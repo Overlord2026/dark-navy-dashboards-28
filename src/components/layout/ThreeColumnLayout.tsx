@@ -1,7 +1,6 @@
-
 import { ReactNode, useState } from "react";
 import { cn } from "@/lib/utils";
-import { ChevronLeftIcon, ChevronRightIcon, UserIcon, UsersIcon, FileIcon, HomeIcon, BarChart3Icon, ShieldIcon, PiggyBankIcon, CreditCardIcon, WalletIcon, ArrowRightLeftIcon, ReceiptIcon, ShareIcon } from "lucide-react";
+import { ChevronLeftIcon, ChevronRightIcon, UserIcon, UsersIcon, FileIcon, BarChart3Icon, ShieldIcon, PiggyBankIcon, CreditCardIcon, WalletIcon, ArrowRightLeftIcon, ReceiptIcon, ShareIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 type MenuItem = {
@@ -22,12 +21,22 @@ interface ThreeColumnLayoutProps {
 type MainMenuItem = {
   id: string;
   label: string;
-  icon: React.ElementType;
+  icon: React.ElementType | React.FC;
   active?: boolean;
 };
 
+const CustomHomeIcon: React.FC = () => (
+  <div className="flex items-center justify-center bg-black rounded-full h-5 w-5">
+    <img 
+      src="/lovable-uploads/e4ac2159-1b66-4f15-9257-68a0f00c8311.png" 
+      alt="Home"
+      className="h-4 w-4"
+    />
+  </div>
+);
+
 const mainMenuItems: MainMenuItem[] = [
-  { id: "home", label: "Home", icon: HomeIcon },
+  { id: "home", label: "Home", icon: CustomHomeIcon },
   { id: "accounts", label: "Accounts", icon: WalletIcon },
   { id: "documents", label: "Documents", icon: FileIcon },
   { id: "sharing", label: "Sharing", icon: ShareIcon },
@@ -67,12 +76,10 @@ export function ThreeColumnLayout({
     setSecondarySidebarCollapsed(!secondarySidebarCollapsed);
   };
 
-  // Rich gold color to match logo
   const goldIconColor = "#d4af37";
 
   return (
     <div className="flex h-screen overflow-hidden bg-background">
-      {/* Primary Sidebar */}
       <aside
         className={cn(
           "h-screen flex flex-col bg-sidebar transition-all duration-300 ease-in-out z-30",
@@ -102,7 +109,7 @@ export function ThreeColumnLayout({
         <div className="flex-1 py-4 overflow-y-auto">
           <nav className="px-2 space-y-1">
             {mainMenuItems.map((item) => {
-              const Icon = item.icon || (() => <span>{item.id.charAt(0).toUpperCase()}</span>);
+              const Icon = item.icon;
               return (
                 <a
                   key={item.id}
@@ -115,7 +122,11 @@ export function ThreeColumnLayout({
                       : "text-gray-300"
                   )}
                 >
-                  <Icon className={cn("h-5 w-5", !mainSidebarCollapsed && "mr-3")} style={{ color: goldIconColor }} />
+                  {typeof Icon === 'function' ? (
+                    <Icon />
+                  ) : (
+                    <Icon className={cn("h-5 w-5", !mainSidebarCollapsed && "mr-3")} style={{ color: goldIconColor }} />
+                  )}
                   {!mainSidebarCollapsed && <span>{item.label}</span>}
                 </a>
               );
@@ -151,7 +162,6 @@ export function ThreeColumnLayout({
         </Button>
       </aside>
 
-      {/* Secondary Sidebar */}
       <aside
         className={cn(
           "h-screen flex flex-col bg-sidebar border-r border-sidebar-border transition-all duration-300 ease-in-out z-20",
@@ -206,7 +216,6 @@ export function ThreeColumnLayout({
         </Button>
       </aside>
 
-      {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
         <header className="w-full px-4 py-3 flex items-center justify-between border-b border-border/70 bg-background/95 backdrop-blur-sm z-10">
           <h1 className="text-xl font-semibold tracking-tight">{title}</h1>

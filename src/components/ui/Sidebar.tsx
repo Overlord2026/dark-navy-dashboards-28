@@ -4,7 +4,6 @@ import { cn } from "@/lib/utils";
 import { 
   ChevronLeftIcon,
   ChevronRightIcon,
-  HomeIcon, 
   BarChart3Icon, 
   UsersIcon, 
   FolderIcon, 
@@ -16,14 +15,25 @@ import {
 import { Button } from "@/components/ui/button";
 
 type NavItem = {
-  icon: React.ElementType;
+  icon: React.ElementType | React.FC;
   label: string;
   href: string;
   active?: boolean;
 };
 
+// Custom Home Icon component with the tree logo
+const CustomHomeIcon: React.FC = () => (
+  <div className="flex items-center justify-center bg-black rounded-full h-5 w-5 mr-1">
+    <img 
+      src="/lovable-uploads/e4ac2159-1b66-4f15-9257-68a0f00c8311.png" 
+      alt="Home"
+      className="h-4 w-4"
+    />
+  </div>
+);
+
 const mainNavItems: NavItem[] = [
-  { icon: HomeIcon, label: "Dashboard", href: "/", active: true },
+  { icon: CustomHomeIcon, label: "Dashboard", href: "/", active: true },
   { icon: BarChart3Icon, label: "Reports", href: "/reports" },
   { icon: UsersIcon, label: "Clients", href: "/clients" },
   { icon: FolderIcon, label: "Documents", href: "/documents" },
@@ -88,7 +98,11 @@ export const Sidebar = () => {
               )}
               style={{ animationDelay: `${index * 50}ms` }}
             >
-              <item.icon className="h-5 w-5 mr-3 flex-shrink-0" style={{ color: goldIconColor }} />
+              {typeof item.icon === "function" ? (
+                <item.icon />
+              ) : (
+                <item.icon className="h-5 w-5 mr-3 flex-shrink-0" style={{ color: goldIconColor }} />
+              )}
               {!collapsed && <span>{item.label}</span>}
             </a>
           ))}
