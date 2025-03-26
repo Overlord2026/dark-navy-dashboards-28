@@ -19,7 +19,15 @@ interface ThreeColumnLayoutProps {
   secondaryMenuItems?: MenuItem[];
 }
 
-const mainMenuItems = [
+// Update the mainMenuItems type to include the active property
+type MainMenuItem = {
+  id: string;
+  label: string;
+  icon: React.ElementType;
+  active?: boolean; // Added the active property here
+};
+
+const mainMenuItems: MainMenuItem[] = [
   { id: "home", label: "Home", icon: HomeIcon },
   { id: "accounts", label: "Accounts", icon: WalletIcon },
   { id: "documents", label: "Documents", icon: FileIcon },
@@ -95,7 +103,7 @@ export function ThreeColumnLayout({
                   className={cn(
                     "group flex items-center py-2 px-3 rounded-md transition-colors",
                     "hover:bg-white/10",
-                    item.id === activeMainItem || item.active
+                    item.id === activeMainItem
                       ? "bg-white/20 text-white"
                       : "text-gray-300"
                   )}
