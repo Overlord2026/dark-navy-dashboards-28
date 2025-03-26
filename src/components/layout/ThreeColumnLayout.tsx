@@ -26,13 +26,11 @@ type MainMenuItem = {
 };
 
 const CustomHomeIcon: React.FC = () => (
-  <div className="flex items-center justify-center bg-black rounded-full h-5 w-5">
-    <img 
-      src="/lovable-uploads/e4ac2159-1b66-4f15-9257-68a0f00c8311.png" 
-      alt="Home"
-      className="h-4 w-4"
-    />
-  </div>
+  <img 
+    src="/lovable-uploads/e4ac2159-1b66-4f15-9257-68a0f00c8311.png" 
+    alt="Home"
+    className="h-5 w-5"
+  />
 );
 
 const mainMenuItems: MainMenuItem[] = [
