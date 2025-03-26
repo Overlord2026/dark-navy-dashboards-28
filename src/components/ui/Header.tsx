@@ -18,9 +18,9 @@ export const Header = () => {
       <div className="flex items-center gap-4">
         <div className="flex items-center">
           <img 
-            src="/lovable-uploads/031ab7ce-4d6d-4dc5-a085-37febb2093c7.png" 
-            alt="Company Logo" 
-            className="h-12 w-12 mr-3" 
+            src="/lovable-uploads/9d138e85-d6e9-4083-ad34-147b3fc524ab.png" 
+            alt="Advanced Wealth Management Logo" 
+            className="h-10 mr-3" 
           />
           <h1 className="text-xl font-semibold tracking-tight">Dashboard</h1>
         </div>

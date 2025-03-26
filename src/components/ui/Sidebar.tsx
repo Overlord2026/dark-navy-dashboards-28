@@ -51,16 +51,23 @@ export const Sidebar = () => {
       )}
     >
       <div className="flex items-center justify-center h-[70px] px-4 border-b border-sidebar-border">
-        <div className={cn(
-          "flex items-center justify-center",
-          collapsed ? "w-12 h-12" : "w-14 h-14"
-        )}>
-          <img 
-            src="/lovable-uploads/031ab7ce-4d6d-4dc5-a085-37febb2093c7.png" 
-            alt="Company Logo" 
-            className="w-full h-full" 
-          />
-        </div>
+        {collapsed ? (
+          <div className="w-12 h-12 flex items-center justify-center">
+            <img 
+              src="/lovable-uploads/9d138e85-d6e9-4083-ad34-147b3fc524ab.png" 
+              alt="Advanced Wealth Management Logo" 
+              className="h-8" 
+            />
+          </div>
+        ) : (
+          <div className="flex items-center justify-center">
+            <img 
+              src="/lovable-uploads/9d138e85-d6e9-4083-ad34-147b3fc524ab.png" 
+              alt="Advanced Wealth Management Logo" 
+              className="h-10" 
+            />
+          </div>
+        )}
       </div>
 
       <div className="flex-1 py-4 overflow-y-auto">
