@@ -4,10 +4,17 @@ import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { FinancialOverview } from "@/components/dashboard/FinancialOverview";
 import { RecentActivity } from "@/components/dashboard/RecentActivity";
 import { DashboardCard } from "@/components/ui/DashboardCard";
-import { CalendarIcon, ClockIcon } from "lucide-react";
+import { NetWorthSummary } from "@/components/dashboard/NetWorthSummary";
+import { 
+  CalendarIcon, 
+  ClockIcon,
+  SettingsIcon
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const Dashboard = () => {
   const [loading, setLoading] = useState(true);
+  const [showBusinessMetrics, setShowBusinessMetrics] = useState(false);
 
   useEffect(() => {
     // Simulate loading data
@@ -25,6 +32,10 @@ const Dashboard = () => {
       month: 'long', 
       day: 'numeric' 
     });
+  };
+
+  const toggleMetrics = () => {
+    setShowBusinessMetrics(!showBusinessMetrics);
   };
 
   return (
@@ -50,13 +61,26 @@ const Dashboard = () => {
                 <span>{formatDate()}</span>
               </div>
             </div>
-            <div className="flex items-center mt-2 md:mt-0 text-muted-foreground">
-              <ClockIcon className="h-4 w-4 mr-1" />
-              <span>Last updated: Today at 10:45 AM</span>
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center mt-2 md:mt-0 text-muted-foreground">
+                <ClockIcon className="h-4 w-4 mr-1" />
+                <span>Last updated: Today at 10:45 AM</span>
+              </div>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={toggleMetrics}
+                className="mt-2 md:mt-0"
+              >
+                <SettingsIcon className="h-4 w-4 mr-1" />
+                {showBusinessMetrics ? "Show Personal" : "Show Business"}
+              </Button>
             </div>
           </div>
           
-          <FinancialOverview />
+          <NetWorthSummary />
+          
+          <FinancialOverview showBusinessMetrics={showBusinessMetrics} />
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <RecentActivity />
