@@ -1,3 +1,4 @@
+
 import { ReactNode, useState } from "react";
 import { cn } from "@/lib/utils";
 import { ChevronLeftIcon, ChevronRightIcon, UserIcon, UsersIcon, FileIcon, BarChart3Icon, ShieldIcon, PiggyBankIcon, CreditCardIcon, WalletIcon, ArrowRightLeftIcon, ReceiptIcon, ShareIcon } from "lucide-react";
@@ -88,15 +89,15 @@ export function ThreeColumnLayout({
               <img 
                 src="/lovable-uploads/9d138e85-d6e9-4083-ad34-147b3fc524ab.png" 
                 alt="Advanced Wealth Management Logo" 
-                className="h-8" 
+                className="h-10 w-auto" 
               />
             </div>
           ) : (
-            <div className="flex items-center justify-center">
+            <div className="flex items-center justify-center w-full">
               <img 
                 src="/lovable-uploads/9d138e85-d6e9-4083-ad34-147b3fc524ab.png" 
                 alt="Advanced Wealth Management Logo" 
-                className="h-10" 
+                className="h-14 w-auto" 
               />
             </div>
           )}
@@ -114,12 +115,14 @@ export function ThreeColumnLayout({
                     "group flex items-center py-2 px-3 rounded-md transition-colors",
                     "hover:bg-white/10",
                     item.id === activeMainItem
-                      ? "bg-accent text-sidebar-primary-foreground"
+                      ? "bg-black text-white"
                       : "text-gray-300"
                   )}
                 >
                   {typeof Icon === 'function' ? (
-                    <Icon />
+                    <div className="flex items-center justify-center bg-black rounded-sm p-0.5 mr-3">
+                      <Icon />
+                    </div>
                   ) : (
                     <Icon className={cn("h-5 w-5", !mainSidebarCollapsed && "mr-3")} style={{ backgroundColor: '#000', padding: '2px', borderRadius: '2px' }} />
                   )}
@@ -164,9 +167,9 @@ export function ThreeColumnLayout({
           secondarySidebarCollapsed ? "w-[0px]" : "w-[200px]"
         )}
       >
-        <div className="flex items-center h-[60px] px-4 border-b border-sidebar-border">
+        <div className="flex items-center h-[70px] px-4 border-b border-sidebar-border">
           {!secondarySidebarCollapsed && (
-            <span className="font-medium text-sidebar-foreground truncate">Sections</span>
+            <span className="font-medium text-sidebar-foreground truncate pt-4">Sections</span>
           )}
         </div>
 

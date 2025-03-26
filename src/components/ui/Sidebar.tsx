@@ -64,15 +64,15 @@ export const Sidebar = () => {
             <img 
               src="/lovable-uploads/9d138e85-d6e9-4083-ad34-147b3fc524ab.png" 
               alt="Advanced Wealth Management Logo" 
-              className="h-8" 
+              className="h-10 w-auto" 
             />
           </div>
         ) : (
-          <div className="flex items-center justify-center">
+          <div className="flex items-center justify-center w-full">
             <img 
               src="/lovable-uploads/9d138e85-d6e9-4083-ad34-147b3fc524ab.png" 
               alt="Advanced Wealth Management Logo" 
-              className="h-10" 
+              className="h-14 w-auto" 
             />
           </div>
         )}
@@ -88,13 +88,15 @@ export const Sidebar = () => {
                 "group flex items-center py-2 px-3 rounded-md transition-colors",
                 "hover:bg-sidebar-accent",
                 item.active
-                  ? "bg-sidebar-accent text-accent"
+                  ? "bg-black text-white" // Changed to black background with white text
                   : "text-sidebar-foreground"
               )}
               style={{ animationDelay: `${index * 50}ms` }}
             >
               {typeof item.icon === "function" ? (
-                <item.icon />
+                <div className="flex items-center justify-center bg-black rounded-sm p-0.5 mr-3">
+                  <item.icon />
+                </div>
               ) : (
                 <item.icon className="h-5 w-5 mr-3 flex-shrink-0 bg-black p-0.5 rounded-sm" />
               )}
