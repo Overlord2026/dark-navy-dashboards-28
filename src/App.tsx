@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import './App.css';
 import Dashboard from './pages/Index';
 import Documents from './pages/Documents';
+import Accounts from './pages/Accounts';
 import CustomerProfile from './pages/CustomerProfile';
 import NotFound from './pages/NotFound';
 import { Toaster } from './components/ui/toaster';
@@ -18,6 +19,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Dashboard />} />
           <Route path="/documents" element={<Documents />} />
+          <Route path="/accounts" element={<Accounts />} />
           <Route path="/profile" element={<CustomerProfile />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
