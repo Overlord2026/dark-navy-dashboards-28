@@ -54,14 +54,14 @@ export const Sidebar = () => {
         {!collapsed && (
           <div className="flex items-center">
             <div className="h-8 w-8 rounded-md bg-accent flex items-center justify-center mr-2">
-              <span className="font-semibold text-white">B</span>
+              <img src="/lovable-uploads/90781be1-cf1d-4b67-b35a-0e5c45072062.png" alt="BFO Logo" className="h-6 w-6" />
             </div>
-            <span className="font-semibold text-sidebar-foreground">BFO CFO</span>
+            <span className="font-semibold text-sidebar-foreground">Boutique Family Office</span>
           </div>
         )}
         {collapsed && (
           <div className="h-8 w-8 rounded-md bg-accent flex items-center justify-center mx-auto">
-            <span className="font-semibold text-white">B</span>
+            <img src="/lovable-uploads/90781be1-cf1d-4b67-b35a-0e5c45072062.png" alt="BFO Logo" className="h-6 w-6" />
           </div>
         )}
       </div>
@@ -76,7 +76,7 @@ export const Sidebar = () => {
                 "group flex items-center py-2 px-3 rounded-md transition-colors",
                 "hover:bg-sidebar-accent",
                 item.active
-                  ? "bg-sidebar-accent text-sidebar-primary"
+                  ? "bg-sidebar-accent text-accent"
                   : "text-sidebar-foreground"
               )}
               style={{ animationDelay: `${index * 50}ms` }}
@@ -106,7 +106,7 @@ export const Sidebar = () => {
       <Button
         variant="ghost"
         size="icon"
-        className="absolute top-[70px] -right-4 h-8 w-8 rounded-full bg-background border border-border text-foreground hover:bg-accent hover:text-white"
+        className="absolute top-[70px] -right-4 h-8 w-8 rounded-full bg-background border border-border text-foreground hover:bg-accent hover:text-sidebar-primary-foreground"
         onClick={toggleSidebar}
       >
         {collapsed ? (

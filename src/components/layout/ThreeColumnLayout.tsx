@@ -52,7 +52,7 @@ const defaultSecondaryMenuItems: MenuItem[] = [
 
 export function ThreeColumnLayout({ 
   children, 
-  title = "BFO CFO Dashboard", 
+  title = "BFO Dashboard", 
   activeMainItem = "documents",
   activeSecondaryItem = "all-documents",
   secondaryMenuItems = defaultSecondaryMenuItems
@@ -73,7 +73,7 @@ export function ThreeColumnLayout({
       {/* Primary Sidebar */}
       <aside
         className={cn(
-          "h-screen flex flex-col bg-[#0F0F2D] transition-all duration-300 ease-in-out z-30",
+          "h-screen flex flex-col bg-sidebar transition-all duration-300 ease-in-out z-30",
           mainSidebarCollapsed ? "w-[70px]" : "w-[220px]"
         )}
       >
@@ -81,13 +81,13 @@ export function ThreeColumnLayout({
           {!mainSidebarCollapsed ? (
             <div className="flex items-center">
               <div className="h-8 w-8 rounded-md bg-accent flex items-center justify-center mr-2">
-                <span className="font-semibold text-white">F</span>
+                <img src="/lovable-uploads/90781be1-cf1d-4b67-b35a-0e5c45072062.png" alt="BFO Logo" className="h-6 w-6" />
               </div>
-              <span className="font-semibold text-white truncate">Farther</span>
+              <span className="font-semibold text-white truncate">Boutique Family Office</span>
             </div>
           ) : (
             <div className="h-8 w-8 rounded-md bg-accent flex items-center justify-center mx-auto">
-              <span className="font-semibold text-white">F</span>
+              <img src="/lovable-uploads/90781be1-cf1d-4b67-b35a-0e5c45072062.png" alt="BFO Logo" className="h-6 w-6" />
             </div>
           )}
         </div>
@@ -104,7 +104,7 @@ export function ThreeColumnLayout({
                     "group flex items-center py-2 px-3 rounded-md transition-colors",
                     "hover:bg-white/10",
                     item.id === activeMainItem
-                      ? "bg-white/20 text-white"
+                      ? "bg-accent text-sidebar-primary-foreground"
                       : "text-gray-300"
                   )}
                 >
@@ -119,7 +119,7 @@ export function ThreeColumnLayout({
         <div className="p-3 border-t border-white/10 m-2 rounded-md bg-white/5">
           <div className="flex items-center">
             <div className="h-8 w-8 rounded-full bg-accent/30 flex items-center justify-center">
-              <UserIcon className="h-4 w-4 text-white" />
+              <UserIcon className="h-4 w-4 text-accent" />
             </div>
             {!mainSidebarCollapsed && (
               <div className="ml-2">
@@ -133,7 +133,7 @@ export function ThreeColumnLayout({
         <Button
           variant="ghost"
           size="icon"
-          className="absolute top-[70px] right-0 translate-x-1/2 h-8 w-8 rounded-full bg-background border border-border text-foreground hover:bg-accent hover:text-white z-40"
+          className="absolute top-[70px] right-0 translate-x-1/2 h-8 w-8 rounded-full bg-background border border-border text-foreground hover:bg-accent hover:text-sidebar-primary-foreground z-40"
           onClick={toggleMainSidebar}
         >
           {mainSidebarCollapsed ? (
@@ -169,7 +169,7 @@ export function ThreeColumnLayout({
                       "group flex items-center py-2 px-3 rounded-md transition-colors",
                       "hover:bg-sidebar-accent",
                       item.id === activeSecondaryItem || item.active
-                        ? "bg-sidebar-accent text-sidebar-primary"
+                        ? "bg-sidebar-accent text-accent"
                         : "text-sidebar-foreground"
                     )}
                   >
@@ -184,7 +184,7 @@ export function ThreeColumnLayout({
         <Button
           variant="ghost"
           size="icon"
-          className="absolute top-[70px] left-[220px] ml-0.5 h-8 w-8 rounded-full bg-background border border-border text-foreground hover:bg-accent hover:text-white z-40"
+          className="absolute top-[70px] left-[220px] ml-0.5 h-8 w-8 rounded-full bg-background border border-border text-foreground hover:bg-accent hover:text-sidebar-primary-foreground z-40"
           style={{ 
             left: mainSidebarCollapsed ? '70px' : '220px',
             opacity: secondarySidebarCollapsed ? 0.5 : 1

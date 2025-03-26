@@ -1,5 +1,5 @@
 
-import { BellIcon, SearchIcon, UserIcon } from "lucide-react";
+import { BellIcon, SearchIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
@@ -16,7 +16,7 @@ export const Header = () => {
   return (
     <header className="w-full px-4 py-3 flex items-center justify-between border-b border-border/70 bg-background/95 backdrop-blur-sm z-10">
       <div className="flex items-center gap-4">
-        <h1 className="text-xl font-semibold tracking-tight">BFO CFO Dashboard</h1>
+        <h1 className="text-xl font-semibold tracking-tight">Boutique Family Office Dashboard</h1>
       </div>
       
       <div className="hidden md:flex relative max-w-md w-full mx-8">
@@ -39,7 +39,7 @@ export const Header = () => {
             <Button variant="ghost" className="relative h-9 w-9 rounded-full">
               <Avatar className="h-9 w-9">
                 <AvatarImage src="/placeholder.svg" alt="User" />
-                <AvatarFallback className="bg-primary">JD</AvatarFallback>
+                <AvatarFallback className="bg-primary text-primary-foreground">BF</AvatarFallback>
               </Avatar>
             </Button>
           </DropdownMenuTrigger>

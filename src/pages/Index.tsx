@@ -39,7 +39,7 @@ const Dashboard = () => {
   };
 
   return (
-    <ThreeColumnLayout activeMainItem="home" title="Family or Client Name Dashboard">
+    <ThreeColumnLayout activeMainItem="home" title="Boutique Family Office Dashboard">
       {loading ? (
         <div className="h-full flex items-center justify-center">
           <div className="animate-pulse-slow flex flex-col items-center">
