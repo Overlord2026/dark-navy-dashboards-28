@@ -43,6 +43,9 @@ export const Sidebar = () => {
     setCollapsed(!collapsed);
   };
 
+  // Rich gold color to match logo
+  const goldIconColor = "#d4af37";
+
   return (
     <aside
       className={cn(
@@ -85,7 +88,7 @@ export const Sidebar = () => {
               )}
               style={{ animationDelay: `${index * 50}ms` }}
             >
-              <item.icon className="h-5 w-5 mr-3 flex-shrink-0" />
+              <item.icon className="h-5 w-5 mr-3 flex-shrink-0" style={{ color: goldIconColor }} />
               {!collapsed && <span>{item.label}</span>}
             </a>
           ))}
@@ -100,7 +103,7 @@ export const Sidebar = () => {
               href={item.href}
               className="group flex items-center py-2 px-3 rounded-md text-sidebar-foreground hover:bg-sidebar-accent transition-colors"
             >
-              <item.icon className="h-5 w-5 mr-3 flex-shrink-0" />
+              <item.icon className="h-5 w-5 mr-3 flex-shrink-0" style={{ color: goldIconColor }} />
               {!collapsed && <span>{item.label}</span>}
             </a>
           ))}

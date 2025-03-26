@@ -1,3 +1,4 @@
+
 import { ReactNode, useState } from "react";
 import { cn } from "@/lib/utils";
 import { ChevronLeftIcon, ChevronRightIcon, UserIcon, UsersIcon, FileIcon, HomeIcon, BarChart3Icon, ShieldIcon, PiggyBankIcon, CreditCardIcon, WalletIcon, ArrowRightLeftIcon, ReceiptIcon, ShareIcon } from "lucide-react";
@@ -66,6 +67,9 @@ export function ThreeColumnLayout({
     setSecondarySidebarCollapsed(!secondarySidebarCollapsed);
   };
 
+  // Rich gold color to match logo
+  const goldIconColor = "#d4af37";
+
   return (
     <div className="flex h-screen overflow-hidden bg-background">
       {/* Primary Sidebar */}
@@ -111,7 +115,7 @@ export function ThreeColumnLayout({
                       : "text-gray-300"
                   )}
                 >
-                  <Icon className={cn("h-5 w-5", !mainSidebarCollapsed && "mr-3")} />
+                  <Icon className={cn("h-5 w-5", !mainSidebarCollapsed && "mr-3")} style={{ color: goldIconColor }} />
                   {!mainSidebarCollapsed && <span>{item.label}</span>}
                 </a>
               );
