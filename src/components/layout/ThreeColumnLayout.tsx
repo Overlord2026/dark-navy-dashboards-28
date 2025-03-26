@@ -1,7 +1,7 @@
 
 import { ReactNode, useState } from "react";
 import { cn } from "@/lib/utils";
-import { ChevronLeftIcon, ChevronRightIcon, UserIcon, UsersIcon, FileIcon, BarChart3Icon, ShieldIcon, PiggyBankIcon, CreditCardIcon, WalletIcon, ArrowRightLeftIcon, ReceiptIcon, ShareIcon } from "lucide-react";
+import { ChevronLeftIcon, ChevronRightIcon, UserIcon, UsersIcon, FileIcon, BarChart3Icon, ShieldIcon, PiggyBankIcon, CreditCardIcon, WalletIcon, ArrowRightLeftIcon, ReceiptIcon, ShareIcon, GraduationCap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 type MenuItem = {
@@ -39,6 +39,7 @@ const mainMenuItems: MainMenuItem[] = [
   { id: "accounts", label: "Accounts", icon: WalletIcon },
   { id: "documents", label: "Documents", icon: FileIcon },
   { id: "sharing", label: "Sharing", icon: ShareIcon },
+  { id: "education", label: "Education", icon: GraduationCap },
   { id: "financial-plans", label: "Financial Plans", icon: BarChart3Icon },
   { id: "investments", label: "Investments", icon: PiggyBankIcon },
   { id: "insurance", label: "Insurance", icon: ShieldIcon },

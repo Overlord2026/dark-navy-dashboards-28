@@ -11,6 +11,7 @@ import {
   DropdownMenuSeparator, 
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu";
+import { SwagEducationMenu } from "@/components/education/SwagEducationMenu";
 
 export const Header = () => {
   return (
@@ -36,6 +37,8 @@ export const Header = () => {
       </div>
       
       <div className="flex items-center gap-3">
+        <SwagEducationMenu />
+        
         <Button variant="ghost" size="icon" className="relative">
           <BellIcon className="h-5 w-5" />
           <span className="absolute top-1 right-1 h-2 w-2 bg-accent rounded-full"></span>
