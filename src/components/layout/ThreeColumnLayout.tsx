@@ -74,8 +74,6 @@ export function ThreeColumnLayout({
     setSecondarySidebarCollapsed(!secondarySidebarCollapsed);
   };
 
-  const goldIconColor = "#d4af37";
-
   return (
     <div className="flex h-screen overflow-hidden bg-background">
       <aside
@@ -123,7 +121,7 @@ export function ThreeColumnLayout({
                   {typeof Icon === 'function' ? (
                     <Icon />
                   ) : (
-                    <Icon className={cn("h-5 w-5", !mainSidebarCollapsed && "mr-3")} style={{ color: goldIconColor }} />
+                    <Icon className={cn("h-5 w-5", !mainSidebarCollapsed && "mr-3")} style={{ backgroundColor: '#000', padding: '2px', borderRadius: '2px' }} />
                   )}
                   {!mainSidebarCollapsed && <span>{item.label}</span>}
                 </a>
