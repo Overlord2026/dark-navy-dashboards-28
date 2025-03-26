@@ -1,7 +1,7 @@
 
 import { ReactNode, useState } from "react";
 import { cn } from "@/lib/utils";
-import { ChevronLeftIcon, ChevronRightIcon, UserIcon } from "lucide-react";
+import { ChevronLeftIcon, ChevronRightIcon, UserIcon, UsersIcon, FileIcon, HomeIcon, BarChart3Icon, ShieldIcon, PiggyBankIcon, CreditCardIcon, WalletIcon, ArrowRightLeftIcon, ReceiptIcon, ShareIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 type MenuItem = {
@@ -19,18 +19,18 @@ interface ThreeColumnLayoutProps {
   secondaryMenuItems?: MenuItem[];
 }
 
-const mainMenuItems: MenuItem[] = [
-  { id: "home", label: "Home" },
-  { id: "accounts", label: "Accounts" },
-  { id: "documents", label: "Documents" },
-  { id: "sharing", label: "Sharing" },
-  { id: "financial-plans", label: "Financial Plans" },
-  { id: "investments", label: "Investments" },
-  { id: "insurance", label: "Insurance" },
-  { id: "lending", label: "Lending" },
-  { id: "cash-management", label: "Cash Management" },
-  { id: "transfers", label: "Transfers" },
-  { id: "tax-budgets", label: "Tax Budgets" },
+const mainMenuItems = [
+  { id: "home", label: "Home", icon: HomeIcon },
+  { id: "accounts", label: "Accounts", icon: WalletIcon },
+  { id: "documents", label: "Documents", icon: FileIcon },
+  { id: "sharing", label: "Sharing", icon: ShareIcon },
+  { id: "financial-plans", label: "Financial Plans", icon: BarChart3Icon },
+  { id: "investments", label: "Investments", icon: PiggyBankIcon },
+  { id: "insurance", label: "Insurance", icon: ShieldIcon },
+  { id: "lending", label: "Lending", icon: CreditCardIcon },
+  { id: "cash-management", label: "Cash Management", icon: WalletIcon },
+  { id: "transfers", label: "Transfers", icon: ArrowRightLeftIcon },
+  { id: "tax-budgets", label: "Tax Budgets", icon: ReceiptIcon },
 ];
 
 const defaultSecondaryMenuItems: MenuItem[] = [
@@ -86,24 +86,25 @@ export function ThreeColumnLayout({
 
         <div className="flex-1 py-4 overflow-y-auto">
           <nav className="px-2 space-y-1">
-            {mainMenuItems.map((item) => (
-              <a
-                key={item.id}
-                href={`/${item.id !== 'home' ? item.id : ''}`}
-                className={cn(
-                  "group flex items-center py-2 px-3 rounded-md transition-colors",
-                  "hover:bg-white/10",
-                  item.id === activeMainItem || item.active
-                    ? "bg-white/20 text-white"
-                    : "text-gray-300"
-                )}
-              >
-                <span className={cn(!mainSidebarCollapsed && "mr-3")}>
-                  {item.id.charAt(0).toUpperCase()}
-                </span>
-                {!mainSidebarCollapsed && <span>{item.label}</span>}
-              </a>
-            ))}
+            {mainMenuItems.map((item) => {
+              const Icon = item.icon || (() => <span>{item.id.charAt(0).toUpperCase()}</span>);
+              return (
+                <a
+                  key={item.id}
+                  href={`/${item.id !== 'home' ? item.id : ''}`}
+                  className={cn(
+                    "group flex items-center py-2 px-3 rounded-md transition-colors",
+                    "hover:bg-white/10",
+                    item.id === activeMainItem || item.active
+                      ? "bg-white/20 text-white"
+                      : "text-gray-300"
+                  )}
+                >
+                  <Icon className={cn("h-5 w-5", !mainSidebarCollapsed && "mr-3")} />
+                  {!mainSidebarCollapsed && <span>{item.label}</span>}
+                </a>
+              );
+            })}
           </nav>
         </div>
 
@@ -155,7 +156,7 @@ export function ThreeColumnLayout({
                 {secondaryMenuItems.map((item) => (
                   <a
                     key={item.id}
-                    href={`/documents/${item.id}`}
+                    href={`/${activeMainItem}/${item.id}`}
                     className={cn(
                       "group flex items-center py-2 px-3 rounded-md transition-colors",
                       "hover:bg-sidebar-accent",
