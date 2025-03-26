@@ -1,8 +1,24 @@
 
 import { ReactNode, useState } from "react";
 import { cn } from "@/lib/utils";
-import { ChevronLeftIcon, ChevronRightIcon, UserIcon, UsersIcon, FileIcon, BarChart3Icon, ShieldIcon, PiggyBankIcon, CreditCardIcon, WalletIcon, ArrowRightLeftIcon, ReceiptIcon, ShareIcon, GraduationCap } from "lucide-react";
+import { 
+  ChevronLeftIcon, 
+  ChevronRightIcon, 
+  UserIcon, 
+  UsersIcon, 
+  FileIcon, 
+  BarChart3Icon, 
+  ShieldIcon, 
+  PiggyBankIcon, 
+  CreditCardIcon, 
+  WalletIcon, 
+  ArrowRightLeftIcon, 
+  ReceiptIcon, 
+  ShareIcon, 
+  GraduationCapIcon
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 
 type MenuItem = {
   id: string;
@@ -17,12 +33,14 @@ interface ThreeColumnLayoutProps {
   activeMainItem?: string;
   activeSecondaryItem?: string;
   secondaryMenuItems?: MenuItem[];
+  breadcrumbs?: { name: string; href: string; active?: boolean }[];
 }
 
 type MainMenuItem = {
   id: string;
   label: string;
   icon: React.ElementType | React.FC;
+  href: string;
   active?: boolean;
 };
 
@@ -35,38 +53,82 @@ const CustomHomeIcon: React.FC = () => (
 );
 
 const mainMenuItems: MainMenuItem[] = [
-  { id: "home", label: "Home", icon: CustomHomeIcon },
-  { id: "accounts", label: "Accounts", icon: WalletIcon },
-  { id: "documents", label: "Documents", icon: FileIcon },
-  { id: "sharing", label: "Sharing", icon: ShareIcon },
-  { id: "education", label: "Education", icon: GraduationCap },
-  { id: "financial-plans", label: "Financial Plans", icon: BarChart3Icon },
-  { id: "investments", label: "Investments", icon: PiggyBankIcon },
-  { id: "insurance", label: "Insurance", icon: ShieldIcon },
-  { id: "lending", label: "Lending", icon: CreditCardIcon },
-  { id: "cash-management", label: "Cash Management", icon: WalletIcon },
-  { id: "transfers", label: "Transfers", icon: ArrowRightLeftIcon },
-  { id: "tax-budgets", label: "Tax Budgets", icon: ReceiptIcon },
+  { id: "home", label: "Home", icon: CustomHomeIcon, href: "/" },
+  { id: "accounts", label: "Accounts", icon: WalletIcon, href: "/accounts" },
+  { id: "documents", label: "Documents", icon: FileIcon, href: "/documents" },
+  { id: "sharing", label: "Sharing", icon: ShareIcon, href: "/sharing" },
+  { id: "education", label: "Education", icon: GraduationCapIcon, href: "/education" },
+  { id: "financial-plans", label: "Financial Plans", icon: BarChart3Icon, href: "/financial-plans" },
+  { id: "investments", label: "Investments", icon: PiggyBankIcon, href: "/investments" },
+  { id: "insurance", label: "Insurance", icon: ShieldIcon, href: "/insurance" },
+  { id: "lending", label: "Lending", icon: CreditCardIcon, href: "/lending" },
+  { id: "cash-management", label: "Cash Management", icon: WalletIcon, href: "/cash-management" },
+  { id: "transfers", label: "Transfers", icon: ArrowRightLeftIcon, href: "/transfers" },
+  { id: "tax-budgets", label: "Tax Budgets", icon: ReceiptIcon, href: "/tax-budgets" },
 ];
 
-const defaultSecondaryMenuItems: MenuItem[] = [
+const documentSubMenuItems: MenuItem[] = [
   { id: "all-documents", name: "All Documents", active: true },
-  { id: "tax-documents", name: "Tax Documents" },
-  { id: "statements", name: "Statements" },
-  { id: "reports", name: "Reports" },
-  { id: "agreements", name: "Agreements" },
-  { id: "shared-docs", name: "Shared Documents" },
+  { id: "business-ownership", name: "Business Ownership" },
+  { id: "education", name: "Education" },
+  { id: "estate-planning", name: "Estate Planning" },
+  { id: "insurance-policies", name: "Insurance Policies" },
+  { id: "leases", name: "Leases" },
+  { id: "taxes", name: "Taxes" },
+  { id: "trusts", name: "Trusts" },
 ];
+
+const accountsSubMenuItems: MenuItem[] = [
+  { id: "all-accounts", name: "All Accounts", active: true },
+  { id: "checking", name: "Checking" },
+  { id: "savings", name: "Savings" },
+  { id: "investment", name: "Investment" },
+  { id: "retirement", name: "Retirement" },
+];
+
+const sharingSubMenuItems: MenuItem[] = [
+  { id: "shared-with-me", name: "Shared With Me", active: true },
+  { id: "shared-by-me", name: "Shared By Me" },
+  { id: "collaborators", name: "Collaborators" },
+];
+
+const educationSubMenuItems: MenuItem[] = [
+  { id: "all-courses", name: "All Courses", active: true },
+  { id: "financial-basics", name: "Financial Basics" },
+  { id: "investing", name: "Investing" },
+  { id: "retirement", name: "Retirement" },
+  { id: "premium", name: "Premium Courses" },
+];
+
+const getSecondaryMenuItems = (activeMainItem: string): MenuItem[] => {
+  switch (activeMainItem) {
+    case "documents":
+      return documentSubMenuItems;
+    case "accounts":
+      return accountsSubMenuItems;
+    case "sharing":
+      return sharingSubMenuItems;
+    case "education":
+      return educationSubMenuItems;
+    default:
+      return [];
+  }
+};
 
 export function ThreeColumnLayout({ 
   children, 
   title = "Dashboard", 
   activeMainItem = "documents",
   activeSecondaryItem = "all-documents",
-  secondaryMenuItems = defaultSecondaryMenuItems
+  secondaryMenuItems,
+  breadcrumbs
 }: ThreeColumnLayoutProps) {
   const [mainSidebarCollapsed, setMainSidebarCollapsed] = useState(false);
   const [secondarySidebarCollapsed, setSecondarySidebarCollapsed] = useState(false);
+  
+  const menuItems = secondaryMenuItems || getSecondaryMenuItems(activeMainItem);
+  
+  const hasSecondaryMenu = menuItems.length > 0;
 
   const toggleMainSidebar = () => {
     setMainSidebarCollapsed(!mainSidebarCollapsed);
@@ -75,6 +137,17 @@ export function ThreeColumnLayout({
   const toggleSecondarySidebar = () => {
     setSecondarySidebarCollapsed(!secondarySidebarCollapsed);
   };
+
+  const defaultBreadcrumbs = breadcrumbs || [
+    { name: activeMainItem === 'home' ? 'Dashboard' : mainMenuItems.find(item => item.id === activeMainItem)?.label || title, href: activeMainItem === 'home' ? '/' : `/${activeMainItem}`, active: !activeSecondaryItem },
+    ...(activeSecondaryItem && activeSecondaryItem !== `all-${activeMainItem}` ? [
+      { 
+        name: menuItems.find(item => item.id === activeSecondaryItem)?.name || activeSecondaryItem, 
+        href: `/${activeMainItem}/${activeSecondaryItem}`,
+        active: true 
+      }
+    ] : [])
+  ];
 
   return (
     <div className="flex h-screen overflow-hidden bg-background">
@@ -89,7 +162,7 @@ export function ThreeColumnLayout({
             <div className="w-12 h-12 flex items-center justify-center">
               <img 
                 src="/lovable-uploads/9d138e85-d6e9-4083-ad34-147b3fc524ab.png" 
-                alt="Advanced Wealth Management Logo" 
+                alt="BFO CFO Client Dashboard" 
                 className="h-10 w-auto" 
               />
             </div>
@@ -97,7 +170,7 @@ export function ThreeColumnLayout({
             <div className="flex items-center justify-center w-full">
               <img 
                 src="/lovable-uploads/9d138e85-d6e9-4083-ad34-147b3fc524ab.png" 
-                alt="Advanced Wealth Management Logo" 
+                alt="BFO CFO Client Dashboard" 
                 className="h-14 w-auto" 
               />
             </div>
@@ -108,14 +181,15 @@ export function ThreeColumnLayout({
           <nav className="px-2 space-y-1">
             {mainMenuItems.map((item) => {
               const Icon = item.icon;
+              const isActive = item.id === activeMainItem;
               return (
                 <a
                   key={item.id}
-                  href={`/${item.id !== 'home' ? item.id : ''}`}
+                  href={item.href}
                   className={cn(
                     "group flex items-center py-2 px-3 rounded-md transition-colors",
                     "hover:bg-white/10",
-                    item.id === activeMainItem
+                    isActive
                       ? "bg-black text-white"
                       : "text-gray-300"
                   )}
@@ -162,23 +236,23 @@ export function ThreeColumnLayout({
         </Button>
       </aside>
 
-      <aside
-        className={cn(
-          "h-screen flex flex-col bg-sidebar border-r border-sidebar-border transition-all duration-300 ease-in-out z-20",
-          secondarySidebarCollapsed ? "w-[0px]" : "w-[200px]"
-        )}
-      >
-        <div className="flex items-center h-[70px] px-4 border-b border-sidebar-border">
-          {!secondarySidebarCollapsed && (
-            <span className="font-medium text-sidebar-foreground truncate pt-4">Sections</span>
+      {hasSecondaryMenu && (
+        <aside
+          className={cn(
+            "h-screen flex flex-col bg-sidebar border-r border-sidebar-border transition-all duration-300 ease-in-out z-20",
+            secondarySidebarCollapsed ? "w-[0px]" : "w-[200px]"
           )}
-        </div>
+        >
+          <div className="flex items-center h-[70px] px-4 border-b border-sidebar-border">
+            {!secondarySidebarCollapsed && (
+              <span className="font-medium text-sidebar-foreground truncate pt-4">Sections</span>
+            )}
+          </div>
 
-        {!secondarySidebarCollapsed && (
-          <>
+          {!secondarySidebarCollapsed && (
             <div className="flex-1 py-4 overflow-y-auto">
               <nav className="px-2 space-y-1">
-                {secondaryMenuItems.map((item) => (
+                {menuItems.map((item) => (
                   <a
                     key={item.id}
                     href={`/${activeMainItem}/${item.id}`}
@@ -195,26 +269,26 @@ export function ThreeColumnLayout({
                 ))}
               </nav>
             </div>
-          </>
-        )}
-
-        <Button
-          variant="ghost"
-          size="icon"
-          className="absolute top-[70px] left-[220px] ml-0.5 h-8 w-8 rounded-full bg-background border border-border text-foreground hover:bg-accent hover:text-sidebar-primary-foreground z-40"
-          style={{ 
-            left: mainSidebarCollapsed ? '70px' : '220px',
-            opacity: secondarySidebarCollapsed ? 0.5 : 1
-          }}
-          onClick={toggleSecondarySidebar}
-        >
-          {secondarySidebarCollapsed ? (
-            <ChevronRightIcon className="h-4 w-4" />
-          ) : (
-            <ChevronLeftIcon className="h-4 w-4" />
           )}
-        </Button>
-      </aside>
+
+          <Button
+            variant="ghost"
+            size="icon"
+            className="absolute top-[70px] h-8 w-8 rounded-full bg-background border border-border text-foreground hover:bg-accent hover:text-sidebar-primary-foreground z-40"
+            style={{ 
+              left: mainSidebarCollapsed ? '70px' : '220px',
+              opacity: secondarySidebarCollapsed ? 0.5 : 1
+            }}
+            onClick={toggleSecondarySidebar}
+          >
+            {secondarySidebarCollapsed ? (
+              <ChevronRightIcon className="h-4 w-4" />
+            ) : (
+              <ChevronLeftIcon className="h-4 w-4" />
+            )}
+          </Button>
+        </aside>
+      )}
 
       <div className="flex-1 flex flex-col overflow-hidden">
         <header className="w-full px-4 py-3 flex items-center justify-between border-b border-border/70 bg-background/95 backdrop-blur-sm z-10">
@@ -222,6 +296,34 @@ export function ThreeColumnLayout({
         </header>
         
         <main className="flex-1 overflow-y-auto p-6">
+          {defaultBreadcrumbs.length > 0 && (
+            <div className="mb-6">
+              <Breadcrumb>
+                <BreadcrumbList>
+                  <BreadcrumbItem>
+                    <BreadcrumbLink href="/">Home</BreadcrumbLink>
+                  </BreadcrumbItem>
+                  <BreadcrumbSeparator />
+                  
+                  {defaultBreadcrumbs.map((breadcrumb, index) => (
+                    <React.Fragment key={breadcrumb.name}>
+                      <BreadcrumbItem>
+                        {breadcrumb.active ? (
+                          <span className="text-foreground">{breadcrumb.name}</span>
+                        ) : (
+                          <BreadcrumbLink href={breadcrumb.href}>{breadcrumb.name}</BreadcrumbLink>
+                        )}
+                      </BreadcrumbItem>
+                      {index < defaultBreadcrumbs.length - 1 && (
+                        <BreadcrumbSeparator />
+                      )}
+                    </React.Fragment>
+                  ))}
+                </BreadcrumbList>
+              </Breadcrumb>
+            </div>
+          )}
+          
           {children}
         </main>
       </div>
