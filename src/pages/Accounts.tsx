@@ -26,8 +26,8 @@ type AccountSection = {
 const Accounts = () => {
   const [accountSections, setAccountSections] = useState<AccountSection[]>([
     {
-      id: "farther-managed",
-      title: "Farther Managed",
+      id: "bfo-managed",
+      title: "BFO Managed",
       icon: <Landmark className="h-5 w-5 text-blue-400" />,
       status: "Unable to retrieve balance",
       isExpanded: true,
@@ -124,7 +124,7 @@ const Accounts = () => {
                     <p className="mb-4">No accounts added yet</p>
                     <Button variant="outline" className="border-gray-700 text-white hover:bg-[#1c2e4a] hover:text-white">
                       <Plus className="mr-2 h-4 w-4" />
-                      Add {section.title.replace("External ", "")}
+                      Add {section.title.replace("External ", "").replace("BFO ", "")}
                     </Button>
                   </div>
                 </div>
