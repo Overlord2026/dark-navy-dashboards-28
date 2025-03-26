@@ -77,9 +77,16 @@ export function ThreeColumnLayout({
           mainSidebarCollapsed ? "w-[70px]" : "w-[220px]"
         )}
       >
-        <div className="flex items-center justify-center h-[60px] px-4 border-b border-white/10">
-          <div className="h-10 w-10 rounded-md flex items-center justify-center">
-            <img src="/lovable-uploads/01eba118-b78a-4bd3-8bd2-556224625c98.png" alt="BFO Logo" className="h-8 w-8" />
+        <div className="flex items-center justify-center h-[70px] px-4 border-b border-white/10">
+          <div className={cn(
+            "flex items-center justify-center",
+            mainSidebarCollapsed ? "w-12 h-12" : "w-14 h-14"
+          )}>
+            <img 
+              src="/lovable-uploads/031ab7ce-4d6d-4dc5-a085-37febb2093c7.png" 
+              alt="Company Logo" 
+              className="w-full h-full" 
+            />
           </div>
         </div>
 
