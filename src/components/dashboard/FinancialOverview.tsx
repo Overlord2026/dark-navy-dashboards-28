@@ -1,5 +1,5 @@
 
-import { ArrowTrendingUpIcon, ArrowTrendingDownIcon } from "lucide-react";
+import { TrendingUp, TrendingDown } from "lucide-react";
 import { DashboardCard } from "@/components/ui/DashboardCard";
 import { Progress } from "@/components/ui/progress";
 
@@ -9,7 +9,7 @@ export const FinancialOverview = () => {
       <DashboardCard
         title="Revenue"
         className="xl:col-span-1"
-        icon={<ArrowTrendingUpIcon className="h-5 w-5" />}
+        icon={<TrendingUp className="h-5 w-5" />}
         footer={
           <div className="flex items-center justify-between text-sm">
             <span>Monthly Goal</span>
@@ -20,7 +20,7 @@ export const FinancialOverview = () => {
         <div className="text-3xl font-semibold mb-1">$97,843</div>
         <div className="flex items-center text-sm mb-4">
           <span className="text-green-400 flex items-center mr-2">
-            <ArrowTrendingUpIcon className="h-3 w-3 mr-1" />
+            <TrendingUp className="h-3 w-3 mr-1" />
             8.2%
           </span>
           <span className="text-muted-foreground">vs last month</span>
@@ -31,7 +31,7 @@ export const FinancialOverview = () => {
       <DashboardCard
         title="Expenses"
         className="xl:col-span-1"
-        icon={<ArrowTrendingDownIcon className="h-5 w-5" />}
+        icon={<TrendingDown className="h-5 w-5" />}
         footer={
           <div className="flex items-center justify-between text-sm">
             <span>Monthly Budget</span>
@@ -42,7 +42,7 @@ export const FinancialOverview = () => {
         <div className="text-3xl font-semibold mb-1">$64,973</div>
         <div className="flex items-center text-sm mb-4">
           <span className="text-amber-400 flex items-center mr-2">
-            <ArrowTrendingUpIcon className="h-3 w-3 mr-1" />
+            <TrendingUp className="h-3 w-3 mr-1" />
             3.7%
           </span>
           <span className="text-muted-foreground">vs last month</span>
@@ -53,7 +53,7 @@ export const FinancialOverview = () => {
       <DashboardCard
         title="Cash Flow"
         className="xl:col-span-1"
-        icon={<ArrowTrendingUpIcon className="h-5 w-5" />}
+        icon={<TrendingUp className="h-5 w-5" />}
         footer={
           <div className="flex items-center justify-between text-sm">
             <span>Quarterly Avg</span>
@@ -64,7 +64,7 @@ export const FinancialOverview = () => {
         <div className="text-3xl font-semibold mb-1">$32,870</div>
         <div className="flex items-center text-sm mb-4">
           <span className="text-green-400 flex items-center mr-2">
-            <ArrowTrendingUpIcon className="h-3 w-3 mr-1" />
+            <TrendingUp className="h-3 w-3 mr-1" />
             12.5%
           </span>
           <span className="text-muted-foreground">vs last quarter</span>
@@ -75,7 +75,7 @@ export const FinancialOverview = () => {
       <DashboardCard
         title="Profit Margin"
         className="xl:col-span-1"
-        icon={<ArrowTrendingUpIcon className="h-5 w-5" />}
+        icon={<TrendingUp className="h-5 w-5" />}
         footer={
           <div className="flex items-center justify-between text-sm">
             <span>Target</span>
@@ -86,7 +86,7 @@ export const FinancialOverview = () => {
         <div className="text-3xl font-semibold mb-1">33.4%</div>
         <div className="flex items-center text-sm mb-4">
           <span className="text-green-400 flex items-center mr-2">
-            <ArrowTrendingUpIcon className="h-3 w-3 mr-1" />
+            <TrendingUp className="h-3 w-3 mr-1" />
             2.3%
           </span>
           <span className="text-muted-foreground">vs last month</span>
