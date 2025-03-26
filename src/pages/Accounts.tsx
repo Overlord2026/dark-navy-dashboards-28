@@ -13,6 +13,8 @@ import {
   ClipboardList,
   DollarSign
 } from "lucide-react";
+import { AddAccountDialog, AccountData } from "@/components/accounts/AddAccountDialog";
+import { useToast } from "@/hooks/use-toast";
 
 type AccountSection = {
   id: string;
@@ -21,9 +23,15 @@ type AccountSection = {
   balance?: string;
   status?: string;
   isExpanded: boolean;
+  accounts: AccountData[];
 };
 
 const Accounts = () => {
+  const { toast } = useToast();
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [selectedSection, setSelectedSection] = useState<AccountSection | null>(null);
+  const [mainDialogOpen, setMainDialogOpen] = useState(false);
+
   const [accountSections, setAccountSections] = useState<AccountSection[]>([
     {
       id: "bfo-managed",
@@ -31,6 +39,7 @@ const Accounts = () => {
       icon: <Landmark className="h-5 w-5 text-blue-400" />,
       status: "Unable to retrieve balance",
       isExpanded: true,
+      accounts: [],
     },
     {
       id: "external-investment",
@@ -38,6 +47,7 @@ const Accounts = () => {
       icon: <TrendingUp className="h-5 w-5 text-green-400" />,
       balance: "$0.00",
       isExpanded: false,
+      accounts: [],
     },
     {
       id: "external-manually-tracked",
@@ -45,6 +55,7 @@ const Accounts = () => {
       icon: <ClipboardList className="h-5 w-5 text-amber-400" />,
       balance: "$0.00",
       isExpanded: false,
+      accounts: [],
     },
     {
       id: "external-loans",
@@ -52,6 +63,7 @@ const Accounts = () => {
       icon: <DollarSign className="h-5 w-5 text-indigo-400" />,
       balance: "$0.00",
       isExpanded: false,
+      accounts: [],
     },
     {
       id: "external-banking",
@@ -59,6 +71,7 @@ const Accounts = () => {
       icon: <Building className="h-5 w-5 text-red-400" />,
       balance: "$0.00",
       isExpanded: false,
+      accounts: [],
     },
     {
       id: "external-credit-cards",
@@ -66,6 +79,7 @@ const Accounts = () => {
       icon: <CreditCard className="h-5 w-5 text-cyan-400" />,
       balance: "$0.00",
       isExpanded: false,
+      accounts: [],
     },
   ]);
 
@@ -79,12 +93,92 @@ const Accounts = () => {
     );
   };
 
+  const openAddDialog = (section: AccountSection) => {
+    setSelectedSection(section);
+    setDialogOpen(true);
+  };
+
+  const openMainAddDialog = () => {
+    setMainDialogOpen(true);
+  };
+
+  const handleAddAccount = (accountData: AccountData) => {
+    if (!selectedSection) return;
+
+    // Add the account to the selected section
+    setAccountSections(
+      accountSections.map((section) =>
+        section.id === selectedSection.id
+          ? {
+              ...section,
+              accounts: [...section.accounts, accountData],
+              balance: section.id !== "bfo-managed"
+                ? `$${section.accounts.reduce(
+                    (sum, account) => sum + parseFloat(account.balance || "0"),
+                    parseFloat(accountData.balance || "0")
+                  ).toFixed(2)}`
+                : undefined,
+              status: section.id === "bfo-managed" ? "Connected" : undefined,
+            }
+          : section
+      )
+    );
+
+    toast({
+      title: "Account added",
+      description: `${accountData.name} has been added to ${selectedSection.title}`,
+    });
+  };
+
+  const handleMainAddAccount = (accountData: AccountData) => {
+    // Find the section that matches the account type
+    const matchingSection = accountSections.find(
+      (section) => section.title.toLowerCase().includes(accountData.section.toLowerCase())
+    );
+
+    if (!matchingSection) {
+      toast({
+        title: "Error",
+        description: "Could not find a matching section for this account type",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Add the account to the matching section
+    setAccountSections(
+      accountSections.map((section) =>
+        section.id === matchingSection.id
+          ? {
+              ...section,
+              accounts: [...section.accounts, accountData],
+              balance: section.id !== "bfo-managed"
+                ? `$${section.accounts.reduce(
+                    (sum, account) => sum + parseFloat(account.balance || "0"),
+                    parseFloat(accountData.balance || "0")
+                  ).toFixed(2)}`
+                : undefined,
+              status: section.id === "bfo-managed" ? "Connected" : undefined,
+            }
+          : section
+      )
+    );
+
+    toast({
+      title: "Account added",
+      description: `${accountData.name} has been added to ${matchingSection.title}`,
+    });
+  };
+
   return (
     <ThreeColumnLayout activeMainItem="accounts" title="Accounts">
       <div className="mx-auto max-w-6xl animate-fade-in">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-2xl font-semibold mb-1">Accounts</h1>
-          <Button className="bg-white text-black hover:bg-slate-100">
+          <Button 
+            className="bg-white text-black hover:bg-slate-100"
+            onClick={openMainAddDialog}
+          >
             <Plus className="mr-2 h-4 w-4" />
             Add Account
           </Button>
@@ -120,18 +214,74 @@ const Accounts = () => {
 
               {section.isExpanded && (
                 <div className="p-6 border-t border-gray-800">
-                  <div className="flex flex-col items-center justify-center py-8 text-gray-400">
-                    <p className="mb-4">No accounts added yet</p>
-                    <Button variant="outline" className="border-gray-700 text-white hover:bg-[#1c2e4a] hover:text-white">
-                      <Plus className="mr-2 h-4 w-4" />
-                      Add {section.title.replace("External ", "").replace("BFO ", "")}
-                    </Button>
-                  </div>
+                  {section.accounts.length > 0 ? (
+                    <div className="space-y-3">
+                      {section.accounts.map((account) => (
+                        <div 
+                          key={account.id}
+                          className="p-3 rounded-lg bg-[#1c2e4a] border border-gray-700 flex justify-between items-center"
+                        >
+                          <div>
+                            <p className="font-medium text-white">{account.name}</p>
+                            {account.accountNumber && (
+                              <p className="text-sm text-gray-400">
+                                Account: {account.accountNumber}
+                              </p>
+                            )}
+                          </div>
+                          {account.balance && (
+                            <div className="text-right">
+                              <p className="font-medium text-white">${account.balance}</p>
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                      
+                      <Button 
+                        variant="outline" 
+                        className="mt-3 border-gray-700 text-white hover:bg-[#1c2e4a] hover:text-white"
+                        onClick={() => openAddDialog(section)}
+                      >
+                        <Plus className="mr-2 h-4 w-4" />
+                        Add {section.title.replace("External ", "").replace("BFO ", "")}
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="flex flex-col items-center justify-center py-8 text-gray-400">
+                      <p className="mb-4">No accounts added yet</p>
+                      <Button 
+                        variant="outline" 
+                        className="border-gray-700 text-white hover:bg-[#1c2e4a] hover:text-white"
+                        onClick={() => openAddDialog(section)}
+                      >
+                        <Plus className="mr-2 h-4 w-4" />
+                        Add {section.title.replace("External ", "").replace("BFO ", "")}
+                      </Button>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
           ))}
         </div>
+
+        {selectedSection && (
+          <AddAccountDialog
+            isOpen={dialogOpen}
+            onClose={() => setDialogOpen(false)}
+            onAddAccount={handleAddAccount}
+            accountType={selectedSection.title.replace("External ", "").replace("BFO ", "")}
+            sectionType={selectedSection.title}
+          />
+        )}
+
+        <AddAccountDialog
+          isOpen={mainDialogOpen}
+          onClose={() => setMainDialogOpen(false)}
+          onAddAccount={handleMainAddAccount}
+          accountType="Account"
+          sectionType="Main"
+        />
       </div>
     </ThreeColumnLayout>
   );
