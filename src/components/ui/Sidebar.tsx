@@ -103,6 +103,20 @@ export const Sidebar = () => {
         </nav>
       </div>
 
+      <div className="p-3 border-t border-sidebar-border m-2 rounded-md bg-sidebar-accent/30">
+        <div className="flex items-center">
+          <div className="h-8 w-8 rounded-full bg-accent/30 flex items-center justify-center">
+            <UsersIcon className="h-4 w-4 text-accent" />
+          </div>
+          {!collapsed && (
+            <div className="ml-2">
+              <p className="text-xs text-sidebar-foreground font-medium">Advisor:</p>
+              <p className="text-xs text-sidebar-foreground/80">Charles Bryant</p>
+            </div>
+          )}
+        </div>
+      </div>
+
       <Button
         variant="ghost"
         size="icon"

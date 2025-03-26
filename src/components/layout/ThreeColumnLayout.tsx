@@ -124,7 +124,7 @@ export function ThreeColumnLayout({
             {!mainSidebarCollapsed && (
               <div className="ml-2">
                 <p className="text-xs text-white font-medium">Advisor:</p>
-                <p className="text-xs text-white/80">Daniel Herrera</p>
+                <p className="text-xs text-white/80">Charles Bryant</p>
               </div>
             )}
           </div>
