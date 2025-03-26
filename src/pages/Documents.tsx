@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
-import { Upload, FolderPlus, FileText, FilePdf, FileImage } from "lucide-react";
+import { Upload, FolderPlus, FileText, File, FileImage } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -55,7 +55,7 @@ const Documents = () => {
   const getDocumentIcon = (type: DocumentType) => {
     switch (type) {
       case "pdf":
-        return <FilePdf className="h-5 w-5 text-red-400" />;
+        return <File className="h-5 w-5 text-red-400" />; // Changed FilePdf to File
       case "image":
         return <FileImage className="h-5 w-5 text-blue-400" />;
       default:

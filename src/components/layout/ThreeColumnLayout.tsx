@@ -1,5 +1,6 @@
 
 import { ReactNode, useState } from "react";
+import * as React from "react"; // Added explicit React import
 import { cn } from "@/lib/utils";
 import { 
   ChevronLeftIcon, 
