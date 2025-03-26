@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button";
 
 type MenuItem = {
   id: string;
-  label: string;
+  label?: string;
+  name?: string;
   active?: boolean;
 };
 
@@ -15,12 +16,13 @@ interface ThreeColumnLayoutProps {
   title?: string;
   activeMainItem?: string;
   activeSecondaryItem?: string;
+  secondaryMenuItems?: MenuItem[];
 }
 
 const mainMenuItems: MenuItem[] = [
   { id: "home", label: "Home" },
   { id: "accounts", label: "Accounts" },
-  { id: "documents", label: "Documents", active: true },
+  { id: "documents", label: "Documents" },
   { id: "sharing", label: "Sharing" },
   { id: "financial-plans", label: "Financial Plans" },
   { id: "investments", label: "Investments" },
@@ -31,20 +33,21 @@ const mainMenuItems: MenuItem[] = [
   { id: "tax-budgets", label: "Tax Budgets" },
 ];
 
-const secondaryMenuItems: MenuItem[] = [
-  { id: "all-documents", label: "All Documents", active: true },
-  { id: "tax-documents", label: "Tax Documents" },
-  { id: "statements", label: "Statements" },
-  { id: "reports", label: "Reports" },
-  { id: "agreements", label: "Agreements" },
-  { id: "shared-docs", label: "Shared Documents" },
+const defaultSecondaryMenuItems: MenuItem[] = [
+  { id: "all-documents", name: "All Documents", active: true },
+  { id: "tax-documents", name: "Tax Documents" },
+  { id: "statements", name: "Statements" },
+  { id: "reports", name: "Reports" },
+  { id: "agreements", name: "Agreements" },
+  { id: "shared-docs", name: "Shared Documents" },
 ];
 
 export function ThreeColumnLayout({ 
   children, 
   title = "BFO CFO Dashboard", 
   activeMainItem = "documents",
-  activeSecondaryItem = "all-documents"
+  activeSecondaryItem = "all-documents",
+  secondaryMenuItems = defaultSecondaryMenuItems
 }: ThreeColumnLayoutProps) {
   const [mainSidebarCollapsed, setMainSidebarCollapsed] = useState(false);
   const [secondarySidebarCollapsed, setSecondarySidebarCollapsed] = useState(false);
@@ -70,13 +73,13 @@ export function ThreeColumnLayout({
           {!mainSidebarCollapsed ? (
             <div className="flex items-center">
               <div className="h-8 w-8 rounded-md bg-accent flex items-center justify-center mr-2">
-                <span className="font-semibold text-white">B</span>
+                <span className="font-semibold text-white">F</span>
               </div>
-              <span className="font-semibold text-white truncate">BFO CFO</span>
+              <span className="font-semibold text-white truncate">Farther</span>
             </div>
           ) : (
             <div className="h-8 w-8 rounded-md bg-accent flex items-center justify-center mx-auto">
-              <span className="font-semibold text-white">B</span>
+              <span className="font-semibold text-white">F</span>
             </div>
           )}
         </div>
@@ -112,7 +115,7 @@ export function ThreeColumnLayout({
             {!mainSidebarCollapsed && (
               <div className="ml-2">
                 <p className="text-xs text-white font-medium">Advisor:</p>
-                <p className="text-xs text-white/80">Sarah Johnson</p>
+                <p className="text-xs text-white/80">Daniel Herrera</p>
               </div>
             )}
           </div>
@@ -141,7 +144,7 @@ export function ThreeColumnLayout({
       >
         <div className="flex items-center h-[60px] px-4 border-b border-sidebar-border">
           {!secondarySidebarCollapsed && (
-            <span className="font-medium text-sidebar-foreground truncate">Documents</span>
+            <span className="font-medium text-sidebar-foreground truncate">Sections</span>
           )}
         </div>
 
@@ -161,7 +164,7 @@ export function ThreeColumnLayout({
                         : "text-sidebar-foreground"
                     )}
                   >
-                    <span>{item.label}</span>
+                    <span>{item.name || item.label}</span>
                   </a>
                 ))}
               </nav>

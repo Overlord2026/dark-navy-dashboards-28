@@ -1,45 +1,112 @@
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
-import { DashboardCard } from "@/components/ui/DashboardCard";
 import { Button } from "@/components/ui/button";
-import { FolderIcon, FileTextIcon, DownloadIcon, ShareIcon, PlusIcon } from "lucide-react";
-import { Separator } from "@/components/ui/separator";
+import { 
+  FileTextIcon, 
+  FolderIcon, 
+  UploadIcon, 
+  PlusIcon, 
+  ChevronRightIcon,
+  ChevronUpIcon,
+  ArrowUpIcon 
+} from "lucide-react";
+import { 
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow 
+} from "@/components/ui/table";
+import { Progress } from "@/components/ui/progress";
+import { useToast } from "@/hooks/use-toast";
 
 const documentCategories = [
-  {
-    id: "recent",
-    title: "Recent Documents",
-    documents: [
-      { id: "1", name: "Q1_Financial_Report.pdf", date: "2025-03-15", type: "PDF", size: "2.4 MB" },
-      { id: "2", name: "Annual_Compliance_Review.docx", date: "2025-03-10", type: "DOCX", size: "1.8 MB" },
-      { id: "3", name: "Investment_Strategy_2025.xlsx", date: "2025-03-05", type: "XLSX", size: "3.2 MB" },
-    ]
-  },
-  {
-    id: "tax",
-    title: "Tax Documents",
-    documents: [
-      { id: "4", name: "W2_Forms_2024.pdf", date: "2025-02-15", type: "PDF", size: "1.5 MB" },
-      { id: "5", name: "1099_Statements.pdf", date: "2025-02-10", type: "PDF", size: "2.1 MB" },
-    ]
-  }
+  { id: "farther-records", name: "Farther Records", active: true },
+  { id: "manually-tracked-assets", name: "Manually-Tracked Assets" },
+  { id: "business-ownership", name: "Business Ownership" },
+  { id: "education", name: "Education" },
+  { id: "employer-agreements", name: "Employer Agreements" },
+  { id: "estate-planning", name: "Estate Planning" },
+  { id: "insurance-policies", name: "Insurance Policies" },
+  { id: "leases", name: "Leases" },
+  { id: "other", name: "Other" },
+  { id: "property-ownership", name: "Property Ownership" },
+  { id: "statements", name: "Statements" },
+  { id: "taxes", name: "Taxes" },
+  { id: "trusts", name: "Trusts" },
+  { id: "vehicles", name: "Vehicles" },
+];
+
+const sampleFolders = [
+  { id: "1", name: "Signed Documents", type: "folder", date: "2025-02-10", size: "453kB" },
 ];
 
 const Documents = () => {
   const [loading, setLoading] = useState(true);
+  const [activeCategory, setActiveCategory] = useState("farther-records");
+  const [documents, setDocuments] = useState<any[]>([]);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const { toast } = useToast();
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
+      if (activeCategory === "farther-records") {
+        setDocuments(sampleFolders);
+      } else {
+        setDocuments([]);
+      }
     }, 800);
     
     return () => clearTimeout(timer);
-  }, []);
+  }, [activeCategory]);
 
-  return (
-    <ThreeColumnLayout activeMainItem="documents" title="Documents">
-      {loading ? (
+  const handleCategoryChange = (categoryId: string) => {
+    setLoading(true);
+    setActiveCategory(categoryId);
+  };
+
+  const handleUploadClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    setIsUploading(true);
+    setUploadProgress(0);
+
+    // Simulate file upload progress
+    const interval = setInterval(() => {
+      setUploadProgress(prev => {
+        if (prev >= 100) {
+          clearInterval(interval);
+          setIsUploading(false);
+          
+          toast({
+            title: "Upload complete",
+            description: `Successfully uploaded ${files[0].name}`,
+          });
+          
+          return 0;
+        }
+        return prev + 10;
+      });
+    }, 300);
+  };
+
+  const activeCategoryName = documentCategories.find(cat => cat.id === activeCategory)?.name || "";
+
+  const renderContent = () => {
+    if (loading) {
+      return (
         <div className="h-full flex items-center justify-center">
           <div className="animate-pulse flex flex-col items-center w-full">
             <div className="h-8 w-48 bg-card rounded-md mb-6"></div>
@@ -50,87 +117,112 @@ const Documents = () => {
             </div>
           </div>
         </div>
-      ) : (
-        <div className="max-w-5xl mx-auto space-y-6 animate-fade-in">
-          <div className="flex justify-between items-center mb-6">
-            <h1 className="text-2xl font-semibold">All Documents</h1>
-            <Button className="bg-accent hover:bg-accent/90">
+      );
+    }
+
+    if (documents.length === 0) {
+      const emptyMessage = activeCategory === "manually-tracked-assets" 
+        ? `There are no files in ${activeCategoryName}`
+        : `You haven't uploaded any files to ${activeCategoryName}`;
+
+      return (
+        <div className="flex flex-col items-center justify-center py-16">
+          <h3 className="text-xl font-medium mb-2">No files</h3>
+          <p className="text-muted-foreground text-center mb-6">{emptyMessage}</p>
+          {activeCategory !== "manually-tracked-assets" && (
+            <Button onClick={handleUploadClick} className="bg-white hover:bg-white/90 text-black">
+              <UploadIcon className="h-4 w-4 mr-2" />
+              Upload
+            </Button>
+          )}
+        </div>
+      );
+    }
+
+    return (
+      <Table>
+        <TableHeader>
+          <TableRow className="hover:bg-transparent">
+            <TableHead className="w-[500px]">Name</TableHead>
+            <TableHead className="text-right">Created</TableHead>
+            <TableHead className="text-right">Type</TableHead>
+            <TableHead className="text-right">Size</TableHead>
+            <TableHead className="w-10"></TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {documents.map((doc) => (
+            <TableRow key={doc.id} className="hover:bg-sidebar-accent/30">
+              <TableCell className="font-medium flex items-center">
+                <div className="mr-3 p-2 bg-amber-500/10 rounded-md">
+                  <FolderIcon className="h-5 w-5 text-amber-400" />
+                </div>
+                <div className="flex items-center">
+                  {doc.name}
+                  {doc.type === "folder" && (
+                    <ChevronRightIcon className="h-4 w-4 ml-2 text-muted-foreground" />
+                  )}
+                </div>
+              </TableCell>
+              <TableCell className="text-right">{new Date(doc.date).toLocaleDateString()}</TableCell>
+              <TableCell className="text-right capitalize">{doc.type}</TableCell>
+              <TableCell className="text-right">{doc.size}</TableCell>
+              <TableCell className="text-right">•••</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    );
+  };
+
+  return (
+    <ThreeColumnLayout 
+      activeMainItem="documents" 
+      activeSecondaryItem={activeCategory} 
+      title="Documents"
+      secondaryMenuItems={documentCategories}
+    >
+      <div className="max-w-full mx-auto space-y-6 animate-fade-in">
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center text-lg">
+            <span className="text-white font-medium">Documents</span>
+            <ChevronRightIcon className="h-5 w-5 mx-1 text-muted-foreground" />
+            <span className="text-white font-medium">{activeCategoryName}</span>
+          </div>
+          <div className="flex space-x-3">
+            <Button variant="outline" className="border-accent/50 hover:bg-accent/10 hover:text-white">
               <PlusIcon className="h-4 w-4 mr-2" />
-              Upload Document
+              New Folder
+            </Button>
+            <Button onClick={handleUploadClick} className="bg-accent hover:bg-accent/90">
+              <UploadIcon className="h-4 w-4 mr-2" />
+              Upload
             </Button>
           </div>
-          
-          {documentCategories.map((category) => (
-            <DashboardCard key={category.id} title={category.title}>
-              <div className="space-y-1">
-                {category.documents.map((doc) => (
-                  <div key={doc.id} className="p-3 hover:bg-sidebar-accent/30 rounded-md transition-colors">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center">
-                        <div className="mr-3 p-2 bg-accent/10 rounded-md">
-                          <FileTextIcon className="h-5 w-5 text-accent" />
-                        </div>
-                        <div>
-                          <p className="font-medium text-white">{doc.name}</p>
-                          <p className="text-xs text-muted-foreground">
-                            {new Date(doc.date).toLocaleDateString()} • {doc.type} • {doc.size}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="flex space-x-2">
-                        <Button variant="ghost" size="icon">
-                          <DownloadIcon className="h-4 w-4" />
-                        </Button>
-                        <Button variant="ghost" size="icon">
-                          <ShareIcon className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </DashboardCard>
-          ))}
-          
-          <DashboardCard title="Folder Structure">
-            <div className="space-y-1">
-              <div className="p-3 hover:bg-sidebar-accent/30 rounded-md transition-colors">
-                <div className="flex items-center">
-                  <div className="mr-3 p-2 bg-amber-500/10 rounded-md">
-                    <FolderIcon className="h-5 w-5 text-amber-400" />
-                  </div>
-                  <div>
-                    <p className="font-medium text-white">Financial Reports</p>
-                    <p className="text-xs text-muted-foreground">8 files • Last updated 3 days ago</p>
-                  </div>
-                </div>
-              </div>
-              <div className="p-3 hover:bg-sidebar-accent/30 rounded-md transition-colors">
-                <div className="flex items-center">
-                  <div className="mr-3 p-2 bg-amber-500/10 rounded-md">
-                    <FolderIcon className="h-5 w-5 text-amber-400" />
-                  </div>
-                  <div>
-                    <p className="font-medium text-white">Tax Documents</p>
-                    <p className="text-xs text-muted-foreground">12 files • Last updated 1 week ago</p>
-                  </div>
-                </div>
-              </div>
-              <div className="p-3 hover:bg-sidebar-accent/30 rounded-md transition-colors">
-                <div className="flex items-center">
-                  <div className="mr-3 p-2 bg-amber-500/10 rounded-md">
-                    <FolderIcon className="h-5 w-5 text-amber-400" />
-                  </div>
-                  <div>
-                    <p className="font-medium text-white">Investment Records</p>
-                    <p className="text-xs text-muted-foreground">5 files • Last updated 2 days ago</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </DashboardCard>
         </div>
-      )}
+
+        {isUploading && (
+          <div className="p-4 bg-card rounded-lg mb-4">
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-sm font-medium">Uploading...</span>
+              <span className="text-sm">{uploadProgress}%</span>
+            </div>
+            <Progress value={uploadProgress} className="h-2" />
+          </div>
+        )}
+        
+        <div className="bg-card border border-border/50 rounded-lg overflow-hidden">
+          {renderContent()}
+        </div>
+      </div>
+
+      <input 
+        type="file" 
+        ref={fileInputRef} 
+        className="hidden" 
+        onChange={handleFileChange}
+        multiple 
+      />
     </ThreeColumnLayout>
   );
 };
