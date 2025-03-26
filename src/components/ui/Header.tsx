@@ -16,7 +16,10 @@ export const Header = () => {
   return (
     <header className="w-full px-4 py-3 flex items-center justify-between border-b border-border/70 bg-background/95 backdrop-blur-sm z-10">
       <div className="flex items-center gap-4">
-        <h1 className="text-xl font-semibold tracking-tight">Boutique Family Office Dashboard</h1>
+        <div className="flex items-center">
+          <img src="/lovable-uploads/01eba118-b78a-4bd3-8bd2-556224625c98.png" alt="BFO Logo" className="h-8 w-8 mr-2" />
+          <h1 className="text-xl font-semibold tracking-tight">Dashboard</h1>
+        </div>
       </div>
       
       <div className="hidden md:flex relative max-w-md w-full mx-8">

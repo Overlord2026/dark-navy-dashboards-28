@@ -52,7 +52,7 @@ const defaultSecondaryMenuItems: MenuItem[] = [
 
 export function ThreeColumnLayout({ 
   children, 
-  title = "BFO Dashboard", 
+  title = "Dashboard", 
   activeMainItem = "documents",
   activeSecondaryItem = "all-documents",
   secondaryMenuItems = defaultSecondaryMenuItems
@@ -77,19 +77,10 @@ export function ThreeColumnLayout({
           mainSidebarCollapsed ? "w-[70px]" : "w-[220px]"
         )}
       >
-        <div className="flex items-center h-[60px] px-4 border-b border-white/10">
-          {!mainSidebarCollapsed ? (
-            <div className="flex items-center">
-              <div className="h-8 w-8 rounded-md bg-accent flex items-center justify-center mr-2">
-                <img src="/lovable-uploads/90781be1-cf1d-4b67-b35a-0e5c45072062.png" alt="BFO Logo" className="h-6 w-6" />
-              </div>
-              <span className="font-semibold text-white truncate">Boutique Family Office</span>
-            </div>
-          ) : (
-            <div className="h-8 w-8 rounded-md bg-accent flex items-center justify-center mx-auto">
-              <img src="/lovable-uploads/90781be1-cf1d-4b67-b35a-0e5c45072062.png" alt="BFO Logo" className="h-6 w-6" />
-            </div>
-          )}
+        <div className="flex items-center justify-center h-[60px] px-4 border-b border-white/10">
+          <div className="h-10 w-10 rounded-md flex items-center justify-center">
+            <img src="/lovable-uploads/01eba118-b78a-4bd3-8bd2-556224625c98.png" alt="BFO Logo" className="h-8 w-8" />
+          </div>
         </div>
 
         <div className="flex-1 py-4 overflow-y-auto">
