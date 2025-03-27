@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
@@ -116,7 +115,6 @@ const Accounts = () => {
   const handlePlaidLinkSuccess = (linkToken: string) => {
     console.log("Plaid Link Token:", linkToken);
     
-    // For demo purposes, we'll add a mock account to the External Banking section
     const newAccount: AccountData = {
       id: `plaid-${Date.now()}`,
       name: "Plaid Demo Account",
@@ -126,7 +124,6 @@ const Accounts = () => {
       section: "External Banking"
     };
 
-    // Find the banking section and add the account
     setAccountSections(
       accountSections.map((section) =>
         section.id === "external-banking"
@@ -151,7 +148,6 @@ const Accounts = () => {
   const handleAddAccount = (accountData: AccountData) => {
     if (!selectedSection) return;
 
-    // Add the account to the selected section
     setAccountSections(
       accountSections.map((section) =>
         section.id === selectedSection.id
@@ -177,7 +173,6 @@ const Accounts = () => {
   };
 
   const handleMainAddAccount = (accountData: AccountData) => {
-    // Find the section that matches the account type
     const matchingSection = accountSections.find(
       (section) => section.title.toLowerCase().includes(accountData.section.toLowerCase())
     );
@@ -191,7 +186,6 @@ const Accounts = () => {
       return;
     }
 
-    // Add the account to the matching section
     setAccountSections(
       accountSections.map((section) =>
         section.id === matchingSection.id
@@ -324,20 +318,11 @@ const Accounts = () => {
         )}
 
         {currentView === "selection" && (
-          <div>
-            <Button 
-              variant="ghost" 
-              onClick={handleBackToMain} 
-              className="mb-4"
-            >
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to Accounts
-            </Button>
-            <AccountLinkTypeSelector 
-              onSelectPlaid={handleSelectPlaid}
-              onSelectManual={handleSelectManual}
-            />
-          </div>
+          <AccountLinkTypeSelector 
+            onSelectPlaid={handleSelectPlaid}
+            onSelectManual={handleSelectManual}
+            onBack={handleBackToMain}
+          />
         )}
 
         {selectedSection && (

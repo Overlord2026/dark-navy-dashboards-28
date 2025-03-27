@@ -1,15 +1,17 @@
 
-import { ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface AccountLinkTypeSelectorProps {
   onSelectPlaid: () => void;
   onSelectManual: () => void;
+  onBack: () => void;
 }
 
 export function AccountLinkTypeSelector({ 
   onSelectPlaid, 
-  onSelectManual 
+  onSelectManual,
+  onBack
 }: AccountLinkTypeSelectorProps) {
   return (
     <div className="mx-auto max-w-md px-4 py-8 animate-fade-in">
@@ -45,6 +47,17 @@ export function AccountLinkTypeSelector({
             </p>
           </div>
           <ArrowRight className="h-5 w-5 text-gray-400" />
+        </Button>
+      </div>
+
+      <div className="mt-8">
+        <Button 
+          variant="ghost" 
+          onClick={onBack} 
+          className="text-gray-400 hover:text-white"
+        >
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Back to Accounts
         </Button>
       </div>
     </div>
