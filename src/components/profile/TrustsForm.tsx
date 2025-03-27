@@ -14,6 +14,8 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Minus, Plus } from "lucide-react";
 import { useState } from "react";
+import { FileUpload } from "@/components/ui/file-upload";
+import { useToast } from "@/hooks/use-toast";
 
 const trustSchema = z.object({
   trustName: z.string().min(1, { message: "Trust name is required." }),
@@ -30,6 +32,9 @@ const trustSchema = z.object({
 export function TrustsForm({ onSave }: { onSave: () => void }) {
   const [trusts, setTrusts] = useState<z.infer<typeof trustSchema>[]>([]);
   const [currentTrust, setCurrentTrust] = useState<z.infer<typeof trustSchema> | null>(null);
+  const [isUploadingFile, setIsUploadingFile] = useState(false);
+  const [uploadedFiles, setUploadedFiles] = useState<{name: string, size: string}[]>([]);
+  const { toast } = useToast();
 
   const form = useForm<z.infer<typeof trustSchema>>({
     resolver: zodResolver(trustSchema),
@@ -94,6 +99,21 @@ export function TrustsForm({ onSave }: { onSave: () => void }) {
   function handleEditTrust(trust: z.infer<typeof trustSchema>) {
     setCurrentTrust(trust);
     form.reset(trust);
+  }
+  
+  function handleFileSelect(file: File, filename: string) {
+    const newFile = {
+      name: filename,
+      size: `${(file.size / (1024 * 1024)).toFixed(2)} MB`
+    };
+    
+    setUploadedFiles(prev => [...prev, newFile]);
+    setIsUploadingFile(false);
+    
+    toast({
+      title: "File uploaded",
+      description: `${filename} has been added to the trust document`
+    });
   }
 
   return (
@@ -335,11 +355,55 @@ export function TrustsForm({ onSave }: { onSave: () => void }) {
           </div>
           
           <div className="pt-4 border-t">
-            <div className="flex items-center justify-center h-32 border-2 border-dashed rounded-md bg-muted/50">
-              <div className="text-center">
-                <p className="text-muted-foreground mb-1">Drop files here</p>
-                <Button variant="outline" size="sm">Select Files</Button>
+            <div className="space-y-4">
+              <div className="flex justify-between items-center">
+                <h4 className="text-sm font-medium">Trust Documents</h4>
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => setIsUploadingFile(true)}
+                >
+                  <Plus className="mr-2 h-4 w-4" />
+                  Add Document
+                </Button>
               </div>
+              
+              {isUploadingFile ? (
+                <FileUpload 
+                  onFileSelect={handleFileSelect}
+                  onCancel={() => setIsUploadingFile(false)}
+                  accept=".pdf,.doc,.docx"
+                  label="Upload Document"
+                  placeholder="Drag and drop your files here or click to browse"
+                />
+              ) : uploadedFiles.length > 0 ? (
+                <div className="space-y-2">
+                  {uploadedFiles.map((file, index) => (
+                    <div key={index} className="flex justify-between items-center p-2 border rounded-md">
+                      <div>
+                        <p className="font-medium text-sm">{file.name}</p>
+                        <p className="text-xs text-muted-foreground">{file.size}</p>
+                      </div>
+                      <Button variant="ghost" size="sm">
+                        <Minus className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-8 border-2 border-dashed rounded-md bg-muted/50">
+                  <p className="text-muted-foreground text-sm mb-2">No documents uploaded yet</p>
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => setIsUploadingFile(true)}
+                  >
+                    Add Document
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
           

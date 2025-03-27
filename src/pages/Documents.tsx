@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
-import { Upload, FolderPlus, FileText, File, FileImage } from "lucide-react";
+import { FolderPlus, FileText, File, FileImage } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -14,6 +14,8 @@ import {
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { FileUpload } from "@/components/ui/file-upload";
+import { useToast } from "@/hooks/use-toast";
 
 type DocumentType = "pdf" | "image" | "spreadsheet" | "document";
 
@@ -31,31 +33,57 @@ const Documents = () => {
   const [folderName, setFolderName] = useState("");
   const [fileName, setFileName] = useState("");
   const [fileType, setFileType] = useState<DocumentType>("pdf");
+  const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
+  const { toast } = useToast();
 
-  const handleUploadDocument = () => {
-    if (!fileName) return;
+  const handleCreateFolder = () => {
+    if (!folderName.trim()) {
+      toast({
+        title: "Please enter a folder name",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    toast({
+      title: "Folder created",
+      description: `Created folder: ${folderName}`
+    });
+    setFolderName("");
+  };
+
+  const handleFileUpload = (file: File, customName: string) => {
+    // Determine file type based on mime type
+    let documentType: DocumentType = "document";
+    if (file.type.includes("pdf")) {
+      documentType = "pdf";
+    } else if (file.type.includes("image")) {
+      documentType = "image";
+    } else if (file.type.includes("spreadsheet") || file.type.includes("excel") || file.type.includes("csv")) {
+      documentType = "spreadsheet";
+    }
     
     const newDocument: DocumentItem = {
       id: `doc-${Math.random().toString(36).substring(2, 9)}`,
-      name: fileName,
+      name: customName || file.name,
       created: new Date().toLocaleDateString(),
-      type: fileType,
-      size: `${Math.floor(Math.random() * 10) + 1} MB`
+      type: documentType,
+      size: `${(file.size / (1024 * 1024)).toFixed(2)} MB`
     };
     
     setDocuments([...documents, newDocument]);
-    setFileName("");
-  };
-
-  const handleCreateFolder = () => {
-    console.log(`Created folder: ${folderName}`);
-    setFolderName("");
+    setIsUploadDialogOpen(false);
+    
+    toast({
+      title: "File uploaded",
+      description: `${newDocument.name} has been uploaded successfully`
+    });
   };
 
   const getDocumentIcon = (type: DocumentType) => {
     switch (type) {
       case "pdf":
-        return <File className="h-5 w-5 text-red-400" />; // Changed FilePdf to File
+        return <File className="h-5 w-5 text-red-400" />;
       case "image":
         return <FileImage className="h-5 w-5 text-blue-400" />;
       default:
@@ -111,60 +139,29 @@ const Documents = () => {
               </DialogContent>
             </Dialog>
             
-            <Dialog>
+            <Dialog open={isUploadDialogOpen} onOpenChange={setIsUploadDialogOpen}>
               <DialogTrigger asChild>
                 <Button className="gap-2">
-                  <Upload className="h-4 w-4" />
+                  <FileText className="h-4 w-4" />
                   Upload
                 </Button>
               </DialogTrigger>
-              <DialogContent>
+              <DialogContent className="sm:max-w-md">
                 <DialogHeader>
                   <DialogTitle>Upload Document</DialogTitle>
                   <DialogDescription>
                     Upload a document to the Business Ownership section.
                   </DialogDescription>
                 </DialogHeader>
-                <div className="grid gap-4 py-4">
-                  <div className="border-2 border-dashed border-muted rounded-lg p-10 text-center">
-                    <Upload className="h-10 w-10 mx-auto mb-4 text-muted-foreground" />
-                    <p className="text-sm text-muted-foreground mb-2">
-                      Drag and drop your files here or click to browse
-                    </p>
-                    <Button variant="outline" size="sm">Browse Files</Button>
-                  </div>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="filename" className="text-right">
-                      Name
-                    </Label>
-                    <Input
-                      id="filename"
-                      placeholder="Enter file name"
-                      className="col-span-3"
-                      value={fileName}
-                      onChange={(e) => setFileName(e.target.value)}
-                    />
-                  </div>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="filetype" className="text-right">
-                      Type
-                    </Label>
-                    <select
-                      id="filetype"
-                      className="col-span-3 flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                      value={fileType}
-                      onChange={(e) => setFileType(e.target.value as DocumentType)}
-                    >
-                      <option value="pdf">PDF Document</option>
-                      <option value="image">Image</option>
-                      <option value="spreadsheet">Spreadsheet</option>
-                      <option value="document">Text Document</option>
-                    </select>
-                  </div>
-                </div>
-                <DialogFooter>
-                  <Button onClick={handleUploadDocument}>Upload Document</Button>
-                </DialogFooter>
+                
+                <FileUpload 
+                  onFileSelect={handleFileUpload}
+                  onCancel={() => setIsUploadDialogOpen(false)}
+                  accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png"
+                  label="Upload Document"
+                  buttonText="Browse Files"
+                  placeholder="Drag and drop your files here or click to browse"
+                />
               </DialogContent>
             </Dialog>
           </div>
@@ -204,62 +201,13 @@ const Documents = () => {
               <p className="text-muted-foreground mb-6">
                 You haven't uploaded any files to Business Ownership.
               </p>
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button className="gap-2">
-                    <Upload className="h-4 w-4" />
-                    Upload Document
-                  </Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Upload Document</DialogTitle>
-                    <DialogDescription>
-                      Upload a document to the Business Ownership section.
-                    </DialogDescription>
-                  </DialogHeader>
-                  <div className="grid gap-4 py-4">
-                    <div className="border-2 border-dashed border-muted rounded-lg p-10 text-center">
-                      <Upload className="h-10 w-10 mx-auto mb-4 text-muted-foreground" />
-                      <p className="text-sm text-muted-foreground mb-2">
-                        Drag and drop your files here or click to browse
-                      </p>
-                      <Button variant="outline" size="sm">Browse Files</Button>
-                    </div>
-                    <div className="grid grid-cols-4 items-center gap-4">
-                      <Label htmlFor="filename" className="text-right">
-                        Name
-                      </Label>
-                      <Input
-                        id="filename"
-                        placeholder="Enter file name"
-                        className="col-span-3"
-                        value={fileName}
-                        onChange={(e) => setFileName(e.target.value)}
-                      />
-                    </div>
-                    <div className="grid grid-cols-4 items-center gap-4">
-                      <Label htmlFor="filetype" className="text-right">
-                        Type
-                      </Label>
-                      <select
-                        id="filetype"
-                        className="col-span-3 flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                        value={fileType}
-                        onChange={(e) => setFileType(e.target.value as DocumentType)}
-                      >
-                        <option value="pdf">PDF Document</option>
-                        <option value="image">Image</option>
-                        <option value="spreadsheet">Spreadsheet</option>
-                        <option value="document">Text Document</option>
-                      </select>
-                    </div>
-                  </div>
-                  <DialogFooter>
-                    <Button onClick={handleUploadDocument}>Upload Document</Button>
-                  </DialogFooter>
-                </DialogContent>
-              </Dialog>
+              <Button 
+                className="gap-2"
+                onClick={() => setIsUploadDialogOpen(true)}
+              >
+                <FileText className="h-4 w-4" />
+                Upload Document
+              </Button>
             </div>
           </div>
         )}
