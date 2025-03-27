@@ -1,4 +1,3 @@
-
 import { Routes, Route } from 'react-router-dom';
 import { BrowserRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -27,10 +26,23 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Dashboard />} />
-          <Route path="/documents" element={<Documents />} />
-          <Route path="/accounts" element={<Accounts />} />
-          <Route path="/sharing" element={<Sharing />} />
-          <Route path="/education" element={<Education />} />
+          
+          <Route path="/documents" element={<Documents />}>
+            <Route path=":sectionId" element={<Documents />} />
+          </Route>
+          
+          <Route path="/accounts" element={<Accounts />}>
+            <Route path=":sectionId" element={<Accounts />} />
+          </Route>
+          
+          <Route path="/sharing" element={<Sharing />}>
+            <Route path=":sectionId" element={<Sharing />} />
+          </Route>
+          
+          <Route path="/education" element={<Education />}>
+            <Route path=":sectionId" element={<Education />} />
+          </Route>
+
           <Route path="/financial-plans" element={<FinancialPlans />} />
           <Route path="/investments" element={<Investments />} />
           <Route path="/insurance" element={<Insurance />} />
@@ -39,6 +51,7 @@ function App() {
           <Route path="/transfers" element={<Transfers />} />
           <Route path="/tax-budgets" element={<TaxBudgets />} />
           <Route path="/profile" element={<CustomerProfile />} />
+          
           <Route path="*" element={<NotFound />} />
         </Routes>
         <Toaster />

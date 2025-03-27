@@ -3,6 +3,7 @@ import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { AlertTriangleIcon } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const NotFound = () => {
   const location = useLocation();
@@ -25,7 +26,7 @@ const NotFound = () => {
           The page you're looking for doesn't exist or has been moved.
         </p>
         <Button asChild className="bg-accent hover:bg-accent/90 text-white">
-          <a href="/">Return to Dashboard</a>
+          <Link to="/">Return to Dashboard</Link>
         </Button>
       </div>
     </div>

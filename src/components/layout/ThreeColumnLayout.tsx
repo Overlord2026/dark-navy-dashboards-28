@@ -1,6 +1,7 @@
 
 import { ReactNode, useState } from "react";
-import * as React from "react"; // Added explicit React import
+import * as React from "react";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { 
   ChevronLeftIcon, 
@@ -127,6 +128,12 @@ export function ThreeColumnLayout({
   const [mainSidebarCollapsed, setMainSidebarCollapsed] = useState(false);
   const [secondarySidebarCollapsed, setSecondarySidebarCollapsed] = useState(false);
   
+  const params = useParams();
+  const navigate = useNavigate();
+  
+  // Get section ID from URL params if available
+  const sectionId = params.sectionId || activeSecondaryItem;
+  
   const menuItems = secondaryMenuItems || getSecondaryMenuItems(activeMainItem);
   
   const hasSecondaryMenu = menuItems.length > 0;
@@ -140,11 +147,11 @@ export function ThreeColumnLayout({
   };
 
   const defaultBreadcrumbs = breadcrumbs || [
-    { name: activeMainItem === 'home' ? 'Dashboard' : mainMenuItems.find(item => item.id === activeMainItem)?.label || title, href: activeMainItem === 'home' ? '/' : `/${activeMainItem}`, active: !activeSecondaryItem },
-    ...(activeSecondaryItem && activeSecondaryItem !== `all-${activeMainItem}` ? [
+    { name: activeMainItem === 'home' ? 'Dashboard' : mainMenuItems.find(item => item.id === activeMainItem)?.label || title, href: activeMainItem === 'home' ? '/' : `/${activeMainItem}`, active: !sectionId || sectionId === `all-${activeMainItem}` },
+    ...(sectionId && sectionId !== `all-${activeMainItem}` ? [
       { 
-        name: menuItems.find(item => item.id === activeSecondaryItem)?.name || activeSecondaryItem, 
-        href: `/${activeMainItem}/${activeSecondaryItem}`,
+        name: menuItems.find(item => item.id === sectionId)?.name || sectionId, 
+        href: `/${activeMainItem}/${sectionId}`,
         active: true 
       }
     ] : [])
@@ -184,9 +191,9 @@ export function ThreeColumnLayout({
               const Icon = item.icon;
               const isActive = item.id === activeMainItem;
               return (
-                <a
+                <Link
                   key={item.id}
-                  href={item.href}
+                  to={item.href}
                   className={cn(
                     "group flex items-center py-2 px-3 rounded-md transition-colors",
                     "hover:bg-white/10",
@@ -203,7 +210,7 @@ export function ThreeColumnLayout({
                     <Icon className={cn("h-5 w-5", !mainSidebarCollapsed && "mr-3")} style={{ backgroundColor: '#000', padding: '2px', borderRadius: '2px' }} />
                   )}
                   {!mainSidebarCollapsed && <span>{item.label}</span>}
-                </a>
+                </Link>
               );
             })}
           </nav>
@@ -254,19 +261,19 @@ export function ThreeColumnLayout({
             <div className="flex-1 py-4 overflow-y-auto">
               <nav className="px-2 space-y-1">
                 {menuItems.map((item) => (
-                  <a
+                  <Link
                     key={item.id}
-                    href={`/${activeMainItem}/${item.id}`}
+                    to={`/${activeMainItem}/${item.id}`}
                     className={cn(
                       "group flex items-center py-2 px-3 rounded-md transition-colors",
                       "hover:bg-sidebar-accent",
-                      item.id === activeSecondaryItem || item.active
+                      item.id === sectionId || item.active
                         ? "bg-sidebar-accent text-accent"
                         : "text-sidebar-foreground"
                     )}
                   >
                     <span>{item.name || item.label}</span>
-                  </a>
+                  </Link>
                 ))}
               </nav>
             </div>
