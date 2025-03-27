@@ -11,9 +11,12 @@ import {
   Building,
   TrendingUp,
   ClipboardList,
-  DollarSign
+  DollarSign,
+  ArrowLeft
 } from "lucide-react";
 import { AddAccountDialog, AccountData } from "@/components/accounts/AddAccountDialog";
+import { AccountLinkTypeSelector } from "@/components/accounts/AccountLinkTypeSelector";
+import { PlaidLinkDialog } from "@/components/accounts/PlaidLinkDialog";
 import { useToast } from "@/hooks/use-toast";
 
 type AccountSection = {
@@ -26,9 +29,13 @@ type AccountSection = {
   accounts: AccountData[];
 };
 
+type AppView = "main" | "selection" | "plaid";
+
 const Accounts = () => {
   const { toast } = useToast();
+  const [currentView, setCurrentView] = useState<AppView>("main");
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [plaidDialogOpen, setPlaidDialogOpen] = useState(false);
   const [selectedSection, setSelectedSection] = useState<AccountSection | null>(null);
   const [mainDialogOpen, setMainDialogOpen] = useState(false);
 
@@ -99,7 +106,46 @@ const Accounts = () => {
   };
 
   const openMainAddDialog = () => {
-    setMainDialogOpen(true);
+    setCurrentView("selection");
+  };
+
+  const handleBackToMain = () => {
+    setCurrentView("main");
+  };
+
+  const handlePlaidLinkSuccess = (linkToken: string) => {
+    console.log("Plaid Link Token:", linkToken);
+    
+    // For demo purposes, we'll add a mock account to the External Banking section
+    const newAccount: AccountData = {
+      id: `plaid-${Date.now()}`,
+      name: "Plaid Demo Account",
+      accountNumber: "PLAID-XXX-" + Math.floor(1000 + Math.random() * 9000),
+      balance: "1,250.00",
+      type: "External Banking",
+      section: "External Banking"
+    };
+
+    // Find the banking section and add the account
+    setAccountSections(
+      accountSections.map((section) =>
+        section.id === "external-banking"
+          ? {
+              ...section,
+              accounts: [...section.accounts, newAccount],
+              balance: "$1,250.00",
+              isExpanded: true,
+            }
+          : section
+      )
+    );
+
+    toast({
+      title: "Account linked",
+      description: "Your bank account has been successfully linked via Plaid",
+    });
+
+    setCurrentView("main");
   };
 
   const handleAddAccount = (accountData: AccountData) => {
@@ -170,100 +216,129 @@ const Accounts = () => {
     });
   };
 
+  const handleSelectPlaid = () => {
+    setPlaidDialogOpen(true);
+  };
+
+  const handleSelectManual = () => {
+    setMainDialogOpen(true);
+  };
+
   return (
     <ThreeColumnLayout activeMainItem="accounts" title="Accounts">
       <div className="mx-auto max-w-6xl animate-fade-in">
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-semibold mb-1">Accounts</h1>
-          <Button 
-            className="bg-white text-black hover:bg-slate-100"
-            onClick={openMainAddDialog}
-          >
-            <Plus className="mr-2 h-4 w-4" />
-            Add Account
-          </Button>
-        </div>
-
-        <div className="space-y-4">
-          {accountSections.map((section) => (
-            <div
-              key={section.id}
-              className="rounded-lg bg-[#121a2c] border border-gray-800 overflow-hidden"
-            >
-              <div
-                className="p-4 flex items-center justify-between cursor-pointer"
-                onClick={() => toggleSection(section.id)}
+        {currentView === "main" && (
+          <>
+            <div className="flex items-center justify-between mb-6">
+              <h1 className="text-2xl font-semibold mb-1">Accounts</h1>
+              <Button 
+                className="bg-white text-black hover:bg-slate-100"
+                onClick={openMainAddDialog}
               >
-                <div className="flex items-center space-x-3">
-                  {section.icon}
-                  <span className="font-medium text-white">{section.title}</span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  {section.balance ? (
-                    <span className="text-white">{section.balance}</span>
-                  ) : (
-                    <span className="text-gray-400">{section.status}</span>
-                  )}
-                  {section.isExpanded ? (
-                    <ChevronUp className="h-5 w-5 text-gray-400" />
-                  ) : (
-                    <ChevronDown className="h-5 w-5 text-gray-400" />
-                  )}
-                </div>
-              </div>
-
-              {section.isExpanded && (
-                <div className="p-6 border-t border-gray-800">
-                  {section.accounts.length > 0 ? (
-                    <div className="space-y-3">
-                      {section.accounts.map((account) => (
-                        <div 
-                          key={account.id}
-                          className="p-3 rounded-lg bg-[#1c2e4a] border border-gray-700 flex justify-between items-center"
-                        >
-                          <div>
-                            <p className="font-medium text-white">{account.name}</p>
-                            {account.accountNumber && (
-                              <p className="text-sm text-gray-400">
-                                Account: {account.accountNumber}
-                              </p>
-                            )}
-                          </div>
-                          {account.balance && (
-                            <div className="text-right">
-                              <p className="font-medium text-white">${account.balance}</p>
-                            </div>
-                          )}
-                        </div>
-                      ))}
-                      
-                      <Button 
-                        variant="outline" 
-                        className="mt-3 border-gray-700 text-white hover:bg-[#1c2e4a] hover:text-white"
-                        onClick={() => openAddDialog(section)}
-                      >
-                        <Plus className="mr-2 h-4 w-4" />
-                        Add {section.title.replace("External ", "").replace("BFO ", "")}
-                      </Button>
-                    </div>
-                  ) : (
-                    <div className="flex flex-col items-center justify-center py-8 text-gray-400">
-                      <p className="mb-4">No accounts added yet</p>
-                      <Button 
-                        variant="outline" 
-                        className="border-gray-700 text-white hover:bg-[#1c2e4a] hover:text-white"
-                        onClick={() => openAddDialog(section)}
-                      >
-                        <Plus className="mr-2 h-4 w-4" />
-                        Add {section.title.replace("External ", "").replace("BFO ", "")}
-                      </Button>
-                    </div>
-                  )}
-                </div>
-              )}
+                <Plus className="mr-2 h-4 w-4" />
+                Add Account
+              </Button>
             </div>
-          ))}
-        </div>
+
+            <div className="space-y-4">
+              {accountSections.map((section) => (
+                <div
+                  key={section.id}
+                  className="rounded-lg bg-[#121a2c] border border-gray-800 overflow-hidden"
+                >
+                  <div
+                    className="p-4 flex items-center justify-between cursor-pointer"
+                    onClick={() => toggleSection(section.id)}
+                  >
+                    <div className="flex items-center space-x-3">
+                      {section.icon}
+                      <span className="font-medium text-white">{section.title}</span>
+                    </div>
+                    <div className="flex items-center space-x-3">
+                      {section.balance ? (
+                        <span className="text-white">{section.balance}</span>
+                      ) : (
+                        <span className="text-gray-400">{section.status}</span>
+                      )}
+                      {section.isExpanded ? (
+                        <ChevronUp className="h-5 w-5 text-gray-400" />
+                      ) : (
+                        <ChevronDown className="h-5 w-5 text-gray-400" />
+                      )}
+                    </div>
+                  </div>
+
+                  {section.isExpanded && (
+                    <div className="p-6 border-t border-gray-800">
+                      {section.accounts.length > 0 ? (
+                        <div className="space-y-3">
+                          {section.accounts.map((account) => (
+                            <div 
+                              key={account.id}
+                              className="p-3 rounded-lg bg-[#1c2e4a] border border-gray-700 flex justify-between items-center"
+                            >
+                              <div>
+                                <p className="font-medium text-white">{account.name}</p>
+                                {account.accountNumber && (
+                                  <p className="text-sm text-gray-400">
+                                    Account: {account.accountNumber}
+                                  </p>
+                                )}
+                              </div>
+                              {account.balance && (
+                                <div className="text-right">
+                                  <p className="font-medium text-white">${account.balance}</p>
+                                </div>
+                              )}
+                            </div>
+                          ))}
+                          
+                          <Button 
+                            variant="outline" 
+                            className="mt-3 border-gray-700 text-white hover:bg-[#1c2e4a] hover:text-white"
+                            onClick={() => openAddDialog(section)}
+                          >
+                            <Plus className="mr-2 h-4 w-4" />
+                            Add {section.title.replace("External ", "").replace("BFO ", "")}
+                          </Button>
+                        </div>
+                      ) : (
+                        <div className="flex flex-col items-center justify-center py-8 text-gray-400">
+                          <p className="mb-4">No accounts added yet</p>
+                          <Button 
+                            variant="outline" 
+                            className="border-gray-700 text-white hover:bg-[#1c2e4a] hover:text-white"
+                            onClick={() => openAddDialog(section)}
+                          >
+                            <Plus className="mr-2 h-4 w-4" />
+                            Add {section.title.replace("External ", "").replace("BFO ", "")}
+                          </Button>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+
+        {currentView === "selection" && (
+          <div>
+            <Button 
+              variant="ghost" 
+              onClick={handleBackToMain} 
+              className="mb-4"
+            >
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Back to Accounts
+            </Button>
+            <AccountLinkTypeSelector 
+              onSelectPlaid={handleSelectPlaid}
+              onSelectManual={handleSelectManual}
+            />
+          </div>
+        )}
 
         {selectedSection && (
           <AddAccountDialog
@@ -281,6 +356,12 @@ const Accounts = () => {
           onAddAccount={handleMainAddAccount}
           accountType="Account"
           sectionType="Main"
+        />
+
+        <PlaidLinkDialog
+          isOpen={plaidDialogOpen}
+          onClose={() => setPlaidDialogOpen(false)}
+          onSuccess={handlePlaidLinkSuccess}
         />
       </div>
     </ThreeColumnLayout>
