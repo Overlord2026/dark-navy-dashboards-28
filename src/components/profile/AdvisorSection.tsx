@@ -1,8 +1,9 @@
 
 import { useState } from "react";
-import { ChevronRight, MailIcon, LinkedinIcon, Calendar, ExternalLinkIcon } from "lucide-react";
+import { ChevronRight, UserRoundIcon, MailIcon, LinkedinIcon, Calendar, ExternalLinkIcon } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 interface AdvisorInfo {
   name: string;
@@ -26,54 +27,56 @@ export const AdvisorSection = ({ advisorInfo, onViewProfile, onBookSession }: Ad
       <Popover>
         <PopoverTrigger asChild>
           <div 
-            className="flex items-center justify-between w-full p-2 hover:bg-[#1c2e4a] rounded-md transition-colors cursor-pointer"
+            className="flex items-center w-full p-2 hover:bg-[#2A2A40] rounded-md transition-colors cursor-pointer"
           >
-            <div className="flex items-center">
-              <div className="h-8 w-8 rounded-full bg-white/10 flex items-center justify-center text-white font-medium mr-3">
-                DH
-              </div>
-              <div className="flex flex-col">
-                <span className="text-xs text-gray-400">Advisor</span>
-                <span className="font-medium text-sm">{advisorInfo.name}</span>
-              </div>
+            <Avatar className="h-[30px] w-[30px] mr-3">
+              <AvatarFallback className="bg-[#2A2A40] text-white">CB</AvatarFallback>
+            </Avatar>
+            <div className="flex flex-col">
+              <span className="text-[14px] text-gray-200 font-medium">Advisor:</span>
+              <span className="text-[14px] text-gray-300">Charles Bryant</span>
             </div>
-            <ChevronRight className="h-4 w-4" />
           </div>
         </PopoverTrigger>
-        <PopoverContent align="start" alignOffset={-40} side="top" className="w-64 bg-[#0c1224] border-gray-700 text-white">
+        <PopoverContent 
+          align="start" 
+          alignOffset={-40} 
+          side="top" 
+          className="w-64 bg-[#1E1E30] border-gray-700 text-white shadow-md shadow-black/20"
+        >
           <div className="flex flex-col space-y-3 p-1">
             <div className="flex items-center space-x-3">
-              <div className="h-12 w-12 rounded-full bg-white/10 flex items-center justify-center text-white text-xl font-medium">
-                DH
-              </div>
+              <Avatar className="h-[60px] w-[60px]">
+                <AvatarFallback className="bg-[#2A2A40] text-white text-xl">CB</AvatarFallback>
+              </Avatar>
               <div>
-                <p className="font-medium text-sm">{advisorInfo.name}</p>
-                <p className="text-xs text-gray-400">{advisorInfo.title}</p>
+                <p className="font-medium">Charles Bryant</p>
+                <p className="text-sm text-gray-400">Senior Financial Advisor</p>
               </div>
             </div>
             
-            <div className="text-sm text-gray-300">{advisorInfo.location}</div>
+            <div className="text-sm text-gray-300">New York, NY</div>
             
-            <a href={`mailto:${advisorInfo.email}`} className="text-sm text-blue-400 hover:underline flex items-center">
+            <a href="mailto:charles.bryant@example.com" className="text-sm text-blue-400 hover:underline flex items-center">
               <MailIcon className="h-3.5 w-3.5 mr-1.5" />
-              {advisorInfo.email}
+              charles.bryant@example.com
             </a>
             
             <div className="flex flex-col space-y-2 pt-2">
               <Button 
                 variant="ghost" 
                 size="sm" 
-                className="justify-start hover:bg-[#1c2e4a] text-white"
+                className="justify-start hover:bg-[#2A2A40] text-white"
                 onClick={() => onViewProfile("bio")}
               >
-                <MailIcon className="h-3.5 w-3.5 mr-1.5" />
+                <UserRoundIcon className="h-3.5 w-3.5 mr-1.5" />
                 View profile
               </Button>
               
               <Button 
                 variant="ghost" 
                 size="sm" 
-                className="justify-start hover:bg-[#1c2e4a] text-white"
+                className="justify-start hover:bg-[#2A2A40] text-white"
                 onClick={onBookSession}
               >
                 <Calendar className="h-3.5 w-3.5 mr-1.5" />

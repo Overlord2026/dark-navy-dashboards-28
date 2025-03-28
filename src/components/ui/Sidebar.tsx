@@ -13,6 +13,7 @@ import {
   LogOutIcon
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { AdvisorSection } from "@/components/profile/AdvisorSection";
 
 type NavItem = {
   icon: React.ElementType | React.FC;
@@ -44,11 +45,32 @@ const bottomNavItems: NavItem[] = [
   { icon: LogOutIcon, label: "Logout", href: "/logout" },
 ];
 
+// Sample advisor information
+const advisorInfo = {
+  name: "Charles Bryant",
+  title: "Senior Financial Advisor",
+  location: "New York, NY",
+  email: "charles.bryant@example.com",
+  phone: "(555) 123-4567",
+  office: "Main Office",
+  bio: "Charles has over 15 years of experience in financial planning and wealth management."
+};
+
 export const Sidebar = () => {
   const [collapsed, setCollapsed] = useState(false);
 
   const toggleSidebar = () => {
     setCollapsed(!collapsed);
+  };
+
+  const handleViewProfile = (tabId: string) => {
+    console.log("View profile tab:", tabId);
+    // Navigate to advisor profile or open a modal
+  };
+
+  const handleBookSession = () => {
+    console.log("Book session clicked");
+    // Open booking calendar or external link
   };
 
   return (
@@ -121,19 +143,14 @@ export const Sidebar = () => {
         </nav>
       </div>
 
-      <div className="p-3 border-t border-sidebar-border m-2 rounded-md bg-sidebar-accent/30">
-        <div className="flex items-center">
-          <div className="h-8 w-8 rounded-full bg-accent/30 flex items-center justify-center">
-            <UsersIcon className="h-4 w-4 text-accent" />
-          </div>
-          {!collapsed && (
-            <div className="ml-2">
-              <p className="text-xs text-sidebar-foreground font-medium">Advisor:</p>
-              <p className="text-xs text-sidebar-foreground/80">Charles Bryant</p>
-            </div>
-          )}
-        </div>
-      </div>
+      {/* Advisor Section */}
+      {!collapsed && (
+        <AdvisorSection 
+          advisorInfo={advisorInfo}
+          onViewProfile={handleViewProfile}
+          onBookSession={handleBookSession}
+        />
+      )}
 
       <Button
         variant="ghost"
