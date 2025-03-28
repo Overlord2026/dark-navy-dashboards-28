@@ -58,6 +58,10 @@ export interface GoalFormData {
   targetDate?: Date;
   targetAmount?: number;
   description?: string;
+  // New fields for asset purchase
+  purchasePrice?: number;
+  financingMethod?: string;
+  annualAppreciation?: string;
 }
 
 // Schema for validation
@@ -81,6 +85,13 @@ const goalFormSchema = z.object({
     z.number().positive("Must be positive").optional()
   ),
   description: z.string().optional(),
+  // New fields for asset purchase
+  purchasePrice: z.preprocess(
+    (val) => (val === '' ? undefined : Number(val)),
+    z.number().positive("Must be positive").optional()
+  ),
+  financingMethod: z.string().optional(),
+  annualAppreciation: z.string().optional(),
 });
 
 export function GoalDetailsSidePanel({ isOpen, onClose, onCancel, goal, onSave, title }: GoalDetailsProps) {
@@ -101,6 +112,10 @@ export function GoalDetailsSidePanel({ isOpen, onClose, onCancel, goal, onSave, 
       targetDate: goal?.targetDate,
       targetAmount: goal?.targetAmount,
       description: goal?.description,
+      // New fields with defaults
+      purchasePrice: undefined,
+      financingMethod: "Cash",
+      annualAppreciation: "None",
     },
   });
 
@@ -112,10 +127,12 @@ export function GoalDetailsSidePanel({ isOpen, onClose, onCancel, goal, onSave, 
         goal?.type === "Retirement" || 
         goal?.priority === "Retirement";
       
+      const defaultGoalName = getDefaultGoalName(goal?.type || "", fullName);
+      
       form.reset({
         id: goal?.id,
         owner: goal?.owner || fullName,
-        name: goal?.title || (goal?.name ? goal.name : isRetirement ? `${fullName}'s Retirement Goal` : goal?.type || ""),
+        name: goal?.title || (goal?.name ? goal.name : defaultGoalName),
         dateOfBirth: goal?.dateOfBirth,
         targetRetirementAge: goal?.targetRetirementAge || (isRetirement ? 70 : undefined),
         planningHorizonAge: goal?.planningHorizonAge || (isRetirement ? 100 : undefined),
@@ -123,9 +140,19 @@ export function GoalDetailsSidePanel({ isOpen, onClose, onCancel, goal, onSave, 
         targetDate: goal?.targetDate,
         targetAmount: goal?.targetAmount,
         description: goal?.description,
+        // Reset asset purchase fields
+        purchasePrice: undefined,
+        financingMethod: "Cash",
+        annualAppreciation: "None",
       });
     }
   }, [goal, isOpen, form, fullName]);
+
+  // Helper function to generate default goal name based on type
+  const getDefaultGoalName = (goalType: string, ownerName: string): string => {
+    if (!goalType) return "";
+    return `${ownerName}'s ${goalType}`;
+  };
 
   const handleSubmit = (data: GoalFormData) => {
     onSave(data);
@@ -149,6 +176,9 @@ export function GoalDetailsSidePanel({ isOpen, onClose, onCancel, goal, onSave, 
     goal?.type === "Retirement" || 
     goal?.priority === "Retirement";
 
+  const isAssetPurchaseGoal = 
+    goal?.type === "Asset Purchase";
+
   // Mobile uses a full-screen Dialog, desktop uses a side Sheet
   if (isMobile) {
     return (
@@ -156,7 +186,12 @@ export function GoalDetailsSidePanel({ isOpen, onClose, onCancel, goal, onSave, 
         <DialogContent className="bg-[#0F0F2D] text-[#E2E2E2] border-none sm:max-w-[425px]">
           <div className="space-y-6">
             <h3 className="text-xl font-semibold">{panelTitle}</h3>
-            <GoalForm form={form} onSubmit={handleSubmit} isRetirementGoal={isRetirementGoal} />
+            <GoalForm 
+              form={form} 
+              onSubmit={handleSubmit} 
+              isRetirementGoal={isRetirementGoal} 
+              isAssetPurchaseGoal={isAssetPurchaseGoal}
+            />
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={handleCancel}>Cancel</Button>
@@ -175,7 +210,12 @@ export function GoalDetailsSidePanel({ isOpen, onClose, onCancel, goal, onSave, 
       >
         <div className="space-y-6">
           <h3 className="text-xl font-semibold">{panelTitle}</h3>
-          <GoalForm form={form} onSubmit={handleSubmit} isRetirementGoal={isRetirementGoal} />
+          <GoalForm 
+            form={form} 
+            onSubmit={handleSubmit} 
+            isRetirementGoal={isRetirementGoal} 
+            isAssetPurchaseGoal={isAssetPurchaseGoal}
+          />
         </div>
         <SheetFooter className="pt-6 mt-6 border-t border-white/10">
           <Button variant="outline" onClick={handleCancel}>Cancel</Button>
@@ -190,9 +230,10 @@ interface GoalFormProps {
   form: any;
   onSubmit: (data: GoalFormData) => void;
   isRetirementGoal: boolean;
+  isAssetPurchaseGoal: boolean;
 }
 
-function GoalForm({ form, onSubmit, isRetirementGoal }: GoalFormProps) {
+function GoalForm({ form, onSubmit, isRetirementGoal, isAssetPurchaseGoal }: GoalFormProps) {
   const { userProfile } = useUser();
   
   return (
@@ -243,6 +284,7 @@ function GoalForm({ form, onSubmit, isRetirementGoal }: GoalFormProps) {
         />
 
         {isRetirementGoal ? (
+          // Retirement goal specific fields
           <>
             <FormField
               control={form.control}
@@ -338,7 +380,138 @@ function GoalForm({ form, onSubmit, isRetirementGoal }: GoalFormProps) {
               )}
             />
           </>
+        ) : isAssetPurchaseGoal ? (
+          // Asset Purchase specific fields
+          <>
+            <FormField
+              control={form.control}
+              name="purchasePrice"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Purchase Price</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      className={cn(
+                        "bg-[#1A1A2E] border-border/30",
+                        form.formState.errors.purchasePrice && "border-[#FF4D4D] focus-visible:ring-[#FF4D4D]"
+                      )}
+                      placeholder="$"
+                      {...field}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        if (value === '' || /^[0-9]*\.?[0-9]*$/.test(value)) {
+                          field.onChange(value === '' ? undefined : parseFloat(value));
+                        }
+                      }}
+                    />
+                  </FormControl>
+                  <FormMessage className="text-[#FF4D4D]" />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="financingMethod"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Financing Method</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger className="bg-[#1A1A2E] border-border/30">
+                        <SelectValue placeholder="Select financing method" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent className="bg-[#1A1A2E] border-border/30">
+                      <SelectItem value="Cash">Cash</SelectItem>
+                      <SelectItem value="Loan">Loan</SelectItem>
+                      <SelectItem value="Mortgage">Mortgage</SelectItem>
+                      <SelectItem value="Lease">Lease</SelectItem>
+                      <SelectItem value="Other">Other</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage className="text-[#FF4D4D]" />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="annualAppreciation"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Annual Appreciation</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger className="bg-[#1A1A2E] border-border/30">
+                        <SelectValue placeholder="Select appreciation rate" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent className="bg-[#1A1A2E] border-border/30">
+                      <SelectItem value="None">None</SelectItem>
+                      <SelectItem value="1%">1%</SelectItem>
+                      <SelectItem value="2%">2%</SelectItem>
+                      <SelectItem value="3%">3%</SelectItem>
+                      <SelectItem value="4%">4%</SelectItem>
+                      <SelectItem value="5%">5%</SelectItem>
+                      <SelectItem value="6%">6%</SelectItem>
+                      <SelectItem value="7%">7%</SelectItem>
+                      <SelectItem value="8%">8%</SelectItem>
+                      <SelectItem value="9%">9%</SelectItem>
+                      <SelectItem value="10%">10%</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage className="text-[#FF4D4D]" />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="targetDate"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Target Date</FormLabel>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant="outline"
+                          className={cn(
+                            "w-full justify-start text-left font-normal bg-[#1A1A2E] border-border/30",
+                            !field.value && "text-muted-foreground"
+                          )}
+                        >
+                          <CalendarIcon className="mr-2 h-4 w-4" />
+                          {field.value ? format(field.value, "MM/yyyy") : <span>Pick a target date</span>}
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0 bg-[#1A1A2E] border-border/30">
+                      <Calendar
+                        mode="single"
+                        selected={field.value}
+                        onSelect={field.onChange}
+                        initialFocus
+                        className="pointer-events-auto"
+                        disabled={(date) => date < new Date()}
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  <FormMessage className="text-[#FF4D4D]" />
+                </FormItem>
+              )}
+            />
+          </>
         ) : (
+          // Regular goal fields
           <>
             <FormField
               control={form.control}
@@ -404,26 +577,27 @@ function GoalForm({ form, onSubmit, isRetirementGoal }: GoalFormProps) {
                 </FormItem>
               )}
             />
-
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Description (Optional)</FormLabel>
-                  <FormControl>
-                    <Textarea 
-                      className="bg-[#1A1A2E] border-border/30 min-h-20" 
-                      placeholder="Enter a short description of your goal" 
-                      {...field} 
-                    />
-                  </FormControl>
-                  <FormMessage className="text-[#FF4D4D]" />
-                </FormItem>
-              )}
-            />
           </>
         )}
+
+        {/* Description field for all goal types */}
+        <FormField
+          control={form.control}
+          name="description"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Description (Optional)</FormLabel>
+              <FormControl>
+                <Textarea 
+                  className="bg-[#1A1A2E] border-border/30 min-h-20" 
+                  placeholder="Enter a short description of your goal" 
+                  {...field} 
+                />
+              </FormControl>
+              <FormMessage className="text-[#FF4D4D]" />
+            </FormItem>
+          )}
+        />
       </form>
     </Form>
   );

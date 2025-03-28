@@ -26,6 +26,10 @@ export interface Goal {
   dateOfBirth?: Date;
   description?: string; // Added for goal description
   isNew?: boolean; // Flag to indicate if this is a newly added goal that hasn't been saved yet
+  // New fields for asset purchase
+  purchasePrice?: number;
+  financingMethod?: string;
+  annualAppreciation?: string;
 }
 
 interface GoalsListProps {
@@ -111,6 +115,10 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
         targetAmount: goalData.targetAmount,
         description: goalData.description,
         isNew: false, // No longer a new unsaved goal
+        // New fields for asset purchase
+        purchasePrice: goalData.purchasePrice,
+        financingMethod: goalData.financingMethod,
+        annualAppreciation: goalData.annualAppreciation,
       };
       
       // Update local state immediately
@@ -134,6 +142,10 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
         targetDate: goalData.targetDate,
         targetAmount: goalData.targetAmount,
         description: goalData.description,
+        // New fields for asset purchase
+        purchasePrice: goalData.purchasePrice,
+        financingMethod: goalData.financingMethod,
+        annualAppreciation: goalData.annualAppreciation,
       };
       
       // Update local state immediately
@@ -371,6 +383,7 @@ function GoalCard({ goal, isExpanded, onToggle, onClick }: {
       
       {isExpanded && (
         <div className="mt-4 space-y-2 pt-2 border-t border-border/20">
+          {/* Default fields for all goals */}
           {goal.targetDate && (
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">Target Date:</span>
@@ -403,6 +416,37 @@ function GoalCard({ goal, isExpanded, onToggle, onClick }: {
                 ></div>
               </div>
             </div>
+          )}
+          
+          {/* Asset Purchase specific fields */}
+          {goal.type === "Asset Purchase" && (
+            <>
+              {goal.purchasePrice !== undefined && (
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">Purchase Price:</span>
+                  <span>
+                    {new Intl.NumberFormat('en-US', {
+                      style: 'currency',
+                      currency: 'USD',
+                    }).format(goal.purchasePrice)}
+                  </span>
+                </div>
+              )}
+              
+              {goal.financingMethod && (
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">Financing:</span>
+                  <span>{goal.financingMethod}</span>
+                </div>
+              )}
+              
+              {goal.annualAppreciation && goal.annualAppreciation !== "None" && (
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">Annual Appreciation:</span>
+                  <span>{goal.annualAppreciation}</span>
+                </div>
+              )}
+            </>
           )}
           
           {goal.priority && !goal.type && (
