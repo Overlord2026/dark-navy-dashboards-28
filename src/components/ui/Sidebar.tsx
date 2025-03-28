@@ -58,26 +58,6 @@ export const Sidebar = () => {
         collapsed ? "w-[70px]" : "w-[240px]"
       )}
     >
-      <div className="flex flex-col items-center justify-center h-auto px-4 border-b border-sidebar-border pb-4 pt-[260px]">
-        {collapsed ? (
-          <div className="w-12 h-12 flex items-center justify-center">
-            <img 
-              src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" 
-              alt="Boutique Family Office Logo" 
-              className="h-10 w-auto" 
-            />
-          </div>
-        ) : (
-          <div className="flex items-center justify-center w-full mb-2">
-            <img 
-              src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" 
-              alt="Boutique Family Office Logo" 
-              className="h-20 w-auto" 
-            />
-          </div>
-        )}
-      </div>
-
       <div className="flex-1 py-4 overflow-y-auto">
         <nav className="px-2 space-y-1">
           {mainNavItems.map((item, index) => (
@@ -124,7 +104,7 @@ export const Sidebar = () => {
       <Button
         variant="ghost"
         size="icon"
-        className="absolute top-[260px] -right-4 h-8 w-8 rounded-full bg-background border border-primary text-foreground hover:bg-accent hover:text-sidebar-primary-foreground"
+        className="absolute top-4 -right-4 h-8 w-8 rounded-full bg-background border border-primary text-foreground hover:bg-accent hover:text-sidebar-primary-foreground"
         onClick={toggleSidebar}
       >
         {collapsed ? (
