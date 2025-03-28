@@ -15,7 +15,7 @@ import { SwagEducationMenu } from "@/components/education/SwagEducationMenu";
 
 export const Header = () => {
   return (
-    <div className="w-full px-4 py-3 flex items-center justify-between bg-[#12121C] z-10">
+    <div className="w-full px-4 py-3 flex items-center justify-between bg-transparent z-10">
       <div className="flex-1"></div>
       
       <div className="hidden md:flex relative max-w-md w-full mx-8">

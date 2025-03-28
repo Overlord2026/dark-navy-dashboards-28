@@ -7,12 +7,6 @@ import { DashboardCard } from "@/components/ui/DashboardCard";
 import { NetWorthSummary } from "@/components/dashboard/NetWorthSummary";
 import { SetupChecklist } from "@/components/profile/SetupChecklist";
 import { ProfileFormSheet } from "@/components/profile/ProfileFormSheet";
-import { 
-  CalendarIcon, 
-  ClockIcon,
-  SettingsIcon
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
 
 const Dashboard = () => {
   const [loading, setLoading] = useState(true);
@@ -41,15 +35,6 @@ const Dashboard = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  const formatDate = () => {
-    return new Date().toLocaleDateString('en-US', { 
-      weekday: 'long', 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
-    });
-  };
-
   const toggleMetrics = () => {
     setShowBusinessMetrics(!showBusinessMetrics);
   };
@@ -74,7 +59,7 @@ const Dashboard = () => {
   };
 
   return (
-    <ThreeColumnLayout activeMainItem="home" title="Dashboard">
+    <ThreeColumnLayout activeMainItem="home" title="Home">
       {loading ? (
         <div className="h-full flex items-center justify-center">
           <div className="animate-pulse-slow flex flex-col items-center">
@@ -88,31 +73,6 @@ const Dashboard = () => {
         </div>
       ) : (
         <div className="mx-auto max-w-6xl space-y-6 animate-fade-in">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
-            <div>
-              <h1 className="text-[24px] font-semibold mb-1 text-[#E2E2E2]">Family or Client Name Dashboard</h1>
-              <div className="flex items-center text-muted-foreground">
-                <CalendarIcon className="h-4 w-4 mr-1" />
-                <span>{formatDate()}</span>
-              </div>
-            </div>
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center mt-2 md:mt-0 text-muted-foreground">
-                <ClockIcon className="h-4 w-4 mr-1" />
-                <span>Last updated: Today at 10:45 AM</span>
-              </div>
-              <Button 
-                variant="outline" 
-                size="sm" 
-                onClick={toggleMetrics}
-                className="mt-2 md:mt-0"
-              >
-                <SettingsIcon className="h-4 w-4 mr-1" />
-                {showBusinessMetrics ? "Show Personal" : "Show Business"}
-              </Button>
-            </div>
-          </div>
-          
           <NetWorthSummary />
           
           <FinancialOverview showBusinessMetrics={showBusinessMetrics} />

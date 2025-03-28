@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { UserProfileSection } from "@/components/sidebar/UserProfileSection";
+import { Header } from "@/components/ui/Header";
 
 type MenuItem = {
   id: string;
@@ -295,7 +296,8 @@ export function ThreeColumnLayout({
       )}
 
       <div className="flex-1 flex flex-col overflow-hidden">
-        <main className="flex-1 overflow-y-auto p-6 font-sans">
+        <h1 className="text-[24px] font-semibold text-[#E2E2E2] p-6 pb-0">{title}</h1>
+        <main className="flex-1 overflow-y-auto p-6 pt-3 font-sans">
           {children}
         </main>
       </div>
