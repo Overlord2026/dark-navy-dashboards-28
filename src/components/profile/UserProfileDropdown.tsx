@@ -57,10 +57,22 @@ export const UserProfileDropdown = ({ onOpenForm }: UserProfileDropdownProps) =>
     setIsOpen(false);
   };
 
+  // Handle clicking outside to close the dropdown
+  const handleOpenChange = (open: boolean) => {
+    setIsOpen(open);
+    // If opening and panel is open, close the panel
+    if (open && isPanelOpen) {
+      setIsPanelOpen(false);
+    }
+  };
+
   return (
     <div className="fixed top-0 left-0 z-40 w-[220px] pt-4 px-5">
-      <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
-        <DropdownMenuTrigger className="flex items-center justify-between w-full py-2 hover:bg-[#1c2e4a] rounded-md transition-colors cursor-pointer">
+      <DropdownMenu open={isOpen} onOpenChange={handleOpenChange}>
+        <DropdownMenuTrigger 
+          className="flex items-center justify-between w-full py-2 hover:bg-[#1c2e4a] rounded-md transition-colors cursor-pointer"
+          onClick={() => setIsOpen(!isOpen)} // Explicit toggle on click
+        >
           <div className="flex items-center">
             <div className="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center text-white font-medium mr-3">
               AG
@@ -74,6 +86,7 @@ export const UserProfileDropdown = ({ onOpenForm }: UserProfileDropdownProps) =>
           align="start"
           sideOffset={5}
           alignOffset={0}
+          forceMount
         >
           {menuItems.slice(0, 7).map((item) => {
             const Icon = item.icon;
