@@ -101,7 +101,7 @@ export function GoalDetailsSidePanel({ isOpen, onClose, goal, onSave, title }: G
     <Sheet open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <SheetContent 
         side="right" 
-        className="w-[40%] bg-[#0F0F2D] text-[#E2E2E2] border-border/30 p-6"
+        className="w-[40%] bg-[#0F0F2D] text-[#E2E2E2] border-border/30 p-6 animate-slide-in-right duration-300"
       >
         <div className="space-y-6">
           <h3 className="text-xl font-semibold">{panelTitle}</h3>
