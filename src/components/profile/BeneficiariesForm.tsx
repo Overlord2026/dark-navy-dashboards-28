@@ -1,11 +1,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -13,48 +11,27 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { CalendarIcon, Minus, Plus, Search } from "lucide-react";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
-import { format } from "date-fns";
-import { cn } from "@/lib/utils";
 import { useState } from "react";
-
-const beneficiarySchema = z.object({
-  firstName: z.string().min(1, { message: "First name is required." }),
-  lastName: z.string().min(1, { message: "Last name is required." }),
-  relationship: z.string().min(1, { message: "Relationship is required." }),
-  dateOfBirth: z.date({ required_error: "Date of birth is required." }),
-  ssn: z.string().optional(),
-  email: z.string().email().optional().or(z.literal("")),
-  address: z.string().optional(),
-  address2: z.string().optional(),
-  city: z.string().optional(),
-  state: z.string().optional(),
-  zipCode: z.string().optional(),
-});
+import { BeneficiaryList } from "./BeneficiaryList";
+import { BeneficiaryFormHeader } from "./BeneficiaryFormHeader";
+import { BeneficiaryFormActions } from "./BeneficiaryFormActions";
+import { DateOfBirthField } from "./DateOfBirthField";
+import { 
+  beneficiarySchema, 
+  Beneficiary, 
+  defaultBeneficiaryValues 
+} from "./beneficiarySchema";
 
 export function BeneficiariesForm({ onSave }: { onSave: () => void }) {
-  const [beneficiaries, setBeneficiaries] = useState<z.infer<typeof beneficiarySchema>[]>([]);
-  const [currentBeneficiary, setCurrentBeneficiary] = useState<z.infer<typeof beneficiarySchema> | null>(null);
+  const [beneficiaries, setBeneficiaries] = useState<Beneficiary[]>([]);
+  const [currentBeneficiary, setCurrentBeneficiary] = useState<Beneficiary | null>(null);
 
-  const form = useForm<z.infer<typeof beneficiarySchema>>({
+  const form = useForm<Beneficiary>({
     resolver: zodResolver(beneficiarySchema),
-    defaultValues: {
-      firstName: "",
-      lastName: "",
-      relationship: "",
-      address: "",
-      address2: "",
-      city: "",
-      state: "",
-      zipCode: "",
-      email: "",
-      ssn: "",
-    },
+    defaultValues: defaultBeneficiaryValues,
   });
 
-  function onSubmit(values: z.infer<typeof beneficiarySchema>) {
+  function onSubmit(values: Beneficiary) {
     if (currentBeneficiary) {
       // Update existing beneficiary
       setBeneficiaries(prev => 
@@ -68,42 +45,25 @@ export function BeneficiariesForm({ onSave }: { onSave: () => void }) {
       setBeneficiaries(prev => [...prev, values]);
     }
     
-    form.reset({
-      firstName: "",
-      lastName: "",
-      relationship: "",
-      address: "",
-      address2: "",
-      city: "",
-      state: "",
-      zipCode: "",
-      email: "",
-      ssn: "",
-    });
+    form.reset(defaultBeneficiaryValues);
   }
 
-  function handleRemoveBeneficiary(beneficiary: z.infer<typeof beneficiarySchema>) {
+  function handleRemoveBeneficiary(beneficiary: Beneficiary) {
     setBeneficiaries(prev => prev.filter(b => b !== beneficiary));
     if (currentBeneficiary === beneficiary) {
       setCurrentBeneficiary(null);
-      form.reset({
-        firstName: "",
-        lastName: "",
-        relationship: "",
-        address: "",
-        address2: "",
-        city: "",
-        state: "",
-        zipCode: "",
-        email: "",
-        ssn: "",
-      });
+      form.reset(defaultBeneficiaryValues);
     }
   }
 
-  function handleEditBeneficiary(beneficiary: z.infer<typeof beneficiarySchema>) {
+  function handleEditBeneficiary(beneficiary: Beneficiary) {
     setCurrentBeneficiary(beneficiary);
     form.reset(beneficiary);
+  }
+
+  function handleCancelEdit() {
+    setCurrentBeneficiary(null);
+    form.reset(defaultBeneficiaryValues);
   }
 
   return (
@@ -116,72 +76,16 @@ export function BeneficiariesForm({ onSave }: { onSave: () => void }) {
         </p>
       </div>
       
-      {beneficiaries.length > 0 && (
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h3 className="text-base font-medium">Current Beneficiaries</h3>
-          </div>
-          
-          <div className="space-y-2">
-            {beneficiaries.map((beneficiary, index) => (
-              <div 
-                key={index} 
-                className="flex items-center justify-between border rounded-md p-3"
-              >
-                <div>
-                  <p className="font-medium">{beneficiary.firstName} {beneficiary.lastName}</p>
-                  <p className="text-sm text-muted-foreground">{beneficiary.relationship}</p>
-                </div>
-                <div className="flex gap-2">
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    onClick={() => handleEditBeneficiary(beneficiary)}
-                  >
-                    Edit
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    onClick={() => handleRemoveBeneficiary(beneficiary)}
-                  >
-                    <Minus className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+      <BeneficiaryList 
+        beneficiaries={beneficiaries}
+        onEdit={handleEditBeneficiary}
+        onRemove={handleRemoveBeneficiary}
+      />
       
-      <div className="flex justify-between items-center">
-        <h3 className="text-base font-medium">
-          {currentBeneficiary ? "Edit Beneficiary" : "Add Beneficiary"}
-        </h3>
-        {currentBeneficiary && (
-          <Button 
-            variant="outline" 
-            size="sm"
-            onClick={() => {
-              setCurrentBeneficiary(null);
-              form.reset({
-                firstName: "",
-                lastName: "",
-                relationship: "",
-                address: "",
-                address2: "",
-                city: "",
-                state: "",
-                zipCode: "",
-                email: "",
-                ssn: "",
-              });
-            }}
-          >
-            Cancel
-          </Button>
-        )}
-      </div>
+      <BeneficiaryFormHeader 
+        isEditing={currentBeneficiary !== null}
+        onCancelEdit={handleCancelEdit}
+      />
       
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -242,48 +146,7 @@ export function BeneficiariesForm({ onSave }: { onSave: () => void }) {
               )}
             />
             
-            <FormField
-              control={form.control}
-              name="dateOfBirth"
-              render={({ field }) => (
-                <FormItem className="flex flex-col">
-                  <FormLabel>Date of Birth</FormLabel>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant={"outline"}
-                          className={cn(
-                            "w-full pl-3 text-left font-normal",
-                            !field.value && "text-muted-foreground"
-                          )}
-                        >
-                          {field.value ? (
-                            format(field.value, "MM/dd/yyyy")
-                          ) : (
-                            <span>MM/DD/YYYY</span>
-                          )}
-                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        mode="single"
-                        selected={field.value}
-                        onSelect={field.onChange}
-                        disabled={(date) =>
-                          date > new Date() || date < new Date("1900-01-01")
-                        }
-                        initialFocus
-                        className={cn("p-3 pointer-events-auto")}
-                      />
-                    </PopoverContent>
-                  </Popover>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <DateOfBirthField form={form} />
             
             <FormField
               control={form.control}
@@ -401,28 +264,11 @@ export function BeneficiariesForm({ onSave }: { onSave: () => void }) {
             />
           </div>
           
-          <div className="flex justify-end gap-2">
-            {beneficiaries.length === 0 ? (
-              <Button 
-                variant="outline" 
-                type="button"
-                onClick={() => onSave()}
-              >
-                No Beneficiaries to Add
-              </Button>
-            ) : null}
-            <Button type="submit">
-              {currentBeneficiary ? "Update Beneficiary" : "Add Beneficiary"}
-            </Button>
-            {beneficiaries.length > 0 && !currentBeneficiary ? (
-              <Button 
-                type="button"
-                onClick={() => onSave()}
-              >
-                Save
-              </Button>
-            ) : null}
-          </div>
+          <BeneficiaryFormActions 
+            isEditing={currentBeneficiary !== null}
+            hasBeneficiaries={beneficiaries.length > 0}
+            onSave={onSave}
+          />
         </form>
       </Form>
     </div>
