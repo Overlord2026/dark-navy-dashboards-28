@@ -1,4 +1,3 @@
-
 import { ReactNode, useState } from "react";
 import * as React from "react";
 import { useParams, useNavigate, Link, useLocation } from "react-router-dom";
@@ -191,8 +190,14 @@ export function ThreeColumnLayout({
           isLightTheme ? "bg-[#F9F7E8] border-r border-[#DCD8C0]" : "bg-[#1B1B32] border-r border-white/10"
         )}
       >
-        <div className="flex-1 overflow-y-auto">
-          <nav className="px-4 space-y-2 pt-0">
+        {!mainSidebarCollapsed && (
+          <div className="border-b border-sidebar-border">
+            <UserProfileSection onMenuItemClick={handleProfileMenuItemClick} showLogo={false} />
+          </div>
+        )}
+        
+        <div className="flex-1 overflow-y-auto pt-[130px]">
+          <nav className="px-4 space-y-2">
             {mainMenuItems.map((item) => {
               if (item.id === "education") return null;
 
@@ -235,12 +240,6 @@ export function ThreeColumnLayout({
           </nav>
         </div>
 
-        {!mainSidebarCollapsed && (
-          <div className="border-t border-sidebar-border mt-auto">
-            <UserProfileSection onMenuItemClick={handleProfileMenuItemClick} showLogo={false} />
-          </div>
-        )}
-
         <Button
           variant="ghost"
           size="icon"
@@ -258,7 +257,7 @@ export function ThreeColumnLayout({
       {hasSecondaryMenu && (
         <aside
           className={cn(
-            "h-screen flex flex-col transition-all duration-300 ease-in-out z-20 pt-[130px]", // Kept this as is to maintain alignment with Net Worth Summary
+            "h-screen flex flex-col transition-all duration-300 ease-in-out z-20 pt-[130px]",
             secondarySidebarCollapsed ? "w-[0px]" : "w-[200px]",
             isLightTheme ? "bg-[#F9F7E8] border-r border-[#DCD8C0]" : "bg-[#1B1B32] border-r border-sidebar-border"
           )}
@@ -318,7 +317,7 @@ export function ThreeColumnLayout({
 
       <div className="flex-1 flex flex-col overflow-hidden">
         {isHomePage ? (
-          <div className="flex flex-col items-start py-6 px-8"> {/* Changed to items-start and added px-8 */}
+          <div className="flex flex-col items-start py-6 px-8">
             <div className="flex justify-center items-center space-x-6 mb-8 w-full">
               <Link to="/education" className="flex items-center gap-2 px-4 py-2 rounded-md bg-gray-800 hover:bg-gray-700 text-gray-100 transition-colors">
                 <GraduationCapIcon className="h-5 w-5" />
@@ -337,7 +336,7 @@ export function ThreeColumnLayout({
               </Link>
             </div>
             
-            <div className="flex justify-start items-center space-x-10 mb-4 pl-4"> {/* Added pl-4 padding-left */}
+            <div className="flex justify-start items-center space-x-10 mb-4 pl-4">
               <Link to="/profile" className="flex items-center gap-2 px-4 py-2 rounded-md bg-gray-800 hover:bg-gray-700 text-gray-100 transition-colors">
                 <UserIcon className="h-5 w-5" />
                 <span className="font-medium">Client Profile</span>
@@ -412,7 +411,7 @@ export function ThreeColumnLayout({
           </div>
         )}
         
-        <main className="flex-1 overflow-y-auto p-6 pl-10 font-sans"> {/* Added pl-10 padding-left */}
+        <main className="flex-1 overflow-y-auto p-6 pl-10 font-sans">
           {children}
         </main>
       </div>
