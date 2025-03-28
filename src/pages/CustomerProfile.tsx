@@ -9,7 +9,15 @@ import {
   Plus, 
   Calendar, 
   Search,
-  Info
+  Info,
+  UserIcon,
+  PhoneIcon,
+  FileTextIcon,
+  UsersIcon,
+  BuildingIcon,
+  LockIcon,
+  PaletteIcon,
+  LogOutIcon
 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -22,6 +30,13 @@ import { AffiliationsForm } from "@/components/profile/AffiliationsForm";
 import { TrustsForm } from "@/components/profile/TrustsForm";
 import { SecurityForm } from "@/components/profile/SecurityForm";
 import { SetupChecklist } from "@/components/profile/SetupChecklist";
+import { 
+  DropdownMenu, 
+  DropdownMenuContent, 
+  DropdownMenuItem, 
+  DropdownMenuTrigger,
+  DropdownMenuSeparator
+} from "@/components/ui/dropdown-menu";
 
 const CustomerProfile = () => {
   const [activeForm, setActiveForm] = useState<string | null>(null);
@@ -60,11 +75,11 @@ const CustomerProfile = () => {
 
   const renderFormContent = () => {
     switch (activeForm) {
-      case "investor-profile":
+      case "profile":
         return <ProfileForm onSave={() => handleCompleteForm("investor-profile")} />;
-      case "contact-information":
+      case "contact-info":
         return <ContactForm onSave={() => handleCompleteForm("contact-information")} />;
-      case "additional-information":
+      case "additional-info":
         return <AdditionalInfoForm onSave={() => handleCompleteForm("additional-information")} />;
       case "beneficiaries":
         return <BeneficiariesForm onSave={() => handleCompleteForm("beneficiaries")} />;
@@ -78,12 +93,24 @@ const CustomerProfile = () => {
         return <div>Custodian Agreement Form</div>;
       case "trusts":
         return <TrustsForm onSave={() => handleCloseForm()} />;
-      case "security":
+      case "security-access":
         return <SecurityForm onSave={() => handleCloseForm()} />;
       default:
         return null;
     }
   };
+
+  const menuItems = [
+    { id: "profile", label: "Profile", icon: UserIcon },
+    { id: "contact-info", label: "Contact Info", icon: PhoneIcon },
+    { id: "additional-info", label: "Additional Info", icon: FileTextIcon },
+    { id: "beneficiaries", label: "Beneficiaries", icon: UsersIcon },
+    { id: "affiliations", label: "Affiliations", icon: BuildingIcon },
+    { id: "trusts", label: "Trusts", icon: BuildingIcon },
+    { id: "security-access", label: "Security & Access", icon: LockIcon },
+    { id: "change-theme", label: "Change Theme", icon: PaletteIcon },
+    { id: "log-out", label: "Log Out", icon: LogOutIcon },
+  ];
 
   return (
     <ThreeColumnLayout activeMainItem="home" title="Client Profile">
@@ -97,38 +124,39 @@ const CustomerProfile = () => {
           </div>
           
           <div className="flex items-center mt-2 md:mt-0 gap-2">
-            <div className="relative">
-              <Button 
-                variant="outline" 
-                onClick={() => {
-                  const contextMenu = document.getElementById("profile-context-menu");
-                  if (contextMenu) {
-                    contextMenu.classList.toggle("hidden");
-                  }
-                }}
-              >
-                Profile Options
-              </Button>
-              <div 
-                id="profile-context-menu" 
-                className="absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-background border border-border z-10 hidden"
-              >
-                <div className="py-1">
-                  {["Profile", "Contact Info", "Additional Info", "Beneficiaries", "Affiliations", "Trusts", "Security & Access", "Change Theme", "Log Out"].map((item) => (
-                    <button 
-                      key={item} 
-                      className="text-left w-full px-4 py-2 text-sm hover:bg-accent hover:text-accent-foreground"
-                      onClick={() => {
-                        document.getElementById("profile-context-menu")?.classList.add("hidden");
-                        handleOpenForm(item.toLowerCase().replace(/\s+/g, "-").replace(/&/g, "and"));
-                      }}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline">Profile Options</Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56 bg-[#0a1021] border-gray-700 text-white">
+                {menuItems.slice(0, 7).map((item) => {
+                  const Icon = item.icon;
+                  return (
+                    <DropdownMenuItem 
+                      key={item.id}
+                      onClick={() => handleOpenForm(item.id)}
+                      className="py-2.5 cursor-pointer hover:bg-[#1c2e4a]"
                     >
-                      {item}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
+                      <Icon className="h-4 w-4 mr-2" />
+                      <span>{item.label}</span>
+                    </DropdownMenuItem>
+                  );
+                })}
+                <DropdownMenuSeparator className="bg-gray-700" />
+                {menuItems.slice(7).map((item) => {
+                  const Icon = item.icon;
+                  return (
+                    <DropdownMenuItem 
+                      key={item.id}
+                      className="py-2.5 cursor-pointer hover:bg-[#1c2e4a]"
+                    >
+                      <Icon className="h-4 w-4 mr-2" />
+                      <span>{item.label}</span>
+                    </DropdownMenuItem>
+                  );
+                })}
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
 
@@ -157,13 +185,13 @@ const CustomerProfile = () => {
         <SheetContent className="w-full sm:max-w-[540px] overflow-y-auto" side="right">
           <SheetHeader>
             <SheetTitle className="text-xl font-semibold">
-              {activeForm === "investor-profile" && "Investor Profile"}
-              {activeForm === "contact-information" && "Contact Information"}
-              {activeForm === "additional-information" && "Additional Information"}
+              {activeForm === "profile" && "Investor Profile"}
+              {activeForm === "contact-info" && "Contact Information"}
+              {activeForm === "additional-info" && "Additional Information"}
               {activeForm === "beneficiaries" && "Beneficiaries"}
               {activeForm === "affiliations" && "Affiliations"}
               {activeForm === "trusts" && "Trusts"}
-              {activeForm === "security-and-access" && "Security & Access"}
+              {activeForm === "security-access" && "Security & Access"}
               {activeForm === "investment-advisory-agreement" && "Investment Advisory Agreement"}
               {activeForm === "disclosures" && "Disclosures"}
               {activeForm === "custodian-agreement" && "Custodian Agreement"}
