@@ -1,4 +1,5 @@
-import { useState } from "react";
+
+import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { ChevronDownIcon, ChevronUpIcon, PlusIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -23,14 +24,17 @@ export interface Goal {
   targetRetirementAge?: number;
   planningHorizonAge?: number;
   dateOfBirth?: Date;
+  description?: string; // Added for goal description
+  isNew?: boolean; // Flag to indicate if this is a newly added goal that hasn't been saved yet
 }
 
 interface GoalsListProps {
   goals: Goal[];
   onGoalUpdate?: (updatedGoal: Goal) => void;
+  onGoalDelete?: (goalId: string) => void;
 }
 
-export function GoalsList({ goals, onGoalUpdate }: GoalsListProps) {
+export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps) {
   const [expandedGoals, setExpandedGoals] = useState<string[]>([]);
   const [selectedGoal, setSelectedGoal] = useState<Goal | undefined>(undefined);
   const [isDetailsPanelOpen, setIsDetailsPanelOpen] = useState(false);
@@ -63,8 +67,30 @@ export function GoalsList({ goals, onGoalUpdate }: GoalsListProps) {
   };
 
   const handleAddGoalClick = (goalType?: string) => {
-    setSelectedGoal(goalType ? { type: goalType } : undefined);
-    setDetailsPanelTitle(goalType ? `New ${goalType} Goal` : "New Goal");
+    if (!goalType) {
+      // Just a regular "Add Goal" click with no type
+      setSelectedGoal(undefined);
+      setDetailsPanelTitle("New Goal");
+      setIsDetailsPanelOpen(true);
+      return;
+    }
+    
+    // Create a temporary new goal with the selected type
+    const newGoal: Goal = {
+      id: `temp-goal-${Date.now()}`,
+      title: goalType,
+      name: goalType,
+      type: goalType,
+      priority: goalType,
+      isNew: true, // Mark this as a new unsaved goal
+    };
+    
+    // Add the new goal to the local state
+    setLocalGoals(prev => [...prev, newGoal]);
+    
+    // Open the side panel for editing the new goal
+    setSelectedGoal(newGoal);
+    setDetailsPanelTitle(`New ${goalType} Goal`);
     setIsDetailsPanelOpen(true);
   };
 
@@ -81,6 +107,10 @@ export function GoalsList({ goals, onGoalUpdate }: GoalsListProps) {
         planningHorizonAge: goalData.planningHorizonAge,
         priority: goalData.type,
         type: goalData.type, // Update both priority and type for consistency
+        targetDate: goalData.targetDate,
+        targetAmount: goalData.targetAmount,
+        description: goalData.description,
+        isNew: false, // No longer a new unsaved goal
       };
       
       // Update local state immediately
@@ -101,6 +131,9 @@ export function GoalsList({ goals, onGoalUpdate }: GoalsListProps) {
         planningHorizonAge: goalData.planningHorizonAge,
         priority: goalData.type,
         type: goalData.type, // Set both priority and type for consistency
+        targetDate: goalData.targetDate,
+        targetAmount: goalData.targetAmount,
+        description: goalData.description,
       };
       
       // Update local state immediately
@@ -108,6 +141,17 @@ export function GoalsList({ goals, onGoalUpdate }: GoalsListProps) {
       
       onGoalUpdate?.(newGoal);
     }
+  };
+
+  const handleCancelGoal = () => {
+    // If a goal was being edited and it was marked as new (never saved before),
+    // remove it from the local goals
+    if (selectedGoal?.isNew) {
+      setLocalGoals(prev => prev.filter(g => g.id !== selectedGoal.id));
+    }
+    
+    // Close the panel
+    setIsDetailsPanelOpen(false);
   };
   
   const goalTypes = [
@@ -190,6 +234,7 @@ export function GoalsList({ goals, onGoalUpdate }: GoalsListProps) {
         <GoalDetailsSidePanel
           isOpen={isDetailsPanelOpen}
           onClose={() => setIsDetailsPanelOpen(false)}
+          onCancel={handleCancelGoal}
           goal={selectedGoal}
           onSave={handleSaveGoal}
           title={detailsPanelTitle}
@@ -271,6 +316,7 @@ export function GoalsList({ goals, onGoalUpdate }: GoalsListProps) {
       <GoalDetailsSidePanel
         isOpen={isDetailsPanelOpen}
         onClose={() => setIsDetailsPanelOpen(false)}
+        onCancel={handleCancelGoal}
         goal={selectedGoal}
         onSave={handleSaveGoal}
         title={detailsPanelTitle}
@@ -377,6 +423,13 @@ function GoalCard({ goal, isExpanded, onToggle, onClick }: {
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">Planning Horizon:</span>
               <span>{goal.planningHorizonAge} years</span>
+            </div>
+          )}
+          
+          {goal.description && (
+            <div className="flex flex-col text-sm mt-2">
+              <span className="text-muted-foreground mb-1">Description:</span>
+              <p className="text-sm">{goal.description}</p>
             </div>
           )}
         </div>
