@@ -80,7 +80,7 @@ const Dashboard = () => {
           </div>
         </div>
       ) : (
-        <div className="mx-auto max-w-6xl space-y-6 animate-fade-in pl-4"> {/* Added pl-4 padding-left */}
+        <div className="w-full space-y-6 animate-fade-in">
           <div className="flex flex-col lg:flex-row gap-6">
             <div className="lg:w-2/3 space-y-6">
               <NetWorthSummary />

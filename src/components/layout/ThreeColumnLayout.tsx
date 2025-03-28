@@ -249,7 +249,7 @@ export function ThreeColumnLayout({
             </nav>
           </div>
           
-          {/* Add Advisor Section to the sidebar */}
+          {/* Advisor Section properly positioned in the left sidebar */}
           <AdvisorSection 
             advisorInfo={advisorInfo}
             onViewProfile={handleViewProfile}
@@ -429,7 +429,7 @@ export function ThreeColumnLayout({
           </div>
         )}
         
-        <main className="flex-1 overflow-y-auto p-6 pl-10 font-sans max-w-full">
+        <main className="flex-1 overflow-y-auto p-6 pl-10 pr-0 font-sans w-full">
           {children}
         </main>
       </div>
