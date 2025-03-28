@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { ChevronRight, UserRoundIcon, MailIcon, LinkedinIcon, Calendar, ExternalLinkIcon } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -22,11 +23,11 @@ interface AdvisorSectionProps {
 
 export const AdvisorSection = ({ advisorInfo, onViewProfile, onBookSession }: AdvisorSectionProps) => {
   return (
-    <div className="fixed bottom-0 left-0 z-40 w-[220px] p-4">
+    <div className="fixed bottom-0 right-0 z-40 w-[220px] p-4">
       <Popover>
         <PopoverTrigger asChild>
           <div 
-            className="flex items-center w-full p-2 hover:bg-[#2A2A40] rounded-md transition-colors cursor-pointer"
+            className="flex items-center w-full p-2 hover:bg-[#2A2A40] rounded-md transition-colors cursor-pointer border border-primary"
           >
             <Avatar className="h-[30px] w-[30px] mr-3">
               <AvatarFallback className="bg-[#2A2A40] text-white">CB</AvatarFallback>
@@ -38,8 +39,7 @@ export const AdvisorSection = ({ advisorInfo, onViewProfile, onBookSession }: Ad
           </div>
         </PopoverTrigger>
         <PopoverContent 
-          align="start" 
-          alignOffset={-40} 
+          align="end" 
           side="top" 
           className="w-64 bg-[#1E1E30] border-gray-700 text-white shadow-md shadow-black/20"
         >
@@ -65,7 +65,7 @@ export const AdvisorSection = ({ advisorInfo, onViewProfile, onBookSession }: Ad
               <Button 
                 variant="ghost" 
                 size="sm" 
-                className="justify-start hover:bg-[#2A2A40] text-white"
+                className="justify-start hover:bg-[#2A2A40] text-white border border-primary"
                 onClick={() => onViewProfile("bio")}
               >
                 <UserRoundIcon className="h-3.5 w-3.5 mr-1.5" />
@@ -75,7 +75,7 @@ export const AdvisorSection = ({ advisorInfo, onViewProfile, onBookSession }: Ad
               <Button 
                 variant="ghost" 
                 size="sm" 
-                className="justify-start hover:bg-[#2A2A40] text-white"
+                className="justify-start hover:bg-[#2A2A40] text-white border border-primary"
                 onClick={onBookSession}
               >
                 <Calendar className="h-3.5 w-3.5 mr-1.5" />

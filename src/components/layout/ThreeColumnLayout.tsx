@@ -1,4 +1,3 @@
-
 import { ReactNode, useState } from "react";
 import * as React from "react";
 import { useParams, useNavigate, Link, useLocation } from "react-router-dom";
@@ -32,6 +31,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { AdvisorSection } from "@/components/profile/AdvisorSection";
 
 type MenuItem = {
   id: string;
@@ -140,6 +140,11 @@ export function ThreeColumnLayout({
     // This would typically open a booking calendar or external link
   };
 
+  const handleViewProfile = (tabId: string) => {
+    console.log("View profile tab:", tabId);
+    // Navigate to advisor profile or open a modal
+  };
+
   const { theme } = useTheme();
   const { userProfile } = useUser();
   
@@ -211,12 +216,11 @@ export function ThreeColumnLayout({
                     key={item.id}
                     to={item.href}
                     className={cn(
-                      "group flex items-center py-2 px-3 rounded-md transition-colors text-[14px] whitespace-nowrap",
-                      "hover:bg-white/10",
+                      "group flex items-center py-2 px-3 rounded-md transition-colors text-[14px] whitespace-nowrap border",
                       isActive
-                        ? isLightTheme ? "bg-[#E9E7D8] text-[#222222] font-medium" : "bg-black text-[#E2E2E2] font-medium"
-                        : isLightTheme ? "text-[#222222]" : "text-[#E2E2E2]",
-                      isLightTheme ? "hover:bg-[#E9E7D8]" : "hover:bg-white/10"
+                        ? isLightTheme ? "bg-[#E9E7D8] text-[#222222] font-medium border-primary" : "bg-black text-[#E2E2E2] font-medium border-primary"
+                        : isLightTheme ? "text-[#222222] border-transparent" : "text-[#E2E2E2] border-transparent",
+                      isLightTheme ? "hover:bg-[#E9E7D8] hover:border-primary" : "hover:bg-white/10 hover:border-primary"
                     )}
                   >
                     {typeof Icon === 'function' ? (
@@ -246,7 +250,7 @@ export function ThreeColumnLayout({
         <Button
           variant="ghost"
           size="icon"
-          className={`absolute top-[130px] right-0 translate-x-1/2 h-8 w-8 rounded-full bg-background border border-border text-foreground hover:bg-accent hover:text-sidebar-primary-foreground z-40 ${isLightTheme ? 'bg-[#F9F7E8] text-[#222222] border-[#DCD8C0]' : ''}`}
+          className={`absolute top-[130px] right-0 translate-x-1/2 h-8 w-8 rounded-full bg-background border border-primary text-foreground hover:bg-accent hover:text-sidebar-primary-foreground z-40 ${isLightTheme ? 'bg-[#F9F7E8] text-[#222222]' : ''}`}
           onClick={toggleMainSidebar}
         >
           {mainSidebarCollapsed ? (
@@ -279,13 +283,13 @@ export function ThreeColumnLayout({
                     key={item.id}
                     to={`/${activeMainItem}/${item.id}`}
                     className={cn(
-                      "group flex items-center py-2 px-3 rounded-md transition-colors text-[14px]",
-                      isLightTheme ? "hover:bg-[#E9E7D8]" : "hover:bg-sidebar-accent",
+                      "group flex items-center py-2 px-3 rounded-md transition-colors text-[14px] border",
                       item.id === sectionId || item.active
                         ? isLightTheme 
-                          ? "bg-[#E9E7D8] text-[#222222] font-medium" 
-                          : "bg-sidebar-accent text-accent"
-                        : isLightTheme ? "text-[#222222]" : "text-[#E2E2E2]"
+                          ? "bg-[#E9E7D8] text-[#222222] font-medium border-primary" 
+                          : "bg-sidebar-accent text-accent border-primary"
+                        : isLightTheme ? "text-[#222222] border-transparent" : "text-[#E2E2E2] border-transparent",
+                      isLightTheme ? "hover:bg-[#E9E7D8] hover:border-primary" : "hover:bg-sidebar-accent hover:border-primary"
                     )}
                   >
                     <span>{item.name || item.label}</span>
@@ -300,8 +304,8 @@ export function ThreeColumnLayout({
             size="icon"
             className={`absolute top-[130px] h-8 w-8 rounded-full border text-foreground z-40 ${
               isLightTheme 
-                ? 'bg-[#F9F7E8] text-[#222222] border-[#DCD8C0] hover:bg-[#E9E7D8]' 
-                : 'bg-background border-border hover:bg-accent hover:text-sidebar-primary-foreground'
+                ? 'bg-[#F9F7E8] text-[#222222] border-primary hover:bg-[#E9E7D8]' 
+                : 'bg-background border-primary hover:bg-accent hover:text-sidebar-primary-foreground'
             }`}
             style={{ 
               left: mainSidebarCollapsed ? '70px' : '220px',
@@ -322,7 +326,7 @@ export function ThreeColumnLayout({
         {isHomePage ? (
           <div className="flex flex-col items-start py-6 px-8">
             <div className="flex justify-center items-center space-x-6 mb-8 w-full">
-              <Link to="/education" className="flex items-center gap-2 px-4 py-2 rounded-md bg-gray-800 hover:bg-gray-700 text-gray-100 transition-colors">
+              <Link to="/education" className="flex items-center gap-2 px-4 py-2 rounded-md bg-gray-800 hover:bg-gray-700 text-gray-100 transition-colors border border-primary">
                 <GraduationCapIcon className="h-5 w-5" />
                 <span className="font-medium">Education Center</span>
               </Link>
@@ -333,23 +337,23 @@ export function ThreeColumnLayout({
                 className="h-20 w-auto"
               />
               
-              <Link to="/vault" className="flex items-center gap-2 px-4 py-2 rounded-md bg-gray-800 hover:bg-gray-700 text-gray-100 transition-colors">
+              <Link to="/vault" className="flex items-center gap-2 px-4 py-2 rounded-md bg-gray-800 hover:bg-gray-700 text-gray-100 transition-colors border border-primary">
                 <BookOpenIcon className="h-5 w-5" />
                 <span className="font-medium">Legacy Vault</span>
               </Link>
             </div>
             
             <div className="flex justify-start items-center space-x-10 mb-4 pl-4">
-              <Link to="/profile" className="flex items-center gap-2 px-4 py-2 rounded-md bg-gray-800 hover:bg-gray-700 text-gray-100 transition-colors">
+              <Link to="/profile" className="flex items-center gap-2 px-4 py-2 rounded-md bg-gray-800 hover:bg-gray-700 text-gray-100 transition-colors border border-primary">
                 <UserIcon className="h-5 w-5" />
                 <span className="font-medium">Client Profile</span>
               </Link>
               
               <Popover open={showAdvisorInfo} onOpenChange={setShowAdvisorInfo}>
                 <PopoverTrigger asChild>
-                  <Button variant="ghost" className="flex items-center gap-2 px-4 py-2 rounded-md bg-gray-800 hover:bg-gray-700 text-gray-100 transition-colors">
+                  <Button variant="ghost" className="flex items-center gap-2 px-4 py-2 rounded-md bg-gray-800 hover:bg-gray-700 text-gray-100 transition-colors border border-primary">
                     <div className="flex items-center space-x-2">
-                      <Avatar className="h-8 w-8 border-2 border-gray-700">
+                      <Avatar className="h-8 w-8 border-2 border-primary">
                         <AvatarFallback className="bg-primary/20 text-primary">CB</AvatarFallback>
                       </Avatar>
                       <span className="font-medium">Advisor Profile</span>
@@ -357,12 +361,12 @@ export function ThreeColumnLayout({
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent 
-                  className="w-80 bg-gray-900 border border-gray-700 text-white p-0 shadow-lg"
+                  className="w-80 bg-gray-900 border border-primary text-white p-0 shadow-lg"
                   align="center"
                 >
                   <div className="flex flex-col">
                     <div className="p-4 border-b border-gray-700 flex items-center space-x-4">
-                      <Avatar className="h-16 w-16">
+                      <Avatar className="h-16 w-16 border border-primary">
                         <AvatarFallback className="bg-primary/20 text-primary text-xl">CB</AvatarFallback>
                       </Avatar>
                       <div>
@@ -377,7 +381,7 @@ export function ThreeColumnLayout({
                         <CalendarIcon className="h-4 w-4 text-gray-400" />
                         <Button 
                           variant="outline" 
-                          className="w-full justify-start border-gray-700 hover:bg-gray-800 text-white"
+                          className="w-full justify-start border-primary hover:bg-gray-800 text-white"
                           onClick={handleBookSession}
                         >
                           Schedule an Appointment
@@ -417,6 +421,12 @@ export function ThreeColumnLayout({
         <main className="flex-1 overflow-y-auto p-6 pl-10 font-sans">
           {children}
         </main>
+
+        <AdvisorSection 
+          advisorInfo={advisorInfo}
+          onViewProfile={handleViewProfile}
+          onBookSession={handleBookSession}
+        />
       </div>
     </div>
   );

@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { SetupChecklist } from "@/components/profile/SetupChecklist";
@@ -18,7 +17,7 @@ const CustomerProfile = () => {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [isAdvisorDrawerOpen, setIsAdvisorDrawerOpen] = useState(false);
   const [activeAdvisorTab, setActiveAdvisorTab] = useState<string | null>(null);
-  const [profileKey, setProfileKey] = useState(Date.now()); // Add a key to force re-render
+  const [profileKey, setProfileKey] = useState(Date.now());
 
   const [checklistItems, setChecklistItems] = useState([
     { id: "investor-profile", name: "Investor Profile", completed: true },
@@ -43,7 +42,6 @@ const CustomerProfile = () => {
     bio: "Daniel, a seasoned finance professional, guides high net worth investors. His approach blends investment management, risk mitigation, tax optimization, and overall strategy. Starting at Vanguard, then UBS, he directed client acquisition at Fisher Investments before joining Farther. Originally from Asheville, NC, Daniel now resides in Tampa, enjoying fitness, community activities, and sunny days by the water."
   };
 
-  // Force profile section to update when userProfile changes
   useEffect(() => {
     setProfileKey(Date.now());
   }, [userProfile]);
@@ -62,17 +60,14 @@ const CustomerProfile = () => {
   const handleCompleteForm = (formId: string) => {
     console.log(`Form completed: ${formId}`);
     
-    // Update checklist items
     setChecklistItems(prevItems =>
       prevItems.map(item =>
         item.id === formId ? { ...item, completed: true } : item
       )
     );
     
-    // Force UI update for profile information
     setProfileKey(Date.now());
     
-    // Close the form
     handleCloseForm();
   };
 
@@ -80,7 +75,6 @@ const CustomerProfile = () => {
     setActiveAdvisorTab(tabId);
   };
 
-  // Handle the user profile dropdown menu item clicks
   const handleProfileMenuItemClick = (itemId: string) => {
     console.log(`Profile menu item clicked: ${itemId}`);
     
@@ -98,12 +92,10 @@ const CustomerProfile = () => {
         handleOpenForm(itemId);
         break;
       case "change-theme":
-        // Theme change functionality would go here
         toast.info("Theme change functionality coming soon");
         console.log("Change theme clicked");
         break;
       case "log-out":
-        // Logout functionality would go here
         toast.info("Logout functionality coming soon");
         console.log("Log out clicked");
         break;
@@ -121,7 +113,6 @@ const CustomerProfile = () => {
             </div>
           </div>
           
-          {/* Client Profile Section - Top Right */}
           <div key={profileKey} className="mt-4 md:mt-0 bg-card rounded-lg p-4 border border-border/50 shadow-md">
             <div className="flex items-center space-x-4">
               <div className="h-12 w-12 rounded-full bg-primary/20 flex items-center justify-center">
@@ -176,15 +167,8 @@ const CustomerProfile = () => {
         )}
       </div>
 
-      {/* Fixed Position Components */}
       <UserProfileDropdown onOpenForm={handleProfileMenuItemClick} />
       
-      <AdvisorSection 
-        advisorInfo={advisorInfo}
-        onViewProfile={handleViewAdvisorProfile}
-        onBookSession={() => setIsAdvisorDrawerOpen(true)}
-      />
-
       <ProfileFormSheet 
         isOpen={isSheetOpen}
         onOpenChange={setIsSheetOpen}
