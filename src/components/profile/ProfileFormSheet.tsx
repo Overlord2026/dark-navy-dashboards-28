@@ -1,12 +1,6 @@
 
+import React from "react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetClose } from "@/components/ui/sheet";
-import { ProfileForm } from "@/components/profile/ProfileForm";
-import { ContactForm } from "@/components/profile/ContactForm";
-import { AdditionalInfoForm } from "@/components/profile/AdditionalInfoForm";
-import { BeneficiariesForm } from "@/components/profile/BeneficiariesForm";
-import { AffiliationsForm } from "@/components/profile/AffiliationsForm";
-import { TrustsForm } from "@/components/profile/TrustsForm";
-import { SecurityForm } from "@/components/profile/SecurityForm";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -25,26 +19,22 @@ export const ProfileFormSheet = ({
 }: ProfileFormSheetProps) => {
   const renderFormContent = () => {
     switch (activeForm) {
-      case "profile":
-        return <ProfileForm onSave={() => onFormSave("investor-profile")} />;
-      case "contact-info":
-        return <ContactForm onSave={() => onFormSave("contact-information")} />;
-      case "additional-info":
-        return <AdditionalInfoForm onSave={() => onFormSave("additional-information")} />;
+      case "investor-profile":
+        return <div>Investor Profile Form</div>;
+      case "contact-information":
+        return <div>Contact Information Form</div>;
+      case "additional-information":
+        return <div>Additional Information Form</div>;
       case "beneficiaries":
-        return <BeneficiariesForm onSave={() => onFormSave("beneficiaries")} />;
+        return <div>Beneficiaries Form</div>;
       case "affiliations":
-        return <AffiliationsForm onSave={() => onFormSave("affiliations")} />;
+        return <div>Affiliations Form</div>;
       case "investment-advisory-agreement":
         return <div>Investment Advisory Agreement Form</div>;
       case "disclosures":
         return <div>Disclosures Form</div>;
       case "custodian-agreement":
         return <div>Custodian Agreement Form</div>;
-      case "trusts":
-        return <TrustsForm onSave={() => onFormSave("trusts")} />;
-      case "security-access":
-        return <SecurityForm onSave={() => onFormSave("security-access")} />;
       default:
         return null;
     }
@@ -52,20 +42,16 @@ export const ProfileFormSheet = ({
 
   const getFormTitle = () => {
     switch (activeForm) {
-      case "profile":
+      case "investor-profile":
         return "Investor Profile";
-      case "contact-info":
+      case "contact-information":
         return "Contact Information";
-      case "additional-info":
+      case "additional-information":
         return "Additional Information";
       case "beneficiaries":
         return "Beneficiaries";
       case "affiliations":
         return "Affiliations";
-      case "trusts":
-        return "Trusts";
-      case "security-access":
-        return "Security & Access";
       case "investment-advisory-agreement":
         return "Investment Advisory Agreement";
       case "disclosures":

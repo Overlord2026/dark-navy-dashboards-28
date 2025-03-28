@@ -5,6 +5,8 @@ import { FinancialOverview } from "@/components/dashboard/FinancialOverview";
 import { RecentActivity } from "@/components/dashboard/RecentActivity";
 import { DashboardCard } from "@/components/ui/DashboardCard";
 import { NetWorthSummary } from "@/components/dashboard/NetWorthSummary";
+import { SetupChecklist } from "@/components/profile/SetupChecklist";
+import { ProfileFormSheet } from "@/components/profile/ProfileFormSheet";
 import { 
   CalendarIcon, 
   ClockIcon,
@@ -15,6 +17,20 @@ import { Button } from "@/components/ui/button";
 const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [showBusinessMetrics, setShowBusinessMetrics] = useState(false);
+  const [activeForm, setActiveForm] = useState<string | null>(null);
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
+  
+  // Checklist items with completion status
+  const [checklistItems, setChecklistItems] = useState([
+    { id: "investor-profile", name: "Investor Profile", completed: true },
+    { id: "contact-information", name: "Contact Information", completed: true },
+    { id: "additional-information", name: "Additional Information", completed: false },
+    { id: "beneficiaries", name: "Beneficiaries", completed: true },
+    { id: "affiliations", name: "Affiliations", completed: true },
+    { id: "investment-advisory-agreement", name: "Investment Advisory Agreement", completed: true },
+    { id: "disclosures", name: "Disclosures", completed: false },
+    { id: "custodian-agreement", name: "Custodian Agreement", completed: false }
+  ]);
 
   useEffect(() => {
     // Simulate loading data
@@ -36,6 +52,25 @@ const Dashboard = () => {
 
   const toggleMetrics = () => {
     setShowBusinessMetrics(!showBusinessMetrics);
+  };
+
+  const handleOpenForm = (formId: string) => {
+    setActiveForm(formId);
+    setIsSheetOpen(true);
+  };
+
+  const handleCloseForm = () => {
+    setActiveForm(null);
+    setIsSheetOpen(false);
+  };
+
+  const handleCompleteForm = (formId: string) => {
+    setChecklistItems(prevItems =>
+      prevItems.map(item =>
+        item.id === formId ? { ...item, completed: true } : item
+      )
+    );
+    handleCloseForm();
   };
 
   return (
@@ -87,7 +122,7 @@ const Dashboard = () => {
             
             <DashboardCard
               title="Upcoming Tax Deadlines"
-              className="md:col-span-2"
+              className="md:col-span-1"
             >
               <div className="space-y-4">
                 <div className="p-3 rounded-md bg-red-500/10 border border-red-500/20">
@@ -127,9 +162,25 @@ const Dashboard = () => {
                 </div>
               </div>
             </DashboardCard>
+            
+            {/* Setup Checklist */}
+            <div className="md:col-span-1">
+              <SetupChecklist 
+                items={checklistItems} 
+                onItemClick={handleOpenForm} 
+              />
+            </div>
           </div>
         </div>
       )}
+      
+      {/* Slide-in Form Sheet */}
+      <ProfileFormSheet 
+        isOpen={isSheetOpen}
+        onOpenChange={setIsSheetOpen}
+        activeForm={activeForm}
+        onFormSave={handleCompleteForm}
+      />
     </ThreeColumnLayout>
   );
 };
