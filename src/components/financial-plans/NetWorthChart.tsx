@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip } from "recharts";
-import { InfoCircleIcon } from "lucide-react";
+import { InfoIcon } from "lucide-react";
 
 // Sample data - this would typically come from an API
 const sampleData = [
@@ -49,7 +49,7 @@ export function NetWorthChart() {
         <div className="flex items-center gap-2">
           <div className="w-3 h-3 rounded-full bg-[#33C3F0]"></div>
           <span className="text-xs">Median</span>
-          <InfoCircleIcon className="h-4 w-4 text-muted-foreground ml-1" />
+          <InfoIcon className="h-4 w-4 text-muted-foreground ml-1" />
         </div>
         
         {showHighLow && (

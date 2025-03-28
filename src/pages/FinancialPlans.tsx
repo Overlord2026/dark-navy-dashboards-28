@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { PlanSuccessGauge } from "@/components/financial-plans/PlanSuccessGauge";
 import { NetWorthChart } from "@/components/financial-plans/NetWorthChart";
 import { GoalsList } from "@/components/financial-plans/GoalsList";
-import { InfoCircleIcon, ChevronDownIcon, PlusIcon } from "lucide-react";
+import { InfoIcon, ChevronDownIcon, PlusIcon } from "lucide-react";
 import { useUser } from "@/context/UserContext";
 
 const FinancialPlans = () => {
@@ -56,7 +56,7 @@ const FinancialPlans = () => {
                 <h3 className="text-md font-medium">Projected Plan Success</h3>
                 <div className="flex items-center text-muted-foreground text-xs">
                   <span>What is chance of success?</span>
-                  <InfoCircleIcon className="h-4 w-4 ml-1" />
+                  <InfoIcon className="h-4 w-4 ml-1" />
                 </div>
               </div>
               <PlanSuccessGauge successRate={0} />
@@ -91,7 +91,7 @@ const FinancialPlans = () => {
               </div>
               <div className="flex items-center text-muted-foreground text-xs">
                 <span>How is this chart calculated?</span>
-                <InfoCircleIcon className="h-4 w-4 ml-1" />
+                <InfoIcon className="h-4 w-4 ml-1" />
               </div>
             </div>
             <NetWorthChart />

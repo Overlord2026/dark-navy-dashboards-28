@@ -1,5 +1,5 @@
 
-import { InfoCircleIcon } from "lucide-react";
+import { InfoIcon } from "lucide-react";
 
 interface PlanSuccessGaugeProps {
   successRate: number; // 0-100
