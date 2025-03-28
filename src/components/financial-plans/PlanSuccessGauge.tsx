@@ -31,7 +31,7 @@ export function PlanSuccessGauge({ successRate }: PlanSuccessGaugeProps) {
         
         {/* Center Value Display */}
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className="text-4xl font-bold">{rate}%</span>
+          <span className="text-6xl font-bold">{rate}%</span>
           <span className="text-sm text-muted-foreground mt-1">Chance of Success</span>
         </div>
       </div>

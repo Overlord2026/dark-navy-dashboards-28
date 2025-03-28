@@ -6,13 +6,68 @@ import { Button } from "@/components/ui/button";
 import { PlanSuccessGauge } from "@/components/financial-plans/PlanSuccessGauge";
 import { NetWorthChart } from "@/components/financial-plans/NetWorthChart";
 import { GoalsList } from "@/components/financial-plans/GoalsList";
-import { InfoIcon, ChevronDownIcon, PlusIcon } from "lucide-react";
+import { CreatePlanDialog } from "@/components/financial-plans/CreatePlanDialog";
+import { 
+  InfoIcon, 
+  ChevronDownIcon, 
+  PlusIcon, 
+  MoreHorizontal,
+  CheckCircle
+} from "lucide-react";
 import { useUser } from "@/context/UserContext";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
+import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+interface Plan {
+  id: string;
+  name: string;
+  isFavorite: boolean;
+  isActive?: boolean;
+}
 
 const FinancialPlans = () => {
   const { userProfile } = useUser();
   const [goals, setGoals] = useState([]);
-  const name = userProfile?.firstName || "User";
+  const name = userProfile?.firstName || "Pedro";
+  const fullName = userProfile?.firstName && userProfile?.lastName 
+    ? `${userProfile.firstName} ${userProfile.lastName}` 
+    : "Pedro Gomez";
+  
+  const [plans, setPlans] = useState<Plan[]>([
+    { id: "1", name: "Pedro Gomez", isFavorite: true, isActive: true },
+    { id: "2", name: "Draft Plan 1", isFavorite: false },
+    { id: "3", name: "Draft Plan 2", isFavorite: false },
+  ]);
+  
+  const [selectedPlan, setSelectedPlan] = useState<string>(plans[0].id);
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const [isPlansDropdownOpen, setIsPlansDropdownOpen] = useState(false);
+
+  const handleCreatePlan = (planName: string) => {
+    const newPlan = {
+      id: `plan-${Date.now()}`,
+      name: planName,
+      isFavorite: false,
+      isActive: true,
+    };
+    
+    setPlans([...plans, newPlan]);
+    setSelectedPlan(newPlan.id);
+  };
+
+  const activePlan = plans.find(plan => plan.id === selectedPlan) || plans[0];
 
   return (
     <ThreeColumnLayout activeMainItem="financial-plans" title="Financial Plans">
@@ -26,22 +81,63 @@ const FinancialPlans = () => {
 
         <div className="flex justify-between items-center">
           <div className="relative inline-block">
-            <Button className="bg-white text-black hover:bg-gray-100 border border-gray-300">
+            <Button 
+              className="bg-white text-black hover:bg-gray-100 border border-gray-300"
+              onClick={() => setIsCreateDialogOpen(true)}
+            >
               Create Plan
             </Button>
           </div>
           
           <div className="relative inline-block">
-            <Button variant="outline" className="flex items-center gap-2 bg-transparent">
-              {name}
-              <ChevronDownIcon className="h-4 w-4" />
-            </Button>
+            <Select
+              value={selectedPlan}
+              onValueChange={setSelectedPlan}
+            >
+              <SelectTrigger className="w-[180px] bg-transparent">
+                <SelectValue placeholder={fullName}>{activePlan.name}</SelectValue>
+              </SelectTrigger>
+              <SelectContent className="bg-[#0F1C2E] border-white/10">
+                <div className="py-2 px-4 text-sm font-medium border-b border-white/10">Plans</div>
+                {plans.map(plan => (
+                  <SelectItem key={plan.id} value={plan.id} className="flex items-center gap-2">
+                    {plan.isActive && <CheckCircle className="h-4 w-4 text-green-500" />}
+                    {plan.name}
+                  </SelectItem>
+                ))}
+                <DropdownMenuSeparator />
+                <SelectItem value="new-plan" onClick={() => setIsCreateDialogOpen(true)}>
+                  <div className="flex items-center gap-2">
+                    <PlusIcon className="h-4 w-4" />
+                    <span>New plan</span>
+                  </div>
+                </SelectItem>
+                <SelectItem value="manage-plans">
+                  <div className="flex items-center gap-2">
+                    <span>Manage plans</span>
+                  </div>
+                </SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </div>
 
-        <div className="mt-10 flex items-center justify-between">
+        <div className="mt-6 flex items-center justify-between">
           <div className="flex items-center">
-            <h2 className="text-lg font-medium">{name}</h2>
+            <h2 className="text-lg font-medium">{activePlan.name}</h2>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="h-8 w-8 ml-2">
+                  <MoreHorizontal className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="bg-[#0F1C2E] border-white/10">
+                <DropdownMenuItem>Edit plan</DropdownMenuItem>
+                <DropdownMenuItem>Duplicate plan</DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem className="text-red-500">Delete plan</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
           <div className="text-sm text-muted-foreground">
             Updated: about 1 month ago
@@ -119,6 +215,12 @@ const FinancialPlans = () => {
           </Card>
         </div>
       </div>
+
+      <CreatePlanDialog 
+        isOpen={isCreateDialogOpen}
+        onClose={() => setIsCreateDialogOpen(false)}
+        onCreatePlan={handleCreatePlan}
+      />
     </ThreeColumnLayout>
   );
 };
