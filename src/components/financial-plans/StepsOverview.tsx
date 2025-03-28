@@ -63,18 +63,25 @@ export function StepsOverview({ onStepSelect }: StepsOverviewProps) {
     }
   ];
 
+  const handleStepClick = (stepNumber: number) => {
+    if (onStepSelect) {
+      // Pass the step number directly without adding 1
+      onStepSelect(stepNumber);
+    }
+  };
+
   return (
     <div className="space-y-6">
       <h2 className="text-[20px] font-medium text-[#FFFFFF]">Overview of Steps</h2>
       
-      <div className={`grid grid-cols-1 ${isMobile ? 'gap-4' : 'sm:grid-cols-2 gap-6'}`}>
+      <div className={`grid grid-cols-1 ${isMobile ? 'gap-4' : 'sm:grid-cols-2 md:grid-cols-3 gap-6'}`}>
         {steps.map((step) => (
           <StepCard 
             key={step.number}
             number={step.number}
             title={step.title}
             description={step.description}
-            onClick={() => onStepSelect?.(step.number + 1)} // Adding +1 to align with the CreatePlanDialog steps (2-7)
+            onClick={() => handleStepClick(step.number)}
           />
         ))}
       </div>

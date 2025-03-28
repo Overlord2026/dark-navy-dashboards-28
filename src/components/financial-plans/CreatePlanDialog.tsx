@@ -1,5 +1,6 @@
+
 import React, { useState, useEffect } from "react";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { StepsOverview } from "./StepsOverview";
@@ -152,6 +153,48 @@ export function CreatePlanDialog({
             </div>
           </div>
         );
+      case 3:
+        return (
+          <div className="space-y-4">
+            <h2 className="text-2xl font-semibold">Assets</h2>
+            <p className="text-muted-foreground">
+              Choose which accounts to add to your plan.
+            </p>
+            {/* Assets input fields will go here */}
+            <div className="flex justify-between">
+              <Button variant="outline" onClick={handlePrevStep}>Previous</Button>
+              <Button onClick={handleNextStep}>Next</Button>
+            </div>
+          </div>
+        );
+      case 4:
+        return (
+          <div className="space-y-4">
+            <h2 className="text-2xl font-semibold">Income</h2>
+            <p className="text-muted-foreground">
+              Capture all the income you earn and expect to earn.
+            </p>
+            {/* Income input fields will go here */}
+            <div className="flex justify-between">
+              <Button variant="outline" onClick={handlePrevStep}>Previous</Button>
+              <Button onClick={handleNextStep}>Next</Button>
+            </div>
+          </div>
+        );
+      case 5:
+        return (
+          <div className="space-y-4">
+            <h2 className="text-2xl font-semibold">Savings</h2>
+            <p className="text-muted-foreground">
+              Track how much you plan to save each year.
+            </p>
+            {/* Savings input fields will go here */}
+            <div className="flex justify-between">
+              <Button variant="outline" onClick={handlePrevStep}>Previous</Button>
+              <Button onClick={handleNextStep}>Next</Button>
+            </div>
+          </div>
+        );
       case 6:
         return (
           <ExpensesStep 
@@ -165,6 +208,20 @@ export function CreatePlanDialog({
             }} 
           />
         );
+      case 7:
+        return (
+          <div className="space-y-4">
+            <h2 className="text-2xl font-semibold">Insurance</h2>
+            <p className="text-muted-foreground">
+              Add details about your current insurance coverage.
+            </p>
+            {/* Insurance input fields will go here */}
+            <div className="flex justify-between">
+              <Button variant="outline" onClick={handlePrevStep}>Previous</Button>
+              <Button onClick={handleNextStep}>Next</Button>
+            </div>
+          </div>
+        );
       
       default:
         return <StepsOverview onStepSelect={handleStepSelect} />;
@@ -174,6 +231,7 @@ export function CreatePlanDialog({
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl min-h-[600px] bg-[#0a1022] border-blue-900/30">
+        <DialogTitle className="sr-only">Create Financial Plan</DialogTitle>
         <Card className="border-none shadow-none bg-transparent">
           <CardContent className="p-0">
             {renderContent()}
@@ -186,7 +244,7 @@ export function CreatePlanDialog({
               Back
             </Button>
           )}
-          {currentStep < 6 ? (
+          {currentStep < 7 ? (
             currentStep !== 1 && <Button onClick={handleNextStep}>Next</Button>
           ) : (
             <div className="flex gap-2 ml-auto">
