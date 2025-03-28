@@ -1,8 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
-import { PlusIcon } from "lucide-react";
+import { PlusIcon, ChevronUpIcon, ChevronDownIcon } from "lucide-react";
 import { GoalDetailsSidePanel, GoalFormData } from "./GoalDetailsSidePanel";
+import { Card } from "@/components/ui/card";
+import { format } from "date-fns";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export interface Goal {
   id: string;
@@ -31,6 +39,7 @@ export interface Goal {
   repeats?: string;
   annualInflationType?: string;
   annualInflationRate?: number;
+  isNew?: boolean;
 }
 
 interface GoalsListProps {
