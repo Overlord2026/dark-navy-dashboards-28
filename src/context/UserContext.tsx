@@ -36,10 +36,39 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
   const updateUserProfile = (data: Partial<UserProfile>) => {
     console.log("Updating user profile with:", data);
-    setUserProfile(prevProfile => ({
-      ...prevProfile,
-      ...data,
-    }));
+    
+    // Validate date object if present
+    if (data.dateOfBirth) {
+      console.log("Date of birth type:", typeof data.dateOfBirth);
+      console.log("Date of birth value:", data.dateOfBirth);
+      
+      // Ensure it's a proper Date object
+      if (!(data.dateOfBirth instanceof Date) || isNaN(data.dateOfBirth.getTime())) {
+        console.error("Invalid date format received");
+        // Try to fix if possible
+        if (typeof data.dateOfBirth === 'string') {
+          try {
+            data.dateOfBirth = new Date(data.dateOfBirth);
+            console.log("Converted string to date:", data.dateOfBirth);
+          } catch (e) {
+            console.error("Failed to convert string to date:", e);
+            delete data.dateOfBirth;
+          }
+        } else {
+          // Invalid date, remove from update
+          delete data.dateOfBirth;
+        }
+      }
+    }
+    
+    setUserProfile(prevProfile => {
+      const newProfile = {
+        ...prevProfile,
+        ...data,
+      };
+      console.log("Updated profile:", newProfile);
+      return newProfile;
+    });
   };
 
   return (

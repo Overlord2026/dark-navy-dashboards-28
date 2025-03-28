@@ -21,10 +21,10 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { format } from "date-fns";
+import { format, parse } from "date-fns";
 import { cn } from "@/lib/utils";
 import { useUser } from "@/context/UserContext";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const formSchema = z.object({
   title: z.string().optional(),
@@ -41,6 +41,7 @@ const formSchema = z.object({
 
 export function ProfileForm({ onSave }: { onSave: () => void }) {
   const { userProfile, updateUserProfile } = useUser();
+  const [dateInput, setDateInput] = useState("");
   
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -68,10 +69,34 @@ export function ProfileForm({ onSave }: { onSave: () => void }) {
       maritalStatus: userProfile.maritalStatus || "Married",
       dateOfBirth: userProfile.dateOfBirth || new Date("1963-05-03"),
     });
+    
+    if (userProfile.dateOfBirth) {
+      setDateInput(format(userProfile.dateOfBirth, "MM/dd/yyyy"));
+    }
   }, [userProfile, form]);
 
+  // Handle manual date input
+  const handleDateInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setDateInput(value);
+    
+    try {
+      // Try to parse the date from input
+      if (value.match(/^\d{2}\/\d{2}\/\d{4}$/)) {
+        const parsedDate = parse(value, "MM/dd/yyyy", new Date());
+        // Check if it's a valid date
+        if (!isNaN(parsedDate.getTime())) {
+          form.setValue("dateOfBirth", parsedDate);
+        }
+      }
+    } catch (error) {
+      // Invalid date format, do nothing
+      console.log("Invalid date format:", error);
+    }
+  };
+
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+    console.log("Form submitted with values:", values);
     // Update global user profile state
     updateUserProfile(values);
     // Call the onSave callback to update parent components
@@ -233,38 +258,45 @@ export function ProfileForm({ onSave }: { onSave: () => void }) {
               render={({ field }) => (
                 <FormItem className="flex flex-col">
                   <FormLabel>Date of Birth</FormLabel>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
+                  <div className="flex items-center space-x-2">
+                    <FormControl>
+                      <Input
+                        placeholder="MM/DD/YYYY"
+                        value={dateInput}
+                        onChange={handleDateInputChange}
+                        className="flex-1"
+                      />
+                    </FormControl>
+                    <Popover>
+                      <PopoverTrigger asChild>
                         <Button
                           variant={"outline"}
-                          className={cn(
-                            "w-full pl-3 text-left font-normal",
-                            !field.value && "text-muted-foreground"
-                          )}
+                          size="icon"
+                          type="button"
+                          className="h-10 w-10"
                         >
-                          {field.value ? (
-                            format(field.value, "MM/dd/yyyy")
-                          ) : (
-                            <span>Pick a date</span>
-                          )}
-                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                          <CalendarIcon className="h-4 w-4" />
                         </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        mode="single"
-                        selected={field.value}
-                        onSelect={field.onChange}
-                        disabled={(date) =>
-                          date > new Date() || date < new Date("1900-01-01")
-                        }
-                        initialFocus
-                        className={cn("p-3 pointer-events-auto")}
-                      />
-                    </PopoverContent>
-                  </Popover>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                          mode="single"
+                          selected={field.value}
+                          onSelect={(date) => {
+                            field.onChange(date);
+                            if (date) {
+                              setDateInput(format(date, "MM/dd/yyyy"));
+                            }
+                          }}
+                          disabled={(date) =>
+                            date > new Date() || date < new Date("1900-01-01")
+                          }
+                          initialFocus
+                          className={cn("p-3 pointer-events-auto")}
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  </div>
                   <FormMessage />
                 </FormItem>
               )}
