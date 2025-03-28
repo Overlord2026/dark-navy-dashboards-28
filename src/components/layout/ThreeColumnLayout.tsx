@@ -186,16 +186,12 @@ export function ThreeColumnLayout({
     <div className={`flex h-screen overflow-hidden ${isLightTheme ? 'bg-[#F9F7E8]' : 'bg-[#12121C]'}`}>
       <aside
         className={cn(
-          "h-screen flex flex-col transition-all duration-300 ease-in-out z-30 pt-0", // Changed from pt-[130px] to pt-0
+          "h-screen flex flex-col transition-all duration-300 ease-in-out z-30 pt-0",
           mainSidebarCollapsed ? "w-[70px]" : "w-[220px]",
           isLightTheme ? "bg-[#F9F7E8] border-r border-[#DCD8C0]" : "bg-[#1B1B32] border-r border-white/10"
         )}
       >
-        {!mainSidebarCollapsed && (
-          <UserProfileSection onMenuItemClick={handleProfileMenuItemClick} showLogo={false} />
-        )}
-
-        <div className="flex-1 py-6 overflow-y-auto">
+        <div className="flex-1 py-2 overflow-y-auto">
           <nav className="px-4 space-y-2">
             {mainMenuItems.map((item) => {
               if (item.id === "education") return null;
@@ -238,6 +234,12 @@ export function ThreeColumnLayout({
             })}
           </nav>
         </div>
+
+        {!mainSidebarCollapsed && (
+          <div className="border-t border-sidebar-border mt-auto">
+            <UserProfileSection onMenuItemClick={handleProfileMenuItemClick} showLogo={false} />
+          </div>
+        )}
 
         <Button
           variant="ghost"
