@@ -190,11 +190,13 @@ export function ThreeColumnLayout({
   return (
     <div className={`flex flex-col h-screen overflow-hidden ${isLightTheme ? 'bg-[#F9F7E8]' : 'bg-[#12121C]'}`}>
       <div className="w-full flex justify-center items-center py-3 border-b z-50 bg-inherit" style={{ borderColor: isLightTheme ? '#DCD8C0' : 'rgba(255,255,255,0.1)' }}>
-        <img 
-          src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" 
-          alt="Boutique Family Office Logo" 
-          className="h-16 w-auto"
-        />
+        <div className="flex justify-center items-center w-full h-full">
+          <img 
+            src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" 
+            alt="Boutique Family Office Logo" 
+            className="h-16 w-auto"
+          />
+        </div>
       </div>
       
       <div className="flex flex-1 overflow-hidden">
