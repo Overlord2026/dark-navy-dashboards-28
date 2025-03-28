@@ -1,7 +1,7 @@
-
 import { DashboardCard } from "@/components/ui/DashboardCard";
 import { Progress } from "@/components/ui/progress";
-import { ArrowUpRight, Wallet } from "lucide-react";
+import { ArrowUpRight, Wallet, Maximize2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export const NetWorthSummary = () => {
   return (
@@ -11,10 +11,16 @@ export const NetWorthSummary = () => {
           <Wallet className="mr-2 h-5 w-5 text-blue-400" />
           Net Worth Summary
         </h2>
-        <span className="text-green-400 flex items-center text-sm">
-          <ArrowUpRight className="mr-1 h-4 w-4" />
-          +5.2% from last month
-        </span>
+        <div className="flex items-center gap-2">
+          <Button variant="ghost" size="icon" className="h-7 w-7">
+            <Maximize2 className="h-4 w-4" />
+            <span className="sr-only">Expand</span>
+          </Button>
+          <span className="text-green-400 flex items-center text-sm">
+            <ArrowUpRight className="mr-1 h-4 w-4" />
+            +5.2% from last month
+          </span>
+        </div>
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
