@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { cn } from "@/lib/utils";
 import { 
@@ -83,7 +84,7 @@ export const Sidebar = () => {
         {collapsed ? (
           <div className="w-12 h-12 flex items-center justify-center">
             <img 
-              src="/lovable-uploads/b6a65d03-05d7-4aa4-b33b-e433f9f06314.png" 
+              src="/lovable-uploads/3f1d0ac5-00e5-48cc-a437-944e8580ff51.png" 
               alt="Boutique Family Office Logo" 
               className="h-10 w-auto" 
             />
@@ -91,7 +92,7 @@ export const Sidebar = () => {
         ) : (
           <div className="flex items-center justify-center w-full">
             <img 
-              src="/lovable-uploads/b6a65d03-05d7-4aa4-b33b-e433f9f06314.png" 
+              src="/lovable-uploads/3f1d0ac5-00e5-48cc-a437-944e8580ff51.png" 
               alt="Boutique Family Office Logo" 
               className="h-14 w-auto" 
             />
@@ -109,7 +110,7 @@ export const Sidebar = () => {
                 "group flex items-center py-2 px-3 rounded-md transition-colors",
                 "hover:bg-sidebar-accent",
                 item.active
-                  ? "bg-black text-white" // Changed to black background with white text
+                  ? "bg-black text-white" 
                   : "text-sidebar-foreground"
               )}
               style={{ animationDelay: `${index * 50}ms` }}

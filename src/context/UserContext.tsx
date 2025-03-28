@@ -11,12 +11,18 @@ interface UserProfile {
   city: string;
   state: string;
   zipCode: string;
-  dateOfBirth: Date | null; // Fixed: Changed to Date | null instead of just Date
+  dateOfBirth: Date | null;
   investorType: string;
   riskTolerance: string;
   investmentGoals: string[];
   income: number;
   netWorth: number;
+  // Added missing properties
+  title: string;
+  middleName: string;
+  suffix: string;
+  gender: string;
+  maritalStatus: string;
 }
 
 // Define the context interface
@@ -36,12 +42,18 @@ const defaultUserProfile: UserProfile = {
   city: 'New York',
   state: 'NY',
   zipCode: '10001',
-  dateOfBirth: null, // Changed from string to null
+  dateOfBirth: null,
   investorType: 'Moderate',
   riskTolerance: 'Medium',
   investmentGoals: ['Retirement', 'College', 'Home Purchase'],
   income: 150000,
   netWorth: 750000,
+  // Added default values for the new properties
+  title: 'Mr.',
+  middleName: '',
+  suffix: '',
+  gender: 'Male',
+  maritalStatus: 'Single'
 };
 
 // Create the context
