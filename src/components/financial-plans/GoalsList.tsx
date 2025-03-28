@@ -4,6 +4,12 @@ import { Card } from "@/components/ui/card";
 import { ChevronDownIcon, ChevronUpIcon, PlusIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { GoalDetailsSidePanel, GoalFormData } from "./GoalDetailsSidePanel";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export interface Goal {
   id?: string;
@@ -57,9 +63,9 @@ export function GoalsList({ goals, onGoalUpdate }: GoalsListProps) {
     setIsDetailsPanelOpen(true);
   };
 
-  const handleAddGoalClick = () => {
-    setSelectedGoal(undefined);
-    setDetailsPanelTitle("New Goal");
+  const handleAddGoalClick = (goalType?: string) => {
+    setSelectedGoal(goalType ? { type: goalType } : undefined);
+    setDetailsPanelTitle(goalType ? `New ${goalType} Goal` : "New Goal");
     setIsDetailsPanelOpen(true);
   };
 
@@ -105,6 +111,23 @@ export function GoalsList({ goals, onGoalUpdate }: GoalsListProps) {
     }
   };
   
+  const goalTypes = [
+    "Asset Purchase",
+    "Cash Reserve",
+    "Education",
+    "Gift",
+    "Home Improvement",
+    "Home Purchase",
+    "Investment Property",
+    "Land",
+    "Legacy",
+    "Other",
+    "Vacation",
+    "Vacation Home",
+    "Vehicle",
+    "Wedding"
+  ];
+  
   if (!localGoals || localGoals.length === 0) {
     return (
       <div className="space-y-4">
@@ -117,14 +140,30 @@ export function GoalsList({ goals, onGoalUpdate }: GoalsListProps) {
           onClick={() => handleRetirementAgeClick("Spouse's Retirement Age")}
         />
         <div className="mt-4">
-          <Button 
-            variant="outline" 
-            className="w-full flex items-center justify-center gap-2 bg-[#1A1A2E] hover:bg-[#1A1A2E]/80"
-            onClick={handleAddGoalClick}
-          >
-            <PlusIcon className="h-4 w-4" />
-            <span>Add Goal</span>
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button 
+                variant="outline" 
+                className="w-full flex items-center justify-center gap-2 bg-[#1A1A2E] hover:bg-[#1A1A2E]/80"
+              >
+                <PlusIcon className="h-4 w-4" />
+                <span>Add Goal</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent 
+              className="bg-[#1A1A2E] border-white/10 shadow-[0_2px_6px_rgba(0,0,0,0.3)] animate-in fade-in-50 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 duration-200"
+            >
+              {goalTypes.map((type) => (
+                <DropdownMenuItem 
+                  key={type} 
+                  className="text-white hover:bg-[#2A2A3E] focus:bg-[#2A2A3E] cursor-pointer"
+                  onClick={() => handleAddGoalClick(type)}
+                >
+                  {type}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
         <GoalDetailsSidePanel
           isOpen={isDetailsPanelOpen}
@@ -139,6 +178,30 @@ export function GoalsList({ goals, onGoalUpdate }: GoalsListProps) {
   
   return (
     <div className="space-y-4">
+      <div className="flex justify-between items-center mb-2">
+        <div className="text-sm text-muted-foreground">{localGoals.length} Goals</div>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button size="sm" variant="ghost" className="h-8 px-2">
+              <PlusIcon className="h-4 w-4" />
+              <span>Add</span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent 
+            className="bg-[#1A1A2E] border-white/10 shadow-[0_2px_6px_rgba(0,0,0,0.3)] animate-in fade-in-50 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 duration-200"
+          >
+            {goalTypes.map((type) => (
+              <DropdownMenuItem 
+                key={type} 
+                className="text-white hover:bg-[#2A2A3E] focus:bg-[#2A2A3E] cursor-pointer"
+                onClick={() => handleAddGoalClick(type)}
+              >
+                {type}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
       {localGoals.map((goal, index) => (
         <GoalCard 
           key={goal.id || `goal-${index}`} 
@@ -148,16 +211,6 @@ export function GoalsList({ goals, onGoalUpdate }: GoalsListProps) {
           onClick={() => handleGoalClick(goal)}
         />
       ))}
-      <div className="mt-4">
-        <Button 
-          variant="outline" 
-          className="w-full flex items-center justify-center gap-2 bg-[#1A1A2E] hover:bg-[#1A1A2E]/80"
-          onClick={handleAddGoalClick}
-        >
-          <PlusIcon className="h-4 w-4" />
-          <span>Add Goal</span>
-        </Button>
-      </div>
       <GoalDetailsSidePanel
         isOpen={isDetailsPanelOpen}
         onClose={() => setIsDetailsPanelOpen(false)}
