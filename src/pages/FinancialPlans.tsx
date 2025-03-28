@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Card, CardContent } from "@/components/ui/card";
@@ -7,6 +6,7 @@ import { PlanSuccessGauge } from "@/components/financial-plans/PlanSuccessGauge"
 import { NetWorthChart } from "@/components/financial-plans/NetWorthChart";
 import { GoalsList } from "@/components/financial-plans/GoalsList";
 import { CreatePlanDialog } from "@/components/financial-plans/CreatePlanDialog";
+import { ManagePlansDialog, Plan } from "@/components/financial-plans/ManagePlansDialog";
 import { 
   InfoIcon, 
   PlusIcon, 
@@ -14,6 +14,7 @@ import {
   CheckCircle
 } from "lucide-react";
 import { useUser } from "@/context/UserContext";
+import { toast } from "sonner";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -29,14 +30,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-interface Plan {
-  id: string;
-  name: string;
-  isFavorite: boolean;
-  isActive?: boolean;
-  successRate?: number;
-}
-
 const FinancialPlans = () => {
   const { userProfile } = useUser();
   const [goals, setGoals] = useState([]);
@@ -46,13 +39,36 @@ const FinancialPlans = () => {
     : "Pedro Gomez";
   
   const [plans, setPlans] = useState<Plan[]>([
-    { id: "1", name: "Pedro Gomez", isFavorite: true, isActive: true, successRate: 78 },
-    { id: "2", name: "Draft Plan 1", isFavorite: false, successRate: 45 },
-    { id: "3", name: "Draft Plan 2", isFavorite: false, successRate: 62 },
+    { 
+      id: "1", 
+      name: "Pedro Gomez", 
+      isFavorite: true, 
+      isActive: true, 
+      successRate: 78, 
+      status: 'Active',
+      createdAt: new Date(2023, 4, 15)
+    },
+    { 
+      id: "2", 
+      name: "Draft Plan 1", 
+      isFavorite: false, 
+      successRate: 45, 
+      status: 'Draft',
+      createdAt: new Date(2023, 5, 22)
+    },
+    { 
+      id: "3", 
+      name: "Draft Plan 2", 
+      isFavorite: false, 
+      successRate: 62,
+      status: 'Draft',
+      createdAt: new Date(2023, 6, 10)
+    },
   ]);
   
   const [selectedPlan, setSelectedPlan] = useState<string>(plans[0].id);
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const [isManagePlansOpen, setIsManagePlansOpen] = useState(false);
 
   const handleCreatePlan = (planName: string) => {
     const newPlan = {
@@ -61,6 +77,8 @@ const FinancialPlans = () => {
       isFavorite: false,
       isActive: true,
       successRate: Math.floor(Math.random() * 60) + 40, // Random success rate between 40-100 for demo
+      status: 'Draft' as const,
+      createdAt: new Date()
     };
     
     setPlans(prevPlans => {
@@ -70,6 +88,7 @@ const FinancialPlans = () => {
       return [...updatedPlans, newPlan];
     });
     setSelectedPlan(newPlan.id);
+    toast.success(`Plan "${planName}" created successfully`);
   };
 
   const handleSelectPlan = (planId: string) => {
@@ -79,8 +98,7 @@ const FinancialPlans = () => {
     }
     
     if (planId === "manage-plans") {
-      // Future functionality: Open plan management
-      console.log("Open plan management");
+      setIsManagePlansOpen(true);
       return;
     }
     
@@ -91,6 +109,53 @@ const FinancialPlans = () => {
         ...plan,
         isActive: plan.id === planId
       }))
+    );
+  };
+
+  const handleEditPlan = (planId: string) => {
+    // In a real app, this would open the plan in edit mode
+    toast.info(`Editing plan ${planId}`);
+    setIsManagePlansOpen(false);
+    setSelectedPlan(planId);
+  };
+
+  const handleDeletePlan = (planId: string) => {
+    setPlans(prevPlans => prevPlans.filter(plan => plan.id !== planId));
+    
+    // If the deleted plan was selected, select the first available plan
+    if (selectedPlan === planId && plans.length > 1) {
+      const remainingPlans = plans.filter(plan => plan.id !== planId);
+      setSelectedPlan(remainingPlans[0].id);
+    }
+    
+    setIsManagePlansOpen(false);
+  };
+
+  const handleDuplicatePlan = (planId: string) => {
+    const planToDuplicate = plans.find(plan => plan.id === planId);
+    
+    if (planToDuplicate) {
+      const duplicatedPlan = {
+        ...planToDuplicate,
+        id: `plan-${Date.now()}`,
+        name: `${planToDuplicate.name} (Copy)`,
+        createdAt: new Date(),
+        isFavorite: false,
+        isActive: false
+      };
+      
+      setPlans(prevPlans => [...prevPlans, duplicatedPlan]);
+      toast.success(`Plan "${duplicatedPlan.name}" created successfully`);
+    }
+  };
+
+  const handleToggleFavorite = (planId: string) => {
+    setPlans(prevPlans => 
+      prevPlans.map(plan => 
+        plan.id === planId 
+          ? { ...plan, isFavorite: !plan.isFavorite } 
+          : plan
+      )
     );
   };
 
@@ -173,10 +238,15 @@ const FinancialPlans = () => {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="bg-[#0F1C2E] border-white/10 animate-in fade-in-50 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 duration-200">
-                <DropdownMenuItem>Edit plan</DropdownMenuItem>
-                <DropdownMenuItem>Duplicate plan</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleEditPlan(activePlan.id)}>Edit plan</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleDuplicatePlan(activePlan.id)}>Duplicate plan</DropdownMenuItem>
                 <DropdownMenuSeparator className="bg-white/10" />
-                <DropdownMenuItem className="text-red-500">Delete plan</DropdownMenuItem>
+                <DropdownMenuItem 
+                  className="text-red-500"
+                  onClick={() => handleDeletePlan(activePlan.id)}
+                >
+                  Delete plan
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
@@ -186,7 +256,6 @@ const FinancialPlans = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Left Column - Plan Success Gauge */}
           <Card className="border border-border/30 bg-[#0D1426]">
             <CardContent className="p-6">
               <div className="flex justify-between items-center mb-6">
@@ -200,7 +269,6 @@ const FinancialPlans = () => {
             </CardContent>
           </Card>
 
-          {/* Right Column - Goals Section */}
           <Card className="border border-border/30 bg-[#0D1426]">
             <CardContent className="p-6">
               <div className="flex justify-between items-center mb-6">
@@ -218,7 +286,6 @@ const FinancialPlans = () => {
           </Card>
         </div>
 
-        {/* Net Worth Chart Section */}
         <Card className="border border-border/30 bg-[#0D1426]">
           <CardContent className="p-6">
             <div className="flex justify-between items-center mb-6">
@@ -235,7 +302,6 @@ const FinancialPlans = () => {
           </CardContent>
         </Card>
         
-        {/* Information Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Card className="bg-[#0D1426] border border-border/30">
             <CardContent className="p-6">
@@ -261,6 +327,20 @@ const FinancialPlans = () => {
         isOpen={isCreateDialogOpen}
         onClose={() => setIsCreateDialogOpen(false)}
         onCreatePlan={handleCreatePlan}
+      />
+
+      <ManagePlansDialog
+        isOpen={isManagePlansOpen}
+        onClose={() => setIsManagePlansOpen(false)}
+        plans={plans}
+        onEditPlan={handleEditPlan}
+        onDeletePlan={handleDeletePlan}
+        onDuplicatePlan={handleDuplicatePlan}
+        onToggleFavorite={handleToggleFavorite}
+        onSelectPlan={(planId) => {
+          setSelectedPlan(planId);
+          setIsManagePlansOpen(false);
+        }}
       />
     </ThreeColumnLayout>
   );
