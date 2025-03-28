@@ -40,16 +40,16 @@ export function AdditionalInfoForm({ onSave }: { onSave: () => void }) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      citizenshipStatus: "US",
-      ssn: "000-00-0000",
-      incomeRange: "500 - 1MM",
-      netWorth: "0",
-      investorType: "Moderate",
-      investingObjective: "Both equally",
-      taxBracketCapital: "20",
-      taxBracketIncome: "37",
+      citizenshipStatus: "",
+      ssn: "",
+      incomeRange: "",
+      netWorth: "",
+      investorType: "",
+      investingObjective: "",
+      taxBracketCapital: "",
+      taxBracketIncome: "",
       iraContribution: "No",
-      employmentStatus: "Retired",
+      employmentStatus: "",
     },
   });
 
@@ -61,7 +61,7 @@ export function AdditionalInfoForm({ onSave }: { onSave: () => void }) {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-semibold tracking-tight">Provide additional information</h2>
+        <h2 className="text-2xl font-semibold tracking-tight text-white">Provide additional information</h2>
       </div>
       
       <Form {...form}>
@@ -72,20 +72,20 @@ export function AdditionalInfoForm({ onSave }: { onSave: () => void }) {
               name="citizenshipStatus"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Citizenship Status</FormLabel>
+                  <FormLabel className="text-white">Citizenship Status</FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
-                      <SelectTrigger>
+                      <SelectTrigger className="bg-transparent border-gray-700 text-white focus:ring-0">
                         <SelectValue placeholder="Select citizenship status" />
                       </SelectTrigger>
                     </FormControl>
-                    <SelectContent>
+                    <SelectContent className="bg-[#0F0F2D] border-gray-700 text-white">
                       <SelectItem value="US">US</SelectItem>
                       <SelectItem value="Permanent Resident">Permanent Resident</SelectItem>
                       <SelectItem value="Non-Resident Alien">Non-Resident Alien</SelectItem>
                     </SelectContent>
                   </Select>
-                  <FormMessage />
+                  <FormMessage className="text-red-400" />
                 </FormItem>
               )}
             />
@@ -95,11 +95,16 @@ export function AdditionalInfoForm({ onSave }: { onSave: () => void }) {
               name="ssn"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>SSN (or ITIN)</FormLabel>
+                  <FormLabel className="text-white">SSN (or ITIN)</FormLabel>
                   <FormControl>
-                    <Input type="password" placeholder="SSN or ITIN" {...field} />
+                    <Input 
+                      type="password" 
+                      placeholder="SSN or ITIN" 
+                      {...field}
+                      className="bg-transparent border-gray-700 text-white focus:border-blue-500" 
+                    />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="text-red-400" />
                 </FormItem>
               )}
             />
@@ -109,14 +114,14 @@ export function AdditionalInfoForm({ onSave }: { onSave: () => void }) {
               name="incomeRange"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Income Range</FormLabel>
+                  <FormLabel className="text-white">Income Range</FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
-                      <SelectTrigger>
+                      <SelectTrigger className="bg-transparent border-gray-700 text-white focus:ring-0">
                         <SelectValue placeholder="Select income range" />
                       </SelectTrigger>
                     </FormControl>
-                    <SelectContent>
+                    <SelectContent className="bg-[#0F0F2D] border-gray-700 text-white">
                       <SelectItem value="0 - 50K">$0 - $50,000</SelectItem>
                       <SelectItem value="50K - 100K">$50,000 - $100,000</SelectItem>
                       <SelectItem value="100K - 250K">$100,000 - $250,000</SelectItem>
@@ -125,7 +130,7 @@ export function AdditionalInfoForm({ onSave }: { onSave: () => void }) {
                       <SelectItem value="1MM+">$1,000,000+</SelectItem>
                     </SelectContent>
                   </Select>
-                  <FormMessage />
+                  <FormMessage className="text-red-400" />
                 </FormItem>
               )}
             />
@@ -135,20 +140,20 @@ export function AdditionalInfoForm({ onSave }: { onSave: () => void }) {
               name="netWorth"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Net Worth</FormLabel>
+                  <FormLabel className="text-white">Net Worth</FormLabel>
                   <FormControl>
                     <div className="flex">
-                      <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-input bg-muted text-muted-foreground">
+                      <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-700 bg-muted text-muted-foreground">
                         $
                       </span>
                       <Input 
-                        className="rounded-l-none" 
+                        className="rounded-l-none bg-transparent border-gray-700 text-white focus:border-blue-500" 
                         placeholder="Net worth" 
                         {...field} 
                       />
                     </div>
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="text-red-400" />
                 </FormItem>
               )}
             />
@@ -158,20 +163,20 @@ export function AdditionalInfoForm({ onSave }: { onSave: () => void }) {
               name="investorType"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Investor Type</FormLabel>
+                  <FormLabel className="text-white">Investor Type</FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
-                      <SelectTrigger>
+                      <SelectTrigger className="bg-transparent border-gray-700 text-white focus:ring-0">
                         <SelectValue placeholder="Select investor type" />
                       </SelectTrigger>
                     </FormControl>
-                    <SelectContent>
+                    <SelectContent className="bg-[#0F0F2D] border-gray-700 text-white">
                       <SelectItem value="Conservative">Conservative</SelectItem>
                       <SelectItem value="Moderate">Moderate</SelectItem>
                       <SelectItem value="Aggressive">Aggressive</SelectItem>
                     </SelectContent>
                   </Select>
-                  <FormMessage />
+                  <FormMessage className="text-red-400" />
                 </FormItem>
               )}
             />
@@ -181,20 +186,20 @@ export function AdditionalInfoForm({ onSave }: { onSave: () => void }) {
               name="investingObjective"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Investing Objective</FormLabel>
+                  <FormLabel className="text-white">Investing Objective</FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
-                      <SelectTrigger>
+                      <SelectTrigger className="bg-transparent border-gray-700 text-white focus:ring-0">
                         <SelectValue placeholder="Select investing objective" />
                       </SelectTrigger>
                     </FormControl>
-                    <SelectContent>
+                    <SelectContent className="bg-[#0F0F2D] border-gray-700 text-white">
                       <SelectItem value="Growth">Growth</SelectItem>
                       <SelectItem value="Income">Income</SelectItem>
                       <SelectItem value="Both equally">Both equally</SelectItem>
                     </SelectContent>
                   </Select>
-                  <FormMessage />
+                  <FormMessage className="text-red-400" />
                 </FormItem>
               )}
             />
@@ -204,14 +209,14 @@ export function AdditionalInfoForm({ onSave }: { onSave: () => void }) {
               name="taxBracketCapital"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="flex items-center">
+                  <FormLabel className="flex items-center text-white">
                     Tax Bracket (long-term capital gains)
                     <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <Info className="h-4 w-4 ml-2 text-muted-foreground" />
                         </TooltipTrigger>
-                        <TooltipContent>
+                        <TooltipContent className="bg-gray-800 text-white border-gray-700">
                           <p>Long-term capital gains tax rates are 0%, 15%, or 20% depending on your income.</p>
                         </TooltipContent>
                       </Tooltip>
@@ -220,16 +225,16 @@ export function AdditionalInfoForm({ onSave }: { onSave: () => void }) {
                   <FormControl>
                     <div className="flex">
                       <Input 
-                        className="rounded-r-none" 
+                        className="rounded-r-none bg-transparent border-gray-700 text-white focus:border-blue-500" 
                         placeholder="Tax bracket" 
                         {...field} 
                       />
-                      <span className="inline-flex items-center px-3 rounded-r-md border border-l-0 border-input bg-muted text-muted-foreground">
+                      <span className="inline-flex items-center px-3 rounded-r-md border border-l-0 border-gray-700 bg-muted text-muted-foreground">
                         %
                       </span>
                     </div>
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="text-red-400" />
                 </FormItem>
               )}
             />
@@ -239,14 +244,14 @@ export function AdditionalInfoForm({ onSave }: { onSave: () => void }) {
               name="taxBracketIncome"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="flex items-center">
+                  <FormLabel className="flex items-center text-white">
                     Tax Bracket (ordinary income)
                     <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <Info className="h-4 w-4 ml-2 text-muted-foreground" />
                         </TooltipTrigger>
-                        <TooltipContent>
+                        <TooltipContent className="bg-gray-800 text-white border-gray-700">
                           <p>Ordinary income is taxed at rates from 10% to 37% depending on your income.</p>
                         </TooltipContent>
                       </Tooltip>
@@ -255,16 +260,16 @@ export function AdditionalInfoForm({ onSave }: { onSave: () => void }) {
                   <FormControl>
                     <div className="flex">
                       <Input 
-                        className="rounded-r-none" 
+                        className="rounded-r-none bg-transparent border-gray-700 text-white focus:border-blue-500" 
                         placeholder="Tax bracket" 
                         {...field} 
                       />
-                      <span className="inline-flex items-center px-3 rounded-r-md border border-l-0 border-input bg-muted text-muted-foreground">
+                      <span className="inline-flex items-center px-3 rounded-r-md border border-l-0 border-gray-700 bg-muted text-muted-foreground">
                         %
                       </span>
                     </div>
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="text-red-400" />
                 </FormItem>
               )}
             />
@@ -275,7 +280,7 @@ export function AdditionalInfoForm({ onSave }: { onSave: () => void }) {
             name="iraContribution"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Have you contributed to an IRA outside of Farther this year?</FormLabel>
+                <FormLabel className="text-white">Have you contributed to an IRA outside of Farther this year?</FormLabel>
                 <FormControl>
                   <RadioGroup
                     onValueChange={field.onChange}
@@ -284,19 +289,19 @@ export function AdditionalInfoForm({ onSave }: { onSave: () => void }) {
                   >
                     <FormItem className="flex items-center space-x-2 space-y-0">
                       <FormControl>
-                        <RadioGroupItem value="Yes" />
+                        <RadioGroupItem value="Yes" className="text-white" />
                       </FormControl>
-                      <FormLabel className="font-normal">Yes</FormLabel>
+                      <FormLabel className="font-normal text-white">Yes</FormLabel>
                     </FormItem>
                     <FormItem className="flex items-center space-x-2 space-y-0">
                       <FormControl>
-                        <RadioGroupItem value="No" />
+                        <RadioGroupItem value="No" className="text-white" />
                       </FormControl>
-                      <FormLabel className="font-normal">No</FormLabel>
+                      <FormLabel className="font-normal text-white">No</FormLabel>
                     </FormItem>
                   </RadioGroup>
                 </FormControl>
-                <FormMessage />
+                <FormMessage className="text-red-400" />
               </FormItem>
             )}
           />
@@ -306,14 +311,14 @@ export function AdditionalInfoForm({ onSave }: { onSave: () => void }) {
             name="employmentStatus"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Employment Status</FormLabel>
+                <FormLabel className="text-white">Employment Status</FormLabel>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
-                    <SelectTrigger>
+                    <SelectTrigger className="bg-transparent border-gray-700 text-white focus:ring-0">
                       <SelectValue placeholder="Select employment status" />
                     </SelectTrigger>
                   </FormControl>
-                  <SelectContent>
+                  <SelectContent className="bg-[#0F0F2D] border-gray-700 text-white">
                     <SelectItem value="Employed">Employed</SelectItem>
                     <SelectItem value="Self-Employed">Self-Employed</SelectItem>
                     <SelectItem value="Unemployed">Unemployed</SelectItem>
@@ -321,13 +326,18 @@ export function AdditionalInfoForm({ onSave }: { onSave: () => void }) {
                     <SelectItem value="Student">Student</SelectItem>
                   </SelectContent>
                 </Select>
-                <FormMessage />
+                <FormMessage className="text-red-400" />
               </FormItem>
             )}
           />
           
           <div className="flex justify-end">
-            <Button type="submit">Save</Button>
+            <Button 
+              type="submit" 
+              className="bg-white text-[#0F0F2D] hover:bg-white/90"
+            >
+              Save
+            </Button>
           </div>
         </form>
       </Form>

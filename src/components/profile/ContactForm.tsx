@@ -28,13 +28,13 @@ export function ContactForm({ onSave }: { onSave: () => void }) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: "votepedro1999@gmail.com",
-      phone: "(941) 539-8751",
-      address1: "8858 Fishermens Bay Dr",
+      email: "",
+      phone: "",
+      address1: "",
       address2: "",
-      city: "Sarasota",
-      state: "FL",
-      zipCode: "34231",
+      city: "",
+      state: "",
+      zipCode: "",
     },
   });
 
