@@ -1,5 +1,6 @@
 
 import { useState, useEffect } from "react";
+import { InfoIcon } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -110,195 +111,231 @@ export function AddCollaboratorDialog({
     handleDialogOpenChange(false);
   };
 
+  const handleBack = () => {
+    setStep(1);
+  };
+
   return (
     <Dialog open={dialogOpen} onOpenChange={handleDialogOpenChange}>
       {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
       
       <DialogContent className="sm:max-w-md bg-[#030a1c] text-white border-gray-800">
-        <div className="mb-4 pt-2">
-          <Breadcrumb>
-            <BreadcrumbList className="text-xs">
-              <BreadcrumbItem>
-                <BreadcrumbLink href="#" className={`${step === 1 ? "text-white" : "text-gray-400"}`}>
-                  <span className="flex items-center">
-                    <span className={`inline-block w-4 h-4 rounded-full mr-2 ${step === 1 ? "bg-white text-black" : "bg-gray-700"} flex items-center justify-center text-xs`}>1</span>
-                    Add Collaborator
-                  </span>
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator className="text-gray-500">
-                <div className="w-10 h-[1px] bg-gray-700"></div>
-              </BreadcrumbSeparator>
-              <BreadcrumbItem>
-                <BreadcrumbLink href="#" className={`${step === 2 ? "text-white" : "text-gray-400"}`}>
-                  <span className="flex items-center">
-                    <span className={`inline-block w-4 h-4 rounded-full mr-2 ${step === 2 ? "bg-white text-black" : "bg-gray-700"} flex items-center justify-center text-xs`}>2</span>
-                    Access & Type
-                  </span>
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
+        <div className="absolute top-0 left-0 right-0 h-10 flex items-center justify-center gap-2 bg-[#1c2e4a] text-white rounded-t-md px-4">
+          {step === 1 ? (
+            <span className="text-sm font-medium flex items-center">
+              <span className="w-5 h-5 bg-white text-black rounded-full flex items-center justify-center text-xs mr-2">1</span>
+              Add Collaborator
+            </span>
+          ) : (
+            <>
+              <span className="text-sm text-gray-400 font-medium flex items-center">
+                <span className="w-5 h-5 bg-gray-700 rounded-full flex items-center justify-center text-xs mr-2">1</span>
+                Add Collaborator
+              </span>
+              <div className="w-10 h-[1px] bg-gray-700"></div>
+              <span className="text-sm font-medium flex items-center">
+                <span className="w-5 h-5 bg-white text-black rounded-full flex items-center justify-center text-xs mr-2">2</span>
+                Access & Type
+              </span>
+            </>
+          )}
         </div>
         
-        <DialogHeader>
-          <DialogTitle className="text-xl font-normal text-white">
-            {step === 1 ? "Add Collaborator" : "Access & Type"}
-          </DialogTitle>
-        </DialogHeader>
-        
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            {step === 1 && (
-              <>
-                <div>
-                  <p className="text-sm text-gray-400 mb-6">
-                    Tell us who you want to collaborate with.
-                  </p>
-                  
-                  <div className="grid grid-cols-2 gap-4 mb-4">
-                    <FormField
-                      control={form.control}
-                      name="firstName"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-gray-400 text-xs mb-1">First Name</FormLabel>
-                          <FormControl>
-                            <Input 
-                              {...field} 
-                              className="bg-transparent border-gray-700 focus:border-gray-500"
-                              placeholder="First Name"
-                            />
-                          </FormControl>
-                        </FormItem>
-                      )}
-                    />
+        <div className="pt-8">
+          <DialogHeader className="mb-6">
+            <DialogTitle className="text-xl font-normal text-white">
+              {step === 1 ? "Add Collaborator" : "Add Type and Access"}
+            </DialogTitle>
+          </DialogHeader>
+          
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              {step === 1 && (
+                <>
+                  <div>
+                    <p className="text-sm text-gray-400 mb-6">
+                      Tell us who you want to collaborate with.
+                    </p>
+                    
+                    <div className="grid grid-cols-2 gap-4 mb-4">
+                      <FormField
+                        control={form.control}
+                        name="firstName"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-gray-400 text-xs mb-1">First Name</FormLabel>
+                            <FormControl>
+                              <Input 
+                                {...field} 
+                                className="bg-transparent border-gray-700 focus:border-gray-500"
+                                placeholder="First Name"
+                              />
+                            </FormControl>
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="lastName"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-gray-400 text-xs mb-1">Last Name</FormLabel>
+                            <FormControl>
+                              <Input 
+                                {...field} 
+                                className="bg-transparent border-gray-700 focus:border-gray-500"
+                                placeholder="Last Name"
+                              />
+                            </FormControl>
+                          </FormItem>
+                        )}
+                      />
+                    </div>
                     
                     <FormField
                       control={form.control}
-                      name="lastName"
+                      name="email"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-gray-400 text-xs mb-1">Last Name</FormLabel>
+                          <FormLabel className="text-gray-400 text-xs mb-1">Email</FormLabel>
                           <FormControl>
                             <Input 
                               {...field} 
+                              type="email" 
                               className="bg-transparent border-gray-700 focus:border-gray-500"
-                              placeholder="Last Name"
+                              placeholder="Email"
                             />
                           </FormControl>
                         </FormItem>
                       )}
                     />
                   </div>
-                  
-                  <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-gray-400 text-xs mb-1">Email</FormLabel>
-                        <FormControl>
-                          <Input 
-                            {...field} 
-                            type="email" 
-                            className="bg-transparent border-gray-700 focus:border-gray-500"
-                            placeholder="Email"
-                          />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                </div>
-              </>
-            )}
-            
-            {step === 2 && (
-              <>
-                <FormField
-                  control={form.control}
-                  name="role"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-gray-400">What's their relationship to you?</FormLabel>
-                      <Select 
-                        onValueChange={field.onChange} 
-                        defaultValue={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger className="bg-transparent border-gray-700 text-white">
-                            <SelectValue placeholder="Select a role" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent className="bg-[#030a1c] border-gray-700 text-white">
-                          <SelectItem value="spouse">Spouse</SelectItem>
-                          <SelectItem value="child">Child</SelectItem>
-                          <SelectItem value="parent">Parent</SelectItem>
-                          <SelectItem value="accountant">Accountant</SelectItem>
-                          <SelectItem value="financial_advisor">Financial Advisor</SelectItem>
-                          <SelectItem value="attorney">Attorney</SelectItem>
-                          <SelectItem value="other">Other</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={form.control}
-                  name="accessLevel"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-gray-400">What level of access should they have?</FormLabel>
-                      <Select 
-                        onValueChange={field.onChange as (value: string) => void} 
-                        defaultValue={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger className="bg-transparent border-gray-700 text-white">
-                            <SelectValue placeholder="Select access level" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent className="bg-[#030a1c] border-gray-700 text-white">
-                          <SelectItem value="full">Full Access</SelectItem>
-                          <SelectItem value="partial">Partial Access</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </FormItem>
-                  )}
-                />
-              </>
-            )}
-            
-            <div className="flex justify-between pt-4">
-              <Button 
-                type="button" 
-                variant="outline" 
-                onClick={handleCancel}
-                className="border border-white/20 bg-transparent text-white hover:bg-gray-800"
-              >
-                Cancel
-              </Button>
-              
-              {step === 1 ? (
-                <Button 
-                  type="button"
-                  className="bg-blue-600 hover:bg-blue-700 text-white"
-                  onClick={handleNext}
-                >
-                  Next
-                </Button>
-              ) : (
-                <Button 
-                  type="submit"
-                  className="bg-blue-600 hover:bg-blue-700 text-white"
-                >
-                  Send Invitation
-                </Button>
+                </>
               )}
-            </div>
-          </form>
-        </Form>
+              
+              {step === 2 && (
+                <>
+                  <p className="text-sm text-gray-400 mb-6">
+                    Choose the collaborator's type and access level. You can always change this later.
+                  </p>
+                
+                  <div className="bg-[#0c1428] p-4 rounded-md mb-2">
+                    <FormField
+                      control={form.control}
+                      name="role"
+                      render={({ field }) => (
+                        <FormItem className="mb-4">
+                          <FormLabel className="flex items-center gap-1 text-sm font-normal text-white">
+                            Collaborator Type
+                          </FormLabel>
+                          <Select 
+                            onValueChange={field.onChange} 
+                            defaultValue={field.value}
+                          >
+                            <FormControl>
+                              <SelectTrigger className="bg-transparent border-gray-700 text-white">
+                                <SelectValue placeholder="Select collaborator type" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent className="bg-[#030a1c] border-gray-700 text-white">
+                              <SelectItem value="spouse">Spouse</SelectItem>
+                              <SelectItem value="child">Child</SelectItem>
+                              <SelectItem value="parent">Parent</SelectItem>
+                              <SelectItem value="accountant">Accountant</SelectItem>
+                              <SelectItem value="financial_advisor">Financial Advisor</SelectItem>
+                              <SelectItem value="attorney">Attorney</SelectItem>
+                              <SelectItem value="other">Other</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={form.control}
+                      name="accessLevel"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="flex items-center gap-1 text-sm font-normal text-white">
+                            Access
+                            <InfoIcon className="w-4 h-4 text-gray-400" />
+                          </FormLabel>
+                          <Select 
+                            onValueChange={field.onChange as (value: string) => void} 
+                            defaultValue={field.value}
+                          >
+                            <FormControl>
+                              <SelectTrigger className="bg-transparent border-gray-700 text-white">
+                                <SelectValue placeholder="Select access level" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent className="bg-[#030a1c] border-gray-700 text-white">
+                              <SelectItem value="full">Full Access</SelectItem>
+                              <SelectItem value="partial">Partial Access</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </>
+              )}
+              
+              <div className="flex justify-between pt-4">
+                {step === 1 ? (
+                  <>
+                    <Button 
+                      type="button" 
+                      variant="outline" 
+                      onClick={handleCancel}
+                      className="border border-white/20 bg-transparent text-white hover:bg-gray-800"
+                    >
+                      Cancel
+                    </Button>
+                    
+                    <Button 
+                      type="button"
+                      className="bg-blue-600 hover:bg-blue-700 text-white"
+                      onClick={handleNext}
+                    >
+                      Next
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button 
+                      type="button" 
+                      variant="outline" 
+                      onClick={handleCancel}
+                      className="border border-white/20 bg-transparent text-white hover:bg-gray-800"
+                    >
+                      Cancel
+                    </Button>
+                    
+                    <div className="flex gap-2">
+                      <Button 
+                        type="button"
+                        variant="outline"
+                        onClick={handleBack}
+                        className="border border-white/20 bg-transparent text-white hover:bg-gray-800"
+                      >
+                        Back
+                      </Button>
+                      
+                      <Button 
+                        type="submit"
+                        className="bg-blue-600 hover:bg-blue-700 text-white"
+                      >
+                        Send Invitation
+                      </Button>
+                    </div>
+                  </>
+                )}
+              </div>
+            </form>
+          </Form>
+        </div>
       </DialogContent>
     </Dialog>
   );
