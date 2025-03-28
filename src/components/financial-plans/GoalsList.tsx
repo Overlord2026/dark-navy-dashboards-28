@@ -115,8 +115,8 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
       priority: goalType,
       owner: owner,
       isNew: true,
-      financingMethod: goalType === "Asset Purchase" ? "Cash" : undefined,
-      annualAppreciation: goalType === "Asset Purchase" ? "None" : undefined,
+      financingMethod: goalType === "Asset Purchase" || goalType === "Home Purchase" || goalType === "Vehicle" ? "Cash" : undefined,
+      annualAppreciation: goalType === "Asset Purchase" || goalType === "Home Purchase" ? "None" : undefined,
     };
     
     setLocalGoals(prev => [...prev, newGoal]);
