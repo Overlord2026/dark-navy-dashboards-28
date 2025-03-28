@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { cn } from "@/lib/utils";
 import { 
@@ -122,7 +121,7 @@ export const Sidebar = () => {
               ) : (
                 <item.icon className="h-5 w-5 mr-3 flex-shrink-0 bg-black p-0.5 rounded-sm" />
               )}
-              {!collapsed && <span>{item.label}</span>}
+              {!collapsed && <span className="whitespace-nowrap overflow-hidden text-ellipsis">{item.label}</span>}
             </a>
           ))}
         </nav>
@@ -137,7 +136,7 @@ export const Sidebar = () => {
               className="group flex items-center py-2 px-3 rounded-md text-sidebar-foreground hover:bg-sidebar-accent transition-colors"
             >
               <item.icon className="h-5 w-5 mr-3 flex-shrink-0 bg-black p-0.5 rounded-sm" />
-              {!collapsed && <span>{item.label}</span>}
+              {!collapsed && <span className="whitespace-nowrap overflow-hidden text-ellipsis">{item.label}</span>}
             </a>
           ))}
         </nav>

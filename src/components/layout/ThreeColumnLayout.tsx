@@ -1,3 +1,4 @@
+
 import { ReactNode, useState } from "react";
 import * as React from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
@@ -170,7 +171,7 @@ export function ThreeColumnLayout({
           {mainSidebarCollapsed ? (
             <div className="w-12 h-12 flex items-center justify-center">
               <img 
-                src="/lovable-uploads/b6a65d03-05d7-4aa4-b33b-e433f9f06314.png" 
+                src="/lovable-uploads/c598e503-7a57-4a55-9a0b-f09e7ba7003a.png" 
                 alt="Boutique Family Office" 
                 className="h-10 w-auto" 
               />
@@ -178,7 +179,7 @@ export function ThreeColumnLayout({
           ) : (
             <div className="flex items-center justify-center w-full">
               <img 
-                src="/lovable-uploads/b6a65d03-05d7-4aa4-b33b-e433f9f06314.png" 
+                src="/lovable-uploads/c598e503-7a57-4a55-9a0b-f09e7ba7003a.png" 
                 alt="Boutique Family Office" 
                 className="h-14 w-auto" 
               />
@@ -218,7 +219,9 @@ export function ThreeColumnLayout({
                   ) : (
                     <Icon className={cn("h-5 w-5", !mainSidebarCollapsed && "mr-3")} style={{ backgroundColor: '#000', padding: '2px', borderRadius: '2px' }} />
                   )}
-                  {!mainSidebarCollapsed && <span>{item.label}</span>}
+                  {!mainSidebarCollapsed && (
+                    <span className="whitespace-nowrap overflow-hidden text-ellipsis">{item.label}</span>
+                  )}
                 </Link>
               );
             })}
