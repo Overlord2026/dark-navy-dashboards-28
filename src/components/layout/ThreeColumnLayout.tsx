@@ -314,73 +314,8 @@ export function ThreeColumnLayout({
               
               <Link to="/vault" className="flex-1 flex items-center justify-center gap-3 px-5 py-4 rounded-md bg-gray-800 hover:bg-gray-700 text-gray-100 transition-colors border border-primary">
                 <BookOpenIcon className="h-6 w-6" />
-                <span className="font-medium text-lg">Legacy Vault</span>
+                <span className="font-medium text-lg">Family Legacy Vault</span>
               </Link>
-            </div>
-            
-            <div className="flex justify-center items-center space-x-10 w-full max-w-5xl">
-              <Link to="/profile" className="flex-1 flex items-center justify-center gap-3 px-5 py-4 rounded-md bg-gray-800 hover:bg-gray-700 text-gray-100 transition-colors border border-primary">
-                <UserIcon className="h-6 w-6" />
-                <span className="font-medium text-lg">Client Profile</span>
-              </Link>
-              
-              <Popover open={showAdvisorInfo} onOpenChange={setShowAdvisorInfo}>
-                <PopoverTrigger asChild>
-                  <Button variant="ghost" className="flex-1 flex items-center justify-center gap-3 px-5 py-4 rounded-md bg-gray-800 hover:bg-gray-700 text-gray-100 transition-colors border border-primary">
-                    <div className="flex items-center space-x-3">
-                      <Avatar className="h-9 w-9 border-2 border-primary">
-                        <AvatarFallback className="bg-primary/20 text-primary">CB</AvatarFallback>
-                      </Avatar>
-                      <span className="font-medium text-lg">Advisor Profile</span>
-                    </div>
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent 
-                  className="w-80 bg-gray-900 border border-primary text-white p-0 shadow-lg"
-                  align="center"
-                >
-                  <div className="flex flex-col">
-                    <div className="p-4 border-b border-gray-700 flex items-center space-x-4">
-                      <Avatar className="h-16 w-16 border border-primary">
-                        <AvatarFallback className="bg-primary/20 text-primary text-xl">CB</AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <h3 className="text-lg font-semibold">{advisorInfo.name}</h3>
-                        <p className="text-sm text-gray-400">{advisorInfo.title}</p>
-                        <p className="text-sm text-gray-400">{advisorInfo.location}</p>
-                      </div>
-                    </div>
-                    
-                    <div className="p-4 space-y-3">
-                      <div className="flex items-center space-x-2">
-                        <CalendarIcon className="h-4 w-4 text-gray-400" />
-                        <Button 
-                          variant="outline" 
-                          className="w-full justify-start border-primary hover:bg-gray-800 text-white"
-                          onClick={handleBookSession}
-                        >
-                          Schedule an Appointment
-                        </Button>
-                      </div>
-                      
-                      <div className="pt-2 border-t border-gray-700 space-y-1.5">
-                        <p className="text-sm">
-                          <span className="text-gray-400">Email: </span>
-                          <a href={`mailto:${advisorInfo.email}`} className="text-blue-400 hover:underline">
-                            {advisorInfo.email}
-                          </a>
-                        </p>
-                        <p className="text-sm">
-                          <span className="text-gray-400">Phone: </span>
-                          <a href={`tel:${advisorInfo.phone}`} className="text-blue-400 hover:underline">
-                            {advisorInfo.phone}
-                          </a>
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </PopoverContent>
-              </Popover>
             </div>
           </div>
         ) : null}
