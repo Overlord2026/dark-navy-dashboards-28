@@ -31,7 +31,7 @@ export function DatePicker({ date, onSelect, className }: DatePickerProps) {
           )}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
-          {date ? format(date, "PPP") : <span>Pick a date</span>}
+          {date ? format(date, "MM/yyyy") : <span>Pick a date</span>}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0 bg-[#1A1A3A] border-gray-700">
@@ -40,7 +40,7 @@ export function DatePicker({ date, onSelect, className }: DatePickerProps) {
           selected={date}
           onSelect={onSelect}
           initialFocus
-          className="bg-[#1A1A3A] text-white border-gray-700"
+          className="bg-[#1A1A3A] text-white border-gray-700 pointer-events-auto"
         />
       </PopoverContent>
     </Popover>

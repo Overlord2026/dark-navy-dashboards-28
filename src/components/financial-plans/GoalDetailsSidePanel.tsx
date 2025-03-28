@@ -41,6 +41,7 @@ export interface GoalFormData {
   estimatedCost?: number;
   // Cash Reserve fields
   amountDesired?: number;
+  repeats?: string; // New field for Cash Reserve
   // Other fields as needed
 }
 
@@ -120,6 +121,14 @@ export const GoalDetailsSidePanel = ({
     "Other"
   ];
 
+  // Repeats options for Cash Reserve
+  const repeatsOptions = [
+    "None",
+    "Monthly",
+    "Quarterly",
+    "Yearly"
+  ];
+
   // Load goal data when goal changes
   useEffect(() => {
     if (goal) {
@@ -147,6 +156,7 @@ export const GoalDetailsSidePanel = ({
         estimatedCost: goal.estimatedCost,
         // Cash Reserve fields
         amountDesired: goal.amountDesired,
+        repeats: goal.repeats || "None",
       });
       setErrors({});
     } else {
@@ -160,6 +170,7 @@ export const GoalDetailsSidePanel = ({
         description: "",
         financingMethod: "Cash",
         annualAppreciation: "None",
+        repeats: "None",
       });
       setErrors({});
     }
@@ -238,7 +249,7 @@ export const GoalDetailsSidePanel = ({
     
     // If owner is updated, update the panel title
     if (name === "owner" && onTitleUpdate) {
-      onTitleUpdate(value, formData.owner);
+      onTitleUpdate(formData.name, value);
     }
 
     // For new goals, set initial name based on type
@@ -300,6 +311,10 @@ export const GoalDetailsSidePanel = ({
     
     if (formData.planningHorizonAge !== undefined && (isNaN(formData.planningHorizonAge) || formData.planningHorizonAge < 0 || formData.planningHorizonAge > 120)) {
       newErrors.planningHorizonAge = "Age must be between 0 and 120";
+    }
+    
+    if (formData.amountDesired !== undefined && (isNaN(formData.amountDesired) || formData.amountDesired < 0)) {
+      newErrors.amountDesired = "Please enter a valid positive amount";
     }
     
     setErrors(newErrors);
@@ -369,20 +384,54 @@ export const GoalDetailsSidePanel = ({
         );
       case "Cash Reserve":
         return (
-          <div className="space-y-2">
-            <Label htmlFor="amountDesired">Amount Desired</Label>
-            <Input
-              id="amountDesired"
-              name="amountDesired"
-              type="number"
-              value={formData.amountDesired || ""}
-              onChange={handleInputChange}
-              className={`bg-[#1A1A3A] border-gray-700 ${errors.amountDesired ? 'border-[#FF4D4D] focus-visible:ring-[#FF4D4D]' : ''}`}
-            />
-            {errors.amountDesired && (
-              <p className="text-xs text-[#FF4D4D] mt-1">{errors.amountDesired}</p>
-            )}
-          </div>
+          <>
+            <div className="space-y-2">
+              <Label htmlFor="amountDesired">Target Amount</Label>
+              <Input
+                id="amountDesired"
+                name="amountDesired"
+                type="number"
+                value={formData.amountDesired || ""}
+                onChange={handleInputChange}
+                className={`bg-[#1A1A3A] border-gray-700 ${errors.amountDesired ? 'border-[#FF4D4D] focus-visible:ring-[#FF4D4D]' : ''}`}
+              />
+              {errors.amountDesired && (
+                <p className="text-xs text-[#FF4D4D] mt-1">{errors.amountDesired}</p>
+              )}
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="annualAppreciation">Annual Appreciation</Label>
+              <Select
+                value={formData.annualAppreciation || "None"}
+                onValueChange={(value) => handleSelectChange("annualAppreciation", value)}
+              >
+                <SelectTrigger id="annualAppreciation" className="bg-[#1A1A3A] border-gray-700">
+                  <SelectValue placeholder="Select appreciation rate" />
+                </SelectTrigger>
+                <SelectContent className="bg-[#1A1A3A] border-gray-700">
+                  {appreciationOptions.map(option => (
+                    <SelectItem key={option} value={option}>{option}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="repeats">Repeats</Label>
+              <Select
+                value={formData.repeats || "None"}
+                onValueChange={(value) => handleSelectChange("repeats", value)}
+              >
+                <SelectTrigger id="repeats" className="bg-[#1A1A3A] border-gray-700">
+                  <SelectValue placeholder="Select repeat frequency" />
+                </SelectTrigger>
+                <SelectContent className="bg-[#1A1A3A] border-gray-700">
+                  {repeatsOptions.map(option => (
+                    <SelectItem key={option} value={option}>{option}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </>
         );
       case "Education":
         return (

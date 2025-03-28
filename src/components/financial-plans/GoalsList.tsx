@@ -36,6 +36,7 @@ export interface Goal {
   destination?: string;
   estimatedCost?: number;
   amountDesired?: number;
+  repeats?: string;
 }
 
 interface GoalsListProps {
@@ -160,6 +161,7 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
         destination: goalData.destination,
         estimatedCost: goalData.estimatedCost,
         amountDesired: goalData.amountDesired,
+        repeats: goalData.repeats,
       };
       
       setLocalGoals(prev => 
@@ -194,6 +196,7 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
         destination: goalData.destination,
         estimatedCost: goalData.estimatedCost,
         amountDesired: goalData.amountDesired,
+        repeats: goalData.repeats,
       };
       
       setLocalGoals(prev => [...prev, newGoal]);
@@ -518,16 +521,34 @@ function GoalCard({ goal, isExpanded, onToggle, onClick, isNew = false }: {
             </>
           )}
           
-          {goal.type === "Cash Reserve" && goal.amountDesired !== undefined && (
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Amount Desired:</span>
-              <span>
-                {new Intl.NumberFormat('en-US', {
-                  style: 'currency',
-                  currency: 'USD',
-                }).format(goal.amountDesired)}
-              </span>
-            </div>
+          {goal.type === "Cash Reserve" && (
+            <>
+              {goal.amountDesired !== undefined && (
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">Target Amount:</span>
+                  <span>
+                    {new Intl.NumberFormat('en-US', {
+                      style: 'currency',
+                      currency: 'USD',
+                    }).format(goal.amountDesired)}
+                  </span>
+                </div>
+              )}
+              
+              {goal.annualAppreciation && goal.annualAppreciation !== "None" && (
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">Annual Appreciation:</span>
+                  <span>{goal.annualAppreciation}</span>
+                </div>
+              )}
+              
+              {goal.repeats && goal.repeats !== "None" && (
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">Repeats:</span>
+                  <span>{goal.repeats}</span>
+                </div>
+              )}
+            </>
           )}
           
           {goal.targetDate && !["Education"].includes(goal.type || "") && (
