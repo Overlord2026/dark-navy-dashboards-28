@@ -14,10 +14,12 @@ import { ProjectionPreviewChart } from "./ProjectionPreviewChart";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
-interface CreatePlanDialogProps {
+export interface CreatePlanDialogProps {
   isOpen: boolean;
   onClose: () => void;
   onCreatePlan: (planName: string, planData: any) => void;
+  onSaveDraft?: (draftData: any) => void;
+  draftData?: any;
 }
 
 const planBasicsSchema = z.object({
@@ -96,7 +98,7 @@ interface ExpenseItem {
   notes?: string;
 }
 
-export function CreatePlanDialog({ isOpen, onClose, onCreatePlan }: CreatePlanDialogProps) {
+export function CreatePlanDialog({ isOpen, onClose, onCreatePlan, onSaveDraft, draftData }: CreatePlanDialogProps) {
   const [currentStep, setCurrentStep] = useState(1);
   const totalSteps = 5;
   const [goals, setGoals] = useState<Goal[]>([]);
@@ -120,6 +122,30 @@ export function CreatePlanDialog({ isOpen, onClose, onCreatePlan }: CreatePlanDi
     projections: null,
     successRate: 0
   });
+
+  useEffect(() => {
+    if (draftData) {
+      if (draftData.name) {
+        basicsForm.setValue("planName", draftData.name);
+      }
+      
+      if (draftData.goals && Array.isArray(draftData.goals)) {
+        setGoals(draftData.goals);
+      }
+      
+      if (draftData.income) {
+        setIncomeItems(draftData.income.items || []);
+      }
+      
+      if (draftData.expenses) {
+        setExpenseItems(draftData.expenses.items || []);
+      }
+      
+      if (draftData.step) {
+        setCurrentStep(draftData.step);
+      }
+    }
+  }, [draftData]);
 
   const basicsForm = useForm<PlanBasicsFormValues>({
     resolver: zodResolver(planBasicsSchema),
@@ -500,13 +526,19 @@ export function CreatePlanDialog({ isOpen, onClose, onCreatePlan }: CreatePlanDi
 
   const handleDialogClose = (open: boolean) => {
     if (!open && !isDraftSaved && currentStep > 1 && planData.basics?.planName) {
-      const draftName = `${planData.basics.planName} (Draft)`;
-      onCreatePlan(draftName, {
-        ...planData,
-        isDraft: true
-      });
-      setIsDraftSaved(true);
-      toast.info("Your progress has been saved as a draft");
+      if (onSaveDraft) {
+        const draftName = `${planData.basics.planName} (Draft)`;
+        onSaveDraft({
+          name: planData.basics.planName,
+          step: currentStep,
+          goals: goals,
+          income: incomeItems.length > 0 ? { items: incomeItems } : null,
+          expenses: expenseItems.length > 0 ? { items: expenseItems } : null,
+          projections: currentStep >= 4 ? planData.projections : null
+        });
+        setIsDraftSaved(true);
+        toast.info("Your progress has been saved as a draft");
+      }
     }
     
     if (!open) {
