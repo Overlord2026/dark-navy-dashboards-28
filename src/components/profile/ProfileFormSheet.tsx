@@ -3,6 +3,13 @@ import React from "react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetClose } from "@/components/ui/sheet";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ProfileForm } from "@/components/profile/ProfileForm";
+import { ContactForm } from "@/components/profile/ContactForm";
+import { AdditionalInfoForm } from "@/components/profile/AdditionalInfoForm";
+import { BeneficiariesForm } from "@/components/profile/BeneficiariesForm";
+import { AffiliationsForm } from "@/components/profile/AffiliationsForm";
+import { TrustsForm } from "@/components/profile/TrustsForm";
+import { SecurityForm } from "@/components/profile/SecurityForm";
 
 interface ProfileFormSheetProps {
   isOpen: boolean;
@@ -20,15 +27,19 @@ export const ProfileFormSheet = ({
   const renderFormContent = () => {
     switch (activeForm) {
       case "investor-profile":
-        return <div>Investor Profile Form</div>;
+        return <ProfileForm onSave={() => onFormSave("investor-profile")} />;
       case "contact-information":
-        return <div>Contact Information Form</div>;
+        return <ContactForm onSave={() => onFormSave("contact-information")} />;
       case "additional-information":
-        return <div>Additional Information Form</div>;
+        return <AdditionalInfoForm onSave={() => onFormSave("additional-information")} />;
       case "beneficiaries":
-        return <div>Beneficiaries Form</div>;
+        return <BeneficiariesForm onSave={() => onFormSave("beneficiaries")} />;
       case "affiliations":
-        return <div>Affiliations Form</div>;
+        return <AffiliationsForm onSave={() => onFormSave("affiliations")} />;
+      case "trusts":
+        return <TrustsForm onSave={() => onFormSave("trusts")} />;
+      case "security-access":
+        return <SecurityForm onSave={() => onFormSave("security-access")} />;
       case "investment-advisory-agreement":
         return <div>Investment Advisory Agreement Form</div>;
       case "disclosures":
@@ -52,6 +63,10 @@ export const ProfileFormSheet = ({
         return "Beneficiaries";
       case "affiliations":
         return "Affiliations";
+      case "trusts":
+        return "Trusts";
+      case "security-access":
+        return "Security & Access";
       case "investment-advisory-agreement":
         return "Investment Advisory Agreement";
       case "disclosures":

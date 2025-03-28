@@ -9,6 +9,7 @@ import { AdvisorProfileView } from "@/components/profile/AdvisorProfileView";
 import { BookSessionDrawer } from "@/components/profile/BookSessionDrawer";
 import { ProfileFormSheet } from "@/components/profile/ProfileFormSheet";
 import { UserCircle } from "lucide-react";
+import { toast } from "sonner";
 
 const CustomerProfile = () => {
   const [activeForm, setActiveForm] = useState<string | null>(null);
@@ -22,11 +23,11 @@ const CustomerProfile = () => {
     { id: "additional-information", name: "Additional Information", completed: false },
     { id: "beneficiaries", name: "Beneficiaries", completed: true },
     { id: "affiliations", name: "Affiliations", completed: true },
+    { id: "trusts", name: "Trusts", completed: false },
+    { id: "security-access", name: "Security & Access", completed: false },
     { id: "investment-advisory-agreement", name: "Investment Advisory Agreement", completed: true },
     { id: "disclosures", name: "Disclosures", completed: false },
-    { id: "custodian-agreement", name: "Custodian Agreement", completed: false },
-    { id: "trusts", name: "Trusts", completed: false },
-    { id: "security-access", name: "Security & Access", completed: false }
+    { id: "custodian-agreement", name: "Custodian Agreement", completed: false }
   ]);
 
   const advisorInfo = {
@@ -49,6 +50,7 @@ const CustomerProfile = () => {
   };
 
   const handleOpenForm = (formId: string) => {
+    console.log(`Opening form: ${formId}`);
     setActiveForm(formId);
     setIsSheetOpen(true);
   };
@@ -64,6 +66,7 @@ const CustomerProfile = () => {
         item.id === formId ? { ...item, completed: true } : item
       )
     );
+    toast.success(`${checklistItems.find(item => item.id === formId)?.name} updated successfully`);
     handleCloseForm();
   };
 
@@ -76,21 +79,26 @@ const CustomerProfile = () => {
     console.log(`Profile menu item clicked: ${itemId}`);
     
     switch (itemId) {
-      case "profile":
-      case "contact-info":
-      case "additional-info":
+      case "investor-profile":
+      case "contact-information":
+      case "additional-information":
       case "beneficiaries":
       case "affiliations":
       case "trusts":
       case "security-access":
+      case "investment-advisory-agreement":
+      case "disclosures":
+      case "custodian-agreement":
         handleOpenForm(itemId);
         break;
       case "change-theme":
         // Theme change functionality would go here
+        toast.info("Theme change functionality coming soon");
         console.log("Change theme clicked");
         break;
       case "log-out":
         // Logout functionality would go here
+        toast.info("Logout functionality coming soon");
         console.log("Log out clicked");
         break;
     }
@@ -130,7 +138,7 @@ const CustomerProfile = () => {
                 </div>
               </div>
               <button 
-                onClick={() => handleOpenForm("profile")}
+                onClick={() => handleOpenForm("investor-profile")}
                 className="mt-3 text-sm text-primary hover:underline"
               >
                 Edit Profile
@@ -163,7 +171,7 @@ const CustomerProfile = () => {
       </div>
 
       {/* Fixed Position Components */}
-      <UserProfileDropdown onOpenForm={handleOpenForm} />
+      <UserProfileDropdown onOpenForm={handleProfileMenuItemClick} />
       
       <AdvisorSection 
         advisorInfo={advisorInfo}

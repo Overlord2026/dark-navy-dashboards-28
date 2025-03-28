@@ -25,9 +25,9 @@ interface UserProfileDropdownProps {
 
 export const UserProfileDropdown = ({ onOpenForm }: UserProfileDropdownProps) => {
   const menuItems = [
-    { id: "profile", label: "Investor Profile", icon: UserIcon },
-    { id: "contact-info", label: "Contact Information", icon: PhoneIcon },
-    { id: "additional-info", label: "Additional Information", icon: FileTextIcon },
+    { id: "investor-profile", label: "Investor Profile", icon: UserIcon },
+    { id: "contact-information", label: "Contact Information", icon: PhoneIcon },
+    { id: "additional-information", label: "Additional Information", icon: FileTextIcon },
     { id: "beneficiaries", label: "Beneficiaries", icon: UsersIcon },
     { id: "affiliations", label: "Affiliations", icon: BuildingIcon },
     { id: "trusts", label: "Trusts", icon: BuildingIcon },
