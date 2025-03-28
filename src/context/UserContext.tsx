@@ -37,34 +37,49 @@ export function UserProvider({ children }: { children: ReactNode }) {
   const updateUserProfile = (data: Partial<UserProfile>) => {
     console.log("Updating user profile with:", data);
     
-    // Validate date object if present
+    // Create a clean copy of the data
+    const cleanData = { ...data };
+    
+    // Handle date of birth specially
     if (data.dateOfBirth) {
       console.log("Date of birth type:", typeof data.dateOfBirth);
-      console.log("Date of birth value:", data.dateOfBirth);
       
-      // Ensure it's a proper Date object
-      if (!(data.dateOfBirth instanceof Date) || isNaN(data.dateOfBirth.getTime())) {
-        console.error("Invalid date format received");
-        // Try to fix if possible
-        if (typeof data.dateOfBirth === 'string') {
-          try {
-            data.dateOfBirth = new Date(data.dateOfBirth);
-            console.log("Converted string to date:", data.dateOfBirth);
-          } catch (e) {
-            console.error("Failed to convert string to date:", e);
-            delete data.dateOfBirth;
-          }
-        } else {
-          // Invalid date, remove from update
-          delete data.dateOfBirth;
+      // Convert string date to Date object
+      if (typeof data.dateOfBirth === 'string') {
+        try {
+          cleanData.dateOfBirth = new Date(data.dateOfBirth);
+          console.log("Converted string to date:", cleanData.dateOfBirth);
+        } catch (e) {
+          console.error("Failed to convert string to date:", e);
+          delete cleanData.dateOfBirth;
         }
+      } 
+      // Handle serialized date object from form data
+      else if (typeof data.dateOfBirth === 'object' && data.dateOfBirth._type === 'Date') {
+        try {
+          cleanData.dateOfBirth = new Date(data.dateOfBirth.value.iso || data.dateOfBirth.value);
+          console.log("Converted object to date:", cleanData.dateOfBirth);
+        } catch (e) {
+          console.error("Failed to convert object to date:", e);
+          delete cleanData.dateOfBirth;
+        }
+      }
+      // Validate the date object
+      else if (data.dateOfBirth instanceof Date) {
+        if (isNaN(data.dateOfBirth.getTime())) {
+          console.error("Invalid date format received");
+          delete cleanData.dateOfBirth;
+        }
+      } else {
+        console.error("Unhandled date format:", data.dateOfBirth);
+        delete cleanData.dateOfBirth;
       }
     }
     
     setUserProfile(prevProfile => {
       const newProfile = {
         ...prevProfile,
-        ...data,
+        ...cleanData,
       };
       console.log("Updated profile:", newProfile);
       return newProfile;

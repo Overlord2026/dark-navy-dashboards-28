@@ -28,7 +28,7 @@ export const ProfileFormSheet = ({
   
   // Handle saving the form data
   const handleSave = (formId: string) => {
-    console.log(`Saving form: ${formId}`);
+    console.log(`Form ${formId} saved`);
     onFormSave(formId);
   };
 
@@ -108,4 +108,4 @@ export const ProfileFormSheet = ({
       </SheetContent>
     </Sheet>
   );
-};
+}

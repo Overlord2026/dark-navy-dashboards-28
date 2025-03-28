@@ -97,8 +97,13 @@ export function ProfileForm({ onSave }: { onSave: () => void }) {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log("Form submitted with values:", values);
+    
+    // Convert date to proper format if needed
+    const formattedValues = { ...values };
+    
     // Update global user profile state
-    updateUserProfile(values);
+    updateUserProfile(formattedValues);
+    
     // Call the onSave callback to update parent components
     onSave();
   }
@@ -192,6 +197,7 @@ export function ProfileForm({ onSave }: { onSave: () => void }) {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
+                      <SelectItem value="">None</SelectItem>
                       <SelectItem value="Jr">Jr.</SelectItem>
                       <SelectItem value="Sr">Sr.</SelectItem>
                       <SelectItem value="II">II</SelectItem>
