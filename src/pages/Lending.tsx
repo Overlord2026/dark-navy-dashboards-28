@@ -134,7 +134,7 @@ const Lending = () => {
       title="Lending Solutions" 
       activeMainItem="lending"
     >
-      <div className="animate-fade-in p-4">
+      <div className="animate-fade-in">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
           <div>
             <h1 className="text-2xl font-semibold mb-1">Lending Solutions</h1>

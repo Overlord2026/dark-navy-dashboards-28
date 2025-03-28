@@ -67,7 +67,6 @@ const CustomHomeIcon: React.FC = () => (
 const mainMenuItems: MainMenuItem[] = [
   { id: "home", label: "Home", icon: CustomHomeIcon, href: "/" },
   { id: "accounts", label: "Accounts", icon: WalletIcon, href: "/accounts" },
-  { id: "documents", label: "Documents", icon: FileIcon, href: "/documents" },
   { id: "sharing", label: "Sharing", icon: ShareIcon, href: "/sharing" },
   { id: "education", label: "Education", icon: GraduationCapIcon, href: "/education" },
   { id: "financial-plans", label: "Financial Plans", icon: BarChart3Icon, href: "/financial-plans" },
@@ -78,17 +77,6 @@ const mainMenuItems: MainMenuItem[] = [
   { id: "transfers", label: "Transfers", icon: ArrowRightLeftIcon, href: "/transfers" },
   { id: "tax-budgets", label: "Tax Budgets", icon: ReceiptIcon, href: "/tax-budgets" },
   { id: "vault", label: "Legacy Vault", icon: BookOpenIcon, href: "/vault" },
-];
-
-const documentSubMenuItems: MenuItem[] = [
-  { id: "all-documents", name: "All Documents", active: true },
-  { id: "business-ownership", name: "Business Ownership" },
-  { id: "education", name: "Education" },
-  { id: "estate-planning", name: "Estate Planning" },
-  { id: "insurance-policies", name: "Insurance Policies" },
-  { id: "leases", name: "Leases" },
-  { id: "taxes", name: "Taxes" },
-  { id: "trusts", name: "Trusts" },
 ];
 
 const accountsSubMenuItems: MenuItem[] = [
@@ -115,8 +103,6 @@ const educationSubMenuItems: MenuItem[] = [
 
 const getSecondaryMenuItems = (activeMainItem: string): MenuItem[] => {
   switch (activeMainItem) {
-    case "documents":
-      return documentSubMenuItems;
     case "accounts":
       return accountsSubMenuItems;
     case "sharing":
@@ -131,8 +117,8 @@ const getSecondaryMenuItems = (activeMainItem: string): MenuItem[] => {
 export function ThreeColumnLayout({ 
   children, 
   title = "Dashboard", 
-  activeMainItem = "documents",
-  activeSecondaryItem = "all-documents",
+  activeMainItem = "home",
+  activeSecondaryItem = "",
   secondaryMenuItems,
   breadcrumbs
 }: ThreeColumnLayoutProps) {
