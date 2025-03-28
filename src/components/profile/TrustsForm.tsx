@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -14,8 +14,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Plus, Minus, ChevronDown } from "lucide-react";
-import { FileUpload } from "@/components/ui/file-upload";
+import { Plus, Minus, ChevronDown, FileUp } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 const trustSchema = z.object({
   trustName: z.string().min(1, { message: "Trust name is required" }),
@@ -34,6 +34,9 @@ export function TrustsForm({ onSave }: { onSave: () => void }) {
   const [currentTrust, setCurrentTrust] = useState<z.infer<typeof trustSchema> | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploadedFiles, setUploadedFiles] = useState<{trustId: number, file: File}[]>([]);
+  const [isDragging, setIsDragging] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const { toast } = useToast();
   
   const form = useForm<z.infer<typeof trustSchema>>({
     resolver: zodResolver(trustSchema),
@@ -69,6 +72,11 @@ export function TrustsForm({ onSave }: { onSave: () => void }) {
           trustId: trusts.length, // This will be the index of the new trust
           file: selectedFile
         }]);
+
+        toast({
+          title: "File uploaded",
+          description: `${selectedFile.name} has been attached to the trust`
+        });
       }
     }
     
@@ -85,6 +93,7 @@ export function TrustsForm({ onSave }: { onSave: () => void }) {
     });
     
     setSelectedFile(null);
+    onSave();
   }
 
   function handleRemoveTrust(trust: z.infer<typeof trustSchema>) {
@@ -110,8 +119,51 @@ export function TrustsForm({ onSave }: { onSave: () => void }) {
     form.reset(trust);
   }
   
-  function handleFileSelect(file: File) {
-    setSelectedFile(file);
+  function handleFileSelect(e: React.ChangeEvent<HTMLInputElement>) {
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0];
+      setSelectedFile(file);
+      toast({
+        title: "File selected",
+        description: `${file.name} is ready to be uploaded`
+      });
+    }
+  }
+
+  function handleBrowseClick() {
+    fileInputRef.current?.click();
+  }
+
+  function handleDragEnter(e: React.DragEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  }
+
+  function handleDragLeave(e: React.DragEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+  }
+
+  function handleDragOver(e: React.DragEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+
+  function handleDrop(e: React.DragEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+    
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      const file = e.dataTransfer.files[0];
+      setSelectedFile(file);
+      toast({
+        title: "File selected",
+        description: `${file.name} is ready to be uploaded`
+      });
+    }
   }
 
   return (
@@ -367,18 +419,30 @@ export function TrustsForm({ onSave }: { onSave: () => void }) {
               )}
             />
             
-            <div className="mt-4 border border-dashed border-gray-600 rounded-lg p-6 text-center">
-              <div className="flex items-center justify-center">
-                <input type="checkbox" className="mr-2" />
-                <p className="text-white inline">Drop pdf file here or</p>
-                <Button 
-                  type="button" 
-                  variant="link"
-                  className="text-green-400 p-0 h-auto ml-1"
-                >
-                  browse
-                </Button>
+            <div 
+              className={`mt-4 border border-dashed ${isDragging ? 'border-blue-500' : 'border-gray-600'} rounded-lg p-6 text-center cursor-pointer`}
+              onDragEnter={handleDragEnter}
+              onDragLeave={handleDragLeave}
+              onDragOver={handleDragOver}
+              onDrop={handleDrop}
+              onClick={handleBrowseClick}
+            >
+              <input 
+                type="file" 
+                ref={fileInputRef} 
+                onChange={handleFileSelect} 
+                className="hidden" 
+                accept=".pdf,.doc,.docx" 
+              />
+              <div className="flex items-center justify-center space-x-2">
+                <input type="checkbox" className="form-checkbox h-4 w-4 text-blue-600" checked={!!selectedFile} readOnly />
+                <p className="text-white">Drop pdf file here or <span className="text-green-500 font-medium cursor-pointer">browse</span></p>
               </div>
+              {selectedFile && (
+                <div className="mt-2 text-sm text-blue-400">
+                  <p>Selected file: {selectedFile.name}</p>
+                </div>
+              )}
             </div>
           </div>
           
