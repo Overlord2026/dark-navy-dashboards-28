@@ -55,9 +55,21 @@ export function UserProvider({ children }: { children: ReactNode }) {
         }
       } 
       // Handle serialized date object from form data
-      else if (typeof data.dateOfBirth === 'object' && data.dateOfBirth._type === 'Date') {
+      else if (typeof data.dateOfBirth === 'object' && 
+              'toString' in data.dateOfBirth &&
+              !(data.dateOfBirth instanceof Date)) {
         try {
-          cleanData.dateOfBirth = new Date(data.dateOfBirth.value.iso || data.dateOfBirth.value);
+          // Handle custom date object with possible _type and value properties
+          if ('_type' in (data.dateOfBirth as any) && (data.dateOfBirth as any)._type === 'Date') {
+            const dateValue = (data.dateOfBirth as any).value;
+            if (dateValue) {
+              const isoDate = typeof dateValue === 'object' && 'iso' in dateValue ? dateValue.iso : dateValue;
+              cleanData.dateOfBirth = new Date(isoDate);
+            }
+          } else {
+            // Generic object conversion
+            cleanData.dateOfBirth = new Date(data.dateOfBirth.toString());
+          }
           console.log("Converted object to date:", cleanData.dateOfBirth);
         } catch (e) {
           console.error("Failed to convert object to date:", e);
