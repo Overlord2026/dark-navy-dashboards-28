@@ -23,9 +23,9 @@ export const UserProfileSection = ({
 }: UserProfileSectionProps) => {
   const navigate = useNavigate();
   const menuItems = [
-    { id: "profile", label: "Investor Profile" },
-    { id: "contact-info", label: "Contact Information" },
-    { id: "additional-info", label: "Additional Information" },
+    { id: "investor-profile", label: "Investor Profile" },
+    { id: "contact-information", label: "Contact Information" },
+    { id: "additional-information", label: "Additional Information" },
     { id: "beneficiaries", label: "Beneficiaries" },
     { id: "affiliations", label: "Affiliations" },
     { id: "trusts", label: "Trusts" },

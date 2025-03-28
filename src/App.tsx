@@ -29,6 +29,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Dashboard />} />
+          <Route path="/profile" element={<CustomerProfile />} />
           
           <Route path="/documents" element={<Documents />}>
             <Route path=":sectionId" element={<Documents />} />
@@ -53,7 +54,6 @@ function App() {
           <Route path="/cash-management" element={<CashManagement />} />
           <Route path="/transfers" element={<Transfers />} />
           <Route path="/tax-budgets" element={<TaxBudgets />} />
-          <Route path="/profile" element={<CustomerProfile />} />
           <Route path="/advisor" element={<AdvisorProfile />} />
           
           <Route path="*" element={<NotFound />} />

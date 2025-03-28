@@ -37,7 +37,7 @@ export const UserProfileDropdown = ({ onOpenForm }: UserProfileDropdownProps) =>
   ];
 
   const handleMenuItemClick = (itemId: string) => {
-    console.log(`Profile menu item clicked in dropdown: ${itemId}`);
+    console.log(`Dropdown menu item clicked: ${itemId}`);
     onOpenForm(itemId);
   };
 

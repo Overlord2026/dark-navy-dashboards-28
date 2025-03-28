@@ -105,7 +105,7 @@ const CustomerProfile = () => {
   };
 
   return (
-    <ThreeColumnLayout activeMainItem="home" title="Dashboard">
+    <ThreeColumnLayout activeMainItem="home" title="Home">
       <div className="mx-auto w-full max-w-6xl space-y-6 animate-fade-in p-4">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
           <div>

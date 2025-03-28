@@ -34,26 +34,6 @@ export const Header = () => {
           <BellIcon className="h-5 w-5" />
           <span className="absolute top-1 right-1 h-2 w-2 bg-accent rounded-full"></span>
         </Button>
-        
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="relative h-9 w-9 rounded-full">
-              <Avatar className="h-9 w-9">
-                <AvatarImage src="/placeholder.svg" alt="User" />
-                <AvatarFallback className="bg-primary text-primary-foreground">BF</AvatarFallback>
-              </Avatar>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56 mt-1 mr-1 bg-[#1B1B32] border-gray-700 text-[#E2E2E2]">
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
-            <DropdownMenuSeparator className="bg-gray-700" />
-            <DropdownMenuItem className="hover:bg-[#1c2e4a] cursor-pointer">Profile</DropdownMenuItem>
-            <DropdownMenuItem className="hover:bg-[#1c2e4a] cursor-pointer">Settings</DropdownMenuItem>
-            <DropdownMenuItem className="hover:bg-[#1c2e4a] cursor-pointer">Billing</DropdownMenuItem>
-            <DropdownMenuSeparator className="bg-gray-700" />
-            <DropdownMenuItem className="hover:bg-[#1c2e4a] cursor-pointer">Log out</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
       </div>
     </div>
   );
