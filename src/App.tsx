@@ -3,6 +3,7 @@ import React from 'react';
 import './App.css';
 import Dashboard from "./pages/Index";
 import CustomerProfile from "./pages/CustomerProfile";
+import FinancialPlans from "./pages/FinancialPlans";
 import {
   BrowserRouter as Router,
   Routes,
@@ -21,6 +22,7 @@ function App() {
             <Routes>
               <Route path="/" element={<Dashboard />} />
               <Route path="/profile" element={<CustomerProfile />} />
+              <Route path="/financial-plans" element={<FinancialPlans />} />
             </Routes>
           </div>
           <Toaster position="top-right" />
