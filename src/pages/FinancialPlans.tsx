@@ -264,6 +264,38 @@ const FinancialPlans = () => {
     );
   };
 
+  const handleGoalUpdate = (updatedGoal: Goal) => {
+    const planIndex = plans.findIndex(p => p.id === selectedPlan);
+    if (planIndex === -1) return;
+    
+    const plan = plans[planIndex];
+    const existingGoals = plan.goals || [];
+    const goalIndex = existingGoals.findIndex(g => g.id === updatedGoal.id);
+    
+    let updatedGoals;
+    if (goalIndex >= 0) {
+      updatedGoals = [...existingGoals];
+      updatedGoals[goalIndex] = updatedGoal;
+    } else {
+      updatedGoals = [...existingGoals, updatedGoal];
+    }
+    
+    const updatedPlan = {
+      ...plan,
+      goals: updatedGoals
+    };
+    
+    setPlans(prevPlans => {
+      const newPlans = [...prevPlans];
+      newPlans[planIndex] = updatedPlan;
+      return newPlans;
+    });
+    
+    setGoals(updatedGoals);
+    
+    toast.success("Goal updated successfully");
+  };
+
   const activePlan = plans.find(plan => plan.id === selectedPlan) || plans[0];
   const draftPlans = plans.filter(plan => plan.status === 'Draft');
   const activePlans = plans.filter(plan => plan.status === 'Active');
@@ -417,7 +449,10 @@ const FinancialPlans = () => {
                   </Button>
                 </div>
               </div>
-              <GoalsList goals={goals} />
+              <GoalsList 
+                goals={goals} 
+                onGoalUpdate={handleGoalUpdate}
+              />
             </CardContent>
           </Card>
         </div>
