@@ -1,3 +1,4 @@
+
 import { ReactNode, useState } from "react";
 import * as React from "react";
 import { useParams, useNavigate, Link, useLocation } from "react-router-dom";
@@ -189,6 +190,7 @@ export function ThreeColumnLayout({
 
   return (
     <div className={`flex flex-col h-screen overflow-hidden ${isLightTheme ? 'bg-[#F9F7E8]' : 'bg-[#12121C]'}`}>
+      {/* Logo Section - isolated, with clear boundary */}
       <div className="w-full flex justify-center items-center py-3 border-b z-50 bg-inherit" style={{ borderColor: isLightTheme ? '#DCD8C0' : 'rgba(255,255,255,0.1)' }}>
         <div className="flex justify-center items-center w-full h-full">
           <img 
@@ -199,6 +201,7 @@ export function ThreeColumnLayout({
         </div>
       </div>
       
+      {/* Content Section - positioned directly below logo section */}
       <div className="flex flex-1 overflow-hidden">
         <aside
           className={cn(
@@ -306,7 +309,8 @@ export function ThreeColumnLayout({
 
         <div className="flex-1 flex flex-col overflow-hidden">
           {isHomePage ? (
-            <div className="flex flex-col items-center w-full p-8">
+            <div className="flex flex-col items-center w-full">
+              {/* Removed p-8 to eliminate extra padding/gap */}
             </div>
           ) : null}
           

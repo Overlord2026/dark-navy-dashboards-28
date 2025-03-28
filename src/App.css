@@ -49,3 +49,13 @@
   width: 100%;
   height: 100%;
 }
+
+/* Ensure content follows logo section without gaps */
+.content-section {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+  margin-top: 0;
+  padding-top: 0;
+}
