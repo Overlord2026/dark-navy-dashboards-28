@@ -8,6 +8,7 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
+import { useNavigate } from "react-router-dom";
 
 interface UserProfileSectionProps {
   userName: string;
@@ -20,6 +21,7 @@ export const UserProfileSection = ({
   avatarInitials,
   onMenuItemClick 
 }: UserProfileSectionProps) => {
+  const navigate = useNavigate();
   const menuItems = [
     { id: "profile", label: "Investor Profile" },
     { id: "contact-info", label: "Contact Information" },
@@ -33,6 +35,7 @@ export const UserProfileSection = ({
   ];
 
   const handleMenuItemClick = (itemId: string) => {
+    console.log(`Profile menu item clicked in sidebar: ${itemId}`);
     if (onMenuItemClick) {
       onMenuItemClick(itemId);
     }
@@ -51,7 +54,7 @@ export const UserProfileSection = ({
           <ChevronDown className="h-4 w-4 text-white/70" />
         </DropdownMenuTrigger>
         <DropdownMenuContent 
-          className="w-[220px] bg-[#0F0F2D] border-gray-700 text-white"
+          className="w-[220px] bg-[#0F0F2D] border-gray-700 text-white z-50"
           align="end"
         >
           {menuItems.slice(0, 7).map((item) => (

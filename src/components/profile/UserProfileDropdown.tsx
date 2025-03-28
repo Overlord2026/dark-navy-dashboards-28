@@ -36,6 +36,11 @@ export const UserProfileDropdown = ({ onOpenForm }: UserProfileDropdownProps) =>
     { id: "log-out", label: "Log Out", icon: LogOutIcon },
   ];
 
+  const handleMenuItemClick = (itemId: string) => {
+    console.log(`Profile menu item clicked in dropdown: ${itemId}`);
+    onOpenForm(itemId);
+  };
+
   return (
     <div className="fixed top-0 left-0 z-40 w-[220px] pt-4 px-5">
       <DropdownMenu>
@@ -48,13 +53,13 @@ export const UserProfileDropdown = ({ onOpenForm }: UserProfileDropdownProps) =>
           </div>
           <ChevronRight className="h-4 w-4 rotate-90 text-white/70" />
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-[220px] bg-[#0F0F2D] border-gray-700 text-white">
+        <DropdownMenuContent className="w-[220px] bg-[#0F0F2D] border-gray-700 text-white z-50">
           {menuItems.slice(0, 7).map((item) => {
             const Icon = item.icon;
             return (
               <DropdownMenuItem 
                 key={item.id}
-                onClick={() => onOpenForm(item.id)}
+                onClick={() => handleMenuItemClick(item.id)}
                 className="py-2.5 cursor-pointer hover:bg-[#1c2e4a]"
               >
                 <Icon className="h-4 w-4 mr-2" />
@@ -68,6 +73,7 @@ export const UserProfileDropdown = ({ onOpenForm }: UserProfileDropdownProps) =>
             return (
               <DropdownMenuItem 
                 key={item.id}
+                onClick={() => handleMenuItemClick(item.id)}
                 className="py-2.5 cursor-pointer hover:bg-[#1c2e4a]"
               >
                 <Icon className="h-4 w-4 mr-2" />

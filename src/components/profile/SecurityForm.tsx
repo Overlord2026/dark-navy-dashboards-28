@@ -1,7 +1,23 @@
 
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 export function SecurityForm({ onSave }: { onSave: () => void }) {
+  const [loading, setLoading] = useState(false);
+
+  const handleEnableTwoFactor = () => {
+    setLoading(true);
+    console.log("Enable 2FA clicked");
+    
+    // Simulate API call
+    setTimeout(() => {
+      setLoading(false);
+      toast.success("Two-factor authentication enabled successfully");
+      onSave();
+    }, 1500);
+  };
+
   return (
     <div className="space-y-6">
       <div>
@@ -14,14 +30,11 @@ export function SecurityForm({ onSave }: { onSave: () => void }) {
       
       <div className="flex justify-center">
         <Button 
-          onClick={() => {
-            console.log("Enable 2FA clicked");
-            // This would normally integrate with a 2FA service
-            onSave();
-          }}
+          onClick={handleEnableTwoFactor}
           className="bg-white text-[#0F0F2D] hover:bg-white/90 py-6 px-8"
+          disabled={loading}
         >
-          Turn On Two-Factor Authentication
+          {loading ? "Enabling..." : "Turn On Two-Factor Authentication"}
         </Button>
       </div>
     </div>
