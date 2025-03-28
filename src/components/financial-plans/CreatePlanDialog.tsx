@@ -8,6 +8,7 @@ import { ExpensesStep } from "./ExpensesStep";
 import { ExpenseData } from "./ExpensesSidePanel";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Select,
   SelectContent,
@@ -23,12 +24,21 @@ interface Goal {
   priority: string;
 }
 
+interface Account {
+  id: string;
+  name: string;
+  type: string;
+  balance: number;
+  isSelected?: boolean;
+}
+
 interface PlanData {
   name: string;
   goals: Goal[];
   isDraft?: boolean;
   successRate?: number;
   expenses?: ExpenseData[];
+  accounts?: Account[];
 }
 
 interface CreatePlanDialogProps {
@@ -53,8 +63,16 @@ export function CreatePlanDialog({
     goals: draftData?.goals || [],
     isDraft: true,
     expenses: draftData?.expenses || [],
+    accounts: draftData?.accounts || [],
   });
   const [goals, setGoals] = useState<Goal[]>(draftData?.goals || []);
+  const [accounts, setAccounts] = useState<Account[]>(draftData?.accounts || [
+    { id: "1", name: "Checking Account", type: "Checking", balance: 5000, isSelected: false },
+    { id: "2", name: "Savings Account", type: "Savings", balance: 25000, isSelected: false },
+    { id: "3", name: "401(k)", type: "Retirement", balance: 120000, isSelected: false },
+    { id: "4", name: "IRA", type: "Retirement", balance: 45000, isSelected: false },
+    { id: "5", name: "Brokerage Account", type: "Investment", balance: 30000, isSelected: false },
+  ]);
 
   const handleStepSelect = (stepNumber: number) => {
     setCurrentStep(stepNumber);
@@ -83,7 +101,8 @@ export function CreatePlanDialog({
       ...planData,
       name: planName,
       currentStep: currentStep,
-      draftId: draftData?.id
+      draftId: draftData?.id,
+      accounts: accounts
     };
     
     onSaveDraft(draftDataToSave);
@@ -93,6 +112,15 @@ export function CreatePlanDialog({
   const handleGoalUpdate = (updatedGoals: Goal[]) => {
     setGoals(updatedGoals);
     setPlanData(prev => ({ ...prev, goals: updatedGoals }));
+  };
+
+  const handleAccountSelect = (accountId: string, isChecked: boolean) => {
+    const updatedAccounts = accounts.map(account => 
+      account.id === accountId ? { ...account, isSelected: isChecked } : account
+    );
+    
+    setAccounts(updatedAccounts);
+    setPlanData(prev => ({ ...prev, accounts: updatedAccounts }));
   };
 
   const [expenses, setExpenses] = useState<ExpenseData[]>(draftData?.expenses || []);
@@ -155,12 +183,38 @@ export function CreatePlanDialog({
         );
       case 3:
         return (
-          <div className="space-y-4">
+          <div className="space-y-6">
             <h2 className="text-2xl font-semibold">Assets</h2>
-            <p className="text-muted-foreground">
+            <p className="text-muted-foreground mb-4">
               Choose which accounts to add to your plan.
             </p>
-            {/* Assets input fields will go here */}
+            
+            <div className="space-y-4">
+              {accounts.map((account) => (
+                <div key={account.id} className="flex items-center justify-between p-4 bg-[#1A1A2E] rounded-lg border border-border/20">
+                  <div className="flex items-center space-x-3">
+                    <Checkbox 
+                      id={`account-${account.id}`} 
+                      checked={account.isSelected} 
+                      onCheckedChange={(checked) => handleAccountSelect(account.id, !!checked)}
+                    />
+                    <div>
+                      <Label 
+                        htmlFor={`account-${account.id}`} 
+                        className="text-base font-medium cursor-pointer"
+                      >
+                        {account.name}
+                      </Label>
+                      <p className="text-sm text-muted-foreground">{account.type}</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-semibold">${account.balance.toLocaleString()}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            
             <div className="flex justify-between">
               <Button variant="outline" onClick={handlePrevStep}>Previous</Button>
               <Button onClick={handleNextStep}>Next</Button>
