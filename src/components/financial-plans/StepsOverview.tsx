@@ -6,10 +6,14 @@ interface StepCardProps {
   number: number;
   title: string;
   description: string;
+  onClick: () => void;
 }
 
-const StepCard = ({ number, title, description }: StepCardProps) => (
-  <Card className="w-full max-w-[200px] h-[200px] flex flex-col bg-[#1A1A2E] border-border/20">
+const StepCard = ({ number, title, description, onClick }: StepCardProps) => (
+  <Card 
+    className="w-full max-w-[200px] h-[200px] flex flex-col bg-[#1A1A2E] border-border/20 cursor-pointer hover:bg-[#1A1A2E]/80 hover:border-primary/30 transition-all duration-200"
+    onClick={onClick}
+  >
     <CardContent className="p-4 flex flex-col h-full">
       <span className="text-3xl font-bold text-primary/80 mb-2">{number}</span>
       <h3 className="text-[17px] font-bold mb-2">{title}</h3>
@@ -18,7 +22,11 @@ const StepCard = ({ number, title, description }: StepCardProps) => (
   </Card>
 );
 
-export function StepsOverview() {
+export interface StepsOverviewProps {
+  onStepSelect?: (stepNumber: number) => void;
+}
+
+export function StepsOverview({ onStepSelect }: StepsOverviewProps) {
   const steps = [
     {
       number: 1,
@@ -63,6 +71,7 @@ export function StepsOverview() {
             number={step.number}
             title={step.title}
             description={step.description}
+            onClick={() => onStepSelect?.(step.number + 1)} // Adding +1 to align with the CreatePlanDialog steps (2-7)
           />
         ))}
       </div>

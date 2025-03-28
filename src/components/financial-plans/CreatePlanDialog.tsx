@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -102,7 +101,7 @@ interface ExpenseItem {
 
 export function CreatePlanDialog({ isOpen, onClose, onCreatePlan, onSaveDraft, draftData }: CreatePlanDialogProps) {
   const [currentStep, setCurrentStep] = useState(1);
-  const totalSteps = 6; // Increased from 5 to 6
+  const totalSteps = 6;
   const [goals, setGoals] = useState<Goal[]>([]);
   const [editingGoal, setEditingGoal] = useState<Goal | null>(null);
   const [isGoalFormOpen, setIsGoalFormOpen] = useState(false);
@@ -240,7 +239,7 @@ export function CreatePlanDialog({ isOpen, onClose, onCreatePlan, onSaveDraft, d
       ...prev,
       basics: values
     }));
-    setCurrentStep(3); // Skip overview step if coming from basics
+    setCurrentStep(3);
   };
 
   const handleGoalSubmit = (values: GoalFormValues) => {
@@ -579,6 +578,21 @@ export function CreatePlanDialog({ isOpen, onClose, onCreatePlan, onSaveDraft, d
     }
   };
 
+  const handleStepSelect = (stepNumber: number) => {
+    const wizardStep = stepNumber + 1;
+    
+    if (wizardStep <= totalSteps) {
+      if (currentStep === 2) {
+        setPlanData(prev => ({
+          ...prev,
+          basics: basicsForm.getValues()
+        }));
+      }
+      
+      setCurrentStep(wizardStep);
+    }
+  };
+
   return (
     <>
       <Dialog open={isOpen} onOpenChange={handleDialogClose}>
@@ -595,7 +609,7 @@ export function CreatePlanDialog({ isOpen, onClose, onCreatePlan, onSaveDraft, d
           <div className={cn("transition-opacity duration-300", { "animate-in fade-in": true })}>
             {currentStep === 1 && (
               <div className="space-y-6">
-                <StepsOverview />
+                <StepsOverview onStepSelect={handleStepSelect} />
                 
                 <DialogFooter className="pt-4 flex justify-between w-full">
                   <Button 
