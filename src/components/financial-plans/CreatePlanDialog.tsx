@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -84,13 +83,29 @@ export function CreatePlanDialog({ isOpen, onClose, onCreatePlan }: CreatePlanDi
 
   const handleGoalSubmit = (values: GoalFormValues) => {
     if (editingGoal) {
-      // Update existing goal
+      // Update existing goal - ensure all properties match the Goal interface
       setGoals(goals.map(goal => 
-        goal.id === values.id ? { ...values, isEditing: false } : goal
+        goal.id === values.id ? {
+          id: values.id,
+          title: values.title,
+          targetDate: values.targetDate,
+          targetAmount: values.targetAmount,
+          priority: values.priority || "Medium",
+          description: values.description,
+          isEditing: false
+        } : goal
       ));
     } else {
-      // Add new goal
-      setGoals([...goals, { ...values, id: `goal-${Date.now()}` }]);
+      // Add new goal - ensure all properties match the Goal interface
+      const newGoal: Goal = {
+        id: values.id,
+        title: values.title,
+        targetDate: values.targetDate,
+        targetAmount: values.targetAmount,
+        priority: values.priority || "Medium",
+        description: values.description
+      };
+      setGoals([...goals, newGoal]);
     }
     
     closeGoalForm();
