@@ -1,6 +1,6 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CalendarIcon, ChevronDown } from "lucide-react";
+import { CalendarIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
@@ -49,6 +49,7 @@ export function ProfileForm({ onSave }: { onSave: () => void }) {
       firstName: userProfile.firstName,
       middleName: userProfile.middleName || "",
       lastName: userProfile.lastName,
+      suffix: userProfile.suffix || "",
       gender: userProfile.gender || "Male",
       maritalStatus: userProfile.maritalStatus || "Married",
       dateOfBirth: userProfile.dateOfBirth || new Date("1963-05-03"),
@@ -62,6 +63,7 @@ export function ProfileForm({ onSave }: { onSave: () => void }) {
       firstName: userProfile.firstName,
       middleName: userProfile.middleName || "",
       lastName: userProfile.lastName,
+      suffix: userProfile.suffix || "",
       gender: userProfile.gender || "Male",
       maritalStatus: userProfile.maritalStatus || "Married",
       dateOfBirth: userProfile.dateOfBirth || new Date("1963-05-03"),
@@ -270,7 +272,7 @@ export function ProfileForm({ onSave }: { onSave: () => void }) {
           </div>
           
           <div className="flex justify-end">
-            <Button type="submit">Save</Button>
+            <Button type="submit" className="bg-yellow-500 hover:bg-yellow-600 text-black font-medium">Save</Button>
           </div>
         </form>
       </Form>

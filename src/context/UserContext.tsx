@@ -35,6 +35,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
   const [userProfile, setUserProfile] = useState<UserProfile>(defaultUserProfile);
 
   const updateUserProfile = (data: Partial<UserProfile>) => {
+    console.log("Updating user profile with:", data);
     setUserProfile(prevProfile => ({
       ...prevProfile,
       ...data,

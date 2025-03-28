@@ -10,6 +10,7 @@ import { BeneficiariesForm } from "@/components/profile/BeneficiariesForm";
 import { AffiliationsForm } from "@/components/profile/AffiliationsForm";
 import { TrustsForm } from "@/components/profile/TrustsForm";
 import { SecurityForm } from "@/components/profile/SecurityForm";
+import { DialogTitle } from "@/components/ui/dialog";
 
 interface ProfileFormSheetProps {
   isOpen: boolean;
