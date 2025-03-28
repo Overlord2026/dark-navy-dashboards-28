@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useToast } from "@/hooks/use-toast";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address." }),
@@ -25,6 +26,7 @@ const formSchema = z.object({
 });
 
 export function ContactForm({ onSave }: { onSave: () => void }) {
+  const { toast } = useToast();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -40,6 +42,10 @@ export function ContactForm({ onSave }: { onSave: () => void }) {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
+    toast({
+      title: "Contact information updated",
+      description: "Your contact information has been saved successfully.",
+    });
     onSave();
   }
 
