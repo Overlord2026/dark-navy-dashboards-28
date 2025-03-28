@@ -191,8 +191,8 @@ export function ThreeColumnLayout({
           isLightTheme ? "bg-[#F9F7E8] border-r border-[#DCD8C0]" : "bg-[#1B1B32] border-r border-white/10"
         )}
       >
-        <div className="flex-1 py-2 overflow-y-auto">
-          <nav className="px-4 space-y-2">
+        <div className="flex-1 overflow-y-auto">
+          <nav className="px-4 space-y-2 pt-0">
             {mainMenuItems.map((item) => {
               if (item.id === "education") return null;
 
