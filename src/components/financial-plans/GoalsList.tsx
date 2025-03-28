@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { ChevronDownIcon, ChevronUpIcon, PlusIcon } from "lucide-react";
@@ -26,10 +25,20 @@ export interface Goal {
   dateOfBirth?: Date;
   description?: string; // Added for goal description
   isNew?: boolean; // Flag to indicate if this is a newly added goal that hasn't been saved yet
-  // New fields for asset purchase
+  // Asset Purchase fields
   purchasePrice?: number;
   financingMethod?: string;
   annualAppreciation?: string;
+  // Education fields
+  studentName?: string;
+  startYear?: number;
+  endYear?: number;
+  tuitionEstimate?: number;
+  // Vacation fields
+  destination?: string;
+  estimatedCost?: number;
+  // Generic fields that might be used by multiple goal types
+  amountDesired?: number;
 }
 
 interface GoalsListProps {
@@ -115,10 +124,20 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
         targetAmount: goalData.targetAmount,
         description: goalData.description,
         isNew: false, // No longer a new unsaved goal
-        // New fields for asset purchase
+        // Asset Purchase fields
         purchasePrice: goalData.purchasePrice,
         financingMethod: goalData.financingMethod,
         annualAppreciation: goalData.annualAppreciation,
+        // Education fields
+        studentName: goalData.studentName,
+        startYear: goalData.startYear,
+        endYear: goalData.endYear,
+        tuitionEstimate: goalData.tuitionEstimate,
+        // Vacation fields
+        destination: goalData.destination,
+        estimatedCost: goalData.estimatedCost,
+        // Generic fields
+        amountDesired: goalData.amountDesired,
       };
       
       // Update local state immediately
@@ -142,10 +161,20 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
         targetDate: goalData.targetDate,
         targetAmount: goalData.targetAmount,
         description: goalData.description,
-        // New fields for asset purchase
+        // Asset Purchase fields
         purchasePrice: goalData.purchasePrice,
         financingMethod: goalData.financingMethod,
         annualAppreciation: goalData.annualAppreciation,
+        // Education fields
+        studentName: goalData.studentName,
+        startYear: goalData.startYear,
+        endYear: goalData.endYear,
+        tuitionEstimate: goalData.tuitionEstimate,
+        // Vacation fields
+        destination: goalData.destination,
+        estimatedCost: goalData.estimatedCost,
+        // Generic fields
+        amountDesired: goalData.amountDesired,
       };
       
       // Update local state immediately
@@ -383,43 +412,10 @@ function GoalCard({ goal, isExpanded, onToggle, onClick }: {
       
       {isExpanded && (
         <div className="mt-4 space-y-2 pt-2 border-t border-border/20">
-          {/* Default fields for all goals */}
-          {goal.targetDate && (
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Target Date:</span>
-              <span>{goal.targetDate.toLocaleDateString()}</span>
-            </div>
-          )}
+          {/* Different goal types display different information */}
           
-          {goal.targetAmount && (
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Target Amount:</span>
-              <span>
-                {new Intl.NumberFormat('en-US', {
-                  style: 'currency',
-                  currency: 'USD',
-                }).format(goal.targetAmount)}
-              </span>
-            </div>
-          )}
-          
-          {goal.currentAmount !== undefined && goal.targetAmount && (
-            <div className="mt-2">
-              <div className="flex justify-between text-xs mb-1">
-                <span>Progress</span>
-                <span>{Math.round((goal.currentAmount / goal.targetAmount) * 100)}%</span>
-              </div>
-              <div className="w-full bg-gray-700 h-2 rounded-full">
-                <div 
-                  className="bg-[#33C3F0] h-2 rounded-full" 
-                  style={{ width: `${Math.min(100, (goal.currentAmount / goal.targetAmount) * 100)}%` }}
-                ></div>
-              </div>
-            </div>
-          )}
-          
-          {/* Asset Purchase specific fields */}
-          {goal.type === "Asset Purchase" && (
+          {/* Asset Purchase, Home Purchase & Vehicle fields */}
+          {(goal.type === "Asset Purchase" || goal.type === "Home Purchase" || goal.type === "Vehicle") && (
             <>
               {goal.purchasePrice !== undefined && (
                 <div className="flex justify-between text-sm">
@@ -440,7 +436,8 @@ function GoalCard({ goal, isExpanded, onToggle, onClick }: {
                 </div>
               )}
               
-              {goal.annualAppreciation && goal.annualAppreciation !== "None" && (
+              {(goal.type === "Asset Purchase" || goal.type === "Home Purchase") && 
+                goal.annualAppreciation && goal.annualAppreciation !== "None" && (
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Annual Appreciation:</span>
                   <span>{goal.annualAppreciation}</span>
@@ -449,13 +446,120 @@ function GoalCard({ goal, isExpanded, onToggle, onClick }: {
             </>
           )}
           
-          {goal.priority && !goal.type && (
+          {/* Education Fields */}
+          {goal.type === "Education" && (
+            <>
+              {goal.studentName && (
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">Student:</span>
+                  <span>{goal.studentName}</span>
+                </div>
+              )}
+              
+              {goal.tuitionEstimate !== undefined && (
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">Tuition Estimate:</span>
+                  <span>
+                    {new Intl.NumberFormat('en-US', {
+                      style: 'currency',
+                      currency: 'USD',
+                    }).format(goal.tuitionEstimate)}
+                  </span>
+                </div>
+              )}
+              
+              {goal.startYear && goal.endYear && (
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">Years:</span>
+                  <span>{goal.startYear} - {goal.endYear}</span>
+                </div>
+              )}
+            </>
+          )}
+          
+          {/* Vacation Fields */}
+          {goal.type === "Vacation" && (
+            <>
+              {goal.destination && (
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">Destination:</span>
+                  <span>{goal.destination}</span>
+                </div>
+              )}
+              
+              {goal.estimatedCost !== undefined && (
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">Estimated Cost:</span>
+                  <span>
+                    {new Intl.NumberFormat('en-US', {
+                      style: 'currency',
+                      currency: 'USD',
+                    }).format(goal.estimatedCost)}
+                  </span>
+                </div>
+              )}
+            </>
+          )}
+          
+          {/* Cash Reserve Fields */}
+          {goal.type === "Cash Reserve" && goal.amountDesired !== undefined && (
             <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Priority:</span>
-              <span>{goal.priority}</span>
+              <span className="text-muted-foreground">Amount Desired:</span>
+              <span>
+                {new Intl.NumberFormat('en-US', {
+                  style: 'currency',
+                  currency: 'USD',
+                }).format(goal.amountDesired)}
+              </span>
             </div>
           )}
-
+          
+          {/* Common fields for most goals */}
+          {goal.targetDate && !["Education"].includes(goal.type || "") && (
+            <div className="flex justify-between text-sm">
+              <span className="text-muted-foreground">Target Date:</span>
+              <span>{format(goal.targetDate, 'MMM yyyy')}</span>
+            </div>
+          )}
+          
+          {goal.targetAmount !== undefined && 
+            !["Asset Purchase", "Home Purchase", "Vehicle", "Vacation", "Education", "Cash Reserve"].includes(goal.type || "") && (
+            <div className="flex justify-between text-sm">
+              <span className="text-muted-foreground">Target Amount:</span>
+              <span>
+                {new Intl.NumberFormat('en-US', {
+                  style: 'currency',
+                  currency: 'USD',
+                }).format(goal.targetAmount)}
+              </span>
+            </div>
+          )}
+          
+          {goal.currentAmount !== undefined && 
+            (goal.targetAmount || goal.purchasePrice || goal.estimatedCost || goal.tuitionEstimate || goal.amountDesired) && (
+            <div className="mt-2">
+              <div className="flex justify-between text-xs mb-1">
+                <span>Progress</span>
+                <span>
+                  {Math.round((goal.currentAmount / 
+                    (goal.targetAmount || goal.purchasePrice || goal.estimatedCost || 
+                     goal.tuitionEstimate || goal.amountDesired || 1)) * 100)}%
+                </span>
+              </div>
+              <div className="w-full bg-gray-700 h-2 rounded-full">
+                <div 
+                  className="bg-[#33C3F0] h-2 rounded-full" 
+                  style={{ 
+                    width: `${Math.min(100, (goal.currentAmount / 
+                      (goal.targetAmount || goal.purchasePrice || goal.estimatedCost || 
+                       goal.tuitionEstimate || goal.amountDesired || 1)) * 100)}%` 
+                  }}
+                ></div>
+              </div>
+            </div>
+          )}
+          
+          {/* Retirement-specific fields */}
           {goal.targetRetirementAge && (
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">Target Retirement Age:</span>
@@ -470,6 +574,7 @@ function GoalCard({ goal, isExpanded, onToggle, onClick }: {
             </div>
           )}
           
+          {/* Description for all goal types */}
           {goal.description && (
             <div className="flex flex-col text-sm mt-2">
               <span className="text-muted-foreground mb-1">Description:</span>
