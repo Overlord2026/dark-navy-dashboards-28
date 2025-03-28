@@ -17,7 +17,8 @@ import {
   ArrowRightLeftIcon, 
   ReceiptIcon, 
   ShareIcon, 
-  GraduationCapIcon
+  GraduationCapIcon,
+  VaultIcon
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { UserProfileSection } from "@/components/sidebar/UserProfileSection";
@@ -199,6 +200,9 @@ export function ThreeColumnLayout({
         <div className="flex-1 py-6 overflow-y-auto">
           <nav className="px-4 space-y-2">
             {mainMenuItems.map((item) => {
+              // Skip the education menu item as we're relocating it
+              if (item.id === "education") return null;
+
               const Icon = item.icon;
               const isActive = item.id === activeMainItem;
               return (
@@ -313,13 +317,28 @@ export function ThreeColumnLayout({
       )}
 
       <div className="flex-1 flex flex-col overflow-hidden">
-        <div className="flex justify-center py-4">
+        {/* Center logo with Education and Legacy Vault buttons */}
+        <div className="flex justify-center items-center py-4 space-x-6">
+          {/* Education button */}
+          <Link to="/education" className="flex items-center gap-2 px-4 py-2 rounded-md bg-blue-50 hover:bg-blue-100 text-blue-800 transition-colors">
+            <GraduationCapIcon className="h-5 w-5" />
+            <span className="font-medium">Education Center</span>
+          </Link>
+          
+          {/* Center logo */}
           <img 
             src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" 
             alt="Boutique Family Office Logo" 
             className="h-20 w-auto"
           />
+          
+          {/* Legacy Vault button */}
+          <Link to="/vault" className="flex items-center gap-2 px-4 py-2 rounded-md bg-amber-50 hover:bg-amber-100 text-amber-800 transition-colors">
+            <VaultIcon className="h-5 w-5" />
+            <span className="font-medium">Legacy Vault</span>
+          </Link>
         </div>
+        
         <h1 className={`text-[24px] font-semibold p-6 pb-0 ${isLightTheme ? 'text-[#222222]' : 'text-[#E2E2E2]'}`}>{title}</h1>
         <main className="flex-1 overflow-y-auto p-6 pt-3 font-sans">
           {children}
