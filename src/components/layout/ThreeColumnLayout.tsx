@@ -1,3 +1,4 @@
+
 import { ReactNode, useState } from "react";
 import * as React from "react";
 import { useParams, useNavigate, Link, useLocation } from "react-router-dom";
@@ -132,7 +133,9 @@ export function ThreeColumnLayout({
     title: "Senior Financial Advisor",
     email: "charles.bryant@example.com",
     phone: "(555) 123-4567",
-    location: "New York, NY"
+    location: "New York, NY",
+    office: "Manhattan Office",
+    bio: "Charles has over 15 years of experience in wealth management and financial planning."
   };
 
   const handleBookSession = () => {
@@ -196,9 +199,9 @@ export function ThreeColumnLayout({
           isLightTheme ? "bg-[#F9F7E8] border-r border-[#DCD8C0]" : "bg-[#1B1B32] border-r border-white/10"
         )}
       >
-        <div className="pt-[130px]">
+        <div className="pt-[260px]">
           {!mainSidebarCollapsed && (
-            <div className="border-b border-sidebar-border">
+            <div className="border-b border-sidebar-border mb-2">
               <UserProfileSection onMenuItemClick={handleProfileMenuItemClick} showLogo={false} />
             </div>
           )}
@@ -250,7 +253,7 @@ export function ThreeColumnLayout({
         <Button
           variant="ghost"
           size="icon"
-          className={`absolute top-[130px] right-0 translate-x-1/2 h-8 w-8 rounded-full bg-background border border-primary text-foreground hover:bg-accent hover:text-sidebar-primary-foreground z-40 ${isLightTheme ? 'bg-[#F9F7E8] text-[#222222]' : ''}`}
+          className={`absolute top-[260px] right-0 translate-x-1/2 h-8 w-8 rounded-full bg-background border border-primary text-foreground hover:bg-accent hover:text-sidebar-primary-foreground z-40 ${isLightTheme ? 'bg-[#F9F7E8] text-[#222222]' : ''}`}
           onClick={toggleMainSidebar}
         >
           {mainSidebarCollapsed ? (
@@ -264,7 +267,7 @@ export function ThreeColumnLayout({
       {hasSecondaryMenu && (
         <aside
           className={cn(
-            "h-screen flex flex-col transition-all duration-300 ease-in-out z-20 pt-[130px]",
+            "h-screen flex flex-col transition-all duration-300 ease-in-out z-20 pt-[260px]",
             secondarySidebarCollapsed ? "w-[0px]" : "w-[200px]",
             isLightTheme ? "bg-[#F9F7E8] border-r border-[#DCD8C0]" : "bg-[#1B1B32] border-r border-sidebar-border"
           )}
@@ -302,7 +305,7 @@ export function ThreeColumnLayout({
           <Button
             variant="ghost"
             size="icon"
-            className={`absolute top-[130px] h-8 w-8 rounded-full border text-foreground z-40 ${
+            className={`absolute top-[260px] h-8 w-8 rounded-full border text-foreground z-40 ${
               isLightTheme 
                 ? 'bg-[#F9F7E8] text-[#222222] border-primary hover:bg-[#E9E7D8]' 
                 : 'bg-background border-primary hover:bg-accent hover:text-sidebar-primary-foreground'

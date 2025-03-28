@@ -34,14 +34,14 @@ export const AdvisorSection = ({ advisorInfo, onViewProfile, onBookSession }: Ad
             </Avatar>
             <div className="flex flex-col">
               <span className="text-[14px] text-gray-200 font-medium">Advisor:</span>
-              <span className="text-[14px] text-gray-300">Charles Bryant</span>
+              <span className="text-[14px] text-gray-300">{advisorInfo.name}</span>
             </div>
           </div>
         </PopoverTrigger>
         <PopoverContent 
           align="end" 
           side="top" 
-          className="w-64 bg-[#1E1E30] border-gray-700 text-white shadow-md shadow-black/20"
+          className="w-64 bg-[#1E1E30] border-gray-700 text-white shadow-md shadow-black/20 border border-primary"
         >
           <div className="flex flex-col space-y-3 p-1">
             <div className="flex items-center space-x-3">
@@ -49,16 +49,16 @@ export const AdvisorSection = ({ advisorInfo, onViewProfile, onBookSession }: Ad
                 <AvatarFallback className="bg-[#2A2A40] text-white text-xl">CB</AvatarFallback>
               </Avatar>
               <div>
-                <p className="font-medium">Charles Bryant</p>
-                <p className="text-sm text-gray-400">Senior Financial Advisor</p>
+                <p className="font-medium">{advisorInfo.name}</p>
+                <p className="text-sm text-gray-400">{advisorInfo.title}</p>
               </div>
             </div>
             
-            <div className="text-sm text-gray-300">New York, NY</div>
+            <div className="text-sm text-gray-300">{advisorInfo.location}</div>
             
-            <a href="mailto:charles.bryant@example.com" className="text-sm text-blue-400 hover:underline flex items-center">
+            <a href={`mailto:${advisorInfo.email}`} className="text-sm text-blue-400 hover:underline flex items-center">
               <MailIcon className="h-3.5 w-3.5 mr-1.5" />
-              charles.bryant@example.com
+              {advisorInfo.email}
             </a>
             
             <div className="flex flex-col space-y-2 pt-2">

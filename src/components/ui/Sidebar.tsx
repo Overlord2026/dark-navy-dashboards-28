@@ -58,9 +58,9 @@ export const Sidebar = () => {
         collapsed ? "w-[70px]" : "w-[240px]"
       )}
     >
-      <div className="flex flex-col items-center justify-center h-auto px-4 border-b border-sidebar-border pb-4">
+      <div className="flex flex-col items-center justify-center h-auto px-4 border-b border-sidebar-border pb-4 pt-[260px]">
         {collapsed ? (
-          <div className="w-12 h-12 flex items-center justify-center mt-4">
+          <div className="w-12 h-12 flex items-center justify-center">
             <img 
               src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" 
               alt="Boutique Family Office Logo" 
@@ -68,7 +68,7 @@ export const Sidebar = () => {
             />
           </div>
         ) : (
-          <div className="flex items-center justify-center w-full mt-4 mb-2">
+          <div className="flex items-center justify-center w-full mb-2">
             <img 
               src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" 
               alt="Boutique Family Office Logo" 
@@ -112,7 +112,7 @@ export const Sidebar = () => {
             <a
               key={item.label}
               href={item.href}
-              className="group flex items-center py-2 px-3 rounded-md text-sidebar-foreground hover:bg-sidebar-accent transition-colors"
+              className="group flex items-center py-2 px-3 rounded-md text-sidebar-foreground hover:bg-sidebar-accent transition-colors border border-primary"
             >
               <item.icon className="h-5 w-5 mr-3 flex-shrink-0 bg-black p-0.5 rounded-sm" />
               {!collapsed && <span className="whitespace-nowrap overflow-hidden text-ellipsis">{item.label}</span>}
@@ -124,7 +124,7 @@ export const Sidebar = () => {
       <Button
         variant="ghost"
         size="icon"
-        className="absolute top-[70px] -right-4 h-8 w-8 rounded-full bg-background border border-border text-foreground hover:bg-accent hover:text-sidebar-primary-foreground"
+        className="absolute top-[260px] -right-4 h-8 w-8 rounded-full bg-background border border-primary text-foreground hover:bg-accent hover:text-sidebar-primary-foreground"
         onClick={toggleSidebar}
       >
         {collapsed ? (
