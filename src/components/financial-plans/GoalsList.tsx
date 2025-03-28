@@ -5,12 +5,14 @@ import { ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export interface Goal {
-  id: string;
-  title: string;
+  id?: string;
+  title?: string;
+  name?: string;  // For compatibility with different goal formats
   targetDate?: Date;
   targetAmount?: number;
   currentAmount?: number;
-  type: string;
+  type?: string;
+  priority?: string;
 }
 
 interface GoalsListProps {
@@ -28,7 +30,7 @@ export function GoalsList({ goals }: GoalsListProps) {
     );
   };
   
-  if (goals.length === 0) {
+  if (!goals || goals.length === 0) {
     return (
       <div className="space-y-4">
         <RetirementAgeSection title="Your Retirement Age" />
@@ -39,19 +41,12 @@ export function GoalsList({ goals }: GoalsListProps) {
   
   return (
     <div className="space-y-4">
-      {goals.length === 0 && (
-        <>
-          <RetirementAgeSection title="Your Retirement Age" />
-          <RetirementAgeSection title="Spouse's Retirement Age" />
-        </>
-      )}
-      
-      {goals.map(goal => (
+      {goals.map((goal, index) => (
         <GoalCard 
-          key={goal.id} 
+          key={goal.id || `goal-${index}`} 
           goal={goal} 
-          isExpanded={expandedGoals.includes(goal.id)} 
-          onToggle={() => toggleGoalExpansion(goal.id)}
+          isExpanded={expandedGoals.includes(goal.id || `goal-${index}`)} 
+          onToggle={() => toggleGoalExpansion(goal.id || `goal-${index}`)}
         />
       ))}
     </div>
@@ -72,12 +67,16 @@ function GoalCard({ goal, isExpanded, onToggle }: {
   isExpanded: boolean;
   onToggle: () => void;
 }) {
+  // Handle different goal formats
+  const goalTitle = goal.title || goal.name || "Unnamed Goal";
+  const goalType = goal.type || goal.priority || "Goal";
+
   return (
     <Card className="bg-[#0F1C2E] border border-border/20 p-4">
       <div className="flex items-center justify-between">
         <div>
-          <h4 className="font-medium">{goal.title}</h4>
-          <p className="text-xs text-muted-foreground">{goal.type}</p>
+          <h4 className="font-medium">{goalTitle}</h4>
+          <p className="text-xs text-muted-foreground">{goalType}</p>
         </div>
         <Button variant="ghost" size="sm" onClick={onToggle}>
           {isExpanded ? <ChevronUpIcon className="h-5 w-5" /> : <ChevronDownIcon className="h-5 w-5" />}
@@ -117,6 +116,13 @@ function GoalCard({ goal, isExpanded, onToggle }: {
                   style={{ width: `${Math.min(100, (goal.currentAmount / goal.targetAmount) * 100)}%` }}
                 ></div>
               </div>
+            </div>
+          )}
+          
+          {goal.priority && !goal.type && (
+            <div className="flex justify-between text-sm">
+              <span className="text-muted-foreground">Priority:</span>
+              <span>{goal.priority}</span>
             </div>
           )}
         </div>

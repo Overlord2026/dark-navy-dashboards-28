@@ -1,5 +1,4 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -86,12 +85,22 @@ const FinancialPlans = () => {
   const [isManagePlansOpen, setIsManagePlansOpen] = useState(false);
   const [currentDraftData, setCurrentDraftData] = useState<any>(null);
 
+  useEffect(() => {
+    const plan = plans.find(p => p.id === selectedPlan);
+    if (plan) {
+      const planGoals = plan.goals || [];
+      setGoals(planGoals);
+    }
+  }, [selectedPlan, plans]);
+
   const handleCreatePlan = (planName: string, planDetails: any = {}) => {
     const isDraft = planDetails?.isDraft || false;
     const projections = planDetails?.projections || {};
-    const goals = planDetails?.goals || [];
+    const planGoals = planDetails?.goals || [];
     
-    const calculatedSuccessRate = planDetails?.successRate || Math.floor(Math.random() * 60) + 40;
+    const calculatedSuccessRate = planDetails?.successRate !== undefined 
+      ? planDetails.successRate 
+      : (isDraft ? 0 : Math.floor(Math.random() * 60) + 40);
     
     const newPlan = {
       id: `plan-${Date.now()}`,
@@ -101,7 +110,7 @@ const FinancialPlans = () => {
       successRate: calculatedSuccessRate,
       status: isDraft ? 'Draft' as const : 'Active' as const,
       createdAt: new Date(),
-      goals: goals,
+      goals: planGoals,
       projections: projections,
     };
     
@@ -116,14 +125,15 @@ const FinancialPlans = () => {
     
     if (!isDraft) {
       setSelectedPlan(newPlan.id);
-      toast.success(`Plan "${planName}" created successfully`);
+      setGoals(planGoals);
+      toast.success("Your new plan is created!");
     }
   };
 
   const handleSelectPlan = (planId: string) => {
     if (planId === "new-plan") {
       setIsCreateDialogOpen(true);
-      setCurrentDraftData(null); // Start fresh
+      setCurrentDraftData(null);
       return;
     }
     
@@ -135,7 +145,6 @@ const FinancialPlans = () => {
     const selectedPlanObj = plans.find(plan => plan.id === planId);
     
     if (selectedPlanObj?.status === 'Draft' && selectedPlanObj.draftData) {
-      // Open the create dialog with draft data
       setCurrentDraftData(selectedPlanObj.draftData);
       setIsCreateDialogOpen(true);
       return;
@@ -151,7 +160,6 @@ const FinancialPlans = () => {
   };
 
   const handleSaveDraft = (draftData: any) => {
-    // If this is an existing draft being updated
     if (currentDraftData && draftData.draftId) {
       setPlans(prevPlans => 
         prevPlans.map(plan => 
@@ -165,7 +173,6 @@ const FinancialPlans = () => {
       );
       toast.info("Draft plan updated");
     } else {
-      // This is a new draft
       const newDraft: Plan = {
         id: `draft-${Date.now()}`,
         name: draftData.name || "Untitled Draft",
@@ -185,7 +192,6 @@ const FinancialPlans = () => {
     const planToEdit = plans.find(plan => plan.id === planId);
     
     if (planToEdit?.status === 'Draft' && planToEdit.draftData) {
-      // Open the create dialog with draft data
       setCurrentDraftData({...planToEdit.draftData, draftId: planId});
       setIsCreateDialogOpen(true);
     } else {
@@ -253,7 +259,7 @@ const FinancialPlans = () => {
             <Button 
               className="bg-white text-black hover:bg-gray-100 border border-gray-300"
               onClick={() => {
-                setCurrentDraftData(null); // Start fresh
+                setCurrentDraftData(null);
                 setIsCreateDialogOpen(true);
               }}
             >
@@ -267,7 +273,7 @@ const FinancialPlans = () => {
               onValueChange={handleSelectPlan}
             >
               <SelectTrigger className="w-[210px] bg-transparent">
-                <SelectValue placeholder={fullName}>{activePlan.name}</SelectValue>
+                <SelectValue placeholder={activePlan.name}>{activePlan.name}</SelectValue>
               </SelectTrigger>
               <SelectContent 
                 className="bg-[#0F1C2E] border-white/10 animate-in fade-in-50 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 duration-200"
@@ -380,7 +386,7 @@ const FinancialPlans = () => {
               <div className="flex justify-between items-center mb-6">
                 <h3 className="text-md font-medium">Goals</h3>
                 <div className="flex items-center">
-                  <span className="text-muted-foreground text-sm mr-2">0 Goals</span>
+                  <span className="text-muted-foreground text-sm mr-2">{goals.length} Goals</span>
                   <Button size="sm" variant="ghost" className="h-8 px-2">
                     <PlusIcon className="h-4 w-4" />
                     <span>Add</span>
