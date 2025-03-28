@@ -66,14 +66,14 @@ const featuredCourses = [
 export default function Education() {
   return (
     <ThreeColumnLayout 
-      title="SWAG Education Vault" 
+      title="SWAG Education Center" 
       activeMainItem="education"
       activeSecondaryItem="all-courses"
       secondaryMenuItems={courseCategories}
     >
       <div className="space-y-6">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight">Welcome to the SWAG Education Vault</h2>
+          <h2 className="text-2xl font-bold tracking-tight">Welcome to the SWAG Education Center</h2>
           <p className="text-muted-foreground mt-2">
             Explore our collection of financial education resources to help you build wealth and achieve your financial goals.
           </p>

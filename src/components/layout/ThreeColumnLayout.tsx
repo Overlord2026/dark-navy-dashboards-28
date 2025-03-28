@@ -1,4 +1,3 @@
-
 import { ReactNode, useState } from "react";
 import * as React from "react";
 import { useParams, useNavigate, Link, useLocation } from "react-router-dom";
@@ -69,8 +68,9 @@ const CustomHomeIcon: React.FC = () => (
 
 const mainMenuItems: MainMenuItem[] = [
   { id: "home", label: "Home", icon: CustomHomeIcon, href: "/" },
-  { id: "education", label: "Education", icon: GraduationCapIcon, href: "/education" },
+  { id: "education", label: "Education Center", icon: GraduationCapIcon, href: "/education" },
   { id: "vault", label: "Legacy Vault", icon: BookOpenIcon, href: "/vault" },
+  { id: "tax-budgets", label: "Proactive Tax Planning", icon: ReceiptIcon, href: "/tax-budgets" },
   { id: "accounts", label: "Accounts", icon: WalletIcon, href: "/accounts" },
   { id: "sharing", label: "Sharing", icon: ShareIcon, href: "/sharing" },
   { id: "financial-plans", label: "Financial Plans", icon: BarChart3Icon, href: "/financial-plans" },
@@ -79,7 +79,6 @@ const mainMenuItems: MainMenuItem[] = [
   { id: "lending", label: "Lending", icon: CreditCardIcon, href: "/lending" },
   { id: "cash-management", label: "Cash Management", icon: WalletIcon, href: "/cash-management" },
   { id: "transfers", label: "Transfers", icon: ArrowRightLeftIcon, href: "/transfers" },
-  { id: "tax-budgets", label: "Proactive Tax Planning", icon: ReceiptIcon, href: "/tax-budgets" },
 ];
 
 const accountsSubMenuItems: MenuItem[] = [
