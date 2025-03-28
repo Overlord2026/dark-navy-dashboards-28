@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { FinancialOverview } from "@/components/dashboard/FinancialOverview";
@@ -14,20 +13,18 @@ const Dashboard = () => {
   const [activeForm, setActiveForm] = useState<string | null>(null);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   
-  // Checklist items with completion status
   const [checklistItems, setChecklistItems] = useState([
     { id: "investor-profile", name: "Investor Profile", completed: true },
     { id: "contact-information", name: "Contact Information", completed: true },
-    { id: "additional-information", name: "Additional Information", completed: false },
+    { id: "additional-information", name: "Additional Information", completed: false, description: "Please fill out" },
     { id: "beneficiaries", name: "Beneficiaries", completed: true },
     { id: "affiliations", name: "Affiliations", completed: true },
     { id: "investment-advisory-agreement", name: "Investment Advisory Agreement", completed: true },
-    { id: "disclosures", name: "Disclosures", completed: false },
-    { id: "custodian-agreement", name: "Custodian Agreement", completed: false }
+    { id: "disclosures", name: "Disclosures", completed: false, description: "Please look over and accept disclosures" },
+    { id: "custodian-agreement", name: "Custodian Agreement", completed: false, description: "Waiting for your Advisor's Plan" }
   ]);
 
   useEffect(() => {
-    // Simulate loading data
     const timer = setTimeout(() => {
       setLoading(false);
     }, 800);
@@ -123,7 +120,6 @@ const Dashboard = () => {
               </div>
             </DashboardCard>
             
-            {/* Setup Checklist */}
             <div className="md:col-span-1">
               <SetupChecklist 
                 items={checklistItems} 
@@ -134,7 +130,6 @@ const Dashboard = () => {
         </div>
       )}
       
-      {/* Slide-in Form Sheet */}
       <ProfileFormSheet 
         isOpen={isSheetOpen}
         onOpenChange={setIsSheetOpen}

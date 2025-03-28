@@ -2,11 +2,13 @@
 import React from "react";
 import { Check, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Progress } from "@/components/ui/progress";
 
 interface ChecklistItem {
   id: string;
   name: string;
   completed: boolean;
+  description?: string; // Optional custom description text for incomplete items
 }
 
 interface SetupChecklistProps {
@@ -21,7 +23,7 @@ export function SetupChecklist({ items, onItemClick }: SetupChecklistProps) {
   const progressPercentage = Math.round((completedCount / total) * 100);
   
   return (
-    <div className="rounded-lg border bg-[#1B1B32] text-[#E2E2E2] shadow-sm">
+    <div className="rounded-lg border bg-[#1B1B32] text-[#E2E2E2] shadow-sm dark:bg-[#1B1B32] dark:text-[#E2E2E2] light:bg-[#F9F7E8] light:text-[#222222] light:border-[#DCD8C0]">
       <div className="p-6">
         <div className="flex items-center justify-between mb-2">
           <h3 className="text-lg font-medium">Setup Checklist</h3>
@@ -29,6 +31,7 @@ export function SetupChecklist({ items, onItemClick }: SetupChecklistProps) {
         </div>
         <p className="text-sm text-muted-foreground mb-4">Complete at your own pace.</p>
         
+        {/* Progress bar */}
         <div className="h-2 w-full bg-muted rounded-full mb-6 overflow-hidden">
           <div 
             className="h-full bg-green-500 rounded-full transition-all duration-300 ease-in-out" 
@@ -41,7 +44,7 @@ export function SetupChecklist({ items, onItemClick }: SetupChecklistProps) {
             <li 
               key={item.id}
               onClick={() => onItemClick(item.id)}
-              className="flex items-center justify-between p-3 rounded-md hover:bg-black/30 cursor-pointer"
+              className="flex items-center justify-between p-3 rounded-md hover:bg-black/30 cursor-pointer dark:hover:bg-black/30 light:hover:bg-gray-200/50"
             >
               <div className="flex items-center">
                 <div className={cn(
@@ -62,7 +65,9 @@ export function SetupChecklist({ items, onItemClick }: SetupChecklistProps) {
                     {item.name}
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    {item.completed ? "Complete" : "Please fill out"}
+                    {item.completed 
+                      ? "Complete" 
+                      : item.description || "Please fill out"}
                   </p>
                 </div>
               </div>

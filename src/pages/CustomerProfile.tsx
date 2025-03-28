@@ -20,14 +20,14 @@ const CustomerProfile = () => {
   const [checklistItems, setChecklistItems] = useState([
     { id: "investor-profile", name: "Investor Profile", completed: true },
     { id: "contact-information", name: "Contact Information", completed: true },
-    { id: "additional-information", name: "Additional Information", completed: false },
+    { id: "additional-information", name: "Additional Information", completed: false, description: "Please fill out" },
     { id: "beneficiaries", name: "Beneficiaries", completed: true },
     { id: "affiliations", name: "Affiliations", completed: true },
-    { id: "trusts", name: "Trusts", completed: false },
-    { id: "security-access", name: "Security & Access", completed: false },
+    { id: "trusts", name: "Trusts", completed: false, description: "Please fill out" },
+    { id: "security-access", name: "Security & Access", completed: false, description: "Please fill out" },
     { id: "investment-advisory-agreement", name: "Investment Advisory Agreement", completed: true },
-    { id: "disclosures", name: "Disclosures", completed: false },
-    { id: "custodian-agreement", name: "Custodian Agreement", completed: false }
+    { id: "disclosures", name: "Disclosures", completed: false, description: "Please look over and accept disclosures" },
+    { id: "custodian-agreement", name: "Custodian Agreement", completed: false, description: "Waiting for your Advisor's Plan" }
   ]);
 
   const advisorInfo = {
