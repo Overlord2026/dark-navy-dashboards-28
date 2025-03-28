@@ -77,7 +77,14 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
   const handleGoalClick = (goal: Goal) => {
     setSelectedGoal(goal);
     const goalTitle = goal.title || goal.name || "";
-    setDetailsPanelTitle(goalTitle);
+    
+    let panelTitle = goalTitle;
+    if (goal.owner) {
+      const ownerPossessive = goal.owner.endsWith('s') ? `${goal.owner}'` : `${goal.owner}'s`;
+      panelTitle = `${ownerPossessive} ${goalTitle}`;
+    }
+    
+    setDetailsPanelTitle(panelTitle);
     setIsDetailsPanelOpen(true);
   };
 
@@ -95,19 +102,26 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
       return;
     }
     
+    const owner = "Antonio Gomez";
     const newGoal: Goal = {
       id: `temp-goal-${Date.now()}`,
       title: goalType,
       name: goalType,
       type: goalType,
       priority: goalType,
+      owner: owner,
       isNew: true,
+      financingMethod: goalType === "Asset Purchase" ? "Cash" : undefined,
+      annualAppreciation: goalType === "Asset Purchase" ? "None" : undefined,
     };
     
     setLocalGoals(prev => [...prev, newGoal]);
     
+    const ownerPossessive = owner.endsWith('s') ? `${owner}'` : `${owner}'s`;
+    const detailsTitle = `${ownerPossessive} ${goalType}`;
+    
     setSelectedGoal(newGoal);
-    setDetailsPanelTitle(`New ${goalType}`);
+    setDetailsPanelTitle(detailsTitle);
     setIsDetailsPanelOpen(true);
   };
 

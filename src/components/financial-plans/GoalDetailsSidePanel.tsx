@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
@@ -239,7 +238,7 @@ export const GoalDetailsSidePanel = ({
     
     // If owner is updated, update the panel title
     if (name === "owner" && onTitleUpdate) {
-      onTitleUpdate(formData.name, value);
+      onTitleUpdate(value, formData.owner);
     }
 
     // For new goals, set initial name based on type
@@ -585,7 +584,10 @@ export const GoalDetailsSidePanel = ({
 
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
-      <SheetContent className="w-full sm:max-w-[540px] overflow-y-auto bg-[#0F0F2D] text-white border-l border-gray-800" side="right">
+      <SheetContent 
+        className="w-full sm:max-w-[540px] overflow-y-auto bg-[#0F0F2D] text-white border-l border-gray-800 animate-slide-in-right" 
+        side="right"
+      >
         <div className="flex flex-col h-full">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-semibold">{title}</h2>
