@@ -1,3 +1,4 @@
+
 import { ReactNode, useState } from "react";
 import * as React from "react";
 import { useParams, useNavigate, Link, useLocation } from "react-router-dom";
@@ -30,6 +31,7 @@ import {
 } from "@/components/ui/popover";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { AdvisorSection } from "@/components/profile/AdvisorSection";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 type MenuItem = {
   id: string;
@@ -75,7 +77,7 @@ const mainMenuItems: MainMenuItem[] = [
   { id: "cash-management", label: "Cash Management", icon: WalletIcon, href: "/cash-management" },
   { id: "transfers", label: "Transfers", icon: ArrowRightLeftIcon, href: "/transfers" },
   { id: "tax-budgets", label: "Tax Budgets", icon: ReceiptIcon, href: "/tax-budgets" },
-  { id: "vault", label: "Legacy Vault", icon: BookOpenIcon, href: "/vault" },
+  { id: "vault", label: "Family Legacy Vault", icon: BookOpenIcon, href: "/vault" },
 ];
 
 const accountsSubMenuItems: MenuItem[] = [
@@ -124,6 +126,7 @@ export function ThreeColumnLayout({
   const [mainSidebarCollapsed, setMainSidebarCollapsed] = useState(false);
   const [secondarySidebarCollapsed, setSecondarySidebarCollapsed] = useState(false);
   const [showAdvisorInfo, setShowAdvisorInfo] = useState(false);
+  const isMobile = useIsMobile();
   
   const advisorInfo = {
     name: "Charles Bryant",
@@ -188,18 +191,18 @@ export function ThreeColumnLayout({
   };
 
   return (
-    <div className={`flex h-screen overflow-hidden ${isLightTheme ? 'bg-[#F9F7E8]' : 'bg-[#12121C]'}`}>
-      <div className="fixed top-0 left-0 right-0 w-full flex justify-center py-4 z-40 bg-inherit">
+    <div className={`flex min-h-screen w-full overflow-hidden ${isLightTheme ? 'bg-[#F9F7E8]' : 'bg-[#12121C]'}`}>
+      <div className="fixed top-0 left-0 right-0 w-full flex justify-center z-40 bg-inherit">
         <img 
           src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" 
           alt="Boutique Family Office Logo" 
-          className="h-20 w-auto"
+          className="h-20 w-auto py-2"
         />
       </div>
       
       <aside
         className={cn(
-          "flex flex-col transition-all duration-300 ease-in-out z-30 mt-[120px]",
+          "flex flex-col transition-all duration-300 ease-in-out z-30 mt-[90px]",
           mainSidebarCollapsed ? "w-[70px]" : "w-[220px]",
           isLightTheme ? "bg-[#F9F7E8] border-r border-[#DCD8C0]" : "bg-[#1B1B32] border-r border-white/10"
         )}
@@ -214,8 +217,6 @@ export function ThreeColumnLayout({
           <div className="overflow-y-auto mt-1 flex-1">
             <nav className="px-4 space-y-1.5">
               {mainMenuItems.map((item) => {
-                if (item.id === "education") return null;
-
                 const isActive = item.id === currentPath;
                 const Icon = item.icon;
                 
@@ -266,7 +267,7 @@ export function ThreeColumnLayout({
       {hasSecondaryMenu && (
         <aside
           className={cn(
-            "flex flex-col transition-all duration-300 ease-in-out z-20 mt-[120px]",
+            "flex flex-col transition-all duration-300 ease-in-out z-20 mt-[90px]",
             secondarySidebarCollapsed ? "w-[0px]" : "w-[200px]",
             isLightTheme ? "bg-[#F9F7E8] border-r border-[#DCD8C0]" : "bg-[#1B1B32] border-r border-sidebar-border"
           )}
@@ -303,16 +304,16 @@ export function ThreeColumnLayout({
         </aside>
       )}
 
-      <div className="flex-1 flex flex-col overflow-hidden mt-[120px]">
+      <div className="flex-1 flex flex-col overflow-hidden mt-[90px]">
         {isHomePage ? (
-          <div className="flex flex-col items-center w-full p-8">
-            <div className="flex justify-center items-center space-x-10 mb-8 w-full max-w-5xl">
-              <Link to="/education" className="flex-1 flex items-center justify-center gap-3 px-5 py-4 rounded-md bg-gray-800 hover:bg-gray-700 text-gray-100 transition-colors border border-primary">
+          <div className="flex flex-col items-center justify-center w-full p-4 md:p-8 h-full">
+            <div className="flex flex-col md:flex-row justify-center items-center gap-4 md:gap-10 w-full max-w-5xl mb-8">
+              <Link to="/education" className="w-full md:w-1/2 flex items-center justify-center gap-3 px-5 py-6 rounded-md bg-gray-800 hover:bg-gray-700 text-gray-100 transition-colors border border-primary">
                 <GraduationCapIcon className="h-6 w-6" />
                 <span className="font-medium text-lg">Education Center</span>
               </Link>
               
-              <Link to="/vault" className="flex-1 flex items-center justify-center gap-3 px-5 py-4 rounded-md bg-gray-800 hover:bg-gray-700 text-gray-100 transition-colors border border-primary">
+              <Link to="/vault" className="w-full md:w-1/2 flex items-center justify-center gap-3 px-5 py-6 rounded-md bg-gray-800 hover:bg-gray-700 text-gray-100 transition-colors border border-primary">
                 <BookOpenIcon className="h-6 w-6" />
                 <span className="font-medium text-lg">Family Legacy Vault</span>
               </Link>
