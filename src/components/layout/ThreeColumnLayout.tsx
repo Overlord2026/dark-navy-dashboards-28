@@ -1,4 +1,3 @@
-
 import { ReactNode, useState } from "react";
 import * as React from "react";
 import { useParams, useNavigate, Link, useLocation } from "react-router-dom";
@@ -17,7 +16,10 @@ import {
   ShareIcon, 
   GraduationCapIcon,
   BookOpenIcon,
-  CalendarIcon
+  CalendarIcon,
+  MailIcon,
+  ExternalLinkIcon,
+  UserRoundIcon
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { UserProfileSection } from "@/components/sidebar/UserProfileSection";
@@ -76,7 +78,7 @@ const mainMenuItems: MainMenuItem[] = [
   { id: "lending", label: "Lending", icon: CreditCardIcon, href: "/lending" },
   { id: "cash-management", label: "Cash Management", icon: WalletIcon, href: "/cash-management" },
   { id: "transfers", label: "Transfers", icon: ArrowRightLeftIcon, href: "/transfers" },
-  { id: "tax-budgets", label: "Tax Budgets", icon: ReceiptIcon, href: "/tax-budgets" },
+  { id: "tax-budgets", label: "Proactive Tax Planning", icon: ReceiptIcon, href: "/tax-budgets" },
 ];
 
 const accountsSubMenuItems: MenuItem[] = [
@@ -190,7 +192,6 @@ export function ThreeColumnLayout({
 
   return (
     <div className={`flex flex-col h-screen overflow-hidden ${isLightTheme ? 'bg-[#F9F7E8]' : 'bg-[#12121C]'}`}>
-      {/* Logo Section - isolated, with clear boundary */}
       <div className="w-full flex justify-center items-center py-3 border-b z-50 bg-inherit" style={{ borderColor: isLightTheme ? '#DCD8C0' : 'rgba(255,255,255,0.1)' }}>
         <div className="flex justify-center items-center w-full h-full">
           <img 
@@ -201,7 +202,6 @@ export function ThreeColumnLayout({
         </div>
       </div>
       
-      {/* Content Section - positioned directly below logo section */}
       <div className="flex flex-1 overflow-hidden">
         <aside
           className={cn(
@@ -258,12 +258,76 @@ export function ThreeColumnLayout({
               </nav>
             </div>
             
-            <AdvisorSection 
-              advisorInfo={advisorInfo}
-              onViewProfile={handleViewProfile}
-              onBookSession={handleBookSession}
-              collapsed={mainSidebarCollapsed}
-            />
+            <div className={`px-4 mt-auto mb-4 ${isLightTheme ? 'border-[#DCD8C0]' : 'border-white/10'}`}>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <div 
+                    className={`flex items-center w-full p-2 ${isLightTheme ? 'hover:bg-[#E9E7D8]' : 'hover:bg-[#2A2A40]'} rounded-md transition-colors cursor-pointer border border-primary`}
+                  >
+                    <Avatar className="h-[30px] w-[30px] mr-3">
+                      <AvatarFallback className={`${isLightTheme ? 'bg-[#E9E7D8]' : 'bg-[#2A2A40]'} ${isLightTheme ? 'text-[#222222]' : 'text-white'}`}>
+                        {advisorInfo.name.split(' ').map(name => name[0]).join('')}
+                      </AvatarFallback>
+                    </Avatar>
+                    {!mainSidebarCollapsed && (
+                      <div className="flex flex-col">
+                        <span className={`text-[14px] ${isLightTheme ? 'text-[#222222]' : 'text-gray-200'} font-medium`}>Your Personal CFO:</span>
+                        <span className={`text-[14px] ${isLightTheme ? 'text-[#222222]' : 'text-gray-300'}`}>{advisorInfo.name}</span>
+                      </div>
+                    )}
+                  </div>
+                </PopoverTrigger>
+                <PopoverContent 
+                  align="start" 
+                  side={mainSidebarCollapsed ? "right" : "bottom"} 
+                  className={`w-64 ${isLightTheme ? 'bg-[#F9F7E8] border-[#DCD8C0] text-[#222222]' : 'bg-[#1E1E30] border-gray-700 text-white'} shadow-md shadow-black/20 border border-primary`}
+                >
+                  <div className="flex flex-col space-y-3 p-1">
+                    <div className="flex items-center space-x-3">
+                      <Avatar className="h-[60px] w-[60px]">
+                        <AvatarFallback className={`${isLightTheme ? 'bg-[#E9E7D8]' : 'bg-[#2A2A40]'} ${isLightTheme ? 'text-[#222222]' : 'text-white'} text-xl`}>
+                          {advisorInfo.name.split(' ').map(name => name[0]).join('')}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <p className="font-medium">{advisorInfo.name}</p>
+                        <p className="text-sm text-gray-400">{advisorInfo.title}</p>
+                      </div>
+                    </div>
+                    
+                    <div className="text-sm text-gray-300">{advisorInfo.location}</div>
+                    
+                    <a href={`mailto:${advisorInfo.email}`} className="text-sm text-blue-400 hover:underline flex items-center">
+                      <MailIcon className="h-3.5 w-3.5 mr-1.5" />
+                      {advisorInfo.email}
+                    </a>
+                    
+                    <div className="flex flex-col space-y-2 pt-2">
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className={`justify-start ${isLightTheme ? 'hover:bg-[#E9E7D8] text-[#222222]' : 'hover:bg-[#2A2A40] text-white'} border border-primary`}
+                        onClick={() => handleViewProfile("bio")}
+                      >
+                        <UserRoundIcon className="h-3.5 w-3.5 mr-1.5" />
+                        View profile
+                      </Button>
+                      
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className={`justify-start ${isLightTheme ? 'hover:bg-[#E9E7D8] text-[#222222]' : 'hover:bg-[#2A2A40] text-white'} border border-primary`}
+                        onClick={handleBookSession}
+                      >
+                        <Calendar className="h-3.5 w-3.5 mr-1.5" />
+                        Book a session
+                        <ExternalLinkIcon className="h-3 w-3 ml-1" />
+                      </Button>
+                    </div>
+                  </div>
+                </PopoverContent>
+              </Popover>
+            </div>
           </div>
         </aside>
 
@@ -310,7 +374,6 @@ export function ThreeColumnLayout({
         <div className="flex-1 flex flex-col overflow-hidden">
           {isHomePage ? (
             <div className="flex flex-col items-center w-full">
-              {/* Removed p-8 to eliminate extra padding/gap */}
             </div>
           ) : null}
           
