@@ -1,6 +1,6 @@
 import { ReactNode, useState } from "react";
 import * as React from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useParams, useNavigate, Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { 
   ChevronLeftIcon, 
@@ -70,6 +70,7 @@ const mainMenuItems: MainMenuItem[] = [
   { id: "cash-management", label: "Cash Management", icon: WalletIcon, href: "/cash-management" },
   { id: "transfers", label: "Transfers", icon: ArrowRightLeftIcon, href: "/transfers" },
   { id: "tax-budgets", label: "Tax Budgets", icon: ReceiptIcon, href: "/tax-budgets" },
+  { id: "vault", label: "Legacy Vault", icon: VaultIcon, href: "/vault" },
 ];
 
 const documentSubMenuItems: MenuItem[] = [
@@ -135,6 +136,7 @@ export function ThreeColumnLayout({
   
   const params = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   
   const sectionId = params.sectionId || activeSecondaryItem;
   
@@ -142,6 +144,7 @@ export function ThreeColumnLayout({
   
   const hasSecondaryMenu = menuItems.length > 0;
   const isLightTheme = theme === "light";
+  const isHomePage = location.pathname === "/";
 
   const toggleMainSidebar = () => {
     setMainSidebarCollapsed(!mainSidebarCollapsed);
@@ -297,23 +300,33 @@ export function ThreeColumnLayout({
       )}
 
       <div className="flex-1 flex flex-col overflow-hidden">
-        <div className="flex justify-center items-center py-4 space-x-6">
-          <Link to="/education" className="flex items-center gap-2 px-4 py-2 rounded-md bg-blue-50 hover:bg-blue-100 text-blue-800 transition-colors">
-            <GraduationCapIcon className="h-5 w-5" />
-            <span className="font-medium">Education Center</span>
-          </Link>
-          
-          <img 
-            src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" 
-            alt="Boutique Family Office Logo" 
-            className="h-20 w-auto"
-          />
-          
-          <Link to="/vault" className="flex items-center gap-2 px-4 py-2 rounded-md bg-amber-50 hover:bg-amber-100 text-amber-800 transition-colors">
-            <VaultIcon className="h-5 w-5" />
-            <span className="font-medium">Legacy Vault</span>
-          </Link>
-        </div>
+        {isHomePage ? (
+          <div className="flex justify-center items-center py-4 space-x-6">
+            <Link to="/education" className="flex items-center gap-2 px-4 py-2 rounded-md bg-gray-800 hover:bg-gray-700 text-gray-100 transition-colors">
+              <GraduationCapIcon className="h-5 w-5" />
+              <span className="font-medium">Education Center</span>
+            </Link>
+            
+            <img 
+              src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" 
+              alt="Boutique Family Office Logo" 
+              className="h-20 w-auto"
+            />
+            
+            <Link to="/vault" className="flex items-center gap-2 px-4 py-2 rounded-md bg-gray-800 hover:bg-gray-700 text-gray-100 transition-colors">
+              <VaultIcon className="h-5 w-5" />
+              <span className="font-medium">Legacy Vault</span>
+            </Link>
+          </div>
+        ) : (
+          <div className="flex justify-center py-4">
+            <img 
+              src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" 
+              alt="Boutique Family Office Logo" 
+              className="h-20 w-auto"
+            />
+          </div>
+        )}
         
         <h1 className={`text-[24px] font-semibold p-6 pb-0 ${isLightTheme ? 'text-[#222222]' : 'text-[#E2E2E2]'}`}>{title}</h1>
         <main className="flex-1 overflow-y-auto p-6 pt-3 font-sans">

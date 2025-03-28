@@ -14,6 +14,7 @@ import Documents from "./pages/Documents";
 import Sharing from "./pages/Sharing";
 import NotFound from "./pages/NotFound";
 import Accounts from "./pages/Accounts";
+import LegacyVault from "./pages/LegacyVault";
 import {
   BrowserRouter as Router,
   Routes,
@@ -42,6 +43,7 @@ function App() {
               <Route path="/documents/*" element={<Documents />} />
               <Route path="/sharing/*" element={<Sharing />} />
               <Route path="/accounts/*" element={<Accounts />} />
+              <Route path="/vault" element={<LegacyVault />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </div>
