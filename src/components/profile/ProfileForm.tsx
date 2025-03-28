@@ -43,6 +43,7 @@ const formSchema = z.object({
 export function ProfileForm({ onSave }: { onSave: () => void }) {
   const { userProfile, updateUserProfile } = useUser();
   const [dateInput, setDateInput] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -98,6 +99,7 @@ export function ProfileForm({ onSave }: { onSave: () => void }) {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log("Form submitted with values:", values);
+    setIsSubmitting(true);
     
     try {
       // Update global user profile state
@@ -107,10 +109,14 @@ export function ProfileForm({ onSave }: { onSave: () => void }) {
       toast.success("Profile information updated successfully");
       
       // Call the onSave callback to update parent components
-      if (onSave) onSave();
+      if (onSave) {
+        onSave();
+      }
     } catch (error) {
       console.error("Error updating profile:", error);
       toast.error("Failed to update profile. Please try again.");
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
@@ -316,7 +322,13 @@ export function ProfileForm({ onSave }: { onSave: () => void }) {
           </div>
           
           <div className="flex justify-end">
-            <Button type="submit" className="bg-yellow-500 hover:bg-yellow-600 text-black font-medium">Save</Button>
+            <Button 
+              type="submit" 
+              className="bg-yellow-500 hover:bg-yellow-600 text-black font-medium"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Saving..." : "Save"}
+            </Button>
           </div>
         </form>
       </Form>

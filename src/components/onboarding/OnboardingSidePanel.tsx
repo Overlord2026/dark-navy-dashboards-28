@@ -21,12 +21,14 @@ interface OnboardingSidePanelProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
   initialFormId?: string;
+  onFormSave?: (formId: string) => void;
 }
 
 export const OnboardingSidePanel = ({ 
   isOpen, 
   onOpenChange,
-  initialFormId = "investor-profile"
+  initialFormId = "investor-profile",
+  onFormSave
 }: OnboardingSidePanelProps) => {
   const [activeFormId, setActiveFormId] = useState(initialFormId);
 
@@ -39,6 +41,13 @@ export const OnboardingSidePanel = ({
 
   const handleFormChange = (formId: string) => {
     setActiveFormId(formId);
+  };
+
+  const handleFormSave = (formId: string) => {
+    console.log(`Form saved in side panel: ${formId}`);
+    if (onFormSave) {
+      onFormSave(formId);
+    }
   };
 
   return (
@@ -72,7 +81,7 @@ export const OnboardingSidePanel = ({
           </div>
           
           <ScrollArea className="flex-1 pr-4">
-            <OnboardingForm formId={activeFormId} />
+            <OnboardingForm formId={activeFormId} onFormSave={handleFormSave} />
           </ScrollArea>
         </div>
       </SheetContent>

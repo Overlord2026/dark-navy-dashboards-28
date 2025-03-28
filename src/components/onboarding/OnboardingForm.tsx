@@ -10,12 +10,16 @@ import { SecurityForm } from "@/components/profile/SecurityForm";
 
 interface OnboardingFormProps {
   formId: string;
+  onFormSave?: (formId: string) => void;
 }
 
-export const OnboardingForm = ({ formId }: OnboardingFormProps) => {
+export const OnboardingForm = ({ formId, onFormSave }: OnboardingFormProps) => {
   const handleFormSave = () => {
     console.log(`Form ${formId} saved`);
-    // Handle form save logic here
+    // Call the parent's onFormSave with the current form ID
+    if (onFormSave) {
+      onFormSave(formId);
+    }
   };
 
   switch (formId) {
