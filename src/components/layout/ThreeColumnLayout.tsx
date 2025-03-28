@@ -1,4 +1,3 @@
-
 import { ReactNode, useState } from "react";
 import * as React from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
@@ -21,6 +20,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
+import { UserProfileSection } from "@/components/sidebar/UserProfileSection";
 
 type MenuItem = {
   id: string;
@@ -131,7 +131,6 @@ export function ThreeColumnLayout({
   const params = useParams();
   const navigate = useNavigate();
   
-  // Get section ID from URL params if available
   const sectionId = params.sectionId || activeSecondaryItem;
   
   const menuItems = secondaryMenuItems || getSecondaryMenuItems(activeMainItem);
@@ -157,9 +156,13 @@ export function ThreeColumnLayout({
     ] : [])
   ];
 
+  const handleProfileMenuItemClick = (itemId: string) => {
+    console.log(`Profile menu item clicked: ${itemId}`);
+    // Here you can add logic to handle profile menu item clicks
+  };
+
   return (
     <div className="flex h-screen overflow-hidden bg-background">
-      {/* Left Sidebar - 220px wide with dark navy background */}
       <aside
         className={cn(
           "h-screen flex flex-col transition-all duration-300 ease-in-out z-30",
@@ -186,6 +189,14 @@ export function ThreeColumnLayout({
             </div>
           )}
         </div>
+
+        {!mainSidebarCollapsed && (
+          <UserProfileSection 
+            userName="Antonio Gomez" 
+            avatarInitials="AG" 
+            onMenuItemClick={handleProfileMenuItemClick}
+          />
+        )}
 
         <div className="flex-1 py-4 overflow-y-auto">
           <nav className="px-2 space-y-1">
@@ -216,20 +227,6 @@ export function ThreeColumnLayout({
               );
             })}
           </nav>
-        </div>
-
-        <div className="p-3 border-t border-white/10 m-2 rounded-md bg-white/5">
-          <div className="flex items-center">
-            <div className="h-8 w-8 rounded-full bg-accent/30 flex items-center justify-center">
-              <UserIcon className="h-4 w-4 text-accent" />
-            </div>
-            {!mainSidebarCollapsed && (
-              <div className="ml-2">
-                <p className="text-xs text-[#E2E2E2] font-medium">Advisor:</p>
-                <p className="text-xs text-[#E2E2E2]/80">Charles Bryant</p>
-              </div>
-            )}
-          </div>
         </div>
 
         <Button
