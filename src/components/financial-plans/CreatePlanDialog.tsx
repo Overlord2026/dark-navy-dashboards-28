@@ -174,7 +174,7 @@ export function CreatePlanDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl min-h-[600px]">
+      <DialogContent className="max-w-4xl min-h-[600px] bg-[#0a1022] border-blue-900/30">
         <Card className="border-none shadow-none bg-transparent">
           <CardContent className="p-0">
             {renderContent()}
@@ -182,19 +182,19 @@ export function CreatePlanDialog({
         </Card>
 
         <div className="absolute bottom-6 left-6 right-6 flex justify-between">
-          {currentStep > 1 && currentStep < 6 && (
-            <Button variant="outline" onClick={handlePrevStep}>
-              Previous
+          {currentStep > 1 && (
+            <Button variant="outline" onClick={handlePrevStep} className="border-gray-700 hover:bg-gray-800">
+              Back
             </Button>
           )}
           {currentStep < 6 ? (
             currentStep !== 1 && <Button onClick={handleNextStep}>Next</Button>
           ) : (
-            <div className="flex gap-2">
-              <Button variant="secondary" onClick={handleSaveDraft}>
+            <div className="flex gap-2 ml-auto">
+              <Button variant="outline" onClick={handleSaveDraft} className="border-gray-700 hover:bg-gray-800">
                 Save Draft
               </Button>
-              <Button onClick={handleCreatePlan}>Create Plan</Button>
+              <Button onClick={handleCreatePlan}>Continue</Button>
             </div>
           )}
         </div>

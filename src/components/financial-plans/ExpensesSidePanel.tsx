@@ -1,8 +1,8 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { X } from "lucide-react";
+import { X, Info } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -14,7 +14,7 @@ import {
 export interface ExpenseData {
   id: string;
   name: string;
-  type: "Living" | "Healthcare" | "Education" | "Other";
+  type: "Living" | "Healthcare" | "Education" | "Other" | "Taxes and fees" | "Debt" | "Alimony";
   period: "Before Retirement" | "After Retirement";
   amount: number;
   owner: string;
@@ -23,6 +23,7 @@ export interface ExpenseData {
   repeats?: string;
   starts?: string;
   ends?: string;
+  approach?: string;
 }
 
 interface ExpensesSidePanelProps {
@@ -44,6 +45,13 @@ export const ExpensesSidePanel = ({ isOpen, onClose, expense, onSave }: Expenses
     }
   );
 
+  // Update form data when expense changes
+  useEffect(() => {
+    if (expense) {
+      setFormData(expense);
+    }
+  }, [expense]);
+
   const handleChange = (field: keyof ExpenseData, value: any) => {
     setFormData((prev) => ({
       ...prev,
@@ -58,111 +66,159 @@ export const ExpensesSidePanel = ({ isOpen, onClose, expense, onSave }: Expenses
 
   if (!isOpen) return null;
 
-  // Determine the title based on the expense type
-  const panelTitle = `${formData.type} Expense`;
+  // Determine the title and subtitle based on the expense type and period
+  const getTitle = () => {
+    return `${formData.type} Expense`;
+  };
+
+  const getSubtitle = () => {
+    return formData.period;
+  };
+
+  // Conditional info message for Living expenses
+  const showLivingExpensesInfo = formData.type === "Living";
 
   return (
     <div className="fixed inset-0 z-50 flex justify-end">
       <div className="fixed inset-0 bg-black/50" onClick={onClose} />
-      <div className="w-full max-w-md bg-[#0D1426] border-l border-blue-900/30 overflow-y-auto animate-in slide-in-from-right">
+      <div className="w-full max-w-md bg-[#0a1022] border-l border-blue-900/30 overflow-y-auto">
         <div className="flex flex-col h-full">
-          <div className="flex justify-between items-center p-6 border-b border-blue-900/30">
-            <h2 className="text-xl font-semibold">{panelTitle}</h2>
-            <Button variant="ghost" size="icon" onClick={onClose}>
+          <div className="p-6 border-b border-blue-900/30 relative">
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={onClose}
+              className="absolute right-4 top-4 text-gray-400 hover:text-white"
+            >
               <X className="h-5 w-5" />
             </Button>
+            <h2 className="text-2xl font-semibold text-white">{getTitle()}</h2>
+            <p className="text-sm text-gray-400">{getSubtitle()}</p>
           </div>
 
           <div className="flex-1 p-6 space-y-6">
-            <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <label className="text-sm text-muted-foreground">Owner</label>
-                  <Select
-                    value={formData.owner}
-                    onValueChange={(value) => handleChange("owner", value)}
-                  >
-                    <SelectTrigger className="bg-[#1A2333] border-blue-900/30">
-                      <SelectValue placeholder="Select owner" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-[#1A2333] border-blue-900/30">
-                      <SelectItem value="Antonio Gomez">Antonio Gomez</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+            {showLivingExpensesInfo && (
+              <div className="bg-blue-950 border border-blue-800 rounded-md p-4 flex items-start space-x-3">
+                <Info className="h-5 w-5 text-blue-500 mt-0.5 flex-shrink-0" />
+                <p className="text-sm text-gray-300">
+                  Do not include any debt payments (e.g. mortgage) in living expenses.
+                </p>
+              </div>
+            )}
 
+            <div className="space-y-6">
+              <div className="grid grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <label className="text-sm text-muted-foreground">Name</label>
+                  <label className="text-sm text-gray-400">Name</label>
                   <Input
                     value={formData.name}
                     onChange={(e) => handleChange("name", e.target.value)}
                     placeholder={`${formData.type} Expenses ${formData.period}`}
-                    className="bg-[#1A2333] border-blue-900/30"
+                    className="bg-[#1A2333] border-blue-900/30 text-white"
                   />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm text-gray-400">Owner</label>
+                  <Select
+                    value={formData.owner}
+                    onValueChange={(value) => handleChange("owner", value)}
+                  >
+                    <SelectTrigger className="bg-[#1A2333] border-blue-900/30 text-white">
+                      <SelectValue placeholder="Select owner" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-[#0A1022] border-blue-900/30">
+                      <SelectItem value="Antonio Gomez">Antonio Gomez</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <label className="text-sm text-muted-foreground">Amount</label>
-                <div className="relative">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
-                    $
-                  </span>
-                  <Input
-                    type="number"
-                    value={formData.amount}
-                    onChange={(e) => handleChange("amount", parseFloat(e.target.value) || 0)}
-                    className="pl-8 bg-[#1A2333] border-blue-900/30"
-                    placeholder="0.00"
-                  />
+              <div className="grid grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <label className="text-sm text-gray-400">
+                    {formData.type === "Living" ? "Monthly Amount" : "Amount"}
+                  </label>
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                      $
+                    </span>
+                    <Input
+                      type="number"
+                      value={formData.amount}
+                      onChange={(e) => handleChange("amount", parseFloat(e.target.value) || 0)}
+                      className="pl-8 bg-[#1A2333] border-blue-900/30 text-white"
+                      placeholder="0"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm text-gray-400">Payment Account</label>
+                  <Select
+                    value={formData.paymentAccount}
+                    onValueChange={(value) => handleChange("paymentAccount", value)}
+                  >
+                    <SelectTrigger className="bg-[#1A2333] border-blue-900/30 text-white">
+                      <SelectValue placeholder="Select account" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-[#0A1022] border-blue-900/30">
+                      <SelectItem value="Checking Account">Checking Account</SelectItem>
+                      <SelectItem value="Savings Account">Savings Account</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <label className="text-sm text-muted-foreground">Payment Account</label>
-                <Select
-                  value={formData.paymentAccount}
-                  onValueChange={(value) => handleChange("paymentAccount", value)}
-                >
-                  <SelectTrigger className="bg-[#1A2333] border-blue-900/30">
-                    <SelectValue placeholder="Select account" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-[#1A2333] border-blue-900/30">
-                    <SelectItem value="Checking Account">Checking Account</SelectItem>
-                    <SelectItem value="Savings Account">Savings Account</SelectItem>
-                  </SelectContent>
-                </Select>
+              <div className="grid grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <label className="text-sm text-gray-400">Annual Increase</label>
+                  <Select
+                    value={formData.annualIncrease || "None"}
+                    onValueChange={(value) => handleChange("annualIncrease", value)}
+                  >
+                    <SelectTrigger className="bg-[#1A2333] border-blue-900/30 text-white">
+                      <SelectValue placeholder="None" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-[#0A1022] border-blue-900/30">
+                      <SelectItem value="None">None</SelectItem>
+                      <SelectItem value="2%">2%</SelectItem>
+                      <SelectItem value="3%">3%</SelectItem>
+                      <SelectItem value="4%">4%</SelectItem>
+                      <SelectItem value="5%">5%</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {formData.type === "Living" && (
+                  <div className="space-y-2">
+                    <label className="text-sm text-gray-400">Approach</label>
+                    <Select
+                      value={formData.approach || "Simple"}
+                      onValueChange={(value) => handleChange("approach", value)}
+                    >
+                      <SelectTrigger className="bg-[#1A2333] border-blue-900/30 text-white">
+                        <SelectValue placeholder="Simple" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-[#0A1022] border-blue-900/30">
+                        <SelectItem value="Simple">Simple</SelectItem>
+                        <SelectItem value="Detailed">Detailed</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm text-muted-foreground">Annual Increase</label>
-                <Select
-                  value={formData.annualIncrease || "None"}
-                  onValueChange={(value) => handleChange("annualIncrease", value)}
-                >
-                  <SelectTrigger className="bg-[#1A2333] border-blue-900/30">
-                    <SelectValue placeholder="Select increase rate" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-[#1A2333] border-blue-900/30">
-                    <SelectItem value="None">None</SelectItem>
-                    <SelectItem value="2%">2%</SelectItem>
-                    <SelectItem value="3%">3%</SelectItem>
-                    <SelectItem value="4%">4%</SelectItem>
-                    <SelectItem value="5%">5%</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <label className="text-sm text-muted-foreground">Repeats</label>
+                <label className="text-sm text-gray-400">Repeats</label>
                 <Select
                   value={formData.repeats || "Every Month"}
                   onValueChange={(value) => handleChange("repeats", value)}
                 >
-                  <SelectTrigger className="bg-[#1A2333] border-blue-900/30">
-                    <SelectValue placeholder="Select frequency" />
+                  <SelectTrigger className="bg-[#1A2333] border-blue-900/30 text-white">
+                    <SelectValue placeholder="Every Month" />
                   </SelectTrigger>
-                  <SelectContent className="bg-[#1A2333] border-blue-900/30">
+                  <SelectContent className="bg-[#0A1022] border-blue-900/30">
                     <SelectItem value="Every Month">Every Month</SelectItem>
                     <SelectItem value="Every Quarter">Every Quarter</SelectItem>
                     <SelectItem value="Every Year">Every Year</SelectItem>
@@ -171,16 +227,16 @@ export const ExpensesSidePanel = ({ isOpen, onClose, expense, onSave }: Expenses
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm text-muted-foreground">Starts</label>
+                <label className="text-sm text-gray-400">Starts</label>
                 <Select
-                  value={formData.starts || "Your Retirement"}
+                  value={formData.starts || (formData.period === "After Retirement" ? "Your Retirement" : "Already Started")}
                   onValueChange={(value) => handleChange("starts", value)}
                 >
-                  <SelectTrigger className="bg-[#1A2333] border-blue-900/30">
-                    <SelectValue placeholder="Select start date" />
+                  <SelectTrigger className="bg-[#1A2333] border-blue-900/30 text-white">
+                    <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="bg-[#1A2333] border-blue-900/30">
-                    <SelectItem value="Today">Today</SelectItem>
+                  <SelectContent className="bg-[#0A1022] border-blue-900/30">
+                    <SelectItem value="Already Started">Already Started</SelectItem>
                     <SelectItem value="Your Retirement">Your Retirement</SelectItem>
                     <SelectItem value="In 5 Years">In 5 Years</SelectItem>
                   </SelectContent>
@@ -188,15 +244,16 @@ export const ExpensesSidePanel = ({ isOpen, onClose, expense, onSave }: Expenses
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm text-muted-foreground">Ends</label>
+                <label className="text-sm text-gray-400">Ends</label>
                 <Select
-                  value={formData.ends || "End of Your Planning Horizon"}
+                  value={formData.ends || (formData.period === "Before Retirement" ? "Your Retirement" : "End of Your Planning Horizon")}
                   onValueChange={(value) => handleChange("ends", value)}
                 >
-                  <SelectTrigger className="bg-[#1A2333] border-blue-900/30">
-                    <SelectValue placeholder="Select end date" />
+                  <SelectTrigger className="bg-[#1A2333] border-blue-900/30 text-white">
+                    <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="bg-[#1A2333] border-blue-900/30">
+                  <SelectContent className="bg-[#0A1022] border-blue-900/30">
+                    <SelectItem value="Your Retirement">Your Retirement</SelectItem>
                     <SelectItem value="End of Your Planning Horizon">End of Your Planning Horizon</SelectItem>
                     <SelectItem value="In 10 Years">In 10 Years</SelectItem>
                     <SelectItem value="In 20 Years">In 20 Years</SelectItem>
@@ -206,11 +263,13 @@ export const ExpensesSidePanel = ({ isOpen, onClose, expense, onSave }: Expenses
             </div>
           </div>
 
-          <div className="flex justify-between p-6 border-t border-blue-900/30">
-            <Button variant="outline" onClick={onClose}>
+          <div className="flex justify-end p-6 border-t border-blue-900/30 gap-2">
+            <Button variant="outline" onClick={onClose} className="text-white border-gray-700 hover:bg-gray-800">
               Cancel
             </Button>
-            <Button onClick={handleSubmit}>Save</Button>
+            <Button onClick={handleSubmit} className="bg-blue-600 hover:bg-blue-700">
+              Save
+            </Button>
           </div>
         </div>
       </div>
