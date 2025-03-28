@@ -2,7 +2,6 @@
 import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
@@ -88,6 +87,20 @@ export function AddCollaboratorDialog({
     form.reset();
     setStep(1);
     handleDialogOpenChange(false);
+  };
+
+  const handleNext = () => {
+    // Validate only the required fields for step 1
+    const isFirstNameValid = form.getValues("firstName") && form.getValues("firstName").length > 0;
+    const isLastNameValid = form.getValues("lastName") && form.getValues("lastName").length > 0;
+    const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.getValues("email") || "");
+    
+    if (isFirstNameValid && isLastNameValid && isEmailValid) {
+      setStep(2);
+    } else {
+      // Show validation errors
+      form.trigger(["firstName", "lastName", "email"]);
+    }
   };
 
   const handleCancel = () => {
@@ -237,12 +250,22 @@ export function AddCollaboratorDialog({
                 Cancel
               </Button>
               
-              <Button 
-                type="submit"
-                className="bg-blue-600 hover:bg-blue-700 text-white"
-              >
-                {step === 1 ? "Next" : "Send Invitation"}
-              </Button>
+              {step === 1 ? (
+                <Button 
+                  type="button"
+                  className="bg-blue-600 hover:bg-blue-700 text-white"
+                  onClick={handleNext}
+                >
+                  Next
+                </Button>
+              ) : (
+                <Button 
+                  type="submit"
+                  className="bg-blue-600 hover:bg-blue-700 text-white"
+                >
+                  Send Invitation
+                </Button>
+              )}
             </div>
           </form>
         </Form>
