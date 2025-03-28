@@ -24,22 +24,29 @@ export const ProfileFormSheet = ({
   activeForm, 
   onFormSave 
 }: ProfileFormSheetProps) => {
+  
+  // Handle saving the form data
+  const handleSave = (formId: string) => {
+    console.log(`Saving form: ${formId}`);
+    onFormSave(formId);
+  };
+
   const renderFormContent = () => {
     switch (activeForm) {
       case "investor-profile":
-        return <ProfileForm onSave={() => onFormSave("investor-profile")} />;
+        return <ProfileForm onSave={() => handleSave("investor-profile")} />;
       case "contact-information":
-        return <ContactForm onSave={() => onFormSave("contact-information")} />;
+        return <ContactForm onSave={() => handleSave("contact-information")} />;
       case "additional-information":
-        return <AdditionalInfoForm onSave={() => onFormSave("additional-information")} />;
+        return <AdditionalInfoForm onSave={() => handleSave("additional-information")} />;
       case "beneficiaries":
-        return <BeneficiariesForm onSave={() => onFormSave("beneficiaries")} />;
+        return <BeneficiariesForm onSave={() => handleSave("beneficiaries")} />;
       case "affiliations":
-        return <AffiliationsForm onSave={() => onFormSave("affiliations")} />;
+        return <AffiliationsForm onSave={() => handleSave("affiliations")} />;
       case "trusts":
-        return <TrustsForm onSave={() => onFormSave("trusts")} />;
+        return <TrustsForm onSave={() => handleSave("trusts")} />;
       case "security-access":
-        return <SecurityForm onSave={() => onFormSave("security-access")} />;
+        return <SecurityForm onSave={() => handleSave("security-access")} />;
       case "investment-advisory-agreement":
         return <div>Investment Advisory Agreement Form</div>;
       case "disclosures":

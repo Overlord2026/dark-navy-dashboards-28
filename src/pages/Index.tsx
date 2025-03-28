@@ -7,6 +7,7 @@ import { DashboardCard } from "@/components/ui/DashboardCard";
 import { NetWorthSummary } from "@/components/dashboard/NetWorthSummary";
 import { SetupChecklist } from "@/components/profile/SetupChecklist";
 import { ProfileFormSheet } from "@/components/profile/ProfileFormSheet";
+import { toast } from "sonner";
 
 const Dashboard = () => {
   const [loading, setLoading] = useState(true);
@@ -38,6 +39,7 @@ const Dashboard = () => {
   };
 
   const handleOpenForm = (formId: string) => {
+    console.log(`Opening form: ${formId}`);
     setActiveForm(formId);
     setIsSheetOpen(true);
   };
@@ -48,11 +50,19 @@ const Dashboard = () => {
   };
 
   const handleCompleteForm = (formId: string) => {
+    console.log(`Completing form: ${formId}`);
+    
     setChecklistItems(prevItems =>
       prevItems.map(item =>
         item.id === formId ? { ...item, completed: true } : item
       )
     );
+    
+    // Show a toast notification
+    const itemName = checklistItems.find(item => item.id === formId)?.name || "";
+    toast.success(`${itemName} updated successfully`);
+    
+    // Close the form sheet
     handleCloseForm();
   };
 
