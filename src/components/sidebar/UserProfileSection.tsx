@@ -80,7 +80,7 @@ export const UserProfileSection = ({
   };
 
   return (
-    <div className={`px-4 py-2 ${isLightTheme ? 'border-[#DCD8C0]' : 'border-white/10'}`}>
+    <div className={`px-4 py-3 ${isLightTheme ? 'border-[#DCD8C0]' : 'border-white/10'}`}>
       {/* Optional logo above the user profile dropdown */}
       {showLogo && (
         <div className="mb-3 flex justify-center">
@@ -102,10 +102,10 @@ export const UserProfileSection = ({
           onClick={() => setIsDropdownOpen(!isDropdownOpen)}
         >
           <div className="flex items-center">
-            <div className="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center mr-3 text-primary-foreground font-medium border border-primary">
+            <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center mr-2 text-primary-foreground font-medium border border-primary">
               {avatarInitials}
             </div>
-            <span className="font-medium text-base">{userName}</span>
+            <span className="font-medium text-sm">{userName}</span>
           </div>
           <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${isLightTheme ? 'text-[#222222]/70' : 'text-white/70'} ${isDropdownOpen ? 'rotate-180' : ''}`} />
         </DropdownMenuTrigger>

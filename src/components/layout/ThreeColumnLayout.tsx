@@ -1,3 +1,4 @@
+
 import { ReactNode, useState } from "react";
 import * as React from "react";
 import { useParams, useNavigate, Link, useLocation } from "react-router-dom";
@@ -200,13 +201,13 @@ export function ThreeColumnLayout({
       >
         <div>
           {!mainSidebarCollapsed && (
-            <div className="border-b border-sidebar-border mb-2">
+            <div className="border-b border-sidebar-border">
               <UserProfileSection onMenuItemClick={handleProfileMenuItemClick} showLogo={false} />
             </div>
           )}
           
-          <div className="overflow-y-auto">
-            <nav className="px-4 space-y-2">
+          <div className="overflow-y-auto mt-2">
+            <nav className="px-4 space-y-1.5">
               {mainMenuItems.map((item) => {
                 if (item.id === "education") return null;
 
