@@ -21,10 +21,11 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { format, parse } from "date-fns";
+import { format, parse, isValid } from "date-fns";
 import { cn } from "@/lib/utils";
 import { useUser } from "@/context/UserContext";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   title: z.string().optional(),
@@ -50,7 +51,7 @@ export function ProfileForm({ onSave }: { onSave: () => void }) {
       firstName: userProfile.firstName,
       middleName: userProfile.middleName || "",
       lastName: userProfile.lastName,
-      suffix: userProfile.suffix || "",
+      suffix: userProfile.suffix || "none",
       gender: userProfile.gender || "Male",
       maritalStatus: userProfile.maritalStatus || "Married",
       dateOfBirth: userProfile.dateOfBirth || new Date("1963-05-03"),
@@ -59,19 +60,21 @@ export function ProfileForm({ onSave }: { onSave: () => void }) {
 
   // Update form when user profile changes
   useEffect(() => {
-    form.reset({
-      title: userProfile.title || "Mr",
-      firstName: userProfile.firstName,
-      middleName: userProfile.middleName || "",
-      lastName: userProfile.lastName,
-      suffix: userProfile.suffix || "",
-      gender: userProfile.gender || "Male",
-      maritalStatus: userProfile.maritalStatus || "Married",
-      dateOfBirth: userProfile.dateOfBirth || new Date("1963-05-03"),
-    });
-    
-    if (userProfile.dateOfBirth) {
-      setDateInput(format(userProfile.dateOfBirth, "MM/dd/yyyy"));
+    if (userProfile) {
+      form.reset({
+        title: userProfile.title || "Mr",
+        firstName: userProfile.firstName,
+        middleName: userProfile.middleName || "",
+        lastName: userProfile.lastName,
+        suffix: userProfile.suffix || "none",
+        gender: userProfile.gender || "Male",
+        maritalStatus: userProfile.maritalStatus || "Married",
+        dateOfBirth: userProfile.dateOfBirth || new Date("1963-05-03"),
+      });
+      
+      if (userProfile.dateOfBirth) {
+        setDateInput(format(userProfile.dateOfBirth, "MM/dd/yyyy"));
+      }
     }
   }, [userProfile, form]);
 
@@ -81,16 +84,14 @@ export function ProfileForm({ onSave }: { onSave: () => void }) {
     setDateInput(value);
     
     try {
-      // Try to parse the date from input
+      // Validate MM/DD/YYYY format
       if (value.match(/^\d{2}\/\d{2}\/\d{4}$/)) {
         const parsedDate = parse(value, "MM/dd/yyyy", new Date());
-        // Check if it's a valid date
-        if (!isNaN(parsedDate.getTime())) {
+        if (isValid(parsedDate)) {
           form.setValue("dateOfBirth", parsedDate);
         }
       }
     } catch (error) {
-      // Invalid date format, do nothing
       console.log("Invalid date format:", error);
     }
   };
@@ -98,14 +99,19 @@ export function ProfileForm({ onSave }: { onSave: () => void }) {
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log("Form submitted with values:", values);
     
-    // Convert date to proper format if needed
-    const formattedValues = { ...values };
-    
-    // Update global user profile state
-    updateUserProfile(formattedValues);
-    
-    // Call the onSave callback to update parent components
-    onSave();
+    try {
+      // Update global user profile state
+      updateUserProfile(values);
+      
+      // Show success message
+      toast.success("Profile information updated successfully");
+      
+      // Call the onSave callback to update parent components
+      if (onSave) onSave();
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      toast.error("Failed to update profile. Please try again.");
+    }
   }
 
   return (
@@ -190,7 +196,7 @@ export function ProfileForm({ onSave }: { onSave: () => void }) {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Suffix (Optional)</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <Select onValueChange={field.onChange} defaultValue={field.value || "none"}>
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="Select suffix" />
