@@ -57,11 +57,13 @@ export function GoalsList({ goals, onGoalUpdate }: GoalsListProps) {
       const updatedGoal: Goal = {
         ...selectedGoal,
         title: goalData.name,
+        name: goalData.name, // Update both title and name for consistency
         owner: goalData.owner,
         dateOfBirth: goalData.dateOfBirth,
         targetRetirementAge: goalData.targetRetirementAge,
         planningHorizonAge: goalData.planningHorizonAge,
         priority: goalData.type,
+        type: goalData.type, // Update both priority and type for consistency
       };
       onGoalUpdate?.(updatedGoal);
     } else {
@@ -69,11 +71,13 @@ export function GoalsList({ goals, onGoalUpdate }: GoalsListProps) {
       const newGoal: Goal = {
         id: `goal-${Date.now()}`,
         title: goalData.name,
+        name: goalData.name, // Set both title and name for consistency
         owner: goalData.owner,
         dateOfBirth: goalData.dateOfBirth,
         targetRetirementAge: goalData.targetRetirementAge,
         planningHorizonAge: goalData.planningHorizonAge,
         priority: goalData.type,
+        type: goalData.type, // Set both priority and type for consistency
       };
       onGoalUpdate?.(newGoal);
     }

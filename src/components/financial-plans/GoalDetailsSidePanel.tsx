@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { 
   Dialog,
   DialogContent,
@@ -61,14 +61,29 @@ export function GoalDetailsSidePanel({ isOpen, onClose, goal, onSave, title }: G
   const form = useForm<GoalFormData>({
     defaultValues: {
       id: goal?.id,
-      owner: fullName,
-      name: goal?.title ? `${goal.title} Goal` : `${fullName}'s Retirement Goal`,
-      dateOfBirth: undefined,
-      targetRetirementAge: 70,
-      planningHorizonAge: 100,
-      type: goal?.priority || "High"
+      owner: goal?.owner || fullName,
+      name: goal?.title || (goal?.name ? goal.name : `${fullName}'s Retirement Goal`),
+      dateOfBirth: goal?.dateOfBirth,
+      targetRetirementAge: goal?.targetRetirementAge || 70,
+      planningHorizonAge: goal?.planningHorizonAge || 100,
+      type: goal?.priority || goal?.type || "High"
     },
   });
+
+  // Reset form when goal changes
+  useEffect(() => {
+    if (isOpen) {
+      form.reset({
+        id: goal?.id,
+        owner: goal?.owner || fullName,
+        name: goal?.title || (goal?.name ? goal.name : `${fullName}'s Retirement Goal`),
+        dateOfBirth: goal?.dateOfBirth,
+        targetRetirementAge: goal?.targetRetirementAge || 70,
+        planningHorizonAge: goal?.planningHorizonAge || 100,
+        type: goal?.priority || goal?.type || "High"
+      });
+    }
+  }, [goal, isOpen, form, fullName]);
 
   const handleSubmit = (data: GoalFormData) => {
     onSave(data);
