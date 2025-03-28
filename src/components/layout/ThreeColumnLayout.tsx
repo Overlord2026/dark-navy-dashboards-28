@@ -1,4 +1,3 @@
-
 import { ReactNode, useState } from "react";
 import * as React from "react";
 import { useParams, useNavigate, Link, useLocation } from "react-router-dom";
@@ -194,19 +193,19 @@ export function ThreeColumnLayout({
     <div className={`flex h-screen overflow-hidden ${isLightTheme ? 'bg-[#F9F7E8]' : 'bg-[#12121C]'}`}>
       <aside
         className={cn(
-          "h-screen flex flex-col transition-all duration-300 ease-in-out z-30",
+          "flex flex-col transition-all duration-300 ease-in-out z-30 mt-[260px]",
           mainSidebarCollapsed ? "w-[70px]" : "w-[220px]",
           isLightTheme ? "bg-[#F9F7E8] border-r border-[#DCD8C0]" : "bg-[#1B1B32] border-r border-white/10"
         )}
       >
-        <div className="pt-[260px]">
+        <div>
           {!mainSidebarCollapsed && (
             <div className="border-b border-sidebar-border mb-2">
               <UserProfileSection onMenuItemClick={handleProfileMenuItemClick} showLogo={false} />
             </div>
           )}
           
-          <div className="flex-1 overflow-y-auto">
+          <div className="overflow-y-auto">
             <nav className="px-4 space-y-2">
               {mainMenuItems.map((item) => {
                 if (item.id === "education") return null;
@@ -267,7 +266,7 @@ export function ThreeColumnLayout({
       {hasSecondaryMenu && (
         <aside
           className={cn(
-            "h-screen flex flex-col transition-all duration-300 ease-in-out z-20 pt-[260px]",
+            "flex flex-col transition-all duration-300 ease-in-out z-20 mt-[260px]",
             secondarySidebarCollapsed ? "w-[0px]" : "w-[200px]",
             isLightTheme ? "bg-[#F9F7E8] border-r border-[#DCD8C0]" : "bg-[#1B1B32] border-r border-sidebar-border"
           )}
