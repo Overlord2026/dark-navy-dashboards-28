@@ -24,7 +24,9 @@ const CustomerProfile = () => {
     { id: "affiliations", name: "Affiliations", completed: true },
     { id: "investment-advisory-agreement", name: "Investment Advisory Agreement", completed: true },
     { id: "disclosures", name: "Disclosures", completed: false },
-    { id: "custodian-agreement", name: "Custodian Agreement", completed: false }
+    { id: "custodian-agreement", name: "Custodian Agreement", completed: false },
+    { id: "trusts", name: "Trusts", completed: false },
+    { id: "security-access", name: "Security & Access", completed: false }
   ]);
 
   const advisorInfo = {
@@ -40,8 +42,8 @@ const CustomerProfile = () => {
   // Client info
   const clientInfo = {
     name: "Antonio Gomez",
-    email: "antonio.gomez@example.com",
-    phone: "(555) 123-4567",
+    email: "votepedro1999@gmail.com",
+    phone: "(941) 539-8751",
     joinDate: "March 15, 2023",
     investorType: "Aggressive Growth"
   };
@@ -67,6 +69,31 @@ const CustomerProfile = () => {
 
   const handleViewAdvisorProfile = (tabId: string) => {
     setActiveAdvisorTab(tabId);
+  };
+
+  // Handle the user profile dropdown menu item clicks
+  const handleProfileMenuItemClick = (itemId: string) => {
+    console.log(`Profile menu item clicked: ${itemId}`);
+    
+    switch (itemId) {
+      case "profile":
+      case "contact-info":
+      case "additional-info":
+      case "beneficiaries":
+      case "affiliations":
+      case "trusts":
+      case "security-access":
+        handleOpenForm(itemId);
+        break;
+      case "change-theme":
+        // Theme change functionality would go here
+        console.log("Change theme clicked");
+        break;
+      case "log-out":
+        // Logout functionality would go here
+        console.log("Log out clicked");
+        break;
+    }
   };
 
   return (

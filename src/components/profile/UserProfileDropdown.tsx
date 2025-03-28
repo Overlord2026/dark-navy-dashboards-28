@@ -25,9 +25,9 @@ interface UserProfileDropdownProps {
 
 export const UserProfileDropdown = ({ onOpenForm }: UserProfileDropdownProps) => {
   const menuItems = [
-    { id: "profile", label: "Profile", icon: UserIcon },
-    { id: "contact-info", label: "Contact Info", icon: PhoneIcon },
-    { id: "additional-info", label: "Additional Info", icon: FileTextIcon },
+    { id: "profile", label: "Investor Profile", icon: UserIcon },
+    { id: "contact-info", label: "Contact Information", icon: PhoneIcon },
+    { id: "additional-info", label: "Additional Information", icon: FileTextIcon },
     { id: "beneficiaries", label: "Beneficiaries", icon: UsersIcon },
     { id: "affiliations", label: "Affiliations", icon: BuildingIcon },
     { id: "trusts", label: "Trusts", icon: BuildingIcon },
@@ -41,14 +41,14 @@ export const UserProfileDropdown = ({ onOpenForm }: UserProfileDropdownProps) =>
       <DropdownMenu>
         <DropdownMenuTrigger className="flex items-center justify-between w-full py-2 hover:bg-[#1c2e4a] rounded-md transition-colors cursor-pointer">
           <div className="flex items-center">
-            <div className="h-10 w-10 rounded-full bg-white/10 flex items-center justify-center text-white font-medium mr-3">
+            <div className="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center text-white font-medium mr-3">
               AG
             </div>
-            <span className="font-medium">Antonio Gomez</span>
+            <span className="font-medium text-white">Antonio Gomez</span>
           </div>
-          <ChevronRight className="h-4 w-4 rotate-90" />
+          <ChevronRight className="h-4 w-4 rotate-90 text-white/70" />
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-[220px] bg-[#0a1021] border-gray-700 text-white">
+        <DropdownMenuContent className="w-[220px] bg-[#0F0F2D] border-gray-700 text-white">
           {menuItems.slice(0, 7).map((item) => {
             const Icon = item.icon;
             return (

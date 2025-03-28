@@ -1,5 +1,5 @@
 
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetClose } from "@/components/ui/sheet";
 import { ProfileForm } from "@/components/profile/ProfileForm";
 import { ContactForm } from "@/components/profile/ContactForm";
 import { AdditionalInfoForm } from "@/components/profile/AdditionalInfoForm";
@@ -7,6 +7,8 @@ import { BeneficiariesForm } from "@/components/profile/BeneficiariesForm";
 import { AffiliationsForm } from "@/components/profile/AffiliationsForm";
 import { TrustsForm } from "@/components/profile/TrustsForm";
 import { SecurityForm } from "@/components/profile/SecurityForm";
+import { X } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface ProfileFormSheetProps {
   isOpen: boolean;
@@ -77,13 +79,18 @@ export const ProfileFormSheet = ({
 
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
-      <SheetContent className="w-full sm:max-w-[540px] overflow-y-auto bg-[#0a1021] text-white" side="right">
-        <SheetHeader>
+      <SheetContent className="w-full sm:max-w-[540px] overflow-y-auto bg-[#0F0F2D] text-white border-l border-gray-800" side="right">
+        <div className="flex items-center justify-between mb-6">
           <SheetTitle className="text-xl font-semibold text-white">
             {getFormTitle()}
           </SheetTitle>
-        </SheetHeader>
-        <div className="mt-6">
+          <SheetClose asChild>
+            <Button variant="ghost" size="icon" className="h-8 w-8 p-0 text-white/70 hover:text-white">
+              <X className="h-5 w-5" />
+            </Button>
+          </SheetClose>
+        </div>
+        <div>
           {renderFormContent()}
         </div>
       </SheetContent>

@@ -1,3 +1,4 @@
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -5,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -46,24 +46,28 @@ export function ContactForm({ onSave }: { onSave: () => void }) {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-semibold tracking-tight">Provide your contact information</h2>
+        <h2 className="text-2xl font-semibold tracking-tight text-white mb-2">Provide your contact information</h2>
       </div>
       
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <div>
-            <h3 className="text-base font-medium mb-3 text-muted-foreground">PRIMARY CONTACT</h3>
+            <h3 className="text-base font-medium mb-3 text-gray-400 uppercase">PRIMARY CONTACT</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <FormField
                 control={form.control}
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel className="text-gray-400">Email</FormLabel>
                     <FormControl>
-                      <Input placeholder="Email address" {...field} />
+                      <Input 
+                        placeholder="Email address" 
+                        {...field} 
+                        className="bg-transparent border-gray-700 text-white focus:border-blue-500"
+                      />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="text-red-400" />
                   </FormItem>
                 )}
               />
@@ -73,11 +77,15 @@ export function ContactForm({ onSave }: { onSave: () => void }) {
                 name="phone"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Phone Number</FormLabel>
+                    <FormLabel className="text-gray-400">Phone Number</FormLabel>
                     <FormControl>
-                      <Input placeholder="Phone number" {...field} />
+                      <Input 
+                        placeholder="Phone number" 
+                        {...field} 
+                        className="bg-transparent border-gray-700 text-white focus:border-blue-500"
+                      />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="text-red-400" />
                   </FormItem>
                 )}
               />
@@ -85,18 +93,22 @@ export function ContactForm({ onSave }: { onSave: () => void }) {
           </div>
           
           <div>
-            <h3 className="text-base font-medium mb-3 text-muted-foreground">PRIMARY ADDRESS</h3>
+            <h3 className="text-base font-medium mb-3 text-gray-400 uppercase">PRIMARY ADDRESS</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <FormField
                 control={form.control}
                 name="address1"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Address</FormLabel>
+                    <FormLabel className="text-gray-400">Address</FormLabel>
                     <FormControl>
-                      <Input placeholder="Street address" {...field} />
+                      <Input 
+                        placeholder="Street address" 
+                        {...field} 
+                        className="bg-transparent border-gray-700 text-white focus:border-blue-500"
+                      />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="text-red-400" />
                   </FormItem>
                 )}
               />
@@ -106,11 +118,15 @@ export function ContactForm({ onSave }: { onSave: () => void }) {
                 name="address2"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Address 2 (Optional)</FormLabel>
+                    <FormLabel className="text-gray-400">Address 2 (Optional)</FormLabel>
                     <FormControl>
-                      <Input placeholder="Apt, suite, unit, etc." {...field} />
+                      <Input 
+                        placeholder="Apt, suite, unit, etc." 
+                        {...field} 
+                        className="bg-transparent border-gray-700 text-white focus:border-blue-500"
+                      />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="text-red-400" />
                   </FormItem>
                 )}
               />
@@ -120,11 +136,15 @@ export function ContactForm({ onSave }: { onSave: () => void }) {
                 name="city"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>City</FormLabel>
+                    <FormLabel className="text-gray-400">City</FormLabel>
                     <FormControl>
-                      <Input placeholder="City" {...field} />
+                      <Input 
+                        placeholder="City" 
+                        {...field} 
+                        className="bg-transparent border-gray-700 text-white focus:border-blue-500"
+                      />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="text-red-400" />
                   </FormItem>
                 )}
               />
@@ -134,14 +154,14 @@ export function ContactForm({ onSave }: { onSave: () => void }) {
                 name="state"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>State</FormLabel>
+                    <FormLabel className="text-gray-400">State</FormLabel>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
-                        <SelectTrigger>
+                        <SelectTrigger className="bg-transparent border-gray-700 text-white focus:ring-0">
                           <SelectValue placeholder="Select state" />
                         </SelectTrigger>
                       </FormControl>
-                      <SelectContent>
+                      <SelectContent className="bg-[#0F0F2D] border-gray-700 text-white">
                         <SelectItem value="AL">Alabama</SelectItem>
                         <SelectItem value="AK">Alaska</SelectItem>
                         <SelectItem value="AZ">Arizona</SelectItem>
@@ -155,7 +175,7 @@ export function ContactForm({ onSave }: { onSave: () => void }) {
                         {/* Other states would be added here */}
                       </SelectContent>
                     </Select>
-                    <FormMessage />
+                    <FormMessage className="text-red-400" />
                   </FormItem>
                 )}
               />
@@ -165,11 +185,15 @@ export function ContactForm({ onSave }: { onSave: () => void }) {
                 name="zipCode"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Zip Code</FormLabel>
+                    <FormLabel className="text-gray-400">Zip Code</FormLabel>
                     <FormControl>
-                      <Input placeholder="Zip code" {...field} />
+                      <Input 
+                        placeholder="Zip code" 
+                        {...field} 
+                        className="bg-transparent border-gray-700 text-white focus:border-blue-500"
+                      />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="text-red-400" />
                   </FormItem>
                 )}
               />
@@ -177,7 +201,12 @@ export function ContactForm({ onSave }: { onSave: () => void }) {
           </div>
           
           <div className="flex justify-end">
-            <Button type="submit">Save</Button>
+            <Button 
+              type="submit" 
+              className="bg-white text-[#0F0F2D] hover:bg-white/90"
+            >
+              Save
+            </Button>
           </div>
         </form>
       </Form>

@@ -157,8 +157,15 @@ export function ThreeColumnLayout({
   ];
 
   const handleProfileMenuItemClick = (itemId: string) => {
-    console.log(`Profile menu item clicked: ${itemId}`);
-    // Here you can add logic to handle profile menu item clicks
+    console.log(`Profile menu item clicked in layout: ${itemId}`);
+    
+    if (itemId === "profile") {
+      navigate("/");
+    } else if (itemId === "settings") {
+      navigate("/settings");
+    } else if (itemId === "log-out") {
+      console.log("Logging out...");
+    }
   };
 
   return (
