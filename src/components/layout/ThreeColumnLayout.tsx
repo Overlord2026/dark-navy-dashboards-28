@@ -1,4 +1,3 @@
-
 import { ReactNode, useState } from "react";
 import * as React from "react";
 import { useParams, useNavigate, Link, useLocation } from "react-router-dom";
@@ -421,7 +420,7 @@ export function ThreeColumnLayout({
           </div>
         )}
         
-        <main className="flex-1 overflow-y-auto p-6 pl-10 font-sans">
+        <main className="flex-1 overflow-y-auto p-6 pl-10 font-sans max-w-full">
           {children}
         </main>
 
