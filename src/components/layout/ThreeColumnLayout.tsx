@@ -22,6 +22,7 @@ import { Button } from "@/components/ui/button";
 import { UserProfileSection } from "@/components/sidebar/UserProfileSection";
 import { Header } from "@/components/ui/Header";
 import { useTheme } from "@/context/ThemeContext";
+import { useUser } from "@/context/UserContext";
 
 type MenuItem = {
   id: string;
@@ -129,6 +130,7 @@ export function ThreeColumnLayout({
   const [mainSidebarCollapsed, setMainSidebarCollapsed] = useState(false);
   const [secondarySidebarCollapsed, setSecondarySidebarCollapsed] = useState(false);
   const { theme } = useTheme();
+  const { userProfile } = useUser();
   
   const params = useParams();
   const navigate = useNavigate();
@@ -190,11 +192,7 @@ export function ThreeColumnLayout({
         </div>
 
         {!mainSidebarCollapsed && (
-          <UserProfileSection 
-            userName="Antonio Gomez" 
-            avatarInitials="AG" 
-            onMenuItemClick={handleProfileMenuItemClick}
-          />
+          <UserProfileSection onMenuItemClick={handleProfileMenuItemClick} />
         )}
 
         <div className="flex-1 py-6 overflow-y-auto">

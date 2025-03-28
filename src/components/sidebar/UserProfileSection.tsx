@@ -12,21 +12,23 @@ import { OnboardingSidePanel } from "@/components/onboarding/OnboardingSidePanel
 import { ThemeDialog } from "@/components/ui/ThemeDialog";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "@/context/ThemeContext";
+import { useUser } from "@/context/UserContext";
 
 interface UserProfileSectionProps {
-  userName: string;
-  avatarInitials: string;
   onMenuItemClick?: (itemId: string) => void;
 }
 
 export const UserProfileSection = ({ 
-  userName, 
-  avatarInitials,
   onMenuItemClick 
 }: UserProfileSectionProps) => {
   const navigate = useNavigate();
   const { theme } = useTheme();
+  const { userProfile } = useUser();
   const isLightTheme = theme === "light";
+  
+  // Generate user initials from first and last name
+  const avatarInitials = `${userProfile.firstName?.charAt(0) || ''}${userProfile.lastName?.charAt(0) || ''}`;
+  const userName = `${userProfile.firstName} ${userProfile.lastName}`;
   
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [isThemeDialogOpen, setIsThemeDialogOpen] = useState(false);

@@ -10,8 +10,10 @@ import { BookSessionDrawer } from "@/components/profile/BookSessionDrawer";
 import { ProfileFormSheet } from "@/components/profile/ProfileFormSheet";
 import { UserCircle } from "lucide-react";
 import { toast } from "sonner";
+import { useUser } from "@/context/UserContext";
 
 const CustomerProfile = () => {
+  const { userProfile } = useUser();
   const [activeForm, setActiveForm] = useState<string | null>(null);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [isAdvisorDrawerOpen, setIsAdvisorDrawerOpen] = useState(false);
@@ -38,15 +40,6 @@ const CustomerProfile = () => {
     phone: "(800) 555-1234",
     office: "New York, NY",
     bio: "Daniel, a seasoned finance professional, guides high net worth investors. His approach blends investment management, risk mitigation, tax optimization, and overall strategy. Starting at Vanguard, then UBS, he directed client acquisition at Fisher Investments before joining Farther. Originally from Asheville, NC, Daniel now resides in Tampa, enjoying fitness, community activities, and sunny days by the water."
-  };
-
-  // Client info
-  const clientInfo = {
-    name: "Antonio Gomez",
-    email: "votepedro1999@gmail.com",
-    phone: "(941) 539-8751",
-    joinDate: "March 15, 2023",
-    investorType: "Aggressive Growth"
   };
 
   const handleOpenForm = (formId: string) => {
@@ -111,7 +104,7 @@ const CustomerProfile = () => {
           <div>
             <h1 className="text-[24px] font-semibold mb-1 text-[#E2E2E2]">Client Profile</h1>
             <div className="flex items-center text-muted-foreground">
-              <span>{clientInfo.name}</span>
+              <span>{`${userProfile.firstName} ${userProfile.lastName}`}</span>
             </div>
           </div>
           
@@ -122,19 +115,19 @@ const CustomerProfile = () => {
                 <UserCircle className="h-8 w-8 text-primary" />
               </div>
               <div>
-                <h3 className="font-medium">{clientInfo.name}</h3>
-                <p className="text-sm text-muted-foreground">{clientInfo.investorType}</p>
+                <h3 className="font-medium">{`${userProfile.firstName} ${userProfile.lastName}`}</h3>
+                <p className="text-sm text-muted-foreground">{userProfile.investorType}</p>
               </div>
             </div>
             <div className="mt-3 pt-3 border-t border-border/50">
               <div className="grid grid-cols-2 gap-2 text-sm">
                 <div>
                   <p className="text-muted-foreground">Email:</p>
-                  <p>{clientInfo.email}</p>
+                  <p>{userProfile.email}</p>
                 </div>
                 <div>
                   <p className="text-muted-foreground">Phone:</p>
-                  <p>{clientInfo.phone}</p>
+                  <p>{userProfile.phone}</p>
                 </div>
               </div>
               <button 

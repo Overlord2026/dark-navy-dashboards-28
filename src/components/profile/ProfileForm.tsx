@@ -23,6 +23,8 @@ import {
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
+import { useUser } from "@/context/UserContext";
+import { useEffect } from "react";
 
 const formSchema = z.object({
   title: z.string().optional(),
@@ -38,21 +40,39 @@ const formSchema = z.object({
 });
 
 export function ProfileForm({ onSave }: { onSave: () => void }) {
+  const { userProfile, updateUserProfile } = useUser();
+  
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: "Mr",
-      firstName: "Antonio",
-      middleName: "Pedro",
-      lastName: "Gomez",
-      gender: "Male",
-      maritalStatus: "Married",
-      dateOfBirth: new Date("1963-05-03"),
+      title: userProfile.title || "Mr",
+      firstName: userProfile.firstName,
+      middleName: userProfile.middleName || "",
+      lastName: userProfile.lastName,
+      gender: userProfile.gender || "Male",
+      maritalStatus: userProfile.maritalStatus || "Married",
+      dateOfBirth: userProfile.dateOfBirth || new Date("1963-05-03"),
     },
   });
 
+  // Update form when user profile changes
+  useEffect(() => {
+    form.reset({
+      title: userProfile.title || "Mr",
+      firstName: userProfile.firstName,
+      middleName: userProfile.middleName || "",
+      lastName: userProfile.lastName,
+      gender: userProfile.gender || "Male",
+      maritalStatus: userProfile.maritalStatus || "Married",
+      dateOfBirth: userProfile.dateOfBirth || new Date("1963-05-03"),
+    });
+  }, [userProfile, form]);
+
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
+    // Update global user profile state
+    updateUserProfile(values);
+    // Call the onSave callback to update parent components
     onSave();
   }
 

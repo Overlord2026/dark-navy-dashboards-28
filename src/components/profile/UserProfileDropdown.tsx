@@ -20,16 +20,21 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { OnboardingSidePanel } from "@/components/onboarding/OnboardingSidePanel";
 import { ThemeDialog } from "@/components/ui/ThemeDialog";
+import { useUser } from "@/context/UserContext";
 
 interface UserProfileDropdownProps {
   onOpenForm: (formId: string) => void;
 }
 
 export const UserProfileDropdown = ({ onOpenForm }: UserProfileDropdownProps) => {
+  const { userProfile } = useUser();
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [isThemeDialogOpen, setIsThemeDialogOpen] = useState(false);
   const [activePanelForm, setActivePanelForm] = useState("investor-profile");
   const [isOpen, setIsOpen] = useState(false);
+  
+  // Generate initials from user's first and last name
+  const initials = `${userProfile.firstName?.charAt(0) || ''}${userProfile.lastName?.charAt(0) || ''}`;
   
   const menuItems = [
     { id: "investor-profile", label: "Investor Profile", icon: UserIcon },
@@ -80,9 +85,9 @@ export const UserProfileDropdown = ({ onOpenForm }: UserProfileDropdownProps) =>
         >
           <div className="flex items-center">
             <div className="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center text-white font-medium mr-3">
-              AG
+              {initials}
             </div>
-            <span className="font-medium text-white">Antonio Gomez</span>
+            <span className="font-medium text-white">{`${userProfile.firstName} ${userProfile.lastName}`}</span>
           </div>
           <ChevronRight className={`h-4 w-4 text-white/70 transition-transform duration-200 ${isOpen ? 'rotate-[270deg]' : 'rotate-90'}`} />
         </DropdownMenuTrigger>
