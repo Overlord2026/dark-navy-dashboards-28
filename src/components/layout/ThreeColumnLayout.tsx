@@ -1,3 +1,4 @@
+
 import { ReactNode, useState } from "react";
 import * as React from "react";
 import { useParams, useNavigate, Link, useLocation } from "react-router-dom";
@@ -185,7 +186,7 @@ export function ThreeColumnLayout({
     <div className={`flex h-screen overflow-hidden ${isLightTheme ? 'bg-[#F9F7E8]' : 'bg-[#12121C]'}`}>
       <aside
         className={cn(
-          "h-screen flex flex-col transition-all duration-300 ease-in-out z-30",
+          "h-screen flex flex-col transition-all duration-300 ease-in-out z-30 pt-6", // Added pt-6 padding-top to move sidebar down
           mainSidebarCollapsed ? "w-[70px]" : "w-[220px]",
           isLightTheme ? "bg-[#F9F7E8] border-r border-[#DCD8C0]" : "bg-[#1B1B32] border-r border-white/10"
         )}
@@ -241,7 +242,7 @@ export function ThreeColumnLayout({
         <Button
           variant="ghost"
           size="icon"
-          className={`absolute top-0 right-0 translate-x-1/2 h-8 w-8 rounded-full bg-background border border-border text-foreground hover:bg-accent hover:text-sidebar-primary-foreground z-40 ${isLightTheme ? 'bg-[#F9F7E8] text-[#222222] border-[#DCD8C0]' : ''}`}
+          className={`absolute top-6 right-0 translate-x-1/2 h-8 w-8 rounded-full bg-background border border-border text-foreground hover:bg-accent hover:text-sidebar-primary-foreground z-40 ${isLightTheme ? 'bg-[#F9F7E8] text-[#222222] border-[#DCD8C0]' : ''}`}
           onClick={toggleMainSidebar}
         >
           {mainSidebarCollapsed ? (
@@ -255,14 +256,14 @@ export function ThreeColumnLayout({
       {hasSecondaryMenu && (
         <aside
           className={cn(
-            "h-screen flex flex-col transition-all duration-300 ease-in-out z-20",
+            "h-screen flex flex-col transition-all duration-300 ease-in-out z-20 pt-6", // Added pt-6 padding-top to move sidebar down
             secondarySidebarCollapsed ? "w-[0px]" : "w-[200px]",
             isLightTheme ? "bg-[#F9F7E8] border-r border-[#DCD8C0]" : "bg-[#1B1B32] border-r border-sidebar-border"
           )}
         >
           <div className={`flex items-center h-[70px] px-6 border-b ${isLightTheme ? 'border-[#DCD8C0]' : 'border-sidebar-border'}`}>
             {!secondarySidebarCollapsed && (
-              <span className={`font-medium truncate pt-4 ${isLightTheme ? 'text-[#222222]' : 'text-[#E2E2E2]'}`}>Sections</span>
+              <span className={`font-medium truncate ${isLightTheme ? 'text-[#222222]' : 'text-[#E2E2E2]'}`}>Sections</span>
             )}
           </div>
 
@@ -293,7 +294,7 @@ export function ThreeColumnLayout({
           <Button
             variant="ghost"
             size="icon"
-            className={`absolute top-0 h-8 w-8 rounded-full border text-foreground z-40 ${
+            className={`absolute top-6 h-8 w-8 rounded-full border text-foreground z-40 ${
               isLightTheme 
                 ? 'bg-[#F9F7E8] text-[#222222] border-[#DCD8C0] hover:bg-[#E9E7D8]' 
                 : 'bg-background border-border hover:bg-accent hover:text-sidebar-primary-foreground'
