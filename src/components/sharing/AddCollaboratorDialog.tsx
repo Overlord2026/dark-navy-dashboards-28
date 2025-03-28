@@ -1,11 +1,15 @@
 
-import { useState } from "react";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { useState, useEffect } from "react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
+import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 type AddCollaboratorDialogProps = {
   onAddCollaborator: (collaborator: {
@@ -15,127 +19,233 @@ type AddCollaboratorDialogProps = {
     accessLevel: "full" | "partial";
   }) => void;
   trigger?: React.ReactNode;
+  isOpen?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
-export function AddCollaboratorDialog({ onAddCollaborator, trigger }: AddCollaboratorDialogProps) {
-  const { toast } = useToast();
-  const [open, setOpen] = useState(false);
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [role, setRole] = useState("");
-  const [accessLevel, setAccessLevel] = useState<"full" | "partial">("partial");
+const formSchema = z.object({
+  firstName: z.string().min(1, "First name is required"),
+  lastName: z.string().min(1, "Last name is required"),
+  email: z.string().email("Invalid email address"),
+  role: z.string().min(1, "Role is required"),
+  accessLevel: z.enum(["full", "partial"]),
+});
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!name || !email || !role) {
-      toast({
-        title: "Missing information",
-        description: "Please fill out all required fields.",
-        variant: "destructive",
-      });
+export function AddCollaboratorDialog({ 
+  onAddCollaborator, 
+  trigger, 
+  isOpen, 
+  onOpenChange 
+}: AddCollaboratorDialogProps) {
+  const { toast } = useToast();
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [step, setStep] = useState(1);
+  
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      firstName: "",
+      lastName: "",
+      email: "",
+      role: "",
+      accessLevel: "partial",
+    },
+  });
+
+  // Handle controlled open state from parent
+  useEffect(() => {
+    if (isOpen !== undefined) {
+      setDialogOpen(isOpen);
+    }
+  }, [isOpen]);
+
+  const handleDialogOpenChange = (open: boolean) => {
+    setDialogOpen(open);
+    if (onOpenChange) {
+      onOpenChange(open);
+    }
+    if (!open) {
+      // Reset form when dialog closes
+      form.reset();
+      setStep(1);
+    }
+  };
+  
+  const onSubmit = (values: z.infer<typeof formSchema>) => {
+    if (step === 1) {
+      setStep(2);
       return;
     }
     
     onAddCollaborator({
-      name,
-      email,
-      role,
-      accessLevel,
+      name: `${values.firstName} ${values.lastName}`,
+      email: values.email,
+      role: values.role,
+      accessLevel: values.accessLevel,
     });
     
     // Reset form and close dialog
-    setName("");
-    setEmail("");
-    setRole("");
-    setAccessLevel("partial");
-    setOpen(false);
-    
-    toast({
-      title: "Collaborator added",
-      description: `Invitation sent to ${email}`,
-    });
+    form.reset();
+    setStep(1);
+    handleDialogOpenChange(false);
+  };
+
+  const handleCancel = () => {
+    form.reset();
+    setStep(1);
+    handleDialogOpenChange(false);
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        {trigger || <Button>Add Collaborator</Button>}
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+    <Dialog open={dialogOpen} onOpenChange={handleDialogOpenChange}>
+      {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
+      
+      <DialogContent className="sm:max-w-md bg-[#0F0F2D] text-white border-gray-800">
         <DialogHeader>
-          <DialogTitle>Add Collaborator</DialogTitle>
-          <DialogDescription>
-            Invite a family member or professional to collaborate on your finances.
-          </DialogDescription>
+          <DialogTitle className="text-xl">
+            {step === 1 ? "Add Collaborator" : "Access & Type"}
+          </DialogTitle>
         </DialogHeader>
         
-        <form onSubmit={handleSubmit} className="space-y-4 py-4">
-          <div className="space-y-2">
-            <Label htmlFor="name">Name</Label>
-            <Input 
-              id="name" 
-              value={name} 
-              onChange={(e) => setName(e.target.value)} 
-              placeholder="Jane Doe"
-            />
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <Input 
-              id="email" 
-              type="email" 
-              value={email} 
-              onChange={(e) => setEmail(e.target.value)} 
-              placeholder="jane@example.com"
-            />
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="role">Role</Label>
-            <Select value={role} onValueChange={setRole}>
-              <SelectTrigger id="role">
-                <SelectValue placeholder="Select a role" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="spouse">Spouse</SelectItem>
-                <SelectItem value="child">Child</SelectItem>
-                <SelectItem value="parent">Parent</SelectItem>
-                <SelectItem value="accountant">Accountant</SelectItem>
-                <SelectItem value="financial_advisor">Financial Advisor</SelectItem>
-                <SelectItem value="attorney">Attorney</SelectItem>
-                <SelectItem value="other">Other</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="access-level">Access Level</Label>
-            <Select 
-              value={accessLevel} 
-              onValueChange={(value: "full" | "partial") => setAccessLevel(value)}
-            >
-              <SelectTrigger id="access-level">
-                <SelectValue placeholder="Select access level" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="full">Full Access</SelectItem>
-                <SelectItem value="partial">Partial Access</SelectItem>
-              </SelectContent>
-            </Select>
-            <p className="text-xs text-muted-foreground mt-1">
-              Full access allows viewing and editing. Partial access is view-only for specific sections.
-            </p>
-          </div>
-          
-          <DialogFooter className="pt-4">
-            <Button type="button" variant="outline" onClick={() => setOpen(false)}>
-              Cancel
-            </Button>
-            <Button type="submit">Send Invitation</Button>
-          </DialogFooter>
-        </form>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            {step === 1 && (
+              <>
+                <div>
+                  <p className="text-sm text-gray-300 mb-6">
+                    Tell us who you want to collaborate with.
+                  </p>
+                  
+                  <div className="grid grid-cols-2 gap-4 mb-4">
+                    <FormField
+                      control={form.control}
+                      name="firstName"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-gray-300">First Name</FormLabel>
+                          <FormControl>
+                            <Input 
+                              {...field} 
+                              className="bg-transparent border-gray-600 focus:border-gray-400"
+                            />
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={form.control}
+                      name="lastName"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-gray-300">Last Name</FormLabel>
+                          <FormControl>
+                            <Input 
+                              {...field} 
+                              className="bg-transparent border-gray-600 focus:border-gray-400"
+                            />
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-gray-300">Email</FormLabel>
+                        <FormControl>
+                          <Input 
+                            {...field} 
+                            type="email" 
+                            className="bg-transparent border-gray-600 focus:border-gray-400"
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </>
+            )}
+            
+            {step === 2 && (
+              <>
+                <FormField
+                  control={form.control}
+                  name="role"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-gray-300">What's their relationship to you?</FormLabel>
+                      <Select 
+                        onValueChange={field.onChange} 
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger className="bg-transparent border-gray-600 text-white">
+                            <SelectValue placeholder="Select a role" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent className="bg-[#1A1A3A] border-gray-700 text-white">
+                          <SelectItem value="spouse">Spouse</SelectItem>
+                          <SelectItem value="child">Child</SelectItem>
+                          <SelectItem value="parent">Parent</SelectItem>
+                          <SelectItem value="accountant">Accountant</SelectItem>
+                          <SelectItem value="financial_advisor">Financial Advisor</SelectItem>
+                          <SelectItem value="attorney">Attorney</SelectItem>
+                          <SelectItem value="other">Other</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </FormItem>
+                  )}
+                />
+                
+                <FormField
+                  control={form.control}
+                  name="accessLevel"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-gray-300">What level of access should they have?</FormLabel>
+                      <Select 
+                        onValueChange={field.onChange as (value: string) => void} 
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger className="bg-transparent border-gray-600 text-white">
+                            <SelectValue placeholder="Select access level" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent className="bg-[#1A1A3A] border-gray-700 text-white">
+                          <SelectItem value="full">Full Access</SelectItem>
+                          <SelectItem value="partial">Partial Access</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </FormItem>
+                  )}
+                />
+              </>
+            )}
+            
+            <div className="flex justify-between pt-4">
+              <Button 
+                type="button" 
+                variant="outline" 
+                onClick={handleCancel}
+                className="border-gray-600 text-white hover:bg-gray-800"
+              >
+                Cancel
+              </Button>
+              
+              <Button 
+                type="submit"
+                className="bg-blue-600 hover:bg-blue-700 text-white"
+              >
+                {step === 1 ? "Next" : "Send Invitation"}
+              </Button>
+            </div>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   );

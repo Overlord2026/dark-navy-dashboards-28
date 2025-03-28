@@ -45,6 +45,7 @@ function App() {
               
               <Route path="/sharing" element={<Sharing />}>
                 <Route path=":sectionId" element={<Sharing />} />
+                <Route path="add-collaborator" element={<Sharing />} />
               </Route>
               
               <Route path="/education" element={<Education />}>
