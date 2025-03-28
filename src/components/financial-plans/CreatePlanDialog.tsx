@@ -18,14 +18,12 @@ interface CreatePlanDialogProps {
   onCreatePlan: (planName: string) => void;
 }
 
-// Define schema for Step 1: Plan Basics
 const planBasicsSchema = z.object({
   planName: z.string().min(1, "Plan name is required"),
   targetRetirementAge: z.string().optional(),
   spouseRetirementAge: z.string().optional(),
 });
 
-// Define schema for a single goal
 const goalSchema = z.object({
   id: z.string(),
   title: z.string().min(1, "Goal title is required"),
@@ -35,7 +33,6 @@ const goalSchema = z.object({
   description: z.string().optional(),
 });
 
-// Define schema for income item
 const incomeItemSchema = z.object({
   id: z.string(),
   source: z.string().min(1, "Income source is required"),
@@ -46,7 +43,6 @@ const incomeItemSchema = z.object({
   notes: z.string().optional(),
 });
 
-// Define schema for expense item
 const expenseItemSchema = z.object({
   id: z.string(),
   category: z.string().min(1, "Expense category is required"),
@@ -56,7 +52,6 @@ const expenseItemSchema = z.object({
   notes: z.string().optional(),
 });
 
-// Define schema for projections
 const projectionsSchema = z.object({
   expectedReturnRate: z.string().min(1, "Expected return rate is required"),
   inflationRate: z.string().min(1, "Inflation rate is required"),
@@ -101,12 +96,11 @@ interface ExpenseItem {
 
 export function CreatePlanDialog({ isOpen, onClose, onCreatePlan }: CreatePlanDialogProps) {
   const [currentStep, setCurrentStep] = useState(1);
-  const totalSteps = 5; // Increased from 4 to 5 to include the projections step
+  const totalSteps = 5;
   const [goals, setGoals] = useState<Goal[]>([]);
   const [editingGoal, setEditingGoal] = useState<Goal | null>(null);
   const [isGoalFormOpen, setIsGoalFormOpen] = useState(false);
   
-  // State for income and expenses
   const [incomeItems, setIncomeItems] = useState<IncomeItem[]>([]);
   const [expenseItems, setExpenseItems] = useState<ExpenseItem[]>([]);
   const [editingIncome, setEditingIncome] = useState<IncomeItem | null>(null);
@@ -114,10 +108,8 @@ export function CreatePlanDialog({ isOpen, onClose, onCreatePlan }: CreatePlanDi
   const [isIncomeFormOpen, setIsIncomeFormOpen] = useState(false);
   const [isExpenseFormOpen, setIsExpenseFormOpen] = useState(false);
   
-  // State for projections
-  const [successRate, setSuccessRate] = useState(70); // Default value for preview
+  const [successRate, setSuccessRate] = useState(70);
 
-  // Form for Step 1: Plan Basics
   const basicsForm = useForm<PlanBasicsFormValues>({
     resolver: zodResolver(planBasicsSchema),
     defaultValues: {
@@ -127,7 +119,6 @@ export function CreatePlanDialog({ isOpen, onClose, onCreatePlan }: CreatePlanDi
     },
   });
 
-  // Form for a single goal
   const goalForm = useForm<GoalFormValues>({
     resolver: zodResolver(goalSchema),
     defaultValues: {
@@ -140,7 +131,6 @@ export function CreatePlanDialog({ isOpen, onClose, onCreatePlan }: CreatePlanDi
     },
   });
 
-  // Form for income item
   const incomeForm = useForm<IncomeItemFormValues>({
     resolver: zodResolver(incomeItemSchema),
     defaultValues: {
@@ -154,7 +144,6 @@ export function CreatePlanDialog({ isOpen, onClose, onCreatePlan }: CreatePlanDi
     },
   });
 
-  // Form for expense item
   const expenseForm = useForm<ExpenseItemFormValues>({
     resolver: zodResolver(expenseItemSchema),
     defaultValues: {
@@ -167,7 +156,6 @@ export function CreatePlanDialog({ isOpen, onClose, onCreatePlan }: CreatePlanDi
     },
   });
   
-  // Form for projections
   const projectionsForm = useForm<ProjectionsFormValues>({
     resolver: zodResolver(projectionsSchema),
     defaultValues: {
@@ -179,13 +167,11 @@ export function CreatePlanDialog({ isOpen, onClose, onCreatePlan }: CreatePlanDi
   });
 
   const handleBasicsSubmit = (values: PlanBasicsFormValues) => {
-    // Move to next step
     setCurrentStep(2);
   };
 
   const handleGoalSubmit = (values: GoalFormValues) => {
     if (editingGoal) {
-      // Update existing goal - ensure all properties match the Goal interface
       setGoals(goals.map(goal => 
         goal.id === values.id ? {
           id: values.id,
@@ -198,7 +184,6 @@ export function CreatePlanDialog({ isOpen, onClose, onCreatePlan }: CreatePlanDi
         } : goal
       ));
     } else {
-      // Add new goal - ensure all properties match the Goal interface
       const newGoal: Goal = {
         id: values.id,
         title: values.title,
@@ -215,7 +200,6 @@ export function CreatePlanDialog({ isOpen, onClose, onCreatePlan }: CreatePlanDi
 
   const handleIncomeSubmit = (values: IncomeItemFormValues) => {
     if (editingIncome) {
-      // Update existing income
       setIncomeItems(incomeItems.map(item => 
         item.id === values.id ? {
           id: values.id,
@@ -228,7 +212,6 @@ export function CreatePlanDialog({ isOpen, onClose, onCreatePlan }: CreatePlanDi
         } : item
       ));
     } else {
-      // Add new income item
       const newIncome: IncomeItem = {
         id: values.id,
         source: values.source,
@@ -246,7 +229,6 @@ export function CreatePlanDialog({ isOpen, onClose, onCreatePlan }: CreatePlanDi
 
   const handleExpenseSubmit = (values: ExpenseItemFormValues) => {
     if (editingExpense) {
-      // Update existing expense
       setExpenseItems(expenseItems.map(item => 
         item.id === values.id ? {
           id: values.id,
@@ -258,7 +240,6 @@ export function CreatePlanDialog({ isOpen, onClose, onCreatePlan }: CreatePlanDi
         } : item
       ));
     } else {
-      // Add new expense item
       const newExpense: ExpenseItem = {
         id: values.id,
         category: values.category,
@@ -274,7 +255,6 @@ export function CreatePlanDialog({ isOpen, onClose, onCreatePlan }: CreatePlanDi
   };
 
   const handleProjectionsSubmit = (values: ProjectionsFormValues) => {
-    // Calculate a mock success rate based on inputs (this is just for demonstration)
     const returnRate = parseFloat(values.expectedReturnRate);
     const inflation = parseFloat(values.inflationRate);
     const riskModifier = 
@@ -282,17 +262,15 @@ export function CreatePlanDialog({ isOpen, onClose, onCreatePlan }: CreatePlanDi
       values.riskTolerance === "Moderate" ? 1.0 :
       values.riskTolerance === "Aggressive" ? 1.3 : 1.0;
       
-    // Simple formula for demo purposes - this would be much more complex in reality
     const calculatedRate = Math.min(95, Math.max(5, 
       (returnRate - inflation) * 10 * riskModifier
     ));
     
     setSuccessRate(Math.round(calculatedRate));
-    setCurrentStep(5); // Move to summary step
+    setCurrentStep(5);
   };
 
   const handleFinalSubmit = () => {
-    // Final step - create the plan with goals, income, expenses, and projections
     onCreatePlan(basicsForm.getValues().planName);
     resetAndClose();
   };
@@ -318,13 +296,11 @@ export function CreatePlanDialog({ isOpen, onClose, onCreatePlan }: CreatePlanDi
     setCurrentStep(currentStep + 1);
   };
 
-  // Format amount as currency
   const formatCurrency = (amount: string) => {
     const num = parseFloat(amount);
     return isNaN(num) ? "" : `$${num.toLocaleString()}`;
   };
 
-  // Helper function to calculate total monthly income and expenses
   const calculateNetMonthly = () => {
     const monthlyIncome = incomeItems.reduce((total, item) => {
       const amount = parseFloat(item.amount) || 0;
@@ -351,6 +327,113 @@ export function CreatePlanDialog({ isOpen, onClose, onCreatePlan }: CreatePlanDi
       expenses: monthlyExpenses,
       net: monthlyIncome - monthlyExpenses
     };
+  };
+
+  const openGoalForm = (goal?: Goal) => {
+    if (goal) {
+      setEditingGoal(goal);
+      goalForm.reset({
+        id: goal.id,
+        title: goal.title,
+        targetDate: goal.targetDate || "",
+        targetAmount: goal.targetAmount || "",
+        priority: goal.priority || "Medium",
+        description: goal.description || "",
+      });
+    } else {
+      setEditingGoal(null);
+      goalForm.reset({
+        id: `goal-${Date.now()}`,
+        title: "",
+        targetDate: "",
+        targetAmount: "",
+        priority: "Medium",
+        description: "",
+      });
+    }
+    setIsGoalFormOpen(true);
+  };
+
+  const closeGoalForm = () => {
+    setIsGoalFormOpen(false);
+    setEditingGoal(null);
+    goalForm.reset();
+  };
+
+  const removeGoal = (goalId: string) => {
+    setGoals(goals.filter(goal => goal.id !== goalId));
+  };
+
+  const openIncomeForm = (income?: IncomeItem) => {
+    if (income) {
+      setEditingIncome(income);
+      incomeForm.reset({
+        id: income.id,
+        source: income.source,
+        amount: income.amount,
+        frequency: income.frequency,
+        startDate: income.startDate || "",
+        endDate: income.endDate || "",
+        notes: income.notes || "",
+      });
+    } else {
+      setEditingIncome(null);
+      incomeForm.reset({
+        id: `income-${Date.now()}`,
+        source: "",
+        amount: "",
+        frequency: "Monthly",
+        startDate: "",
+        endDate: "",
+        notes: "",
+      });
+    }
+    setIsIncomeFormOpen(true);
+  };
+
+  const closeIncomeForm = () => {
+    setIsIncomeFormOpen(false);
+    setEditingIncome(null);
+    incomeForm.reset();
+  };
+
+  const removeIncome = (incomeId: string) => {
+    setIncomeItems(incomeItems.filter(item => item.id !== incomeId));
+  };
+
+  const openExpenseForm = (expense?: ExpenseItem) => {
+    if (expense) {
+      setEditingExpense(expense);
+      expenseForm.reset({
+        id: expense.id,
+        category: expense.category,
+        amount: expense.amount,
+        frequency: expense.frequency,
+        isEssential: expense.isEssential || false,
+        notes: expense.notes || "",
+      });
+    } else {
+      setEditingExpense(null);
+      expenseForm.reset({
+        id: `expense-${Date.now()}`,
+        category: "",
+        amount: "",
+        frequency: "Monthly",
+        isEssential: false,
+        notes: "",
+      });
+    }
+    setIsExpenseFormOpen(true);
+  };
+
+  const closeExpenseForm = () => {
+    setIsExpenseFormOpen(false);
+    setEditingExpense(null);
+    expenseForm.reset();
+  };
+
+  const removeExpense = (expenseId: string) => {
+    setExpenseItems(expenseItems.filter(item => item.id !== expenseId));
   };
 
   return (
@@ -382,7 +465,6 @@ export function CreatePlanDialog({ isOpen, onClose, onCreatePlan }: CreatePlanDi
             </p>
           </DialogHeader>
           
-          {/* Step 1: Plan Basics */}
           {currentStep === 1 && (
             <Form {...basicsForm}>
               <form onSubmit={basicsForm.handleSubmit(handleBasicsSubmit)} className="space-y-4">
@@ -462,7 +544,6 @@ export function CreatePlanDialog({ isOpen, onClose, onCreatePlan }: CreatePlanDi
             </Form>
           )}
           
-          {/* Step 2: Goals */}
           {currentStep === 2 && (
             <div className="space-y-4">
               <div className="flex items-center justify-between mb-2">
@@ -559,10 +640,8 @@ export function CreatePlanDialog({ isOpen, onClose, onCreatePlan }: CreatePlanDi
             </div>
           )}
           
-          {/* Step 3: Income & Expenses */}
           {currentStep === 3 && (
             <div className="space-y-6">
-              {/* Income Section */}
               <div className="space-y-3">
                 <div className="flex items-center justify-between mb-2">
                   <h3 className="text-sm font-medium">Income Sources</h3>
@@ -628,7 +707,6 @@ export function CreatePlanDialog({ isOpen, onClose, onCreatePlan }: CreatePlanDi
                 )}
               </div>
               
-              {/* Expenses Section */}
               <div className="space-y-3">
                 <div className="flex items-center justify-between mb-2">
                   <h3 className="text-sm font-medium">Expenses</h3>
@@ -724,7 +802,6 @@ export function CreatePlanDialog({ isOpen, onClose, onCreatePlan }: CreatePlanDi
             </div>
           )}
           
-          {/* Step 4: Projections */}
           {currentStep === 4 && (
             <Form {...projectionsForm}>
               <form onSubmit={projectionsForm.handleSubmit(handleProjectionsSubmit)} className="space-y-4">
@@ -862,7 +939,6 @@ export function CreatePlanDialog({ isOpen, onClose, onCreatePlan }: CreatePlanDi
             </Form>
           )}
           
-          {/* Step 5: Summary */}
           {currentStep === 5 && (
             <div className="space-y-4">
               <div className="space-y-3">
@@ -975,7 +1051,6 @@ export function CreatePlanDialog({ isOpen, onClose, onCreatePlan }: CreatePlanDi
         </DialogContent>
       </Dialog>
       
-      {/* Goal Form Sheet */}
       <Sheet open={isGoalFormOpen} onOpenChange={setIsGoalFormOpen}>
         <SheetContent className="bg-[#0F1C2E] border-l border-border/30 w-full sm:max-w-md">
           <SheetHeader>
@@ -1103,7 +1178,6 @@ export function CreatePlanDialog({ isOpen, onClose, onCreatePlan }: CreatePlanDi
         </SheetContent>
       </Sheet>
       
-      {/* Income Form Sheet */}
       <Sheet open={isIncomeFormOpen} onOpenChange={setIsIncomeFormOpen}>
         <SheetContent className="bg-[#0F1C2E] border-l border-border/30 w-full sm:max-w-md">
           <SheetHeader>
@@ -1248,7 +1322,6 @@ export function CreatePlanDialog({ isOpen, onClose, onCreatePlan }: CreatePlanDi
         </SheetContent>
       </Sheet>
       
-      {/* Expense Form Sheet */}
       <Sheet open={isExpenseFormOpen} onOpenChange={setIsExpenseFormOpen}>
         <SheetContent className="bg-[#0F1C2E] border-l border-border/30 w-full sm:max-w-md">
           <SheetHeader>
