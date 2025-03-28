@@ -52,7 +52,10 @@ function App() {
                 <Route path=":sectionId" element={<Education />} />
               </Route>
 
-              <Route path="/financial-plans" element={<FinancialPlans />} />
+              <Route path="/financial-plans" element={<FinancialPlans />}>
+                <Route path=":planId" element={<FinancialPlans />} />
+              </Route>
+              
               <Route path="/investments" element={<Investments />} />
               <Route path="/insurance" element={<Insurance />} />
               <Route path="/lending" element={<Lending />} />
