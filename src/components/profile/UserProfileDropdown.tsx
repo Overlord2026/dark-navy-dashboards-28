@@ -27,6 +27,7 @@ interface UserProfileDropdownProps {
 export const UserProfileDropdown = ({ onOpenForm }: UserProfileDropdownProps) => {
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [activePanelForm, setActivePanelForm] = useState("investor-profile");
+  const [isOpen, setIsOpen] = useState(false);
   
   const menuItems = [
     { id: "investor-profile", label: "Investor Profile", icon: UserIcon },
@@ -51,11 +52,14 @@ export const UserProfileDropdown = ({ onOpenForm }: UserProfileDropdownProps) =>
       setActivePanelForm(itemId);
       setIsPanelOpen(true);
     }
+    
+    // Close the dropdown after selection
+    setIsOpen(false);
   };
 
   return (
     <div className="fixed top-0 left-0 z-40 w-[220px] pt-4 px-5">
-      <DropdownMenu>
+      <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
         <DropdownMenuTrigger className="flex items-center justify-between w-full py-2 hover:bg-[#1c2e4a] rounded-md transition-colors cursor-pointer">
           <div className="flex items-center">
             <div className="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center text-white font-medium mr-3">
@@ -63,9 +67,14 @@ export const UserProfileDropdown = ({ onOpenForm }: UserProfileDropdownProps) =>
             </div>
             <span className="font-medium text-white">Antonio Gomez</span>
           </div>
-          <ChevronRight className="h-4 w-4 rotate-90 text-white/70" />
+          <ChevronRight className={`h-4 w-4 text-white/70 transition-transform duration-200 ${isOpen ? 'rotate-[270deg]' : 'rotate-90'}`} />
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-[220px] bg-[#0F0F2D] border-gray-800 text-white z-50">
+        <DropdownMenuContent 
+          className="w-[220px] bg-[#0F0F2D] border-gray-800 text-white z-50"
+          align="start"
+          sideOffset={5}
+          alignOffset={0}
+        >
           {menuItems.slice(0, 7).map((item) => {
             const Icon = item.icon;
             return (
@@ -73,6 +82,10 @@ export const UserProfileDropdown = ({ onOpenForm }: UserProfileDropdownProps) =>
                 key={item.id}
                 onClick={() => handleMenuItemClick(item.id)}
                 className="py-2.5 cursor-pointer hover:bg-[#1c2e4a]"
+                onSelect={(event) => {
+                  // Prevent default selection behavior
+                  event.preventDefault();
+                }}
               >
                 <Icon className="h-4 w-4 mr-2" />
                 <span>{item.label}</span>
@@ -87,6 +100,10 @@ export const UserProfileDropdown = ({ onOpenForm }: UserProfileDropdownProps) =>
                 key={item.id}
                 onClick={() => handleMenuItemClick(item.id)}
                 className="py-2.5 cursor-pointer hover:bg-[#1c2e4a]"
+                onSelect={(event) => {
+                  // Prevent default selection behavior
+                  event.preventDefault();
+                }}
               >
                 <Icon className="h-4 w-4 mr-2" />
                 <span>{item.label}</span>
