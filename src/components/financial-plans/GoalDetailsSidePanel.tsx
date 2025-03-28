@@ -15,7 +15,6 @@ import { DatePicker } from "@/components/ui/date-picker";
 import { Goal } from "./GoalsList";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-// Goal form data interfaces
 export interface GoalFormData {
   name: string;
   type: string;
@@ -27,25 +26,19 @@ export interface GoalFormData {
   dateOfBirth?: Date;
   targetRetirementAge?: number;
   planningHorizonAge?: number;
-  // Asset Purchase fields
   purchasePrice?: number;
   financingMethod?: string;
   annualAppreciation?: string;
-  // Education fields
   studentName?: string;
   startYear?: number;
   endYear?: number;
   tuitionEstimate?: number;
-  // Vacation fields
   destination?: string;
   estimatedCost?: number;
-  // Cash Reserve fields
   amountDesired?: number;
   repeats?: string;
-  // Annual Inflation fields
   annualInflationType?: string;
   annualInflationRate?: number;
-  // Other fields as needed
 }
 
 interface GoalDetailsSidePanelProps {
@@ -71,7 +64,6 @@ export const GoalDetailsSidePanel = ({
   title,
   onTitleUpdate
 }: GoalDetailsSidePanelProps) => {
-  // Initialize form data state
   const [formData, setFormData] = useState<GoalFormData>({
     name: "",
     type: "",
@@ -82,13 +74,10 @@ export const GoalDetailsSidePanel = ({
     annualInflationType: "None",
   });
 
-  // Add validation errors state
   const [errors, setErrors] = useState<ValidationErrors>({});
 
-  // Define owner options
   const owners = ["Antonio Gomez", "Maria Gomez", "Joint"];
 
-  // Define goal types
   const goalTypes = [
     "Asset Purchase",
     "Cash Reserve",
@@ -107,7 +96,6 @@ export const GoalDetailsSidePanel = ({
     "Wedding"
   ];
 
-  // Annual appreciation options for real estate
   const appreciationOptions = [
     "None",
     "1%",
@@ -117,14 +105,12 @@ export const GoalDetailsSidePanel = ({
     "5%"
   ];
 
-  // Annual inflation type options
   const inflationTypeOptions = [
     "None",
     "General",
     "Custom"
   ];
 
-  // Financing method options
   const financingOptions = [
     "Cash",
     "Loan",
@@ -132,7 +118,6 @@ export const GoalDetailsSidePanel = ({
     "Other"
   ];
 
-  // Repeats options for Cash Reserve
   const repeatsOptions = [
     "None",
     "Monthly",
@@ -140,7 +125,6 @@ export const GoalDetailsSidePanel = ({
     "Yearly"
   ];
 
-  // Load goal data when goal changes
   useEffect(() => {
     if (goal) {
       setFormData({
@@ -153,28 +137,22 @@ export const GoalDetailsSidePanel = ({
         dateOfBirth: goal.dateOfBirth,
         targetRetirementAge: goal.targetRetirementAge,
         planningHorizonAge: goal.planningHorizonAge,
-        // Asset Purchase fields
         purchasePrice: goal.purchasePrice,
         financingMethod: goal.financingMethod || "Cash",
         annualAppreciation: goal.annualAppreciation || "None",
-        // Education fields
         studentName: goal.studentName,
         startYear: goal.startYear,
         endYear: goal.endYear,
         tuitionEstimate: goal.tuitionEstimate,
-        // Vacation fields
         destination: goal.destination,
         estimatedCost: goal.estimatedCost,
-        // Cash Reserve fields
         amountDesired: goal.amountDesired,
         repeats: goal.repeats || "None",
-        // Annual Inflation fields
         annualInflationType: goal.annualInflationType || "None",
         annualInflationRate: goal.annualInflationRate,
       });
       setErrors({});
     } else {
-      // Reset form for new goal
       setFormData({
         name: "",
         type: "",
@@ -191,7 +169,6 @@ export const GoalDetailsSidePanel = ({
     }
   }, [goal]);
 
-  // Update title when name or owner changes
   useEffect(() => {
     if (onTitleUpdate && formData.name && formData.owner) {
       onTitleUpdate(formData.name, formData.owner);
@@ -201,13 +178,11 @@ export const GoalDetailsSidePanel = ({
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     
-    // For number fields, validate before setting
     if (name === "targetAmount" || name === "purchasePrice" || name === "tuitionEstimate" || 
         name === "startYear" || name === "endYear" || name === "estimatedCost" || 
         name === "amountDesired" || name === "targetRetirementAge" || name === "planningHorizonAge" ||
         name === "annualInflationRate") {
       
-      // Allow empty values (clear field)
       if (value === "") {
         setFormData(prev => ({ ...prev, [name]: undefined }));
         setErrors(prev => {
@@ -220,13 +195,11 @@ export const GoalDetailsSidePanel = ({
 
       const numValue = Number(value);
       
-      // Check if it's a valid number
       if (isNaN(numValue)) {
         setErrors(prev => ({ ...prev, [name]: "Please enter a valid number" }));
         return;
       }
       
-      // Additional validation based on field type
       if ((name === "startYear" || name === "endYear") && (numValue < 2000 || numValue > 2100)) {
         setErrors(prev => ({ ...prev, [name]: "Year must be between 2000 and 2100" }));
         return;
@@ -248,7 +221,6 @@ export const GoalDetailsSidePanel = ({
         return;
       }
       
-      // If validation passes, clear error and set value
       setFormData(prev => ({ ...prev, [name]: numValue }));
       setErrors(prev => {
         const newErrors = { ...prev };
@@ -259,7 +231,6 @@ export const GoalDetailsSidePanel = ({
       setFormData(prev => ({ ...prev, [name]: value }));
     }
 
-    // If name is updated, update the panel title
     if (name === "name" && onTitleUpdate) {
       onTitleUpdate(value, formData.owner);
     }
@@ -268,27 +239,22 @@ export const GoalDetailsSidePanel = ({
   const handleSelectChange = (name: string, value: string) => {
     setFormData(prev => ({ ...prev, [name]: value }));
     
-    // Handle inflation type changes
     if (name === "annualInflationType") {
       if (value === "None") {
         setFormData(prev => ({ ...prev, annualInflationRate: 0 }));
       } else if (value === "General") {
         setFormData(prev => ({ ...prev, annualInflationRate: 2 }));
       }
-      // For "Custom", we'll let the user set the value
     }
     
-    // If owner is updated, update the panel title
     if (name === "owner" && onTitleUpdate) {
       onTitleUpdate(formData.name, value);
     }
 
-    // For new goals, set initial name based on type
     if (name === "type" && (!formData.name || formData.name === formData.type)) {
       const newName = value;
       setFormData(prev => ({ ...prev, name: newName }));
       
-      // Update panel title
       if (onTitleUpdate) {
         onTitleUpdate(newName, formData.owner);
       }
@@ -302,7 +268,6 @@ export const GoalDetailsSidePanel = ({
   const validateForm = (): boolean => {
     const newErrors: ValidationErrors = {};
     
-    // Check required fields
     if (!formData.type) {
       newErrors.type = "Goal type is required";
     }
@@ -311,7 +276,6 @@ export const GoalDetailsSidePanel = ({
       newErrors.owner = "Owner is required";
     }
     
-    // Validate numeric fields
     if (formData.targetAmount !== undefined && (isNaN(formData.targetAmount) || formData.targetAmount < 0)) {
       newErrors.targetAmount = "Please enter a valid positive amount";
     }
@@ -360,11 +324,10 @@ export const GoalDetailsSidePanel = ({
   const handleSave = () => {
     if (validateForm()) {
       onSave(formData);
-      // Panel will be closed by the parent component
+      onClose();
     }
   };
 
-  // Render Annual Inflation fields
   const renderAnnualInflationFields = () => (
     <>
       <div className="space-y-2">
@@ -385,11 +348,14 @@ export const GoalDetailsSidePanel = ({
       </div>
       {formData.annualInflationType === "Custom" && (
         <div className="space-y-2">
-          <Label htmlFor="annualInflationRate">Custom Inflation Rate (%)</Label>
+          <Label htmlFor="annualInflationRate">Custom Inflation (%)</Label>
           <Input
             id="annualInflationRate"
             name="annualInflationRate"
             type="number"
+            min="0"
+            max="100"
+            step="0.1"
             value={formData.annualInflationRate || ""}
             onChange={handleInputChange}
             className={`bg-[#1A1A3A] border-gray-700 ${errors.annualInflationRate ? 'border-[#FF4D4D] focus-visible:ring-[#FF4D4D]' : ''}`}
@@ -402,7 +368,6 @@ export const GoalDetailsSidePanel = ({
     </>
   );
 
-  // Determine which fields to display based on goal type
   const renderGoalFields = () => {
     switch (formData.type) {
       case "Asset Purchase":
@@ -454,7 +419,6 @@ export const GoalDetailsSidePanel = ({
                 </SelectContent>
               </Select>
             </div>
-            {/* Add Annual Inflation for Asset Purchase */}
             {renderAnnualInflationFields()}
           </>
         );
@@ -507,7 +471,6 @@ export const GoalDetailsSidePanel = ({
                 </SelectContent>
               </Select>
             </div>
-            {/* Add Annual Inflation for Cash Reserve */}
             {renderAnnualInflationFields()}
           </>
         );
@@ -568,7 +531,6 @@ export const GoalDetailsSidePanel = ({
                 )}
               </div>
             </div>
-            {/* Add Annual Inflation for Education */}
             {renderAnnualInflationFields()}
           </>
         );
@@ -599,7 +561,6 @@ export const GoalDetailsSidePanel = ({
                 <p className="text-xs text-[#FF4D4D] mt-1">{errors.estimatedCost}</p>
               )}
             </div>
-            {/* Add Annual Inflation for Vacation */}
             {renderAnnualInflationFields()}
           </>
         );
@@ -636,7 +597,6 @@ export const GoalDetailsSidePanel = ({
                 </SelectContent>
               </Select>
             </div>
-            {/* Add Annual Inflation for Vehicle */}
             {renderAnnualInflationFields()}
           </>
         );
@@ -689,7 +649,6 @@ export const GoalDetailsSidePanel = ({
                 </SelectContent>
               </Select>
             </div>
-            {/* Add Annual Inflation for Home Purchase */}
             {renderAnnualInflationFields()}
           </>
         );
@@ -742,12 +701,10 @@ export const GoalDetailsSidePanel = ({
                 </SelectContent>
               </Select>
             </div>
-            {/* Add Annual Inflation for Land */}
             {renderAnnualInflationFields()}
           </>
         );
       default:
-        // For other goal types, we'll show the default target amount and inflation fields
         return (
           <>
             <div className="space-y-2">
@@ -764,14 +721,12 @@ export const GoalDetailsSidePanel = ({
                 <p className="text-xs text-[#FF4D4D] mt-1">{errors.targetAmount}</p>
               )}
             </div>
-            {/* Add Annual Inflation for all other goal types */}
             {renderAnnualInflationFields()}
           </>
         );
     }
   };
 
-  // Show retirement-specific fields for Retirement goal type
   const showRetirementFields = formData.type === "Retirement";
 
   return (
@@ -838,10 +793,8 @@ export const GoalDetailsSidePanel = ({
                 />
               </div>
               
-              {/* Render type-specific fields */}
               {formData.type && renderGoalFields()}
               
-              {/* Show target date for all goals except Education */}
               {formData.type !== "Education" && (
                 <div className="space-y-2">
                   <Label htmlFor="targetDate">Target Date</Label>
@@ -853,7 +806,6 @@ export const GoalDetailsSidePanel = ({
                 </div>
               )}
               
-              {/* Retirement-specific fields */}
               {showRetirementFields && (
                 <>
                   <div className="space-y-2">

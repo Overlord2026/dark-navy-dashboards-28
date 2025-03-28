@@ -1,34 +1,26 @@
-import { useState, useEffect } from "react";
-import { Card } from "@/components/ui/card";
-import { ChevronDownIcon, ChevronUpIcon, PlusIcon } from "lucide-react";
+import React, { useState } from "react";
+import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
+import { PlusIcon } from "lucide-react";
 import { GoalDetailsSidePanel, GoalFormData } from "./GoalDetailsSidePanel";
-import { format } from "date-fns";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 
 export interface Goal {
-  id?: string;
+  id: string;
   title?: string;
   name?: string;
+  type?: string;
+  priority?: string;
   targetDate?: Date;
   targetAmount?: number;
   currentAmount?: number;
-  type?: string;
-  priority?: string;
   owner?: string;
-  targetRetirementAge?: number;
-  planningHorizonAge?: number;
-  dateOfBirth?: Date;
   description?: string;
-  isNew?: boolean;
   purchasePrice?: number;
   financingMethod?: string;
   annualAppreciation?: string;
+  dateOfBirth?: Date;
+  targetRetirementAge?: number;
+  planningHorizonAge?: number;
   studentName?: string;
   startYear?: number;
   endYear?: number;
@@ -37,6 +29,8 @@ export interface Goal {
   estimatedCost?: number;
   amountDesired?: number;
   repeats?: string;
+  annualInflationType?: string;
+  annualInflationRate?: number;
 }
 
 interface GoalsListProps {
@@ -162,6 +156,8 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
         estimatedCost: goalData.estimatedCost,
         amountDesired: goalData.amountDesired,
         repeats: goalData.repeats,
+        annualInflationType: goalData.annualInflationType,
+        annualInflationRate: goalData.annualInflationRate,
       };
       
       setLocalGoals(prev => 
@@ -197,6 +193,8 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
         estimatedCost: goalData.estimatedCost,
         amountDesired: goalData.amountDesired,
         repeats: goalData.repeats,
+        annualInflationType: goalData.annualInflationType,
+        annualInflationRate: goalData.annualInflationRate,
       };
       
       setLocalGoals(prev => [...prev, newGoal]);
