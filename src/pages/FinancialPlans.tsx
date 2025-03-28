@@ -423,6 +423,13 @@ const FinancialPlans = () => {
           </div>
         </div>
 
+        <div className="bg-[#0D1426] border border-blue-900/30 rounded-lg p-6">
+          <GoalsList 
+            goals={goals} 
+            onGoalUpdate={handleGoalUpdate}
+          />
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <Card className="border border-border/30 bg-[#0D1426]">
             <CardContent className="p-6">
@@ -440,38 +447,16 @@ const FinancialPlans = () => {
           <Card className="border border-border/30 bg-[#0D1426]">
             <CardContent className="p-6">
               <div className="flex justify-between items-center mb-6">
-                <h3 className="text-md font-medium">Goals</h3>
-                <div className="flex items-center">
-                  <span className="text-muted-foreground text-sm mr-2">{goals.length} Goals</span>
-                  <Button size="sm" variant="ghost" className="h-8 px-2">
-                    <PlusIcon className="h-4 w-4" />
-                    <span>Add</span>
-                  </Button>
+                <h3 className="text-md font-medium">Projected Net Worth</h3>
+                <div className="flex items-center text-muted-foreground text-xs">
+                  <span>How is this chart calculated?</span>
+                  <InfoIcon className="h-4 w-4 ml-1" />
                 </div>
               </div>
-              <GoalsList 
-                goals={goals} 
-                onGoalUpdate={handleGoalUpdate}
-              />
+              <NetWorthChart />
             </CardContent>
           </Card>
         </div>
-
-        <Card className="border border-border/30 bg-[#0D1426]">
-          <CardContent className="p-6">
-            <div className="flex justify-between items-center mb-6">
-              <div>
-                <h3 className="text-md font-medium">Projected Net Worth</h3>
-                <p className="text-xs text-muted-foreground">Your projected net worth over time based on this plan</p>
-              </div>
-              <div className="flex items-center text-muted-foreground text-xs">
-                <span>How is this chart calculated?</span>
-                <InfoIcon className="h-4 w-4 ml-1" />
-              </div>
-            </div>
-            <NetWorthChart />
-          </CardContent>
-        </Card>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Card className="bg-[#0D1426] border border-border/30">

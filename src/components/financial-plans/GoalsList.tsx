@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
@@ -56,6 +55,7 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
   const [detailsPanelTitle, setDetailsPanelTitle] = useState<string>("");
   const [localGoals, setLocalGoals] = useState<Goal[]>(goals);
   const [newGoalId, setNewGoalId] = useState<string | null>(null);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   
   if (JSON.stringify(goals) !== JSON.stringify(localGoals)) {
     setLocalGoals(goals);
@@ -128,6 +128,7 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
     setSelectedGoal(newGoal);
     setDetailsPanelTitle(detailsTitle);
     setIsDetailsPanelOpen(true);
+    setIsDropdownOpen(false);
   };
 
   const handleTitleUpdate = (name: string, owner: string) => {
@@ -255,131 +256,91 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
     goal.priority !== "Retirement"
   );
   
-  // If there are no goals at all, show retirement age sections and placeholder for other goals
-  if (!localGoals || localGoals.length === 0) {
-    return (
-      <div className="space-y-4">
-        <RetirementAgeSection 
-          title="Your Retirement Age" 
-          onClick={() => handleRetirementAgeClick("Your Retirement Age")}
-        />
-        <RetirementAgeSection 
-          title="Spouse's Retirement Age" 
-          onClick={() => handleRetirementAgeClick("Spouse's Retirement Age")}
-        />
-        
-        <div className="mt-6">
-          <h4 className="text-sm font-medium mb-2">Other Goals</h4>
-          <Card className="bg-[#0F1C2E] border border-border/20 p-4 text-center">
-            <p className="text-sm text-muted-foreground">
-              Add other goals for education, cars, vacations, homes, and more.
-            </p>
-          </Card>
-        </div>
-        
-        <div className="mt-4">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button 
-                variant="outline" 
-                className="w-full flex items-center justify-center gap-2 bg-[#1A1A2E] hover:bg-[#1A1A2E]/80"
-              >
-                <PlusIcon className="h-4 w-4" />
-                <span>Add Goal</span>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent 
-              className="bg-[#0F0F2D] border-white/10 shadow-[0_2px_6px_rgba(0,0,0,0.3)] animate-in fade-in-50 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 duration-200"
-            >
+  return (
+    <div className="space-y-8">
+      <div className="flex justify-between items-center">
+        <h2 className="text-xl font-semibold">Goals</h2>
+        <div className="relative">
+          <Button 
+            className="bg-blue-600 hover:bg-blue-700 text-white"
+            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+          >
+            Add Goal
+          </Button>
+          {isDropdownOpen && (
+            <div className="absolute right-0 mt-2 w-48 bg-[#0D1426] border border-blue-900 rounded-md shadow-lg z-50">
               {goalTypes.map((type) => (
-                <DropdownMenuItem 
+                <div 
                   key={type} 
-                  className="text-white hover:bg-[#1A1A3A] focus:bg-[#1A1A3A] cursor-pointer"
+                  className="px-4 py-2 text-white hover:bg-blue-800 cursor-pointer"
                   onClick={() => handleAddGoalClick(type)}
                 >
                   {type}
-                </DropdownMenuItem>
+                </div>
               ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
+            </div>
+          )}
         </div>
-        <GoalDetailsSidePanel
-          isOpen={isDetailsPanelOpen}
-          onClose={() => setIsDetailsPanelOpen(false)}
-          onCancel={handleCancelGoal}
-          goal={selectedGoal}
-          onSave={handleSaveGoal}
-          title={detailsPanelTitle}
-          onTitleUpdate={handleTitleUpdate}
-        />
-      </div>
-    );
-  }
-  
-  return (
-    <div className="space-y-4">
-      <div className="flex justify-between items-center mb-2">
-        <div className="text-sm text-muted-foreground">{localGoals.length} Goals</div>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button size="sm" variant="ghost" className="h-8 px-2">
-              <PlusIcon className="h-4 w-4" />
-              <span>Add</span>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent 
-            className="bg-[#0F0F2D] border-white/10 shadow-[0_2px_6px_rgba(0,0,0,0.3)] animate-in fade-in-50 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 duration-200"
-          >
-            {goalTypes.map((type) => (
-              <DropdownMenuItem 
-                key={type} 
-                className="text-white hover:bg-[#1A1A3A] focus:bg-[#1A1A3A] cursor-pointer"
-                onClick={() => handleAddGoalClick(type)}
-              >
-                {type}
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
       </div>
       
-      <div className="mb-6">
-        <h4 className="text-sm font-medium mb-2">Target Retirement Age</h4>
+      <p className="text-gray-400 text-sm -mt-4">
+        Add your goals including retirement age and big purchases like homes, education, and vacations.
+      </p>
+      
+      <div>
+        <h3 className="text-md font-medium mb-4">Target Retirement Age</h3>
         {retirementGoals.length > 0 ? (
           retirementGoals.map((goal, index) => (
-            <GoalCard 
-              key={goal.id || `retirement-goal-${index}`} 
-              goal={goal} 
-              isExpanded={expandedGoals.includes(goal.id || `retirement-goal-${index}`)} 
-              onToggle={() => toggleGoalExpansion(goal.id || `retirement-goal-${index}`)}
+            <RetirementAgeCard 
+              key={goal.id || `retirement-goal-${index}`}
+              goal={goal}
               onClick={() => handleGoalClick(goal)}
               isNew={goal.id === newGoalId}
             />
           ))
         ) : (
-          <RetirementAgeSection 
-            title="Your Retirement Age" 
-            onClick={() => handleRetirementAgeClick("Your Retirement Age")}
-          />
+          <Card 
+            className="bg-[#0D1426] border border-blue-900 p-6 cursor-pointer hover:border-blue-600 transition-all mb-4"
+            onClick={() => handleRetirementAgeClick("Target Retirement Age")}
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-3xl font-bold">70</div>
+                <div className="text-sm text-gray-400">years old</div>
+              </div>
+              <div className="text-right">
+                <div className="text-sm text-gray-400">2033</div>
+              </div>
+            </div>
+            <div className="flex justify-between items-center mt-6">
+              <div className="text-sm font-medium">Antonio's Retirement Age</div>
+              <div className="text-sm text-gray-400">Antonio Gomez</div>
+            </div>
+          </Card>
         )}
       </div>
       
-      <div className="mb-4">
-        <h4 className="text-sm font-medium mb-2">Other Goals</h4>
+      <div>
+        <h3 className="text-md font-medium mb-4">Other Goals</h3>
         {otherGoals.length > 0 ? (
-          otherGoals.map((goal, index) => (
-            <GoalCard 
-              key={goal.id || `other-goal-${index}`} 
-              goal={goal} 
-              isExpanded={expandedGoals.includes(goal.id || `other-goal-${index}`)} 
-              onToggle={() => toggleGoalExpansion(goal.id || `other-goal-${index}`)}
-              onClick={() => handleGoalClick(goal)}
-              isNew={goal.id === newGoalId}
-            />
-          ))
+          <div className="space-y-4">
+            {otherGoals.map((goal, index) => (
+              <GoalCard 
+                key={goal.id || `other-goal-${index}`} 
+                goal={goal} 
+                isExpanded={expandedGoals.includes(goal.id || `other-goal-${index}`)} 
+                onToggle={() => toggleGoalExpansion(goal.id || `other-goal-${index}`)}
+                onClick={() => handleGoalClick(goal)}
+                isNew={goal.id === newGoalId}
+              />
+            ))}
+          </div>
         ) : (
-          <Card className="bg-[#0F1C2E] border border-border/20 p-4 text-center">
-            <p className="text-sm text-muted-foreground">
+          <Card 
+            className="bg-[#0D1426] border border-blue-900 p-6 text-center hover:border-blue-600 transition-all cursor-pointer"
+            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+          >
+            <p className="text-gray-400">
               Add other goals for education, cars, vacations, homes, and more.
             </p>
           </Card>
@@ -399,15 +360,37 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
   );
 }
 
-function RetirementAgeSection({ title, onClick }: { title: string; onClick: () => void }) {
+function RetirementAgeCard({ goal, onClick, isNew = false }: { 
+  goal: Goal;
+  onClick: () => void;
+  isNew?: boolean;
+}) {
+  const age = goal.targetRetirementAge || 70;
+  const year = goal.targetDate ? format(goal.targetDate, 'yyyy') : '2033';
+  const owner = goal.owner || 'Antonio Gomez';
+  const shortName = owner.split(' ')[0];
+  
   return (
-    <div 
-      className="flex items-center justify-between border-b border-border/20 py-3 cursor-pointer hover:bg-[#1A1A2E]/80 transition-colors px-2 rounded-md"
+    <Card 
+      className={`bg-[#0D1426] border border-blue-900 p-6 cursor-pointer hover:border-blue-600 transition-all ${
+        isNew ? 'animate-in slide-in-from-bottom-5 fade-in-100 duration-500' : 'animate-in fade-in-80 duration-200'
+      }`}
       onClick={onClick}
     >
-      <h4 className="text-sm">{title}</h4>
-      <ChevronDownIcon className="h-5 w-5 text-muted-foreground" />
-    </div>
+      <div className="flex items-center justify-between">
+        <div>
+          <div className="text-3xl font-bold">{age}</div>
+          <div className="text-sm text-gray-400">years old</div>
+        </div>
+        <div className="text-right">
+          <div className="text-sm text-gray-400">{year}</div>
+        </div>
+      </div>
+      <div className="flex justify-between items-center mt-6">
+        <div className="text-sm font-medium">{shortName}'s Retirement Age</div>
+        <div className="text-sm text-gray-400">{owner}</div>
+      </div>
+    </Card>
   );
 }
 
@@ -424,7 +407,7 @@ function GoalCard({ goal, isExpanded, onToggle, onClick, isNew = false }: {
 
   return (
     <Card 
-      className={`bg-[#0F1C2E] border border-border/20 p-4 cursor-pointer hover:bg-[#0F1C2E]/80 hover:border-primary/30 transition-all duration-200 mb-2 ${
+      className={`bg-[#0D1426] border border-blue-900 p-4 cursor-pointer hover:border-blue-600 transition-all ${
         isNew ? 'animate-in slide-in-from-bottom-5 fade-in-100 duration-500' : 'animate-in fade-in-80 duration-200'
       }`}
       onClick={onClick}
@@ -432,9 +415,9 @@ function GoalCard({ goal, isExpanded, onToggle, onClick, isNew = false }: {
       <div className="flex items-center justify-between">
         <div>
           <h4 className="font-medium">
-            {goalTitle} {inflationText && <span className="text-xs text-muted-foreground ml-1">{inflationText}</span>}
+            {goalTitle} {inflationText && <span className="text-xs text-gray-400 ml-1">{inflationText}</span>}
           </h4>
-          <p className="text-xs text-muted-foreground">{goalType}</p>
+          <p className="text-xs text-gray-400">{goalType}</p>
         </div>
         <Button 
           variant="ghost" 
@@ -449,12 +432,12 @@ function GoalCard({ goal, isExpanded, onToggle, onClick, isNew = false }: {
       </div>
       
       {isExpanded && (
-        <div className="mt-4 space-y-2 pt-2 border-t border-border/20">
+        <div className="mt-4 space-y-2 pt-2 border-t border-blue-900/50">
           {(goal.type === "Asset Purchase" || goal.type === "Home Purchase" || goal.type === "Vehicle") && (
             <>
               {goal.purchasePrice !== undefined && (
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Purchase Price:</span>
+                  <span className="text-gray-400">Purchase Price:</span>
                   <span>
                     {new Intl.NumberFormat('en-US', {
                       style: 'currency',
@@ -466,7 +449,7 @@ function GoalCard({ goal, isExpanded, onToggle, onClick, isNew = false }: {
               
               {goal.financingMethod && (
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Financing:</span>
+                  <span className="text-gray-400">Financing:</span>
                   <span>{goal.financingMethod}</span>
                 </div>
               )}
@@ -474,7 +457,7 @@ function GoalCard({ goal, isExpanded, onToggle, onClick, isNew = false }: {
               {(goal.type === "Asset Purchase" || goal.type === "Home Purchase") && 
                 goal.annualAppreciation && goal.annualAppreciation !== "None" && (
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Annual Appreciation:</span>
+                  <span className="text-gray-400">Annual Appreciation:</span>
                   <span>{goal.annualAppreciation}</span>
                 </div>
               )}
@@ -485,14 +468,14 @@ function GoalCard({ goal, isExpanded, onToggle, onClick, isNew = false }: {
             <>
               {goal.studentName && (
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Student:</span>
+                  <span className="text-gray-400">Student:</span>
                   <span>{goal.studentName}</span>
                 </div>
               )}
               
               {goal.tuitionEstimate !== undefined && (
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Tuition Estimate:</span>
+                  <span className="text-gray-400">Tuition Estimate:</span>
                   <span>
                     {new Intl.NumberFormat('en-US', {
                       style: 'currency',
@@ -504,7 +487,7 @@ function GoalCard({ goal, isExpanded, onToggle, onClick, isNew = false }: {
               
               {goal.startYear && goal.endYear && (
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Years:</span>
+                  <span className="text-gray-400">Years:</span>
                   <span>{goal.startYear} - {goal.endYear}</span>
                 </div>
               )}
@@ -515,14 +498,14 @@ function GoalCard({ goal, isExpanded, onToggle, onClick, isNew = false }: {
             <>
               {goal.destination && (
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Destination:</span>
+                  <span className="text-gray-400">Destination:</span>
                   <span>{goal.destination}</span>
                 </div>
               )}
               
               {goal.estimatedCost !== undefined && (
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Estimated Cost:</span>
+                  <span className="text-gray-400">Estimated Cost:</span>
                   <span>
                     {new Intl.NumberFormat('en-US', {
                       style: 'currency',
@@ -538,7 +521,7 @@ function GoalCard({ goal, isExpanded, onToggle, onClick, isNew = false }: {
             <>
               {goal.amountDesired !== undefined && (
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Target Amount:</span>
+                  <span className="text-gray-400">Target Amount:</span>
                   <span>
                     {new Intl.NumberFormat('en-US', {
                       style: 'currency',
@@ -550,14 +533,14 @@ function GoalCard({ goal, isExpanded, onToggle, onClick, isNew = false }: {
               
               {goal.annualAppreciation && goal.annualAppreciation !== "None" && (
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Annual Appreciation:</span>
+                  <span className="text-gray-400">Annual Appreciation:</span>
                   <span>{goal.annualAppreciation}</span>
                 </div>
               )}
               
               {goal.repeats && goal.repeats !== "None" && (
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Repeats:</span>
+                  <span className="text-gray-400">Repeats:</span>
                   <span>{goal.repeats}</span>
                 </div>
               )}
@@ -566,7 +549,7 @@ function GoalCard({ goal, isExpanded, onToggle, onClick, isNew = false }: {
           
           {goal.targetDate && !["Education"].includes(goal.type || "") && (
             <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Target Date:</span>
+              <span className="text-gray-400">Target Date:</span>
               <span>{format(goal.targetDate, 'MMM yyyy')}</span>
             </div>
           )}
@@ -574,7 +557,7 @@ function GoalCard({ goal, isExpanded, onToggle, onClick, isNew = false }: {
           {goal.targetAmount !== undefined && 
             !["Asset Purchase", "Home Purchase", "Vehicle", "Vacation", "Education", "Cash Reserve"].includes(goal.type || "") && (
             <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Target Amount:</span>
+              <span className="text-gray-400">Target Amount:</span>
               <span>
                 {new Intl.NumberFormat('en-US', {
                   style: 'currency',
@@ -610,28 +593,28 @@ function GoalCard({ goal, isExpanded, onToggle, onClick, isNew = false }: {
           
           {goal.targetRetirementAge && (
             <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Target Retirement Age:</span>
+              <span className="text-gray-400">Target Retirement Age:</span>
               <span>{goal.targetRetirementAge}</span>
             </div>
           )}
           
           {goal.planningHorizonAge && (
             <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Planning Horizon:</span>
+              <span className="text-gray-400">Planning Horizon:</span>
               <span>{goal.planningHorizonAge} years</span>
             </div>
           )}
           
           {goal.description && (
             <div className="flex flex-col text-sm mt-2">
-              <span className="text-muted-foreground mb-1">Description:</span>
+              <span className="text-gray-400 mb-1">Description:</span>
               <p className="text-sm">{goal.description}</p>
             </div>
           )}
           
           {goal.annualInflationType && goal.annualInflationType !== "None" && (
             <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Annual Inflation:</span>
+              <span className="text-gray-400">Annual Inflation:</span>
               <span>
                 {goal.annualInflationType === "General" ? "2% (General)" : 
                  goal.annualInflationType === "Custom" ? `${goal.annualInflationRate}% (Custom)` : 
