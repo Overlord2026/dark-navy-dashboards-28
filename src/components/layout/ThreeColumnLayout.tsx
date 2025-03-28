@@ -175,7 +175,7 @@ export function ThreeColumnLayout({
           {mainSidebarCollapsed ? (
             <div className="w-12 h-12 flex items-center justify-center">
               <img 
-                src="/lovable-uploads/c598e503-7a57-4a55-9a0b-f09e7ba7003a.png" 
+                src="/lovable-uploads/cfb9898e-86f6-43a4-816d-9ecd35536845.png" 
                 alt="Boutique Family Office" 
                 className="h-10 w-auto" 
               />
@@ -183,7 +183,7 @@ export function ThreeColumnLayout({
           ) : (
             <div className="flex items-center justify-center w-full">
               <img 
-                src="/lovable-uploads/c598e503-7a57-4a55-9a0b-f09e7ba7003a.png" 
+                src="/lovable-uploads/cfb9898e-86f6-43a4-816d-9ecd35536845.png" 
                 alt="Boutique Family Office" 
                 className="h-14 w-auto" 
               />

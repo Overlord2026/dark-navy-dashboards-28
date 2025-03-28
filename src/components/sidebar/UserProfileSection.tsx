@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 import {
@@ -79,6 +78,15 @@ export const UserProfileSection = ({
 
   return (
     <div className={`px-4 py-3 border-b ${isLightTheme ? 'border-[#DCD8C0]' : 'border-white/10'}`}>
+      {/* Added logo above the user profile dropdown */}
+      <div className="mb-3 flex justify-center">
+        <img 
+          src="/lovable-uploads/cfb9898e-86f6-43a4-816d-9ecd35536845.png" 
+          alt="Boutique Family Office Logo" 
+          className="h-16 w-auto"
+        />
+      </div>
+      
       <DropdownMenu open={isDropdownOpen} onOpenChange={handleOpenChange}>
         <DropdownMenuTrigger 
           className={`flex items-center justify-between w-full py-2 rounded-md transition-colors cursor-pointer ${
@@ -96,6 +104,7 @@ export const UserProfileSection = ({
           </div>
           <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${isLightTheme ? 'text-[#222222]/70' : 'text-white/70'} ${isDropdownOpen ? 'rotate-180' : ''}`} />
         </DropdownMenuTrigger>
+        
         <DropdownMenuContent 
           className={`w-[220px] z-50 ${
             isLightTheme 
