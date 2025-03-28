@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
@@ -17,6 +18,7 @@ import { AddAccountDialog, AccountData } from "@/components/accounts/AddAccountD
 import { AccountLinkTypeSelector } from "@/components/accounts/AccountLinkTypeSelector";
 import { PlaidLinkDialog } from "@/components/accounts/PlaidLinkDialog";
 import { useToast } from "@/hooks/use-toast";
+import { useTheme } from "@/context/ThemeContext";
 
 type AccountSection = {
   id: string;
@@ -32,6 +34,9 @@ type AppView = "main" | "selection" | "plaid";
 
 const Accounts = () => {
   const { toast } = useToast();
+  const { theme } = useTheme();
+  const isLightTheme = theme === "light";
+  
   const [currentView, setCurrentView] = useState<AppView>("main");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [plaidDialogOpen, setPlaidDialogOpen] = useState(false);
@@ -226,7 +231,7 @@ const Accounts = () => {
             <div className="flex items-center justify-between mb-6">
               <h1 className="text-2xl font-semibold mb-1">Accounts</h1>
               <Button 
-                className="bg-white text-black hover:bg-slate-100"
+                className={isLightTheme ? "bg-[#E9E7D8] text-[#222222] hover:bg-[#DCD8C0]" : "bg-white text-black hover:bg-slate-100"}
                 onClick={openMainAddDialog}
               >
                 <Plus className="mr-2 h-4 w-4" />
@@ -238,7 +243,11 @@ const Accounts = () => {
               {accountSections.map((section) => (
                 <div
                   key={section.id}
-                  className="rounded-lg bg-[#121a2c] border border-gray-800 overflow-hidden"
+                  className={`rounded-lg ${
+                    isLightTheme 
+                      ? "bg-[#F2F0E1] border border-[#DCD8C0]" 
+                      : "bg-[#121a2c] border border-gray-800"
+                  } overflow-hidden`}
                 >
                   <div
                     className="p-4 flex items-center justify-between cursor-pointer"
@@ -246,42 +255,56 @@ const Accounts = () => {
                   >
                     <div className="flex items-center space-x-3">
                       {section.icon}
-                      <span className="font-medium text-white">{section.title}</span>
+                      <span className={`font-medium ${isLightTheme ? "text-[#222222]" : "text-white"}`}>
+                        {section.title}
+                      </span>
                     </div>
                     <div className="flex items-center space-x-3">
                       {section.balance ? (
-                        <span className="text-white">{section.balance}</span>
+                        <span className={isLightTheme ? "text-[#222222]" : "text-white"}>
+                          {section.balance}
+                        </span>
                       ) : (
-                        <span className="text-gray-400">{section.status}</span>
+                        <span className={isLightTheme ? "text-[#666666]" : "text-gray-400"}>
+                          {section.status}
+                        </span>
                       )}
                       {section.isExpanded ? (
-                        <ChevronUp className="h-5 w-5 text-gray-400" />
+                        <ChevronUp className={`h-5 w-5 ${isLightTheme ? "text-[#666666]" : "text-gray-400"}`} />
                       ) : (
-                        <ChevronDown className="h-5 w-5 text-gray-400" />
+                        <ChevronDown className={`h-5 w-5 ${isLightTheme ? "text-[#666666]" : "text-gray-400"}`} />
                       )}
                     </div>
                   </div>
 
                   {section.isExpanded && (
-                    <div className="p-6 border-t border-gray-800">
+                    <div className={`p-6 border-t ${isLightTheme ? "border-[#DCD8C0]" : "border-gray-800"}`}>
                       {section.accounts.length > 0 ? (
                         <div className="space-y-3">
                           {section.accounts.map((account) => (
                             <div 
                               key={account.id}
-                              className="p-3 rounded-lg bg-[#1c2e4a] border border-gray-700 flex justify-between items-center"
+                              className={`p-3 rounded-lg ${
+                                isLightTheme 
+                                  ? "bg-[#E9E7D8] border border-[#DCD8C0]" 
+                                  : "bg-[#1c2e4a] border border-gray-700"
+                              } flex justify-between items-center`}
                             >
                               <div>
-                                <p className="font-medium text-white">{account.name}</p>
+                                <p className={`font-medium ${isLightTheme ? "text-[#222222]" : "text-white"}`}>
+                                  {account.name}
+                                </p>
                                 {account.accountNumber && (
-                                  <p className="text-sm text-gray-400">
+                                  <p className={`text-sm ${isLightTheme ? "text-[#666666]" : "text-gray-400"}`}>
                                     Account: {account.accountNumber}
                                   </p>
                                 )}
                               </div>
                               {account.balance && (
                                 <div className="text-right">
-                                  <p className="font-medium text-white">${account.balance}</p>
+                                  <p className={`font-medium ${isLightTheme ? "text-[#222222]" : "text-white"}`}>
+                                    ${account.balance}
+                                  </p>
                                 </div>
                               )}
                             </div>
@@ -289,7 +312,11 @@ const Accounts = () => {
                           
                           <Button 
                             variant="outline" 
-                            className="mt-3 border-gray-700 text-white hover:bg-[#1c2e4a] hover:text-white"
+                            className={`mt-3 ${
+                              isLightTheme 
+                                ? "border-[#DCD8C0] text-[#222222] hover:bg-[#E9E7D8] hover:text-[#222222]" 
+                                : "border-gray-700 text-white hover:bg-[#1c2e4a] hover:text-white"
+                            }`}
                             onClick={() => openAddDialog(section)}
                           >
                             <Plus className="mr-2 h-4 w-4" />
@@ -298,10 +325,16 @@ const Accounts = () => {
                         </div>
                       ) : (
                         <div className="flex flex-col items-center justify-center py-8 text-gray-400">
-                          <p className="mb-4">No accounts added yet</p>
+                          <p className={`mb-4 ${isLightTheme ? "text-[#666666]" : "text-gray-400"}`}>
+                            No accounts added yet
+                          </p>
                           <Button 
                             variant="outline" 
-                            className="border-gray-700 text-white hover:bg-[#1c2e4a] hover:text-white"
+                            className={`${
+                              isLightTheme 
+                                ? "border-[#DCD8C0] text-[#222222] hover:bg-[#E9E7D8] hover:text-[#222222]" 
+                                : "border-gray-700 text-white hover:bg-[#1c2e4a] hover:text-white"
+                            }`}
                             onClick={() => openAddDialog(section)}
                           >
                             <Plus className="mr-2 h-4 w-4" />
