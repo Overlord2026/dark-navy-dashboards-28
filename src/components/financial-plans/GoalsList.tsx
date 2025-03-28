@@ -349,7 +349,7 @@ function GoalCard({ goal, isExpanded, onToggle, onClick }: {
 
   return (
     <Card 
-      className="bg-[#0F1C2E] border border-border/20 p-4 cursor-pointer hover:bg-[#0F1C2E]/80 hover:border-primary/30 transition-all duration-200 mb-2"
+      className="bg-[#0F1C2E] border border-border/20 p-4 cursor-pointer hover:bg-[#0F1C2E]/80 hover:border-primary/30 transition-all duration-200 mb-2 animate-fade-in"
       onClick={onClick}
     >
       <div className="flex items-center justify-between">
