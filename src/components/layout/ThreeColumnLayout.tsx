@@ -188,206 +188,143 @@ export function ThreeColumnLayout({
   };
 
   return (
-    <div className={`flex h-screen overflow-hidden ${isLightTheme ? 'bg-[#F9F7E8]' : 'bg-[#12121C]'}`}>
-      <div className="fixed top-0 left-0 right-0 w-full flex justify-center py-4 z-40 bg-inherit">
+    <div className={`flex flex-col h-screen overflow-hidden ${isLightTheme ? 'bg-[#F9F7E8]' : 'bg-[#12121C]'}`}>
+      <div className="w-full flex justify-center items-center py-3 border-b z-50 bg-inherit" style={{ borderColor: isLightTheme ? '#DCD8C0' : 'rgba(255,255,255,0.1)' }}>
         <img 
           src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" 
           alt="Boutique Family Office Logo" 
-          className="h-20 w-auto"
+          className="h-16 w-auto"
         />
       </div>
       
-      <aside
-        className={cn(
-          "flex flex-col transition-all duration-300 ease-in-out z-30 mt-[120px]",
-          mainSidebarCollapsed ? "w-[70px]" : "w-[220px]",
-          isLightTheme ? "bg-[#F9F7E8] border-r border-[#DCD8C0]" : "bg-[#1B1B32] border-r border-white/10"
-        )}
-      >
-        <div className="flex flex-col h-full">
-          {!mainSidebarCollapsed && (
-            <div className="border-b border-sidebar-border">
-              <UserProfileSection onMenuItemClick={handleProfileMenuItemClick} showLogo={false} />
-            </div>
-          )}
-          
-          <div className="overflow-y-auto mt-1 flex-1">
-            <nav className="px-4 space-y-1.5">
-              {mainMenuItems.map((item) => {
-                if (item.id === "education") return null;
-
-                const isActive = item.id === currentPath;
-                const Icon = item.icon;
-                
-                return (
-                  <Link
-                    key={item.id}
-                    to={item.href}
-                    className={cn(
-                      "group flex items-center py-2 px-3 rounded-md transition-colors text-[14px] whitespace-nowrap border",
-                      isActive
-                        ? isLightTheme ? "bg-[#E9E7D8] text-[#222222] font-medium border-primary" : "bg-black text-[#E2E2E2] font-medium border-primary"
-                        : isLightTheme ? "text-[#222222] border-transparent" : "text-[#E2E2E2] border-transparent",
-                      isLightTheme ? "hover:bg-[#E9E7D8] hover:border-primary" : "hover:bg-white/10 hover:border-primary"
-                    )}
-                  >
-                    {typeof Icon === 'function' ? (
-                      <div className={`flex items-center justify-center rounded-sm p-0.5 mr-3 ${isLightTheme ? 'bg-[#222222]' : 'bg-black'}`}>
-                        <Icon />
-                      </div>
-                    ) : (
-                      <Icon 
-                        className={cn("h-5 w-5", !mainSidebarCollapsed && "mr-3")} 
-                        style={{ 
-                          backgroundColor: isLightTheme ? '#222222' : '#000', 
-                          padding: '2px', 
-                          borderRadius: '2px' 
-                        }} 
-                      />
-                    )}
-                    {!mainSidebarCollapsed && (
-                      <span className="whitespace-nowrap overflow-hidden text-ellipsis">{item.label}</span>
-                    )}
-                  </Link>
-                );
-              })}
-            </nav>
-          </div>
-          
-          <AdvisorSection 
-            advisorInfo={advisorInfo}
-            onViewProfile={handleViewProfile}
-            onBookSession={handleBookSession}
-            collapsed={mainSidebarCollapsed}
-          />
-        </div>
-      </aside>
-
-      {hasSecondaryMenu && (
+      <div className="flex flex-1 overflow-hidden">
         <aside
           className={cn(
-            "flex flex-col transition-all duration-300 ease-in-out z-20 mt-[120px]",
-            secondarySidebarCollapsed ? "w-[0px]" : "w-[200px]",
-            isLightTheme ? "bg-[#F9F7E8] border-r border-[#DCD8C0]" : "bg-[#1B1B32] border-r border-sidebar-border"
+            "flex flex-col transition-all duration-300 ease-in-out z-30",
+            mainSidebarCollapsed ? "w-[70px]" : "w-[220px]",
+            isLightTheme ? "bg-[#F9F7E8] border-r border-[#DCD8C0]" : "bg-[#1B1B32] border-r border-white/10"
           )}
         >
-          <div className={`flex items-center h-[70px] px-6 border-b ${isLightTheme ? 'border-[#DCD8C0]' : 'border-sidebar-border'}`}>
-            {!secondarySidebarCollapsed && (
-              <span className={`font-medium truncate ${isLightTheme ? 'text-[#222222]' : 'text-[#E2E2E2]'}`}>Sections</span>
+          <div className="flex flex-col h-full">
+            {!mainSidebarCollapsed && (
+              <div className="border-b border-sidebar-border">
+                <UserProfileSection onMenuItemClick={handleProfileMenuItemClick} showLogo={false} />
+              </div>
             )}
-          </div>
+            
+            <div className="overflow-y-auto mt-1 flex-1">
+              <nav className="px-4 space-y-1.5">
+                {mainMenuItems.map((item) => {
+                  if (item.id === "education") return null;
 
-          {!secondarySidebarCollapsed && (
-            <div className="flex-1 py-6 overflow-y-auto">
-              <nav className="px-4 space-y-2">
-                {menuItems.map((item) => (
-                  <Link
-                    key={item.id}
-                    to={`/${activeMainItem}/${item.id}`}
-                    className={cn(
-                      "group flex items-center py-2 px-3 rounded-md transition-colors text-[14px] border",
-                      item.id === sectionId || item.active
-                        ? isLightTheme 
-                          ? "bg-[#E9E7D8] text-[#222222] font-medium border-primary" 
-                          : "bg-sidebar-accent text-accent border-primary"
-                        : isLightTheme ? "text-[#222222] border-transparent" : "text-[#E2E2E2] border-transparent",
-                      isLightTheme ? "hover:bg-[#E9E7D8] hover:border-primary" : "hover:bg-sidebar-accent hover:border-primary"
-                    )}
-                  >
-                    <span>{item.name || item.label}</span>
-                  </Link>
-                ))}
+                  const isActive = item.id === currentPath;
+                  const Icon = item.icon;
+                  
+                  return (
+                    <Link
+                      key={item.id}
+                      to={item.href}
+                      className={cn(
+                        "group flex items-center py-2 px-3 rounded-md transition-colors text-[14px] whitespace-nowrap border",
+                        isActive
+                          ? isLightTheme ? "bg-[#E9E7D8] text-[#222222] font-medium border-primary" : "bg-black text-[#E2E2E2] font-medium border-primary"
+                          : isLightTheme ? "text-[#222222] border-transparent" : "text-[#E2E2E2] border-transparent",
+                        isLightTheme ? "hover:bg-[#E9E7D8] hover:border-primary" : "hover:bg-white/10 hover:border-primary"
+                      )}
+                    >
+                      {typeof Icon === 'function' ? (
+                        <div className={`flex items-center justify-center rounded-sm p-0.5 mr-3 ${isLightTheme ? 'bg-[#222222]' : 'bg-black'}`}>
+                          <Icon />
+                        </div>
+                      ) : (
+                        <Icon 
+                          className={cn("h-5 w-5", !mainSidebarCollapsed && "mr-3")} 
+                          style={{ 
+                            backgroundColor: isLightTheme ? '#222222' : '#000', 
+                            padding: '2px', 
+                            borderRadius: '2px' 
+                          }} 
+                        />
+                      )}
+                      {!mainSidebarCollapsed && (
+                        <span className="whitespace-nowrap overflow-hidden text-ellipsis">{item.label}</span>
+                      )}
+                    </Link>
+                  );
+                })}
               </nav>
             </div>
-          )}
-        </aside>
-      )}
-
-      <div className="flex-1 flex flex-col overflow-hidden mt-[120px]">
-        {isHomePage ? (
-          <div className="flex flex-col items-center w-full p-8">
-            <div className="flex justify-center items-center space-x-10 mb-8 w-full max-w-5xl">
-              <Link to="/education" className="flex-1 flex items-center justify-center gap-3 px-5 py-4 rounded-md bg-gray-800 hover:bg-gray-700 text-gray-100 transition-colors border border-primary">
-                <GraduationCapIcon className="h-6 w-6" />
-                <span className="font-medium text-lg">Education Center</span>
-              </Link>
-              
-              <Link to="/vault" className="flex-1 flex items-center justify-center gap-3 px-5 py-4 rounded-md bg-gray-800 hover:bg-gray-700 text-gray-100 transition-colors border border-primary">
-                <BookOpenIcon className="h-6 w-6" />
-                <span className="font-medium text-lg">Legacy Vault</span>
-              </Link>
-            </div>
             
-            <div className="flex justify-center items-center space-x-10 w-full max-w-5xl">
-              <Link to="/profile" className="flex-1 flex items-center justify-center gap-3 px-5 py-4 rounded-md bg-gray-800 hover:bg-gray-700 text-gray-100 transition-colors border border-primary">
-                <UserIcon className="h-6 w-6" />
-                <span className="font-medium text-lg">Client Profile</span>
-              </Link>
-              
-              <Popover open={showAdvisorInfo} onOpenChange={setShowAdvisorInfo}>
-                <PopoverTrigger asChild>
-                  <Button variant="ghost" className="flex-1 flex items-center justify-center gap-3 px-5 py-4 rounded-md bg-gray-800 hover:bg-gray-700 text-gray-100 transition-colors border border-primary">
-                    <div className="flex items-center space-x-3">
-                      <Avatar className="h-9 w-9 border-2 border-primary">
-                        <AvatarFallback className="bg-primary/20 text-primary">CB</AvatarFallback>
-                      </Avatar>
-                      <span className="font-medium text-lg">Advisor Profile</span>
-                    </div>
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent 
-                  className="w-80 bg-gray-900 border border-primary text-white p-0 shadow-lg"
-                  align="center"
-                >
-                  <div className="flex flex-col">
-                    <div className="p-4 border-b border-gray-700 flex items-center space-x-4">
-                      <Avatar className="h-16 w-16 border border-primary">
-                        <AvatarFallback className="bg-primary/20 text-primary text-xl">CB</AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <h3 className="text-lg font-semibold">{advisorInfo.name}</h3>
-                        <p className="text-sm text-gray-400">{advisorInfo.title}</p>
-                        <p className="text-sm text-gray-400">{advisorInfo.location}</p>
-                      </div>
-                    </div>
-                    
-                    <div className="p-4 space-y-3">
-                      <div className="flex items-center space-x-2">
-                        <CalendarIcon className="h-4 w-4 text-gray-400" />
-                        <Button 
-                          variant="outline" 
-                          className="w-full justify-start border-primary hover:bg-gray-800 text-white"
-                          onClick={handleBookSession}
-                        >
-                          Schedule an Appointment
-                        </Button>
-                      </div>
-                      
-                      <div className="pt-2 border-t border-gray-700 space-y-1.5">
-                        <p className="text-sm">
-                          <span className="text-gray-400">Email: </span>
-                          <a href={`mailto:${advisorInfo.email}`} className="text-blue-400 hover:underline">
-                            {advisorInfo.email}
-                          </a>
-                        </p>
-                        <p className="text-sm">
-                          <span className="text-gray-400">Phone: </span>
-                          <a href={`tel:${advisorInfo.phone}`} className="text-blue-400 hover:underline">
-                            {advisorInfo.phone}
-                          </a>
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </PopoverContent>
-              </Popover>
-            </div>
+            <AdvisorSection 
+              advisorInfo={advisorInfo}
+              onViewProfile={handleViewProfile}
+              onBookSession={handleBookSession}
+              collapsed={mainSidebarCollapsed}
+            />
           </div>
-        ) : null}
-        
-        <main className="flex-1 overflow-y-auto p-4 font-sans w-full">
-          {children}
-        </main>
+        </aside>
+
+        {hasSecondaryMenu && (
+          <aside
+            className={cn(
+              "flex flex-col transition-all duration-300 ease-in-out z-20",
+              secondarySidebarCollapsed ? "w-[0px]" : "w-[200px]",
+              isLightTheme ? "bg-[#F9F7E8] border-r border-[#DCD8C0]" : "bg-[#1B1B32] border-r border-sidebar-border"
+            )}
+          >
+            <div className={`flex items-center h-[70px] px-6 border-b ${isLightTheme ? 'border-[#DCD8C0]' : 'border-sidebar-border'}`}>
+              {!secondarySidebarCollapsed && (
+                <span className={`font-medium truncate ${isLightTheme ? 'text-[#222222]' : 'text-[#E2E2E2]'}`}>Sections</span>
+              )}
+            </div>
+
+            {!secondarySidebarCollapsed && (
+              <div className="flex-1 py-6 overflow-y-auto">
+                <nav className="px-4 space-y-2">
+                  {menuItems.map((item) => (
+                    <Link
+                      key={item.id}
+                      to={`/${activeMainItem}/${item.id}`}
+                      className={cn(
+                        "group flex items-center py-2 px-3 rounded-md transition-colors text-[14px] border",
+                        item.id === sectionId || item.active
+                          ? isLightTheme 
+                            ? "bg-[#E9E7D8] text-[#222222] font-medium border-primary" 
+                            : "bg-sidebar-accent text-accent border-primary"
+                          : isLightTheme ? "text-[#222222] border-transparent" : "text-[#E2E2E2] border-transparent",
+                        isLightTheme ? "hover:bg-[#E9E7D8] hover:border-primary" : "hover:bg-sidebar-accent hover:border-primary"
+                      )}
+                    >
+                      <span>{item.name || item.label}</span>
+                    </Link>
+                  ))}
+                </nav>
+              </div>
+            )}
+          </aside>
+        )}
+
+        <div className="flex-1 flex flex-col overflow-hidden">
+          {isHomePage ? (
+            <div className="flex flex-col items-center w-full p-8">
+              <div className="flex justify-center items-center space-x-10 mb-8 w-full max-w-5xl">
+                <Link to="/education" className="flex-1 flex items-center justify-center gap-3 px-5 py-4 rounded-md bg-gray-800 hover:bg-gray-700 text-gray-100 transition-colors border border-primary">
+                  <GraduationCapIcon className="h-6 w-6" />
+                  <span className="font-medium text-lg">Education Center</span>
+                </Link>
+                
+                <Link to="/vault" className="flex-1 flex items-center justify-center gap-3 px-5 py-4 rounded-md bg-gray-800 hover:bg-gray-700 text-gray-100 transition-colors border border-primary">
+                  <BookOpenIcon className="h-6 w-6" />
+                  <span className="font-medium text-lg">Legacy Vault</span>
+                </Link>
+              </div>
+            </div>
+          ) : null}
+          
+          <main className="flex-1 overflow-y-auto p-4 font-sans w-full">
+            {children}
+          </main>
+        </div>
       </div>
     </div>
   );
