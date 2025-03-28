@@ -9,7 +9,6 @@ import { GoalsList } from "@/components/financial-plans/GoalsList";
 import { CreatePlanDialog } from "@/components/financial-plans/CreatePlanDialog";
 import { 
   InfoIcon, 
-  ChevronDownIcon, 
   PlusIcon, 
   MoreHorizontal,
   CheckCircle
@@ -53,7 +52,6 @@ const FinancialPlans = () => {
   
   const [selectedPlan, setSelectedPlan] = useState<string>(plans[0].id);
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
-  const [isPlansDropdownOpen, setIsPlansDropdownOpen] = useState(false);
 
   const handleCreatePlan = (planName: string) => {
     const newPlan = {
@@ -63,8 +61,35 @@ const FinancialPlans = () => {
       isActive: true,
     };
     
-    setPlans([...plans, newPlan]);
+    setPlans(prevPlans => {
+      // Set all plans to not active
+      const updatedPlans = prevPlans.map(plan => ({ ...plan, isActive: false }));
+      // Add the new active plan
+      return [...updatedPlans, newPlan];
+    });
     setSelectedPlan(newPlan.id);
+  };
+
+  const handleSelectPlan = (planId: string) => {
+    if (planId === "new-plan") {
+      setIsCreateDialogOpen(true);
+      return;
+    }
+    
+    if (planId === "manage-plans") {
+      // Future functionality: Open plan management
+      console.log("Open plan management");
+      return;
+    }
+    
+    setSelectedPlan(planId);
+    // Update the active status of plans
+    setPlans(prevPlans => 
+      prevPlans.map(plan => ({
+        ...plan,
+        isActive: plan.id === planId
+      }))
+    );
   };
 
   const activePlan = plans.find(plan => plan.id === selectedPlan) || plans[0];
@@ -92,27 +117,41 @@ const FinancialPlans = () => {
           <div className="relative inline-block">
             <Select
               value={selectedPlan}
-              onValueChange={setSelectedPlan}
+              onValueChange={handleSelectPlan}
             >
               <SelectTrigger className="w-[180px] bg-transparent">
                 <SelectValue placeholder={fullName}>{activePlan.name}</SelectValue>
               </SelectTrigger>
-              <SelectContent className="bg-[#0F1C2E] border-white/10">
+              <SelectContent 
+                className="bg-[#0F1C2E] border-white/10 animate-in fade-in-50 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 duration-200"
+              >
                 <div className="py-2 px-4 text-sm font-medium border-b border-white/10">Plans</div>
                 {plans.map(plan => (
-                  <SelectItem key={plan.id} value={plan.id} className="flex items-center gap-2">
-                    {plan.isActive && <CheckCircle className="h-4 w-4 text-green-500" />}
-                    {plan.name}
+                  <SelectItem 
+                    key={plan.id} 
+                    value={plan.id} 
+                    className="flex items-center gap-2 transition-colors"
+                  >
+                    <div className="flex items-center gap-2">
+                      {plan.isActive && <CheckCircle className="h-4 w-4 text-green-500" />}
+                      <span>{plan.name}</span>
+                    </div>
                   </SelectItem>
                 ))}
-                <DropdownMenuSeparator />
-                <SelectItem value="new-plan" onClick={() => setIsCreateDialogOpen(true)}>
+                <DropdownMenuSeparator className="my-1 bg-white/10" />
+                <SelectItem 
+                  value="new-plan" 
+                  className="flex items-center gap-2 transition-colors"
+                >
                   <div className="flex items-center gap-2">
                     <PlusIcon className="h-4 w-4" />
                     <span>New plan</span>
                   </div>
                 </SelectItem>
-                <SelectItem value="manage-plans">
+                <SelectItem 
+                  value="manage-plans"
+                  className="flex items-center gap-2 transition-colors"
+                >
                   <div className="flex items-center gap-2">
                     <span>Manage plans</span>
                   </div>
@@ -131,10 +170,10 @@ const FinancialPlans = () => {
                   <MoreHorizontal className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="bg-[#0F1C2E] border-white/10">
+              <DropdownMenuContent className="bg-[#0F1C2E] border-white/10 animate-in fade-in-50 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 duration-200">
                 <DropdownMenuItem>Edit plan</DropdownMenuItem>
                 <DropdownMenuItem>Duplicate plan</DropdownMenuItem>
-                <DropdownMenuSeparator />
+                <DropdownMenuSeparator className="bg-white/10" />
                 <DropdownMenuItem className="text-red-500">Delete plan</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
