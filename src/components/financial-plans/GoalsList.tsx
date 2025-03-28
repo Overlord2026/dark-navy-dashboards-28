@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { ChevronDownIcon, ChevronUpIcon, PlusIcon } from "lucide-react";
@@ -127,6 +126,19 @@ export function GoalsList({ goals, onGoalUpdate }: GoalsListProps) {
     "Vehicle",
     "Wedding"
   ];
+
+  // Separate retirement and other goals
+  const retirementGoals = localGoals.filter(goal => 
+    goal.targetRetirementAge !== undefined || 
+    goal.type === "Retirement" || 
+    goal.priority === "Retirement"
+  );
+  
+  const otherGoals = localGoals.filter(goal => 
+    goal.targetRetirementAge === undefined && 
+    goal.type !== "Retirement" && 
+    goal.priority !== "Retirement"
+  );
   
   if (!localGoals || localGoals.length === 0) {
     return (
@@ -139,6 +151,16 @@ export function GoalsList({ goals, onGoalUpdate }: GoalsListProps) {
           title="Spouse's Retirement Age" 
           onClick={() => handleRetirementAgeClick("Spouse's Retirement Age")}
         />
+        
+        <div className="mt-6">
+          <h4 className="text-sm font-medium mb-2">Other Goals</h4>
+          <Card className="bg-[#0F1C2E] border border-border/20 p-4 text-center">
+            <p className="text-sm text-muted-foreground">
+              Add other goals for education, cars, vacations, homes, and more.
+            </p>
+          </Card>
+        </div>
+        
         <div className="mt-4">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -202,15 +224,50 @@ export function GoalsList({ goals, onGoalUpdate }: GoalsListProps) {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      {localGoals.map((goal, index) => (
-        <GoalCard 
-          key={goal.id || `goal-${index}`} 
-          goal={goal} 
-          isExpanded={expandedGoals.includes(goal.id || `goal-${index}`)} 
-          onToggle={() => toggleGoalExpansion(goal.id || `goal-${index}`)}
-          onClick={() => handleGoalClick(goal)}
-        />
-      ))}
+      
+      {/* Retirement Goals Section */}
+      <div className="mb-6">
+        <h4 className="text-sm font-medium mb-2">Target Retirement Age</h4>
+        {retirementGoals.length > 0 ? (
+          retirementGoals.map((goal, index) => (
+            <GoalCard 
+              key={goal.id || `retirement-goal-${index}`} 
+              goal={goal} 
+              isExpanded={expandedGoals.includes(goal.id || `retirement-goal-${index}`)} 
+              onToggle={() => toggleGoalExpansion(goal.id || `retirement-goal-${index}`)}
+              onClick={() => handleGoalClick(goal)}
+            />
+          ))
+        ) : (
+          <RetirementAgeSection 
+            title="Your Retirement Age" 
+            onClick={() => handleRetirementAgeClick("Your Retirement Age")}
+          />
+        )}
+      </div>
+      
+      {/* Other Goals Section */}
+      <div className="mb-4">
+        <h4 className="text-sm font-medium mb-2">Other Goals</h4>
+        {otherGoals.length > 0 ? (
+          otherGoals.map((goal, index) => (
+            <GoalCard 
+              key={goal.id || `other-goal-${index}`} 
+              goal={goal} 
+              isExpanded={expandedGoals.includes(goal.id || `other-goal-${index}`)} 
+              onToggle={() => toggleGoalExpansion(goal.id || `other-goal-${index}`)}
+              onClick={() => handleGoalClick(goal)}
+            />
+          ))
+        ) : (
+          <Card className="bg-[#0F1C2E] border border-border/20 p-4 text-center">
+            <p className="text-sm text-muted-foreground">
+              Add other goals for education, cars, vacations, homes, and more.
+            </p>
+          </Card>
+        )}
+      </div>
+      
       <GoalDetailsSidePanel
         isOpen={isDetailsPanelOpen}
         onClose={() => setIsDetailsPanelOpen(false)}
@@ -246,7 +303,7 @@ function GoalCard({ goal, isExpanded, onToggle, onClick }: {
 
   return (
     <Card 
-      className="bg-[#0F1C2E] border border-border/20 p-4 cursor-pointer hover:bg-[#0F1C2E]/80 hover:border-primary/30 transition-all duration-200"
+      className="bg-[#0F1C2E] border border-border/20 p-4 cursor-pointer hover:bg-[#0F1C2E]/80 hover:border-primary/30 transition-all duration-200 mb-2"
       onClick={onClick}
     >
       <div className="flex items-center justify-between">
