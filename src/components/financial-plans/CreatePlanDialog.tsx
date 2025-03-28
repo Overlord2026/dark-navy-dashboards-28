@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -11,6 +10,7 @@ import * as z from "zod";
 import { Calendar, Trash2, Plus, Edit, Check, X, ArrowRight, ArrowLeft } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetFooter } from "@/components/ui/sheet";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
+import { ProjectionPreviewChart } from "./ProjectionPreviewChart";
 
 interface CreatePlanDialogProps {
   isOpen: boolean;
@@ -56,10 +56,19 @@ const expenseItemSchema = z.object({
   notes: z.string().optional(),
 });
 
+// Define schema for projections
+const projectionsSchema = z.object({
+  expectedReturnRate: z.string().min(1, "Expected return rate is required"),
+  inflationRate: z.string().min(1, "Inflation rate is required"),
+  riskTolerance: z.string().min(1, "Risk tolerance is required"),
+  lifeExpectancy: z.string().optional(),
+});
+
 type PlanBasicsFormValues = z.infer<typeof planBasicsSchema>;
 type GoalFormValues = z.infer<typeof goalSchema>;
 type IncomeItemFormValues = z.infer<typeof incomeItemSchema>;
 type ExpenseItemFormValues = z.infer<typeof expenseItemSchema>;
+type ProjectionsFormValues = z.infer<typeof projectionsSchema>;
 
 interface Goal {
   id: string;
@@ -92,18 +101,21 @@ interface ExpenseItem {
 
 export function CreatePlanDialog({ isOpen, onClose, onCreatePlan }: CreatePlanDialogProps) {
   const [currentStep, setCurrentStep] = useState(1);
-  const totalSteps = 4; // Increased from 3 to 4 to include the new step
+  const totalSteps = 5; // Increased from 4 to 5 to include the projections step
   const [goals, setGoals] = useState<Goal[]>([]);
   const [editingGoal, setEditingGoal] = useState<Goal | null>(null);
   const [isGoalFormOpen, setIsGoalFormOpen] = useState(false);
   
-  // New state for income and expenses
+  // State for income and expenses
   const [incomeItems, setIncomeItems] = useState<IncomeItem[]>([]);
   const [expenseItems, setExpenseItems] = useState<ExpenseItem[]>([]);
   const [editingIncome, setEditingIncome] = useState<IncomeItem | null>(null);
   const [editingExpense, setEditingExpense] = useState<ExpenseItem | null>(null);
   const [isIncomeFormOpen, setIsIncomeFormOpen] = useState(false);
   const [isExpenseFormOpen, setIsExpenseFormOpen] = useState(false);
+  
+  // State for projections
+  const [successRate, setSuccessRate] = useState(70); // Default value for preview
 
   // Form for Step 1: Plan Basics
   const basicsForm = useForm<PlanBasicsFormValues>({
@@ -152,6 +164,17 @@ export function CreatePlanDialog({ isOpen, onClose, onCreatePlan }: CreatePlanDi
       frequency: "Monthly",
       isEssential: false,
       notes: "",
+    },
+  });
+  
+  // Form for projections
+  const projectionsForm = useForm<ProjectionsFormValues>({
+    resolver: zodResolver(projectionsSchema),
+    defaultValues: {
+      expectedReturnRate: "7",
+      inflationRate: "2.5",
+      riskTolerance: "Moderate",
+      lifeExpectancy: "",
     },
   });
 
@@ -250,124 +273,26 @@ export function CreatePlanDialog({ isOpen, onClose, onCreatePlan }: CreatePlanDi
     closeExpenseForm();
   };
 
-  const openGoalForm = (goal?: Goal) => {
-    if (goal) {
-      // Edit existing goal
-      setEditingGoal(goal);
-      goalForm.reset({
-        id: goal.id,
-        title: goal.title,
-        targetDate: goal.targetDate || "",
-        targetAmount: goal.targetAmount || "",
-        priority: goal.priority || "Medium",
-        description: goal.description || "",
-      });
-    } else {
-      // Create new goal
-      setEditingGoal(null);
-      goalForm.reset({
-        id: `goal-${Date.now()}`,
-        title: "",
-        targetDate: "",
-        targetAmount: "",
-        priority: "Medium",
-        description: "",
-      });
-    }
+  const handleProjectionsSubmit = (values: ProjectionsFormValues) => {
+    // Calculate a mock success rate based on inputs (this is just for demonstration)
+    const returnRate = parseFloat(values.expectedReturnRate);
+    const inflation = parseFloat(values.inflationRate);
+    const riskModifier = 
+      values.riskTolerance === "Conservative" ? 0.7 :
+      values.riskTolerance === "Moderate" ? 1.0 :
+      values.riskTolerance === "Aggressive" ? 1.3 : 1.0;
+      
+    // Simple formula for demo purposes - this would be much more complex in reality
+    const calculatedRate = Math.min(95, Math.max(5, 
+      (returnRate - inflation) * 10 * riskModifier
+    ));
     
-    setIsGoalFormOpen(true);
-  };
-
-  const openIncomeForm = (income?: IncomeItem) => {
-    if (income) {
-      // Edit existing income
-      setEditingIncome(income);
-      incomeForm.reset({
-        id: income.id,
-        source: income.source,
-        amount: income.amount,
-        frequency: income.frequency,
-        startDate: income.startDate || "",
-        endDate: income.endDate || "",
-        notes: income.notes || "",
-      });
-    } else {
-      // Create new income
-      setEditingIncome(null);
-      incomeForm.reset({
-        id: `income-${Date.now()}`,
-        source: "",
-        amount: "",
-        frequency: "Monthly",
-        startDate: "",
-        endDate: "",
-        notes: "",
-      });
-    }
-    
-    setIsIncomeFormOpen(true);
-  };
-
-  const openExpenseForm = (expense?: ExpenseItem) => {
-    if (expense) {
-      // Edit existing expense
-      setEditingExpense(expense);
-      expenseForm.reset({
-        id: expense.id,
-        category: expense.category,
-        amount: expense.amount,
-        frequency: expense.frequency,
-        isEssential: expense.isEssential || false,
-        notes: expense.notes || "",
-      });
-    } else {
-      // Create new expense
-      setEditingExpense(null);
-      expenseForm.reset({
-        id: `expense-${Date.now()}`,
-        category: "",
-        amount: "",
-        frequency: "Monthly",
-        isEssential: false,
-        notes: "",
-      });
-    }
-    
-    setIsExpenseFormOpen(true);
-  };
-
-  const closeGoalForm = () => {
-    setIsGoalFormOpen(false);
-    setEditingGoal(null);
-    goalForm.reset();
-  };
-
-  const closeIncomeForm = () => {
-    setIsIncomeFormOpen(false);
-    setEditingIncome(null);
-    incomeForm.reset();
-  };
-
-  const closeExpenseForm = () => {
-    setIsExpenseFormOpen(false);
-    setEditingExpense(null);
-    expenseForm.reset();
-  };
-
-  const removeGoal = (id: string) => {
-    setGoals(goals.filter(goal => goal.id !== id));
-  };
-
-  const removeIncome = (id: string) => {
-    setIncomeItems(incomeItems.filter(item => item.id !== id));
-  };
-
-  const removeExpense = (id: string) => {
-    setExpenseItems(expenseItems.filter(item => item.id !== id));
+    setSuccessRate(Math.round(calculatedRate));
+    setCurrentStep(5); // Move to summary step
   };
 
   const handleFinalSubmit = () => {
-    // Final step - create the plan with goals, income, and expenses
+    // Final step - create the plan with goals, income, expenses, and projections
     onCreatePlan(basicsForm.getValues().planName);
     resetAndClose();
   };
@@ -377,6 +302,7 @@ export function CreatePlanDialog({ isOpen, onClose, onCreatePlan }: CreatePlanDi
     goalForm.reset();
     incomeForm.reset();
     expenseForm.reset();
+    projectionsForm.reset();
     setGoals([]);
     setIncomeItems([]);
     setExpenseItems([]);
@@ -398,6 +324,35 @@ export function CreatePlanDialog({ isOpen, onClose, onCreatePlan }: CreatePlanDi
     return isNaN(num) ? "" : `$${num.toLocaleString()}`;
   };
 
+  // Helper function to calculate total monthly income and expenses
+  const calculateNetMonthly = () => {
+    const monthlyIncome = incomeItems.reduce((total, item) => {
+      const amount = parseFloat(item.amount) || 0;
+      const multiplier = 
+        item.frequency === "Annually" ? 1/12 :
+        item.frequency === "Quarterly" ? 1/3 :
+        item.frequency === "Bi-weekly" ? 26/12 :
+        item.frequency === "Weekly" ? 52/12 : 1;
+      return total + (amount * multiplier);
+    }, 0);
+    
+    const monthlyExpenses = expenseItems.reduce((total, item) => {
+      const amount = parseFloat(item.amount) || 0;
+      const multiplier = 
+        item.frequency === "Annually" ? 1/12 :
+        item.frequency === "Quarterly" ? 1/3 :
+        item.frequency === "Bi-weekly" ? 26/12 :
+        item.frequency === "Weekly" ? 52/12 : 1;
+      return total + (amount * multiplier);
+    }, 0);
+    
+    return {
+      income: monthlyIncome,
+      expenses: monthlyExpenses,
+      net: monthlyIncome - monthlyExpenses
+    };
+  };
+
   return (
     <>
       <Dialog open={isOpen} onOpenChange={(open) => {
@@ -406,7 +361,13 @@ export function CreatePlanDialog({ isOpen, onClose, onCreatePlan }: CreatePlanDi
         <DialogContent className="bg-[#0F1C2E] border border-border/30 sm:max-w-[500px]">
           <DialogHeader>
             <DialogTitle className="text-xl font-semibold">
-              Plan Wizard - Step {currentStep}: {currentStep === 1 ? "Basics" : currentStep === 2 ? "Goals" : currentStep === 3 ? "Income & Expenses" : "Summary"}
+              Plan Wizard - Step {currentStep}: {
+                currentStep === 1 ? "Basics" : 
+                currentStep === 2 ? "Goals" : 
+                currentStep === 3 ? "Income & Expenses" : 
+                currentStep === 4 ? "Projections" : 
+                "Summary"
+              }
             </DialogTitle>
             <p className="text-sm text-muted-foreground">
               {currentStep === 1 
@@ -415,10 +376,13 @@ export function CreatePlanDialog({ isOpen, onClose, onCreatePlan }: CreatePlanDi
                 ? "Define your financial goals for this plan."
                 : currentStep === 3
                 ? "Add your income sources and expenses to complete your plan."
+                : currentStep === 4
+                ? "Set assumptions for future projections and growth."
                 : "Review your plan details before creating it."}
             </p>
           </DialogHeader>
           
+          {/* Step 1: Plan Basics */}
           {currentStep === 1 && (
             <Form {...basicsForm}>
               <form onSubmit={basicsForm.handleSubmit(handleBasicsSubmit)} className="space-y-4">
@@ -498,6 +462,7 @@ export function CreatePlanDialog({ isOpen, onClose, onCreatePlan }: CreatePlanDi
             </Form>
           )}
           
+          {/* Step 2: Goals */}
           {currentStep === 2 && (
             <div className="space-y-4">
               <div className="flex items-center justify-between mb-2">
@@ -759,7 +724,146 @@ export function CreatePlanDialog({ isOpen, onClose, onCreatePlan }: CreatePlanDi
             </div>
           )}
           
+          {/* Step 4: Projections */}
           {currentStep === 4 && (
+            <Form {...projectionsForm}>
+              <form onSubmit={projectionsForm.handleSubmit(handleProjectionsSubmit)} className="space-y-4">
+                <div className="mb-4">
+                  <h3 className="text-sm font-medium mb-2">Investment Assumptions</h3>
+                  <p className="text-xs text-muted-foreground">
+                    These assumptions will affect your projected net worth and chance of success.
+                  </p>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <FormField
+                    control={projectionsForm.control}
+                    name="expectedReturnRate"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Expected Return (%)</FormLabel>
+                        <FormControl>
+                          <Input 
+                            type="number" 
+                            step="0.1"
+                            placeholder="7"
+                            className="bg-background/50 border-border/30"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormDescription className="text-xs">
+                          Average annual return on investments
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={projectionsForm.control}
+                    name="inflationRate"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Inflation Rate (%)</FormLabel>
+                        <FormControl>
+                          <Input 
+                            type="number"
+                            step="0.1"
+                            placeholder="2.5"
+                            className="bg-background/50 border-border/30"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormDescription className="text-xs">
+                          Expected annual inflation
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                
+                <FormField
+                  control={projectionsForm.control}
+                  name="riskTolerance"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Risk Tolerance</FormLabel>
+                      <FormControl>
+                        <select
+                          className="bg-background/50 border border-border/30 rounded-md px-3 py-2 w-full text-sm"
+                          {...field}
+                        >
+                          <option value="Conservative">Conservative</option>
+                          <option value="Moderate">Moderate</option>
+                          <option value="Aggressive">Aggressive</option>
+                        </select>
+                      </FormControl>
+                      <FormDescription className="text-xs">
+                        Your comfort level with investment risk
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
+                <FormField
+                  control={projectionsForm.control}
+                  name="lifeExpectancy"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Life Expectancy (Optional)</FormLabel>
+                      <FormControl>
+                        <Input 
+                          type="number"
+                          placeholder="85"
+                          className="bg-background/50 border-border/30"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormDescription className="text-xs">
+                        Age to plan for in retirement calculations
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
+                <div className="mt-6 mb-4">
+                  <h3 className="text-sm font-medium mb-2">Projection Preview</h3>
+                  <div className="bg-background/30 rounded-md p-4 h-[180px] border border-border/20">
+                    <ProjectionPreviewChart 
+                      expectedReturn={parseFloat(projectionsForm.watch("expectedReturnRate") || "7")}
+                      inflation={parseFloat(projectionsForm.watch("inflationRate") || "2.5")}
+                      riskTolerance={projectionsForm.watch("riskTolerance") || "Moderate"}
+                      monthlyNetSavings={calculateNetMonthly().net}
+                    />
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-2">
+                    This is a simplified projection based on your inputs. Actual results may vary.
+                  </p>
+                </div>
+                
+                <DialogFooter className="pt-4">
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    onClick={handleGoBack}
+                  >
+                    <ArrowLeft className="mr-1 h-4 w-4" />
+                    Back
+                  </Button>
+                  <Button type="submit">
+                    Next
+                    <ArrowRight className="ml-1 h-4 w-4" />
+                  </Button>
+                </DialogFooter>
+              </form>
+            </Form>
+          )}
+          
+          {/* Step 5: Summary */}
+          {currentStep === 5 && (
             <div className="space-y-4">
               <div className="space-y-3">
                 <div className="border-b border-border/30 pb-2">
@@ -824,6 +928,27 @@ export function CreatePlanDialog({ isOpen, onClose, onCreatePlan }: CreatePlanDi
                       ) : (
                         <p className="text-xs text-muted-foreground">None defined</p>
                       )}
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="border-b border-border/30 pb-2">
+                  <h3 className="text-sm font-medium mb-2">Projections</h3>
+                  <div className="flex justify-between">
+                    <div>
+                      <p className="text-xs">
+                        <span className="text-muted-foreground">Expected Return:</span> {projectionsForm.getValues().expectedReturnRate}%
+                      </p>
+                      <p className="text-xs">
+                        <span className="text-muted-foreground">Inflation:</span> {projectionsForm.getValues().inflationRate}%
+                      </p>
+                      <p className="text-xs">
+                        <span className="text-muted-foreground">Risk Tolerance:</span> {projectionsForm.getValues().riskTolerance}
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-sm font-medium">Chance of Success</p>
+                      <p className="text-lg font-semibold text-green-400">{successRate}%</p>
                     </div>
                   </div>
                 </div>

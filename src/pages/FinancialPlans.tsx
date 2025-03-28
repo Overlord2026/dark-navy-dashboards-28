@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Card, CardContent } from "@/components/ui/card";
@@ -33,6 +34,7 @@ interface Plan {
   name: string;
   isFavorite: boolean;
   isActive?: boolean;
+  successRate?: number;
 }
 
 const FinancialPlans = () => {
@@ -44,9 +46,9 @@ const FinancialPlans = () => {
     : "Pedro Gomez";
   
   const [plans, setPlans] = useState<Plan[]>([
-    { id: "1", name: "Pedro Gomez", isFavorite: true, isActive: true },
-    { id: "2", name: "Draft Plan 1", isFavorite: false },
-    { id: "3", name: "Draft Plan 2", isFavorite: false },
+    { id: "1", name: "Pedro Gomez", isFavorite: true, isActive: true, successRate: 78 },
+    { id: "2", name: "Draft Plan 1", isFavorite: false, successRate: 45 },
+    { id: "3", name: "Draft Plan 2", isFavorite: false, successRate: 62 },
   ]);
   
   const [selectedPlan, setSelectedPlan] = useState<string>(plans[0].id);
@@ -58,6 +60,7 @@ const FinancialPlans = () => {
       name: planName,
       isFavorite: false,
       isActive: true,
+      successRate: Math.floor(Math.random() * 60) + 40, // Random success rate between 40-100 for demo
     };
     
     setPlans(prevPlans => {
@@ -193,7 +196,7 @@ const FinancialPlans = () => {
                   <InfoIcon className="h-4 w-4 ml-1" />
                 </div>
               </div>
-              <PlanSuccessGauge successRate={0} />
+              <PlanSuccessGauge successRate={activePlan.successRate || 0} />
             </CardContent>
           </Card>
 
