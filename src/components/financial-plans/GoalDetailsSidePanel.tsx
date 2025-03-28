@@ -55,6 +55,10 @@ interface GoalDetailsSidePanelProps {
   onTitleUpdate?: (name: string, owner: string) => void;
 }
 
+interface ValidationErrors {
+  [key: string]: string;
+}
+
 export const GoalDetailsSidePanel = ({
   isOpen,
   onClose,
@@ -73,6 +77,9 @@ export const GoalDetailsSidePanel = ({
     targetAmount: undefined,
     description: "",
   });
+
+  // Add validation errors state
+  const [errors, setErrors] = useState<ValidationErrors>({});
 
   // Define owner options
   const owners = ["Antonio Gomez", "Maria Gomez", "Joint"];
@@ -142,6 +149,7 @@ export const GoalDetailsSidePanel = ({
         // Cash Reserve fields
         amountDesired: goal.amountDesired,
       });
+      setErrors({});
     } else {
       // Reset form for new goal
       setFormData({
@@ -154,6 +162,7 @@ export const GoalDetailsSidePanel = ({
         financingMethod: "Cash",
         annualAppreciation: "None",
       });
+      setErrors({});
     }
   }, [goal]);
 
@@ -167,11 +176,54 @@ export const GoalDetailsSidePanel = ({
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     
-    // For number fields, convert to number
+    // For number fields, validate before setting
     if (name === "targetAmount" || name === "purchasePrice" || name === "tuitionEstimate" || 
-        name === "startYear" || name === "endYear" || name === "estimatedCost" || name === "amountDesired") {
-      const numValue = value === "" ? undefined : Number(value);
+        name === "startYear" || name === "endYear" || name === "estimatedCost" || 
+        name === "amountDesired" || name === "targetRetirementAge" || name === "planningHorizonAge") {
+      
+      // Allow empty values (clear field)
+      if (value === "") {
+        setFormData(prev => ({ ...prev, [name]: undefined }));
+        setErrors(prev => {
+          const newErrors = { ...prev };
+          delete newErrors[name];
+          return newErrors;
+        });
+        return;
+      }
+
+      const numValue = Number(value);
+      
+      // Check if it's a valid number
+      if (isNaN(numValue)) {
+        setErrors(prev => ({ ...prev, [name]: "Please enter a valid number" }));
+        return;
+      }
+      
+      // Additional validation based on field type
+      if ((name === "startYear" || name === "endYear") && (numValue < 2000 || numValue > 2100)) {
+        setErrors(prev => ({ ...prev, [name]: "Year must be between 2000 and 2100" }));
+        return;
+      }
+      
+      if ((name === "targetRetirementAge" || name === "planningHorizonAge") && (numValue < 0 || numValue > 120)) {
+        setErrors(prev => ({ ...prev, [name]: "Age must be between 0 and 120" }));
+        return;
+      }
+      
+      if ((name === "purchasePrice" || name === "targetAmount" || name === "tuitionEstimate" || 
+           name === "estimatedCost" || name === "amountDesired") && numValue < 0) {
+        setErrors(prev => ({ ...prev, [name]: "Amount cannot be negative" }));
+        return;
+      }
+      
+      // If validation passes, clear error and set value
       setFormData(prev => ({ ...prev, [name]: numValue }));
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors[name];
+        return newErrors;
+      });
     } else {
       setFormData(prev => ({ ...prev, [name]: value }));
     }
@@ -206,9 +258,60 @@ export const GoalDetailsSidePanel = ({
     setFormData(prev => ({ ...prev, [fieldName]: date }));
   };
 
+  const validateForm = (): boolean => {
+    const newErrors: ValidationErrors = {};
+    
+    // Check required fields
+    if (!formData.type) {
+      newErrors.type = "Goal type is required";
+    }
+    
+    if (!formData.owner) {
+      newErrors.owner = "Owner is required";
+    }
+    
+    // Validate numeric fields
+    if (formData.targetAmount !== undefined && (isNaN(formData.targetAmount) || formData.targetAmount < 0)) {
+      newErrors.targetAmount = "Please enter a valid positive amount";
+    }
+    
+    if (formData.purchasePrice !== undefined && (isNaN(formData.purchasePrice) || formData.purchasePrice < 0)) {
+      newErrors.purchasePrice = "Please enter a valid positive amount";
+    }
+    
+    if (formData.tuitionEstimate !== undefined && (isNaN(formData.tuitionEstimate) || formData.tuitionEstimate < 0)) {
+      newErrors.tuitionEstimate = "Please enter a valid positive amount";
+    }
+    
+    if (formData.startYear !== undefined && (formData.startYear < 2000 || formData.startYear > 2100)) {
+      newErrors.startYear = "Year must be between 2000 and 2100";
+    }
+    
+    if (formData.endYear !== undefined && (formData.endYear < 2000 || formData.endYear > 2100)) {
+      newErrors.endYear = "Year must be between 2000 and 2100";
+    }
+    
+    if (formData.startYear && formData.endYear && formData.startYear > formData.endYear) {
+      newErrors.endYear = "End year must be after start year";
+    }
+    
+    if (formData.targetRetirementAge !== undefined && (isNaN(formData.targetRetirementAge) || formData.targetRetirementAge < 0 || formData.targetRetirementAge > 120)) {
+      newErrors.targetRetirementAge = "Age must be between 0 and 120";
+    }
+    
+    if (formData.planningHorizonAge !== undefined && (isNaN(formData.planningHorizonAge) || formData.planningHorizonAge < 0 || formData.planningHorizonAge > 120)) {
+      newErrors.planningHorizonAge = "Age must be between 0 and 120";
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSave = () => {
-    onSave(formData);
-    onClose();
+    if (validateForm()) {
+      onSave(formData);
+      // Panel will be closed by the parent component
+    }
   };
 
   // Determine which fields to display based on goal type
@@ -225,8 +328,11 @@ export const GoalDetailsSidePanel = ({
                 type="number"
                 value={formData.purchasePrice || ""}
                 onChange={handleInputChange}
-                className="bg-[#1A1A3A] border-gray-700"
+                className={`bg-[#1A1A3A] border-gray-700 ${errors.purchasePrice ? 'border-[#FF4D4D] focus-visible:ring-[#FF4D4D]' : ''}`}
               />
+              {errors.purchasePrice && (
+                <p className="text-xs text-[#FF4D4D] mt-1">{errors.purchasePrice}</p>
+              )}
             </div>
             <div className="space-y-2">
               <Label htmlFor="financingMethod">Financing Method</Label>
@@ -272,8 +378,11 @@ export const GoalDetailsSidePanel = ({
               type="number"
               value={formData.amountDesired || ""}
               onChange={handleInputChange}
-              className="bg-[#1A1A3A] border-gray-700"
+              className={`bg-[#1A1A3A] border-gray-700 ${errors.amountDesired ? 'border-[#FF4D4D] focus-visible:ring-[#FF4D4D]' : ''}`}
             />
+            {errors.amountDesired && (
+              <p className="text-xs text-[#FF4D4D] mt-1">{errors.amountDesired}</p>
+            )}
           </div>
         );
       case "Education":
@@ -297,8 +406,11 @@ export const GoalDetailsSidePanel = ({
                 type="number"
                 value={formData.tuitionEstimate || ""}
                 onChange={handleInputChange}
-                className="bg-[#1A1A3A] border-gray-700"
+                className={`bg-[#1A1A3A] border-gray-700 ${errors.tuitionEstimate ? 'border-[#FF4D4D] focus-visible:ring-[#FF4D4D]' : ''}`}
               />
+              {errors.tuitionEstimate && (
+                <p className="text-xs text-[#FF4D4D] mt-1">{errors.tuitionEstimate}</p>
+              )}
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
@@ -309,8 +421,11 @@ export const GoalDetailsSidePanel = ({
                   type="number"
                   value={formData.startYear || ""}
                   onChange={handleInputChange}
-                  className="bg-[#1A1A3A] border-gray-700"
+                  className={`bg-[#1A1A3A] border-gray-700 ${errors.startYear ? 'border-[#FF4D4D] focus-visible:ring-[#FF4D4D]' : ''}`}
                 />
+                {errors.startYear && (
+                  <p className="text-xs text-[#FF4D4D] mt-1">{errors.startYear}</p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label htmlFor="endYear">End Year</Label>
@@ -320,8 +435,11 @@ export const GoalDetailsSidePanel = ({
                   type="number"
                   value={formData.endYear || ""}
                   onChange={handleInputChange}
-                  className="bg-[#1A1A3A] border-gray-700"
+                  className={`bg-[#1A1A3A] border-gray-700 ${errors.endYear ? 'border-[#FF4D4D] focus-visible:ring-[#FF4D4D]' : ''}`}
                 />
+                {errors.endYear && (
+                  <p className="text-xs text-[#FF4D4D] mt-1">{errors.endYear}</p>
+                )}
               </div>
             </div>
           </>
@@ -347,8 +465,11 @@ export const GoalDetailsSidePanel = ({
                 type="number"
                 value={formData.estimatedCost || ""}
                 onChange={handleInputChange}
-                className="bg-[#1A1A3A] border-gray-700"
+                className={`bg-[#1A1A3A] border-gray-700 ${errors.estimatedCost ? 'border-[#FF4D4D] focus-visible:ring-[#FF4D4D]' : ''}`}
               />
+              {errors.estimatedCost && (
+                <p className="text-xs text-[#FF4D4D] mt-1">{errors.estimatedCost}</p>
+              )}
             </div>
           </>
         );
@@ -363,8 +484,11 @@ export const GoalDetailsSidePanel = ({
                 type="number"
                 value={formData.purchasePrice || ""}
                 onChange={handleInputChange}
-                className="bg-[#1A1A3A] border-gray-700"
+                className={`bg-[#1A1A3A] border-gray-700 ${errors.purchasePrice ? 'border-[#FF4D4D] focus-visible:ring-[#FF4D4D]' : ''}`}
               />
+              {errors.purchasePrice && (
+                <p className="text-xs text-[#FF4D4D] mt-1">{errors.purchasePrice}</p>
+              )}
             </div>
             <div className="space-y-2">
               <Label htmlFor="financingMethod">Financing Method</Label>
@@ -395,8 +519,11 @@ export const GoalDetailsSidePanel = ({
                 type="number"
                 value={formData.purchasePrice || ""}
                 onChange={handleInputChange}
-                className="bg-[#1A1A3A] border-gray-700"
+                className={`bg-[#1A1A3A] border-gray-700 ${errors.purchasePrice ? 'border-[#FF4D4D] focus-visible:ring-[#FF4D4D]' : ''}`}
               />
+              {errors.purchasePrice && (
+                <p className="text-xs text-[#FF4D4D] mt-1">{errors.purchasePrice}</p>
+              )}
             </div>
             <div className="space-y-2">
               <Label htmlFor="financingMethod">Financing Method</Label>
@@ -443,8 +570,11 @@ export const GoalDetailsSidePanel = ({
               type="number"
               value={formData.targetAmount || ""}
               onChange={handleInputChange}
-              className="bg-[#1A1A3A] border-gray-700"
+              className={`bg-[#1A1A3A] border-gray-700 ${errors.targetAmount ? 'border-[#FF4D4D] focus-visible:ring-[#FF4D4D]' : ''}`}
             />
+            {errors.targetAmount && (
+              <p className="text-xs text-[#FF4D4D] mt-1">{errors.targetAmount}</p>
+            )}
           </div>
         );
     }
@@ -469,7 +599,7 @@ export const GoalDetailsSidePanel = ({
                   value={formData.owner}
                   onValueChange={(value) => handleSelectChange("owner", value)}
                 >
-                  <SelectTrigger id="owner" className="bg-[#1A1A3A] border-gray-700">
+                  <SelectTrigger id="owner" className={`bg-[#1A1A3A] border-gray-700 ${errors.owner ? 'border-[#FF4D4D]' : ''}`}>
                     <SelectValue placeholder="Select owner" />
                   </SelectTrigger>
                   <SelectContent className="bg-[#1A1A3A] border-gray-700">
@@ -478,6 +608,9 @@ export const GoalDetailsSidePanel = ({
                     ))}
                   </SelectContent>
                 </Select>
+                {errors.owner && (
+                  <p className="text-xs text-[#FF4D4D] mt-1">{errors.owner}</p>
+                )}
               </div>
               
               <div className="space-y-2">
@@ -486,7 +619,7 @@ export const GoalDetailsSidePanel = ({
                   value={formData.type}
                   onValueChange={(value) => handleSelectChange("type", value)}
                 >
-                  <SelectTrigger id="type" className="bg-[#1A1A3A] border-gray-700">
+                  <SelectTrigger id="type" className={`bg-[#1A1A3A] border-gray-700 ${errors.type ? 'border-[#FF4D4D]' : ''}`}>
                     <SelectValue placeholder="Select goal type" />
                   </SelectTrigger>
                   <SelectContent className="bg-[#1A1A3A] border-gray-700 max-h-[300px]">
@@ -495,6 +628,9 @@ export const GoalDetailsSidePanel = ({
                     ))}
                   </SelectContent>
                 </Select>
+                {errors.type && (
+                  <p className="text-xs text-[#FF4D4D] mt-1">{errors.type}</p>
+                )}
               </div>
               
               <div className="space-y-2">
@@ -534,8 +670,11 @@ export const GoalDetailsSidePanel = ({
                       type="number"
                       value={formData.targetRetirementAge || ""}
                       onChange={handleInputChange}
-                      className="bg-[#1A1A3A] border-gray-700"
+                      className={`bg-[#1A1A3A] border-gray-700 ${errors.targetRetirementAge ? 'border-[#FF4D4D] focus-visible:ring-[#FF4D4D]' : ''}`}
                     />
+                    {errors.targetRetirementAge && (
+                      <p className="text-xs text-[#FF4D4D] mt-1">{errors.targetRetirementAge}</p>
+                    )}
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="planningHorizonAge">Planning Horizon (Years)</Label>
@@ -545,8 +684,11 @@ export const GoalDetailsSidePanel = ({
                       type="number"
                       value={formData.planningHorizonAge || ""}
                       onChange={handleInputChange}
-                      className="bg-[#1A1A3A] border-gray-700"
+                      className={`bg-[#1A1A3A] border-gray-700 ${errors.planningHorizonAge ? 'border-[#FF4D4D] focus-visible:ring-[#FF4D4D]' : ''}`}
                     />
+                    {errors.planningHorizonAge && (
+                      <p className="text-xs text-[#FF4D4D] mt-1">{errors.planningHorizonAge}</p>
+                    )}
                   </div>
                 </>
               )}

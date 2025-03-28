@@ -50,10 +50,21 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
   const [isDetailsPanelOpen, setIsDetailsPanelOpen] = useState(false);
   const [detailsPanelTitle, setDetailsPanelTitle] = useState<string>("");
   const [localGoals, setLocalGoals] = useState<Goal[]>(goals);
+  const [newGoalId, setNewGoalId] = useState<string | null>(null);
   
   if (JSON.stringify(goals) !== JSON.stringify(localGoals)) {
     setLocalGoals(goals);
   }
+  
+  useEffect(() => {
+    if (newGoalId) {
+      const timer = setTimeout(() => {
+        setNewGoalId(null);
+      }, 1500);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [newGoalId]);
   
   const toggleGoalExpansion = (goalId: string) => {
     setExpandedGoals(prev => 
@@ -141,10 +152,13 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
         prev.map(g => g.id === updatedGoal.id ? updatedGoal : g)
       );
       
+      setNewGoalId(updatedGoal.id);
+      
       onGoalUpdate?.(updatedGoal);
     } else {
+      const newGoalId = `goal-${Date.now()}`;
       const newGoal: Goal = {
-        id: `goal-${Date.now()}`,
+        id: newGoalId,
         title: goalData.name,
         name: goalData.name,
         owner: goalData.owner,
@@ -170,8 +184,12 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
       
       setLocalGoals(prev => [...prev, newGoal]);
       
+      setNewGoalId(newGoalId);
+      
       onGoalUpdate?.(newGoal);
     }
+    
+    setIsDetailsPanelOpen(false);
   };
 
   const handleCancelGoal = () => {
@@ -308,6 +326,7 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
               isExpanded={expandedGoals.includes(goal.id || `retirement-goal-${index}`)} 
               onToggle={() => toggleGoalExpansion(goal.id || `retirement-goal-${index}`)}
               onClick={() => handleGoalClick(goal)}
+              isNew={goal.id === newGoalId}
             />
           ))
         ) : (
@@ -328,6 +347,7 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
               isExpanded={expandedGoals.includes(goal.id || `other-goal-${index}`)} 
               onToggle={() => toggleGoalExpansion(goal.id || `other-goal-${index}`)}
               onClick={() => handleGoalClick(goal)}
+              isNew={goal.id === newGoalId}
             />
           ))
         ) : (
@@ -364,18 +384,21 @@ function RetirementAgeSection({ title, onClick }: { title: string; onClick: () =
   );
 }
 
-function GoalCard({ goal, isExpanded, onToggle, onClick }: { 
+function GoalCard({ goal, isExpanded, onToggle, onClick, isNew = false }: { 
   goal: Goal;
   isExpanded: boolean;
   onToggle: () => void;
   onClick: () => void;
+  isNew?: boolean;
 }) {
   const goalTitle = goal.title || goal.name || "Unnamed Goal";
   const goalType = goal.type || goal.priority || "Goal";
 
   return (
     <Card 
-      className="bg-[#0F1C2E] border border-border/20 p-4 cursor-pointer hover:bg-[#0F1C2E]/80 hover:border-primary/30 transition-all duration-200 mb-2 animate-in fade-in-80 duration-200"
+      className={`bg-[#0F1C2E] border border-border/20 p-4 cursor-pointer hover:bg-[#0F1C2E]/80 hover:border-primary/30 transition-all duration-200 mb-2 ${
+        isNew ? 'animate-in slide-in-from-bottom-5 fade-in-100 duration-500' : 'animate-in fade-in-80 duration-200'
+      }`}
       onClick={onClick}
     >
       <div className="flex items-center justify-between">
