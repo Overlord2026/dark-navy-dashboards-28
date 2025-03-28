@@ -11,6 +11,7 @@ import { Calendar, Trash2, Plus, Edit, Check, X, ArrowRight, ArrowLeft } from "l
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetFooter } from "@/components/ui/sheet";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import { ProjectionPreviewChart } from "./ProjectionPreviewChart";
+import { StepsOverview } from "./StepsOverview";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
@@ -100,7 +101,7 @@ interface ExpenseItem {
 
 export function CreatePlanDialog({ isOpen, onClose, onCreatePlan, onSaveDraft, draftData }: CreatePlanDialogProps) {
   const [currentStep, setCurrentStep] = useState(1);
-  const totalSteps = 5;
+  const totalSteps = 6; // Increased from 5 to 6
   const [goals, setGoals] = useState<Goal[]>([]);
   const [editingGoal, setEditingGoal] = useState<Goal | null>(null);
   const [isGoalFormOpen, setIsGoalFormOpen] = useState(false);
@@ -204,28 +205,28 @@ export function CreatePlanDialog({ isOpen, onClose, onCreatePlan, onSaveDraft, d
   });
 
   useEffect(() => {
-    if (currentStep === 1) {
+    if (currentStep === 2) {
       setPlanData(prev => ({
         ...prev,
         basics: basicsForm.getValues()
       }));
-    } else if (currentStep === 2) {
+    } else if (currentStep === 3) {
       setPlanData(prev => ({
         ...prev,
         goals: [...goals]
       }));
-    } else if (currentStep === 3) {
+    } else if (currentStep === 4) {
       setPlanData(prev => ({
         ...prev,
         incomeItems: [...incomeItems],
         expenseItems: [...expenseItems]
       }));
-    } else if (currentStep === 4) {
+    } else if (currentStep === 5) {
       setPlanData(prev => ({
         ...prev,
         projections: projectionsForm.getValues()
       }));
-    } else if (currentStep === 5) {
+    } else if (currentStep === 6) {
       setPlanData(prev => ({
         ...prev,
         successRate: successRate
@@ -238,7 +239,7 @@ export function CreatePlanDialog({ isOpen, onClose, onCreatePlan, onSaveDraft, d
       ...prev,
       basics: values
     }));
-    setCurrentStep(2);
+    setCurrentStep(3); // Skip overview step if coming from basics
   };
 
   const handleGoalSubmit = (values: GoalFormValues) => {
@@ -524,6 +525,37 @@ export function CreatePlanDialog({ isOpen, onClose, onCreatePlan, onSaveDraft, d
     setExpenseItems(expenseItems.filter(item => item.id !== expenseId));
   };
 
+  const getStepTitle = () => {
+    switch (currentStep) {
+      case 1: return "Overview of Steps";
+      case 2: return "Basics";
+      case 3: return "Goals";
+      case 4: return "Income & Expenses";
+      case 5: return "Projections";
+      case 6: return "Summary";
+      default: return "Plan Wizard";
+    }
+  };
+
+  const getStepDescription = () => {
+    switch (currentStep) {
+      case 1:
+        return "Here's an overview of the plan creation process. Follow these steps to create your financial plan.";
+      case 2:
+        return "Let's set up your plan. Start by giving it a name.";
+      case 3:
+        return "Define your financial goals for this plan.";
+      case 4:
+        return "Add your income sources and expenses to complete your plan.";
+      case 5:
+        return "Set assumptions for future projections and growth.";
+      case 6:
+        return "Review your plan details before creating it.";
+      default:
+        return "";
+    }
+  };
+
   const handleDialogClose = (open: boolean) => {
     if (!open && !isDraftSaved && currentStep > 1 && planData.basics?.planName) {
       if (onSaveDraft) {
@@ -534,7 +566,7 @@ export function CreatePlanDialog({ isOpen, onClose, onCreatePlan, onSaveDraft, d
           goals: goals,
           income: incomeItems.length > 0 ? { items: incomeItems } : null,
           expenses: expenseItems.length > 0 ? { items: expenseItems } : null,
-          projections: currentStep >= 4 ? planData.projections : null
+          projections: currentStep >= 5 ? planData.projections : null
         });
         setIsDraftSaved(true);
         toast.info("Your progress has been saved as a draft");
@@ -552,29 +584,40 @@ export function CreatePlanDialog({ isOpen, onClose, onCreatePlan, onSaveDraft, d
         <DialogContent className="bg-[#0F0F2D] text-[#E2E2E2] border border-border/30 sm:max-w-[600px] min-h-[400px] transition-all duration-300">
           <DialogHeader>
             <DialogTitle className="text-xl font-semibold">
-              Plan Wizard - Step {currentStep}: {
-                currentStep === 1 ? "Basics" : 
-                currentStep === 2 ? "Goals" : 
-                currentStep === 3 ? "Income & Expenses" : 
-                currentStep === 4 ? "Projections" : 
-                "Summary"
-              }
+              Plan Wizard - Step {currentStep}: {getStepTitle()}
             </DialogTitle>
             <DialogDescription className="text-sm text-[#E2E2E2]/70">
-              {currentStep === 1 
-                ? "Let's set up your plan. Start by giving it a name." 
-                : currentStep === 2
-                ? "Define your financial goals for this plan."
-                : currentStep === 3
-                ? "Add your income sources and expenses to complete your plan."
-                : currentStep === 4
-                ? "Set assumptions for future projections and growth."
-                : "Review your plan details before creating it."}
+              {getStepDescription()}
             </DialogDescription>
           </DialogHeader>
           
           <div className={cn("transition-opacity duration-300", { "animate-in fade-in": true })}>
             {currentStep === 1 && (
+              <div className="space-y-6">
+                <StepsOverview />
+                
+                <DialogFooter className="pt-4 flex justify-between w-full">
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    onClick={resetAndClose}
+                  >
+                    Exit
+                  </Button>
+                  <div className="flex gap-2">
+                    <Button 
+                      type="button" 
+                      onClick={handleNext}
+                    >
+                      Continue
+                      <ArrowRight className="ml-1 h-4 w-4" />
+                    </Button>
+                  </div>
+                </DialogFooter>
+              </div>
+            )}
+            
+            {currentStep === 2 && (
               <Form {...basicsForm}>
                 <form onSubmit={basicsForm.handleSubmit(handleBasicsSubmit)} className="space-y-4">
                   <FormField
@@ -636,13 +679,13 @@ export function CreatePlanDialog({ isOpen, onClose, onCreatePlan, onSaveDraft, d
                     )}
                   />
                   
-                  <DialogFooter className="pt-4">
+                  <DialogFooter className="pt-4 flex justify-between w-full">
                     <Button 
                       type="button" 
                       variant="outline" 
-                      onClick={resetAndClose}
+                      onClick={handleGoBack}
                     >
-                      Cancel
+                      Back
                     </Button>
                     <Button type="submit">
                       Continue
@@ -653,7 +696,7 @@ export function CreatePlanDialog({ isOpen, onClose, onCreatePlan, onSaveDraft, d
               </Form>
             )}
             
-            {currentStep === 2 && (
+            {currentStep === 3 && (
               <div className="space-y-4">
                 <div className="flex items-center justify-between mb-2">
                   <h3 className="text-sm font-medium">Your Financial Goals</h3>
@@ -729,7 +772,7 @@ export function CreatePlanDialog({ isOpen, onClose, onCreatePlan, onSaveDraft, d
                   </div>
                 )}
                 
-                <DialogFooter className="pt-4">
+                <DialogFooter className="pt-4 flex justify-between w-full">
                   <Button 
                     type="button" 
                     variant="outline" 
@@ -749,7 +792,7 @@ export function CreatePlanDialog({ isOpen, onClose, onCreatePlan, onSaveDraft, d
               </div>
             )}
             
-            {currentStep === 3 && (
+            {currentStep === 4 && (
               <div className="space-y-6">
                 <div className="space-y-3">
                   <div className="flex items-center justify-between mb-2">
@@ -891,7 +934,7 @@ export function CreatePlanDialog({ isOpen, onClose, onCreatePlan, onSaveDraft, d
                   </Button> or refine your financial tracking with custom categories.
                 </p>
                 
-                <DialogFooter className="pt-4">
+                <DialogFooter className="pt-4 flex justify-between w-full">
                   <Button 
                     type="button" 
                     variant="outline" 
@@ -911,667 +954,9 @@ export function CreatePlanDialog({ isOpen, onClose, onCreatePlan, onSaveDraft, d
               </div>
             )}
             
-            {currentStep === 4 && (
+            {currentStep === 5 && (
               <Form {...projectionsForm}>
                 <form onSubmit={projectionsForm.handleSubmit(handleProjectionsSubmit)} className="space-y-4">
                   <div className="mb-4">
                     <h3 className="text-sm font-medium mb-2">Investment Assumptions</h3>
                     <p className="text-xs text-muted-foreground">
-                      These assumptions will affect your projected net worth and chance of success.
-                    </p>
-                  </div>
-                  
-                  <div className="grid grid-cols-2 gap-4">
-                    <FormField
-                      control={projectionsForm.control}
-                      name="expectedReturnRate"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Expected Return (%)</FormLabel>
-                          <FormControl>
-                            <Input 
-                              type="number" 
-                              step="0.1"
-                              placeholder="7"
-                              className="bg-background/50 border-border/30"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormDescription className="text-xs">
-                            Average annual return on investments
-                          </FormDescription>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    
-                    <FormField
-                      control={projectionsForm.control}
-                      name="inflationRate"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Inflation Rate (%)</FormLabel>
-                          <FormControl>
-                            <Input 
-                              type="number"
-                              step="0.1"
-                              placeholder="2.5"
-                              className="bg-background/50 border-border/30"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormDescription className="text-xs">
-                            Expected annual inflation
-                          </FormDescription>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                  
-                  <FormField
-                    control={projectionsForm.control}
-                    name="riskTolerance"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Risk Tolerance</FormLabel>
-                        <FormControl>
-                          <select
-                            className="bg-background/50 border border-border/30 rounded-md px-3 py-2 w-full text-sm"
-                            {...field}
-                          >
-                            <option value="Conservative">Conservative</option>
-                            <option value="Moderate">Moderate</option>
-                            <option value="Aggressive">Aggressive</option>
-                          </select>
-                        </FormControl>
-                        <FormDescription className="text-xs">
-                          Your comfort level with investment risk
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  
-                  <FormField
-                    control={projectionsForm.control}
-                    name="lifeExpectancy"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Life Expectancy (Optional)</FormLabel>
-                        <FormControl>
-                          <Input 
-                            type="number"
-                            placeholder="85"
-                            className="bg-background/50 border-border/30"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormDescription className="text-xs">
-                          Age to plan for in retirement calculations
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  
-                  <div className="mt-6 mb-4">
-                    <h3 className="text-sm font-medium mb-2">Projection Preview</h3>
-                    <div className="bg-background/30 rounded-md p-4 h-[180px] border border-border/20">
-                      <ProjectionPreviewChart 
-                        expectedReturn={parseFloat(projectionsForm.watch("expectedReturnRate") || "7")}
-                        inflation={parseFloat(projectionsForm.watch("inflationRate") || "2.5")}
-                        riskTolerance={projectionsForm.watch("riskTolerance") || "Moderate"}
-                        monthlyNetSavings={calculateNetMonthly().net}
-                      />
-                    </div>
-                    <p className="text-xs text-muted-foreground mt-2">
-                      This is a simplified projection based on your inputs. Actual results may vary.
-                    </p>
-                  </div>
-                  
-                  <DialogFooter className="pt-4">
-                    <Button 
-                      type="button" 
-                      variant="outline" 
-                      onClick={handleGoBack}
-                    >
-                      <ArrowLeft className="mr-1 h-4 w-4" />
-                      Back
-                    </Button>
-                    <Button type="submit">
-                      Continue
-                      <ArrowRight className="ml-1 h-4 w-4" />
-                    </Button>
-                  </DialogFooter>
-                </form>
-              </Form>
-            )}
-            
-            {currentStep === 5 && (
-              <div className="space-y-4">
-                <div className="space-y-3">
-                  <div className="border-b border-border/30 pb-2">
-                    <h3 className="text-sm font-medium">Plan Details</h3>
-                    <p className="text-sm">
-                      <span className="text-muted-foreground">Name:</span> {basicsForm.getValues().planName}
-                    </p>
-                    <p className="text-sm">
-                      <span className="text-muted-foreground">Retirement Age:</span> {basicsForm.getValues().targetRetirementAge || "Not specified"}
-                    </p>
-                    <p className="text-sm">
-                      <span className="text-muted-foreground">Spouse's Retirement Age:</span> {basicsForm.getValues().spouseRetirementAge || "Not specified"}
-                    </p>
-                  </div>
-                  
-                  <div className="border-b border-border/30 pb-2">
-                    <h3 className="text-sm font-medium mb-2">Goals ({goals.length})</h3>
-                    {goals.length === 0 ? (
-                      <p className="text-sm text-muted-foreground">No goals defined</p>
-                    ) : (
-                      <ul className="space-y-2">
-                        {goals.map((goal) => (
-                          <li key={goal.id} className="text-sm flex items-center gap-2">
-                            <Check className="h-4 w-4 text-green-400 flex-shrink-0" />
-                            <span>{goal.title}</span>
-                            {goal.targetAmount && (
-                              <span className="text-muted-foreground ml-auto">${parseInt(goal.targetAmount).toLocaleString()}</span>
-                            )}
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </div>
-                  
-                  <div className="border-b border-border/30 pb-2">
-                    <h3 className="text-sm font-medium mb-2">Income & Expenses</h3>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <p className="text-xs text-muted-foreground mb-1">Income Sources: {incomeItems.length}</p>
-                        {incomeItems.length > 0 ? (
-                          <ul className="text-xs space-y-1">
-                            {incomeItems.map(income => (
-                              <li key={income.id}>
-                                {income.source}: {formatCurrency(income.amount)} ({income.frequency})
-                              </li>
-                            ))}
-                          </ul>
-                        ) : (
-                          <p className="text-xs text-muted-foreground">None defined</p>
-                        )}
-                      </div>
-                      <div>
-                        <p className="text-xs text-muted-foreground mb-1">Expenses: {expenseItems.length}</p>
-                        {expenseItems.length > 0 ? (
-                          <ul className="text-xs space-y-1">
-                            {expenseItems.map(expense => (
-                              <li key={expense.id}>
-                                {expense.category}: {formatCurrency(expense.amount)} ({expense.frequency})
-                              </li>
-                            ))}
-                          </ul>
-                        ) : (
-                          <p className="text-xs text-muted-foreground">None defined</p>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="border-b border-border/30 pb-2">
-                    <h3 className="text-sm font-medium mb-2">Projections</h3>
-                    <div className="flex justify-between">
-                      <div>
-                        <p className="text-xs">
-                          <span className="text-muted-foreground">Expected Return:</span> {projectionsForm.getValues().expectedReturnRate}%
-                        </p>
-                        <p className="text-xs">
-                          <span className="text-muted-foreground">Inflation:</span> {projectionsForm.getValues().inflationRate}%
-                        </p>
-                        <p className="text-xs">
-                          <span className="text-muted-foreground">Risk Tolerance:</span> {projectionsForm.getValues().riskTolerance}
-                        </p>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-sm font-medium">Chance of Success</p>
-                        <p className="text-lg font-semibold text-green-400">{successRate}%</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                
-                <DialogFooter className="pt-4">
-                  <Button 
-                    type="button" 
-                    variant="outline" 
-                    onClick={handleGoBack}
-                  >
-                    <ArrowLeft className="mr-1 h-4 w-4" />
-                    Back
-                  </Button>
-                  <Button 
-                    type="button" 
-                    onClick={handleFinalSubmit}
-                  >
-                    Create Plan
-                  </Button>
-                </DialogFooter>
-              </div>
-            )}
-          </div>
-        </DialogContent>
-      </Dialog>
-      
-      <Sheet open={isGoalFormOpen} onOpenChange={setIsGoalFormOpen}>
-        <SheetContent className="bg-[#0F1C2E] border-l border-border/30 w-full sm:max-w-md">
-          <SheetHeader>
-            <SheetTitle className="text-xl font-semibold">
-              {editingGoal ? "Edit Goal" : "Add Financial Goal"}
-            </SheetTitle>
-          </SheetHeader>
-          
-          <Form {...goalForm}>
-            <form onSubmit={goalForm.handleSubmit(handleGoalSubmit)} className="space-y-4 mt-6">
-              <FormField
-                control={goalForm.control}
-                name="title"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Goal Title</FormLabel>
-                    <FormControl>
-                      <Input 
-                        placeholder="e.g., Buy a House" 
-                        className="bg-background/50 border-border/30"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <FormField
-                control={goalForm.control}
-                name="targetDate"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Target Date</FormLabel>
-                    <FormControl>
-                      <Input 
-                        type="date"
-                        className="bg-background/50 border-border/30"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormDescription>
-                      When do you want to achieve this goal?
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <FormField
-                control={goalForm.control}
-                name="targetAmount"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Target Amount</FormLabel>
-                    <FormControl>
-                      <Input 
-                        type="number"
-                        placeholder="e.g., 20000" 
-                        className="bg-background/50 border-border/30"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormDescription>
-                      How much money do you need to achieve this goal?
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <FormField
-                control={goalForm.control}
-                name="priority"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Priority</FormLabel>
-                    <FormControl>
-                      <select
-                        className="bg-background/50 border border-border/30 rounded-md px-3 py-2 w-full text-sm"
-                        {...field}
-                      >
-                        <option value="High">High</option>
-                        <option value="Medium">Medium</option>
-                        <option value="Low">Low</option>
-                      </select>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <FormField
-                control={goalForm.control}
-                name="description"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Description (Optional)</FormLabel>
-                    <FormControl>
-                      <Textarea 
-                        placeholder="Add any additional details about this goal" 
-                        className="bg-background/50 border-border/30 min-h-[100px]"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <SheetFooter className="mt-6 flex gap-2">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={closeGoalForm}
-                >
-                  Cancel
-                </Button>
-                <Button type="submit">
-                  {editingGoal ? "Update Goal" : "Add Goal"}
-                </Button>
-              </SheetFooter>
-            </form>
-          </Form>
-        </SheetContent>
-      </Sheet>
-      
-      <Sheet open={isIncomeFormOpen} onOpenChange={setIsIncomeFormOpen}>
-        <SheetContent className="bg-[#0F1C2E] border-l border-border/30 w-full sm:max-w-md">
-          <SheetHeader>
-            <SheetTitle className="text-xl font-semibold">
-              {editingIncome ? "Edit Income Source" : "Add Income Source"}
-            </SheetTitle>
-          </SheetHeader>
-          
-          <Form {...incomeForm}>
-            <form onSubmit={incomeForm.handleSubmit(handleIncomeSubmit)} className="space-y-4 mt-6">
-              <FormField
-                control={incomeForm.control}
-                name="source"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Income Source</FormLabel>
-                    <FormControl>
-                      <Input 
-                        placeholder="e.g., Salary, Rental Income" 
-                        className="bg-background/50 border-border/30"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <FormField
-                control={incomeForm.control}
-                name="amount"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Amount</FormLabel>
-                    <FormControl>
-                      <Input 
-                        type="number"
-                        placeholder="e.g., 5000" 
-                        className="bg-background/50 border-border/30"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <FormField
-                control={incomeForm.control}
-                name="frequency"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Frequency</FormLabel>
-                    <FormControl>
-                      <select
-                        className="bg-background/50 border border-border/30 rounded-md px-3 py-2 w-full text-sm"
-                        {...field}
-                      >
-                        <option value="Monthly">Monthly</option>
-                        <option value="Weekly">Weekly</option>
-                        <option value="Bi-weekly">Bi-weekly</option>
-                        <option value="Quarterly">Quarterly</option>
-                        <option value="Annually">Annually</option>
-                        <option value="One-time">One-time</option>
-                      </select>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <div className="grid grid-cols-2 gap-4">
-                <FormField
-                  control={incomeForm.control}
-                  name="startDate"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Start Date (Optional)</FormLabel>
-                      <FormControl>
-                        <Input 
-                          type="date"
-                          className="bg-background/50 border-border/30"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={incomeForm.control}
-                  name="endDate"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>End Date (Optional)</FormLabel>
-                      <FormControl>
-                        <Input 
-                          type="date"
-                          className="bg-background/50 border-border/30"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-              
-              <FormField
-                control={incomeForm.control}
-                name="notes"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Notes (Optional)</FormLabel>
-                    <FormControl>
-                      <Textarea 
-                        placeholder="Add any additional details about this income source" 
-                        className="bg-background/50 border-border/30"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <SheetFooter className="mt-6 flex gap-2">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={closeIncomeForm}
-                >
-                  Cancel
-                </Button>
-                <Button type="submit">
-                  {editingIncome ? "Update Income" : "Add Income"}
-                </Button>
-              </SheetFooter>
-            </form>
-          </Form>
-        </SheetContent>
-      </Sheet>
-      
-      <Sheet open={isExpenseFormOpen} onOpenChange={setIsExpenseFormOpen}>
-        <SheetContent className="bg-[#0F1C2E] border-l border-border/30 w-full sm:max-w-md">
-          <SheetHeader>
-            <SheetTitle className="text-xl font-semibold">
-              {editingExpense ? "Edit Expense" : "Add Expense"}
-            </SheetTitle>
-          </SheetHeader>
-          
-          <Form {...expenseForm}>
-            <form onSubmit={expenseForm.handleSubmit(handleExpenseSubmit)} className="space-y-4 mt-6">
-              <FormField
-                control={expenseForm.control}
-                name="category"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Expense Category</FormLabel>
-                    <FormControl>
-                      <select 
-                        className="bg-background/50 border border-border/30 rounded-md px-3 py-2 w-full text-sm"
-                        {...field}
-                      >
-                        <option value="">Select a category</option>
-                        <option value="Housing">Housing</option>
-                        <option value="Transportation">Transportation</option>
-                        <option value="Food">Food</option>
-                        <option value="Utilities">Utilities</option>
-                        <option value="Insurance">Insurance</option>
-                        <option value="Healthcare">Healthcare</option>
-                        <option value="Debt Payments">Debt Payments</option>
-                        <option value="Entertainment">Entertainment</option>
-                        <option value="Education">Education</option>
-                        <option value="Personal Care">Personal Care</option>
-                        <option value="Other">Other</option>
-                      </select>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <FormField
-                control={expenseForm.control}
-                name="amount"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Amount</FormLabel>
-                    <FormControl>
-                      <Input 
-                        type="number"
-                        placeholder="e.g., 1500" 
-                        className="bg-background/50 border-border/30"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <FormField
-                control={expenseForm.control}
-                name="frequency"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Frequency</FormLabel>
-                    <FormControl>
-                      <select
-                        className="bg-background/50 border border-border/30 rounded-md px-3 py-2 w-full text-sm"
-                        {...field}
-                      >
-                        <option value="Monthly">Monthly</option>
-                        <option value="Weekly">Weekly</option>
-                        <option value="Bi-weekly">Bi-weekly</option>
-                        <option value="Quarterly">Quarterly</option>
-                        <option value="Annually">Annually</option>
-                        <option value="One-time">One-time</option>
-                      </select>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <FormField
-                control={expenseForm.control}
-                name="isEssential"
-                render={({ field }) => (
-                  <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border border-border/30 p-4">
-                    <FormControl>
-                      <input
-                        type="checkbox"
-                        checked={field.value}
-                        onChange={field.onChange}
-                        className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
-                      />
-                    </FormControl>
-                    <div className="space-y-1 leading-none">
-                      <FormLabel>Essential Expense</FormLabel>
-                      <FormDescription>
-                        Mark this if the expense is necessary and cannot be reduced
-                      </FormDescription>
-                    </div>
-                  </FormItem>
-                )}
-              />
-              
-              <FormField
-                control={expenseForm.control}
-                name="notes"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Notes (Optional)</FormLabel>
-                    <FormControl>
-                      <Textarea 
-                        placeholder="Add any additional details about this expense" 
-                        className="bg-background/50 border-border/30"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <SheetFooter className="mt-6 flex gap-2">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={closeExpenseForm}
-                >
-                  Cancel
-                </Button>
-                <Button type="submit">
-                  {editingExpense ? "Update Expense" : "Add Expense"}
-                </Button>
-              </SheetFooter>
-            </form>
-          </Form>
-        </SheetContent>
-      </Sheet>
-    </>
-  );
-}

@@ -39,16 +39,6 @@ declare module "@/components/financial-plans/ManagePlansDialog" {
   }
 }
 
-declare module "@/components/financial-plans/CreatePlanDialog" {
-  interface CreatePlanDialogProps {
-    isOpen: boolean;
-    onClose: () => void;
-    onCreatePlan: (planName: string, planDetails?: any) => void;
-    onSaveDraft?: (draftData: any) => void;
-    draftData?: any;
-  }
-}
-
 const FinancialPlans = () => {
   const { userProfile } = useUser();
   const [goals, setGoals] = useState([]);
@@ -127,13 +117,13 @@ const FinancialPlans = () => {
     }
   }, [selectedPlan, plans]);
 
-  const handleCreatePlan = (planName: string, planDetails: any = {}) => {
-    const isDraft = planDetails?.isDraft || false;
-    const projections = planDetails?.projections || {};
-    const planGoals = planDetails?.goals || [];
+  const handleCreatePlan = (planName: string, planData: any) => {
+    const isDraft = planData?.isDraft || false;
+    const projections = planData?.projections || {};
+    const planGoals = planData?.goals || [];
     
-    const calculatedSuccessRate = planDetails?.successRate !== undefined 
-      ? planDetails.successRate 
+    const calculatedSuccessRate = planData?.successRate !== undefined 
+      ? planData.successRate 
       : (isDraft ? 0 : Math.floor(Math.random() * 60) + 40);
     
     const newPlan = {
