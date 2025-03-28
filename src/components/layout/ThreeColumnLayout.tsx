@@ -75,7 +75,7 @@ const mainMenuItems: MainMenuItem[] = [
   { id: "cash-management", label: "Cash Management", icon: WalletIcon, href: "/cash-management" },
   { id: "transfers", label: "Transfers", icon: ArrowRightLeftIcon, href: "/transfers" },
   { id: "tax-budgets", label: "Tax Budgets", icon: ReceiptIcon, href: "/tax-budgets" },
-  { id: "vault", label: "Family Legacy Vault", icon: BookOpenIcon, href: "/vault" },
+  { id: "vault", label: "Legacy Vault", icon: BookOpenIcon, href: "/vault" },
 ];
 
 const accountsSubMenuItems: MenuItem[] = [
@@ -305,16 +305,16 @@ export function ThreeColumnLayout({
 
       <div className="flex-1 flex flex-col overflow-hidden mt-[120px]">
         {isHomePage ? (
-          <div className="flex flex-col items-center justify-center w-full h-full p-8">
-            <div className="flex justify-center items-center space-x-10 mb-8 w-full max-w-4xl">
-              <Link to="/education" className="flex-1 flex items-center justify-center gap-3 px-8 py-6 rounded-md bg-gray-800 hover:bg-gray-700 text-gray-100 transition-colors border border-primary">
-                <GraduationCapIcon className="h-8 w-8" />
-                <span className="font-medium text-xl">Education Center</span>
+          <div className="flex flex-col items-center w-full p-8">
+            <div className="flex justify-center items-center space-x-10 mb-8 w-full max-w-5xl">
+              <Link to="/education" className="flex-1 flex items-center justify-center gap-3 px-5 py-4 rounded-md bg-gray-800 hover:bg-gray-700 text-gray-100 transition-colors border border-primary">
+                <GraduationCapIcon className="h-6 w-6" />
+                <span className="font-medium text-lg">Education Center</span>
               </Link>
               
-              <Link to="/vault" className="flex-1 flex items-center justify-center gap-3 px-8 py-6 rounded-md bg-gray-800 hover:bg-gray-700 text-gray-100 transition-colors border border-primary">
-                <BookOpenIcon className="h-8 w-8" />
-                <span className="font-medium text-xl">Family Legacy Vault</span>
+              <Link to="/vault" className="flex-1 flex items-center justify-center gap-3 px-5 py-4 rounded-md bg-gray-800 hover:bg-gray-700 text-gray-100 transition-colors border border-primary">
+                <BookOpenIcon className="h-6 w-6" />
+                <span className="font-medium text-lg">Family Legacy Vault</span>
               </Link>
             </div>
           </div>
