@@ -22,33 +22,33 @@ export function StepsOverview() {
   const steps = [
     {
       number: 1,
-      title: "Basics",
-      description: "Start with plan name and basic details about your retirement goals."
+      title: "Goals",
+      description: "Add goals like retirement, vacations, and college savings for your kids."
     },
     {
       number: 2,
-      title: "Goals",
-      description: "Add financial goals like retirement, vacations, and college savings for your kids."
+      title: "Assets",
+      description: "Choose which accounts to add to your plan."
     },
     {
       number: 3,
       title: "Income",
-      description: "Enter your income sources and expected changes over time."
+      description: "Capture all the income you earn and expect to earn."
     },
     {
       number: 4,
-      title: "Expenses",
-      description: "Log your regular expenses and anticipated future costs."
+      title: "Savings",
+      description: "Track how much you plan to save each year."
     },
     {
       number: 5,
-      title: "Projections",
-      description: "Set market return expectations and risk tolerance for your investments."
+      title: "Expenses",
+      description: "Plan for expenses before and during retirement."
     },
     {
       number: 6,
-      title: "Review",
-      description: "Analyze your plan, check its success probability, and make adjustments as needed."
+      title: "Insurance",
+      description: "Add details about your current insurance coverage."
     }
   ];
 
