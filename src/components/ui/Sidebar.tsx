@@ -54,11 +54,11 @@ export const Sidebar = () => {
   return (
     <aside
       className={cn(
-        "h-screen flex flex-col bg-sidebar border-r border-sidebar-border transition-all duration-300 ease-in-out",
+        "flex flex-col bg-sidebar border-r border-sidebar-border transition-all duration-300 ease-in-out",
         collapsed ? "w-[70px]" : "w-[240px]"
       )}
     >
-      <div className="flex-1 py-4 overflow-y-auto">
+      <div className="py-4 overflow-y-auto">
         <nav className="px-2 space-y-1">
           {mainNavItems.map((item, index) => (
             <a
@@ -86,7 +86,7 @@ export const Sidebar = () => {
         </nav>
       </div>
 
-      <div className="p-2 border-t border-sidebar-border">
+      <div className="p-2 border-t border-sidebar-border mt-auto">
         <nav className="space-y-1">
           {bottomNavItems.map((item) => (
             <a
