@@ -8,6 +8,7 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
+import { OnboardingSidePanel } from "@/components/onboarding/OnboardingSidePanel";
 import { useNavigate } from "react-router-dom";
 
 interface UserProfileSectionProps {
@@ -22,6 +23,9 @@ export const UserProfileSection = ({
   onMenuItemClick 
 }: UserProfileSectionProps) => {
   const navigate = useNavigate();
+  const [isPanelOpen, setIsPanelOpen] = useState(false);
+  const [activePanelForm, setActivePanelForm] = useState("investor-profile");
+
   const menuItems = [
     { id: "investor-profile", label: "Investor Profile" },
     { id: "contact-information", label: "Contact Information" },
@@ -36,8 +40,16 @@ export const UserProfileSection = ({
 
   const handleMenuItemClick = (itemId: string) => {
     console.log(`Profile menu item clicked in sidebar: ${itemId}`);
-    if (onMenuItemClick) {
-      onMenuItemClick(itemId);
+    
+    if (itemId === "change-theme" || itemId === "log-out") {
+      // Handle non-form items
+      if (onMenuItemClick) {
+        onMenuItemClick(itemId);
+      }
+    } else {
+      // Open the side panel with the selected form
+      setActivePanelForm(itemId);
+      setIsPanelOpen(true);
     }
   };
 
@@ -78,6 +90,12 @@ export const UserProfileSection = ({
           ))}
         </DropdownMenuContent>
       </DropdownMenu>
+
+      <OnboardingSidePanel 
+        isOpen={isPanelOpen} 
+        onOpenChange={setIsPanelOpen}
+        initialFormId={activePanelForm}
+      />
     </div>
   );
 };

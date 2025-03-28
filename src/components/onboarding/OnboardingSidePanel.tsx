@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { X } from "lucide-react";
 import { 
   Sheet, 
@@ -20,13 +20,22 @@ import { OnboardingForm } from "@/components/onboarding/OnboardingForm";
 interface OnboardingSidePanelProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
+  initialFormId?: string;
 }
 
 export const OnboardingSidePanel = ({ 
   isOpen, 
-  onOpenChange 
+  onOpenChange,
+  initialFormId = "investor-profile"
 }: OnboardingSidePanelProps) => {
-  const [activeFormId, setActiveFormId] = useState("investor-profile");
+  const [activeFormId, setActiveFormId] = useState(initialFormId);
+
+  // Update the active form when initialFormId changes
+  useEffect(() => {
+    if (initialFormId) {
+      setActiveFormId(initialFormId);
+    }
+  }, [initialFormId]);
 
   const handleFormChange = (formId: string) => {
     setActiveFormId(formId);
@@ -35,7 +44,7 @@ export const OnboardingSidePanel = ({
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
       <SheetContent 
-        className="w-full sm:max-w-[40%] overflow-hidden bg-[#0F0F2D] text-[#E2E2E2] border-l border-gray-800" 
+        className="w-full sm:max-w-[40%] overflow-hidden bg-[#0F0F2D] text-[#E2E2E2] border-l border-gray-800 animate-slide-in-right" 
         side="right"
       >
         <div className="flex flex-col h-full">

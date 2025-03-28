@@ -18,12 +18,16 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
+import { OnboardingSidePanel } from "@/components/onboarding/OnboardingSidePanel";
 
 interface UserProfileDropdownProps {
   onOpenForm: (formId: string) => void;
 }
 
 export const UserProfileDropdown = ({ onOpenForm }: UserProfileDropdownProps) => {
+  const [isPanelOpen, setIsPanelOpen] = useState(false);
+  const [activePanelForm, setActivePanelForm] = useState("investor-profile");
+  
   const menuItems = [
     { id: "investor-profile", label: "Investor Profile", icon: UserIcon },
     { id: "contact-information", label: "Contact Information", icon: PhoneIcon },
@@ -38,7 +42,15 @@ export const UserProfileDropdown = ({ onOpenForm }: UserProfileDropdownProps) =>
 
   const handleMenuItemClick = (itemId: string) => {
     console.log(`Dropdown menu item clicked: ${itemId}`);
-    onOpenForm(itemId);
+    
+    if (itemId === "change-theme" || itemId === "log-out") {
+      // Handle non-form items
+      onOpenForm(itemId);
+    } else {
+      // Open the side panel with the selected form
+      setActivePanelForm(itemId);
+      setIsPanelOpen(true);
+    }
   };
 
   return (
@@ -53,7 +65,7 @@ export const UserProfileDropdown = ({ onOpenForm }: UserProfileDropdownProps) =>
           </div>
           <ChevronRight className="h-4 w-4 rotate-90 text-white/70" />
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-[220px] bg-[#0F0F2D] border-gray-700 text-white z-50">
+        <DropdownMenuContent className="w-[220px] bg-[#0F0F2D] border-gray-800 text-white z-50">
           {menuItems.slice(0, 7).map((item) => {
             const Icon = item.icon;
             return (
@@ -83,6 +95,12 @@ export const UserProfileDropdown = ({ onOpenForm }: UserProfileDropdownProps) =>
           })}
         </DropdownMenuContent>
       </DropdownMenu>
+      
+      <OnboardingSidePanel 
+        isOpen={isPanelOpen} 
+        onOpenChange={setIsPanelOpen}
+        initialFormId={activePanelForm}
+      />
     </div>
   );
 };
