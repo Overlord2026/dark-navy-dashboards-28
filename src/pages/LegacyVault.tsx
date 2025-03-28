@@ -116,7 +116,7 @@ export default function LegacyVault() {
 
   return (
     <ThreeColumnLayout 
-      title="Family Legacy Vault" 
+      title="Legacy Vault" 
       activeMainItem="vault"
     >
       <div className="space-y-6">
@@ -124,7 +124,7 @@ export default function LegacyVault() {
           <div className="flex items-center gap-2">
             <BookOpenIcon className="h-7 w-7 text-primary" />
             <div>
-              <h2 className="text-2xl font-bold tracking-tight">Your Family Legacy Vault</h2>
+              <h2 className="text-2xl font-bold tracking-tight">Your Legacy Vault</h2>
               <p className="text-muted-foreground mt-2">
                 Securely store and organize your important documents and legacy instructions
               </p>
