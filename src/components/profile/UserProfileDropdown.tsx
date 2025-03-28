@@ -19,6 +19,7 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { OnboardingSidePanel } from "@/components/onboarding/OnboardingSidePanel";
+import { ThemeDialog } from "@/components/ui/ThemeDialog";
 
 interface UserProfileDropdownProps {
   onOpenForm: (formId: string) => void;
@@ -26,6 +27,7 @@ interface UserProfileDropdownProps {
 
 export const UserProfileDropdown = ({ onOpenForm }: UserProfileDropdownProps) => {
   const [isPanelOpen, setIsPanelOpen] = useState(false);
+  const [isThemeDialogOpen, setIsThemeDialogOpen] = useState(false);
   const [activePanelForm, setActivePanelForm] = useState("investor-profile");
   const [isOpen, setIsOpen] = useState(false);
   
@@ -44,8 +46,11 @@ export const UserProfileDropdown = ({ onOpenForm }: UserProfileDropdownProps) =>
   const handleMenuItemClick = (itemId: string) => {
     console.log(`Dropdown menu item clicked: ${itemId}`);
     
-    if (itemId === "change-theme" || itemId === "log-out") {
-      // Handle non-form items
+    if (itemId === "change-theme") {
+      // Open theme dialog
+      setIsThemeDialogOpen(true);
+    } else if (itemId === "log-out") {
+      // Handle log out action
       onOpenForm(itemId);
     } else {
       // Open the side panel with the selected form
@@ -130,6 +135,11 @@ export const UserProfileDropdown = ({ onOpenForm }: UserProfileDropdownProps) =>
         isOpen={isPanelOpen} 
         onOpenChange={setIsPanelOpen}
         initialFormId={activePanelForm}
+      />
+
+      <ThemeDialog
+        open={isThemeDialogOpen}
+        onOpenChange={setIsThemeDialogOpen}
       />
     </div>
   );

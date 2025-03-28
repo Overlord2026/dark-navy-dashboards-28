@@ -6,7 +6,7 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
+  :root, .dark-theme {
     --background: 240 22% 9%; /* #12121C */
     --foreground: 0 0% 89%; /* #E2E2E2 */
 
@@ -44,6 +44,45 @@
     --sidebar-accent: 240 20% 20%;
     --sidebar-accent-foreground: 45 100% 50%;
     --sidebar-border: 240 20% 20%;
+    --sidebar-ring: 45 100% 50%;
+  }
+
+  .light-theme {
+    --background: 60 33% 98%; /* #FEFEF7 - Soft white with hint of yellow */
+    --foreground: 240 10% 15%; /* #23232E - Dark text for contrast */
+
+    --card: 60 33% 96%; /* #FCFCF2 - Slightly darker card background */
+    --card-foreground: 240 10% 15%;
+
+    --popover: 60 33% 96%;
+    --popover-foreground: 240 10% 15%;
+
+    --primary: 45 100% 50%; /* Keep primary yellow */
+    --primary-foreground: 240 10% 15%;
+
+    --secondary: 60 33% 90%; /* #F7F7DF - Light secondary */
+    --secondary-foreground: 240 10% 15%;
+
+    --muted: 60 33% 90%;
+    --muted-foreground: 240 10% 40%;
+
+    --accent: 45 100% 50%;
+    --accent-foreground: 240 10% 15%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 60 33% 86%; /* #F0F0D8 - Light border */
+    --input: 60 33% 86%;
+    --ring: 45 100% 50%;
+
+    --sidebar-background: 60 33% 94%; /* #FAFAEB - Light sidebar */
+    --sidebar-foreground: 240 10% 15%; /* Dark text */
+    --sidebar-primary: 45 100% 50%;
+    --sidebar-primary-foreground: 240 10% 15%;
+    --sidebar-accent: 60 33% 85%; /* #F5F5D5 - Light sidebar accent */
+    --sidebar-accent-foreground: 45 100% 50%;
+    --sidebar-border: 60 33% 86%; /* #F0F0D8 - Light border */
     --sidebar-ring: 45 100% 50%;
   }
 }

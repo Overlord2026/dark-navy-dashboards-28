@@ -9,6 +9,7 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { OnboardingSidePanel } from "@/components/onboarding/OnboardingSidePanel";
+import { ThemeDialog } from "@/components/ui/ThemeDialog";
 import { useNavigate } from "react-router-dom";
 
 interface UserProfileSectionProps {
@@ -24,6 +25,7 @@ export const UserProfileSection = ({
 }: UserProfileSectionProps) => {
   const navigate = useNavigate();
   const [isPanelOpen, setIsPanelOpen] = useState(false);
+  const [isThemeDialogOpen, setIsThemeDialogOpen] = useState(false);
   const [activePanelForm, setActivePanelForm] = useState("investor-profile");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -42,8 +44,11 @@ export const UserProfileSection = ({
   const handleMenuItemClick = (itemId: string) => {
     console.log(`Profile menu item clicked in sidebar: ${itemId}`);
     
-    if (itemId === "change-theme" || itemId === "log-out") {
-      // Handle non-form items
+    if (itemId === "change-theme") {
+      // Open theme dialog
+      setIsThemeDialogOpen(true);
+    } else if (itemId === "log-out") {
+      // Handle log out action
       if (onMenuItemClick) {
         onMenuItemClick(itemId);
       }
@@ -71,7 +76,7 @@ export const UserProfileSection = ({
       <DropdownMenu open={isDropdownOpen} onOpenChange={handleOpenChange}>
         <DropdownMenuTrigger 
           className="flex items-center justify-between w-full py-2 hover:bg-white/5 rounded-md transition-colors cursor-pointer"
-          onClick={() => setIsDropdownOpen(!isDropdownOpen)} // Explicit toggle on click
+          onClick={() => setIsDropdownOpen(!isDropdownOpen)}
         >
           <div className="flex items-center">
             <div className="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center text-white font-medium mr-3">
@@ -120,6 +125,11 @@ export const UserProfileSection = ({
         isOpen={isPanelOpen} 
         onOpenChange={setIsPanelOpen}
         initialFormId={activePanelForm}
+      />
+
+      <ThemeDialog
+        open={isThemeDialogOpen}
+        onOpenChange={setIsThemeDialogOpen}
       />
     </div>
   );
