@@ -226,7 +226,7 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
   
   const goalTypes = [
     "Asset Purchase",
-    "Cash Reserve",
+    "Cash Reserves",
     "Education",
     "Gift",
     "Home Improvement",
@@ -286,7 +286,7 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent 
-              className="bg-[#1A1A2E] border-white/10 shadow-[0_2px_6px_rgba(0,0,0,0.3)] animate-in fade-in-50 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 duration-200"
+              className="bg-[#0F0F2D] border-white/10 shadow-[0_2px_6px_rgba(0,0,0,0.3)] animate-in fade-in-50 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 duration-200"
             >
               {goalTypes.map((type) => (
                 <DropdownMenuItem 
@@ -325,7 +325,7 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent 
-            className="bg-[#1A1A2E] border-white/10 shadow-[0_2px_6px_rgba(0,0,0,0.3)] animate-in fade-in-50 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 duration-200"
+            className="bg-[#0F0F2D] border-white/10 shadow-[0_2px_6px_rgba(0,0,0,0.3)] animate-in fade-in-50 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 duration-200"
           >
             {goalTypes.map((type) => (
               <DropdownMenuItem 
