@@ -32,8 +32,10 @@ import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
-import { Form, FormField, FormItem, FormLabel, FormControl } from "@/components/ui/form";
+import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 export interface GoalDetailsProps {
   isOpen: boolean;
@@ -53,12 +55,30 @@ export interface GoalFormData {
   type?: string;
 }
 
+// Schema for validation
+const goalFormSchema = z.object({
+  id: z.string().optional(),
+  owner: z.string().min(1, "Owner is required"),
+  name: z.string().min(1, "Name is required"),
+  dateOfBirth: z.date().optional(),
+  targetRetirementAge: z.preprocess(
+    (val) => (val === '' ? undefined : Number(val)),
+    z.number().int("Must be a whole number").positive("Must be positive").optional()
+  ),
+  planningHorizonAge: z.preprocess(
+    (val) => (val === '' ? undefined : Number(val)),
+    z.number().int("Must be a whole number").positive("Must be positive").optional()
+  ),
+  type: z.string().optional(),
+});
+
 export function GoalDetailsSidePanel({ isOpen, onClose, goal, onSave, title }: GoalDetailsProps) {
   const { userProfile } = useUser();
   const isMobile = useIsMobile();
   const fullName = `${userProfile.firstName} ${userProfile.lastName}`;
   
   const form = useForm<GoalFormData>({
+    resolver: zodResolver(goalFormSchema),
     defaultValues: {
       id: goal?.id,
       owner: goal?.owner || fullName,
@@ -163,6 +183,7 @@ function GoalForm({ form, onSubmit }: GoalFormProps) {
                   </SelectItem>
                 </SelectContent>
               </Select>
+              <FormMessage className="text-[#FF4D4D]" />
             </FormItem>
           )}
         />
@@ -180,6 +201,7 @@ function GoalForm({ form, onSubmit }: GoalFormProps) {
                   {...field} 
                 />
               </FormControl>
+              <FormMessage className="text-[#FF4D4D]" />
             </FormItem>
           )}
         />
@@ -215,6 +237,7 @@ function GoalForm({ form, onSubmit }: GoalFormProps) {
                   />
                 </PopoverContent>
               </Popover>
+              <FormMessage className="text-[#FF4D4D]" />
             </FormItem>
           )}
         />
@@ -228,12 +251,22 @@ function GoalForm({ form, onSubmit }: GoalFormProps) {
               <FormControl>
                 <Input
                   type="number"
-                  className="bg-[#1A1A2E] border-border/30"
+                  className={cn(
+                    "bg-[#1A1A2E] border-border/30",
+                    form.formState.errors.targetRetirementAge && "border-[#FF4D4D] focus-visible:ring-[#FF4D4D]"
+                  )}
                   placeholder="70"
                   {...field}
-                  onChange={(e) => field.onChange(parseInt(e.target.value, 10) || undefined)}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    // Allow empty value or only integer values
+                    if (value === '' || /^[0-9]+$/.test(value)) {
+                      field.onChange(value === '' ? undefined : parseInt(value, 10));
+                    }
+                  }}
                 />
               </FormControl>
+              <FormMessage className="text-[#FF4D4D]" />
             </FormItem>
           )}
         />
@@ -247,12 +280,22 @@ function GoalForm({ form, onSubmit }: GoalFormProps) {
               <FormControl>
                 <Input
                   type="number"
-                  className="bg-[#1A1A2E] border-border/30"
+                  className={cn(
+                    "bg-[#1A1A2E] border-border/30",
+                    form.formState.errors.planningHorizonAge && "border-[#FF4D4D] focus-visible:ring-[#FF4D4D]"
+                  )}
                   placeholder="100"
                   {...field}
-                  onChange={(e) => field.onChange(parseInt(e.target.value, 10) || undefined)}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    // Allow empty value or only integer values
+                    if (value === '' || /^[0-9]+$/.test(value)) {
+                      field.onChange(value === '' ? undefined : parseInt(value, 10));
+                    }
+                  }}
                 />
               </FormControl>
+              <FormMessage className="text-[#FF4D4D]" />
             </FormItem>
           )}
         />

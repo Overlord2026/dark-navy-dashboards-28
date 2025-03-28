@@ -30,6 +30,12 @@ export function GoalsList({ goals, onGoalUpdate }: GoalsListProps) {
   const [selectedGoal, setSelectedGoal] = useState<Goal | undefined>(undefined);
   const [isDetailsPanelOpen, setIsDetailsPanelOpen] = useState(false);
   const [detailsPanelTitle, setDetailsPanelTitle] = useState<string>("");
+  const [localGoals, setLocalGoals] = useState<Goal[]>(goals);
+  
+  // Update local goals when props change
+  if (JSON.stringify(goals) !== JSON.stringify(localGoals)) {
+    setLocalGoals(goals);
+  }
   
   const toggleGoalExpansion = (goalId: string) => {
     setExpandedGoals(prev => 
@@ -71,6 +77,12 @@ export function GoalsList({ goals, onGoalUpdate }: GoalsListProps) {
         priority: goalData.type,
         type: goalData.type, // Update both priority and type for consistency
       };
+      
+      // Update local state immediately
+      setLocalGoals(prev => 
+        prev.map(g => g.id === updatedGoal.id ? updatedGoal : g)
+      );
+      
       onGoalUpdate?.(updatedGoal);
     } else {
       // Create new goal
@@ -85,11 +97,15 @@ export function GoalsList({ goals, onGoalUpdate }: GoalsListProps) {
         priority: goalData.type,
         type: goalData.type, // Set both priority and type for consistency
       };
+      
+      // Update local state immediately
+      setLocalGoals(prev => [...prev, newGoal]);
+      
       onGoalUpdate?.(newGoal);
     }
   };
   
-  if (!goals || goals.length === 0) {
+  if (!localGoals || localGoals.length === 0) {
     return (
       <div className="space-y-4">
         <RetirementAgeSection 
@@ -123,7 +139,7 @@ export function GoalsList({ goals, onGoalUpdate }: GoalsListProps) {
   
   return (
     <div className="space-y-4">
-      {goals.map((goal, index) => (
+      {localGoals.map((goal, index) => (
         <GoalCard 
           key={goal.id || `goal-${index}`} 
           goal={goal} 
