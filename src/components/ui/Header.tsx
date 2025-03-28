@@ -18,7 +18,7 @@ export const Header = () => {
       {/* Prominent logo at top center */}
       <div className="w-full flex justify-center mb-4">
         <img 
-          src="/lovable-uploads/7f52d8e5-bf6b-4533-8c1b-f933a43cfce7.png" 
+          src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" 
           alt="Boutique Family Office Logo" 
           className="h-20 w-auto"
         />

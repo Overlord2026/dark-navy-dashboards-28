@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 import {
@@ -84,7 +85,7 @@ export const UserProfileSection = ({
       {showLogo && (
         <div className="mb-3 flex justify-center">
           <img 
-            src="/lovable-uploads/7f52d8e5-bf6b-4533-8c1b-f933a43cfce7.png" 
+            src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" 
             alt="Boutique Family Office Logo" 
             className="h-16 w-auto"
           />

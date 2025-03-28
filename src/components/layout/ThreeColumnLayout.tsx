@@ -1,3 +1,4 @@
+
 import { ReactNode, useState } from "react";
 import * as React from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
@@ -175,7 +176,7 @@ export function ThreeColumnLayout({
           {mainSidebarCollapsed ? (
             <div className="w-12 h-12 flex items-center justify-center">
               <img 
-                src="/lovable-uploads/7f52d8e5-bf6b-4533-8c1b-f933a43cfce7.png" 
+                src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" 
                 alt="Boutique Family Office" 
                 className="h-10 w-auto" 
               />
@@ -183,7 +184,7 @@ export function ThreeColumnLayout({
           ) : (
             <div className="flex items-center justify-center w-full">
               <img 
-                src="/lovable-uploads/7f52d8e5-bf6b-4533-8c1b-f933a43cfce7.png" 
+                src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" 
                 alt="Boutique Family Office" 
                 className="h-14 w-auto" 
               />
@@ -314,7 +315,7 @@ export function ThreeColumnLayout({
       <div className="flex-1 flex flex-col overflow-hidden">
         <div className="flex justify-center py-4">
           <img 
-            src="/lovable-uploads/7f52d8e5-bf6b-4533-8c1b-f933a43cfce7.png" 
+            src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" 
             alt="Boutique Family Office Logo" 
             className="h-20 w-auto"
           />
@@ -327,3 +328,44 @@ export function ThreeColumnLayout({
     </div>
   );
 }
+
+// Re-add the getSecondaryMenuItems function
+const getSecondaryMenuItems = (activeMainItem: string): MenuItem[] => {
+  switch (activeMainItem) {
+    case "documents":
+      return [
+        { id: "all-documents", name: "All Documents", active: true },
+        { id: "business-ownership", name: "Business Ownership" },
+        { id: "education", name: "Education" },
+        { id: "estate-planning", name: "Estate Planning" },
+        { id: "insurance-policies", name: "Insurance Policies" },
+        { id: "leases", name: "Leases" },
+        { id: "taxes", name: "Taxes" },
+        { id: "trusts", name: "Trusts" },
+      ];
+    case "accounts":
+      return [
+        { id: "all-accounts", name: "All Accounts", active: true },
+        { id: "checking", name: "Checking" },
+        { id: "savings", name: "Savings" },
+        { id: "investment", name: "Investment" },
+        { id: "retirement", name: "Retirement" },
+      ];
+    case "sharing":
+      return [
+        { id: "shared-with-me", name: "Shared With Me", active: true },
+        { id: "shared-by-me", name: "Shared By Me" },
+        { id: "collaborators", name: "Collaborators" },
+      ];
+    case "education":
+      return [
+        { id: "all-courses", name: "All Courses", active: true },
+        { id: "financial-basics", name: "Financial Basics" },
+        { id: "investing", name: "Investing" },
+        { id: "retirement", name: "Retirement" },
+        { id: "premium", name: "Premium Courses" },
+      ];
+    default:
+      return [];
+  }
+};

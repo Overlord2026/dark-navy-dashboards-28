@@ -84,7 +84,7 @@ export const Sidebar = () => {
         {collapsed ? (
           <div className="w-12 h-12 flex items-center justify-center mt-4">
             <img 
-              src="/lovable-uploads/7f52d8e5-bf6b-4533-8c1b-f933a43cfce7.png" 
+              src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" 
               alt="Boutique Family Office Logo" 
               className="h-10 w-auto" 
             />
@@ -92,7 +92,7 @@ export const Sidebar = () => {
         ) : (
           <div className="flex items-center justify-center w-full mt-4 mb-2">
             <img 
-              src="/lovable-uploads/7f52d8e5-bf6b-4533-8c1b-f933a43cfce7.png" 
+              src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" 
               alt="Boutique Family Office Logo" 
               className="h-20 w-auto" 
             />
