@@ -64,9 +64,8 @@ export default function Sharing() {
           <AddCollaboratorDialog 
             onAddCollaborator={handleAddCollaborator}
             trigger={
-              <Button>
-                <UserRoundPlusIcon className="mr-2 h-4 w-4" />
-                Add Collaborators
+              <Button className="bg-white text-black hover:bg-gray-100 border border-gray-300">
+                <span>Add Collaborators</span>
               </Button>
             }
           />
@@ -120,10 +119,10 @@ export default function Sharing() {
               <div className="text-center py-10">
                 <h3 className="text-lg font-medium mb-2">Collaborators</h3>
                 <p className="text-muted-foreground text-sm max-w-md mx-auto mb-4">
-                  You haven't added any collaborators yet. Share access with family members 
-                  and service professionals to get started.
+                  Share access with family members and service professionals (e.g., your accountant) by giving them full or 
+                  partial access.
                 </p>
-                <Button onClick={handleGetStarted}>
+                <Button onClick={handleGetStarted} className="bg-white text-black hover:bg-gray-100 border border-gray-300">
                   Get Started
                 </Button>
               </div>
