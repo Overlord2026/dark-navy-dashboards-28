@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
@@ -110,7 +111,7 @@ export const GoalDetailsSidePanel = ({
     "Cash",
     "Loan",
     "Mortgage",
-    "Lease"
+    "Other"
   ];
 
   // Load goal data when goal changes
@@ -128,8 +129,8 @@ export const GoalDetailsSidePanel = ({
         planningHorizonAge: goal.planningHorizonAge,
         // Asset Purchase fields
         purchasePrice: goal.purchasePrice,
-        financingMethod: goal.financingMethod,
-        annualAppreciation: goal.annualAppreciation,
+        financingMethod: goal.financingMethod || "Cash",
+        annualAppreciation: goal.annualAppreciation || "None",
         // Education fields
         studentName: goal.studentName,
         startYear: goal.startYear,
@@ -150,6 +151,8 @@ export const GoalDetailsSidePanel = ({
         targetDate: undefined,
         targetAmount: undefined,
         description: "",
+        financingMethod: "Cash",
+        annualAppreciation: "None",
       });
     }
   }, [goal]);
@@ -228,7 +231,7 @@ export const GoalDetailsSidePanel = ({
             <div className="space-y-2">
               <Label htmlFor="financingMethod">Financing Method</Label>
               <Select
-                value={formData.financingMethod || ""}
+                value={formData.financingMethod || "Cash"}
                 onValueChange={(value) => handleSelectChange("financingMethod", value)}
               >
                 <SelectTrigger id="financingMethod" className="bg-[#1A1A3A] border-gray-700">
@@ -244,7 +247,7 @@ export const GoalDetailsSidePanel = ({
             <div className="space-y-2">
               <Label htmlFor="annualAppreciation">Annual Appreciation</Label>
               <Select
-                value={formData.annualAppreciation || ""}
+                value={formData.annualAppreciation || "None"}
                 onValueChange={(value) => handleSelectChange("annualAppreciation", value)}
               >
                 <SelectTrigger id="annualAppreciation" className="bg-[#1A1A3A] border-gray-700">
@@ -366,7 +369,7 @@ export const GoalDetailsSidePanel = ({
             <div className="space-y-2">
               <Label htmlFor="financingMethod">Financing Method</Label>
               <Select
-                value={formData.financingMethod || ""}
+                value={formData.financingMethod || "Cash"}
                 onValueChange={(value) => handleSelectChange("financingMethod", value)}
               >
                 <SelectTrigger id="financingMethod" className="bg-[#1A1A3A] border-gray-700">
@@ -398,7 +401,7 @@ export const GoalDetailsSidePanel = ({
             <div className="space-y-2">
               <Label htmlFor="financingMethod">Financing Method</Label>
               <Select
-                value={formData.financingMethod || ""}
+                value={formData.financingMethod || "Cash"}
                 onValueChange={(value) => handleSelectChange("financingMethod", value)}
               >
                 <SelectTrigger id="financingMethod" className="bg-[#1A1A3A] border-gray-700">
@@ -414,7 +417,7 @@ export const GoalDetailsSidePanel = ({
             <div className="space-y-2">
               <Label htmlFor="annualAppreciation">Annual Appreciation</Label>
               <Select
-                value={formData.annualAppreciation || ""}
+                value={formData.annualAppreciation || "None"}
                 onValueChange={(value) => handleSelectChange("annualAppreciation", value)}
               >
                 <SelectTrigger id="annualAppreciation" className="bg-[#1A1A3A] border-gray-700">
