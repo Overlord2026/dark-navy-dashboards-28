@@ -15,8 +15,11 @@ export function ThemeSwitcher({ onClose }: { onClose?: () => void }) {
     if (onClose) onClose();
   };
 
+  const isDark = theme === "dark";
+  const isLight = theme === "light";
+
   return (
-    <div className={`p-6 space-y-6 ${theme === "light" ? "bg-[#F9F7E8] text-[#222222]" : ""}`}>
+    <div className={`p-6 space-y-6 ${isLight ? "bg-[#F9F7E8] text-[#222222]" : "bg-[#1B1B32] text-white"}`}>
       <h2 className="text-xl font-semibold mb-4">
         Change Theme
       </h2>
@@ -24,44 +27,44 @@ export function ThemeSwitcher({ onClose }: { onClose?: () => void }) {
       <div className="flex flex-col gap-4">
         <div 
           className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
-            theme === "dark" 
+            isDark 
               ? "border-primary bg-[#12121C]/80 text-white" 
-              : "border-gray-300 bg-[#12121C]/20 text-white"
+              : "border-gray-300 bg-[#12121C]/80 text-white"
           }`}
-          onClick={() => theme !== "dark" && toggleTheme()}
+          onClick={() => isLight && toggleTheme()}
         >
           <div className="flex items-center gap-3 mb-2">
             <MoonIcon className="h-5 w-5 text-gray-400" />
             <h3 className="font-medium">Dark Mode</h3>
-            {theme === "dark" && (
+            {isDark && (
               <span className="ml-auto text-xs bg-primary/20 text-primary-foreground px-2 py-0.5 rounded-full">
                 Current
               </span>
             )}
           </div>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-white/70">
             Dark interface with higher contrast and yellow accents
           </p>
         </div>
         
         <div 
           className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
-            theme === "light" 
-              ? "border-primary bg-[#F9F7E8]/80 text-[#222222]" 
-              : "border-gray-300 bg-[#F9F7E8]/20 text-[#666666]"
+            isLight 
+              ? "border-primary bg-[#F9F7E8] text-[#222222]" 
+              : "border-gray-300 bg-[#F9F7E8] text-[#222222]"
           }`}
-          onClick={() => theme !== "light" && toggleTheme()}
+          onClick={() => isDark && toggleTheme()}
         >
           <div className="flex items-center gap-3 mb-2">
             <SunIcon className="h-5 w-5 text-amber-500" />
             <h3 className="font-medium">Light Mode</h3>
-            {theme === "light" && (
+            {isLight && (
               <span className="ml-auto text-xs bg-primary/20 text-primary-foreground px-2 py-0.5 rounded-full">
                 Current
               </span>
             )}
           </div>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-[#666666]">
             Soft yellow-tinted theme with enhanced readability
           </p>
         </div>
@@ -71,7 +74,7 @@ export function ThemeSwitcher({ onClose }: { onClose?: () => void }) {
         <Button
           onClick={onClose}
           variant="outline"
-          className="mr-2"
+          className={`mr-2 ${isLight ? "border-[#DCD8C0] hover:bg-[#E9E7D8]" : ""}`}
         >
           Cancel
         </Button>

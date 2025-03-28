@@ -78,12 +78,12 @@
 
     --radius: 0.5rem;
 
-    --sidebar-background: 48 30% 97%; /* Light sidebar with soft yellow tint */
-    --sidebar-foreground: 240 10% 13%; /* Dark text */
+    --sidebar-background: 48 33% 97%; /* Light sidebar with soft yellow tint #F9F7E8 */
+    --sidebar-foreground: 240 10% 13%; /* Dark text #222222 */
     --sidebar-primary: 45 70% 50%;
     --sidebar-primary-foreground: 240 10% 13%;
     --sidebar-accent: 48 30% 90%; /* Light sidebar accent */
-    --sidebar-accent-foreground: 45 70% 50%;
+    --sidebar-accent-foreground: 240 10% 13%; /* Dark text on accent */
     --sidebar-border: 48 30% 86%; /* Light border */
     --sidebar-ring: 45 70% 50%;
   }
@@ -169,5 +169,22 @@
   .dark-theme .dialog-content,
   .dark-theme .popover-content {
     @apply bg-[#1B1B32] text-white border-[#2A2A40];
+  }
+  
+  /* Sidebar text color overrides for light mode */
+  .light-theme aside {
+    @apply text-[#222222];
+  }
+  
+  .light-theme [data-sidebar="sidebar"] {
+    @apply bg-[#F9F7E8] text-[#222222] border-[#DCD8C0];
+  }
+  
+  .light-theme [data-sidebar="menu-button"] {
+    @apply text-[#222222] hover:bg-[#E9E7D8] hover:text-[#222222];
+  }
+  
+  .light-theme [data-sidebar="menu-button"][data-active="true"] {
+    @apply bg-[#E9E7D8] text-[#222222];
   }
 }

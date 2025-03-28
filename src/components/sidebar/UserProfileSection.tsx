@@ -11,6 +11,7 @@ import {
 import { OnboardingSidePanel } from "@/components/onboarding/OnboardingSidePanel";
 import { ThemeDialog } from "@/components/ui/ThemeDialog";
 import { useNavigate } from "react-router-dom";
+import { useTheme } from "@/context/ThemeContext";
 
 interface UserProfileSectionProps {
   userName: string;
@@ -24,6 +25,9 @@ export const UserProfileSection = ({
   onMenuItemClick 
 }: UserProfileSectionProps) => {
   const navigate = useNavigate();
+  const { theme } = useTheme();
+  const isLightTheme = theme === "light";
+  
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [isThemeDialogOpen, setIsThemeDialogOpen] = useState(false);
   const [activePanelForm, setActivePanelForm] = useState("investor-profile");
@@ -72,22 +76,30 @@ export const UserProfileSection = ({
   };
 
   return (
-    <div className="px-4 py-3 border-b border-white/10">
+    <div className={`px-4 py-3 border-b ${isLightTheme ? 'border-[#DCD8C0]' : 'border-white/10'}`}>
       <DropdownMenu open={isDropdownOpen} onOpenChange={handleOpenChange}>
         <DropdownMenuTrigger 
-          className="flex items-center justify-between w-full py-2 hover:bg-white/5 rounded-md transition-colors cursor-pointer"
+          className={`flex items-center justify-between w-full py-2 rounded-md transition-colors cursor-pointer ${
+            isLightTheme 
+              ? 'hover:bg-[#E9E7D8] text-[#222222]' 
+              : 'hover:bg-white/5 text-white'
+          }`}
           onClick={() => setIsDropdownOpen(!isDropdownOpen)}
         >
           <div className="flex items-center">
-            <div className="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center text-white font-medium mr-3">
+            <div className="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center mr-3 text-primary-foreground font-medium">
               {avatarInitials}
             </div>
-            <span className="font-medium text-white text-base">{userName}</span>
+            <span className="font-medium text-base">{userName}</span>
           </div>
-          <ChevronDown className={`h-4 w-4 text-white/70 transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`} />
+          <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${isLightTheme ? 'text-[#222222]/70' : 'text-white/70'} ${isDropdownOpen ? 'rotate-180' : ''}`} />
         </DropdownMenuTrigger>
         <DropdownMenuContent 
-          className="w-[220px] bg-[#0F0F2D] border-gray-700 text-white z-50"
+          className={`w-[220px] z-50 ${
+            isLightTheme 
+              ? 'bg-[#F9F7E8] border-[#DCD8C0] text-[#222222]' 
+              : 'bg-[#0F0F2D] border-gray-700 text-white'
+          }`}
           align="end"
           forceMount
         >
@@ -95,7 +107,11 @@ export const UserProfileSection = ({
             <DropdownMenuItem 
               key={item.id}
               onClick={() => handleMenuItemClick(item.id)}
-              className="py-2.5 cursor-pointer hover:bg-white/10"
+              className={`py-2.5 cursor-pointer ${
+                isLightTheme 
+                  ? 'hover:bg-[#E9E7D8]' 
+                  : 'hover:bg-white/10'
+              }`}
               onSelect={(event) => {
                 // Prevent default selection behavior
                 event.preventDefault();
@@ -104,12 +120,16 @@ export const UserProfileSection = ({
               <span>{item.label}</span>
             </DropdownMenuItem>
           ))}
-          <DropdownMenuSeparator className="bg-gray-700" />
+          <DropdownMenuSeparator className={isLightTheme ? "bg-[#DCD8C0]" : "bg-gray-700"} />
           {menuItems.slice(7).map((item) => (
             <DropdownMenuItem 
               key={item.id}
               onClick={() => handleMenuItemClick(item.id)}
-              className="py-2.5 cursor-pointer hover:bg-white/10"
+              className={`py-2.5 cursor-pointer ${
+                isLightTheme 
+                  ? 'hover:bg-[#E9E7D8]' 
+                  : 'hover:bg-white/10'
+              }`}
               onSelect={(event) => {
                 // Prevent default selection behavior
                 event.preventDefault();

@@ -18,7 +18,7 @@ export function ThemeDialog({ trigger, open, onOpenChange }: {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
-      <DialogContent className={`sm:max-w-[425px] ${theme === "light" ? "bg-[#F9F7E8] text-[#222222] border-[#DCD8C0]" : ""}`}>
+      <DialogContent className={`sm:max-w-[425px] ${theme === "light" ? "bg-[#F9F7E8] text-[#222222] border-[#DCD8C0]" : "bg-[#1B1B32] text-white border-[#2A2A40]"}`}>
         <ThemeSwitcher onClose={() => onOpenChange && onOpenChange(false)} />
       </DialogContent>
     </Dialog>
