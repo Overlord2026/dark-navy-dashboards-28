@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -339,7 +340,7 @@ export function CreatePlanDialog({ isOpen, onClose, onCreatePlan, onSaveDraft, d
     ));
     
     setSuccessRate(Math.round(calculatedRate));
-    setCurrentStep(5);
+    setCurrentStep(6);
   };
 
   const handleFinalSubmit = () => {
@@ -960,3 +961,676 @@ export function CreatePlanDialog({ isOpen, onClose, onCreatePlan, onSaveDraft, d
                   <div className="mb-4">
                     <h3 className="text-sm font-medium mb-2">Investment Assumptions</h3>
                     <p className="text-xs text-muted-foreground">
+                      These assumptions will be used to calculate the success rate of your plan.
+                    </p>
+                  </div>
+                  
+                  <FormField
+                    control={projectionsForm.control}
+                    name="expectedReturnRate"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Expected Annual Return Rate (%)</FormLabel>
+                        <FormControl>
+                          <Input 
+                            type="number" 
+                            step="0.1"
+                            min="0"
+                            max="20"
+                            className="bg-background/50 border-border/30"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormDescription className="text-[#E2E2E2]/70">
+                          Average annual return before inflation (typically 5-10%)
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={projectionsForm.control}
+                    name="inflationRate"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Inflation Rate (%)</FormLabel>
+                        <FormControl>
+                          <Input 
+                            type="number" 
+                            step="0.1"
+                            min="0"
+                            max="10"
+                            className="bg-background/50 border-border/30"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormDescription className="text-[#E2E2E2]/70">
+                          Expected annual inflation rate (typically 2-3%)
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={projectionsForm.control}
+                    name="riskTolerance"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Risk Tolerance</FormLabel>
+                        <FormControl>
+                          <select 
+                            className="w-full p-2 rounded-md bg-background/50 border border-border/30"
+                            {...field}
+                          >
+                            <option value="Conservative">Conservative (lower risk, lower return)</option>
+                            <option value="Moderate">Moderate (balanced risk and return)</option>
+                            <option value="Aggressive">Aggressive (higher risk, higher return)</option>
+                          </select>
+                        </FormControl>
+                        <FormDescription className="text-[#E2E2E2]/70">
+                          Your comfort level with investment risk
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={projectionsForm.control}
+                    name="lifeExpectancy"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Life Expectancy (optional)</FormLabel>
+                        <FormControl>
+                          <Input 
+                            type="number"
+                            placeholder="e.g., 90" 
+                            className="bg-background/50 border-border/30"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormDescription className="text-[#E2E2E2]/70">
+                          Age used for retirement planning (default is 90)
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <DialogFooter className="pt-4 flex justify-between w-full">
+                    <Button 
+                      type="button" 
+                      variant="outline" 
+                      onClick={handleGoBack}
+                    >
+                      <ArrowLeft className="mr-1 h-4 w-4" />
+                      Back
+                    </Button>
+                    <Button type="submit">
+                      Continue
+                      <ArrowRight className="ml-1 h-4 w-4" />
+                    </Button>
+                  </DialogFooter>
+                </form>
+              </Form>
+            )}
+            
+            {currentStep === 6 && (
+              <div className="space-y-6">
+                <div className="bg-background/20 p-4 rounded-md">
+                  <h3 className="text-md font-medium mb-3">Plan Summary</h3>
+                  
+                  <div className="space-y-4">
+                    <div>
+                      <h4 className="text-sm font-medium text-muted-foreground">Basics</h4>
+                      <p className="text-sm">
+                        <span className="font-medium">Name:</span> {planData.basics?.planName}
+                      </p>
+                      {planData.basics?.targetRetirementAge && (
+                        <p className="text-sm">
+                          <span className="font-medium">Target Retirement Age:</span> {planData.basics.targetRetirementAge}
+                        </p>
+                      )}
+                    </div>
+                    
+                    <div>
+                      <h4 className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+                        Goals <span className="text-xs font-normal">({goals.length})</span>
+                      </h4>
+                      {goals.length > 0 ? (
+                        <ul className="text-sm list-disc pl-5 pt-1 space-y-1">
+                          {goals.slice(0, 3).map(goal => (
+                            <li key={goal.id}>
+                              {goal.title}
+                              {goal.targetAmount && ` - $${parseInt(goal.targetAmount).toLocaleString()}`}
+                              {goal.priority && ` (${goal.priority})`}
+                            </li>
+                          ))}
+                          {goals.length > 3 && (
+                            <li className="text-muted-foreground">
+                              +{goals.length - 3} more goals...
+                            </li>
+                          )}
+                        </ul>
+                      ) : (
+                        <p className="text-sm text-muted-foreground">No goals set.</p>
+                      )}
+                    </div>
+                    
+                    <div>
+                      <h4 className="text-sm font-medium text-muted-foreground">Income & Expenses</h4>
+                      <div className="flex flex-col sm:flex-row gap-4 mt-1">
+                        <div className="flex-1">
+                          <p className="text-sm">
+                            <span className="font-medium">Income Sources:</span> {incomeItems.length}
+                          </p>
+                          <p className="text-sm">
+                            <span className="font-medium">Expenses:</span> {expenseItems.length}
+                          </p>
+                        </div>
+                        <div className="flex-1">
+                          {(incomeItems.length > 0 || expenseItems.length > 0) && (
+                            <div>
+                              <p className="text-sm">
+                                <span className="font-medium">Monthly Income:</span> ${calculateNetMonthly().income.toLocaleString(undefined, { maximumFractionDigits: 2 })}
+                              </p>
+                              <p className="text-sm">
+                                <span className="font-medium">Monthly Expenses:</span> ${calculateNetMonthly().expenses.toLocaleString(undefined, { maximumFractionDigits: 2 })}
+                              </p>
+                              <p className="text-sm font-medium">
+                                Net: ${calculateNetMonthly().net.toLocaleString(undefined, { maximumFractionDigits: 2 })}
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <h4 className="text-sm font-medium text-muted-foreground">Projections</h4>
+                      {planData.projections ? (
+                        <div className="text-sm">
+                          <p>
+                            <span className="font-medium">Expected Return:</span> {planData.projections.expectedReturnRate}%
+                          </p>
+                          <p>
+                            <span className="font-medium">Inflation:</span> {planData.projections.inflationRate}%
+                          </p>
+                          <p>
+                            <span className="font-medium">Risk Profile:</span> {planData.projections.riskTolerance}
+                          </p>
+                        </div>
+                      ) : (
+                        <p className="text-sm text-muted-foreground">Projection data not available.</p>
+                      )}
+                    </div>
+                    
+                    <div>
+                      <h4 className="text-sm font-medium text-muted-foreground">Plan Success Rate</h4>
+                      <div className="flex items-center mt-1">
+                        <div className="h-2 w-full bg-gray-700 rounded-full overflow-hidden">
+                          <div 
+                            className="h-full rounded-full transition-all duration-700" 
+                            style={{ 
+                              width: `${successRate}%`,
+                              backgroundColor: 
+                                successRate > 75 ? '#22c55e' : 
+                                successRate > 50 ? '#eab308' : 
+                                '#ef4444'
+                            }}
+                          />
+                        </div>
+                        <span className="text-lg font-bold ml-3">{successRate}%</span>
+                      </div>
+                      <p className="text-xs text-muted-foreground mt-2">
+                        Based on your inputs, this plan has a {successRate}% chance of meeting your financial goals.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                
+                <DialogFooter className="pt-4 flex justify-between w-full">
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    onClick={handleGoBack}
+                  >
+                    <ArrowLeft className="mr-1 h-4 w-4" />
+                    Back
+                  </Button>
+                  <Button 
+                    type="button" 
+                    onClick={handleFinalSubmit}
+                  >
+                    Create Plan
+                    <Check className="ml-1 h-4 w-4" />
+                  </Button>
+                </DialogFooter>
+              </div>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
+      
+      {isGoalFormOpen && (
+        <Dialog open={isGoalFormOpen} onOpenChange={(open) => !open && closeGoalForm()}>
+          <DialogContent className="bg-[#0F0F2D] text-[#E2E2E2] border border-border/30 sm:max-w-[500px]">
+            <DialogHeader>
+              <DialogTitle>{editingGoal ? "Edit Goal" : "Add Financial Goal"}</DialogTitle>
+              <DialogDescription>
+                Define the details of your financial goal
+              </DialogDescription>
+            </DialogHeader>
+            
+            <Form {...goalForm}>
+              <form onSubmit={goalForm.handleSubmit(handleGoalSubmit)} className="space-y-4">
+                <FormField
+                  control={goalForm.control}
+                  name="title"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Goal Title</FormLabel>
+                      <FormControl>
+                        <Input 
+                          placeholder="e.g., Retirement, Buy a House" 
+                          className="bg-background/50 border-border/30"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
+                <FormField
+                  control={goalForm.control}
+                  name="targetAmount"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Target Amount ($)</FormLabel>
+                      <FormControl>
+                        <Input 
+                          type="number"
+                          min="0"
+                          placeholder="e.g., 500000" 
+                          className="bg-background/50 border-border/30"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
+                <FormField
+                  control={goalForm.control}
+                  name="targetDate"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Target Date</FormLabel>
+                      <FormControl>
+                        <Input 
+                          type="text"
+                          placeholder="e.g., 2040" 
+                          className="bg-background/50 border-border/30"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormDescription className="text-[#E2E2E2]/70">
+                        Enter a year or specific date
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
+                <FormField
+                  control={goalForm.control}
+                  name="priority"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Priority</FormLabel>
+                      <FormControl>
+                        <select 
+                          className="w-full p-2 rounded-md bg-background/50 border border-border/30"
+                          {...field}
+                        >
+                          <option value="High">High</option>
+                          <option value="Medium">Medium</option>
+                          <option value="Low">Low</option>
+                        </select>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
+                <FormField
+                  control={goalForm.control}
+                  name="description"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Description (Optional)</FormLabel>
+                      <FormControl>
+                        <Textarea 
+                          placeholder="Add any details about this goal" 
+                          className="bg-background/50 border-border/30 min-h-[80px]"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
+                <DialogFooter className="pt-2 flex gap-2">
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    className="w-full sm:w-auto"
+                    onClick={closeGoalForm}
+                  >
+                    Cancel
+                  </Button>
+                  <Button 
+                    type="submit" 
+                    className="w-full sm:w-auto"
+                  >
+                    {editingGoal ? "Update Goal" : "Add Goal"}
+                  </Button>
+                </DialogFooter>
+              </form>
+            </Form>
+          </DialogContent>
+        </Dialog>
+      )}
+      
+      {isIncomeFormOpen && (
+        <Dialog open={isIncomeFormOpen} onOpenChange={(open) => !open && closeIncomeForm()}>
+          <DialogContent className="bg-[#0F0F2D] text-[#E2E2E2] border border-border/30 sm:max-w-[500px]">
+            <DialogHeader>
+              <DialogTitle>{editingIncome ? "Edit Income Source" : "Add Income Source"}</DialogTitle>
+              <DialogDescription>
+                Define details about this income source
+              </DialogDescription>
+            </DialogHeader>
+            
+            <Form {...incomeForm}>
+              <form onSubmit={incomeForm.handleSubmit(handleIncomeSubmit)} className="space-y-4">
+                <FormField
+                  control={incomeForm.control}
+                  name="source"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Income Source</FormLabel>
+                      <FormControl>
+                        <Input 
+                          placeholder="e.g., Salary, Investments" 
+                          className="bg-background/50 border-border/30"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <FormField
+                    control={incomeForm.control}
+                    name="amount"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Amount ($)</FormLabel>
+                        <FormControl>
+                          <Input 
+                            type="number"
+                            min="0"
+                            placeholder="e.g., 5000" 
+                            className="bg-background/50 border-border/30"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={incomeForm.control}
+                    name="frequency"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Frequency</FormLabel>
+                        <FormControl>
+                          <select 
+                            className="w-full p-2 rounded-md bg-background/50 border border-border/30"
+                            {...field}
+                          >
+                            <option value="Monthly">Monthly</option>
+                            <option value="Bi-weekly">Bi-weekly</option>
+                            <option value="Weekly">Weekly</option>
+                            <option value="Quarterly">Quarterly</option>
+                            <option value="Annually">Annually</option>
+                          </select>
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <FormField
+                    control={incomeForm.control}
+                    name="startDate"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Start Date (Optional)</FormLabel>
+                        <FormControl>
+                          <Input 
+                            placeholder="e.g., Now or a specific year" 
+                            className="bg-background/50 border-border/30"
+                            {...field}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={incomeForm.control}
+                    name="endDate"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>End Date (Optional)</FormLabel>
+                        <FormControl>
+                          <Input 
+                            placeholder="e.g., Retirement" 
+                            className="bg-background/50 border-border/30"
+                            {...field}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                
+                <FormField
+                  control={incomeForm.control}
+                  name="notes"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Notes (Optional)</FormLabel>
+                      <FormControl>
+                        <Textarea 
+                          placeholder="Any additional details about this income source" 
+                          className="bg-background/50 border-border/30 min-h-[80px]"
+                          {...field}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                
+                <DialogFooter className="pt-2 flex gap-2">
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    className="w-full sm:w-auto"
+                    onClick={closeIncomeForm}
+                  >
+                    Cancel
+                  </Button>
+                  <Button 
+                    type="submit" 
+                    className="w-full sm:w-auto"
+                  >
+                    {editingIncome ? "Update Income" : "Add Income"}
+                  </Button>
+                </DialogFooter>
+              </form>
+            </Form>
+          </DialogContent>
+        </Dialog>
+      )}
+      
+      {isExpenseFormOpen && (
+        <Dialog open={isExpenseFormOpen} onOpenChange={(open) => !open && closeExpenseForm()}>
+          <DialogContent className="bg-[#0F0F2D] text-[#E2E2E2] border border-border/30 sm:max-w-[500px]">
+            <DialogHeader>
+              <DialogTitle>{editingExpense ? "Edit Expense" : "Add Expense"}</DialogTitle>
+              <DialogDescription>
+                Define details about this expense
+              </DialogDescription>
+            </DialogHeader>
+            
+            <Form {...expenseForm}>
+              <form onSubmit={expenseForm.handleSubmit(handleExpenseSubmit)} className="space-y-4">
+                <FormField
+                  control={expenseForm.control}
+                  name="category"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Expense Category</FormLabel>
+                      <FormControl>
+                        <Input 
+                          placeholder="e.g., Housing, Food, Transportation" 
+                          className="bg-background/50 border-border/30"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <FormField
+                    control={expenseForm.control}
+                    name="amount"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Amount ($)</FormLabel>
+                        <FormControl>
+                          <Input 
+                            type="number"
+                            min="0"
+                            placeholder="e.g., 1500" 
+                            className="bg-background/50 border-border/30"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={expenseForm.control}
+                    name="frequency"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Frequency</FormLabel>
+                        <FormControl>
+                          <select 
+                            className="w-full p-2 rounded-md bg-background/50 border border-border/30"
+                            {...field}
+                          >
+                            <option value="Monthly">Monthly</option>
+                            <option value="Bi-weekly">Bi-weekly</option>
+                            <option value="Weekly">Weekly</option>
+                            <option value="Quarterly">Quarterly</option>
+                            <option value="Annually">Annually</option>
+                          </select>
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                
+                <FormField
+                  control={expenseForm.control}
+                  name="isEssential"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md p-3 bg-background/20">
+                      <FormControl>
+                        <input
+                          type="checkbox"
+                          className="h-4 w-4 mt-1"
+                          checked={field.value}
+                          onChange={field.onChange}
+                        />
+                      </FormControl>
+                      <div className="space-y-1 leading-none">
+                        <FormLabel>Essential Expense</FormLabel>
+                        <FormDescription className="text-[#E2E2E2]/70">
+                          Mark if this is a necessary expense that cannot be reduced
+                        </FormDescription>
+                      </div>
+                    </FormItem>
+                  )}
+                />
+                
+                <FormField
+                  control={expenseForm.control}
+                  name="notes"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Notes (Optional)</FormLabel>
+                      <FormControl>
+                        <Textarea 
+                          placeholder="Any additional details about this expense" 
+                          className="bg-background/50 border-border/30 min-h-[80px]"
+                          {...field}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                
+                <DialogFooter className="pt-2 flex gap-2">
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    className="w-full sm:w-auto"
+                    onClick={closeExpenseForm}
+                  >
+                    Cancel
+                  </Button>
+                  <Button 
+                    type="submit" 
+                    className="w-full sm:w-auto"
+                  >
+                    {editingExpense ? "Update Expense" : "Add Expense"}
+                  </Button>
+                </DialogFooter>
+              </form>
+            </Form>
+          </DialogContent>
+        </Dialog>
+      )}
+    </>
+  );
+}
