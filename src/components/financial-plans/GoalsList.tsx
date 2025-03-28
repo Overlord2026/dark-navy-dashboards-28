@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
-import { ChevronDownIcon, ChevronUpIcon } from "lucide-react";
+import { ChevronDownIcon, ChevronUpIcon, PlusIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { GoalDetailsSidePanel, GoalFormData } from "./GoalDetailsSidePanel";
 
@@ -51,6 +51,12 @@ export function GoalsList({ goals, onGoalUpdate }: GoalsListProps) {
     setIsDetailsPanelOpen(true);
   };
 
+  const handleAddGoalClick = () => {
+    setSelectedGoal(undefined);
+    setDetailsPanelTitle("New Goal");
+    setIsDetailsPanelOpen(true);
+  };
+
   const handleSaveGoal = (goalData: GoalFormData) => {
     if (selectedGoal) {
       // Update existing goal
@@ -94,6 +100,16 @@ export function GoalsList({ goals, onGoalUpdate }: GoalsListProps) {
           title="Spouse's Retirement Age" 
           onClick={() => handleRetirementAgeClick("Spouse's Retirement Age")}
         />
+        <div className="mt-4">
+          <Button 
+            variant="outline" 
+            className="w-full flex items-center justify-center gap-2 bg-[#1A1A2E] hover:bg-[#1A1A2E]/80"
+            onClick={handleAddGoalClick}
+          >
+            <PlusIcon className="h-4 w-4" />
+            <span>Add Goal</span>
+          </Button>
+        </div>
         <GoalDetailsSidePanel
           isOpen={isDetailsPanelOpen}
           onClose={() => setIsDetailsPanelOpen(false)}
@@ -116,6 +132,16 @@ export function GoalsList({ goals, onGoalUpdate }: GoalsListProps) {
           onClick={() => handleGoalClick(goal)}
         />
       ))}
+      <div className="mt-4">
+        <Button 
+          variant="outline" 
+          className="w-full flex items-center justify-center gap-2 bg-[#1A1A2E] hover:bg-[#1A1A2E]/80"
+          onClick={handleAddGoalClick}
+        >
+          <PlusIcon className="h-4 w-4" />
+          <span>Add Goal</span>
+        </Button>
+      </div>
       <GoalDetailsSidePanel
         isOpen={isDetailsPanelOpen}
         onClose={() => setIsDetailsPanelOpen(false)}
