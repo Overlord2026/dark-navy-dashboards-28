@@ -17,13 +17,20 @@ import {
   ReceiptIcon, 
   ShareIcon, 
   GraduationCapIcon,
-  BookOpenIcon
+  BookOpenIcon,
+  CalendarIcon
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { UserProfileSection } from "@/components/sidebar/UserProfileSection";
 import { Header } from "@/components/ui/Header";
 import { useTheme } from "@/context/ThemeContext";
 import { useUser } from "@/context/UserContext";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 type MenuItem = {
   id: string;
@@ -131,6 +138,21 @@ export function ThreeColumnLayout({
 }: ThreeColumnLayoutProps) {
   const [mainSidebarCollapsed, setMainSidebarCollapsed] = useState(false);
   const [secondarySidebarCollapsed, setSecondarySidebarCollapsed] = useState(false);
+  const [showAdvisorInfo, setShowAdvisorInfo] = useState(false);
+  
+  const advisorInfo = {
+    name: "Charles Bryant",
+    title: "Senior Financial Advisor",
+    email: "charles.bryant@example.com",
+    phone: "(555) 123-4567",
+    location: "New York, NY"
+  };
+
+  const handleBookSession = () => {
+    console.log("Book session clicked");
+    // This would typically open a booking calendar or external link
+  };
+
   const { theme } = useTheme();
   const { userProfile } = useUser();
   
@@ -309,22 +331,89 @@ export function ThreeColumnLayout({
 
       <div className="flex-1 flex flex-col overflow-hidden">
         {isHomePage ? (
-          <div className="flex justify-center items-center py-4 space-x-6">
-            <Link to="/education" className="flex items-center gap-2 px-4 py-2 rounded-md bg-gray-800 hover:bg-gray-700 text-gray-100 transition-colors">
-              <GraduationCapIcon className="h-5 w-5" />
-              <span className="font-medium">Education Center</span>
-            </Link>
+          <div className="flex flex-col items-center py-4 space-y-6">
+            <div className="flex justify-center items-center space-x-6">
+              <Link to="/education" className="flex items-center gap-2 px-4 py-2 rounded-md bg-gray-800 hover:bg-gray-700 text-gray-100 transition-colors">
+                <GraduationCapIcon className="h-5 w-5" />
+                <span className="font-medium">Education Center</span>
+              </Link>
+              
+              <img 
+                src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" 
+                alt="Boutique Family Office Logo" 
+                className="h-20 w-auto"
+              />
+              
+              <Link to="/vault" className="flex items-center gap-2 px-4 py-2 rounded-md bg-gray-800 hover:bg-gray-700 text-gray-100 transition-colors">
+                <BookOpenIcon className="h-5 w-5" />
+                <span className="font-medium">Legacy Vault</span>
+              </Link>
+            </div>
             
-            <img 
-              src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" 
-              alt="Boutique Family Office Logo" 
-              className="h-20 w-auto"
-            />
-            
-            <Link to="/vault" className="flex items-center gap-2 px-4 py-2 rounded-md bg-gray-800 hover:bg-gray-700 text-gray-100 transition-colors">
-              <BookOpenIcon className="h-5 w-5" />
-              <span className="font-medium">Legacy Vault</span>
-            </Link>
+            <div className="flex justify-center items-center space-x-10">
+              <Link to="/profile" className="flex items-center gap-2 px-4 py-2 rounded-md bg-gray-800 hover:bg-gray-700 text-gray-100 transition-colors">
+                <UserIcon className="h-5 w-5" />
+                <span className="font-medium">Client Profile</span>
+              </Link>
+              
+              <Popover open={showAdvisorInfo} onOpenChange={setShowAdvisorInfo}>
+                <PopoverTrigger asChild>
+                  <Button variant="ghost" className="flex items-center gap-2 px-4 py-2 rounded-md bg-gray-800 hover:bg-gray-700 text-gray-100 transition-colors">
+                    <div className="flex items-center space-x-2">
+                      <Avatar className="h-8 w-8 border-2 border-gray-700">
+                        <AvatarFallback className="bg-primary/20 text-primary">CB</AvatarFallback>
+                      </Avatar>
+                      <span className="font-medium">Advisor Profile</span>
+                    </div>
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent 
+                  className="w-80 bg-gray-900 border border-gray-700 text-white p-0 shadow-lg"
+                  align="center"
+                >
+                  <div className="flex flex-col">
+                    <div className="p-4 border-b border-gray-700 flex items-center space-x-4">
+                      <Avatar className="h-16 w-16">
+                        <AvatarFallback className="bg-primary/20 text-primary text-xl">CB</AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <h3 className="text-lg font-semibold">{advisorInfo.name}</h3>
+                        <p className="text-sm text-gray-400">{advisorInfo.title}</p>
+                        <p className="text-sm text-gray-400">{advisorInfo.location}</p>
+                      </div>
+                    </div>
+                    
+                    <div className="p-4 space-y-3">
+                      <div className="flex items-center space-x-2">
+                        <CalendarIcon className="h-4 w-4 text-gray-400" />
+                        <Button 
+                          variant="outline" 
+                          className="w-full justify-start border-gray-700 hover:bg-gray-800 text-white"
+                          onClick={handleBookSession}
+                        >
+                          Schedule an Appointment
+                        </Button>
+                      </div>
+                      
+                      <div className="pt-2 border-t border-gray-700 space-y-1.5">
+                        <p className="text-sm">
+                          <span className="text-gray-400">Email: </span>
+                          <a href={`mailto:${advisorInfo.email}`} className="text-blue-400 hover:underline">
+                            {advisorInfo.email}
+                          </a>
+                        </p>
+                        <p className="text-sm">
+                          <span className="text-gray-400">Phone: </span>
+                          <a href={`tel:${advisorInfo.phone}`} className="text-blue-400 hover:underline">
+                            {advisorInfo.phone}
+                          </a>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </PopoverContent>
+              </Popover>
+            </div>
           </div>
         ) : (
           <div className="flex justify-center py-4">
