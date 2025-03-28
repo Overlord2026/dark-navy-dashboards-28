@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/card";
 import { ChevronDownIcon, ChevronUpIcon, PlusIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { GoalDetailsSidePanel, GoalFormData } from "./GoalDetailsSidePanel";
+import { format } from "date-fns";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,7 +14,7 @@ import {
 export interface Goal {
   id?: string;
   title?: string;
-  name?: string;  // For compatibility with different goal formats
+  name?: string;
   targetDate?: Date;
   targetAmount?: number;
   currentAmount?: number;
@@ -23,21 +24,17 @@ export interface Goal {
   targetRetirementAge?: number;
   planningHorizonAge?: number;
   dateOfBirth?: Date;
-  description?: string; // Added for goal description
-  isNew?: boolean; // Flag to indicate if this is a newly added goal that hasn't been saved yet
-  // Asset Purchase fields
+  description?: string;
+  isNew?: boolean;
   purchasePrice?: number;
   financingMethod?: string;
   annualAppreciation?: string;
-  // Education fields
   studentName?: string;
   startYear?: number;
   endYear?: number;
   tuitionEstimate?: number;
-  // Vacation fields
   destination?: string;
   estimatedCost?: number;
-  // Generic fields that might be used by multiple goal types
   amountDesired?: number;
 }
 
@@ -54,7 +51,6 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
   const [detailsPanelTitle, setDetailsPanelTitle] = useState<string>("");
   const [localGoals, setLocalGoals] = useState<Goal[]>(goals);
   
-  // Update local goals when props change
   if (JSON.stringify(goals) !== JSON.stringify(localGoals)) {
     setLocalGoals(goals);
   }
@@ -69,115 +65,109 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
   
   const handleGoalClick = (goal: Goal) => {
     setSelectedGoal(goal);
-    setDetailsPanelTitle(goal.title ? `${goal.title}` : "Retirement Age");
+    const goalTitle = goal.title || goal.name || "";
+    setDetailsPanelTitle(goalTitle);
     setIsDetailsPanelOpen(true);
   };
 
   const handleRetirementAgeClick = (title: string) => {
     setSelectedGoal(undefined);
-    setDetailsPanelTitle(`${title}`);
+    setDetailsPanelTitle(title);
     setIsDetailsPanelOpen(true);
   };
 
   const handleAddGoalClick = (goalType?: string) => {
     if (!goalType) {
-      // Just a regular "Add Goal" click with no type
       setSelectedGoal(undefined);
       setDetailsPanelTitle("New Goal");
       setIsDetailsPanelOpen(true);
       return;
     }
     
-    // Create a temporary new goal with the selected type
     const newGoal: Goal = {
       id: `temp-goal-${Date.now()}`,
       title: goalType,
       name: goalType,
       type: goalType,
       priority: goalType,
-      isNew: true, // Mark this as a new unsaved goal
+      isNew: true,
     };
     
-    // Add the new goal to the local state
     setLocalGoals(prev => [...prev, newGoal]);
     
-    // Open the side panel for editing the new goal
     setSelectedGoal(newGoal);
-    setDetailsPanelTitle(`New ${goalType} Goal`);
+    setDetailsPanelTitle(`New ${goalType}`);
     setIsDetailsPanelOpen(true);
+  };
+
+  const handleTitleUpdate = (name: string, owner: string) => {
+    if (name && owner) {
+      const ownerPossessive = owner.endsWith('s') ? `${owner}'` : `${owner}'s`;
+      setDetailsPanelTitle(`${ownerPossessive} ${name}`);
+    } else if (name) {
+      setDetailsPanelTitle(name);
+    }
   };
 
   const handleSaveGoal = (goalData: GoalFormData) => {
     if (selectedGoal) {
-      // Update existing goal
       const updatedGoal: Goal = {
         ...selectedGoal,
         title: goalData.name,
-        name: goalData.name, // Update both title and name for consistency
+        name: goalData.name,
         owner: goalData.owner,
         dateOfBirth: goalData.dateOfBirth,
         targetRetirementAge: goalData.targetRetirementAge,
         planningHorizonAge: goalData.planningHorizonAge,
         priority: goalData.type,
-        type: goalData.type, // Update both priority and type for consistency
+        type: goalData.type,
         targetDate: goalData.targetDate,
         targetAmount: goalData.targetAmount,
         description: goalData.description,
-        isNew: false, // No longer a new unsaved goal
-        // Asset Purchase fields
+        isNew: false,
         purchasePrice: goalData.purchasePrice,
         financingMethod: goalData.financingMethod,
         annualAppreciation: goalData.annualAppreciation,
-        // Education fields
         studentName: goalData.studentName,
         startYear: goalData.startYear,
         endYear: goalData.endYear,
         tuitionEstimate: goalData.tuitionEstimate,
-        // Vacation fields
         destination: goalData.destination,
         estimatedCost: goalData.estimatedCost,
-        // Generic fields
         amountDesired: goalData.amountDesired,
       };
       
-      // Update local state immediately
       setLocalGoals(prev => 
         prev.map(g => g.id === updatedGoal.id ? updatedGoal : g)
       );
       
       onGoalUpdate?.(updatedGoal);
     } else {
-      // Create new goal
       const newGoal: Goal = {
         id: `goal-${Date.now()}`,
         title: goalData.name,
-        name: goalData.name, // Set both title and name for consistency
+        name: goalData.name,
         owner: goalData.owner,
         dateOfBirth: goalData.dateOfBirth,
         targetRetirementAge: goalData.targetRetirementAge,
         planningHorizonAge: goalData.planningHorizonAge,
         priority: goalData.type,
-        type: goalData.type, // Set both priority and type for consistency
+        type: goalData.type,
         targetDate: goalData.targetDate,
         targetAmount: goalData.targetAmount,
         description: goalData.description,
-        // Asset Purchase fields
         purchasePrice: goalData.purchasePrice,
         financingMethod: goalData.financingMethod,
         annualAppreciation: goalData.annualAppreciation,
-        // Education fields
         studentName: goalData.studentName,
         startYear: goalData.startYear,
         endYear: goalData.endYear,
         tuitionEstimate: goalData.tuitionEstimate,
-        // Vacation fields
         destination: goalData.destination,
         estimatedCost: goalData.estimatedCost,
-        // Generic fields
         amountDesired: goalData.amountDesired,
       };
       
-      // Update local state immediately
       setLocalGoals(prev => [...prev, newGoal]);
       
       onGoalUpdate?.(newGoal);
@@ -185,13 +175,10 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
   };
 
   const handleCancelGoal = () => {
-    // If a goal was being edited and it was marked as new (never saved before),
-    // remove it from the local goals
     if (selectedGoal?.isNew) {
       setLocalGoals(prev => prev.filter(g => g.id !== selectedGoal.id));
     }
     
-    // Close the panel
     setIsDetailsPanelOpen(false);
   };
   
@@ -212,7 +199,6 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
     "Wedding"
   ];
 
-  // Separate retirement and other goals
   const retirementGoals = localGoals.filter(goal => 
     goal.targetRetirementAge !== undefined || 
     goal.type === "Retirement" || 
@@ -279,6 +265,7 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
           goal={selectedGoal}
           onSave={handleSaveGoal}
           title={detailsPanelTitle}
+          onTitleUpdate={handleTitleUpdate}
         />
       </div>
     );
@@ -311,7 +298,6 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
         </DropdownMenu>
       </div>
       
-      {/* Retirement Goals Section */}
       <div className="mb-6">
         <h4 className="text-sm font-medium mb-2">Target Retirement Age</h4>
         {retirementGoals.length > 0 ? (
@@ -332,7 +318,6 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
         )}
       </div>
       
-      {/* Other Goals Section */}
       <div className="mb-4">
         <h4 className="text-sm font-medium mb-2">Other Goals</h4>
         {otherGoals.length > 0 ? (
@@ -361,6 +346,7 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
         goal={selectedGoal}
         onSave={handleSaveGoal}
         title={detailsPanelTitle}
+        onTitleUpdate={handleTitleUpdate}
       />
     </div>
   );
@@ -384,7 +370,6 @@ function GoalCard({ goal, isExpanded, onToggle, onClick }: {
   onToggle: () => void;
   onClick: () => void;
 }) {
-  // Handle different goal formats
   const goalTitle = goal.title || goal.name || "Unnamed Goal";
   const goalType = goal.type || goal.priority || "Goal";
 
@@ -402,7 +387,7 @@ function GoalCard({ goal, isExpanded, onToggle, onClick }: {
           variant="ghost" 
           size="sm" 
           onClick={(e) => {
-            e.stopPropagation(); // Prevent triggering the card's onClick
+            e.stopPropagation();
             onToggle();
           }}
         >
@@ -412,9 +397,6 @@ function GoalCard({ goal, isExpanded, onToggle, onClick }: {
       
       {isExpanded && (
         <div className="mt-4 space-y-2 pt-2 border-t border-border/20">
-          {/* Different goal types display different information */}
-          
-          {/* Asset Purchase, Home Purchase & Vehicle fields */}
           {(goal.type === "Asset Purchase" || goal.type === "Home Purchase" || goal.type === "Vehicle") && (
             <>
               {goal.purchasePrice !== undefined && (
@@ -446,7 +428,6 @@ function GoalCard({ goal, isExpanded, onToggle, onClick }: {
             </>
           )}
           
-          {/* Education Fields */}
           {goal.type === "Education" && (
             <>
               {goal.studentName && (
@@ -477,7 +458,6 @@ function GoalCard({ goal, isExpanded, onToggle, onClick }: {
             </>
           )}
           
-          {/* Vacation Fields */}
           {goal.type === "Vacation" && (
             <>
               {goal.destination && (
@@ -501,7 +481,6 @@ function GoalCard({ goal, isExpanded, onToggle, onClick }: {
             </>
           )}
           
-          {/* Cash Reserve Fields */}
           {goal.type === "Cash Reserve" && goal.amountDesired !== undefined && (
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">Amount Desired:</span>
@@ -514,7 +493,6 @@ function GoalCard({ goal, isExpanded, onToggle, onClick }: {
             </div>
           )}
           
-          {/* Common fields for most goals */}
           {goal.targetDate && !["Education"].includes(goal.type || "") && (
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">Target Date:</span>
@@ -559,14 +537,13 @@ function GoalCard({ goal, isExpanded, onToggle, onClick }: {
             </div>
           )}
           
-          {/* Retirement-specific fields */}
           {goal.targetRetirementAge && (
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">Target Retirement Age:</span>
               <span>{goal.targetRetirementAge}</span>
             </div>
           )}
-
+          
           {goal.planningHorizonAge && (
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">Planning Horizon:</span>
@@ -574,7 +551,6 @@ function GoalCard({ goal, isExpanded, onToggle, onClick }: {
             </div>
           )}
           
-          {/* Description for all goal types */}
           {goal.description && (
             <div className="flex flex-col text-sm mt-2">
               <span className="text-muted-foreground mb-1">Description:</span>

@@ -1,21 +1,9 @@
-
 import React, { useState, useEffect } from "react";
-import { 
-  Dialog,
-  DialogContent,
-  DialogFooter,
-} from "@/components/ui/dialog";
-import {
-  Sheet,
-  SheetContent,
-  SheetFooter,
-} from "@/components/ui/sheet";
+import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Calendar } from "@/components/ui/calendar";
-import { useUser } from "@/context/UserContext";
-import { Goal } from "@/components/financial-plans/GoalsList";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -23,41 +11,22 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { CalendarIcon } from "lucide-react";
-import { format } from "date-fns";
-import { useIsMobile } from "@/hooks/use-mobile";
-import { cn } from "@/lib/utils";
-import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Textarea } from "@/components/ui/textarea";
+import { DatePicker } from "@/components/ui/date-picker";
+import { Goal } from "./GoalsList";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
-export interface GoalDetailsProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onCancel?: () => void;
-  goal?: Goal;
-  onSave: (goalData: GoalFormData) => void;
-  title?: string;
-}
-
+// Goal form data interfaces
 export interface GoalFormData {
-  id?: string;
+  name: string;
+  type: string;
+  priority?: string;
+  targetDate?: Date;
+  targetAmount?: number;
   owner: string;
-  name: string; 
+  description?: string;
   dateOfBirth?: Date;
   targetRetirementAge?: number;
   planningHorizonAge?: number;
-  type?: string;
-  targetDate?: Date;
-  targetAmount?: number;
-  description?: string;
   // Asset Purchase fields
   purchasePrice?: number;
   financingMethod?: string;
@@ -67,819 +36,548 @@ export interface GoalFormData {
   startYear?: number;
   endYear?: number;
   tuitionEstimate?: number;
-  // Vacation fields 
+  // Vacation fields
   destination?: string;
   estimatedCost?: number;
-  // Generic fields that might be used by multiple goal types
+  // Cash Reserve fields
   amountDesired?: number;
+  // Other fields as needed
 }
 
-// Schema for validation
-const goalFormSchema = z.object({
-  id: z.string().optional(),
-  owner: z.string().min(1, "Owner is required"),
-  name: z.string().min(1, "Name is required"),
-  dateOfBirth: z.date().optional(),
-  targetRetirementAge: z.preprocess(
-    (val) => (val === '' ? undefined : Number(val)),
-    z.number().int("Must be a whole number").positive("Must be positive").optional()
-  ),
-  planningHorizonAge: z.preprocess(
-    (val) => (val === '' ? undefined : Number(val)),
-    z.number().int("Must be a whole number").positive("Must be positive").optional()
-  ),
-  type: z.string().optional(),
-  targetDate: z.date().optional(),
-  targetAmount: z.preprocess(
-    (val) => (val === '' ? undefined : Number(val)),
-    z.number().positive("Must be positive").optional()
-  ),
-  description: z.string().optional(),
-  // Asset Purchase fields
-  purchasePrice: z.preprocess(
-    (val) => (val === '' ? undefined : Number(val)),
-    z.number().positive("Must be positive").optional()
-  ),
-  financingMethod: z.string().optional(),
-  annualAppreciation: z.string().optional(),
-  // Education fields
-  studentName: z.string().optional(),
-  startYear: z.preprocess(
-    (val) => (val === '' ? undefined : Number(val)),
-    z.number().int("Must be a whole number").positive("Must be positive").optional()
-  ),
-  endYear: z.preprocess(
-    (val) => (val === '' ? undefined : Number(val)),
-    z.number().int("Must be a whole number").positive("Must be positive").optional()
-  ),
-  tuitionEstimate: z.preprocess(
-    (val) => (val === '' ? undefined : Number(val)),
-    z.number().positive("Must be positive").optional()
-  ),
-  // Vacation fields
-  destination: z.string().optional(),
-  estimatedCost: z.preprocess(
-    (val) => (val === '' ? undefined : Number(val)),
-    z.number().positive("Must be positive").optional()
-  ),
-  // Generic fields
-  amountDesired: z.preprocess(
-    (val) => (val === '' ? undefined : Number(val)),
-    z.number().positive("Must be positive").optional()
-  ),
-});
+interface GoalDetailsSidePanelProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onCancel: () => void;
+  goal?: Goal;
+  onSave: (goalData: GoalFormData) => void;
+  title: string;
+  onTitleUpdate?: (name: string, owner: string) => void;
+}
 
-export function GoalDetailsSidePanel({ isOpen, onClose, onCancel, goal, onSave, title }: GoalDetailsProps) {
-  const { userProfile } = useUser();
-  const isMobile = useIsMobile();
-  const fullName = `${userProfile.firstName} ${userProfile.lastName}`;
-  
-  const form = useForm<GoalFormData>({
-    resolver: zodResolver(goalFormSchema),
-    defaultValues: {
-      id: goal?.id,
-      owner: goal?.owner || fullName,
-      name: goal?.title || (goal?.name ? goal.name : `${fullName}'s Retirement Goal`),
-      dateOfBirth: goal?.dateOfBirth,
-      targetRetirementAge: goal?.targetRetirementAge || 70,
-      planningHorizonAge: goal?.planningHorizonAge || 100,
-      type: goal?.priority || goal?.type || "High",
-      targetDate: goal?.targetDate,
-      targetAmount: goal?.targetAmount,
-      description: goal?.description,
-      // Asset Purchase defaults
-      purchasePrice: undefined,
-      financingMethod: "Cash",
-      annualAppreciation: "None",
-      // Education defaults
-      studentName: undefined,
-      startYear: new Date().getFullYear() + 1,
-      endYear: new Date().getFullYear() + 5,
-      tuitionEstimate: undefined,
-      // Vacation defaults
-      destination: undefined,
-      estimatedCost: undefined,
-      // Generic defaults
-      amountDesired: undefined,
-    },
+export const GoalDetailsSidePanel = ({
+  isOpen,
+  onClose,
+  onCancel,
+  goal,
+  onSave,
+  title,
+  onTitleUpdate
+}: GoalDetailsSidePanelProps) => {
+  // Initialize form data state
+  const [formData, setFormData] = useState<GoalFormData>({
+    name: "",
+    type: "",
+    owner: "",
+    targetDate: undefined,
+    targetAmount: undefined,
+    description: "",
   });
 
-  // Reset form when goal changes
+  // Define owner options
+  const owners = ["Antonio Gomez", "Maria Gomez", "Joint"];
+
+  // Define goal types
+  const goalTypes = [
+    "Asset Purchase",
+    "Cash Reserve",
+    "Education",
+    "Gift",
+    "Home Improvement",
+    "Home Purchase",
+    "Investment Property",
+    "Land",
+    "Legacy",
+    "Other",
+    "Retirement",
+    "Vacation",
+    "Vacation Home",
+    "Vehicle",
+    "Wedding"
+  ];
+
+  // Annual appreciation options for real estate
+  const appreciationOptions = [
+    "None",
+    "1%",
+    "2%",
+    "3%",
+    "4%",
+    "5%"
+  ];
+
+  // Financing method options
+  const financingOptions = [
+    "Cash",
+    "Loan",
+    "Mortgage",
+    "Lease"
+  ];
+
+  // Load goal data when goal changes
   useEffect(() => {
-    if (isOpen) {
-      const isRetirement = 
-        goal?.targetRetirementAge !== undefined || 
-        goal?.type === "Retirement" || 
-        goal?.priority === "Retirement";
-      
-      const defaultGoalName = getDefaultGoalName(goal?.type || "", fullName);
-      
-      form.reset({
-        id: goal?.id,
-        owner: goal?.owner || fullName,
-        name: goal?.title || (goal?.name ? goal.name : defaultGoalName),
-        dateOfBirth: goal?.dateOfBirth,
-        targetRetirementAge: goal?.targetRetirementAge || (isRetirement ? 70 : undefined),
-        planningHorizonAge: goal?.planningHorizonAge || (isRetirement ? 100 : undefined),
-        type: goal?.priority || goal?.type || (isRetirement ? "Retirement" : ""),
-        targetDate: goal?.targetDate,
-        targetAmount: goal?.targetAmount,
-        description: goal?.description,
-        // Reset asset purchase fields
-        purchasePrice: goal?.purchasePrice,
-        financingMethod: goal?.financingMethod || "Cash",
-        annualAppreciation: goal?.annualAppreciation || "None",
-        // Reset education fields
-        studentName: goal?.studentName,
-        startYear: goal?.startYear || new Date().getFullYear() + 1,
-        endYear: goal?.endYear || new Date().getFullYear() + 5,
-        tuitionEstimate: goal?.tuitionEstimate,
-        // Reset vacation fields
-        destination: goal?.destination,
-        estimatedCost: goal?.estimatedCost,
-        // Reset generic fields
-        amountDesired: goal?.amountDesired,
+    if (goal) {
+      setFormData({
+        name: goal.title || goal.name || "",
+        type: goal.type || goal.priority || "",
+        owner: goal.owner || "Antonio Gomez",
+        targetDate: goal.targetDate,
+        targetAmount: goal.targetAmount,
+        description: goal.description || "",
+        dateOfBirth: goal.dateOfBirth,
+        targetRetirementAge: goal.targetRetirementAge,
+        planningHorizonAge: goal.planningHorizonAge,
+        // Asset Purchase fields
+        purchasePrice: goal.purchasePrice,
+        financingMethod: goal.financingMethod,
+        annualAppreciation: goal.annualAppreciation,
+        // Education fields
+        studentName: goal.studentName,
+        startYear: goal.startYear,
+        endYear: goal.endYear,
+        tuitionEstimate: goal.tuitionEstimate,
+        // Vacation fields
+        destination: goal.destination,
+        estimatedCost: goal.estimatedCost,
+        // Cash Reserve fields
+        amountDesired: goal.amountDesired,
+      });
+    } else {
+      // Reset form for new goal
+      setFormData({
+        name: "",
+        type: "",
+        owner: "Antonio Gomez",
+        targetDate: undefined,
+        targetAmount: undefined,
+        description: "",
       });
     }
-  }, [goal, isOpen, form, fullName]);
+  }, [goal]);
 
-  // Helper function to generate default goal name based on type
-  const getDefaultGoalName = (goalType: string, ownerName: string): string => {
-    if (!goalType) return "";
-    return `${ownerName}'s ${goalType}`;
-  };
+  // Update title when name or owner changes
+  useEffect(() => {
+    if (onTitleUpdate && formData.name && formData.owner) {
+      onTitleUpdate(formData.name, formData.owner);
+    }
+  }, [formData.name, formData.owner, onTitleUpdate]);
 
-  const handleSubmit = (data: GoalFormData) => {
-    onSave(data);
-    onClose();
-  };
-  
-  const handleCancel = () => {
-    if (onCancel) {
-      onCancel();
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    
+    // For number fields, convert to number
+    if (name === "targetAmount" || name === "purchasePrice" || name === "tuitionEstimate" || 
+        name === "startYear" || name === "endYear" || name === "estimatedCost" || name === "amountDesired") {
+      const numValue = value === "" ? undefined : Number(value);
+      setFormData(prev => ({ ...prev, [name]: numValue }));
     } else {
-      onClose();
+      setFormData(prev => ({ ...prev, [name]: value }));
+    }
+
+    // If name is updated, update the panel title
+    if (name === "name" && onTitleUpdate) {
+      onTitleUpdate(value, formData.owner);
     }
   };
 
-  const panelTitle = title || (goal?.title 
-    ? `${goal.title} Goal` 
-    : `${userProfile.firstName}'s Retirement Age`);
-  
-  const isRetirementGoal = 
-    goal?.targetRetirementAge !== undefined || 
-    goal?.type === "Retirement" || 
-    goal?.priority === "Retirement";
+  const handleSelectChange = (name: string, value: string) => {
+    setFormData(prev => ({ ...prev, [name]: value }));
+    
+    // If owner is updated, update the panel title
+    if (name === "owner" && onTitleUpdate) {
+      onTitleUpdate(formData.name, value);
+    }
 
-  const goalType = goal?.type || goal?.priority || "";
+    // For new goals, set initial name based on type
+    if (name === "type" && (!formData.name || formData.name === formData.type)) {
+      const newName = value;
+      setFormData(prev => ({ ...prev, name: newName }));
+      
+      // Update panel title
+      if (onTitleUpdate) {
+        onTitleUpdate(newName, formData.owner);
+      }
+    }
+  };
 
-  // Mobile uses a full-screen Dialog, desktop uses a side Sheet
-  if (isMobile) {
-    return (
-      <Dialog open={isOpen} onOpenChange={(open) => !open && handleCancel()}>
-        <DialogContent className="bg-[#0F0F2D] text-[#E2E2E2] border-none sm:max-w-[425px]">
-          <div className="space-y-6">
-            <h3 className="text-xl font-semibold">{panelTitle}</h3>
-            <GoalForm 
-              form={form} 
-              onSubmit={handleSubmit} 
-              goalType={goalType}
+  const handleDateChange = (date: Date | undefined, fieldName: string) => {
+    setFormData(prev => ({ ...prev, [fieldName]: date }));
+  };
+
+  const handleSave = () => {
+    onSave(formData);
+    onClose();
+  };
+
+  // Determine which fields to display based on goal type
+  const renderGoalFields = () => {
+    switch (formData.type) {
+      case "Asset Purchase":
+        return (
+          <>
+            <div className="space-y-2">
+              <Label htmlFor="purchasePrice">Purchase Price</Label>
+              <Input
+                id="purchasePrice"
+                name="purchasePrice"
+                type="number"
+                value={formData.purchasePrice || ""}
+                onChange={handleInputChange}
+                className="bg-[#1A1A3A] border-gray-700"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="financingMethod">Financing Method</Label>
+              <Select
+                value={formData.financingMethod || ""}
+                onValueChange={(value) => handleSelectChange("financingMethod", value)}
+              >
+                <SelectTrigger id="financingMethod" className="bg-[#1A1A3A] border-gray-700">
+                  <SelectValue placeholder="Select financing method" />
+                </SelectTrigger>
+                <SelectContent className="bg-[#1A1A3A] border-gray-700">
+                  {financingOptions.map(option => (
+                    <SelectItem key={option} value={option}>{option}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="annualAppreciation">Annual Appreciation</Label>
+              <Select
+                value={formData.annualAppreciation || ""}
+                onValueChange={(value) => handleSelectChange("annualAppreciation", value)}
+              >
+                <SelectTrigger id="annualAppreciation" className="bg-[#1A1A3A] border-gray-700">
+                  <SelectValue placeholder="Select appreciation rate" />
+                </SelectTrigger>
+                <SelectContent className="bg-[#1A1A3A] border-gray-700">
+                  {appreciationOptions.map(option => (
+                    <SelectItem key={option} value={option}>{option}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </>
+        );
+      case "Cash Reserve":
+        return (
+          <div className="space-y-2">
+            <Label htmlFor="amountDesired">Amount Desired</Label>
+            <Input
+              id="amountDesired"
+              name="amountDesired"
+              type="number"
+              value={formData.amountDesired || ""}
+              onChange={handleInputChange}
+              className="bg-[#1A1A3A] border-gray-700"
             />
           </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={handleCancel}>Cancel</Button>
-            <Button onClick={form.handleSubmit(handleSubmit)}>Save</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    );
-  }
+        );
+      case "Education":
+        return (
+          <>
+            <div className="space-y-2">
+              <Label htmlFor="studentName">Student Name</Label>
+              <Input
+                id="studentName"
+                name="studentName"
+                value={formData.studentName || ""}
+                onChange={handleInputChange}
+                className="bg-[#1A1A3A] border-gray-700"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="tuitionEstimate">Tuition Estimate</Label>
+              <Input
+                id="tuitionEstimate"
+                name="tuitionEstimate"
+                type="number"
+                value={formData.tuitionEstimate || ""}
+                onChange={handleInputChange}
+                className="bg-[#1A1A3A] border-gray-700"
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="startYear">Start Year</Label>
+                <Input
+                  id="startYear"
+                  name="startYear"
+                  type="number"
+                  value={formData.startYear || ""}
+                  onChange={handleInputChange}
+                  className="bg-[#1A1A3A] border-gray-700"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="endYear">End Year</Label>
+                <Input
+                  id="endYear"
+                  name="endYear"
+                  type="number"
+                  value={formData.endYear || ""}
+                  onChange={handleInputChange}
+                  className="bg-[#1A1A3A] border-gray-700"
+                />
+              </div>
+            </div>
+          </>
+        );
+      case "Vacation":
+        return (
+          <>
+            <div className="space-y-2">
+              <Label htmlFor="destination">Destination</Label>
+              <Input
+                id="destination"
+                name="destination"
+                value={formData.destination || ""}
+                onChange={handleInputChange}
+                className="bg-[#1A1A3A] border-gray-700"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="estimatedCost">Estimated Cost</Label>
+              <Input
+                id="estimatedCost"
+                name="estimatedCost"
+                type="number"
+                value={formData.estimatedCost || ""}
+                onChange={handleInputChange}
+                className="bg-[#1A1A3A] border-gray-700"
+              />
+            </div>
+          </>
+        );
+      case "Vehicle":
+        return (
+          <>
+            <div className="space-y-2">
+              <Label htmlFor="purchasePrice">Purchase Price</Label>
+              <Input
+                id="purchasePrice"
+                name="purchasePrice"
+                type="number"
+                value={formData.purchasePrice || ""}
+                onChange={handleInputChange}
+                className="bg-[#1A1A3A] border-gray-700"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="financingMethod">Financing Method</Label>
+              <Select
+                value={formData.financingMethod || ""}
+                onValueChange={(value) => handleSelectChange("financingMethod", value)}
+              >
+                <SelectTrigger id="financingMethod" className="bg-[#1A1A3A] border-gray-700">
+                  <SelectValue placeholder="Select financing method" />
+                </SelectTrigger>
+                <SelectContent className="bg-[#1A1A3A] border-gray-700">
+                  {financingOptions.map(option => (
+                    <SelectItem key={option} value={option}>{option}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </>
+        );
+      case "Home Purchase":
+        return (
+          <>
+            <div className="space-y-2">
+              <Label htmlFor="purchasePrice">Purchase Price</Label>
+              <Input
+                id="purchasePrice"
+                name="purchasePrice"
+                type="number"
+                value={formData.purchasePrice || ""}
+                onChange={handleInputChange}
+                className="bg-[#1A1A3A] border-gray-700"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="financingMethod">Financing Method</Label>
+              <Select
+                value={formData.financingMethod || ""}
+                onValueChange={(value) => handleSelectChange("financingMethod", value)}
+              >
+                <SelectTrigger id="financingMethod" className="bg-[#1A1A3A] border-gray-700">
+                  <SelectValue placeholder="Select financing method" />
+                </SelectTrigger>
+                <SelectContent className="bg-[#1A1A3A] border-gray-700">
+                  {financingOptions.map(option => (
+                    <SelectItem key={option} value={option}>{option}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="annualAppreciation">Annual Appreciation</Label>
+              <Select
+                value={formData.annualAppreciation || ""}
+                onValueChange={(value) => handleSelectChange("annualAppreciation", value)}
+              >
+                <SelectTrigger id="annualAppreciation" className="bg-[#1A1A3A] border-gray-700">
+                  <SelectValue placeholder="Select appreciation rate" />
+                </SelectTrigger>
+                <SelectContent className="bg-[#1A1A3A] border-gray-700">
+                  {appreciationOptions.map(option => (
+                    <SelectItem key={option} value={option}>{option}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </>
+        );
+      default:
+        // For other goal types, we'll show the default target amount
+        return (
+          <div className="space-y-2">
+            <Label htmlFor="targetAmount">Target Amount</Label>
+            <Input
+              id="targetAmount"
+              name="targetAmount"
+              type="number"
+              value={formData.targetAmount || ""}
+              onChange={handleInputChange}
+              className="bg-[#1A1A3A] border-gray-700"
+            />
+          </div>
+        );
+    }
+  };
+
+  // Show retirement-specific fields for Retirement goal type
+  const showRetirementFields = formData.type === "Retirement";
 
   return (
-    <Sheet open={isOpen} onOpenChange={(open) => !open && handleCancel()}>
-      <SheetContent 
-        side="right" 
-        className="w-[40%] bg-[#0F0F2D] text-[#E2E2E2] border-border/30 p-6 animate-slide-in-right duration-300"
-      >
-        <div className="space-y-6">
-          <h3 className="text-xl font-semibold">{panelTitle}</h3>
-          <GoalForm 
-            form={form} 
-            onSubmit={handleSubmit} 
-            goalType={goalType}
-          />
+    <Sheet open={isOpen} onOpenChange={onClose}>
+      <SheetContent className="w-full sm:max-w-[540px] overflow-y-auto bg-[#0F0F2D] text-white border-l border-gray-800" side="right">
+        <div className="flex flex-col h-full">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-semibold">{title}</h2>
+          </div>
+          
+          <ScrollArea className="flex-1 pr-4">
+            <div className="space-y-6">
+              <div className="space-y-2">
+                <Label htmlFor="owner">Owner</Label>
+                <Select
+                  value={formData.owner}
+                  onValueChange={(value) => handleSelectChange("owner", value)}
+                >
+                  <SelectTrigger id="owner" className="bg-[#1A1A3A] border-gray-700">
+                    <SelectValue placeholder="Select owner" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-[#1A1A3A] border-gray-700">
+                    {owners.map(owner => (
+                      <SelectItem key={owner} value={owner}>{owner}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="type">Goal Type</Label>
+                <Select
+                  value={formData.type}
+                  onValueChange={(value) => handleSelectChange("type", value)}
+                >
+                  <SelectTrigger id="type" className="bg-[#1A1A3A] border-gray-700">
+                    <SelectValue placeholder="Select goal type" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-[#1A1A3A] border-gray-700 max-h-[300px]">
+                    {goalTypes.map(type => (
+                      <SelectItem key={type} value={type}>{type}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="name">Name</Label>
+                <Input
+                  id="name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  className="bg-[#1A1A3A] border-gray-700"
+                />
+              </div>
+              
+              {/* Render type-specific fields */}
+              {formData.type && renderGoalFields()}
+              
+              {/* Show target date for all goals except Education */}
+              {formData.type !== "Education" && (
+                <div className="space-y-2">
+                  <Label htmlFor="targetDate">Target Date</Label>
+                  <DatePicker
+                    date={formData.targetDate}
+                    onSelect={(date) => handleDateChange(date, "targetDate")}
+                    className="bg-[#1A1A3A] border-gray-700 w-full"
+                  />
+                </div>
+              )}
+              
+              {/* Retirement-specific fields */}
+              {showRetirementFields && (
+                <>
+                  <div className="space-y-2">
+                    <Label htmlFor="targetRetirementAge">Target Retirement Age</Label>
+                    <Input
+                      id="targetRetirementAge"
+                      name="targetRetirementAge"
+                      type="number"
+                      value={formData.targetRetirementAge || ""}
+                      onChange={handleInputChange}
+                      className="bg-[#1A1A3A] border-gray-700"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="planningHorizonAge">Planning Horizon (Years)</Label>
+                    <Input
+                      id="planningHorizonAge"
+                      name="planningHorizonAge"
+                      type="number"
+                      value={formData.planningHorizonAge || ""}
+                      onChange={handleInputChange}
+                      className="bg-[#1A1A3A] border-gray-700"
+                    />
+                  </div>
+                </>
+              )}
+              
+              <div className="space-y-2">
+                <Label htmlFor="description">Description</Label>
+                <Textarea
+                  id="description"
+                  name="description"
+                  value={formData.description || ""}
+                  onChange={handleInputChange}
+                  className="bg-[#1A1A3A] border-gray-700 min-h-20"
+                />
+              </div>
+            </div>
+          </ScrollArea>
+          
+          <div className="flex justify-end space-x-2 mt-6 pt-4 border-t border-gray-800">
+            <Button
+              variant="outline"
+              onClick={onCancel}
+              className="border-gray-700 hover:bg-gray-800"
+            >
+              Cancel
+            </Button>
+            <Button 
+              onClick={handleSave}
+              className="bg-primary hover:bg-primary/90"
+            >
+              Save
+            </Button>
+          </div>
         </div>
-        <SheetFooter className="pt-6 mt-6 border-t border-white/10">
-          <Button variant="outline" onClick={handleCancel}>Cancel</Button>
-          <Button onClick={form.handleSubmit(handleSubmit)}>Save</Button>
-        </SheetFooter>
       </SheetContent>
     </Sheet>
   );
-}
-
-interface GoalFormProps {
-  form: any;
-  onSubmit: (data: GoalFormData) => void;
-  goalType: string;
-}
-
-function GoalForm({ form, onSubmit, goalType }: GoalFormProps) {
-  const { userProfile } = useUser();
-  
-  // Determine which fields to show based on goal type
-  const isRetirementGoal = goalType === "Retirement";
-  const isAssetPurchase = goalType === "Asset Purchase" || goalType === "Home Purchase";
-  const isEducation = goalType === "Education";
-  const isVacation = goalType === "Vacation";
-  const isVehicle = goalType === "Vehicle";
-  const isCashReserve = goalType === "Cash Reserve";
-  
-  return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        {/* Common fields for all goal types */}
-        <FormField
-          control={form.control}
-          name="owner"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Owner</FormLabel>
-              <Select
-                onValueChange={field.onChange}
-                defaultValue={field.value}
-              >
-                <FormControl>
-                  <SelectTrigger className="bg-[#1A1A2E] border-border/30">
-                    <SelectValue placeholder="Select owner" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent className="bg-[#1A1A2E] border-border/30">
-                  <SelectItem value={`${userProfile.firstName} ${userProfile.lastName}`}>
-                    {userProfile.firstName} {userProfile.lastName}
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-              <FormMessage className="text-[#FF4D4D]" />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Goal Name</FormLabel>
-              <FormControl>
-                <Input 
-                  className="bg-[#1A1A2E] border-border/30" 
-                  placeholder="Goal name" 
-                  {...field} 
-                />
-              </FormControl>
-              <FormMessage className="text-[#FF4D4D]" />
-            </FormItem>
-          )}
-        />
-
-        {/* Retirement Goal Fields */}
-        {isRetirementGoal && (
-          <>
-            <FormField
-              control={form.control}
-              name="dateOfBirth"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Date of Birth</FormLabel>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant="outline"
-                          className={cn(
-                            "w-full justify-start text-left font-normal bg-[#1A1A2E] border-border/30",
-                            !field.value && "text-muted-foreground"
-                          )}
-                        >
-                          <CalendarIcon className="mr-2 h-4 w-4" />
-                          {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0 bg-[#1A1A2E] border-border/30">
-                      <Calendar
-                        mode="single"
-                        selected={field.value}
-                        onSelect={field.onChange}
-                        initialFocus
-                        className="pointer-events-auto"
-                      />
-                    </PopoverContent>
-                  </Popover>
-                  <FormMessage className="text-[#FF4D4D]" />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="targetRetirementAge"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Target Retirement Age</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      className={cn(
-                        "bg-[#1A1A2E] border-border/30",
-                        form.formState.errors.targetRetirementAge && "border-[#FF4D4D] focus-visible:ring-[#FF4D4D]"
-                      )}
-                      placeholder="70"
-                      {...field}
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        if (value === '' || /^[0-9]+$/.test(value)) {
-                          field.onChange(value === '' ? undefined : parseInt(value, 10));
-                        }
-                      }}
-                    />
-                  </FormControl>
-                  <FormMessage className="text-[#FF4D4D]" />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="planningHorizonAge"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Planning Horizon (Age)</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      className={cn(
-                        "bg-[#1A1A2E] border-border/30",
-                        form.formState.errors.planningHorizonAge && "border-[#FF4D4D] focus-visible:ring-[#FF4D4D]"
-                      )}
-                      placeholder="100"
-                      {...field}
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        if (value === '' || /^[0-9]+$/.test(value)) {
-                          field.onChange(value === '' ? undefined : parseInt(value, 10));
-                        }
-                      }}
-                    />
-                  </FormControl>
-                  <FormMessage className="text-[#FF4D4D]" />
-                </FormItem>
-              )}
-            />
-          </>
-        )}
-
-        {/* Asset Purchase / Home Purchase Fields */}
-        {isAssetPurchase && (
-          <>
-            <FormField
-              control={form.control}
-              name="purchasePrice"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Purchase Price</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      className={cn(
-                        "bg-[#1A1A2E] border-border/30",
-                        form.formState.errors.purchasePrice && "border-[#FF4D4D] focus-visible:ring-[#FF4D4D]"
-                      )}
-                      placeholder="$"
-                      {...field}
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        if (value === '' || /^[0-9]*\.?[0-9]*$/.test(value)) {
-                          field.onChange(value === '' ? undefined : parseFloat(value));
-                        }
-                      }}
-                    />
-                  </FormControl>
-                  <FormMessage className="text-[#FF4D4D]" />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="financingMethod"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Financing Method</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger className="bg-[#1A1A2E] border-border/30">
-                        <SelectValue placeholder="Select financing method" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent className="bg-[#1A1A2E] border-border/30">
-                      <SelectItem value="Cash">Cash</SelectItem>
-                      <SelectItem value="Loan">Loan</SelectItem>
-                      <SelectItem value="Mortgage">Mortgage</SelectItem>
-                      <SelectItem value="Lease">Lease</SelectItem>
-                      <SelectItem value="Other">Other</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage className="text-[#FF4D4D]" />
-                </FormItem>
-              )}
-            />
-
-            {goalType === "Home Purchase" || goalType === "Asset Purchase" ? (
-              <FormField
-                control={form.control}
-                name="annualAppreciation"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Annual Appreciation</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger className="bg-[#1A1A2E] border-border/30">
-                          <SelectValue placeholder="Select appreciation rate" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent className="bg-[#1A1A2E] border-border/30">
-                        <SelectItem value="None">None</SelectItem>
-                        <SelectItem value="1%">1%</SelectItem>
-                        <SelectItem value="2%">2%</SelectItem>
-                        <SelectItem value="3%">3%</SelectItem>
-                        <SelectItem value="4%">4%</SelectItem>
-                        <SelectItem value="5%">5%</SelectItem>
-                        <SelectItem value="6%">6%</SelectItem>
-                        <SelectItem value="7%">7%</SelectItem>
-                        <SelectItem value="8%">8%</SelectItem>
-                        <SelectItem value="9%">9%</SelectItem>
-                        <SelectItem value="10%">10%</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage className="text-[#FF4D4D]" />
-                  </FormItem>
-                )}
-              />
-            ) : null}
-          </>
-        )}
-
-        {/* Education Fields */}
-        {isEducation && (
-          <>
-            <FormField
-              control={form.control}
-              name="studentName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Student Name</FormLabel>
-                  <FormControl>
-                    <Input 
-                      className="bg-[#1A1A2E] border-border/30" 
-                      placeholder="Student name" 
-                      {...field} 
-                    />
-                  </FormControl>
-                  <FormMessage className="text-[#FF4D4D]" />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="tuitionEstimate"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Tuition Estimate</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      className={cn(
-                        "bg-[#1A1A2E] border-border/30",
-                        form.formState.errors.tuitionEstimate && "border-[#FF4D4D] focus-visible:ring-[#FF4D4D]"
-                      )}
-                      placeholder="$"
-                      {...field}
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        if (value === '' || /^[0-9]*\.?[0-9]*$/.test(value)) {
-                          field.onChange(value === '' ? undefined : parseFloat(value));
-                        }
-                      }}
-                    />
-                  </FormControl>
-                  <FormMessage className="text-[#FF4D4D]" />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="startYear"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Start Year</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      className={cn(
-                        "bg-[#1A1A2E] border-border/30",
-                        form.formState.errors.startYear && "border-[#FF4D4D] focus-visible:ring-[#FF4D4D]"
-                      )}
-                      placeholder={new Date().getFullYear().toString()}
-                      {...field}
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        if (value === '' || /^[0-9]+$/.test(value)) {
-                          field.onChange(value === '' ? undefined : parseInt(value, 10));
-                        }
-                      }}
-                    />
-                  </FormControl>
-                  <FormMessage className="text-[#FF4D4D]" />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="endYear"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>End Year</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      className={cn(
-                        "bg-[#1A1A2E] border-border/30",
-                        form.formState.errors.endYear && "border-[#FF4D4D] focus-visible:ring-[#FF4D4D]"
-                      )}
-                      placeholder={(new Date().getFullYear() + 4).toString()}
-                      {...field}
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        if (value === '' || /^[0-9]+$/.test(value)) {
-                          field.onChange(value === '' ? undefined : parseInt(value, 10));
-                        }
-                      }}
-                    />
-                  </FormControl>
-                  <FormMessage className="text-[#FF4D4D]" />
-                </FormItem>
-              )}
-            />
-          </>
-        )}
-
-        {/* Vacation Fields */}
-        {isVacation && (
-          <>
-            <FormField
-              control={form.control}
-              name="destination"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Destination</FormLabel>
-                  <FormControl>
-                    <Input 
-                      className="bg-[#1A1A2E] border-border/30" 
-                      placeholder="Destination" 
-                      {...field} 
-                    />
-                  </FormControl>
-                  <FormMessage className="text-[#FF4D4D]" />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="estimatedCost"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Estimated Cost</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      className={cn(
-                        "bg-[#1A1A2E] border-border/30",
-                        form.formState.errors.estimatedCost && "border-[#FF4D4D] focus-visible:ring-[#FF4D4D]"
-                      )}
-                      placeholder="$"
-                      {...field}
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        if (value === '' || /^[0-9]*\.?[0-9]*$/.test(value)) {
-                          field.onChange(value === '' ? undefined : parseFloat(value));
-                        }
-                      }}
-                    />
-                  </FormControl>
-                  <FormMessage className="text-[#FF4D4D]" />
-                </FormItem>
-              )}
-            />
-          </>
-        )}
-
-        {/* Vehicle Fields (similar to Asset Purchase but with fewer fields) */}
-        {isVehicle && (
-          <>
-            <FormField
-              control={form.control}
-              name="purchasePrice"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Purchase Price</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      className={cn(
-                        "bg-[#1A1A2E] border-border/30",
-                        form.formState.errors.purchasePrice && "border-[#FF4D4D] focus-visible:ring-[#FF4D4D]"
-                      )}
-                      placeholder="$"
-                      {...field}
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        if (value === '' || /^[0-9]*\.?[0-9]*$/.test(value)) {
-                          field.onChange(value === '' ? undefined : parseFloat(value));
-                        }
-                      }}
-                    />
-                  </FormControl>
-                  <FormMessage className="text-[#FF4D4D]" />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="financingMethod"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Financing Method</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger className="bg-[#1A1A2E] border-border/30">
-                        <SelectValue placeholder="Select financing method" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent className="bg-[#1A1A2E] border-border/30">
-                      <SelectItem value="Cash">Cash</SelectItem>
-                      <SelectItem value="Loan">Loan</SelectItem>
-                      <SelectItem value="Lease">Lease</SelectItem>
-                      <SelectItem value="Other">Other</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage className="text-[#FF4D4D]" />
-                </FormItem>
-              )}
-            />
-          </>
-        )}
-
-        {/* Cash Reserve Fields */}
-        {isCashReserve && (
-          <FormField
-            control={form.control}
-            name="amountDesired"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Amount Desired</FormLabel>
-                <FormControl>
-                  <Input
-                    type="number"
-                    className={cn(
-                      "bg-[#1A1A2E] border-border/30",
-                      form.formState.errors.amountDesired && "border-[#FF4D4D] focus-visible:ring-[#FF4D4D]"
-                    )}
-                    placeholder="$"
-                    {...field}
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      if (value === '' || /^[0-9]*\.?[0-9]*$/.test(value)) {
-                        field.onChange(value === '' ? undefined : parseFloat(value));
-                      }
-                    }}
-                  />
-                </FormControl>
-                <FormMessage className="text-[#FF4D4D]" />
-              </FormItem>
-            )}
-          />
-        )}
-
-        {/* Target Date field for most goal types */}
-        {!isEducation && (
-          <FormField
-            control={form.control}
-            name="targetDate"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Target Date</FormLabel>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <FormControl>
-                      <Button
-                        variant="outline"
-                        className={cn(
-                          "w-full justify-start text-left font-normal bg-[#1A1A2E] border-border/30",
-                          !field.value && "text-muted-foreground"
-                        )}
-                      >
-                        <CalendarIcon className="mr-2 h-4 w-4" />
-                        {field.value ? 
-                          (isAssetPurchase || isVehicle) ? 
-                            format(field.value, "MM/yyyy") : 
-                            format(field.value, "PPP") 
-                          : <span>Pick a target date</span>}
-                      </Button>
-                    </FormControl>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0 bg-[#1A1A2E] border-border/30">
-                    <Calendar
-                      mode="single"
-                      selected={field.value}
-                      onSelect={field.onChange}
-                      initialFocus
-                      className="pointer-events-auto"
-                      disabled={(date) => date < new Date()}
-                    />
-                  </PopoverContent>
-                </Popover>
-                <FormMessage className="text-[#FF4D4D]" />
-              </FormItem>
-            )}
-          />
-        )}
-
-        {/* Target Amount field for goal types that don't have a specific amount field */}
-        {!isAssetPurchase && !isEducation && !isVacation && !isVehicle && !isCashReserve && !isRetirementGoal && (
-          <FormField
-            control={form.control}
-            name="targetAmount"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Estimated Amount</FormLabel>
-                <FormControl>
-                  <Input
-                    type="number"
-                    className={cn(
-                      "bg-[#1A1A2E] border-border/30",
-                      form.formState.errors.targetAmount && "border-[#FF4D4D] focus-visible:ring-[#FF4D4D]"
-                    )}
-                    placeholder="$"
-                    {...field}
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      if (value === '' || /^[0-9]*\.?[0-9]*$/.test(value)) {
-                        field.onChange(value === '' ? undefined : parseFloat(value));
-                      }
-                    }}
-                  />
-                </FormControl>
-                <FormMessage className="text-[#FF4D4D]" />
-              </FormItem>
-            )}
-          />
-        )}
-
-        {/* Description field for all goal types */}
-        <FormField
-          control={form.control}
-          name="description"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Description (Optional)</FormLabel>
-              <FormControl>
-                <Textarea 
-                  className="bg-[#1A1A2E] border-border/30 min-h-20" 
-                  placeholder="Enter a short description of your goal" 
-                  {...field} 
-                />
-              </FormControl>
-              <FormMessage className="text-[#FF4D4D]" />
-            </FormItem>
-          )}
-        />
-      </form>
-    </Form>
-  );
-}
+};
