@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -11,6 +11,7 @@ import { Calendar, Trash2, Plus, Edit, Check, X, ArrowRight, ArrowLeft } from "l
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetFooter } from "@/components/ui/sheet";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import { ProjectionPreviewChart } from "./ProjectionPreviewChart";
+import { cn } from "@/lib/utils";
 
 interface CreatePlanDialogProps {
   isOpen: boolean;
@@ -441,7 +442,7 @@ export function CreatePlanDialog({ isOpen, onClose, onCreatePlan }: CreatePlanDi
       <Dialog open={isOpen} onOpenChange={(open) => {
         if (!open) resetAndClose();
       }}>
-        <DialogContent className="bg-[#0F1C2E] border border-border/30 sm:max-w-[500px]">
+        <DialogContent className="bg-[#0F0F2D] text-[#E2E2E2] border border-border/30 sm:max-w-[600px] min-h-[400px] transition-all duration-300">
           <DialogHeader>
             <DialogTitle className="text-xl font-semibold">
               Plan Wizard - Step {currentStep}: {
@@ -452,9 +453,9 @@ export function CreatePlanDialog({ isOpen, onClose, onCreatePlan }: CreatePlanDi
                 "Summary"
               }
             </DialogTitle>
-            <p className="text-sm text-muted-foreground">
+            <DialogDescription className="text-sm text-[#E2E2E2]/70">
               {currentStep === 1 
-                ? "Let's gather some basic information about your plan." 
+                ? "Let's set up your plan. Start by giving it a name." 
                 : currentStep === 2
                 ? "Define your financial goals for this plan."
                 : currentStep === 3
@@ -462,374 +463,423 @@ export function CreatePlanDialog({ isOpen, onClose, onCreatePlan }: CreatePlanDi
                 : currentStep === 4
                 ? "Set assumptions for future projections and growth."
                 : "Review your plan details before creating it."}
-            </p>
+            </DialogDescription>
           </DialogHeader>
           
-          {currentStep === 1 && (
-            <Form {...basicsForm}>
-              <form onSubmit={basicsForm.handleSubmit(handleBasicsSubmit)} className="space-y-4">
-                <FormField
-                  control={basicsForm.control}
-                  name="planName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Plan Name</FormLabel>
-                      <FormControl>
-                        <Input 
-                          placeholder="e.g., Retirement Plan" 
-                          className="bg-background/50 border-border/30"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormDescription>
-                        Give your financial plan a descriptive name
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+          <div className={cn("transition-opacity duration-300", { "animate-in fade-in": true })}>
+            {currentStep === 1 && (
+              <Form {...basicsForm}>
+                <form onSubmit={basicsForm.handleSubmit(handleBasicsSubmit)} className="space-y-4">
+                  <FormField
+                    control={basicsForm.control}
+                    name="planName"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Plan Name</FormLabel>
+                        <FormControl>
+                          <Input 
+                            placeholder="e.g., Pedro Gomez Retirement" 
+                            className="bg-background/50 border-border/30"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormDescription className="text-[#E2E2E2]/70">
+                          Give your financial plan a descriptive name
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={basicsForm.control}
+                    name="targetRetirementAge"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Target Retirement Age</FormLabel>
+                        <FormControl>
+                          <Input 
+                            type="number"
+                            placeholder="e.g., 65" 
+                            className="bg-background/50 border-border/30"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={basicsForm.control}
+                    name="spouseRetirementAge"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Spouse's Retirement Age (if applicable)</FormLabel>
+                        <FormControl>
+                          <Input 
+                            type="number"
+                            placeholder="e.g., 65" 
+                            className="bg-background/50 border-border/30"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <DialogFooter className="pt-4">
+                    <Button 
+                      type="button" 
+                      variant="outline" 
+                      onClick={resetAndClose}
+                    >
+                      Cancel
+                    </Button>
+                    <Button type="submit">
+                      Continue
+                      <ArrowRight className="ml-1 h-4 w-4" />
+                    </Button>
+                  </DialogFooter>
+                </form>
+              </Form>
+            )}
+            
+            {currentStep === 2 && (
+              <div className="space-y-4">
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="text-sm font-medium">Your Financial Goals</h3>
+                  <Button 
+                    type="button" 
+                    size="sm" 
+                    variant="outline" 
+                    className="gap-1"
+                    onClick={() => openGoalForm()}
+                  >
+                    <Plus className="h-4 w-4" />
+                    Add Goal
+                  </Button>
+                </div>
                 
-                <FormField
-                  control={basicsForm.control}
-                  name="targetRetirementAge"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Target Retirement Age</FormLabel>
-                      <FormControl>
-                        <Input 
-                          type="number"
-                          placeholder="e.g., 65" 
-                          className="bg-background/50 border-border/30"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={basicsForm.control}
-                  name="spouseRetirementAge"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Spouse's Retirement Age (if applicable)</FormLabel>
-                      <FormControl>
-                        <Input 
-                          type="number"
-                          placeholder="e.g., 65" 
-                          className="bg-background/50 border-border/30"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                {goals.length === 0 ? (
+                  <div className="text-center py-6 text-muted-foreground">
+                    <p>No goals added yet.</p>
+                    <p className="text-sm">Click "Add Goal" to define your first financial goal.</p>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {goals.map((goal) => (
+                      <div 
+                        key={goal.id} 
+                        className="bg-background/50 border border-border/30 p-3 rounded-md"
+                      >
+                        <div className="flex justify-between items-start">
+                          <div>
+                            <h4 className="font-medium">{goal.title}</h4>
+                            {goal.targetDate && (
+                              <p className="text-xs text-muted-foreground flex items-center gap-1">
+                                <Calendar className="h-3 w-3" />
+                                Target: {goal.targetDate}
+                              </p>
+                            )}
+                            {goal.targetAmount && (
+                              <p className="text-xs text-muted-foreground">
+                                Amount: ${parseInt(goal.targetAmount).toLocaleString()}
+                              </p>
+                            )}
+                            {goal.priority && (
+                              <p className="text-xs">
+                                Priority: <span className={`font-medium ${
+                                  goal.priority === "High" ? "text-red-400" : 
+                                  goal.priority === "Medium" ? "text-yellow-400" : 
+                                  "text-green-400"
+                                }`}>{goal.priority}</span>
+                              </p>
+                            )}
+                          </div>
+                          <div className="flex gap-1">
+                            <Button 
+                              variant="ghost" 
+                              size="icon" 
+                              className="h-7 w-7" 
+                              onClick={() => openGoalForm(goal)}
+                            >
+                              <Edit className="h-4 w-4" />
+                            </Button>
+                            <Button 
+                              variant="ghost" 
+                              size="icon" 
+                              className="h-7 w-7 text-red-400 hover:text-red-300 hover:bg-red-900/20" 
+                              onClick={() => removeGoal(goal.id)}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
                 
                 <DialogFooter className="pt-4">
                   <Button 
                     type="button" 
                     variant="outline" 
-                    onClick={resetAndClose}
+                    onClick={handleGoBack}
                   >
-                    Cancel
+                    <ArrowLeft className="mr-1 h-4 w-4" />
+                    Back
                   </Button>
-                  <Button type="submit">
-                    Next
+                  <Button 
+                    type="button" 
+                    onClick={handleNext}
+                  >
+                    Continue
                     <ArrowRight className="ml-1 h-4 w-4" />
                   </Button>
                 </DialogFooter>
-              </form>
-            </Form>
-          )}
-          
-          {currentStep === 2 && (
-            <div className="space-y-4">
-              <div className="flex items-center justify-between mb-2">
-                <h3 className="text-sm font-medium">Your Financial Goals</h3>
-                <Button 
-                  type="button" 
-                  size="sm" 
-                  variant="outline" 
-                  className="gap-1"
-                  onClick={() => openGoalForm()}
-                >
-                  <Plus className="h-4 w-4" />
-                  Add Goal
-                </Button>
               </div>
-              
-              {goals.length === 0 ? (
-                <div className="text-center py-6 text-muted-foreground">
-                  <p>No goals added yet.</p>
-                  <p className="text-sm">Click "Add Goal" to define your first financial goal.</p>
-                </div>
-              ) : (
+            )}
+            
+            {currentStep === 3 && (
+              <div className="space-y-6">
                 <div className="space-y-3">
-                  {goals.map((goal) => (
-                    <div 
-                      key={goal.id} 
-                      className="bg-background/50 border border-border/30 p-3 rounded-md"
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="text-sm font-medium">Income Sources</h3>
+                    <Button 
+                      type="button" 
+                      size="sm" 
+                      variant="outline" 
+                      className="gap-1"
+                      onClick={() => openIncomeForm()}
                     >
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <h4 className="font-medium">{goal.title}</h4>
-                          {goal.targetDate && (
-                            <p className="text-xs text-muted-foreground flex items-center gap-1">
-                              <Calendar className="h-3 w-3" />
-                              Target: {goal.targetDate}
-                            </p>
-                          )}
-                          {goal.targetAmount && (
-                            <p className="text-xs text-muted-foreground">
-                              Amount: ${parseInt(goal.targetAmount).toLocaleString()}
-                            </p>
-                          )}
-                          {goal.priority && (
-                            <p className="text-xs">
-                              Priority: <span className={`font-medium ${
-                                goal.priority === "High" ? "text-red-400" : 
-                                goal.priority === "Medium" ? "text-yellow-400" : 
-                                "text-green-400"
-                              }`}>{goal.priority}</span>
-                            </p>
-                          )}
-                        </div>
-                        <div className="flex gap-1">
-                          <Button 
-                            variant="ghost" 
-                            size="icon" 
-                            className="h-7 w-7" 
-                            onClick={() => openGoalForm(goal)}
-                          >
-                            <Edit className="h-4 w-4" />
-                          </Button>
-                          <Button 
-                            variant="ghost" 
-                            size="icon" 
-                            className="h-7 w-7 text-red-400 hover:text-red-300 hover:bg-red-900/20" 
-                            onClick={() => removeGoal(goal.id)}
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </div>
+                      <Plus className="h-4 w-4" />
+                      Add Income
+                    </Button>
+                  </div>
+                  
+                  {incomeItems.length === 0 ? (
+                    <div className="text-center py-4 text-muted-foreground bg-background/30 rounded-md border border-border/20">
+                      <p className="text-sm">No income sources added.</p>
+                      <p className="text-xs">Add your salary, investments, and other income sources.</p>
                     </div>
-                  ))}
+                  ) : (
+                    <div className="overflow-auto max-h-[200px] border border-border/30 rounded-md">
+                      <Table className="min-w-full">
+                        <TableHeader className="bg-background/20">
+                          <TableRow>
+                            <TableHead className="w-1/3">Source</TableHead>
+                            <TableHead className="w-1/4">Amount</TableHead>
+                            <TableHead className="w-1/4">Frequency</TableHead>
+                            <TableHead className="w-1/6 text-right">Actions</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {incomeItems.map((income) => (
+                            <TableRow key={income.id} className="border-b border-border/20">
+                              <TableCell className="font-medium">{income.source}</TableCell>
+                              <TableCell>{formatCurrency(income.amount)}</TableCell>
+                              <TableCell>{income.frequency}</TableCell>
+                              <TableCell className="text-right">
+                                <div className="flex justify-end gap-1">
+                                  <Button 
+                                    variant="ghost" 
+                                    size="icon" 
+                                    className="h-7 w-7" 
+                                    onClick={() => openIncomeForm(income)}
+                                  >
+                                    <Edit className="h-4 w-4" />
+                                  </Button>
+                                  <Button 
+                                    variant="ghost" 
+                                    size="icon" 
+                                    className="h-7 w-7 text-red-400 hover:text-red-300" 
+                                    onClick={() => removeIncome(income.id)}
+                                  >
+                                    <Trash2 className="h-4 w-4" />
+                                  </Button>
+                                </div>
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </div>
+                  )}
                 </div>
-              )}
-              
-              <DialogFooter className="pt-4">
-                <Button 
-                  type="button" 
-                  variant="outline" 
-                  onClick={handleGoBack}
-                >
-                  <ArrowLeft className="mr-1 h-4 w-4" />
-                  Back
-                </Button>
-                <Button 
-                  type="button" 
-                  onClick={handleNext}
-                >
-                  Next
-                  <ArrowRight className="ml-1 h-4 w-4" />
-                </Button>
-              </DialogFooter>
-            </div>
-          )}
-          
-          {currentStep === 3 && (
-            <div className="space-y-6">
-              <div className="space-y-3">
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-sm font-medium">Income Sources</h3>
+                
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="text-sm font-medium">Expenses</h3>
+                    <Button 
+                      type="button" 
+                      size="sm" 
+                      variant="outline" 
+                      className="gap-1"
+                      onClick={() => openExpenseForm()}
+                    >
+                      <Plus className="h-4 w-4" />
+                      Add Expense
+                    </Button>
+                  </div>
+                  
+                  {expenseItems.length === 0 ? (
+                    <div className="text-center py-4 text-muted-foreground bg-background/30 rounded-md border border-border/20">
+                      <p className="text-sm">No expenses added yet.</p>
+                      <p className="text-xs">Add your mortgage, insurance, and other regular expenses.</p>
+                    </div>
+                  ) : (
+                    <div className="overflow-auto max-h-[200px] border border-border/30 rounded-md">
+                      <Table className="min-w-full">
+                        <TableHeader className="bg-background/20">
+                          <TableRow>
+                            <TableHead className="w-1/3">Category</TableHead>
+                            <TableHead className="w-1/4">Amount</TableHead>
+                            <TableHead className="w-1/4">Frequency</TableHead>
+                            <TableHead className="w-1/6 text-right">Actions</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {expenseItems.map((expense) => (
+                            <TableRow key={expense.id} className="border-b border-border/20">
+                              <TableCell className="font-medium">{expense.category}</TableCell>
+                              <TableCell>{formatCurrency(expense.amount)}</TableCell>
+                              <TableCell>{expense.frequency}</TableCell>
+                              <TableCell className="text-right">
+                                <div className="flex justify-end gap-1">
+                                  <Button 
+                                    variant="ghost" 
+                                    size="icon" 
+                                    className="h-7 w-7" 
+                                    onClick={() => openExpenseForm(expense)}
+                                  >
+                                    <Edit className="h-4 w-4" />
+                                  </Button>
+                                  <Button 
+                                    variant="ghost" 
+                                    size="icon" 
+                                    className="h-7 w-7 text-red-400 hover:text-red-300" 
+                                    onClick={() => removeExpense(expense.id)}
+                                  >
+                                    <Trash2 className="h-4 w-4" />
+                                  </Button>
+                                </div>
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </div>
+                  )}
+                </div>
+                
+                <p className="text-sm text-muted-foreground">
+                  <Button 
+                    variant="link" 
+                    className="p-0 h-auto text-sm font-normal"
+                    onClick={() => {/* Future enhancement: Advanced income/expense categories */}}
+                  >
+                    Add expense categories
+                  </Button> or refine your financial tracking with custom categories.
+                </p>
+                
+                <DialogFooter className="pt-4">
                   <Button 
                     type="button" 
-                    size="sm" 
                     variant="outline" 
-                    className="gap-1"
-                    onClick={() => openIncomeForm()}
+                    onClick={handleGoBack}
                   >
-                    <Plus className="h-4 w-4" />
-                    Add Income
+                    <ArrowLeft className="mr-1 h-4 w-4" />
+                    Back
                   </Button>
-                </div>
-                
-                {incomeItems.length === 0 ? (
-                  <div className="text-center py-4 text-muted-foreground bg-background/30 rounded-md border border-border/20">
-                    <p className="text-sm">No income sources added.</p>
-                    <p className="text-xs">Add your salary, investments, and other income sources.</p>
-                  </div>
-                ) : (
-                  <div className="overflow-auto max-h-[200px] border border-border/30 rounded-md">
-                    <Table className="min-w-full">
-                      <TableHeader className="bg-background/20">
-                        <TableRow>
-                          <TableHead className="w-1/3">Source</TableHead>
-                          <TableHead className="w-1/4">Amount</TableHead>
-                          <TableHead className="w-1/4">Frequency</TableHead>
-                          <TableHead className="w-1/6 text-right">Actions</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {incomeItems.map((income) => (
-                          <TableRow key={income.id} className="border-b border-border/20">
-                            <TableCell className="font-medium">{income.source}</TableCell>
-                            <TableCell>{formatCurrency(income.amount)}</TableCell>
-                            <TableCell>{income.frequency}</TableCell>
-                            <TableCell className="text-right">
-                              <div className="flex justify-end gap-1">
-                                <Button 
-                                  variant="ghost" 
-                                  size="icon" 
-                                  className="h-7 w-7" 
-                                  onClick={() => openIncomeForm(income)}
-                                >
-                                  <Edit className="h-4 w-4" />
-                                </Button>
-                                <Button 
-                                  variant="ghost" 
-                                  size="icon" 
-                                  className="h-7 w-7 text-red-400 hover:text-red-300" 
-                                  onClick={() => removeIncome(income.id)}
-                                >
-                                  <Trash2 className="h-4 w-4" />
-                                </Button>
-                              </div>
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </div>
-                )}
-              </div>
-              
-              <div className="space-y-3">
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-sm font-medium">Expenses</h3>
                   <Button 
                     type="button" 
-                    size="sm" 
-                    variant="outline" 
-                    className="gap-1"
-                    onClick={() => openExpenseForm()}
+                    onClick={handleNext}
                   >
-                    <Plus className="h-4 w-4" />
-                    Add Expense
+                    Continue
+                    <ArrowRight className="ml-1 h-4 w-4" />
                   </Button>
-                </div>
-                
-                {expenseItems.length === 0 ? (
-                  <div className="text-center py-4 text-muted-foreground bg-background/30 rounded-md border border-border/20">
-                    <p className="text-sm">No expenses added yet.</p>
-                    <p className="text-xs">Add your mortgage, insurance, and other regular expenses.</p>
-                  </div>
-                ) : (
-                  <div className="overflow-auto max-h-[200px] border border-border/30 rounded-md">
-                    <Table className="min-w-full">
-                      <TableHeader className="bg-background/20">
-                        <TableRow>
-                          <TableHead className="w-1/3">Category</TableHead>
-                          <TableHead className="w-1/4">Amount</TableHead>
-                          <TableHead className="w-1/4">Frequency</TableHead>
-                          <TableHead className="w-1/6 text-right">Actions</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {expenseItems.map((expense) => (
-                          <TableRow key={expense.id} className="border-b border-border/20">
-                            <TableCell className="font-medium">{expense.category}</TableCell>
-                            <TableCell>{formatCurrency(expense.amount)}</TableCell>
-                            <TableCell>{expense.frequency}</TableCell>
-                            <TableCell className="text-right">
-                              <div className="flex justify-end gap-1">
-                                <Button 
-                                  variant="ghost" 
-                                  size="icon" 
-                                  className="h-7 w-7" 
-                                  onClick={() => openExpenseForm(expense)}
-                                >
-                                  <Edit className="h-4 w-4" />
-                                </Button>
-                                <Button 
-                                  variant="ghost" 
-                                  size="icon" 
-                                  className="h-7 w-7 text-red-400 hover:text-red-300" 
-                                  onClick={() => removeExpense(expense.id)}
-                                >
-                                  <Trash2 className="h-4 w-4" />
-                                </Button>
-                              </div>
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </div>
-                )}
+                </DialogFooter>
               </div>
-              
-              <p className="text-sm text-muted-foreground">
-                <Button 
-                  variant="link" 
-                  className="p-0 h-auto text-sm font-normal"
-                  onClick={() => {/* Future enhancement: Advanced income/expense categories */}}
-                >
-                  Add expense categories
-                </Button> or refine your financial tracking with custom categories.
-              </p>
-              
-              <DialogFooter className="pt-4">
-                <Button 
-                  type="button" 
-                  variant="outline" 
-                  onClick={handleGoBack}
-                >
-                  <ArrowLeft className="mr-1 h-4 w-4" />
-                  Back
-                </Button>
-                <Button 
-                  type="button" 
-                  onClick={handleNext}
-                >
-                  Next
-                  <ArrowRight className="ml-1 h-4 w-4" />
-                </Button>
-              </DialogFooter>
-            </div>
-          )}
-          
-          {currentStep === 4 && (
-            <Form {...projectionsForm}>
-              <form onSubmit={projectionsForm.handleSubmit(handleProjectionsSubmit)} className="space-y-4">
-                <div className="mb-4">
-                  <h3 className="text-sm font-medium mb-2">Investment Assumptions</h3>
-                  <p className="text-xs text-muted-foreground">
-                    These assumptions will affect your projected net worth and chance of success.
-                  </p>
-                </div>
-                
-                <div className="grid grid-cols-2 gap-4">
+            )}
+            
+            {currentStep === 4 && (
+              <Form {...projectionsForm}>
+                <form onSubmit={projectionsForm.handleSubmit(handleProjectionsSubmit)} className="space-y-4">
+                  <div className="mb-4">
+                    <h3 className="text-sm font-medium mb-2">Investment Assumptions</h3>
+                    <p className="text-xs text-muted-foreground">
+                      These assumptions will affect your projected net worth and chance of success.
+                    </p>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-4">
+                    <FormField
+                      control={projectionsForm.control}
+                      name="expectedReturnRate"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Expected Return (%)</FormLabel>
+                          <FormControl>
+                            <Input 
+                              type="number" 
+                              step="0.1"
+                              placeholder="7"
+                              className="bg-background/50 border-border/30"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormDescription className="text-xs">
+                            Average annual return on investments
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={projectionsForm.control}
+                      name="inflationRate"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Inflation Rate (%)</FormLabel>
+                          <FormControl>
+                            <Input 
+                              type="number"
+                              step="0.1"
+                              placeholder="2.5"
+                              className="bg-background/50 border-border/30"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormDescription className="text-xs">
+                            Expected annual inflation
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  
                   <FormField
                     control={projectionsForm.control}
-                    name="expectedReturnRate"
+                    name="riskTolerance"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Expected Return (%)</FormLabel>
+                        <FormLabel>Risk Tolerance</FormLabel>
                         <FormControl>
-                          <Input 
-                            type="number" 
-                            step="0.1"
-                            placeholder="7"
-                            className="bg-background/50 border-border/30"
+                          <select
+                            className="bg-background/50 border border-border/30 rounded-md px-3 py-2 w-full text-sm"
                             {...field}
-                          />
+                          >
+                            <option value="Conservative">Conservative</option>
+                            <option value="Moderate">Moderate</option>
+                            <option value="Aggressive">Aggressive</option>
+                          </select>
                         </FormControl>
                         <FormDescription className="text-xs">
-                          Average annual return on investments
+                          Your comfort level with investment risk
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
@@ -838,87 +888,148 @@ export function CreatePlanDialog({ isOpen, onClose, onCreatePlan }: CreatePlanDi
                   
                   <FormField
                     control={projectionsForm.control}
-                    name="inflationRate"
+                    name="lifeExpectancy"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Inflation Rate (%)</FormLabel>
+                        <FormLabel>Life Expectancy (Optional)</FormLabel>
                         <FormControl>
                           <Input 
                             type="number"
-                            step="0.1"
-                            placeholder="2.5"
+                            placeholder="85"
                             className="bg-background/50 border-border/30"
                             {...field}
                           />
                         </FormControl>
                         <FormDescription className="text-xs">
-                          Expected annual inflation
+                          Age to plan for in retirement calculations
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-                </div>
-                
-                <FormField
-                  control={projectionsForm.control}
-                  name="riskTolerance"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Risk Tolerance</FormLabel>
-                      <FormControl>
-                        <select
-                          className="bg-background/50 border border-border/30 rounded-md px-3 py-2 w-full text-sm"
-                          {...field}
-                        >
-                          <option value="Conservative">Conservative</option>
-                          <option value="Moderate">Moderate</option>
-                          <option value="Aggressive">Aggressive</option>
-                        </select>
-                      </FormControl>
-                      <FormDescription className="text-xs">
-                        Your comfort level with investment risk
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={projectionsForm.control}
-                  name="lifeExpectancy"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Life Expectancy (Optional)</FormLabel>
-                      <FormControl>
-                        <Input 
-                          type="number"
-                          placeholder="85"
-                          className="bg-background/50 border-border/30"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormDescription className="text-xs">
-                        Age to plan for in retirement calculations
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                <div className="mt-6 mb-4">
-                  <h3 className="text-sm font-medium mb-2">Projection Preview</h3>
-                  <div className="bg-background/30 rounded-md p-4 h-[180px] border border-border/20">
-                    <ProjectionPreviewChart 
-                      expectedReturn={parseFloat(projectionsForm.watch("expectedReturnRate") || "7")}
-                      inflation={parseFloat(projectionsForm.watch("inflationRate") || "2.5")}
-                      riskTolerance={projectionsForm.watch("riskTolerance") || "Moderate"}
-                      monthlyNetSavings={calculateNetMonthly().net}
-                    />
+                  
+                  <div className="mt-6 mb-4">
+                    <h3 className="text-sm font-medium mb-2">Projection Preview</h3>
+                    <div className="bg-background/30 rounded-md p-4 h-[180px] border border-border/20">
+                      <ProjectionPreviewChart 
+                        expectedReturn={parseFloat(projectionsForm.watch("expectedReturnRate") || "7")}
+                        inflation={parseFloat(projectionsForm.watch("inflationRate") || "2.5")}
+                        riskTolerance={projectionsForm.watch("riskTolerance") || "Moderate"}
+                        monthlyNetSavings={calculateNetMonthly().net}
+                      />
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-2">
+                      This is a simplified projection based on your inputs. Actual results may vary.
+                    </p>
                   </div>
-                  <p className="text-xs text-muted-foreground mt-2">
-                    This is a simplified projection based on your inputs. Actual results may vary.
-                  </p>
+                  
+                  <DialogFooter className="pt-4">
+                    <Button 
+                      type="button" 
+                      variant="outline" 
+                      onClick={handleGoBack}
+                    >
+                      <ArrowLeft className="mr-1 h-4 w-4" />
+                      Back
+                    </Button>
+                    <Button type="submit">
+                      Continue
+                      <ArrowRight className="ml-1 h-4 w-4" />
+                    </Button>
+                  </DialogFooter>
+                </form>
+              </Form>
+            )}
+            
+            {currentStep === 5 && (
+              <div className="space-y-4">
+                <div className="space-y-3">
+                  <div className="border-b border-border/30 pb-2">
+                    <h3 className="text-sm font-medium">Plan Details</h3>
+                    <p className="text-sm">
+                      <span className="text-muted-foreground">Name:</span> {basicsForm.getValues().planName}
+                    </p>
+                    <p className="text-sm">
+                      <span className="text-muted-foreground">Retirement Age:</span> {basicsForm.getValues().targetRetirementAge || "Not specified"}
+                    </p>
+                    <p className="text-sm">
+                      <span className="text-muted-foreground">Spouse's Retirement Age:</span> {basicsForm.getValues().spouseRetirementAge || "Not specified"}
+                    </p>
+                  </div>
+                  
+                  <div className="border-b border-border/30 pb-2">
+                    <h3 className="text-sm font-medium mb-2">Goals ({goals.length})</h3>
+                    {goals.length === 0 ? (
+                      <p className="text-sm text-muted-foreground">No goals defined</p>
+                    ) : (
+                      <ul className="space-y-2">
+                        {goals.map((goal) => (
+                          <li key={goal.id} className="text-sm flex items-center gap-2">
+                            <Check className="h-4 w-4 text-green-400 flex-shrink-0" />
+                            <span>{goal.title}</span>
+                            {goal.targetAmount && (
+                              <span className="text-muted-foreground ml-auto">${parseInt(goal.targetAmount).toLocaleString()}</span>
+                            )}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                  
+                  <div className="border-b border-border/30 pb-2">
+                    <h3 className="text-sm font-medium mb-2">Income & Expenses</h3>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <p className="text-xs text-muted-foreground mb-1">Income Sources: {incomeItems.length}</p>
+                        {incomeItems.length > 0 ? (
+                          <ul className="text-xs space-y-1">
+                            {incomeItems.map(income => (
+                              <li key={income.id}>
+                                {income.source}: {formatCurrency(income.amount)} ({income.frequency})
+                              </li>
+                            ))}
+                          </ul>
+                        ) : (
+                          <p className="text-xs text-muted-foreground">None defined</p>
+                        )}
+                      </div>
+                      <div>
+                        <p className="text-xs text-muted-foreground mb-1">Expenses: {expenseItems.length}</p>
+                        {expenseItems.length > 0 ? (
+                          <ul className="text-xs space-y-1">
+                            {expenseItems.map(expense => (
+                              <li key={expense.id}>
+                                {expense.category}: {formatCurrency(expense.amount)} ({expense.frequency})
+                              </li>
+                            ))}
+                          </ul>
+                        ) : (
+                          <p className="text-xs text-muted-foreground">None defined</p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="border-b border-border/30 pb-2">
+                    <h3 className="text-sm font-medium mb-2">Projections</h3>
+                    <div className="flex justify-between">
+                      <div>
+                        <p className="text-xs">
+                          <span className="text-muted-foreground">Expected Return:</span> {projectionsForm.getValues().expectedReturnRate}%
+                        </p>
+                        <p className="text-xs">
+                          <span className="text-muted-foreground">Inflation:</span> {projectionsForm.getValues().inflationRate}%
+                        </p>
+                        <p className="text-xs">
+                          <span className="text-muted-foreground">Risk Tolerance:</span> {projectionsForm.getValues().riskTolerance}
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-sm font-medium">Chance of Success</p>
+                        <p className="text-lg font-semibold text-green-400">{successRate}%</p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 
                 <DialogFooter className="pt-4">
@@ -930,124 +1041,16 @@ export function CreatePlanDialog({ isOpen, onClose, onCreatePlan }: CreatePlanDi
                     <ArrowLeft className="mr-1 h-4 w-4" />
                     Back
                   </Button>
-                  <Button type="submit">
-                    Next
-                    <ArrowRight className="ml-1 h-4 w-4" />
+                  <Button 
+                    type="button" 
+                    onClick={handleFinalSubmit}
+                  >
+                    Create Plan
                   </Button>
                 </DialogFooter>
-              </form>
-            </Form>
-          )}
-          
-          {currentStep === 5 && (
-            <div className="space-y-4">
-              <div className="space-y-3">
-                <div className="border-b border-border/30 pb-2">
-                  <h3 className="text-sm font-medium">Plan Details</h3>
-                  <p className="text-sm">
-                    <span className="text-muted-foreground">Name:</span> {basicsForm.getValues().planName}
-                  </p>
-                  <p className="text-sm">
-                    <span className="text-muted-foreground">Retirement Age:</span> {basicsForm.getValues().targetRetirementAge || "Not specified"}
-                  </p>
-                  <p className="text-sm">
-                    <span className="text-muted-foreground">Spouse's Retirement Age:</span> {basicsForm.getValues().spouseRetirementAge || "Not specified"}
-                  </p>
-                </div>
-                
-                <div className="border-b border-border/30 pb-2">
-                  <h3 className="text-sm font-medium mb-2">Goals ({goals.length})</h3>
-                  {goals.length === 0 ? (
-                    <p className="text-sm text-muted-foreground">No goals defined</p>
-                  ) : (
-                    <ul className="space-y-2">
-                      {goals.map((goal) => (
-                        <li key={goal.id} className="text-sm flex items-center gap-2">
-                          <Check className="h-4 w-4 text-green-400 flex-shrink-0" />
-                          <span>{goal.title}</span>
-                          {goal.targetAmount && (
-                            <span className="text-muted-foreground ml-auto">${parseInt(goal.targetAmount).toLocaleString()}</span>
-                          )}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
-                
-                <div className="border-b border-border/30 pb-2">
-                  <h3 className="text-sm font-medium mb-2">Income & Expenses</h3>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <p className="text-xs text-muted-foreground mb-1">Income Sources: {incomeItems.length}</p>
-                      {incomeItems.length > 0 ? (
-                        <ul className="text-xs space-y-1">
-                          {incomeItems.map(income => (
-                            <li key={income.id}>
-                              {income.source}: {formatCurrency(income.amount)} ({income.frequency})
-                            </li>
-                          ))}
-                        </ul>
-                      ) : (
-                        <p className="text-xs text-muted-foreground">None defined</p>
-                      )}
-                    </div>
-                    <div>
-                      <p className="text-xs text-muted-foreground mb-1">Expenses: {expenseItems.length}</p>
-                      {expenseItems.length > 0 ? (
-                        <ul className="text-xs space-y-1">
-                          {expenseItems.map(expense => (
-                            <li key={expense.id}>
-                              {expense.category}: {formatCurrency(expense.amount)} ({expense.frequency})
-                            </li>
-                          ))}
-                        </ul>
-                      ) : (
-                        <p className="text-xs text-muted-foreground">None defined</p>
-                      )}
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="border-b border-border/30 pb-2">
-                  <h3 className="text-sm font-medium mb-2">Projections</h3>
-                  <div className="flex justify-between">
-                    <div>
-                      <p className="text-xs">
-                        <span className="text-muted-foreground">Expected Return:</span> {projectionsForm.getValues().expectedReturnRate}%
-                      </p>
-                      <p className="text-xs">
-                        <span className="text-muted-foreground">Inflation:</span> {projectionsForm.getValues().inflationRate}%
-                      </p>
-                      <p className="text-xs">
-                        <span className="text-muted-foreground">Risk Tolerance:</span> {projectionsForm.getValues().riskTolerance}
-                      </p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-sm font-medium">Chance of Success</p>
-                      <p className="text-lg font-semibold text-green-400">{successRate}%</p>
-                    </div>
-                  </div>
-                </div>
               </div>
-              
-              <DialogFooter className="pt-4">
-                <Button 
-                  type="button" 
-                  variant="outline" 
-                  onClick={handleGoBack}
-                >
-                  <ArrowLeft className="mr-1 h-4 w-4" />
-                  Back
-                </Button>
-                <Button 
-                  type="button" 
-                  onClick={handleFinalSubmit}
-                >
-                  Create Plan
-                </Button>
-              </DialogFooter>
-            </div>
-          )}
+            )}
+          </div>
         </DialogContent>
       </Dialog>
       
