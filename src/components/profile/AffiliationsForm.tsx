@@ -12,14 +12,16 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { X } from "lucide-react";
 
 const formSchema = z.object({
   stockExchangeOrFinra: z.enum(["Yes", "No"]),
   publicCompany: z.enum(["Yes", "No"]),
   usPoliticallyExposed: z.enum(["Yes", "No"]),
-  fartherEmployee: z.enum(["Yes", "No"]),
+  awmEmployee: z.enum(["Yes", "No"]),
   custodian: z.enum(["Yes", "No"]),
   brokerDealer: z.enum(["Yes", "No"]),
+  familyBrokerDealer: z.enum(["Yes", "No"]),
 });
 
 export function AffiliationsForm({ onSave }: { onSave: () => void }) {
@@ -29,9 +31,10 @@ export function AffiliationsForm({ onSave }: { onSave: () => void }) {
       stockExchangeOrFinra: "No",
       publicCompany: "No",
       usPoliticallyExposed: "No",
-      fartherEmployee: "No",
+      awmEmployee: "No",
       custodian: "No",
       brokerDealer: "No",
+      familyBrokerDealer: "No",
     },
   });
 
@@ -62,13 +65,13 @@ export function AffiliationsForm({ onSave }: { onSave: () => void }) {
                   >
                     <FormItem className="flex items-center space-x-2 space-y-0">
                       <FormControl>
-                        <RadioGroupItem value="Yes" className="text-white" />
+                        <RadioGroupItem value="Yes" className="border-white text-white" />
                       </FormControl>
                       <FormLabel className="font-normal text-white">Yes</FormLabel>
                     </FormItem>
                     <FormItem className="flex items-center space-x-2 space-y-0">
                       <FormControl>
-                        <RadioGroupItem value="No" className="text-white" />
+                        <RadioGroupItem value="No" className="border-white text-white" />
                       </FormControl>
                       <FormLabel className="font-normal text-white">No</FormLabel>
                     </FormItem>
@@ -93,13 +96,13 @@ export function AffiliationsForm({ onSave }: { onSave: () => void }) {
                   >
                     <FormItem className="flex items-center space-x-2 space-y-0">
                       <FormControl>
-                        <RadioGroupItem value="Yes" className="text-white" />
+                        <RadioGroupItem value="Yes" className="border-white text-white" />
                       </FormControl>
                       <FormLabel className="font-normal text-white">Yes</FormLabel>
                     </FormItem>
                     <FormItem className="flex items-center space-x-2 space-y-0">
                       <FormControl>
-                        <RadioGroupItem value="No" className="text-white" />
+                        <RadioGroupItem value="No" className="border-white text-white" />
                       </FormControl>
                       <FormLabel className="font-normal text-white">No</FormLabel>
                     </FormItem>
@@ -124,13 +127,13 @@ export function AffiliationsForm({ onSave }: { onSave: () => void }) {
                   >
                     <FormItem className="flex items-center space-x-2 space-y-0">
                       <FormControl>
-                        <RadioGroupItem value="Yes" className="text-white" />
+                        <RadioGroupItem value="Yes" className="border-white text-white" />
                       </FormControl>
                       <FormLabel className="font-normal text-white">Yes</FormLabel>
                     </FormItem>
                     <FormItem className="flex items-center space-x-2 space-y-0">
                       <FormControl>
-                        <RadioGroupItem value="No" className="text-white" />
+                        <RadioGroupItem value="No" className="border-white text-white" />
                       </FormControl>
                       <FormLabel className="font-normal text-white">No</FormLabel>
                     </FormItem>
@@ -143,10 +146,10 @@ export function AffiliationsForm({ onSave }: { onSave: () => void }) {
           
           <FormField
             control={form.control}
-            name="fartherEmployee"
+            name="awmEmployee"
             render={({ field }) => (
               <FormItem className="space-y-3">
-                <FormLabel className="text-white">Are you related to a Farther Employee?</FormLabel>
+                <FormLabel className="text-white">Are you related to a AWM Employee?</FormLabel>
                 <FormControl>
                   <RadioGroup
                     onValueChange={field.onChange}
@@ -155,13 +158,13 @@ export function AffiliationsForm({ onSave }: { onSave: () => void }) {
                   >
                     <FormItem className="flex items-center space-x-2 space-y-0">
                       <FormControl>
-                        <RadioGroupItem value="Yes" className="text-white" />
+                        <RadioGroupItem value="Yes" className="border-white text-white" />
                       </FormControl>
                       <FormLabel className="font-normal text-white">Yes</FormLabel>
                     </FormItem>
                     <FormItem className="flex items-center space-x-2 space-y-0">
                       <FormControl>
-                        <RadioGroupItem value="No" className="text-white" />
+                        <RadioGroupItem value="No" className="border-white text-white" />
                       </FormControl>
                       <FormLabel className="font-normal text-white">No</FormLabel>
                     </FormItem>
@@ -186,13 +189,13 @@ export function AffiliationsForm({ onSave }: { onSave: () => void }) {
                   >
                     <FormItem className="flex items-center space-x-2 space-y-0">
                       <FormControl>
-                        <RadioGroupItem value="Yes" className="text-white" />
+                        <RadioGroupItem value="Yes" className="border-white text-white" />
                       </FormControl>
                       <FormLabel className="font-normal text-white">Yes</FormLabel>
                     </FormItem>
                     <FormItem className="flex items-center space-x-2 space-y-0">
                       <FormControl>
-                        <RadioGroupItem value="No" className="text-white" />
+                        <RadioGroupItem value="No" className="border-white text-white" />
                       </FormControl>
                       <FormLabel className="font-normal text-white">No</FormLabel>
                     </FormItem>
@@ -217,13 +220,44 @@ export function AffiliationsForm({ onSave }: { onSave: () => void }) {
                   >
                     <FormItem className="flex items-center space-x-2 space-y-0">
                       <FormControl>
-                        <RadioGroupItem value="Yes" className="text-white" />
+                        <RadioGroupItem value="Yes" className="border-white text-white" />
                       </FormControl>
                       <FormLabel className="font-normal text-white">Yes</FormLabel>
                     </FormItem>
                     <FormItem className="flex items-center space-x-2 space-y-0">
                       <FormControl>
-                        <RadioGroupItem value="No" className="text-white" />
+                        <RadioGroupItem value="No" className="border-white text-white" />
+                      </FormControl>
+                      <FormLabel className="font-normal text-white">No</FormLabel>
+                    </FormItem>
+                  </RadioGroup>
+                </FormControl>
+                <FormMessage className="text-red-400" />
+              </FormItem>
+            )}
+          />
+          
+          <FormField
+            control={form.control}
+            name="familyBrokerDealer"
+            render={({ field }) => (
+              <FormItem className="space-y-3">
+                <FormLabel className="text-white">Is a family member affiliated with a broker-dealer?</FormLabel>
+                <FormControl>
+                  <RadioGroup
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                    className="flex space-x-4"
+                  >
+                    <FormItem className="flex items-center space-x-2 space-y-0">
+                      <FormControl>
+                        <RadioGroupItem value="Yes" className="border-white text-white" />
+                      </FormControl>
+                      <FormLabel className="font-normal text-white">Yes</FormLabel>
+                    </FormItem>
+                    <FormItem className="flex items-center space-x-2 space-y-0">
+                      <FormControl>
+                        <RadioGroupItem value="No" className="border-white text-white" />
                       </FormControl>
                       <FormLabel className="font-normal text-white">No</FormLabel>
                     </FormItem>

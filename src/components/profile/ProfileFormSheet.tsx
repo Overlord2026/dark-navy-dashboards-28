@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetClose } from "@/components/ui/sheet";
-import { X } from "lucide-react";
+import { X, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ProfileForm } from "@/components/profile/ProfileForm";
 import { ContactForm } from "@/components/profile/ContactForm";
@@ -80,18 +80,23 @@ export const ProfileFormSheet = ({
 
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
-      <SheetContent className="w-full sm:max-w-[540px] overflow-y-auto bg-[#1B1B32] text-[#E2E2E2] border-l border-gray-800" side="right">
-        <div className="flex items-center justify-between mb-6">
-          <SheetTitle className="text-xl font-semibold text-[#E2E2E2]">
-            {getFormTitle()}
-          </SheetTitle>
+      <SheetContent className="w-full sm:max-w-[540px] overflow-y-auto bg-[#0A0A23] text-white border-l border-gray-800" side="right">
+        <div className="flex items-center justify-between mb-2 py-2 px-4 border border-gray-700/20 rounded-md">
+          <div className="flex items-center">
+            <SheetTitle className="text-xl font-semibold text-white">
+              {getFormTitle()}
+            </SheetTitle>
+            {activeForm === "affiliations" && (
+              <ChevronDown className="h-5 w-5 ml-2 text-white/70" />
+            )}
+          </div>
           <SheetClose asChild>
             <Button variant="ghost" size="icon" className="h-8 w-8 p-0 text-white/70 hover:text-white">
               <X className="h-5 w-5" />
             </Button>
           </SheetClose>
         </div>
-        <div className="p-4">
+        <div className="mt-4">
           {renderFormContent()}
         </div>
       </SheetContent>
