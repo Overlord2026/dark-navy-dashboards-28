@@ -1,4 +1,3 @@
-
 import { ReactNode, useState } from "react";
 import * as React from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
@@ -173,25 +172,7 @@ export function ThreeColumnLayout({
           isLightTheme ? "bg-[#F9F7E8] border-r border-[#DCD8C0]" : "bg-[#1B1B32] border-r border-white/10"
         )}
       >
-        <div className={`flex items-center justify-center h-[70px] px-6 border-b ${isLightTheme ? 'border-[#DCD8C0]' : 'border-white/10'}`}>
-          {mainSidebarCollapsed ? (
-            <div className="w-12 h-12 flex items-center justify-center">
-              <img 
-                src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" 
-                alt="Boutique Family Office" 
-                className="h-10 w-auto" 
-              />
-            </div>
-          ) : (
-            <div className="flex items-center justify-center w-full">
-              <img 
-                src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" 
-                alt="Boutique Family Office" 
-                className="h-14 w-auto" 
-              />
-            </div>
-          )}
-        </div>
+        <div className={`h-[70px] border-b ${isLightTheme ? 'border-[#DCD8C0]' : 'border-white/10'}`}></div>
 
         {!mainSidebarCollapsed && (
           <UserProfileSection onMenuItemClick={handleProfileMenuItemClick} showLogo={false} />
@@ -200,7 +181,6 @@ export function ThreeColumnLayout({
         <div className="flex-1 py-6 overflow-y-auto">
           <nav className="px-4 space-y-2">
             {mainMenuItems.map((item) => {
-              // Skip the education menu item as we're relocating it
               if (item.id === "education") return null;
 
               const Icon = item.icon;
@@ -317,22 +297,18 @@ export function ThreeColumnLayout({
       )}
 
       <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Center logo with Education and Legacy Vault buttons */}
         <div className="flex justify-center items-center py-4 space-x-6">
-          {/* Education button */}
           <Link to="/education" className="flex items-center gap-2 px-4 py-2 rounded-md bg-blue-50 hover:bg-blue-100 text-blue-800 transition-colors">
             <GraduationCapIcon className="h-5 w-5" />
             <span className="font-medium">Education Center</span>
           </Link>
           
-          {/* Center logo */}
           <img 
             src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" 
             alt="Boutique Family Office Logo" 
             className="h-20 w-auto"
           />
           
-          {/* Legacy Vault button */}
           <Link to="/vault" className="flex items-center gap-2 px-4 py-2 rounded-md bg-amber-50 hover:bg-amber-100 text-amber-800 transition-colors">
             <VaultIcon className="h-5 w-5" />
             <span className="font-medium">Legacy Vault</span>
