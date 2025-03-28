@@ -1,3 +1,4 @@
+
 import { ReactNode, useState } from "react";
 import * as React from "react";
 import { useParams, useNavigate, Link, useLocation } from "react-router-dom";
@@ -146,6 +147,14 @@ export function ThreeColumnLayout({
   const isLightTheme = theme === "light";
   const isHomePage = location.pathname === "/";
 
+  const getCurrentPath = () => {
+    // Extract the first part of the path (e.g., /accounts/id -> accounts)
+    const path = location.pathname.split('/')[1];
+    return path === '' ? 'home' : path;
+  };
+
+  const currentPath = getCurrentPath();
+
   const toggleMainSidebar = () => {
     setMainSidebarCollapsed(!mainSidebarCollapsed);
   };
@@ -186,8 +195,9 @@ export function ThreeColumnLayout({
             {mainMenuItems.map((item) => {
               if (item.id === "education") return null;
 
+              const isActive = item.id === currentPath;
               const Icon = item.icon;
-              const isActive = item.id === activeMainItem;
+              
               return (
                 <Link
                   key={item.id}
@@ -196,7 +206,7 @@ export function ThreeColumnLayout({
                     "group flex items-center py-2 px-3 rounded-md transition-colors text-[14px] whitespace-nowrap",
                     "hover:bg-white/10",
                     isActive
-                      ? isLightTheme ? "bg-[#E9E7D8] text-[#222222]" : "bg-black text-[#E2E2E2]"
+                      ? isLightTheme ? "bg-[#E9E7D8] text-[#222222] font-medium" : "bg-black text-[#E2E2E2] font-medium"
                       : isLightTheme ? "text-[#222222]" : "text-[#E2E2E2]",
                     isLightTheme ? "hover:bg-[#E9E7D8]" : "hover:bg-white/10"
                   )}
