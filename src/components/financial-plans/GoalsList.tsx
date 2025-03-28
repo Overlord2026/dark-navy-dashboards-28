@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
@@ -241,6 +242,7 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
     "Wedding"
   ];
 
+  // Separate retirement goals from other goals
   const retirementGoals = localGoals.filter(goal => 
     goal.targetRetirementAge !== undefined || 
     goal.type === "Retirement" || 
@@ -253,6 +255,7 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
     goal.priority !== "Retirement"
   );
   
+  // If there are no goals at all, show retirement age sections and placeholder for other goals
   if (!localGoals || localGoals.length === 0) {
     return (
       <div className="space-y-4">
@@ -291,7 +294,7 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
               {goalTypes.map((type) => (
                 <DropdownMenuItem 
                   key={type} 
-                  className="text-white hover:bg-[#2A2A3E] focus:bg-[#2A2A3E] cursor-pointer"
+                  className="text-white hover:bg-[#1A1A3A] focus:bg-[#1A1A3A] cursor-pointer"
                   onClick={() => handleAddGoalClick(type)}
                 >
                   {type}
@@ -330,7 +333,7 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
             {goalTypes.map((type) => (
               <DropdownMenuItem 
                 key={type} 
-                className="text-white hover:bg-[#2A2A3E] focus:bg-[#2A2A3E] cursor-pointer"
+                className="text-white hover:bg-[#1A1A3A] focus:bg-[#1A1A3A] cursor-pointer"
                 onClick={() => handleAddGoalClick(type)}
               >
                 {type}
