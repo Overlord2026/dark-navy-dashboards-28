@@ -24,6 +24,9 @@ export const UserProfileSection = ({
     { id: "profile", label: "Profile" },
     { id: "contact-info", label: "Contact Info" },
     { id: "additional-info", label: "Additional Info" },
+    { id: "beneficiaries", label: "Beneficiaries" },
+    { id: "affiliations", label: "Affiliations" },
+    { id: "trusts", label: "Trusts" },
     { id: "security-access", label: "Security & Access" },
     { id: "change-theme", label: "Change Theme" },
     { id: "log-out", label: "Log Out" },
@@ -48,10 +51,10 @@ export const UserProfileSection = ({
           <ChevronDown className="h-4 w-4 text-white/70" />
         </DropdownMenuTrigger>
         <DropdownMenuContent 
-          className="w-[200px] bg-[#1E1E30] border-gray-700 text-white"
+          className="w-[220px] bg-[#1E1E30] border-gray-700 text-white"
           align="end"
         >
-          {menuItems.slice(0, 4).map((item) => (
+          {menuItems.slice(0, 7).map((item) => (
             <DropdownMenuItem 
               key={item.id}
               onClick={() => handleMenuItemClick(item.id)}
@@ -61,7 +64,7 @@ export const UserProfileSection = ({
             </DropdownMenuItem>
           ))}
           <DropdownMenuSeparator className="bg-gray-700" />
-          {menuItems.slice(4).map((item) => (
+          {menuItems.slice(7).map((item) => (
             <DropdownMenuItem 
               key={item.id}
               onClick={() => handleMenuItemClick(item.id)}
