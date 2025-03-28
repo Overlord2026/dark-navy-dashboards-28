@@ -1,3 +1,4 @@
+
 import { Routes, Route } from 'react-router-dom';
 import { BrowserRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -8,6 +9,7 @@ import Accounts from './pages/Accounts';
 import Sharing from './pages/Sharing';
 import Education from './pages/Education';
 import CustomerProfile from './pages/CustomerProfile';
+import AdvisorProfile from './pages/AdvisorProfile';
 import NotFound from './pages/NotFound';
 import { Toaster } from './components/ui/toaster';
 import FinancialPlans from './pages/FinancialPlans';
@@ -51,6 +53,7 @@ function App() {
           <Route path="/transfers" element={<Transfers />} />
           <Route path="/tax-budgets" element={<TaxBudgets />} />
           <Route path="/profile" element={<CustomerProfile />} />
+          <Route path="/advisor" element={<AdvisorProfile />} />
           
           <Route path="*" element={<NotFound />} />
         </Routes>
