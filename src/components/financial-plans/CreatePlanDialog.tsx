@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -102,7 +101,8 @@ export function CreatePlanDialog({
       name: planName,
       currentStep: currentStep,
       draftId: draftData?.id,
-      accounts: accounts
+      accounts: accounts,
+      expenses: expenses
     };
     
     onSaveDraft(draftDataToSave);
@@ -124,6 +124,11 @@ export function CreatePlanDialog({
   };
 
   const [expenses, setExpenses] = useState<ExpenseData[]>(draftData?.expenses || []);
+  
+  const handleExpenseUpdate = (updatedExpenses: ExpenseData[]) => {
+    setExpenses(updatedExpenses);
+    setPlanData(prev => ({ ...prev, expenses: updatedExpenses }));
+  };
   
   const renderContent = () => {
     switch (currentStep) {
@@ -253,13 +258,7 @@ export function CreatePlanDialog({
         return (
           <ExpensesStep 
             expenses={expenses} 
-            onExpenseUpdate={(updatedExpenses) => {
-              setExpenses(updatedExpenses);
-              setPlanData(prev => ({
-                ...prev,
-                expenses: updatedExpenses
-              }));
-            }} 
+            onExpenseUpdate={handleExpenseUpdate} 
           />
         );
       case 7:

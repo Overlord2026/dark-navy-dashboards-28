@@ -49,8 +49,18 @@ export const ExpensesSidePanel = ({ isOpen, onClose, expense, onSave }: Expenses
   useEffect(() => {
     if (expense) {
       setFormData(expense);
+    } else {
+      // Reset form to defaults if no expense is provided
+      setFormData({
+        id: `expense-${Date.now()}`,
+        name: "",
+        type: "Healthcare",
+        period: "Before Retirement",
+        amount: 0,
+        owner: "Antonio Gomez",
+      });
     }
-  }, [expense]);
+  }, [expense, isOpen]);
 
   const handleChange = (field: keyof ExpenseData, value: any) => {
     setFormData((prev) => ({
@@ -61,7 +71,6 @@ export const ExpensesSidePanel = ({ isOpen, onClose, expense, onSave }: Expenses
 
   const handleSubmit = () => {
     onSave(formData);
-    onClose();
   };
 
   if (!isOpen) return null;

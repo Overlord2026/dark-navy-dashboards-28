@@ -96,6 +96,7 @@ export const ExpensesStep = ({ expenses = [], onExpenseUpdate }: ExpensesStepPro
     }
     
     onExpenseUpdate(updatedExpenses);
+    setIsExpensePanelOpen(false);
   };
 
   const expenseTypes = [
@@ -106,6 +107,45 @@ export const ExpensesStep = ({ expenses = [], onExpenseUpdate }: ExpensesStepPro
     { value: "Alimony", label: "Alimony" },
     { value: "Other", label: "Other" },
   ];
+
+  // Adding buttons for each expense category
+  const renderExpenseSection = (type: string, period: string) => {
+    const sectionExpenses = getExpensesByTypeAndPeriod(type as ExpenseData["type"], period as ExpenseData["period"]);
+    
+    return (
+      <div className="space-y-4">
+        <div className="flex items-center gap-2">
+          <h3 className="text-lg font-medium text-white">{type} Expenses {period}</h3>
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="rounded-full w-6 h-6"
+            onClick={() => handleAddExpense(type as ExpenseData["type"], period as ExpenseData["period"])}
+          >
+            <PlusCircle className="w-5 h-5" />
+          </Button>
+        </div>
+        
+        {sectionExpenses.length > 0 ? (
+          <div className="space-y-4">
+            {sectionExpenses.map((expense) => (
+              <ExpenseCard
+                key={expense.id}
+                expense={expense}
+                onClick={() => handleEditExpense(expense)}
+              />
+            ))}
+          </div>
+        ) : (
+          <EmptyExpenseCard 
+            type={type.toLowerCase()} 
+            period={period.toLowerCase()} 
+            onClick={() => handleAddExpense(type as ExpenseData["type"], period as ExpenseData["period"])} 
+          />
+        )}
+      </div>
+    );
+  };
 
   return (
     <div className="space-y-6">
@@ -121,7 +161,7 @@ export const ExpensesStep = ({ expenses = [], onExpenseUpdate }: ExpensesStepPro
                 Add Expense
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-56 p-0">
+            <PopoverContent className="w-56 p-0 bg-[#0A1022] border-blue-900/30">
               <div className="py-2">
                 {expenseTypes.map((type) => (
                   <button
@@ -139,133 +179,10 @@ export const ExpensesStep = ({ expenses = [], onExpenseUpdate }: ExpensesStepPro
       </div>
       
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-        <div className="space-y-4">
-          <div className="flex items-center gap-2">
-            <h3 className="text-lg font-medium text-white">Living Expenses Before Retirement</h3>
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              className="rounded-full w-6 h-6"
-              onClick={() => handleAddExpense("Living", "Before Retirement")}
-            >
-              <PlusCircle className="w-5 h-5" />
-            </Button>
-          </div>
-          
-          {livingExpensesBefore.length > 0 ? (
-            <div className="space-y-4">
-              {livingExpensesBefore.map((expense) => (
-                <ExpenseCard
-                  key={expense.id}
-                  expense={expense}
-                  onClick={() => handleEditExpense(expense)}
-                />
-              ))}
-            </div>
-          ) : (
-            <EmptyExpenseCard 
-              type="living" 
-              period="before retirement" 
-              onClick={() => handleAddExpense("Living", "Before Retirement")} 
-            />
-          )}
-        </div>
-        
-        <div className="space-y-4">
-          <div className="flex items-center gap-2">
-            <h3 className="text-lg font-medium text-white">Healthcare Expenses Before Retirement</h3>
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              className="rounded-full w-6 h-6"
-              onClick={() => handleAddExpense("Healthcare", "Before Retirement")}
-            >
-              <PlusCircle className="w-5 h-5" />
-            </Button>
-          </div>
-          
-          {healthcareExpensesBefore.length > 0 ? (
-            <div className="space-y-4">
-              {healthcareExpensesBefore.map((expense) => (
-                <ExpenseCard
-                  key={expense.id}
-                  expense={expense}
-                  onClick={() => handleEditExpense(expense)}
-                />
-              ))}
-            </div>
-          ) : (
-            <EmptyExpenseCard 
-              type="healthcare" 
-              period="before retirement" 
-              onClick={() => handleAddExpense("Healthcare", "Before Retirement")} 
-            />
-          )}
-        </div>
-        
-        <div className="space-y-4">
-          <div className="flex items-center gap-2">
-            <h3 className="text-lg font-medium text-white">Living Expenses After Retirement</h3>
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              className="rounded-full w-6 h-6"
-              onClick={() => handleAddExpense("Living", "After Retirement")}
-            >
-              <PlusCircle className="w-5 h-5" />
-            </Button>
-          </div>
-          
-          {livingExpensesAfter.length > 0 ? (
-            <div className="space-y-4">
-              {livingExpensesAfter.map((expense) => (
-                <ExpenseCard
-                  key={expense.id}
-                  expense={expense}
-                  onClick={() => handleEditExpense(expense)}
-                />
-              ))}
-            </div>
-          ) : (
-            <EmptyExpenseCard 
-              type="living" 
-              period="after retirement" 
-              onClick={() => handleAddExpense("Living", "After Retirement")} 
-            />
-          )}
-        </div>
-        
-        <div className="space-y-4">
-          <div className="flex items-center gap-2">
-            <h3 className="text-lg font-medium text-white">Healthcare Expenses After Retirement</h3>
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              className="rounded-full w-6 h-6"
-              onClick={() => handleAddExpense("Healthcare", "After Retirement")}
-            >
-              <PlusCircle className="w-5 h-5" />
-            </Button>
-          </div>
-          
-          {healthcareExpensesAfter.length > 0 ? (
-            <div className="space-y-4">
-              {healthcareExpensesAfter.map((expense) => (
-                <ExpenseCard
-                  key={expense.id}
-                  expense={expense}
-                  onClick={() => handleEditExpense(expense)}
-                />
-              ))}
-            </div>
-          ) : (
-            <EmptyExpenseCard 
-              type="healthcare" 
-              period="after retirement" 
-              onClick={() => handleAddExpense("Healthcare", "After Retirement")} 
-            />
-          )}
-        </div>
+        {renderExpenseSection("Living", "Before Retirement")}
+        {renderExpenseSection("Healthcare", "Before Retirement")}
+        {renderExpenseSection("Living", "After Retirement")}
+        {renderExpenseSection("Healthcare", "After Retirement")}
       </div>
       
       <ExpensesSidePanel
