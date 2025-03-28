@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -78,14 +79,14 @@ export function CreatePlanDialog({
   };
 
   const handleSaveDraft = () => {
-    const draftData = {
+    const draftDataToSave = {
       ...planData,
       name: planName,
       currentStep: currentStep,
       draftId: draftData?.id
     };
     
-    onSaveDraft(draftData);
+    onSaveDraft(draftDataToSave);
     onClose();
   };
 
