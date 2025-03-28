@@ -45,9 +45,13 @@ const getUserProfileFromStorage = (): UserProfile => {
       // Convert dateOfBirth string back to Date object if it exists
       if (parsedProfile.dateOfBirth) {
         const dateStr = parsedProfile.dateOfBirth;
+        // Convert string to Date object
         const dateObj = new Date(dateStr);
         if (isValid(dateObj)) {
           parsedProfile.dateOfBirth = dateObj;
+        } else {
+          // If date is invalid, use the default value
+          parsedProfile.dateOfBirth = defaultUserProfile.dateOfBirth;
         }
       }
       
@@ -170,11 +174,18 @@ export function UserProvider({ children }: { children: ReactNode }) {
       // Save to localStorage
       try {
         const profileToStore = { ...newProfile };
-        // Convert Date to ISO string for storage
+        // Convert Date to ISO string for storage - this fixes the TypeScript error
         if (profileToStore.dateOfBirth instanceof Date) {
-          profileToStore.dateOfBirth = profileToStore.dateOfBirth.toISOString();
+          const dateOfBirthString = profileToStore.dateOfBirth.toISOString();
+          // Create a new object with the string version for storage
+          const storageProfile = {
+            ...profileToStore,
+            dateOfBirth: dateOfBirthString
+          };
+          localStorage.setItem("userProfile", JSON.stringify(storageProfile));
+        } else {
+          localStorage.setItem("userProfile", JSON.stringify(profileToStore));
         }
-        localStorage.setItem("userProfile", JSON.stringify(profileToStore));
         console.log("Saved profile to localStorage");
       } catch (error) {
         console.error("Failed to save profile to localStorage:", error);
