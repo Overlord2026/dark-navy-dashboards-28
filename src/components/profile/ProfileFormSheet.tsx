@@ -86,9 +86,7 @@ export const ProfileFormSheet = ({
             <SheetTitle className="text-xl font-semibold text-white">
               {getFormTitle()}
             </SheetTitle>
-            {activeForm === "affiliations" && (
-              <ChevronDown className="h-5 w-5 ml-2 text-white/70" />
-            )}
+            <ChevronDown className="h-5 w-5 ml-2 text-white/70" />
           </div>
           <SheetClose asChild>
             <Button variant="ghost" size="icon" className="h-8 w-8 p-0 text-white/70 hover:text-white">

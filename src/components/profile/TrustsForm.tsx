@@ -14,7 +14,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Plus, Minus } from "lucide-react";
+import { Plus, Minus, ChevronDown } from "lucide-react";
+import { FileUpload } from "@/components/ui/file-upload";
 
 const trustSchema = z.object({
   trustName: z.string().min(1, { message: "Trust name is required" }),
@@ -31,7 +32,9 @@ const trustSchema = z.object({
 export function TrustsForm({ onSave }: { onSave: () => void }) {
   const [trusts, setTrusts] = useState<z.infer<typeof trustSchema>[]>([]);
   const [currentTrust, setCurrentTrust] = useState<z.infer<typeof trustSchema> | null>(null);
-
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [uploadedFiles, setUploadedFiles] = useState<{trustId: number, file: File}[]>([]);
+  
   const form = useForm<z.infer<typeof trustSchema>>({
     resolver: zodResolver(trustSchema),
     defaultValues: {
@@ -59,6 +62,14 @@ export function TrustsForm({ onSave }: { onSave: () => void }) {
     } else {
       // Add new trust
       setTrusts(prev => [...prev, values]);
+      
+      // If a file was selected, associate it with this trust
+      if (selectedFile) {
+        setUploadedFiles(prev => [...prev, {
+          trustId: trusts.length, // This will be the index of the new trust
+          file: selectedFile
+        }]);
+      }
     }
     
     form.reset({
@@ -72,6 +83,8 @@ export function TrustsForm({ onSave }: { onSave: () => void }) {
       email: "",
       documentType: "Trust Formation Document",
     });
+    
+    setSelectedFile(null);
   }
 
   function handleRemoveTrust(trust: z.infer<typeof trustSchema>) {
@@ -96,6 +109,10 @@ export function TrustsForm({ onSave }: { onSave: () => void }) {
     setCurrentTrust(trust);
     form.reset(trust);
   }
+  
+  function handleFileSelect(file: File) {
+    setSelectedFile(file);
+  }
 
   return (
     <div className="space-y-6">
@@ -107,73 +124,47 @@ export function TrustsForm({ onSave }: { onSave: () => void }) {
       </div>
       
       {trusts.length > 0 && (
-        <div className="space-y-4">
+        <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <h3 className="text-base font-medium text-white">Current Trusts</h3>
+            <h3 className="text-base font-medium text-white">Trust</h3>
           </div>
           
-          <div className="space-y-2">
-            {trusts.map((trust, index) => (
-              <div 
-                key={index} 
-                className="flex items-center justify-between border border-gray-700 rounded-md p-3"
+          <div className="flex items-center justify-between border border-gray-700 rounded-md p-3">
+            <div className="flex items-center gap-2">
+              <Select defaultValue="new">
+                <SelectTrigger className="w-[120px] bg-transparent border-gray-700 text-white focus:ring-0">
+                  <SelectValue placeholder="Select" />
+                </SelectTrigger>
+                <SelectContent className="bg-[#0F0F2D] border-gray-700 text-white">
+                  <SelectItem value="new">New</SelectItem>
+                  {trusts.map((trust, i) => (
+                    <SelectItem key={i} value={`trust-${i}`}>
+                      {trust.trustName}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="flex gap-2">
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => handleRemoveTrust(trusts[0])}
+                className="border-gray-700 text-white hover:bg-gray-800 rounded-full p-0 w-7 h-7 flex items-center justify-center"
               >
-                <div>
-                  <p className="font-medium text-white">{trust.trustName}</p>
-                  <p className="text-sm text-gray-400">{trust.city}, {trust.state}</p>
-                </div>
-                <div className="flex gap-2">
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    onClick={() => handleEditTrust(trust)}
-                    className="border-gray-700 text-white hover:bg-gray-800"
-                  >
-                    Edit
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    onClick={() => handleRemoveTrust(trust)}
-                    className="border-gray-700 text-white hover:bg-gray-800"
-                  >
-                    <Minus className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-            ))}
+                <Minus className="h-4 w-4" />
+              </Button>
+              <Button 
+                variant="outline" 
+                size="sm"
+                className="border-gray-700 text-white hover:bg-gray-800 rounded-full p-0 w-7 h-7 flex items-center justify-center"
+              >
+                <Plus className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
         </div>
       )}
-      
-      <div className="flex justify-between items-center">
-        <h3 className="text-base font-medium text-white">
-          {currentTrust ? "Edit Trust" : "Add Trust"}
-        </h3>
-        {currentTrust && (
-          <Button 
-            variant="outline" 
-            size="sm"
-            onClick={() => {
-              setCurrentTrust(null);
-              form.reset({
-                trustName: "",
-                country: "United States",
-                address: "",
-                city: "",
-                state: "",
-                zipCode: "",
-                phoneNumber: "",
-                email: "",
-                documentType: "Trust Formation Document",
-              });
-            }}
-            className="border-gray-700 text-white hover:bg-gray-800"
-          >
-            Cancel
-          </Button>
-        )}
-      </div>
       
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -186,7 +177,7 @@ export function TrustsForm({ onSave }: { onSave: () => void }) {
                   <FormLabel className="text-gray-400">Trust Name</FormLabel>
                   <FormControl>
                     <Input 
-                      placeholder="Enter trust name" 
+                      placeholder="John's Trust" 
                       {...field} 
                       className="bg-transparent border-gray-700 text-white focus:border-blue-500" 
                     />
@@ -202,18 +193,28 @@ export function TrustsForm({ onSave }: { onSave: () => void }) {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-gray-400">Country</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <FormControl>
-                      <SelectTrigger className="bg-transparent border-gray-700 text-white focus:ring-0">
-                        <SelectValue placeholder="Select country" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent className="bg-[#0F0F2D] border-gray-700 text-white">
-                      <SelectItem value="United States">United States</SelectItem>
-                      <SelectItem value="Canada">Canada</SelectItem>
-                      <SelectItem value="United Kingdom">United Kingdom</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <div className="flex items-center gap-2">
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger className="bg-transparent border-gray-700 text-white focus:ring-0 flex-1">
+                          <SelectValue placeholder="Select country" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent className="bg-[#0F0F2D] border-gray-700 text-white">
+                        <SelectItem value="United States">United States</SelectItem>
+                        <SelectItem value="Canada">Canada</SelectItem>
+                        <SelectItem value="United Kingdom">United Kingdom</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="outline"
+                      className="bg-gray-200 text-black h-10 w-10 p-0 flex items-center justify-center"
+                    >
+                      US
+                    </Button>
+                  </div>
                   <FormMessage className="text-red-400" />
                 </FormItem>
               )}
@@ -227,7 +228,7 @@ export function TrustsForm({ onSave }: { onSave: () => void }) {
                   <FormLabel className="text-gray-400">Address</FormLabel>
                   <FormControl>
                     <Input 
-                      placeholder="Street address" 
+                      placeholder="123 Hancock St" 
                       {...field} 
                       className="bg-transparent border-gray-700 text-white focus:border-blue-500" 
                     />
@@ -245,7 +246,7 @@ export function TrustsForm({ onSave }: { onSave: () => void }) {
                   <FormLabel className="text-gray-400">City</FormLabel>
                   <FormControl>
                     <Input 
-                      placeholder="City" 
+                      placeholder="Los Angeles" 
                       {...field} 
                       className="bg-transparent border-gray-700 text-white focus:border-blue-500" 
                     />
@@ -261,19 +262,22 @@ export function TrustsForm({ onSave }: { onSave: () => void }) {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-gray-400">State</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <FormControl>
-                      <SelectTrigger className="bg-transparent border-gray-700 text-white focus:ring-0">
-                        <SelectValue placeholder="Select state" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent className="bg-[#0F0F2D] border-gray-700 text-white">
-                      <SelectItem value="CA">California</SelectItem>
-                      <SelectItem value="FL">Florida</SelectItem>
-                      <SelectItem value="NY">New York</SelectItem>
-                      <SelectItem value="TX">Texas</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <div className="relative">
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger className="bg-transparent border-gray-700 text-white focus:ring-0">
+                          <SelectValue placeholder="Select state" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent className="bg-[#0F0F2D] border-gray-700 text-white">
+                        <SelectItem value="CA">California</SelectItem>
+                        <SelectItem value="FL">Florida</SelectItem>
+                        <SelectItem value="NY">New York</SelectItem>
+                        <SelectItem value="TX">Texas</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <ChevronDown className="absolute right-3 top-3 h-4 w-4 opacity-50 pointer-events-none" />
+                  </div>
                   <FormMessage className="text-red-400" />
                 </FormItem>
               )}
@@ -287,7 +291,7 @@ export function TrustsForm({ onSave }: { onSave: () => void }) {
                   <FormLabel className="text-gray-400">Zip Code</FormLabel>
                   <FormControl>
                     <Input 
-                      placeholder="Zip code" 
+                      placeholder="12345" 
                       {...field} 
                       className="bg-transparent border-gray-700 text-white focus:border-blue-500" 
                     />
@@ -304,11 +308,16 @@ export function TrustsForm({ onSave }: { onSave: () => void }) {
                 <FormItem>
                   <FormLabel className="text-gray-400">Phone Number</FormLabel>
                   <FormControl>
-                    <Input 
-                      placeholder="Phone number" 
-                      {...field} 
-                      className="bg-transparent border-gray-700 text-white focus:border-blue-500" 
-                    />
+                    <div className="flex">
+                      <div className="bg-transparent border border-r-0 border-gray-700 text-white rounded-l-md px-3 flex items-center">
+                        +1
+                      </div>
+                      <Input 
+                        placeholder="123-456-7890" 
+                        {...field} 
+                        className="bg-transparent border-gray-700 text-white focus:border-blue-500 rounded-l-none" 
+                      />
+                    </div>
                   </FormControl>
                   <FormMessage className="text-red-400" />
                 </FormItem>
@@ -323,7 +332,7 @@ export function TrustsForm({ onSave }: { onSave: () => void }) {
                   <FormLabel className="text-gray-400">Email Address</FormLabel>
                   <FormControl>
                     <Input 
-                      placeholder="Email address" 
+                      placeholder="johngaydoe@email.com" 
                       {...field} 
                       className="bg-transparent border-gray-700 text-white focus:border-blue-500" 
                     />
@@ -332,13 +341,15 @@ export function TrustsForm({ onSave }: { onSave: () => void }) {
                 </FormItem>
               )}
             />
-            
+          </div>
+          
+          <div>
             <FormField
               control={form.control}
               name="documentType"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-gray-400">Document Type</FormLabel>
+                  <FormLabel className="text-gray-400">Document Type 1</FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
                       <SelectTrigger className="bg-transparent border-gray-700 text-white focus:ring-0">
@@ -355,45 +366,29 @@ export function TrustsForm({ onSave }: { onSave: () => void }) {
                 </FormItem>
               )}
             />
+            
+            <div className="mt-4 border border-dashed border-gray-600 rounded-lg p-6 text-center">
+              <div className="flex items-center justify-center">
+                <input type="checkbox" className="mr-2" />
+                <p className="text-white inline">Drop pdf file here or</p>
+                <Button 
+                  type="button" 
+                  variant="link"
+                  className="text-green-400 p-0 h-auto ml-1"
+                >
+                  browse
+                </Button>
+              </div>
+            </div>
           </div>
           
-          <div className="bg-black/20 border border-gray-700 rounded-lg p-6 text-center">
-            <p className="text-white mb-2">Drop pdf file here or</p>
-            <Button 
-              type="button" 
-              variant="outline"
-              className="border-gray-700 text-white hover:bg-gray-800"
-            >
-              browse
-            </Button>
-          </div>
-          
-          <div className="flex justify-end gap-2">
-            {trusts.length === 0 ? (
-              <Button 
-                variant="outline" 
-                type="button"
-                onClick={() => onSave()}
-                className="border-gray-700 text-white hover:bg-gray-800"
-              >
-                No Trusts to Add
-              </Button>
-            ) : null}
+          <div className="flex justify-end">
             <Button 
               type="submit"
-              className="bg-white text-[#0F0F2D] hover:bg-white/90"
+              className="bg-blue-600 text-white hover:bg-blue-700"
             >
-              {currentTrust ? "Update Trust" : "Add Trust"}
+              Create
             </Button>
-            {trusts.length > 0 && !currentTrust ? (
-              <Button 
-                type="button"
-                onClick={() => onSave()}
-                className="bg-white text-[#0F0F2D] hover:bg-white/90"
-              >
-                Create
-              </Button>
-            ) : null}
           </div>
         </form>
       </Form>
