@@ -70,25 +70,38 @@ const FinancialPlans = () => {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isManagePlansOpen, setIsManagePlansOpen] = useState(false);
 
-  const handleCreatePlan = (planName: string) => {
+  const handleCreatePlan = (planName: string, planDetails: any = {}) => {
+    const isDraft = planDetails?.isDraft || false;
+    const projections = planDetails?.projections || {};
+    const goals = planDetails?.goals || [];
+    
+    const calculatedSuccessRate = planDetails?.successRate || Math.floor(Math.random() * 60) + 40;
+    
     const newPlan = {
       id: `plan-${Date.now()}`,
       name: planName,
       isFavorite: false,
-      isActive: true,
-      successRate: Math.floor(Math.random() * 60) + 40, // Random success rate between 40-100 for demo
-      status: 'Draft' as const,
-      createdAt: new Date()
+      isActive: !isDraft,
+      successRate: calculatedSuccessRate,
+      status: isDraft ? 'Draft' as const : 'Active' as const,
+      createdAt: new Date(),
+      goals: goals,
+      projections: projections,
     };
     
     setPlans(prevPlans => {
-      // Set all plans to not active
-      const updatedPlans = prevPlans.map(plan => ({ ...plan, isActive: false }));
-      // Add the new active plan
-      return [...updatedPlans, newPlan];
+      if (!isDraft) {
+        const updatedPlans = prevPlans.map(plan => ({ ...plan, isActive: false }));
+        return [...updatedPlans, newPlan];
+      } else {
+        return [...prevPlans, newPlan];
+      }
     });
-    setSelectedPlan(newPlan.id);
-    toast.success(`Plan "${planName}" created successfully`);
+    
+    if (!isDraft) {
+      setSelectedPlan(newPlan.id);
+      toast.success(`Plan "${planName}" created successfully`);
+    }
   };
 
   const handleSelectPlan = (planId: string) => {
@@ -103,7 +116,6 @@ const FinancialPlans = () => {
     }
     
     setSelectedPlan(planId);
-    // Update the active status of plans
     setPlans(prevPlans => 
       prevPlans.map(plan => ({
         ...plan,
@@ -113,7 +125,6 @@ const FinancialPlans = () => {
   };
 
   const handleEditPlan = (planId: string) => {
-    // In a real app, this would open the plan in edit mode
     toast.info(`Editing plan ${planId}`);
     setIsManagePlansOpen(false);
     setSelectedPlan(planId);
@@ -122,7 +133,6 @@ const FinancialPlans = () => {
   const handleDeletePlan = (planId: string) => {
     setPlans(prevPlans => prevPlans.filter(plan => plan.id !== planId));
     
-    // If the deleted plan was selected, select the first available plan
     if (selectedPlan === planId && plans.length > 1) {
       const remainingPlans = plans.filter(plan => plan.id !== planId);
       setSelectedPlan(remainingPlans[0].id);

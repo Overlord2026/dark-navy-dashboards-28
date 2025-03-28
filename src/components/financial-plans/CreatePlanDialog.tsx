@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,11 +12,12 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetFooter } from "@/com
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import { ProjectionPreviewChart } from "./ProjectionPreviewChart";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 interface CreatePlanDialogProps {
   isOpen: boolean;
   onClose: () => void;
-  onCreatePlan: (planName: string) => void;
+  onCreatePlan: (planName: string, planData: any) => void;
 }
 
 const planBasicsSchema = z.object({
@@ -110,6 +111,15 @@ export function CreatePlanDialog({ isOpen, onClose, onCreatePlan }: CreatePlanDi
   const [isExpenseFormOpen, setIsExpenseFormOpen] = useState(false);
   
   const [successRate, setSuccessRate] = useState(70);
+  const [isDraftSaved, setIsDraftSaved] = useState(false);
+  const [planData, setPlanData] = useState({
+    basics: null,
+    goals: [],
+    incomeItems: [],
+    expenseItems: [],
+    projections: null,
+    successRate: 0
+  });
 
   const basicsForm = useForm<PlanBasicsFormValues>({
     resolver: zodResolver(planBasicsSchema),
@@ -167,7 +177,41 @@ export function CreatePlanDialog({ isOpen, onClose, onCreatePlan }: CreatePlanDi
     },
   });
 
+  useEffect(() => {
+    if (currentStep === 1) {
+      setPlanData(prev => ({
+        ...prev,
+        basics: basicsForm.getValues()
+      }));
+    } else if (currentStep === 2) {
+      setPlanData(prev => ({
+        ...prev,
+        goals: [...goals]
+      }));
+    } else if (currentStep === 3) {
+      setPlanData(prev => ({
+        ...prev,
+        incomeItems: [...incomeItems],
+        expenseItems: [...expenseItems]
+      }));
+    } else if (currentStep === 4) {
+      setPlanData(prev => ({
+        ...prev,
+        projections: projectionsForm.getValues()
+      }));
+    } else if (currentStep === 5) {
+      setPlanData(prev => ({
+        ...prev,
+        successRate: successRate
+      }));
+    }
+  }, [currentStep, goals, incomeItems, expenseItems, successRate]);
+
   const handleBasicsSubmit = (values: PlanBasicsFormValues) => {
+    setPlanData(prev => ({
+      ...prev,
+      basics: values
+    }));
     setCurrentStep(2);
   };
 
@@ -272,7 +316,15 @@ export function CreatePlanDialog({ isOpen, onClose, onCreatePlan }: CreatePlanDi
   };
 
   const handleFinalSubmit = () => {
-    onCreatePlan(basicsForm.getValues().planName);
+    const planName = planData.basics?.planName || basicsForm.getValues().planName;
+    onCreatePlan(planName, {
+      basics: planData.basics,
+      goals: planData.goals,
+      incomeItems: planData.incomeItems,
+      expenseItems: planData.expenseItems, 
+      projections: planData.projections,
+      successRate: planData.successRate
+    });
     resetAndClose();
   };
 
@@ -286,6 +338,15 @@ export function CreatePlanDialog({ isOpen, onClose, onCreatePlan }: CreatePlanDi
     setIncomeItems([]);
     setExpenseItems([]);
     setCurrentStep(1);
+    setIsDraftSaved(false);
+    setPlanData({
+      basics: null,
+      goals: [],
+      incomeItems: [],
+      expenseItems: [],
+      projections: null,
+      successRate: 0
+    });
     onClose();
   };
 
@@ -437,11 +498,25 @@ export function CreatePlanDialog({ isOpen, onClose, onCreatePlan }: CreatePlanDi
     setExpenseItems(expenseItems.filter(item => item.id !== expenseId));
   };
 
+  const handleDialogClose = (open: boolean) => {
+    if (!open && !isDraftSaved && currentStep > 1 && planData.basics?.planName) {
+      const draftName = `${planData.basics.planName} (Draft)`;
+      onCreatePlan(draftName, {
+        ...planData,
+        isDraft: true
+      });
+      setIsDraftSaved(true);
+      toast.info("Your progress has been saved as a draft");
+    }
+    
+    if (!open) {
+      resetAndClose();
+    }
+  };
+
   return (
     <>
-      <Dialog open={isOpen} onOpenChange={(open) => {
-        if (!open) resetAndClose();
-      }}>
+      <Dialog open={isOpen} onOpenChange={handleDialogClose}>
         <DialogContent className="bg-[#0F0F2D] text-[#E2E2E2] border border-border/30 sm:max-w-[600px] min-h-[400px] transition-all duration-300">
           <DialogHeader>
             <DialogTitle className="text-xl font-semibold">
