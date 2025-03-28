@@ -191,9 +191,17 @@ export function ThreeColumnLayout({
 
   return (
     <div className={`flex h-screen overflow-hidden ${isLightTheme ? 'bg-[#F9F7E8]' : 'bg-[#12121C]'}`}>
+      <div className="fixed top-0 left-0 right-0 w-full flex justify-center py-4 z-40 bg-inherit">
+        <img 
+          src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" 
+          alt="Boutique Family Office Logo" 
+          className="h-20 w-auto"
+        />
+      </div>
+      
       <aside
         className={cn(
-          "flex flex-col transition-all duration-300 ease-in-out z-30 mt-[260px]",
+          "flex flex-col transition-all duration-300 ease-in-out z-30 mt-[120px]",
           mainSidebarCollapsed ? "w-[70px]" : "w-[220px]",
           isLightTheme ? "bg-[#F9F7E8] border-r border-[#DCD8C0]" : "bg-[#1B1B32] border-r border-white/10"
         )}
@@ -260,7 +268,7 @@ export function ThreeColumnLayout({
       {hasSecondaryMenu && (
         <aside
           className={cn(
-            "flex flex-col transition-all duration-300 ease-in-out z-20 mt-[260px]",
+            "flex flex-col transition-all duration-300 ease-in-out z-20 mt-[120px]",
             secondarySidebarCollapsed ? "w-[0px]" : "w-[200px]",
             isLightTheme ? "bg-[#F9F7E8] border-r border-[#DCD8C0]" : "bg-[#1B1B32] border-r border-sidebar-border"
           )}
@@ -297,20 +305,14 @@ export function ThreeColumnLayout({
         </aside>
       )}
 
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <div className="flex-1 flex flex-col overflow-hidden mt-[120px]">
         {isHomePage ? (
-          <div className="flex flex-col items-start py-6 px-4">
-            <div className="flex justify-center items-center space-x-6 mb-8 w-full">
+          <div className="flex flex-col items-start p-4">
+            <div className="flex justify-start items-center space-x-10 mb-4 w-full">
               <Link to="/education" className="flex items-center gap-2 px-4 py-2 rounded-md bg-gray-800 hover:bg-gray-700 text-gray-100 transition-colors border border-primary">
                 <GraduationCapIcon className="h-5 w-5" />
                 <span className="font-medium">Education Center</span>
               </Link>
-              
-              <img 
-                src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" 
-                alt="Boutique Family Office Logo" 
-                className="h-20 w-auto"
-              />
               
               <Link to="/vault" className="flex items-center gap-2 px-4 py-2 rounded-md bg-gray-800 hover:bg-gray-700 text-gray-100 transition-colors border border-primary">
                 <BookOpenIcon className="h-5 w-5" />
@@ -383,15 +385,7 @@ export function ThreeColumnLayout({
               </Popover>
             </div>
           </div>
-        ) : (
-          <div className="flex justify-center py-4">
-            <img 
-              src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" 
-              alt="Boutique Family Office Logo" 
-              className="h-20 w-auto"
-            />
-          </div>
-        )}
+        ) : null}
         
         <main className="flex-1 overflow-y-auto p-4 font-sans w-full">
           {children}
