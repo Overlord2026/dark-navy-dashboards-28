@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { SetupChecklist } from "@/components/profile/SetupChecklist";
@@ -7,6 +8,7 @@ import { AccountSummaryCard } from "@/components/profile/AccountSummaryCard";
 import { AdvisorProfileView } from "@/components/profile/AdvisorProfileView";
 import { BookSessionDrawer } from "@/components/profile/BookSessionDrawer";
 import { ProfileFormSheet } from "@/components/profile/ProfileFormSheet";
+import { UserCircle } from "lucide-react";
 
 const CustomerProfile = () => {
   const [activeForm, setActiveForm] = useState<string | null>(null);
@@ -33,6 +35,15 @@ const CustomerProfile = () => {
     phone: "(800) 555-1234",
     office: "New York, NY",
     bio: "Daniel, a seasoned finance professional, guides high net worth investors. His approach blends investment management, risk mitigation, tax optimization, and overall strategy. Starting at Vanguard, then UBS, he directed client acquisition at Fisher Investments before joining Farther. Originally from Asheville, NC, Daniel now resides in Tampa, enjoying fitness, community activities, and sunny days by the water."
+  };
+
+  // Client info
+  const clientInfo = {
+    name: "Antonio Gomez",
+    email: "antonio.gomez@example.com",
+    phone: "(555) 123-4567",
+    joinDate: "March 15, 2023",
+    investorType: "Aggressive Growth"
   };
 
   const handleOpenForm = (formId: string) => {
@@ -65,7 +76,38 @@ const CustomerProfile = () => {
           <div>
             <h1 className="text-2xl font-semibold mb-1 text-[#E2E2E2]">Client Profile</h1>
             <div className="flex items-center text-muted-foreground">
-              <span>Antonio Gomez</span>
+              <span>{clientInfo.name}</span>
+            </div>
+          </div>
+          
+          {/* Client Profile Section - Top Left */}
+          <div className="mt-4 md:mt-0 bg-card rounded-lg p-4 border border-border/50 shadow-md">
+            <div className="flex items-center space-x-4">
+              <div className="h-12 w-12 rounded-full bg-primary/20 flex items-center justify-center">
+                <UserCircle className="h-8 w-8 text-primary" />
+              </div>
+              <div>
+                <h3 className="font-medium">{clientInfo.name}</h3>
+                <p className="text-sm text-muted-foreground">{clientInfo.investorType}</p>
+              </div>
+            </div>
+            <div className="mt-3 pt-3 border-t border-border/50">
+              <div className="grid grid-cols-2 gap-2 text-sm">
+                <div>
+                  <p className="text-muted-foreground">Email:</p>
+                  <p>{clientInfo.email}</p>
+                </div>
+                <div>
+                  <p className="text-muted-foreground">Phone:</p>
+                  <p>{clientInfo.phone}</p>
+                </div>
+              </div>
+              <button 
+                onClick={() => handleOpenForm("profile")}
+                className="mt-3 text-sm text-primary hover:underline"
+              >
+                Edit Profile
+              </button>
             </div>
           </div>
         </div>
