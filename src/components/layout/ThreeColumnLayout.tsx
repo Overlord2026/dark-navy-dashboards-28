@@ -1,11 +1,8 @@
-
 import { ReactNode, useState } from "react";
 import * as React from "react";
 import { useParams, useNavigate, Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { 
-  ChevronLeftIcon, 
-  ChevronRightIcon, 
   UserIcon, 
   UsersIcon, 
   FileIcon, 
@@ -308,33 +305,33 @@ export function ThreeColumnLayout({
 
       <div className="flex-1 flex flex-col overflow-hidden mt-[120px]">
         {isHomePage ? (
-          <div className="flex flex-col items-center w-full p-6">
-            <div className="flex justify-center items-center space-x-8 mb-6 w-full max-w-4xl">
-              <Link to="/education" className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-md bg-gray-800 hover:bg-gray-700 text-gray-100 transition-colors border border-primary">
-                <GraduationCapIcon className="h-5 w-5" />
-                <span className="font-medium">Education Center</span>
+          <div className="flex flex-col items-center w-full p-8">
+            <div className="flex justify-center items-center space-x-10 mb-8 w-full max-w-5xl">
+              <Link to="/education" className="flex-1 flex items-center justify-center gap-3 px-5 py-4 rounded-md bg-gray-800 hover:bg-gray-700 text-gray-100 transition-colors border border-primary">
+                <GraduationCapIcon className="h-6 w-6" />
+                <span className="font-medium text-lg">Education Center</span>
               </Link>
               
-              <Link to="/vault" className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-md bg-gray-800 hover:bg-gray-700 text-gray-100 transition-colors border border-primary">
-                <BookOpenIcon className="h-5 w-5" />
-                <span className="font-medium">Legacy Vault</span>
+              <Link to="/vault" className="flex-1 flex items-center justify-center gap-3 px-5 py-4 rounded-md bg-gray-800 hover:bg-gray-700 text-gray-100 transition-colors border border-primary">
+                <BookOpenIcon className="h-6 w-6" />
+                <span className="font-medium text-lg">Legacy Vault</span>
               </Link>
             </div>
             
-            <div className="flex justify-center items-center space-x-8 w-full max-w-4xl">
-              <Link to="/profile" className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-md bg-gray-800 hover:bg-gray-700 text-gray-100 transition-colors border border-primary">
-                <UserIcon className="h-5 w-5" />
-                <span className="font-medium">Client Profile</span>
+            <div className="flex justify-center items-center space-x-10 w-full max-w-5xl">
+              <Link to="/profile" className="flex-1 flex items-center justify-center gap-3 px-5 py-4 rounded-md bg-gray-800 hover:bg-gray-700 text-gray-100 transition-colors border border-primary">
+                <UserIcon className="h-6 w-6" />
+                <span className="font-medium text-lg">Client Profile</span>
               </Link>
               
               <Popover open={showAdvisorInfo} onOpenChange={setShowAdvisorInfo}>
                 <PopoverTrigger asChild>
-                  <Button variant="ghost" className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-md bg-gray-800 hover:bg-gray-700 text-gray-100 transition-colors border border-primary">
-                    <div className="flex items-center space-x-2">
-                      <Avatar className="h-8 w-8 border-2 border-primary">
+                  <Button variant="ghost" className="flex-1 flex items-center justify-center gap-3 px-5 py-4 rounded-md bg-gray-800 hover:bg-gray-700 text-gray-100 transition-colors border border-primary">
+                    <div className="flex items-center space-x-3">
+                      <Avatar className="h-9 w-9 border-2 border-primary">
                         <AvatarFallback className="bg-primary/20 text-primary">CB</AvatarFallback>
                       </Avatar>
-                      <span className="font-medium">Advisor Profile</span>
+                      <span className="font-medium text-lg">Advisor Profile</span>
                     </div>
                   </Button>
                 </PopoverTrigger>
@@ -395,4 +392,3 @@ export function ThreeColumnLayout({
     </div>
   );
 }
-
