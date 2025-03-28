@@ -317,6 +317,14 @@ export const GoalDetailsSidePanel = ({
       newErrors.annualInflationRate = "Inflation rate must be between 0 and 100";
     }
     
+    if (formData.annualInflationType === "Custom" && 
+        (formData.annualInflationRate === undefined || 
+         isNaN(formData.annualInflationRate) || 
+         formData.annualInflationRate < 0 || 
+         formData.annualInflationRate > 100)) {
+      newErrors.annualInflationRate = "Please enter a valid inflation rate between 0 and 100";
+    }
+    
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -356,9 +364,10 @@ export const GoalDetailsSidePanel = ({
             min="0"
             max="100"
             step="0.1"
-            value={formData.annualInflationRate || ""}
+            value={formData.annualInflationRate ?? ""}
             onChange={handleInputChange}
             className={`bg-[#1A1A3A] border-gray-700 ${errors.annualInflationRate ? 'border-[#FF4D4D] focus-visible:ring-[#FF4D4D]' : ''}`}
+            required
           />
           {errors.annualInflationRate && (
             <p className="text-xs text-[#FF4D4D] mt-1">{errors.annualInflationRate}</p>

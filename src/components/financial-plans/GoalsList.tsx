@@ -417,6 +417,7 @@ function GoalCard({ goal, isExpanded, onToggle, onClick, isNew = false }: {
 }) {
   const goalTitle = goal.title || goal.name || "Unnamed Goal";
   const goalType = goal.type || goal.priority || "Goal";
+  const inflationText = renderInflationText(goal);
 
   return (
     <Card 
@@ -427,7 +428,9 @@ function GoalCard({ goal, isExpanded, onToggle, onClick, isNew = false }: {
     >
       <div className="flex items-center justify-between">
         <div>
-          <h4 className="font-medium">{goalTitle}</h4>
+          <h4 className="font-medium">
+            {goalTitle} {inflationText && <span className="text-xs text-muted-foreground ml-1">{inflationText}</span>}
+          </h4>
           <p className="text-xs text-muted-foreground">{goalType}</p>
         </div>
         <Button 
@@ -622,8 +625,35 @@ function GoalCard({ goal, isExpanded, onToggle, onClick, isNew = false }: {
               <p className="text-sm">{goal.description}</p>
             </div>
           )}
+          
+          {goal.annualInflationType && goal.annualInflationType !== "None" && (
+            <div className="flex justify-between text-sm">
+              <span className="text-muted-foreground">Annual Inflation:</span>
+              <span>
+                {goal.annualInflationType === "General" ? "2% (General)" : 
+                 goal.annualInflationType === "Custom" ? `${goal.annualInflationRate}% (Custom)` : 
+                 "0%"}
+              </span>
+            </div>
+          )}
         </div>
       )}
     </Card>
   );
+}
+
+function renderInflationText(goal: Goal) {
+  if (!goal.annualInflationType || goal.annualInflationType === "None") {
+    return null;
+  }
+  
+  if (goal.annualInflationType === "General") {
+    return "(Annual Inflation: 2%)";
+  }
+  
+  if (goal.annualInflationType === "Custom" && goal.annualInflationRate !== undefined) {
+    return `(Annual Inflation: ${goal.annualInflationRate}% Custom)`;
+  }
+  
+  return null;
 }
