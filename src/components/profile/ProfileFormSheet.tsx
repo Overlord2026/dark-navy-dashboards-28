@@ -65,9 +65,9 @@ export const ProfileFormSheet = ({
 
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
-      <SheetContent className="w-full sm:max-w-[540px] overflow-y-auto bg-[#0F0F2D] text-white border-l border-gray-800" side="right">
+      <SheetContent className="w-full sm:max-w-[540px] overflow-y-auto bg-[#1B1B32] text-[#E2E2E2] border-l border-gray-800" side="right">
         <div className="flex items-center justify-between mb-6">
-          <SheetTitle className="text-xl font-semibold text-white">
+          <SheetTitle className="text-xl font-semibold text-[#E2E2E2]">
             {getFormTitle()}
           </SheetTitle>
           <SheetClose asChild>
@@ -76,7 +76,7 @@ export const ProfileFormSheet = ({
             </Button>
           </SheetClose>
         </div>
-        <div>
+        <div className="p-4">
           {renderFormContent()}
         </div>
       </SheetContent>

@@ -1,3 +1,4 @@
+
 import { ReactNode, useState } from "react";
 import * as React from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
@@ -174,10 +175,10 @@ export function ThreeColumnLayout({
         className={cn(
           "h-screen flex flex-col transition-all duration-300 ease-in-out z-30",
           mainSidebarCollapsed ? "w-[70px]" : "w-[220px]",
-          "bg-[#0F0F2D]" // Dark navy background
+          "bg-[#1B1B32]" // Updated sidebar background color
         )}
       >
-        <div className="flex items-center justify-center h-[70px] px-4 border-b border-white/10">
+        <div className="flex items-center justify-center h-[70px] px-6 border-b border-white/10">
           {mainSidebarCollapsed ? (
             <div className="w-12 h-12 flex items-center justify-center">
               <img 
@@ -205,8 +206,8 @@ export function ThreeColumnLayout({
           />
         )}
 
-        <div className="flex-1 py-4 overflow-y-auto">
-          <nav className="px-2 space-y-1">
+        <div className="flex-1 py-6 overflow-y-auto">
+          <nav className="px-4 space-y-2">
             {mainMenuItems.map((item) => {
               const Icon = item.icon;
               const isActive = item.id === activeMainItem;
@@ -215,11 +216,11 @@ export function ThreeColumnLayout({
                   key={item.id}
                   to={item.href}
                   className={cn(
-                    "group flex items-center py-2 px-3 rounded-md transition-colors",
+                    "group flex items-center py-2 px-3 rounded-md transition-colors text-[14px]",
                     "hover:bg-white/10",
                     isActive
                       ? "bg-black text-[#E2E2E2]"
-                      : "text-[#E2E2E2]" // Light gray text for better contrast
+                      : "text-[#E2E2E2]"
                   )}
                 >
                   {typeof Icon === 'function' ? (
@@ -255,28 +256,28 @@ export function ThreeColumnLayout({
           className={cn(
             "h-screen flex flex-col border-r border-sidebar-border transition-all duration-300 ease-in-out z-20",
             secondarySidebarCollapsed ? "w-[0px]" : "w-[200px]",
-            "bg-[#0F0F2D]" // Dark navy background
+            "bg-[#1B1B32]" // Updated secondary sidebar background color
           )}
         >
-          <div className="flex items-center h-[70px] px-4 border-b border-sidebar-border">
+          <div className="flex items-center h-[70px] px-6 border-b border-sidebar-border">
             {!secondarySidebarCollapsed && (
               <span className="font-medium text-[#E2E2E2] truncate pt-4">Sections</span>
             )}
           </div>
 
           {!secondarySidebarCollapsed && (
-            <div className="flex-1 py-4 overflow-y-auto">
-              <nav className="px-2 space-y-1">
+            <div className="flex-1 py-6 overflow-y-auto">
+              <nav className="px-4 space-y-2">
                 {menuItems.map((item) => (
                   <Link
                     key={item.id}
                     to={`/${activeMainItem}/${item.id}`}
                     className={cn(
-                      "group flex items-center py-2 px-3 rounded-md transition-colors",
+                      "group flex items-center py-2 px-3 rounded-md transition-colors text-[14px]",
                       "hover:bg-sidebar-accent",
                       item.id === sectionId || item.active
                         ? "bg-sidebar-accent text-accent"
-                        : "text-[#E2E2E2]" // Light gray text
+                        : "text-[#E2E2E2]"
                     )}
                   >
                     <span>{item.name || item.label}</span>
@@ -306,8 +307,8 @@ export function ThreeColumnLayout({
       )}
 
       <div className="flex-1 flex flex-col overflow-hidden">
-        <header className="w-full px-4 py-3 flex items-center justify-between border-b border-border/70 bg-background/95 backdrop-blur-sm z-10">
-          <h1 className="text-xl font-medium tracking-tight font-sans">Dashboard – Client & Advisor Profiles</h1>
+        <header className="w-full px-6 py-4 flex items-center justify-between border-b border-border/70 bg-background/95 backdrop-blur-sm z-10">
+          <h1 className="text-[24px] font-medium tracking-tight font-sans">Dashboard – Client & Advisor Profiles</h1>
         </header>
         
         <main className="flex-1 overflow-y-auto p-6 font-sans">

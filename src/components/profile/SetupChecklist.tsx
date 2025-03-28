@@ -21,27 +21,27 @@ export function SetupChecklist({ items, onItemClick }: SetupChecklistProps) {
   const progressPercentage = Math.round((completedCount / total) * 100);
   
   return (
-    <div className="rounded-lg border bg-card text-card-foreground shadow-sm">
+    <div className="rounded-lg border bg-[#1B1B32] text-[#E2E2E2] shadow-sm">
       <div className="p-6">
-        <div className="flex items-center justify-between mb-1">
+        <div className="flex items-center justify-between mb-2">
           <h3 className="text-lg font-medium">Setup Checklist</h3>
           <span className="text-sm text-muted-foreground">{completedCount}/{total}</span>
         </div>
         <p className="text-sm text-muted-foreground mb-4">Complete at your own pace.</p>
         
-        <div className="h-2 w-full bg-muted rounded-full mb-4 overflow-hidden">
+        <div className="h-2 w-full bg-muted rounded-full mb-6 overflow-hidden">
           <div 
             className="h-full bg-green-500 rounded-full transition-all duration-300 ease-in-out" 
             style={{ width: `${progressPercentage}%` }}
           />
         </div>
         
-        <ul className="space-y-3">
+        <ul className="space-y-4">
           {items.map((item) => (
             <li 
               key={item.id}
               onClick={() => onItemClick(item.id)}
-              className="flex items-center justify-between p-3 rounded-md hover:bg-muted cursor-pointer"
+              className="flex items-center justify-between p-3 rounded-md hover:bg-black/30 cursor-pointer"
             >
               <div className="flex items-center">
                 <div className={cn(
@@ -56,7 +56,7 @@ export function SetupChecklist({ items, onItemClick }: SetupChecklistProps) {
                 </div>
                 <div>
                   <p className={cn(
-                    "font-medium",
+                    "font-medium text-[16px]",
                     item.completed ? "line-through text-muted-foreground" : ""
                   )}>
                     {item.name}
