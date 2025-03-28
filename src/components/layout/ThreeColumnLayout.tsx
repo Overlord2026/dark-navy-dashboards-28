@@ -1,4 +1,3 @@
-
 import { ReactNode, useState } from "react";
 import * as React from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
@@ -171,16 +170,16 @@ export function ThreeColumnLayout({
           {mainSidebarCollapsed ? (
             <div className="w-12 h-12 flex items-center justify-center">
               <img 
-                src="/lovable-uploads/9d138e85-d6e9-4083-ad34-147b3fc524ab.png" 
-                alt="BFO CFO Client Dashboard" 
+                src="/lovable-uploads/b6a65d03-05d7-4aa4-b33b-e433f9f06314.png" 
+                alt="Boutique Family Office" 
                 className="h-10 w-auto" 
               />
             </div>
           ) : (
             <div className="flex items-center justify-center w-full">
               <img 
-                src="/lovable-uploads/9d138e85-d6e9-4083-ad34-147b3fc524ab.png" 
-                alt="BFO CFO Client Dashboard" 
+                src="/lovable-uploads/b6a65d03-05d7-4aa4-b33b-e433f9f06314.png" 
+                alt="Boutique Family Office" 
                 className="h-14 w-auto" 
               />
             </div>

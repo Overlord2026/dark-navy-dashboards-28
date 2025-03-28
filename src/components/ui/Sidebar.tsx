@@ -84,16 +84,16 @@ export const Sidebar = () => {
         {collapsed ? (
           <div className="w-12 h-12 flex items-center justify-center">
             <img 
-              src="/lovable-uploads/9d138e85-d6e9-4083-ad34-147b3fc524ab.png" 
-              alt="Advanced Wealth Management Logo" 
+              src="/lovable-uploads/b6a65d03-05d7-4aa4-b33b-e433f9f06314.png" 
+              alt="Boutique Family Office Logo" 
               className="h-10 w-auto" 
             />
           </div>
         ) : (
           <div className="flex items-center justify-center w-full">
             <img 
-              src="/lovable-uploads/9d138e85-d6e9-4083-ad34-147b3fc524ab.png" 
-              alt="Advanced Wealth Management Logo" 
+              src="/lovable-uploads/b6a65d03-05d7-4aa4-b33b-e433f9f06314.png" 
+              alt="Boutique Family Office Logo" 
               className="h-14 w-auto" 
             />
           </div>
@@ -166,4 +166,4 @@ export const Sidebar = () => {
       </Button>
     </aside>
   );
-};
+}
