@@ -41,7 +41,10 @@ export interface GoalFormData {
   estimatedCost?: number;
   // Cash Reserve fields
   amountDesired?: number;
-  repeats?: string; // New field for Cash Reserve
+  repeats?: string;
+  // Annual Inflation fields
+  annualInflationType?: string;
+  annualInflationRate?: number;
   // Other fields as needed
 }
 
@@ -76,6 +79,7 @@ export const GoalDetailsSidePanel = ({
     targetDate: undefined,
     targetAmount: undefined,
     description: "",
+    annualInflationType: "None",
   });
 
   // Add validation errors state
@@ -111,6 +115,13 @@ export const GoalDetailsSidePanel = ({
     "3%",
     "4%",
     "5%"
+  ];
+
+  // Annual inflation type options
+  const inflationTypeOptions = [
+    "None",
+    "General",
+    "Custom"
   ];
 
   // Financing method options
@@ -157,6 +168,9 @@ export const GoalDetailsSidePanel = ({
         // Cash Reserve fields
         amountDesired: goal.amountDesired,
         repeats: goal.repeats || "None",
+        // Annual Inflation fields
+        annualInflationType: goal.annualInflationType || "None",
+        annualInflationRate: goal.annualInflationRate,
       });
       setErrors({});
     } else {
@@ -171,6 +185,7 @@ export const GoalDetailsSidePanel = ({
         financingMethod: "Cash",
         annualAppreciation: "None",
         repeats: "None",
+        annualInflationType: "None",
       });
       setErrors({});
     }
@@ -189,7 +204,8 @@ export const GoalDetailsSidePanel = ({
     // For number fields, validate before setting
     if (name === "targetAmount" || name === "purchasePrice" || name === "tuitionEstimate" || 
         name === "startYear" || name === "endYear" || name === "estimatedCost" || 
-        name === "amountDesired" || name === "targetRetirementAge" || name === "planningHorizonAge") {
+        name === "amountDesired" || name === "targetRetirementAge" || name === "planningHorizonAge" ||
+        name === "annualInflationRate") {
       
       // Allow empty values (clear field)
       if (value === "") {
@@ -227,6 +243,11 @@ export const GoalDetailsSidePanel = ({
         return;
       }
       
+      if (name === "annualInflationRate" && (numValue < 0 || numValue > 100)) {
+        setErrors(prev => ({ ...prev, [name]: "Rate must be between 0 and 100" }));
+        return;
+      }
+      
       // If validation passes, clear error and set value
       setFormData(prev => ({ ...prev, [name]: numValue }));
       setErrors(prev => {
@@ -246,6 +267,16 @@ export const GoalDetailsSidePanel = ({
 
   const handleSelectChange = (name: string, value: string) => {
     setFormData(prev => ({ ...prev, [name]: value }));
+    
+    // Handle inflation type changes
+    if (name === "annualInflationType") {
+      if (value === "None") {
+        setFormData(prev => ({ ...prev, annualInflationRate: 0 }));
+      } else if (value === "General") {
+        setFormData(prev => ({ ...prev, annualInflationRate: 2 }));
+      }
+      // For "Custom", we'll let the user set the value
+    }
     
     // If owner is updated, update the panel title
     if (name === "owner" && onTitleUpdate) {
@@ -317,6 +348,11 @@ export const GoalDetailsSidePanel = ({
       newErrors.amountDesired = "Please enter a valid positive amount";
     }
     
+    if (formData.annualInflationRate !== undefined && 
+        (isNaN(formData.annualInflationRate) || formData.annualInflationRate < 0 || formData.annualInflationRate > 100)) {
+      newErrors.annualInflationRate = "Inflation rate must be between 0 and 100";
+    }
+    
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -327,6 +363,44 @@ export const GoalDetailsSidePanel = ({
       // Panel will be closed by the parent component
     }
   };
+
+  // Render Annual Inflation fields
+  const renderAnnualInflationFields = () => (
+    <>
+      <div className="space-y-2">
+        <Label htmlFor="annualInflationType">Annual Inflation</Label>
+        <Select
+          value={formData.annualInflationType || "None"}
+          onValueChange={(value) => handleSelectChange("annualInflationType", value)}
+        >
+          <SelectTrigger id="annualInflationType" className="bg-[#1A1A3A] border-gray-700">
+            <SelectValue placeholder="Select inflation type" />
+          </SelectTrigger>
+          <SelectContent className="bg-[#1A1A3A] border-gray-700">
+            {inflationTypeOptions.map(option => (
+              <SelectItem key={option} value={option}>{option}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+      {formData.annualInflationType === "Custom" && (
+        <div className="space-y-2">
+          <Label htmlFor="annualInflationRate">Custom Inflation Rate (%)</Label>
+          <Input
+            id="annualInflationRate"
+            name="annualInflationRate"
+            type="number"
+            value={formData.annualInflationRate || ""}
+            onChange={handleInputChange}
+            className={`bg-[#1A1A3A] border-gray-700 ${errors.annualInflationRate ? 'border-[#FF4D4D] focus-visible:ring-[#FF4D4D]' : ''}`}
+          />
+          {errors.annualInflationRate && (
+            <p className="text-xs text-[#FF4D4D] mt-1">{errors.annualInflationRate}</p>
+          )}
+        </div>
+      )}
+    </>
+  );
 
   // Determine which fields to display based on goal type
   const renderGoalFields = () => {
@@ -380,6 +454,8 @@ export const GoalDetailsSidePanel = ({
                 </SelectContent>
               </Select>
             </div>
+            {/* Add Annual Inflation for Asset Purchase */}
+            {renderAnnualInflationFields()}
           </>
         );
       case "Cash Reserve":
@@ -431,6 +507,8 @@ export const GoalDetailsSidePanel = ({
                 </SelectContent>
               </Select>
             </div>
+            {/* Add Annual Inflation for Cash Reserve */}
+            {renderAnnualInflationFields()}
           </>
         );
       case "Education":
@@ -490,6 +568,8 @@ export const GoalDetailsSidePanel = ({
                 )}
               </div>
             </div>
+            {/* Add Annual Inflation for Education */}
+            {renderAnnualInflationFields()}
           </>
         );
       case "Vacation":
@@ -519,6 +599,8 @@ export const GoalDetailsSidePanel = ({
                 <p className="text-xs text-[#FF4D4D] mt-1">{errors.estimatedCost}</p>
               )}
             </div>
+            {/* Add Annual Inflation for Vacation */}
+            {renderAnnualInflationFields()}
           </>
         );
       case "Vehicle":
@@ -554,6 +636,8 @@ export const GoalDetailsSidePanel = ({
                 </SelectContent>
               </Select>
             </div>
+            {/* Add Annual Inflation for Vehicle */}
+            {renderAnnualInflationFields()}
           </>
         );
       case "Home Purchase":
@@ -605,25 +689,84 @@ export const GoalDetailsSidePanel = ({
                 </SelectContent>
               </Select>
             </div>
+            {/* Add Annual Inflation for Home Purchase */}
+            {renderAnnualInflationFields()}
+          </>
+        );
+      case "Land":
+        return (
+          <>
+            <div className="space-y-2">
+              <Label htmlFor="purchasePrice">Purchase Price</Label>
+              <Input
+                id="purchasePrice"
+                name="purchasePrice"
+                type="number"
+                value={formData.purchasePrice || ""}
+                onChange={handleInputChange}
+                className={`bg-[#1A1A3A] border-gray-700 ${errors.purchasePrice ? 'border-[#FF4D4D] focus-visible:ring-[#FF4D4D]' : ''}`}
+              />
+              {errors.purchasePrice && (
+                <p className="text-xs text-[#FF4D4D] mt-1">{errors.purchasePrice}</p>
+              )}
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="financingMethod">Financing Method</Label>
+              <Select
+                value={formData.financingMethod || "Cash"}
+                onValueChange={(value) => handleSelectChange("financingMethod", value)}
+              >
+                <SelectTrigger id="financingMethod" className="bg-[#1A1A3A] border-gray-700">
+                  <SelectValue placeholder="Select financing method" />
+                </SelectTrigger>
+                <SelectContent className="bg-[#1A1A3A] border-gray-700">
+                  {financingOptions.map(option => (
+                    <SelectItem key={option} value={option}>{option}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="annualAppreciation">Annual Appreciation</Label>
+              <Select
+                value={formData.annualAppreciation || "None"}
+                onValueChange={(value) => handleSelectChange("annualAppreciation", value)}
+              >
+                <SelectTrigger id="annualAppreciation" className="bg-[#1A1A3A] border-gray-700">
+                  <SelectValue placeholder="Select appreciation rate" />
+                </SelectTrigger>
+                <SelectContent className="bg-[#1A1A3A] border-gray-700">
+                  {appreciationOptions.map(option => (
+                    <SelectItem key={option} value={option}>{option}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            {/* Add Annual Inflation for Land */}
+            {renderAnnualInflationFields()}
           </>
         );
       default:
-        // For other goal types, we'll show the default target amount
+        // For other goal types, we'll show the default target amount and inflation fields
         return (
-          <div className="space-y-2">
-            <Label htmlFor="targetAmount">Target Amount</Label>
-            <Input
-              id="targetAmount"
-              name="targetAmount"
-              type="number"
-              value={formData.targetAmount || ""}
-              onChange={handleInputChange}
-              className={`bg-[#1A1A3A] border-gray-700 ${errors.targetAmount ? 'border-[#FF4D4D] focus-visible:ring-[#FF4D4D]' : ''}`}
-            />
-            {errors.targetAmount && (
-              <p className="text-xs text-[#FF4D4D] mt-1">{errors.targetAmount}</p>
-            )}
-          </div>
+          <>
+            <div className="space-y-2">
+              <Label htmlFor="targetAmount">Target Amount</Label>
+              <Input
+                id="targetAmount"
+                name="targetAmount"
+                type="number"
+                value={formData.targetAmount || ""}
+                onChange={handleInputChange}
+                className={`bg-[#1A1A3A] border-gray-700 ${errors.targetAmount ? 'border-[#FF4D4D] focus-visible:ring-[#FF4D4D]' : ''}`}
+              />
+              {errors.targetAmount && (
+                <p className="text-xs text-[#FF4D4D] mt-1">{errors.targetAmount}</p>
+              )}
+            </div>
+            {/* Add Annual Inflation for all other goal types */}
+            {renderAnnualInflationFields()}
+          </>
         );
     }
   };
