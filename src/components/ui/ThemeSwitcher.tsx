@@ -47,8 +47,8 @@ export function ThemeSwitcher({ onClose }: { onClose?: () => void }) {
         <div 
           className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
             theme === "light" 
-              ? "border-primary bg-[#FCFCF2]/80" 
-              : "border-gray-300 bg-[#FCFCF2]/20"
+              ? "border-primary bg-[#F9F7E8]/80" 
+              : "border-gray-300 bg-[#F9F7E8]/20"
           }`}
           onClick={() => theme !== "light" && toggleTheme()}
         >
@@ -62,7 +62,7 @@ export function ThemeSwitcher({ onClose }: { onClose?: () => void }) {
             )}
           </div>
           <p className="text-sm text-muted-foreground">
-            Soft white and yellow theme with increased readability
+            Soft yellow-tinted theme with enhanced readability
           </p>
         </div>
       </div>

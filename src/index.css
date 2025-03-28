@@ -48,48 +48,50 @@
   }
 
   .light-theme {
-    --background: 60 33% 98%; /* #FEFEF7 - Soft white with hint of yellow */
-    --foreground: 240 10% 15%; /* #23232E - Dark text for contrast */
+    --background: 48 33% 97%; /* Softer yellow-tinted white background */
+    --foreground: 240 10% 20%; /* Darker text for better contrast */
 
-    --card: 60 33% 96%; /* #FCFCF2 - Slightly darker card background */
-    --card-foreground: 240 10% 15%;
+    --card: 48 30% 95%; /* Softer yellow-tinted card background */
+    --card-foreground: 240 10% 20%;
 
-    --popover: 60 33% 96%;
-    --popover-foreground: 240 10% 15%;
+    --popover: 48 30% 95%;
+    --popover-foreground: 240 10% 20%;
 
-    --primary: 45 100% 50%; /* Keep primary yellow */
-    --primary-foreground: 240 10% 15%;
+    --primary: 45 70% 50%; /* Softer yellow primary */
+    --primary-foreground: 240 10% 20%;
 
-    --secondary: 60 33% 90%; /* #F7F7DF - Light secondary */
-    --secondary-foreground: 240 10% 15%;
+    --secondary: 48 30% 90%; /* Light secondary */
+    --secondary-foreground: 240 10% 20%;
 
-    --muted: 60 33% 90%;
+    --muted: 48 30% 90%;
     --muted-foreground: 240 10% 40%;
 
-    --accent: 45 100% 50%;
-    --accent-foreground: 240 10% 15%;
+    --accent: 45 70% 50%;
+    --accent-foreground: 240 10% 20%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 60 33% 86%; /* #F0F0D8 - Light border */
-    --input: 60 33% 86%;
-    --ring: 45 100% 50%;
+    --border: 48 30% 86%; /* Light border */
+    --input: 48 30% 86%;
+    --ring: 45 70% 50%;
 
-    --sidebar-background: 60 33% 94%; /* #FAFAEB - Light sidebar */
-    --sidebar-foreground: 240 10% 15%; /* Dark text */
-    --sidebar-primary: 45 100% 50%;
-    --sidebar-primary-foreground: 240 10% 15%;
-    --sidebar-accent: 60 33% 85%; /* #F5F5D5 - Light sidebar accent */
-    --sidebar-accent-foreground: 45 100% 50%;
-    --sidebar-border: 60 33% 86%; /* #F0F0D8 - Light border */
-    --sidebar-ring: 45 100% 50%;
+    --radius: 0.5rem;
+
+    --sidebar-background: 48 30% 97%; /* Light sidebar with soft yellow tint */
+    --sidebar-foreground: 240 10% 20%; /* Dark text */
+    --sidebar-primary: 45 70% 50%;
+    --sidebar-primary-foreground: 240 10% 20%;
+    --sidebar-accent: 48 30% 90%; /* Light sidebar accent */
+    --sidebar-accent-foreground: 45 70% 50%;
+    --sidebar-border: 48 30% 86%; /* Light border */
+    --sidebar-ring: 45 70% 50%;
   }
 }
 
 @layer base {
   * {
-    @apply border-border selection:bg-accent/30 selection:text-white;
+    @apply border-border selection:bg-accent/30 selection:text-foreground;
   }
 
   html, body, #root {
@@ -98,17 +100,17 @@
   }
 
   body {
-    @apply bg-background text-[#E2E2E2];
+    @apply bg-background text-foreground;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
     font-size: 16px;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply text-[#E2E2E2] font-medium tracking-tight font-sans;
+    @apply text-foreground font-medium tracking-tight font-sans;
   }
 
   p, span, li, div {
-    @apply text-[#E2E2E2] font-sans;
+    @apply text-foreground font-sans;
   }
 
   h1 {
