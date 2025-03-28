@@ -1,3 +1,4 @@
+
 import { ReactNode, useState } from "react";
 import * as React from "react";
 import { useParams, useNavigate, Link, useLocation } from "react-router-dom";
@@ -319,7 +320,7 @@ export function ThreeColumnLayout({
                         className={`justify-start ${isLightTheme ? 'hover:bg-[#E9E7D8] text-[#222222]' : 'hover:bg-[#2A2A40] text-white'} border border-primary`}
                         onClick={handleBookSession}
                       >
-                        <Calendar className="h-3.5 w-3.5 mr-1.5" />
+                        <CalendarIcon className="h-3.5 w-3.5 mr-1.5" />
                         Book a session
                         <ExternalLinkIcon className="h-3 w-3 ml-1" />
                       </Button>
