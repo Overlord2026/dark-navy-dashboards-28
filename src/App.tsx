@@ -29,7 +29,7 @@ function App() {
     <ThemeProvider>
       <UserProvider>
         <Router>
-          <div className="w-full h-full">
+          <div>
             <Routes>
               <Route path="/" element={<Dashboard />} />
               <Route path="/profile" element={<CustomerProfile />} />
