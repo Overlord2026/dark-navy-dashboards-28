@@ -1,6 +1,7 @@
 
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface StepCardProps {
   number: number;
@@ -11,7 +12,8 @@ interface StepCardProps {
 
 const StepCard = ({ number, title, description, onClick }: StepCardProps) => (
   <Card 
-    className="w-full max-w-[200px] h-[200px] flex flex-col bg-[#1A1A2E] border-border/20 cursor-pointer hover:bg-[#1A1A2E]/80 hover:border-primary/30 transition-all duration-200"
+    className="w-full max-w-[200px] h-[200px] flex flex-col bg-[#1A1A2E] border-border/20 cursor-pointer 
+    hover:bg-[#1A1A2E]/90 hover:border-primary hover:shadow-md hover:shadow-primary/10 transition-all duration-200"
     onClick={onClick}
   >
     <CardContent className="p-4 flex flex-col h-full">
@@ -27,6 +29,7 @@ export interface StepsOverviewProps {
 }
 
 export function StepsOverview({ onStepSelect }: StepsOverviewProps) {
+  const isMobile = useIsMobile();
   const steps = [
     {
       number: 1,
@@ -64,7 +67,7 @@ export function StepsOverview({ onStepSelect }: StepsOverviewProps) {
     <div className="space-y-6">
       <h2 className="text-[20px] font-medium text-[#FFFFFF]">Overview of Steps</h2>
       
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+      <div className={`grid grid-cols-1 ${isMobile ? 'gap-4' : 'sm:grid-cols-2 gap-6'}`}>
         {steps.map((step) => (
           <StepCard 
             key={step.number}
