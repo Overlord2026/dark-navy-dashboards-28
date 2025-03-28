@@ -48,26 +48,26 @@
   }
 
   .light-theme {
-    --background: 48 33% 97%; /* Softer yellow-tinted white background */
-    --foreground: 240 10% 20%; /* Darker text for better contrast */
+    --background: 48 33% 97%; /* Softer yellow-tinted white background #F9F7E8 */
+    --foreground: 240 10% 13%; /* Darker text for better contrast #222222 */
 
     --card: 48 30% 95%; /* Softer yellow-tinted card background */
-    --card-foreground: 240 10% 20%;
+    --card-foreground: 240 10% 13%; /* #222222 */
 
     --popover: 48 30% 95%;
-    --popover-foreground: 240 10% 20%;
+    --popover-foreground: 240 10% 13%; /* #222222 */
 
     --primary: 45 70% 50%; /* Softer yellow primary */
-    --primary-foreground: 240 10% 20%;
+    --primary-foreground: 240 10% 13%;
 
     --secondary: 48 30% 90%; /* Light secondary */
-    --secondary-foreground: 240 10% 20%;
+    --secondary-foreground: 240 10% 13%;
 
     --muted: 48 30% 90%;
     --muted-foreground: 240 10% 40%;
 
     --accent: 45 70% 50%;
-    --accent-foreground: 240 10% 20%;
+    --accent-foreground: 240 10% 13%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
@@ -79,9 +79,9 @@
     --radius: 0.5rem;
 
     --sidebar-background: 48 30% 97%; /* Light sidebar with soft yellow tint */
-    --sidebar-foreground: 240 10% 20%; /* Dark text */
+    --sidebar-foreground: 240 10% 13%; /* Dark text */
     --sidebar-primary: 45 70% 50%;
-    --sidebar-primary-foreground: 240 10% 20%;
+    --sidebar-primary-foreground: 240 10% 13%;
     --sidebar-accent: 48 30% 90%; /* Light sidebar accent */
     --sidebar-accent-foreground: 45 70% 50%;
     --sidebar-border: 48 30% 86%; /* Light border */
@@ -103,6 +103,16 @@
     @apply bg-background text-foreground;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
     font-size: 16px;
+  }
+
+  body.light-theme {
+    background-color: #F9F7E8;
+    color: #222222;
+  }
+
+  body.dark-theme {
+    background-color: #12121C;
+    color: #E2E2E2;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -149,5 +159,15 @@
   
   .text-balance {
     text-wrap: balance;
+  }
+
+  .light-theme .dialog-content,
+  .light-theme .popover-content {
+    @apply bg-[#F9F7E8] text-[#222222] border-[#DCD8C0];
+  }
+  
+  .dark-theme .dialog-content,
+  .dark-theme .popover-content {
+    @apply bg-[#1B1B32] text-white border-[#2A2A40];
   }
 }

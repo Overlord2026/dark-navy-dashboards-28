@@ -24,15 +24,21 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     if (theme === "light") {
       root.classList.add("light-theme");
       root.classList.remove("dark-theme");
-      // Also apply to body for full coverage
+      // Apply to body for full coverage
       document.body.classList.add("light-theme");
       document.body.classList.remove("dark-theme");
+      // Apply additional class for dialog backgrounds
+      document.body.classList.add("bg-[#F9F7E8]");
+      document.body.classList.remove("bg-[#12121C]");
     } else {
       root.classList.add("dark-theme");
       root.classList.remove("light-theme");
-      // Also apply to body for full coverage
+      // Apply to body for full coverage
       document.body.classList.add("dark-theme");
       document.body.classList.remove("light-theme");
+      // Apply additional class for dialog backgrounds
+      document.body.classList.add("bg-[#12121C]");
+      document.body.classList.remove("bg-[#F9F7E8]");
     }
   }, [theme]);
 

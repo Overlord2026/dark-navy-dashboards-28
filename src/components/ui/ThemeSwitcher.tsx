@@ -16,7 +16,7 @@ export function ThemeSwitcher({ onClose }: { onClose?: () => void }) {
   };
 
   return (
-    <div className="p-6 space-y-6">
+    <div className={`p-6 space-y-6 ${theme === "light" ? "bg-[#F9F7E8] text-[#222222]" : ""}`}>
       <h2 className="text-xl font-semibold mb-4">
         Change Theme
       </h2>
@@ -25,8 +25,8 @@ export function ThemeSwitcher({ onClose }: { onClose?: () => void }) {
         <div 
           className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
             theme === "dark" 
-              ? "border-primary bg-[#12121C]/80" 
-              : "border-gray-300 bg-[#12121C]/20"
+              ? "border-primary bg-[#12121C]/80 text-white" 
+              : "border-gray-300 bg-[#12121C]/20 text-white"
           }`}
           onClick={() => theme !== "dark" && toggleTheme()}
         >
@@ -47,8 +47,8 @@ export function ThemeSwitcher({ onClose }: { onClose?: () => void }) {
         <div 
           className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
             theme === "light" 
-              ? "border-primary bg-[#F9F7E8]/80" 
-              : "border-gray-300 bg-[#F9F7E8]/20"
+              ? "border-primary bg-[#F9F7E8]/80 text-[#222222]" 
+              : "border-gray-300 bg-[#F9F7E8]/20 text-[#666666]"
           }`}
           onClick={() => theme !== "light" && toggleTheme()}
         >
