@@ -130,7 +130,10 @@ const Lending = () => {
   };
 
   return (
-    <ThreeColumnLayout activeMainItem="lending" title="Lending">
+    <ThreeColumnLayout 
+      title="Lending Solutions" 
+      activeMainItem="lending"
+    >
       <div className="animate-fade-in p-4">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
           <div>

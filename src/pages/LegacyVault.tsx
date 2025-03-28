@@ -2,7 +2,7 @@
 import React from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { LockIcon, FileIcon, UsersIcon, KeyIcon, ClockIcon } from "lucide-react";
+import { BookOpenIcon, FileIcon, UsersIcon, KeyIcon, ClockIcon, LockIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const vaultCategories = [
@@ -20,11 +20,14 @@ export default function LegacyVault() {
     >
       <div className="space-y-6">
         <div className="flex items-start justify-between">
-          <div>
-            <h2 className="text-2xl font-bold tracking-tight">Your Legacy Vault</h2>
-            <p className="text-muted-foreground mt-2">
-              Securely store and organize your important documents and legacy instructions
-            </p>
+          <div className="flex items-center gap-2">
+            <BookOpenIcon className="h-7 w-7 text-primary" />
+            <div>
+              <h2 className="text-2xl font-bold tracking-tight">Your Legacy Vault</h2>
+              <p className="text-muted-foreground mt-2">
+                Securely store and organize your important documents and legacy instructions
+              </p>
+            </div>
           </div>
           <Button variant="outline" className="flex items-center gap-2">
             <LockIcon className="h-4 w-4" />

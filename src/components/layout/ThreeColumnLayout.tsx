@@ -1,4 +1,3 @@
-
 import { ReactNode, useState } from "react";
 import * as React from "react";
 import { useParams, useNavigate, Link, useLocation } from "react-router-dom";
@@ -18,7 +17,7 @@ import {
   ReceiptIcon, 
   ShareIcon, 
   GraduationCapIcon,
-  VaultIcon
+  BookOpenIcon
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { UserProfileSection } from "@/components/sidebar/UserProfileSection";
@@ -71,7 +70,7 @@ const mainMenuItems: MainMenuItem[] = [
   { id: "cash-management", label: "Cash Management", icon: WalletIcon, href: "/cash-management" },
   { id: "transfers", label: "Transfers", icon: ArrowRightLeftIcon, href: "/transfers" },
   { id: "tax-budgets", label: "Tax Budgets", icon: ReceiptIcon, href: "/tax-budgets" },
-  { id: "vault", label: "Legacy Vault", icon: VaultIcon, href: "/vault" },
+  { id: "vault", label: "Legacy Vault", icon: BookOpenIcon, href: "/vault" },
 ];
 
 const documentSubMenuItems: MenuItem[] = [
@@ -148,7 +147,6 @@ export function ThreeColumnLayout({
   const isHomePage = location.pathname === "/";
 
   const getCurrentPath = () => {
-    // Extract the first part of the path (e.g., /accounts/id -> accounts)
     const path = location.pathname.split('/')[1];
     return path === '' ? 'home' : path;
   };
@@ -324,7 +322,7 @@ export function ThreeColumnLayout({
             />
             
             <Link to="/vault" className="flex items-center gap-2 px-4 py-2 rounded-md bg-gray-800 hover:bg-gray-700 text-gray-100 transition-colors">
-              <VaultIcon className="h-5 w-5" />
+              <BookOpenIcon className="h-5 w-5" />
               <span className="font-medium">Legacy Vault</span>
             </Link>
           </div>
