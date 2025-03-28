@@ -24,7 +24,8 @@ import {
   Copy, 
   Star,
   Info,
-  MoreHorizontal
+  MoreHorizontal,
+  FileIcon
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -43,6 +44,7 @@ export interface Plan {
   isActive?: boolean;
   successRate?: number;
   status: 'Active' | 'Draft';
+  draftData?: any;
 }
 
 interface ManagePlansDialogProps {
@@ -67,6 +69,7 @@ export function ManagePlansDialog({
   onSelectPlan
 }: ManagePlansDialogProps) {
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
+  const [filter, setFilter] = useState<'all' | 'active' | 'drafts'>('all');
   
   const handleDelete = (planId: string) => {
     setConfirmDeleteId(planId);
@@ -83,6 +86,12 @@ export function ManagePlansDialog({
   const cancelDelete = () => {
     setConfirmDeleteId(null);
   };
+
+  const filteredPlans = filter === 'all' 
+    ? plans 
+    : filter === 'active' 
+      ? plans.filter(p => p.status === 'Active')
+      : plans.filter(p => p.status === 'Draft');
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
@@ -118,98 +127,142 @@ export function ManagePlansDialog({
             </div>
           </div>
         ) : (
-          <div className="overflow-auto max-h-[60vh]">
-            <Table>
-              <TableHeader>
-                <TableRow className="hover:bg-transparent">
-                  <TableHead className="w-[30px]"></TableHead>
-                  <TableHead>Plan Name</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Created</TableHead>
-                  <TableHead>Success Rate</TableHead>
-                  <TableHead className="w-[80px] text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {plans.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
-                      No plans found. Create your first plan!
-                    </TableCell>
+          <>
+            <div className="flex gap-2 mb-4">
+              <Button 
+                variant={filter === 'all' ? 'default' : 'outline'} 
+                size="sm" 
+                onClick={() => setFilter('all')}
+              >
+                All Plans
+              </Button>
+              <Button 
+                variant={filter === 'active' ? 'default' : 'outline'} 
+                size="sm" 
+                onClick={() => setFilter('active')}
+              >
+                Active Plans
+              </Button>
+              <Button 
+                variant={filter === 'drafts' ? 'default' : 'outline'} 
+                size="sm" 
+                onClick={() => setFilter('drafts')}
+              >
+                Draft Plans
+              </Button>
+            </div>
+            
+            <div className="overflow-auto max-h-[60vh]">
+              <Table>
+                <TableHeader>
+                  <TableRow className="hover:bg-transparent">
+                    <TableHead className="w-[30px]"></TableHead>
+                    <TableHead>Plan Name</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Created</TableHead>
+                    <TableHead>Progress</TableHead>
+                    <TableHead className="w-[80px] text-right">Actions</TableHead>
                   </TableRow>
-                ) : (
-                  plans.map((plan) => (
-                    <TableRow key={plan.id} className="group hover:bg-[#182339] transition-colors">
-                      <TableCell>
-                        <Button 
-                          variant="ghost" 
-                          size="icon" 
-                          className="h-8 w-8"
-                          onClick={() => onToggleFavorite(plan.id)}
-                        >
-                          <Star 
-                            className={`h-4 w-4 ${plan.isFavorite ? 'text-yellow-400 fill-yellow-400' : 'text-muted-foreground'}`} 
-                          />
-                        </Button>
-                      </TableCell>
-                      <TableCell 
-                        className="font-medium cursor-pointer hover:underline"
-                        onClick={() => onSelectPlan(plan.id)}
-                      >
-                        {plan.name}
-                      </TableCell>
-                      <TableCell>
-                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                          plan.status === 'Active' 
-                            ? 'bg-green-100/10 text-green-500' 
-                            : 'bg-blue-100/10 text-blue-500'
-                        }`}>
-                          {plan.status}
-                        </span>
-                      </TableCell>
-                      <TableCell>{format(plan.createdAt, 'MMM dd, yyyy')}</TableCell>
-                      <TableCell>
-                        {plan.successRate ? `${plan.successRate}%` : 'N/A'}
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon" className="h-8 w-8">
-                              <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent className="bg-[#0F1C2E] border-white/10 animate-in fade-in-50 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 duration-200">
-                            <DropdownMenuItem 
-                              className="flex items-center gap-2 cursor-pointer"
-                              onClick={() => onEditPlan(plan.id)}
-                            >
-                              <Edit2 className="h-4 w-4" />
-                              <span>Edit Plan</span>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem 
-                              className="flex items-center gap-2 cursor-pointer"
-                              onClick={() => onDuplicatePlan(plan.id)}
-                            >
-                              <Copy className="h-4 w-4" />
-                              <span>Duplicate Plan</span>
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator className="bg-white/10" />
-                            <DropdownMenuItem 
-                              className="flex items-center gap-2 cursor-pointer text-destructive hover:text-destructive focus:text-destructive"
-                              onClick={() => handleDelete(plan.id)}
-                            >
-                              <Trash2 className="h-4 w-4" />
-                              <span>Delete Plan</span>
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
+                </TableHeader>
+                <TableBody>
+                  {filteredPlans.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
+                        No plans found. Create your first plan!
                       </TableCell>
                     </TableRow>
-                  ))
-                )}
-              </TableBody>
-            </Table>
-          </div>
+                  ) : (
+                    filteredPlans.map((plan) => (
+                      <TableRow key={plan.id} className="group hover:bg-[#182339] transition-colors">
+                        <TableCell>
+                          <Button 
+                            variant="ghost" 
+                            size="icon" 
+                            className="h-8 w-8"
+                            onClick={() => onToggleFavorite(plan.id)}
+                          >
+                            {plan.status === 'Draft' ? (
+                              <FileIcon className="h-4 w-4 text-blue-400" />
+                            ) : (
+                              <Star 
+                                className={`h-4 w-4 ${plan.isFavorite ? 'text-yellow-400 fill-yellow-400' : 'text-muted-foreground'}`} 
+                              />
+                            )}
+                          </Button>
+                        </TableCell>
+                        <TableCell 
+                          className="font-medium cursor-pointer hover:underline"
+                          onClick={() => onSelectPlan(plan.id)}
+                        >
+                          {plan.name}
+                        </TableCell>
+                        <TableCell>
+                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                            plan.status === 'Active' 
+                              ? 'bg-green-100/10 text-green-500' 
+                              : 'bg-blue-100/10 text-blue-500'
+                          }`}>
+                            {plan.status}
+                          </span>
+                        </TableCell>
+                        <TableCell>{format(plan.createdAt, 'MMM dd, yyyy')}</TableCell>
+                        <TableCell>
+                          {plan.status === 'Draft' ? (
+                            <div className="flex items-center gap-2">
+                              <div className="w-24 h-2 bg-gray-700 rounded-full overflow-hidden">
+                                <div 
+                                  className="h-full bg-blue-500 rounded-full" 
+                                  style={{ width: `${Math.min(100, ((plan.draftData?.step || 1) / 5) * 100)}%` }}
+                                ></div>
+                              </div>
+                              <span className="text-xs text-muted-foreground">
+                                Step {plan.draftData?.step || 1} of 5
+                              </span>
+                            </div>
+                          ) : (
+                            <span>{plan.successRate ? `${plan.successRate}%` : 'N/A'}</span>
+                          )}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="icon" className="h-8 w-8">
+                                <MoreHorizontal className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent className="bg-[#0F1C2E] border-white/10 animate-in fade-in-50 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 duration-200">
+                              <DropdownMenuItem 
+                                className="flex items-center gap-2 cursor-pointer"
+                                onClick={() => onEditPlan(plan.id)}
+                              >
+                                <Edit2 className="h-4 w-4" />
+                                <span>{plan.status === 'Draft' ? 'Continue Editing' : 'Edit Plan'}</span>
+                              </DropdownMenuItem>
+                              <DropdownMenuItem 
+                                className="flex items-center gap-2 cursor-pointer"
+                                onClick={() => onDuplicatePlan(plan.id)}
+                              >
+                                <Copy className="h-4 w-4" />
+                                <span>Duplicate Plan</span>
+                              </DropdownMenuItem>
+                              <DropdownMenuSeparator className="bg-white/10" />
+                              <DropdownMenuItem 
+                                className="flex items-center gap-2 cursor-pointer text-destructive hover:text-destructive focus:text-destructive"
+                                onClick={() => handleDelete(plan.id)}
+                              >
+                                <Trash2 className="h-4 w-4" />
+                                <span>Delete Plan</span>
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  )}
+                </TableBody>
+              </Table>
+            </div>
+          </>
         )}
 
         <DialogFooter>

@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Card, CardContent } from "@/components/ui/card";
@@ -11,7 +12,8 @@ import {
   InfoIcon, 
   PlusIcon, 
   MoreHorizontal,
-  CheckCircle
+  CheckCircle,
+  FileIcon
 } from "lucide-react";
 import { useUser } from "@/context/UserContext";
 import { toast } from "sonner";
@@ -28,6 +30,8 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
+  SelectGroup,
+  SelectLabel
 } from "@/components/ui/select";
 
 const FinancialPlans = () => {
@@ -54,7 +58,12 @@ const FinancialPlans = () => {
       isFavorite: false, 
       successRate: 45, 
       status: 'Draft',
-      createdAt: new Date(2023, 5, 22)
+      createdAt: new Date(2023, 5, 22),
+      draftData: {
+        step: 2,
+        name: "Draft Plan 1",
+        goals: [{ name: "Retirement", priority: "High" }]
+      }
     },
     { 
       id: "3", 
@@ -62,13 +71,20 @@ const FinancialPlans = () => {
       isFavorite: false, 
       successRate: 62,
       status: 'Draft',
-      createdAt: new Date(2023, 6, 10)
+      createdAt: new Date(2023, 6, 10),
+      draftData: {
+        step: 3,
+        name: "Draft Plan 2",
+        goals: [{ name: "Buy a house", priority: "Medium" }],
+        income: { monthly: 5000 }
+      }
     },
   ]);
   
   const [selectedPlan, setSelectedPlan] = useState<string>(plans[0].id);
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isManagePlansOpen, setIsManagePlansOpen] = useState(false);
+  const [currentDraftData, setCurrentDraftData] = useState<any>(null);
 
   const handleCreatePlan = (planName: string, planDetails: any = {}) => {
     const isDraft = planDetails?.isDraft || false;
@@ -107,11 +123,21 @@ const FinancialPlans = () => {
   const handleSelectPlan = (planId: string) => {
     if (planId === "new-plan") {
       setIsCreateDialogOpen(true);
+      setCurrentDraftData(null); // Start fresh
       return;
     }
     
     if (planId === "manage-plans") {
       setIsManagePlansOpen(true);
+      return;
+    }
+    
+    const selectedPlanObj = plans.find(plan => plan.id === planId);
+    
+    if (selectedPlanObj?.status === 'Draft' && selectedPlanObj.draftData) {
+      // Open the create dialog with draft data
+      setCurrentDraftData(selectedPlanObj.draftData);
+      setIsCreateDialogOpen(true);
       return;
     }
     
@@ -124,10 +150,49 @@ const FinancialPlans = () => {
     );
   };
 
+  const handleSaveDraft = (draftData: any) => {
+    // If this is an existing draft being updated
+    if (currentDraftData && draftData.draftId) {
+      setPlans(prevPlans => 
+        prevPlans.map(plan => 
+          plan.id === draftData.draftId 
+            ? { 
+                ...plan, 
+                draftData: { ...draftData, step: draftData.currentStep || 1 } 
+              } 
+            : plan
+        )
+      );
+      toast.info("Draft plan updated");
+    } else {
+      // This is a new draft
+      const newDraft: Plan = {
+        id: `draft-${Date.now()}`,
+        name: draftData.name || "Untitled Draft",
+        isFavorite: false,
+        successRate: 0,
+        status: 'Draft',
+        createdAt: new Date(),
+        draftData: { ...draftData, step: draftData.currentStep || 1 }
+      };
+      
+      setPlans(prevPlans => [...prevPlans, newDraft]);
+      toast.info("Draft plan saved");
+    }
+  };
+
   const handleEditPlan = (planId: string) => {
-    toast.info(`Editing plan ${planId}`);
+    const planToEdit = plans.find(plan => plan.id === planId);
+    
+    if (planToEdit?.status === 'Draft' && planToEdit.draftData) {
+      // Open the create dialog with draft data
+      setCurrentDraftData({...planToEdit.draftData, draftId: planId});
+      setIsCreateDialogOpen(true);
+    } else {
+      toast.info(`Editing plan ${planId}`);
+    }
+    
     setIsManagePlansOpen(false);
-    setSelectedPlan(planId);
   };
 
   const handleDeletePlan = (planId: string) => {
@@ -170,6 +235,8 @@ const FinancialPlans = () => {
   };
 
   const activePlan = plans.find(plan => plan.id === selectedPlan) || plans[0];
+  const draftPlans = plans.filter(plan => plan.status === 'Draft');
+  const activePlans = plans.filter(plan => plan.status === 'Active');
 
   return (
     <ThreeColumnLayout activeMainItem="financial-plans" title="Financial Plans">
@@ -185,7 +252,10 @@ const FinancialPlans = () => {
           <div className="relative inline-block">
             <Button 
               className="bg-white text-black hover:bg-gray-100 border border-gray-300"
-              onClick={() => setIsCreateDialogOpen(true)}
+              onClick={() => {
+                setCurrentDraftData(null); // Start fresh
+                setIsCreateDialogOpen(true);
+              }}
             >
               Create Plan
             </Button>
@@ -196,25 +266,51 @@ const FinancialPlans = () => {
               value={selectedPlan}
               onValueChange={handleSelectPlan}
             >
-              <SelectTrigger className="w-[180px] bg-transparent">
+              <SelectTrigger className="w-[210px] bg-transparent">
                 <SelectValue placeholder={fullName}>{activePlan.name}</SelectValue>
               </SelectTrigger>
               <SelectContent 
                 className="bg-[#0F1C2E] border-white/10 animate-in fade-in-50 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 duration-200"
               >
-                <div className="py-2 px-4 text-sm font-medium border-b border-white/10">Plans</div>
-                {plans.map(plan => (
-                  <SelectItem 
-                    key={plan.id} 
-                    value={plan.id} 
-                    className="flex items-center gap-2 transition-colors"
-                  >
-                    <div className="flex items-center gap-2">
-                      {plan.isActive && <CheckCircle className="h-4 w-4 text-green-500" />}
-                      <span>{plan.name}</span>
-                    </div>
-                  </SelectItem>
-                ))}
+                {activePlans.length > 0 && (
+                  <SelectGroup>
+                    <SelectLabel className="py-2 px-4 text-sm font-medium border-b border-white/10">Active Plans</SelectLabel>
+                    {activePlans.map(plan => (
+                      <SelectItem 
+                        key={plan.id} 
+                        value={plan.id} 
+                        className="flex items-center gap-2 transition-colors"
+                      >
+                        <div className="flex items-center gap-2">
+                          {plan.isActive && <CheckCircle className="h-4 w-4 text-green-500" />}
+                          <span>{plan.name}</span>
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                )}
+
+                {draftPlans.length > 0 && (
+                  <SelectGroup>
+                    <SelectLabel className="py-2 px-4 text-sm font-medium border-b border-white/10 mt-2">Drafts</SelectLabel>
+                    {draftPlans.map(plan => (
+                      <SelectItem 
+                        key={plan.id} 
+                        value={plan.id} 
+                        className="flex items-center gap-2 transition-colors"
+                      >
+                        <div className="flex items-center gap-2">
+                          <FileIcon className="h-4 w-4 text-blue-400" />
+                          <span>{plan.name}</span>
+                          <span className="text-xs text-muted-foreground ml-1">
+                            (Step {plan.draftData?.step || 1})
+                          </span>
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                )}
+                
                 <DropdownMenuSeparator className="my-1 bg-white/10" />
                 <SelectItem 
                   value="new-plan" 
@@ -337,6 +433,8 @@ const FinancialPlans = () => {
         isOpen={isCreateDialogOpen}
         onClose={() => setIsCreateDialogOpen(false)}
         onCreatePlan={handleCreatePlan}
+        onSaveDraft={handleSaveDraft}
+        draftData={currentDraftData}
       />
 
       <ManagePlansDialog
