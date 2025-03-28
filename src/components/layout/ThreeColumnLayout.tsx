@@ -1,3 +1,4 @@
+
 import { ReactNode, useState } from "react";
 import * as React from "react";
 import { useParams, useNavigate, Link, useLocation } from "react-router-dom";
@@ -185,65 +186,67 @@ export function ThreeColumnLayout({
     <div className={`flex h-screen overflow-hidden ${isLightTheme ? 'bg-[#F9F7E8]' : 'bg-[#12121C]'}`}>
       <aside
         className={cn(
-          "h-screen flex flex-col transition-all duration-300 ease-in-out z-30 pt-0",
+          "h-screen flex flex-col transition-all duration-300 ease-in-out z-30",
           mainSidebarCollapsed ? "w-[70px]" : "w-[220px]",
           isLightTheme ? "bg-[#F9F7E8] border-r border-[#DCD8C0]" : "bg-[#1B1B32] border-r border-white/10"
         )}
       >
-        {!mainSidebarCollapsed && (
-          <div className="border-b border-sidebar-border">
-            <UserProfileSection onMenuItemClick={handleProfileMenuItemClick} showLogo={false} />
-          </div>
-        )}
-        
-        <div className="flex-1 overflow-y-auto pt-[130px]">
-          <nav className="px-4 space-y-2">
-            {mainMenuItems.map((item) => {
-              if (item.id === "education") return null;
+        <div className="pt-[130px]">
+          {!mainSidebarCollapsed && (
+            <div className="border-b border-sidebar-border">
+              <UserProfileSection onMenuItemClick={handleProfileMenuItemClick} showLogo={false} />
+            </div>
+          )}
+          
+          <div className="flex-1 overflow-y-auto">
+            <nav className="px-4 space-y-2">
+              {mainMenuItems.map((item) => {
+                if (item.id === "education") return null;
 
-              const isActive = item.id === currentPath;
-              const Icon = item.icon;
-              
-              return (
-                <Link
-                  key={item.id}
-                  to={item.href}
-                  className={cn(
-                    "group flex items-center py-2 px-3 rounded-md transition-colors text-[14px] whitespace-nowrap",
-                    "hover:bg-white/10",
-                    isActive
-                      ? isLightTheme ? "bg-[#E9E7D8] text-[#222222] font-medium" : "bg-black text-[#E2E2E2] font-medium"
-                      : isLightTheme ? "text-[#222222]" : "text-[#E2E2E2]",
-                    isLightTheme ? "hover:bg-[#E9E7D8]" : "hover:bg-white/10"
-                  )}
-                >
-                  {typeof Icon === 'function' ? (
-                    <div className={`flex items-center justify-center rounded-sm p-0.5 mr-3 ${isLightTheme ? 'bg-[#222222]' : 'bg-black'}`}>
-                      <Icon />
-                    </div>
-                  ) : (
-                    <Icon 
-                      className={cn("h-5 w-5", !mainSidebarCollapsed && "mr-3")} 
-                      style={{ 
-                        backgroundColor: isLightTheme ? '#222222' : '#000', 
-                        padding: '2px', 
-                        borderRadius: '2px' 
-                      }} 
-                    />
-                  )}
-                  {!mainSidebarCollapsed && (
-                    <span className="whitespace-nowrap overflow-hidden text-ellipsis">{item.label}</span>
-                  )}
-                </Link>
-              );
-            })}
-          </nav>
+                const isActive = item.id === currentPath;
+                const Icon = item.icon;
+                
+                return (
+                  <Link
+                    key={item.id}
+                    to={item.href}
+                    className={cn(
+                      "group flex items-center py-2 px-3 rounded-md transition-colors text-[14px] whitespace-nowrap",
+                      "hover:bg-white/10",
+                      isActive
+                        ? isLightTheme ? "bg-[#E9E7D8] text-[#222222] font-medium" : "bg-black text-[#E2E2E2] font-medium"
+                        : isLightTheme ? "text-[#222222]" : "text-[#E2E2E2]",
+                      isLightTheme ? "hover:bg-[#E9E7D8]" : "hover:bg-white/10"
+                    )}
+                  >
+                    {typeof Icon === 'function' ? (
+                      <div className={`flex items-center justify-center rounded-sm p-0.5 mr-3 ${isLightTheme ? 'bg-[#222222]' : 'bg-black'}`}>
+                        <Icon />
+                      </div>
+                    ) : (
+                      <Icon 
+                        className={cn("h-5 w-5", !mainSidebarCollapsed && "mr-3")} 
+                        style={{ 
+                          backgroundColor: isLightTheme ? '#222222' : '#000', 
+                          padding: '2px', 
+                          borderRadius: '2px' 
+                        }} 
+                      />
+                    )}
+                    {!mainSidebarCollapsed && (
+                      <span className="whitespace-nowrap overflow-hidden text-ellipsis">{item.label}</span>
+                    )}
+                  </Link>
+                );
+              })}
+            </nav>
+          </div>
         </div>
 
         <Button
           variant="ghost"
           size="icon"
-          className={`absolute top-6 right-0 translate-x-1/2 h-8 w-8 rounded-full bg-background border border-border text-foreground hover:bg-accent hover:text-sidebar-primary-foreground z-40 ${isLightTheme ? 'bg-[#F9F7E8] text-[#222222] border-[#DCD8C0]' : ''}`}
+          className={`absolute top-[130px] right-0 translate-x-1/2 h-8 w-8 rounded-full bg-background border border-border text-foreground hover:bg-accent hover:text-sidebar-primary-foreground z-40 ${isLightTheme ? 'bg-[#F9F7E8] text-[#222222] border-[#DCD8C0]' : ''}`}
           onClick={toggleMainSidebar}
         >
           {mainSidebarCollapsed ? (

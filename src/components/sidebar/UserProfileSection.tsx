@@ -80,7 +80,7 @@ export const UserProfileSection = ({
   };
 
   return (
-    <div className={`px-4 py-3 ${isLightTheme ? 'border-[#DCD8C0]' : 'border-white/10'}`}>
+    <div className={`px-4 py-2 ${isLightTheme ? 'border-[#DCD8C0]' : 'border-white/10'}`}>
       {/* Optional logo above the user profile dropdown */}
       {showLogo && (
         <div className="mb-3 flex justify-center">
