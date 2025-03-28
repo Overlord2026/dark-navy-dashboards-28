@@ -186,7 +186,7 @@ export function ThreeColumnLayout({
     <div className={`flex h-screen overflow-hidden ${isLightTheme ? 'bg-[#F9F7E8]' : 'bg-[#12121C]'}`}>
       <aside
         className={cn(
-          "h-screen flex flex-col transition-all duration-300 ease-in-out z-30 pt-32", // Increased pt-32 to move sidebar further down
+          "h-screen flex flex-col transition-all duration-300 ease-in-out z-30 pt-64", // Increased to pt-64 to align with Net Worth Summary
           mainSidebarCollapsed ? "w-[70px]" : "w-[220px]",
           isLightTheme ? "bg-[#F9F7E8] border-r border-[#DCD8C0]" : "bg-[#1B1B32] border-r border-white/10"
         )}
@@ -242,7 +242,7 @@ export function ThreeColumnLayout({
         <Button
           variant="ghost"
           size="icon"
-          className={`absolute top-32 right-0 translate-x-1/2 h-8 w-8 rounded-full bg-background border border-border text-foreground hover:bg-accent hover:text-sidebar-primary-foreground z-40 ${isLightTheme ? 'bg-[#F9F7E8] text-[#222222] border-[#DCD8C0]' : ''}`}
+          className={`absolute top-64 right-0 translate-x-1/2 h-8 w-8 rounded-full bg-background border border-border text-foreground hover:bg-accent hover:text-sidebar-primary-foreground z-40 ${isLightTheme ? 'bg-[#F9F7E8] text-[#222222] border-[#DCD8C0]' : ''}`}
           onClick={toggleMainSidebar}
         >
           {mainSidebarCollapsed ? (
@@ -256,7 +256,7 @@ export function ThreeColumnLayout({
       {hasSecondaryMenu && (
         <aside
           className={cn(
-            "h-screen flex flex-col transition-all duration-300 ease-in-out z-20 pt-32", // Increased pt-32 to move sidebar further down
+            "h-screen flex flex-col transition-all duration-300 ease-in-out z-20 pt-64", // Increased to pt-64 to align with Net Worth Summary
             secondarySidebarCollapsed ? "w-[0px]" : "w-[200px]",
             isLightTheme ? "bg-[#F9F7E8] border-r border-[#DCD8C0]" : "bg-[#1B1B32] border-r border-sidebar-border"
           )}
@@ -294,7 +294,7 @@ export function ThreeColumnLayout({
           <Button
             variant="ghost"
             size="icon"
-            className={`absolute top-32 h-8 w-8 rounded-full border text-foreground z-40 ${
+            className={`absolute top-64 h-8 w-8 rounded-full border text-foreground z-40 ${
               isLightTheme 
                 ? 'bg-[#F9F7E8] text-[#222222] border-[#DCD8C0] hover:bg-[#E9E7D8]' 
                 : 'bg-background border-border hover:bg-accent hover:text-sidebar-primary-foreground'
