@@ -9,6 +9,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 
 type AddCollaboratorDialogProps = {
   onAddCollaborator: (collaborator: {
@@ -113,9 +114,35 @@ export function AddCollaboratorDialog({
     <Dialog open={dialogOpen} onOpenChange={handleDialogOpenChange}>
       {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
       
-      <DialogContent className="sm:max-w-md bg-[#0F0F2D] text-white border-gray-800">
+      <DialogContent className="sm:max-w-md bg-[#030a1c] text-white border-gray-800">
+        <div className="mb-4 pt-2">
+          <Breadcrumb>
+            <BreadcrumbList className="text-xs">
+              <BreadcrumbItem>
+                <BreadcrumbLink href="#" className={`${step === 1 ? "text-white" : "text-gray-400"}`}>
+                  <span className="flex items-center">
+                    <span className={`inline-block w-4 h-4 rounded-full mr-2 ${step === 1 ? "bg-white text-black" : "bg-gray-700"} flex items-center justify-center text-xs`}>1</span>
+                    Add Collaborator
+                  </span>
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator className="text-gray-500">
+                <div className="w-10 h-[1px] bg-gray-700"></div>
+              </BreadcrumbSeparator>
+              <BreadcrumbItem>
+                <BreadcrumbLink href="#" className={`${step === 2 ? "text-white" : "text-gray-400"}`}>
+                  <span className="flex items-center">
+                    <span className={`inline-block w-4 h-4 rounded-full mr-2 ${step === 2 ? "bg-white text-black" : "bg-gray-700"} flex items-center justify-center text-xs`}>2</span>
+                    Access & Type
+                  </span>
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+        </div>
+        
         <DialogHeader>
-          <DialogTitle className="text-xl">
+          <DialogTitle className="text-xl font-normal text-white">
             {step === 1 ? "Add Collaborator" : "Access & Type"}
           </DialogTitle>
         </DialogHeader>
@@ -125,7 +152,7 @@ export function AddCollaboratorDialog({
             {step === 1 && (
               <>
                 <div>
-                  <p className="text-sm text-gray-300 mb-6">
+                  <p className="text-sm text-gray-400 mb-6">
                     Tell us who you want to collaborate with.
                   </p>
                   
@@ -135,11 +162,12 @@ export function AddCollaboratorDialog({
                       name="firstName"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-gray-300">First Name</FormLabel>
+                          <FormLabel className="text-gray-400 text-xs mb-1">First Name</FormLabel>
                           <FormControl>
                             <Input 
                               {...field} 
-                              className="bg-transparent border-gray-600 focus:border-gray-400"
+                              className="bg-transparent border-gray-700 focus:border-gray-500"
+                              placeholder="First Name"
                             />
                           </FormControl>
                         </FormItem>
@@ -151,11 +179,12 @@ export function AddCollaboratorDialog({
                       name="lastName"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-gray-300">Last Name</FormLabel>
+                          <FormLabel className="text-gray-400 text-xs mb-1">Last Name</FormLabel>
                           <FormControl>
                             <Input 
                               {...field} 
-                              className="bg-transparent border-gray-600 focus:border-gray-400"
+                              className="bg-transparent border-gray-700 focus:border-gray-500"
+                              placeholder="Last Name"
                             />
                           </FormControl>
                         </FormItem>
@@ -168,12 +197,13 @@ export function AddCollaboratorDialog({
                     name="email"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-gray-300">Email</FormLabel>
+                        <FormLabel className="text-gray-400 text-xs mb-1">Email</FormLabel>
                         <FormControl>
                           <Input 
                             {...field} 
                             type="email" 
-                            className="bg-transparent border-gray-600 focus:border-gray-400"
+                            className="bg-transparent border-gray-700 focus:border-gray-500"
+                            placeholder="Email"
                           />
                         </FormControl>
                       </FormItem>
@@ -190,17 +220,17 @@ export function AddCollaboratorDialog({
                   name="role"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-gray-300">What's their relationship to you?</FormLabel>
+                      <FormLabel className="text-gray-400">What's their relationship to you?</FormLabel>
                       <Select 
                         onValueChange={field.onChange} 
                         defaultValue={field.value}
                       >
                         <FormControl>
-                          <SelectTrigger className="bg-transparent border-gray-600 text-white">
+                          <SelectTrigger className="bg-transparent border-gray-700 text-white">
                             <SelectValue placeholder="Select a role" />
                           </SelectTrigger>
                         </FormControl>
-                        <SelectContent className="bg-[#1A1A3A] border-gray-700 text-white">
+                        <SelectContent className="bg-[#030a1c] border-gray-700 text-white">
                           <SelectItem value="spouse">Spouse</SelectItem>
                           <SelectItem value="child">Child</SelectItem>
                           <SelectItem value="parent">Parent</SelectItem>
@@ -219,17 +249,17 @@ export function AddCollaboratorDialog({
                   name="accessLevel"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-gray-300">What level of access should they have?</FormLabel>
+                      <FormLabel className="text-gray-400">What level of access should they have?</FormLabel>
                       <Select 
                         onValueChange={field.onChange as (value: string) => void} 
                         defaultValue={field.value}
                       >
                         <FormControl>
-                          <SelectTrigger className="bg-transparent border-gray-600 text-white">
+                          <SelectTrigger className="bg-transparent border-gray-700 text-white">
                             <SelectValue placeholder="Select access level" />
                           </SelectTrigger>
                         </FormControl>
-                        <SelectContent className="bg-[#1A1A3A] border-gray-700 text-white">
+                        <SelectContent className="bg-[#030a1c] border-gray-700 text-white">
                           <SelectItem value="full">Full Access</SelectItem>
                           <SelectItem value="partial">Partial Access</SelectItem>
                         </SelectContent>
@@ -245,7 +275,7 @@ export function AddCollaboratorDialog({
                 type="button" 
                 variant="outline" 
                 onClick={handleCancel}
-                className="border-gray-600 text-white hover:bg-gray-800"
+                className="border border-white/20 bg-transparent text-white hover:bg-gray-800"
               >
                 Cancel
               </Button>
