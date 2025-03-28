@@ -1,4 +1,3 @@
-
 import { ReactNode, useState } from "react";
 import * as React from "react";
 import { useParams, useNavigate, Link, useLocation } from "react-router-dom";
@@ -249,7 +248,6 @@ export function ThreeColumnLayout({
             </nav>
           </div>
           
-          {/* Advisor Section properly positioned in the left sidebar */}
           <AdvisorSection 
             advisorInfo={advisorInfo}
             onViewProfile={handleViewProfile}
@@ -257,19 +255,6 @@ export function ThreeColumnLayout({
             collapsed={mainSidebarCollapsed}
           />
         </div>
-
-        <Button
-          variant="ghost"
-          size="icon"
-          className={`absolute top-[260px] right-0 translate-x-1/2 h-8 w-8 rounded-full bg-background border border-primary text-foreground hover:bg-accent hover:text-sidebar-primary-foreground z-40 ${isLightTheme ? 'bg-[#F9F7E8] text-[#222222]' : ''}`}
-          onClick={toggleMainSidebar}
-        >
-          {mainSidebarCollapsed ? (
-            <ChevronRightIcon className="h-4 w-4" />
-          ) : (
-            <ChevronLeftIcon className="h-4 w-4" />
-          )}
-        </Button>
       </aside>
 
       {hasSecondaryMenu && (
@@ -309,27 +294,6 @@ export function ThreeColumnLayout({
               </nav>
             </div>
           )}
-
-          <Button
-            variant="ghost"
-            size="icon"
-            className={`absolute top-[260px] h-8 w-8 rounded-full border text-foreground z-40 ${
-              isLightTheme 
-                ? 'bg-[#F9F7E8] text-[#222222] border-primary hover:bg-[#E9E7D8]' 
-                : 'bg-background border-primary hover:bg-accent hover:text-sidebar-primary-foreground'
-            }`}
-            style={{ 
-              left: mainSidebarCollapsed ? '70px' : '220px',
-              opacity: secondarySidebarCollapsed ? 0.5 : 1
-            }}
-            onClick={toggleSecondarySidebar}
-          >
-            {secondarySidebarCollapsed ? (
-              <ChevronRightIcon className="h-4 w-4" />
-            ) : (
-              <ChevronLeftIcon className="h-4 w-4" />
-            )}
-          </Button>
         </aside>
       )}
 
