@@ -14,7 +14,7 @@ type Collaborator = {
   name: string;
   email: string;
   role: string;
-  accessLevel: "full" | "partial";
+  accessLevel: "full" | "limited";
   dateAdded: Date;
 };
 
@@ -30,7 +30,7 @@ export default function Sharing() {
     name: string;
     email: string;
     role: string;
-    accessLevel: "full" | "partial";
+    accessLevel: "full" | "limited";
   }) => {
     const newCollaborator: Collaborator = {
       id: `collab-${Math.random().toString(36).substring(2, 9)}`,
@@ -83,7 +83,7 @@ export default function Sharing() {
                 <h2 className="text-xl font-medium">Your Collaborators</h2>
                 <p className="text-muted-foreground text-sm">
                   Share access with family members and service professionals (e.g., your accountant) by giving them full or 
-                  partial access.
+                  limited access.
                 </p>
               </div>
               
@@ -127,7 +127,7 @@ export default function Sharing() {
                     <h3 className="text-lg font-medium mb-2">Collaborators</h3>
                     <p className="text-muted-foreground text-sm max-w-md mx-auto mb-4">
                       Share access with family members and service professionals (e.g., your accountant) by giving them full or 
-                      partial access.
+                      limited access.
                     </p>
                     <Button onClick={handleGetStarted} className="bg-white text-black hover:bg-gray-100 border border-gray-300">
                       Get Started

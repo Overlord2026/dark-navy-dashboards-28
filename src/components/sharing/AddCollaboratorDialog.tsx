@@ -4,7 +4,7 @@ import { InfoIcon } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
@@ -17,7 +17,7 @@ type AddCollaboratorDialogProps = {
     name: string;
     email: string;
     role: string;
-    accessLevel: "full" | "partial";
+    accessLevel: "full" | "limited";
   }) => void;
   trigger?: React.ReactNode;
   isOpen?: boolean;
@@ -29,7 +29,7 @@ const formSchema = z.object({
   lastName: z.string().min(1, "Last name is required"),
   email: z.string().email("Invalid email address"),
   role: z.string().min(1, "Role is required"),
-  accessLevel: z.enum(["full", "partial"]),
+  accessLevel: z.enum(["full", "limited"]),
 });
 
 export function AddCollaboratorDialog({ 
@@ -49,7 +49,7 @@ export function AddCollaboratorDialog({
       lastName: "",
       email: "",
       role: "",
-      accessLevel: "partial",
+      accessLevel: "limited",
     },
   });
 
@@ -82,7 +82,7 @@ export function AddCollaboratorDialog({
       name: `${values.firstName} ${values.lastName}`,
       email: values.email,
       role: values.role,
-      accessLevel: values.accessLevel,
+      accessLevel: values.accessLevel as "full" | "limited",
     });
     
     // Reset form and close dialog
@@ -239,13 +239,38 @@ export function AddCollaboratorDialog({
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent className="bg-[#030a1c] border-gray-700 text-white">
-                              <SelectItem value="spouse">Spouse</SelectItem>
-                              <SelectItem value="child">Child</SelectItem>
-                              <SelectItem value="parent">Parent</SelectItem>
-                              <SelectItem value="accountant">Accountant</SelectItem>
-                              <SelectItem value="financial_advisor">Financial Advisor</SelectItem>
-                              <SelectItem value="attorney">Attorney</SelectItem>
-                              <SelectItem value="other">Other</SelectItem>
+                              <SelectGroup>
+                                <SelectLabel>Family Member</SelectLabel>
+                                <SelectItem value="aunt">Aunt</SelectItem>
+                                <SelectItem value="brother">Brother</SelectItem>
+                                <SelectItem value="daughter">Daughter</SelectItem>
+                                <SelectItem value="domestic_partner">Domestic Partner</SelectItem>
+                                <SelectItem value="father">Father</SelectItem>
+                                <SelectItem value="father_in_law">Father-in-law</SelectItem>
+                                <SelectItem value="grandfather">Grandfather</SelectItem>
+                                <SelectItem value="grandmother">Grandmother</SelectItem>
+                                <SelectItem value="granddaughter">Granddaughter</SelectItem>
+                                <SelectItem value="grandson">Grandson</SelectItem>
+                                <SelectItem value="mother">Mother</SelectItem>
+                                <SelectItem value="mother_in_law">Mother-in-law</SelectItem>
+                                <SelectItem value="nephew">Nephew</SelectItem>
+                                <SelectItem value="niece">Niece</SelectItem>
+                                <SelectItem value="other_individual">Other Individual</SelectItem>
+                                <SelectItem value="sister">Sister</SelectItem>
+                                <SelectItem value="son">Son</SelectItem>
+                                <SelectItem value="spouse">Spouse</SelectItem>
+                                <SelectItem value="uncle">Uncle</SelectItem>
+                              </SelectGroup>
+                              <SelectGroup>
+                                <SelectLabel>Service Professional</SelectLabel>
+                                <SelectItem value="accountant">Accountant</SelectItem>
+                                <SelectItem value="estate_lawyer">Estate Lawyer</SelectItem>
+                                <SelectItem value="financial_advisor">Financial Advisor</SelectItem>
+                                <SelectItem value="property_manager">Property Manager</SelectItem>
+                                <SelectItem value="insurance_broker">Insurance Broker</SelectItem>
+                                <SelectItem value="realtor">Realtor</SelectItem>
+                                <SelectItem value="banker">Banker</SelectItem>
+                              </SelectGroup>
                             </SelectContent>
                           </Select>
                         </FormItem>
@@ -272,7 +297,7 @@ export function AddCollaboratorDialog({
                             </FormControl>
                             <SelectContent className="bg-[#030a1c] border-gray-700 text-white">
                               <SelectItem value="full">Full Access</SelectItem>
-                              <SelectItem value="partial">Partial Access</SelectItem>
+                              <SelectItem value="limited">Limited Access</SelectItem>
                             </SelectContent>
                           </Select>
                         </FormItem>
