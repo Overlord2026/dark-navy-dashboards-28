@@ -90,7 +90,7 @@ const Dashboard = () => {
         <div className="mx-auto max-w-6xl space-y-6 animate-fade-in">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
             <div>
-              <h1 className="text-2xl font-semibold mb-1">Family or Client Name Dashboard</h1>
+              <h1 className="text-[24px] font-semibold mb-1 text-[#E2E2E2]">Family or Client Name Dashboard</h1>
               <div className="flex items-center text-muted-foreground">
                 <CalendarIcon className="h-4 w-4 mr-1" />
                 <span>{formatDate()}</span>

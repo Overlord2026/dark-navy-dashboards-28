@@ -20,7 +20,6 @@ import {
   GraduationCapIcon
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { UserProfileSection } from "@/components/sidebar/UserProfileSection";
 
 type MenuItem = {
@@ -146,17 +145,6 @@ export function ThreeColumnLayout({
     setSecondarySidebarCollapsed(!secondarySidebarCollapsed);
   };
 
-  const defaultBreadcrumbs = breadcrumbs || [
-    { name: activeMainItem === 'home' ? 'Dashboard' : mainMenuItems.find(item => item.id === activeMainItem)?.label || title, href: activeMainItem === 'home' ? '/' : `/${activeMainItem}`, active: !sectionId || sectionId === `all-${activeMainItem}` },
-    ...(sectionId && sectionId !== `all-${activeMainItem}` ? [
-      { 
-        name: menuItems.find(item => item.id === sectionId)?.name || sectionId, 
-        href: `/${activeMainItem}/${sectionId}`,
-        active: true 
-      }
-    ] : [])
-  ];
-
   const handleProfileMenuItemClick = (itemId: string) => {
     console.log(`Profile menu item clicked in layout: ${itemId}`);
     
@@ -170,7 +158,7 @@ export function ThreeColumnLayout({
   };
 
   return (
-    <div className="flex h-screen overflow-hidden bg-background">
+    <div className="flex h-screen overflow-hidden bg-[#12121C]">
       <aside
         className={cn(
           "h-screen flex flex-col transition-all duration-300 ease-in-out z-30",
@@ -307,39 +295,7 @@ export function ThreeColumnLayout({
       )}
 
       <div className="flex-1 flex flex-col overflow-hidden">
-        <header className="w-full px-6 py-4 flex items-center justify-between border-b border-border/70 bg-background/95 backdrop-blur-sm z-10">
-          <h1 className="text-[24px] font-medium tracking-tight font-sans">Dashboard – Client & Advisor Profiles</h1>
-        </header>
-        
         <main className="flex-1 overflow-y-auto p-6 font-sans">
-          {defaultBreadcrumbs.length > 0 && (
-            <div className="mb-6">
-              <Breadcrumb>
-                <BreadcrumbList>
-                  <BreadcrumbItem>
-                    <BreadcrumbLink href="/">Home</BreadcrumbLink>
-                  </BreadcrumbItem>
-                  <BreadcrumbSeparator />
-                  
-                  {defaultBreadcrumbs.map((breadcrumb, index) => (
-                    <React.Fragment key={breadcrumb.name}>
-                      <BreadcrumbItem>
-                        {breadcrumb.active ? (
-                          <span className="text-foreground">{breadcrumb.name}</span>
-                        ) : (
-                          <BreadcrumbLink href={breadcrumb.href}>{breadcrumb.name}</BreadcrumbLink>
-                        )}
-                      </BreadcrumbItem>
-                      {index < defaultBreadcrumbs.length - 1 && (
-                        <BreadcrumbSeparator />
-                      )}
-                    </React.Fragment>
-                  ))}
-                </BreadcrumbList>
-              </Breadcrumb>
-            </div>
-          )}
-          
           {children}
         </main>
       </div>

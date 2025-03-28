@@ -105,17 +105,17 @@ const CustomerProfile = () => {
   };
 
   return (
-    <ThreeColumnLayout activeMainItem="home" title="Dashboard – Client & Advisor Profiles">
+    <ThreeColumnLayout activeMainItem="home" title="Dashboard">
       <div className="mx-auto w-full max-w-6xl space-y-6 animate-fade-in p-4">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-semibold mb-1 text-[#E2E2E2]">Client Profile</h1>
+            <h1 className="text-[24px] font-semibold mb-1 text-[#E2E2E2]">Client Profile</h1>
             <div className="flex items-center text-muted-foreground">
               <span>{clientInfo.name}</span>
             </div>
           </div>
           
-          {/* Client Profile Section - Top Left */}
+          {/* Client Profile Section - Top Right */}
           <div className="mt-4 md:mt-0 bg-card rounded-lg p-4 border border-border/50 shadow-md">
             <div className="flex items-center space-x-4">
               <div className="h-12 w-12 rounded-full bg-primary/20 flex items-center justify-center">

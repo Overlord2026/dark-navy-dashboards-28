@@ -15,17 +15,8 @@ import { SwagEducationMenu } from "@/components/education/SwagEducationMenu";
 
 export const Header = () => {
   return (
-    <header className="w-full px-4 py-3 flex items-center justify-between border-b border-border/70 bg-background/95 backdrop-blur-sm z-10">
-      <div className="flex items-center gap-4">
-        <div className="flex items-center">
-          <img 
-            src="/lovable-uploads/9d138e85-d6e9-4083-ad34-147b3fc524ab.png" 
-            alt="Advanced Wealth Management Logo" 
-            className="h-10 mr-3" 
-          />
-          <h1 className="text-xl font-semibold tracking-tight">Dashboard</h1>
-        </div>
-      </div>
+    <div className="w-full px-4 py-3 flex items-center justify-between bg-[#12121C] z-10">
+      <div className="flex-1"></div>
       
       <div className="hidden md:flex relative max-w-md w-full mx-8">
         <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
@@ -53,17 +44,17 @@ export const Header = () => {
               </Avatar>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56 mt-1 mr-1">
+          <DropdownMenuContent align="end" className="w-56 mt-1 mr-1 bg-[#1B1B32] border-gray-700 text-[#E2E2E2]">
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>Profile</DropdownMenuItem>
-            <DropdownMenuItem>Settings</DropdownMenuItem>
-            <DropdownMenuItem>Billing</DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>Log out</DropdownMenuItem>
+            <DropdownMenuSeparator className="bg-gray-700" />
+            <DropdownMenuItem className="hover:bg-[#1c2e4a] cursor-pointer">Profile</DropdownMenuItem>
+            <DropdownMenuItem className="hover:bg-[#1c2e4a] cursor-pointer">Settings</DropdownMenuItem>
+            <DropdownMenuItem className="hover:bg-[#1c2e4a] cursor-pointer">Billing</DropdownMenuItem>
+            <DropdownMenuSeparator className="bg-gray-700" />
+            <DropdownMenuItem className="hover:bg-[#1c2e4a] cursor-pointer">Log out</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-    </header>
+    </div>
   );
 };
