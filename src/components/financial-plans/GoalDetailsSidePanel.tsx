@@ -515,7 +515,7 @@ export const GoalDetailsSidePanel = ({
                   <DatePicker
                     date={formData.targetDate}
                     onSelect={(date) => handleDateChange(date, "targetDate")}
-                    className="bg-[#1A1A3A] border-gray-700 w-full"
+                    className="bg-[#1A1A3A] border-gray-700"
                   />
                 </div>
               )}
