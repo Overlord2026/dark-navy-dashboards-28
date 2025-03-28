@@ -13,6 +13,7 @@ import TaxBudgets from "./pages/TaxBudgets";
 import Documents from "./pages/Documents";
 import Sharing from "./pages/Sharing";
 import NotFound from "./pages/NotFound";
+import Accounts from "./pages/Accounts";
 import {
   BrowserRouter as Router,
   Routes,
@@ -40,6 +41,7 @@ function App() {
               <Route path="/tax-budgets" element={<TaxBudgets />} />
               <Route path="/documents/*" element={<Documents />} />
               <Route path="/sharing/*" element={<Sharing />} />
+              <Route path="/accounts/*" element={<Accounts />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </div>

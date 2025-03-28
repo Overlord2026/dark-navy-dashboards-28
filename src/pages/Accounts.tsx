@@ -12,7 +12,6 @@ import {
   TrendingUp,
   ClipboardList,
   DollarSign,
-  ArrowLeft
 } from "lucide-react";
 import { AddAccountDialog, AccountData } from "@/components/accounts/AddAccountDialog";
 import { AccountLinkTypeSelector } from "@/components/accounts/AccountLinkTypeSelector";
@@ -324,7 +323,7 @@ const Accounts = () => {
                           </Button>
                         </div>
                       ) : (
-                        <div className="flex flex-col items-center justify-center py-8 text-gray-400">
+                        <div className="flex flex-col items-center justify-center py-8">
                           <p className={`mb-4 ${isLightTheme ? "text-[#666666]" : "text-gray-400"}`}>
                             No accounts added yet
                           </p>

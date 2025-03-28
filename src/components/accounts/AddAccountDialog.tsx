@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
+import { useTheme } from "@/context/ThemeContext";
 
 interface AddAccountDialogProps {
   isOpen: boolean;
@@ -38,6 +39,9 @@ export function AddAccountDialog({
   sectionType
 }: AddAccountDialogProps) {
   const { toast } = useToast();
+  const { theme } = useTheme();
+  const isLightTheme = theme === "light";
+  
   const [accountData, setAccountData] = useState<Omit<AccountData, "id">>({
     name: "",
     accountNumber: "",
@@ -75,11 +79,6 @@ export function AddAccountDialog({
 
     onAddAccount(newAccount);
     
-    toast({
-      title: "Success",
-      description: "Account added successfully"
-    });
-    
     // Reset form and close dialog
     setAccountData({
       name: "",
@@ -93,10 +92,14 @@ export function AddAccountDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px] bg-[#121a2c] text-white border-gray-800">
+      <DialogContent className={`sm:max-w-[425px] ${
+        isLightTheme
+          ? "bg-[#F9F7E8] text-[#222222] border-[#DCD8C0]"
+          : "bg-[#121a2c] text-white border-gray-800"
+      }`}>
         <DialogHeader>
           <DialogTitle>Add {accountType}</DialogTitle>
-          <DialogDescription className="text-gray-400">
+          <DialogDescription className={isLightTheme ? "text-[#666666]" : "text-gray-400"}>
             Enter the details for your new {accountType.toLowerCase()} account.
           </DialogDescription>
         </DialogHeader>
@@ -110,7 +113,11 @@ export function AddAccountDialog({
                 placeholder="Enter account name"
                 value={accountData.name}
                 onChange={handleInputChange}
-                className="bg-[#1c2e4a] border-gray-700 text-white"
+                className={`${
+                  isLightTheme
+                    ? "bg-[#E9E7D8] border-[#DCD8C0] text-[#222222]"
+                    : "bg-[#1c2e4a] border-gray-700 text-white"
+                }`}
               />
             </div>
             <div className="space-y-2">
@@ -121,7 +128,11 @@ export function AddAccountDialog({
                 placeholder="Enter account number (optional)"
                 value={accountData.accountNumber}
                 onChange={handleInputChange}
-                className="bg-[#1c2e4a] border-gray-700 text-white"
+                className={`${
+                  isLightTheme
+                    ? "bg-[#E9E7D8] border-[#DCD8C0] text-[#222222]"
+                    : "bg-[#1c2e4a] border-gray-700 text-white"
+                }`}
               />
             </div>
             {sectionType !== "BFO Managed" && (
@@ -135,16 +146,34 @@ export function AddAccountDialog({
                   placeholder="0.00"
                   value={accountData.balance}
                   onChange={handleInputChange}
-                  className="bg-[#1c2e4a] border-gray-700 text-white"
+                  className={`${
+                    isLightTheme
+                      ? "bg-[#E9E7D8] border-[#DCD8C0] text-[#222222]"
+                      : "bg-[#1c2e4a] border-gray-700 text-white"
+                  }`}
                 />
               </div>
             )}
           </div>
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={onClose} className="border-gray-700 text-white hover:bg-[#1c2e4a]">
+            <Button 
+              type="button" 
+              variant="outline" 
+              onClick={onClose} 
+              className={`${
+                isLightTheme
+                  ? "border-[#DCD8C0] text-[#222222] hover:bg-[#E9E7D8]"
+                  : "border-gray-700 text-white hover:bg-[#1c2e4a]"
+              }`}
+            >
               Cancel
             </Button>
-            <Button type="submit">Add Account</Button>
+            <Button 
+              type="submit"
+              className={isLightTheme ? "bg-[#222222] text-white hover:bg-[#333333]" : ""}
+            >
+              Add Account
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>
