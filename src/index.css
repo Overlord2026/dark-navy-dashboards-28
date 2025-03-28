@@ -37,8 +37,8 @@
 
     --radius: 0.5rem;
 
-    --sidebar-background: 240 24% 16%;
-    --sidebar-foreground: 240 10% 85%;
+    --sidebar-background: 15 55% 12%;
+    --sidebar-foreground: 0 0% 89%;
     --sidebar-primary: 45 100% 50%;
     --sidebar-primary-foreground: 240 10% 10%;
     --sidebar-accent: 240 20% 20%;
@@ -55,20 +55,21 @@
 
   html, body, #root {
     @apply h-full w-full overflow-x-hidden;
+    font-family: 'Inter', sans-serif;
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-[#E2E2E2];
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
     font-size: 16px;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply text-white font-medium tracking-tight;
+    @apply text-[#E2E2E2] font-medium tracking-tight font-sans;
   }
 
   p, span, li, div {
-    @apply text-[#cccccc];
+    @apply text-[#E2E2E2] font-sans;
   }
 
   h1 {

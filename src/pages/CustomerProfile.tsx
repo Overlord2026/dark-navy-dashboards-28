@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { SetupChecklist } from "@/components/profile/SetupChecklist";
@@ -15,7 +14,6 @@ const CustomerProfile = () => {
   const [isAdvisorDrawerOpen, setIsAdvisorDrawerOpen] = useState(false);
   const [activeAdvisorTab, setActiveAdvisorTab] = useState<string | null>(null);
 
-  // Checklist items with their completion status
   const [checklistItems, setChecklistItems] = useState([
     { id: "investor-profile", name: "Investor Profile", completed: true },
     { id: "contact-information", name: "Contact Information", completed: true },
@@ -61,11 +59,11 @@ const CustomerProfile = () => {
   };
 
   return (
-    <ThreeColumnLayout activeMainItem="home" title="Client Profile">
+    <ThreeColumnLayout activeMainItem="home" title="Dashboard – Client & Advisor Profiles">
       <div className="mx-auto w-full max-w-6xl space-y-6 animate-fade-in p-4">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-semibold mb-1">Client Profile</h1>
+            <h1 className="text-2xl font-semibold mb-1 text-[#E2E2E2]">Client Profile</h1>
             <div className="flex items-center text-muted-foreground">
               <span>Antonio Gomez</span>
             </div>

@@ -159,10 +159,12 @@ export function ThreeColumnLayout({
 
   return (
     <div className="flex h-screen overflow-hidden bg-background">
+      {/* Left Sidebar - 220px wide with dark navy background */}
       <aside
         className={cn(
-          "h-screen flex flex-col bg-sidebar transition-all duration-300 ease-in-out z-30",
-          mainSidebarCollapsed ? "w-[70px]" : "w-[220px]"
+          "h-screen flex flex-col transition-all duration-300 ease-in-out z-30",
+          mainSidebarCollapsed ? "w-[70px]" : "w-[220px]",
+          "bg-[#0F0F2D]" // Dark navy background
         )}
       >
         <div className="flex items-center justify-center h-[70px] px-4 border-b border-white/10">
@@ -198,8 +200,8 @@ export function ThreeColumnLayout({
                     "group flex items-center py-2 px-3 rounded-md transition-colors",
                     "hover:bg-white/10",
                     isActive
-                      ? "bg-black text-white"
-                      : "text-gray-300"
+                      ? "bg-black text-[#E2E2E2]"
+                      : "text-[#E2E2E2]" // Light gray text for better contrast
                   )}
                 >
                   {typeof Icon === 'function' ? (
@@ -223,8 +225,8 @@ export function ThreeColumnLayout({
             </div>
             {!mainSidebarCollapsed && (
               <div className="ml-2">
-                <p className="text-xs text-white font-medium">Advisor:</p>
-                <p className="text-xs text-white/80">Charles Bryant</p>
+                <p className="text-xs text-[#E2E2E2] font-medium">Advisor:</p>
+                <p className="text-xs text-[#E2E2E2]/80">Charles Bryant</p>
               </div>
             )}
           </div>
@@ -247,13 +249,14 @@ export function ThreeColumnLayout({
       {hasSecondaryMenu && (
         <aside
           className={cn(
-            "h-screen flex flex-col bg-sidebar border-r border-sidebar-border transition-all duration-300 ease-in-out z-20",
-            secondarySidebarCollapsed ? "w-[0px]" : "w-[200px]"
+            "h-screen flex flex-col border-r border-sidebar-border transition-all duration-300 ease-in-out z-20",
+            secondarySidebarCollapsed ? "w-[0px]" : "w-[200px]",
+            "bg-[#0F0F2D]" // Dark navy background
           )}
         >
           <div className="flex items-center h-[70px] px-4 border-b border-sidebar-border">
             {!secondarySidebarCollapsed && (
-              <span className="font-medium text-sidebar-foreground truncate pt-4">Sections</span>
+              <span className="font-medium text-[#E2E2E2] truncate pt-4">Sections</span>
             )}
           </div>
 
@@ -269,7 +272,7 @@ export function ThreeColumnLayout({
                       "hover:bg-sidebar-accent",
                       item.id === sectionId || item.active
                         ? "bg-sidebar-accent text-accent"
-                        : "text-sidebar-foreground"
+                        : "text-[#E2E2E2]" // Light gray text
                     )}
                   >
                     <span>{item.name || item.label}</span>
@@ -300,10 +303,10 @@ export function ThreeColumnLayout({
 
       <div className="flex-1 flex flex-col overflow-hidden">
         <header className="w-full px-4 py-3 flex items-center justify-between border-b border-border/70 bg-background/95 backdrop-blur-sm z-10">
-          <h1 className="text-xl font-semibold tracking-tight">{title}</h1>
+          <h1 className="text-xl font-medium tracking-tight font-sans">Dashboard – Client & Advisor Profiles</h1>
         </header>
         
-        <main className="flex-1 overflow-y-auto p-6">
+        <main className="flex-1 overflow-y-auto p-6 font-sans">
           {defaultBreadcrumbs.length > 0 && (
             <div className="mb-6">
               <Breadcrumb>
