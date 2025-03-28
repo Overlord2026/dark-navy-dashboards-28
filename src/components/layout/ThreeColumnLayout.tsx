@@ -1,3 +1,4 @@
+
 import { ReactNode, useState } from "react";
 import * as React from "react";
 import { useParams, useNavigate, Link, useLocation } from "react-router-dom";
@@ -205,8 +206,8 @@ export function ThreeColumnLayout({
             </div>
           )}
           
-          <div className="overflow-y-auto mt-1">
-            <nav className="px-4 space-y-1.5 flex-1">
+          <div className="overflow-y-auto mt-1 flex-1">
+            <nav className="px-4 space-y-1.5">
               {mainMenuItems.map((item) => {
                 if (item.id === "education") return null;
 
@@ -247,6 +248,14 @@ export function ThreeColumnLayout({
               })}
             </nav>
           </div>
+          
+          {/* Add Advisor Section to the sidebar */}
+          <AdvisorSection 
+            advisorInfo={advisorInfo}
+            onViewProfile={handleViewProfile}
+            onBookSession={handleBookSession}
+            collapsed={mainSidebarCollapsed}
+          />
         </div>
 
         <Button
@@ -423,12 +432,6 @@ export function ThreeColumnLayout({
         <main className="flex-1 overflow-y-auto p-6 pl-10 font-sans max-w-full">
           {children}
         </main>
-
-        <AdvisorSection 
-          advisorInfo={advisorInfo}
-          onViewProfile={handleViewProfile}
-          onBookSession={handleBookSession}
-        />
       </div>
     </div>
   );
