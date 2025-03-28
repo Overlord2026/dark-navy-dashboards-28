@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { SetupChecklist } from "@/components/profile/SetupChecklist";
 import { UserProfileDropdown } from "@/components/profile/UserProfileDropdown";
@@ -18,6 +18,7 @@ const CustomerProfile = () => {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [isAdvisorDrawerOpen, setIsAdvisorDrawerOpen] = useState(false);
   const [activeAdvisorTab, setActiveAdvisorTab] = useState<string | null>(null);
+  const [profileKey, setProfileKey] = useState(Date.now()); // Add a key to force re-render
 
   const [checklistItems, setChecklistItems] = useState([
     { id: "investor-profile", name: "Investor Profile", completed: true },
@@ -42,6 +43,11 @@ const CustomerProfile = () => {
     bio: "Daniel, a seasoned finance professional, guides high net worth investors. His approach blends investment management, risk mitigation, tax optimization, and overall strategy. Starting at Vanguard, then UBS, he directed client acquisition at Fisher Investments before joining Farther. Originally from Asheville, NC, Daniel now resides in Tampa, enjoying fitness, community activities, and sunny days by the water."
   };
 
+  // Force profile section to update when userProfile changes
+  useEffect(() => {
+    setProfileKey(Date.now());
+  }, [userProfile]);
+
   const handleOpenForm = (formId: string) => {
     console.log(`Opening form: ${formId}`);
     setActiveForm(formId);
@@ -54,12 +60,19 @@ const CustomerProfile = () => {
   };
 
   const handleCompleteForm = (formId: string) => {
+    console.log(`Form completed: ${formId}`);
+    
+    // Update checklist items
     setChecklistItems(prevItems =>
       prevItems.map(item =>
         item.id === formId ? { ...item, completed: true } : item
       )
     );
-    toast.success(`${checklistItems.find(item => item.id === formId)?.name} updated successfully`);
+    
+    // Force UI update for profile information
+    setProfileKey(Date.now());
+    
+    // Close the form
     handleCloseForm();
   };
 
@@ -109,7 +122,7 @@ const CustomerProfile = () => {
           </div>
           
           {/* Client Profile Section - Top Right */}
-          <div className="mt-4 md:mt-0 bg-card rounded-lg p-4 border border-border/50 shadow-md">
+          <div key={profileKey} className="mt-4 md:mt-0 bg-card rounded-lg p-4 border border-border/50 shadow-md">
             <div className="flex items-center space-x-4">
               <div className="h-12 w-12 rounded-full bg-primary/20 flex items-center justify-center">
                 <UserCircle className="h-8 w-8 text-primary" />

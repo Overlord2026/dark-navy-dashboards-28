@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, { createContext, useContext, useState, ReactNode, useEffect } from "react";
 import { format, parse, isValid } from "date-fns";
 
 type UserProfile = {
@@ -35,10 +35,34 @@ const defaultUserProfile: UserProfile = {
   investorType: "Aggressive Growth",
 };
 
+// Helper to retrieve user profile from localStorage
+const getUserProfileFromStorage = (): UserProfile => {
+  try {
+    const storedProfile = localStorage.getItem("userProfile");
+    if (storedProfile) {
+      const parsedProfile = JSON.parse(storedProfile);
+      
+      // Convert dateOfBirth string back to Date object if it exists
+      if (parsedProfile.dateOfBirth) {
+        const dateStr = parsedProfile.dateOfBirth;
+        const dateObj = new Date(dateStr);
+        if (isValid(dateObj)) {
+          parsedProfile.dateOfBirth = dateObj;
+        }
+      }
+      
+      return { ...defaultUserProfile, ...parsedProfile };
+    }
+  } catch (error) {
+    console.error("Error retrieving user profile from storage:", error);
+  }
+  return defaultUserProfile;
+};
+
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export function UserProvider({ children }: { children: ReactNode }) {
-  const [userProfile, setUserProfile] = useState<UserProfile>(defaultUserProfile);
+  const [userProfile, setUserProfile] = useState<UserProfile>(getUserProfileFromStorage());
 
   const updateUserProfile = (data: Partial<UserProfile>) => {
     console.log("Updating user profile with:", data);
@@ -142,9 +166,29 @@ export function UserProvider({ children }: { children: ReactNode }) {
         ...cleanData,
       };
       console.log("Updated profile:", newProfile);
+      
+      // Save to localStorage
+      try {
+        const profileToStore = { ...newProfile };
+        // Convert Date to ISO string for storage
+        if (profileToStore.dateOfBirth instanceof Date) {
+          profileToStore.dateOfBirth = profileToStore.dateOfBirth.toISOString();
+        }
+        localStorage.setItem("userProfile", JSON.stringify(profileToStore));
+        console.log("Saved profile to localStorage");
+      } catch (error) {
+        console.error("Failed to save profile to localStorage:", error);
+      }
+      
       return newProfile;
     });
   };
+
+  // Load user profile from localStorage on init
+  useEffect(() => {
+    const storedProfile = getUserProfileFromStorage();
+    setUserProfile(storedProfile);
+  }, []);
 
   return (
     <UserContext.Provider value={{ userProfile, updateUserProfile }}>

@@ -11,6 +11,7 @@ import { AffiliationsForm } from "@/components/profile/AffiliationsForm";
 import { TrustsForm } from "@/components/profile/TrustsForm";
 import { SecurityForm } from "@/components/profile/SecurityForm";
 import { DialogTitle } from "@/components/ui/dialog";
+import { toast } from "sonner";
 
 interface ProfileFormSheetProps {
   isOpen: boolean;
@@ -28,11 +29,15 @@ export const ProfileFormSheet = ({
   
   // Handle saving the form data
   const handleSave = (formId: string) => {
-    console.log(`Form ${formId} saved`);
-    onFormSave(formId);
+    console.log(`Form ${formId} saved from ProfileFormSheet`);
+    if (onFormSave) {
+      onFormSave(formId);
+    }
   };
 
   const renderFormContent = () => {
+    if (!activeForm) return null;
+    
     switch (activeForm) {
       case "investor-profile":
         return <ProfileForm onSave={() => handleSave("investor-profile")} />;
