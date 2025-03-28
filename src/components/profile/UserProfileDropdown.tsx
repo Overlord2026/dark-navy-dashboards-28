@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { ChevronRight } from "lucide-react";
 import { 
@@ -91,6 +90,7 @@ export const UserProfileDropdown = ({ onOpenForm }: UserProfileDropdownProps) =>
           </div>
           <ChevronRight className={`h-4 w-4 text-white/70 transition-transform duration-200 ${isOpen ? 'rotate-[270deg]' : 'rotate-90'}`} />
         </DropdownMenuTrigger>
+        
         <DropdownMenuContent 
           className="w-[220px] bg-[#0F0F2D] border-gray-800 text-white z-50"
           align="start"

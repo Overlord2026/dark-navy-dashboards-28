@@ -80,21 +80,21 @@ export const Sidebar = () => {
         collapsed ? "w-[70px]" : "w-[240px]"
       )}
     >
-      <div className="flex items-center justify-center h-[70px] px-4 border-b border-sidebar-border">
+      <div className="flex flex-col items-center justify-center h-auto px-4 border-b border-sidebar-border pb-4">
         {collapsed ? (
-          <div className="w-12 h-12 flex items-center justify-center">
+          <div className="w-12 h-12 flex items-center justify-center mt-4">
             <img 
-              src="/lovable-uploads/6b80c4ed-a513-491e-b6f8-1a78c48dced5.png" 
+              src="/lovable-uploads/7f52d8e5-bf6b-4533-8c1b-f933a43cfce7.png" 
               alt="Boutique Family Office Logo" 
               className="h-10 w-auto" 
             />
           </div>
         ) : (
-          <div className="flex items-center justify-center w-full">
+          <div className="flex items-center justify-center w-full mt-4 mb-2">
             <img 
-              src="/lovable-uploads/6b80c4ed-a513-491e-b6f8-1a78c48dced5.png" 
+              src="/lovable-uploads/7f52d8e5-bf6b-4533-8c1b-f933a43cfce7.png" 
               alt="Boutique Family Office Logo" 
-              className="h-14 w-auto" 
+              className="h-20 w-auto" 
             />
           </div>
         )}

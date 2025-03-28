@@ -175,7 +175,7 @@ export function ThreeColumnLayout({
           {mainSidebarCollapsed ? (
             <div className="w-12 h-12 flex items-center justify-center">
               <img 
-                src="/lovable-uploads/6b80c4ed-a513-491e-b6f8-1a78c48dced5.png" 
+                src="/lovable-uploads/7f52d8e5-bf6b-4533-8c1b-f933a43cfce7.png" 
                 alt="Boutique Family Office" 
                 className="h-10 w-auto" 
               />
@@ -183,7 +183,7 @@ export function ThreeColumnLayout({
           ) : (
             <div className="flex items-center justify-center w-full">
               <img 
-                src="/lovable-uploads/6b80c4ed-a513-491e-b6f8-1a78c48dced5.png" 
+                src="/lovable-uploads/7f52d8e5-bf6b-4533-8c1b-f933a43cfce7.png" 
                 alt="Boutique Family Office" 
                 className="h-14 w-auto" 
               />
@@ -192,7 +192,7 @@ export function ThreeColumnLayout({
         </div>
 
         {!mainSidebarCollapsed && (
-          <UserProfileSection onMenuItemClick={handleProfileMenuItemClick} />
+          <UserProfileSection onMenuItemClick={handleProfileMenuItemClick} showLogo={false} />
         )}
 
         <div className="flex-1 py-6 overflow-y-auto">
@@ -312,6 +312,13 @@ export function ThreeColumnLayout({
       )}
 
       <div className="flex-1 flex flex-col overflow-hidden">
+        <div className="flex justify-center py-4">
+          <img 
+            src="/lovable-uploads/7f52d8e5-bf6b-4533-8c1b-f933a43cfce7.png" 
+            alt="Boutique Family Office Logo" 
+            className="h-20 w-auto"
+          />
+        </div>
         <h1 className={`text-[24px] font-semibold p-6 pb-0 ${isLightTheme ? 'text-[#222222]' : 'text-[#E2E2E2]'}`}>{title}</h1>
         <main className="flex-1 overflow-y-auto p-6 pt-3 font-sans">
           {children}

@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 import {
@@ -16,10 +15,12 @@ import { useUser } from "@/context/UserContext";
 
 interface UserProfileSectionProps {
   onMenuItemClick?: (itemId: string) => void;
+  showLogo?: boolean;
 }
 
 export const UserProfileSection = ({ 
-  onMenuItemClick 
+  onMenuItemClick,
+  showLogo = true
 }: UserProfileSectionProps) => {
   const navigate = useNavigate();
   const { theme } = useTheme();
@@ -79,14 +80,16 @@ export const UserProfileSection = ({
 
   return (
     <div className={`px-4 py-3 border-b ${isLightTheme ? 'border-[#DCD8C0]' : 'border-white/10'}`}>
-      {/* Logo above the user profile dropdown */}
-      <div className="mb-3 flex justify-center">
-        <img 
-          src="/lovable-uploads/6b80c4ed-a513-491e-b6f8-1a78c48dced5.png" 
-          alt="Boutique Family Office Logo" 
-          className="h-16 w-auto"
-        />
-      </div>
+      {/* Optional logo above the user profile dropdown */}
+      {showLogo && (
+        <div className="mb-3 flex justify-center">
+          <img 
+            src="/lovable-uploads/7f52d8e5-bf6b-4533-8c1b-f933a43cfce7.png" 
+            alt="Boutique Family Office Logo" 
+            className="h-16 w-auto"
+          />
+        </div>
+      )}
       
       <DropdownMenu open={isDropdownOpen} onOpenChange={handleOpenChange}>
         <DropdownMenuTrigger 
