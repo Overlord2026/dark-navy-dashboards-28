@@ -82,7 +82,7 @@ export const UserProfileSection = ({
       {/* Logo above the user profile dropdown */}
       <div className="mb-3 flex justify-center">
         <img 
-          src="/lovable-uploads/3f1d0ac5-00e5-48cc-a437-944e8580ff51.png" 
+          src="/lovable-uploads/6b80c4ed-a513-491e-b6f8-1a78c48dced5.png" 
           alt="Boutique Family Office Logo" 
           className="h-16 w-auto"
         />
