@@ -204,8 +204,6 @@ export function ThreeColumnLayout({
           isLightTheme ? "bg-[#F9F7E8] border-r border-[#DCD8C0]" : "bg-[#1B1B32] border-r border-white/10"
         )}
       >
-        <div className={`h-[70px] border-b ${isLightTheme ? 'border-[#DCD8C0]' : 'border-white/10'}`}></div>
-
         {!mainSidebarCollapsed && (
           <UserProfileSection onMenuItemClick={handleProfileMenuItemClick} showLogo={false} />
         )}
@@ -257,7 +255,7 @@ export function ThreeColumnLayout({
         <Button
           variant="ghost"
           size="icon"
-          className={`absolute top-[70px] right-0 translate-x-1/2 h-8 w-8 rounded-full bg-background border border-border text-foreground hover:bg-accent hover:text-sidebar-primary-foreground z-40 ${isLightTheme ? 'bg-[#F9F7E8] text-[#222222] border-[#DCD8C0]' : ''}`}
+          className={`absolute top-0 right-0 translate-x-1/2 h-8 w-8 rounded-full bg-background border border-border text-foreground hover:bg-accent hover:text-sidebar-primary-foreground z-40 ${isLightTheme ? 'bg-[#F9F7E8] text-[#222222] border-[#DCD8C0]' : ''}`}
           onClick={toggleMainSidebar}
         >
           {mainSidebarCollapsed ? (
@@ -309,7 +307,7 @@ export function ThreeColumnLayout({
           <Button
             variant="ghost"
             size="icon"
-            className={`absolute top-[70px] h-8 w-8 rounded-full border text-foreground z-40 ${
+            className={`absolute top-0 h-8 w-8 rounded-full border text-foreground z-40 ${
               isLightTheme 
                 ? 'bg-[#F9F7E8] text-[#222222] border-[#DCD8C0] hover:bg-[#E9E7D8]' 
                 : 'bg-background border-border hover:bg-accent hover:text-sidebar-primary-foreground'
@@ -331,7 +329,7 @@ export function ThreeColumnLayout({
 
       <div className="flex-1 flex flex-col overflow-hidden">
         {isHomePage ? (
-          <div className="flex flex-col items-center py-4 space-y-6">
+          <div className="flex flex-col items-center py-6 space-y-8">
             <div className="flex justify-center items-center space-x-6">
               <Link to="/education" className="flex items-center gap-2 px-4 py-2 rounded-md bg-gray-800 hover:bg-gray-700 text-gray-100 transition-colors">
                 <GraduationCapIcon className="h-5 w-5" />
@@ -425,8 +423,7 @@ export function ThreeColumnLayout({
           </div>
         )}
         
-        <h1 className={`text-[24px] font-semibold p-6 pb-0 ${isLightTheme ? 'text-[#222222]' : 'text-[#E2E2E2]'}`}>{title}</h1>
-        <main className="flex-1 overflow-y-auto p-6 pt-3 font-sans">
+        <main className="flex-1 overflow-y-auto p-6 font-sans">
           {children}
         </main>
       </div>
