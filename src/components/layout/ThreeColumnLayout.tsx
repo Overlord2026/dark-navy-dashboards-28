@@ -199,15 +199,15 @@ export function ThreeColumnLayout({
           isLightTheme ? "bg-[#F9F7E8] border-r border-[#DCD8C0]" : "bg-[#1B1B32] border-r border-white/10"
         )}
       >
-        <div>
+        <div className="flex flex-col h-full">
           {!mainSidebarCollapsed && (
             <div className="border-b border-sidebar-border">
               <UserProfileSection onMenuItemClick={handleProfileMenuItemClick} showLogo={false} />
             </div>
           )}
           
-          <div className="overflow-y-auto mt-2">
-            <nav className="px-4 space-y-1.5">
+          <div className="overflow-y-auto mt-1">
+            <nav className="px-4 space-y-1.5 flex-1">
               {mainMenuItems.map((item) => {
                 if (item.id === "education") return null;
 

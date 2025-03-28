@@ -80,10 +80,10 @@ export const UserProfileSection = ({
   };
 
   return (
-    <div className={`px-4 py-3 ${isLightTheme ? 'border-[#DCD8C0]' : 'border-white/10'}`}>
+    <div className={`px-4 py-2.5 ${isLightTheme ? 'border-[#DCD8C0]' : 'border-white/10'}`}>
       {/* Optional logo above the user profile dropdown */}
       {showLogo && (
-        <div className="mb-3 flex justify-center">
+        <div className="mb-2 flex justify-center">
           <img 
             src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" 
             alt="Boutique Family Office Logo" 
@@ -94,7 +94,7 @@ export const UserProfileSection = ({
       
       <DropdownMenu open={isDropdownOpen} onOpenChange={handleOpenChange}>
         <DropdownMenuTrigger 
-          className={`flex items-center justify-between w-full py-2 rounded-md transition-colors cursor-pointer border border-primary ${
+          className={`flex items-center justify-between w-full py-1.5 rounded-md transition-colors cursor-pointer border border-primary ${
             isLightTheme 
               ? 'hover:bg-[#E9E7D8] text-[#222222]' 
               : 'hover:bg-white/5 text-white'
@@ -102,7 +102,7 @@ export const UserProfileSection = ({
           onClick={() => setIsDropdownOpen(!isDropdownOpen)}
         >
           <div className="flex items-center">
-            <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center mr-2 text-primary-foreground font-medium border border-primary">
+            <div className="h-7 w-7 rounded-full bg-primary/20 flex items-center justify-center mr-2 text-primary-foreground font-medium border border-primary">
               {avatarInitials}
             </div>
             <span className="font-medium text-sm">{userName}</span>
