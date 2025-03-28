@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { PlanSuccessGauge } from "@/components/financial-plans/PlanSuccessGauge";
 import { NetWorthChart } from "@/components/financial-plans/NetWorthChart";
-import { GoalsList } from "@/components/financial-plans/GoalsList";
+import { GoalsList, Goal } from "@/components/financial-plans/GoalsList";
 import { CreatePlanDialog } from "@/components/financial-plans/CreatePlanDialog";
 import { ManagePlansDialog, Plan } from "@/components/financial-plans/ManagePlansDialog";
 import { 
@@ -33,6 +33,22 @@ import {
   SelectLabel
 } from "@/components/ui/select";
 
+declare module "@/components/financial-plans/ManagePlansDialog" {
+  interface Plan {
+    goals?: Goal[];
+  }
+}
+
+declare module "@/components/financial-plans/CreatePlanDialog" {
+  interface CreatePlanDialogProps {
+    isOpen: boolean;
+    onClose: () => void;
+    onCreatePlan: (planName: string, planDetails?: any) => void;
+    onSaveDraft?: (draftData: any) => void;
+    draftData?: any;
+  }
+}
+
 const FinancialPlans = () => {
   const { userProfile } = useUser();
   const [goals, setGoals] = useState([]);
@@ -49,7 +65,25 @@ const FinancialPlans = () => {
       isActive: true, 
       successRate: 78, 
       status: 'Active',
-      createdAt: new Date(2023, 4, 15)
+      createdAt: new Date(2023, 4, 15),
+      goals: [
+        { 
+          id: "goal-1", 
+          title: "Retirement", 
+          targetDate: new Date(2045, 0, 1), 
+          targetAmount: 1500000, 
+          currentAmount: 350000,
+          priority: "High" 
+        },
+        { 
+          id: "goal-2", 
+          title: "College Fund", 
+          targetDate: new Date(2030, 0, 1), 
+          targetAmount: 120000, 
+          currentAmount: 25000,
+          priority: "Medium" 
+        }
+      ]
     },
     { 
       id: "2", 
