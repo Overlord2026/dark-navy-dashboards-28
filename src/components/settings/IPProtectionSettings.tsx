@@ -1,9 +1,8 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Shield, Lock, FileText, UserCog } from "lucide-react";
+import { Shield, Lock, FileText, UserCog, GitBranch } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -22,6 +21,14 @@ interface RolePermissions {
   description: string;
 }
 
+interface RepositoryAccess {
+  gitAccountLinked: boolean;
+  gitUsername: string;
+  allowFeatureBranchAccess: boolean;
+  requireCodeReview: boolean;
+  selectedDeveloper: string;
+}
+
 interface IPProtectionSettings {
   twoFactorForPublishing: boolean;
   publisherPhoneNumber: string;
@@ -34,6 +41,7 @@ interface IPProtectionSettings {
   selectedRole?: string;
   currentUsername?: string;
   ipAgreement?: string;
+  repositoryAccess: RepositoryAccess;
 }
 
 export function IPProtectionSettings() {
@@ -63,7 +71,14 @@ export function IPProtectionSettings() {
     ipDisclaimer: "All content, code, designs, and intellectual property created within this application are the exclusive property of the company. No reproduction, distribution, or usage outside the terms of service is permitted.",
     ipAgreement: "1) All code, content, designs, and strategies accessed through this platform are the sole property of [Your Company Name].\n2) You must not share or replicate any proprietary information outside authorized channels.\n3) Violations of this agreement may lead to immediate termination and legal action.",
     selectedRole: undefined,
-    currentUsername: ""
+    currentUsername: "",
+    repositoryAccess: {
+      gitAccountLinked: false,
+      gitUsername: "",
+      allowFeatureBranchAccess: true,
+      requireCodeReview: true,
+      selectedDeveloper: ""
+    }
   });
 
   const [verifying2FA, setVerifying2FA] = useState(false);
@@ -73,6 +88,7 @@ export function IPProtectionSettings() {
   const [showRoleAssignment, setShowRoleAssignment] = useState(false);
   const [agreementAccepted, setAgreementAccepted] = useState(false);
   const [showAgreement, setShowAgreement] = useState(false);
+  const [showGrantAccess, setShowGrantAccess] = useState(false);
 
   const form = useForm();
 
@@ -237,6 +253,43 @@ export function IPProtectionSettings() {
     toast.success("IP Ownership Agreement accepted");
   };
 
+  const grantRepositoryAccess = () => {
+    if (!settings.repositoryAccess.selectedDeveloper) {
+      toast.error("Please enter a developer name");
+      return;
+    }
+
+    // Simulate granting repository access
+    toast.success(`Repository access granted to ${settings.repositoryAccess.selectedDeveloper}`);
+    
+    // Log repository access to audit log
+    auditLog.log(
+      "current-user",
+      "settings_change",
+      "success",
+      {
+        userName: "Administrator",
+        userRole: "admin",
+        details: { 
+          action: "repository_access_granted",
+          developerName: settings.repositoryAccess.selectedDeveloper,
+          featureBranchAccess: settings.repositoryAccess.allowFeatureBranchAccess,
+          codeReviewRequired: settings.repositoryAccess.requireCodeReview
+        }
+      }
+    );
+
+    // Clear the form
+    setSettings(prev => ({
+      ...prev,
+      repositoryAccess: {
+        ...prev.repositoryAccess,
+        selectedDeveloper: ""
+      }
+    }));
+    setShowGrantAccess(false);
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -244,7 +297,7 @@ export function IPProtectionSettings() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="2fa" className="flex items-center gap-2">
             <Lock className="h-4 w-4" />
             <span>Two-Factor Authentication</span>
@@ -260,6 +313,10 @@ export function IPProtectionSettings() {
           <TabsTrigger value="agreement" className="flex items-center gap-2">
             <Shield className="h-4 w-4" />
             <span>IP Agreement</span>
+          </TabsTrigger>
+          <TabsTrigger value="repository" className="flex items-center gap-2">
+            <GitBranch className="h-4 w-4" />
+            <span>Repository Access</span>
           </TabsTrigger>
         </TabsList>
 
@@ -586,6 +643,121 @@ export function IPProtectionSettings() {
                     </div>
                   </div>
                 )}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="repository" className="space-y-4 mt-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <GitBranch className="h-5 w-5" />
+                Repository Access Management
+              </CardTitle>
+              <CardDescription>
+                Control Git repository access permissions for developers
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="space-y-4">
+                <div className="flex items-center space-x-2">
+                  <Switch 
+                    id="git-account-toggle"
+                    checked={settings.repositoryAccess.gitAccountLinked}
+                    onCheckedChange={(checked) => handleSettingChange(['repositoryAccess', 'gitAccountLinked'], checked)}
+                  />
+                  <Label htmlFor="git-account-toggle">Link platform with Git provider</Label>
+                </div>
+                
+                {settings.repositoryAccess.gitAccountLinked && (
+                  <div className="space-y-2">
+                    <Label htmlFor="git-username">Organization Git username</Label>
+                    <Input 
+                      id="git-username" 
+                      placeholder="Enter Git username"
+                      value={settings.repositoryAccess.gitUsername}
+                      onChange={(e) => handleSettingChange(['repositoryAccess', 'gitUsername'], e.target.value)}
+                    />
+                  </div>
+                )}
+
+                <div className="p-4 border rounded-md space-y-4 mt-2">
+                  <h3 className="text-lg font-medium">Default Repository Access Settings</h3>
+                  
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <Label htmlFor="feature-branch-toggle">
+                        Allow feature branch read/write access
+                      </Label>
+                      <Switch 
+                        id="feature-branch-toggle"
+                        checked={settings.repositoryAccess.allowFeatureBranchAccess}
+                        onCheckedChange={(checked) => handleSettingChange(['repositoryAccess', 'allowFeatureBranchAccess'], checked)}
+                      />
+                    </div>
+                    
+                    <div className="flex items-center justify-between">
+                      <Label htmlFor="code-review-toggle">
+                        Require code review before merging to main
+                      </Label>
+                      <Switch 
+                        id="code-review-toggle"
+                        checked={settings.repositoryAccess.requireCodeReview}
+                        onCheckedChange={(checked) => handleSettingChange(['repositoryAccess', 'requireCodeReview'], checked)}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-6">
+                  <Button 
+                    variant="outline" 
+                    onClick={() => setShowGrantAccess(!showGrantAccess)}
+                    className="w-full"
+                  >
+                    {showGrantAccess ? "Cancel" : "Grant Repository Access to Developer"}
+                  </Button>
+
+                  {showGrantAccess && (
+                    <div className="mt-4 p-4 border rounded-md">
+                      <h3 className="text-lg font-medium mb-4">Grant Repository Access</h3>
+                      <div className="space-y-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="developer-name">Developer Name</Label>
+                          <Input 
+                            id="developer-name" 
+                            placeholder="Enter developer's name"
+                            value={settings.repositoryAccess.selectedDeveloper}
+                            onChange={(e) => handleSettingChange(['repositoryAccess', 'selectedDeveloper'], e.target.value)}
+                          />
+                        </div>
+                        
+                        <div className="p-3 bg-muted rounded-md">
+                          <h4 className="font-medium mb-2">Access Settings:</h4>
+                          <ul className="space-y-1 text-sm">
+                            <li className="flex justify-between">
+                              <span>Feature branch access:</span>
+                              <span>{settings.repositoryAccess.allowFeatureBranchAccess ? "Granted" : "Denied"}</span>
+                            </li>
+                            <li className="flex justify-between">
+                              <span>Code review required:</span>
+                              <span>{settings.repositoryAccess.requireCodeReview ? "Yes" : "No"}</span>
+                            </li>
+                          </ul>
+                        </div>
+                        
+                        <Button 
+                          onClick={grantRepositoryAccess}
+                          className="w-full mt-2"
+                          disabled={!settings.repositoryAccess.selectedDeveloper}
+                        >
+                          Confirm Access Grant
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             </CardContent>
           </Card>
