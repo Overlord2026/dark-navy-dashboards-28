@@ -1,1043 +1,724 @@
-import { useState } from "react";
+
+import React, { useState, useEffect } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
-import { Button } from "@/components/ui/button";
-import { 
-  ChevronDown, 
-  ChevronUp, 
-  Plus, 
-  Landmark, 
-  CreditCard,
-  Building,
-  TrendingUp,
-  ClipboardList,
-  DollarSign,
-  Home,
-  Filter,
-  PieChart,
-  Download,
-  ArrowUpDown,
-  RefreshCcw
-} from "lucide-react";
-import { AddAccountDialog, AccountData } from "@/components/accounts/AddAccountDialog";
-import { AccountLinkTypeSelector } from "@/components/accounts/AccountLinkTypeSelector";
-import { PlaidLinkDialog } from "@/components/accounts/PlaidLinkDialog";
-import { RealEstateTracker } from "@/components/accounts/RealEstateTracker";
-import { NetWorthSummary } from "@/components/dashboard/NetWorthSummary";
-import { useToast } from "@/hooks/use-toast";
-import { useTheme } from "@/context/ThemeContext";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs";
-import { 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableHead, 
-  TableHeader, 
-  TableRow 
+import { Button } from "@/components/ui/button";
+import {
+  WalletIcon,
+  HomeIcon,
+  BriefcaseIcon,
+  PiggyBankIcon,
+  ArrowUpDown,
+  Plus,
+  CreditCard,
+  Building,
+  DollarSign,
+  MoreHorizontal,
+} from "lucide-react";
+import { PlaidLinkDialog } from "@/components/accounts/PlaidLinkDialog";
+import { AddAccountDialog } from "@/components/accounts/AddAccountDialog";
+import { AccountLinkTypeSelector } from "@/components/accounts/AccountLinkTypeSelector";
+import { RealEstateTracker } from "@/components/accounts/RealEstateTracker";
+import { Badge } from "@/components/ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from "@/components/ui/table";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { format } from "date-fns";
+import { Progress } from "@/components/ui/progress";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { toast } from "sonner";
 
-type AccountSection = {
+// Define types
+type AccountSection = "all-accounts" | "checking" | "savings" | "investment" | "retirement" | "real-estate" | "credit-cards" | "loans";
+
+type AccountData = {
   id: string;
-  title: string;
-  icon: React.ReactNode;
-  balance?: string;
-  status?: string;
-  isExpanded: boolean;
-  accounts: AccountData[];
-  component?: React.ReactNode;
+  name: string;
+  type: string;
+  balance: number;
+  institution: string;
+  lastUpdated: string;
+  accountNumber: string;
+  routingNumber?: string;
+  interestRate?: number;
+  dueDate?: string;
+  minimumPayment?: number;
+  creditLimit?: number;
+  availableCredit?: number;
+  propertyValue?: number;
+  propertyAddress?: string;
+  loanAmount?: number;
+  loanTerm?: number;
+  transactions?: Array<{
+    id: string;
+    date: string;
+    description: string;
+    amount: number;
+    category: string;
+  }>;
 };
 
-type AppView = "main" | "selection" | "plaid";
+// Mock data
+const mockAccounts: AccountData[] = [
+  {
+    id: "1",
+    name: "Primary Checking",
+    type: "checking",
+    balance: 5240.23,
+    institution: "Chase Bank",
+    lastUpdated: "2023-10-15",
+    accountNumber: "****1234",
+    routingNumber: "072000326",
+  },
+  {
+    id: "2",
+    name: "High-Yield Savings",
+    type: "savings",
+    balance: 25680.45,
+    institution: "Ally Bank",
+    lastUpdated: "2023-10-14",
+    accountNumber: "****5678",
+    interestRate: 3.75,
+  },
+  {
+    id: "3",
+    name: "Retirement Fund",
+    type: "retirement",
+    balance: 352450.89,
+    institution: "Vanguard",
+    lastUpdated: "2023-10-12",
+    accountNumber: "****4321",
+  },
+  {
+    id: "4",
+    name: "Stock Portfolio",
+    type: "investment",
+    balance: 128934.67,
+    institution: "Charles Schwab",
+    lastUpdated: "2023-10-15",
+    accountNumber: "****8765",
+  },
+  {
+    id: "5",
+    name: "Travel Rewards Card",
+    type: "credit-cards",
+    balance: -2340.56,
+    institution: "American Express",
+    lastUpdated: "2023-10-13",
+    accountNumber: "****9012",
+    dueDate: "2023-11-05",
+    minimumPayment: 35.00,
+    creditLimit: 15000,
+    availableCredit: 12659.44,
+  },
+  {
+    id: "6",
+    name: "Mortgage",
+    type: "loans",
+    balance: -285000.00,
+    institution: "Wells Fargo",
+    lastUpdated: "2023-10-10",
+    accountNumber: "****3456",
+    dueDate: "2023-11-01",
+    minimumPayment: 1850.75,
+    loanAmount: 320000,
+    loanTerm: 30,
+  },
+  {
+    id: "7",
+    name: "Vacation Home",
+    type: "real-estate",
+    balance: 450000.00,
+    institution: "Self Managed",
+    lastUpdated: "2023-09-30",
+    accountNumber: "N/A",
+    propertyValue: 450000,
+    propertyAddress: "123 Sunset Drive, Miami, FL 33101",
+  },
+];
+
+// Generate mock transactions for a specific account
+const generateMockTransactions = (accountId: string) => {
+  const transactions = [];
+  const categories = ["Food", "Shopping", "Transportation", "Entertainment", "Utilities", "Health"];
+  
+  for (let i = 0; i < 15; i++) {
+    const date = new Date();
+    date.setDate(date.getDate() - i);
+    
+    transactions.push({
+      id: `tx-${accountId}-${i}`,
+      date: date.toISOString().split('T')[0],
+      description: `Transaction ${i + 1}`,
+      amount: Math.round(Math.random() * 200 * 100) / 100,
+      category: categories[Math.floor(Math.random() * categories.length)]
+    });
+  }
+  
+  return transactions;
+};
 
 const Accounts = () => {
-  const { toast } = useToast();
-  const { theme } = useTheme();
-  const isLightTheme = theme === "light";
-  
-  const [currentView, setCurrentView] = useState<AppView>("main");
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [plaidDialogOpen, setPlaidDialogOpen] = useState(false);
-  const [selectedSection, setSelectedSection] = useState<AccountSection | null>(null);
-  const [mainDialogOpen, setMainDialogOpen] = useState(false);
-  const [showRealEstate, setShowRealEstate] = useState(true);
-  const [showNetWorth, setShowNetWorth] = useState(true);
-  const [activeAccountType, setActiveAccountType] = useState<string | null>(null);
-  const [accountDetailView, setAccountDetailView] = useState(false);
+  const [activeTab, setActiveTab] = useState("overview");
+  const [selectedSection, setSelectedSection] = useState<AccountSection>("all-accounts");
+  const [accounts, setAccounts] = useState<AccountData[]>(mockAccounts);
+  const [showAddAccountDialog, setShowAddAccountDialog] = useState(false);
+  const [showPlaidLinkDialog, setShowPlaidLinkDialog] = useState(false);
+  const [showAccountTypeSelector, setShowAccountTypeSelector] = useState(false);
+  const [showRealEstateTracker, setShowRealEstateTracker] = useState(false);
   const [selectedAccount, setSelectedAccount] = useState<AccountData | null>(null);
-  const [showAnalytics, setShowAnalytics] = useState(false);
-  const [accountHistory, setAccountHistory] = useState<any[]>([
-    { date: '2023-01-01', balance: 15000 },
-    { date: '2023-02-01', balance: 16200 },
-    { date: '2023-03-01', balance: 17500 },
-    { date: '2023-04-01', balance: 16800 },
-    { date: '2023-05-01', balance: 18200 },
-    { date: '2023-06-01', balance: 19500 },
-    { date: '2023-07-01', balance: 20300 },
-    { date: '2023-08-01', balance: 21600 },
-    { date: '2023-09-01', balance: 22800 },
-    { date: '2023-10-01', balance: 24000 },
-  ]);
+  const [showAccountDetails, setShowAccountDetails] = useState(false);
+  
+  // Filter accounts based on selected section
+  const filteredAccounts = accounts.filter(account => {
+    if (selectedSection === "all-accounts") return true;
+    return account.type === selectedSection;
+  });
 
-  const [accountSections, setAccountSections] = useState<AccountSection[]>([
-    {
-      id: "bfo-managed",
-      title: "BFO Managed",
-      icon: <Landmark className="h-5 w-5 text-blue-400" />,
-      status: "Connected",
-      isExpanded: true,
-      accounts: [
-        {
-          id: "bfo-1",
-          name: "Core Investment Account",
-          accountNumber: "BFO-7459-XXX",
-          balance: "485,750.00",
-          type: "Investment",
-          section: "BFO Managed"
-        },
-        {
-          id: "bfo-2",
-          name: "Tax Advantaged Portfolio",
-          accountNumber: "BFO-8912-XXX",
-          balance: "237,250.00",
-          type: "Investment",
-          section: "BFO Managed"
-        }
-      ],
-    },
-    {
-      id: "external-investment",
-      title: "External Investment",
-      icon: <TrendingUp className="h-5 w-5 text-green-400" />,
-      balance: "$310,450.00",
-      isExpanded: false,
-      accounts: [
-        {
-          id: "ext-inv-1",
-          name: "Vanguard 401(k)",
-          accountNumber: "VG-4532-XXX",
-          balance: "186,250.00",
-          type: "Retirement",
-          section: "External Investment"
-        },
-        {
-          id: "ext-inv-2",
-          name: "Fidelity Roth IRA",
-          accountNumber: "FID-9823-XXX",
-          balance: "124,200.00",
-          type: "Retirement",
-          section: "External Investment"
-        }
-      ],
-    },
-    {
-      id: "real-estate",
-      title: "Real Estate",
-      icon: <Home className="h-5 w-5 text-amber-400" />,
-      balance: "$3,145,000.00",
-      isExpanded: true,
-      accounts: [],
-      component: <RealEstateTracker />
-    },
-    {
-      id: "external-manually-tracked",
-      title: "External Manually-Tracked",
-      icon: <ClipboardList className="h-5 w-5 text-amber-400" />,
-      balance: "$85,700.00",
-      isExpanded: false,
-      accounts: [
-        {
-          id: "man-1",
-          name: "Private Equity Fund",
-          accountNumber: "PE-7790-XXX",
-          balance: "75,000.00",
-          type: "Alternative Investment",
-          section: "External Manually-Tracked"
-        },
-        {
-          id: "man-2",
-          name: "Art Collection",
-          accountNumber: "ASSET-ART-1",
-          balance: "10,700.00",
-          type: "Collectible",
-          section: "External Manually-Tracked"
-        }
-      ],
-    },
-    {
-      id: "external-loans",
-      title: "External Loans",
-      icon: <DollarSign className="h-5 w-5 text-indigo-400" />,
-      balance: "$735,000.00",
-      isExpanded: false,
-      accounts: [
-        {
-          id: "loan-1",
-          name: "Primary Mortgage",
-          accountNumber: "MTG-5643-XXX",
-          balance: "685,000.00",
-          type: "Mortgage",
-          section: "External Loans"
-        },
-        {
-          id: "loan-2",
-          name: "Auto Loan",
-          accountNumber: "AUTO-3328-XXX",
-          balance: "50,000.00",
-          type: "Auto Loan",
-          section: "External Loans"
-        }
-      ],
-    },
-    {
-      id: "external-banking",
-      title: "External Banking",
-      icon: <Building className="h-5 w-5 text-red-400" />,
-      balance: "$68,250.00",
-      isExpanded: false,
-      accounts: [
-        {
-          id: "bank-1",
-          name: "Chase Checking",
-          accountNumber: "CH-8867-XXX",
-          balance: "18,250.00",
-          type: "Checking",
-          section: "External Banking"
-        },
-        {
-          id: "bank-2",
-          name: "Chase Savings",
-          accountNumber: "CH-9954-XXX",
-          balance: "50,000.00",
-          type: "Savings",
-          section: "External Banking"
-        }
-      ],
-    },
-    {
-      id: "external-credit-cards",
-      title: "External Credit Cards",
-      icon: <CreditCard className="h-5 w-5 text-cyan-400" />,
-      balance: "$12,450.00",
-      isExpanded: false,
-      accounts: [
-        {
-          id: "cc-1",
-          name: "Chase Sapphire Reserve",
-          accountNumber: "CSR-5678-XXX",
-          balance: "8,250.00",
-          type: "Credit Card",
-          section: "External Credit Cards"
-        },
-        {
-          id: "cc-2",
-          name: "American Express Platinum",
-          accountNumber: "AMEX-9012-XXX",
-          balance: "4,200.00",
-          type: "Credit Card",
-          section: "External Credit Cards"
-        }
-      ],
-    },
-  ]);
+  // Calculate net worth
+  const netWorth = accounts.reduce((sum, account) => sum + account.balance, 0);
+  
+  // Calculate assets
+  const assets = accounts
+    .filter(account => account.balance > 0)
+    .reduce((sum, account) => sum + account.balance, 0);
+  
+  // Calculate liabilities
+  const liabilities = accounts
+    .filter(account => account.balance < 0)
+    .reduce((sum, account) => sum + Math.abs(account.balance), 0);
 
-  const toggleSection = (id: string) => {
-    setAccountSections(
-      accountSections.map((section) =>
-        section.id === id
-          ? { ...section, isExpanded: !section.isExpanded }
-          : section
-      )
-    );
-  };
-
-  const openAddDialog = (section: AccountSection) => {
-    setSelectedSection(section);
-    setDialogOpen(true);
-  };
-
-  const openMainAddDialog = () => {
-    setCurrentView("selection");
-  };
-
-  const handleBackToMain = () => {
-    setCurrentView("main");
-  };
-
-  const handlePlaidLinkSuccess = (linkToken: string) => {
-    console.log("Plaid Link Token:", linkToken);
-    
-    const newAccount: AccountData = {
-      id: `plaid-${Date.now()}`,
-      name: "Plaid Demo Account",
-      accountNumber: "PLAID-XXX-" + Math.floor(1000 + Math.random() * 9000),
-      balance: "1,250.00",
-      type: "External Banking",
-      section: "External Banking"
-    };
-
-    setAccountSections(
-      accountSections.map((section) =>
-        section.id === "external-banking"
-          ? {
-              ...section,
-              accounts: [...section.accounts, newAccount],
-              balance: "$69,500.00",
-              isExpanded: true,
-            }
-          : section
-      )
-    );
-
-    toast({
-      title: "Account linked",
-      description: "Your bank account has been successfully linked via Plaid",
-    });
-
-    setCurrentView("main");
+  const handleAccountClick = (account: AccountData) => {
+    // Generate transactions if they don't exist
+    if (!account.transactions) {
+      account.transactions = generateMockTransactions(account.id);
+    }
+    setSelectedAccount(account);
+    setShowAccountDetails(true);
   };
 
   const handleAddAccount = (accountData: AccountData) => {
-    if (!selectedSection) return;
-
-    setAccountSections(
-      accountSections.map((section) =>
-        section.id === selectedSection.id
-          ? {
-              ...section,
-              accounts: [...section.accounts, accountData],
-              balance: section.id !== "bfo-managed"
-                ? `$${section.accounts.reduce(
-                    (sum, account) => sum + parseFloat(account.balance.replace(/,/g, "") || "0"),
-                    parseFloat(accountData.balance.replace(/,/g, "") || "0")
-                  ).toFixed(2)}`
-                : undefined,
-              status: section.id === "bfo-managed" ? "Connected" : undefined,
-            }
-          : section
-      )
-    );
-
-    toast({
-      title: "Account added",
-      description: `${accountData.name} has been added to ${selectedSection.title}`,
-    });
-  };
-
-  const handleMainAddAccount = (accountData: AccountData) => {
-    const matchingSection = accountSections.find(
-      (section) => section.title.toLowerCase().includes(accountData.section.toLowerCase())
-    );
-
-    if (!matchingSection) {
-      toast({
-        title: "Error",
-        description: "Could not find a matching section for this account type",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setAccountSections(
-      accountSections.map((section) =>
-        section.id === matchingSection.id
-          ? {
-              ...section,
-              accounts: [...section.accounts, accountData],
-              balance: section.id !== "bfo-managed"
-                ? `$${section.accounts.reduce(
-                    (sum, account) => sum + parseFloat(account.balance.replace(/,/g, "") || "0"),
-                    parseFloat(accountData.balance.replace(/,/g, "") || "0")
-                  ).toFixed(2)}`
-                : undefined,
-              status: section.id === "bfo-managed" ? "Connected" : undefined,
-            }
-          : section
-      )
-    );
-
-    toast({
-      title: "Account added",
-      description: `${accountData.name} has been added to ${matchingSection.title}`,
-    });
-  };
-
-  const handleSelectPlaid = () => {
-    setPlaidDialogOpen(true);
-  };
-
-  const handleSelectManual = () => {
-    setMainDialogOpen(true);
-  };
-
-  const handleAccountClick = (account: AccountData) => {
-    if (!account.transactions) {
-      account.transactions = generateTransactions(account);
-    }
-    setSelectedAccount(account);
-    setAccountDetailView(true);
-  };
-
-  const handleBackToAccounts = () => {
-    setAccountDetailView(false);
-    setSelectedAccount(null);
-  };
-
-  const filterAccountsByType = (type: string) => {
-    const allAccounts: AccountData[] = [];
-    
-    accountSections.forEach(section => {
-      section.accounts.forEach(account => {
-        if (account.type.toLowerCase() === type.toLowerCase()) {
-          allAccounts.push(account);
-        }
-      });
-    });
-    
-    return allAccounts;
-  };
-  
-  const checkingAccounts = filterAccountsByType("checking");
-  const savingsAccounts = filterAccountsByType("savings");
-  const investmentAccounts = filterAccountsByType("investment");
-  const retirementAccounts = filterAccountsByType("retirement");
-
-  const calculateTotal = (accounts: AccountData[]) => {
-    return accounts.reduce((total, account) => {
-      const balance = parseFloat(account.balance.replace(/,/g, "")) || 0;
-      return total + balance;
-    }, 0);
-  };
-  
-  const checkingTotal = calculateTotal(checkingAccounts);
-  const savingsTotal = calculateTotal(savingsAccounts);
-  const investmentTotal = calculateTotal(investmentAccounts);
-  const retirementTotal = calculateTotal(retirementAccounts);
-
-  const generateTransactions = (account: AccountData) => {
-    const today = new Date();
-    const transactions = [];
-    const types = {
-      "Checking": ["Grocery Store", "ATM Withdrawal", "Online Payment", "Direct Deposit", "Restaurant", "Utility Bill"],
-      "Savings": ["Transfer from Checking", "Interest Payment", "Withdrawal", "Deposit", "Automatic Savings"],
-      "Investment": ["Stock Purchase", "Dividend Payment", "ETF Purchase", "Fund Management Fee", "Stock Sale"],
-      "Retirement": ["401(k) Contribution", "IRA Deposit", "Fund Rebalancing", "Dividend Reinvestment", "Admin Fee"]
+    // Generate a new ID
+    const newAccount = {
+      ...accountData,
+      id: `${accounts.length + 1}`,
+      lastUpdated: new Date().toISOString().split('T')[0],
     };
     
-    const transactionTypes = types[account.type as keyof typeof types] || types["Checking"];
+    setAccounts([...accounts, newAccount]);
+    setShowAddAccountDialog(false);
+    toast.success("Account added successfully");
+  };
+
+  const handlePlaidLinkSuccess = (linkToken: string) => {
+    console.log("Plaid link success:", linkToken);
+    setShowPlaidLinkDialog(false);
+    setShowAddAccountDialog(true);
+    toast.success("Account linked successfully");
+  };
+
+  const handleAddAccountClick = () => {
+    setShowAccountTypeSelector(true);
+  };
+
+  const handleAccountTypeSelected = (type: string) => {
+    setShowAccountTypeSelector(false);
     
-    const count = Math.floor(Math.random() * 6) + 5;
-    
-    for (let i = 0; i < count; i++) {
-      const daysAgo = i * 3 + Math.floor(Math.random() * 3);
-      const date = new Date(today);
-      date.setDate(date.getDate() - daysAgo);
-      
-      const isDeposit = Math.random() > 0.7;
-      const amount = isDeposit 
-        ? Math.floor(Math.random() * 2000) + 500 
-        : -(Math.floor(Math.random() * 300) + 50);
-        
-      const typeIndex = Math.floor(Math.random() * transactionTypes.length);
-      
-      transactions.push({
-        date: format(date, 'yyyy-MM-dd'),
-        description: transactionTypes[typeIndex],
-        amount: amount,
-        type: amount > 0 ? 'credit' : 'debit'
-      });
+    if (type === "plaid") {
+      setShowPlaidLinkDialog(true);
+    } else if (type === "real-estate") {
+      setShowRealEstateTracker(true);
+    } else {
+      setShowAddAccountDialog(true);
     }
-    
-    return transactions.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
   };
 
-  const toggleAnalytics = () => {
-    setShowAnalytics(!showAnalytics);
+  const handleRealEstateAdded = (propertyData: any) => {
+    const newProperty = {
+      id: `${accounts.length + 1}`,
+      name: propertyData.propertyName,
+      type: "real-estate",
+      balance: propertyData.propertyValue,
+      institution: "Self Managed",
+      lastUpdated: new Date().toISOString().split('T')[0],
+      accountNumber: "N/A",
+      propertyValue: propertyData.propertyValue,
+      propertyAddress: propertyData.propertyAddress,
+    };
+    
+    setAccounts([...accounts, newProperty]);
+    setShowRealEstateTracker(false);
+    toast.success("Property added successfully");
   };
 
-  const renderAnalytics = (accounts: AccountData[], title: string) => {
-    const total = calculateTotal(accounts);
-    const pieData = accounts.map(account => ({
-      name: account.name,
-      value: parseFloat(account.balance.replace(/,/g, "")) || 0
-    }));
-    
-    return (
-      <div className={`p-4 rounded-lg ${isLightTheme ? "bg-[#F2F0E1]" : "bg-[#1c2e4a]"} mb-4`}>
-        <h3 className="text-lg font-medium mb-3">{title} Analytics</h3>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <h4 className="text-sm font-medium mb-2">Account Breakdown</h4>
-            <div className="space-y-3">
-              {accounts.map((account, index) => {
-                const percent = Math.round(
-                  (parseFloat(account.balance.replace(/,/g, "")) / total) * 100
-                );
-                
-                return (
-                  <div key={index} className="space-y-1">
-                    <div className="flex justify-between text-sm">
-                      <span>{account.name}</span>
-                      <span>${account.balance} ({percent}%)</span>
-                    </div>
-                    <div className="w-full bg-gray-700 h-2 rounded-full">
-                      <div 
-                        className="bg-blue-500 h-2 rounded-full" 
-                        style={{ width: `${percent}%` }}
-                      ></div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-          
-          <div>
-            <h4 className="text-sm font-medium mb-2">Growth Over Time</h4>
-            <div className="h-40 flex items-end gap-1">
-              {accountHistory.map((item, index) => {
-                const heightPercent = (item.balance / 24000) * 100;
-                return (
-                  <div key={index} className="flex flex-col items-center flex-1">
-                    <div 
-                      className="w-full bg-blue-500 rounded-t"
-                      style={{ height: `${heightPercent}%` }}
-                    ></div>
-                    <span className="text-xs mt-1">
-                      {format(new Date(item.date), 'MMM')}
-                    </span>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-        
-        <div className="mt-4">
-          <h4 className="text-sm font-medium mb-2">Performance Summary</h4>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            <div className={`p-3 rounded-lg ${isLightTheme ? "bg-[#E9E7D8]" : "bg-[#121a2c]"}`}>
-              <p className="text-sm text-gray-400">Month-over-Month</p>
-              <p className="text-lg font-semibold text-green-400">+5.3%</p>
-            </div>
-            <div className={`p-3 rounded-lg ${isLightTheme ? "bg-[#E9E7D8]" : "bg-[#121a2c]"}`}>
-              <p className="text-sm text-gray-400">Quarter-over-Quarter</p>
-              <p className="text-lg font-semibold text-green-400">+12.7%</p>
-            </div>
-            <div className={`p-3 rounded-lg ${isLightTheme ? "bg-[#E9E7D8]" : "bg-[#121a2c]"}`}>
-              <p className="text-sm text-gray-400">Year-to-Date</p>
-              <p className="text-lg font-semibold text-green-400">+33.2%</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
-  const renderInteractiveAccountTypeDetails = (accounts: AccountData[], title: string) => {
-    if (accounts.length === 0) {
-      return (
-        <div className="flex flex-col items-center justify-center p-8">
-          <p className={`text-center mb-4 ${isLightTheme ? "text-[#666666]" : "text-gray-400"}`}>
-            No {title.toLowerCase()} accounts found
-          </p>
-          <Button 
-            onClick={openMainAddDialog}
-            className={isLightTheme ? "bg-[#E9E7D8] text-[#222222] hover:bg-[#DCD8C0]" : "bg-white text-black hover:bg-slate-100"}
-          >
-            <Plus className="mr-2 h-4 w-4" />
-            Add {title} Account
-          </Button>
-        </div>
-      );
-    }
-
-    return (
-      <div className="space-y-4">
-        <div className="flex justify-between items-center">
-          <h3 className="text-lg font-medium">{title} Accounts</h3>
-          <div className="flex gap-2">
-            <Button 
-              variant="outline" 
-              size="sm"
-              className={`${
-                isLightTheme 
-                  ? "border-[#DCD8C0] text-[#222222] hover:bg-[#E9E7D8]" 
-                  : "border-gray-700 text-white hover:bg-[#1c2e4a]"
-              }`}
-              onClick={() => setShowAnalytics(!showAnalytics)}
-            >
-              <PieChart className="h-4 w-4 mr-2" />
-              {showAnalytics ? "Hide Analytics" : "Show Analytics"}
-            </Button>
-            
-            <Button 
-              variant="outline" 
-              size="sm"
-              className={`${
-                isLightTheme 
-                  ? "border-[#DCD8C0] text-[#222222] hover:bg-[#E9E7D8]" 
-                  : "border-gray-700 text-white hover:bg-[#1c2e4a]"
-              }`}
-            >
-              <Download className="h-4 w-4 mr-2" />
-              Export
-            </Button>
-            
-            <Button 
-              variant="outline" 
-              size="sm"
-              className={`${
-                isLightTheme 
-                  ? "border-[#DCD8C0] text-[#222222] hover:bg-[#E9E7D8]" 
-                  : "border-gray-700 text-white hover:bg-[#1c2e4a]"
-              }`}
-            >
-              <RefreshCcw className="h-4 w-4 mr-2" />
-              Refresh
-            </Button>
-          </div>
-        </div>
-        
-        {showAnalytics && renderAnalytics(accounts, title)}
-        
-        <div className={`p-4 rounded-lg ${isLightTheme ? "bg-[#F2F0E1]" : "bg-[#1c2e4a]"}`}>
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-medium">{title} Summary</h3>
-            <p className="font-bold">${calculateTotal(accounts).toLocaleString()}</p>
-          </div>
-          
-          <Table>
-            <TableHeader>
-              <TableRow className={isLightTheme ? "bg-[#E9E7D8]" : "bg-[#121a2c]"}>
-                <TableHead>Account Name</TableHead>
-                <TableHead>Account Number</TableHead>
-                <TableHead className="text-right">Balance</TableHead>
-                <TableHead>
-                  <div className="flex items-center justify-end">
-                    <span className="sr-only">Sort</span>
-                    <ArrowUpDown className="h-4 w-4" />
-                  </div>
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {accounts.map((account) => (
-                <TableRow 
-                  key={account.id}
-                  className={`cursor-pointer ${isLightTheme ? "hover:bg-[#E9E7D8]" : "hover:bg-[#2A2A40]"}`}
-                  onClick={() => handleAccountClick(account)}
-                >
-                  <TableCell className="font-medium">{account.name}</TableCell>
-                  <TableCell>{account.accountNumber}</TableCell>
-                  <TableCell className="text-right">${account.balance}</TableCell>
-                  <TableCell>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8 p-0"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleAccountClick(account);
-                      }}
-                    >
-                      <ChevronDown className="h-4 w-4" />
-                      <span className="sr-only">View details</span>
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
-        
-        <div className="flex justify-between items-center">
-          <Button 
-            onClick={openMainAddDialog}
-            variant="outline" 
-            className={`${
-              isLightTheme 
-                ? "border-[#DCD8C0] text-[#222222] hover:bg-[#E9E7D8]" 
-                : "border-gray-700 text-white hover:bg-[#1c2e4a]"
-            }`}
-          >
-            <Plus className="mr-2 h-4 w-4" />
-            Add {title} Account
-          </Button>
-          
-          {title === "Investment" && (
-            <Button
-              className={isLightTheme ? "bg-[#E9E7D8] text-[#222222] hover:bg-[#DCD8C0]" : "bg-white text-black hover:bg-slate-100"}
-              onClick={() => {
-                toast({
-                  title: "Portfolio Analysis",
-                  description: "Launching detailed portfolio analysis view"
-                });
-              }}
-            >
-              Portfolio Analysis
-            </Button>
-          )}
-          
-          {title === "Retirement" && (
-            <Button
-              className={isLightTheme ? "bg-[#E9E7D8] text-[#222222] hover:bg-[#DCD8C0]" : "bg-white text-black hover:bg-slate-100"}
-              onClick={() => {
-                toast({
-                  title: "Retirement Calculator",
-                  description: "Launching retirement planning calculator"
-                });
-              }}
-            >
-              Retirement Calculator
-            </Button>
-          )}
-        </div>
-        
-        {title === "Checking" && (
-          <Card className={`mt-4 ${isLightTheme ? "bg-[#F2F0E1]" : "bg-[#121a2c]"}`}>
-            <CardHeader>
-              <CardTitle className="text-base">Quick Actions</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-                <Button
-                  variant="outline"
-                  className={`${
-                    isLightTheme 
-                      ? "border-[#DCD8C0] text-[#222222] hover:bg-[#E9E7D8]" 
-                      : "border-gray-700 text-white hover:bg-[#1c2e4a]"
-                  }`}
-                  onClick={() => {
-                    toast({
-                      title: "Transfer Initiated",
-                      description: "Redirecting to transfer page"
-                    });
-                  }}
-                >
-                  Transfer Money
-                </Button>
-                <Button
-                  variant="outline"
-                  className={`${
-                    isLightTheme 
-                      ? "border-[#DCD8C0] text-[#222222] hover:bg-[#E9E7D8]" 
-                      : "border-gray-700 text-white hover:bg-[#1c2e4a]"
-                  }`}
-                  onClick={() => {
-                    toast({
-                      title: "Bill Pay",
-                      description: "Redirecting to bill payment page"
-                    });
-                  }}
-                >
-                  Pay Bills
-                </Button>
-                <Button
-                  variant="outline"
-                  className={`${
-                    isLightTheme 
-                      ? "border-[#DCD8C0] text-[#222222] hover:bg-[#E9E7D8]" 
-                      : "border-gray-700 text-white hover:bg-[#1c2e4a]"
-                  }`}
-                  onClick={() => {
-                    toast({
-                      title: "Statements",
-                      description: "Fetching your recent statements"
-                    });
-                  }}
-                >
-                  View Statements
-                </Button>
-                <Button
-                  variant="outline"
-                  className={`${
-                    isLightTheme 
-                      ? "border-[#DCD8C0] text-[#222222] hover:bg-[#E9E7D8]" 
-                      : "border-gray-700 text-white hover:bg-[#1c2e4a]"
-                  }`}
-                  onClick={() => {
-                    toast({
-                      title: "Budget Analysis",
-                      description: "Analyzing your spending patterns"
-                    });
-                  }}
-                >
-                  Budget Analysis
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-        
-        {title === "Savings" && (
-          <Card className={`mt-4 ${isLightTheme ? "bg-[#F2F0E1]" : "bg-[#121a2c]"}`}>
-            <CardHeader>
-              <CardTitle className="text-base">Savings Goals</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div>
-                  <div className="flex justify-between mb-1">
-                    <span>Emergency Fund</span>
-                    <span>$8,500 / $15,000</span>
-                  </div>
-                  <div className="w-full bg-gray-700 h-2 rounded-full">
-                    <div 
-                      className="bg-blue-500 h-2 rounded-full" 
-                      style={{ width: '57%' }}
-                    ></div>
-                  </div>
-                </div>
-                <div>
-                  <div className="flex justify-between mb-1">
-                    <span>Vacation</span>
-                    <span>$3,200 / $5,000</span>
-                  </div>
-                  <div className="w-full bg-gray-700 h-2 rounded-full">
-                    <div 
-                      className="bg-green-500 h-2 rounded-full" 
-                      style={{ width: '64%' }}
-                    ></div>
-                  </div>
-                </div>
-                
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className={`${
-                    isLightTheme 
-                      ? "border-[#DCD8C0] text-[#222222] hover:bg-[#E9E7D8]" 
-                      : "border-gray-700 text-white hover:bg-[#1c2e4a]"
-                  }`}
-                  onClick={() => {
-                    toast({
-                      title: "Savings Goals",
-                      description: "Opening savings goal management"
-                    });
-                  }}
-                >
-                  <Plus className="h-4 w-4 mr-2" />
-                  Add New Goal
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-      </div>
-    );
-  };
-
-  const renderEnhancedAccountDetails = () => {
-    if (!selectedAccount) return null;
-    
-    const transactions = selectedAccount.transactions || [];
-    
-    return (
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <Button
-            variant="outline"
-            onClick={handleBackToAccounts}
-            className={`${
-              isLightTheme 
-                ? "border-[#DCD8C0] text-[#222222] hover:bg-[#E9E7D8]" 
-                : "border-gray-700 text-white hover:bg-[#1c2e4a]"
-            }`}
-          >
-            Back to Accounts
-          </Button>
-          
-          <div className="flex gap-2">
-            <Button
-              variant="outline"
-              className={`${
-                isLightTheme 
-                  ? "border-[#DCD8C0] text-[#222222] hover:bg-[#E9E7D8]" 
-                  : "border-gray-700 text-white hover:bg-[#1c2e4a]"
-              }`}
-            >
-              <Filter className="mr-2 h-4 w-4" />
-              Filter
-            </Button>
-            
-            <Button
-              variant="outline"
-              className={`${
-                isLightTheme 
-                  ? "border-[#DCD8C0] text-[#222222] hover:bg-[#E9E7D8]" 
-                  : "border-gray-700 text-white hover:bg-[#1c2e4a]"
-              }`}
-            >
-              <Download className="mr-2 h-4 w-4" />
-              Export
-            </Button>
-
-          </div>
-        </div>
-        
-        <div className="space-y-4">
-          <div className="flex justify-between items-center">
-            <h3 className="text-lg font-medium">{selectedAccount.name}</h3>
-            <p className="font-bold">${selectedAccount.balance}</p>
-          </div>
-          
-          <Table>
-            <TableHeader>
-              <TableRow className={isLightTheme ? "bg-[#E9E7D8]" : "bg-[#121a2c]"}>
-                <TableHead>Transaction Date</TableHead>
-                <TableHead>Description</TableHead>
-                <TableHead className="text-right">Amount</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {transactions.map((transaction) => (
-                <TableRow 
-                  key={transaction.date}
-                  className={`cursor-pointer ${isLightTheme ? "hover:bg-[#E9E7D8]" : "hover:bg-[#2A2A40]"}`}
-                >
-                  <TableCell>{transaction.date}</TableCell>
-                  <TableCell>{transaction.description}</TableCell>
-                  <TableCell className="text-right">${transaction.amount}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
-      </div>
-    );
+  // Helper function to format currency
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+    }).format(amount);
   };
 
   return (
-    <div className="flex flex-col">
-      <div className="flex flex-col">
-        <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-bold">Accounts</h1>
-          <div className="flex gap-2">
-            <Button 
-              variant="outline" 
-              size="sm"
-              className={`${
-                isLightTheme 
-                  ? "border-[#DCD8C0] text-[#222222] hover:bg-[#E9E7D8]" 
-                  : "border-gray-700 text-white hover:bg-[#1c2e4a]"
-              }`}
-              onClick={() => handleSelectPlaid()}
-            >
-              <Plus className="mr-2 h-4 w-4" />
-              Add Account
-            </Button>
-            <Button 
-              variant="outline" 
-              size="sm"
-              className={`${
-                isLightTheme 
-                  ? "border-[#DCD8C0] text-[#222222] hover:bg-[#E9E7D8]" 
-                  : "border-gray-700 text-white hover:bg-[#1c2e4a]"
-              }`}
-              onClick={() => handleSelectManual()}
-            >
-              <Plus className="mr-2 h-4 w-4" />
-              Add Manually-Tracked Account
-            </Button>
-          </div>
+    <ThreeColumnLayout activeMainItem="accounts" activeSecondaryItem={selectedSection} title="Accounts">
+      <div className="space-y-6">
+        <div className="flex justify-between items-center mb-4">
+          <h1 className="text-2xl font-semibold">Accounts</h1>
+          <Button onClick={handleAddAccountClick}>
+            <Plus className="mr-2 h-4 w-4" />
+            Add Account
+          </Button>
         </div>
-        
-        <div className="flex flex-col">
-          {accountSections.map((section) => (
-            <div key={section.id} className="mb-4">
-              <div className="flex justify-between items-center">
-                <h2 className="text-lg font-medium">{section.title}</h2>
-                <div className="flex gap-2">
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    className={`${
-                      isLightTheme 
-                        ? "border-[#DCD8C0] text-[#222222] hover:bg-[#E9E7D8]" 
-                        : "border-gray-700 text-white hover:bg-[#1c2e4a]"
-                    }`}
-                    onClick={() => toggleSection(section.id)}
-                  >
-                    {section.isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-                  </Button>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-lg">Net Worth</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{formatCurrency(netWorth)}</div>
+              <div className="flex justify-between mt-2 text-sm">
+                <div>
+                  <span className="text-gray-500">Assets:</span> {formatCurrency(assets)}
+                </div>
+                <div>
+                  <span className="text-gray-500">Liabilities:</span> {formatCurrency(liabilities)}
                 </div>
               </div>
-              
-              {section.isExpanded && (
-                <div className="mt-2">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {section.accounts.map((account) => (
-                      <div key={account.id} className="p-4 rounded-lg border border-gray-200">
-                        <div className="flex justify-between items-center">
-                          <div className="flex items-center">
-                            {section.icon}
-                            <h3 className="text-lg font-medium ml-2">{account.name}</h3>
-                          </div>
-                          <div className="flex gap-2">
-                            <Button 
-                              variant="outline" 
-                              size="sm"
-                              className={`${
-                                isLightTheme 
-                                  ? "border-[#DCD8C0] text-[#222222] hover:bg-[#E9E7D8]" 
-                                  : "border-gray-700 text-white hover:bg-[#1c2e4a]"
-                              }`}
-                              onClick={() => handleAccountClick(account)}
-                            >
-                              <ChevronDown className="h-4 w-4" />
-                              <span className="sr-only">View details</span>
-                            </Button>
-                          </div>
-                        </div>
-                        
-                        <div className="mt-2">
-                          <p className="text-sm text-gray-400">Account Number: {account.accountNumber}</p>
-                          <p className="text-lg font-semibold">${account.balance}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+              <Progress value={assets / (assets + liabilities) * 100} className="h-2 mt-2" />
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-lg">Total Accounts</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{accounts.length}</div>
+              <div className="flex flex-wrap gap-2 mt-2">
+                <Badge variant="outline" className="bg-[#D3E4FD] text-blue-700 hover:bg-[#D3E4FD]">
+                  {accounts.filter(a => a.type === "checking" || a.type === "savings").length} Bank
+                </Badge>
+                <Badge variant="outline" className="bg-[#F2FCE2] text-green-700 hover:bg-[#F2FCE2]">
+                  {accounts.filter(a => a.type === "investment" || a.type === "retirement").length} Investment
+                </Badge>
+                <Badge variant="outline" className="bg-[#FFDEE2] text-red-700 hover:bg-[#FFDEE2]">
+                  {accounts.filter(a => a.type === "credit-cards" || a.type === "loans").length} Credit
+                </Badge>
+                <Badge variant="outline" className="bg-[#FDE1D3] text-orange-700 hover:bg-[#FDE1D3]">
+                  {accounts.filter(a => a.type === "real-estate").length} Property
+                </Badge>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-lg">Last Updated</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">
+                {accounts.length > 0 
+                  ? new Date(Math.max(...accounts.map(a => new Date(a.lastUpdated).getTime()))).toLocaleDateString() 
+                  : "N/A"}
+              </div>
+              <div className="text-sm text-gray-500 mt-2">
+                {accounts.length > 0 ? (
+                  <span>
+                    {accounts.filter(a => {
+                      const today = new Date();
+                      const lastUpdated = new Date(a.lastUpdated);
+                      const diffTime = Math.abs(today.getTime() - lastUpdated.getTime());
+                      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                      return diffDays <= 1;
+                    }).length} accounts updated today
+                  </span>
+                ) : "No accounts to update"}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
+          <TabsList>
+            <TabsTrigger value="overview">Overview</TabsTrigger>
+            <TabsTrigger value="transactions">Transactions</TabsTrigger>
+            <TabsTrigger value="insights">Insights</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="overview" className="space-y-4">
+            <div className="grid grid-cols-1 gap-4">
+              {filteredAccounts.length > 0 ? (
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Your Accounts</CardTitle>
+                    <CardDescription>
+                      Manage and track all your financial accounts in one place
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Account</TableHead>
+                          <TableHead>Type</TableHead>
+                          <TableHead>Institution</TableHead>
+                          <TableHead className="text-right">Balance</TableHead>
+                          <TableHead className="text-right">Actions</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {filteredAccounts.map((account) => (
+                          <TableRow key={account.id} onClick={() => handleAccountClick(account)} className="cursor-pointer hover:bg-muted/50">
+                            <TableCell className="font-medium">{account.name}</TableCell>
+                            <TableCell>
+                              <Badge variant="outline" className={
+                                account.type === "checking" || account.type === "savings" 
+                                  ? "bg-[#D3E4FD] text-blue-700" 
+                                  : account.type === "investment" || account.type === "retirement"
+                                  ? "bg-[#F2FCE2] text-green-700"
+                                  : account.type === "credit-cards" || account.type === "loans"
+                                  ? "bg-[#FFDEE2] text-red-700"
+                                  : "bg-[#FDE1D3] text-orange-700"
+                              }>
+                                {account.type.charAt(0).toUpperCase() + account.type.slice(1).replace("-", " ")}
+                              </Badge>
+                            </TableCell>
+                            <TableCell>{account.institution}</TableCell>
+                            <TableCell className={`text-right ${account.balance < 0 ? "text-red-500" : ""}`}>
+                              {formatCurrency(account.balance)}
+                            </TableCell>
+                            <TableCell className="text-right">
+                              <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                  <Button variant="ghost" className="h-8 w-8 p-0">
+                                    <span className="sr-only">Open menu</span>
+                                    <MoreHorizontal className="h-4 w-4" />
+                                  </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end">
+                                  <DropdownMenuItem onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleAccountClick(account);
+                                  }}>
+                                    View Details
+                                  </DropdownMenuItem>
+                                  <DropdownMenuItem onClick={(e) => {
+                                    e.stopPropagation();
+                                    console.log("Edit account:", account.id);
+                                    toast.info("Edit account feature coming soon");
+                                  }}>
+                                    Edit
+                                  </DropdownMenuItem>
+                                  <DropdownMenuItem onClick={(e) => {
+                                    e.stopPropagation();
+                                    console.log("Update balance:", account.id);
+                                    toast.info("Update balance feature coming soon");
+                                  }}>
+                                    Update Balance
+                                  </DropdownMenuItem>
+                                  <DropdownMenuItem onClick={(e) => {
+                                    e.stopPropagation();
+                                    console.log("Remove account:", account.id);
+                                    setAccounts(accounts.filter(a => a.id !== account.id));
+                                    toast.success("Account removed successfully");
+                                  }}>
+                                    Remove
+                                  </DropdownMenuItem>
+                                </DropdownMenuContent>
+                              </DropdownMenu>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </CardContent>
+                </Card>
+              ) : (
+                <Card>
+                  <CardHeader>
+                    <CardTitle>No Accounts Found</CardTitle>
+                    <CardDescription>
+                      {selectedSection === "all-accounts" 
+                        ? "You haven't added any accounts yet." 
+                        : `You don't have any ${selectedSection.replace("-", " ")} accounts.`}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="flex justify-center">
+                    <Button onClick={handleAddAccountClick}>
+                      <Plus className="mr-2 h-4 w-4" />
+                      Add Your First Account
+                    </Button>
+                  </CardContent>
+                </Card>
               )}
             </div>
-          ))}
-        </div>
-        
-        {accountDetailView && renderEnhancedAccountDetails()}
+          </TabsContent>
+
+          <TabsContent value="transactions" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle>Recent Transactions</CardTitle>
+                <CardDescription>
+                  View and manage your recent account transactions
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="text-center text-gray-500 py-6">
+                  <p>Select an account to view transactions</p>
+                  <Button variant="outline" className="mt-2" onClick={() => setActiveTab("overview")}>
+                    Go to Accounts
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="insights" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle>Financial Insights</CardTitle>
+                <CardDescription>
+                  Analyze your accounts and get personalized recommendations
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="border rounded-lg p-4">
+                    <h3 className="font-medium mb-2">Spending Analysis</h3>
+                    <p className="text-sm text-gray-500">
+                      Connect more accounts to get personalized spending insights.
+                    </p>
+                  </div>
+                  
+                  <div className="border rounded-lg p-4">
+                    <h3 className="font-medium mb-2">Savings Opportunities</h3>
+                    <p className="text-sm text-gray-500">
+                      We've identified potential for higher interest rates on your savings accounts.
+                    </p>
+                  </div>
+                  
+                  <div className="border rounded-lg p-4">
+                    <h3 className="font-medium mb-2">Debt Optimization</h3>
+                    <p className="text-sm text-gray-500">
+                      Strategies to help you pay down debt more efficiently.
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
       </div>
-      
-      {dialogOpen && (
-        <AddAccountDialog
-          open={dialogOpen}
-          onClose={() => setDialogOpen(false)}
+
+      {/* Account Details Dialog */}
+      <Dialog open={showAccountDetails} onOpenChange={setShowAccountDetails}>
+        <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+          {selectedAccount && (
+            <>
+              <DialogHeader>
+                <DialogTitle>{selectedAccount.name}</DialogTitle>
+                <DialogDescription>
+                  {selectedAccount.institution} • Last updated {new Date(selectedAccount.lastUpdated).toLocaleDateString()}
+                </DialogDescription>
+              </DialogHeader>
+              
+              <div className="space-y-4">
+                <div className="flex justify-between">
+                  <div>
+                    <p className="text-sm text-gray-500">Current Balance</p>
+                    <p className={`text-2xl font-bold ${selectedAccount.balance < 0 ? "text-red-500" : ""}`}>
+                      {formatCurrency(selectedAccount.balance)}
+                    </p>
+                  </div>
+                  
+                  <div className="text-right">
+                    <p className="text-sm text-gray-500">Account Number</p>
+                    <p className="font-medium">{selectedAccount.accountNumber}</p>
+                  </div>
+                </div>
+                
+                {/* Account-specific details */}
+                {selectedAccount.type === "checking" && selectedAccount.routingNumber && (
+                  <div className="border rounded-lg p-4">
+                    <h3 className="font-medium mb-2">Account Details</h3>
+                    <div className="grid grid-cols-2 gap-2">
+                      <div>
+                        <p className="text-sm text-gray-500">Routing Number</p>
+                        <p>{selectedAccount.routingNumber}</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                
+                {selectedAccount.type === "savings" && selectedAccount.interestRate && (
+                  <div className="border rounded-lg p-4">
+                    <h3 className="font-medium mb-2">Account Details</h3>
+                    <div className="grid grid-cols-2 gap-2">
+                      <div>
+                        <p className="text-sm text-gray-500">Interest Rate</p>
+                        <p>{selectedAccount.interestRate}% APY</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                
+                {selectedAccount.type === "credit-cards" && (
+                  <div className="border rounded-lg p-4">
+                    <h3 className="font-medium mb-2">Credit Card Details</h3>
+                    <div className="grid grid-cols-2 gap-2">
+                      <div>
+                        <p className="text-sm text-gray-500">Payment Due Date</p>
+                        <p>{selectedAccount.dueDate}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-500">Minimum Payment</p>
+                        <p>{formatCurrency(selectedAccount.minimumPayment || 0)}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-500">Credit Limit</p>
+                        <p>{formatCurrency(selectedAccount.creditLimit || 0)}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-500">Available Credit</p>
+                        <p>{formatCurrency(selectedAccount.availableCredit || 0)}</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                
+                {selectedAccount.type === "loans" && (
+                  <div className="border rounded-lg p-4">
+                    <h3 className="font-medium mb-2">Loan Details</h3>
+                    <div className="grid grid-cols-2 gap-2">
+                      <div>
+                        <p className="text-sm text-gray-500">Payment Due Date</p>
+                        <p>{selectedAccount.dueDate}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-500">Monthly Payment</p>
+                        <p>{formatCurrency(selectedAccount.minimumPayment || 0)}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-500">Original Loan Amount</p>
+                        <p>{formatCurrency(selectedAccount.loanAmount || 0)}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-500">Loan Term</p>
+                        <p>{selectedAccount.loanTerm} years</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                
+                {selectedAccount.type === "real-estate" && (
+                  <div className="border rounded-lg p-4">
+                    <h3 className="font-medium mb-2">Property Details</h3>
+                    <div className="grid grid-cols-1 gap-2">
+                      <div>
+                        <p className="text-sm text-gray-500">Property Address</p>
+                        <p>{selectedAccount.propertyAddress}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-500">Property Value</p>
+                        <p>{formatCurrency(selectedAccount.propertyValue || 0)}</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                
+                {/* Recent Transactions */}
+                <div>
+                  <h3 className="font-medium mb-2">Recent Transactions</h3>
+                  {selectedAccount.transactions && selectedAccount.transactions.length > 0 ? (
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Date</TableHead>
+                          <TableHead>Description</TableHead>
+                          <TableHead>Category</TableHead>
+                          <TableHead className="text-right">Amount</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {selectedAccount.transactions.map((transaction) => (
+                          <TableRow key={transaction.id}>
+                            <TableCell>{transaction.date}</TableCell>
+                            <TableCell>{transaction.description}</TableCell>
+                            <TableCell>{transaction.category}</TableCell>
+                            <TableCell className={`text-right ${transaction.amount < 0 ? "text-red-500" : ""}`}>
+                              {formatCurrency(transaction.amount)}
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  ) : (
+                    <p className="text-sm text-gray-500">No recent transactions found.</p>
+                  )}
+                </div>
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Account Management Dialogs */}
+      {showAddAccountDialog && (
+        <AddAccountDialog 
+          isOpen={showAddAccountDialog}
+          onClose={() => setShowAddAccountDialog(false)}
           onAdd={handleAddAccount}
           selectedSection={selectedSection}
         />
       )}
       
-      {plaidDialogOpen && (
+      {showPlaidLinkDialog && (
         <PlaidLinkDialog
-          open={plaidDialogOpen}
-          onClose={() => setPlaidDialogOpen(false)}
+          isOpen={showPlaidLinkDialog}
+          onClose={() => setShowPlaidLinkDialog(false)}
           onLinkSuccess={handlePlaidLinkSuccess}
         />
       )}
       
-      {mainDialogOpen && (
+      {showAccountTypeSelector && (
         <AccountLinkTypeSelector
-          open={mainDialogOpen}
-          onClose={() => setMainDialogOpen(false)}
-          onAdd={handleMainAddAccount}
+          isOpen={showAccountTypeSelector}
+          onClose={() => setShowAccountTypeSelector(false)}
+          onAdd={handleAccountTypeSelected}
         />
       )}
-    </div>
+      
+      {showRealEstateTracker && (
+        <RealEstateTracker
+          isOpen={showRealEstateTracker}
+          onClose={() => setShowRealEstateTracker(false)}
+          onAdd={handleRealEstateAdded}
+        />
+      )}
+    </ThreeColumnLayout>
   );
 };
 
