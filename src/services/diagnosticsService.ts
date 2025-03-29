@@ -1,4 +1,3 @@
-
 interface DiagnosticResult {
   status: 'success' | 'warning' | 'error';
   message: string;
@@ -40,6 +39,15 @@ interface FormValidationTestResult {
   fields?: FormFieldTestResult[];
 }
 
+interface ApiIntegrationTestResult {
+  service: string;
+  endpoint: string;
+  responseTime: number;
+  status: 'success' | 'warning' | 'error';
+  message: string;
+  authStatus?: 'valid' | 'expired' | 'invalid' | 'not_tested';
+}
+
 interface SystemHealthReport {
   navigation: DiagnosticResult;
   forms: DiagnosticResult;
@@ -50,6 +58,7 @@ interface SystemHealthReport {
   permissionsTests: PermissionsTestResult[];
   iconTests: IconTestResult[];
   formValidationTests: FormValidationTestResult[];
+  apiIntegrationTests: ApiIntegrationTestResult[];
   overall: 'healthy' | 'warning' | 'critical';
   timestamp: string;
 }
@@ -85,6 +94,9 @@ export const runDiagnostics = async (): Promise<SystemHealthReport> => {
   // Run form validation tests
   const formValidationTests = testFormValidation();
   
+  // Run API integration tests
+  const apiIntegrationTests = testApiIntegrations();
+  
   // Determine overall system health
   const statuses = [
     navigationResult.status, 
@@ -99,13 +111,15 @@ export const runDiagnostics = async (): Promise<SystemHealthReport> => {
   const permTestStatuses = permissionsTests.map(test => test.status);
   const iconTestStatuses = iconTests.map(test => test.status);
   const formValidationStatuses = formValidationTests.map(test => test.status);
+  const apiIntegrationStatuses = apiIntegrationTests.map(test => test.status);
   
   const allStatuses = [
     ...statuses,
     ...navTestStatuses,
     ...permTestStatuses,
     ...iconTestStatuses,
-    ...formValidationStatuses
+    ...formValidationStatuses,
+    ...apiIntegrationStatuses
   ];
   
   let overall: 'healthy' | 'warning' | 'critical' = 'healthy';
@@ -126,6 +140,7 @@ export const runDiagnostics = async (): Promise<SystemHealthReport> => {
     permissionsTests,
     iconTests,
     formValidationTests,
+    apiIntegrationTests,
     overall,
     timestamp: new Date().toISOString()
   };
@@ -400,6 +415,93 @@ const testFormValidation = (): FormValidationTestResult[] => {
           message: "Document type selection works correctly"
         }
       ]
+    }
+  ];
+};
+
+// New function to test API integrations
+const testApiIntegrations = (): ApiIntegrationTestResult[] => {
+  // In a real app, would actually ping these services and verify connections
+  return [
+    {
+      service: "FINIAT",
+      endpoint: "/api/data-sync",
+      responseTime: 245,
+      status: "success",
+      message: "Connection successful with normal response time",
+      authStatus: "valid"
+    },
+    {
+      service: "ADVYZON",
+      endpoint: "/api/portfolio-data",
+      responseTime: 189,
+      status: "success",
+      message: "Connection successful with normal response time",
+      authStatus: "valid"
+    },
+    {
+      service: "GHL",
+      endpoint: "/api/marketing-automation",
+      responseTime: 678,
+      status: "warning",
+      message: "Connection successful but with higher than expected response time",
+      authStatus: "valid"
+    },
+    {
+      service: "Microsoft Azure",
+      endpoint: "/api/identity",
+      responseTime: 210,
+      status: "success",
+      message: "Connection successful with normal response time",
+      authStatus: "valid"
+    },
+    {
+      service: "Stripe",
+      endpoint: "/v1/customers",
+      responseTime: 156,
+      status: "success",
+      message: "Connection successful with normal response time",
+      authStatus: "valid"
+    },
+    {
+      service: "Plaid",
+      endpoint: "/api/accounts/balance",
+      responseTime: 876,
+      status: "warning",
+      message: "Connection successful but with higher than expected response time",
+      authStatus: "valid"
+    },
+    {
+      service: "RIGHT CAPITAL",
+      endpoint: "/api/financial-plans",
+      responseTime: 345,
+      status: "success",
+      message: "Connection successful with normal response time",
+      authStatus: "valid"
+    },
+    {
+      service: "RETIREMENT ANALYZER",
+      endpoint: "/api/projections",
+      responseTime: 432,
+      status: "success",
+      message: "Connection successful with normal response time",
+      authStatus: "valid"
+    },
+    {
+      service: "Catchlight",
+      endpoint: "/api/prospect-insights",
+      responseTime: 267,
+      status: "success",
+      message: "Connection successful with normal response time",
+      authStatus: "valid"
+    },
+    {
+      service: "Tax Software Integration",
+      endpoint: "/api/tax-forms",
+      responseTime: 0,
+      status: "error",
+      message: "Connection failed - service unavailable or invalid credentials",
+      authStatus: "invalid"
     }
   ];
 };

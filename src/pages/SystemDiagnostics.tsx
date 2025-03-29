@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
@@ -12,8 +11,10 @@ import {
   Link, 
   Lock, 
   Eye,
-  FileText
+  FileText,
+  Globe
 } from "lucide-react";
+import { ActivityIcon } from "@/components/icons/ActivityIcon";
 import { toast } from "sonner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -68,30 +69,25 @@ export default function SystemDiagnostics() {
       recs.push("Review authentication flows for potential security improvements.");
     }
     
-    // New recommendations based on navigation tests
     const failedNavTests = report.navigationTests.filter((test: any) => test.status === 'error' || test.status === 'warning');
     if (failedNavTests.length > 0) {
       recs.push(`Fix navigation issues with routes: ${failedNavTests.map((t: any) => t.route).join(', ')}`);
     }
     
-    // New recommendations based on permission tests
     const failedPermTests = report.permissionsTests.filter((test: any) => test.status === 'error' || test.status === 'warning');
     if (failedPermTests.length > 0) {
       recs.push(`Review permission configuration for roles: ${[...new Set(failedPermTests.map((t: any) => t.role))].join(', ')}`);
     }
     
-    // New recommendations based on icon tests
     const failedIconTests = report.iconTests.filter((test: any) => test.status === 'error' || test.status === 'warning');
     if (failedIconTests.length > 0) {
       recs.push(`Fix icon display issues in: ${[...new Set(failedIconTests.map((t: any) => t.location))].join(', ')}`);
     }
     
-    // New recommendations based on form validation tests
     const failedFormTests = report.formValidationTests.filter((test: any) => test.status === 'error' || test.status === 'warning');
     if (failedFormTests.length > 0) {
       recs.push(`Address form validation issues in: ${failedFormTests.map((t: any) => t.formName).join(', ')}`);
       
-      // Add specific recommendations for form fields with issues
       failedFormTests.forEach((formTest: any) => {
         if (formTest.fields) {
           const fieldIssues = formTest.fields.filter((field: any) => field.status === 'error' || field.status === 'warning');
@@ -102,7 +98,21 @@ export default function SystemDiagnostics() {
       });
     }
     
-    // Add general recommendations
+    const failedApiTests = report.apiIntegrationTests.filter((test: any) => test.status === 'error' || test.status === 'warning');
+    if (failedApiTests.length > 0) {
+      recs.push(`Address API connection issues with: ${failedApiTests.map((t: any) => t.service).join(', ')}`);
+      
+      const slowApiResponses = failedApiTests.filter((test: any) => test.status === 'warning' && test.responseTime > 500);
+      if (slowApiResponses.length > 0) {
+        recs.push(`Optimize slow API connections with: ${slowApiResponses.map((t: any) => t.service).join(', ')}`);
+      }
+      
+      const authIssues = failedApiTests.filter((test: any) => test.authStatus === 'invalid' || test.authStatus === 'expired');
+      if (authIssues.length > 0) {
+        recs.push(`Refresh authentication credentials for: ${authIssues.map((t: any) => t.service).join(', ')}`);
+      }
+    }
+    
     recs.push("Consider implementing periodic automated health checks to monitor system performance.");
     
     return recs;
@@ -147,6 +157,31 @@ export default function SystemDiagnostics() {
     }
   };
 
+  const getAuthStatusBadge = (status: string) => {
+    switch (status) {
+      case 'valid':
+        return <span className="text-xs px-2 py-1 rounded-full bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-200">Valid</span>;
+      case 'expired':
+        return <span className="text-xs px-2 py-1 rounded-full bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-200">Expired</span>;
+      case 'invalid':
+        return <span className="text-xs px-2 py-1 rounded-full bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-200">Invalid</span>;
+      default:
+        return <span className="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-200">Not Tested</span>;
+    }
+  };
+
+  const getResponseTimeBadge = (time: number) => {
+    if (time === 0) {
+      return <span className="text-xs px-2 py-1 rounded-full bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-200">Timeout</span>;
+    } else if (time < 300) {
+      return <span className="text-xs px-2 py-1 rounded-full bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-200">{time}ms</span>;
+    } else if (time < 600) {
+      return <span className="text-xs px-2 py-1 rounded-full bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-200">{time}ms</span>;
+    } else {
+      return <span className="text-xs px-2 py-1 rounded-full bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-200">{time}ms</span>;
+    }
+  };
+
   return (
     <ThreeColumnLayout title="System Diagnostics">
       <div className="space-y-6 p-4 max-w-6xl mx-auto">
@@ -178,12 +213,13 @@ export default function SystemDiagnostics() {
         {report ? (
           <div className="space-y-6">
             <Tabs defaultValue="summary" className="w-full">
-              <TabsList className="grid grid-cols-5 mb-4">
+              <TabsList className="grid grid-cols-6 mb-4">
                 <TabsTrigger value="summary">Core Services</TabsTrigger>
                 <TabsTrigger value="navigation">Navigation</TabsTrigger>
                 <TabsTrigger value="permissions">Permissions</TabsTrigger>
                 <TabsTrigger value="icons">Icons</TabsTrigger>
                 <TabsTrigger value="forms">Form Validation</TabsTrigger>
+                <TabsTrigger value="api">API Integrations</TabsTrigger>
               </TabsList>
               
               <TabsContent value="summary">
@@ -353,6 +389,44 @@ export default function SystemDiagnostics() {
                               ))}
                             </div>
                           )}
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+              
+              <TabsContent value="api">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Globe className="h-5 w-5" />
+                      API Integration Tests
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      {report.apiIntegrationTests.map((test: any, index: number) => (
+                        <div key={index} className={`p-3 rounded-md border ${getStatusColor(test.status)}`}>
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-start gap-2">
+                              {getStatusIcon(test.status)}
+                              <div>
+                                <span className="font-medium">{test.service}</span>
+                                <p className="text-sm">Endpoint: {test.endpoint}</p>
+                              </div>
+                            </div>
+                            <div className="flex flex-col items-end gap-1">
+                              <span className="text-sm px-2 py-1 rounded-full bg-muted">
+                                {test.status}
+                              </span>
+                              <div className="flex items-center gap-2">
+                                {getResponseTimeBadge(test.responseTime)}
+                                {getAuthStatusBadge(test.authStatus)}
+                              </div>
+                            </div>
+                          </div>
+                          <p className="text-sm mt-1">{test.message}</p>
                         </div>
                       ))}
                     </div>
