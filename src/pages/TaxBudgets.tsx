@@ -1,9 +1,8 @@
-
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { TaxPlanningSummary } from "@/components/dashboard/TaxPlanningSummary";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Calendar, FileText, Download, Upload, BarChart, Calculator, Clock, ArrowRight } from "lucide-react";
+import { Calendar, FileText, Download, Upload, BarChart, Calculator, Clock, ArrowRight, HeartHandshake, BadgeDollarSign, BookCheck, Atom, Leaf, Users, PiggyBank, Landmark, AlarmClock, AlertTriangle } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useState } from "react";
@@ -11,6 +10,70 @@ import { Progress } from "@/components/ui/progress";
 
 const TaxBudgets = () => {
   const [activeTab, setActiveTab] = useState("summary");
+  const [activeSubcategory, setActiveSubcategory] = useState<string | null>(null);
+  
+  const taxPlanningSubcategories = [
+    { 
+      id: "retirement",
+      name: "Retirement Tax Planning", 
+      description: "Strategies to minimize taxes during retirement",
+      icon: <PiggyBank className="h-5 w-5" />
+    },
+    { 
+      id: "preparation",
+      name: "Tax Preparation & Filing Assistance", 
+      description: "Professional help with tax return preparation and filing",
+      icon: <BookCheck className="h-5 w-5" />
+    },
+    { 
+      id: "business",
+      name: "Business Tax Return Analysis", 
+      description: "Comprehensive review of business tax returns",
+      icon: <BadgeDollarSign className="h-5 w-5" />
+    },
+    { 
+      id: "roth",
+      name: "Roth IRA Conversion Analysis", 
+      description: "Evaluation of traditional to Roth IRA conversion benefits",
+      icon: <Atom className="h-5 w-5" />
+    },
+    { 
+      id: "stock",
+      name: "Highly Appreciated Stock", 
+      description: "Tax-efficient strategies for appreciated securities",
+      icon: <BarChart className="h-5 w-5" />
+    },
+    { 
+      id: "gifting",
+      name: "Family Gifting Strategies", 
+      description: "Tax-efficient wealth transfer to family members",
+      icon: <Users className="h-5 w-5" />
+    },
+    { 
+      id: "charitable",
+      name: "Magnify Charitable Gifting", 
+      description: "Optimize tax benefits from charitable contributions",
+      icon: <HeartHandshake className="h-5 w-5" />
+    },
+    { 
+      id: "secure",
+      name: "SECURE Act Impacts", 
+      description: "Analysis of how the SECURE Act affects your retirement",
+      icon: <Landmark className="h-5 w-5" />
+    },
+    { 
+      id: "rmd",
+      name: "RMD Tracking", 
+      description: "Required Minimum Distribution monitoring and optimization",
+      icon: <AlarmClock className="h-5 w-5" />
+    },
+    { 
+      id: "traps",
+      name: "Tax Traps Analysis", 
+      description: "Identification and avoidance of potential tax pitfalls",
+      icon: <AlertTriangle className="h-5 w-5" />
+    }
+  ];
   
   const taxSavingStrategies = [
     { 
@@ -57,6 +120,37 @@ const TaxBudgets = () => {
     { date: "December 31, 2024", description: "Last day for tax-deductible donations", status: "Upcoming" },
     { date: "January 15, 2025", description: "Q4 Estimated Tax Payment Due", status: "Upcoming" }
   ];
+
+  const renderSubcategoryContent = () => {
+    if (!activeSubcategory) return null;
+    
+    const subcategory = taxPlanningSubcategories.find(s => s.id === activeSubcategory);
+    if (!subcategory) return null;
+    
+    return (
+      <Card className="mt-6">
+        <CardHeader>
+          <div className="flex items-center">
+            {subcategory.icon}
+            <CardTitle className="ml-2">{subcategory.name}</CardTitle>
+          </div>
+          <CardDescription>{subcategory.description}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="p-4 bg-[#121a2c] rounded-lg mb-6">
+            <p className="text-blue-400">
+              This is a personalized analysis based on your financial situation. Schedule a consultation with your advisor for a detailed discussion.
+            </p>
+          </div>
+          
+          <Button className="w-full">
+            <Calendar className="h-4 w-4 mr-2" />
+            Schedule a Consultation
+          </Button>
+        </CardContent>
+      </Card>
+    );
+  };
   
   return (
     <ThreeColumnLayout activeMainItem="tax-budgets" title="Proactive Tax Planning">
@@ -113,6 +207,29 @@ const TaxBudgets = () => {
               </Button>
             </CardContent>
           </Card>
+        </div>
+        
+        <div className="bg-[#121a2c]/80 rounded-lg p-6 mb-6">
+          <h2 className="text-xl font-semibold mb-4">Tax Planning Categories</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+            {taxPlanningSubcategories.map((category) => (
+              <Button 
+                key={category.id}
+                variant={activeSubcategory === category.id ? "default" : "outline"} 
+                className="h-auto py-3 justify-start"
+                onClick={() => setActiveSubcategory(category.id)}
+              >
+                <div className="flex flex-col items-start text-left">
+                  <span className="flex items-center">
+                    {category.icon}
+                    <span className="ml-2 font-medium">{category.name}</span>
+                  </span>
+                </div>
+              </Button>
+            ))}
+          </div>
+          
+          {renderSubcategoryContent()}
         </div>
         
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
@@ -420,4 +537,3 @@ const TaxBudgets = () => {
 };
 
 export default TaxBudgets;
-
