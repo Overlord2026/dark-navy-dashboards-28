@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from "@/components/ui/button";
 import { Trophy, Clock } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { toast } from "sonner";
 
 export interface CourseCardProps {
   id: string | number;
@@ -12,7 +13,7 @@ export interface CourseCardProps {
   level?: string;
   duration?: string;
   comingSoon?: boolean;
-  ghlUrl?: string; // Add URL for the GHL course
+  ghlUrl?: string;
   onClick?: () => void;
 }
 
@@ -27,13 +28,44 @@ export function CourseCard({
   onClick,
 }: CourseCardProps) {
   const handleButtonClick = () => {
-    if (ghlUrl && !comingSoon) {
-      // Open the GHL URL in a new tab if it exists
+    if (comingSoon) {
+      toast.info(`${title} is coming soon. Stay tuned!`);
+      return;
+    }
+    
+    if (isPaid) {
+      // For paid courses, initiate Stripe checkout
+      initiateStripeCheckout();
+    } else if (ghlUrl) {
+      // For free courses, directly open the GHL URL
       window.open(ghlUrl, "_blank", "noopener,noreferrer");
     } else if (onClick) {
-      // Fall back to regular onClick if no URL provided
+      // Fallback to regular onClick if no URL provided
       onClick();
     }
+  };
+
+  const initiateStripeCheckout = () => {
+    // This would connect to your Stripe checkout in a real implementation
+    // For now, we'll simulate with a toast message
+    toast.info("Redirecting to payment page...");
+    
+    // Simulate successful payment after 2 seconds
+    setTimeout(() => {
+      toast.success("Payment successful! You now have access to this course.");
+      
+      // After successful payment, redirect to the course
+      if (ghlUrl) {
+        window.open(ghlUrl, "_blank", "noopener,noreferrer");
+      }
+    }, 2000);
+    
+    // In a real implementation, you would:
+    // 1. Call your backend to create a Stripe Checkout session
+    // 2. Redirect the user to the Stripe Checkout page
+    // 3. Handle the webhook from Stripe to confirm payment
+    // 4. Grant access to the course in your database
+    // 5. Redirect the user to the course
   };
 
   return (
