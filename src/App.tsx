@@ -49,6 +49,14 @@ function App() {
               <Route path="/documents" element={<Documents />} />
               <Route path="/documents/:categoryId" element={<Documents />} />
               <Route path="/lending" element={<Lending />} />
+              
+              {/* Properties Management Routes */}
+              <Route path="/properties" element={<NotFound />} />
+              <Route path="/buildings" element={<NotFound />} />
+              <Route path="/rentals" element={<NotFound />} />
+              <Route path="/locations" element={<NotFound />} />
+              <Route path="/property-investments" element={<NotFound />} />
+              
               <Route path="*" element={<NotFound />} />
             </Routes>
           </div>
