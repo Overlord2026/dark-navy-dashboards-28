@@ -200,7 +200,7 @@ const SheetDetailRow = ({
 
 SheetDetailRow.displayName = "SheetDetailRow"
 
-// New component for strategy section with a better readable format
+// Enhanced component for strategy section with better readability and formatting
 const SheetStrategySection = ({
   className,
   title,
@@ -222,7 +222,7 @@ const SheetStrategySection = ({
         <h4 className="text-sm font-medium text-blue-400 mb-2">Investment Approach</h4>
         <p className="text-gray-300 leading-relaxed mb-4">{strategy}</p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 pt-4 border-t border-slate-700/50">
-          <div className="bg-slate-800/30 p-3 rounded">
+          <div className="bg-slate-800/30 p-3 rounded hover:bg-slate-800/40 transition-colors">
             <h5 className="text-sm font-medium text-blue-400 mb-1">Focus Areas</h5>
             <ul className="list-disc list-inside text-xs text-gray-300 space-y-1">
               {strategy.split('. ').slice(0, 3).map((sentence, idx) => (
@@ -230,7 +230,7 @@ const SheetStrategySection = ({
               ))}
             </ul>
           </div>
-          <div className="bg-slate-800/30 p-3 rounded">
+          <div className="bg-slate-800/30 p-3 rounded hover:bg-slate-800/40 transition-colors">
             <h5 className="text-sm font-medium text-blue-400 mb-1">Key Differentiators</h5>
             <ul className="list-disc list-inside text-xs text-gray-300 space-y-1">
               {strategy.split('. ').slice(-2).map((sentence, idx) => (

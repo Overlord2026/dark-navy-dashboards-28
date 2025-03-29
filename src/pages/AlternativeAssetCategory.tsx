@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
@@ -32,6 +33,7 @@ import {
   SheetFooter,
   SheetHeader,
   SheetSection,
+  SheetStrategySection,
   SheetTitle
 } from "@/components/ui/sheet";
 import { 
