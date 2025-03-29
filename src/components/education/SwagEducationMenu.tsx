@@ -26,17 +26,46 @@ const courseCategories = [
 ];
 
 const featuredCourses = [
-  { id: "financial-fundamentals", name: "Financial Fundamentals" },
-  { id: "investment-strategies", name: "Investment Strategies 101" },
-  { id: "wealth-building", name: "Wealth Building for Beginners" },
+  { 
+    id: "financial-fundamentals", 
+    name: "Financial Fundamentals",
+    ghlUrl: "https://ghl.example.com/courses/financial-fundamentals" 
+  },
+  { 
+    id: "investment-strategies", 
+    name: "Investment Strategies 101",
+    ghlUrl: "https://ghl.example.com/courses/investment-strategies-101" 
+  },
+  { 
+    id: "wealth-building", 
+    name: "Wealth Building for Beginners",
+    ghlUrl: "https://ghl.example.com/courses/wealth-building-beginners" 
+  },
 ];
 
 const premiumCourses = [
-  { id: "advanced-trading", name: "Advanced Trading (Coming Soon)" },
-  { id: "estate-planning-premium", name: "Estate Planning (Coming Soon)" },
+  { 
+    id: "advanced-trading", 
+    name: "Advanced Trading (Coming Soon)",
+    ghlUrl: "https://ghl.example.com/courses/advanced-trading",
+    comingSoon: true
+  },
+  { 
+    id: "estate-planning-premium", 
+    name: "Estate Planning (Coming Soon)",
+    ghlUrl: "https://ghl.example.com/courses/estate-planning",
+    comingSoon: true
+  },
 ];
 
 export function SwagEducationMenu() {
+  const handleExternalLink = (e: React.MouseEvent<HTMLDivElement>, url?: string, comingSoon?: boolean) => {
+    if (url && !comingSoon) {
+      e.preventDefault();
+      window.open(url, "_blank", "noopener,noreferrer");
+    }
+  };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -62,11 +91,13 @@ export function SwagEducationMenu() {
         <DropdownMenuSeparator />
         
         {featuredCourses.map((course) => (
-          <Link to={`/education?course=${course.id}`} key={course.id}>
-            <DropdownMenuItem>
-              {course.name}
-            </DropdownMenuItem>
-          </Link>
+          <DropdownMenuItem 
+            key={course.id}
+            onClick={(e) => handleExternalLink(e, course.ghlUrl)}
+            className="cursor-pointer"
+          >
+            {course.name}
+          </DropdownMenuItem>
         ))}
         
         <DropdownMenuSeparator />
@@ -74,7 +105,11 @@ export function SwagEducationMenu() {
         <DropdownMenuSeparator />
         
         {premiumCourses.map((course) => (
-          <DropdownMenuItem className="opacity-70" key={course.id}>
+          <DropdownMenuItem 
+            className={`${course.comingSoon ? "opacity-70" : "cursor-pointer"}`} 
+            key={course.id}
+            onClick={(e) => handleExternalLink(e, course.ghlUrl, course.comingSoon)}
+          >
             {course.name}
           </DropdownMenuItem>
         ))}

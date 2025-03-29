@@ -27,7 +27,8 @@ const coursesByCategory = {
       description: "Learn the basic principles of creating sustainable retirement income.",
       isPaid: false,
       level: "Beginner",
-      duration: "2 hours"
+      duration: "2 hours",
+      ghlUrl: "https://ghl.example.com/courses/retirement-income-fundamentals"
     },
     {
       id: "ri-102",
@@ -35,7 +36,8 @@ const coursesByCategory = {
       description: "Advanced techniques for optimizing your retirement income sources.",
       isPaid: true,
       level: "Intermediate",
-      duration: "3 hours"
+      duration: "3 hours",
+      ghlUrl: "https://ghl.example.com/courses/income-planning-strategies"
     }
   ],
   "social-security": [
@@ -45,7 +47,8 @@ const coursesByCategory = {
       description: "Understanding how Social Security benefits work and when to claim.",
       isPaid: false,
       level: "Beginner",
-      duration: "1.5 hours"
+      duration: "1.5 hours",
+      ghlUrl: "https://ghl.example.com/courses/social-security-basics"
     },
     {
       id: "ss-102",
@@ -53,7 +56,8 @@ const coursesByCategory = {
       description: "Strategies to optimize your Social Security claiming decision.",
       isPaid: true,
       level: "Intermediate",
-      duration: "2.5 hours"
+      duration: "2.5 hours",
+      ghlUrl: "https://ghl.example.com/courses/maximizing-social-security"
     }
   ],
   "income-distribution": [
@@ -63,7 +67,8 @@ const coursesByCategory = {
       description: "Learn how to structure withdrawals from your retirement accounts.",
       isPaid: false,
       level: "Beginner",
-      duration: "2 hours"
+      duration: "2 hours",
+      ghlUrl: "https://ghl.example.com/courses/distribution-planning-101"
     },
     {
       id: "id-102",
@@ -71,7 +76,8 @@ const coursesByCategory = {
       description: "Advanced strategies for minimizing taxes during retirement.",
       isPaid: true,
       level: "Advanced",
-      duration: "3 hours"
+      duration: "3 hours",
+      ghlUrl: "https://ghl.example.com/courses/tax-efficient-withdrawals"
     }
   ],
   "annuities": [
@@ -81,7 +87,8 @@ const coursesByCategory = {
       description: "Understanding different types of annuities and their benefits.",
       isPaid: false,
       level: "Beginner",
-      duration: "1.5 hours"
+      duration: "1.5 hours",
+      ghlUrl: "https://ghl.example.com/courses/annuity-fundamentals"
     },
     {
       id: "an-102",
@@ -90,7 +97,8 @@ const coursesByCategory = {
       isPaid: true,
       level: "Intermediate",
       duration: "2.5 hours",
-      comingSoon: true
+      comingSoon: true,
+      ghlUrl: "https://ghl.example.com/courses/advanced-annuity-strategies"
     }
   ],
   "tax-planning": [
@@ -100,7 +108,8 @@ const coursesByCategory = {
       description: "Fundamental strategies to minimize your tax burden.",
       isPaid: false,
       level: "Beginner",
-      duration: "2 hours"
+      duration: "2 hours",
+      ghlUrl: "https://ghl.example.com/courses/tax-planning-essentials"
     },
     {
       id: "tp-102",
@@ -108,7 +117,8 @@ const coursesByCategory = {
       description: "How to structure investments to minimize taxes.",
       isPaid: true,
       level: "Intermediate",
-      duration: "2.5 hours"
+      duration: "2.5 hours",
+      ghlUrl: "https://ghl.example.com/courses/tax-efficient-investing"
     }
   ],
   "advanced-tax": [
@@ -118,7 +128,8 @@ const coursesByCategory = {
       description: "Complex tax planning techniques for high-net-worth individuals.",
       isPaid: true,
       level: "Advanced",
-      duration: "3 hours"
+      duration: "3 hours",
+      ghlUrl: "https://ghl.example.com/courses/advanced-tax-strategies"
     },
     {
       id: "at-102",
@@ -127,7 +138,8 @@ const coursesByCategory = {
       isPaid: true,
       level: "Advanced",
       duration: "3.5 hours",
-      comingSoon: true
+      comingSoon: true,
+      ghlUrl: "https://ghl.example.com/courses/estate-tax-planning"
     }
   ],
   "wealth-management": [
@@ -137,7 +149,8 @@ const coursesByCategory = {
       description: "Core concepts for building and preserving wealth.",
       isPaid: false,
       level: "Beginner",
-      duration: "2 hours"
+      duration: "2 hours",
+      ghlUrl: "https://ghl.example.com/courses/wealth-building-principles"
     },
     {
       id: "wm-102",
@@ -146,7 +159,8 @@ const coursesByCategory = {
       isPaid: true,
       level: "Advanced",
       duration: "4 hours",
-      comingSoon: true
+      comingSoon: true,
+      ghlUrl: "https://ghl.example.com/courses/advanced-portfolio-management"
     }
   ],
   "estate-planning": [
@@ -156,7 +170,8 @@ const coursesByCategory = {
       description: "Essential elements of creating an estate plan.",
       isPaid: false,
       level: "Beginner",
-      duration: "2 hours"
+      duration: "2 hours",
+      ghlUrl: "https://ghl.example.com/courses/estate-planning-basics"
     },
     {
       id: "ep-102",
@@ -164,7 +179,8 @@ const coursesByCategory = {
       description: "How to use different types of trusts in estate planning.",
       isPaid: true,
       level: "Intermediate",
-      duration: "3 hours"
+      duration: "3 hours",
+      ghlUrl: "https://ghl.example.com/courses/trust-strategies"
     }
   ],
   "florida-residency": [
@@ -174,7 +190,8 @@ const coursesByCategory = {
       description: "Tax and financial benefits of Florida residency.",
       isPaid: false,
       level: "Beginner",
-      duration: "1.5 hours"
+      duration: "1.5 hours",
+      ghlUrl: "https://ghl.example.com/courses/florida-residency-advantages"
     },
     {
       id: "fl-102",
@@ -183,7 +200,8 @@ const coursesByCategory = {
       isPaid: true,
       level: "Intermediate",
       duration: "2 hours",
-      comingSoon: true
+      comingSoon: true,
+      ghlUrl: "https://ghl.example.com/courses/florida-estate-planning"
     }
   ],
   "texas-residency": [
@@ -193,7 +211,8 @@ const coursesByCategory = {
       description: "Tax and financial advantages of Texas residency.",
       isPaid: false,
       level: "Beginner",
-      duration: "1.5 hours"
+      duration: "1.5 hours",
+      ghlUrl: "https://ghl.example.com/courses/texas-residency-benefits"
     },
     {
       id: "tx-102",
@@ -202,7 +221,8 @@ const coursesByCategory = {
       isPaid: true,
       level: "Intermediate",
       duration: "2 hours",
-      comingSoon: true
+      comingSoon: true,
+      ghlUrl: "https://ghl.example.com/courses/texas-estate-planning"
     }
   ]
 };
@@ -215,7 +235,8 @@ const featuredCourses = [
     level: "Beginner",
     duration: "2 hours",
     image: "/placeholder.svg",
-    isPaid: false
+    isPaid: false,
+    ghlUrl: "https://ghl.example.com/courses/financial-fundamentals"
   },
   {
     id: 2,
@@ -224,7 +245,8 @@ const featuredCourses = [
     level: "Beginner",
     duration: "3 hours",
     image: "/placeholder.svg",
-    isPaid: false
+    isPaid: false,
+    ghlUrl: "https://ghl.example.com/courses/investment-strategies-101"
   },
   {
     id: 3,
@@ -233,7 +255,8 @@ const featuredCourses = [
     level: "Beginner",
     duration: "2.5 hours",
     image: "/placeholder.svg",
-    isPaid: false
+    isPaid: false,
+    ghlUrl: "https://ghl.example.com/courses/wealth-building-beginners"
   },
   {
     id: 4,
@@ -243,7 +266,8 @@ const featuredCourses = [
     duration: "5 hours",
     image: "/placeholder.svg",
     isPaid: true,
-    comingSoon: true
+    comingSoon: true,
+    ghlUrl: "https://ghl.example.com/courses/advanced-trading"
   },
   {
     id: 5,
@@ -253,12 +277,19 @@ const featuredCourses = [
     duration: "4 hours",
     image: "/placeholder.svg",
     isPaid: true,
-    comingSoon: true
+    comingSoon: true,
+    ghlUrl: "https://ghl.example.com/courses/estate-planning"
   }
 ];
 
 export default function Education() {
-  const handleCourseEnrollment = (courseId: string | number, title: string, isPaid: boolean) => {
+  const handleCourseEnrollment = (courseId: string | number, title: string, isPaid: boolean, ghlUrl?: string) => {
+    if (ghlUrl) {
+      // If we have a GHL URL, we'll open it directly (this is handled in CourseCard now)
+      return;
+    }
+    
+    // Fallback for if we somehow get here without a URL
     if (isPaid) {
       toast.info(`Redirecting to payment page for ${title}`);
     } else {
@@ -309,7 +340,7 @@ export default function Education() {
                 <CourseCard
                   key={course.id}
                   {...course}
-                  onClick={() => handleCourseEnrollment(course.id, course.title, course.isPaid)}
+                  onClick={() => handleCourseEnrollment(course.id, course.title, course.isPaid, course.ghlUrl)}
                 />
               ))}
             </div>
@@ -323,7 +354,7 @@ export default function Education() {
               <CourseCard
                 key={course.id}
                 {...course}
-                onClick={() => handleCourseEnrollment(course.id, course.title, course.isPaid)}
+                onClick={() => handleCourseEnrollment(course.id, course.title, course.isPaid, course.ghlUrl)}
               />
             ))}
           </div>

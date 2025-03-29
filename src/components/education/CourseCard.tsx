@@ -12,6 +12,7 @@ export interface CourseCardProps {
   level?: string;
   duration?: string;
   comingSoon?: boolean;
+  ghlUrl?: string; // Add URL for the GHL course
   onClick?: () => void;
 }
 
@@ -22,8 +23,19 @@ export function CourseCard({
   level = "Beginner",
   duration = "2-3 hours",
   comingSoon = false,
+  ghlUrl,
   onClick,
 }: CourseCardProps) {
+  const handleButtonClick = () => {
+    if (ghlUrl && !comingSoon) {
+      // Open the GHL URL in a new tab if it exists
+      window.open(ghlUrl, "_blank", "noopener,noreferrer");
+    } else if (onClick) {
+      // Fall back to regular onClick if no URL provided
+      onClick();
+    }
+  };
+
   return (
     <Card className={`h-full flex flex-col ${comingSoon ? "opacity-70" : ""}`}>
       <CardHeader className="pb-3">
@@ -54,7 +66,7 @@ export function CourseCard({
           variant="default" 
           className="w-full" 
           disabled={comingSoon}
-          onClick={onClick}
+          onClick={handleButtonClick}
         >
           {comingSoon ? "Coming Soon" : isPaid ? "Enroll Now" : "Access Course"}
         </Button>
