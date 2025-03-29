@@ -510,7 +510,7 @@ const AlternativeAssetCategory = () => {
           
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="flex">
+              <Button variant="outline" className="flex items-center">
                 <Filter className="h-4 w-4 mr-2" />
                 Filter by Tags
                 {selectedTags.length > 0 && (
@@ -553,7 +553,7 @@ const AlternativeAssetCategory = () => {
           
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline">
+              <Button variant="outline" className="flex items-center">
                 <ArrowUpDown className="h-4 w-4 mr-2" />
                 Sort By
               </Button>
@@ -587,7 +587,7 @@ const AlternativeAssetCategory = () => {
           {filteredInvestments.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredInvestments.map((investment) => (
-                <Card key={investment.id} className="h-full flex flex-col">
+                <Card key={investment.id} className="h-full flex flex-col animate-fade-in">
                   <CardHeader>
                     <CardTitle>{investment.name}</CardTitle>
                     <div className="flex flex-wrap gap-2 mt-2">
@@ -618,8 +618,8 @@ const AlternativeAssetCategory = () => {
                     </div>
                   </CardContent>
                   <CardFooter className="border-t pt-4">
-                    <div className="w-full flex justify-between">
-                      <Button variant="outline" size="sm" className="w-full mr-2">
+                    <div className="w-full flex justify-between gap-2">
+                      <Button variant="outline" size="sm" className="w-full">
                         <Info className="h-4 w-4 mr-2" />
                         Details
                       </Button>
