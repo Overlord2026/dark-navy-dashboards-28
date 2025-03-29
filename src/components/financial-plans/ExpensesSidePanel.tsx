@@ -14,7 +14,10 @@ import {
 export interface ExpenseData {
   id: string;
   name: string;
-  type: "Living" | "Healthcare" | "Education" | "Other" | "Taxes and fees" | "Debt" | "Alimony";
+  type: "Living" | "Healthcare" | "Education" | "Housing" | "Transportation" | "Food" | 
+        "Utilities" | "Insurance" | "Debt" | "Childcare" | "Entertainment" | 
+        "Travel" | "Gifts" | "Taxes and fees" | "Alimony" | "Retirement" | 
+        "Business" | "Other";
   period: "Before Retirement" | "After Retirement";
   amount: number;
   owner: string;
@@ -84,8 +87,32 @@ export const ExpensesSidePanel = ({ isOpen, onClose, expense, onSave }: Expenses
     return formData.period;
   };
 
+  // Comprehensive list of expense types
+  const expenseTypes = [
+    { value: "Living", label: "Living Expenses" },
+    { value: "Housing", label: "Housing" },
+    { value: "Transportation", label: "Transportation" },
+    { value: "Food", label: "Food & Groceries" },
+    { value: "Utilities", label: "Utilities" },
+    { value: "Healthcare", label: "Healthcare" },
+    { value: "Insurance", label: "Insurance" },
+    { value: "Debt", label: "Debt Payments" },
+    { value: "Education", label: "Education" },
+    { value: "Childcare", label: "Childcare" },
+    { value: "Entertainment", label: "Entertainment" },
+    { value: "Travel", label: "Travel" },
+    { value: "Gifts", label: "Gifts & Donations" },
+    { value: "Taxes and fees", label: "Taxes & Fees" },
+    { value: "Alimony", label: "Alimony & Child Support" },
+    { value: "Retirement", label: "Retirement Savings" },
+    { value: "Business", label: "Business Expenses" },
+    { value: "Other", label: "Other Expenses" },
+  ];
+
   // Conditional info message for Living expenses
   const showLivingExpensesInfo = formData.type === "Living";
+  const showHousingInfo = formData.type === "Housing";
+  const showHealthcareInfo = formData.type === "Healthcare";
 
   return (
     <div className="fixed inset-0 z-50 flex justify-end">
@@ -111,6 +138,24 @@ export const ExpensesSidePanel = ({ isOpen, onClose, expense, onSave }: Expenses
                 <Info className="h-5 w-5 text-blue-500 mt-0.5 flex-shrink-0" />
                 <p className="text-sm text-gray-300">
                   Do not include any debt payments (e.g. mortgage) in living expenses.
+                </p>
+              </div>
+            )}
+
+            {showHousingInfo && (
+              <div className="bg-blue-950 border border-blue-800 rounded-md p-4 flex items-start space-x-3">
+                <Info className="h-5 w-5 text-blue-500 mt-0.5 flex-shrink-0" />
+                <p className="text-sm text-gray-300">
+                  Include mortgage or rent, property taxes, home insurance, and maintenance.
+                </p>
+              </div>
+            )}
+
+            {showHealthcareInfo && (
+              <div className="bg-blue-950 border border-blue-800 rounded-md p-4 flex items-start space-x-3">
+                <Info className="h-5 w-5 text-blue-500 mt-0.5 flex-shrink-0" />
+                <p className="text-sm text-gray-300">
+                  Remember to account for Medicare premiums and potential long-term care needs after retirement.
                 </p>
               </div>
             )}
@@ -141,6 +186,25 @@ export const ExpensesSidePanel = ({ isOpen, onClose, expense, onSave }: Expenses
                     </SelectContent>
                   </Select>
                 </div>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm text-gray-400">Type</label>
+                <Select
+                  value={formData.type}
+                  onValueChange={(value) => handleChange("type", value)}
+                >
+                  <SelectTrigger className="bg-[#1A2333] border-blue-900/30 text-white">
+                    <SelectValue placeholder="Select expense type" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-[#0A1022] border-blue-900/30 max-h-[300px]">
+                    {expenseTypes.map((type) => (
+                      <SelectItem key={type.value} value={type.value}>
+                        {type.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
 
               <div className="grid grid-cols-2 gap-6">
