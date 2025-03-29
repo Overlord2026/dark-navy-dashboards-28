@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { SetupChecklist } from "@/components/profile/SetupChecklist";
@@ -36,7 +37,7 @@ const CustomerProfile = () => {
     name: "Daniel Herrera",
     title: "Certified Financial Planner™",
     location: "Tampa, FL",
-    email: "daniel.herrera@bfo.com",
+    email: "daniel.herrera@awmfl.com",
     phone: "(800) 555-1234",
     office: "New York, NY",
     bio: "Daniel, a seasoned finance professional, guides high net worth investors. His approach blends investment management, risk mitigation, tax optimization, and overall strategy. Starting at Vanguard, then UBS, he directed client acquisition at Fisher Investments before joining BFO. Originally from Asheville, NC, Daniel now resides in Tampa, enjoying fitness, community activities, and sunny days by the water."
