@@ -4,15 +4,17 @@ import { coursesByCategory } from './coursesByCategory';
 import { featuredCourses } from './featuredCourses';
 import { popularCourses } from './popularCourses';
 
-export const getCoursesByCategory = (category: CourseCategory): Course[] => {
-  return coursesByCategory[category] || [];
+export const getCoursesByCategory = (categoryId: string): Course[] => {
+  // Type-safe access to coursesByCategory using categoryId as index
+  return (coursesByCategory as any)[categoryId] || [];
 };
 
 export const getAllCourses = (): Course[] => {
   const allCourses: Course[] = [];
   
-  Object.values(coursesByCategory).forEach((categoryCourses) => {
-    allCourses.push(...categoryCourses);
+  // Safely iterate over the coursesByCategory object
+  Object.keys(coursesByCategory).forEach((categoryId) => {
+    allCourses.push(...(coursesByCategory as any)[categoryId]);
   });
   
   return allCourses;
@@ -26,7 +28,7 @@ export const getPopularCourses = (): Course[] => {
   return popularCourses;
 };
 
-export const getRelatedCourses = (courseId: string, category: CourseCategory): Course[] => {
-  const categoryCourses = getCoursesByCategory(category);
+export const getRelatedCourses = (courseId: string, categoryId: string): Course[] => {
+  const categoryCourses = getCoursesByCategory(categoryId);
   return categoryCourses.filter(course => course.id !== courseId).slice(0, 3);
 };
