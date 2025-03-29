@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { ProfessionalsDirectory } from "@/components/professionals/ProfessionalsDirectory";
 import { AddProfessionalDialog } from "@/components/professionals/AddProfessionalDialog";
+import { ConsultationsPrompt } from "@/components/professionals/ConsultationsPrompt";
 import { Button } from "@/components/ui/button";
 import { UserPlus, ExternalLink } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -36,6 +37,8 @@ export default function Professionals() {
             Add Professional
           </Button>
         </div>
+
+        <ConsultationsPrompt />
 
         <div className="bg-card p-4 rounded-lg border border-border">
           <h2 className="text-lg font-medium mb-3">Are you a Professional?</h2>

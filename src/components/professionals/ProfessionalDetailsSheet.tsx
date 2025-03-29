@@ -9,8 +9,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { ProfessionalType, Professional } from "@/types/professional";
 import { useProfessionals } from "@/hooks/useProfessionals";
 import { Badge } from "@/components/ui/badge";
-import { Trash2, Mail, Phone, Globe, MapPin, Star } from "lucide-react";
+import { Trash2, Mail, Phone, Globe, MapPin, Star, Calendar, FileText } from "lucide-react";
 import { toast } from "sonner";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
 interface ProfessionalDetailsSheetProps {
   isOpen: boolean;
@@ -26,6 +27,11 @@ export function ProfessionalDetailsSheet({
   const { updateProfessional, removeProfessional } = useProfessionals();
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState<Professional | null>(null);
+  const [isConsultationDialogOpen, setIsConsultationDialogOpen] = useState(false);
+  const [isProposalDialogOpen, setIsProposalDialogOpen] = useState(false);
+  const [consultationDate, setConsultationDate] = useState("");
+  const [consultationTime, setConsultationTime] = useState("");
+  const [proposalDetails, setProposalDetails] = useState("");
 
   useEffect(() => {
     if (professional) {
@@ -61,6 +67,28 @@ export function ProfessionalDetailsSheet({
       onOpenChange(false);
       toast.success("Professional removed successfully");
     }
+  };
+
+  const handleBookConsultation = () => {
+    if (!consultationDate || !consultationTime) {
+      toast.error("Please select both date and time");
+      return;
+    }
+
+    // In a real app, this would send a request to the professional
+    toast.success(`Consultation booked with ${formData.name} for ${consultationDate} at ${consultationTime}`);
+    setIsConsultationDialogOpen(false);
+  };
+
+  const handleRequestProposal = () => {
+    if (!proposalDetails.trim()) {
+      toast.error("Please provide details for your proposal request");
+      return;
+    }
+
+    // In a real app, this would send the proposal request to the professional
+    toast.success(`Proposal request sent to ${formData.name}`);
+    setIsProposalDialogOpen(false);
   };
 
   return (
@@ -148,6 +176,85 @@ export function ProfessionalDetailsSheet({
                   <p className="whitespace-pre-wrap">{formData.notes}</p>
                 </div>
               )}
+              
+              <div className="space-y-3 pt-4 border-t">
+                <h3 className="font-medium">Connect with {formData.name}</h3>
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <Dialog open={isConsultationDialogOpen} onOpenChange={setIsConsultationDialogOpen}>
+                    <DialogTrigger asChild>
+                      <Button variant="outline" className="flex items-center gap-2">
+                        <Calendar className="h-4 w-4" />
+                        Book Free Consultation
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Book a 15-Minute Consultation</DialogTitle>
+                        <DialogDescription>
+                          Schedule a free consultation with {formData.name} to discuss your needs.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="space-y-4 py-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="consultation-date">Preferred Date</Label>
+                          <Input 
+                            id="consultation-date" 
+                            type="date" 
+                            value={consultationDate}
+                            onChange={(e) => setConsultationDate(e.target.value)}
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="consultation-time">Preferred Time</Label>
+                          <Input 
+                            id="consultation-time" 
+                            type="time" 
+                            value={consultationTime}
+                            onChange={(e) => setConsultationTime(e.target.value)}
+                          />
+                        </div>
+                      </div>
+                      <DialogFooter>
+                        <Button variant="outline" onClick={() => setIsConsultationDialogOpen(false)}>Cancel</Button>
+                        <Button onClick={handleBookConsultation}>Book Consultation</Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                  
+                  <Dialog open={isProposalDialogOpen} onOpenChange={setIsProposalDialogOpen}>
+                    <DialogTrigger asChild>
+                      <Button variant="outline" className="flex items-center gap-2">
+                        <FileText className="h-4 w-4" />
+                        Request Proposal
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Request a Detailed Proposal</DialogTitle>
+                        <DialogDescription>
+                          Provide details about your needs to receive a customized proposal from {formData.name}.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="space-y-4 py-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="proposal-details">Project Details</Label>
+                          <Textarea 
+                            id="proposal-details" 
+                            placeholder="Describe your needs, timeline, and any specific requirements"
+                            className="min-h-[150px]"
+                            value={proposalDetails}
+                            onChange={(e) => setProposalDetails(e.target.value)}
+                          />
+                        </div>
+                      </div>
+                      <DialogFooter>
+                        <Button variant="outline" onClick={() => setIsProposalDialogOpen(false)}>Cancel</Button>
+                        <Button onClick={handleRequestProposal}>Request Proposal</Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                </div>
+              </div>
             </div>
           ) : (
             // Edit mode
