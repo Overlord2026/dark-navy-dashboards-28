@@ -1,11 +1,10 @@
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ExternalLinkIcon, PlusCircleIcon, TrashIcon, UserIcon, CalendarIcon } from "lucide-react";
+import { ExternalLinkIcon, PlusCircleIcon, TrashIcon, UserIcon, CalendarIcon, BellRingIcon } from "lucide-react";
 import { toast } from "sonner";
 import { useUser } from "@/context/UserContext";
 
@@ -113,6 +112,11 @@ export const SocialSecurityTracker = () => {
     return monthlyEstimate * 12;
   };
 
+  const handleGetAssistance = () => {
+    toast.success("Your request for assistance has been sent to your advisor");
+    // In a real app, this would send a notification to the advisor
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -120,56 +124,62 @@ export const SocialSecurityTracker = () => {
           <h2 className="text-xl font-semibold">Family Social Security Estimates</h2>
           <p className="text-muted-foreground">Track and manage social security benefits for your family members</p>
         </div>
-        <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-          <DialogTrigger asChild>
-            <Button>
-              <PlusCircleIcon className="h-4 w-4 mr-2" />
-              Add Family Member
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Add Family Member</DialogTitle>
-              <DialogDescription>
-                Add a family member to track their social security benefits.
-              </DialogDescription>
-            </DialogHeader>
-            <div className="space-y-4 py-4">
-              <div className="space-y-2">
-                <Label htmlFor="name">Name</Label>
-                <Input 
-                  id="name" 
-                  placeholder="Enter name" 
-                  value={newMember.name}
-                  onChange={(e) => setNewMember({...newMember, name: e.target.value})}
-                />
+        <div className="flex gap-3">
+          <Button variant="outline" onClick={handleGetAssistance}>
+            <BellRingIcon className="h-4 w-4 mr-2" />
+            Get Assistance
+          </Button>
+          <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+            <DialogTrigger asChild>
+              <Button>
+                <PlusCircleIcon className="h-4 w-4 mr-2" />
+                Add Family Member
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Add Family Member</DialogTitle>
+                <DialogDescription>
+                  Add a family member to track their social security benefits.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-4 py-4">
+                <div className="space-y-2">
+                  <Label htmlFor="name">Name</Label>
+                  <Input 
+                    id="name" 
+                    placeholder="Enter name" 
+                    value={newMember.name}
+                    onChange={(e) => setNewMember({...newMember, name: e.target.value})}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="relationship">Relationship</Label>
+                  <Input 
+                    id="relationship" 
+                    placeholder="E.g., Spouse, Child, Parent" 
+                    value={newMember.relationship}
+                    onChange={(e) => setNewMember({...newMember, relationship: e.target.value})}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="retirement-age">Preferred Retirement Age</Label>
+                  <Input 
+                    id="retirement-age" 
+                    type="number" 
+                    value={newMember.preferredRetirementAge}
+                    onChange={(e) => setNewMember({...newMember, preferredRetirementAge: Number(e.target.value)})}
+                  />
+                  <p className="text-xs text-muted-foreground">After linking to SSA.gov, we'll show estimates for various retirement ages</p>
+                </div>
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="relationship">Relationship</Label>
-                <Input 
-                  id="relationship" 
-                  placeholder="E.g., Spouse, Child, Parent" 
-                  value={newMember.relationship}
-                  onChange={(e) => setNewMember({...newMember, relationship: e.target.value})}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="retirement-age">Preferred Retirement Age</Label>
-                <Input 
-                  id="retirement-age" 
-                  type="number" 
-                  value={newMember.preferredRetirementAge}
-                  onChange={(e) => setNewMember({...newMember, preferredRetirementAge: Number(e.target.value)})}
-                />
-                <p className="text-xs text-muted-foreground">After linking to SSA.gov, we'll show estimates for various retirement ages</p>
-              </div>
-            </div>
-            <DialogFooter>
-              <Button variant="outline" onClick={() => setIsAddDialogOpen(false)}>Cancel</Button>
-              <Button onClick={handleAddMember}>Add Member</Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setIsAddDialogOpen(false)}>Cancel</Button>
+                <Button onClick={handleAddMember}>Add Member</Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </div>
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
