@@ -11,7 +11,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CourseCard } from "./CourseCard";
 import { CourseList } from "./CourseList";
 import { handleCourseAccess } from './courseUtils';
 import { Button } from "@/components/ui/button";
