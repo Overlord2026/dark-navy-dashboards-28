@@ -1,10 +1,14 @@
-
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CourseCategories } from "./CourseCategories";
 import { CourseList } from "./CourseList";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { courseCategories, coursesByCategory, educationalResources, featuredCourses } from "@/data/courseData";
+import { 
+  courseCategories, 
+  coursesByCategory, 
+  educationalResources, 
+  featuredCourses 
+} from "@/data/education";
 import { CourseCard } from "./CourseCard";
 
 interface EducationalTabsProps {

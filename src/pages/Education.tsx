@@ -1,10 +1,9 @@
-
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { toast } from "sonner";
 import { useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { EducationalTabs } from "@/components/education/EducationalTabs";
-import { courseCategories } from "@/data/courseData";
+import { courseCategories } from "@/data/education";
 
 export default function Education() {
   const [searchParams] = useSearchParams();

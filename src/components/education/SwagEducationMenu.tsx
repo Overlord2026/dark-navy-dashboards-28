@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { GraduationCapIcon } from 'lucide-react';
 import {
@@ -15,7 +14,7 @@ import { CourseList } from "./CourseList";
 import { handleCourseAccess } from './courseUtils';
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { courseCategories, featuredCourses, popularCourses } from "@/data/courseData";
+import { courseCategories, featuredCourses, popularCourses } from "@/data/education";
 
 export const SwagEducationMenu = () => {
   const [activeTab, setActiveTab] = useState<string>("featured");
