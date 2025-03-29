@@ -4,6 +4,7 @@ import { useSubscription } from '@/context/SubscriptionContext';
 import { Button } from '@/components/ui/button';
 import { Lock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { Badge } from '@/components/ui/badge';
 
 interface FeatureGateProps {
   featureId: string;
@@ -12,7 +13,12 @@ interface FeatureGateProps {
 }
 
 export function FeatureGate({ featureId, children, fallback }: FeatureGateProps) {
-  const { isFeatureAvailable, isUpgradeRequired } = useSubscription();
+  const { 
+    isFeatureAvailable, 
+    isUpgradeRequired, 
+    isInFreeTrial, 
+    daysRemainingInTrial 
+  } = useSubscription();
   const navigate = useNavigate();
   
   if (isFeatureAvailable(featureId)) {
@@ -29,14 +35,34 @@ export function FeatureGate({ featureId, children, fallback }: FeatureGateProps)
         <Lock className="h-8 w-8 text-primary" />
       </div>
       <h3 className="text-xl font-semibold">Premium Feature</h3>
-      <p className="text-muted-foreground max-w-md">
-        This feature requires a higher subscription tier to access.
-      </p>
+      
+      {isInFreeTrial ? (
+        <>
+          <div className="flex items-center gap-2 mb-2">
+            <Badge variant="outline" className="bg-amber-100 text-amber-800 border-amber-300">
+              Trial Preview
+            </Badge>
+            {daysRemainingInTrial !== null && (
+              <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20">
+                {daysRemainingInTrial} days left
+              </Badge>
+            )}
+          </div>
+          <p className="text-muted-foreground max-w-md">
+            This feature is only available in our Elite tier. Upgrade today to unlock all features.
+          </p>
+        </>
+      ) : (
+        <p className="text-muted-foreground max-w-md">
+          This feature requires a higher subscription tier to access.
+        </p>
+      )}
+      
       <Button 
         onClick={() => navigate('/subscription')}
         className="mt-4"
       >
-        Upgrade Subscription
+        {isInFreeTrial ? 'Explore Elite Features' : 'Upgrade Subscription'}
       </Button>
     </div>
   );
