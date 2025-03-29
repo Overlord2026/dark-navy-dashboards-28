@@ -8,9 +8,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { ProfessionalType, Professional } from "@/types/professional";
 import { useProfessionals } from "@/hooks/useProfessionals";
-import { useToast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
 import { Trash2, Mail, Phone, Globe, MapPin, Star } from "lucide-react";
+import { toast } from "sonner";
 
 interface ProfessionalDetailsSheetProps {
   isOpen: boolean;
@@ -24,7 +24,6 @@ export function ProfessionalDetailsSheet({
   professional 
 }: ProfessionalDetailsSheetProps) {
   const { updateProfessional, removeProfessional } = useProfessionals();
-  const { toast } = useToast();
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState<Professional | null>(null);
 
@@ -47,30 +46,20 @@ export function ProfessionalDetailsSheet({
 
   const handleSave = () => {
     if (!formData || !formData.name || !formData.type) {
-      toast({
-        title: "Error",
-        description: "Name and type are required fields",
-        variant: "destructive",
-      });
+      toast.error("Name and type are required fields");
       return;
     }
 
     updateProfessional(formData);
     setIsEditing(false);
-    toast({
-      title: "Success",
-      description: "Professional updated successfully",
-    });
+    toast.success("Professional updated successfully");
   };
 
   const handleDelete = () => {
     if (window.confirm("Are you sure you want to remove this professional?")) {
       removeProfessional(formData.id);
       onOpenChange(false);
-      toast({
-        title: "Success",
-        description: "Professional removed successfully",
-      });
+      toast.success("Professional removed successfully");
     }
   };
 

@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ProfessionalType } from "@/types/professional";
 import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 
 interface AddProfessionalDialogProps {
   isOpen: boolean;
@@ -17,7 +17,6 @@ interface AddProfessionalDialogProps {
 
 export function AddProfessionalDialog({ isOpen, onOpenChange }: AddProfessionalDialogProps) {
   const { addProfessional } = useProfessionals();
-  const { toast } = useToast();
   const [formData, setFormData] = useState({
     name: "",
     type: "" as ProfessionalType,
@@ -43,20 +42,12 @@ export function AddProfessionalDialog({ isOpen, onOpenChange }: AddProfessionalD
     
     // Validation for required fields
     if (!formData.name) {
-      toast({
-        title: "Error",
-        description: "Name is required",
-        variant: "destructive",
-      });
+      toast.error("Name is required");
       return;
     }
     
     if (!formData.type) {
-      toast({
-        title: "Error",
-        description: "Professional type is required",
-        variant: "destructive",
-      });
+      toast.error("Professional type is required");
       return;
     }
 
@@ -75,10 +66,7 @@ export function AddProfessionalDialog({ isOpen, onOpenChange }: AddProfessionalD
 
     addProfessional(newProfessional);
     
-    toast({
-      title: "Success",
-      description: "Professional added successfully",
-    });
+    toast.success("Professional added successfully");
     
     // Reset form and close dialog
     setFormData({
