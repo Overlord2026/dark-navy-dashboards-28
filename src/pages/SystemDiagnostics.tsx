@@ -4,8 +4,9 @@ import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { runDiagnostics } from "@/services/diagnosticsService";
-import { AlertCircle, CheckCircle, AlertTriangle, RefreshCw } from "lucide-react";
+import { AlertCircle, CheckCircle, AlertTriangle, RefreshCw, Link, Lock, Eye } from "lucide-react";
 import { toast } from "sonner";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function SystemDiagnostics() {
   const [isLoading, setIsLoading] = useState(false);
@@ -58,6 +59,24 @@ export default function SystemDiagnostics() {
       recs.push("Review authentication flows for potential security improvements.");
     }
     
+    // New recommendations based on navigation tests
+    const failedNavTests = report.navigationTests.filter((test: any) => test.status === 'error' || test.status === 'warning');
+    if (failedNavTests.length > 0) {
+      recs.push(`Fix navigation issues with routes: ${failedNavTests.map((t: any) => t.route).join(', ')}`);
+    }
+    
+    // New recommendations based on permission tests
+    const failedPermTests = report.permissionsTests.filter((test: any) => test.status === 'error' || test.status === 'warning');
+    if (failedPermTests.length > 0) {
+      recs.push(`Review permission configuration for roles: ${[...new Set(failedPermTests.map((t: any) => t.role))].join(', ')}`);
+    }
+    
+    // New recommendations based on icon tests
+    const failedIconTests = report.iconTests.filter((test: any) => test.status === 'error' || test.status === 'warning');
+    if (failedIconTests.length > 0) {
+      recs.push(`Fix icon display issues in: ${[...new Set(failedIconTests.map((t: any) => t.location))].join(', ')}`);
+    }
+    
     // Add general recommendations
     recs.push("Consider implementing periodic automated health checks to monitor system performance.");
     
@@ -105,7 +124,7 @@ export default function SystemDiagnostics() {
 
   return (
     <ThreeColumnLayout title="System Diagnostics">
-      <div className="space-y-6 p-4 max-w-5xl mx-auto">
+      <div className="space-y-6 p-4 max-w-6xl mx-auto">
         <div className="mb-6">
           <h1 className="text-2xl font-bold">System Health Check</h1>
           <p className="text-muted-foreground mt-1">
@@ -133,24 +152,135 @@ export default function SystemDiagnostics() {
 
         {report ? (
           <div className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {Object.entries(report).filter(([key]) => key !== 'overall' && key !== 'timestamp').map(([key, value]: [string, any]) => (
-                <Card key={key} className={`border ${getStatusColor(value.status)}`}>
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-lg flex items-center gap-2">
-                      {getStatusIcon(value.status)}
-                      {key.charAt(0).toUpperCase() + key.slice(1)}
+            <Tabs defaultValue="summary" className="w-full">
+              <TabsList className="grid grid-cols-4 mb-4">
+                <TabsTrigger value="summary">Core Services</TabsTrigger>
+                <TabsTrigger value="navigation">Navigation</TabsTrigger>
+                <TabsTrigger value="permissions">Permissions</TabsTrigger>
+                <TabsTrigger value="icons">Icons</TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="summary">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {Object.entries(report)
+                    .filter(([key]) => 
+                      key !== 'overall' && 
+                      key !== 'timestamp' && 
+                      key !== 'navigationTests' && 
+                      key !== 'permissionsTests' && 
+                      key !== 'iconTests')
+                    .map(([key, value]: [string, any]) => (
+                      <Card key={key} className={`border ${getStatusColor(value.status)}`}>
+                        <CardHeader className="pb-2">
+                          <CardTitle className="text-lg flex items-center gap-2">
+                            {getStatusIcon(value.status)}
+                            {key.charAt(0).toUpperCase() + key.slice(1)}
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <p>{value.message}</p>
+                          {value.details && (
+                            <p className="text-sm text-muted-foreground mt-2">{value.details}</p>
+                          )}
+                        </CardContent>
+                      </Card>
+                    ))}
+                </div>
+              </TabsContent>
+              
+              <TabsContent value="navigation">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Link className="h-5 w-5" />
+                      Navigation Route Tests
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p>{value.message}</p>
-                    {value.details && (
-                      <p className="text-sm text-muted-foreground mt-2">{value.details}</p>
-                    )}
+                    <div className="space-y-3">
+                      {report.navigationTests.map((test: any, index: number) => (
+                        <div key={index} className={`p-3 rounded-md border ${getStatusColor(test.status)}`}>
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                              {getStatusIcon(test.status)}
+                              <span className="font-medium">{test.route}</span>
+                            </div>
+                            <span className="text-sm px-2 py-1 rounded-full bg-muted">
+                              {test.status}
+                            </span>
+                          </div>
+                          <p className="text-sm mt-1">{test.message}</p>
+                        </div>
+                      ))}
+                    </div>
                   </CardContent>
                 </Card>
-              ))}
-            </div>
+              </TabsContent>
+              
+              <TabsContent value="permissions">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Lock className="h-5 w-5" />
+                      Permission Tests
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      {report.permissionsTests.map((test: any, index: number) => (
+                        <div key={index} className={`p-3 rounded-md border ${getStatusColor(test.status)}`}>
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-start gap-2">
+                              {getStatusIcon(test.status)}
+                              <div>
+                                <span className="font-medium">Role: {test.role}</span>
+                                <p className="text-sm">Permission: {test.permission}</p>
+                              </div>
+                            </div>
+                            <span className="text-sm px-2 py-1 rounded-full bg-muted">
+                              {test.status}
+                            </span>
+                          </div>
+                          <p className="text-sm mt-1">{test.message}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+              
+              <TabsContent value="icons">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Eye className="h-5 w-5" />
+                      Icon Tests
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      {report.iconTests.map((test: any, index: number) => (
+                        <div key={index} className={`p-3 rounded-md border ${getStatusColor(test.status)}`}>
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-start gap-2">
+                              {getStatusIcon(test.status)}
+                              <div>
+                                <span className="font-medium">{test.icon}</span>
+                                <p className="text-sm">Location: {test.location}</p>
+                              </div>
+                            </div>
+                            <span className="text-sm px-2 py-1 rounded-full bg-muted">
+                              {test.status}
+                            </span>
+                          </div>
+                          <p className="text-sm mt-1">{test.message}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+            </Tabs>
 
             <Card>
               <CardHeader>
