@@ -55,8 +55,14 @@ const CATEGORY_DATA = {
         minimumInvestment: "$250,000",
         performance: "+18.5% IRR",
         lockupPeriod: "7-10 years",
+        lockUp: "7-10 years",
         firm: "Vista Equity Partners",
         tags: ["Technology", "Growth Stage", "North America"],
+        platform: "CAIS",
+        category: "Growth Equity",
+        investorQualification: "Qualified Purchaser",
+        liquidity: "Quarterly after 2-year lock-up",
+        subscriptions: "Monthly",
         strategy: {
           overview: "Focus on high-growth technology companies",
           approach: "Value-add operational improvements",
@@ -92,6 +98,7 @@ interface Offering {
   minimumInvestment: string;
   performance: string;
   lockupPeriod: string;
+  lockUp: string;
   firm: string;
   tags: string[];
   strategy: Strategy;
@@ -100,7 +107,6 @@ interface Offering {
   investorQualification?: string;
   liquidity?: string;
   subscriptions?: string;
-  lockUp?: string;
 }
 
 interface CategoryData {
@@ -112,15 +118,15 @@ interface CategoryData {
 }
 
 const AlternativeAssetCategory = () => {
-  const { category } = useParams<{ category: string }>();
+  const { categoryId } = useParams<{ categoryId: string }>();
   const [activeTab, setActiveTab] = useState("offerings");
   const [categoryData, setCategoryData] = useState<CategoryData | null>(null);
 
   useEffect(() => {
-    if (category && CATEGORY_DATA[category as keyof typeof CATEGORY_DATA]) {
-      setCategoryData(CATEGORY_DATA[category as keyof typeof CATEGORY_DATA]);
+    if (categoryId && CATEGORY_DATA[categoryId as keyof typeof CATEGORY_DATA]) {
+      setCategoryData(CATEGORY_DATA[categoryId as keyof typeof CATEGORY_DATA]);
     }
-  }, [category]);
+  }, [categoryId]);
 
   const renderOfferingCard = (offering: Offering) => (
     <Card key={offering.id} className="overflow-hidden hover:shadow-md transition-shadow duration-300">
@@ -170,7 +176,7 @@ const AlternativeAssetCategory = () => {
               <SheetHeader className="mb-6">
                 <div className="flex items-center gap-2">
                   <Button variant="ghost" size="icon" asChild>
-                    <Link to={`/investments/alternative/${category}`}>
+                    <Link to={`/investments/alternative/${categoryId}`}>
                       <ChevronLeft className="h-4 w-4" />
                     </Link>
                   </Button>
@@ -561,7 +567,7 @@ const AlternativeAssetCategory = () => {
       <div className="mb-6">
         <div className="flex items-center gap-2 mb-6">
           <Button variant="ghost" size="icon" asChild>
-            <Link to="/investments/alternative">
+            <Link to="/investments">
               <ChevronLeft className="h-4 w-4" />
             </Link>
           </Button>
