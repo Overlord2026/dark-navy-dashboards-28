@@ -59,4 +59,6 @@ export interface PropertyFormData {
   rental?: RentalDetails;
   business?: BusinessDetails;
   notes?: string;
+  id?: string;
+  valuation?: PropertyValuation;
 }

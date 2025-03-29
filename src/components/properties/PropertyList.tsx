@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Property, PropertyType } from "@/types/property";
-import { Edit, Trash2, Home, Building, Umbrella, Briefcase, Refresh, ExternalLink } from "lucide-react";
+import { Edit, Trash2, Home, Building, Umbrella, Briefcase, RefreshCw, ExternalLink } from "lucide-react";
 import { useTheme } from "@/context/ThemeContext";
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { getPropertyValuation } from "@/services/propertyValuationService";
@@ -152,7 +152,7 @@ export const PropertyList: React.FC<PropertyListProps> = ({
                                   {loadingValuation === property.id ? (
                                     <div className="h-3 w-3 rounded-full border-2 border-t-transparent border-blue-500 animate-spin" />
                                   ) : (
-                                    <Refresh className="h-3 w-3" />
+                                    <RefreshCw className="h-3 w-3" />
                                   )}
                                 </Button>
                               </TooltipTrigger>
