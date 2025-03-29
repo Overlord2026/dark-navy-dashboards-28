@@ -5,6 +5,7 @@ import { Trophy, Clock, ExternalLink } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { useState } from "react";
+import { handleCourseAccess, initiateStripeCheckout } from "./courseUtils";
 
 export interface CourseCardProps {
   id: string | number;
@@ -39,7 +40,8 @@ export function CourseCard({
     
     if (isPaid) {
       // For paid courses, initiate Stripe checkout
-      initiateStripeCheckout();
+      initiateStripeCheckout(id, title, ghlUrl, () => setIsProcessing(false));
+      setIsProcessing(true);
     } else if (ghlUrl) {
       // For free courses, directly open the GHL URL
       toast.success(`Accessing ${title}...`);
@@ -50,52 +52,6 @@ export function CourseCard({
       // Fallback to regular onClick if no URL provided
       onClick();
     }
-  };
-
-  const initiateStripeCheckout = () => {
-    setIsProcessing(true);
-    
-    // Simulate Stripe checkout process with a delay
-    toast.info("Preparing checkout page...");
-    
-    // This simulates a network request to create a Stripe Checkout session
-    setTimeout(() => {
-      toast.loading("Processing payment...", { duration: 2000 });
-      
-      // In a real implementation, we would redirect to Stripe Checkout here
-      // In this simulation, we'll use a setTimeout to simulate the payment process
-      setTimeout(() => {
-        // Simulate successful payment
-        toast.success("Payment processed successfully!");
-        
-        // After successful payment, simulate granting access to the course
-        setTimeout(() => {
-          setIsProcessing(false);
-          
-          // Grant access to the course by opening the GHL URL
-          if (ghlUrl) {
-            toast("You now have access to this course!", {
-              description: "Opening course in a new tab...",
-              action: {
-                label: "Open Course",
-                onClick: () => window.open(ghlUrl, "_blank", "noopener,noreferrer")
-              },
-            });
-            
-            setTimeout(() => {
-              window.open(ghlUrl, "_blank", "noopener,noreferrer");
-            }, 500);
-          }
-        }, 1000);
-      }, 2000);
-    }, 1500);
-    
-    // In a real implementation, you would:
-    // 1. Call your backend to create a Stripe Checkout session
-    // 2. Redirect the user to the Stripe Checkout page
-    // 3. Handle the webhook from Stripe to confirm payment
-    // 4. Grant access to the course in your database
-    // 5. Redirect the user to the course
   };
 
   return (

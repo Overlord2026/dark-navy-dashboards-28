@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { useState } from "react";
+import { handleCourseAccess } from "./courseUtils";
 
 const courseCategories = [
   { id: "all-courses", name: "All Courses" },
@@ -80,43 +81,7 @@ export function SwagEducationMenu() {
       return;
     }
     
-    if (course.isPaid) {
-      // For paid courses, simulate Stripe checkout process
-      setIsProcessing(course.id);
-      toast.info("Preparing checkout page...");
-      
-      // Simulate payment process
-      setTimeout(() => {
-        toast.loading("Processing payment...", { duration: 2000 });
-        
-        setTimeout(() => {
-          toast.success("Payment processed successfully!");
-          
-          setTimeout(() => {
-            setIsProcessing(null);
-            if (course.ghlUrl) {
-              toast("You now have access to this course!", {
-                description: "Opening course in a new tab...",
-                action: {
-                  label: "Open Course",
-                  onClick: () => window.open(course.ghlUrl, "_blank", "noopener,noreferrer")
-                },
-              });
-              
-              setTimeout(() => {
-                window.open(course.ghlUrl, "_blank", "noopener,noreferrer");
-              }, 500);
-            }
-          }, 1000);
-        }, 2000);
-      }, 1500);
-    } else if (course.ghlUrl) {
-      // For free courses, directly open the GHL URL
-      toast.success(`Accessing ${course.name}...`);
-      setTimeout(() => {
-        window.open(course.ghlUrl, "_blank", "noopener,noreferrer");
-      }, 500);
-    }
+    handleCourseAccess(course.id, course.name, course.isPaid, course.ghlUrl, setIsProcessing);
   };
 
   return (
