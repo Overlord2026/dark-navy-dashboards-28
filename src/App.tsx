@@ -20,16 +20,17 @@ import Insurance from "./pages/Insurance";
 import Sharing from "./pages/Sharing";
 import Transfers from "./pages/Transfers";
 import NotFound from "./pages/NotFound";
-import { ThemeProvider } from "./components/theme-provider";
+import { ThemeProvider as CustomThemeProvider } from "./context/ThemeContext";
 import { UserProvider } from "@/context/UserContext";
 
 // Import the ProfessionalsProvider
 import { ProfessionalsProvider } from "./hooks/useProfessionals";
 import Professionals from "./pages/Professionals";
+import { Toaster } from "./components/ui/sonner";
 
 function App() {
   return (
-    <ThemeProvider defaultTheme="system" attribute="class">
+    <CustomThemeProvider>
       <UserProvider>
         <ProfessionalsProvider>
           <BrowserRouter>
@@ -56,10 +57,11 @@ function App() {
               <Route path="/professionals" element={<Professionals />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
+            <Toaster />
           </BrowserRouter>
         </ProfessionalsProvider>
       </UserProvider>
-    </ThemeProvider>
+    </CustomThemeProvider>
   );
 }
 
