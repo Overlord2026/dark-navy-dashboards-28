@@ -7,6 +7,7 @@ import { UserAccessRevocation } from "@/components/settings/UserAccessRevocation
 import { ShieldX, Activity } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { DiagnosticsAccessButton } from "@/components/diagnostics/DiagnosticsAccessButton";
 
 export default function IPProtection() {
   const navigate = useNavigate();
@@ -19,14 +20,7 @@ export default function IPProtection() {
     <div className="container mx-auto py-8 space-y-8">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">IP Protection & Security</h1>
-        <Button 
-          onClick={handleDiagnosticsAccess}
-          variant="outline"
-          className="flex items-center gap-2"
-        >
-          <Activity className="h-4 w-4" />
-          <span>System Diagnostics</span>
-        </Button>
+        <DiagnosticsAccessButton />
       </div>
       
       <Tabs defaultValue="ip-settings" className="w-full">

@@ -29,6 +29,10 @@ interface RepositoryAccess {
   selectedDeveloper: string;
 }
 
+interface IPProtectionSettingsProps {
+  isRepositoryTab?: boolean;
+}
+
 interface IPProtectionSettings {
   twoFactorForPublishing: boolean;
   publisherPhoneNumber: string;
@@ -42,10 +46,6 @@ interface IPProtectionSettings {
   currentUsername?: string;
   ipAgreement?: string;
   repositoryAccess: RepositoryAccess;
-}
-
-interface IPProtectionSettingsProps {
-  isRepositoryTab?: boolean;
 }
 
 export function IPProtectionSettings({ isRepositoryTab = false }: IPProtectionSettingsProps) {
