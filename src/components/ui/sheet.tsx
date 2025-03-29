@@ -1,3 +1,4 @@
+
 import * as SheetPrimitive from "@radix-ui/react-dialog"
 import { cva, type VariantProps } from "class-variance-authority"
 import { X } from "lucide-react"
@@ -124,7 +125,60 @@ const SheetDescription = React.forwardRef<
 ))
 SheetDescription.displayName = SheetPrimitive.Description.displayName
 
+// New component for investment sections
+const SheetSection = ({
+  className,
+  title,
+  icon,
+  children,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement> & {
+  title: string;
+  icon?: React.ReactNode;
+}) => (
+  <div className={cn("pb-6", className)} {...props}>
+    <h3 className="text-lg font-bold mb-3 flex items-center">
+      {icon && <span className="mr-2">{icon}</span>}
+      {title}
+    </h3>
+    <div className="bg-slate-100 dark:bg-slate-800/50 p-4 rounded-md">
+      {children}
+    </div>
+  </div>
+)
+SheetSection.displayName = "SheetSection"
+
+// New component for investment detail rows
+const SheetDetailRow = ({
+  label,
+  value,
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement> & {
+  label: string;
+  value: React.ReactNode;
+}) => (
+  <div 
+    className={cn("p-3 flex justify-between border-b border-border last:border-b-0", className)} 
+    {...props}
+  >
+    <span className="text-muted-foreground">{label}</span>
+    <span className="font-medium">{value}</span>
+  </div>
+)
+SheetDetailRow.displayName = "SheetDetailRow"
+
 export {
-  Sheet, SheetClose,
-  SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetOverlay, SheetPortal, SheetTitle, SheetTrigger
+  Sheet, 
+  SheetClose,
+  SheetContent, 
+  SheetDescription, 
+  SheetDetailRow,
+  SheetFooter, 
+  SheetHeader, 
+  SheetOverlay, 
+  SheetPortal, 
+  SheetSection,
+  SheetTitle, 
+  SheetTrigger
 }

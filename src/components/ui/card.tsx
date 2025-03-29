@@ -77,4 +77,39 @@ const CardFooter = React.forwardRef<
 ))
 CardFooter.displayName = "CardFooter"
 
-export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent }
+// New component for investment card details section
+const CardDetailsSection = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+  <div
+    ref={ref}
+    className={cn("border-t border-border mt-4 pt-4", className)}
+    {...props}
+  />
+))
+CardDetailsSection.displayName = "CardDetailsSection"
+
+// New component for investment strategy section
+const CardStrategySection = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+  <div
+    ref={ref}
+    className={cn("border-t border-border mt-4 pt-4", className)}
+    {...props}
+  />
+))
+CardStrategySection.displayName = "CardStrategySection"
+
+export { 
+  Card, 
+  CardHeader, 
+  CardFooter, 
+  CardTitle, 
+  CardDescription, 
+  CardContent, 
+  CardDetailsSection,
+  CardStrategySection
+}

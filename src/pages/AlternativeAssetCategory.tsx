@@ -28,8 +28,10 @@ import {
   Sheet,
   SheetContent,
   SheetDescription,
+  SheetDetailRow,
   SheetFooter,
   SheetHeader,
+  SheetSection,
   SheetTitle
 } from "@/components/ui/sheet";
 import { 
@@ -59,57 +61,122 @@ const CATEGORY_DATA = {
     investments: [
       {
         id: 1,
-        name: "BlackRock Private Equity Partners",
-        description: "Global private equity fund focusing on mid-to-large market buyouts across diversified sectors.",
-        minimumInvestment: "$250,000",
-        performance: "14.7% (5-year avg)",
+        name: "Blackstone Private Equity Strategies Fund, (TE) L.P. (\"BXPE Tax-Exempt\")",
+        description: "BXPE seeks to provide qualified individual investors broad exposure to Blackstone's private equity platform and its 15+ strategies through a single fund. BXPE's sponsor, Blackstone, is the world's largest alternative asset manager with more than $1 trillion in assets under management (\"AUM\") and has the world's largest private equity platform with approximately $310 billion in AUM.",
+        minimumInvestment: "$50,000",
+        performance: "16.8% (5-year avg)",
         lockupPeriod: "7 years",
-        tags: ["Accredited Investor", "$250K Minimum", "Diversified", "Global"]
+        tags: ["Qualified Purchaser", "$50K Minimum", "Diversified", "Global"],
+        firm: "Blackstone",
+        platform: "Investable Securities",
+        category: "Private Equity",
+        investorQualification: "Qualified Purchaser",
+        liquidity: "Quarterly Tender Offers",
+        subscriptions: "Monthly",
+        lockUp: "7 years",
+        strategy: "The fund invests in a diversified portfolio of private equity investments across various sectors, stages, and geographies to maximize risk-adjusted returns while maintaining appropriate liquidity and capital preservation."
       },
       {
         id: 2,
-        name: "KKR Americas XII Fund",
-        description: "North America focused private equity opportunities in established businesses with strong growth potential.",
-        minimumInvestment: "$500,000",
-        performance: "18.2% (5-year avg)",
+        name: "Ares Private Markets Fund",
+        description: "Ares Private Markets Fund (\"The Fund\") seeks to build a diversified private equity portfolio that focuses on attractive risk-adjusted returns through long-term capital appreciation. The Fund's dynamic and flexible allocation to private equity, anchored principally in traditional secondary markets, is complemented by co-investment and primary solutions, while benefiting from Ares' innovative approach to evolving demands in private markets. The Fund is offered in an investor-friendly structure which seeks to allow individual investors the ability to gain targeted exposure to institutional-quality private equity assets, with the potential benefits of enhanced transparency and liquidity through the correlation to public markets.",
+        minimumInvestment: "$25,000",
+        performance: "15.2% (5-year avg)",
         lockupPeriod: "8 years",
-        tags: ["Qualified Purchaser", "$500K Minimum", "North America", "Growth"]
+        tags: ["Accredited Investor", "$25K Minimum", "North America", "Secondary Markets"],
+        firm: "Ares Management",
+        platform: "Alternative Investment Platform",
+        category: "Private Equity",
+        investorQualification: "Accredited Investor",
+        liquidity: "Quarterly Tender Offers",
+        subscriptions: "Monthly",
+        lockUp: "8 years",
+        strategy: "The fund focuses on secondary market transactions, co-investments, and select primary investments across the private equity spectrum."
       },
       {
         id: 3,
-        name: "Apollo Private Equity Fund IX",
-        description: "Distressed and special situations investments with value creation through operational improvements.",
-        minimumInvestment: "$1,000,000",
-        performance: "16.3% (5-year avg)",
+        name: "CAIS Vista Foundation Fund V, L.P.",
+        description: "Vista Foundation Fund V, L.P. (the "Partnership", the "Fund", or "VFF V") was formed by Vista Equity Partners Management, LLC (with its management company affiliates, together with VFF Management, L.P. and their respective affiliates, collectively "Vista" or the "Manager") principally to acquire operating companies in middle-market and "Mid-Cap" software and technology-enabled businesses, generally with enterprise values generally between $250 million and $750 million.",
+        minimumInvestment: "$100,000",
+        performance: "21.3% (5-year avg)",
         lockupPeriod: "10 years",
-        tags: ["Qualified Purchaser", "$1M Minimum", "Distressed", "Value-Add"]
+        tags: ["Qualified Purchaser", "$100K Minimum", "Technology", "Middle Market"],
+        firm: "Vista Equity Partners",
+        platform: "CAIS",
+        category: "Private Equity",
+        investorQualification: "Qualified Purchaser",
+        liquidity: "Limited",
+        subscriptions: "Quarterly",
+        lockUp: "10 years",
+        strategy: "The fund specializes in technology-focused private equity investing in enterprise software companies with a focus on operational improvements and platform growth."
       },
       {
         id: 4,
-        name: "Vista Equity Partners Fund VII",
-        description: "Technology-focused private equity investing in enterprise software companies.",
-        minimumInvestment: "$500,000",
-        performance: "22.1% (5-year avg)",
+        name: "JP Morgan Private Markets Fund",
+        description: "JP Morgan Private Markets Fund has a small mid-market PE focus, multi-manager and multi-qualified structures & terms, and a breadth & depth of resources offered by one of the largest financial institutions in the world.",
+        minimumInvestment: "$100,000",
+        performance: "18.5% (5-year avg)",
         lockupPeriod: "8 years",
-        tags: ["Accredited Investor", "$500K Minimum", "Technology", "Software"]
+        tags: ["Qualified Purchaser", "$100K Minimum", "Multi-Manager", "Mid-Market"],
+        firm: "JP Morgan",
+        platform: "JP Morgan Wealth Management",
+        category: "Private Equity",
+        investorQualification: "Qualified Purchaser",
+        liquidity: "Limited",
+        subscriptions: "Quarterly",
+        lockUp: "8 years",
+        strategy: "The fund utilizes a multi-manager approach to invest in middle market companies across various sectors with a focus on value creation through operational improvements."
       },
       {
         id: 5,
-        name: "CVC Capital Partners VIII",
-        description: "European focused private equity fund targeting market-leading businesses with international growth potential.",
-        minimumInvestment: "$350,000",
-        performance: "15.8% (5-year avg)",
-        lockupPeriod: "9 years",
-        tags: ["Accredited Investor", "$350K Minimum", "Europe", "Market Leaders"]
+        name: "AMG Pantheon Fund, LLC (Class 1)",
+        description: "AMG Pantheon Fund, LLC (\"the Fund\") seeks to provide Accredited Investors exposure to a diversified portfolio of private equity investments. The Fund seeks to offer diversification by manager, stage, vintage year, geography, and industry sector. With a broad range of private equity investments and differentiated deal sourcing, the Fund seeks to allow investors to build a core private equity portfolio while maintaining a level of diversification that may be unavailable through other private equity funds.",
+        minimumInvestment: "$50,000",
+        performance: "14.7% (5-year avg)",
+        lockupPeriod: "5 years",
+        tags: ["Accredited Investor", "$50K Minimum", "Diversified", "Multi-Manager"],
+        firm: "AMG Pantheon",
+        platform: "AMG Funds",
+        category: "Private Equity",
+        investorQualification: "Accredited Investor",
+        liquidity: "Quarterly Tender Offers",
+        subscriptions: "Monthly",
+        lockUp: "5 years",
+        strategy: "The fund provides diversified exposure across private equity managers, sectors, geographies, and vintage years through a single investment."
       },
       {
-        id: 6, 
-        name: "Thoma Bravo Fund XIV",
-        description: "Private equity firm specializing in software and technology-enabled services sectors.",
-        minimumInvestment: "$750,000",
-        performance: "24.5% (5-year avg)",
+        id: 6,
+        name: "Ares Private Markets Fund iCapital Offshore Access Fund SP 1",
+        description: "Ares Private Markets Fund (APMF) is a diversified private equity investment solution, anchored in secondary investments, that seeks to deliver attractive, long-term capital appreciation through market cycles.",
+        minimumInvestment: "$500,000",
+        performance: "17.2% (5-year avg)",
+        lockupPeriod: "8 years",
+        tags: ["Qualified Purchaser", "$500K Minimum", "Offshore", "Secondary"],
+        firm: "Ares Management",
+        platform: "iCapital",
+        category: "Private Equity",
+        investorQualification: "Qualified Purchaser",
+        liquidity: "Limited",
+        subscriptions: "Quarterly",
+        lockUp: "8 years",
+        strategy: "The fund provides offshore investors access to a diversified portfolio of private equity investments with a focus on secondary market opportunities."
+      },
+      {
+        id: 7,
+        name: "BlackRock Private Investment Fund",
+        description: "With stocks at all time highs and bond yields at sustained lows, we expect longterm public market gains to be more muted. Look to potentially amplify returns through BlackRock Private Investments Fund (\"BPIF\"), which provides access to private equity investments in a continuously offered fund.",
+        minimumInvestment: "$25,000",
+        performance: "15.8% (5-year avg)",
         lockupPeriod: "7 years",
-        tags: ["Qualified Purchaser", "$750K Minimum", "Technology", "Software"]
+        tags: ["Accredited Investor", "$25K Minimum", "Continuous Offering", "Diversified"],
+        firm: "BlackRock",
+        platform: "BlackRock Alternative Investments",
+        category: "Private Equity",
+        investorQualification: "Accredited Investor",
+        liquidity: "Quarterly Tender Offers",
+        subscriptions: "Monthly",
+        lockUp: "7 years",
+        strategy: "The fund provides access to private equity investments across multiple sectors and strategies in a continuously offered vehicle designed for individual investors."
       }
     ]
   },
@@ -510,30 +577,6 @@ const AlternativeAssetCategory = () => {
     );
   }
   
-  const performanceMetrics = {
-    oneYear: 12.5,
-    threeYear: 10.8,
-    fiveYear: 15.2,
-    tenYear: 13.7,
-    sinceInception: 14.3
-  };
-  
-  const riskMetrics = {
-    volatility: 14.2,
-    sharpeRatio: 1.42,
-    beta: 0.85,
-    alpha: 3.2,
-    maxDrawdown: -18.5
-  };
-  
-  const quarterlyReturns = [
-    { quarter: "Q1 2023", return: 4.2 },
-    { quarter: "Q4 2022", return: 3.8 },
-    { quarter: "Q3 2022", return: -1.5 },
-    { quarter: "Q2 2022", return: 2.7 },
-    { quarter: "Q1 2022", return: 5.3 }
-  ];
-  
   return (
     <ThreeColumnLayout activeMainItem="investments" title={`${category.title} Investments`}>
       <div className="mb-6 space-y-6">
@@ -648,8 +691,9 @@ const AlternativeAssetCategory = () => {
                 >
                   <CardHeader>
                     <CardTitle>{investment.name}</CardTitle>
+                    <CardDescription className="text-blue-400 mt-1">{category.title} Offering</CardDescription>
                     <div className="flex flex-wrap gap-2 mt-2">
-                      {investment.tags.map((tag: string) => (
+                      {investment.tags.slice(0, 3).map((tag: string) => (
                         <Badge key={tag} variant={selectedTags.includes(tag) ? "default" : "secondary"}>
                           {tag}
                         </Badge>
@@ -657,7 +701,7 @@ const AlternativeAssetCategory = () => {
                     </div>
                   </CardHeader>
                   <CardContent className="flex-grow">
-                    <CardDescription className="text-sm mb-4">
+                    <CardDescription className="text-sm mb-4 line-clamp-3">
                       {investment.description}
                     </CardDescription>
                     <div className="grid grid-cols-2 gap-2 text-sm">
@@ -701,155 +745,118 @@ const AlternativeAssetCategory = () => {
       </div>
       
       <Sheet open={detailPanelOpen} onOpenChange={setDetailPanelOpen}>
-        <SheetContent className="w-full sm:max-w-md md:max-w-lg overflow-y-auto bg-[#0a1022] text-white border-l border-blue-900/30">
+        <SheetContent className="w-full sm:max-w-md md:max-w-lg lg:max-w-xl overflow-y-auto bg-[#0a1022] text-white border-l border-blue-900/30">
           {selectedInvestment && (
-            <div className="flex flex-col h-full">
+            <div className="flex flex-col h-full pb-12">
               <div className="pb-6 border-b border-blue-900/30 mb-6">
+                <button 
+                  onClick={handleCloseDetailPanel} 
+                  className="absolute right-4 top-4 p-1 rounded-full bg-blue-900/30 hover:bg-blue-900/50 transition-colors"
+                >
+                  <X className="h-5 w-5" />
+                </button>
                 <h2 className="text-2xl font-bold mb-1">{selectedInvestment.name}</h2>
                 <p className="text-blue-400 mb-3">{category.title} Offering</p>
-                <p className="text-gray-300">{selectedInvestment.description}</p>
+                <p className="text-gray-300 line-clamp-2 text-sm">
+                  Investments in private companies or buyouts of public companies, aiming for substantial long-term returns through active management and eventual sale or public offering.
+                </p>
               </div>
               
               <div className="space-y-6">
-                <div className="pb-4">
-                  <h3 className="text-lg font-bold mb-3 text-white flex items-center">
-                    <Info className="h-5 w-5 mr-2 text-blue-400" />
-                    About
-                  </h3>
-                  <div className="bg-blue-950/30 p-4 rounded-md border border-blue-900/30">
-                    <p className="text-gray-300">
-                      {selectedInvestment.name} provides {selectedInvestment.tags.includes("Qualified Purchaser") 
-                        ? "Qualified Purchasers" 
-                        : selectedInvestment.tags.includes("Accredited Investor")
-                          ? "Accredited Investors"
-                          : "Investors"} unique exposure to a diversified {category.title.toLowerCase()} portfolio selected by experienced investment teams. The fund offers diversification by manager, stage, vintage year and industry through a single allocation.
-                    </p>
-                  </div>
-                </div>
+                <SheetSection 
+                  title="About" 
+                  icon={<Info className="h-5 w-5 text-blue-400" />}
+                >
+                  <p className="text-gray-300">
+                    {selectedInvestment.description}
+                  </p>
+                </SheetSection>
                 
-                <div className="pb-4">
-                  <h3 className="text-lg font-bold mb-3 text-white flex items-center">
-                    <TrendingUp className="h-5 w-5 mr-2 text-blue-400" />
-                    How It Works
-                  </h3>
-                  <div className="bg-blue-950/30 p-4 rounded-md border border-blue-900/30">
-                    <p className="text-gray-300">
-                      Your advisor will work with you to select the best offering and fill out the required information. You may be required to sign certain documents. Once completed, your advisor will help you transfer assets to fund the investment.
-                    </p>
-                  </div>
-                </div>
+                <SheetSection 
+                  title="How It Works" 
+                  icon={<TrendingUp className="h-5 w-5 text-blue-400" />}
+                >
+                  <p className="text-gray-300">
+                    Your advisor will work with you to select the best offering and fill out the required information. You may be required to sign certain documents. Once completed, your advisor will help you transfer assets to fund the investment.
+                  </p>
+                </SheetSection>
                 
-                <div className="pb-4">
-                  <h3 className="text-lg font-bold mb-3 text-white flex items-center">
-                    <Calendar className="h-5 w-5 mr-2 text-blue-400" />
-                    Get Started
-                  </h3>
-                  <div className="bg-blue-950/30 p-4 rounded-md border border-blue-900/30">
-                    <p className="text-gray-300 mb-4">
-                      To get started, schedule a meeting with your advisor or tell them you're interested in this offering.
-                    </p>
-                    <div className="flex gap-4">
-                      <Button variant="outline" className="text-white border-gray-700 hover:bg-gray-800">
-                        I'm Interested
-                      </Button>
-                      <Button>
-                        <Calendar className="h-4 w-4 mr-2" />
-                        Schedule a Meeting
-                      </Button>
-                    </div>
+                <SheetSection 
+                  title="Get Started" 
+                  icon={<Calendar className="h-5 w-5 text-blue-400" />}
+                >
+                  <p className="text-gray-300 mb-4">
+                    To get started, schedule a meeting with your advisor or tell them you're interested in this offering.
+                  </p>
+                  <div className="flex gap-4">
+                    <Button variant="outline" className="text-white border-gray-700 hover:bg-gray-800">
+                      I'm Interested
+                    </Button>
+                    <Button>
+                      <Calendar className="h-4 w-4 mr-2" />
+                      Schedule a Meeting
+                    </Button>
                   </div>
-                </div>
+                </SheetSection>
                 
-                <div className="pb-4">
-                  <h3 className="text-lg font-bold mb-3 text-white flex items-center">
-                    <BarChart className="h-5 w-5 mr-2 text-blue-400" />
-                    Details
-                  </h3>
+                <SheetSection 
+                  title="Details" 
+                  icon={<BarChart className="h-5 w-5 text-blue-400" />}
+                >
                   <div className="border border-blue-900/30 rounded-md overflow-hidden">
-                    <div className="grid grid-cols-1 divide-y divide-blue-900/30">
-                      <div className="p-3 flex justify-between">
-                        <span className="text-gray-400">Firm</span>
-                        <span>{selectedInvestment.name.split(' ')[0]}</span>
-                      </div>
-                      <div className="p-3 flex justify-between">
-                        <span className="text-gray-400">Platform</span>
-                        <span>Investable Securities</span>
-                      </div>
-                      <div className="p-3 flex justify-between">
-                        <span className="text-gray-400">Category</span>
-                        <span>{category.title}</span>
-                      </div>
-                      <div className="p-3 flex justify-between">
-                        <span className="text-gray-400">Minimum Investment</span>
-                        <span>{selectedInvestment.minimumInvestment}</span>
-                      </div>
-                      <div className="p-3 flex justify-between">
-                        <span className="text-gray-400">Investor Qualification</span>
-                        <span>
-                          {selectedInvestment.tags.includes("Qualified Purchaser") 
-                            ? "Qualified Purchaser" 
-                            : selectedInvestment.tags.includes("Accredited Investor")
-                              ? "Accredited Investor"
-                              : "All Investors"}
-                        </span>
-                      </div>
-                      <div className="p-3 flex justify-between">
-                        <span className="text-gray-400">Liquidity</span>
-                        <span>Quarterly Tender Offers</span>
-                      </div>
-                      <div className="p-3 flex justify-between">
-                        <span className="text-gray-400">Subscriptions</span>
-                        <span>Monthly</span>
-                      </div>
-                      <div className="p-3 flex justify-between">
-                        <span className="text-gray-400">Performance</span>
-                        <span className="text-green-500">{selectedInvestment.performance}</span>
-                      </div>
-                      <div className="p-3 flex justify-between">
-                        <span className="text-gray-400">Lock-up Period</span>
-                        <span>{selectedInvestment.lockupPeriod}</span>
-                      </div>
+                    <div className="divide-y divide-blue-900/30">
+                      <SheetDetailRow label="Firm" value={selectedInvestment.firm || selectedInvestment.name.split(' ')[0]} />
+                      <SheetDetailRow label="Platform" value={selectedInvestment.platform || "Investable Securities"} />
+                      <SheetDetailRow label="Category" value={selectedInvestment.category || category.title} />
+                      <SheetDetailRow label="Minimum Investment" value={selectedInvestment.minimumInvestment} />
+                      <SheetDetailRow label="Investor Qualification" value={selectedInvestment.investorQualification || (
+                        selectedInvestment.tags.includes("Qualified Purchaser") 
+                          ? "Qualified Purchaser" 
+                          : selectedInvestment.tags.includes("Accredited Investor")
+                            ? "Accredited Investor"
+                            : "All Investors"
+                      )} />
+                      <SheetDetailRow label="Liquidity" value={selectedInvestment.liquidity || "Quarterly Tender Offers"} />
+                      <SheetDetailRow label="Subscriptions" value={selectedInvestment.subscriptions || "Monthly"} />
+                      <SheetDetailRow label="Performance" value={<span className="text-green-500">{selectedInvestment.performance}</span>} />
+                      <SheetDetailRow label="Lock-up Period" value={selectedInvestment.lockupPeriod} />
                     </div>
                   </div>
-                </div>
+                </SheetSection>
                 
-                <div className="pb-4">
-                  <h3 className="text-lg font-bold mb-3 text-white flex items-center">
-                    <LineChart className="h-5 w-5 mr-2 text-blue-400" />
-                    Strategy
-                  </h3>
-                  <div className="bg-blue-950/30 p-4 rounded-md border border-blue-900/30">
+                {selectedInvestment.strategy && (
+                  <SheetSection 
+                    title="Strategy" 
+                    icon={<LineChart className="h-5 w-5 text-blue-400" />}
+                  >
                     <p className="text-gray-300">
-                      The fund invests in a diversified portfolio of {category.title.toLowerCase()} {category.title === "Hedge Fund" ? "strategies" : "investments"} across various sectors, stages, and geographies to maximize risk-adjusted returns while maintaining appropriate liquidity and capital preservation.
+                      {selectedInvestment.strategy}
                     </p>
-                  </div>
-                </div>
+                  </SheetSection>
+                )}
                 
-                <div className="pb-4">
-                  <h3 className="text-lg font-bold mb-3 text-white flex items-center">
-                    <ShieldCheck className="h-5 w-5 mr-2 text-blue-400" />
-                    Risk & Compliance
-                  </h3>
-                  <div className="bg-blue-950/30 p-4 rounded-md border border-blue-900/30">
-                    <p className="text-gray-300 mb-3">
-                      This investment involves significant risks, including potential loss of principal. Past performance does not guarantee future results.
-                    </p>
-                    <div className="space-y-2">
-                      <div>
-                        <p className="text-gray-400 mb-1">Suitability</p>
-                        <Progress value={selectedInvestment.tags.includes("Qualified Purchaser") ? 90 : 70} className="h-2 bg-blue-900/50" />
-                      </div>
-                      <div>
-                        <p className="text-gray-400 mb-1">Risk Level</p>
-                        <Progress value={selectedInvestment.tags.includes("Conservative") ? 40 : 75} className="h-2 bg-blue-900/50" />
-                      </div>
-                      <div>
-                        <p className="text-gray-400 mb-1">Complexity</p>
-                        <Progress value={selectedInvestment.tags.includes("Structured") ? 85 : 60} className="h-2 bg-blue-900/50" />
-                      </div>
+                <SheetSection 
+                  title="Risk & Compliance" 
+                  icon={<ShieldCheck className="h-5 w-5 text-blue-400" />}
+                >
+                  <p className="text-gray-300 mb-3">
+                    This investment involves significant risks, including potential loss of principal. Past performance does not guarantee future results.
+                  </p>
+                  <div className="space-y-2">
+                    <div>
+                      <p className="text-gray-400 mb-1">Suitability</p>
+                      <Progress value={selectedInvestment.tags.includes("Qualified Purchaser") ? 90 : 70} className="h-2 bg-blue-900/50" />
+                    </div>
+                    <div>
+                      <p className="text-gray-400 mb-1">Risk Level</p>
+                      <Progress value={selectedInvestment.tags.includes("Conservative") ? 40 : 75} className="h-2 bg-blue-900/50" />
+                    </div>
+                    <div>
+                      <p className="text-gray-400 mb-1">Complexity</p>
+                      <Progress value={selectedInvestment.tags.includes("Structured") ? 85 : 60} className="h-2 bg-blue-900/50" />
                     </div>
                   </div>
-                </div>
+                </SheetSection>
               </div>
             </div>
           )}
