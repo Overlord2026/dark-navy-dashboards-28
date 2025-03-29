@@ -98,7 +98,7 @@ export const NetWorthProvider: React.FC<{ children: ReactNode }> = ({ children }
     const nonPropertyAssets = assets.filter(asset => asset.type !== 'property');
     
     // Create asset entries for each property
-    const propertyAssets = properties.map(property => ({
+    const propertyAssets: Asset[] = properties.map(property => ({
       id: `property-${property.id}`,
       name: property.name,
       type: 'property' as const,
