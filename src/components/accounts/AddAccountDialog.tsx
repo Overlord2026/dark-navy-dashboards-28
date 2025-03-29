@@ -29,6 +29,12 @@ export interface AccountData {
   balance: string;
   type: string;
   section: string;
+  transactions?: Array<{
+    date: string;
+    description: string;
+    amount: number;
+    type: string;
+  }>;
 }
 
 export function AddAccountDialog({ 
