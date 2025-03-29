@@ -22,7 +22,9 @@ import {
   ExternalLinkIcon,
   UserRoundIcon,
   HomeIcon,
-  CoinsIcon
+  CoinsIcon,
+  ChevronDown,
+  ChevronRight
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { UserProfileSection } from "@/components/sidebar/UserProfileSection";
@@ -36,6 +38,11 @@ import {
 } from "@/components/ui/popover";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { AdvisorSection } from "@/components/profile/AdvisorSection";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 
 type MenuItem = {
   id: string;
@@ -59,6 +66,14 @@ type MainMenuItem = {
   icon: React.ElementType | React.FC;
   href: string;
   active?: boolean;
+  subItems?: MainMenuItem[];
+};
+
+type NavCategory = {
+  id: string;
+  label: string;
+  items: MainMenuItem[];
+  defaultExpanded?: boolean;
 };
 
 const CustomHomeIcon: React.FC = () => (
@@ -69,21 +84,53 @@ const CustomHomeIcon: React.FC = () => (
   />
 );
 
-const mainMenuItems: MainMenuItem[] = [
-  { id: "home", label: "Home", icon: CustomHomeIcon, href: "/" },
-  { id: "education", label: "Education Center", icon: GraduationCapIcon, href: "/education" },
-  { id: "vault", label: "Legacy Vault", icon: BookOpenIcon, href: "/vault" },
-  { id: "tax-budgets", label: "Proactive Tax Planning", icon: ReceiptIcon, href: "/tax-budgets" },
-  { id: "accounts", label: "Accounts", icon: WalletIcon, href: "/accounts" },
-  { id: "sharing", label: "Sharing", icon: ShareIcon, href: "/sharing" },
-  { id: "financial-plans", label: "Financial Plans", icon: BarChart3Icon, href: "/financial-plans" },
-  { id: "investments", label: "Investments", icon: PiggyBankIcon, href: "/investments" },
-  { id: "insurance", label: "Insurance", icon: ShieldIcon, href: "/insurance" },
-  { id: "lending", label: "Lending", icon: CreditCardIcon, href: "/lending" },
-  { id: "cash-management", label: "Cash Management", icon: WalletIcon, href: "/cash-management" },
-  { id: "transfers", label: "Transfers", icon: ArrowRightLeftIcon, href: "/transfers" },
-  { id: "properties", label: "Properties", icon: HomeIcon, href: "/properties" },
-  { id: "social-security", label: "Social Security", icon: CoinsIcon, href: "/social-security" },
+const navigationCategories: NavCategory[] = [
+  {
+    id: "main",
+    label: "Main",
+    defaultExpanded: true,
+    items: [
+      { id: "home", label: "Home", icon: CustomHomeIcon, href: "/" },
+      { id: "education", label: "Education Center", icon: GraduationCapIcon, href: "/education" },
+      { id: "vault", label: "Legacy Vault", icon: BookOpenIcon, href: "/vault" },
+    ]
+  },
+  {
+    id: "wealth-management",
+    label: "Wealth Management",
+    defaultExpanded: true,
+    items: [
+      { id: "financial-plans", label: "Financial Plans", icon: BarChart3Icon, href: "/financial-plans" },
+      { id: "investments", label: "Investments", icon: PiggyBankIcon, href: "/investments" },
+      { id: "accounts", label: "Accounts", icon: WalletIcon, href: "/accounts" },
+      { id: "properties", label: "Properties", icon: HomeIcon, href: "/properties" },
+      { id: "social-security", label: "Social Security", icon: CoinsIcon, href: "/social-security" },
+    ]
+  },
+  {
+    id: "protection",
+    label: "Protection",
+    items: [
+      { id: "insurance", label: "Insurance", icon: ShieldIcon, href: "/insurance" },
+      { id: "tax-budgets", label: "Tax Planning", icon: ReceiptIcon, href: "/tax-budgets" },
+    ]
+  },
+  {
+    id: "banking",
+    label: "Banking",
+    items: [
+      { id: "cash-management", label: "Cash Management", icon: WalletIcon, href: "/cash-management" },
+      { id: "lending", label: "Lending", icon: CreditCardIcon, href: "/lending" },
+      { id: "transfers", label: "Transfers", icon: ArrowRightLeftIcon, href: "/transfers" },
+    ]
+  },
+  {
+    id: "collaboration",
+    label: "Collaboration",
+    items: [
+      { id: "sharing", label: "Sharing", icon: ShareIcon, href: "/sharing" },
+    ]
+  },
 ];
 
 const accountsSubMenuItems: MenuItem[] = [
@@ -132,6 +179,12 @@ export function ThreeColumnLayout({
   const [mainSidebarCollapsed, setMainSidebarCollapsed] = useState(false);
   const [secondarySidebarCollapsed, setSecondarySidebarCollapsed] = useState(false);
   const [showAdvisorInfo, setShowAdvisorInfo] = useState(false);
+  const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>(
+    navigationCategories.reduce((acc, category) => {
+      acc[category.id] = category.defaultExpanded ?? false;
+      return acc;
+    }, {} as Record<string, boolean>)
+  );
   
   const advisorInfo = {
     name: "Daniel Zamora",
@@ -183,6 +236,13 @@ export function ThreeColumnLayout({
     setSecondarySidebarCollapsed(!secondarySidebarCollapsed);
   };
 
+  const toggleCategory = (categoryId: string) => {
+    setExpandedCategories(prev => ({
+      ...prev,
+      [categoryId]: !prev[categoryId]
+    }));
+  };
+
   const handleProfileMenuItemClick = (itemId: string) => {
     console.log(`Profile menu item clicked in layout: ${itemId}`);
     
@@ -223,117 +283,115 @@ export function ThreeColumnLayout({
             )}
             
             <div className="overflow-y-auto mt-1 flex-1">
-              <nav className="px-4 space-y-1.5">
-                {mainMenuItems.map((item) => {
-                  const isActive = item.id === currentPath;
-                  const Icon = item.icon;
-                  
-                  return (
-                    <Link
-                      key={item.id}
-                      to={item.href}
-                      className={cn(
-                        "group flex items-center py-2 px-3 rounded-md transition-colors text-[14px] whitespace-nowrap border",
-                        isActive
-                          ? isLightTheme ? "bg-[#E9E7D8] text-[#222222] font-medium border-primary" : "bg-black text-[#E2E2E2] font-medium border-primary"
-                          : isLightTheme ? "text-[#222222] border-transparent" : "text-[#E2E2E2] border-transparent",
-                        isLightTheme ? "hover:bg-[#E9E7D8] hover:border-primary" : "hover:bg-white/10 hover:border-primary"
-                      )}
-                    >
-                      {typeof Icon === 'function' ? (
-                        <div className={`flex items-center justify-center rounded-sm p-0.5 mr-3 ${isLightTheme ? 'bg-[#222222]' : 'bg-black'}`}>
-                          <Icon />
-                        </div>
-                      ) : (
-                        <Icon 
-                          className={cn("h-5 w-5", !mainSidebarCollapsed && "mr-3")} 
-                          style={{ 
-                            backgroundColor: isLightTheme ? '#222222' : '#000', 
-                            padding: '2px', 
-                            borderRadius: '2px' 
-                          }} 
-                        />
-                      )}
-                      {!mainSidebarCollapsed && (
-                        <span className="whitespace-nowrap overflow-hidden text-ellipsis">{item.label}</span>
-                      )}
-                    </Link>
-                  );
-                })}
+              <nav className="px-2 space-y-1">
+                {navigationCategories.map((category) => (
+                  <div key={category.id} className="mb-2">
+                    {!mainSidebarCollapsed && (
+                      <Collapsible
+                        open={expandedCategories[category.id]}
+                        onOpenChange={() => toggleCategory(category.id)}
+                      >
+                        <CollapsibleTrigger asChild>
+                          <div className={`flex items-center justify-between p-2 text-xs uppercase tracking-wider font-semibold ${isLightTheme ? 'text-[#222222]/70' : 'text-[#E2E2E2]/70'} cursor-pointer`}>
+                            <span>{category.label}</span>
+                            <div>
+                              {expandedCategories[category.id] ? (
+                                <ChevronDown className="h-4 w-4" />
+                              ) : (
+                                <ChevronRight className="h-4 w-4" />
+                              )}
+                            </div>
+                          </div>
+                        </CollapsibleTrigger>
+                        <CollapsibleContent className="space-y-1.5">
+                          {category.items.map((item) => {
+                            const isActive = item.id === currentPath;
+                            const Icon = item.icon;
+                            
+                            return (
+                              <Link
+                                key={item.id}
+                                to={item.href}
+                                className={cn(
+                                  "group flex items-center py-2 px-3 rounded-md transition-colors text-[14px] whitespace-nowrap border",
+                                  isActive
+                                    ? isLightTheme ? "bg-[#E9E7D8] text-[#222222] font-medium border-primary" : "bg-black text-[#E2E2E2] font-medium border-primary"
+                                    : isLightTheme ? "text-[#222222] border-transparent" : "text-[#E2E2E2] border-transparent",
+                                  isLightTheme ? "hover:bg-[#E9E7D8] hover:border-primary" : "hover:bg-white/10 hover:border-primary"
+                                )}
+                              >
+                                {typeof Icon === 'function' ? (
+                                  <div className={`flex items-center justify-center rounded-sm p-0.5 mr-3 ${isLightTheme ? 'bg-[#222222]' : 'bg-black'}`}>
+                                    <Icon />
+                                  </div>
+                                ) : (
+                                  <Icon 
+                                    className={cn("h-5 w-5", !mainSidebarCollapsed && "mr-3")} 
+                                    style={{ 
+                                      backgroundColor: isLightTheme ? '#222222' : '#000', 
+                                      padding: '2px', 
+                                      borderRadius: '2px' 
+                                    }} 
+                                  />
+                                )}
+                                <span className="whitespace-nowrap overflow-hidden text-ellipsis">{item.label}</span>
+                              </Link>
+                            );
+                          })}
+                        </CollapsibleContent>
+                      </Collapsible>
+                    )}
+                    
+                    {mainSidebarCollapsed && (
+                      <>
+                        {category.items.map((item) => {
+                          const isActive = item.id === currentPath;
+                          const Icon = item.icon;
+                          
+                          return (
+                            <Link
+                              key={item.id}
+                              to={item.href}
+                              className={cn(
+                                "group flex justify-center items-center py-2 px-2 my-2 rounded-md transition-colors text-[14px] whitespace-nowrap border",
+                                isActive
+                                  ? isLightTheme ? "bg-[#E9E7D8] text-[#222222] font-medium border-primary" : "bg-black text-[#E2E2E2] font-medium border-primary"
+                                  : isLightTheme ? "text-[#222222] border-transparent" : "text-[#E2E2E2] border-transparent",
+                                isLightTheme ? "hover:bg-[#E9E7D8] hover:border-primary" : "hover:bg-white/10 hover:border-primary"
+                              )}
+                              title={item.label}
+                            >
+                              {typeof Icon === 'function' ? (
+                                <div className={`flex items-center justify-center rounded-sm p-0.5 ${isLightTheme ? 'bg-[#222222]' : 'bg-black'}`}>
+                                  <Icon />
+                                </div>
+                              ) : (
+                                <Icon 
+                                  className="h-5 w-5" 
+                                  style={{ 
+                                    backgroundColor: isLightTheme ? '#222222' : '#000', 
+                                    padding: '2px', 
+                                    borderRadius: '2px' 
+                                  }} 
+                                />
+                              )}
+                            </Link>
+                          );
+                        })}
+                      </>
+                    )}
+                  </div>
+                ))}
               </nav>
             </div>
             
             <div className={`px-4 mt-auto mb-4 ${isLightTheme ? 'border-[#DCD8C0]' : 'border-white/10'}`}>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <div 
-                    className={`flex items-center w-full p-2 rounded-md transition-colors cursor-pointer border bg-black ${isLightTheme ? 'border-[#9F9EA1]' : 'border-[#9F9EA1]'}`}
-                  >
-                    <div className="relative h-[30px] w-[30px] mr-3">
-                      <Avatar className="h-[30px] w-[30px] border-2 border-[#9F9EA1] rounded-full">
-                        <AvatarFallback className="bg-black text-white">
-                          {advisorInfo.name.split(' ').map(name => name[0]).join('')}
-                        </AvatarFallback>
-                      </Avatar>
-                    </div>
-                    {!mainSidebarCollapsed && (
-                      <div className="flex flex-col">
-                        <span className={`text-[14px] text-gray-200 font-medium`}>Advisor/CFO:</span>
-                        <span className={`text-[14px] text-gray-300`}>{advisorInfo.name}</span>
-                      </div>
-                    )}
-                  </div>
-                </PopoverTrigger>
-                <PopoverContent 
-                  align="start" 
-                  side={mainSidebarCollapsed ? "right" : "bottom"} 
-                  className={`w-64 ${isLightTheme ? 'bg-[#F9F7E8] border-[#DCD8C0] text-[#222222]' : 'bg-[#1E1E30] border-gray-700 text-white'} shadow-md shadow-black/20 border border-primary`}
-                >
-                  <div className="flex flex-col space-y-3 p-1">
-                    <div className="flex items-center space-x-3">
-                      <Avatar className="h-[60px] w-[60px] border-2 border-[#9F9EA1]">
-                        <AvatarFallback className={`bg-black text-white text-xl`}>
-                          {advisorInfo.name.split(' ').map(name => name[0]).join('')}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <p className="font-medium">{advisorInfo.name}</p>
-                        <p className="text-sm text-gray-400">{advisorInfo.title}</p>
-                      </div>
-                    </div>
-                    
-                    <div className="text-sm text-gray-300">{advisorInfo.location}</div>
-                    
-                    <a href={`mailto:${advisorInfo.email}`} className="text-sm text-blue-400 hover:underline flex items-center">
-                      <MailIcon className="h-3.5 w-3.5 mr-1.5" />
-                      {advisorInfo.email}
-                    </a>
-                    
-                    <div className="flex flex-col space-y-2 pt-2">
-                      <Button 
-                        variant="ghost" 
-                        size="sm" 
-                        className={`justify-start ${isLightTheme ? 'hover:bg-[#E9E7D8] text-[#222222]' : 'hover:bg-[#2A2A40] text-white'} border border-primary`}
-                        onClick={() => handleViewProfile("bio")}
-                      >
-                        <UserRoundIcon className="h-3.5 w-3.5 mr-1.5" />
-                        View profile
-                      </Button>
-                      
-                      <Button 
-                        variant="ghost" 
-                        size="sm" 
-                        className={`justify-start ${isLightTheme ? 'hover:bg-[#E9E7D8] text-[#222222]' : 'hover:bg-[#2A2A40] text-white'} border border-primary`}
-                        onClick={handleBookSession}
-                      >
-                        <CalendarIcon className="h-3.5 w-3.5 mr-1.5" />
-                        Book a session
-                        <ExternalLinkIcon className="h-3 w-3 ml-1" />
-                      </Button>
-                    </div>
-                  </div>
-                </PopoverContent>
-              </Popover>
+              <AdvisorSection 
+                advisorInfo={advisorInfo} 
+                onViewProfile={handleViewProfile} 
+                onBookSession={handleBookSession} 
+                collapsed={mainSidebarCollapsed} 
+              />
             </div>
           </div>
         </aside>
