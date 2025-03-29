@@ -67,7 +67,7 @@ export const AdvisorSection = ({ advisorInfo, onViewProfile, onBookSession, coll
                 <p className="text-sm text-gray-300 mb-3">{advisorInfo.title}</p>
                 <div className="flex items-center text-sm text-gray-300 mb-2">
                   <MapPinIcon className="h-4 w-4 mr-2 flex-shrink-0" />
-                  <span>{advisorInfo.location}</span>
+                  <span>Sarasota, FL</span>
                 </div>
                 <a href={`mailto:${advisorInfo.email}`} className="text-sm text-blue-400 hover:underline flex items-center">
                   <MailIcon className="h-4 w-4 mr-2 flex-shrink-0" />
@@ -86,16 +86,16 @@ export const AdvisorSection = ({ advisorInfo, onViewProfile, onBookSession, coll
                 <span className="font-medium">View profile</span>
               </Link>
               
-              <Button 
-                variant="ghost" 
-                size="lg" 
-                className="w-full flex items-center justify-center py-2.5 bg-transparent hover:bg-white/10 border border-white/20 rounded-md transition-colors"
-                onClick={onBookSession}
+              <a 
+                href="https://meetings.hubspot.com/daniel-herrera1?uuid=55ab1315-5daa-4009-af29-f100ee7aae67"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full flex items-center justify-center py-2.5 px-4 bg-transparent hover:bg-white/10 border border-white/20 rounded-md transition-colors text-white"
               >
                 <Calendar className="h-5 w-5 mr-2" />
                 <span className="font-medium">Book a session</span>
                 <ExternalLinkIcon className="h-4 w-4 ml-2" />
-              </Button>
+              </a>
             </div>
           </div>
         </PopoverContent>

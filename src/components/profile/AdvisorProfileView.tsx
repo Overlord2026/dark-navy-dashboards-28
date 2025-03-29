@@ -32,7 +32,9 @@ export const AdvisorProfileView = ({
       case "bio":
         return (
           <div className="text-sm text-white/80 mt-4">
-            <p>{advisorInfo.bio}</p>
+            {advisorInfo.bio.split('\n\n').map((paragraph, index) => (
+              <p key={index} className="mb-4">{paragraph}</p>
+            ))}
           </div>
         );
       case "location":
@@ -82,9 +84,14 @@ export const AdvisorProfileView = ({
             </div>
           </div>
         </div>
-        <Button className="mt-4 md:mt-0 bg-white text-[#0a1021] hover:bg-white/90" onClick={onBookSession}>
+        <a 
+          href="https://meetings.hubspot.com/daniel-herrera1?uuid=55ab1315-5daa-4009-af29-f100ee7aae67"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-4 md:mt-0 bg-white text-[#0a1021] hover:bg-white/90 px-4 py-2 rounded-md font-medium inline-flex items-center"
+        >
           Book a session
-        </Button>
+        </a>
       </div>
       
       <Tabs value={activeTab} onValueChange={onTabChange} className="w-full">

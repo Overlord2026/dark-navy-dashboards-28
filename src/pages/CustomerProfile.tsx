@@ -39,7 +39,7 @@ const CustomerProfile = () => {
     email: "daniel.herrera@awmfl.com",
     phone: "(800) 555-1234",
     office: "Sarasota, FL",
-    bio: "Daniel, a seasoned finance professional, guides high net worth investors. His approach blends investment management, risk mitigation, tax optimization, and overall strategy. Starting at Vanguard, then UBS, he directed client acquisition at Fisher Investments before joining BFO. Originally from Asheville, NC, Daniel now resides in Sarasota, enjoying fitness, community activities, and sunny days by the water."
+    bio: "Daniel, a seasoned finance professional, guides high net worth investors through complex financial landscapes. His comprehensive approach integrates investment management, risk mitigation, tax optimization, and overall financial strategy.\n\nBeginning his career at Vanguard, Daniel honed his skills at UBS before directing client acquisition at Fisher Investments. He now brings his expertise to our firm, where he helps clients achieve their long-term financial objectives.\n\nOriginally from Asheville, NC, Daniel now resides in Sarasota, where he enjoys fitness activities, community involvement, and enjoying the coastal lifestyle."
   };
 
   useEffect(() => {
@@ -149,7 +149,7 @@ const CustomerProfile = () => {
             advisorInfo={advisorInfo}
             activeTab={activeAdvisorTab}
             onTabChange={setActiveAdvisorTab}
-            onBookSession={() => setIsAdvisorDrawerOpen(true)}
+            onBookSession={() => window.open("https://meetings.hubspot.com/daniel-herrera1?uuid=55ab1315-5daa-4009-af29-f100ee7aae67", "_blank")}
           />
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
