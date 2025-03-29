@@ -38,7 +38,7 @@ export const ScheduleMeetingDialog: React.FC<ScheduleMeetingDialogProps> = ({ as
           
           <div className="flex justify-center">
             <img 
-              src="/public/lovable-uploads/de09b008-ad83-47b7-a3bf-d51532be0261.png" 
+              src="/public/lovable-uploads/4f186128-9b08-4965-a540-64cf9b0ec9ee.png" 
               alt="Calendar Preview" 
               className="max-h-52 rounded-md border shadow-sm"
             />
