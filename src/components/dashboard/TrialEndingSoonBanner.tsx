@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useSubscription } from '@/context/SubscriptionContext';
 import { Badge } from '@/components/ui/badge';
 
-interface TrialEndingSoonBannerProps {
+export interface TrialEndingSoonBannerProps {
   onDismiss: () => void;
 }
 

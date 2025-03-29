@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useSubscription } from '@/context/SubscriptionContext';
 import { Badge } from '@/components/ui/badge';
 
-interface WelcomeTrialBannerProps {
+export interface WelcomeTrialBannerProps {
   onDismiss: () => void;
 }
 

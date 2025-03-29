@@ -15,19 +15,19 @@ import { useSubscription } from "@/context/SubscriptionContext";
 import { DiagnosticsAccessButton } from "@/components/diagnostics/DiagnosticsAccessButton";
 
 export default function Index() {
-  const { assets, liabilities, assetsByCategory } = useNetWorth();
-  const { isTrial, trialDaysRemaining } = useSubscription();
+  const { assets } = useNetWorth();
+  const { isInFreeTrial, daysRemainingInTrial } = useSubscription();
 
   // Determine which banner to show based on trial status
   const renderTrialBanner = () => {
-    if (!isTrial) return null;
+    if (!isInFreeTrial) return null;
     
-    if (trialDaysRemaining >= 10) {
-      return <WelcomeTrialBanner daysRemaining={trialDaysRemaining} />;
-    } else if (trialDaysRemaining >= 5) {
-      return <MidTrialBanner daysRemaining={trialDaysRemaining} />;
+    if (daysRemainingInTrial && daysRemainingInTrial >= 10) {
+      return <WelcomeTrialBanner onDismiss={() => {}} />;
+    } else if (daysRemainingInTrial && daysRemainingInTrial >= 5) {
+      return <MidTrialBanner onDismiss={() => {}} />;
     } else {
-      return <TrialEndingSoonBanner daysRemaining={trialDaysRemaining} />;
+      return <TrialEndingSoonBanner onDismiss={() => {}} />;
     }
   };
 
@@ -44,11 +44,7 @@ export default function Index() {
         <FinancialOverview />
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <NetWorthSummary 
-            assets={assets}
-            liabilities={liabilities}
-            assetsByCategory={assetsByCategory}
-          />
+          <NetWorthSummary />
           <div className="space-y-6">
             <ExpenseOptimizationCard />
             <TaxPlanningSummary />
