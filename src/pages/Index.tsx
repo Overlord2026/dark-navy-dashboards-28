@@ -13,6 +13,9 @@ import { TrialEndingSoonBanner } from "@/components/dashboard/TrialEndingSoonBan
 import { MidTrialBanner } from "@/components/dashboard/MidTrialBanner";
 import { useSubscription } from "@/context/SubscriptionContext";
 import { DiagnosticsAccessButton } from "@/components/diagnostics/DiagnosticsAccessButton";
+import { Button } from "@/components/ui/button";
+import { ShoppingBag } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export default function Index() {
   const { assets } = useNetWorth();
@@ -38,7 +41,13 @@ export default function Index() {
         
         <div className="flex justify-between items-center">
           <h1 className="text-3xl font-bold">Welcome Back</h1>
-          <DiagnosticsAccessButton />
+          <div className="flex items-center gap-3">
+            <Button as={Link} to="/marketplace" variant="outline" className="gap-2">
+              <ShoppingBag className="h-4 w-4" />
+              Marketplace
+            </Button>
+            <DiagnosticsAccessButton />
+          </div>
         </div>
         
         <FinancialOverview />

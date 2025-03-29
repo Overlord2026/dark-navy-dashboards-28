@@ -12,6 +12,7 @@ import TaxBudgets from "./pages/TaxBudgets";
 import Education from "./pages/Education";
 import FinancialPlans from "./pages/FinancialPlans";
 import Investments from "./pages/Investments";
+import Marketplace from "./pages/Marketplace";
 import AlternativeAssetCategory from "./pages/AlternativeAssetCategory";
 import AdvisorProfile from "./pages/AdvisorProfile";
 import Lending from "./pages/Lending";
@@ -60,6 +61,7 @@ function App() {
                     <Route path="/education/category/:categoryId" element={<Education />} />
                     <Route path="/financial-plans" element={<FinancialPlans />} />
                     <Route path="/investments" element={<Investments />} />
+                    <Route path="/marketplace" element={<Marketplace />} />
                     <Route path="/investment/:categoryId" element={<AlternativeAssetCategory />} />
                     <Route path="/advisor-profile" element={<AdvisorProfile />} />
                     <Route path="/lending" element={<Lending />} />
