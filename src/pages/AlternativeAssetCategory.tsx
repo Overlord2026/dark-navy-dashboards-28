@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
@@ -179,6 +178,57 @@ const CATEGORY_DATA = {
         subscriptions: "Monthly",
         lockUp: "7 years",
         strategy: "The fund provides access to private equity investments across multiple sectors and strategies in a continuously offered vehicle designed for individual investors."
+      },
+      {
+        id: 8,
+        name: "BlackRock Private Investments Fund iCapital Offshore Access Fund, L.P.",
+        description: "With stocks at all time highs and bond yields at sustained lows, we expect longterm public market gains to be more muted. Look to potentially amplify returns through BlackRock Private Investments Fund (\"BPIF\"), which provides access to private equity investments in a continuously offered fund.",
+        minimumInvestment: "$100,000",
+        performance: "15.9% (5-year avg)",
+        lockupPeriod: "7 years",
+        tags: ["Qualified Purchaser", "$100K Minimum", "Offshore", "Diversified"],
+        firm: "BlackRock",
+        platform: "iCapital",
+        category: "Private Equity",
+        investorQualification: "Qualified Purchaser",
+        liquidity: "Limited",
+        subscriptions: "Quarterly",
+        lockUp: "7 years",
+        strategy: "The fund provides offshore investors access to BlackRock's private equity platform with an emphasis on long-term capital appreciation through a diversified portfolio approach."
+      },
+      {
+        id: 9,
+        name: "Bonaccord Capital Partners Fund III",
+        description: "Bonaccord Capital Partners II (\"the Fund\") is a middle-market GP stakes fund with a focus on making growth capital investments in mid-market private markets sponsors across private equity, private credit, real estate, and real assets. The fund aims to deliver attractive risk-adjusted returns driven by both elevated yields and capital appreciation.",
+        minimumInvestment: "$250,000",
+        performance: "19.2% (since inception)",
+        lockupPeriod: "8 years",
+        tags: ["Qualified Purchaser", "$250K Minimum", "GP Stakes", "Mid-Market"],
+        firm: "Bonaccord Capital",
+        platform: "Aberdeen Standard Investments",
+        category: "Private Equity",
+        investorQualification: "Qualified Purchaser",
+        liquidity: "Limited",
+        subscriptions: "Quarterly",
+        lockUp: "8 years",
+        strategy: "The fund invests in minority stakes of middle-market private markets sponsors across private equity, private credit, real estate, and real assets, providing strategic capital for growth while participating in management fee economics."
+      },
+      {
+        id: 10,
+        name: "CAIS Apollo Aligned Alternatives Fund LLC",
+        description: "The CAIS Apollo Aligned Alternatives Fund LLC (\"The Fund\") aims to act as a conduit, diversified solution, accessing opportunities across Apollo Global Management's comprehensive platform of strategic alternatives through differentiated and complementary sources of return. The strategy seeks to deliver risk-adjusted returns with a focus on downside protection. The fund invests with over $100m contributed in total from Apollo's own balance sheet portfolio, which emphasizes the firm's commitment to alignment with its clients and investors in Fund and has day-to-day, week-to-week oversight by the fund.",
+        minimumInvestment: "$50,000",
+        performance: "14.5% (since inception)",
+        lockupPeriod: "5 years",
+        tags: ["Accredited Investor", "$50K Minimum", "Diversified", "Multi-Strategy"],
+        firm: "Apollo Global Management",
+        platform: "CAIS",
+        category: "Private Equity",
+        investorQualification: "Accredited Investor",
+        liquidity: "Quarterly Tender Offers",
+        subscriptions: "Monthly",
+        lockUp: "5 years",
+        strategy: "The fund provides diversified exposure to Apollo's platform of alternative investments through a multi-strategy approach with a focus on downside protection and alignment of interests."
       }
     ]
   },
