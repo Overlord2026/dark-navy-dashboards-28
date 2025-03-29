@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
@@ -12,7 +11,8 @@ import {
   TrendingUp,
   ClipboardList,
   DollarSign,
-  Home
+  Home,
+  Filter
 } from "lucide-react";
 import { AddAccountDialog, AccountData } from "@/components/accounts/AddAccountDialog";
 import { AccountLinkTypeSelector } from "@/components/accounts/AccountLinkTypeSelector";
@@ -21,6 +21,20 @@ import { RealEstateTracker } from "@/components/accounts/RealEstateTracker";
 import { NetWorthSummary } from "@/components/dashboard/NetWorthSummary";
 import { useToast } from "@/hooks/use-toast";
 import { useTheme } from "@/context/ThemeContext";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs";
+import { 
+  Table, 
+  TableBody, 
+  TableCell, 
+  TableHead, 
+  TableHeader, 
+  TableRow 
+} from "@/components/ui/table";
 
 type AccountSection = {
   id: string;
@@ -47,6 +61,9 @@ const Accounts = () => {
   const [mainDialogOpen, setMainDialogOpen] = useState(false);
   const [showRealEstate, setShowRealEstate] = useState(true);
   const [showNetWorth, setShowNetWorth] = useState(true);
+  const [activeAccountType, setActiveAccountType] = useState<string | null>(null);
+  const [accountDetailView, setAccountDetailView] = useState(false);
+  const [selectedAccount, setSelectedAccount] = useState<AccountData | null>(null);
 
   const [accountSections, setAccountSections] = useState<AccountSection[]>([
     {
@@ -339,6 +356,205 @@ const Accounts = () => {
     setMainDialogOpen(true);
   };
 
+  const handleAccountClick = (account: AccountData) => {
+    setSelectedAccount(account);
+    setAccountDetailView(true);
+  };
+
+  const handleBackToAccounts = () => {
+    setAccountDetailView(false);
+    setSelectedAccount(null);
+  };
+
+  const filterAccountsByType = (type: string) => {
+    const allAccounts: AccountData[] = [];
+    
+    accountSections.forEach(section => {
+      section.accounts.forEach(account => {
+        if (account.type.toLowerCase() === type.toLowerCase()) {
+          allAccounts.push(account);
+        }
+      });
+    });
+    
+    return allAccounts;
+  };
+  
+  const checkingAccounts = filterAccountsByType("checking");
+  const savingsAccounts = filterAccountsByType("savings");
+  const investmentAccounts = filterAccountsByType("investment");
+  const retirementAccounts = filterAccountsByType("retirement");
+
+  const calculateTotal = (accounts: AccountData[]) => {
+    return accounts.reduce((total, account) => {
+      const balance = parseFloat(account.balance.replace(/,/g, "")) || 0;
+      return total + balance;
+    }, 0);
+  };
+  
+  const checkingTotal = calculateTotal(checkingAccounts);
+  const savingsTotal = calculateTotal(savingsAccounts);
+  const investmentTotal = calculateTotal(investmentAccounts);
+  const retirementTotal = calculateTotal(retirementAccounts);
+
+  const renderAccountTypeDetails = (accounts: AccountData[], title: string) => {
+    if (accounts.length === 0) {
+      return (
+        <div className="flex flex-col items-center justify-center p-8">
+          <p className={`text-center mb-4 ${isLightTheme ? "text-[#666666]" : "text-gray-400"}`}>
+            No {title.toLowerCase()} accounts found
+          </p>
+          <Button 
+            onClick={openMainAddDialog}
+            className={isLightTheme ? "bg-[#E9E7D8] text-[#222222] hover:bg-[#DCD8C0]" : "bg-white text-black hover:bg-slate-100"}
+          >
+            <Plus className="mr-2 h-4 w-4" />
+            Add {title} Account
+          </Button>
+        </div>
+      );
+    }
+
+    return (
+      <div className="space-y-4">
+        <div className={`p-4 rounded-lg ${isLightTheme ? "bg-[#F2F0E1]" : "bg-[#1c2e4a]"}`}>
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-lg font-medium">{title} Summary</h3>
+            <p className="font-bold">${calculateTotal(accounts).toLocaleString()}</p>
+          </div>
+          
+          <Table>
+            <TableHeader>
+              <TableRow className={isLightTheme ? "bg-[#E9E7D8]" : "bg-[#121a2c]"}>
+                <TableHead>Account Name</TableHead>
+                <TableHead>Account Number</TableHead>
+                <TableHead className="text-right">Balance</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {accounts.map((account) => (
+                <TableRow 
+                  key={account.id}
+                  className={`cursor-pointer ${isLightTheme ? "hover:bg-[#E9E7D8]" : "hover:bg-[#2A2A40]"}`}
+                  onClick={() => handleAccountClick(account)}
+                >
+                  <TableCell className="font-medium">{account.name}</TableCell>
+                  <TableCell>{account.accountNumber}</TableCell>
+                  <TableCell className="text-right">${account.balance}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+        
+        <Button 
+          onClick={openMainAddDialog}
+          variant="outline" 
+          className={`${
+            isLightTheme 
+              ? "border-[#DCD8C0] text-[#222222] hover:bg-[#E9E7D8]" 
+              : "border-gray-700 text-white hover:bg-[#1c2e4a]"
+          }`}
+        >
+          <Plus className="mr-2 h-4 w-4" />
+          Add {title} Account
+        </Button>
+      </div>
+    );
+  };
+
+  const renderAccountDetails = () => {
+    if (!selectedAccount) return null;
+    
+    const transactionData = [
+      { date: '2023-10-15', description: 'Direct Deposit', amount: 3250.00, type: 'credit' },
+      { date: '2023-10-12', description: 'Online Payment', amount: -420.75, type: 'debit' },
+      { date: '2023-10-08', description: 'ATM Withdrawal', amount: -200.00, type: 'debit' },
+      { date: '2023-10-05', description: 'Grocery Store', amount: -89.45, type: 'debit' },
+      { date: '2023-10-01', description: 'Utility Bill Payment', amount: -145.30, type: 'debit' },
+    ];
+    
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <Button
+            variant="outline"
+            onClick={handleBackToAccounts}
+            className={`${
+              isLightTheme 
+                ? "border-[#DCD8C0] text-[#222222] hover:bg-[#E9E7D8]" 
+                : "border-gray-700 text-white hover:bg-[#1c2e4a]"
+            }`}
+          >
+            Back to Accounts
+          </Button>
+          
+          <Button
+            variant="outline"
+            className={`${
+              isLightTheme 
+                ? "border-[#DCD8C0] text-[#222222] hover:bg-[#E9E7D8]" 
+                : "border-gray-700 text-white hover:bg-[#1c2e4a]"
+            }`}
+          >
+            <Filter className="mr-2 h-4 w-4" />
+            Filter
+          </Button>
+        </div>
+        
+        <div className={`p-6 rounded-lg ${isLightTheme ? "bg-[#F2F0E1] border border-[#DCD8C0]" : "bg-[#121a2c] border border-gray-800"}`}>
+          <div className="flex justify-between items-center mb-6">
+            <div>
+              <h2 className="text-xl font-semibold">{selectedAccount.name}</h2>
+              <p className={`${isLightTheme ? "text-[#666666]" : "text-gray-400"}`}>
+                Account: {selectedAccount.accountNumber}
+              </p>
+              <p className={`${isLightTheme ? "text-[#666666]" : "text-gray-400"}`}>
+                Type: {selectedAccount.type}
+              </p>
+            </div>
+            <div className="text-right">
+              <p className="text-2xl font-bold">${selectedAccount.balance}</p>
+              <p className={`${isLightTheme ? "text-[#666666]" : "text-gray-400"}`}>
+                Current Balance
+              </p>
+            </div>
+          </div>
+          
+          <div className="mt-6">
+            <h3 className="text-lg font-medium mb-4">Recent Transactions</h3>
+            <Table>
+              <TableHeader>
+                <TableRow className={isLightTheme ? "bg-[#E9E7D8]" : "bg-[#1c2e4a]"}>
+                  <TableHead>Date</TableHead>
+                  <TableHead>Description</TableHead>
+                  <TableHead className="text-right">Amount</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {transactionData.map((transaction, index) => (
+                  <TableRow key={index}>
+                    <TableCell>{transaction.date}</TableCell>
+                    <TableCell>{transaction.description}</TableCell>
+                    <TableCell 
+                      className={`text-right ${
+                        transaction.type === 'credit' 
+                          ? 'text-green-500' 
+                          : isLightTheme ? 'text-red-500' : 'text-red-400'
+                      }`}
+                    >
+                      {transaction.type === 'credit' ? '+' : ''}${Math.abs(transaction.amount).toFixed(2)}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <ThreeColumnLayout activeMainItem="accounts" title="Accounts">
       <div className="mx-auto max-w-6xl animate-fade-in">
@@ -361,120 +577,151 @@ const Accounts = () => {
               </div>
             )}
 
-            <div className="space-y-4">
-              {accountSections.map((section) => (
-                <div
-                  key={section.id}
-                  className={`rounded-lg ${
-                    isLightTheme 
-                      ? "bg-[#F2F0E1] border border-[#DCD8C0]" 
-                      : "bg-[#121a2c] border border-gray-800"
-                  } overflow-hidden`}
-                >
-                  <div
-                    className="p-4 flex items-center justify-between cursor-pointer"
-                    onClick={() => toggleSection(section.id)}
-                  >
-                    <div className="flex items-center space-x-3">
-                      {section.icon}
-                      <span className={`font-medium ${isLightTheme ? "text-[#222222]" : "text-white"}`}>
-                        {section.title}
-                      </span>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                      {section.balance ? (
-                        <span className={isLightTheme ? "text-[#222222]" : "text-white"}>
-                          {section.balance}
-                        </span>
-                      ) : (
-                        <span className={isLightTheme ? "text-[#666666]" : "text-gray-400"}>
-                          {section.status}
-                        </span>
-                      )}
-                      {section.isExpanded ? (
-                        <ChevronUp className={`h-5 w-5 ${isLightTheme ? "text-[#666666]" : "text-gray-400"}`} />
-                      ) : (
-                        <ChevronDown className={`h-5 w-5 ${isLightTheme ? "text-[#666666]" : "text-gray-400"}`} />
-                      )}
-                    </div>
-                  </div>
-
-                  {section.isExpanded && (
-                    <div className={`p-6 border-t ${isLightTheme ? "border-[#DCD8C0]" : "border-gray-800"}`}>
-                      {section.component ? (
-                        section.component
-                      ) : (
-                        <div className="space-y-3">
-                          {section.accounts.length > 0 ? (
-                            <>
-                              {section.accounts.map((account) => (
-                                <div 
-                                  key={account.id}
-                                  className={`p-3 rounded-lg ${
-                                    isLightTheme 
-                                      ? "bg-[#E9E7D8] border border-[#DCD8C0]" 
-                                      : "bg-[#1c2e4a] border border-gray-700"
-                                  } flex justify-between items-center`}
-                                >
-                                  <div>
-                                    <p className={`font-medium ${isLightTheme ? "text-[#222222]" : "text-white"}`}>
-                                      {account.name}
-                                    </p>
-                                    {account.accountNumber && (
-                                      <p className={`text-sm ${isLightTheme ? "text-[#666666]" : "text-gray-400"}`}>
-                                        Account: {account.accountNumber}
-                                      </p>
-                                    )}
-                                  </div>
-                                  {account.balance && (
-                                    <div className="text-right">
-                                      <p className={`font-medium ${isLightTheme ? "text-[#222222]" : "text-white"}`}>
-                                        ${account.balance}
-                                      </p>
-                                    </div>
-                                  )}
-                                </div>
-                              ))}
-                              
-                              <Button 
-                                variant="outline" 
-                                className={`mt-3 ${
-                                  isLightTheme 
-                                    ? "border-[#DCD8C0] text-[#222222] hover:bg-[#E9E7D8] hover:text-[#222222]" 
-                                    : "border-gray-700 text-white hover:bg-[#1c2e4a] hover:text-white"
-                                }`}
-                                onClick={() => openAddDialog(section)}
-                              >
-                                <Plus className="mr-2 h-4 w-4" />
-                                Add {section.title.replace("External ", "").replace("BFO ", "")}
-                              </Button>
-                            </>
+            {!accountDetailView ? (
+              <Tabs defaultValue="all" className="w-full">
+                <TabsList className="mb-4">
+                  <TabsTrigger value="all">All Accounts</TabsTrigger>
+                  <TabsTrigger value="checking">Checking ({checkingAccounts.length})</TabsTrigger>
+                  <TabsTrigger value="savings">Savings ({savingsAccounts.length})</TabsTrigger>
+                  <TabsTrigger value="investment">Investment ({investmentAccounts.length})</TabsTrigger>
+                  <TabsTrigger value="retirement">Retirement ({retirementAccounts.length})</TabsTrigger>
+                </TabsList>
+                
+                <TabsContent value="all" className="space-y-4">
+                  {accountSections.map((section) => (
+                    <div
+                      key={section.id}
+                      className={`rounded-lg ${
+                        isLightTheme 
+                          ? "bg-[#F2F0E1] border border-[#DCD8C0]" 
+                          : "bg-[#121a2c] border border-gray-800"
+                      } overflow-hidden`}
+                    >
+                      <div
+                        className="p-4 flex items-center justify-between cursor-pointer"
+                        onClick={() => toggleSection(section.id)}
+                      >
+                        <div className="flex items-center space-x-3">
+                          {section.icon}
+                          <span className={`font-medium ${isLightTheme ? "text-[#222222]" : "text-white"}`}>
+                            {section.title}
+                          </span>
+                        </div>
+                        <div className="flex items-center space-x-3">
+                          {section.balance ? (
+                            <span className={isLightTheme ? "text-[#222222]" : "text-white"}>
+                              {section.balance}
+                            </span>
                           ) : (
-                            <div className="flex flex-col items-center justify-center py-8">
-                              <p className={`mb-4 ${isLightTheme ? "text-[#666666]" : "text-gray-400"}`}>
-                                No accounts added yet
-                              </p>
-                              <Button 
-                                variant="outline" 
-                                className={`${
-                                  isLightTheme 
-                                    ? "border-[#DCD8C0] text-[#222222] hover:bg-[#E9E7D8] hover:text-[#222222]" 
-                                    : "border-gray-700 text-white hover:bg-[#1c2e4a] hover:text-white"
-                                }`}
-                                onClick={() => openAddDialog(section)}
-                              >
-                                <Plus className="mr-2 h-4 w-4" />
-                                Add {section.title.replace("External ", "").replace("BFO ", "")}
-                              </Button>
+                            <span className={isLightTheme ? "text-[#666666]" : "text-gray-400"}>
+                              {section.status}
+                            </span>
+                          )}
+                          {section.isExpanded ? (
+                            <ChevronUp className={`h-5 w-5 ${isLightTheme ? "text-[#666666]" : "text-gray-400"}`} />
+                          ) : (
+                            <ChevronDown className={`h-5 w-5 ${isLightTheme ? "text-[#666666]" : "text-gray-400"}`} />
+                          )}
+                        </div>
+                      </div>
+
+                      {section.isExpanded && (
+                        <div className={`p-6 border-t ${isLightTheme ? "border-[#DCD8C0]" : "border-gray-800"}`}>
+                          {section.component ? (
+                            section.component
+                          ) : (
+                            <div className="space-y-3">
+                              {section.accounts.length > 0 ? (
+                                <>
+                                  {section.accounts.map((account) => (
+                                    <div 
+                                      key={account.id}
+                                      className={`p-3 rounded-lg ${
+                                        isLightTheme 
+                                          ? "bg-[#E9E7D8] border border-[#DCD8C0]" 
+                                          : "bg-[#1c2e4a] border border-gray-700"
+                                      } flex justify-between items-center cursor-pointer`}
+                                      onClick={() => handleAccountClick(account)}
+                                    >
+                                      <div>
+                                        <p className={`font-medium ${isLightTheme ? "text-[#222222]" : "text-white"}`}>
+                                          {account.name}
+                                        </p>
+                                        {account.accountNumber && (
+                                          <p className={`text-sm ${isLightTheme ? "text-[#666666]" : "text-gray-400"}`}>
+                                            Account: {account.accountNumber}
+                                          </p>
+                                        )}
+                                      </div>
+                                      {account.balance && (
+                                        <div className="text-right">
+                                          <p className={`font-medium ${isLightTheme ? "text-[#222222]" : "text-white"}`}>
+                                            ${account.balance}
+                                          </p>
+                                        </div>
+                                      )}
+                                    </div>
+                                  ))}
+                                  
+                                  <Button 
+                                    variant="outline" 
+                                    className={`mt-3 ${
+                                      isLightTheme 
+                                        ? "border-[#DCD8C0] text-[#222222] hover:bg-[#E9E7D8] hover:text-[#222222]" 
+                                        : "border-gray-700 text-white hover:bg-[#1c2e4a] hover:text-white"
+                                    }`}
+                                    onClick={() => openAddDialog(section)}
+                                  >
+                                    <Plus className="mr-2 h-4 w-4" />
+                                    Add {section.title.replace("External ", "").replace("BFO ", "")}
+                                  </Button>
+                                </>
+                              ) : (
+                                <div className="flex flex-col items-center justify-center py-8">
+                                  <p className={`mb-4 ${isLightTheme ? "text-[#666666]" : "text-gray-400"}`}>
+                                    No accounts added yet
+                                  </p>
+                                  <Button 
+                                    variant="outline" 
+                                    className={`${
+                                      isLightTheme 
+                                        ? "border-[#DCD8C0] text-[#222222] hover:bg-[#E9E7D8] hover:text-[#222222]" 
+                                        : "border-gray-700 text-white hover:bg-[#1c2e4a] hover:text-white"
+                                    }`}
+                                    onClick={() => openAddDialog(section)}
+                                  >
+                                    <Plus className="mr-2 h-4 w-4" />
+                                    Add {section.title.replace("External ", "").replace("BFO ", "")}
+                                  </Button>
+                                </div>
+                              )}
                             </div>
                           )}
                         </div>
                       )}
                     </div>
-                  )}
-                </div>
-              ))}
-            </div>
+                  ))}
+                </TabsContent>
+                
+                <TabsContent value="checking">
+                  {renderAccountTypeDetails(checkingAccounts, "Checking")}
+                </TabsContent>
+                
+                <TabsContent value="savings">
+                  {renderAccountTypeDetails(savingsAccounts, "Savings")}
+                </TabsContent>
+                
+                <TabsContent value="investment">
+                  {renderAccountTypeDetails(investmentAccounts, "Investment")}
+                </TabsContent>
+                
+                <TabsContent value="retirement">
+                  {renderAccountTypeDetails(retirementAccounts, "Retirement")}
+                </TabsContent>
+              </Tabs>
+            ) : (
+              renderAccountDetails()
+            )}
           </>
         )}
 
