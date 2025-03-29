@@ -1,65 +1,40 @@
 
-import { Course } from '@/types/education';
-import { getAllCourses, getCourseById } from './courseData';
-import { toast } from 'sonner';
+import { Course, CourseCategory } from '@/types/education';
+import { createShuffledArray } from '@/lib/utils';
+import { courses } from './coursesByCategory';
 
-/**
- * Handle course access based on enrollment status
- */
-export const handleCourseAccess = (
-  courseId: string | number,
-  title: string,
-  isPaid: boolean,
-  ghlUrl?: string,
-  setIsProcessing?: (id: string | number | null) => void
-) => {
-  if (setIsProcessing) setIsProcessing(courseId);
-
-  if (!isPaid) {
-    // For free courses, we can directly enroll
-    toast.success(`Successfully enrolled in "${title}"`);
-    if (setIsProcessing) setTimeout(() => setIsProcessing(null), 1000);
-    return;
-  }
-
-  // For paid courses with GHL url, we redirect
-  if (ghlUrl) {
-    toast.info(`Redirecting to enrollment for "${title}"`);
-    window.open(ghlUrl, '_blank');
-    if (setIsProcessing) setTimeout(() => setIsProcessing(null), 1000);
-    return;
-  }
-
-  // For paid courses without GHL url
-  toast.info(`Please contact support to enroll in "${title}"`);
-  if (setIsProcessing) setTimeout(() => setIsProcessing(null), 1000);
+export const getRandomCourses = (count: number): Course[] => {
+  // Create a flattened array of all courses
+  const allCourses = Object.values(courses).flat();
+  return createShuffledArray(allCourses).slice(0, count);
 };
 
-/**
- * Get a course by ID and format for display
- */
-export const getFormattedCourseById = (id: string | number): Course | null => {
-  const course = getCourseById(id);
-  if (!course) return null;
-  return course;
+export const getCoursesByCategory = (categoryId: string): Course[] => {
+  return courses[categoryId as CourseCategory] || [];
 };
 
-/**
- * Get all courses
- */
-export const getFormattedCourses = (): Course[] => {
-  return getAllCourses();
+export const getAllCourses = (): Course[] => {
+  return Object.values(courses).flat();
 };
 
-/**
- * Filter courses by category
- */
-export const filterCoursesByCategory = (categoryId: string): Course[] => {
-  if (categoryId === 'all-courses') {
-    return getAllCourses();
-  }
+export const getFeaturedCourses = (count: number = 3): Course[] => {
+  // In a real app, you'd have a property on courses to mark them as featured
+  // For now, let's just return random courses
+  return getRandomCourses(count);
+};
+
+export const getPopularCourses = (count: number = 4): Course[] => {
+  // In a real app, this would be based on user engagement metrics
+  // For now, let's just return different random courses
+  return getRandomCourses(count);
+};
+
+export const searchCourses = (query: string): Course[] => {
+  if (!query) return [];
   
-  return getAllCourses().filter(
-    (course) => course.categoryIds?.includes(categoryId)
+  const searchTerm = query.toLowerCase();
+  return getAllCourses().filter(course => 
+    course.title.toLowerCase().includes(searchTerm) || 
+    course.description.toLowerCase().includes(searchTerm)
   );
 };

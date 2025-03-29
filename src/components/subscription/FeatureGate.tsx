@@ -40,7 +40,7 @@ export function FeatureGate({ featureId, children, fallback }: FeatureGateProps)
         <>
           <div className="flex items-center gap-2 mb-2">
             <Badge variant="outline" className="bg-amber-100 text-amber-800 border-amber-300">
-              Trial Preview
+              Trial Access
             </Badge>
             {daysRemainingInTrial !== null && (
               <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20">
@@ -49,7 +49,7 @@ export function FeatureGate({ featureId, children, fallback }: FeatureGateProps)
             )}
           </div>
           <p className="text-muted-foreground max-w-md">
-            This feature is only available in our Elite tier. Upgrade today to unlock all features.
+            This feature is only available in our Elite tier. While you can explore many Premium features during your trial, some Elite features remain exclusive.
           </p>
         </>
       ) : (

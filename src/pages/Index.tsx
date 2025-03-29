@@ -9,6 +9,8 @@ import { SetupChecklist } from "@/components/profile/SetupChecklist";
 import { ProfileFormSheet } from "@/components/profile/ProfileFormSheet";
 import { UpcomingBillsCard } from "@/components/dashboard/UpcomingBillsCard";
 import { ExpenseOptimizationCard } from "@/components/dashboard/ExpenseOptimizationCard";
+import { WelcomeTrialBanner } from "@/components/dashboard/WelcomeTrialBanner";
+import { useSubscription } from "@/context/SubscriptionContext"; 
 import { toast } from "sonner";
 
 const Dashboard = () => {
@@ -16,6 +18,8 @@ const Dashboard = () => {
   const [showBusinessMetrics, setShowBusinessMetrics] = useState(false);
   const [activeForm, setActiveForm] = useState<string | null>(null);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const [showWelcomeBanner, setShowWelcomeBanner] = useState(false);
+  const { isInFreeTrial, daysRemainingInTrial } = useSubscription();
   
   const [checklistItems, setChecklistItems] = useState([
     { id: "investor-profile", name: "Investor Profile", completed: true },
@@ -35,6 +39,22 @@ const Dashboard = () => {
     
     return () => clearTimeout(timer);
   }, []);
+
+  // Check if user is in free trial and should see welcome banner
+  useEffect(() => {
+    if (isInFreeTrial) {
+      // Check if welcome banner has been dismissed before
+      const hasSeenWelcome = localStorage.getItem('hasSeenWelcomeBanner');
+      if (!hasSeenWelcome) {
+        setShowWelcomeBanner(true);
+      }
+    }
+  }, [isInFreeTrial]);
+
+  const handleDismissWelcome = () => {
+    setShowWelcomeBanner(false);
+    localStorage.setItem('hasSeenWelcomeBanner', 'true');
+  };
 
   const toggleMetrics = () => {
     setShowBusinessMetrics(!showBusinessMetrics);
@@ -83,6 +103,11 @@ const Dashboard = () => {
         </div>
       ) : (
         <div className="w-full space-y-6 animate-fade-in">
+          {/* Show welcome banner for new trial users */}
+          {showWelcomeBanner && (
+            <WelcomeTrialBanner onDismiss={handleDismissWelcome} />
+          )}
+          
           <div className="flex flex-col lg:flex-row gap-6">
             <div className="lg:w-2/3 space-y-6">
               <NetWorthSummary />
