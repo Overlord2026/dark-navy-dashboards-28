@@ -2,7 +2,7 @@
 import React from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Calendar, Info } from "lucide-react";
+import { CalendarClock } from "lucide-react";
 import { toast } from "sonner";
 
 interface ScheduleMeetingDialogProps {
@@ -19,13 +19,13 @@ export const ScheduleMeetingDialog: React.FC<ScheduleMeetingDialogProps> = ({ as
     <Dialog>
       <DialogTrigger asChild>
         <Button variant="outline" className="w-full flex items-center justify-center gap-2">
-          <Calendar className="h-4 w-4" />
-          Schedule a meeting
+          <CalendarClock className="h-4 w-4" />
+          Schedule an Appointment
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Schedule Meeting with Advisor</DialogTitle>
+          <DialogTitle>Schedule Appointment with Advisor</DialogTitle>
           <DialogDescription>
             Book a consultation about {assetName} with your financial advisor.
           </DialogDescription>
