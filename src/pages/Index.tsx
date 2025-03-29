@@ -42,9 +42,11 @@ export default function Index() {
         <div className="flex justify-between items-center">
           <h1 className="text-3xl font-bold">Welcome Back</h1>
           <div className="flex items-center gap-3">
-            <Button as={Link} to="/marketplace" variant="outline" className="gap-2">
-              <ShoppingBag className="h-4 w-4" />
-              Marketplace
+            <Button variant="outline" className="gap-2" asChild>
+              <Link to="/marketplace">
+                <ShoppingBag className="h-4 w-4" />
+                Marketplace
+              </Link>
             </Button>
             <DiagnosticsAccessButton />
           </div>
