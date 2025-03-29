@@ -1,12 +1,15 @@
+
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { TaxPlanningSummary } from "@/components/dashboard/TaxPlanningSummary";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Calendar, FileText, Download, Upload, BarChart, Calculator, Clock, ArrowRight, HeartHandshake, BadgeDollarSign, BookCheck, Atom, Leaf, Users, PiggyBank, Landmark, AlarmClock, AlertTriangle } from "lucide-react";
+import { Calendar, FileText, Download, Upload, BarChart, Calculator, Clock, ArrowRight, HeartHandshake, BadgeDollarSign, BookCheck, Atom, Leaf, Users, PiggyBank, Landmark, AlarmClock, AlertTriangle, CalendarClock } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useState } from "react";
 import { Progress } from "@/components/ui/progress";
+import { toast } from "sonner";
+import { ScheduleMeetingDialog } from "@/components/investments/ScheduleMeetingDialog";
 
 const TaxBudgets = () => {
   const [activeTab, setActiveTab] = useState("summary");
@@ -121,6 +124,13 @@ const TaxBudgets = () => {
     { date: "January 15, 2025", description: "Q4 Estimated Tax Payment Due", status: "Upcoming" }
   ];
 
+  const handleScheduleAppointment = (categoryName: string) => {
+    toast.success(`Appointment request for ${categoryName} sent to your advisor`, {
+      description: "You will receive a confirmation email shortly.",
+      duration: 5000
+    });
+  };
+
   const renderSubcategoryContent = () => {
     if (!activeSubcategory) return null;
     
@@ -143,10 +153,17 @@ const TaxBudgets = () => {
             </p>
           </div>
           
-          <Button className="w-full">
-            <Calendar className="h-4 w-4 mr-2" />
-            Schedule a Consultation
-          </Button>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <Button 
+              className="w-full"
+              onClick={() => handleScheduleAppointment(subcategory.name)}
+            >
+              <Calendar className="h-4 w-4 mr-2" />
+              Schedule a Consultation
+            </Button>
+            
+            <ScheduleMeetingDialog assetName={subcategory.name} />
+          </div>
         </CardContent>
       </Card>
     );
