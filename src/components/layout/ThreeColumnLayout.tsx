@@ -250,8 +250,8 @@ export function ThreeColumnLayout({
 
   return (
     <div className={`flex flex-col h-screen overflow-hidden ${isLightTheme ? 'bg-[#F9F7E8]' : 'bg-[#12121C]'}`}>
-      <div className="w-full flex justify-center items-center py-3 border-b z-50 bg-inherit" style={{ borderColor: isLightTheme ? '#DCD8C0' : 'rgba(255,255,255,0.1)' }}>
-        <div className="flex justify-center items-center w-full h-full">
+      <div className="w-full flex justify-center items-center py-3 border-b z-50 bg-inherit sticky top-0" style={{ borderColor: isLightTheme ? '#DCD8C0' : 'rgba(255,255,255,0.1)' }}>
+        <div className="container flex justify-center items-center">
           <img 
             src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" 
             alt="Boutique Family Office Logo" 
@@ -348,7 +348,9 @@ export function ThreeColumnLayout({
                               className={cn(
                                 "group flex justify-center items-center py-2 px-2 my-2 rounded-md transition-colors text-[14px] whitespace-nowrap border",
                                 isActive
-                                  ? isLightTheme ? "bg-[#E9E7D8] text-[#222222] font-medium border-primary" : "bg-black text-[#E2E2E2] font-medium border-primary"
+                                  ? isLightTheme 
+                                    ? "bg-[#E9E7D8] text-[#222222] font-medium border-primary" 
+                                    : "bg-black text-[#E2E2E2] font-medium border-primary"
                                   : isLightTheme ? "text-[#222222] border-transparent" : "text-[#E2E2E2] border-transparent",
                                 isLightTheme ? "hover:bg-[#E9E7D8] hover:border-primary" : "hover:bg-white/10 hover:border-primary"
                               )}
