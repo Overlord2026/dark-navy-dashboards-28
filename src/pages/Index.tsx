@@ -7,6 +7,8 @@ import { DashboardCard } from "@/components/ui/DashboardCard";
 import { NetWorthSummary } from "@/components/dashboard/NetWorthSummary";
 import { SetupChecklist } from "@/components/profile/SetupChecklist";
 import { ProfileFormSheet } from "@/components/profile/ProfileFormSheet";
+import { UpcomingBillsCard } from "@/components/dashboard/UpcomingBillsCard";
+import { ExpenseOptimizationCard } from "@/components/dashboard/ExpenseOptimizationCard";
 import { toast } from "sonner";
 
 const Dashboard = () => {
@@ -89,48 +91,10 @@ const Dashboard = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <RecentActivity />
                 
-                <DashboardCard
-                  title="Upcoming Tax Deadlines"
-                  className=""
-                >
-                  <div className="space-y-4">
-                    <div className="p-3 rounded-md bg-red-500/10 border border-red-500/20">
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <h4 className="text-white font-medium">Quarterly Tax Filing</h4>
-                          <p className="text-sm">Federal income tax deadline</p>
-                        </div>
-                        <div className="bg-red-500/20 text-red-400 px-2 py-1 rounded text-xs font-medium">
-                          15 days left
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div className="p-3 rounded-md bg-amber-500/10 border border-amber-500/20">
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <h4 className="text-white font-medium">State Sales Tax</h4>
-                          <p className="text-sm">Monthly sales tax report</p>
-                        </div>
-                        <div className="bg-amber-500/20 text-amber-400 px-2 py-1 rounded text-xs font-medium">
-                          22 days left
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div className="p-3 rounded-md bg-blue-500/10 border border-blue-500/20">
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <h4 className="text-white font-medium">Payroll Tax Deposit</h4>
-                          <p className="text-sm">Monthly employer federal tax</p>
-                        </div>
-                        <div className="bg-blue-500/20 text-blue-400 px-2 py-1 rounded text-xs font-medium">
-                          30 days left
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </DashboardCard>
+                <div className="space-y-4">
+                  <UpcomingBillsCard />
+                  <ExpenseOptimizationCard />
+                </div>
               </div>
             </div>
             
