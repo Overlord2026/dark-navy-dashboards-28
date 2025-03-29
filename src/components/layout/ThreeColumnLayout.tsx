@@ -19,7 +19,8 @@ import {
   CalendarIcon,
   MailIcon,
   ExternalLinkIcon,
-  UserRoundIcon
+  UserRoundIcon,
+  HomeIcon
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { UserProfileSection } from "@/components/sidebar/UserProfileSection";
@@ -79,6 +80,7 @@ const mainMenuItems: MainMenuItem[] = [
   { id: "lending", label: "Lending", icon: CreditCardIcon, href: "/lending" },
   { id: "cash-management", label: "Cash Management", icon: WalletIcon, href: "/cash-management" },
   { id: "transfers", label: "Transfers", icon: ArrowRightLeftIcon, href: "/transfers" },
+  { id: "properties", label: "Properties", icon: HomeIcon, href: "/properties" },
 ];
 
 const accountsSubMenuItems: MenuItem[] = [
