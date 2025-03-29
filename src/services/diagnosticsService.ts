@@ -1,3 +1,4 @@
+
 interface DiagnosticResult {
   status: 'success' | 'warning' | 'error';
   message: string;
@@ -24,6 +25,21 @@ interface IconTestResult {
   message: string;
 }
 
+interface FormFieldTestResult {
+  fieldName: string;
+  fieldType: string;
+  status: 'success' | 'warning' | 'error';
+  message: string;
+}
+
+interface FormValidationTestResult {
+  formName: string;
+  location: string;
+  status: 'success' | 'warning' | 'error';
+  message: string;
+  fields?: FormFieldTestResult[];
+}
+
 interface SystemHealthReport {
   navigation: DiagnosticResult;
   forms: DiagnosticResult;
@@ -33,6 +49,7 @@ interface SystemHealthReport {
   navigationTests: NavigationTestResult[];
   permissionsTests: PermissionsTestResult[];
   iconTests: IconTestResult[];
+  formValidationTests: FormValidationTestResult[];
   overall: 'healthy' | 'warning' | 'critical';
   timestamp: string;
 }
@@ -65,6 +82,9 @@ export const runDiagnostics = async (): Promise<SystemHealthReport> => {
   // Run icon tests
   const iconTests = testIcons();
   
+  // Run form validation tests
+  const formValidationTests = testFormValidation();
+  
   // Determine overall system health
   const statuses = [
     navigationResult.status, 
@@ -78,12 +98,14 @@ export const runDiagnostics = async (): Promise<SystemHealthReport> => {
   const navTestStatuses = navigationTests.map(test => test.status);
   const permTestStatuses = permissionsTests.map(test => test.status);
   const iconTestStatuses = iconTests.map(test => test.status);
+  const formValidationStatuses = formValidationTests.map(test => test.status);
   
   const allStatuses = [
     ...statuses,
     ...navTestStatuses,
     ...permTestStatuses,
-    ...iconTestStatuses
+    ...iconTestStatuses,
+    ...formValidationStatuses
   ];
   
   let overall: 'healthy' | 'warning' | 'critical' = 'healthy';
@@ -103,6 +125,7 @@ export const runDiagnostics = async (): Promise<SystemHealthReport> => {
     navigationTests,
     permissionsTests,
     iconTests,
+    formValidationTests,
     overall,
     timestamp: new Date().toISOString()
   };
@@ -279,6 +302,104 @@ const testIcons = (): IconTestResult[] => {
       location: "Appointments",
       status: "error",
       message: "Calendar icon missing in mobile view"
+    }
+  ];
+};
+
+const testFormValidation = (): FormValidationTestResult[] => {
+  // In a real app, this would run actual form validation tests
+  return [
+    {
+      formName: "Advisor Feedback Form",
+      location: "/advisor-feedback",
+      status: "warning",
+      message: "Form allows submission with empty ratings",
+      fields: [
+        {
+          fieldName: "ratings",
+          fieldType: "star-rating",
+          status: "warning",
+          message: "Star ratings can be empty on submission"
+        },
+        {
+          fieldName: "comments",
+          fieldType: "textarea",
+          status: "success",
+          message: "Text areas properly validate and trim input"
+        }
+      ]
+    },
+    {
+      formName: "Contact Information Form",
+      location: "/customer-profile",
+      status: "success",
+      message: "All fields validate correctly",
+      fields: [
+        {
+          fieldName: "email",
+          fieldType: "email",
+          status: "success",
+          message: "Email validation working correctly"
+        },
+        {
+          fieldName: "phone",
+          fieldType: "tel",
+          status: "success",
+          message: "Phone number validation working correctly"
+        }
+      ]
+    },
+    {
+      formName: "Property Form",
+      location: "/properties",
+      status: "success",
+      message: "Form validates all required fields"
+    },
+    {
+      formName: "Loan Application Form",
+      location: "/lending",
+      status: "error",
+      message: "Form submission fails with valid data",
+      fields: [
+        {
+          fieldName: "loanAmount",
+          fieldType: "number",
+          status: "success",
+          message: "Numeric validation working correctly"
+        },
+        {
+          fieldName: "purpose",
+          fieldType: "select",
+          status: "error",
+          message: "Select field not saving value on submission"
+        },
+        {
+          fieldName: "startDate",
+          fieldType: "date",
+          status: "error",
+          message: "Date picker not selecting correct date format"
+        }
+      ]
+    },
+    {
+      formName: "Document Upload Form",
+      location: "/documents",
+      status: "warning",
+      message: "File validation partially working",
+      fields: [
+        {
+          fieldName: "fileUpload",
+          fieldType: "file",
+          status: "warning",
+          message: "Accepts improper file types despite validation"
+        },
+        {
+          fieldName: "documentType",
+          fieldType: "select",
+          status: "success",
+          message: "Document type selection works correctly"
+        }
+      ]
     }
   ];
 };

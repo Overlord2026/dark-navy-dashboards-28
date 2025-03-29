@@ -4,7 +4,16 @@ import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { runDiagnostics } from "@/services/diagnosticsService";
-import { AlertCircle, CheckCircle, AlertTriangle, RefreshCw, Link, Lock, Eye } from "lucide-react";
+import { 
+  AlertCircle, 
+  CheckCircle, 
+  AlertTriangle, 
+  RefreshCw, 
+  Link, 
+  Lock, 
+  Eye,
+  FileText
+} from "lucide-react";
 import { toast } from "sonner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -75,6 +84,22 @@ export default function SystemDiagnostics() {
     const failedIconTests = report.iconTests.filter((test: any) => test.status === 'error' || test.status === 'warning');
     if (failedIconTests.length > 0) {
       recs.push(`Fix icon display issues in: ${[...new Set(failedIconTests.map((t: any) => t.location))].join(', ')}`);
+    }
+    
+    // New recommendations based on form validation tests
+    const failedFormTests = report.formValidationTests.filter((test: any) => test.status === 'error' || test.status === 'warning');
+    if (failedFormTests.length > 0) {
+      recs.push(`Address form validation issues in: ${failedFormTests.map((t: any) => t.formName).join(', ')}`);
+      
+      // Add specific recommendations for form fields with issues
+      failedFormTests.forEach((formTest: any) => {
+        if (formTest.fields) {
+          const fieldIssues = formTest.fields.filter((field: any) => field.status === 'error' || field.status === 'warning');
+          if (fieldIssues.length > 0) {
+            recs.push(`Fix ${formTest.formName} field validation for: ${fieldIssues.map((f: any) => f.fieldName).join(', ')}`);
+          }
+        }
+      });
     }
     
     // Add general recommendations
@@ -153,11 +178,12 @@ export default function SystemDiagnostics() {
         {report ? (
           <div className="space-y-6">
             <Tabs defaultValue="summary" className="w-full">
-              <TabsList className="grid grid-cols-4 mb-4">
+              <TabsList className="grid grid-cols-5 mb-4">
                 <TabsTrigger value="summary">Core Services</TabsTrigger>
                 <TabsTrigger value="navigation">Navigation</TabsTrigger>
                 <TabsTrigger value="permissions">Permissions</TabsTrigger>
                 <TabsTrigger value="icons">Icons</TabsTrigger>
+                <TabsTrigger value="forms">Form Validation</TabsTrigger>
               </TabsList>
               
               <TabsContent value="summary">
@@ -168,7 +194,8 @@ export default function SystemDiagnostics() {
                       key !== 'timestamp' && 
                       key !== 'navigationTests' && 
                       key !== 'permissionsTests' && 
-                      key !== 'iconTests')
+                      key !== 'iconTests' &&
+                      key !== 'formValidationTests')
                     .map(([key, value]: [string, any]) => (
                       <Card key={key} className={`border ${getStatusColor(value.status)}`}>
                         <CardHeader className="pb-2">
@@ -274,6 +301,58 @@ export default function SystemDiagnostics() {
                             </span>
                           </div>
                           <p className="text-sm mt-1">{test.message}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+              
+              <TabsContent value="forms">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <FileText className="h-5 w-5" />
+                      Form Validation Tests
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      {report.formValidationTests.map((test: any, index: number) => (
+                        <div key={index} className={`p-3 rounded-md border ${getStatusColor(test.status)}`}>
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-start gap-2">
+                              {getStatusIcon(test.status)}
+                              <div>
+                                <span className="font-medium">{test.formName}</span>
+                                <p className="text-sm">Page: {test.location}</p>
+                              </div>
+                            </div>
+                            <span className="text-sm px-2 py-1 rounded-full bg-muted">
+                              {test.status}
+                            </span>
+                          </div>
+                          <p className="text-sm mt-1">{test.message}</p>
+                          
+                          {test.fields && test.fields.length > 0 && (
+                            <div className="mt-2 pl-8 space-y-2">
+                              <p className="text-sm font-medium">Field Tests:</p>
+                              {test.fields.map((field: any, fieldIndex: number) => (
+                                <div key={fieldIndex} className={`p-2 rounded-md border ${getStatusColor(field.status)}`}>
+                                  <div className="flex items-center justify-between">
+                                    <div className="flex items-center gap-2">
+                                      {getStatusIcon(field.status)}
+                                      <div>
+                                        <span className="font-medium">{field.fieldName}</span>
+                                        <p className="text-xs text-muted-foreground">Type: {field.fieldType}</p>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <p className="text-xs mt-1">{field.message}</p>
+                                </div>
+                              ))}
+                            </div>
+                          )}
                         </div>
                       ))}
                     </div>
