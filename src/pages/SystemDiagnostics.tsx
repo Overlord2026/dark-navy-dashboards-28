@@ -116,6 +116,31 @@ export default function SystemDiagnostics() {
       }
     }
     
+    // New: Performance test recommendations
+    if (report.performanceTests) {
+      const slowResponses = report.performanceTests.filter((test: any) => test.responseTime > 1000);
+      if (slowResponses.length > 0) {
+        recs.push(`Optimize slow page loads: ${slowResponses.map((t: any) => t.name).join(', ')} (${slowResponses.map((t: any) => `${t.responseTime}ms`).join(', ')})`);
+      }
+      
+      const highCpuUsage = report.performanceTests.filter((test: any) => test.cpuUsage > 70);
+      if (highCpuUsage.length > 0) {
+        recs.push(`Reduce CPU usage in: ${highCpuUsage.map((t: any) => t.name).join(', ')} (${highCpuUsage.map((t: any) => `${t.cpuUsage}%`).join(', ')})`);
+      }
+      
+      const highMemoryUsage = report.performanceTests.filter((test: any) => test.memoryUsage > 100);
+      if (highMemoryUsage.length > 0) {
+        recs.push(`Investigate potential memory leaks in: ${highMemoryUsage.map((t: any) => t.name).join(', ')}`);
+      }
+      
+      const concurrencyIssues = report.performanceTests.filter((test: any) => 
+        test.concurrentUsers > 30 && (test.status === 'error' || test.status === 'warning')
+      );
+      if (concurrencyIssues.length > 0) {
+        recs.push(`Improve handling of concurrent users in: ${concurrencyIssues.map((t: any) => t.name).join(', ')}`);
+      }
+    }
+    
     recs.push("Consider implementing periodic automated health checks to monitor system performance.");
     
     return recs;
@@ -130,13 +155,14 @@ export default function SystemDiagnostics() {
           onRunDiagnostics={runSystemCheck}
         />
 
-        {report ? (
+        {isLoading && !report ? (
+          <LoadingState />
+        ) : (
           <DiagnosticsTabs 
             report={report}
             recommendations={recommendations}
+            isLoading={isLoading}
           />
-        ) : (
-          <LoadingState />
         )}
       </div>
     </ThreeColumnLayout>

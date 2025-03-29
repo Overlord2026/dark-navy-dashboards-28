@@ -1,103 +1,63 @@
 
-import { SystemHealthReport } from './types';
-import { 
-  checkNavigation, 
-  checkForms, 
-  checkDatabase, 
-  checkAPI, 
-  checkAuthentication 
-} from './basicChecks';
-import { testNavigationRoutes } from './navigationTests';
+import { testBasicServices } from './basicChecks';
+import { testNavigation } from './navigationTests';
 import { testPermissions } from './permissionTests';
 import { testIcons } from './iconTests';
 import { testFormValidation } from './formValidationTests';
 import { testApiIntegrations } from './apiIntegrationTests';
 import { testRoleSimulations } from './roleSimulationTests';
+import { runPerformanceTests } from './performanceTests';
+import { DiagnosticTestStatus } from './types';
 
-export * from './types';
-
-export const runDiagnostics = async (): Promise<SystemHealthReport> => {
-  // Check navigation
-  const navigationResult = checkNavigation();
+/**
+ * Runs all system diagnostics and returns a comprehensive report
+ */
+export const runDiagnostics = async () => {
+  // Core services
+  const basicResults = await testBasicServices();
   
-  // Check forms 
-  const formsResult = checkForms();
+  // Detailed tests
+  const navigationTests = await testNavigation();
+  const permissionsTests = await testPermissions();
+  const iconTests = await testIcons();
+  const formValidationTests = await testFormValidation();
+  const apiIntegrationTests = await testApiIntegrations();
+  const roleSimulationTests = await testRoleSimulations();
+  const performanceTests = await runPerformanceTests();
   
-  // Check database connectivity
-  const databaseResult = checkDatabase();
-  
-  // Check API integrations
-  const apiResult = checkAPI();
-  
-  // Check authentication
-  const authResult = checkAuthentication();
-  
-  // Run navigation route tests
-  const navigationTests = testNavigationRoutes();
-  
-  // Run permission validation tests
-  const permissionsTests = testPermissions();
-  
-  // Run icon tests
-  const iconTests = testIcons();
-  
-  // Run form validation tests
-  const formValidationTests = testFormValidation();
-  
-  // Run API integration tests
-  const apiIntegrationTests = testApiIntegrations();
-  
-  // Run role simulation tests
-  const roleSimulationTests = testRoleSimulations();
-  
-  // Determine overall system health
-  const statuses = [
-    navigationResult.status, 
-    formsResult.status,
-    databaseResult.status,
-    apiResult.status,
-    authResult.status
+  // Determine overall status
+  const allTests = [
+    ...Object.values(basicResults).map(item => item.status),
+    ...navigationTests.map(item => item.status),
+    ...permissionsTests.map(item => item.status),
+    ...iconTests.map(item => item.status),
+    ...formValidationTests.map(item => item.status),
+    ...apiIntegrationTests.map(item => item.status),
+    ...roleSimulationTests.map(item => item.status),
+    ...performanceTests.map(item => item.status),
   ];
   
-  // Also consider the new test results
-  const navTestStatuses = navigationTests.map(test => test.status);
-  const permTestStatuses = permissionsTests.map(test => test.status);
-  const iconTestStatuses = iconTests.map(test => test.status);
-  const formValidationStatuses = formValidationTests.map(test => test.status);
-  const apiIntegrationStatuses = apiIntegrationTests.map(test => test.status);
-  const roleSimulationStatuses = roleSimulationTests.map(test => test.status);
-  
-  const allStatuses = [
-    ...statuses,
-    ...navTestStatuses,
-    ...permTestStatuses,
-    ...iconTestStatuses,
-    ...formValidationStatuses,
-    ...apiIntegrationStatuses,
-    ...roleSimulationStatuses
-  ];
-  
-  let overall: 'healthy' | 'warning' | 'critical' = 'healthy';
-  
-  if (allStatuses.includes('error')) {
-    overall = 'critical';
-  } else if (allStatuses.includes('warning')) {
-    overall = 'warning';
+  let overall: DiagnosticTestStatus = "success";
+  if (allTests.includes("error")) {
+    overall = "error";
+  } else if (allTests.includes("warning")) {
+    overall = "warning";
   }
   
   return {
-    navigation: navigationResult,
-    forms: formsResult,
-    database: databaseResult,
-    api: apiResult,
-    authentication: authResult,
+    timestamp: new Date().toISOString(),
+    overall,
+    
+    // Core services summaries
+    ...basicResults,
+    
+    // Detailed test results
     navigationTests,
     permissionsTests,
     iconTests,
     formValidationTests,
     apiIntegrationTests,
     roleSimulationTests,
-    overall,
-    timestamp: new Date().toISOString()
+    performanceTests,
   };
 };

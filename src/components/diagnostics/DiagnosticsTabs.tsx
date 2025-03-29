@@ -7,18 +7,20 @@ import { IconTests } from "./IconTests";
 import { FormValidationTests } from "./FormValidationTests";
 import { ApiIntegrationTests } from "./ApiIntegrationTests";
 import { RoleSimulationTests } from "./RoleSimulationTests";
+import { PerformanceTests } from "./PerformanceTests";
 import { RecommendationsList } from "./RecommendationsList";
 
 interface DiagnosticsTabsProps {
   report: any;
   recommendations: string[];
+  isLoading?: boolean;
 }
 
-export const DiagnosticsTabs = ({ report, recommendations }: DiagnosticsTabsProps) => {
+export const DiagnosticsTabs = ({ report, recommendations, isLoading = false }: DiagnosticsTabsProps) => {
   return (
     <div className="space-y-6">
       <Tabs defaultValue="summary" className="w-full">
-        <TabsList className="grid grid-cols-7 mb-4">
+        <TabsList className="grid grid-cols-8 mb-4">
           <TabsTrigger value="summary">Core Services</TabsTrigger>
           <TabsTrigger value="navigation">Navigation</TabsTrigger>
           <TabsTrigger value="permissions">Permissions</TabsTrigger>
@@ -26,6 +28,7 @@ export const DiagnosticsTabs = ({ report, recommendations }: DiagnosticsTabsProp
           <TabsTrigger value="forms">Form Validation</TabsTrigger>
           <TabsTrigger value="api">API Integrations</TabsTrigger>
           <TabsTrigger value="roles">Role Simulation</TabsTrigger>
+          <TabsTrigger value="performance">Performance</TabsTrigger>
         </TabsList>
         
         <TabsContent value="summary">
@@ -55,11 +58,15 @@ export const DiagnosticsTabs = ({ report, recommendations }: DiagnosticsTabsProp
         <TabsContent value="roles">
           <RoleSimulationTests tests={report.roleSimulationTests} />
         </TabsContent>
+        
+        <TabsContent value="performance">
+          <PerformanceTests tests={report.performanceTests} isLoading={isLoading} />
+        </TabsContent>
       </Tabs>
 
       <RecommendationsList 
         recommendations={recommendations} 
-        timestamp={report.timestamp}
+        timestamp={report?.timestamp}
       />
     </div>
   );
