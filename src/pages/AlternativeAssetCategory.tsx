@@ -701,168 +701,100 @@ const AlternativeAssetCategory = () => {
       </div>
       
       <Sheet open={detailPanelOpen} onOpenChange={setDetailPanelOpen}>
-        <SheetContent className="w-full sm:max-w-md md:max-w-lg overflow-y-auto">
+        <SheetContent className="w-full sm:max-w-md md:max-w-lg overflow-y-auto bg-[#0a1022] text-white border-l border-blue-900/30">
           {selectedInvestment && (
-            <>
-              <SheetHeader className="text-left">
-                <SheetTitle className="text-2xl">{selectedInvestment.name}</SheetTitle>
-                <SheetDescription className="text-base">
-                  {category.title} Offering
-                </SheetDescription>
-              </SheetHeader>
+            <div className="flex flex-col h-full">
+              <div className="pb-6">
+                <h2 className="text-2xl font-bold mb-1">{selectedInvestment.name}</h2>
+                <p className="text-blue-400 mb-3">{category.title} Offering</p>
+                <p className="text-gray-300">
+                  {category.description}
+                </p>
+              </div>
               
-              <div className="mt-6 space-y-6">
+              <div className="space-y-6">
                 <div>
                   <h3 className="text-lg font-semibold mb-2">About</h3>
-                  <p className="text-sm text-muted-foreground">
-                    {selectedInvestment.description}
-                    {' '}This fund provides institutional investors unique exposure to a diversified private equity portfolio selected by experienced investment teams. The fund offers access to private market opportunities with potential for strong returns while managing risk through portfolio diversification.
+                  <p className="text-gray-300">
+                    {selectedInvestment.name} provides Accredited Investors unique exposure to a diversified private equity portfolio selected by experienced investment teams. The fund offers diversification by manager, stage, vintage year and industry through a single allocation.
                   </p>
                 </div>
                 
                 <div>
                   <h3 className="text-lg font-semibold mb-2">How It Works</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Investors work with the team to assess their offering and fit with the intended strategy. After thorough due diligence, the team manages all aspects of the investment. Once deployed, the strategy will track performance and provide regular reporting.
+                  <p className="text-gray-300">
+                    Your advisor will work with you to select the best offering and fill out the required information. You may be required to sign certain documents. Once completed, your advisor will help you transfer assets to fund the investment.
                   </p>
                 </div>
                 
-                <div className="flex flex-wrap gap-2">
-                  {selectedInvestment.tags.map((tag: string) => (
-                    <Badge key={tag} variant="outline">
-                      {tag}
-                    </Badge>
-                  ))}
-                </div>
-                
-                <div className="space-y-2">
-                  <h3 className="text-lg font-semibold">Details</h3>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <p className="text-sm text-muted-foreground">Minimum Investment</p>
-                      <p className="font-medium">{selectedInvestment.minimumInvestment}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-muted-foreground">Lock-up Period</p>
-                      <p className="font-medium">{selectedInvestment.lockupPeriod}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-muted-foreground">Fund Type</p>
-                      <p className="font-medium">Closed-End</p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-muted-foreground">Category</p>
-                      <p className="font-medium">{category.title}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-muted-foreground">Investor Qualification</p>
-                      <p className="font-medium">
-                        {selectedInvestment.tags.includes("Qualified Purchaser") 
-                          ? "Qualified Purchaser" 
-                          : selectedInvestment.tags.includes("Accredited Investor")
-                            ? "Accredited Investor"
-                            : "All Investors"}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-muted-foreground">Liquidity</p>
-                      <p className="font-medium">Limited</p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-muted-foreground">Distribution</p>
-                      <p className="font-medium">Quarterly</p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-muted-foreground">Strategy</p>
-                      <p className="font-medium">Multi-Strategy</p>
-                    </div>
+                <div>
+                  <h3 className="text-lg font-semibold mb-2">Get Started</h3>
+                  <p className="text-gray-300 mb-4">
+                    To get started, schedule a meeting with your advisor or tell them you're interested in this offering.
+                  </p>
+                  <div className="flex gap-4">
+                    <Button variant="outline" className="text-white border-gray-700 hover:bg-gray-800">
+                      I'm Interested
+                    </Button>
+                    <Button>
+                      <Calendar className="h-4 w-4 mr-2" />
+                      Schedule a Meeting
+                    </Button>
                   </div>
                 </div>
                 
-                <div className="space-y-4">
-                  <h3 className="text-lg font-semibold">Performance</h3>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                    <div className="p-3 bg-slate-100 dark:bg-slate-800 rounded-lg">
-                      <div className="flex items-center">
-                        <TrendingUp className="h-4 w-4 text-green-500 mr-2" />
-                        <p className="text-sm text-muted-foreground">YTD Return</p>
+                <div>
+                  <h3 className="text-lg font-semibold mb-2">Details</h3>
+                  <div className="border border-blue-900/30 rounded-md overflow-hidden">
+                    <div className="grid grid-cols-1 divide-y divide-blue-900/30">
+                      <div className="p-3 flex justify-between">
+                        <span className="text-gray-400">Firm</span>
+                        <span>{selectedInvestment.name.split(' ')[0]}</span>
                       </div>
-                      <p className="text-xl font-semibold text-green-500">+{selectedInvestment.performance.replace("%", "").replace(/\([^)]*\)/g, "").trim()}%</p>
-                    </div>
-                    <div className="p-3 bg-slate-100 dark:bg-slate-800 rounded-lg">
-                      <div className="flex items-center">
-                        <BarChart className="h-4 w-4 text-purple-500 mr-2" />
-                        <p className="text-sm text-muted-foreground">3-Year</p>
+                      <div className="p-3 flex justify-between">
+                        <span className="text-gray-400">Platform</span>
+                        <span>Investable Securities</span>
                       </div>
-                      <p className="text-xl font-semibold">+{performanceMetrics.threeYear}%</p>
-                    </div>
-                    <div className="p-3 bg-slate-100 dark:bg-slate-800 rounded-lg">
-                      <div className="flex items-center">
-                        <LineChart className="h-4 w-4 text-blue-500 mr-2" />
-                        <p className="text-sm text-muted-foreground">Since Inception</p>
+                      <div className="p-3 flex justify-between">
+                        <span className="text-gray-400">Category</span>
+                        <span>{category.title}</span>
                       </div>
-                      <p className="text-xl font-semibold">+{performanceMetrics.sinceInception}%</p>
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <h4 className="text-sm font-medium mb-2">Historical Performance</h4>
-                    <div className="space-y-2">
-                      {quarterlyReturns.map((quarter) => (
-                        <div key={quarter.quarter} className="flex justify-between items-center">
-                          <span className="text-sm">{quarter.quarter}</span>
-                          <span className={`text-sm font-medium ${quarter.return >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-                            {quarter.return >= 0 ? '+' : ''}{quarter.return}%
-                          </span>
-                        </div>
-                      ))}
+                      <div className="p-3 flex justify-between">
+                        <span className="text-gray-400">Minimum Investment</span>
+                        <span>{selectedInvestment.minimumInvestment}</span>
+                      </div>
+                      <div className="p-3 flex justify-between">
+                        <span className="text-gray-400">Investor Qualification</span>
+                        <span>
+                          {selectedInvestment.tags.includes("Qualified Purchaser") 
+                            ? "Qualified Purchaser" 
+                            : selectedInvestment.tags.includes("Accredited Investor")
+                              ? "Accredited Investor"
+                              : "All Investors"}
+                        </span>
+                      </div>
+                      <div className="p-3 flex justify-between">
+                        <span className="text-gray-400">Liquidity</span>
+                        <span>Quarterly Tender Offers</span>
+                      </div>
+                      <div className="p-3 flex justify-between">
+                        <span className="text-gray-400">Subscriptions</span>
+                        <span>Monthly</span>
+                      </div>
                     </div>
                   </div>
                 </div>
                 
-                <div className="space-y-4">
-                  <h3 className="text-lg font-semibold">Risk Assessment</h3>
-                  <div>
-                    <div className="flex justify-between items-center mb-1">
-                      <span className="text-sm">Volatility</span>
-                      <span className="text-sm font-medium">{riskMetrics.volatility}%</span>
-                    </div>
-                    <Progress value={riskMetrics.volatility} max={30} className="h-2" />
-                  </div>
-                  <div>
-                    <div className="flex justify-between items-center mb-1">
-                      <span className="text-sm">Sharpe Ratio</span>
-                      <span className="text-sm font-medium">{riskMetrics.sharpeRatio}</span>
-                    </div>
-                    <Progress value={riskMetrics.sharpeRatio * 40} className="h-2" />
-                  </div>
-                  <div>
-                    <div className="flex justify-between items-center mb-1">
-                      <span className="text-sm">Max Drawdown</span>
-                      <span className="text-sm font-medium text-red-500">{riskMetrics.maxDrawdown}%</span>
-                    </div>
-                    <Progress value={Math.abs(riskMetrics.maxDrawdown)} max={40} className="h-2 bg-red-100" indicatorClassName="bg-red-500" />
+                <div>
+                  <h3 className="text-lg font-semibold mb-2">Strategy</h3>
+                  <div className="border border-blue-900/30 rounded-md p-3">
+                    <p className="text-gray-300">
+                      The fund invests in a diversified portfolio of private equity investments across various sectors, stages, and geographies to maximize risk-adjusted returns.
+                    </p>
                   </div>
                 </div>
               </div>
-              
-              <SheetFooter className="flex-col gap-4 mt-6 sm:flex-col">
-                <Button className="w-full">
-                  <DollarSign className="h-4 w-4 mr-2" />
-                  Invest Now
-                </Button>
-                <div className="grid grid-cols-2 gap-2 w-full">
-                  <Button variant="outline" size="sm">
-                    <Calendar className="h-4 w-4 mr-2" />
-                    Schedule Call
-                  </Button>
-                  <Button variant="outline" size="sm">
-                    <Download className="h-4 w-4 mr-2" />
-                    Download PDF
-                  </Button>
-                </div>
-              </SheetFooter>
-            </>
+            </div>
           )}
         </SheetContent>
       </Sheet>
