@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { cn } from "@/lib/utils";
 import { 
@@ -15,7 +14,8 @@ import {
   BuildingIcon,
   KeyIcon,
   MapPinIcon,
-  LandmarkIcon
+  LandmarkIcon,
+  CoinsIcon
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -42,9 +42,9 @@ const mainNavItems: NavItem[] = [
   { icon: FileIcon, label: "Documents", href: "/documents" },
   { icon: CalendarIcon, label: "Calendar", href: "/calendar" },
   { icon: HomeIcon, label: "Properties", href: "/properties" },
+  { icon: CoinsIcon, label: "Social Security", href: "/social-security" },
 ];
 
-// Properties Management navigation items
 const propertiesNavItems: NavItem[] = [
   { icon: HomeIcon, label: "Properties", href: "/properties" },
   { icon: BuildingIcon, label: "Buildings", href: "/buildings" },

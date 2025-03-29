@@ -18,6 +18,7 @@ import LegacyVault from "./pages/LegacyVault";
 import Lending from "./pages/Lending";
 import Documents from "./pages/Documents";
 import Properties from "./pages/Properties";
+import SocialSecurity from "./pages/SocialSecurity";
 import {
   BrowserRouter as Router,
   Routes,
@@ -59,6 +60,9 @@ function App() {
                 <Route path="/rentals" element={<NotFound />} />
                 <Route path="/locations" element={<NotFound />} />
                 <Route path="/property-investments" element={<NotFound />} />
+                
+                {/* Social Security Route */}
+                <Route path="/social-security" element={<SocialSecurity />} />
                 
                 <Route path="*" element={<NotFound />} />
               </Routes>
