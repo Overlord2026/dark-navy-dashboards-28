@@ -1,356 +1,355 @@
 import React, { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { BookOpenIcon, FileIcon, UsersIcon, KeyIcon, ClockIcon, LockIcon, FolderPlus, FileText, File, FileImage, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableHead, 
-  TableHeader, 
-  TableRow 
-} from "@/components/ui/table";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FileUpload } from "@/components/ui/file-upload";
-import { useToast } from "@/hooks/use-toast";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Separator } from "@/components/ui/separator";
+import { Check, FilePlus, FileText, Lock, Upload } from "lucide-react";
 
-type DocumentType = "pdf" | "image" | "spreadsheet" | "document";
-
-interface DocumentItem {
+interface Document {
   id: string;
   name: string;
-  created: string;
-  type: DocumentType;
-  size: string;
-  category: string;
+  type: string;
+  dateAdded: string;
+  isSecured: boolean;
 }
 
+const mockDocuments: Document[] = [
+  {
+    id: "1",
+    name: "Will & Testament",
+    type: "PDF",
+    dateAdded: "2023-01-15",
+    isSecured: true,
+  },
+  {
+    id: "2",
+    name: "Life Insurance Policy",
+    type: "DOCX",
+    dateAdded: "2023-03-20",
+    isSecured: false,
+  },
+  {
+    id: "3",
+    name: "Deed of Trust",
+    type: "PDF",
+    dateAdded: "2023-05-10",
+    isSecured: true,
+  },
+  {
+    id: "4",
+    name: "Power of Attorney",
+    type: "PDF",
+    dateAdded: "2023-07-01",
+    isSecured: false,
+  },
+];
+
 export default function LegacyVault() {
-  const [activeCategory, setActiveCategory] = useState("important-documents");
-  const [documents, setDocuments] = useState<DocumentItem[]>([]);
-  const [folderName, setFolderName] = useState("");
-  const [fileName, setFileName] = useState("");
-  const [fileType, setFileType] = useState<DocumentType>("pdf");
-  const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
-  const { toast } = useToast();
+  const [documents, setDocuments] = useState(mockDocuments);
+  const [activeTab, setActiveTab] = useState("all");
+  const [isSecuredView, setIsSecuredView] = useState(false);
+  const [selectedDocument, setSelectedDocument] = useState<Document | null>(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [secureDialogOpen, setSecureDialogOpen] = useState(false);
+  const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [customFileName, setCustomFileName] = useState("");
 
-  const documentCategories = [
-    { id: "alternative-investments", name: "Alternative Investments", icon: FileIcon },
-    { id: "business-ownership", name: "Business Ownership", icon: FileIcon },
-    { id: "education", name: "Education", icon: FileIcon },
-    { id: "employer-agreements", name: "Employer Agreements", icon: FileIcon },
-    { id: "estate-planning", name: "Estate Planning", icon: FileIcon },
-    { id: "insurance-policies", name: "Insurance Policies", icon: FileIcon },
-    { id: "leases", name: "Leases", icon: FileIcon },
-    { id: "other", name: "Other", icon: FileIcon },
-    { id: "property-ownership", name: "Property Ownership", icon: FileIcon },
-    { id: "statements", name: "Statements", icon: FileIcon },
-    { id: "taxes", name: "Taxes", icon: FileIcon },
-    { id: "trusts", name: "Trusts", icon: FileIcon },
-    { id: "vehicles", name: "Vehicles", icon: FileIcon },
-  ];
-
-  const vaultCategories = [
-    { id: "access", name: "Access & Permissions", icon: KeyIcon },
-    { id: "beneficiaries", name: "Beneficiaries", icon: UsersIcon },
-    { id: "timeline", name: "Timeline Events", icon: ClockIcon },
-  ];
-
-  const handleCreateFolder = () => {
-    if (!folderName.trim()) {
-      toast({
-        title: "Please enter a folder name",
-        variant: "destructive"
-      });
-      return;
-    }
-    
-    toast({
-      title: "Folder created",
-      description: `Created folder: ${folderName}`
-    });
-    setFolderName("");
+  const handleFileChange = (file: File) => {
+    setSelectedFile(file);
+    setCustomFileName(file.name.replace(/\.[^/.]+$/, ""));
   };
 
-  const handleFileUpload = (file: File, customName: string) => {
-    let documentType: DocumentType = "document";
-    if (file.type.includes("pdf")) {
-      documentType = "pdf";
-    } else if (file.type.includes("image")) {
-      documentType = "image";
-    } else if (file.type.includes("spreadsheet") || file.type.includes("excel") || file.type.includes("csv")) {
-      documentType = "spreadsheet";
-    }
-    
-    const newDocument: DocumentItem = {
-      id: `doc-${Math.random().toString(36).substring(2, 9)}`,
-      name: customName || file.name,
-      created: new Date().toLocaleDateString(),
-      type: documentType,
-      size: `${(file.size / (1024 * 1024)).toFixed(2)} MB`,
-      category: activeCategory
-    };
-    
-    setDocuments([...documents, newDocument]);
-    setIsUploadDialogOpen(false);
-    
-    toast({
-      title: "File uploaded",
-      description: `${newDocument.name} has been uploaded successfully`
-    });
-  };
-
-  const getDocumentIcon = (type: DocumentType) => {
-    switch (type) {
-      case "pdf":
-        return <File className="h-5 w-5 text-red-400" />;
-      case "image":
-        return <FileImage className="h-5 w-5 text-blue-400" />;
-      default:
-        return <FileText className="h-5 w-5 text-gray-400" />;
+  const handleUploadSubmit = () => {
+    if (selectedFile) {
+      // Logic to handle the file upload would go here
+      console.log("Uploading file:", selectedFile, "with name:", customFileName);
+      setUploadDialogOpen(false);
+      setSelectedFile(null);
+      setCustomFileName("");
     }
   };
 
-  const filteredDocuments = documents.filter(doc => doc.category === activeCategory);
+  const filteredDocuments = documents.filter((doc) => {
+    if (activeTab === "all") return true;
+    return doc.type.toLowerCase() === activeTab;
+  });
+
+  const toggleSecuredView = () => {
+    setIsSecuredView(!isSecuredView);
+  };
+
+  const handleDelete = (document: Document) => {
+    setSelectedDocument(document);
+    setDeleteDialogOpen(true);
+  };
+
+  const confirmDelete = () => {
+    if (selectedDocument) {
+      setDocuments(documents.filter((doc) => doc.id !== selectedDocument.id));
+      setDeleteDialogOpen(false);
+      setSelectedDocument(null);
+    }
+  };
+
+  const handleSecure = (document: Document) => {
+    setSelectedDocument(document);
+    setSecureDialogOpen(true);
+  };
+
+  const confirmSecure = () => {
+    if (selectedDocument) {
+      setDocuments(
+        documents.map((doc) =>
+          doc.id === selectedDocument.id ? { ...doc, isSecured: !doc.isSecured } : doc
+        )
+      );
+      setSecureDialogOpen(false);
+      setSelectedDocument(null);
+    }
+  };
 
   return (
-    <ThreeColumnLayout 
-      title="Family Legacy Vault" 
-      activeMainItem="vault"
-    >
-      <div className="space-y-6">
-        <div className="flex items-start justify-between">
-          <div className="flex items-center gap-2">
-            <BookOpenIcon className="h-7 w-7 text-primary" />
-            <div>
-              <h2 className="text-2xl font-bold tracking-tight">Your Family Legacy Vault</h2>
-              <p className="text-muted-foreground mt-2">
-                Securely store and organize your important documents and legacy instructions
-              </p>
-            </div>
+    <ThreeColumnLayout title="Legacy Vault" activeMainItem="legacy-vault">
+      <div className="w-full max-w-6xl mx-auto p-4 space-y-6">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">Legacy Vault</h1>
+            <p className="text-muted-foreground">
+              Secure your legacy and important documents for your loved ones
+            </p>
           </div>
-          <Button variant="outline" className="flex items-center gap-2">
-            <LockIcon className="h-4 w-4" />
-            Manage Security
+          <Button onClick={() => setUploadDialogOpen(true)} className="gap-2">
+            <Upload className="h-4 w-4" />
+            Upload Document
           </Button>
         </div>
 
-        <Tabs defaultValue="documents" className="w-full mt-6">
-          <TabsList className="w-full max-w-md mx-auto mb-6">
-            <TabsTrigger value="documents" className="flex-1">Documents</TabsTrigger>
-            <TabsTrigger value="vault" className="flex-1">Vault Settings</TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="documents">
-            <div className="flex gap-4 mb-6">
-              <div className="w-64 border-r pr-4">
-                <h3 className="font-medium mb-3">Document Categories</h3>
-                <div className="space-y-1">
-                  {documentCategories.map((category) => (
-                    <button
-                      key={category.id}
-                      onClick={() => setActiveCategory(category.id)}
-                      className={`w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${
-                        activeCategory === category.id 
-                          ? 'bg-primary/10 text-primary font-medium' 
-                          : 'hover:bg-muted'
-                      }`}
-                    >
-                      {category.name}
-                    </button>
-                  ))}
-                </div>
-              </div>
-              
-              <div className="flex-1">
-                <div className="flex justify-between items-center mb-6">
-                  <h3 className="text-xl font-semibold">
-                    {documentCategories.find(c => c.id === activeCategory)?.name || "Documents"}
-                  </h3>
-                  <div className="flex space-x-3">
-                    <Dialog>
-                      <DialogTrigger asChild>
-                        <Button variant="outline" className="gap-2">
-                          <FolderPlus className="h-4 w-4" />
-                          New Folder
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent>
-                        <DialogHeader>
-                          <DialogTitle>Create New Folder</DialogTitle>
-                          <DialogDescription>
-                            Enter a name for your new folder.
-                          </DialogDescription>
-                        </DialogHeader>
-                        <div className="grid gap-4 py-4">
-                          <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="name" className="text-right">
-                              Name
-                            </Label>
-                            <Input
-                              id="name"
-                              placeholder="Enter folder name"
-                              className="col-span-3"
-                              value={folderName}
-                              onChange={(e) => setFolderName(e.target.value)}
-                            />
-                          </div>
-                        </div>
-                        <DialogFooter>
-                          <Button onClick={handleCreateFolder}>Create Folder</Button>
-                        </DialogFooter>
-                      </DialogContent>
-                    </Dialog>
-                    
-                    <Dialog open={isUploadDialogOpen} onOpenChange={setIsUploadDialogOpen}>
-                      <DialogTrigger asChild>
-                        <Button className="gap-2">
-                          <FileText className="h-4 w-4" />
-                          Upload
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent className="sm:max-w-md">
-                        <DialogHeader>
-                          <DialogTitle>Upload Document</DialogTitle>
-                          <DialogDescription>
-                            Upload a document to {documentCategories.find(c => c.id === activeCategory)?.name}.
-                          </DialogDescription>
-                        </DialogHeader>
-                        
-                        <FileUpload 
-                          onFileSelect={handleFileUpload}
-                          onCancel={() => setIsUploadDialogOpen(false)}
-                          accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png"
-                          label="Upload Document"
-                          buttonText="Browse Files"
-                          placeholder="Drag and drop your files here or click to browse"
-                        />
-                      </DialogContent>
-                    </Dialog>
-                  </div>
-                </div>
-
-                {filteredDocuments.length > 0 ? (
-                  <div className="dashboard-card overflow-hidden">
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead className="w-[40%]">Name</TableHead>
-                          <TableHead>Created</TableHead>
-                          <TableHead>Type</TableHead>
-                          <TableHead className="text-right">Size</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {filteredDocuments.map((document) => (
-                          <TableRow key={document.id}>
-                            <TableCell className="font-medium flex items-center gap-2">
-                              {getDocumentIcon(document.type)}
-                              {document.name}
-                            </TableCell>
-                            <TableCell>{document.created}</TableCell>
-                            <TableCell className="capitalize">{document.type}</TableCell>
-                            <TableCell className="text-right">{document.size}</TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </div>
-                ) : (
-                  <div className="dashboard-card h-[300px] flex flex-col items-center justify-center">
-                    <div className="text-center max-w-md mx-auto">
-                      <FileText className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-                      <h3 className="text-xl font-medium mb-2">No files</h3>
-                      <p className="text-muted-foreground mb-6">
-                        You haven't uploaded any files to this category.
-                      </p>
-                      <Button 
-                        className="gap-2"
-                        onClick={() => setIsUploadDialogOpen(true)}
-                      >
-                        <FileText className="h-4 w-4" />
-                        Upload Document
-                      </Button>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          </TabsContent>
-          
-          <TabsContent value="vault">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {vaultCategories.map((category) => (
-                <Card key={category.id} className="hover:shadow-md transition-all">
-                  <CardHeader className="pb-3">
-                    <div className="flex justify-between items-start">
-                      <CardTitle className="text-lg">{category.name}</CardTitle>
-                      <category.icon className="h-5 w-5 text-muted-foreground" />
-                    </div>
-                    <CardDescription>
-                      {category.id === "access" && "Manage access permissions for your designated trustees"}
-                      {category.id === "beneficiaries" && "Add and update beneficiary information"}
-                      {category.id === "timeline" && "Create timed release of information and instructions"}
-                    </CardDescription>
+        <Tabs defaultValue="all" value={activeTab} onValueChange={setActiveTab}>
+          <div className="flex justify-between items-center mb-4">
+            <TabsList>
+              <TabsTrigger value="all">All</TabsTrigger>
+              <TabsTrigger value="pdf">PDF</TabsTrigger>
+              <TabsTrigger value="docx">DOCX</TabsTrigger>
+              <TabsTrigger value="txt">TXT</TabsTrigger>
+            </TabsList>
+            <Button variant="outline" onClick={toggleSecuredView} className="gap-2">
+              {isSecuredView ? "View All" : "View Secured"}
+              <Lock className="h-4 w-4" />
+            </Button>
+          </div>
+          <TabsContent value="all" className="mt-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {filteredDocuments.map((document) => (
+                <Card key={document.id} className="bg-gray-900/20 border-gray-700">
+                  <CardHeader>
+                    <CardTitle className="flex justify-between items-center">
+                      {document.name}
+                      <span className="text-xs text-muted-foreground">{document.type}</span>
+                    </CardTitle>
+                    <CardDescription>Added on {document.dateAdded}</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <Button 
-                      variant="outline" 
-                      className="w-full"
-                    >
-                      Open Section
-                    </Button>
+                    <p className="text-sm text-gray-400">
+                      This document is {document.isSecured ? "secured" : "unsecured"}
+                    </p>
                   </CardContent>
+                  <CardFooter className="flex justify-between">
+                    <Button variant="ghost">View</Button>
+                    <div className="flex gap-2">
+                      <Button variant="outline" size="icon" onClick={() => handleSecure(document)}>
+                        <Lock className="h-4 w-4" />
+                      </Button>
+                      <Button variant="destructive" size="icon" onClick={() => handleDelete(document)}>
+                        <FilePlus className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </CardFooter>
                 </Card>
               ))}
             </div>
-            
-            <Card className="mt-6">
-              <CardHeader>
-                <CardTitle>Vault Activity</CardTitle>
-                <CardDescription>Recent actions and access to your vault</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="border-b pb-2">
-                    <div className="flex justify-between items-center">
-                      <div>
-                        <p className="font-medium">Will document uploaded</p>
-                        <p className="text-sm text-muted-foreground">by You</p>
-                      </div>
-                      <span className="text-sm text-muted-foreground">Today at 10:30 AM</span>
+          </TabsContent>
+          <TabsContent value="pdf" className="mt-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {filteredDocuments.map((document) => (
+                <Card key={document.id} className="bg-gray-900/20 border-gray-700">
+                  <CardHeader>
+                    <CardTitle className="flex justify-between items-center">
+                      {document.name}
+                      <span className="text-xs text-muted-foreground">{document.type}</span>
+                    </CardTitle>
+                    <CardDescription>Added on {document.dateAdded}</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-gray-400">
+                      This document is {document.isSecured ? "secured" : "unsecured"}
+                    </p>
+                  </CardContent>
+                  <CardFooter className="flex justify-between">
+                    <Button variant="ghost">View</Button>
+                    <div className="flex gap-2">
+                      <Button variant="outline" size="icon" onClick={() => handleSecure(document)}>
+                        <Lock className="h-4 w-4" />
+                      </Button>
+                      <Button variant="destructive" size="icon" onClick={() => handleDelete(document)}>
+                        <FilePlus className="h-4 w-4" />
+                      </Button>
                     </div>
-                  </div>
-                  
-                  <div className="border-b pb-2">
-                    <div className="flex justify-between items-center">
-                      <div>
-                        <p className="font-medium">Trustee access granted</p>
-                        <p className="text-sm text-muted-foreground">to James Wilson</p>
-                      </div>
-                      <span className="text-sm text-muted-foreground">Yesterday at 3:15 PM</span>
+                  </CardFooter>
+                </Card>
+              ))}
+            </div>
+          </TabsContent>
+          <TabsContent value="docx" className="mt-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {filteredDocuments.map((document) => (
+                <Card key={document.id} className="bg-gray-900/20 border-gray-700">
+                  <CardHeader>
+                    <CardTitle className="flex justify-between items-center">
+                      {document.name}
+                      <span className="text-xs text-muted-foreground">{document.type}</span>
+                    </CardTitle>
+                    <CardDescription>Added on {document.dateAdded}</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-gray-400">
+                      This document is {document.isSecured ? "secured" : "unsecured"}
+                    </p>
+                  </CardContent>
+                  <CardFooter className="flex justify-between">
+                    <Button variant="ghost">View</Button>
+                    <div className="flex gap-2">
+                      <Button variant="outline" size="icon" onClick={() => handleSecure(document)}>
+                        <Lock className="h-4 w-4" />
+                      </Button>
+                      <Button variant="destructive" size="icon" onClick={() => handleDelete(document)}>
+                        <FilePlus className="h-4 w-4" />
+                      </Button>
                     </div>
-                  </div>
-                  
-                  <div className="border-b pb-2">
-                    <div className="flex justify-between items-center">
-                      <div>
-                        <p className="font-medium">Insurance policy updated</p>
-                        <p className="text-sm text-muted-foreground">by You</p>
-                      </div>
-                      <span className="text-sm text-muted-foreground">May 10, 2023</span>
+                  </CardFooter>
+                </Card>
+              ))}
+            </div>
+          </TabsContent>
+          <TabsContent value="txt" className="mt-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {filteredDocuments.map((document) => (
+                <Card key={document.id} className="bg-gray-900/20 border-gray-700">
+                  <CardHeader>
+                    <CardTitle className="flex justify-between items-center">
+                      {document.name}
+                      <span className="text-xs text-muted-foreground">{document.type}</span>
+                    </CardTitle>
+                    <CardDescription>Added on {document.dateAdded}</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-gray-400">
+                      This document is {document.isSecured ? "secured" : "unsecured"}
+                    </p>
+                  </CardContent>
+                  <CardFooter className="flex justify-between">
+                    <Button variant="ghost">View</Button>
+                    <div className="flex gap-2">
+                      <Button variant="outline" size="icon" onClick={() => handleSecure(document)}>
+                        <Lock className="h-4 w-4" />
+                      </Button>
+                      <Button variant="destructive" size="icon" onClick={() => handleDelete(document)}>
+                        <FilePlus className="h-4 w-4" />
+                      </Button>
                     </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+                  </CardFooter>
+                </Card>
+              ))}
+            </div>
           </TabsContent>
         </Tabs>
+
+        {/* Delete Confirmation Dialog */}
+        <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle>Delete Document</DialogTitle>
+              <DialogDescription>
+                Are you sure you want to delete this document? This action cannot be undone.
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setDeleteDialogOpen(false)}>
+                Cancel
+              </Button>
+              <Button variant="destructive" onClick={confirmDelete}>
+                Delete
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* Secure Document Dialog */}
+        <Dialog open={secureDialogOpen} onOpenChange={setSecureDialogOpen}>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle>
+                {selectedDocument?.isSecured ? "Unsecure Document" : "Secure Document"}
+              </DialogTitle>
+              <DialogDescription>
+                Are you sure you want to{" "}
+                {selectedDocument?.isSecured ? "unsecure" : "secure"} this document?
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setSecureDialogOpen(false)}>
+                Cancel
+              </Button>
+              <Button variant="default" onClick={confirmSecure}>
+                {selectedDocument?.isSecured ? "Unsecure" : "Secure"}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* Upload Document Dialog */}
+        <Dialog open={uploadDialogOpen} onOpenChange={setUploadDialogOpen}>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle>Upload Document</DialogTitle>
+              <DialogDescription>
+                Add an important document to your secure Legacy Vault
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              <div className="grid gap-2">
+                <Label htmlFor="file">Select File</Label>
+                <FileUpload
+                  onFileChange={handleFileChange}
+                  accept="application/pdf,image/*,.doc,.docx,.xls,.xlsx,.txt"
+                />
+              </div>
+              {selectedFile && (
+                <div className="grid gap-2">
+                  <Label htmlFor="filename">Document Name</Label>
+                  <Input
+                    id="filename"
+                    value={customFileName}
+                    onChange={(e) => setCustomFileName(e.target.value)}
+                    placeholder="Enter a name for this document"
+                  />
+                </div>
+              )}
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setUploadDialogOpen(false)}>
+                Cancel
+              </Button>
+              <Button onClick={handleUploadSubmit} disabled={!selectedFile}>
+                Upload
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </ThreeColumnLayout>
   );

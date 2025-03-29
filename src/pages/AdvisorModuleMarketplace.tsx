@@ -2,6 +2,8 @@
 import React from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { AdvisorModules } from "@/components/advisor/AdvisorModules";
+import { Button } from "@/components/ui/button";
+import { Search, MessageSquare, Zap } from "lucide-react";
 
 export default function AdvisorModuleMarketplace() {
   return (
@@ -34,6 +36,21 @@ export default function AdvisorModuleMarketplace() {
               <span><strong>Tax analysis module:</strong> Comprehensive tax planning</span>
             </li>
           </ul>
+          
+          <div className="flex flex-wrap gap-3">
+            <Button variant="outline" className="gap-2">
+              <Search className="h-4 w-4" />
+              View Pricing/Details
+            </Button>
+            <Button variant="advisor" className="gap-2">
+              <Zap className="h-4 w-4" />
+              Enable Modules
+            </Button>
+            <Button variant="ghost" className="gap-2">
+              <MessageSquare className="h-4 w-4" />
+              Ask a Question
+            </Button>
+          </div>
         </div>
         <AdvisorModules />
       </div>

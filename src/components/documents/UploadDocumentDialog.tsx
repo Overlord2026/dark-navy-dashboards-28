@@ -1,52 +1,88 @@
 
-import { FileText } from "lucide-react";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import React, { useState } from "react";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { FileUpload } from "@/components/ui/file-upload";
-import { DocumentCategory } from "@/types/document";
 
 interface UploadDocumentDialogProps {
-  isOpen: boolean;
+  open: boolean;
   onOpenChange: (open: boolean) => void;
-  onFileUpload: (file: File, customName: string) => void;
-  activeCategory: string | null;
-  documentCategories: DocumentCategory[];
+  onUpload: (file: File, customName: string) => void;
 }
 
-export const UploadDocumentDialog = ({ 
-  isOpen, 
-  onOpenChange, 
-  onFileUpload, 
-  activeCategory,
-  documentCategories 
-}: UploadDocumentDialogProps) => {
-  const activeCategoryName = documentCategories.find(c => c.id === activeCategory)?.name || "";
+export function UploadDocumentDialog({
+  open,
+  onOpenChange,
+  onUpload,
+}: UploadDocumentDialogProps) {
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [customName, setCustomName] = useState("");
+
+  const handleFileChange = (file: File) => {
+    setSelectedFile(file);
+    // Set default custom name based on file name
+    setCustomName(file.name.replace(/\.[^/.]+$/, ""));
+  };
+
+  const handleSubmit = () => {
+    if (selectedFile) {
+      onUpload(selectedFile, customName.trim() ? customName : selectedFile.name);
+      handleReset();
+    }
+  };
+
+  const handleReset = () => {
+    setSelectedFile(null);
+    setCustomName("");
+  };
+
+  const handleDialogChange = (open: boolean) => {
+    if (!open) {
+      handleReset();
+    }
+    onOpenChange(open);
+  };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogTrigger asChild>
-        <Button className="gap-2">
-          <FileText className="h-4 w-4" />
-          Upload
-        </Button>
-      </DialogTrigger>
+    <Dialog open={open} onOpenChange={handleDialogChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Upload Document</DialogTitle>
+          <DialogTitle>Upload document</DialogTitle>
           <DialogDescription>
-            Upload a document to {activeCategoryName}.
+            Upload a document to your secure vault.
           </DialogDescription>
         </DialogHeader>
-        
-        <FileUpload 
-          onFileSelect={onFileUpload}
-          onCancel={() => onOpenChange(false)}
-          accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png"
-          label="Upload Document"
-          buttonText="Browse Files"
-          placeholder="Drag and drop your files here or click to browse"
-        />
+        <div className="grid gap-4 py-4">
+          <div className="grid gap-2">
+            <Label htmlFor="file">File</Label>
+            <FileUpload
+              onFileChange={handleFileChange}
+              accept="application/pdf,image/*,.doc,.docx,.xls,.xlsx,.txt"
+            />
+          </div>
+          {selectedFile && (
+            <div className="grid gap-2">
+              <Label htmlFor="name">Document Name</Label>
+              <Input
+                id="name"
+                value={customName}
+                onChange={(e) => setCustomName(e.target.value)}
+                placeholder="Enter a custom name for this document"
+              />
+            </div>
+          )}
+        </div>
+        <DialogFooter>
+          <Button variant="outline" onClick={() => handleDialogChange(false)}>
+            Cancel
+          </Button>
+          <Button onClick={handleSubmit} disabled={!selectedFile}>
+            Upload
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
-};
+}
