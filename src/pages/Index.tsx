@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { FinancialOverview } from "@/components/dashboard/FinancialOverview";
@@ -10,6 +9,7 @@ import { ProfileFormSheet } from "@/components/profile/ProfileFormSheet";
 import { UpcomingBillsCard } from "@/components/dashboard/UpcomingBillsCard";
 import { ExpenseOptimizationCard } from "@/components/dashboard/ExpenseOptimizationCard";
 import { WelcomeTrialBanner } from "@/components/dashboard/WelcomeTrialBanner";
+import { MidTrialBanner } from "@/components/dashboard/MidTrialBanner";
 import { useSubscription } from "@/context/SubscriptionContext"; 
 import { toast } from "sonner";
 
@@ -19,7 +19,8 @@ const Dashboard = () => {
   const [activeForm, setActiveForm] = useState<string | null>(null);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [showWelcomeBanner, setShowWelcomeBanner] = useState(false);
-  const { isInFreeTrial, daysRemainingInTrial } = useSubscription();
+  const [showMidTrialBanner, setShowMidTrialBanner] = useState(false);
+  const { isInFreeTrial, daysRemainingInTrial, freeTrialEndDate } = useSubscription();
   
   const [checklistItems, setChecklistItems] = useState([
     { id: "investor-profile", name: "Investor Profile", completed: true },
@@ -40,20 +41,31 @@ const Dashboard = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // Check if user is in free trial and should see welcome banner
   useEffect(() => {
     if (isInFreeTrial) {
-      // Check if welcome banner has been dismissed before
       const hasSeenWelcome = localStorage.getItem('hasSeenWelcomeBanner');
       if (!hasSeenWelcome) {
         setShowWelcomeBanner(true);
       }
+      
+      const hasSeenMidTrial = localStorage.getItem('hasSeenMidTrialBanner');
+      if (daysRemainingInTrial !== null && 
+          daysRemainingInTrial <= 45 && 
+          daysRemainingInTrial >= 40 && 
+          !hasSeenMidTrial) {
+        setShowMidTrialBanner(true);
+      }
     }
-  }, [isInFreeTrial]);
+  }, [isInFreeTrial, daysRemainingInTrial]);
 
   const handleDismissWelcome = () => {
     setShowWelcomeBanner(false);
     localStorage.setItem('hasSeenWelcomeBanner', 'true');
+  };
+  
+  const handleDismissMidTrial = () => {
+    setShowMidTrialBanner(false);
+    localStorage.setItem('hasSeenMidTrialBanner', 'true');
   };
 
   const toggleMetrics = () => {
@@ -80,11 +92,9 @@ const Dashboard = () => {
       )
     );
     
-    // Show a toast notification
     const itemName = checklistItems.find(item => item.id === formId)?.name || "";
     toast.success(`${itemName} updated successfully`);
     
-    // Close the form sheet
     handleCloseForm();
   };
 
@@ -103,9 +113,12 @@ const Dashboard = () => {
         </div>
       ) : (
         <div className="w-full space-y-6 animate-fade-in">
-          {/* Show welcome banner for new trial users */}
           {showWelcomeBanner && (
             <WelcomeTrialBanner onDismiss={handleDismissWelcome} />
+          )}
+          
+          {showMidTrialBanner && (
+            <MidTrialBanner onDismiss={handleDismissMidTrial} />
           )}
           
           <div className="flex flex-col lg:flex-row gap-6">

@@ -40,7 +40,7 @@ export function FeatureGate({ featureId, children, fallback }: FeatureGateProps)
         <>
           <div className="flex items-center gap-2 mb-2">
             <Badge variant="outline" className="bg-amber-100 text-amber-800 border-amber-300">
-              Trial Access
+              Trial Active
             </Badge>
             {daysRemainingInTrial !== null && (
               <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20">
@@ -49,7 +49,8 @@ export function FeatureGate({ featureId, children, fallback }: FeatureGateProps)
             )}
           </div>
           <p className="text-muted-foreground max-w-md">
-            This feature is only available in our Elite tier. While you can explore many Premium features during your trial, some Elite features remain exclusive.
+            This Elite feature is not included in your trial. Your trial gives you access to Basic and Premium features, 
+            but Elite features require a subscription upgrade.
           </p>
         </>
       ) : (
@@ -62,7 +63,7 @@ export function FeatureGate({ featureId, children, fallback }: FeatureGateProps)
         onClick={() => navigate('/subscription')}
         className="mt-4"
       >
-        {isInFreeTrial ? 'Explore Elite Features' : 'Upgrade Subscription'}
+        {isInFreeTrial ? 'Upgrade to Elite Tier' : 'Upgrade Subscription'}
       </Button>
     </div>
   );
