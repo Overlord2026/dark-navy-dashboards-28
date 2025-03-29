@@ -61,70 +61,99 @@ const Investments = () => {
 
   const totalAlternativeValue = alternativeAssets.reduce((sum, asset) => sum + asset.value, 0);
 
+  const modelPortfolios = [
+    { 
+      id: 1, 
+      name: "Growth Portfolio", 
+      type: "Aggressive Growth", 
+      taxStatus: "Taxable", 
+      assignedAccounts: 3, 
+      tradingGroups: 2, 
+      created: "Oct 12, 2023" 
+    },
+    { 
+      id: 2, 
+      name: "Income Strategy", 
+      type: "Income", 
+      taxStatus: "Tax-Advantaged", 
+      assignedAccounts: 2, 
+      tradingGroups: 1, 
+      created: "Nov 05, 2023" 
+    },
+    { 
+      id: 3, 
+      name: "Balanced Approach", 
+      type: "Balanced", 
+      taxStatus: "Mixed", 
+      assignedAccounts: 5, 
+      tradingGroups: 3, 
+      created: "Jan 18, 2024" 
+    },
+    { 
+      id: 4, 
+      name: "Conservative Allocation", 
+      type: "Conservative", 
+      taxStatus: "Tax-Advantaged", 
+      assignedAccounts: 1, 
+      tradingGroups: 1, 
+      created: "Feb 22, 2024" 
+    },
+    { 
+      id: 5, 
+      name: "Tech Sector Focus", 
+      type: "Sector Specific", 
+      taxStatus: "Taxable", 
+      assignedAccounts: 2, 
+      tradingGroups: 2, 
+      created: "Mar 10, 2024" 
+    }
+  ];
+
   const renderModelPortfoliosContent = () => (
     <div className="animate-fade-in space-y-6">
       <div className="flex items-center justify-between mb-4">
         <h1 className="text-2xl font-semibold">Model Portfolios</h1>
         <Button className="bg-white text-black hover:bg-slate-100">
           <Plus className="mr-2 h-4 w-4" />
-          New Investment
+          Pick a Model Portfolio
         </Button>
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-base font-medium">Total Value</CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">${totalValue.toLocaleString()}</div>
-            <p className="text-xs text-green-500 flex items-center">
-              <ArrowUp className="h-3.5 w-3.5 mr-1" />
-              +5.3% from last month
-            </p>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-base font-medium">Gain/Loss YTD</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-green-500">+$21,255.00</div>
-            <p className="text-xs text-muted-foreground">
-              +8.25% year to date
-            </p>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-base font-medium">Cash Balance</CardTitle>
-            <Briefcase className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">$12,450.00</div>
-            <p className="text-xs text-muted-foreground">
-              Available for investment
-            </p>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-base font-medium">Dividend Yield</CardTitle>
-            <BarChart className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">2.85%</div>
-            <p className="text-xs text-muted-foreground">
-              $7,342.23 in the last year
-            </p>
-          </CardContent>
-        </Card>
-      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Your Model Portfolios</CardTitle>
+          <CardDescription>Manage your investment strategies and allocations</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Table className="border-collapse">
+            <TableHeader className="bg-slate-50">
+              <TableRow>
+                <TableHead>Name</TableHead>
+                <TableHead>Type</TableHead>
+                <TableHead>Tax Status</TableHead>
+                <TableHead>Assigned to Accounts</TableHead>
+                <TableHead>Trading Groups Applied</TableHead>
+                <TableHead>Created</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {modelPortfolios.map((portfolio) => (
+                <TableRow 
+                  key={portfolio.id}
+                  className="cursor-pointer hover:bg-slate-50"
+                >
+                  <TableCell className="font-medium">{portfolio.name}</TableCell>
+                  <TableCell>{portfolio.type}</TableCell>
+                  <TableCell>{portfolio.taxStatus}</TableCell>
+                  <TableCell>{portfolio.assignedAccounts}</TableCell>
+                  <TableCell>{portfolio.tradingGroups}</TableCell>
+                  <TableCell>{portfolio.created}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
       
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid w-full grid-cols-5">
