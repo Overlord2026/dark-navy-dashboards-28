@@ -32,6 +32,8 @@ import { BillsProvider } from "./hooks/useBills";
 import { SubscriptionProvider } from "./context/SubscriptionContext";
 import Professionals from "./pages/Professionals";
 import BillsManagement from "./pages/BillsManagement";
+import AdvisorFeedback from "./pages/AdvisorFeedback";
+import SystemDiagnostics from "./pages/SystemDiagnostics";
 import { Toaster } from "./components/ui/sonner";
 
 function App() {
@@ -71,6 +73,8 @@ function App() {
                     <Route path="/admin/subscription" element={<AdminSubscription />} />
                     <Route path="/advisor/onboarding" element={<AdvisorOnboarding />} />
                     <Route path="/advisor/modules" element={<AdvisorModuleMarketplace />} />
+                    <Route path="/advisor-feedback" element={<AdvisorFeedback />} />
+                    <Route path="/system-diagnostics" element={<SystemDiagnostics />} />
                     <Route path="*" element={<NotFound />} />
                   </Routes>
                   <Toaster />

@@ -20,6 +20,8 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Settings, Users } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { ActivityIcon } from "@/components/icons/ActivityIcon";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -270,6 +272,13 @@ const Dashboard = () => {
                 />
               </div>
             </div>
+          </div>
+
+          <div className="flex flex-col gap-2 items-end mt-4">
+            <Link to="/system-diagnostics" className="text-sm text-muted-foreground hover:text-primary flex items-center gap-1">
+              <ActivityIcon className="h-4 w-4" />
+              System Diagnostics
+            </Link>
           </div>
         </div>
       )}
