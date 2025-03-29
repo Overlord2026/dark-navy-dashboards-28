@@ -47,6 +47,8 @@ function App() {
                   <Route path="/documents" element={<Documents />} />
                   <Route path="/tax-budgets" element={<TaxBudgets />} />
                   <Route path="/education" element={<Education />} />
+                  <Route path="/education/course/:courseId" element={<Education />} />
+                  <Route path="/education/category/:categoryId" element={<Education />} />
                   <Route path="/financial-plans" element={<FinancialPlans />} />
                   <Route path="/investments" element={<Investments />} />
                   <Route path="/investment/:categoryId" element={<AlternativeAssetCategory />} />

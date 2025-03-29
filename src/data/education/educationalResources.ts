@@ -1,5 +1,7 @@
 
-export const educationalResources = {
+import { EducationalResources } from "@/types/education";
+
+export const educationalResources: EducationalResources = {
   "guides": [
     {
       id: "guide-retirement",

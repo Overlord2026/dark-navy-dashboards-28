@@ -1,5 +1,7 @@
 
-export const featuredCourses = [
+import { Course } from "@/types/education";
+
+export const featuredCourses: Course[] = [
   {
     id: 1,
     title: "Financial Fundamentals",

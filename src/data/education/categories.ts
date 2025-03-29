@@ -1,5 +1,7 @@
 
-export const courseCategories = [
+import { CourseCategory } from "@/types/education";
+
+export const courseCategories: CourseCategory[] = [
   { id: "all-courses", name: "All Courses", active: true },
   { id: "retirement-income", name: "Retirement Income Planning Basics" },
   { id: "social-security", name: "Social Security Optimization" },
