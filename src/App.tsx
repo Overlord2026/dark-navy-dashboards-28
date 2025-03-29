@@ -6,6 +6,7 @@ import CustomerProfile from "./pages/CustomerProfile";
 import FinancialPlans from "./pages/FinancialPlans";
 import Education from "./pages/Education";
 import Investments from "./pages/Investments";
+import AlternativeAssetCategory from "./pages/AlternativeAssetCategory";
 import Insurance from "./pages/Insurance";
 import CashManagement from "./pages/CashManagement";
 import Transfers from "./pages/Transfers";
@@ -36,6 +37,7 @@ function App() {
               <Route path="/financial-plans" element={<FinancialPlans />} />
               <Route path="/education/*" element={<Education />} />
               <Route path="/investments" element={<Investments />} />
+              <Route path="/investments/alternative/:categoryId" element={<AlternativeAssetCategory />} />
               <Route path="/insurance" element={<Insurance />} />
               <Route path="/cash-management" element={<CashManagement />} />
               <Route path="/transfers" element={<Transfers />} />

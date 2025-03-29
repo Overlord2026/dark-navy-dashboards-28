@@ -124,6 +124,7 @@ const Investments = () => {
     { 
       id: 1, 
       title: "Private Equity", 
+      slug: "private-equity",
       description: "Investments in non-public companies, buyouts, growth equity", 
       icon: <Briefcase className="h-10 w-10 text-purple-500" />,
       trend: "+12.4% YTD"
@@ -131,6 +132,7 @@ const Investments = () => {
     { 
       id: 2, 
       title: "Private Debt", 
+      slug: "private-debt",
       description: "Direct lending, mezzanine financing, distressed debt",
       icon: <Landmark className="h-10 w-10 text-blue-500" />,
       trend: "+8.7% YTD"
@@ -138,6 +140,7 @@ const Investments = () => {
     { 
       id: 3, 
       title: "Hedge Fund", 
+      slug: "hedge-fund",
       description: "Actively managed investment pools with diverse strategies",
       icon: <LineChart className="h-10 w-10 text-green-500" />,
       trend: "+7.5% YTD"
@@ -145,6 +148,7 @@ const Investments = () => {
     { 
       id: 4, 
       title: "Venture Capital", 
+      slug: "venture-capital",
       description: "Investments in early-stage, high-potential startups",
       icon: <Network className="h-10 w-10 text-cyan-500" />,
       trend: "+16.2% YTD"
@@ -152,6 +156,7 @@ const Investments = () => {
     { 
       id: 5, 
       title: "Collectibles", 
+      slug: "collectibles",
       description: "Art, luxury watches, memorabilia, rare items",
       icon: <Wine className="h-10 w-10 text-amber-500" />,
       trend: "+5.3% YTD"
@@ -159,6 +164,7 @@ const Investments = () => {
     { 
       id: 6, 
       title: "Digital Assets", 
+      slug: "digital-assets",
       description: "Cryptocurrencies, NFTs, blockchain investments",
       icon: <Bitcoin className="h-10 w-10 text-orange-500" />,
       trend: "-2.8% YTD"
@@ -166,6 +172,7 @@ const Investments = () => {
     { 
       id: 7, 
       title: "Real Assets", 
+      slug: "real-assets",
       description: "Real estate, infrastructure, commodities, natural resources",
       icon: <Building className="h-10 w-10 text-indigo-500" />,
       trend: "+9.1% YTD"
@@ -173,6 +180,7 @@ const Investments = () => {
     { 
       id: 8, 
       title: "Structured Investments", 
+      slug: "structured-investments",
       description: "Notes, derivatives, insurance-linked securities",
       icon: <HardHat className="h-10 w-10 text-rose-500" />,
       trend: "+4.6% YTD"
@@ -684,20 +692,25 @@ const Investments = () => {
         {alternativeCategories.map((category) => (
           <HoverCard key={category.id}>
             <HoverCardTrigger asChild>
-              <Card className="cursor-pointer transition-all hover:shadow-md hover:border-primary/50">
-                <CardHeader className="pb-2">
-                  <div className="flex justify-between items-center">
-                    {category.icon}
-                    <p className={`text-sm font-medium ${category.trend.includes('-') ? 'text-red-500' : 'text-green-500'}`}>
-                      {category.trend}
-                    </p>
-                  </div>
-                  <CardTitle className="mt-2">{category.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription>{category.description}</CardDescription>
-                </CardContent>
-              </Card>
+              <Link to={`/investments/alternative/${category.slug}`}>
+                <Card className="cursor-pointer transition-all hover:shadow-md hover:border-primary/50">
+                  <CardHeader className="pb-2">
+                    <div className="flex justify-between items-center">
+                      {category.icon}
+                      <p className={`text-sm font-medium ${category.trend.includes('-') ? 'text-red-500' : 'text-green-500'}`}>
+                        {category.trend}
+                      </p>
+                    </div>
+                    <CardTitle className="mt-2 flex items-center">
+                      {category.title}
+                      <ArrowRight className="ml-1 h-4 w-4 opacity-70" />
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <CardDescription>{category.description}</CardDescription>
+                  </CardContent>
+                </Card>
+              </Link>
             </HoverCardTrigger>
             <HoverCardContent className="w-80">
               <div className="space-y-2">
@@ -716,7 +729,11 @@ const Investments = () => {
                   </div>
                 </div>
                 <div className="pt-2">
-                  <Button size="sm" className="w-full">View Opportunities</Button>
+                  <Button size="sm" className="w-full" asChild>
+                    <Link to={`/investments/alternative/${category.slug}`}>
+                      View Opportunities
+                    </Link>
+                  </Button>
                 </div>
               </div>
             </HoverCardContent>
