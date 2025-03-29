@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
@@ -25,9 +24,33 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { ChevronLeft, Search, Filter, ArrowUpDown, Info } from "lucide-react";
+import { 
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle
+} from "@/components/ui/sheet";
+import { 
+  ChevronLeft, 
+  Search, 
+  Filter, 
+  ArrowUpDown, 
+  Info, 
+  X, 
+  ExternalLink, 
+  Download, 
+  Calendar,
+  BarChart,
+  TrendingUp,
+  LineChart,
+  DollarSign,
+  Users,
+  ShieldCheck
+} from "lucide-react";
+import { Progress } from "@/components/ui/progress";
 
-// Asset category data mapping
 const CATEGORY_DATA = {
   "private-equity": {
     title: "Private Equity",
@@ -391,6 +414,8 @@ const AlternativeAssetCategory = () => {
   const [investments, setInvestments] = useState<any[]>([]);
   const [filteredInvestments, setFilteredInvestments] = useState<any[]>([]);
   const [sortConfig, setSortConfig] = useState<{key: string, direction: 'asc' | 'desc'} | null>(null);
+  const [selectedInvestment, setSelectedInvestment] = useState<any | null>(null);
+  const [detailPanelOpen, setDetailPanelOpen] = useState(false);
   
   const category = categoryId && CATEGORY_DATA[categoryId as keyof typeof CATEGORY_DATA];
   
@@ -405,7 +430,6 @@ const AlternativeAssetCategory = () => {
     if (investments.length > 0) {
       let result = [...investments];
       
-      // Apply search filter
       if (searchQuery) {
         const lowerCaseQuery = searchQuery.toLowerCase();
         result = result.filter(item => 
@@ -414,14 +438,12 @@ const AlternativeAssetCategory = () => {
         );
       }
       
-      // Apply tag filters
       if (selectedTags.length > 0) {
         result = result.filter(item => 
           selectedTags.some(tag => item.tags.includes(tag))
         );
       }
       
-      // Apply sorting
       if (sortConfig) {
         result.sort((a, b) => {
           if (a[sortConfig.key] < b[sortConfig.key]) {
@@ -456,7 +478,15 @@ const AlternativeAssetCategory = () => {
     setSortConfig({ key, direction });
   };
   
-  // Get all unique tags from investments
+  const handleInvestmentSelect = (investment: any) => {
+    setSelectedInvestment(investment);
+    setDetailPanelOpen(true);
+  };
+  
+  const handleCloseDetailPanel = () => {
+    setDetailPanelOpen(false);
+  };
+  
   const allTags = investments.reduce((tags, inv) => {
     inv.tags.forEach((tag: string) => {
       if (!tags.includes(tag)) {
@@ -479,6 +509,30 @@ const AlternativeAssetCategory = () => {
       </ThreeColumnLayout>
     );
   }
+  
+  const performanceMetrics = {
+    oneYear: 12.5,
+    threeYear: 10.8,
+    fiveYear: 15.2,
+    tenYear: 13.7,
+    sinceInception: 14.3
+  };
+  
+  const riskMetrics = {
+    volatility: 14.2,
+    sharpeRatio: 1.42,
+    beta: 0.85,
+    alpha: 3.2,
+    maxDrawdown: -18.5
+  };
+  
+  const quarterlyReturns = [
+    { quarter: "Q1 2023", return: 4.2 },
+    { quarter: "Q4 2022", return: 3.8 },
+    { quarter: "Q3 2022", return: -1.5 },
+    { quarter: "Q2 2022", return: 2.7 },
+    { quarter: "Q1 2022", return: 5.3 }
+  ];
   
   return (
     <ThreeColumnLayout activeMainItem="investments" title={`${category.title} Investments`}>
@@ -587,7 +641,11 @@ const AlternativeAssetCategory = () => {
           {filteredInvestments.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredInvestments.map((investment) => (
-                <Card key={investment.id} className="h-full flex flex-col animate-fade-in">
+                <Card 
+                  key={investment.id} 
+                  className="h-full flex flex-col animate-fade-in hover:border-primary/50 cursor-pointer transition-all"
+                  onClick={() => handleInvestmentSelect(investment)}
+                >
                   <CardHeader>
                     <CardTitle>{investment.name}</CardTitle>
                     <div className="flex flex-wrap gap-2 mt-2">
@@ -641,6 +699,173 @@ const AlternativeAssetCategory = () => {
           )}
         </div>
       </div>
+      
+      <Sheet open={detailPanelOpen} onOpenChange={setDetailPanelOpen}>
+        <SheetContent className="w-full sm:max-w-md md:max-w-lg overflow-y-auto">
+          {selectedInvestment && (
+            <>
+              <SheetHeader className="text-left">
+                <SheetTitle className="text-2xl">{selectedInvestment.name}</SheetTitle>
+                <SheetDescription className="text-base">
+                  {category.title} Offering
+                </SheetDescription>
+              </SheetHeader>
+              
+              <div className="mt-6 space-y-6">
+                <div>
+                  <h3 className="text-lg font-semibold mb-2">About</h3>
+                  <p className="text-sm text-muted-foreground">
+                    {selectedInvestment.description}
+                    {' '}This fund provides institutional investors unique exposure to a diversified private equity portfolio selected by experienced investment teams. The fund offers access to private market opportunities with potential for strong returns while managing risk through portfolio diversification.
+                  </p>
+                </div>
+                
+                <div>
+                  <h3 className="text-lg font-semibold mb-2">How It Works</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Investors work with the team to assess their offering and fit with the intended strategy. After thorough due diligence, the team manages all aspects of the investment. Once deployed, the strategy will track performance and provide regular reporting.
+                  </p>
+                </div>
+                
+                <div className="flex flex-wrap gap-2">
+                  {selectedInvestment.tags.map((tag: string) => (
+                    <Badge key={tag} variant="outline">
+                      {tag}
+                    </Badge>
+                  ))}
+                </div>
+                
+                <div className="space-y-2">
+                  <h3 className="text-lg font-semibold">Details</h3>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <p className="text-sm text-muted-foreground">Minimum Investment</p>
+                      <p className="font-medium">{selectedInvestment.minimumInvestment}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">Lock-up Period</p>
+                      <p className="font-medium">{selectedInvestment.lockupPeriod}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">Fund Type</p>
+                      <p className="font-medium">Closed-End</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">Category</p>
+                      <p className="font-medium">{category.title}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">Investor Qualification</p>
+                      <p className="font-medium">
+                        {selectedInvestment.tags.includes("Qualified Purchaser") 
+                          ? "Qualified Purchaser" 
+                          : selectedInvestment.tags.includes("Accredited Investor")
+                            ? "Accredited Investor"
+                            : "All Investors"}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">Liquidity</p>
+                      <p className="font-medium">Limited</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">Distribution</p>
+                      <p className="font-medium">Quarterly</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">Strategy</p>
+                      <p className="font-medium">Multi-Strategy</p>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold">Performance</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                    <div className="p-3 bg-slate-100 dark:bg-slate-800 rounded-lg">
+                      <div className="flex items-center">
+                        <TrendingUp className="h-4 w-4 text-green-500 mr-2" />
+                        <p className="text-sm text-muted-foreground">YTD Return</p>
+                      </div>
+                      <p className="text-xl font-semibold text-green-500">+{selectedInvestment.performance.replace("%", "").replace(/\([^)]*\)/g, "").trim()}%</p>
+                    </div>
+                    <div className="p-3 bg-slate-100 dark:bg-slate-800 rounded-lg">
+                      <div className="flex items-center">
+                        <BarChart className="h-4 w-4 text-purple-500 mr-2" />
+                        <p className="text-sm text-muted-foreground">3-Year</p>
+                      </div>
+                      <p className="text-xl font-semibold">+{performanceMetrics.threeYear}%</p>
+                    </div>
+                    <div className="p-3 bg-slate-100 dark:bg-slate-800 rounded-lg">
+                      <div className="flex items-center">
+                        <LineChart className="h-4 w-4 text-blue-500 mr-2" />
+                        <p className="text-sm text-muted-foreground">Since Inception</p>
+                      </div>
+                      <p className="text-xl font-semibold">+{performanceMetrics.sinceInception}%</p>
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <h4 className="text-sm font-medium mb-2">Historical Performance</h4>
+                    <div className="space-y-2">
+                      {quarterlyReturns.map((quarter) => (
+                        <div key={quarter.quarter} className="flex justify-between items-center">
+                          <span className="text-sm">{quarter.quarter}</span>
+                          <span className={`text-sm font-medium ${quarter.return >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                            {quarter.return >= 0 ? '+' : ''}{quarter.return}%
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold">Risk Assessment</h3>
+                  <div>
+                    <div className="flex justify-between items-center mb-1">
+                      <span className="text-sm">Volatility</span>
+                      <span className="text-sm font-medium">{riskMetrics.volatility}%</span>
+                    </div>
+                    <Progress value={riskMetrics.volatility} max={30} className="h-2" />
+                  </div>
+                  <div>
+                    <div className="flex justify-between items-center mb-1">
+                      <span className="text-sm">Sharpe Ratio</span>
+                      <span className="text-sm font-medium">{riskMetrics.sharpeRatio}</span>
+                    </div>
+                    <Progress value={riskMetrics.sharpeRatio * 40} className="h-2" />
+                  </div>
+                  <div>
+                    <div className="flex justify-between items-center mb-1">
+                      <span className="text-sm">Max Drawdown</span>
+                      <span className="text-sm font-medium text-red-500">{riskMetrics.maxDrawdown}%</span>
+                    </div>
+                    <Progress value={Math.abs(riskMetrics.maxDrawdown)} max={40} className="h-2 bg-red-100" indicatorClassName="bg-red-500" />
+                  </div>
+                </div>
+              </div>
+              
+              <SheetFooter className="flex-col gap-4 mt-6 sm:flex-col">
+                <Button className="w-full">
+                  <DollarSign className="h-4 w-4 mr-2" />
+                  Invest Now
+                </Button>
+                <div className="grid grid-cols-2 gap-2 w-full">
+                  <Button variant="outline" size="sm">
+                    <Calendar className="h-4 w-4 mr-2" />
+                    Schedule Call
+                  </Button>
+                  <Button variant="outline" size="sm">
+                    <Download className="h-4 w-4 mr-2" />
+                    Download PDF
+                  </Button>
+                </div>
+              </SheetFooter>
+            </>
+          )}
+        </SheetContent>
+      </Sheet>
     </ThreeColumnLayout>
   );
 };
