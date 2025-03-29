@@ -43,8 +43,8 @@ export const AdvisorSection = ({ advisorInfo, onViewProfile, onBookSession, coll
             </div>
             {!collapsed && (
               <div className="flex flex-col">
-                <span className={`text-[14px] text-gray-200 font-medium`}>Advisor/CFO:</span>
-                <span className={`text-[14px] text-gray-300`}>{advisorInfo.name}</span>
+                <span className={`text-[14px] text-gray-200 font-medium whitespace-nowrap`}>Advisor/CFO:</span>
+                <span className={`text-[14px] text-gray-300 whitespace-nowrap truncate max-w-[130px]`}>{advisorInfo.name}</span>
               </div>
             )}
           </div>
@@ -62,7 +62,7 @@ export const AdvisorSection = ({ advisorInfo, onViewProfile, onBookSession, coll
                 </AvatarFallback>
               </Avatar>
               <div>
-                <p className="font-medium">{advisorInfo.name}</p>
+                <p className="font-medium whitespace-nowrap">{advisorInfo.name}</p>
                 <p className="text-sm text-gray-400">{advisorInfo.title}</p>
               </div>
             </div>
