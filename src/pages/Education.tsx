@@ -1,9 +1,11 @@
-
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CourseCard } from "@/components/education/CourseCard";
 import { toast } from "sonner";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useSearchParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 const courseCategories = [
   { id: "all-courses", name: "All Courses", active: true },
@@ -15,6 +17,10 @@ const courseCategories = [
   { id: "advanced-tax", name: "Advanced Tax Planning" },
   { id: "wealth-management", name: "Holistic Wealth Management" },
   { id: "estate-planning", name: "Estate Planning Basics" },
+  { id: "advanced-estate-planning", name: "Advanced Estate Planning" },
+  { id: "investment-management", name: "Investment Management" },
+  { id: "alternative-investments", name: "Alternative Investments" },
+  { id: "intelligent-allocation", name: "Intelligent Allocation Models" },
   { id: "florida-residency", name: "Benefits of Florida Residency" },
   { id: "texas-residency", name: "Benefits of Texas Residency" },
 ];
@@ -183,6 +189,86 @@ const coursesByCategory = {
       ghlUrl: "https://ghl.example.com/courses/trust-strategies"
     }
   ],
+  "advanced-estate-planning": [
+    {
+      id: "aep-101",
+      title: "Advanced Estate Planning Strategies",
+      description: "Learn sophisticated estate planning techniques for high-net-worth individuals.",
+      isPaid: true,
+      level: "Advanced",
+      duration: "4 hours",
+      ghlUrl: "https://ghl.example.com/courses/advanced-estate-planning-strategies"
+    },
+    {
+      id: "aep-102",
+      title: "Dynasty Trusts and Family Limited Partnerships",
+      description: "Advanced structures for multi-generational wealth transfer.",
+      isPaid: true,
+      level: "Advanced",
+      duration: "3.5 hours",
+      ghlUrl: "https://ghl.example.com/courses/dynasty-trusts"
+    }
+  ],
+  "investment-management": [
+    {
+      id: "im-101",
+      title: "Investment Management Fundamentals",
+      description: "Core principles of investment management and portfolio construction.",
+      isPaid: false,
+      level: "Beginner",
+      duration: "2.5 hours",
+      ghlUrl: "https://ghl.example.com/courses/investment-management-fundamentals"
+    },
+    {
+      id: "im-102",
+      title: "Portfolio Optimization Techniques",
+      description: "Advanced methods for optimizing investment portfolios.",
+      isPaid: true,
+      level: "Intermediate",
+      duration: "3 hours",
+      ghlUrl: "https://ghl.example.com/courses/portfolio-optimization"
+    }
+  ],
+  "alternative-investments": [
+    {
+      id: "ai-101",
+      title: "Introduction to Alternative Investments",
+      description: "Overview of private equity, hedge funds, and other alternative asset classes.",
+      isPaid: false,
+      level: "Beginner",
+      duration: "2 hours",
+      ghlUrl: "https://ghl.example.com/courses/intro-alternative-investments"
+    },
+    {
+      id: "ai-102",
+      title: "Private Market Alpha",
+      description: "Understanding sources of alpha in private markets and illiquid investments.",
+      isPaid: true,
+      level: "Intermediate",
+      duration: "3 hours",
+      ghlUrl: "https://ghl.example.com/courses/private-market-alpha"
+    }
+  ],
+  "intelligent-allocation": [
+    {
+      id: "ia-101",
+      title: "Intelligent Allocation Models: An Overview",
+      description: "Introduction to our proprietary allocation models and their benefits.",
+      isPaid: false,
+      level: "Beginner",
+      duration: "1.5 hours",
+      ghlUrl: "https://ghl.example.com/courses/intelligent-allocation-overview"
+    },
+    {
+      id: "ia-102",
+      title: "Advanced Allocation Strategies",
+      description: "Deep dive into optimizing asset allocation for various market conditions.",
+      isPaid: true,
+      level: "Advanced",
+      duration: "3 hours",
+      ghlUrl: "https://ghl.example.com/courses/advanced-allocation-strategies"
+    }
+  ],
   "florida-residency": [
     {
       id: "fl-101",
@@ -223,6 +309,49 @@ const coursesByCategory = {
       duration: "2 hours",
       comingSoon: true,
       ghlUrl: "https://ghl.example.com/courses/texas-estate-planning"
+    }
+  ]
+};
+
+const educationalResources = {
+  "guides": [
+    {
+      id: "guide-retirement",
+      title: "Comprehensive Retirement Planning Guide",
+      description: "Step-by-step guide to creating a robust retirement plan.",
+      isPaid: false,
+      level: "All Levels",
+      duration: "Self-paced",
+      ghlUrl: "https://ghl.example.com/guides/retirement-planning"
+    },
+    {
+      id: "guide-estate",
+      title: "Estate Planning Checklist",
+      description: "Essential estate planning documents and considerations.",
+      isPaid: false,
+      level: "All Levels",
+      duration: "Self-paced",
+      ghlUrl: "https://ghl.example.com/guides/estate-planning-checklist"
+    }
+  ],
+  "books": [
+    {
+      id: "book-wealth",
+      title: "The Intelligent Investor",
+      description: "Benjamin Graham's timeless advice on value investing.",
+      isPaid: false,
+      level: "Intermediate",
+      author: "Benjamin Graham",
+      ghlUrl: "https://ghl.example.com/books/intelligent-investor"
+    },
+    {
+      id: "book-retirement",
+      title: "The Power of Zero",
+      description: "How to get to the 0% tax bracket in retirement.",
+      isPaid: false,
+      level: "Beginner",
+      author: "David McKnight",
+      ghlUrl: "https://ghl.example.com/books/power-of-zero"
     }
   ]
 };
@@ -283,6 +412,22 @@ const featuredCourses = [
 ];
 
 export default function Education() {
+  const [searchParams] = useSearchParams();
+  const [activeCategory, setActiveCategory] = useState("all-courses");
+  const [activeSection, setActiveSection] = useState("courses");
+  
+  useEffect(() => {
+    const category = searchParams.get("category");
+    const section = searchParams.get("section");
+    
+    if (category) {
+      setActiveCategory(category);
+      setActiveSection("courses");
+    } else if (section) {
+      setActiveSection(section);
+    }
+  }, [searchParams]);
+
   const handleCourseEnrollment = (courseId: string | number, title: string, isPaid: boolean, ghlUrl?: string) => {
     if (ghlUrl) {
       // If we have a GHL URL, we'll open it directly (this is handled in CourseCard now)
@@ -301,7 +446,7 @@ export default function Education() {
     <ThreeColumnLayout 
       title="SWAG Education Center" 
       activeMainItem="education"
-      activeSecondaryItem="all-courses"
+      activeSecondaryItem={activeCategory}
       secondaryMenuItems={courseCategories}
     >
       <div className="space-y-6">
@@ -310,54 +455,179 @@ export default function Education() {
           <p className="text-muted-foreground mt-2">
             Explore our collection of financial education resources to help you build wealth and achieve your financial goals.
           </p>
-        </div>
+          
+          <Tabs defaultValue="courses" value={activeSection} className="mt-6">
+            <TabsList className="mb-6">
+              <TabsTrigger value="courses" onClick={() => setActiveSection("courses")}>Courses</TabsTrigger>
+              <TabsTrigger value="guides" onClick={() => setActiveSection("guides")}>Guides</TabsTrigger>
+              <TabsTrigger value="books" onClick={() => setActiveSection("books")}>Recommended Reading</TabsTrigger>
+              <TabsTrigger value="allocation-models" onClick={() => setActiveSection("allocation-models")}>Allocation Models</TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="courses">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                {courseCategories.map((category) => (
+                  category.id !== "all-courses" && (
+                    <Card key={category.id} className="hover:border-primary hover:shadow-md transition-all">
+                      <CardHeader className="pb-3">
+                        <CardTitle className="text-lg">{category.name}</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <Button 
+                          variant="outline" 
+                          className="w-full"
+                          onClick={() => setActiveCategory(category.id)}
+                        >
+                          Explore Courses
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  )
+                ))}
+              </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-          {courseCategories.map((category) => (
-            category.id !== "all-courses" && (
-              <Card key={category.id} className="hover:border-primary hover:shadow-md transition-all">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-lg">{category.name}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <Button 
-                    variant="outline" 
-                    className="w-full"
-                  >
-                    Explore Courses
-                  </Button>
-                </CardContent>
-              </Card>
-            )
-          ))}
-        </div>
+              {activeCategory !== "all-courses" ? (
+                <div className="mt-10">
+                  <h3 className="text-xl font-semibold mb-4">
+                    {courseCategories.find(cat => cat.id === activeCategory)?.name || "Courses"}
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {coursesByCategory[activeCategory as keyof typeof coursesByCategory]?.map((course) => (
+                      <CourseCard
+                        key={course.id}
+                        {...course}
+                        onClick={() => handleCourseEnrollment(course.id, course.title, course.isPaid, course.ghlUrl)}
+                      />
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <>
+                  {courseCategories.slice(1).map((category) => (
+                    <div key={category.id} className="mt-10">
+                      <h3 className="text-xl font-semibold mb-4">{category.name}</h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {coursesByCategory[category.id as keyof typeof coursesByCategory]?.map((course) => (
+                          <CourseCard
+                            key={course.id}
+                            {...course}
+                            onClick={() => handleCourseEnrollment(course.id, course.title, course.isPaid, course.ghlUrl)}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </>
+              )}
 
-        {courseCategories.slice(1).map((category) => (
-          <div key={category.id} className="mt-10">
-            <h3 className="text-xl font-semibold mb-4">{category.name}</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {coursesByCategory[category.id as keyof typeof coursesByCategory]?.map((course) => (
-                <CourseCard
-                  key={course.id}
-                  {...course}
-                  onClick={() => handleCourseEnrollment(course.id, course.title, course.isPaid, course.ghlUrl)}
-                />
-              ))}
-            </div>
-          </div>
-        ))}
-
-        <div className="mt-10">
-          <h3 className="text-xl font-semibold mb-4">Featured Courses</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {featuredCourses.map((course) => (
-              <CourseCard
-                key={course.id}
-                {...course}
-                onClick={() => handleCourseEnrollment(course.id, course.title, course.isPaid, course.ghlUrl)}
-              />
-            ))}
-          </div>
+              <div className="mt-10">
+                <h3 className="text-xl font-semibold mb-4">Featured Courses</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {featuredCourses.map((course) => (
+                    <CourseCard
+                      key={course.id}
+                      {...course}
+                      onClick={() => handleCourseEnrollment(course.id, course.title, course.isPaid, course.ghlUrl)}
+                    />
+                  ))}
+                </div>
+              </div>
+            </TabsContent>
+            
+            <TabsContent value="guides">
+              <div className="space-y-6">
+                <h3 className="text-xl font-semibold mb-4">Educational Guides</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {educationalResources.guides.map((guide) => (
+                    <CourseCard
+                      key={guide.id}
+                      {...guide}
+                      onClick={() => handleCourseEnrollment(guide.id, guide.title, guide.isPaid, guide.ghlUrl)}
+                    />
+                  ))}
+                </div>
+              </div>
+            </TabsContent>
+            
+            <TabsContent value="books">
+              <div className="space-y-6">
+                <h3 className="text-xl font-semibold mb-4">Recommended Reading</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {educationalResources.books.map((book) => (
+                    <CourseCard
+                      key={book.id}
+                      title={book.title}
+                      description={`${book.description} (Author: ${book.author})`}
+                      isPaid={false}
+                      level={book.level}
+                      ghlUrl={book.ghlUrl}
+                      onClick={() => window.open(book.ghlUrl, "_blank", "noopener,noreferrer")}
+                    />
+                  ))}
+                </div>
+              </div>
+            </TabsContent>
+            
+            <TabsContent value="allocation-models">
+              <div className="space-y-6">
+                <div className="mb-6">
+                  <h3 className="text-xl font-semibold mb-2">Intelligent Allocation Models</h3>
+                  <p className="text-muted-foreground">
+                    Our proprietary allocation models are designed to optimize your portfolio based on your risk tolerance, time horizon, and financial goals.
+                  </p>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {coursesByCategory["intelligent-allocation"]?.map((course) => (
+                    <CourseCard
+                      key={course.id}
+                      {...course}
+                      onClick={() => handleCourseEnrollment(course.id, course.title, course.isPaid, course.ghlUrl)}
+                    />
+                  ))}
+                </div>
+                
+                <div className="mt-8 p-6 bg-accent/10 rounded-lg">
+                  <h4 className="text-lg font-semibold mb-2">Video Demonstrations</h4>
+                  <p className="mb-4">Watch video demonstrations of our Intelligent Allocation Models in action.</p>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="text-base">Conservative Model</CardTitle>
+                        <CardDescription>Suitable for near-term goals or low risk tolerance</CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <Button 
+                          variant="default" 
+                          className="w-full"
+                          onClick={() => window.open("https://ghl.example.com/videos/conservative-model", "_blank", "noopener,noreferrer")}
+                        >
+                          Watch Video
+                        </Button>
+                      </CardContent>
+                    </Card>
+                    
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="text-base">Moderate Growth Model</CardTitle>
+                        <CardDescription>Balanced approach for medium-term goals</CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <Button 
+                          variant="default" 
+                          className="w-full"
+                          onClick={() => window.open("https://ghl.example.com/videos/moderate-model", "_blank", "noopener,noreferrer")}
+                        >
+                          Watch Video
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </div>
+              </div>
+            </TabsContent>
+          </Tabs>
         </div>
       </div>
     </ThreeColumnLayout>

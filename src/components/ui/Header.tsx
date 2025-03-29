@@ -2,14 +2,6 @@
 import { BellIcon, SearchIcon, GraduationCapIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { 
-  DropdownMenu, 
-  DropdownMenuContent, 
-  DropdownMenuItem, 
-  DropdownMenuLabel, 
-  DropdownMenuSeparator, 
-  DropdownMenuTrigger 
-} from "@/components/ui/dropdown-menu";
 import { SwagEducationMenu } from "@/components/education/SwagEducationMenu";
 import { Link } from "react-router-dom";
 

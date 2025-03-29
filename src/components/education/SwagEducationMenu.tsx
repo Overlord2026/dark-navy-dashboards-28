@@ -1,3 +1,4 @@
+
 import { GraduationCap, BookOpen, ExternalLink } from "lucide-react";
 import { 
   DropdownMenu, 
@@ -21,6 +22,10 @@ const courseCategories = [
   { id: "advanced-tax", name: "Advanced Tax Planning" },
   { id: "wealth-management", name: "Holistic Wealth Management" },
   { id: "estate-planning", name: "Estate Planning Basics" },
+  { id: "advanced-estate-planning", name: "Advanced Estate Planning" },
+  { id: "investment-management", name: "Investment Management" },
+  { id: "alternative-investments", name: "Alternative Investments" },
+  { id: "intelligent-allocation", name: "Intelligent Allocation Models" },
   { id: "florida-residency", name: "Benefits of Florida Residency" },
   { id: "texas-residency", name: "Benefits of Texas Residency" },
 ];
@@ -91,6 +96,24 @@ export function SwagEducationMenu() {
             </DropdownMenuItem>
           </Link>
         ))}
+        
+        <DropdownMenuSeparator className="my-1" />
+        <DropdownMenuLabel className="text-base font-bold">Resources</DropdownMenuLabel>
+        <DropdownMenuSeparator className="my-1" />
+        
+        <Link to={`/education?section=guides`}>
+          <DropdownMenuItem className="py-2 cursor-pointer transition-colors">
+            <BookOpen className="h-4 w-4 mr-2 opacity-70" />
+            Guides
+          </DropdownMenuItem>
+        </Link>
+        
+        <Link to={`/education?section=books`}>
+          <DropdownMenuItem className="py-2 cursor-pointer transition-colors">
+            <BookOpen className="h-4 w-4 mr-2 opacity-70" />
+            Recommended Reading
+          </DropdownMenuItem>
+        </Link>
         
         <DropdownMenuSeparator className="my-1" />
         <DropdownMenuLabel className="text-base font-bold">Featured Courses</DropdownMenuLabel>
