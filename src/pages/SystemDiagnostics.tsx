@@ -6,14 +6,30 @@ import { toast } from "sonner";
 import { DiagnosticsHeader } from "@/components/diagnostics/DiagnosticsHeader";
 import { DiagnosticsTabs } from "@/components/diagnostics/DiagnosticsTabs";
 import { LoadingState } from "@/components/diagnostics/LoadingState";
+import { logger } from "@/services/logging/loggingService";
 
 export default function SystemDiagnostics() {
   const [isLoading, setIsLoading] = useState(false);
   const [report, setReport] = useState<any>(null);
   const [recommendations, setRecommendations] = useState<string[]>([]);
 
+  useEffect(() => {
+    // Initialize logging system when component mounts
+    logger.initialize({
+      minLevel: "info",
+      retentionPeriod: 7,
+      enableRealTimeAlerts: true
+    });
+    
+    logger.info("System Diagnostics page loaded", undefined, "SystemDiagnostics");
+    
+    runSystemCheck();
+  }, []);
+
   const runSystemCheck = async () => {
     setIsLoading(true);
+    logger.info("Starting system health check", undefined, "SystemDiagnostics");
+    
     try {
       const diagnosticReport = await runDiagnostics();
       setReport(diagnosticReport);
@@ -22,18 +38,16 @@ export default function SystemDiagnostics() {
       const newRecommendations = generateRecommendations(diagnosticReport);
       setRecommendations(newRecommendations);
       
+      logger.info("System health check completed successfully", undefined, "SystemDiagnostics");
       toast.success("System health check completed");
     } catch (error) {
       console.error("Diagnostic error:", error);
+      logger.error("Failed to complete system health check", error, "SystemDiagnostics");
       toast.error("Failed to complete system health check");
     } finally {
       setIsLoading(false);
     }
   };
-
-  useEffect(() => {
-    runSystemCheck();
-  }, []);
 
   const generateRecommendations = (report: any): string[] => {
     const recs: string[] = [];
@@ -116,7 +130,7 @@ export default function SystemDiagnostics() {
       }
     }
     
-    // New: Performance test recommendations
+    // Performance test recommendations
     if (report.performanceTests) {
       const slowResponses = report.performanceTests.filter((test: any) => test.responseTime > 1000);
       if (slowResponses.length > 0) {
@@ -141,7 +155,10 @@ export default function SystemDiagnostics() {
       }
     }
     
-    recs.push("Consider implementing periodic automated health checks to monitor system performance.");
+    // Add logging recommendations
+    recs.push("Configure error logging to capture critical system events for troubleshooting.");
+    recs.push("Review log retention settings to comply with data retention policies.");
+    recs.push("Enable real-time alerts for critical errors to improve response time.");
     
     return recs;
   };

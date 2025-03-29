@@ -9,6 +9,8 @@ import { ApiIntegrationTests } from "./ApiIntegrationTests";
 import { RoleSimulationTests } from "./RoleSimulationTests";
 import { PerformanceTests } from "./PerformanceTests";
 import { RecommendationsList } from "./RecommendationsList";
+import { LoggingConfiguration } from "./LoggingConfiguration";
+import { LogViewer } from "./LogViewer";
 
 interface DiagnosticsTabsProps {
   report: any;
@@ -20,7 +22,7 @@ export const DiagnosticsTabs = ({ report, recommendations, isLoading = false }: 
   return (
     <div className="space-y-6">
       <Tabs defaultValue="summary" className="w-full">
-        <TabsList className="grid grid-cols-8 mb-4">
+        <TabsList className="grid grid-cols-10 mb-4">
           <TabsTrigger value="summary">Core Services</TabsTrigger>
           <TabsTrigger value="navigation">Navigation</TabsTrigger>
           <TabsTrigger value="permissions">Permissions</TabsTrigger>
@@ -29,6 +31,8 @@ export const DiagnosticsTabs = ({ report, recommendations, isLoading = false }: 
           <TabsTrigger value="api">API Integrations</TabsTrigger>
           <TabsTrigger value="roles">Role Simulation</TabsTrigger>
           <TabsTrigger value="performance">Performance</TabsTrigger>
+          <TabsTrigger value="logs">System Logs</TabsTrigger>
+          <TabsTrigger value="logging-config">Log Settings</TabsTrigger>
         </TabsList>
         
         <TabsContent value="summary">
@@ -61,6 +65,14 @@ export const DiagnosticsTabs = ({ report, recommendations, isLoading = false }: 
         
         <TabsContent value="performance">
           <PerformanceTests tests={report.performanceTests} isLoading={isLoading} />
+        </TabsContent>
+        
+        <TabsContent value="logs">
+          <LogViewer />
+        </TabsContent>
+        
+        <TabsContent value="logging-config">
+          <LoggingConfiguration />
         </TabsContent>
       </Tabs>
 

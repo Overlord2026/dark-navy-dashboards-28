@@ -1,18 +1,13 @@
 
-import { DiagnosticTestResult, DiagnosticTestStatus } from './types';
-
-export interface PerformanceTestResult extends DiagnosticTestResult {
-  responseTime?: number; // in ms
-  memoryUsage?: number; // in MB
-  cpuUsage?: number; // percentage
-  concurrentUsers?: number;
-  endpoint?: string;
-}
+import { DiagnosticTestResult, PerformanceTestResult } from './types';
+import { logger } from '../logging/loggingService';
 
 /**
  * Simulates performance testing with concurrent user load
  */
 export const runPerformanceTests = async (): Promise<PerformanceTestResult[]> => {
+  logger.info("Running performance tests", undefined, "PerformanceTests");
+  
   // In a real implementation, this would use actual performance metrics,
   // potentially from browser performance API or backend monitoring
   
@@ -24,7 +19,7 @@ export const runPerformanceTests = async (): Promise<PerformanceTestResult[]> =>
   const endTime = performance.now();
   const actualResponseTime = endTime - startTime;
   
-  return [
+  const tests: PerformanceTestResult[] = [
     {
       name: "Dashboard loading",
       status: actualResponseTime < 500 ? "success" : actualResponseTime < 1000 ? "warning" : "error",
@@ -86,4 +81,23 @@ export const runPerformanceTests = async (): Promise<PerformanceTestResult[]> =>
       endpoint: "/auth",
     },
   ];
+  
+  // Log any performance issues found
+  const issues = tests.filter(test => test.status !== "success");
+  if (issues.length > 0) {
+    logger.warning(
+      `Found ${issues.length} performance issues`,
+      { 
+        issues: issues.map(i => ({ 
+          name: i.name, 
+          status: i.status, 
+          responseTime: i.responseTime,
+          cpuUsage: i.cpuUsage
+        }))
+      },
+      "PerformanceTests"
+    );
+  }
+  
+  return tests;
 };
