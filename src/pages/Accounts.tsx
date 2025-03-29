@@ -878,3 +878,167 @@ const Accounts = () => {
               <Download className="mr-2 h-4 w-4" />
               Export
             </Button>
+
+          </div>
+        </div>
+        
+        <div className="space-y-4">
+          <div className="flex justify-between items-center">
+            <h3 className="text-lg font-medium">{selectedAccount.name}</h3>
+            <p className="font-bold">${selectedAccount.balance}</p>
+          </div>
+          
+          <Table>
+            <TableHeader>
+              <TableRow className={isLightTheme ? "bg-[#E9E7D8]" : "bg-[#121a2c]"}>
+                <TableHead>Transaction Date</TableHead>
+                <TableHead>Description</TableHead>
+                <TableHead className="text-right">Amount</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {transactions.map((transaction) => (
+                <TableRow 
+                  key={transaction.date}
+                  className={`cursor-pointer ${isLightTheme ? "hover:bg-[#E9E7D8]" : "hover:bg-[#2A2A40]"}`}
+                >
+                  <TableCell>{transaction.date}</TableCell>
+                  <TableCell>{transaction.description}</TableCell>
+                  <TableCell className="text-right">${transaction.amount}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <div className="flex flex-col">
+      <div className="flex flex-col">
+        <div className="flex justify-between items-center">
+          <h1 className="text-2xl font-bold">Accounts</h1>
+          <div className="flex gap-2">
+            <Button 
+              variant="outline" 
+              size="sm"
+              className={`${
+                isLightTheme 
+                  ? "border-[#DCD8C0] text-[#222222] hover:bg-[#E9E7D8]" 
+                  : "border-gray-700 text-white hover:bg-[#1c2e4a]"
+              }`}
+              onClick={() => handleSelectPlaid()}
+            >
+              <Plus className="mr-2 h-4 w-4" />
+              Add Account
+            </Button>
+            <Button 
+              variant="outline" 
+              size="sm"
+              className={`${
+                isLightTheme 
+                  ? "border-[#DCD8C0] text-[#222222] hover:bg-[#E9E7D8]" 
+                  : "border-gray-700 text-white hover:bg-[#1c2e4a]"
+              }`}
+              onClick={() => handleSelectManual()}
+            >
+              <Plus className="mr-2 h-4 w-4" />
+              Add Manually-Tracked Account
+            </Button>
+          </div>
+        </div>
+        
+        <div className="flex flex-col">
+          {accountSections.map((section) => (
+            <div key={section.id} className="mb-4">
+              <div className="flex justify-between items-center">
+                <h2 className="text-lg font-medium">{section.title}</h2>
+                <div className="flex gap-2">
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    className={`${
+                      isLightTheme 
+                        ? "border-[#DCD8C0] text-[#222222] hover:bg-[#E9E7D8]" 
+                        : "border-gray-700 text-white hover:bg-[#1c2e4a]"
+                    }`}
+                    onClick={() => toggleSection(section.id)}
+                  >
+                    {section.isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                  </Button>
+                </div>
+              </div>
+              
+              {section.isExpanded && (
+                <div className="mt-2">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {section.accounts.map((account) => (
+                      <div key={account.id} className="p-4 rounded-lg border border-gray-200">
+                        <div className="flex justify-between items-center">
+                          <div className="flex items-center">
+                            {section.icon}
+                            <h3 className="text-lg font-medium ml-2">{account.name}</h3>
+                          </div>
+                          <div className="flex gap-2">
+                            <Button 
+                              variant="outline" 
+                              size="sm"
+                              className={`${
+                                isLightTheme 
+                                  ? "border-[#DCD8C0] text-[#222222] hover:bg-[#E9E7D8]" 
+                                  : "border-gray-700 text-white hover:bg-[#1c2e4a]"
+                              }`}
+                              onClick={() => handleAccountClick(account)}
+                            >
+                              <ChevronDown className="h-4 w-4" />
+                              <span className="sr-only">View details</span>
+                            </Button>
+                          </div>
+                        </div>
+                        
+                        <div className="mt-2">
+                          <p className="text-sm text-gray-400">Account Number: {account.accountNumber}</p>
+                          <p className="text-lg font-semibold">${account.balance}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+        
+        {accountDetailView && renderEnhancedAccountDetails()}
+      </div>
+      
+      {dialogOpen && (
+        <AddAccountDialog
+          open={dialogOpen}
+          onClose={() => setDialogOpen(false)}
+          onAdd={handleAddAccount}
+          selectedSection={selectedSection}
+        />
+      )}
+      
+      {plaidDialogOpen && (
+        <PlaidLinkDialog
+          open={plaidDialogOpen}
+          onClose={() => setPlaidDialogOpen(false)}
+          onLinkSuccess={handlePlaidLinkSuccess}
+        />
+      )}
+      
+      {mainDialogOpen && (
+        <AccountLinkTypeSelector
+          open={mainDialogOpen}
+          onClose={() => setMainDialogOpen(false)}
+          onAdd={handleMainAddAccount}
+        />
+      )}
+    </div>
+  );
+};
+
+export default Accounts;
