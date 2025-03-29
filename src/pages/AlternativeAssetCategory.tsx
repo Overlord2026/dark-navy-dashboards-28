@@ -96,7 +96,7 @@ const CATEGORY_DATA = {
       {
         id: 3,
         name: "CAIS Vista Foundation Fund V, L.P.",
-        description: "Vista Foundation Fund V, L.P. (the "Partnership", the "Fund", or "VFF V") was formed by Vista Equity Partners Management, LLC (with its management company affiliates, together with VFF Management, L.P. and their respective affiliates, collectively "Vista" or the "Manager") principally to acquire operating companies in middle-market and "Mid-Cap" software and technology-enabled businesses, generally with enterprise values generally between $250 million and $750 million.",
+        description: "Vista Foundation Fund V, L.P. (the \"Partnership\", the \"Fund\", or \"VFF V\") was formed by Vista Equity Partners Management, LLC (with its management company affiliates, together with VFF Management, L.P. and their respective affiliates, collectively \"Vista\" or the \"Manager\") principally to acquire operating companies in middle-market and \"Mid-Cap\" software and technology-enabled businesses, generally with enterprise values generally between $250 million and $750 million.",
         minimumInvestment: "$100,000",
         performance: "21.3% (5-year avg)",
         lockupPeriod: "10 years",
