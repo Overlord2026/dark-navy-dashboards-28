@@ -32,17 +32,19 @@ export const AdvisorSection = ({ advisorInfo, onViewProfile, onBookSession, coll
       <Popover>
         <PopoverTrigger asChild>
           <div 
-            className={`flex items-center w-full p-2 ${isLightTheme ? 'hover:bg-[#E9E7D8]' : 'hover:bg-[#2A2A40]'} rounded-md transition-colors cursor-pointer border border-primary`}
+            className={`flex items-center w-full p-2 rounded-md transition-colors cursor-pointer border bg-black ${isLightTheme ? 'border-[#9F9EA1]' : 'border-[#9F9EA1]'}`}
           >
-            <Avatar className="h-[30px] w-[30px] mr-3">
-              <AvatarFallback className={`${isLightTheme ? 'bg-[#E9E7D8]' : 'bg-[#2A2A40]'} ${isLightTheme ? 'text-[#222222]' : 'text-white'}`}>
-                {advisorInfo.name.split(' ').map(name => name[0]).join('')}
-              </AvatarFallback>
-            </Avatar>
+            <div className="relative h-[30px] w-[30px] mr-3">
+              <Avatar className="h-[30px] w-[30px] border-2 border-[#9F9EA1] rounded-full">
+                <AvatarFallback className="bg-black text-white">
+                  {advisorInfo.name.split(' ').map(name => name[0]).join('')}
+                </AvatarFallback>
+              </Avatar>
+            </div>
             {!collapsed && (
               <div className="flex flex-col">
-                <span className={`text-[14px] ${isLightTheme ? 'text-[#222222]' : 'text-gray-200'} font-medium`}>Advisor:</span>
-                <span className={`text-[14px] ${isLightTheme ? 'text-[#222222]' : 'text-gray-300'}`}>{advisorInfo.name}</span>
+                <span className={`text-[14px] text-gray-200 font-medium`}>Advisor/CFO:</span>
+                <span className={`text-[14px] text-gray-300`}>{advisorInfo.name}</span>
               </div>
             )}
           </div>
@@ -54,8 +56,8 @@ export const AdvisorSection = ({ advisorInfo, onViewProfile, onBookSession, coll
         >
           <div className="flex flex-col space-y-3 p-1">
             <div className="flex items-center space-x-3">
-              <Avatar className="h-[60px] w-[60px]">
-                <AvatarFallback className={`${isLightTheme ? 'bg-[#E9E7D8]' : 'bg-[#2A2A40]'} ${isLightTheme ? 'text-[#222222]' : 'text-white'} text-xl`}>
+              <Avatar className="h-[60px] w-[60px] border-2 border-[#9F9EA1]">
+                <AvatarFallback className={`bg-black text-white text-xl`}>
                   {advisorInfo.name.split(' ').map(name => name[0]).join('')}
                 </AvatarFallback>
               </Avatar>
