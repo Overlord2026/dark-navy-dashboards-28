@@ -13,6 +13,7 @@ import { MidTrialBanner } from "@/components/dashboard/MidTrialBanner";
 import { TrialEndingSoonBanner } from "@/components/dashboard/TrialEndingSoonBanner";
 import { ExpirationNotice } from "@/components/subscription/ExpirationNotice";
 import { TrialExtensionBanner } from "@/components/subscription/TrialExtensionBanner";
+import { BoutiqueFamilyOfficeBanner } from "@/components/subscription/BoutiqueFamilyOfficeBanner";
 import { useSubscription } from "@/context/SubscriptionContext"; 
 import { toast } from "sonner";
 
@@ -26,6 +27,7 @@ const Dashboard = () => {
   const [showTrialEndingSoonBanner, setShowTrialEndingSoonBanner] = useState(false);
   const [showExpirationNotice, setShowExpirationNotice] = useState(false);
   const [showExtensionBanner, setShowExtensionBanner] = useState(false);
+  const [showBoutiqueClientBanner, setShowBoutiqueClientBanner] = useState(false);
   const { 
     isInFreeTrial, 
     daysRemainingInTrial, 
@@ -91,6 +93,11 @@ const Dashboard = () => {
         setShowExtensionBanner(true);
       }
     }
+    
+    const hasSeenBoutiqueClientBanner = localStorage.getItem('hasSeenBoutiqueClientBanner');
+    if (!hasSeenBoutiqueClientBanner) {
+      setShowBoutiqueClientBanner(true);
+    }
   }, [isInFreeTrial, daysRemainingInTrial, trialWasExtended, checklistItems]);
 
   const handleDismissWelcome = () => {
@@ -116,6 +123,11 @@ const Dashboard = () => {
   const handleDismissExtensionBanner = () => {
     setShowExtensionBanner(false);
     localStorage.setItem('hasSeenExtensionBanner', 'true');
+  };
+
+  const handleDismissBoutiqueClientBanner = () => {
+    setShowBoutiqueClientBanner(false);
+    localStorage.setItem('hasSeenBoutiqueClientBanner', 'true');
   };
 
   const toggleMetrics = () => {
@@ -163,6 +175,10 @@ const Dashboard = () => {
         </div>
       ) : (
         <div className="w-full space-y-6 animate-fade-in">
+          {showBoutiqueClientBanner && (
+            <BoutiqueFamilyOfficeBanner onDismiss={handleDismissBoutiqueClientBanner} />
+          )}
+          
           {showWelcomeBanner && (
             <WelcomeTrialBanner onDismiss={handleDismissWelcome} />
           )}
