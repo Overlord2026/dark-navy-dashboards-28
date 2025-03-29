@@ -4,11 +4,14 @@ import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { AdvisorModules } from "@/components/advisor/AdvisorModules";
 import { Button } from "@/components/ui/button";
 import { Search, MessageSquare, Zap } from "lucide-react";
+import { FreeTierAdvisorBanner } from "@/components/advisor/FreeTierAdvisorBanner";
 
 export default function AdvisorModuleMarketplace() {
   return (
     <ThreeColumnLayout activeMainItem="advisor" title="Module Marketplace">
       <div className="w-full max-w-6xl mx-auto p-4">
+        <FreeTierAdvisorBanner />
+        
         <div className="mb-8 p-6 bg-[#0F0F2D] rounded-lg border border-gray-700">
           <h2 className="text-2xl font-bold mb-4">Explore our suite of integrated tools to enhance your practice</h2>
           <p className="text-gray-400 mb-6">
