@@ -42,8 +42,10 @@ export function CourseCard({
       initiateStripeCheckout();
     } else if (ghlUrl) {
       // For free courses, directly open the GHL URL
-      window.open(ghlUrl, "_blank", "noopener,noreferrer");
       toast.success(`Accessing ${title}...`);
+      setTimeout(() => {
+        window.open(ghlUrl, "_blank", "noopener,noreferrer");
+      }, 500);
     } else if (onClick) {
       // Fallback to regular onClick if no URL provided
       onClick();
@@ -54,11 +56,11 @@ export function CourseCard({
     setIsProcessing(true);
     
     // Simulate Stripe checkout process with a delay
-    toast.info("Preparing payment page...");
+    toast.info("Preparing checkout page...");
     
     // This simulates a network request to create a Stripe Checkout session
     setTimeout(() => {
-      toast.success("Payment page ready!");
+      toast.loading("Processing payment...", { duration: 2000 });
       
       // In a real implementation, we would redirect to Stripe Checkout here
       // In this simulation, we'll use a setTimeout to simulate the payment process
@@ -80,7 +82,9 @@ export function CourseCard({
               },
             });
             
-            window.open(ghlUrl, "_blank", "noopener,noreferrer");
+            setTimeout(() => {
+              window.open(ghlUrl, "_blank", "noopener,noreferrer");
+            }, 500);
           }
         }, 1000);
       }, 2000);

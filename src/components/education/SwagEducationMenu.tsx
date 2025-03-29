@@ -83,30 +83,39 @@ export function SwagEducationMenu() {
     if (course.isPaid) {
       // For paid courses, simulate Stripe checkout process
       setIsProcessing(course.id);
-      toast.info("Preparing payment page...");
+      toast.info("Preparing checkout page...");
       
       // Simulate payment process
       setTimeout(() => {
-        toast.success("Payment processed successfully!");
+        toast.loading("Processing payment...", { duration: 2000 });
         
         setTimeout(() => {
-          setIsProcessing(null);
-          if (course.ghlUrl) {
-            toast("You now have access to this course!", {
-              description: "Opening course in a new tab...",
-              action: {
-                label: "Open Course",
-                onClick: () => window.open(course.ghlUrl, "_blank", "noopener,noreferrer")
-              },
-            });
-            window.open(course.ghlUrl, "_blank", "noopener,noreferrer");
-          }
-        }, 1000);
-      }, 2000);
+          toast.success("Payment processed successfully!");
+          
+          setTimeout(() => {
+            setIsProcessing(null);
+            if (course.ghlUrl) {
+              toast("You now have access to this course!", {
+                description: "Opening course in a new tab...",
+                action: {
+                  label: "Open Course",
+                  onClick: () => window.open(course.ghlUrl, "_blank", "noopener,noreferrer")
+                },
+              });
+              
+              setTimeout(() => {
+                window.open(course.ghlUrl, "_blank", "noopener,noreferrer");
+              }, 500);
+            }
+          }, 1000);
+        }, 2000);
+      }, 1500);
     } else if (course.ghlUrl) {
       // For free courses, directly open the GHL URL
       toast.success(`Accessing ${course.name}...`);
-      window.open(course.ghlUrl, "_blank", "noopener,noreferrer");
+      setTimeout(() => {
+        window.open(course.ghlUrl, "_blank", "noopener,noreferrer");
+      }, 500);
     }
   };
 
