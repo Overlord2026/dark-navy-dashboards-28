@@ -1,5 +1,5 @@
 
-import { BellIcon, SearchIcon } from "lucide-react";
+import { BellIcon, SearchIcon, GraduationCapIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { 
@@ -11,6 +11,7 @@ import {
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu";
 import { SwagEducationMenu } from "@/components/education/SwagEducationMenu";
+import { Link } from "react-router-dom";
 
 export const Header = () => {
   return (
@@ -25,7 +26,14 @@ export const Header = () => {
       </div>
       
       <div className="w-full flex items-center justify-between">
-        <div className="flex-1"></div>
+        <div className="flex-1 flex items-center">
+          <Link to="/education">
+            <Button variant="ghost" className="flex items-center gap-1">
+              <GraduationCapIcon className="h-5 w-5" />
+              <span className="font-medium">Education Center</span>
+            </Button>
+          </Link>
+        </div>
         
         <div className="hidden md:flex relative max-w-md w-full mx-8">
           <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
