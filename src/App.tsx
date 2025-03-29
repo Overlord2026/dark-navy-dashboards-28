@@ -17,6 +17,7 @@ import Accounts from "./pages/Accounts";
 import LegacyVault from "./pages/LegacyVault";
 import Lending from "./pages/Lending";
 import Documents from "./pages/Documents";
+import Properties from "./pages/Properties";
 import {
   BrowserRouter as Router,
   Routes,
@@ -51,7 +52,7 @@ function App() {
               <Route path="/lending" element={<Lending />} />
               
               {/* Properties Management Routes */}
-              <Route path="/properties" element={<NotFound />} />
+              <Route path="/properties" element={<Properties />} />
               <Route path="/buildings" element={<NotFound />} />
               <Route path="/rentals" element={<NotFound />} />
               <Route path="/locations" element={<NotFound />} />
