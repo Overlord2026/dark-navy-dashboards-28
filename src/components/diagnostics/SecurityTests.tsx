@@ -2,9 +2,10 @@
 import { Shield } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getStatusColor } from "./StatusIcon";
+import { SecurityTestResult } from "@/services/diagnostics/types";
 
 interface SecurityTestsProps {
-  tests: any[];
+  tests: SecurityTestResult[];
 }
 
 const getSeverityBadge = (severity: string) => {
@@ -47,7 +48,7 @@ export const SecurityTests = ({ tests }: SecurityTestsProps) => {
     }
     acc[test.category].push(test);
     return acc;
-  }, {} as Record<string, any[]>);
+  }, {} as Record<string, SecurityTestResult[]>);
 
   const categoryNames: Record<string, string> = {
     'authentication': 'Authentication Security',
