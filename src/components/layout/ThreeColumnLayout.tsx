@@ -129,13 +129,13 @@ export function ThreeColumnLayout({
   const [showAdvisorInfo, setShowAdvisorInfo] = useState(false);
   
   const advisorInfo = {
-    name: "Charles Bryant",
+    name: "Daniel Zamora",
     title: "Senior Financial Advisor",
-    email: "charles.bryant@example.com",
+    email: "Daniel@awmfl.com",
     phone: "(555) 123-4567",
     location: "New York, NY",
     office: "Manhattan Office",
-    bio: "Charles has over 15 years of experience in wealth management and financial planning."
+    bio: "Daniel has over 15 years of experience in wealth management and financial planning."
   };
 
   const handleBookSession = () => {

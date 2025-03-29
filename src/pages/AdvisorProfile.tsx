@@ -11,10 +11,10 @@ const AdvisorProfile = () => {
   const [isBookingDrawerOpen, setIsBookingDrawerOpen] = useState(false);
 
   const advisorInfo = {
-    name: "Daniel Herrera",
+    name: "Daniel Zamora",
     title: "Certified Financial Planner™",
     location: "Tampa, FL",
-    email: "daniel.herrera@farther.com",
+    email: "Daniel@awmfl.com",
     phone: "(800) 555-1234",
     office: "New York, NY",
     bio: "Daniel, a seasoned finance professional, guides high net worth investors. His approach blends investment management, risk mitigation, tax optimization, and overall strategy. Starting at Vanguard, then UBS, he directed client acquisition at Fisher Investments before joining Farther. Originally from Asheville, NC, Daniel now resides in Tampa, enjoying fitness, community activities, and sunny days by the water."
@@ -87,7 +87,7 @@ const AdvisorProfile = () => {
               <div className="rounded-full overflow-hidden w-32 h-32 mb-4 md:mb-0 md:mr-8">
                 <img
                   src="/lovable-uploads/b4df25d6-12d7-4c34-874e-804e72335904.png"
-                  alt="Daniel Herrera"
+                  alt="Daniel Zamora"
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -159,7 +159,7 @@ const AdvisorProfile = () => {
                   <div className="mx-auto w-24 h-24 rounded-full overflow-hidden mb-4">
                     <img
                       src="/lovable-uploads/b4df25d6-12d7-4c34-874e-804e72335904.png"
-                      alt="Daniel Herrera"
+                      alt="Daniel Zamora"
                       className="w-full h-full object-cover"
                     />
                   </div>
