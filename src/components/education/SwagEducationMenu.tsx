@@ -11,6 +11,31 @@ import {
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
+const courseCategories = [
+  { id: "all-courses", name: "All Courses" },
+  { id: "retirement-income", name: "Retirement Income Planning Basics" },
+  { id: "social-security", name: "Social Security Optimization" },
+  { id: "income-distribution", name: "Retirement Income Distribution Optimization" },
+  { id: "annuities", name: "Understanding Annuities" },
+  { id: "tax-planning", name: "Proactive Tax Planning" },
+  { id: "advanced-tax", name: "Advanced Tax Planning" },
+  { id: "wealth-management", name: "Holistic Wealth Management" },
+  { id: "estate-planning", name: "Estate Planning Basics" },
+  { id: "florida-residency", name: "Benefits of Florida Residency" },
+  { id: "texas-residency", name: "Benefits of Texas Residency" },
+];
+
+const featuredCourses = [
+  { id: "financial-fundamentals", name: "Financial Fundamentals" },
+  { id: "investment-strategies", name: "Investment Strategies 101" },
+  { id: "wealth-building", name: "Wealth Building for Beginners" },
+];
+
+const premiumCourses = [
+  { id: "advanced-trading", name: "Advanced Trading (Coming Soon)" },
+  { id: "estate-planning-premium", name: "Estate Planning (Coming Soon)" },
+];
+
 export function SwagEducationMenu() {
   return (
     <DropdownMenu>
@@ -23,62 +48,36 @@ export function SwagEducationMenu() {
       <DropdownMenuContent align="end" className="w-72">
         <DropdownMenuLabel>Course Categories</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <Link to="/education">
-          <DropdownMenuItem>
-            All Courses
-          </DropdownMenuItem>
-        </Link>
-        <DropdownMenuItem>
-          Retirement Income Planning Basics
-        </DropdownMenuItem>
-        <DropdownMenuItem>
-          Social Security Optimization
-        </DropdownMenuItem>
-        <DropdownMenuItem>
-          Retirement Income Distribution Optimization
-        </DropdownMenuItem>
-        <DropdownMenuItem>
-          Understanding Annuities
-        </DropdownMenuItem>
-        <DropdownMenuItem>
-          Proactive Tax Planning
-        </DropdownMenuItem>
-        <DropdownMenuItem>
-          Advanced Tax Planning
-        </DropdownMenuItem>
-        <DropdownMenuItem>
-          Holistic Wealth Management
-        </DropdownMenuItem>
-        <DropdownMenuItem>
-          Estate Planning Basics
-        </DropdownMenuItem>
-        <DropdownMenuItem>
-          Benefits of Florida Residency
-        </DropdownMenuItem>
-        <DropdownMenuItem>
-          Benefits of Texas Residency
-        </DropdownMenuItem>
+        
+        {courseCategories.map((category) => (
+          <Link to={`/education?category=${category.id}`} key={category.id}>
+            <DropdownMenuItem>
+              {category.name}
+            </DropdownMenuItem>
+          </Link>
+        ))}
+        
         <DropdownMenuSeparator />
         <DropdownMenuLabel>Featured Courses</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
-          Financial Fundamentals
-        </DropdownMenuItem>
-        <DropdownMenuItem>
-          Investment Strategies 101
-        </DropdownMenuItem>
-        <DropdownMenuItem>
-          Wealth Building for Beginners
-        </DropdownMenuItem>
+        
+        {featuredCourses.map((course) => (
+          <Link to={`/education?course=${course.id}`} key={course.id}>
+            <DropdownMenuItem>
+              {course.name}
+            </DropdownMenuItem>
+          </Link>
+        ))}
+        
         <DropdownMenuSeparator />
         <DropdownMenuLabel>Premium Courses</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem className="opacity-70">
-          Advanced Trading (Coming Soon)
-        </DropdownMenuItem>
-        <DropdownMenuItem className="opacity-70">
-          Estate Planning (Coming Soon)
-        </DropdownMenuItem>
+        
+        {premiumCourses.map((course) => (
+          <DropdownMenuItem className="opacity-70" key={course.id}>
+            {course.name}
+          </DropdownMenuItem>
+        ))}
       </DropdownMenuContent>
     </DropdownMenu>
   );
