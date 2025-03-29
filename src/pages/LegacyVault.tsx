@@ -1,8 +1,7 @@
-
 import React, { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { BookOpenIcon, FileIcon, UsersIcon, KeyIcon, ClockIcon, LockIcon, FolderPlus, FileText, File, FileImage } from "lucide-react";
+import { BookOpenIcon, FileIcon, UsersIcon, KeyIcon, ClockIcon, LockIcon, FolderPlus, FileText, File, FileImage, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { 
   Table, 
@@ -18,6 +17,7 @@ import { Label } from "@/components/ui/label";
 import { FileUpload } from "@/components/ui/file-upload";
 import { useToast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Separator } from "@/components/ui/separator";
 
 type DocumentType = "pdf" | "image" | "spreadsheet" | "document";
 
@@ -40,14 +40,19 @@ export default function LegacyVault() {
   const { toast } = useToast();
 
   const documentCategories = [
-    { id: "important-documents", name: "Important Documents", icon: FileIcon },
+    { id: "alternative-investments", name: "Alternative Investments", icon: FileIcon },
     { id: "business-ownership", name: "Business Ownership", icon: FileIcon },
     { id: "education", name: "Education", icon: FileIcon },
+    { id: "employer-agreements", name: "Employer Agreements", icon: FileIcon },
     { id: "estate-planning", name: "Estate Planning", icon: FileIcon },
     { id: "insurance-policies", name: "Insurance Policies", icon: FileIcon },
     { id: "leases", name: "Leases", icon: FileIcon },
+    { id: "other", name: "Other", icon: FileIcon },
+    { id: "property-ownership", name: "Property Ownership", icon: FileIcon },
+    { id: "statements", name: "Statements", icon: FileIcon },
     { id: "taxes", name: "Taxes", icon: FileIcon },
     { id: "trusts", name: "Trusts", icon: FileIcon },
+    { id: "vehicles", name: "Vehicles", icon: FileIcon },
   ];
 
   const vaultCategories = [
@@ -73,7 +78,6 @@ export default function LegacyVault() {
   };
 
   const handleFileUpload = (file: File, customName: string) => {
-    // Determine file type based on mime type
     let documentType: DocumentType = "document";
     if (file.type.includes("pdf")) {
       documentType = "pdf";

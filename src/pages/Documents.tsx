@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
-import { FolderPlus, FileText, File, FileImage } from "lucide-react";
+import { FolderPlus, FileText, File, FileImage, ChevronRight } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -16,6 +16,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FileUpload } from "@/components/ui/file-upload";
 import { useToast } from "@/hooks/use-toast";
+import { Card, CardContent } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 
 type DocumentType = "pdf" | "image" | "spreadsheet" | "document";
 
@@ -27,14 +29,36 @@ interface DocumentItem {
   size: string;
 }
 
+interface DocumentCategory {
+  id: string;
+  name: string;
+}
+
 const Documents = () => {
-  const [activeCategory, setActiveCategory] = useState("business-ownership");
+  const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [documents, setDocuments] = useState<DocumentItem[]>([]);
   const [folderName, setFolderName] = useState("");
   const [fileName, setFileName] = useState("");
   const [fileType, setFileType] = useState<DocumentType>("pdf");
   const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
   const { toast } = useToast();
+
+  // Updated document categories to match the image
+  const documentCategories: DocumentCategory[] = [
+    { id: "alternative-investments", name: "Alternative Investments" },
+    { id: "business-ownership", name: "Business Ownership" },
+    { id: "education", name: "Education" },
+    { id: "employer-agreements", name: "Employer Agreements" },
+    { id: "estate-planning", name: "Estate Planning" },
+    { id: "insurance-policies", name: "Insurance Policies" },
+    { id: "leases", name: "Leases" },
+    { id: "other", name: "Other" },
+    { id: "property-ownership", name: "Property Ownership" },
+    { id: "statements", name: "Statements" },
+    { id: "taxes", name: "Taxes" },
+    { id: "trusts", name: "Trusts" },
+    { id: "vehicles", name: "Vehicles" },
+  ];
 
   const handleCreateFolder = () => {
     if (!folderName.trim()) {
@@ -94,120 +118,158 @@ const Documents = () => {
   return (
     <ThreeColumnLayout 
       activeMainItem="documents" 
-      activeSecondaryItem={activeCategory}
-      title="Business Ownership"
-      breadcrumbs={[
-        { name: "Documents", href: "/documents", active: false },
-        { name: "Business Ownership", href: "/documents/business-ownership", active: true }
-      ]}
+      title="Documents"
     >
       <div className="animate-fade-in">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-semibold">Business Ownership</h1>
-          <div className="flex space-x-3">
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button variant="outline" className="gap-2">
-                  <FolderPlus className="h-4 w-4" />
-                  New Folder
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Create New Folder</DialogTitle>
-                  <DialogDescription>
-                    Enter a name for your new folder.
-                  </DialogDescription>
-                </DialogHeader>
-                <div className="grid gap-4 py-4">
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="name" className="text-right">
-                      Name
-                    </Label>
-                    <Input
-                      id="name"
-                      placeholder="Enter folder name"
-                      className="col-span-3"
-                      value={folderName}
-                      onChange={(e) => setFolderName(e.target.value)}
-                    />
-                  </div>
-                </div>
-                <DialogFooter>
-                  <Button onClick={handleCreateFolder}>Create Folder</Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
-            
-            <Dialog open={isUploadDialogOpen} onOpenChange={setIsUploadDialogOpen}>
-              <DialogTrigger asChild>
-                <Button className="gap-2">
-                  <FileText className="h-4 w-4" />
-                  Upload
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-md">
-                <DialogHeader>
-                  <DialogTitle>Upload Document</DialogTitle>
-                  <DialogDescription>
-                    Upload a document to the Business Ownership section.
-                  </DialogDescription>
-                </DialogHeader>
-                
-                <FileUpload 
-                  onFileSelect={handleFileUpload}
-                  onCancel={() => setIsUploadDialogOpen(false)}
-                  accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png"
-                  label="Upload Document"
-                  buttonText="Browse Files"
-                  placeholder="Drag and drop your files here or click to browse"
-                />
-              </DialogContent>
-            </Dialog>
-          </div>
-        </div>
+        <h1 className="text-2xl font-semibold mb-6">Documents</h1>
         
-        {documents.length > 0 ? (
-          <div className="dashboard-card overflow-hidden">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-[40%]">Name</TableHead>
-                  <TableHead>Created</TableHead>
-                  <TableHead>Type</TableHead>
-                  <TableHead className="text-right">Size</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {documents.map((document) => (
-                  <TableRow key={document.id}>
-                    <TableCell className="font-medium flex items-center gap-2">
-                      {getDocumentIcon(document.type)}
-                      {document.name}
-                    </TableCell>
-                    <TableCell>{document.created}</TableCell>
-                    <TableCell className="capitalize">{document.type}</TableCell>
-                    <TableCell className="text-right">{document.size}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+        <Card className="bg-[#0a1629] border-none shadow-lg">
+          <CardContent className="p-0">
+            {documentCategories.map((category, index) => (
+              <div key={category.id}>
+                <Button 
+                  variant="ghost" 
+                  className="w-full p-4 flex items-center justify-between rounded-none text-white"
+                  onClick={() => setActiveCategory(category.id)}
+                >
+                  <div className="flex items-center space-x-3">
+                    <File className="h-6 w-6 text-gray-400" />
+                    <span className="text-lg font-medium">{category.name}</span>
+                  </div>
+                  <ChevronRight className="h-5 w-5 text-gray-400" />
+                </Button>
+                {index < documentCategories.length - 1 && <Separator className="bg-gray-700" />}
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+        
+        {activeCategory && (
+          <div className="mt-6">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-medium">
+                {documentCategories.find(c => c.id === activeCategory)?.name}
+              </h2>
+              <div className="flex space-x-3">
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button variant="outline" className="gap-2">
+                      <FolderPlus className="h-4 w-4" />
+                      New Folder
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Create New Folder</DialogTitle>
+                      <DialogDescription>
+                        Enter a name for your new folder.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="grid gap-4 py-4">
+                      <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="name" className="text-right">
+                          Name
+                        </Label>
+                        <Input
+                          id="name"
+                          placeholder="Enter folder name"
+                          className="col-span-3"
+                          value={folderName}
+                          onChange={(e) => setFolderName(e.target.value)}
+                        />
+                      </div>
+                    </div>
+                    <DialogFooter>
+                      <Button onClick={handleCreateFolder}>Create Folder</Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+                
+                <Dialog open={isUploadDialogOpen} onOpenChange={setIsUploadDialogOpen}>
+                  <DialogTrigger asChild>
+                    <Button className="gap-2">
+                      <FileText className="h-4 w-4" />
+                      Upload
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-md">
+                    <DialogHeader>
+                      <DialogTitle>Upload Document</DialogTitle>
+                      <DialogDescription>
+                        Upload a document to {documentCategories.find(c => c.id === activeCategory)?.name}.
+                      </DialogDescription>
+                    </DialogHeader>
+                    
+                    <FileUpload 
+                      onFileSelect={handleFileUpload}
+                      onCancel={() => setIsUploadDialogOpen(false)}
+                      accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png"
+                      label="Upload Document"
+                      buttonText="Browse Files"
+                      placeholder="Drag and drop your files here or click to browse"
+                    />
+                  </DialogContent>
+                </Dialog>
+              </div>
+            </div>
+            
+            {documents.filter(doc => doc.category === activeCategory).length > 0 ? (
+              <div className="dashboard-card overflow-hidden">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="w-[40%]">Name</TableHead>
+                      <TableHead>Created</TableHead>
+                      <TableHead>Type</TableHead>
+                      <TableHead className="text-right">Size</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {documents
+                      .filter(doc => doc.category === activeCategory)
+                      .map((document) => (
+                        <TableRow key={document.id}>
+                          <TableCell className="font-medium flex items-center gap-2">
+                            {getDocumentIcon(document.type)}
+                            {document.name}
+                          </TableCell>
+                          <TableCell>{document.created}</TableCell>
+                          <TableCell className="capitalize">{document.type}</TableCell>
+                          <TableCell className="text-right">{document.size}</TableCell>
+                        </TableRow>
+                      ))}
+                  </TableBody>
+                </Table>
+              </div>
+            ) : (
+              <div className="dashboard-card h-[400px] flex flex-col items-center justify-center">
+                <div className="text-center max-w-md mx-auto">
+                  <FileText className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
+                  <h3 className="text-xl font-medium mb-2">No files</h3>
+                  <p className="text-muted-foreground mb-6">
+                    You haven't uploaded any files to {documentCategories.find(c => c.id === activeCategory)?.name}.
+                  </p>
+                  <Button 
+                    className="gap-2"
+                    onClick={() => setIsUploadDialogOpen(true)}
+                  >
+                    <FileText className="h-4 w-4" />
+                    Upload Document
+                  </Button>
+                </div>
+              </div>
+            )}
           </div>
-        ) : (
-          <div className="dashboard-card h-[400px] flex flex-col items-center justify-center">
+        )}
+        
+        {!activeCategory && (
+          <div className="dashboard-card h-[400px] flex flex-col items-center justify-center mt-6">
             <div className="text-center max-w-md mx-auto">
               <FileText className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-              <h3 className="text-xl font-medium mb-2">No files</h3>
+              <h3 className="text-xl font-medium mb-2">Select a category</h3>
               <p className="text-muted-foreground mb-6">
-                You haven't uploaded any files to Business Ownership.
+                Please select a document category from the list above.
               </p>
-              <Button 
-                className="gap-2"
-                onClick={() => setIsUploadDialogOpen(true)}
-              >
-                <FileText className="h-4 w-4" />
-                Upload Document
-              </Button>
             </div>
           </div>
         )}

@@ -16,6 +16,7 @@ import NotFound from "./pages/NotFound";
 import Accounts from "./pages/Accounts";
 import LegacyVault from "./pages/LegacyVault";
 import Lending from "./pages/Lending";
+import Documents from "./pages/Documents";
 import {
   BrowserRouter as Router,
   Routes,
@@ -45,6 +46,8 @@ function App() {
               <Route path="/sharing/*" element={<Sharing />} />
               <Route path="/accounts/*" element={<Accounts />} />
               <Route path="/vault/*" element={<LegacyVault />} />
+              <Route path="/documents" element={<Documents />} />
+              <Route path="/documents/:categoryId" element={<Documents />} />
               <Route path="/lending" element={<Lending />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
