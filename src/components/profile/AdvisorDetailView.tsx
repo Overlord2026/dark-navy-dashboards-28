@@ -1,4 +1,3 @@
-
 import React from "react";
 import { MailIcon, LinkedinIcon, MapPinIcon, HomeIcon, GraduationCapIcon, UserIcon, BriefcaseIcon, CheckCircleIcon } from "lucide-react";
 
