@@ -27,27 +27,27 @@ export const CoreServicesSummary = ({
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
           <div className="flex flex-col items-center p-3 border rounded-md">
             <h3 className="font-medium text-sm mb-2">Navigation</h3>
-            <StatusIcon status={navigation.status} size="lg" />
+            <StatusIcon status={navigation.status} />
             <span className="text-xs mt-2 text-center">{navigation.message}</span>
           </div>
           <div className="flex flex-col items-center p-3 border rounded-md">
             <h3 className="font-medium text-sm mb-2">Forms</h3>
-            <StatusIcon status={forms.status} size="lg" />
+            <StatusIcon status={forms.status} />
             <span className="text-xs mt-2 text-center">{forms.message}</span>
           </div>
           <div className="flex flex-col items-center p-3 border rounded-md">
             <h3 className="font-medium text-sm mb-2">Database</h3>
-            <StatusIcon status={database.status} size="lg" />
+            <StatusIcon status={database.status} />
             <span className="text-xs mt-2 text-center">{database.message}</span>
           </div>
           <div className="flex flex-col items-center p-3 border rounded-md">
             <h3 className="font-medium text-sm mb-2">API</h3>
-            <StatusIcon status={api.status} size="lg" />
+            <StatusIcon status={api.status} />
             <span className="text-xs mt-2 text-center">{api.message}</span>
           </div>
           <div className="flex flex-col items-center p-3 border rounded-md">
             <h3 className="font-medium text-sm mb-2">Authentication</h3>
-            <StatusIcon status={authentication.status} size="lg" />
+            <StatusIcon status={authentication.status} />
             <span className="text-xs mt-2 text-center">{authentication.message}</span>
           </div>
         </div>
