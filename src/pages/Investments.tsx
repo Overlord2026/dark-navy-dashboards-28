@@ -1,3 +1,4 @@
+
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -19,7 +20,8 @@ import {
   HardHat,
   LineChart,
   Landmark,
-  Network
+  Network,
+  ArrowRight
 } from "lucide-react";
 import { useState } from "react";
 import { Progress } from "@/components/ui/progress";
@@ -623,10 +625,16 @@ const Investments = () => {
     <div className="animate-fade-in space-y-6">
       <div className="flex items-center justify-between mb-4">
         <h1 className="text-2xl font-semibold">Alternative Assets</h1>
-        <Button className="bg-white text-black hover:bg-slate-100">
-          <Plus className="mr-2 h-4 w-4" />
-          Add Alternative Asset
-        </Button>
+        <div className="space-x-3">
+          <Button className="bg-white text-black hover:bg-slate-100">
+            <Plus className="mr-2 h-4 w-4" />
+            Add Alternative Asset
+          </Button>
+          <Button variant="outline" className="flex items-center">
+            View All
+            <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
+        </div>
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
