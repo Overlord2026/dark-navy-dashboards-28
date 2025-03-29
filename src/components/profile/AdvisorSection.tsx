@@ -42,9 +42,9 @@ export const AdvisorSection = ({ advisorInfo, onViewProfile, onBookSession, coll
               </Avatar>
             </div>
             {!collapsed && (
-              <div className="flex flex-col">
+              <div className="flex flex-col overflow-hidden">
                 <span className={`text-[14px] text-gray-200 font-medium whitespace-nowrap`}>Advisor/CFO:</span>
-                <span className={`text-[14px] text-gray-300 whitespace-nowrap truncate max-w-[130px]`}>{advisorInfo.name}</span>
+                <span className={`text-[14px] text-gray-300 whitespace-nowrap truncate max-w-[120px]`}>{advisorInfo.name}</span>
               </div>
             )}
           </div>
@@ -61,17 +61,17 @@ export const AdvisorSection = ({ advisorInfo, onViewProfile, onBookSession, coll
                   {advisorInfo.name.split(' ').map(name => name[0]).join('')}
                 </AvatarFallback>
               </Avatar>
-              <div>
-                <p className="font-medium whitespace-nowrap">{advisorInfo.name}</p>
-                <p className="text-sm text-gray-400">{advisorInfo.title}</p>
+              <div className="max-w-[150px] overflow-hidden">
+                <p className="font-medium whitespace-nowrap text-ellipsis overflow-hidden">{advisorInfo.name}</p>
+                <p className="text-sm text-gray-400 whitespace-nowrap text-ellipsis overflow-hidden">{advisorInfo.title}</p>
               </div>
             </div>
             
             <div className="text-sm text-gray-300">{advisorInfo.location}</div>
             
             <a href={`mailto:${advisorInfo.email}`} className="text-sm text-blue-400 hover:underline flex items-center">
-              <MailIcon className="h-3.5 w-3.5 mr-1.5" />
-              {advisorInfo.email}
+              <MailIcon className="h-3.5 w-3.5 mr-1.5 flex-shrink-0" />
+              <span className="truncate">{advisorInfo.email}</span>
             </a>
             
             <div className="flex flex-col space-y-2 pt-2">
