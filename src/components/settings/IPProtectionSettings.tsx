@@ -13,16 +13,26 @@ import { auditLog } from "@/services/auditLog/auditLogService";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
+interface RolePermissions {
+  canPublish: boolean;
+  canViewStrategicData: boolean;
+  canEditCode: boolean;
+  description: string;
+}
 
 interface IPProtectionSettings {
   twoFactorForPublishing: boolean;
   publisherPhoneNumber: string;
   roles: {
-    admin: { canPublish: boolean; canViewStrategicData: boolean };
-    developer: { canPublish: boolean; canViewStrategicData: boolean };
-    assistant: { canPublish: boolean; canViewStrategicData: boolean };
+    admin: RolePermissions;
+    developer: RolePermissions;
+    assistant: RolePermissions;
   };
   ipDisclaimer: string;
+  selectedRole?: string;
+  currentUsername?: string;
 }
 
 export function IPProtectionSettings() {
@@ -30,31 +40,49 @@ export function IPProtectionSettings() {
     twoFactorForPublishing: true,
     publisherPhoneNumber: "",
     roles: {
-      admin: { canPublish: true, canViewStrategicData: true },
-      developer: { canPublish: false, canViewStrategicData: false },
-      assistant: { canPublish: false, canViewStrategicData: false },
+      admin: { 
+        canPublish: true, 
+        canViewStrategicData: true, 
+        canEditCode: true,
+        description: "Full read/write/publish. Bypasses normal restrictions but still requires 2FA for final publish."
+      },
+      developer: { 
+        canPublish: false, 
+        canViewStrategicData: false, 
+        canEditCode: true,
+        description: "Can view and edit code or modules, but cannot publish without admin approval/2FA."
+      },
+      assistant: { 
+        canPublish: false, 
+        canViewStrategicData: false, 
+        canEditCode: false,
+        description: "Can view certain sections, provide content, but cannot access backend code or publish changes."
+      },
     },
     ipDisclaimer: "All content, code, designs, and intellectual property created within this application are the exclusive property of the company. No reproduction, distribution, or usage outside the terms of service is permitted.",
+    selectedRole: undefined,
+    currentUsername: ""
   });
 
   const [verifying2FA, setVerifying2FA] = useState(false);
   const [otpValue, setOtpValue] = useState("");
   const [activeTab, setActiveTab] = useState("2fa");
   const [showVerificationForm, setShowVerificationForm] = useState(false);
+  const [showRoleAssignment, setShowRoleAssignment] = useState(false);
 
   const form = useForm();
 
   const handleSettingChange = (path: string[], value: any) => {
     setSettings(prevSettings => {
       const newSettings = { ...prevSettings };
-      let current = newSettings;
+      let current: any = newSettings;
       
       for (let i = 0; i < path.length - 1; i++) {
-        current = current[path[i] as keyof typeof current] as any;
+        current = current[path[i]];
       }
       
       const lastKey = path[path.length - 1];
-      current[lastKey as keyof typeof current] = value;
+      current[lastKey] = value;
       
       return newSettings;
     });
@@ -149,6 +177,40 @@ export function IPProtectionSettings() {
     }
   };
 
+  const assignRole = () => {
+    if (!settings.selectedRole || !settings.currentUsername) {
+      toast.error("Please select a role and enter a username");
+      return;
+    }
+
+    // Simulate role assignment
+    toast.success(`Role '${settings.selectedRole}' assigned to ${settings.currentUsername}`);
+    
+    // Log role assignment to audit log
+    auditLog.log(
+      "current-user",
+      "role_assignment",
+      "success",
+      {
+        userName: "Administrator",
+        userRole: "admin",
+        details: { 
+          action: "user_role_assigned",
+          username: settings.currentUsername,
+          assignedRole: settings.selectedRole
+        }
+      }
+    );
+
+    // Clear the form
+    setSettings(prev => ({
+      ...prev,
+      selectedRole: undefined,
+      currentUsername: ""
+    }));
+    setShowRoleAssignment(false);
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -228,7 +290,8 @@ export function IPProtectionSettings() {
               <div className="space-y-6">
                 {/* Admin Role */}
                 <div className="p-4 border rounded-md">
-                  <h3 className="text-lg font-medium mb-4">Administrator Role</h3>
+                  <h3 className="text-lg font-medium mb-2">Administrator Role</h3>
+                  <p className="text-sm text-muted-foreground mb-4">{settings.roles.admin.description}</p>
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
                       <Label htmlFor="admin-publish">Can publish changes</Label>
@@ -246,12 +309,21 @@ export function IPProtectionSettings() {
                         onCheckedChange={(checked) => handleSettingChange(['roles', 'admin', 'canViewStrategicData'], checked)}
                       />
                     </div>
+                    <div className="flex items-center justify-between">
+                      <Label htmlFor="admin-code">Can edit code</Label>
+                      <Switch 
+                        id="admin-code"
+                        checked={settings.roles.admin.canEditCode}
+                        onCheckedChange={(checked) => handleSettingChange(['roles', 'admin', 'canEditCode'], checked)}
+                      />
+                    </div>
                   </div>
                 </div>
 
                 {/* Developer Role */}
                 <div className="p-4 border rounded-md">
-                  <h3 className="text-lg font-medium mb-4">Developer Role</h3>
+                  <h3 className="text-lg font-medium mb-2">Developer Role</h3>
+                  <p className="text-sm text-muted-foreground mb-4">{settings.roles.developer.description}</p>
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
                       <Label htmlFor="developer-publish">Can publish changes</Label>
@@ -269,12 +341,21 @@ export function IPProtectionSettings() {
                         onCheckedChange={(checked) => handleSettingChange(['roles', 'developer', 'canViewStrategicData'], checked)}
                       />
                     </div>
+                    <div className="flex items-center justify-between">
+                      <Label htmlFor="developer-code">Can edit code</Label>
+                      <Switch 
+                        id="developer-code"
+                        checked={settings.roles.developer.canEditCode}
+                        onCheckedChange={(checked) => handleSettingChange(['roles', 'developer', 'canEditCode'], checked)}
+                      />
+                    </div>
                   </div>
                 </div>
 
                 {/* Assistant Role */}
                 <div className="p-4 border rounded-md">
-                  <h3 className="text-lg font-medium mb-4">Assistant Role</h3>
+                  <h3 className="text-lg font-medium mb-2">Assistant/Editor Role</h3>
+                  <p className="text-sm text-muted-foreground mb-4">{settings.roles.assistant.description}</p>
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
                       <Label htmlFor="assistant-publish">Can publish changes</Label>
@@ -292,7 +373,86 @@ export function IPProtectionSettings() {
                         onCheckedChange={(checked) => handleSettingChange(['roles', 'assistant', 'canViewStrategicData'], checked)}
                       />
                     </div>
+                    <div className="flex items-center justify-between">
+                      <Label htmlFor="assistant-code">Can edit code</Label>
+                      <Switch 
+                        id="assistant-code"
+                        checked={settings.roles.assistant.canEditCode}
+                        onCheckedChange={(checked) => handleSettingChange(['roles', 'assistant', 'canEditCode'], checked)}
+                      />
+                    </div>
                   </div>
+                </div>
+
+                <div className="mt-6">
+                  <Button 
+                    variant="outline" 
+                    onClick={() => setShowRoleAssignment(!showRoleAssignment)}
+                    className="w-full"
+                  >
+                    {showRoleAssignment ? "Cancel Role Assignment" : "Assign Role to User"}
+                  </Button>
+
+                  {showRoleAssignment && (
+                    <div className="mt-4 p-4 border rounded-md">
+                      <h3 className="text-lg font-medium mb-4">Assign Role to User</h3>
+                      <div className="space-y-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="username">Username</Label>
+                          <Input 
+                            id="username" 
+                            placeholder="Enter username"
+                            value={settings.currentUsername || ""}
+                            onChange={(e) => handleSettingChange(['currentUsername'], e.target.value)}
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="role-select">Select Role</Label>
+                          <Select 
+                            value={settings.selectedRole} 
+                            onValueChange={(value) => handleSettingChange(['selectedRole'], value)}
+                          >
+                            <SelectTrigger id="role-select">
+                              <SelectValue placeholder="Select a role" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="admin">Administrator</SelectItem>
+                              <SelectItem value="developer">Developer</SelectItem>
+                              <SelectItem value="assistant">Assistant/Editor</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        
+                        {settings.selectedRole && (
+                          <div className="mt-4 p-3 bg-muted rounded-md">
+                            <h4 className="font-medium mb-2">Role Privileges:</h4>
+                            <ul className="space-y-1 text-sm">
+                              <li className="flex justify-between">
+                                <span>Can publish changes:</span>
+                                <span>{settings.roles[settings.selectedRole as keyof typeof settings.roles].canPublish ? "Yes" : "No"}</span>
+                              </li>
+                              <li className="flex justify-between">
+                                <span>Can view strategic data:</span>
+                                <span>{settings.roles[settings.selectedRole as keyof typeof settings.roles].canViewStrategicData ? "Yes" : "No"}</span>
+                              </li>
+                              <li className="flex justify-between">
+                                <span>Can edit code:</span>
+                                <span>{settings.roles[settings.selectedRole as keyof typeof settings.roles].canEditCode ? "Yes" : "No"}</span>
+                              </li>
+                            </ul>
+                          </div>
+                        )}
+                        
+                        <Button 
+                          onClick={assignRole}
+                          className="w-full mt-4"
+                          disabled={!settings.selectedRole || !settings.currentUsername}
+                        >
+                          Confirm Role Assignment
+                        </Button>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </CardContent>
