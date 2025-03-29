@@ -1,4 +1,3 @@
-
 import { ReactNode, useState } from "react";
 import * as React from "react";
 import { useParams, useNavigate, Link, useLocation } from "react-router-dom";
@@ -93,6 +92,7 @@ const navigationCategories: NavCategory[] = [
       { id: "home", label: "Home", icon: CustomHomeIcon, href: "/" },
       { id: "education", label: "Education Center", icon: GraduationCapIcon, href: "/education" },
       { id: "vault", label: "Legacy Vault", icon: BookOpenIcon, href: "/vault" },
+      { id: "tax-budgets", label: "Tax Planning", icon: ReceiptIcon, href: "/tax-budgets" },
     ]
   },
   {
@@ -105,14 +105,7 @@ const navigationCategories: NavCategory[] = [
       { id: "accounts", label: "Accounts", icon: WalletIcon, href: "/accounts" },
       { id: "properties", label: "Properties", icon: HomeIcon, href: "/properties" },
       { id: "social-security", label: "Social Security", icon: CoinsIcon, href: "/social-security" },
-    ]
-  },
-  {
-    id: "protection",
-    label: "Protection",
-    items: [
       { id: "insurance", label: "Insurance", icon: ShieldIcon, href: "/insurance" },
-      { id: "tax-budgets", label: "Tax Planning", icon: ReceiptIcon, href: "/tax-budgets" },
     ]
   },
   {
