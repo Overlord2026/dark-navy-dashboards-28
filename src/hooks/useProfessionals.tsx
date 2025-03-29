@@ -1,13 +1,13 @@
 
 import { useState, useEffect, createContext, useContext } from "react";
-import { Professional } from "@/types/professional";
+import { Professional, ProfessionalType } from "@/types/professional";
 
 // Sample professionals data
 const sampleProfessionals: Professional[] = [
   {
     id: "pro-1",
     name: "Sarah Johnson",
-    type: "Accountant/CPA",
+    type: "Tax Professional / Accountant",
     company: "Johnson Tax & Accounting",
     phone: "(555) 123-4567",
     email: "sarah.johnson@example.com",
@@ -31,7 +31,7 @@ const sampleProfessionals: Professional[] = [
   {
     id: "pro-3",
     name: "Jennifer Williams",
-    type: "Attorney",
+    type: "Estate Planning Attorney",
     company: "Williams & Partners Law Firm",
     phone: "(555) 456-7890",
     email: "jennifer.williams@example.com",
