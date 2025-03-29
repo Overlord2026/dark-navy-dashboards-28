@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -54,7 +53,7 @@ export function PracticeDetailsForm() {
               </div>
             )}
             <FileUpload
-              onUpload={handleLogoUpload}
+              onFileChange={handleLogoUpload}
               accept="image/*"
               maxSize={5242880}
               className="w-full"
