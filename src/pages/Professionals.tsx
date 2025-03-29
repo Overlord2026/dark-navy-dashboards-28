@@ -6,7 +6,7 @@ import { ProfessionalsDirectory } from "@/components/professionals/Professionals
 import { AddProfessionalDialog } from "@/components/professionals/AddProfessionalDialog";
 import { ConsultationsPrompt } from "@/components/professionals/ConsultationsPrompt";
 import { Button } from "@/components/ui/button";
-import { UserPlus, ExternalLink } from "lucide-react";
+import { UserPlus, ExternalLink, MessageSquare } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ProfessionalType } from "@/types/professional";
 
@@ -17,6 +17,10 @@ export default function Professionals() {
 
   const handleProfessionalSignup = () => {
     navigate("/professional-signup", { state: { professionalType } });
+  };
+
+  const handleNavigateToFeedback = () => {
+    navigate("/advisor-feedback");
   };
 
   return (
@@ -69,6 +73,22 @@ export default function Professionals() {
               Sign Up as Professional
             </Button>
           </div>
+        </div>
+
+        {/* New advisor feedback prompt */}
+        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/40 dark:to-indigo-950/30 p-4 rounded-lg border border-blue-200 dark:border-blue-800">
+          <h2 className="text-lg font-medium mb-2">Already a Professional on our Platform?</h2>
+          <p className="text-muted-foreground mb-4">
+            Share your experience with our practice management tools, marketing features, and marketplace visibility.
+          </p>
+          <Button 
+            variant="outline" 
+            onClick={handleNavigateToFeedback}
+            className="flex items-center gap-2"
+          >
+            <MessageSquare size={16} />
+            Provide Advisor Feedback
+          </Button>
         </div>
 
         <ProfessionalsDirectory />
