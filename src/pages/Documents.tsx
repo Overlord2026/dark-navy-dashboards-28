@@ -27,6 +27,7 @@ interface DocumentItem {
   created: string;
   type: DocumentType;
   size: string;
+  category: string; // Added category property to match filtering logic
 }
 
 interface DocumentCategory {
@@ -43,7 +44,7 @@ const Documents = () => {
   const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
   const { toast } = useToast();
 
-  // Updated document categories to match the image
+  // Document categories to match the provided image
   const documentCategories: DocumentCategory[] = [
     { id: "alternative-investments", name: "Alternative Investments" },
     { id: "business-ownership", name: "Business Ownership" },
@@ -58,6 +59,7 @@ const Documents = () => {
     { id: "taxes", name: "Taxes" },
     { id: "trusts", name: "Trusts" },
     { id: "vehicles", name: "Vehicles" },
+    { id: "wills", name: "Wills" }, // Added Wills category
   ];
 
   const handleCreateFolder = () => {
@@ -87,12 +89,22 @@ const Documents = () => {
       documentType = "spreadsheet";
     }
     
+    // Make sure we have an active category before uploading
+    if (!activeCategory) {
+      toast({
+        title: "Please select a category",
+        variant: "destructive"
+      });
+      return;
+    }
+    
     const newDocument: DocumentItem = {
       id: `doc-${Math.random().toString(36).substring(2, 9)}`,
       name: customName || file.name,
       created: new Date().toLocaleDateString(),
       type: documentType,
-      size: `${(file.size / (1024 * 1024)).toFixed(2)} MB`
+      size: `${(file.size / (1024 * 1024)).toFixed(2)} MB`,
+      category: activeCategory // Set the category to the active category
     };
     
     setDocuments([...documents, newDocument]);
@@ -110,6 +122,8 @@ const Documents = () => {
         return <File className="h-5 w-5 text-red-400" />;
       case "image":
         return <FileImage className="h-5 w-5 text-blue-400" />;
+      case "spreadsheet":
+        return <FileText className="h-5 w-5 text-green-400" />;
       default:
         return <FileText className="h-5 w-5 text-gray-400" />;
     }
