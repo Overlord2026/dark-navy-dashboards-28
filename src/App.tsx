@@ -34,6 +34,7 @@ import Professionals from "./pages/Professionals";
 import BillsManagement from "./pages/BillsManagement";
 import AdvisorFeedback from "./pages/AdvisorFeedback";
 import SystemDiagnostics from "./pages/SystemDiagnostics";
+import IPProtection from "./pages/IPProtection";
 import { Toaster } from "./components/ui/sonner";
 
 function App() {
@@ -75,6 +76,7 @@ function App() {
                     <Route path="/advisor/modules" element={<AdvisorModuleMarketplace />} />
                     <Route path="/advisor-feedback" element={<AdvisorFeedback />} />
                     <Route path="/system-diagnostics" element={<SystemDiagnostics />} />
+                    <Route path="/ip-protection" element={<IPProtection />} />
                     <Route path="*" element={<NotFound />} />
                   </Routes>
                   <Toaster />
