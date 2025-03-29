@@ -99,10 +99,12 @@ const Dashboard = () => {
             </div>
             
             <div className="lg:w-1/3">
-              <SetupChecklist 
-                items={checklistItems} 
-                onItemClick={handleOpenForm} 
-              />
+              <div className="bg-[#1EAEDB]/10 p-1 rounded-lg border-2 border-[#FFD700]">
+                <SetupChecklist 
+                  items={checklistItems} 
+                  onItemClick={handleOpenForm} 
+                />
+              </div>
             </div>
           </div>
         </div>
