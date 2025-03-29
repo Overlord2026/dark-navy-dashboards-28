@@ -69,7 +69,7 @@ export const SecurityTests = ({ tests }: SecurityTestsProps) => {
   const highIssues = tests.filter(test => test.severity === 'high' && test.status !== 'success').length;
 
   // Determine overall security status
-  let overallStatus = 'success';
+  let overallStatus: 'success' | 'warning' | 'error' = 'success';
   if (errorTests > 0 || criticalIssues > 0) {
     overallStatus = 'error';
   } else if (warningTests > 0 || highIssues > 0) {
