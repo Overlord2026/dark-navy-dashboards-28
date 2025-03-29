@@ -1,13 +1,8 @@
 
-import { Property } from "@/types/property";
+import { Property, PropertyValuation } from "@/types/property";
 
 // Simulated service to get property valuations
-export const getPropertyValuation = async (address: string): Promise<{
-  estimatedValue: number;
-  lastUpdated: string;
-  confidence: 'high' | 'medium' | 'low';
-  source: string;
-}> => {
+export const getPropertyValuation = async (address: string): Promise<PropertyValuation> => {
   // This would be replaced with actual API call to Zillow or similar service
   // For now, we simulate a response with random data
   
@@ -43,4 +38,9 @@ export const updatePropertyValue = (property: Property, newValue: number): Prope
     ...property,
     currentValue: newValue
   };
+};
+
+// Generate a Zillow search URL for a property
+export const getZillowSearchUrl = (address: string): string => {
+  return `https://www.zillow.com/homes/${encodeURIComponent(address)}_rb/`;
 };

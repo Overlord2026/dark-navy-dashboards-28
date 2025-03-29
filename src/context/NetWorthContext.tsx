@@ -10,6 +10,8 @@ export interface Asset {
   value: number;
   owner: string;
   lastUpdated: string;
+  sourceId?: string; // Reference to the source object (like property.id)
+  source?: 'zillow' | 'manual' | 'other'; // Where the valuation came from
 }
 
 interface NetWorthContextType {
@@ -20,6 +22,7 @@ interface NetWorthContextType {
   getTotalNetWorth: () => number;
   getTotalAssetsByType: (type: Asset['type']) => number;
   syncPropertiesToAssets: (properties: Property[]) => void;
+  getAssetsByOwner: (owner: string) => Asset[];
 }
 
 // Create context
@@ -84,6 +87,11 @@ export const NetWorthProvider: React.FC<{ children: ReactNode }> = ({ children }
       .reduce((total, asset) => total + asset.value, 0);
   };
 
+  // Get assets by owner
+  const getAssetsByOwner = (owner: string) => {
+    return assets.filter(asset => asset.owner === owner);
+  };
+
   // Sync properties to assets list
   const syncPropertiesToAssets = (properties: Property[]) => {
     // First, remove all existing property assets
@@ -96,7 +104,9 @@ export const NetWorthProvider: React.FC<{ children: ReactNode }> = ({ children }
       type: 'property' as const,
       value: property.currentValue,
       owner: property.owner,
-      lastUpdated: new Date().toISOString().split('T')[0]
+      lastUpdated: property.valuation?.lastUpdated || new Date().toISOString().split('T')[0],
+      sourceId: property.id,
+      source: property.valuation ? 'zillow' : 'manual'
     }));
     
     // Update the assets list with non-property assets and new property assets
@@ -111,7 +121,8 @@ export const NetWorthProvider: React.FC<{ children: ReactNode }> = ({ children }
       removeAsset, 
       getTotalNetWorth, 
       getTotalAssetsByType,
-      syncPropertiesToAssets
+      syncPropertiesToAssets,
+      getAssetsByOwner
     }}>
       {children}
     </NetWorthContext.Provider>

@@ -1,13 +1,15 @@
 
 import { DashboardCard } from "@/components/ui/DashboardCard";
 import { Progress } from "@/components/ui/progress";
-import { ArrowUpRight, Wallet, Maximize2, Home } from "lucide-react";
+import { ArrowUpRight, Wallet, Maximize2, Home, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNetWorth } from "@/context/NetWorthContext";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "@/context/UserContext";
 
 export const NetWorthSummary = () => {
-  const { assets, getTotalNetWorth, getTotalAssetsByType } = useNetWorth();
+  const { assets, getTotalNetWorth, getTotalAssetsByType, getAssetsByOwner } = useNetWorth();
+  const { userProfile } = useUser();
   const navigate = useNavigate();
   
   const formatCurrency = (amount: number) => {
@@ -37,6 +39,9 @@ export const NetWorthSummary = () => {
   
   // Get property count
   const propertyCount = assets.filter(asset => asset.type === 'property').length;
+  
+  // Get unique asset owners
+  const owners = Array.from(new Set(assets.map(asset => asset.owner)));
 
   return (
     <div className="bg-[#121a2c]/80 rounded-lg p-4 border border-gray-800">
@@ -129,12 +134,39 @@ export const NetWorthSummary = () => {
         </div>
         
         <div>
-          <h3 className="text-sm font-medium mb-3">Liability Breakdown</h3>
+          <h3 className="text-sm font-medium mb-3">Ownership Breakdown</h3>
           <div className="space-y-3">
-            <AssetItem label="Mortgage" value="$685,000" percentage={81} color="bg-red-500" />
-            <AssetItem label="Auto Loans" value="$48,210" percentage={6} color="bg-orange-500" />
-            <AssetItem label="Student Loans" value="$72,000" percentage={9} color="bg-pink-500" />
-            <AssetItem label="Credit Cards" value="$40,000" percentage={4} color="bg-cyan-500" />
+            {owners.map((owner, index) => {
+              const ownerAssets = getAssetsByOwner(owner);
+              const ownerTotal = ownerAssets.reduce((sum, asset) => sum + asset.value, 0);
+              const ownerPercentage = totalNetWorth > 0 ? Math.round((ownerTotal / totalNetWorth) * 100) : 0;
+              
+              return (
+                <div key={index}>
+                  <div className="flex justify-between items-center mb-1">
+                    <span className="text-sm flex items-center">
+                      <User className="h-3 w-3 mr-1 text-blue-400" />
+                      {owner}
+                    </span>
+                    <span className="text-sm font-medium">{formatCurrency(ownerTotal)}</span>
+                  </div>
+                  <div className="flex items-center">
+                    <Progress value={ownerPercentage} className="h-2 bg-blue-500/20" indicatorClassName="bg-blue-500" />
+                    <span className="ml-2 text-xs">{ownerPercentage}%</span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+          
+          <div className="mt-6">
+            <h3 className="text-sm font-medium mb-3">Liability Breakdown</h3>
+            <div className="space-y-3">
+              <AssetItem label="Mortgage" value="$685,000" percentage={81} color="bg-red-500" />
+              <AssetItem label="Auto Loans" value="$48,210" percentage={6} color="bg-orange-500" />
+              <AssetItem label="Student Loans" value="$72,000" percentage={9} color="bg-pink-500" />
+              <AssetItem label="Credit Cards" value="$40,000" percentage={4} color="bg-cyan-500" />
+            </div>
           </div>
         </div>
       </div>

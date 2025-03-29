@@ -137,6 +137,21 @@ export const PropertyManager = () => {
     setEditingProperty(property);
     setShowForm(true);
   };
+  
+  const handlePropertyUpdate = (updatedProperty: Property) => {
+    setProperties(
+      properties.map(prop => 
+        prop.id === updatedProperty.id ? updatedProperty : prop
+      )
+    );
+    
+    // Manually sync with net worth context to ensure immediate update
+    syncPropertiesToAssets(
+      properties.map(prop => 
+        prop.id === updatedProperty.id ? updatedProperty : prop
+      )
+    );
+  };
 
   return (
     <div className="space-y-6">
@@ -162,13 +177,7 @@ export const PropertyManager = () => {
           properties={properties}
           onEdit={handleEditProperty}
           onDelete={handleDeleteProperty}
-          onPropertyUpdate={(updatedProperty) => {
-            setProperties(
-              properties.map(prop => 
-                prop.id === updatedProperty.id ? updatedProperty : prop
-              )
-            );
-          }}
+          onPropertyUpdate={handlePropertyUpdate}
         />
       )}
     </div>
