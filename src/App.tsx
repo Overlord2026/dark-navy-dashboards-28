@@ -22,6 +22,7 @@ import Transfers from "./pages/Transfers";
 import NotFound from "./pages/NotFound";
 import Subscription from "./pages/Subscription";
 import AdminSubscription from "./pages/AdminSubscription";
+import AdvisorOnboarding from "./pages/AdvisorOnboarding";
 import { ThemeProvider as CustomThemeProvider } from "./context/ThemeContext";
 import { UserProvider } from "@/context/UserContext";
 import { NetWorthProvider } from "@/context/NetWorthContext";
@@ -67,6 +68,7 @@ function App() {
                     <Route path="/bills-management" element={<BillsManagement />} />
                     <Route path="/subscription" element={<Subscription />} />
                     <Route path="/admin/subscription" element={<AdminSubscription />} />
+                    <Route path="/advisor/onboarding" element={<AdvisorOnboarding />} />
                     <Route path="*" element={<NotFound />} />
                   </Routes>
                   <Toaster />

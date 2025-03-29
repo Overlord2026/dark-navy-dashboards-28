@@ -18,7 +18,7 @@ import { FeedbackSurveyBanner } from "@/components/dashboard/FeedbackSurveyBanne
 import { useSubscription } from "@/context/SubscriptionContext"; 
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { Settings } from "lucide-react";
+import { Settings, Users } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
@@ -197,7 +197,17 @@ const Dashboard = () => {
         </div>
       ) : (
         <div className="w-full space-y-6 animate-fade-in">
-          <div className="flex justify-end mb-2">
+          <div className="flex justify-end mb-2 gap-2">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="flex items-center gap-1 bg-background/80 border-muted"
+              onClick={() => navigate('/advisor/onboarding')}
+            >
+              <Users className="h-3 w-3" />
+              <span className="text-xs">Advisor Portal</span>
+            </Button>
+            
             <Button 
               variant="outline" 
               size="sm" 
