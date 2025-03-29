@@ -1,691 +1,551 @@
 
-import React, { useState, useEffect } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import {
-  WalletIcon,
-  HomeIcon,
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Progress } from "@/components/ui/progress";
+import { 
+  PlusIcon, 
+  CircleDollarSignIcon, 
+  BankIcon, 
+  PercentIcon, 
+  TrendingUpIcon, 
+  EyeIcon, 
+  EyeOffIcon, 
+  RefreshCwIcon,
+  ChevronDownIcon,
   BriefcaseIcon,
-  PiggyBankIcon,
-  ArrowUpDown,
-  Plus,
-  CreditCard,
-  Building,
-  DollarSign,
+  HomeIcon,
+  CreditCardIcon,
+  ShieldIcon,
+  ArrowRightIcon,
   MoreHorizontal,
 } from "lucide-react";
 import { PlaidLinkDialog } from "@/components/accounts/PlaidLinkDialog";
-import { AddAccountDialog, AccountData } from "@/components/accounts/AddAccountDialog";
+import { AddAccountDialog } from "@/components/accounts/AddAccountDialog";
 import { AccountLinkTypeSelector } from "@/components/accounts/AccountLinkTypeSelector";
 import { RealEstateTracker } from "@/components/accounts/RealEstateTracker";
 import { Badge } from "@/components/ui/badge";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Progress } from "@/components/ui/progress";
-import {
+import { 
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useState } from "react";
 import { toast } from "sonner";
 
-// Define types
-type AccountSection = "all-accounts" | "checking" | "savings" | "investment" | "retirement" | "real-estate" | "credit-cards" | "loans";
+type AccountSection = "all-accounts" | "checking" | "savings" | "investment" | "retirement" | "real-estate";
 
-type AccountData = {
+type Account = {
   id: string;
   name: string;
+  institution: string;
   type: string;
   balance: number;
-  institution: string;
   lastUpdated: string;
-  accountNumber: string;
-  routingNumber?: string;
-  interestRate?: number;
-  dueDate?: string;
-  minimumPayment?: number;
-  creditLimit?: number;
-  availableCredit?: number;
-  propertyValue?: number;
-  propertyAddress?: string;
-  loanAmount?: number;
-  loanTerm?: number;
-  transactions?: Array<{
-    id: string;
-    date: string;
-    description: string;
-    amount: number;
-    category: string;
-  }>;
+  isHidden?: boolean;
 };
 
-// Mock data
-const mockAccounts: AccountData[] = [
+type PropertyAsset = {
+  id: string;
+  address: string;
+  type: string;
+  purchasePrice: number;
+  currentValue: number;
+  equity: number;
+  mortgage?: number;
+};
+
+const accounts: Account[] = [
   {
-    id: "1",
-    name: "Primary Checking",
-    type: "checking",
-    balance: 5240.23,
+    id: "acc-001",
+    name: "Everyday Checking",
     institution: "Chase Bank",
-    lastUpdated: "2023-10-15",
-    accountNumber: "****1234",
-    routingNumber: "072000326",
+    type: "checking",
+    balance: 4250.67,
+    lastUpdated: "2023-10-25T10:30:00",
   },
   {
-    id: "2",
-    name: "High-Yield Savings",
+    id: "acc-002",
+    name: "Savings Account",
+    institution: "Chase Bank",
     type: "savings",
-    balance: 25680.45,
+    balance: 12750.42,
+    lastUpdated: "2023-10-25T10:30:00",
+  },
+  {
+    id: "acc-003",
+    name: "High Yield Savings",
     institution: "Ally Bank",
-    lastUpdated: "2023-10-14",
-    accountNumber: "****5678",
-    interestRate: 3.75,
+    type: "savings",
+    balance: 25340.91,
+    lastUpdated: "2023-10-25T09:15:00",
   },
   {
-    id: "3",
-    name: "Retirement Fund",
-    type: "retirement",
-    balance: 352450.89,
+    id: "acc-004",
+    name: "Roth IRA",
     institution: "Vanguard",
-    lastUpdated: "2023-10-12",
-    accountNumber: "****4321",
+    type: "retirement",
+    balance: 62481.34,
+    lastUpdated: "2023-10-24T16:00:00",
   },
   {
-    id: "4",
-    name: "Stock Portfolio",
-    type: "investment",
-    balance: 128934.67,
+    id: "acc-005",
+    name: "401(k)",
+    institution: "Fidelity",
+    type: "retirement",
+    balance: 143875.29,
+    lastUpdated: "2023-10-24T16:30:00",
+  },
+  {
+    id: "acc-006",
+    name: "Brokerage Account",
     institution: "Charles Schwab",
-    lastUpdated: "2023-10-15",
-    accountNumber: "****8765",
+    type: "investment",
+    balance: 87651.20,
+    lastUpdated: "2023-10-24T16:15:00",
   },
   {
-    id: "5",
-    name: "Travel Rewards Card",
-    type: "credit-cards",
-    balance: -2340.56,
-    institution: "American Express",
-    lastUpdated: "2023-10-13",
-    accountNumber: "****9012",
-    dueDate: "2023-11-05",
-    minimumPayment: 35.00,
-    creditLimit: 15000,
-    availableCredit: 12659.44,
+    id: "acc-007",
+    name: "Taxable Account",
+    institution: "Vanguard",
+    type: "investment",
+    balance: 53120.87,
+    lastUpdated: "2023-10-24T16:00:00",
   },
   {
-    id: "6",
-    name: "Mortgage",
-    type: "loans",
-    balance: -285000.00,
-    institution: "Wells Fargo",
-    lastUpdated: "2023-10-10",
-    accountNumber: "****3456",
-    dueDate: "2023-11-01",
-    minimumPayment: 1850.75,
-    loanAmount: 320000,
-    loanTerm: 30,
-  },
-  {
-    id: "7",
-    name: "Vacation Home",
-    type: "real-estate",
-    balance: 450000.00,
-    institution: "Self Managed",
-    lastUpdated: "2023-09-30",
-    accountNumber: "N/A",
-    propertyValue: 450000,
-    propertyAddress: "123 Sunset Drive, Miami, FL 33101",
+    id: "acc-008",
+    name: "Business Checking",
+    institution: "Bank of America",
+    type: "checking",
+    balance: 8975.12,
+    lastUpdated: "2023-10-25T08:45:00",
+    isHidden: true,
   },
 ];
 
-// Generate mock transactions for a specific account
-const generateMockTransactions = (accountId: string) => {
-  const transactions = [];
-  const categories = ["Food", "Shopping", "Transportation", "Entertainment", "Utilities", "Health"];
-  
-  for (let i = 0; i < 15; i++) {
-    const date = new Date();
-    date.setDate(date.getDate() - i);
-    
-    transactions.push({
-      id: `tx-${accountId}-${i}`,
-      date: date.toISOString().split('T')[0],
-      description: `Transaction ${i + 1}`,
-      amount: Math.round(Math.random() * 200 * 100) / 100,
-      category: categories[Math.floor(Math.random() * categories.length)]
-    });
-  }
-  
-  return transactions;
-};
+const realEstateProperties: PropertyAsset[] = [
+  {
+    id: "prop-001",
+    address: "123 Main St, Austin, TX 78701",
+    type: "Primary Residence",
+    purchasePrice: 475000,
+    currentValue: 525000,
+    equity: 125000,
+    mortgage: 400000,
+  },
+  {
+    id: "prop-002",
+    address: "456 Rental Ave, Austin, TX 78704",
+    type: "Rental Property",
+    purchasePrice: 350000,
+    currentValue: 425000,
+    equity: 155000,
+    mortgage: 270000,
+  },
+  {
+    id: "prop-003",
+    address: "789 Vacation Dr, Aspen, CO 81611",
+    type: "Vacation Home",
+    purchasePrice: 650000,
+    currentValue: 875000,
+    equity: 325000,
+    mortgage: 550000,
+  },
+];
 
 const Accounts = () => {
-  const [activeTab, setActiveTab] = useState("overview");
   const [selectedSection, setSelectedSection] = useState<AccountSection>("all-accounts");
-  const [accounts, setAccounts] = useState<AccountData[]>(mockAccounts);
+  const [hideBalances, setHideBalances] = useState(false);
   const [showAddAccountDialog, setShowAddAccountDialog] = useState(false);
   const [showPlaidLinkDialog, setShowPlaidLinkDialog] = useState(false);
   const [showAccountTypeSelector, setShowAccountTypeSelector] = useState(false);
-  const [showRealEstateTracker, setShowRealEstateTracker] = useState(false);
-  const [selectedAccount, setSelectedAccount] = useState<AccountData | null>(null);
-  const [showAccountDetails, setShowAccountDetails] = useState(false);
+  const [showAddPropertyDialog, setShowAddPropertyDialog] = useState(false);
+  const [showHiddenAccounts, setShowHiddenAccounts] = useState(false);
   
-  // Filter accounts based on selected section
+  // Filter accounts based on the selected section
   const filteredAccounts = accounts.filter(account => {
-    if (selectedSection === "all-accounts") return true;
+    // First filter by visibility
+    if (!showHiddenAccounts && account.isHidden) {
+      return false;
+    }
+    
+    // Then filter by section
+    if (selectedSection === "all-accounts") {
+      return true;
+    }
+    if (selectedSection === "real-estate") {
+      return false; // Real estate is handled separately
+    }
     return account.type === selectedSection;
   });
 
-  // Calculate net worth
-  const netWorth = accounts.reduce((sum, account) => sum + account.balance, 0);
+  // Calculate totals
+  const totalBalance = filteredAccounts.reduce((sum, account) => sum + account.balance, 0);
+  const savingsTotal = accounts
+    .filter(a => a.type === "savings" && (!a.isHidden || showHiddenAccounts))
+    .reduce((sum, a) => sum + a.balance, 0);
+  const checkingTotal = accounts
+    .filter(a => a.type === "checking" && (!a.isHidden || showHiddenAccounts))
+    .reduce((sum, a) => sum + a.balance, 0);
+  const investmentTotal = accounts
+    .filter(a => a.type === "investment" && (!a.isHidden || showHiddenAccounts))
+    .reduce((sum, a) => sum + a.balance, 0);
+  const retirementTotal = accounts
+    .filter(a => a.type === "retirement" && (!a.isHidden || showHiddenAccounts))
+    .reduce((sum, a) => sum + a.balance, 0);
   
-  // Calculate assets
-  const assets = accounts
-    .filter(account => account.balance > 0)
-    .reduce((sum, account) => sum + account.balance, 0);
-  
-  // Calculate liabilities
-  const liabilities = accounts
-    .filter(account => account.balance < 0)
-    .reduce((sum, account) => sum + Math.abs(account.balance), 0);
+  // Calculate real estate totals
+  const realEstateValue = realEstateProperties.reduce((sum, property) => sum + property.currentValue, 0);
+  const realEstateEquity = realEstateProperties.reduce((sum, property) => sum + property.equity, 0);
+  const totalMortgage = realEstateProperties.reduce((sum, property) => sum + (property.mortgage || 0), 0);
 
-  const handleAccountClick = (account: AccountData) => {
-    // Generate transactions if they don't exist
-    if (!account.transactions) {
-      account.transactions = generateMockTransactions(account.id);
+  const refreshAccounts = () => {
+    toast.success("Accounts refreshed successfully");
+  };
+
+  const handleSectionChange = (section: AccountSection) => {
+    setSelectedSection(section);
+  };
+
+  const handleAddNewClick = () => {
+    if (selectedSection === "real-estate") {
+      setShowAddPropertyDialog(true);
+    } else {
+      setShowAccountTypeSelector(true);
     }
-    setSelectedAccount(account);
-    setShowAccountDetails(true);
-  };
-
-  const handleAddAccount = (accountData: AccountData) => {
-    // Generate a new ID
-    const newAccount = {
-      ...accountData,
-      id: `${accounts.length + 1}`,
-      lastUpdated: new Date().toISOString().split('T')[0],
-    };
-    
-    setAccounts([...accounts, newAccount]);
-    setShowAddAccountDialog(false);
-    toast.success("Account added successfully");
-  };
-
-  const handlePlaidLinkSuccess = (linkToken: string) => {
-    console.log("Plaid link success:", linkToken);
-    setShowPlaidLinkDialog(false);
-    setShowAddAccountDialog(true);
-    toast.success("Account linked successfully");
-  };
-
-  const handleAddAccountClick = () => {
-    setShowAccountTypeSelector(true);
   };
 
   const handleAccountTypeSelected = (type: string) => {
     setShowAccountTypeSelector(false);
-    
     if (type === "plaid") {
       setShowPlaidLinkDialog(true);
-    } else if (type === "real-estate") {
-      setShowRealEstateTracker(true);
     } else {
       setShowAddAccountDialog(true);
     }
   };
 
-  const handleRealEstateAdded = (propertyData: any) => {
-    const newProperty = {
-      id: `${accounts.length + 1}`,
-      name: propertyData.propertyName,
-      type: "real-estate",
-      balance: propertyData.propertyValue,
-      institution: "Self Managed",
-      lastUpdated: new Date().toISOString().split('T')[0],
-      accountNumber: "N/A",
-      propertyValue: propertyData.propertyValue,
-      propertyAddress: propertyData.propertyAddress,
-    };
-    
-    setAccounts([...accounts, newProperty]);
-    setShowRealEstateTracker(false);
-    toast.success("Property added successfully");
+  const handlePlaidLinkSuccess = (token: string) => {
+    console.log("Plaid link successful with token:", token);
+    setShowPlaidLinkDialog(false);
+    toast.success("Account linked successfully!");
   };
 
-  // Helper function to format currency
+  const handleAddAccount = (accountData: any) => {
+    console.log("Adding new account:", accountData);
+    setShowAddAccountDialog(false);
+    toast.success(`${accountData.name} account added successfully!`);
+  };
+
+  const handleAddProperty = (propertyData: any) => {
+    console.log("Adding new property:", propertyData);
+    setShowAddPropertyDialog(false);
+    toast.success(`Property at ${propertyData.address} added successfully!`);
+  };
+
+  const handleHideAccount = (accountId: string) => {
+    console.log("Hiding account:", accountId);
+    toast.success("Account visibility updated");
+  };
+
+  const handleDeleteAccount = (accountId: string) => {
+    console.log("Deleting account:", accountId);
+    toast.success("Account deleted successfully");
+  };
+
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-    }).format(amount);
+    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
   };
 
   return (
-    <ThreeColumnLayout activeMainItem="accounts" activeSecondaryItem={selectedSection} title="Accounts">
-      <div className="space-y-6">
-        <div className="flex justify-between items-center mb-4">
-          <h1 className="text-2xl font-semibold">Accounts</h1>
-          <Button onClick={handleAddAccountClick}>
-            <Plus className="mr-2 h-4 w-4" />
-            Add Account
-          </Button>
+    <ThreeColumnLayout
+      activeMainItem="accounts"
+      activeSecondaryItem={selectedSection}
+      title="Accounts"
+    >
+      <div className="min-h-screen animate-fade-in space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-semibold">Accounts</h1>
+            <p className="text-muted-foreground">Manage all your financial accounts in one place</p>
+          </div>
+          <div className="flex items-center gap-2">
+            <Button 
+              variant="outline" 
+              size="icon"
+              onClick={() => setHideBalances(!hideBalances)}
+              title={hideBalances ? "Show Balances" : "Hide Balances"}
+            >
+              {hideBalances ? <EyeIcon className="h-4 w-4" /> : <EyeOffIcon className="h-4 w-4" />}
+            </Button>
+            <Button 
+              variant="outline" 
+              size="icon"
+              onClick={refreshAccounts}
+              title="Refresh Accounts"
+            >
+              <RefreshCwIcon className="h-4 w-4" />
+            </Button>
+            <Button onClick={handleAddNewClick}>
+              <PlusIcon className="mr-2 h-4 w-4" />
+              {selectedSection === "real-estate" ? "Add Property" : "Add Account"}
+            </Button>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-lg">Net Worth</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{formatCurrency(netWorth)}</div>
-              <div className="flex justify-between mt-2 text-sm">
-                <div>
-                  <span className="text-gray-500">Assets:</span> {formatCurrency(assets)}
-                </div>
-                <div>
-                  <span className="text-gray-500">Liabilities:</span> {formatCurrency(liabilities)}
-                </div>
-              </div>
-              <Progress value={assets / (assets + liabilities) * 100} className="h-2 mt-2" />
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-lg">Total Accounts</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{accounts.length}</div>
-              <div className="flex flex-wrap gap-2 mt-2">
-                <Badge variant="outline" className="bg-[#D3E4FD] text-blue-700 hover:bg-[#D3E4FD]">
-                  {accounts.filter(a => a.type === "checking" || a.type === "savings").length} Bank
-                </Badge>
-                <Badge variant="outline" className="bg-[#F2FCE2] text-green-700 hover:bg-[#F2FCE2]">
-                  {accounts.filter(a => a.type === "investment" || a.type === "retirement").length} Investment
-                </Badge>
-                <Badge variant="outline" className="bg-[#FFDEE2] text-red-700 hover:bg-[#FFDEE2]">
-                  {accounts.filter(a => a.type === "credit-cards" || a.type === "loans").length} Credit
-                </Badge>
-                <Badge variant="outline" className="bg-[#FDE1D3] text-orange-700 hover:bg-[#FDE1D3]">
-                  {accounts.filter(a => a.type === "real-estate").length} Property
-                </Badge>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-lg">Last Updated</CardTitle>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
+          <Card className={selectedSection === "all-accounts" ? "border-primary" : ""}>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium">Total Balance</CardTitle>
+              <CircleDollarSignIcon className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                {accounts.length > 0 
-                  ? new Date(Math.max(...accounts.map(a => new Date(a.lastUpdated).getTime()))).toLocaleDateString() 
-                  : "N/A"}
+                {hideBalances ? "••••••" : formatCurrency(totalBalance)}
               </div>
-              <div className="text-sm text-gray-500 mt-2">
-                {accounts.length > 0 ? (
-                  <span>
-                    {accounts.filter(a => {
-                      const today = new Date();
-                      const lastUpdated = new Date(a.lastUpdated);
-                      const diffTime = Math.abs(today.getTime() - lastUpdated.getTime());
-                      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                      return diffDays <= 1;
-                    }).length} accounts updated today
-                  </span>
-                ) : "No accounts to update"}
+              <p className="text-xs text-muted-foreground">
+                Across all accounts
+              </p>
+              <Button 
+                variant="ghost" 
+                className="mt-3 w-full justify-between px-2"
+                onClick={() => handleSectionChange("all-accounts")}
+              >
+                View All Accounts
+                <ArrowRightIcon className="h-4 w-4" />
+              </Button>
+            </CardContent>
+          </Card>
+          
+          <Card className={selectedSection === "checking" ? "border-primary" : ""}>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium">Checking</CardTitle>
+              <BankIcon className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">
+                {hideBalances ? "••••••" : formatCurrency(checkingTotal)}
               </div>
+              <p className="text-xs text-muted-foreground">
+                {accounts.filter(a => a.type === "checking" && (!a.isHidden || showHiddenAccounts)).length} account(s)
+              </p>
+              <Button 
+                variant="ghost" 
+                className="mt-3 w-full justify-between px-2"
+                onClick={() => handleSectionChange("checking")}
+              >
+                View Checking
+                <ArrowRightIcon className="h-4 w-4" />
+              </Button>
+            </CardContent>
+          </Card>
+          
+          <Card className={selectedSection === "savings" ? "border-primary" : ""}>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium">Savings</CardTitle>
+              <PercentIcon className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">
+                {hideBalances ? "••••••" : formatCurrency(savingsTotal)}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                {accounts.filter(a => a.type === "savings" && (!a.isHidden || showHiddenAccounts)).length} account(s)
+              </p>
+              <Button 
+                variant="ghost" 
+                className="mt-3 w-full justify-between px-2"
+                onClick={() => handleSectionChange("savings")}
+              >
+                View Savings
+                <ArrowRightIcon className="h-4 w-4" />
+              </Button>
+            </CardContent>
+          </Card>
+          
+          <Card className={selectedSection === "investment" ? "border-primary" : ""}>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium">Investments</CardTitle>
+              <TrendingUpIcon className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">
+                {hideBalances ? "••••••" : formatCurrency(investmentTotal)}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                {accounts.filter(a => a.type === "investment" && (!a.isHidden || showHiddenAccounts)).length} account(s)
+              </p>
+              <Button 
+                variant="ghost" 
+                className="mt-3 w-full justify-between px-2"
+                onClick={() => handleSectionChange("investment")}
+              >
+                View Investments
+                <ArrowRightIcon className="h-4 w-4" />
+              </Button>
+            </CardContent>
+          </Card>
+          
+          <Card className={selectedSection === "retirement" ? "border-primary" : ""}>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium">Retirement</CardTitle>
+              <BriefcaseIcon className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">
+                {hideBalances ? "••••••" : formatCurrency(retirementTotal)}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                {accounts.filter(a => a.type === "retirement" && (!a.isHidden || showHiddenAccounts)).length} account(s)
+              </p>
+              <Button 
+                variant="ghost" 
+                className="mt-3 w-full justify-between px-2"
+                onClick={() => handleSectionChange("retirement")}
+              >
+                View Retirement
+                <ArrowRightIcon className="h-4 w-4" />
+              </Button>
+            </CardContent>
+          </Card>
+          
+          <Card className={`md:col-span-3 ${selectedSection === "real-estate" ? "border-primary" : ""}`}>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium">Real Estate</CardTitle>
+              <HomeIcon className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-3 gap-4">
+                <div>
+                  <p className="text-xs text-muted-foreground">Total Value</p>
+                  <p className="text-xl font-bold">
+                    {hideBalances ? "••••••" : formatCurrency(realEstateValue)}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xs text-muted-foreground">Total Equity</p>
+                  <p className="text-xl font-bold">
+                    {hideBalances ? "••••••" : formatCurrency(realEstateEquity)}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xs text-muted-foreground">Total Mortgage</p>
+                  <p className="text-xl font-bold">
+                    {hideBalances ? "••••••" : formatCurrency(totalMortgage)}
+                  </p>
+                </div>
+              </div>
+              <Button 
+                variant="ghost" 
+                className="mt-3 w-full justify-between px-2"
+                onClick={() => handleSectionChange("real-estate")}
+              >
+                View Real Estate
+                <ArrowRightIcon className="h-4 w-4" />
+              </Button>
             </CardContent>
           </Card>
         </div>
-
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-          <TabsList>
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="transactions">Transactions</TabsTrigger>
-            <TabsTrigger value="insights">Insights</TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="overview" className="space-y-4">
-            <div className="grid grid-cols-1 gap-4">
-              {filteredAccounts.length > 0 ? (
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Your Accounts</CardTitle>
-                    <CardDescription>
-                      Manage and track all your financial accounts in one place
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead>Account</TableHead>
-                          <TableHead>Type</TableHead>
-                          <TableHead>Institution</TableHead>
-                          <TableHead className="text-right">Balance</TableHead>
-                          <TableHead className="text-right">Actions</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {filteredAccounts.map((account) => (
-                          <TableRow key={account.id} onClick={() => handleAccountClick(account)} className="cursor-pointer hover:bg-muted/50">
-                            <TableCell className="font-medium">{account.name}</TableCell>
-                            <TableCell>
-                              <Badge variant="outline" className={
-                                account.type === "checking" || account.type === "savings" 
-                                  ? "bg-[#D3E4FD] text-blue-700" 
-                                  : account.type === "investment" || account.type === "retirement"
-                                  ? "bg-[#F2FCE2] text-green-700"
-                                  : account.type === "credit-cards" || account.type === "loans"
-                                  ? "bg-[#FFDEE2] text-red-700"
-                                  : "bg-[#FDE1D3] text-orange-700"
-                              }>
-                                {account.type.charAt(0).toUpperCase() + account.type.slice(1).replace("-", " ")}
-                              </Badge>
-                            </TableCell>
-                            <TableCell>{account.institution}</TableCell>
-                            <TableCell className={`text-right ${account.balance < 0 ? "text-red-500" : ""}`}>
-                              {formatCurrency(account.balance)}
-                            </TableCell>
-                            <TableCell className="text-right">
-                              <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                  <Button variant="ghost" className="h-8 w-8 p-0">
-                                    <span className="sr-only">Open menu</span>
-                                    <MoreHorizontal className="h-4 w-4" />
-                                  </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent align="end">
-                                  <DropdownMenuItem onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleAccountClick(account);
-                                  }}>
-                                    View Details
-                                  </DropdownMenuItem>
-                                  <DropdownMenuItem onClick={(e) => {
-                                    e.stopPropagation();
-                                    console.log("Edit account:", account.id);
-                                    toast.info("Edit account feature coming soon");
-                                  }}>
-                                    Edit
-                                  </DropdownMenuItem>
-                                  <DropdownMenuItem onClick={(e) => {
-                                    e.stopPropagation();
-                                    console.log("Update balance:", account.id);
-                                    toast.info("Update balance feature coming soon");
-                                  }}>
-                                    Update Balance
-                                  </DropdownMenuItem>
-                                  <DropdownMenuItem onClick={(e) => {
-                                    e.stopPropagation();
-                                    console.log("Remove account:", account.id);
-                                    setAccounts(accounts.filter(a => a.id !== account.id));
-                                    toast.success("Account removed successfully");
-                                  }}>
-                                    Remove
-                                  </DropdownMenuItem>
-                                </DropdownMenuContent>
-                              </DropdownMenu>
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </CardContent>
-                </Card>
-              ) : (
-                <Card>
-                  <CardHeader>
-                    <CardTitle>No Accounts Found</CardTitle>
-                    <CardDescription>
-                      {selectedSection === "all-accounts" 
-                        ? "You haven't added any accounts yet." 
-                        : `You don't have any ${selectedSection.replace("-", " ")} accounts.`}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="flex justify-center">
-                    <Button onClick={handleAddAccountClick}>
-                      <Plus className="mr-2 h-4 w-4" />
-                      Add Your First Account
-                    </Button>
-                  </CardContent>
-                </Card>
-              )}
-            </div>
-          </TabsContent>
-
-          <TabsContent value="transactions" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>Recent Transactions</CardTitle>
-                <CardDescription>
-                  View and manage your recent account transactions
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="text-center text-gray-500 py-6">
-                  <p>Select an account to view transactions</p>
-                  <Button variant="outline" className="mt-2" onClick={() => setActiveTab("overview")}>
-                    Go to Accounts
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="insights" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>Financial Insights</CardTitle>
-                <CardDescription>
-                  Analyze your accounts and get personalized recommendations
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="border rounded-lg p-4">
-                    <h3 className="font-medium mb-2">Spending Analysis</h3>
-                    <p className="text-sm text-gray-500">
-                      Connect more accounts to get personalized spending insights.
-                    </p>
-                  </div>
-                  
-                  <div className="border rounded-lg p-4">
-                    <h3 className="font-medium mb-2">Savings Opportunities</h3>
-                    <p className="text-sm text-gray-500">
-                      We've identified potential for higher interest rates on your savings accounts.
-                    </p>
-                  </div>
-                  
-                  <div className="border rounded-lg p-4">
-                    <h3 className="font-medium mb-2">Debt Optimization</h3>
-                    <p className="text-sm text-gray-500">
-                      Strategies to help you pay down debt more efficiently.
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
-      </div>
-
-      {/* Account Details Dialog */}
-      <Dialog open={showAccountDetails} onOpenChange={setShowAccountDetails}>
-        <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
-          {selectedAccount && (
-            <>
-              <DialogHeader>
-                <DialogTitle>{selectedAccount.name}</DialogTitle>
-                <DialogDescription>
-                  {selectedAccount.institution} • Last updated {new Date(selectedAccount.lastUpdated).toLocaleDateString()}
-                </DialogDescription>
-              </DialogHeader>
-              
-              <div className="space-y-4">
-                <div className="flex justify-between">
-                  <div>
-                    <p className="text-sm text-gray-500">Current Balance</p>
-                    <p className={`text-2xl font-bold ${selectedAccount.balance < 0 ? "text-red-500" : ""}`}>
-                      {formatCurrency(selectedAccount.balance)}
-                    </p>
-                  </div>
-                  
-                  <div className="text-right">
-                    <p className="text-sm text-gray-500">Account Number</p>
-                    <p className="font-medium">{selectedAccount.accountNumber}</p>
-                  </div>
-                </div>
-                
-                {/* Account-specific details */}
-                {selectedAccount.type === "checking" && selectedAccount.routingNumber && (
-                  <div className="border rounded-lg p-4">
-                    <h3 className="font-medium mb-2">Account Details</h3>
-                    <div className="grid grid-cols-2 gap-2">
-                      <div>
-                        <p className="text-sm text-gray-500">Routing Number</p>
-                        <p>{selectedAccount.routingNumber}</p>
-                      </div>
-                    </div>
-                  </div>
-                )}
-                
-                {selectedAccount.type === "savings" && selectedAccount.interestRate && (
-                  <div className="border rounded-lg p-4">
-                    <h3 className="font-medium mb-2">Account Details</h3>
-                    <div className="grid grid-cols-2 gap-2">
-                      <div>
-                        <p className="text-sm text-gray-500">Interest Rate</p>
-                        <p>{selectedAccount.interestRate}% APY</p>
-                      </div>
-                    </div>
-                  </div>
-                )}
-                
-                {selectedAccount.type === "credit-cards" && (
-                  <div className="border rounded-lg p-4">
-                    <h3 className="font-medium mb-2">Credit Card Details</h3>
-                    <div className="grid grid-cols-2 gap-2">
-                      <div>
-                        <p className="text-sm text-gray-500">Payment Due Date</p>
-                        <p>{selectedAccount.dueDate}</p>
-                      </div>
-                      <div>
-                        <p className="text-sm text-gray-500">Minimum Payment</p>
-                        <p>{formatCurrency(selectedAccount.minimumPayment || 0)}</p>
-                      </div>
-                      <div>
-                        <p className="text-sm text-gray-500">Credit Limit</p>
-                        <p>{formatCurrency(selectedAccount.creditLimit || 0)}</p>
-                      </div>
-                      <div>
-                        <p className="text-sm text-gray-500">Available Credit</p>
-                        <p>{formatCurrency(selectedAccount.availableCredit || 0)}</p>
-                      </div>
-                    </div>
-                  </div>
-                )}
-                
-                {selectedAccount.type === "loans" && (
-                  <div className="border rounded-lg p-4">
-                    <h3 className="font-medium mb-2">Loan Details</h3>
-                    <div className="grid grid-cols-2 gap-2">
-                      <div>
-                        <p className="text-sm text-gray-500">Payment Due Date</p>
-                        <p>{selectedAccount.dueDate}</p>
-                      </div>
-                      <div>
-                        <p className="text-sm text-gray-500">Monthly Payment</p>
-                        <p>{formatCurrency(selectedAccount.minimumPayment || 0)}</p>
-                      </div>
-                      <div>
-                        <p className="text-sm text-gray-500">Original Loan Amount</p>
-                        <p>{formatCurrency(selectedAccount.loanAmount || 0)}</p>
-                      </div>
-                      <div>
-                        <p className="text-sm text-gray-500">Loan Term</p>
-                        <p>{selectedAccount.loanTerm} years</p>
-                      </div>
-                    </div>
-                  </div>
-                )}
-                
-                {selectedAccount.type === "real-estate" && (
-                  <div className="border rounded-lg p-4">
-                    <h3 className="font-medium mb-2">Property Details</h3>
-                    <div className="grid grid-cols-1 gap-2">
-                      <div>
-                        <p className="text-sm text-gray-500">Property Address</p>
-                        <p>{selectedAccount.propertyAddress}</p>
-                      </div>
-                      <div>
-                        <p className="text-sm text-gray-500">Property Value</p>
-                        <p>{formatCurrency(selectedAccount.propertyValue || 0)}</p>
-                      </div>
-                    </div>
-                  </div>
-                )}
-                
-                {/* Recent Transactions */}
-                <div>
-                  <h3 className="font-medium mb-2">Recent Transactions</h3>
-                  {selectedAccount.transactions && selectedAccount.transactions.length > 0 ? (
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead>Date</TableHead>
-                          <TableHead>Description</TableHead>
-                          <TableHead>Category</TableHead>
-                          <TableHead className="text-right">Amount</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {selectedAccount.transactions.map((transaction) => (
-                          <TableRow key={transaction.id}>
-                            <TableCell>{transaction.date}</TableCell>
-                            <TableCell>{transaction.description}</TableCell>
-                            <TableCell>{transaction.category}</TableCell>
-                            <TableCell className={`text-right ${transaction.amount < 0 ? "text-red-500" : ""}`}>
-                              {formatCurrency(transaction.amount)}
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  ) : (
-                    <p className="text-sm text-gray-500">No recent transactions found.</p>
-                  )}
-                </div>
-              </div>
-            </>
+        
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl font-semibold">
+            {selectedSection === "all-accounts" 
+              ? "All Accounts" 
+              : selectedSection === "real-estate" 
+                ? "Properties" 
+                : `${selectedSection.charAt(0).toUpperCase() + selectedSection.slice(1)} Accounts`}
+          </h2>
+          
+          {selectedSection !== "real-estate" && (
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={() => setShowHiddenAccounts(!showHiddenAccounts)}
+            >
+              {showHiddenAccounts ? "Hide Hidden Accounts" : "Show Hidden Accounts"}
+            </Button>
           )}
-        </DialogContent>
-      </Dialog>
-
-      {/* Account Management Dialogs */}
+        </div>
+        
+        {selectedSection === "real-estate" ? (
+          <RealEstateTracker properties={realEstateProperties} />
+        ) : (
+          <Card>
+            <CardContent className="p-0">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Name</TableHead>
+                    <TableHead>Institution</TableHead>
+                    <TableHead>Type</TableHead>
+                    <TableHead>Balance</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredAccounts.length > 0 ? (
+                    filteredAccounts.map((account) => (
+                      <TableRow key={account.id} className={account.isHidden ? "text-muted-foreground" : ""}>
+                        <TableCell>
+                          <div className="font-medium">{account.name}</div>
+                          <div className="text-xs text-muted-foreground">
+                            Last updated: {new Date(account.lastUpdated).toLocaleDateString()}
+                          </div>
+                        </TableCell>
+                        <TableCell>{account.institution}</TableCell>
+                        <TableCell>
+                          <Badge variant="outline" className="capitalize">
+                            {account.type}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="font-medium">
+                          {hideBalances ? "••••••" : formatCurrency(account.balance)}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="icon">
+                                <MoreHorizontal className="h-4 w-4" />
+                                <span className="sr-only">Actions</span>
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                              <DropdownMenuItem>View Details</DropdownMenuItem>
+                              <DropdownMenuItem>Edit Account</DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => handleHideAccount(account.id)}>
+                                {account.isHidden ? "Unhide Account" : "Hide Account"}
+                              </DropdownMenuItem>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem 
+                                className="text-destructive focus:text-destructive"
+                                onClick={() => handleDeleteAccount(account.id)}
+                              >
+                                Delete Account
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={5} className="h-24 text-center">
+                        No accounts found.
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+        )}
+      </div>
+      
       {showAddAccountDialog && (
         <AddAccountDialog 
           isOpen={showAddAccountDialog}
@@ -712,11 +572,11 @@ const Accounts = () => {
         />
       )}
       
-      {showRealEstateTracker && (
-        <RealEstateTracker
-          isOpen={showRealEstateTracker}
-          onClose={() => setShowRealEstateTracker(false)}
-          onAdd={handleRealEstateAdded}
+      {showAddPropertyDialog && (
+        <RealEstateTracker.AddPropertyDialog
+          isOpen={showAddPropertyDialog}
+          onClose={() => setShowAddPropertyDialog(false)}
+          onAdd={handleAddProperty}
         />
       )}
     </ThreeColumnLayout>
