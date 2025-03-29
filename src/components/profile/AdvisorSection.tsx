@@ -32,7 +32,7 @@ export const AdvisorSection = ({ advisorInfo, onViewProfile, onBookSession, coll
       <Popover>
         <PopoverTrigger asChild>
           <div 
-            className={`flex items-center w-full p-2 rounded-md transition-colors cursor-pointer border bg-black ${isLightTheme ? 'border-[#9F9EA1]' : 'border-[#9F9EA1]'}`}
+            className={`flex items-center w-full py-1.5 px-3 rounded-md transition-colors cursor-pointer border bg-black ${isLightTheme ? 'border-[#9F9EA1]' : 'border-[#9F9EA1]'}`}
           >
             <div className="relative h-[30px] w-[30px] mr-3">
               <Avatar className="h-[30px] w-[30px] border-2 border-[#9F9EA1] rounded-full">
@@ -44,7 +44,7 @@ export const AdvisorSection = ({ advisorInfo, onViewProfile, onBookSession, coll
             {!collapsed && (
               <div className="flex flex-col overflow-hidden">
                 <span className={`text-[14px] text-gray-200 font-medium whitespace-nowrap`}>Advisor/CFO:</span>
-                <span className={`text-[14px] text-gray-300 whitespace-nowrap truncate max-w-[120px]`}>{advisorInfo.name}</span>
+                <span className={`text-[14px] text-gray-300 whitespace-nowrap truncate max-w-[150px]`}>{advisorInfo.name}</span>
               </div>
             )}
           </div>
