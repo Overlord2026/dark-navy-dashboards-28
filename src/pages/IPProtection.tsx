@@ -3,6 +3,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { IPProtectionSettings } from "@/components/settings/IPProtectionSettings";
 import { PublishAuditLogViewer } from "@/components/settings/PublishAuditLogViewer";
 import { CollaborationGuidelines } from "@/components/settings/CollaborationGuidelines";
+import { UserAccessRevocation } from "@/components/settings/UserAccessRevocation";
+import { ShieldX } from "lucide-react";
 
 export default function IPProtection() {
   return (
@@ -15,6 +17,10 @@ export default function IPProtection() {
           <TabsTrigger value="repository">Repository Access</TabsTrigger>
           <TabsTrigger value="collaboration">Collaboration Guidelines</TabsTrigger>
           <TabsTrigger value="audit-logs">Publish Audit Logs</TabsTrigger>
+          <TabsTrigger value="access-revocation" className="text-red-500 flex items-center gap-1">
+            <ShieldX className="h-4 w-4" />
+            <span>Revoke Access</span>
+          </TabsTrigger>
         </TabsList>
         
         <TabsContent value="ip-settings">
@@ -31,6 +37,10 @@ export default function IPProtection() {
         
         <TabsContent value="audit-logs">
           <PublishAuditLogViewer />
+        </TabsContent>
+        
+        <TabsContent value="access-revocation">
+          <UserAccessRevocation />
         </TabsContent>
       </Tabs>
     </div>
