@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { MarketplaceListing } from "@/hooks/useMarketplace";
 import { SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
@@ -12,6 +12,8 @@ interface MarketplaceListingDetailsProps {
 }
 
 export function MarketplaceListingDetails({ listing }: MarketplaceListingDetailsProps) {
+  const [activeTab, setActiveTab] = useState("overview");
+
   return (
     <>
       <SheetHeader className="mb-6">
@@ -58,7 +60,7 @@ export function MarketplaceListingDetails({ listing }: MarketplaceListingDetails
           </div>
         </div>
         
-        <Tabs defaultValue="overview">
+        <Tabs defaultValue="overview" value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="grid grid-cols-3 mb-6">
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="details">Details</TabsTrigger>
