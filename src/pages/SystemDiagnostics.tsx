@@ -7,11 +7,12 @@ import { DiagnosticsHeader } from "@/components/diagnostics/DiagnosticsHeader";
 import { DiagnosticsTabs } from "@/components/diagnostics/DiagnosticsTabs";
 import { LoadingState } from "@/components/diagnostics/LoadingState";
 import { logger } from "@/services/logging/loggingService";
+import { Recommendation } from "@/components/diagnostics/RecommendationsList";
 
 export default function SystemDiagnostics() {
   const [isLoading, setIsLoading] = useState(false);
   const [report, setReport] = useState<any>(null);
-  const [recommendations, setRecommendations] = useState<string[]>([]);
+  const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
 
   useEffect(() => {
     // Initialize logging system when component mounts
@@ -49,53 +50,83 @@ export default function SystemDiagnostics() {
     }
   };
 
-  const generateRecommendations = (report: any): string[] => {
-    const recs: string[] = [];
+  const generateRecommendations = (report: any): Recommendation[] => {
+    const recs: Recommendation[] = [];
     
     if (report.forms.status !== 'success') {
-      recs.push("Review form validation in advisor feedback forms to ensure proper data collection.");
+      recs.push({
+        text: "Review form validation in advisor feedback forms to ensure proper data collection.",
+        priority: report.forms.status === 'error' ? 'high' : 'medium'
+      });
     }
     
     if (report.api.status !== 'success') {
-      recs.push("Optimize API responses in professional directory to improve load times.");
+      recs.push({
+        text: "Optimize API responses in professional directory to improve load times.",
+        priority: report.api.status === 'error' ? 'high' : 'medium'
+      });
     }
     
     if (report.navigation.status !== 'success') {
-      recs.push("Check navigation routing to ensure all pages are accessible.");
+      recs.push({
+        text: "Check navigation routing to ensure all pages are accessible.",
+        priority: report.navigation.status === 'error' ? 'high' : 'medium'
+      });
     }
     
     if (report.database.status !== 'success') {
-      recs.push("Verify database connections and optimize query performance.");
+      recs.push({
+        text: "Verify database connections and optimize query performance.",
+        priority: report.database.status === 'error' ? 'high' : 'medium'
+      });
     }
     
     if (report.authentication.status !== 'success') {
-      recs.push("Review authentication flows for potential security improvements.");
+      recs.push({
+        text: "Review authentication flows for potential security improvements.",
+        priority: report.authentication.status === 'error' ? 'critical' : 'high'
+      });
     }
     
     const failedNavTests = report.navigationTests.filter((test: any) => test.status === 'error' || test.status === 'warning');
     if (failedNavTests.length > 0) {
-      recs.push(`Fix navigation issues with routes: ${failedNavTests.map((t: any) => t.route).join(', ')}`);
+      recs.push({
+        text: `Fix navigation issues with routes: ${failedNavTests.map((t: any) => t.route).join(', ')}`,
+        priority: failedNavTests.some((t: any) => t.status === 'error') ? 'high' : 'medium'
+      });
     }
     
     const failedPermTests = report.permissionsTests.filter((test: any) => test.status === 'error' || test.status === 'warning');
     if (failedPermTests.length > 0) {
-      recs.push(`Review permission configuration for roles: ${[...new Set(failedPermTests.map((t: any) => t.role))].join(', ')}`);
+      recs.push({
+        text: `Review permission configuration for roles: ${[...new Set(failedPermTests.map((t: any) => t.role))].join(', ')}`,
+        priority: failedPermTests.some((t: any) => t.status === 'error') ? 'high' : 'medium'
+      });
     }
     
     const failedIconTests = report.iconTests.filter((test: any) => test.status === 'error' || test.status === 'warning');
     if (failedIconTests.length > 0) {
-      recs.push(`Fix icon display issues in: ${[...new Set(failedIconTests.map((t: any) => t.location))].join(', ')}`);
+      recs.push({
+        text: `Fix icon display issues in: ${[...new Set(failedIconTests.map((t: any) => t.location))].join(', ')}`,
+        priority: 'low'
+      });
     }
     
     const failedFormTests = report.formValidationTests.filter((test: any) => test.status === 'error' || test.status === 'warning');
     if (failedFormTests.length > 0) {
-      recs.push(`Address form validation issues in: ${failedFormTests.map((t: any) => t.formName).join(', ')}`);
+      recs.push({
+        text: `Address form validation issues in: ${failedFormTests.map((t: any) => t.formName).join(', ')}`,
+        priority: failedFormTests.some((t: any) => t.status === 'error') ? 'high' : 'medium'
+      });
       
       failedFormTests.forEach((formTest: any) => {
         if (formTest.fields) {
           const fieldIssues = formTest.fields.filter((field: any) => field.status === 'error' || field.status === 'warning');
           if (fieldIssues.length > 0) {
-            recs.push(`Fix ${formTest.formName} field validation for: ${fieldIssues.map((f: any) => f.fieldName).join(', ')}`);
+            recs.push({
+              text: `Fix ${formTest.formName} field validation for: ${fieldIssues.map((f: any) => f.fieldName).join(', ')}`,
+              priority: fieldIssues.some((f: any) => f.status === 'error') ? 'medium' : 'low'
+            });
           }
         }
       });
@@ -103,22 +134,34 @@ export default function SystemDiagnostics() {
     
     const failedApiTests = report.apiIntegrationTests.filter((test: any) => test.status === 'error' || test.status === 'warning');
     if (failedApiTests.length > 0) {
-      recs.push(`Address API connection issues with: ${failedApiTests.map((t: any) => t.service).join(', ')}`);
+      recs.push({
+        text: `Address API connection issues with: ${failedApiTests.map((t: any) => t.service).join(', ')}`,
+        priority: failedApiTests.some((t: any) => t.status === 'error') ? 'high' : 'medium'
+      });
       
       const slowApiResponses = failedApiTests.filter((test: any) => test.status === 'warning' && test.responseTime > 500);
       if (slowApiResponses.length > 0) {
-        recs.push(`Optimize slow API connections with: ${slowApiResponses.map((t: any) => t.service).join(', ')}`);
+        recs.push({
+          text: `Optimize slow API connections with: ${slowApiResponses.map((t: any) => t.service).join(', ')}`,
+          priority: 'medium'
+        });
       }
       
       const authIssues = failedApiTests.filter((test: any) => test.authStatus === 'invalid' || test.authStatus === 'expired');
       if (authIssues.length > 0) {
-        recs.push(`Refresh authentication credentials for: ${authIssues.map((t: any) => t.service).join(', ')}`);
+        recs.push({
+          text: `Refresh authentication credentials for: ${authIssues.map((t: any) => t.service).join(', ')}`,
+          priority: 'high'
+        });
       }
     }
     
     const failedRoleTests = report.roleSimulationTests.filter((test: any) => test.status === 'error' || test.status === 'warning');
     if (failedRoleTests.length > 0) {
-      recs.push(`Fix role access issues for: ${[...new Set(failedRoleTests.map((t: any) => t.role))].join(', ')}`);
+      recs.push({
+        text: `Fix role access issues for: ${[...new Set(failedRoleTests.map((t: any) => t.role))].join(', ')}`,
+        priority: failedRoleTests.some((t: any) => t.status === 'error') ? 'high' : 'medium'
+      });
       
       const incorrectAccess = failedRoleTests.filter((test: any) => 
         (test.expectedAccess && test.accessStatus !== 'granted') || 
@@ -126,7 +169,10 @@ export default function SystemDiagnostics() {
       );
       
       if (incorrectAccess.length > 0) {
-        recs.push(`Review permission policies for modules: ${[...new Set(incorrectAccess.map((t: any) => t.module))].join(', ')}`);
+        recs.push({
+          text: `Review permission policies for modules: ${[...new Set(incorrectAccess.map((t: any) => t.module))].join(', ')}`,
+          priority: 'high'
+        });
       }
     }
     
@@ -134,31 +180,68 @@ export default function SystemDiagnostics() {
     if (report.performanceTests) {
       const slowResponses = report.performanceTests.filter((test: any) => test.responseTime > 1000);
       if (slowResponses.length > 0) {
-        recs.push(`Optimize slow page loads: ${slowResponses.map((t: any) => t.name).join(', ')} (${slowResponses.map((t: any) => `${t.responseTime}ms`).join(', ')})`);
+        recs.push({
+          text: `Optimize slow page loads: ${slowResponses.map((t: any) => t.name).join(', ')} (${slowResponses.map((t: any) => `${t.responseTime}ms`).join(', ')})`,
+          priority: 'medium'
+        });
       }
       
       const highCpuUsage = report.performanceTests.filter((test: any) => test.cpuUsage > 70);
       if (highCpuUsage.length > 0) {
-        recs.push(`Reduce CPU usage in: ${highCpuUsage.map((t: any) => t.name).join(', ')} (${highCpuUsage.map((t: any) => `${t.cpuUsage}%`).join(', ')})`);
+        recs.push({
+          text: `Reduce CPU usage in: ${highCpuUsage.map((t: any) => t.name).join(', ')} (${highCpuUsage.map((t: any) => `${t.cpuUsage}%`).join(', ')})`,
+          priority: 'high'
+        });
       }
       
       const highMemoryUsage = report.performanceTests.filter((test: any) => test.memoryUsage > 100);
       if (highMemoryUsage.length > 0) {
-        recs.push(`Investigate potential memory leaks in: ${highMemoryUsage.map((t: any) => t.name).join(', ')}`);
+        recs.push({
+          text: `Investigate potential memory leaks in: ${highMemoryUsage.map((t: any) => t.name).join(', ')}`,
+          priority: 'high'
+        });
       }
       
       const concurrencyIssues = report.performanceTests.filter((test: any) => 
         test.concurrentUsers > 30 && (test.status === 'error' || test.status === 'warning')
       );
       if (concurrencyIssues.length > 0) {
-        recs.push(`Improve handling of concurrent users in: ${concurrencyIssues.map((t: any) => t.name).join(', ')}`);
+        recs.push({
+          text: `Improve handling of concurrent users in: ${concurrencyIssues.map((t: any) => t.name).join(', ')}`,
+          priority: 'medium'
+        });
       }
     }
     
-    // Add logging recommendations
-    recs.push("Configure error logging to capture critical system events for troubleshooting.");
-    recs.push("Review log retention settings to comply with data retention policies.");
-    recs.push("Enable real-time alerts for critical errors to improve response time.");
+    // Security recommendations based on critical issues
+    const criticalSecurityIssues = report.securityTests?.filter((test: any) => 
+      test.status !== 'success' && test.severity === 'critical'
+    );
+    
+    if (criticalSecurityIssues?.length > 0) {
+      criticalSecurityIssues.forEach((issue: any) => {
+        recs.push({
+          text: `CRITICAL SECURITY ISSUE: ${issue.name} - ${issue.message}`,
+          priority: 'critical'
+        });
+      });
+    }
+    
+    // Add logging recommendations with appropriate priorities
+    recs.push({
+      text: "Configure error logging to capture critical system events for troubleshooting.",
+      priority: 'medium'
+    });
+    
+    recs.push({
+      text: "Review log retention settings to comply with data retention policies.",
+      priority: 'low'
+    });
+    
+    recs.push({
+      text: "Enable real-time alerts for critical errors to improve response time.",
+      priority: 'medium'
+    });
     
     return recs;
   };

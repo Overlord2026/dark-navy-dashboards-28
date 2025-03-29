@@ -9,6 +9,11 @@ export interface CoreServicesSummaryProps {
   database: DiagnosticResult;
   api: DiagnosticResult;
   authentication: DiagnosticResult;
+  navigationTestCount?: { total: number; passed: number };
+  formsTestCount?: { total: number; passed: number };
+  databaseTestCount?: { total: number; passed: number };
+  apiTestCount?: { total: number; passed: number };
+  authTestCount?: { total: number; passed: number };
 }
 
 export const CoreServicesSummary = ({
@@ -17,6 +22,11 @@ export const CoreServicesSummary = ({
   database,
   api,
   authentication,
+  navigationTestCount,
+  formsTestCount,
+  databaseTestCount,
+  apiTestCount,
+  authTestCount,
 }: CoreServicesSummaryProps) => {
   return (
     <Card>
@@ -28,27 +38,52 @@ export const CoreServicesSummary = ({
           <div className="flex flex-col items-center p-3 border rounded-md">
             <h3 className="font-medium text-sm mb-2">Navigation</h3>
             <StatusIcon status={navigation.status} />
-            <span className="text-xs mt-2 text-center">{navigation.message}</span>
+            {navigationTestCount && (
+              <div className="mt-1 mb-1 text-xs px-2 py-1 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300">
+                {navigationTestCount.passed} / {navigationTestCount.total} checks
+              </div>
+            )}
+            <span className="text-xs mt-1 text-center">{navigation.message}</span>
           </div>
           <div className="flex flex-col items-center p-3 border rounded-md">
             <h3 className="font-medium text-sm mb-2">Forms</h3>
             <StatusIcon status={forms.status} />
-            <span className="text-xs mt-2 text-center">{forms.message}</span>
+            {formsTestCount && (
+              <div className="mt-1 mb-1 text-xs px-2 py-1 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300">
+                {formsTestCount.passed} / {formsTestCount.total} checks
+              </div>
+            )}
+            <span className="text-xs mt-1 text-center">{forms.message}</span>
           </div>
           <div className="flex flex-col items-center p-3 border rounded-md">
             <h3 className="font-medium text-sm mb-2">Database</h3>
             <StatusIcon status={database.status} />
-            <span className="text-xs mt-2 text-center">{database.message}</span>
+            {databaseTestCount && (
+              <div className="mt-1 mb-1 text-xs px-2 py-1 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300">
+                {databaseTestCount.passed} / {databaseTestCount.total} checks
+              </div>
+            )}
+            <span className="text-xs mt-1 text-center">{database.message}</span>
           </div>
           <div className="flex flex-col items-center p-3 border rounded-md">
             <h3 className="font-medium text-sm mb-2">API</h3>
             <StatusIcon status={api.status} />
-            <span className="text-xs mt-2 text-center">{api.message}</span>
+            {apiTestCount && (
+              <div className="mt-1 mb-1 text-xs px-2 py-1 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300">
+                {apiTestCount.passed} / {apiTestCount.total} checks
+              </div>
+            )}
+            <span className="text-xs mt-1 text-center">{api.message}</span>
           </div>
           <div className="flex flex-col items-center p-3 border rounded-md">
             <h3 className="font-medium text-sm mb-2">Authentication</h3>
             <StatusIcon status={authentication.status} />
-            <span className="text-xs mt-2 text-center">{authentication.message}</span>
+            {authTestCount && (
+              <div className="mt-1 mb-1 text-xs px-2 py-1 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300">
+                {authTestCount.passed} / {authTestCount.total} checks
+              </div>
+            )}
+            <span className="text-xs mt-1 text-center">{authentication.message}</span>
           </div>
         </div>
       </CardContent>

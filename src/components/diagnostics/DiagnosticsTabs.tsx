@@ -8,7 +8,7 @@ import { FormValidationTests } from "./FormValidationTests";
 import { ApiIntegrationTests } from "./ApiIntegrationTests";
 import { RoleSimulationTests } from "./RoleSimulationTests";
 import { PerformanceTests } from "./PerformanceTests";
-import { RecommendationsList } from "./RecommendationsList";
+import { RecommendationsList, Recommendation } from "./RecommendationsList";
 import { LogViewer } from "./LogViewer";
 import { LoggingConfiguration } from "./LoggingConfiguration";
 import { SecurityTests } from "./SecurityTests";
@@ -16,12 +16,35 @@ import { AuditLogViewer } from "./AuditLogViewer";
 
 interface DiagnosticsTabsProps {
   report: any;
-  recommendations: string[];
+  recommendations: string[] | Recommendation[];
   isLoading: boolean;
 }
 
 export const DiagnosticsTabs = ({ report, recommendations, isLoading }: DiagnosticsTabsProps) => {
   if (!report) return null;
+
+  // Calculate test counts
+  const navigationTestCount = report.navigationTests ? {
+    total: report.navigationTests.length,
+    passed: report.navigationTests.filter((t: any) => t.status === 'success').length
+  } : undefined;
+
+  const formsTestCount = report.formValidationTests ? {
+    total: report.formValidationTests.length,
+    passed: report.formValidationTests.filter((t: any) => t.status === 'success').length
+  } : undefined;
+
+  const apiTestCount = report.apiIntegrationTests ? {
+    total: report.apiIntegrationTests.length,
+    passed: report.apiIntegrationTests.filter((t: any) => t.status === 'success').length
+  } : undefined;
+
+  const authTestCount = report.securityTests ? {
+    total: report.securityTests.filter((t: any) => t.category === 'authentication').length,
+    passed: report.securityTests.filter((t: any) => 
+      t.category === 'authentication' && t.status === 'success'
+    ).length
+  } : undefined;
 
   return (
     <Tabs defaultValue="overview" className="space-y-4">
@@ -41,6 +64,10 @@ export const DiagnosticsTabs = ({ report, recommendations, isLoading }: Diagnost
           database={report.database}
           api={report.api}
           authentication={report.authentication}
+          navigationTestCount={navigationTestCount}
+          formsTestCount={formsTestCount}
+          apiTestCount={apiTestCount}
+          authTestCount={authTestCount}
         />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <NavigationTests tests={report.navigationTests} />

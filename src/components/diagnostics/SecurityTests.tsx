@@ -58,6 +58,24 @@ export const SecurityTests = ({ tests }: SecurityTestsProps) => {
     'input-validation': 'Input Validation'
   };
 
+  // Calculate security test stats
+  const totalTests = tests.length;
+  const passedTests = tests.filter(test => test.status === 'success').length;
+  const warningTests = tests.filter(test => test.status === 'warning').length;
+  const errorTests = tests.filter(test => test.status === 'error').length;
+  
+  // Count by severity
+  const criticalIssues = tests.filter(test => test.severity === 'critical' && test.status !== 'success').length;
+  const highIssues = tests.filter(test => test.severity === 'high' && test.status !== 'success').length;
+
+  // Determine overall security status
+  let overallStatus = 'success';
+  if (errorTests > 0 || criticalIssues > 0) {
+    overallStatus = 'error';
+  } else if (warningTests > 0 || highIssues > 0) {
+    overallStatus = 'warning';
+  }
+
   return (
     <Card>
       <CardHeader>
@@ -67,6 +85,33 @@ export const SecurityTests = ({ tests }: SecurityTestsProps) => {
         </CardTitle>
       </CardHeader>
       <CardContent>
+        <div className={`mb-4 p-3 rounded-md border ${getStatusColor(overallStatus)}`}>
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <div className="flex items-center gap-2">
+              <span className="font-medium">Overall Security Status:</span>
+              <span className={`text-sm px-2 py-1 rounded-full ${
+                overallStatus === 'success' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' :
+                overallStatus === 'warning' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' :
+                'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
+              }`}>
+                {overallStatus === 'success' ? 'Secure' : 
+                 overallStatus === 'warning' ? 'Needs Attention' : 
+                 'Vulnerable'}
+              </span>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <span className="text-sm px-2 py-1 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                {passedTests}/{totalTests} Tests Passed
+              </span>
+              {(criticalIssues > 0 || highIssues > 0) && (
+                <span className="text-sm px-2 py-1 rounded-full bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">
+                  {criticalIssues} Critical, {highIssues} High Risk Issues
+                </span>
+              )}
+            </div>
+          </div>
+        </div>
+
         <div className="space-y-6">
           {Object.entries(categories).map(([category, categoryTests]) => (
             <div key={category} className="space-y-3">
