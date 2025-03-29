@@ -7,19 +7,19 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 import { 
   PlusIcon, 
-  CircleDollarSignIcon, 
-  BankIcon, 
-  PercentIcon, 
-  TrendingUpIcon, 
-  EyeIcon, 
-  EyeOffIcon, 
-  RefreshCwIcon,
-  ChevronDownIcon,
-  BriefcaseIcon,
-  HomeIcon,
-  CreditCardIcon,
-  ShieldIcon,
-  ArrowRightIcon,
+  CircleDollarSign, 
+  Bank, 
+  Percent, 
+  TrendingUp, 
+  Eye, 
+  EyeOff, 
+  RefreshCw,
+  ChevronDown,
+  Briefcase,
+  Home,
+  CreditCard,
+  Shield,
+  ArrowRight,
   MoreHorizontal,
 } from "lucide-react";
 import { PlaidLinkDialog } from "@/components/accounts/PlaidLinkDialog";
@@ -280,7 +280,7 @@ const Accounts = () => {
               onClick={() => setHideBalances(!hideBalances)}
               title={hideBalances ? "Show Balances" : "Hide Balances"}
             >
-              {hideBalances ? <EyeIcon className="h-4 w-4" /> : <EyeOffIcon className="h-4 w-4" />}
+              {hideBalances ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
             </Button>
             <Button 
               variant="outline" 
@@ -288,7 +288,7 @@ const Accounts = () => {
               onClick={refreshAccounts}
               title="Refresh Accounts"
             >
-              <RefreshCwIcon className="h-4 w-4" />
+              <RefreshCw className="h-4 w-4" />
             </Button>
             <Button onClick={handleAddNewClick}>
               <PlusIcon className="mr-2 h-4 w-4" />
@@ -301,7 +301,7 @@ const Accounts = () => {
           <Card className={selectedSection === "all-accounts" ? "border-primary" : ""}>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium">Total Balance</CardTitle>
-              <CircleDollarSignIcon className="h-4 w-4 text-muted-foreground" />
+              <CircleDollarSign className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
@@ -316,7 +316,7 @@ const Accounts = () => {
                 onClick={() => handleSectionChange("all-accounts")}
               >
                 View All Accounts
-                <ArrowRightIcon className="h-4 w-4" />
+                <ArrowRight className="h-4 w-4" />
               </Button>
             </CardContent>
           </Card>
@@ -324,7 +324,7 @@ const Accounts = () => {
           <Card className={selectedSection === "checking" ? "border-primary" : ""}>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium">Checking</CardTitle>
-              <BankIcon className="h-4 w-4 text-muted-foreground" />
+              <Bank className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
@@ -339,7 +339,7 @@ const Accounts = () => {
                 onClick={() => handleSectionChange("checking")}
               >
                 View Checking
-                <ArrowRightIcon className="h-4 w-4" />
+                <ArrowRight className="h-4 w-4" />
               </Button>
             </CardContent>
           </Card>
@@ -347,7 +347,7 @@ const Accounts = () => {
           <Card className={selectedSection === "savings" ? "border-primary" : ""}>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium">Savings</CardTitle>
-              <PercentIcon className="h-4 w-4 text-muted-foreground" />
+              <Percent className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
@@ -362,7 +362,7 @@ const Accounts = () => {
                 onClick={() => handleSectionChange("savings")}
               >
                 View Savings
-                <ArrowRightIcon className="h-4 w-4" />
+                <ArrowRight className="h-4 w-4" />
               </Button>
             </CardContent>
           </Card>
@@ -370,7 +370,7 @@ const Accounts = () => {
           <Card className={selectedSection === "investment" ? "border-primary" : ""}>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium">Investments</CardTitle>
-              <TrendingUpIcon className="h-4 w-4 text-muted-foreground" />
+              <TrendingUp className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
@@ -385,7 +385,7 @@ const Accounts = () => {
                 onClick={() => handleSectionChange("investment")}
               >
                 View Investments
-                <ArrowRightIcon className="h-4 w-4" />
+                <ArrowRight className="h-4 w-4" />
               </Button>
             </CardContent>
           </Card>
@@ -393,7 +393,7 @@ const Accounts = () => {
           <Card className={selectedSection === "retirement" ? "border-primary" : ""}>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium">Retirement</CardTitle>
-              <BriefcaseIcon className="h-4 w-4 text-muted-foreground" />
+              <Briefcase className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
@@ -408,7 +408,7 @@ const Accounts = () => {
                 onClick={() => handleSectionChange("retirement")}
               >
                 View Retirement
-                <ArrowRightIcon className="h-4 w-4" />
+                <ArrowRight className="h-4 w-4" />
               </Button>
             </CardContent>
           </Card>
@@ -416,7 +416,7 @@ const Accounts = () => {
           <Card className={`md:col-span-3 ${selectedSection === "real-estate" ? "border-primary" : ""}`}>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium">Real Estate</CardTitle>
-              <HomeIcon className="h-4 w-4 text-muted-foreground" />
+              <Home className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-3 gap-4">
@@ -445,7 +445,7 @@ const Accounts = () => {
                 onClick={() => handleSectionChange("real-estate")}
               >
                 View Real Estate
-                <ArrowRightIcon className="h-4 w-4" />
+                <ArrowRight className="h-4 w-4" />
               </Button>
             </CardContent>
           </Card>
@@ -566,9 +566,10 @@ const Accounts = () => {
       
       {showAccountTypeSelector && (
         <AccountLinkTypeSelector
+          isOpen={showAccountTypeSelector}
+          onClose={() => setShowAccountTypeSelector(false)}
           onSelectPlaid={() => handleAccountTypeSelected("plaid")}
           onSelectManual={() => handleAccountTypeSelected("manual")}
-          onBack={() => setShowAccountTypeSelector(false)}
         />
       )}
       
@@ -576,7 +577,7 @@ const Accounts = () => {
         <RealEstateTracker.AddPropertyDialog
           isOpen={showAddPropertyDialog}
           onClose={() => setShowAddPropertyDialog(false)}
-          onAdd={handleAddProperty}
+          onAddProperty={handleAddProperty}
         />
       )}
     </ThreeColumnLayout>
