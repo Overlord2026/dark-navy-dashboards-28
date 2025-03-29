@@ -77,12 +77,15 @@ export function ProfessionalEditForm({ professional, onSave, onCancel }: Profess
               <SelectValue placeholder="Select type" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="Accountant/CPA">Accountant/CPA</SelectItem>
+              <SelectItem value="Tax Professional / Accountant">Tax Professional / Accountant</SelectItem>
+              <SelectItem value="Estate Planning Attorney">Estate Planning Attorney</SelectItem>
               <SelectItem value="Financial Advisor">Financial Advisor</SelectItem>
-              <SelectItem value="Attorney">Attorney</SelectItem>
-              <SelectItem value="Realtor">Realtor</SelectItem>
-              <SelectItem value="Dentist">Dentist</SelectItem>
+              <SelectItem value="Real Estate Agent / Property Manager">Real Estate Agent / Property Manager</SelectItem>
+              <SelectItem value="Insurance / LTC Specialist">Insurance / LTC Specialist</SelectItem>
+              <SelectItem value="Mortgage Broker">Mortgage Broker</SelectItem>
+              <SelectItem value="Auto Insurance Provider">Auto Insurance Provider</SelectItem>
               <SelectItem value="Physician">Physician</SelectItem>
+              <SelectItem value="Dentist">Dentist</SelectItem>
               <SelectItem value="Banker">Banker</SelectItem>
               <SelectItem value="Consultant">Consultant</SelectItem>
               <SelectItem value="Service Professional">Service Professional</SelectItem>

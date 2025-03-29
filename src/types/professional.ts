@@ -1,11 +1,14 @@
 
 export type ProfessionalType = 
-  | "Accountant/CPA"
+  | "Tax Professional / Accountant"
+  | "Estate Planning Attorney"
   | "Financial Advisor"
-  | "Attorney"
-  | "Realtor"
-  | "Dentist"
+  | "Real Estate Agent / Property Manager"
+  | "Insurance / LTC Specialist"
+  | "Mortgage Broker"
+  | "Auto Insurance Provider"
   | "Physician"
+  | "Dentist"
   | "Banker"
   | "Consultant"
   | "Service Professional"
@@ -22,4 +25,6 @@ export interface Professional {
   address?: string;
   notes?: string;
   rating?: number;
+  specialties?: string[];
+  certifications?: string[];
 }
