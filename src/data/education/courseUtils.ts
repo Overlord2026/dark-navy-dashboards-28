@@ -1,5 +1,5 @@
 
-import { Course, CourseCategory, SubscriptionTier } from "@/types/education";
+import { Course, CourseCategory } from "@/types/education";
 import { featuredCourses } from "./featuredCourses";
 import { popularCourses } from "./popularCourses";
 import { coursesByCategory } from "./coursesByCategory";
@@ -16,32 +16,19 @@ export const getAllCourses = (): Course[] => {
     coursesMap.set(course.id, course);
   });
   
-  // Add popular courses if they exist
-  if (popularCourses) {
-    popularCourses.forEach(course => {
-      // Ensure course has a valid level type
-      if (isValidCourseLevel(course.level)) {
-        coursesMap.set(course.id, course as Course);
-      }
-    });
-  }
+  // Add popular courses
+  popularCourses.forEach(course => {
+    coursesMap.set(course.id, course);
+  });
   
   // Add courses by category
-  Object.values(coursesByCategory || {}).forEach(courses => {
+  Object.values(coursesByCategory).forEach(courses => {
     courses.forEach(course => {
-      // Ensure course has a valid level type
-      if (isValidCourseLevel(course.level)) {
-        coursesMap.set(course.id, course as Course);
-      }
+      coursesMap.set(course.id, course);
     });
   });
   
   return Array.from(coursesMap.values());
-};
-
-// Helper function to validate course level
-const isValidCourseLevel = (level: string): level is Course['level'] => {
-  return ['Beginner', 'Intermediate', 'Advanced', 'All Levels'].includes(level);
 };
 
 /**
@@ -74,23 +61,6 @@ export const getPaidCourses = (): Course[] => {
  */
 export const getCoursesByLevel = (level: Course['level']): Course[] => {
   return getAllCourses().filter(course => course.level === level);
-};
-
-/**
- * Get courses by subscription tier
- */
-export const getCoursesByTier = (tier: SubscriptionTier): Course[] => {
-  const tierLevels: Record<SubscriptionTier, number> = {
-    "Basic": 1,
-    "Premium": 2,
-    "Elite": 3
-  };
-  
-  return getAllCourses().filter(course => {
-    if (!course.requiredTier) return true;
-    const courseTierLevel = tierLevels[course.requiredTier];
-    return tierLevels[tier] >= courseTierLevel;
-  });
 };
 
 /**
