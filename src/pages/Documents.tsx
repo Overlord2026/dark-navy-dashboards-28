@@ -49,7 +49,7 @@ const Documents = () => {
                 <NewFolderDialog onCreateFolder={handleCreateFolder} />
                 
                 <UploadDocumentDialog 
-                  isOpen={isUploadDialogOpen}
+                  open={isUploadDialogOpen}
                   onOpenChange={setIsUploadDialogOpen}
                   onFileUpload={handleFileUpload}
                   activeCategory={activeCategory}

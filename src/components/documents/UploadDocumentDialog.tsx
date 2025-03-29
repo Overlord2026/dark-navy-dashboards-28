@@ -6,16 +6,20 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FileUpload } from "@/components/ui/file-upload";
 
-interface UploadDocumentDialogProps {
+export interface UploadDocumentDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onUpload: (file: File, customName: string) => void;
+  onFileUpload: (file: File, customName: string) => void;
+  activeCategory?: string;
+  documentCategories?: any[];
 }
 
 export function UploadDocumentDialog({
   open,
   onOpenChange,
-  onUpload,
+  onFileUpload,
+  activeCategory,
+  documentCategories,
 }: UploadDocumentDialogProps) {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [customName, setCustomName] = useState("");
@@ -28,7 +32,7 @@ export function UploadDocumentDialog({
 
   const handleSubmit = () => {
     if (selectedFile) {
-      onUpload(selectedFile, customName.trim() ? customName : selectedFile.name);
+      onFileUpload(selectedFile, customName.trim() ? customName : selectedFile.name);
       handleReset();
     }
   };
