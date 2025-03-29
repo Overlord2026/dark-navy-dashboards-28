@@ -33,7 +33,7 @@ export function BillDetailsDialog({ bill, isOpen, onOpenChange }: BillDetailsDia
   };
 
   const handlePayNow = () => {
-    const updatedBill = { ...bill, status: "Paid" };
+    const updatedBill = { ...bill, status: "Paid" as BillStatus };
     updateBill(updatedBill);
     toast.success("Bill marked as paid");
     onOpenChange(false);
