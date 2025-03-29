@@ -704,47 +704,67 @@ const AlternativeAssetCategory = () => {
         <SheetContent className="w-full sm:max-w-md md:max-w-lg overflow-y-auto bg-[#0a1022] text-white border-l border-blue-900/30">
           {selectedInvestment && (
             <div className="flex flex-col h-full">
-              <div className="pb-6">
+              <div className="pb-6 border-b border-blue-900/30 mb-6">
                 <h2 className="text-2xl font-bold mb-1">{selectedInvestment.name}</h2>
                 <p className="text-blue-400 mb-3">{category.title} Offering</p>
-                <p className="text-gray-300">
-                  {category.description}
-                </p>
+                <p className="text-gray-300">{selectedInvestment.description}</p>
               </div>
               
               <div className="space-y-6">
-                <div>
-                  <h3 className="text-lg font-semibold mb-2">About</h3>
-                  <p className="text-gray-300">
-                    {selectedInvestment.name} provides Accredited Investors unique exposure to a diversified private equity portfolio selected by experienced investment teams. The fund offers diversification by manager, stage, vintage year and industry through a single allocation.
-                  </p>
-                </div>
-                
-                <div>
-                  <h3 className="text-lg font-semibold mb-2">How It Works</h3>
-                  <p className="text-gray-300">
-                    Your advisor will work with you to select the best offering and fill out the required information. You may be required to sign certain documents. Once completed, your advisor will help you transfer assets to fund the investment.
-                  </p>
-                </div>
-                
-                <div>
-                  <h3 className="text-lg font-semibold mb-2">Get Started</h3>
-                  <p className="text-gray-300 mb-4">
-                    To get started, schedule a meeting with your advisor or tell them you're interested in this offering.
-                  </p>
-                  <div className="flex gap-4">
-                    <Button variant="outline" className="text-white border-gray-700 hover:bg-gray-800">
-                      I'm Interested
-                    </Button>
-                    <Button>
-                      <Calendar className="h-4 w-4 mr-2" />
-                      Schedule a Meeting
-                    </Button>
+                <div className="pb-4">
+                  <h3 className="text-lg font-bold mb-3 text-white flex items-center">
+                    <Info className="h-5 w-5 mr-2 text-blue-400" />
+                    About
+                  </h3>
+                  <div className="bg-blue-950/30 p-4 rounded-md border border-blue-900/30">
+                    <p className="text-gray-300">
+                      {selectedInvestment.name} provides {selectedInvestment.tags.includes("Qualified Purchaser") 
+                        ? "Qualified Purchasers" 
+                        : selectedInvestment.tags.includes("Accredited Investor")
+                          ? "Accredited Investors"
+                          : "Investors"} unique exposure to a diversified {category.title.toLowerCase()} portfolio selected by experienced investment teams. The fund offers diversification by manager, stage, vintage year and industry through a single allocation.
+                    </p>
                   </div>
                 </div>
                 
-                <div>
-                  <h3 className="text-lg font-semibold mb-2">Details</h3>
+                <div className="pb-4">
+                  <h3 className="text-lg font-bold mb-3 text-white flex items-center">
+                    <TrendingUp className="h-5 w-5 mr-2 text-blue-400" />
+                    How It Works
+                  </h3>
+                  <div className="bg-blue-950/30 p-4 rounded-md border border-blue-900/30">
+                    <p className="text-gray-300">
+                      Your advisor will work with you to select the best offering and fill out the required information. You may be required to sign certain documents. Once completed, your advisor will help you transfer assets to fund the investment.
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="pb-4">
+                  <h3 className="text-lg font-bold mb-3 text-white flex items-center">
+                    <Calendar className="h-5 w-5 mr-2 text-blue-400" />
+                    Get Started
+                  </h3>
+                  <div className="bg-blue-950/30 p-4 rounded-md border border-blue-900/30">
+                    <p className="text-gray-300 mb-4">
+                      To get started, schedule a meeting with your advisor or tell them you're interested in this offering.
+                    </p>
+                    <div className="flex gap-4">
+                      <Button variant="outline" className="text-white border-gray-700 hover:bg-gray-800">
+                        I'm Interested
+                      </Button>
+                      <Button>
+                        <Calendar className="h-4 w-4 mr-2" />
+                        Schedule a Meeting
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="pb-4">
+                  <h3 className="text-lg font-bold mb-3 text-white flex items-center">
+                    <BarChart className="h-5 w-5 mr-2 text-blue-400" />
+                    Details
+                  </h3>
                   <div className="border border-blue-900/30 rounded-md overflow-hidden">
                     <div className="grid grid-cols-1 divide-y divide-blue-900/30">
                       <div className="p-3 flex justify-between">
@@ -781,16 +801,53 @@ const AlternativeAssetCategory = () => {
                         <span className="text-gray-400">Subscriptions</span>
                         <span>Monthly</span>
                       </div>
+                      <div className="p-3 flex justify-between">
+                        <span className="text-gray-400">Performance</span>
+                        <span className="text-green-500">{selectedInvestment.performance}</span>
+                      </div>
+                      <div className="p-3 flex justify-between">
+                        <span className="text-gray-400">Lock-up Period</span>
+                        <span>{selectedInvestment.lockupPeriod}</span>
+                      </div>
                     </div>
                   </div>
                 </div>
                 
-                <div>
-                  <h3 className="text-lg font-semibold mb-2">Strategy</h3>
-                  <div className="border border-blue-900/30 rounded-md p-3">
+                <div className="pb-4">
+                  <h3 className="text-lg font-bold mb-3 text-white flex items-center">
+                    <LineChart className="h-5 w-5 mr-2 text-blue-400" />
+                    Strategy
+                  </h3>
+                  <div className="bg-blue-950/30 p-4 rounded-md border border-blue-900/30">
                     <p className="text-gray-300">
-                      The fund invests in a diversified portfolio of private equity investments across various sectors, stages, and geographies to maximize risk-adjusted returns.
+                      The fund invests in a diversified portfolio of {category.title.toLowerCase()} {category.title === "Hedge Fund" ? "strategies" : "investments"} across various sectors, stages, and geographies to maximize risk-adjusted returns while maintaining appropriate liquidity and capital preservation.
                     </p>
+                  </div>
+                </div>
+                
+                <div className="pb-4">
+                  <h3 className="text-lg font-bold mb-3 text-white flex items-center">
+                    <ShieldCheck className="h-5 w-5 mr-2 text-blue-400" />
+                    Risk & Compliance
+                  </h3>
+                  <div className="bg-blue-950/30 p-4 rounded-md border border-blue-900/30">
+                    <p className="text-gray-300 mb-3">
+                      This investment involves significant risks, including potential loss of principal. Past performance does not guarantee future results.
+                    </p>
+                    <div className="space-y-2">
+                      <div>
+                        <p className="text-gray-400 mb-1">Suitability</p>
+                        <Progress value={selectedInvestment.tags.includes("Qualified Purchaser") ? 90 : 70} className="h-2 bg-blue-900/50" />
+                      </div>
+                      <div>
+                        <p className="text-gray-400 mb-1">Risk Level</p>
+                        <Progress value={selectedInvestment.tags.includes("Conservative") ? 40 : 75} className="h-2 bg-blue-900/50" />
+                      </div>
+                      <div>
+                        <p className="text-gray-400 mb-1">Complexity</p>
+                        <Progress value={selectedInvestment.tags.includes("Structured") ? 85 : 60} className="h-2 bg-blue-900/50" />
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
