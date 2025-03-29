@@ -184,8 +184,8 @@ export function ThreeColumnLayout({
     title: "Senior Financial Advisor",
     email: "Daniel@awmfl.com",
     phone: "(555) 123-4567",
-    location: "New York, NY",
-    office: "Manhattan Office",
+    location: "Sarasota, FL",
+    office: "Sarasota Office",
     bio: "Daniel has over 15 years of experience in wealth management and financial planning."
   };
 

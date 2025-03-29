@@ -1,10 +1,11 @@
 
 import React from "react";
-import { ChevronRight, UserRoundIcon, MailIcon, LinkedinIcon, Calendar, ExternalLinkIcon } from "lucide-react";
+import { ChevronRight, UserRoundIcon, MailIcon, LinkedinIcon, Calendar, ExternalLinkIcon, MapPinIcon } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useTheme } from "@/context/ThemeContext";
+import { Link } from "react-router-dom";
 
 interface AdvisorInfo {
   name: string;
@@ -52,48 +53,48 @@ export const AdvisorSection = ({ advisorInfo, onViewProfile, onBookSession, coll
         <PopoverContent 
           align="start" 
           side={collapsed ? "right" : "bottom"} 
-          className={`w-64 ${isLightTheme ? 'bg-[#F9F7E8] border-[#DCD8C0] text-[#222222]' : 'bg-[#1E1E30] border-gray-700 text-white'} shadow-md shadow-black/20 border border-primary`}
+          className={`w-[350px] p-0 overflow-hidden ${isLightTheme ? 'bg-[#F9F7E8] border-[#DCD8C0] text-[#222222]' : 'bg-[#1E1E30] border-gray-700 text-white'} shadow-md shadow-black/20 border border-primary`}
         >
-          <div className="flex flex-col space-y-3 p-1">
-            <div className="flex items-center space-x-3">
-              <Avatar className="h-[60px] w-[60px] border-2 border-[#9F9EA1]">
-                <AvatarFallback className={`bg-black text-white text-xl`}>
+          <div className="bg-[#1B1B32] p-6 text-white">
+            <div className="flex items-start space-x-4 mb-4">
+              <Avatar className="h-[70px] w-[70px] border-2 border-[#9F9EA1]">
+                <AvatarFallback className="bg-black text-white text-[24px]">
                   {advisorInfo.name.split(' ').map(name => name[0]).join('')}
                 </AvatarFallback>
               </Avatar>
-              <div className="max-w-[150px] overflow-hidden">
-                <p className="font-medium whitespace-nowrap text-ellipsis overflow-hidden">{advisorInfo.name}</p>
-                <p className="text-sm text-gray-400 whitespace-nowrap text-ellipsis overflow-hidden">{advisorInfo.title}</p>
+              <div className="overflow-hidden">
+                <p className="font-semibold text-xl whitespace-nowrap text-ellipsis overflow-hidden mb-1">{advisorInfo.name}</p>
+                <p className="text-sm text-gray-300 mb-3">{advisorInfo.title}</p>
+                <div className="flex items-center text-sm text-gray-300 mb-2">
+                  <MapPinIcon className="h-4 w-4 mr-2 flex-shrink-0" />
+                  <span>{advisorInfo.location}</span>
+                </div>
+                <a href={`mailto:${advisorInfo.email}`} className="text-sm text-blue-400 hover:underline flex items-center">
+                  <MailIcon className="h-4 w-4 mr-2 flex-shrink-0" />
+                  <span className="truncate">{advisorInfo.email}</span>
+                </a>
               </div>
             </div>
             
-            <div className="text-sm text-gray-300">{advisorInfo.location}</div>
-            
-            <a href={`mailto:${advisorInfo.email}`} className="text-sm text-blue-400 hover:underline flex items-center">
-              <MailIcon className="h-3.5 w-3.5 mr-1.5 flex-shrink-0" />
-              <span className="truncate">{advisorInfo.email}</span>
-            </a>
-            
-            <div className="flex flex-col space-y-2 pt-2">
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                className={`justify-start ${isLightTheme ? 'hover:bg-[#E9E7D8] text-[#222222]' : 'hover:bg-[#2A2A40] text-white'} border border-primary`}
+            <div className="space-y-2 mt-4">
+              <Link 
+                to="/advisor-profile"
+                className="w-full flex items-center justify-center py-2.5 px-4 bg-transparent hover:bg-white/10 border border-white/20 rounded-md transition-colors"
                 onClick={() => onViewProfile("bio")}
               >
-                <UserRoundIcon className="h-3.5 w-3.5 mr-1.5" />
-                View profile
-              </Button>
+                <UserRoundIcon className="h-5 w-5 mr-2" />
+                <span className="font-medium">View profile</span>
+              </Link>
               
               <Button 
                 variant="ghost" 
-                size="sm" 
-                className={`justify-start ${isLightTheme ? 'hover:bg-[#E9E7D8] text-[#222222]' : 'hover:bg-[#2A2A40] text-white'} border border-primary`}
+                size="lg" 
+                className="w-full flex items-center justify-center py-2.5 bg-transparent hover:bg-white/10 border border-white/20 rounded-md transition-colors"
                 onClick={onBookSession}
               >
-                <Calendar className="h-3.5 w-3.5 mr-1.5" />
-                Book a session
-                <ExternalLinkIcon className="h-3 w-3 ml-1" />
+                <Calendar className="h-5 w-5 mr-2" />
+                <span className="font-medium">Book a session</span>
+                <ExternalLinkIcon className="h-4 w-4 ml-2" />
               </Button>
             </div>
           </div>

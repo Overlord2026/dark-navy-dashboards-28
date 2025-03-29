@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -16,11 +15,11 @@ const AdvisorProfile = () => {
   const advisorInfo = {
     name: "Daniel Zamora",
     title: "Certified Financial Planner™",
-    location: "Tampa, FL",
+    location: "Sarasota, FL",
     email: "Daniel@awmfl.com",
     serviceEmail: "Service@awmfl.com",
     phone: "(800) 555-1234",
-    office: "New York, NY",
+    office: "Sarasota, FL",
     hometown: "Asheville, NC",
     education: [
       "Pine View Academy - Sarasota, Florida (Top of class at top 10 school in the country)",
@@ -65,7 +64,7 @@ const AdvisorProfile = () => {
       "Risk Management",
       "Asset Allocation"
     ],
-    bio: "Daniel, a seasoned finance professional, guides high net worth investors. His approach blends investment management, risk mitigation, tax optimization, and overall strategy. Starting at Vanguard, then UBS, he directed client acquisition at Fisher Investments before joining BFO. Originally from Asheville, NC, Daniel now resides in Tampa, enjoying fitness, community activities, and sunny days by the water."
+    bio: "Daniel, a seasoned finance professional, guides high net worth investors. His approach blends investment management, risk mitigation, tax optimization, and overall strategy. Starting at Vanguard, then UBS, he directed client acquisition at Fisher Investments before joining BFO. Originally from Asheville, NC, Daniel now resides in Sarasota, enjoying fitness, community activities, and sunny days by the water."
   };
 
   const renderTabContent = () => {
