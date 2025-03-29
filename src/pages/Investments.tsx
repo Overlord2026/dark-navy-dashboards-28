@@ -11,13 +11,22 @@ import {
   ArrowDown, 
   ArrowUp, 
   Plus,
-  DollarSign
+  DollarSign,
+  Building,
+  Gem,
+  Wine,
+  Bitcoin,
+  HardHat,
+  LineChart,
+  Landmark,
+  Network
 } from "lucide-react";
 import { useState } from "react";
 import { Progress } from "@/components/ui/progress";
 import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger, navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
 import { Link } from "react-router-dom";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 
 const Investments = () => {
   const [activeTab, setActiveTab] = useState("overview");
@@ -106,6 +115,65 @@ const Investments = () => {
       assignedAccounts: 2, 
       tradingGroups: 2, 
       created: "Mar 10, 2024" 
+    }
+  ];
+
+  const alternativeCategories = [
+    { 
+      id: 1, 
+      title: "Private Equity", 
+      description: "Investments in non-public companies, buyouts, growth equity", 
+      icon: <Briefcase className="h-10 w-10 text-purple-500" />,
+      trend: "+12.4% YTD"
+    },
+    { 
+      id: 2, 
+      title: "Private Debt", 
+      description: "Direct lending, mezzanine financing, distressed debt",
+      icon: <Landmark className="h-10 w-10 text-blue-500" />,
+      trend: "+8.7% YTD"
+    },
+    { 
+      id: 3, 
+      title: "Hedge Fund", 
+      description: "Actively managed investment pools with diverse strategies",
+      icon: <LineChart className="h-10 w-10 text-green-500" />,
+      trend: "+7.5% YTD"
+    },
+    { 
+      id: 4, 
+      title: "Venture Capital", 
+      description: "Investments in early-stage, high-potential startups",
+      icon: <Network className="h-10 w-10 text-cyan-500" />,
+      trend: "+16.2% YTD"
+    },
+    { 
+      id: 5, 
+      title: "Collectibles", 
+      description: "Art, luxury watches, memorabilia, rare items",
+      icon: <Wine className="h-10 w-10 text-amber-500" />,
+      trend: "+5.3% YTD"
+    },
+    { 
+      id: 6, 
+      title: "Digital Assets", 
+      description: "Cryptocurrencies, NFTs, blockchain investments",
+      icon: <Bitcoin className="h-10 w-10 text-orange-500" />,
+      trend: "-2.8% YTD"
+    },
+    { 
+      id: 7, 
+      title: "Real Assets", 
+      description: "Real estate, infrastructure, commodities, natural resources",
+      icon: <Building className="h-10 w-10 text-indigo-500" />,
+      trend: "+9.1% YTD"
+    },
+    { 
+      id: 8, 
+      title: "Structured Investments", 
+      description: "Notes, derivatives, insurance-linked securities",
+      icon: <HardHat className="h-10 w-10 text-rose-500" />,
+      trend: "+4.6% YTD"
     }
   ];
 
@@ -603,10 +671,55 @@ const Investments = () => {
         </Card>
       </div>
       
+      <h2 className="text-xl font-medium mb-4">Alternative Investment Categories</h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        {alternativeCategories.map((category) => (
+          <HoverCard key={category.id}>
+            <HoverCardTrigger asChild>
+              <Card className="cursor-pointer transition-all hover:shadow-md hover:border-primary/50">
+                <CardHeader className="pb-2">
+                  <div className="flex justify-between items-center">
+                    {category.icon}
+                    <p className={`text-sm font-medium ${category.trend.includes('-') ? 'text-red-500' : 'text-green-500'}`}>
+                      {category.trend}
+                    </p>
+                  </div>
+                  <CardTitle className="mt-2">{category.title}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <CardDescription>{category.description}</CardDescription>
+                </CardContent>
+              </Card>
+            </HoverCardTrigger>
+            <HoverCardContent className="w-80">
+              <div className="space-y-2">
+                <h4 className="text-sm font-semibold">{category.title} Details</h4>
+                <p className="text-xs text-muted-foreground">{category.description}</p>
+                <div className="grid grid-cols-2 gap-2 pt-2">
+                  <div>
+                    <p className="text-xs text-muted-foreground">Annual Return</p>
+                    <p className="text-sm font-medium">{category.trend}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-muted-foreground">Risk Level</p>
+                    <p className="text-sm font-medium">
+                      {category.id % 3 === 0 ? "High" : category.id % 3 === 1 ? "Medium" : "Medium-High"}
+                    </p>
+                  </div>
+                </div>
+                <div className="pt-2">
+                  <Button size="sm" className="w-full">View Opportunities</Button>
+                </div>
+              </div>
+            </HoverCardContent>
+          </HoverCard>
+        ))}
+      </div>
+
       <Card>
         <CardHeader>
-          <CardTitle>Alternative Assets</CardTitle>
-          <CardDescription>Non-traditional investment holdings</CardDescription>
+          <CardTitle>Your Alternative Assets</CardTitle>
+          <CardDescription>Currently held non-traditional investments</CardDescription>
         </CardHeader>
         <CardContent>
           <Table>
