@@ -1,3 +1,4 @@
+
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
@@ -24,6 +25,24 @@ const Index = () => {
           authMethod: "SMS",
           changedFiles: ["src/components/HomePage.tsx", "src/styles/main.css"],
           diff: `--- src/components/HomePage.tsx\n+++ src/components/HomePage.tsx\n@@ -12,7 +12,7 @@\n const HomePage = () => {\n   return (\n     <div>\n-      <h1>Welcome to Our Platform</h1>\n+      <h1>Welcome to Our Updated Platform</h1>\n       <p>Lorem ipsum dolor sit amet</p>\n     </div>\n   );\n`
+        }
+      }
+    );
+    
+    // Log a simulated collaboration guidelines confirmation
+    auditLog.log(
+      "developer-user", 
+      "settings_change", 
+      "success", 
+      {
+        userName: "Developer User",
+        userRole: "Developer",
+        ipAddress: "192.168.1.105",
+        resourceType: "Collaboration Guidelines",
+        details: {
+          action: "confirm_guidelines",
+          timeStamp: new Date().toISOString(),
+          guidelinesVersion: "1.2"
         }
       }
     );
