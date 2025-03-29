@@ -10,6 +10,7 @@ import { UpcomingBillsCard } from "@/components/dashboard/UpcomingBillsCard";
 import { ExpenseOptimizationCard } from "@/components/dashboard/ExpenseOptimizationCard";
 import { WelcomeTrialBanner } from "@/components/dashboard/WelcomeTrialBanner";
 import { MidTrialBanner } from "@/components/dashboard/MidTrialBanner";
+import { TrialEndingSoonBanner } from "@/components/dashboard/TrialEndingSoonBanner";
 import { useSubscription } from "@/context/SubscriptionContext"; 
 import { toast } from "sonner";
 
@@ -20,6 +21,7 @@ const Dashboard = () => {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [showWelcomeBanner, setShowWelcomeBanner] = useState(false);
   const [showMidTrialBanner, setShowMidTrialBanner] = useState(false);
+  const [showTrialEndingSoonBanner, setShowTrialEndingSoonBanner] = useState(false);
   const { isInFreeTrial, daysRemainingInTrial, freeTrialEndDate } = useSubscription();
   
   const [checklistItems, setChecklistItems] = useState([
@@ -55,6 +57,14 @@ const Dashboard = () => {
           !hasSeenMidTrial) {
         setShowMidTrialBanner(true);
       }
+
+      const hasSeenTrialEndingSoon = localStorage.getItem('hasSeenTrialEndingSoonBanner');
+      if (daysRemainingInTrial !== null && 
+          daysRemainingInTrial <= 14 && 
+          daysRemainingInTrial >= 10 && 
+          !hasSeenTrialEndingSoon) {
+        setShowTrialEndingSoonBanner(true);
+      }
     }
   }, [isInFreeTrial, daysRemainingInTrial]);
 
@@ -66,6 +76,11 @@ const Dashboard = () => {
   const handleDismissMidTrial = () => {
     setShowMidTrialBanner(false);
     localStorage.setItem('hasSeenMidTrialBanner', 'true');
+  };
+
+  const handleDismissTrialEndingSoon = () => {
+    setShowTrialEndingSoonBanner(false);
+    localStorage.setItem('hasSeenTrialEndingSoonBanner', 'true');
   };
 
   const toggleMetrics = () => {
@@ -119,6 +134,10 @@ const Dashboard = () => {
           
           {showMidTrialBanner && (
             <MidTrialBanner onDismiss={handleDismissMidTrial} />
+          )}
+
+          {showTrialEndingSoonBanner && (
+            <TrialEndingSoonBanner onDismiss={handleDismissTrialEndingSoon} />
           )}
           
           <div className="flex flex-col lg:flex-row gap-6">

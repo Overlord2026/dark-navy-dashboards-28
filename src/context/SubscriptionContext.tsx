@@ -91,7 +91,15 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
     const intervalId = setInterval(calculateDaysRemaining, 1000 * 60 * 60 * 24);
     
     // Show notification when trial is about to end
-    if (daysRemainingInTrial === 7) {
+    if (daysRemainingInTrial === 14) {
+      toast.warning('Your free trial ends in 2 weeks. Upgrade now to maintain premium access!', {
+        action: {
+          label: 'Upgrade',
+          onClick: () => window.location.href = '/subscription',
+        },
+        duration: 10000,
+      });
+    } else if (daysRemainingInTrial === 7) {
       toast.warning('Your free trial ends in 7 days. Upgrade now to maintain premium access!', {
         action: {
           label: 'Upgrade',
