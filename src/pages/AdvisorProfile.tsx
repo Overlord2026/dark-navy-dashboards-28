@@ -22,6 +22,7 @@ const AdvisorProfile = () => {
     office: "New York, NY",
     hometown: "Asheville, NC",
     education: [
+      "Pine View Academy - Sarasota, Florida (Top of class at top 10 school in the country)",
       "University of North Carolina at Charlotte",
       "University of North Carolina at Charlotte"
     ],
