@@ -22,7 +22,7 @@ import {
   MoreHorizontal,
 } from "lucide-react";
 import { PlaidLinkDialog } from "@/components/accounts/PlaidLinkDialog";
-import { AddAccountDialog } from "@/components/accounts/AddAccountDialog";
+import { AddAccountDialog, AccountData } from "@/components/accounts/AddAccountDialog";
 import { AccountLinkTypeSelector } from "@/components/accounts/AccountLinkTypeSelector";
 import { RealEstateTracker } from "@/components/accounts/RealEstateTracker";
 import { Badge } from "@/components/ui/badge";
@@ -690,8 +690,9 @@ const Accounts = () => {
         <AddAccountDialog 
           isOpen={showAddAccountDialog}
           onClose={() => setShowAddAccountDialog(false)}
-          onAdd={handleAddAccount}
-          selectedSection={selectedSection}
+          onAddAccount={handleAddAccount}
+          accountType={selectedSection === "all-accounts" ? "Account" : selectedSection}
+          sectionType={selectedSection === "all-accounts" ? "General" : selectedSection}
         />
       )}
       
@@ -699,15 +700,15 @@ const Accounts = () => {
         <PlaidLinkDialog
           isOpen={showPlaidLinkDialog}
           onClose={() => setShowPlaidLinkDialog(false)}
-          onLinkSuccess={handlePlaidLinkSuccess}
+          onSuccess={handlePlaidLinkSuccess}
         />
       )}
       
       {showAccountTypeSelector && (
         <AccountLinkTypeSelector
-          isOpen={showAccountTypeSelector}
-          onClose={() => setShowAccountTypeSelector(false)}
-          onAdd={handleAccountTypeSelected}
+          onSelectPlaid={() => handleAccountTypeSelected("plaid")}
+          onSelectManual={() => handleAccountTypeSelected("manual")}
+          onBack={() => setShowAccountTypeSelector(false)}
         />
       )}
       
