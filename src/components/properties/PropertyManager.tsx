@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { PropertyList } from "./PropertyList";
 import { PropertyForm } from "./PropertyForm";
 import { PropertySummary } from "./PropertySummary";
@@ -7,9 +7,11 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { Property } from "@/types/property";
 import { useToast } from "@/hooks/use-toast";
+import { useNetWorth } from "@/context/NetWorthContext";
 
 export const PropertyManager = () => {
   const { toast } = useToast();
+  const { syncPropertiesToAssets } = useNetWorth();
   const [showForm, setShowForm] = useState(false);
   const [editingProperty, setEditingProperty] = useState<Property | null>(null);
   const [properties, setProperties] = useState<Property[]>([
@@ -85,6 +87,11 @@ export const PropertyManager = () => {
     }
   ]);
 
+  // Sync properties with net worth context whenever they change
+  useEffect(() => {
+    syncPropertiesToAssets(properties);
+  }, [properties, syncPropertiesToAssets]);
+
   const handleAddProperty = (property: Omit<Property, "id">) => {
     const newProperty = {
       ...property,
@@ -148,13 +155,20 @@ export const PropertyManager = () => {
       {showForm ? (
         <PropertyForm 
           onSubmit={editingProperty ? handleUpdateProperty : handleAddProperty} 
-          property={editingProperty || undefined}
+          property={editingProperty}
         />
       ) : (
         <PropertyList 
           properties={properties}
           onEdit={handleEditProperty}
           onDelete={handleDeleteProperty}
+          onPropertyUpdate={(updatedProperty) => {
+            setProperties(
+              properties.map(prop => 
+                prop.id === updatedProperty.id ? updatedProperty : prop
+              )
+            );
+          }}
         />
       )}
     </div>

@@ -22,8 +22,31 @@ export interface BusinessDetails {
   annualExpenses: number;
 }
 
+export interface PropertyValuation {
+  estimatedValue: number;
+  lastUpdated: string;
+  confidence: 'high' | 'medium' | 'low';
+  source: string;
+}
+
 export interface Property {
   id: string;
+  name: string;
+  type: PropertyType;
+  address: string;
+  ownership: OwnershipType;
+  owner: string;
+  purchaseDate: string;
+  originalCost: number;
+  currentValue: number;
+  improvements: Improvement[];
+  rental?: RentalDetails;
+  business?: BusinessDetails;
+  notes?: string;
+  valuation?: PropertyValuation;
+}
+
+export interface PropertyFormData {
   name: string;
   type: PropertyType;
   address: string;

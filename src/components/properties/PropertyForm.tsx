@@ -1,7 +1,7 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Property, PropertyType, OwnershipType } from "@/types/property";
+import { Property, PropertyType, OwnershipType, PropertyFormData } from "@/types/property";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -27,7 +27,20 @@ export const PropertyForm: React.FC<PropertyFormProps> = ({ property, onSubmit }
   const isLightTheme = theme === "light";
   const isEditing = !!property;
   
-  const defaultValues = property || {
+  const defaultValues: PropertyFormData = property ? {
+    name: property.name,
+    type: property.type,
+    address: property.address,
+    ownership: property.ownership,
+    owner: property.owner,
+    purchaseDate: property.purchaseDate,
+    originalCost: property.originalCost,
+    currentValue: property.currentValue,
+    improvements: property.improvements || [],
+    rental: property.rental,
+    business: property.business,
+    notes: property.notes || ""
+  } : {
     name: "",
     type: "primary" as PropertyType,
     address: "",
@@ -40,7 +53,7 @@ export const PropertyForm: React.FC<PropertyFormProps> = ({ property, onSubmit }
     notes: ""
   };
   
-  const form = useForm({ defaultValues });
+  const form = useForm<PropertyFormData>({ defaultValues });
   const watchType = form.watch("type");
   
   const [improvements, setImprovements] = useState(defaultValues.improvements || []);
@@ -60,7 +73,7 @@ export const PropertyForm: React.FC<PropertyFormProps> = ({ property, onSubmit }
     annualExpenses: 0
   });
   
-  const handleFormSubmit = (data: any) => {
+  const handleFormSubmit = (data: PropertyFormData) => {
     // Combine form data with improvements and rental/business details
     const formattedData = {
       ...data,
@@ -69,8 +82,11 @@ export const PropertyForm: React.FC<PropertyFormProps> = ({ property, onSubmit }
       ...(data.type === "business" ? { business: businessDetails } : {})
     };
     
-    if (isEditing) {
+    if (isEditing && property) {
       formattedData.id = property.id;
+      if (property.valuation) {
+        formattedData.valuation = property.valuation;
+      }
     }
     
     onSubmit(formattedData);
