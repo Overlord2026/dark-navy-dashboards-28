@@ -1,9 +1,10 @@
 
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Trophy, Clock, Bookmark } from "lucide-react";
+import { Trophy, Clock, ExternalLink } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
+import { useState } from "react";
 
 export interface CourseCardProps {
   id: string | number;
@@ -18,6 +19,7 @@ export interface CourseCardProps {
 }
 
 export function CourseCard({
+  id,
   title,
   description,
   isPaid,
@@ -27,6 +29,8 @@ export function CourseCard({
   ghlUrl,
   onClick,
 }: CourseCardProps) {
+  const [isProcessing, setIsProcessing] = useState(false);
+
   const handleButtonClick = () => {
     if (comingSoon) {
       toast.info(`${title} is coming soon. Stay tuned!`);
@@ -39,6 +43,7 @@ export function CourseCard({
     } else if (ghlUrl) {
       // For free courses, directly open the GHL URL
       window.open(ghlUrl, "_blank", "noopener,noreferrer");
+      toast.success(`Accessing ${title}...`);
     } else if (onClick) {
       // Fallback to regular onClick if no URL provided
       onClick();
@@ -46,19 +51,40 @@ export function CourseCard({
   };
 
   const initiateStripeCheckout = () => {
-    // This would connect to your Stripe checkout in a real implementation
-    // For now, we'll simulate with a toast message
-    toast.info("Redirecting to payment page...");
+    setIsProcessing(true);
     
-    // Simulate successful payment after 2 seconds
+    // Simulate Stripe checkout process with a delay
+    toast.info("Preparing payment page...");
+    
+    // This simulates a network request to create a Stripe Checkout session
     setTimeout(() => {
-      toast.success("Payment successful! You now have access to this course.");
+      toast.success("Payment page ready!");
       
-      // After successful payment, redirect to the course
-      if (ghlUrl) {
-        window.open(ghlUrl, "_blank", "noopener,noreferrer");
-      }
-    }, 2000);
+      // In a real implementation, we would redirect to Stripe Checkout here
+      // In this simulation, we'll use a setTimeout to simulate the payment process
+      setTimeout(() => {
+        // Simulate successful payment
+        toast.success("Payment processed successfully!");
+        
+        // After successful payment, simulate granting access to the course
+        setTimeout(() => {
+          setIsProcessing(false);
+          
+          // Grant access to the course by opening the GHL URL
+          if (ghlUrl) {
+            toast("You now have access to this course!", {
+              description: "Opening course in a new tab...",
+              action: {
+                label: "Open Course",
+                onClick: () => window.open(ghlUrl, "_blank", "noopener,noreferrer")
+              },
+            });
+            
+            window.open(ghlUrl, "_blank", "noopener,noreferrer");
+          }
+        }, 1000);
+      }, 2000);
+    }, 1500);
     
     // In a real implementation, you would:
     // 1. Call your backend to create a Stripe Checkout session
@@ -96,11 +122,28 @@ export function CourseCard({
       <CardFooter>
         <Button 
           variant={isPaid ? "default" : "outline"} 
-          className="w-full transition-colors" 
-          disabled={comingSoon}
+          className="w-full transition-colors flex items-center justify-center gap-2" 
+          disabled={comingSoon || isProcessing}
           onClick={handleButtonClick}
         >
-          {comingSoon ? "Coming Soon" : isPaid ? "Enroll Now" : "Access Course"}
+          {isProcessing ? (
+            <div className="flex items-center gap-2">
+              <svg className="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Processing...
+            </div>
+          ) : comingSoon ? (
+            "Coming Soon"
+          ) : isPaid ? (
+            "Enroll Now"
+          ) : (
+            <>
+              Access Course
+              <ExternalLink className="h-3 w-3 opacity-70" />
+            </>
+          )}
         </Button>
       </CardFooter>
     </Card>

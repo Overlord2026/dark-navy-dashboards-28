@@ -11,6 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
+import { useState } from "react";
 
 const courseCategories = [
   { id: "all-courses", name: "All Courses" },
@@ -34,17 +35,20 @@ const featuredCourses = [
   { 
     id: "financial-fundamentals", 
     name: "Financial Fundamentals",
-    ghlUrl: "https://ghl.example.com/courses/financial-fundamentals" 
+    ghlUrl: "https://ghl.example.com/courses/financial-fundamentals",
+    isPaid: false
   },
   { 
     id: "investment-strategies", 
     name: "Investment Strategies 101",
-    ghlUrl: "https://ghl.example.com/courses/investment-strategies-101" 
+    ghlUrl: "https://ghl.example.com/courses/investment-strategies-101",
+    isPaid: false
   },
   { 
     id: "wealth-building", 
     name: "Wealth Building for Beginners",
-    ghlUrl: "https://ghl.example.com/courses/wealth-building-beginners" 
+    ghlUrl: "https://ghl.example.com/courses/wealth-building-beginners",
+    isPaid: false
   },
 ];
 
@@ -53,26 +57,56 @@ const premiumCourses = [
     id: "advanced-trading", 
     name: "Advanced Trading (Coming Soon)",
     ghlUrl: "https://ghl.example.com/courses/advanced-trading",
+    isPaid: true,
     comingSoon: true
   },
   { 
     id: "estate-planning-premium", 
     name: "Estate Planning (Coming Soon)",
     ghlUrl: "https://ghl.example.com/courses/estate-planning",
+    isPaid: true,
     comingSoon: true
   },
 ];
 
 export function SwagEducationMenu() {
-  const handleExternalLink = (e: React.MouseEvent<HTMLDivElement>, url?: string, comingSoon?: boolean) => {
-    if (comingSoon) {
-      toast.info("This course is coming soon. Stay tuned!");
+  const [isProcessing, setIsProcessing] = useState<string | null>(null);
+
+  const handleExternalLink = (e: React.MouseEvent<HTMLDivElement>, course: any) => {
+    e.preventDefault();
+    
+    if (course.comingSoon) {
+      toast.info(`${course.name} is coming soon. Stay tuned!`);
       return;
     }
     
-    if (url) {
-      e.preventDefault();
-      window.open(url, "_blank", "noopener,noreferrer");
+    if (course.isPaid) {
+      // For paid courses, simulate Stripe checkout process
+      setIsProcessing(course.id);
+      toast.info("Preparing payment page...");
+      
+      // Simulate payment process
+      setTimeout(() => {
+        toast.success("Payment processed successfully!");
+        
+        setTimeout(() => {
+          setIsProcessing(null);
+          if (course.ghlUrl) {
+            toast("You now have access to this course!", {
+              description: "Opening course in a new tab...",
+              action: {
+                label: "Open Course",
+                onClick: () => window.open(course.ghlUrl, "_blank", "noopener,noreferrer")
+              },
+            });
+            window.open(course.ghlUrl, "_blank", "noopener,noreferrer");
+          }
+        }, 1000);
+      }, 2000);
+    } else if (course.ghlUrl) {
+      // For free courses, directly open the GHL URL
+      toast.success(`Accessing ${course.name}...`);
+      window.open(course.ghlUrl, "_blank", "noopener,noreferrer");
     }
   };
 
@@ -122,11 +156,18 @@ export function SwagEducationMenu() {
         {featuredCourses.map((course) => (
           <DropdownMenuItem 
             key={course.id}
-            onClick={(e) => handleExternalLink(e, course.ghlUrl)}
+            onClick={(e) => handleExternalLink(e, course)}
             className="py-2 cursor-pointer transition-colors flex items-center justify-between"
           >
             <span>{course.name}</span>
-            <ExternalLink className="h-3 w-3 opacity-70" />
+            {isProcessing === course.id ? (
+              <svg className="animate-spin h-3 w-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+            ) : (
+              <ExternalLink className="h-3 w-3 opacity-70" />
+            )}
           </DropdownMenuItem>
         ))}
         
@@ -138,10 +179,17 @@ export function SwagEducationMenu() {
           <DropdownMenuItem 
             className={`py-2 transition-colors flex items-center justify-between ${course.comingSoon ? "opacity-70" : "cursor-pointer"}`} 
             key={course.id}
-            onClick={(e) => handleExternalLink(e, course.ghlUrl, course.comingSoon)}
+            onClick={(e) => handleExternalLink(e, course)}
           >
             <span>{course.name}</span>
-            {!course.comingSoon && <ExternalLink className="h-3 w-3 opacity-70" />}
+            {isProcessing === course.id ? (
+              <svg className="animate-spin h-3 w-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+            ) : !course.comingSoon && (
+              <ExternalLink className="h-3 w-3 opacity-70" />
+            )}
           </DropdownMenuItem>
         ))}
         

@@ -1,3 +1,4 @@
+
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -556,6 +557,7 @@ export default function Education() {
                   {educationalResources.books.map((book) => (
                     <CourseCard
                       key={book.id}
+                      id={book.id}
                       title={book.title}
                       description={`${book.description} (Author: ${book.author})`}
                       isPaid={false}
