@@ -33,6 +33,7 @@ interface IPProtectionSettings {
   ipDisclaimer: string;
   selectedRole?: string;
   currentUsername?: string;
+  ipAgreement?: string;
 }
 
 export function IPProtectionSettings() {
@@ -60,6 +61,7 @@ export function IPProtectionSettings() {
       },
     },
     ipDisclaimer: "All content, code, designs, and intellectual property created within this application are the exclusive property of the company. No reproduction, distribution, or usage outside the terms of service is permitted.",
+    ipAgreement: "1) All code, content, designs, and strategies accessed through this platform are the sole property of [Your Company Name].\n2) You must not share or replicate any proprietary information outside authorized channels.\n3) Violations of this agreement may lead to immediate termination and legal action.",
     selectedRole: undefined,
     currentUsername: ""
   });
@@ -69,6 +71,8 @@ export function IPProtectionSettings() {
   const [activeTab, setActiveTab] = useState("2fa");
   const [showVerificationForm, setShowVerificationForm] = useState(false);
   const [showRoleAssignment, setShowRoleAssignment] = useState(false);
+  const [agreementAccepted, setAgreementAccepted] = useState(false);
+  const [showAgreement, setShowAgreement] = useState(false);
 
   const form = useForm();
 
@@ -186,10 +190,10 @@ export function IPProtectionSettings() {
     // Simulate role assignment
     toast.success(`Role '${settings.selectedRole}' assigned to ${settings.currentUsername}`);
     
-    // Log role assignment to audit log
+    // Log role assignment to audit log - using settings_change instead of role_assignment to match valid types
     auditLog.log(
       "current-user",
-      "role_assignment",
+      "settings_change",
       "success",
       {
         userName: "Administrator",
@@ -211,6 +215,28 @@ export function IPProtectionSettings() {
     setShowRoleAssignment(false);
   };
 
+  const acceptAgreement = () => {
+    setAgreementAccepted(true);
+    setShowAgreement(false);
+    
+    // Log agreement acceptance to audit log
+    auditLog.log(
+      "current-user",
+      "settings_change",
+      "success",
+      {
+        userName: "Administrator",
+        userRole: "admin",
+        details: { 
+          action: "ip_agreement_accepted",
+          timestamp: new Date().toISOString()
+        }
+      }
+    );
+    
+    toast.success("IP Ownership Agreement accepted");
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -218,7 +244,7 @@ export function IPProtectionSettings() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="2fa" className="flex items-center gap-2">
             <Lock className="h-4 w-4" />
             <span>Two-Factor Authentication</span>
@@ -230,6 +256,10 @@ export function IPProtectionSettings() {
           <TabsTrigger value="disclaimer" className="flex items-center gap-2">
             <FileText className="h-4 w-4" />
             <span>IP Disclaimer</span>
+          </TabsTrigger>
+          <TabsTrigger value="agreement" className="flex items-center gap-2">
+            <Shield className="h-4 w-4" />
+            <span>IP Agreement</span>
           </TabsTrigger>
         </TabsList>
 
@@ -482,6 +512,80 @@ export function IPProtectionSettings() {
                 <p className="text-xs text-muted-foreground">
                   This disclaimer will be displayed in Terms of Service, documentation, and other appropriate places within the application.
                 </p>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="agreement" className="space-y-4 mt-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Shield className="h-5 w-5" />
+                Non-Disclosure & IP Ownership Agreement
+              </CardTitle>
+              <CardDescription>
+                Review and manage the IP ownership agreement for all users
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <Textarea 
+                  id="ip-agreement"
+                  value={settings.ipAgreement}
+                  onChange={(e) => handleSettingChange(['ipAgreement'], e.target.value)}
+                  rows={8}
+                  className="font-mono text-sm"
+                />
+                
+                <div className="flex justify-between items-center">
+                  <p className="text-xs text-muted-foreground">
+                    This agreement will be presented to all users during onboarding and after major updates.
+                  </p>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => setShowAgreement(true)}
+                  >
+                    Preview Agreement
+                  </Button>
+                </div>
+
+                {showAgreement && (
+                  <div className="mt-4 p-6 border rounded-md bg-muted/30">
+                    <h3 className="text-xl font-bold mb-4 text-center">Non-Disclosure & IP Ownership Agreement</h3>
+                    <div className="whitespace-pre-line mb-6">
+                      {settings.ipAgreement}
+                    </div>
+                    
+                    <div className="flex flex-col space-y-4 items-center">
+                      <div className="flex items-center space-x-2">
+                        <Switch 
+                          id="agree-toggle"
+                          checked={agreementAccepted}
+                          onCheckedChange={setAgreementAccepted}
+                        />
+                        <Label htmlFor="agree-toggle">
+                          I acknowledge and accept the terms of this agreement
+                        </Label>
+                      </div>
+                      <div className="flex space-x-4">
+                        <Button 
+                          variant="outline" 
+                          onClick={() => setShowAgreement(false)}
+                        >
+                          Cancel
+                        </Button>
+                        <Button 
+                          onClick={acceptAgreement}
+                          disabled={!agreementAccepted}
+                        >
+                          Accept Agreement
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>
