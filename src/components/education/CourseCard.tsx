@@ -1,7 +1,7 @@
 
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Trophy, Clock } from "lucide-react";
+import { Trophy, Clock, Bookmark } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 
@@ -69,17 +69,17 @@ export function CourseCard({
   };
 
   return (
-    <Card className={`h-full flex flex-col ${comingSoon ? "opacity-70" : ""}`}>
+    <Card className={`h-full flex flex-col transition-all duration-200 hover:shadow-md ${comingSoon ? "opacity-70" : ""}`}>
       <CardHeader className="pb-3">
         <div className="flex justify-between items-start">
-          <CardTitle className="text-lg font-bold">{title}</CardTitle>
+          <CardTitle className="text-lg font-bold text-left">{title}</CardTitle>
           {!isPaid ? (
             <Badge variant="default" className="bg-green-600 hover:bg-green-700">Free</Badge>
           ) : (
             <Badge variant="secondary" className="bg-blue-600 hover:bg-blue-700 text-white">Paid</Badge>
           )}
         </div>
-        <CardDescription className="mt-2">{description}</CardDescription>
+        <CardDescription className="mt-2 text-left">{description}</CardDescription>
       </CardHeader>
       <CardContent className="flex-grow">
         <div className="flex items-center justify-between text-sm text-muted-foreground mb-4">
@@ -95,8 +95,8 @@ export function CourseCard({
       </CardContent>
       <CardFooter>
         <Button 
-          variant="default" 
-          className="w-full" 
+          variant={isPaid ? "default" : "outline"} 
+          className="w-full transition-colors" 
           disabled={comingSoon}
           onClick={handleButtonClick}
         >

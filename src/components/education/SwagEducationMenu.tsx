@@ -1,5 +1,4 @@
-
-import { GraduationCap } from "lucide-react";
+import { GraduationCap, BookOpen, ExternalLink } from "lucide-react";
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
@@ -10,6 +9,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { toast } from "sonner";
 
 const courseCategories = [
   { id: "all-courses", name: "All Courses" },
@@ -60,7 +60,12 @@ const premiumCourses = [
 
 export function SwagEducationMenu() {
   const handleExternalLink = (e: React.MouseEvent<HTMLDivElement>, url?: string, comingSoon?: boolean) => {
-    if (url && !comingSoon) {
+    if (comingSoon) {
+      toast.info("This course is coming soon. Stay tuned!");
+      return;
+    }
+    
+    if (url) {
       e.preventDefault();
       window.open(url, "_blank", "noopener,noreferrer");
     }
@@ -69,50 +74,60 @@ export function SwagEducationMenu() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="flex items-center gap-1">
+        <Button variant="ghost" className="flex items-center gap-1 transition-colors hover:bg-accent/20">
           <GraduationCap className="h-5 w-5" />
-          <span>SWAG Education Vault</span>
+          <span className="font-medium">SWAG Education Vault</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-72">
-        <DropdownMenuLabel>Course Categories</DropdownMenuLabel>
-        <DropdownMenuSeparator />
+      <DropdownMenuContent align="end" className="w-72 p-2">
+        <DropdownMenuLabel className="text-base font-bold">Course Categories</DropdownMenuLabel>
+        <DropdownMenuSeparator className="my-1" />
         
         {courseCategories.map((category) => (
           <Link to={`/education?category=${category.id}`} key={category.id}>
-            <DropdownMenuItem>
+            <DropdownMenuItem className="py-2 cursor-pointer transition-colors">
+              <BookOpen className="h-4 w-4 mr-2 opacity-70" />
               {category.name}
             </DropdownMenuItem>
           </Link>
         ))}
         
-        <DropdownMenuSeparator />
-        <DropdownMenuLabel>Featured Courses</DropdownMenuLabel>
-        <DropdownMenuSeparator />
+        <DropdownMenuSeparator className="my-1" />
+        <DropdownMenuLabel className="text-base font-bold">Featured Courses</DropdownMenuLabel>
+        <DropdownMenuSeparator className="my-1" />
         
         {featuredCourses.map((course) => (
           <DropdownMenuItem 
             key={course.id}
             onClick={(e) => handleExternalLink(e, course.ghlUrl)}
-            className="cursor-pointer"
+            className="py-2 cursor-pointer transition-colors flex items-center justify-between"
           >
-            {course.name}
+            <span>{course.name}</span>
+            <ExternalLink className="h-3 w-3 opacity-70" />
           </DropdownMenuItem>
         ))}
         
-        <DropdownMenuSeparator />
-        <DropdownMenuLabel>Premium Courses</DropdownMenuLabel>
-        <DropdownMenuSeparator />
+        <DropdownMenuSeparator className="my-1" />
+        <DropdownMenuLabel className="text-base font-bold">Premium Courses</DropdownMenuLabel>
+        <DropdownMenuSeparator className="my-1" />
         
         {premiumCourses.map((course) => (
           <DropdownMenuItem 
-            className={`${course.comingSoon ? "opacity-70" : "cursor-pointer"}`} 
+            className={`py-2 transition-colors flex items-center justify-between ${course.comingSoon ? "opacity-70" : "cursor-pointer"}`} 
             key={course.id}
             onClick={(e) => handleExternalLink(e, course.ghlUrl, course.comingSoon)}
           >
-            {course.name}
+            <span>{course.name}</span>
+            {!course.comingSoon && <ExternalLink className="h-3 w-3 opacity-70" />}
           </DropdownMenuItem>
         ))}
+        
+        <DropdownMenuSeparator className="my-1" />
+        <Link to="/education">
+          <DropdownMenuItem className="py-2 mt-1 cursor-pointer transition-colors bg-accent/10 hover:bg-accent/20 text-center font-medium">
+            View All Courses
+          </DropdownMenuItem>
+        </Link>
       </DropdownMenuContent>
     </DropdownMenu>
   );
