@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { StarIcon, CheckIcon, X } from 'lucide-react';
+import { StarIcon, CheckIcon, X, ArrowDown, ArrowUp } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface FeedbackSurveyBannerProps {
@@ -12,8 +12,9 @@ interface FeedbackSurveyBannerProps {
 export function FeedbackSurveyBanner({ onDismiss }: FeedbackSurveyBannerProps) {
   const [step, setStep] = useState<'rating' | 'feedback' | 'thankyou'>('rating');
   const [rating, setRating] = useState<number | null>(null);
-  const [feedback, setFeedback] = useState('');
-  const [improvements, setImprovements] = useState('');
+  const [advancedToolsFeedback, setAdvancedToolsFeedback] = useState('');
+  const [improvementsFeedback, setImprovementsFeedback] = useState('');
+  const [expandedSection, setExpandedSection] = useState<string | null>(null);
   
   const handleRatingSubmit = () => {
     if (rating !== null) {
@@ -25,7 +26,11 @@ export function FeedbackSurveyBanner({ onDismiss }: FeedbackSurveyBannerProps) {
   
   const handleFeedbackSubmit = () => {
     // In a real application, you would send this data to your backend
-    console.log('Submitting feedback:', { rating, feedback, improvements });
+    console.log('Submitting feedback:', { 
+      rating, 
+      advancedToolsFeedback, 
+      improvementsFeedback 
+    });
     setStep('thankyou');
     
     // Simulate API call
@@ -37,6 +42,14 @@ export function FeedbackSurveyBanner({ onDismiss }: FeedbackSurveyBannerProps) {
   
   const handleStarClick = (selectedRating: number) => {
     setRating(selectedRating);
+  };
+
+  const toggleSection = (section: string) => {
+    if (expandedSection === section) {
+      setExpandedSection(null);
+    } else {
+      setExpandedSection(section);
+    }
   };
   
   return (
@@ -102,33 +115,57 @@ export function FeedbackSurveyBanner({ onDismiss }: FeedbackSurveyBannerProps) {
           </p>
           
           <div className="space-y-4">
-            <div>
-              <label htmlFor="value-feedback" className="block text-sm font-medium mb-2">
-                What features are you finding most valuable?
-              </label>
-              <Textarea
-                id="value-feedback"
-                placeholder="Tell us which tools and features you're enjoying..."
-                value={feedback}
-                onChange={(e) => setFeedback(e.target.value)}
-                className="min-h-[80px]"
-              />
+            <div className="border border-border/40 rounded-md overflow-hidden">
+              <button 
+                onClick={() => toggleSection('advancedTools')}
+                className="w-full flex justify-between items-center p-3 bg-background/80 hover:bg-background/90 text-left"
+              >
+                <span className="font-medium">Are you finding value in the advanced tools?</span>
+                {expandedSection === 'advancedTools' ? (
+                  <ArrowUp className="h-4 w-4 text-muted-foreground" />
+                ) : (
+                  <ArrowDown className="h-4 w-4 text-muted-foreground" />
+                )}
+              </button>
+              
+              {expandedSection === 'advancedTools' && (
+                <div className="p-3 bg-background/60">
+                  <Textarea
+                    placeholder="Tell us which advanced features you're finding most valuable..."
+                    value={advancedToolsFeedback}
+                    onChange={(e) => setAdvancedToolsFeedback(e.target.value)}
+                    className="min-h-[80px]"
+                  />
+                </div>
+              )}
             </div>
             
-            <div>
-              <label htmlFor="improvements" className="block text-sm font-medium mb-2">
-                Is there anything you'd like us to improve?
-              </label>
-              <Textarea
-                id="improvements"
-                placeholder="Any suggestions for improvements or new features..."
-                value={improvements}
-                onChange={(e) => setImprovements(e.target.value)}
-                className="min-h-[80px]"
-              />
+            <div className="border border-border/40 rounded-md overflow-hidden">
+              <button 
+                onClick={() => toggleSection('improvements')}
+                className="w-full flex justify-between items-center p-3 bg-background/80 hover:bg-background/90 text-left"
+              >
+                <span className="font-medium">Is there anything you'd like us to improve?</span>
+                {expandedSection === 'improvements' ? (
+                  <ArrowUp className="h-4 w-4 text-muted-foreground" />
+                ) : (
+                  <ArrowDown className="h-4 w-4 text-muted-foreground" />
+                )}
+              </button>
+              
+              {expandedSection === 'improvements' && (
+                <div className="p-3 bg-background/60">
+                  <Textarea
+                    placeholder="Any suggestions for improvements or new features..."
+                    value={improvementsFeedback}
+                    onChange={(e) => setImprovementsFeedback(e.target.value)}
+                    className="min-h-[80px]"
+                  />
+                </div>
+              )}
             </div>
             
-            <div className="flex justify-end gap-2 mt-4">
+            <div className="flex justify-end gap-2 mt-6">
               <Button 
                 variant="outline" 
                 onClick={() => setStep('rating')}
@@ -138,6 +175,10 @@ export function FeedbackSurveyBanner({ onDismiss }: FeedbackSurveyBannerProps) {
               <Button 
                 onClick={handleFeedbackSubmit}
                 className="bg-purple-600 hover:bg-purple-700"
+                disabled={expandedSection !== null && (
+                  (expandedSection === 'advancedTools' && !advancedToolsFeedback) || 
+                  (expandedSection === 'improvements' && !improvementsFeedback)
+                )}
               >
                 Submit Feedback
               </Button>
