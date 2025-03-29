@@ -11,6 +11,7 @@ import { ExpenseOptimizationCard } from "@/components/dashboard/ExpenseOptimizat
 import { WelcomeTrialBanner } from "@/components/dashboard/WelcomeTrialBanner";
 import { MidTrialBanner } from "@/components/dashboard/MidTrialBanner";
 import { TrialEndingSoonBanner } from "@/components/dashboard/TrialEndingSoonBanner";
+import { ExpirationNotice } from "@/components/subscription/ExpirationNotice";
 import { useSubscription } from "@/context/SubscriptionContext"; 
 import { toast } from "sonner";
 
@@ -22,6 +23,7 @@ const Dashboard = () => {
   const [showWelcomeBanner, setShowWelcomeBanner] = useState(false);
   const [showMidTrialBanner, setShowMidTrialBanner] = useState(false);
   const [showTrialEndingSoonBanner, setShowTrialEndingSoonBanner] = useState(false);
+  const [showExpirationNotice, setShowExpirationNotice] = useState(false);
   const { isInFreeTrial, daysRemainingInTrial, freeTrialEndDate } = useSubscription();
   
   const [checklistItems, setChecklistItems] = useState([
@@ -65,6 +67,13 @@ const Dashboard = () => {
           !hasSeenTrialEndingSoon) {
         setShowTrialEndingSoonBanner(true);
       }
+      
+      const hasSeenExpirationNotice = localStorage.getItem('hasSeenExpirationNotice');
+      if (daysRemainingInTrial !== null && 
+          daysRemainingInTrial <= 5 && 
+          !hasSeenExpirationNotice) {
+        setShowExpirationNotice(true);
+      }
     }
   }, [isInFreeTrial, daysRemainingInTrial]);
 
@@ -81,6 +90,11 @@ const Dashboard = () => {
   const handleDismissTrialEndingSoon = () => {
     setShowTrialEndingSoonBanner(false);
     localStorage.setItem('hasSeenTrialEndingSoonBanner', 'true');
+  };
+  
+  const handleDismissExpirationNotice = () => {
+    setShowExpirationNotice(false);
+    localStorage.setItem('hasSeenExpirationNotice', 'true');
   };
 
   const toggleMetrics = () => {
@@ -138,6 +152,10 @@ const Dashboard = () => {
 
           {showTrialEndingSoonBanner && (
             <TrialEndingSoonBanner onDismiss={handleDismissTrialEndingSoon} />
+          )}
+          
+          {showExpirationNotice && (
+            <ExpirationNotice onDismiss={handleDismissExpirationNotice} />
           )}
           
           <div className="flex flex-col lg:flex-row gap-6">

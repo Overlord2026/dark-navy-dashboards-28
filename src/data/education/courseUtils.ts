@@ -25,7 +25,7 @@ export const getFeaturedCourses = (): Course[] => {
 };
 
 export const getPopularCourses = (): Course[] => {
-  return popularCourses;
+  return popularCourses as Course[];
 };
 
 export const getRelatedCourses = (courseId: string, categoryId: string): Course[] => {
