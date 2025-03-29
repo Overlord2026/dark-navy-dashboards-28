@@ -1,41 +1,34 @@
 
-import React from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { FileUpload } from "@/components/ui/file-upload";
-
-const practiceFormSchema = z.object({
-  firmName: z.string().min(2, "Firm name must be at least 2 characters"),
-  address: z.string().min(5, "Address is required"),
-  phone: z.string().min(10, "Valid phone number is required"),
-  email: z.string().email("Valid email is required"),
-  website: z.string().url("Valid website URL is required").optional().or(z.literal("")),
-  description: z.string().optional(),
-  logo: z.any().optional(),
-});
-
-type PracticeFormValues = z.infer<typeof practiceFormSchema>;
+import { Card, CardContent } from "@/components/ui/card";
 
 export function PracticeDetailsForm() {
-  const form = useForm<PracticeFormValues>({
-    resolver: zodResolver(practiceFormSchema),
-    defaultValues: {
-      firmName: "",
-      address: "",
-      phone: "",
-      email: "",
-      website: "",
-      description: "",
-    },
+  const [practiceDetails, setPracticeDetails] = useState({
+    name: "",
+    address: "",
+    phone: "",
+    email: "",
+    website: "",
+    description: "",
+    logo: null as File | null,
   });
 
-  const onSubmit = (data: PracticeFormValues) => {
-    console.log("Practice details submitted:", data);
-    // This would typically save the data to your backend
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setPracticeDetails({
+      ...practiceDetails,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleLogoUpload = (file: File) => {
+    setPracticeDetails({
+      ...practiceDetails,
+      logo: file,
+    });
   };
 
   return (
@@ -43,117 +36,117 @@ export function PracticeDetailsForm() {
       <div className="mb-6">
         <h2 className="text-xl font-semibold mb-2">Practice Details</h2>
         <p className="text-gray-400">
-          Set up your firm's information to personalize your advisory platform
+          Add information about your practice that will be visible to clients
         </p>
       </div>
 
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <div className="mb-6">
-            <h3 className="text-lg font-medium mb-4">Firm Logo</h3>
-            <FileUpload 
-              id="logo-upload"
-              onUpload={(file) => form.setValue("logo", file)}
+      <div className="space-y-4">
+        <div className="space-y-2">
+          <Label htmlFor="practice-logo">Practice Logo</Label>
+          <div className="flex items-center gap-4">
+            {practiceDetails.logo && (
+              <div className="h-16 w-16 rounded-md overflow-hidden bg-gray-800 flex items-center justify-center">
+                <img 
+                  src={URL.createObjectURL(practiceDetails.logo)} 
+                  alt="Practice logo preview" 
+                  className="h-full w-full object-contain"
+                />
+              </div>
+            )}
+            <FileUpload
+              onUpload={handleLogoUpload}
               accept="image/*"
-              maxSize={5}
+              maxSize={5242880}
               className="w-full"
             />
-            <p className="text-xs text-gray-400 mt-2">
-              Upload a square logo (PNG or JPG), recommended size 512x512px
-            </p>
           </div>
+          <p className="text-xs text-gray-400">Max file size: 5MB. Recommended dimensions: 200x200px.</p>
+        </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <FormField
-              control={form.control}
-              name="firmName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Firm Name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Boutique Family Office LLC" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+        <div className="space-y-2">
+          <Label htmlFor="name">Practice Name</Label>
+          <Input
+            id="name"
+            name="name"
+            placeholder="Enter your practice name"
+            value={practiceDetails.name}
+            onChange={handleInputChange}
+            className="bg-gray-800 border-gray-700"
+          />
+        </div>
 
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email Address</FormLabel>
-                  <FormControl>
-                    <Input placeholder="contact@yourfirm.com" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="phone"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Phone Number</FormLabel>
-                  <FormControl>
-                    <Input placeholder="(555) 123-4567" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="website"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Website (optional)</FormLabel>
-                  <FormControl>
-                    <Input placeholder="https://www.yourfirm.com" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-
-          <FormField
-            control={form.control}
+        <div className="space-y-2">
+          <Label htmlFor="address">Business Address</Label>
+          <Textarea
+            id="address"
             name="address"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Business Address</FormLabel>
-                <FormControl>
-                  <Input placeholder="123 Main St, City, State, Zip" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+            placeholder="Enter your business address"
+            value={practiceDetails.address}
+            onChange={handleInputChange}
+            className="bg-gray-800 border-gray-700"
           />
+        </div>
 
-          <FormField
-            control={form.control}
-            name="description"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Firm Description (optional)</FormLabel>
-                <FormControl>
-                  <Textarea 
-                    placeholder="Tell clients about your firm's approach and services..." 
-                    className="min-h-[100px]"
-                    {...field} 
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label htmlFor="phone">Phone Number</Label>
+            <Input
+              id="phone"
+              name="phone"
+              placeholder="(123) 456-7890"
+              value={practiceDetails.phone}
+              onChange={handleInputChange}
+              className="bg-gray-800 border-gray-700"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="email">Email Address</Label>
+            <Input
+              id="email"
+              name="email"
+              type="email"
+              placeholder="example@yourfirm.com"
+              value={practiceDetails.email}
+              onChange={handleInputChange}
+              className="bg-gray-800 border-gray-700"
+            />
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="website">Website URL</Label>
+          <Input
+            id="website"
+            name="website"
+            placeholder="https://www.yourfirm.com"
+            value={practiceDetails.website}
+            onChange={handleInputChange}
+            className="bg-gray-800 border-gray-700"
           />
-        </form>
-      </Form>
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="description">Practice Description</Label>
+          <Textarea
+            id="description"
+            name="description"
+            placeholder="Tell clients about your practice, specialties, and approach"
+            value={practiceDetails.description}
+            onChange={handleInputChange}
+            className="bg-gray-800 border-gray-700 min-h-[120px]"
+          />
+        </div>
+      </div>
+
+      <Card className="bg-yellow-500/10 border border-yellow-500/30">
+        <CardContent className="p-4">
+          <p className="text-sm text-yellow-400">
+            <strong>Note:</strong> This information will be displayed on your client-facing portal. 
+            Make sure all details are accurate and professional.
+          </p>
+        </CardContent>
+      </Card>
     </div>
   );
 }

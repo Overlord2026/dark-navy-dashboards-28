@@ -1,220 +1,259 @@
 
 import React, { useState } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 import { FileUpload } from "@/components/ui/file-upload";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-
-const brandingFormSchema = z.object({
-  portalTitle: z.string().min(2, "Portal title must be at least 2 characters"),
-  primaryColor: z.string().regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, "Must be a valid hex color"),
-  secondaryColor: z.string().regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, "Must be a valid hex color"),
-  customDomain: z.string().optional(),
-  headerLogo: z.any().optional(),
-  footerLogo: z.any().optional(),
-  welcomeMessage: z.string().optional(),
-});
-
-type BrandingFormValues = z.infer<typeof brandingFormSchema>;
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Card, CardContent } from "@/components/ui/card";
 
 export function PortalBrandingForm() {
-  const [activePreview, setActivePreview] = useState("desktop");
-  
-  const form = useForm<BrandingFormValues>({
-    resolver: zodResolver(brandingFormSchema),
-    defaultValues: {
-      portalTitle: "Boutique Family Office Client Portal",
-      primaryColor: "#1EAEDB",
-      secondaryColor: "#33C3F0",
-      customDomain: "",
-      welcomeMessage: "Welcome to your personalized financial portal",
-    },
+  const [branding, setBranding] = useState({
+    primaryColor: "#1EAEDB",
+    secondaryColor: "#0F0F2D",
+    logo: null as File | null,
+    backgroundImage: null as File | null,
+    theme: "dark",
+    portalName: "My Client Portal",
   });
 
-  const onSubmit = (data: BrandingFormValues) => {
-    console.log("Branding details submitted:", data);
-    // This would typically save the data to your backend
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setBranding({
+      ...branding,
+      [e.target.name]: e.target.value,
+    });
   };
 
-  // Colors from the form for preview
-  const primaryColor = form.watch("primaryColor");
-  const secondaryColor = form.watch("secondaryColor");
-  const portalTitle = form.watch("portalTitle");
+  const handleFileUpload = (file: File, field: 'logo' | 'backgroundImage') => {
+    setBranding({
+      ...branding,
+      [field]: file,
+    });
+  };
+
+  const handleThemeChange = (value: string) => {
+    setBranding({
+      ...branding,
+      theme: value,
+    });
+  };
 
   return (
     <div className="space-y-6">
       <div className="mb-6">
-        <h2 className="text-xl font-semibold mb-2">Client Portal Branding</h2>
+        <h2 className="text-xl font-semibold mb-2">Portal Branding</h2>
         <p className="text-gray-400">
-          Customize the appearance of your client portal to match your brand
+          Customize how your client portal looks and feels
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              <FormField
-                control={form.control}
-                name="portalTitle"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Portal Title</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Your Firm Client Portal" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+      <Tabs defaultValue="branding" className="w-full">
+        <TabsList className="grid grid-cols-3 mb-6">
+          <TabsTrigger value="branding">Branding</TabsTrigger>
+          <TabsTrigger value="theme">Theme</TabsTrigger>
+          <TabsTrigger value="preview">Preview</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="branding" className="space-y-6">
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="portalName">Portal Name</Label>
+              <Input
+                id="portalName"
+                name="portalName"
+                placeholder="My Client Portal"
+                value={branding.portalName}
+                onChange={handleInputChange}
+                className="bg-gray-800 border-gray-700"
               />
+              <p className="text-xs text-gray-400">This name will appear in the browser title and throughout the portal.</p>
+            </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <FormField
-                  control={form.control}
-                  name="primaryColor"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Primary Color</FormLabel>
-                      <div className="flex space-x-2">
-                        <FormControl>
-                          <Input {...field} />
-                        </FormControl>
-                        <div 
-                          className="h-10 w-10 rounded border border-gray-600" 
-                          style={{ backgroundColor: field.value }}
-                        />
-                      </div>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="secondaryColor"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Secondary Color</FormLabel>
-                      <div className="flex space-x-2">
-                        <FormControl>
-                          <Input {...field} />
-                        </FormControl>
-                        <div 
-                          className="h-10 w-10 rounded border border-gray-600" 
-                          style={{ backgroundColor: field.value }}
-                        />
-                      </div>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <div className="mb-6">
-                <h3 className="text-lg font-medium mb-4">Portal Logo</h3>
-                <FileUpload 
-                  id="logo-upload"
-                  onUpload={(file) => form.setValue("headerLogo", file)}
+            <div className="space-y-2">
+              <Label htmlFor="logo-upload">Portal Logo</Label>
+              <div className="flex items-center gap-4">
+                {branding.logo && (
+                  <div className="h-16 w-16 rounded-md overflow-hidden bg-gray-800 flex items-center justify-center">
+                    <img 
+                      src={URL.createObjectURL(branding.logo)} 
+                      alt="Logo preview" 
+                      className="h-full w-full object-contain"
+                    />
+                  </div>
+                )}
+                <FileUpload
+                  onUpload={(file) => handleFileUpload(file, 'logo')}
                   accept="image/*"
-                  maxSize={5}
+                  maxSize={5242880}
                   className="w-full"
                 />
-                <p className="text-xs text-gray-400 mt-2">
-                  This logo will appear in the header of the client portal
-                </p>
               </div>
+              <p className="text-xs text-gray-400">Max file size: 5MB. Recommended dimensions: 200x50px.</p>
+            </div>
 
-              <FormField
-                control={form.control}
-                name="customDomain"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Custom Domain (optional)</FormLabel>
-                    <FormControl>
-                      <Input placeholder="portal.yourfirm.com" {...field} />
-                    </FormControl>
-                    <p className="text-xs text-gray-400 mt-1">
-                      You'll need to configure DNS records separately
-                    </p>
-                    <FormMessage />
-                  </FormItem>
+            <div className="space-y-2">
+              <Label htmlFor="background-upload">Background Image (Optional)</Label>
+              <div className="flex items-center gap-4">
+                {branding.backgroundImage && (
+                  <div className="h-16 w-16 rounded-md overflow-hidden bg-gray-800 flex items-center justify-center">
+                    <img 
+                      src={URL.createObjectURL(branding.backgroundImage)} 
+                      alt="Background preview" 
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
                 )}
-              />
+                <FileUpload
+                  onUpload={(file) => handleFileUpload(file, 'backgroundImage')}
+                  accept="image/*"
+                  maxSize={10485760}
+                  className="w-full"
+                />
+              </div>
+              <p className="text-xs text-gray-400">Max file size: 10MB. Recommended dimensions: 1920x1080px.</p>
+            </div>
 
-              <FormField
-                control={form.control}
-                name="welcomeMessage"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Welcome Message</FormLabel>
-                    <FormControl>
-                      <Input 
-                        placeholder="Welcome to your personalized financial portal" 
-                        {...field} 
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="primaryColor">Primary Color</Label>
+                <div className="flex items-center gap-2">
+                  <div 
+                    className="h-8 w-8 rounded-md border border-gray-600" 
+                    style={{ backgroundColor: branding.primaryColor }}
+                  />
+                  <Input
+                    id="primaryColor"
+                    name="primaryColor"
+                    type="text"
+                    value={branding.primaryColor}
+                    onChange={handleInputChange}
+                    className="bg-gray-800 border-gray-700"
+                  />
+                </div>
+                <p className="text-xs text-gray-400">Used for buttons, links, and highlights.</p>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="secondaryColor">Secondary Color</Label>
+                <div className="flex items-center gap-2">
+                  <div 
+                    className="h-8 w-8 rounded-md border border-gray-600" 
+                    style={{ backgroundColor: branding.secondaryColor }}
+                  />
+                  <Input
+                    id="secondaryColor"
+                    name="secondaryColor"
+                    type="text"
+                    value={branding.secondaryColor}
+                    onChange={handleInputChange}
+                    className="bg-gray-800 border-gray-700"
+                  />
+                </div>
+                <p className="text-xs text-gray-400">Used for backgrounds and secondary elements.</p>
+              </div>
+            </div>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="theme" className="space-y-6">
+          <div className="space-y-4">
+            <Label>Portal Theme</Label>
+            <RadioGroup 
+              value={branding.theme} 
+              onValueChange={handleThemeChange}
+              className="grid grid-cols-1 md:grid-cols-2 gap-4"
+            >
+              <Card className={`cursor-pointer transition-all duration-200 ${branding.theme === 'dark' ? 'bg-[#1EAEDB]/10 border-[#1EAEDB]' : 'bg-gray-900/30 border-gray-700'}`}>
+                <CardContent className="p-4 flex items-center gap-3">
+                  <RadioGroupItem value="dark" id="theme-dark" />
+                  <Label htmlFor="theme-dark" className="cursor-pointer">
+                    <div>
+                      <h3 className="font-medium">Dark Theme</h3>
+                      <p className="text-sm text-gray-400">A sleek dark interface that's easy on the eyes</p>
+                    </div>
+                  </Label>
+                </CardContent>
+              </Card>
+              
+              <Card className={`cursor-pointer transition-all duration-200 ${branding.theme === 'light' ? 'bg-[#1EAEDB]/10 border-[#1EAEDB]' : 'bg-gray-900/30 border-gray-700'}`}>
+                <CardContent className="p-4 flex items-center gap-3">
+                  <RadioGroupItem value="light" id="theme-light" />
+                  <Label htmlFor="theme-light" className="cursor-pointer">
+                    <div>
+                      <h3 className="font-medium">Light Theme</h3>
+                      <p className="text-sm text-gray-400">A bright, clean interface with good contrast</p>
+                    </div>
+                  </Label>
+                </CardContent>
+              </Card>
+              
+              <Card className={`cursor-pointer transition-all duration-200 ${branding.theme === 'custom' ? 'bg-[#1EAEDB]/10 border-[#1EAEDB]' : 'bg-gray-900/30 border-gray-700'}`}>
+                <CardContent className="p-4 flex items-center gap-3">
+                  <RadioGroupItem value="custom" id="theme-custom" />
+                  <Label htmlFor="theme-custom" className="cursor-pointer">
+                    <div>
+                      <h3 className="font-medium">Custom Theme</h3>
+                      <p className="text-sm text-gray-400">Build your own theme with custom colors</p>
+                    </div>
+                  </Label>
+                </CardContent>
+              </Card>
+            </RadioGroup>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="preview" className="space-y-6">
+          <div className="bg-gray-900/50 border border-gray-700 rounded-lg p-6 flex flex-col items-center justify-center min-h-[300px]">
+            <div className="text-center mb-4">
+              <p className="text-sm text-gray-400 mb-2">Portal Preview</p>
+              <h3 className="text-xl font-semibold">{branding.portalName}</h3>
+            </div>
+            
+            <div className="w-full max-w-md bg-gray-800 border border-gray-700 rounded-lg p-4">
+              <div className="flex items-center justify-between mb-4">
+                {branding.logo ? (
+                  <img 
+                    src={URL.createObjectURL(branding.logo)} 
+                    alt="Portal logo" 
+                    className="h-8"
+                  />
+                ) : (
+                  <div 
+                    className="h-8 px-3 flex items-center justify-center text-sm font-medium bg-gray-700 rounded"
+                    style={{ backgroundColor: branding.primaryColor }}
+                  >
+                    LOGO
+                  </div>
                 )}
-              />
-            </form>
-          </Form>
-        </div>
-
-        <div className="bg-gray-900 rounded-lg border border-gray-700 p-4">
-          <div className="mb-4">
-            <h3 className="text-lg font-medium">Portal Preview</h3>
-            <p className="text-sm text-gray-400">See how your branding will look</p>
-          </div>
-          
-          <Tabs value={activePreview} onValueChange={setActivePreview} className="mt-4">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="desktop">Desktop</TabsTrigger>
-              <TabsTrigger value="mobile">Mobile</TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="desktop" className="mt-4">
-              <div className="border border-gray-700 rounded-lg overflow-hidden bg-black">
-                <div 
-                  className="h-12 flex items-center px-4 border-b border-gray-800"
-                  style={{ backgroundColor: primaryColor }}
-                >
-                  <div className="font-medium text-white">{portalTitle}</div>
-                </div>
-                <div className="p-4">
-                  <div className="h-40 bg-gray-800 rounded-lg animate-pulse"></div>
+                <div className="flex gap-2">
+                  <div className="w-2 h-2 rounded-full bg-gray-600"></div>
+                  <div className="w-2 h-2 rounded-full bg-gray-600"></div>
+                  <div className="w-2 h-2 rounded-full bg-gray-600"></div>
                 </div>
               </div>
-            </TabsContent>
-            
-            <TabsContent value="mobile" className="mt-4">
-              <div className="w-60 mx-auto border border-gray-700 rounded-lg overflow-hidden bg-black">
-                <div 
-                  className="h-10 flex items-center justify-center border-b border-gray-800"
-                  style={{ backgroundColor: primaryColor }}
-                >
-                  <div className="font-medium text-white text-sm truncate">{portalTitle}</div>
+              
+              <div className="space-y-3">
+                <div className="h-4 bg-gray-700 rounded w-3/4"></div>
+                <div className="h-4 bg-gray-700 rounded w-1/2"></div>
+                <div className="flex justify-center my-4">
+                  <div 
+                    className="px-4 py-2 rounded text-sm"
+                    style={{ backgroundColor: branding.primaryColor }}
+                  >
+                    Sample Button
+                  </div>
                 </div>
-                <div className="p-2">
-                  <div className="h-32 bg-gray-800 rounded-lg animate-pulse"></div>
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="h-16 bg-gray-700 rounded"></div>
+                  <div className="h-16 bg-gray-700 rounded"></div>
                 </div>
               </div>
-            </TabsContent>
-          </Tabs>
-          
-          <div className="mt-6 p-3 bg-gray-800 rounded-lg">
-            <p className="text-sm text-gray-300">
-              This is a simplified preview. The actual portal will include navigation menus,
-              content areas, and interactive elements styled with your brand colors.
-            </p>
+            </div>
+            
+            <p className="text-xs text-gray-400 mt-4">This is a simplified preview. The actual portal will reflect your branding choices.</p>
           </div>
-        </div>
-      </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
