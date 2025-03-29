@@ -1,8 +1,9 @@
+
 import React, { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { Calendar, UserIcon, MailIcon, LinkedinIcon, PhoneIcon, MapPinIcon, GraduationCapIcon, ArrowLeft, BriefcaseIcon } from "lucide-react";
+import { Calendar, UserIcon, MailIcon, LinkedinIcon, PhoneIcon, MapPinIcon, GraduationCapIcon, ArrowLeft, BriefcaseIcon, HeadphonesIcon } from "lucide-react";
 import { Drawer, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerClose } from "@/components/ui/drawer";
 import { AdvisorDetailView } from "@/components/profile/AdvisorDetailView";
 import { Link } from "react-router-dom";
@@ -17,6 +18,7 @@ const AdvisorProfile = () => {
     title: "Certified Financial Planner™",
     location: "Tampa, FL",
     email: "Daniel@awmfl.com",
+    serviceEmail: "Service@awmfl.com",
     phone: "(800) 555-1234",
     office: "New York, NY",
     hometown: "Asheville, NC",
@@ -196,6 +198,13 @@ const AdvisorProfile = () => {
                   <div className="flex items-center mt-3 text-white/80">
                     <PhoneIcon className="h-4 w-4 mr-2" />
                     <span>{advisorInfo.phone}</span>
+                  </div>
+                  
+                  <div className="flex items-center mt-3 text-white/80">
+                    <HeadphonesIcon className="h-4 w-4 mr-2" />
+                    <a href={`mailto:${advisorInfo.serviceEmail}`} className="hover:text-white">
+                      {advisorInfo.serviceEmail}
+                    </a>
                   </div>
                 </div>
               </div>

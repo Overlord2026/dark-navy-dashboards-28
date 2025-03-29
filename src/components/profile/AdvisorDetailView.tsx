@@ -1,5 +1,6 @@
+
 import React from "react";
-import { MailIcon, LinkedinIcon, MapPinIcon, HomeIcon, GraduationCapIcon, UserIcon, BriefcaseIcon, CheckCircleIcon } from "lucide-react";
+import { MailIcon, LinkedinIcon, MapPinIcon, HomeIcon, GraduationCapIcon, UserIcon, BriefcaseIcon, CheckCircleIcon, HeadphonesIcon } from "lucide-react";
 
 interface Experience {
   company: string;
@@ -13,6 +14,7 @@ interface AdvisorDetailViewProps {
     name: string;
     title: string;
     email: string;
+    serviceEmail?: string;
     location: string;
     hometown: string;
     education: string[];
@@ -50,6 +52,18 @@ export const AdvisorDetailView = ({ advisorInfo }: AdvisorDetailViewProps) => {
             {advisorInfo.email}
           </a>
         </div>
+        
+        {advisorInfo.serviceEmail && (
+          <div className="flex justify-between items-center py-4">
+            <div className="flex items-center">
+              <HeadphonesIcon className="h-5 w-5 mr-4 text-white/70" />
+              <span className="text-lg text-white">Service</span>
+            </div>
+            <a href={`mailto:${advisorInfo.serviceEmail}`} className="text-lg text-white underline">
+              {advisorInfo.serviceEmail}
+            </a>
+          </div>
+        )}
         
         <div className="flex justify-between items-center py-4">
           <div className="flex items-center">
