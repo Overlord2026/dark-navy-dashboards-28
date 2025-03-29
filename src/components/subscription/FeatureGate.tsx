@@ -5,14 +5,25 @@ import { Button } from '@/components/ui/button';
 import { Lock, Clock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
+import { PlanUpgradePrompt } from './PlanUpgradePrompt';
 
 interface FeatureGateProps {
   featureId: string;
   children: ReactNode;
   fallback?: ReactNode;
+  featureName?: string;
+  requiredPlans?: ('premium' | 'elite')[];
+  usePlanUpgradePrompt?: boolean;
 }
 
-export function FeatureGate({ featureId, children, fallback }: FeatureGateProps) {
+export function FeatureGate({ 
+  featureId, 
+  children, 
+  fallback, 
+  featureName, 
+  requiredPlans = ['premium'],
+  usePlanUpgradePrompt = false
+}: FeatureGateProps) {
   const { 
     isFeatureAvailable, 
     isUpgradeRequired, 
@@ -29,6 +40,11 @@ export function FeatureGate({ featureId, children, fallback }: FeatureGateProps)
     return <>{fallback}</>;
   }
   
+  // Use the new PlanUpgradePrompt component if specified
+  if (usePlanUpgradePrompt) {
+    return <PlanUpgradePrompt requiredPlans={requiredPlans} featureName={featureName} />;
+  }
+  
   const isTwoWeeksOrLess = daysRemainingInTrial !== null && daysRemainingInTrial <= 14;
   
   return (
@@ -40,7 +56,7 @@ export function FeatureGate({ featureId, children, fallback }: FeatureGateProps)
           <Lock className="h-8 w-8 text-primary" />
         )}
       </div>
-      <h3 className="text-xl font-semibold">Premium Feature</h3>
+      <h3 className="text-xl font-semibold">{featureName || 'Premium Feature'}</h3>
       
       {isInFreeTrial ? (
         <>
