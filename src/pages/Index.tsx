@@ -14,6 +14,7 @@ import { TrialEndingSoonBanner } from "@/components/dashboard/TrialEndingSoonBan
 import { ExpirationNotice } from "@/components/subscription/ExpirationNotice";
 import { TrialExtensionBanner } from "@/components/subscription/TrialExtensionBanner";
 import { BoutiqueFamilyOfficeBanner } from "@/components/subscription/BoutiqueFamilyOfficeBanner";
+import { FeedbackSurveyBanner } from "@/components/dashboard/FeedbackSurveyBanner";
 import { useSubscription } from "@/context/SubscriptionContext"; 
 import { toast } from "sonner";
 
@@ -28,6 +29,7 @@ const Dashboard = () => {
   const [showExpirationNotice, setShowExpirationNotice] = useState(false);
   const [showExtensionBanner, setShowExtensionBanner] = useState(false);
   const [showBoutiqueClientBanner, setShowBoutiqueClientBanner] = useState(false);
+  const [showFeedbackBanner, setShowFeedbackBanner] = useState(false);
   const { 
     isInFreeTrial, 
     daysRemainingInTrial, 
@@ -100,6 +102,17 @@ const Dashboard = () => {
     }
   }, [isInFreeTrial, daysRemainingInTrial, trialWasExtended, checklistItems]);
 
+  useEffect(() => {
+    const hasSeenFeedbackBanner = localStorage.getItem('hasSeenFeedbackBanner');
+    if (!hasSeenFeedbackBanner) {
+      const feedbackTimer = setTimeout(() => {
+        setShowFeedbackBanner(true);
+      }, 3000);
+      
+      return () => clearTimeout(feedbackTimer);
+    }
+  }, [loading]);
+
   const handleDismissWelcome = () => {
     setShowWelcomeBanner(false);
     localStorage.setItem('hasSeenWelcomeBanner', 'true');
@@ -128,6 +141,11 @@ const Dashboard = () => {
   const handleDismissBoutiqueClientBanner = () => {
     setShowBoutiqueClientBanner(false);
     localStorage.setItem('hasSeenBoutiqueClientBanner', 'true');
+  };
+
+  const handleDismissFeedback = () => {
+    setShowFeedbackBanner(false);
+    localStorage.setItem('hasSeenFeedbackBanner', 'true');
   };
 
   const toggleMetrics = () => {
@@ -197,6 +215,10 @@ const Dashboard = () => {
           
           {showExpirationNotice && (
             <ExpirationNotice onDismiss={handleDismissExpirationNotice} />
+          )}
+          
+          {showFeedbackBanner && (
+            <FeedbackSurveyBanner onDismiss={handleDismissFeedback} />
           )}
           
           <div className="flex flex-col lg:flex-row gap-6">

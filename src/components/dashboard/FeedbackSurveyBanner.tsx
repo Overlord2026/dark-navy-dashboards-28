@@ -1,0 +1,162 @@
+
+import React, { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
+import { StarIcon, CheckIcon, X } from 'lucide-react';
+import { toast } from 'sonner';
+
+interface FeedbackSurveyBannerProps {
+  onDismiss: () => void;
+}
+
+export function FeedbackSurveyBanner({ onDismiss }: FeedbackSurveyBannerProps) {
+  const [step, setStep] = useState<'rating' | 'feedback' | 'thankyou'>('rating');
+  const [rating, setRating] = useState<number | null>(null);
+  const [feedback, setFeedback] = useState('');
+  const [improvements, setImprovements] = useState('');
+  
+  const handleRatingSubmit = () => {
+    if (rating !== null) {
+      setStep('feedback');
+    } else {
+      toast.error('Please select a rating before continuing');
+    }
+  };
+  
+  const handleFeedbackSubmit = () => {
+    // In a real application, you would send this data to your backend
+    console.log('Submitting feedback:', { rating, feedback, improvements });
+    setStep('thankyou');
+    
+    // Simulate API call
+    setTimeout(() => {
+      toast.success('Thank you for your feedback!');
+      onDismiss();
+    }, 2000);
+  };
+  
+  const handleStarClick = (selectedRating: number) => {
+    setRating(selectedRating);
+  };
+  
+  return (
+    <div className="bg-gradient-to-r from-purple-600/20 to-indigo-500/20 rounded-lg p-6 mb-6 animate-fade-in border border-purple-500/30">
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-xl font-semibold">
+          {step === 'rating' && "How has your experience been so far?"}
+          {step === 'feedback' && "We'd love to hear more details"}
+          {step === 'thankyou' && "Thank you for your feedback!"}
+        </h2>
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          onClick={onDismiss}
+          className="h-8 w-8"
+        >
+          <X className="h-4 w-4" />
+        </Button>
+      </div>
+      
+      {step === 'rating' && (
+        <>
+          <p className="text-muted-foreground mb-6">
+            Your feedback helps us enhance the platform and deliver a better experience.
+          </p>
+          
+          <div className="flex flex-col space-y-6">
+            <div className="flex flex-col items-center">
+              <p className="text-sm font-medium mb-3">Rate your overall experience</p>
+              <div className="flex space-x-2">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <button
+                    key={star}
+                    onClick={() => handleStarClick(star)}
+                    className={`p-2 rounded-full transition-colors ${
+                      rating !== null && star <= rating 
+                        ? 'text-yellow-400 bg-yellow-400/10' 
+                        : 'text-muted-foreground hover:text-yellow-400 hover:bg-yellow-400/10'
+                    }`}
+                  >
+                    <StarIcon className="h-8 w-8" />
+                  </button>
+                ))}
+              </div>
+            </div>
+            
+            <div className="flex justify-end">
+              <Button 
+                onClick={handleRatingSubmit}
+                className="bg-purple-600 hover:bg-purple-700"
+              >
+                Continue
+              </Button>
+            </div>
+          </div>
+        </>
+      )}
+      
+      {step === 'feedback' && (
+        <>
+          <p className="text-muted-foreground mb-6">
+            Thank you for your rating! Please share more specific feedback to help us improve.
+          </p>
+          
+          <div className="space-y-4">
+            <div>
+              <label htmlFor="value-feedback" className="block text-sm font-medium mb-2">
+                What features are you finding most valuable?
+              </label>
+              <Textarea
+                id="value-feedback"
+                placeholder="Tell us which tools and features you're enjoying..."
+                value={feedback}
+                onChange={(e) => setFeedback(e.target.value)}
+                className="min-h-[80px]"
+              />
+            </div>
+            
+            <div>
+              <label htmlFor="improvements" className="block text-sm font-medium mb-2">
+                Is there anything you'd like us to improve?
+              </label>
+              <Textarea
+                id="improvements"
+                placeholder="Any suggestions for improvements or new features..."
+                value={improvements}
+                onChange={(e) => setImprovements(e.target.value)}
+                className="min-h-[80px]"
+              />
+            </div>
+            
+            <div className="flex justify-end gap-2 mt-4">
+              <Button 
+                variant="outline" 
+                onClick={() => setStep('rating')}
+              >
+                Back
+              </Button>
+              <Button 
+                onClick={handleFeedbackSubmit}
+                className="bg-purple-600 hover:bg-purple-700"
+              >
+                Submit Feedback
+              </Button>
+            </div>
+          </div>
+        </>
+      )}
+      
+      {step === 'thankyou' && (
+        <div className="flex flex-col items-center justify-center py-6">
+          <div className="bg-green-500/20 p-3 rounded-full mb-4">
+            <CheckIcon className="h-8 w-8 text-green-500" />
+          </div>
+          <p className="text-center text-muted-foreground">
+            Thank you for sharing your thoughts! Your feedback is invaluable as we continue to 
+            improve our platform.
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}
