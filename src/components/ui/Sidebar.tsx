@@ -41,6 +41,7 @@ const mainNavItems: NavItem[] = [
   { icon: UsersIcon, label: "Clients", href: "/clients" },
   { icon: FileIcon, label: "Documents", href: "/documents" },
   { icon: CalendarIcon, label: "Calendar", href: "/calendar" },
+  { icon: HomeIcon, label: "Properties", href: "/properties" },
 ];
 
 // Properties Management navigation items
