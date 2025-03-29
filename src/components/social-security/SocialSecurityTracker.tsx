@@ -5,36 +5,47 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ExternalLinkIcon, PlusCircleIcon, TrashIcon, UserIcon } from "lucide-react";
+import { ExternalLinkIcon, PlusCircleIcon, TrashIcon, UserIcon, CalendarIcon } from "lucide-react";
 import { toast } from "sonner";
+import { useUser } from "@/context/UserContext";
+
+type EstimatesByAge = {
+  age62: number;
+  age67: number;
+  age70: number;
+};
 
 type FamilyMemberAccount = {
   id: string;
   name: string;
   relationship: string;
-  monthlyEstimate: number;
-  retirementAge: number;
+  estimates: EstimatesByAge;
+  preferredRetirementAge: number;
   accountLinked: boolean;
 };
 
 export const SocialSecurityTracker = () => {
+  const { userProfile } = useUser();
   const [familyMembers, setFamilyMembers] = useState<FamilyMemberAccount[]>([
     {
       id: "1",
-      name: "Anthony Gomez",
+      name: `${userProfile.firstName} ${userProfile.lastName}`,
       relationship: "Self",
-      monthlyEstimate: 2800,
-      retirementAge: 67,
+      estimates: {
+        age62: 2100,
+        age67: 2800,
+        age70: 3500
+      },
+      preferredRetirementAge: 67,
       accountLinked: true
     }
   ]);
   
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
-  const [newMember, setNewMember] = useState<Omit<FamilyMemberAccount, "id" | "accountLinked">>({
+  const [newMember, setNewMember] = useState<Omit<FamilyMemberAccount, "id" | "accountLinked" | "estimates">>({
     name: "",
     relationship: "",
-    monthlyEstimate: 0,
-    retirementAge: 67
+    preferredRetirementAge: 67
   });
 
   const handleAddMember = () => {
@@ -47,14 +58,18 @@ export const SocialSecurityTracker = () => {
     setFamilyMembers([...familyMembers, {
       ...newMember,
       id,
+      estimates: {
+        age62: 0,
+        age67: 0,
+        age70: 0
+      },
       accountLinked: false
     }]);
     
     setNewMember({
       name: "",
       relationship: "",
-      monthlyEstimate: 0,
-      retirementAge: 67
+      preferredRetirementAge: 67
     });
     
     setIsAddDialogOpen(false);
@@ -62,17 +77,30 @@ export const SocialSecurityTracker = () => {
   };
 
   const handleLinkAccount = (id: string) => {
-    // In a real implementation, this would open SSS.gov authentication
+    // In a real implementation, this would open SSA.gov authentication
     window.open("https://www.ssa.gov/myaccount/", "_blank");
     
-    // For demo purposes, we'll just update the state
+    // For demo purposes, we'll just update the state with estimated values
     setTimeout(() => {
       setFamilyMembers(members => 
-        members.map(member => 
-          member.id === id ? { ...member, accountLinked: true } : member
-        )
+        members.map(member => {
+          if (member.id === id) {
+            // Generate realistic estimates based on age
+            const baseEstimate = 2000 + Math.floor(Math.random() * 1000);
+            return { 
+              ...member, 
+              accountLinked: true,
+              estimates: {
+                age62: Math.floor(baseEstimate * 0.75),
+                age67: baseEstimate,
+                age70: Math.floor(baseEstimate * 1.25)
+              }
+            };
+          }
+          return member;
+        })
       );
-      toast.success("Account linked successfully");
+      toast.success("Account linked successfully - benefit estimates updated");
     }, 1000);
   };
 
@@ -126,24 +154,14 @@ export const SocialSecurityTracker = () => {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="estimate">Monthly Estimate ($)</Label>
+                <Label htmlFor="retirement-age">Preferred Retirement Age</Label>
                 <Input 
-                  id="estimate" 
+                  id="retirement-age" 
                   type="number" 
-                  placeholder="0" 
-                  value={newMember.monthlyEstimate || ''}
-                  onChange={(e) => setNewMember({...newMember, monthlyEstimate: Number(e.target.value)})}
+                  value={newMember.preferredRetirementAge}
+                  onChange={(e) => setNewMember({...newMember, preferredRetirementAge: Number(e.target.value)})}
                 />
-                <p className="text-xs text-muted-foreground">Enter 0 if unknown, you can update after linking account</p>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="age">Retirement Age</Label>
-                <Input 
-                  id="age" 
-                  type="number" 
-                  value={newMember.retirementAge}
-                  onChange={(e) => setNewMember({...newMember, retirementAge: Number(e.target.value)})}
-                />
+                <p className="text-xs text-muted-foreground">After linking to SSA.gov, we'll show estimates for various retirement ages</p>
               </div>
             </div>
             <DialogFooter>
@@ -179,25 +197,64 @@ export const SocialSecurityTracker = () => {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="space-y-2">
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Monthly Benefit:</span>
-                  <span className="font-medium">${member.monthlyEstimate.toLocaleString()}</span>
+              {member.accountLinked ? (
+                <div className="space-y-3">
+                  <div className="bg-muted p-3 rounded-md space-y-2">
+                    <h4 className="font-medium text-sm flex items-center">
+                      <CalendarIcon className="h-4 w-4 mr-2" />
+                      Retirement Benefit Estimates
+                    </h4>
+                    <div className="grid grid-cols-3 gap-2 text-center">
+                      <div className="bg-card p-2 rounded border">
+                        <div className="text-xs text-muted-foreground">Age 62</div>
+                        <div className="font-medium">${member.estimates.age62}</div>
+                        <div className="text-xs text-muted-foreground">per month</div>
+                      </div>
+                      <div className="bg-card p-2 rounded border border-primary">
+                        <div className="text-xs text-muted-foreground">Age 67</div>
+                        <div className="font-medium">${member.estimates.age67}</div>
+                        <div className="text-xs text-muted-foreground">per month</div>
+                      </div>
+                      <div className="bg-card p-2 rounded border">
+                        <div className="text-xs text-muted-foreground">Age 70</div>
+                        <div className="font-medium">${member.estimates.age70}</div>
+                        <div className="text-xs text-muted-foreground">per month</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex justify-between pt-1">
+                    <span className="text-sm text-muted-foreground">Preferred Retirement Age:</span>
+                    <span className="text-sm font-medium">{member.preferredRetirementAge}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-sm text-muted-foreground">Annual at preferred age:</span>
+                    <span className="text-sm font-medium">
+                      ${calculateAnnualBenefit(
+                        member.preferredRetirementAge <= 62 ? member.estimates.age62 : 
+                        member.preferredRetirementAge >= 70 ? member.estimates.age70 : 
+                        member.estimates.age67
+                      ).toLocaleString()}
+                    </span>
+                  </div>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Annual Benefit:</span>
-                  <span className="font-medium">${calculateAnnualBenefit(member.monthlyEstimate).toLocaleString()}</span>
+              ) : (
+                <div className="space-y-3">
+                  <div className="border-2 border-dashed border-muted-foreground/20 rounded-md p-4 text-center">
+                    <p className="text-muted-foreground">
+                      Link to SSA.gov to see benefit estimates for different retirement ages
+                    </p>
+                  </div>
+                  <div className="flex justify-between pt-1">
+                    <span className="text-sm text-muted-foreground">Preferred Retirement Age:</span>
+                    <span className="text-sm font-medium">{member.preferredRetirementAge}</span>
+                  </div>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Retirement Age:</span>
-                  <span className="font-medium">{member.retirementAge}</span>
-                </div>
-                <div className="flex items-center justify-between mt-1">
-                  <span className="text-sm text-muted-foreground">Account Status:</span>
-                  <span className={`text-sm font-medium ${member.accountLinked ? 'text-green-500' : 'text-yellow-500'}`}>
-                    {member.accountLinked ? 'Linked' : 'Not Linked'}
-                  </span>
-                </div>
+              )}
+              <div className="flex items-center justify-between mt-3">
+                <span className="text-sm text-muted-foreground">Account Status:</span>
+                <span className={`text-sm font-medium ${member.accountLinked ? 'text-green-500' : 'text-yellow-500'}`}>
+                  {member.accountLinked ? 'Linked' : 'Not Linked'}
+                </span>
               </div>
             </CardContent>
             <CardFooter>
@@ -220,8 +277,13 @@ export const SocialSecurityTracker = () => {
       <div className="bg-card p-4 rounded-lg border border-primary mb-4">
         <h3 className="font-medium mb-2">About Social Security Benefits</h3>
         <p className="text-muted-foreground text-sm mb-2">
-          Social Security provides a foundation of income for millions of Americans when they retire. You can link family members' accounts to track their benefits.
+          Social Security provides different benefit amounts depending on when you choose to start receiving benefits:
         </p>
+        <ul className="text-muted-foreground text-sm list-disc pl-5 space-y-1 mb-2">
+          <li>Age 62: You'll receive reduced benefits (approximately 70-75% of your full retirement benefit)</li>
+          <li>Age 67: Full retirement age for those born after 1960, where you receive 100% of your benefit</li>
+          <li>Age 70: Maximum benefit (approximately 124-132% of your full retirement benefit)</li>
+        </ul>
         <p className="text-muted-foreground text-sm">
           Visit <a href="https://www.ssa.gov/myaccount/" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">SSA.gov</a> to create or access your account and get personalized benefit estimates.
         </p>
