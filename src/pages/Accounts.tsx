@@ -12,7 +12,11 @@ import {
   ClipboardList,
   DollarSign,
   Home,
-  Filter
+  Filter,
+  PieChart,
+  Download,
+  ArrowUpDown,
+  RefreshCcw
 } from "lucide-react";
 import { AddAccountDialog, AccountData } from "@/components/accounts/AddAccountDialog";
 import { AccountLinkTypeSelector } from "@/components/accounts/AccountLinkTypeSelector";
@@ -35,6 +39,8 @@ import {
   TableHeader, 
   TableRow 
 } from "@/components/ui/table";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { format } from "date-fns";
 
 type AccountSection = {
   id: string;
@@ -64,6 +70,19 @@ const Accounts = () => {
   const [activeAccountType, setActiveAccountType] = useState<string | null>(null);
   const [accountDetailView, setAccountDetailView] = useState(false);
   const [selectedAccount, setSelectedAccount] = useState<AccountData | null>(null);
+  const [showAnalytics, setShowAnalytics] = useState(false);
+  const [accountHistory, setAccountHistory] = useState<any[]>([
+    { date: '2023-01-01', balance: 15000 },
+    { date: '2023-02-01', balance: 16200 },
+    { date: '2023-03-01', balance: 17500 },
+    { date: '2023-04-01', balance: 16800 },
+    { date: '2023-05-01', balance: 18200 },
+    { date: '2023-06-01', balance: 19500 },
+    { date: '2023-07-01', balance: 20300 },
+    { date: '2023-08-01', balance: 21600 },
+    { date: '2023-09-01', balance: 22800 },
+    { date: '2023-10-01', balance: 24000 },
+  ]);
 
   const [accountSections, setAccountSections] = useState<AccountSection[]>([
     {
@@ -397,7 +416,128 @@ const Accounts = () => {
   const investmentTotal = calculateTotal(investmentAccounts);
   const retirementTotal = calculateTotal(retirementAccounts);
 
-  const renderAccountTypeDetails = (accounts: AccountData[], title: string) => {
+  const generateTransactions = (account: AccountData) => {
+    const today = new Date();
+    const transactions = [];
+    const types = {
+      "Checking": ["Grocery Store", "ATM Withdrawal", "Online Payment", "Direct Deposit", "Restaurant", "Utility Bill"],
+      "Savings": ["Transfer from Checking", "Interest Payment", "Withdrawal", "Deposit", "Automatic Savings"],
+      "Investment": ["Stock Purchase", "Dividend Payment", "ETF Purchase", "Fund Management Fee", "Stock Sale"],
+      "Retirement": ["401(k) Contribution", "IRA Deposit", "Fund Rebalancing", "Dividend Reinvestment", "Admin Fee"]
+    };
+    
+    const transactionTypes = types[account.type as keyof typeof types] || types["Checking"];
+    
+    const count = Math.floor(Math.random() * 6) + 5;
+    
+    for (let i = 0; i < count; i++) {
+      const daysAgo = i * 3 + Math.floor(Math.random() * 3);
+      const date = new Date(today);
+      date.setDate(date.getDate() - daysAgo);
+      
+      const isDeposit = Math.random() > 0.7;
+      const amount = isDeposit 
+        ? Math.floor(Math.random() * 2000) + 500 
+        : -(Math.floor(Math.random() * 300) + 50);
+        
+      const typeIndex = Math.floor(Math.random() * transactionTypes.length);
+      
+      transactions.push({
+        date: format(date, 'yyyy-MM-dd'),
+        description: transactionTypes[typeIndex],
+        amount: amount,
+        type: amount > 0 ? 'credit' : 'debit'
+      });
+    }
+    
+    return transactions.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  };
+
+  const toggleAnalytics = () => {
+    setShowAnalytics(!showAnalytics);
+  };
+
+  const renderAnalytics = (accounts: AccountData[], title: string) => {
+    const total = calculateTotal(accounts);
+    const pieData = accounts.map(account => ({
+      name: account.name,
+      value: parseFloat(account.balance.replace(/,/g, "")) || 0
+    }));
+    
+    return (
+      <div className={`p-4 rounded-lg ${isLightTheme ? "bg-[#F2F0E1]" : "bg-[#1c2e4a]"} mb-4`}>
+        <h3 className="text-lg font-medium mb-3">{title} Analytics</h3>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <h4 className="text-sm font-medium mb-2">Account Breakdown</h4>
+            <div className="space-y-3">
+              {accounts.map((account, index) => {
+                const percent = Math.round(
+                  (parseFloat(account.balance.replace(/,/g, "")) / total) * 100
+                );
+                
+                return (
+                  <div key={index} className="space-y-1">
+                    <div className="flex justify-between text-sm">
+                      <span>{account.name}</span>
+                      <span>${account.balance} ({percent}%)</span>
+                    </div>
+                    <div className="w-full bg-gray-700 h-2 rounded-full">
+                      <div 
+                        className="bg-blue-500 h-2 rounded-full" 
+                        style={{ width: `${percent}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+          
+          <div>
+            <h4 className="text-sm font-medium mb-2">Growth Over Time</h4>
+            <div className="h-40 flex items-end gap-1">
+              {accountHistory.map((item, index) => {
+                const heightPercent = (item.balance / 24000) * 100;
+                return (
+                  <div key={index} className="flex flex-col items-center flex-1">
+                    <div 
+                      className="w-full bg-blue-500 rounded-t"
+                      style={{ height: `${heightPercent}%` }}
+                    ></div>
+                    <span className="text-xs mt-1">
+                      {format(new Date(item.date), 'MMM')}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+        
+        <div className="mt-4">
+          <h4 className="text-sm font-medium mb-2">Performance Summary</h4>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div className={`p-3 rounded-lg ${isLightTheme ? "bg-[#E9E7D8]" : "bg-[#121a2c]"}`}>
+              <p className="text-sm text-gray-400">Month-over-Month</p>
+              <p className="text-lg font-semibold text-green-400">+5.3%</p>
+            </div>
+            <div className={`p-3 rounded-lg ${isLightTheme ? "bg-[#E9E7D8]" : "bg-[#121a2c]"}`}>
+              <p className="text-sm text-gray-400">Quarter-over-Quarter</p>
+              <p className="text-lg font-semibold text-green-400">+12.7%</p>
+            </div>
+            <div className={`p-3 rounded-lg ${isLightTheme ? "bg-[#E9E7D8]" : "bg-[#121a2c]"}`}>
+              <p className="text-sm text-gray-400">Year-to-Date</p>
+              <p className="text-lg font-semibold text-green-400">+33.2%</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const renderInteractiveAccountTypeDetails = (accounts: AccountData[], title: string) => {
     if (accounts.length === 0) {
       return (
         <div className="flex flex-col items-center justify-center p-8">
@@ -417,6 +557,53 @@ const Accounts = () => {
 
     return (
       <div className="space-y-4">
+        <div className="flex justify-between items-center">
+          <h3 className="text-lg font-medium">{title} Accounts</h3>
+          <div className="flex gap-2">
+            <Button 
+              variant="outline" 
+              size="sm"
+              className={`${
+                isLightTheme 
+                  ? "border-[#DCD8C0] text-[#222222] hover:bg-[#E9E7D8]" 
+                  : "border-gray-700 text-white hover:bg-[#1c2e4a]"
+              }`}
+              onClick={() => setShowAnalytics(!showAnalytics)}
+            >
+              <PieChart className="h-4 w-4 mr-2" />
+              {showAnalytics ? "Hide Analytics" : "Show Analytics"}
+            </Button>
+            
+            <Button 
+              variant="outline" 
+              size="sm"
+              className={`${
+                isLightTheme 
+                  ? "border-[#DCD8C0] text-[#222222] hover:bg-[#E9E7D8]" 
+                  : "border-gray-700 text-white hover:bg-[#1c2e4a]"
+              }`}
+            >
+              <Download className="h-4 w-4 mr-2" />
+              Export
+            </Button>
+            
+            <Button 
+              variant="outline" 
+              size="sm"
+              className={`${
+                isLightTheme 
+                  ? "border-[#DCD8C0] text-[#222222] hover:bg-[#E9E7D8]" 
+                  : "border-gray-700 text-white hover:bg-[#1c2e4a]"
+              }`}
+            >
+              <RefreshCcw className="h-4 w-4 mr-2" />
+              Refresh
+            </Button>
+          </div>
+        </div>
+        
+        {showAnalytics && renderAnalytics(accounts, title)}
+        
         <div className={`p-4 rounded-lg ${isLightTheme ? "bg-[#F2F0E1]" : "bg-[#1c2e4a]"}`}>
           <div className="flex justify-between items-center mb-4">
             <h3 className="text-lg font-medium">{title} Summary</h3>
@@ -429,6 +616,12 @@ const Accounts = () => {
                 <TableHead>Account Name</TableHead>
                 <TableHead>Account Number</TableHead>
                 <TableHead className="text-right">Balance</TableHead>
+                <TableHead>
+                  <div className="flex items-center justify-end">
+                    <span className="sr-only">Sort</span>
+                    <ArrowUpDown className="h-4 w-4" />
+                  </div>
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -441,38 +634,207 @@ const Accounts = () => {
                   <TableCell className="font-medium">{account.name}</TableCell>
                   <TableCell>{account.accountNumber}</TableCell>
                   <TableCell className="text-right">${account.balance}</TableCell>
+                  <TableCell>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8 p-0"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleAccountClick(account);
+                      }}
+                    >
+                      <ChevronDown className="h-4 w-4" />
+                      <span className="sr-only">View details</span>
+                    </Button>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
         </div>
         
-        <Button 
-          onClick={openMainAddDialog}
-          variant="outline" 
-          className={`${
-            isLightTheme 
-              ? "border-[#DCD8C0] text-[#222222] hover:bg-[#E9E7D8]" 
-              : "border-gray-700 text-white hover:bg-[#1c2e4a]"
-          }`}
-        >
-          <Plus className="mr-2 h-4 w-4" />
-          Add {title} Account
-        </Button>
+        <div className="flex justify-between items-center">
+          <Button 
+            onClick={openMainAddDialog}
+            variant="outline" 
+            className={`${
+              isLightTheme 
+                ? "border-[#DCD8C0] text-[#222222] hover:bg-[#E9E7D8]" 
+                : "border-gray-700 text-white hover:bg-[#1c2e4a]"
+            }`}
+          >
+            <Plus className="mr-2 h-4 w-4" />
+            Add {title} Account
+          </Button>
+          
+          {title === "Investment" && (
+            <Button
+              className={isLightTheme ? "bg-[#E9E7D8] text-[#222222] hover:bg-[#DCD8C0]" : "bg-white text-black hover:bg-slate-100"}
+              onClick={() => {
+                toast({
+                  title: "Portfolio Analysis",
+                  description: "Launching detailed portfolio analysis view"
+                });
+              }}
+            >
+              Portfolio Analysis
+            </Button>
+          )}
+          
+          {title === "Retirement" && (
+            <Button
+              className={isLightTheme ? "bg-[#E9E7D8] text-[#222222] hover:bg-[#DCD8C0]" : "bg-white text-black hover:bg-slate-100"}
+              onClick={() => {
+                toast({
+                  title: "Retirement Calculator",
+                  description: "Launching retirement planning calculator"
+                });
+              }}
+            >
+              Retirement Calculator
+            </Button>
+          )}
+        </div>
+        
+        {title === "Checking" && (
+          <Card className={`mt-4 ${isLightTheme ? "bg-[#F2F0E1]" : "bg-[#121a2c]"}`}>
+            <CardHeader>
+              <CardTitle className="text-base">Quick Actions</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                <Button
+                  variant="outline"
+                  className={`${
+                    isLightTheme 
+                      ? "border-[#DCD8C0] text-[#222222] hover:bg-[#E9E7D8]" 
+                      : "border-gray-700 text-white hover:bg-[#1c2e4a]"
+                  }`}
+                  onClick={() => {
+                    toast({
+                      title: "Transfer Initiated",
+                      description: "Redirecting to transfer page"
+                    });
+                  }}
+                >
+                  Transfer Money
+                </Button>
+                <Button
+                  variant="outline"
+                  className={`${
+                    isLightTheme 
+                      ? "border-[#DCD8C0] text-[#222222] hover:bg-[#E9E7D8]" 
+                      : "border-gray-700 text-white hover:bg-[#1c2e4a]"
+                  }`}
+                  onClick={() => {
+                    toast({
+                      title: "Bill Pay",
+                      description: "Redirecting to bill payment page"
+                    });
+                  }}
+                >
+                  Pay Bills
+                </Button>
+                <Button
+                  variant="outline"
+                  className={`${
+                    isLightTheme 
+                      ? "border-[#DCD8C0] text-[#222222] hover:bg-[#E9E7D8]" 
+                      : "border-gray-700 text-white hover:bg-[#1c2e4a]"
+                  }`}
+                  onClick={() => {
+                    toast({
+                      title: "Statements",
+                      description: "Fetching your recent statements"
+                    });
+                  }}
+                >
+                  View Statements
+                </Button>
+                <Button
+                  variant="outline"
+                  className={`${
+                    isLightTheme 
+                      ? "border-[#DCD8C0] text-[#222222] hover:bg-[#E9E7D8]" 
+                      : "border-gray-700 text-white hover:bg-[#1c2e4a]"
+                  }`}
+                  onClick={() => {
+                    toast({
+                      title: "Budget Analysis",
+                      description: "Analyzing your spending patterns"
+                    });
+                  }}
+                >
+                  Budget Analysis
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+        
+        {title === "Savings" && (
+          <Card className={`mt-4 ${isLightTheme ? "bg-[#F2F0E1]" : "bg-[#121a2c]"}`}>
+            <CardHeader>
+              <CardTitle className="text-base">Savings Goals</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div>
+                  <div className="flex justify-between mb-1">
+                    <span>Emergency Fund</span>
+                    <span>$8,500 / $15,000</span>
+                  </div>
+                  <div className="w-full bg-gray-700 h-2 rounded-full">
+                    <div 
+                      className="bg-blue-500 h-2 rounded-full" 
+                      style={{ width: '57%' }}
+                    ></div>
+                  </div>
+                </div>
+                <div>
+                  <div className="flex justify-between mb-1">
+                    <span>Vacation</span>
+                    <span>$3,200 / $5,000</span>
+                  </div>
+                  <div className="w-full bg-gray-700 h-2 rounded-full">
+                    <div 
+                      className="bg-green-500 h-2 rounded-full" 
+                      style={{ width: '64%' }}
+                    ></div>
+                  </div>
+                </div>
+                
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className={`${
+                    isLightTheme 
+                      ? "border-[#DCD8C0] text-[#222222] hover:bg-[#E9E7D8]" 
+                      : "border-gray-700 text-white hover:bg-[#1c2e4a]"
+                  }`}
+                  onClick={() => {
+                    toast({
+                      title: "Savings Goals",
+                      description: "Opening savings goal management"
+                    });
+                  }}
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add New Goal
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
       </div>
     );
   };
 
-  const renderAccountDetails = () => {
+  const renderEnhancedAccountDetails = () => {
     if (!selectedAccount) return null;
     
-    const transactionData = [
-      { date: '2023-10-15', description: 'Direct Deposit', amount: 3250.00, type: 'credit' },
-      { date: '2023-10-12', description: 'Online Payment', amount: -420.75, type: 'debit' },
-      { date: '2023-10-08', description: 'ATM Withdrawal', amount: -200.00, type: 'debit' },
-      { date: '2023-10-05', description: 'Grocery Store', amount: -89.45, type: 'debit' },
-      { date: '2023-10-01', description: 'Utility Bill Payment', amount: -145.30, type: 'debit' },
-    ];
+    const transactions = selectedAccount.transactions || [];
     
     return (
       <div className="space-y-6">
@@ -489,17 +851,31 @@ const Accounts = () => {
             Back to Accounts
           </Button>
           
-          <Button
-            variant="outline"
-            className={`${
-              isLightTheme 
-                ? "border-[#DCD8C0] text-[#222222] hover:bg-[#E9E7D8]" 
-                : "border-gray-700 text-white hover:bg-[#1c2e4a]"
-            }`}
-          >
-            <Filter className="mr-2 h-4 w-4" />
-            Filter
-          </Button>
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              className={`${
+                isLightTheme 
+                  ? "border-[#DCD8C0] text-[#222222] hover:bg-[#E9E7D8]" 
+                  : "border-gray-700 text-white hover:bg-[#1c2e4a]"
+              }`}
+            >
+              <Filter className="mr-2 h-4 w-4" />
+              Filter
+            </Button>
+            
+            <Button
+              variant="outline"
+              className={`${
+                isLightTheme 
+                  ? "border-[#DCD8C0] text-[#222222] hover:bg-[#E9E7D8]" 
+                  : "border-gray-700 text-white hover:bg-[#1c2e4a]"
+              }`}
+            >
+              <Download className="mr-2 h-4 w-4" />
+              Export
+            </Button>
+          </div>
         </div>
         
         <div className={`p-6 rounded-lg ${isLightTheme ? "bg-[#F2F0E1] border border-[#DCD8C0]" : "bg-[#121a2c] border border-gray-800"}`}>
@@ -518,8 +894,55 @@ const Accounts = () => {
               <p className={`${isLightTheme ? "text-[#666666]" : "text-gray-400"}`}>
                 Current Balance
               </p>
+              
+              {selectedAccount.type === "Checking" && (
+                <p className={`text-xs ${isLightTheme ? "text-[#666666]" : "text-gray-400"} mt-1`}>
+                  Available: ${parseFloat(selectedAccount.balance.replace(/,/g, "")) - 500}
+                </p>
+              )}
+              
+              {selectedAccount.type === "Investment" && (
+                <div className="mt-1">
+                  <p className="text-xs text-green-500">+2.3% today</p>
+                  <p className="text-xs text-green-500">+8.7% YTD</p>
+                </div>
+              )}
             </div>
           </div>
+          
+          {selectedAccount.type === "Investment" && (
+            <div className="mb-6 grid grid-cols-3 gap-4">
+              <div className={`p-3 rounded-lg ${isLightTheme ? "bg-[#E9E7D8]" : "bg-[#1c2e4a]"}`}>
+                <p className="text-sm text-gray-400">Cash Balance</p>
+                <p className="text-lg font-semibold">$4,250.00</p>
+              </div>
+              <div className={`p-3 rounded-lg ${isLightTheme ? "bg-[#E9E7D8]" : "bg-[#1c2e4a]"}`}>
+                <p className="text-sm text-gray-400">Securities Value</p>
+                <p className="text-lg font-semibold">${(parseFloat(selectedAccount.balance.replace(/,/g, "")) - 4250).toLocaleString()}</p>
+              </div>
+              <div className={`p-3 rounded-lg ${isLightTheme ? "bg-[#E9E7D8]" : "bg-[#1c2e4a]"}`}>
+                <p className="text-sm text-gray-400">Buying Power</p>
+                <p className="text-lg font-semibold">$4,250.00</p>
+              </div>
+            </div>
+          )}
+          
+          {selectedAccount.type === "Retirement" && (
+            <div className="mb-6 grid grid-cols-3 gap-4">
+              <div className={`p-3 rounded-lg ${isLightTheme ? "bg-[#E9E7D8]" : "bg-[#1c2e4a]"}`}>
+                <p className="text-sm text-gray-400">YTD Contributions</p>
+                <p className="text-lg font-semibold">$12,500.00</p>
+              </div>
+              <div className={`p-3 rounded-lg ${isLightTheme ? "bg-[#E9E7D8]" : "bg-[#1c2e4a]"}`}>
+                <p className="text-sm text-gray-400">Annual Limit</p>
+                <p className="text-lg font-semibold">$22,500.00</p>
+              </div>
+              <div className={`p-3 rounded-lg ${isLightTheme ? "bg-[#E9E7D8]" : "bg-[#1c2e4a]"}`}>
+                <p className="text-sm text-gray-400">Remaining</p>
+                <p className="text-lg font-semibold">$10,000.00</p>
+              </div>
+            </div>
+          )}
           
           <div className="mt-6">
             <h3 className="text-lg font-medium mb-4">Recent Transactions</h3>
@@ -532,7 +955,7 @@ const Accounts = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {transactionData.map((transaction, index) => (
+                {transactions.map((transaction, index) => (
                   <TableRow key={index}>
                     <TableCell>{transaction.date}</TableCell>
                     <TableCell>{transaction.description}</TableCell>
@@ -550,6 +973,276 @@ const Accounts = () => {
               </TableBody>
             </Table>
           </div>
+          
+          {selectedAccount.type === "Investment" && (
+            <div className="mt-6">
+              <h3 className="text-lg font-medium mb-4">Holdings</h3>
+              <Table>
+                <TableHeader>
+                  <TableRow className={isLightTheme ? "bg-[#E9E7D8]" : "bg-[#1c2e4a]"}>
+                    <TableHead>Symbol</TableHead>
+                    <TableHead>Description</TableHead>
+                    <TableHead>Quantity</TableHead>
+                    <TableHead>Price</TableHead>
+                    <TableHead className="text-right">Value</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  <TableRow>
+                    <TableCell>VTI</TableCell>
+                    <TableCell>Vanguard Total Stock Market ETF</TableCell>
+                    <TableCell>152</TableCell>
+                    <TableCell>$245.68</TableCell>
+                    <TableCell className="text-right">$37,343.36</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>VXUS</TableCell>
+                    <TableCell>Vanguard Total International Stock ETF</TableCell>
+                    <TableCell>320</TableCell>
+                    <TableCell>$58.92</TableCell>
+                    <TableCell className="text-right">$18,854.40</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>BND</TableCell>
+                    <TableCell>Vanguard Total Bond Market ETF</TableCell>
+                    <TableCell>275</TableCell>
+                    <TableCell>$72.15</TableCell>
+                    <TableCell className="text-right">$19,841.25</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>AAPL</TableCell>
+                    <TableCell>Apple Inc.</TableCell>
+                    <TableCell>45</TableCell>
+                    <TableCell>$175.24</TableCell>
+                    <TableCell className="text-right">$7,885.80</TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </div>
+          )}
+          
+          {selectedAccount.type === "Retirement" && (
+            <div className="mt-6">
+              <h3 className="text-lg font-medium mb-4">Asset Allocation</h3>
+              <div className="grid grid-cols-3 gap-4">
+                <div>
+                  <h4 className="text-sm font-medium mb-2">Current Allocation</h4>
+                  <div className="space-y-2">
+                    <div>
+                      <div className="flex justify-between text-sm mb-1">
+                        <span>Stocks</span>
+                        <span>70%</span>
+                      </div>
+                      <div className="w-full bg-gray-700 h-2 rounded-full">
+                        <div className="bg-blue-500 h-2 rounded-full" style={{ width: '70%' }}></div>
+                      </div>
+                    </div>
+                    <div>
+                      <div className="flex justify-between text-sm mb-1">
+                        <span>Bonds</span>
+                        <span>25%</span>
+                      </div>
+                      <div className="w-full bg-gray-700 h-2 rounded-full">
+                        <div className="bg-green-500 h-2 rounded-full" style={{ width: '25%' }}></div>
+                      </div>
+                    </div>
+                    <div>
+                      <div className="flex justify-between text-sm mb-1">
+                        <span>Cash</span>
+                        <span>5%</span>
+                      </div>
+                      <div className="w-full bg-gray-700 h-2 rounded-full">
+                        <div className="bg-amber-500 h-2 rounded-full" style={{ width: '5%' }}></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div>
+                  <h4 className="text-sm font-medium mb-2">Target Allocation</h4>
+                  <div className="space-y-2">
+                    <div>
+                      <div className="flex justify-between text-sm mb-1">
+                        <span>Stocks</span>
+                        <span>65%</span>
+                      </div>
+                      <div className="w-full bg-gray-700 h-2 rounded-full">
+                        <div className="bg-blue-800 h-2 rounded-full" style={{ width: '65%' }}></div>
+                      </div>
+                    </div>
+                    <div>
+                      <div className="flex justify-between text-sm mb-1">
+                        <span>Bonds</span>
+                        <span>30%</span>
+                      </div>
+                      <div className="w-full bg-gray-700 h-2 rounded-full">
+                        <div className="bg-green-800 h-2 rounded-full" style={{ width: '30%' }}></div>
+                      </div>
+                    </div>
+                    <div>
+                      <div className="flex justify-between text-sm mb-1">
+                        <span>Cash</span>
+                        <span>5%</span>
+                      </div>
+                      <div className="w-full bg-gray-700 h-2 rounded-full">
+                        <div className="bg-amber-800 h-2 rounded-full" style={{ width: '5%' }}></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div>
+                  <h4 className="text-sm font-medium mb-2">Performance</h4>
+                  <div className="space-y-2">
+                    <div className={`p-2 rounded-lg ${isLightTheme ? "bg-[#E9E7D8]" : "bg-[#1c2e4a]"}`}>
+                      <p className="text-xs text-gray-400">1 Year</p>
+                      <p className="text-sm font-semibold text-green-500">+8.2%</p>
+                    </div>
+                    <div className={`p-2 rounded-lg ${isLightTheme ? "bg-[#E9E7D8]" : "bg-[#1c2e4a]"}`}>
+                      <p className="text-xs text-gray-400">3 Year</p>
+                      <p className="text-sm font-semibold text-green-500">+24.5%</p>
+                    </div>
+                    <div className={`p-2 rounded-lg ${isLightTheme ? "bg-[#E9E7D8]" : "bg-[#1c2e4a]"}`}>
+                      <p className="text-xs text-gray-400">5 Year</p>
+                      <p className="text-sm font-semibold text-green-500">+42.8%</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {(selectedAccount.type === "Checking" || selectedAccount.type === "Savings") && (
+            <Card className={isLightTheme ? "bg-[#F2F0E1]" : "bg-[#121a2c]"}>
+              <CardHeader>
+                <CardTitle className="text-base">Quick Actions</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-2 gap-2">
+                  <Button
+                    variant="outline"
+                    className={`${
+                      isLightTheme 
+                        ? "border-[#DCD8C0] text-[#222222] hover:bg-[#E9E7D8]" 
+                        : "border-gray-700 text-white hover:bg-[#1c2e4a]"
+                    }`}
+                    onClick={() => {
+                      toast({
+                        title: "Transfer Initiated",
+                        description: "Redirecting to transfer page"
+                      });
+                    }}
+                  >
+                    Transfer Money
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className={`${
+                      isLightTheme 
+                        ? "border-[#DCD8C0] text-[#222222] hover:bg-[#E9E7D8]" 
+                        : "border-gray-700 text-white hover:bg-[#1c2e4a]"
+                    }`}
+                    onClick={() => {
+                      toast({
+                        title: "Statements",
+                        description: "Fetching your recent statements"
+                      });
+                    }}
+                  >
+                    View Statements
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+          
+          {(selectedAccount.type === "Investment" || selectedAccount.type === "Retirement") && (
+            <Card className={isLightTheme ? "bg-[#F2F0E1]" : "bg-[#121a2c]"}>
+              <CardHeader>
+                <CardTitle className="text-base">Investment Actions</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-2 gap-2">
+                  <Button
+                    variant="outline"
+                    className={`${
+                      isLightTheme 
+                        ? "border-[#DCD8C0] text-[#222222] hover:bg-[#E9E7D8]" 
+                        : "border-gray-700 text-white hover:bg-[#1c2e4a]"
+                    }`}
+                    onClick={() => {
+                      toast({
+                        title: "Trade",
+                        description: "Opening trade interface"
+                      });
+                    }}
+                  >
+                    Trade
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className={`${
+                      isLightTheme 
+                        ? "border-[#DCD8C0] text-[#222222] hover:bg-[#E9E7D8]" 
+                        : "border-gray-700 text-white hover:bg-[#1c2e4a]"
+                    }`}
+                    onClick={() => {
+                      toast({
+                        title: "Rebalance",
+                        description: "Opening rebalance interface"
+                      });
+                    }}
+                  >
+                    Rebalance
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+          
+          <Card className={isLightTheme ? "bg-[#F2F0E1]" : "bg-[#121a2c]"}>
+            <CardHeader>
+              <CardTitle className="text-base">Account Settings</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 gap-2">
+                <Button
+                  variant="outline"
+                  className={`${
+                    isLightTheme 
+                      ? "border-[#DCD8C0] text-[#222222] hover:bg-[#E9E7D8]" 
+                      : "border-gray-700 text-white hover:bg-[#1c2e4a]"
+                  }`}
+                  onClick={() => {
+                    toast({
+                      title: "Edit Account",
+                      description: "Opening account settings"
+                    });
+                  }}
+                >
+                  Edit Account
+                </Button>
+                <Button
+                  variant="outline"
+                  className={`${
+                    isLightTheme 
+                      ? "border-[#DCD8C0] text-[#222222] hover:bg-[#E9E7D8]" 
+                      : "border-gray-700 text-white hover:bg-[#1c2e4a]"
+                  }`}
+                  onClick={() => {
+                    toast({
+                      title: "Alerts Setup",
+                      description: "Opening alerts configuration"
+                    });
+                  }}
+                >
+                  Setup Alerts
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     );
@@ -704,23 +1397,23 @@ const Accounts = () => {
                 </TabsContent>
                 
                 <TabsContent value="checking">
-                  {renderAccountTypeDetails(checkingAccounts, "Checking")}
+                  {renderInteractiveAccountTypeDetails(checkingAccounts, "Checking")}
                 </TabsContent>
                 
                 <TabsContent value="savings">
-                  {renderAccountTypeDetails(savingsAccounts, "Savings")}
+                  {renderInteractiveAccountTypeDetails(savingsAccounts, "Savings")}
                 </TabsContent>
                 
                 <TabsContent value="investment">
-                  {renderAccountTypeDetails(investmentAccounts, "Investment")}
+                  {renderInteractiveAccountTypeDetails(investmentAccounts, "Investment")}
                 </TabsContent>
                 
                 <TabsContent value="retirement">
-                  {renderAccountTypeDetails(retirementAccounts, "Retirement")}
+                  {renderInteractiveAccountTypeDetails(retirementAccounts, "Retirement")}
                 </TabsContent>
               </Tabs>
             ) : (
-              renderAccountDetails()
+              renderEnhancedAccountDetails()
             )}
           </>
         )}
