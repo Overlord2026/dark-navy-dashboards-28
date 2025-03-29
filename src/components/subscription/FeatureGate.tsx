@@ -56,12 +56,12 @@ export function FeatureGate({ featureId, children, fallback }: FeatureGateProps)
           </div>
           {isTwoWeeksOrLess ? (
             <p className="text-muted-foreground max-w-md">
-              Your trial is ending soon! Upgrade now to keep accessing all premium features 
+              Your 90-day trial is ending soon! Upgrade now to keep accessing all premium features 
               and avoid losing your settings and personalized data.
             </p>
           ) : (
             <p className="text-muted-foreground max-w-md">
-              This Elite feature is not included in your trial. Your trial gives you access to Basic and Premium features, 
+              This Elite feature is not included in your 90-day trial. Your trial gives you access to Basic and Premium features, 
               but Elite features require a subscription upgrade.
             </p>
           )}

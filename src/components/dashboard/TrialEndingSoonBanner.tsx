@@ -20,7 +20,7 @@ export function TrialEndingSoonBanner({ onDismiss }: TrialEndingSoonBannerProps)
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Clock className="h-5 w-5 text-amber-500" />
-            <h2 className="text-xl font-semibold">Your free trial ends soon!</h2>
+            <h2 className="text-xl font-semibold">Your 90-day free trial ends soon!</h2>
           </div>
           <Badge className="bg-amber-500/20 text-amber-500 border-amber-500/20">
             {daysRemainingInTrial} days left
