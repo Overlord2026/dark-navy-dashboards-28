@@ -10,11 +10,11 @@ import { Button } from "@/components/ui/button";
 import { PlusIcon } from "lucide-react";
 import { AddBillDialog } from "@/components/bills/AddBillDialog";
 import { useTheme } from "@/context/ThemeContext";
-import { useMobile } from "@/hooks/use-mobile";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const BillsManagement = () => {
   const { theme } = useTheme();
-  const isMobile = useMobile();
+  const isMobile = useIsMobile();
   const [isAddBillDialogOpen, setIsAddBillDialogOpen] = useState(false);
   const { bills, insights } = useBills();
 
