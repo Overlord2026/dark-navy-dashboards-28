@@ -1,4 +1,3 @@
-
 import React from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { AdvisorModules } from "@/components/advisor/AdvisorModules";
@@ -6,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Search, MessageSquare, Zap } from "lucide-react";
 import { FreeTierAdvisorBanner } from "@/components/advisor/FreeTierAdvisorBanner";
 import { PremiumTierAdvisorBanner } from "@/components/advisor/PremiumTierAdvisorBanner";
+import { MarketingFunnelPrompt } from "@/components/advisor/MarketingFunnelPrompt";
 
 export default function AdvisorModuleMarketplace() {
   return (
@@ -13,6 +13,7 @@ export default function AdvisorModuleMarketplace() {
       <div className="w-full max-w-6xl mx-auto p-4">
         <FreeTierAdvisorBanner />
         <PremiumTierAdvisorBanner />
+        <MarketingFunnelPrompt />
         
         <div className="mb-8 p-6 bg-[#0F0F2D] rounded-lg border border-gray-700">
           <h2 className="text-2xl font-bold mb-4">Explore our suite of integrated tools to enhance your practice</h2>
