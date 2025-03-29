@@ -44,7 +44,11 @@ interface IPProtectionSettings {
   repositoryAccess: RepositoryAccess;
 }
 
-export function IPProtectionSettings() {
+interface IPProtectionSettingsProps {
+  isRepositoryTab?: boolean;
+}
+
+export function IPProtectionSettings({ isRepositoryTab = false }: IPProtectionSettingsProps) {
   const [settings, setSettings] = useState<IPProtectionSettings>({
     twoFactorForPublishing: true,
     publisherPhoneNumber: "",
@@ -83,7 +87,7 @@ export function IPProtectionSettings() {
 
   const [verifying2FA, setVerifying2FA] = useState(false);
   const [otpValue, setOtpValue] = useState("");
-  const [activeTab, setActiveTab] = useState("2fa");
+  const [activeTab, setActiveTab] = useState(isRepositoryTab ? "repository" : "2fa");
   const [showVerificationForm, setShowVerificationForm] = useState(false);
   const [showRoleAssignment, setShowRoleAssignment] = useState(false);
   const [agreementAccepted, setAgreementAccepted] = useState(false);
@@ -114,11 +118,9 @@ export function IPProtectionSettings() {
       return;
     }
 
-    // Simulate sending code
     toast.success("Verification code sent to your phone");
     setShowVerificationForm(true);
 
-    // Log this action to the audit log
     auditLog.log(
       "current-user",
       "settings_change",
@@ -128,7 +130,7 @@ export function IPProtectionSettings() {
         userRole: "admin",
         details: { 
           action: "ip_protection_2fa_code_sent", 
-          phoneNumber: settings.publisherPhoneNumber.replace(/\d(?=\d{4})/g, "*") // Mask the phone number
+          phoneNumber: settings.publisherPhoneNumber.replace(/\d(?=\d{4})/g, "*")
         }
       }
     );
@@ -142,13 +144,11 @@ export function IPProtectionSettings() {
 
     setVerifying2FA(true);
 
-    // Simulate verification
     setTimeout(() => {
       setVerifying2FA(false);
       setShowVerificationForm(false);
       toast.success("IP Protection & Security Settings saved successfully");
       
-      // Log successful settings change to audit log
       auditLog.log(
         "current-user",
         "settings_change",
@@ -173,10 +173,8 @@ export function IPProtectionSettings() {
     if (settings.twoFactorForPublishing) {
       sendVerificationCode();
     } else {
-      // If 2FA is disabled, save directly
       toast.success("IP Protection & Security Settings saved successfully");
       
-      // Log successful settings change to audit log
       auditLog.log(
         "current-user",
         "settings_change",
@@ -203,10 +201,8 @@ export function IPProtectionSettings() {
       return;
     }
 
-    // Simulate role assignment
     toast.success(`Role '${settings.selectedRole}' assigned to ${settings.currentUsername}`);
     
-    // Log role assignment to audit log - using settings_change instead of role_assignment to match valid types
     auditLog.log(
       "current-user",
       "settings_change",
@@ -222,7 +218,6 @@ export function IPProtectionSettings() {
       }
     );
 
-    // Clear the form
     setSettings(prev => ({
       ...prev,
       selectedRole: undefined,
@@ -235,7 +230,6 @@ export function IPProtectionSettings() {
     setAgreementAccepted(true);
     setShowAgreement(false);
     
-    // Log agreement acceptance to audit log
     auditLog.log(
       "current-user",
       "settings_change",
@@ -259,10 +253,8 @@ export function IPProtectionSettings() {
       return;
     }
 
-    // Simulate granting repository access
     toast.success(`Repository access granted to ${settings.repositoryAccess.selectedDeveloper}`);
     
-    // Log repository access to audit log
     auditLog.log(
       "current-user",
       "settings_change",
@@ -279,7 +271,6 @@ export function IPProtectionSettings() {
       }
     );
 
-    // Clear the form
     setSettings(prev => ({
       ...prev,
       repositoryAccess: {
@@ -375,7 +366,6 @@ export function IPProtectionSettings() {
             </CardHeader>
             <CardContent>
               <div className="space-y-6">
-                {/* Admin Role */}
                 <div className="p-4 border rounded-md">
                   <h3 className="text-lg font-medium mb-2">Administrator Role</h3>
                   <p className="text-sm text-muted-foreground mb-4">{settings.roles.admin.description}</p>
@@ -407,7 +397,6 @@ export function IPProtectionSettings() {
                   </div>
                 </div>
 
-                {/* Developer Role */}
                 <div className="p-4 border rounded-md">
                   <h3 className="text-lg font-medium mb-2">Developer Role</h3>
                   <p className="text-sm text-muted-foreground mb-4">{settings.roles.developer.description}</p>
@@ -439,7 +428,6 @@ export function IPProtectionSettings() {
                   </div>
                 </div>
 
-                {/* Assistant Role */}
                 <div className="p-4 border rounded-md">
                   <h3 className="text-lg font-medium mb-2">Assistant/Editor Role</h3>
                   <p className="text-sm text-muted-foreground mb-4">{settings.roles.assistant.description}</p>
