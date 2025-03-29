@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { LockIcon, ShieldIcon, ArrowLeft, CheckCircle } from "lucide-react";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
+import { auditLog } from "@/services/auditLog/auditLogService";
 
 export function SecurityForm({ onSave }: { onSave: () => void }) {
   const [loading, setLoading] = useState(false);
@@ -23,6 +24,19 @@ export function SecurityForm({ onSave }: { onSave: () => void }) {
   const handlePhoneSubmit = () => {
     if (!phoneNumber || phoneNumber.length < 10) {
       toast.error("Please enter a valid phone number");
+      
+      // Log failed attempt to audit log
+      auditLog.log(
+        "current-user", // In a real application, this would be the actual user ID
+        "mfa_enabled",
+        "failure",
+        {
+          userName: "Current User",
+          userRole: "client",
+          details: { step: "phone_verification", reason: "Invalid phone number" }
+        }
+      );
+      
       return;
     }
 
@@ -33,12 +47,40 @@ export function SecurityForm({ onSave }: { onSave: () => void }) {
       setLoading(false);
       setStep(1);
       toast.success("Verification code sent to your phone");
+      
+      // Log verification code sent to audit log
+      auditLog.log(
+        "current-user",
+        "settings_change",
+        "success",
+        {
+          userName: "Current User",
+          userRole: "client",
+          details: { 
+            step: "verification_code_sent", 
+            phoneNumber: phoneNumber.replace(/\d(?=\d{4})/g, "*") // Mask the phone number
+          }
+        }
+      );
     }, 1500);
   };
 
   const handleVerifyOtp = () => {
     if (otpValue.length !== 6) {
       toast.error("Please enter a valid verification code");
+      
+      // Log failed OTP verification
+      auditLog.log(
+        "current-user",
+        "mfa_enabled",
+        "failure",
+        {
+          userName: "Current User",
+          userRole: "client",
+          details: { step: "otp_verification", reason: "Invalid OTP code" }
+        }
+      );
+      
       return;
     }
 
@@ -49,6 +91,23 @@ export function SecurityForm({ onSave }: { onSave: () => void }) {
       setVerifying(false);
       setSuccess(true);
       toast.success("Two-factor authentication enabled successfully");
+      
+      // Log successful MFA enablement to audit log
+      auditLog.log(
+        "current-user",
+        "mfa_enabled",
+        "success",
+        {
+          userName: "Current User",
+          userRole: "client",
+          details: { 
+            step: "mfa_setup_complete",
+            method: "sms",
+            phoneNumber: phoneNumber.replace(/\d(?=\d{4})/g, "*") // Mask the phone number
+          }
+        }
+      );
+      
       setTimeout(() => {
         onSave();
       }, 1500);

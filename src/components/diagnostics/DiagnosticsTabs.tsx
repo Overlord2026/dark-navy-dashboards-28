@@ -9,77 +9,79 @@ import { ApiIntegrationTests } from "./ApiIntegrationTests";
 import { RoleSimulationTests } from "./RoleSimulationTests";
 import { PerformanceTests } from "./PerformanceTests";
 import { RecommendationsList } from "./RecommendationsList";
-import { LoggingConfiguration } from "./LoggingConfiguration";
 import { LogViewer } from "./LogViewer";
+import { LoggingConfiguration } from "./LoggingConfiguration";
+import { SecurityTests } from "./SecurityTests";
+import { AuditLogViewer } from "./AuditLogViewer";
 
 interface DiagnosticsTabsProps {
   report: any;
   recommendations: string[];
-  isLoading?: boolean;
+  isLoading: boolean;
 }
 
-export const DiagnosticsTabs = ({ report, recommendations, isLoading = false }: DiagnosticsTabsProps) => {
-  return (
-    <div className="space-y-6">
-      <Tabs defaultValue="summary" className="w-full">
-        <TabsList className="grid grid-cols-10 mb-4">
-          <TabsTrigger value="summary">Core Services</TabsTrigger>
-          <TabsTrigger value="navigation">Navigation</TabsTrigger>
-          <TabsTrigger value="permissions">Permissions</TabsTrigger>
-          <TabsTrigger value="icons">Icons</TabsTrigger>
-          <TabsTrigger value="forms">Form Validation</TabsTrigger>
-          <TabsTrigger value="api">API Integrations</TabsTrigger>
-          <TabsTrigger value="roles">Role Simulation</TabsTrigger>
-          <TabsTrigger value="performance">Performance</TabsTrigger>
-          <TabsTrigger value="logs">System Logs</TabsTrigger>
-          <TabsTrigger value="logging-config">Log Settings</TabsTrigger>
-        </TabsList>
-        
-        <TabsContent value="summary">
-          <CoreServicesSummary report={report} />
-        </TabsContent>
-        
-        <TabsContent value="navigation">
-          <NavigationTests tests={report.navigationTests} />
-        </TabsContent>
-        
-        <TabsContent value="permissions">
-          <PermissionTests tests={report.permissionsTests} />
-        </TabsContent>
-        
-        <TabsContent value="icons">
-          <IconTests tests={report.iconTests} />
-        </TabsContent>
-        
-        <TabsContent value="forms">
-          <FormValidationTests tests={report.formValidationTests} />
-        </TabsContent>
-        
-        <TabsContent value="api">
-          <ApiIntegrationTests tests={report.apiIntegrationTests} />
-        </TabsContent>
-        
-        <TabsContent value="roles">
-          <RoleSimulationTests tests={report.roleSimulationTests} />
-        </TabsContent>
-        
-        <TabsContent value="performance">
-          <PerformanceTests tests={report.performanceTests} isLoading={isLoading} />
-        </TabsContent>
-        
-        <TabsContent value="logs">
-          <LogViewer />
-        </TabsContent>
-        
-        <TabsContent value="logging-config">
-          <LoggingConfiguration />
-        </TabsContent>
-      </Tabs>
+export const DiagnosticsTabs = ({ report, recommendations, isLoading }: DiagnosticsTabsProps) => {
+  if (!report) return null;
 
-      <RecommendationsList 
-        recommendations={recommendations} 
-        timestamp={report?.timestamp}
-      />
-    </div>
+  return (
+    <Tabs defaultValue="overview" className="space-y-4">
+      <TabsList className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 w-full">
+        <TabsTrigger value="overview">Overview</TabsTrigger>
+        <TabsTrigger value="details">Details</TabsTrigger>
+        <TabsTrigger value="security">Security</TabsTrigger>
+        <TabsTrigger value="performance">Performance</TabsTrigger>
+        <TabsTrigger value="logs">Logs</TabsTrigger>
+        <TabsTrigger value="recommendations">Recommendations</TabsTrigger>
+      </TabsList>
+
+      <TabsContent value="overview" className="space-y-4">
+        <CoreServicesSummary 
+          navigation={report.navigation}
+          forms={report.forms}
+          database={report.database}
+          api={report.api}
+          authentication={report.authentication}
+        />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <NavigationTests tests={report.navigationTests} />
+          <ApiIntegrationTests tests={report.apiIntegrationTests} />
+        </div>
+      </TabsContent>
+
+      <TabsContent value="details" className="space-y-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <IconTests tests={report.iconTests} />
+          <FormValidationTests tests={report.formValidationTests} />
+        </div>
+      </TabsContent>
+
+      <TabsContent value="security" className="space-y-4">
+        <div className="grid grid-cols-1 gap-4">
+          <SecurityTests tests={report.securityTests || []} />
+          <PermissionTests tests={report.permissionsTests} />
+          <RoleSimulationTests tests={report.roleSimulationTests} />
+        </div>
+        <div className="grid grid-cols-1 gap-4">
+          <AuditLogViewer />
+        </div>
+      </TabsContent>
+
+      <TabsContent value="performance" className="space-y-4">
+        <PerformanceTests tests={report.performanceTests} />
+      </TabsContent>
+
+      <TabsContent value="logs" className="space-y-4">
+        <div className="grid grid-cols-1 gap-4">
+          <LogViewer />
+        </div>
+        <div className="grid grid-cols-1 gap-4">
+          <LoggingConfiguration />
+        </div>
+      </TabsContent>
+
+      <TabsContent value="recommendations">
+        <RecommendationsList recommendations={recommendations} isLoading={isLoading} />
+      </TabsContent>
+    </Tabs>
   );
 };

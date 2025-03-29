@@ -75,6 +75,12 @@ export interface PerformanceTestResult extends DiagnosticTestResult {
   endpoint?: string;
 }
 
+export interface SecurityTestResult extends DiagnosticTestResult {
+  severity: 'low' | 'medium' | 'high' | 'critical';
+  category: 'authentication' | 'data-protection' | 'authorization' | 'file-security' | 'input-validation';
+  remediation?: string;
+}
+
 export interface SystemHealthReport {
   navigation: DiagnosticResult;
   forms: DiagnosticResult;
@@ -88,6 +94,7 @@ export interface SystemHealthReport {
   apiIntegrationTests: ApiIntegrationTestResult[];
   roleSimulationTests: RoleSimulationTestResult[];
   performanceTests: PerformanceTestResult[];
+  securityTests: SecurityTestResult[];
   overall: DiagnosticTestStatus;
   timestamp: string;
 }

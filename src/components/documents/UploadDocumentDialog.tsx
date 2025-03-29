@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FileUpload } from "@/components/ui/file-upload";
+import { auditLog } from "@/services/auditLog/auditLogService";
 
 export interface UploadDocumentDialogProps {
   open: boolean;
@@ -32,7 +33,32 @@ export function UploadDocumentDialog({
 
   const handleSubmit = () => {
     if (selectedFile) {
+      // Call the actual upload handler
       onFileUpload(selectedFile, customName.trim() ? customName : selectedFile.name);
+      
+      // Log the successful file upload to the audit log
+      try {
+        auditLog.log(
+          "current-user", // In a real app, this would be the actual user ID
+          "file_upload",
+          "success",
+          {
+            userName: "Current User",
+            userRole: "client",
+            resourceType: "document",
+            details: {
+              fileName: customName.trim() ? customName : selectedFile.name,
+              fileType: selectedFile.type,
+              fileSize: selectedFile.size,
+              category: activeCategory,
+              uploadTime: new Date().toISOString()
+            }
+          }
+        );
+      } catch (error) {
+        console.error("Failed to log document upload to audit log", error);
+      }
+      
       handleReset();
     }
   };
