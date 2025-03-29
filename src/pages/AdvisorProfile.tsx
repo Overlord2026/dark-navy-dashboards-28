@@ -3,12 +3,15 @@ import React, { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { Calendar, UserIcon, MailIcon, LinkedinIcon, PhoneIcon, MapPinIcon, GraduationCapIcon } from "lucide-react";
+import { Calendar, UserIcon, MailIcon, LinkedinIcon, PhoneIcon, MapPinIcon, GraduationCapIcon, ArrowLeft } from "lucide-react";
 import { Drawer, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerClose } from "@/components/ui/drawer";
+import { AdvisorDetailView } from "@/components/profile/AdvisorDetailView";
+import { Link } from "react-router-dom";
 
 const AdvisorProfile = () => {
   const [activeTab, setActiveTab] = useState("bio");
   const [isBookingDrawerOpen, setIsBookingDrawerOpen] = useState(false);
+  const [showDetailView, setShowDetailView] = useState(false);
 
   const advisorInfo = {
     name: "Daniel Zamora",
@@ -17,6 +20,11 @@ const AdvisorProfile = () => {
     email: "Daniel@awmfl.com",
     phone: "(800) 555-1234",
     office: "New York, NY",
+    hometown: "Asheville, NC",
+    education: [
+      "University of North Carolina at Charlotte",
+      "University of North Carolina at Charlotte"
+    ],
     bio: "Daniel, a seasoned finance professional, guides high net worth investors. His approach blends investment management, risk mitigation, tax optimization, and overall strategy. Starting at Vanguard, then UBS, he directed client acquisition at Fisher Investments before joining Farther. Originally from Asheville, NC, Daniel now resides in Tampa, enjoying fitness, community activities, and sunny days by the water."
   };
 
@@ -80,68 +88,94 @@ const AdvisorProfile = () => {
 
   return (
     <ThreeColumnLayout activeMainItem="home" title="Advisor Profile">
-      <div className="mx-auto w-full max-w-6xl space-y-6 p-4 animate-fade-in">
-        <div className="bg-[#0a1021] rounded-lg p-6 md:p-8">
-          <div className="flex flex-col md:flex-row items-center justify-between mb-8">
-            <div className="flex flex-col md:flex-row items-center mb-6 md:mb-0">
-              <div className="rounded-full overflow-hidden w-32 h-32 mb-4 md:mb-0 md:mr-8">
-                <img
-                  src="/lovable-uploads/b4df25d6-12d7-4c34-874e-804e72335904.png"
-                  alt="Daniel Zamora"
-                  className="w-full h-full object-cover"
-                />
+      {showDetailView ? (
+        <div className="mx-auto w-full max-w-6xl space-y-6 p-4 animate-fade-in">
+          <Button 
+            variant="ghost" 
+            className="mb-4 text-white"
+            onClick={() => setShowDetailView(false)}
+          >
+            <ArrowLeft className="h-5 w-5 mr-2" />
+            Back
+          </Button>
+          
+          <div className="bg-[#0a1021] rounded-lg p-6 md:p-8">
+            <AdvisorDetailView advisorInfo={advisorInfo} />
+          </div>
+        </div>
+      ) : (
+        <div className="mx-auto w-full max-w-6xl space-y-6 p-4 animate-fade-in">
+          <div className="bg-[#0a1021] rounded-lg p-6 md:p-8">
+            <div className="flex flex-col md:flex-row items-center justify-between mb-8">
+              <div className="flex flex-col md:flex-row items-center mb-6 md:mb-0">
+                <div className="rounded-full overflow-hidden w-32 h-32 mb-4 md:mb-0 md:mr-8">
+                  <img
+                    src="/lovable-uploads/b4df25d6-12d7-4c34-874e-804e72335904.png"
+                    alt="Daniel Zamora"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="text-center md:text-left">
+                  <h2 className="text-2xl font-semibold text-white">{advisorInfo.name}</h2>
+                  <p className="text-white/70 mt-1">{advisorInfo.title}</p>
+                  
+                  <div className="flex flex-col md:flex-row md:items-center mt-4 space-y-2 md:space-y-0 md:space-x-6">
+                    <a href={`mailto:${advisorInfo.email}`} className="flex items-center text-white/80 hover:text-white">
+                      <MailIcon className="h-4 w-4 mr-2" />
+                      <span>{advisorInfo.email}</span>
+                    </a>
+                    <a href="#" className="flex items-center text-white/80 hover:text-white">
+                      <LinkedinIcon className="h-4 w-4 mr-2" />
+                      <span>LinkedIn</span>
+                    </a>
+                  </div>
+                  
+                  <div className="flex items-center mt-3 text-white/80">
+                    <PhoneIcon className="h-4 w-4 mr-2" />
+                    <span>{advisorInfo.phone}</span>
+                  </div>
+                </div>
               </div>
-              <div className="text-center md:text-left">
-                <h2 className="text-2xl font-semibold text-white">{advisorInfo.name}</h2>
-                <p className="text-white/70 mt-1">{advisorInfo.title}</p>
-                
-                <div className="flex flex-col md:flex-row md:items-center mt-4 space-y-2 md:space-y-0 md:space-x-6">
-                  <a href={`mailto:${advisorInfo.email}`} className="flex items-center text-white/80 hover:text-white">
-                    <MailIcon className="h-4 w-4 mr-2" />
-                    <span>{advisorInfo.email}</span>
-                  </a>
-                  <a href="#" className="flex items-center text-white/80 hover:text-white">
-                    <LinkedinIcon className="h-4 w-4 mr-2" />
-                    <span>LinkedIn</span>
-                  </a>
-                </div>
-                
-                <div className="flex items-center mt-3 text-white/80">
-                  <PhoneIcon className="h-4 w-4 mr-2" />
-                  <span>{advisorInfo.phone}</span>
-                </div>
+              <div className="flex flex-col space-y-2">
+                <Button 
+                  onClick={() => setIsBookingDrawerOpen(true)}
+                  className="bg-white text-[#0a1021] hover:bg-white/90 px-6"
+                >
+                  <Calendar className="h-4 w-4 mr-2" />
+                  Book a session
+                </Button>
+                <Button
+                  variant="outline"
+                  className="border-white/20 text-white hover:bg-white/10"
+                  onClick={() => setShowDetailView(true)}
+                >
+                  View full profile
+                </Button>
               </div>
             </div>
-            <Button 
-              onClick={() => setIsBookingDrawerOpen(true)}
-              className="bg-white text-[#0a1021] hover:bg-white/90 px-6"
-            >
-              <Calendar className="h-4 w-4 mr-2" />
-              Book a session
-            </Button>
+            
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+              <TabsList className="bg-[#1c2e4a] w-auto inline-flex mb-6">
+                <TabsTrigger value="bio" className="data-[state=active]:bg-white/10">
+                  <UserIcon className="h-4 w-4 mr-2" />
+                  Bio
+                </TabsTrigger>
+                <TabsTrigger value="location" className="data-[state=active]:bg-white/10">
+                  <MapPinIcon className="h-4 w-4 mr-2" />
+                  Location
+                </TabsTrigger>
+                <TabsTrigger value="education" className="data-[state=active]:bg-white/10">
+                  <GraduationCapIcon className="h-4 w-4 mr-2" />
+                  Education
+                </TabsTrigger>
+              </TabsList>
+              <TabsContent value={activeTab}>
+                {renderTabContent()}
+              </TabsContent>
+            </Tabs>
           </div>
-          
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="bg-[#1c2e4a] w-auto inline-flex mb-6">
-              <TabsTrigger value="bio" className="data-[state=active]:bg-white/10">
-                <UserIcon className="h-4 w-4 mr-2" />
-                Bio
-              </TabsTrigger>
-              <TabsTrigger value="location" className="data-[state=active]:bg-white/10">
-                <MapPinIcon className="h-4 w-4 mr-2" />
-                Location
-              </TabsTrigger>
-              <TabsTrigger value="education" className="data-[state=active]:bg-white/10">
-                <GraduationCapIcon className="h-4 w-4 mr-2" />
-                Education
-              </TabsTrigger>
-            </TabsList>
-            <TabsContent value={activeTab}>
-              {renderTabContent()}
-            </TabsContent>
-          </Tabs>
         </div>
-      </div>
+      )}
       
       <Drawer open={isBookingDrawerOpen} onOpenChange={setIsBookingDrawerOpen}>
         <DrawerContent className="bg-white">
