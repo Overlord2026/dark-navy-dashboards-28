@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { Calendar, UserIcon, MailIcon, LinkedinIcon, PhoneIcon, MapPinIcon, GraduationCapIcon, ArrowLeft } from "lucide-react";
+import { Calendar, UserIcon, MailIcon, LinkedinIcon, PhoneIcon, MapPinIcon, GraduationCapIcon, ArrowLeft, BriefcaseIcon } from "lucide-react";
 import { Drawer, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerClose } from "@/components/ui/drawer";
 import { AdvisorDetailView } from "@/components/profile/AdvisorDetailView";
 import { Link } from "react-router-dom";
@@ -23,8 +23,46 @@ const AdvisorProfile = () => {
     hometown: "Asheville, NC",
     education: [
       "Pine View Academy - Sarasota, Florida (Top of class at top 10 school in the country)",
-      "University of North Carolina at Charlotte",
-      "University of North Carolina at Charlotte"
+      "Bachelor of Science in Finance - University of North Carolina at Charlotte",
+      "Certified Financial Planner™ (CFP®) - Certified Financial Planner Board of Standards"
+    ],
+    experience: [
+      {
+        company: "AWM Financial Advisors",
+        title: "Senior Financial Advisor",
+        period: "2020 - Present",
+        description: "Provide comprehensive financial planning and investment management services to high-net-worth individuals and families."
+      },
+      {
+        company: "Fisher Investments",
+        title: "Client Acquisition Director",
+        period: "2017 - 2020",
+        description: "Led team responsible for client acquisition and relationship management, consistently exceeding quarterly targets."
+      },
+      {
+        company: "UBS Financial Services",
+        title: "Wealth Management Advisor",
+        period: "2013 - 2017",
+        description: "Developed personalized financial strategies for affluent clients with focus on retirement planning and wealth preservation."
+      },
+      {
+        company: "Vanguard",
+        title: "Financial Advisor",
+        period: "2010 - 2013",
+        description: "Provided investment guidance and financial planning services to individual investors."
+      }
+    ],
+    certifications: [
+      "Certified Financial Planner™ (CFP®)",
+      "Chartered Financial Analyst (CFA) Level II Candidate",
+      "Series 7 & 66 Licenses"
+    ],
+    specialties: [
+      "Retirement Planning",
+      "Tax-Efficient Investment Strategies",
+      "Estate Planning",
+      "Risk Management",
+      "Asset Allocation"
     ],
     bio: "Daniel, a seasoned finance professional, guides high net worth investors. His approach blends investment management, risk mitigation, tax optimization, and overall strategy. Starting at Vanguard, then UBS, he directed client acquisition at Fisher Investments before joining Farther. Originally from Asheville, NC, Daniel now resides in Tampa, enjoying fitness, community activities, and sunny days by the water."
   };
@@ -35,6 +73,50 @@ const AdvisorProfile = () => {
         return (
           <div className="text-white/80 mt-4">
             <p className="text-base leading-relaxed">{advisorInfo.bio}</p>
+          </div>
+        );
+      case "experience":
+        return (
+          <div className="text-white/80 mt-4 space-y-6">
+            {advisorInfo.experience.map((exp, index) => (
+              <div key={index} className="flex items-start">
+                <BriefcaseIcon className="h-5 w-5 mr-3 mt-0.5 flex-shrink-0" />
+                <div>
+                  <h3 className="font-medium text-white mb-1">{exp.title}</h3>
+                  <p className="text-sm text-white/70 mb-1">{exp.company} | {exp.period}</p>
+                  <p className="text-sm">{exp.description}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        );
+      case "education":
+        return (
+          <div className="text-white/80 mt-4 space-y-4">
+            <div className="flex items-start">
+              <GraduationCapIcon className="h-5 w-5 mr-3 mt-0.5 flex-shrink-0" />
+              <div>
+                <h3 className="font-medium text-white mb-1">Pine View Academy</h3>
+                <p>Sarasota, Florida</p>
+                <p className="text-sm text-white/70 mt-1">Top of class at top 10 school in the country</p>
+              </div>
+            </div>
+            <div className="flex items-start">
+              <GraduationCapIcon className="h-5 w-5 mr-3 mt-0.5 flex-shrink-0" />
+              <div>
+                <h3 className="font-medium text-white mb-1">BS, Finance</h3>
+                <p>University of North Carolina at Charlotte</p>
+              </div>
+            </div>
+            <div className="flex items-start">
+              <GraduationCapIcon className="h-5 w-5 mr-3 mt-0.5 flex-shrink-0" />
+              <div>
+                <h3 className="font-medium text-white mb-1">Certifications</h3>
+                {advisorInfo.certifications.map((cert, index) => (
+                  <p key={index}>{cert}</p>
+                ))}
+              </div>
+            </div>
           </div>
         );
       case "location":
@@ -50,34 +132,15 @@ const AdvisorProfile = () => {
             <div className="flex items-start">
               <MapPinIcon className="h-5 w-5 mr-3 mt-0.5 flex-shrink-0" />
               <div>
-                <h3 className="font-medium text-white mb-1">Location</h3>
+                <h3 className="font-medium text-white mb-1">Current Location</h3>
                 <p>{advisorInfo.location}</p>
               </div>
             </div>
-          </div>
-        );
-      case "education":
-        return (
-          <div className="text-white/80 mt-4 space-y-4">
             <div className="flex items-start">
-              <GraduationCapIcon className="h-5 w-5 mr-3 mt-0.5 flex-shrink-0" />
+              <MapPinIcon className="h-5 w-5 mr-3 mt-0.5 flex-shrink-0" />
               <div>
-                <h3 className="font-medium text-white mb-1">MBA, Finance</h3>
-                <p>University of Florida, 2010-2012</p>
-              </div>
-            </div>
-            <div className="flex items-start">
-              <GraduationCapIcon className="h-5 w-5 mr-3 mt-0.5 flex-shrink-0" />
-              <div>
-                <h3 className="font-medium text-white mb-1">BS, Business Administration</h3>
-                <p>UNC Chapel Hill, 2006-2010</p>
-              </div>
-            </div>
-            <div className="flex items-start">
-              <GraduationCapIcon className="h-5 w-5 mr-3 mt-0.5 flex-shrink-0" />
-              <div>
-                <h3 className="font-medium text-white mb-1">Certifications</h3>
-                <p>Certified Financial Planner™ (CFP®)</p>
+                <h3 className="font-medium text-white mb-1">Hometown</h3>
+                <p>{advisorInfo.hometown}</p>
               </div>
             </div>
           </div>
@@ -161,13 +224,17 @@ const AdvisorProfile = () => {
                   <UserIcon className="h-4 w-4 mr-2" />
                   Bio
                 </TabsTrigger>
-                <TabsTrigger value="location" className="data-[state=active]:bg-white/10">
-                  <MapPinIcon className="h-4 w-4 mr-2" />
-                  Location
+                <TabsTrigger value="experience" className="data-[state=active]:bg-white/10">
+                  <BriefcaseIcon className="h-4 w-4 mr-2" />
+                  Experience
                 </TabsTrigger>
                 <TabsTrigger value="education" className="data-[state=active]:bg-white/10">
                   <GraduationCapIcon className="h-4 w-4 mr-2" />
                   Education
+                </TabsTrigger>
+                <TabsTrigger value="location" className="data-[state=active]:bg-white/10">
+                  <MapPinIcon className="h-4 w-4 mr-2" />
+                  Location
                 </TabsTrigger>
               </TabsList>
               <TabsContent value={activeTab}>
