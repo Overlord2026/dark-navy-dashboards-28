@@ -1,4 +1,3 @@
-
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -8,19 +7,19 @@ import { Progress } from "@/components/ui/progress";
 import { 
   PlusIcon, 
   CircleDollarSign, 
-  Bank, 
+  Briefcase, 
   Percent, 
   TrendingUp, 
   Eye, 
   EyeOff, 
   RefreshCw,
   ChevronDown,
-  Briefcase,
   Home,
   CreditCard,
   Shield,
   ArrowRight,
   MoreHorizontal,
+  Building,
 } from "lucide-react";
 import { PlaidLinkDialog } from "@/components/accounts/PlaidLinkDialog";
 import { AddAccountDialog } from "@/components/accounts/AddAccountDialog";
@@ -167,24 +166,20 @@ const Accounts = () => {
   const [showAddPropertyDialog, setShowAddPropertyDialog] = useState(false);
   const [showHiddenAccounts, setShowHiddenAccounts] = useState(false);
   
-  // Filter accounts based on the selected section
   const filteredAccounts = accounts.filter(account => {
-    // First filter by visibility
     if (!showHiddenAccounts && account.isHidden) {
       return false;
     }
     
-    // Then filter by section
     if (selectedSection === "all-accounts") {
       return true;
     }
     if (selectedSection === "real-estate") {
-      return false; // Real estate is handled separately
+      return false;
     }
     return account.type === selectedSection;
   });
 
-  // Calculate totals
   const totalBalance = filteredAccounts.reduce((sum, account) => sum + account.balance, 0);
   const savingsTotal = accounts
     .filter(a => a.type === "savings" && (!a.isHidden || showHiddenAccounts))
@@ -199,7 +194,6 @@ const Accounts = () => {
     .filter(a => a.type === "retirement" && (!a.isHidden || showHiddenAccounts))
     .reduce((sum, a) => sum + a.balance, 0);
   
-  // Calculate real estate totals
   const realEstateValue = realEstateProperties.reduce((sum, property) => sum + property.currentValue, 0);
   const realEstateEquity = realEstateProperties.reduce((sum, property) => sum + property.equity, 0);
   const totalMortgage = realEstateProperties.reduce((sum, property) => sum + (property.mortgage || 0), 0);
@@ -324,7 +318,7 @@ const Accounts = () => {
           <Card className={selectedSection === "checking" ? "border-primary" : ""}>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium">Checking</CardTitle>
-              <Bank className="h-4 w-4 text-muted-foreground" />
+              <Building className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
@@ -472,7 +466,7 @@ const Accounts = () => {
         </div>
         
         {selectedSection === "real-estate" ? (
-          <RealEstateTracker properties={realEstateProperties} />
+          <RealEstateTracker />
         ) : (
           <Card>
             <CardContent className="p-0">
@@ -566,19 +560,76 @@ const Accounts = () => {
       
       {showAccountTypeSelector && (
         <AccountLinkTypeSelector
-          isOpen={showAccountTypeSelector}
-          onClose={() => setShowAccountTypeSelector(false)}
           onSelectPlaid={() => handleAccountTypeSelected("plaid")}
           onSelectManual={() => handleAccountTypeSelected("manual")}
+          onBack={() => setShowAccountTypeSelector(false)}
         />
       )}
       
       {showAddPropertyDialog && (
-        <RealEstateTracker.AddPropertyDialog
-          isOpen={showAddPropertyDialog}
-          onClose={() => setShowAddPropertyDialog(false)}
-          onAddProperty={handleAddProperty}
-        />
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-background p-6 rounded-lg max-w-2xl w-full">
+            <h2 className="text-xl font-semibold mb-4">Add New Property</h2>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="col-span-2">
+                <label className="block text-sm font-medium mb-1">Property Name</label>
+                <input 
+                  type="text" 
+                  className="w-full p-2 border rounded"
+                  placeholder="e.g. Main Residence, Rental Property"
+                />
+              </div>
+              <div className="col-span-2">
+                <label className="block text-sm font-medium mb-1">Address</label>
+                <input 
+                  type="text" 
+                  className="w-full p-2 border rounded"
+                  placeholder="Full property address"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Property Type</label>
+                <select className="w-full p-2 border rounded">
+                  <option>Primary Residence</option>
+                  <option>Rental Property</option>
+                  <option>Vacation Home</option>
+                  <option>Commercial</option>
+                  <option>Land</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Purchase Price</label>
+                <input 
+                  type="number" 
+                  className="w-full p-2 border rounded"
+                  placeholder="$"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Current Value</label>
+                <input 
+                  type="number" 
+                  className="w-full p-2 border rounded"
+                  placeholder="$"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Mortgage Balance (optional)</label>
+                <input 
+                  type="number" 
+                  className="w-full p-2 border rounded"
+                  placeholder="$"
+                />
+              </div>
+            </div>
+            <div className="flex justify-end gap-3 mt-6">
+              <Button variant="outline" onClick={() => setShowAddPropertyDialog(false)}>Cancel</Button>
+              <Button onClick={() => {
+                handleAddProperty({address: "123 New Property"});
+              }}>Add Property</Button>
+            </div>
+          </div>
+        </div>
       )}
     </ThreeColumnLayout>
   );
