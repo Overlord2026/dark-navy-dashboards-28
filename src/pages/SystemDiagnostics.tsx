@@ -12,7 +12,8 @@ import {
   Lock, 
   Eye,
   FileText,
-  Globe
+  Globe,
+  UserCog
 } from "lucide-react";
 import { ActivityIcon } from "@/components/icons/ActivityIcon";
 import { toast } from "sonner";
@@ -113,6 +114,20 @@ export default function SystemDiagnostics() {
       }
     }
     
+    const failedRoleTests = report.roleSimulationTests.filter((test: any) => test.status === 'error' || test.status === 'warning');
+    if (failedRoleTests.length > 0) {
+      recs.push(`Fix role access issues for: ${[...new Set(failedRoleTests.map((t: any) => t.role))].join(', ')}`);
+      
+      const incorrectAccess = failedRoleTests.filter((test: any) => 
+        (test.expectedAccess && test.accessStatus !== 'granted') || 
+        (!test.expectedAccess && test.accessStatus === 'granted')
+      );
+      
+      if (incorrectAccess.length > 0) {
+        recs.push(`Review permission policies for modules: ${[...new Set(incorrectAccess.map((t: any) => t.module))].join(', ')}`);
+      }
+    }
+    
     recs.push("Consider implementing periodic automated health checks to monitor system performance.");
     
     return recs;
@@ -128,6 +143,14 @@ export default function SystemDiagnostics() {
         return <AlertCircle className="h-6 w-6 text-red-500" />;
       default:
         return null;
+    }
+  };
+
+  const getAccessStatusIcon = (status: string, expected: boolean) => {
+    if ((status === 'granted' && expected) || (status === 'denied' && !expected)) {
+      return <CheckCircle className="h-5 w-5 text-green-500" />;
+    } else {
+      return <AlertCircle className="h-5 w-5 text-red-500" />;
     }
   };
 
@@ -182,6 +205,19 @@ export default function SystemDiagnostics() {
     }
   };
 
+  const getAccessStatusBadge = (status: string) => {
+    switch (status) {
+      case 'granted':
+        return <span className="text-xs px-2 py-1 rounded-full bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-200">Access Granted</span>;
+      case 'denied':
+        return <span className="text-xs px-2 py-1 rounded-full bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-200">Access Denied</span>;
+      case 'error':
+        return <span className="text-xs px-2 py-1 rounded-full bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-200">Test Error</span>;
+      default:
+        return <span className="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-200">Not Tested</span>;
+    }
+  };
+
   return (
     <ThreeColumnLayout title="System Diagnostics">
       <div className="space-y-6 p-4 max-w-6xl mx-auto">
@@ -213,13 +249,14 @@ export default function SystemDiagnostics() {
         {report ? (
           <div className="space-y-6">
             <Tabs defaultValue="summary" className="w-full">
-              <TabsList className="grid grid-cols-6 mb-4">
+              <TabsList className="grid grid-cols-7 mb-4">
                 <TabsTrigger value="summary">Core Services</TabsTrigger>
                 <TabsTrigger value="navigation">Navigation</TabsTrigger>
                 <TabsTrigger value="permissions">Permissions</TabsTrigger>
                 <TabsTrigger value="icons">Icons</TabsTrigger>
                 <TabsTrigger value="forms">Form Validation</TabsTrigger>
                 <TabsTrigger value="api">API Integrations</TabsTrigger>
+                <TabsTrigger value="roles">Role Simulation</TabsTrigger>
               </TabsList>
               
               <TabsContent value="summary">
@@ -231,7 +268,8 @@ export default function SystemDiagnostics() {
                       key !== 'navigationTests' && 
                       key !== 'permissionsTests' && 
                       key !== 'iconTests' &&
-                      key !== 'formValidationTests')
+                      key !== 'formValidationTests' &&
+                      key !== 'roleSimulationTests')
                     .map(([key, value]: [string, any]) => (
                       <Card key={key} className={`border ${getStatusColor(value.status)}`}>
                         <CardHeader className="pb-2">
@@ -427,6 +465,59 @@ export default function SystemDiagnostics() {
                             </div>
                           </div>
                           <p className="text-sm mt-1">{test.message}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+              
+              <TabsContent value="roles">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <UserCog className="h-5 w-5" />
+                      User Role Simulation Tests
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="mb-4">
+                      <h3 className="text-lg font-medium mb-2">Role Access Testing</h3>
+                      <p className="text-sm text-muted-foreground">
+                        These tests simulate different user roles accessing various system modules to ensure proper authorization boundaries.
+                      </p>
+                    </div>
+                    
+                    <div className="space-y-6">
+                      {['client', 'advisor', 'admin', 'accountant', 'attorney'].map(role => (
+                        <div key={role} className="space-y-3">
+                          <h4 className="text-md font-semibold capitalize border-b pb-1">
+                            {role} Role Access
+                          </h4>
+                          {report.roleSimulationTests
+                            .filter((test: any) => test.role === role)
+                            .map((test: any, index: number) => (
+                              <div key={index} className={`p-3 rounded-md border ${getStatusColor(test.status)}`}>
+                                <div className="flex items-center justify-between">
+                                  <div className="flex items-start gap-2">
+                                    {getAccessStatusIcon(test.accessStatus, test.expectedAccess)}
+                                    <div>
+                                      <span className="font-medium">Module: {test.module}</span>
+                                      <p className="text-xs mt-1">
+                                        Expected: {test.expectedAccess ? "Access Allowed" : "Access Denied"}
+                                      </p>
+                                    </div>
+                                  </div>
+                                  <div className="flex flex-col items-end gap-1">
+                                    {getAccessStatusBadge(test.accessStatus)}
+                                    <span className="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200">
+                                      {test.status}
+                                    </span>
+                                  </div>
+                                </div>
+                                <p className="text-sm mt-2">{test.message}</p>
+                              </div>
+                            ))}
                         </div>
                       ))}
                     </div>
