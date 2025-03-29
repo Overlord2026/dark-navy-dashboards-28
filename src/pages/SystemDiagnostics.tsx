@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
-import { runDiagnostics } from "@/services/diagnosticsService";
+import { runDiagnostics, runQuickSystemCheck } from "@/services/diagnosticsService";
 import { toast } from "sonner";
 import { DiagnosticsHeader } from "@/components/diagnostics/DiagnosticsHeader";
 import { DiagnosticsTabs } from "@/components/diagnostics/DiagnosticsTabs";
@@ -13,6 +13,7 @@ export default function SystemDiagnostics() {
   const [isLoading, setIsLoading] = useState(false);
   const [report, setReport] = useState<any>(null);
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
+  const [pageAccessError, setPageAccessError] = useState<string | null>(null);
 
   useEffect(() => {
     // Initialize logging system when component mounts
@@ -24,11 +25,30 @@ export default function SystemDiagnostics() {
     
     logger.info("System Diagnostics page loaded", undefined, "SystemDiagnostics");
     
-    runSystemCheck();
+    // Perform a quick system check on load to see if diagnostics is accessible
+    const checkSystemAccess = async () => {
+      try {
+        const quickCheck = await runQuickSystemCheck();
+        if (!quickCheck.success) {
+          setPageAccessError("Could not access system diagnostics. Please try again later.");
+          toast.error("Diagnostics service is currently unavailable");
+        } else {
+          // If quick check was successful, run the full diagnostics
+          runSystemCheck();
+        }
+      } catch (error) {
+        setPageAccessError("Error accessing diagnostics. Please contact support.");
+        toast.error("Could not initialize diagnostics service");
+        logger.error("Failed to run quick system check", error, "SystemDiagnostics");
+      }
+    };
+    
+    checkSystemAccess();
   }, []);
 
   const runSystemCheck = async () => {
     setIsLoading(true);
+    setPageAccessError(null);
     logger.info("Starting system health check", undefined, "SystemDiagnostics");
     
     try {
@@ -45,6 +65,7 @@ export default function SystemDiagnostics() {
       console.error("Diagnostic error:", error);
       logger.error("Failed to complete system health check", error, "SystemDiagnostics");
       toast.error("Failed to complete system health check");
+      setPageAccessError("Could not complete diagnostics. Please try again later.");
     } finally {
       setIsLoading(false);
     }
@@ -255,7 +276,20 @@ export default function SystemDiagnostics() {
           onRunDiagnostics={runSystemCheck}
         />
 
-        {isLoading && !report ? (
+        {pageAccessError ? (
+          <div className="p-8 border border-red-200 rounded-lg bg-red-50 dark:bg-red-900/20 dark:border-red-800 text-center">
+            <h3 className="text-xl font-semibold text-red-700 dark:text-red-300 mb-2">
+              Diagnostics Error
+            </h3>
+            <p className="text-red-600 dark:text-red-400 mb-4">{pageAccessError}</p>
+            <button 
+              onClick={runSystemCheck}
+              className="px-4 py-2 bg-red-100 hover:bg-red-200 dark:bg-red-800 dark:hover:bg-red-700 text-red-700 dark:text-red-200 rounded-md transition-colors"
+            >
+              Try Again
+            </button>
+          </div>
+        ) : isLoading && !report ? (
           <LoadingState />
         ) : (
           <DiagnosticsTabs 
