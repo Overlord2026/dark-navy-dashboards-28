@@ -1,6 +1,7 @@
+
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Index from "./pages";
+import Index from "./pages/Index";
 import CustomerProfile from "./pages/CustomerProfile";
 import SocialSecurity from "./pages/SocialSecurity";
 import LegacyVault from "./pages/LegacyVault";
@@ -19,7 +20,7 @@ import Insurance from "./pages/Insurance";
 import Sharing from "./pages/Sharing";
 import Transfers from "./pages/Transfers";
 import NotFound from "./pages/NotFound";
-import { ThemeProvider } from "@/components/theme-provider";
+import { ThemeProvider } from "./components/theme-provider";
 import { UserProvider } from "@/context/UserContext";
 
 // Import the ProfessionalsProvider
@@ -28,7 +29,7 @@ import Professionals from "./pages/Professionals";
 
 function App() {
   return (
-    <ThemeProvider>
+    <ThemeProvider defaultTheme="system" attribute="class">
       <UserProvider>
         <ProfessionalsProvider>
           <BrowserRouter>

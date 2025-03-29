@@ -1,252 +1,230 @@
 
-import React from "react";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Textarea } from "@/components/ui/textarea";
-import { toast } from "sonner";
+import React, { useState } from "react";
 import { useProfessionals } from "@/hooks/useProfessionals";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ProfessionalType } from "@/types/professional";
-
-const professionalSchema = z.object({
-  name: z.string().min(2, { message: "Name must be at least 2 characters" }),
-  type: z.enum([
-    "Accountant/CPA", 
-    "Financial Advisor", 
-    "Attorney", 
-    "Realtor", 
-    "Dentist", 
-    "Physician", 
-    "Banker", 
-    "Consultant", 
-    "Service Professional", 
-    "Other"
-  ] as const),
-  company: z.string().optional(),
-  phone: z.string().optional(),
-  email: z.string().email({ message: "Invalid email address" }).optional().or(z.literal("")),
-  website: z.string().url({ message: "Invalid website URL" }).optional().or(z.literal("")),
-  address: z.string().optional(),
-  notes: z.string().optional(),
-  rating: z.number().min(0).max(5).optional()
-});
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/hooks/use-toast";
 
 interface AddProfessionalDialogProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
-export const AddProfessionalDialog = ({ isOpen, onOpenChange }: AddProfessionalDialogProps) => {
+export function AddProfessionalDialog({ isOpen, onOpenChange }: AddProfessionalDialogProps) {
   const { addProfessional } = useProfessionals();
-  
-  const form = useForm<z.infer<typeof professionalSchema>>({
-    resolver: zodResolver(professionalSchema),
-    defaultValues: {
+  const { toast } = useToast();
+  const [formData, setFormData] = useState({
+    name: "",
+    type: "" as ProfessionalType,
+    company: "",
+    phone: "",
+    email: "",
+    website: "",
+    address: "",
+    notes: "",
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleTypeChange = (value: ProfessionalType) => {
+    setFormData((prev) => ({ ...prev, type: value }));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Validation for required fields
+    if (!formData.name) {
+      toast({
+        title: "Error",
+        description: "Name is required",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    if (!formData.type) {
+      toast({
+        title: "Error",
+        description: "Professional type is required",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Create new professional with a random ID
+    const newProfessional = {
+      id: `pro-${Math.random().toString(36).substring(2, 9)}`,
+      name: formData.name,
+      type: formData.type,
+      company: formData.company,
+      phone: formData.phone,
+      email: formData.email,
+      website: formData.website,
+      address: formData.address,
+      notes: formData.notes,
+    };
+
+    addProfessional(newProfessional);
+    
+    toast({
+      title: "Success",
+      description: "Professional added successfully",
+    });
+    
+    // Reset form and close dialog
+    setFormData({
       name: "",
-      type: "Other" as ProfessionalType,
+      type: "" as ProfessionalType,
       company: "",
       phone: "",
       email: "",
       website: "",
       address: "",
       notes: "",
-      rating: 0
-    }
-  });
-
-  const onSubmit = (data: z.infer<typeof professionalSchema>) => {
-    addProfessional({
-      id: `pro-${Date.now()}`,
-      ...data
     });
     
-    toast.success(`${data.name} added to your professionals`);
-    form.reset();
     onOpenChange(false);
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:max-w-[550px]">
         <DialogHeader>
           <DialogTitle>Add Professional</DialogTitle>
           <DialogDescription>
-            Add a professional to your family's directory
+            Add a new professional to your directory.
           </DialogDescription>
         </DialogHeader>
         
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
+        <form onSubmit={handleSubmit} className="space-y-4 py-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="name">Name *</Label>
+              <Input 
+                id="name"
                 name="name"
-                render={({ field }) => (
-                  <FormItem className="col-span-2">
-                    <FormLabel>Name*</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Name of professional" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <FormField
-                control={form.control}
-                name="type"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Type*</FormLabel>
-                    <Select 
-                      onValueChange={field.onChange} 
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select type" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="Accountant/CPA">Accountant/CPA</SelectItem>
-                        <SelectItem value="Financial Advisor">Financial Advisor</SelectItem>
-                        <SelectItem value="Attorney">Attorney</SelectItem>
-                        <SelectItem value="Realtor">Realtor</SelectItem>
-                        <SelectItem value="Dentist">Dentist</SelectItem>
-                        <SelectItem value="Physician">Physician</SelectItem>
-                        <SelectItem value="Banker">Banker</SelectItem>
-                        <SelectItem value="Consultant">Consultant</SelectItem>
-                        <SelectItem value="Service Professional">Service Professional</SelectItem>
-                        <SelectItem value="Other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <FormField
-                control={form.control}
-                name="company"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Company/Organization</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Company name" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <FormField
-                control={form.control}
-                name="phone"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Phone</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Phone number" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Email address" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <FormField
-                control={form.control}
-                name="website"
-                render={({ field }) => (
-                  <FormItem className="col-span-2">
-                    <FormLabel>Website</FormLabel>
-                    <FormControl>
-                      <Input placeholder="https://website.com" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <FormField
-                control={form.control}
-                name="address"
-                render={({ field }) => (
-                  <FormItem className="col-span-2">
-                    <FormLabel>Address</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Business address" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <FormField
-                control={form.control}
-                name="notes"
-                render={({ field }) => (
-                  <FormItem className="col-span-2">
-                    <FormLabel>Notes</FormLabel>
-                    <FormControl>
-                      <Textarea placeholder="Additional notes about this professional" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <FormField
-                control={form.control}
-                name="rating"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Rating (0-5)</FormLabel>
-                    <FormControl>
-                      <Input 
-                        type="number" 
-                        min="0" 
-                        max="5" 
-                        step="0.5"
-                        placeholder="Rating" 
-                        {...field}
-                        onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                placeholder="John Doe"
+                value={formData.name}
+                onChange={handleChange}
+                required
               />
             </div>
             
-            <div className="flex justify-end gap-2">
-              <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-                Cancel
-              </Button>
-              <Button type="submit">Add Professional</Button>
+            <div className="space-y-2">
+              <Label htmlFor="type">Type *</Label>
+              <Select 
+                value={formData.type} 
+                onValueChange={(value) => handleTypeChange(value as ProfessionalType)}
+                required
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Accountant/CPA">Accountant/CPA</SelectItem>
+                  <SelectItem value="Financial Advisor">Financial Advisor</SelectItem>
+                  <SelectItem value="Attorney">Attorney</SelectItem>
+                  <SelectItem value="Realtor">Realtor</SelectItem>
+                  <SelectItem value="Dentist">Dentist</SelectItem>
+                  <SelectItem value="Physician">Physician</SelectItem>
+                  <SelectItem value="Banker">Banker</SelectItem>
+                  <SelectItem value="Consultant">Consultant</SelectItem>
+                  <SelectItem value="Service Professional">Service Professional</SelectItem>
+                  <SelectItem value="Other">Other</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
-          </form>
-        </Form>
+          </div>
+          
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="company">Company</Label>
+              <Input 
+                id="company"
+                name="company"
+                placeholder="Company Name"
+                value={formData.company}
+                onChange={handleChange}
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="phone">Phone</Label>
+              <Input 
+                id="phone"
+                name="phone"
+                placeholder="(555) 123-4567"
+                value={formData.phone}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input 
+                id="email"
+                name="email"
+                placeholder="email@example.com"
+                value={formData.email}
+                onChange={handleChange}
+                type="email"
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="website">Website</Label>
+              <Input 
+                id="website"
+                name="website"
+                placeholder="https://example.com"
+                value={formData.website}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+          
+          <div className="space-y-2">
+            <Label htmlFor="address">Address</Label>
+            <Input 
+              id="address"
+              name="address"
+              placeholder="123 Main St, City, State, Zip"
+              value={formData.address}
+              onChange={handleChange}
+            />
+          </div>
+          
+          <div className="space-y-2">
+            <Label htmlFor="notes">Notes</Label>
+            <Textarea 
+              id="notes"
+              name="notes"
+              placeholder="Add any helpful notes about this professional..."
+              value={formData.notes}
+              onChange={handleChange}
+              className="min-h-[100px]"
+            />
+          </div>
+          
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+              Cancel
+            </Button>
+            <Button type="submit">Add Professional</Button>
+          </DialogFooter>
+        </form>
       </DialogContent>
     </Dialog>
   );
-};
+}
