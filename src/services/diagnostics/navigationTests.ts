@@ -41,3 +41,8 @@ export const testNavigationRoutes = (): NavigationTestResult[] => {
     }
   ];
 };
+
+// Add the missing testNavigation function
+export const testNavigation = async (): Promise<NavigationTestResult[]> => {
+  return testNavigationRoutes();
+};

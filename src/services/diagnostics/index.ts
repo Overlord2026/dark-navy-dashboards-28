@@ -31,7 +31,7 @@ export const runDiagnostics = async () => {
     
     // Determine overall status
     const allTests = [
-      ...Object.values(basicResults).map(item => item.status),
+      ...Object.values(basicResults).map((item: any) => item.status),
       ...navigationTests.map(item => item.status),
       ...permissionsTests.map(item => item.status),
       ...iconTests.map(item => item.status),

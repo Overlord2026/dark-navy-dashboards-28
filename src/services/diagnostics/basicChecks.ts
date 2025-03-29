@@ -43,3 +43,15 @@ export const checkAuthentication = (): DiagnosticResult => {
     message: 'Authentication systems functioning properly',
   };
 };
+
+// Add the missing testBasicServices function
+export const testBasicServices = async () => {
+  // Run all basic service checks
+  return {
+    navigation: checkNavigation(),
+    forms: checkForms(),
+    database: checkDatabase(),
+    api: checkAPI(),
+    authentication: checkAuthentication(),
+  };
+};
