@@ -37,15 +37,15 @@ export const advisorSubscriptionTiers: AdvisorSubscriptionTier[] = [
   {
     id: "premium",
     name: "Premium",
-    price: 299,
+    price: 1000,
     description: "Enterprise-grade platform for established advisors",
     features: [
       { id: "feature-1", name: "Premium Marketplace Listing", included: true },
-      { id: "feature-2", name: "Advanced Lead Generation", included: true },
+      { id: "feature-2", name: "Advanced Marketing Funnels & CRM Integrations", included: true },
       { id: "feature-3", name: "Enterprise Client Management", included: true },
-      { id: "feature-4", name: "Top in Search Results", included: true },
+      { id: "feature-4", name: "Priority Listing in Marketplace", included: true },
       { id: "feature-5", name: "Fully Customizable White-Labeled Portal", included: true },
-      { id: "feature-6", name: "Advanced Marketing & Analysis Tools", included: true },
+      { id: "feature-6", name: "White-labeled Practice Management and Analytics", included: true },
       { id: "feature-7", name: "Priority Support & Dedicated Rep", included: true },
     ],
     active: false
