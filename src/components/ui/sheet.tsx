@@ -1,10 +1,12 @@
 
 import * as SheetPrimitive from "@radix-ui/react-dialog"
 import { cva, type VariantProps } from "class-variance-authority"
-import { X } from "lucide-react"
+import { ChevronDown, X } from "lucide-react"
 import * as React from "react"
+import { useState } from "react"
 
 import { cn } from "@/lib/utils"
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "./collapsible"
 
 const Sheet = SheetPrimitive.Root
 
@@ -148,24 +150,54 @@ const SheetSection = ({
 )
 SheetSection.displayName = "SheetSection"
 
-// New component for investment detail rows
+// Updated component for investment detail rows with expandable content
+interface SheetDetailRowProps extends React.HTMLAttributes<HTMLDivElement> {
+  label: string;
+  value: React.ReactNode;
+  detailedInfo?: React.ReactNode;
+}
+
 const SheetDetailRow = ({
   label,
   value,
+  detailedInfo,
   className,
   ...props
-}: React.HTMLAttributes<HTMLDivElement> & {
-  label: string;
-  value: React.ReactNode;
-}) => (
-  <div 
-    className={cn("p-3 flex justify-between border-b border-border last:border-b-0", className)} 
-    {...props}
-  >
-    <span className="text-muted-foreground">{label}</span>
-    <span className="font-medium">{value}</span>
-  </div>
-)
+}: SheetDetailRowProps) => {
+  const [isOpen, setIsOpen] = useState(false);
+  
+  return (
+    <Collapsible
+      open={isOpen}
+      onOpenChange={setIsOpen}
+      className={cn("border-b border-border last:border-b-0", className)}
+      {...props}
+    >
+      <CollapsibleTrigger asChild>
+        <div className="p-3 flex justify-between items-center cursor-pointer hover:bg-slate-800/30 transition-colors">
+          <span className="text-muted-foreground">{label}</span>
+          <div className="flex items-center">
+            <span className="font-medium mr-2">{value}</span>
+            {detailedInfo && (
+              <ChevronDown className={cn(
+                "h-4 w-4 transition-transform", 
+                isOpen ? "transform rotate-180" : ""
+              )} />
+            )}
+          </div>
+        </div>
+      </CollapsibleTrigger>
+      {detailedInfo && (
+        <CollapsibleContent>
+          <div className="p-3 pt-0 pl-6 text-sm bg-slate-800/20">
+            {detailedInfo}
+          </div>
+        </CollapsibleContent>
+      )}
+    </Collapsible>
+  );
+};
+
 SheetDetailRow.displayName = "SheetDetailRow"
 
 export {

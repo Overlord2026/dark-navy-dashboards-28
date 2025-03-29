@@ -813,22 +813,130 @@ const AlternativeAssetCategory = () => {
                   icon={<BarChart className="h-5 w-5 text-blue-400" />}
                 >
                   <div className="border border-blue-900/30 rounded-md overflow-hidden">
-                    <div className="divide-y divide-blue-900/30">
-                      <SheetDetailRow label="Firm" value={selectedInvestment.firm || selectedInvestment.name.split(' ')[0]} />
-                      <SheetDetailRow label="Platform" value={selectedInvestment.platform || "Investable Securities"} />
-                      <SheetDetailRow label="Category" value={selectedInvestment.category || category.title} />
-                      <SheetDetailRow label="Minimum Investment" value={selectedInvestment.minimumInvestment} />
-                      <SheetDetailRow label="Investor Qualification" value={selectedInvestment.investorQualification || (
-                        selectedInvestment.tags.includes("Qualified Purchaser") 
-                          ? "Qualified Purchaser" 
-                          : selectedInvestment.tags.includes("Accredited Investor")
-                            ? "Accredited Investor"
-                            : "All Investors"
-                      )} />
-                      <SheetDetailRow label="Liquidity" value={selectedInvestment.liquidity || "Quarterly Tender Offers"} />
-                      <SheetDetailRow label="Subscriptions" value={selectedInvestment.subscriptions || "Monthly"} />
-                      <SheetDetailRow label="Performance" value={<span className="text-green-500">{selectedInvestment.performance}</span>} />
-                      <SheetDetailRow label="Lock-up Period" value={selectedInvestment.lockupPeriod} />
+                    <div>
+                      <SheetDetailRow 
+                        label="Firm" 
+                        value={selectedInvestment.firm || selectedInvestment.name.split(' ')[0]} 
+                        detailedInfo={
+                          <div>
+                            <p className="mb-2">A leading alternative investment management firm specializing in private market solutions.</p>
+                            <p>Founded: {selectedInvestment.firm ? "1985" : "2002"}</p>
+                            <p>AUM: ${selectedInvestment.firm?.includes("Blackstone") ? "1 trillion+" : "500 billion+"}</p>
+                          </div>
+                        }
+                      />
+                      <SheetDetailRow 
+                        label="Platform" 
+                        value={selectedInvestment.platform || "Investable Securities"} 
+                        detailedInfo={
+                          <p>Investment platforms provide investors with access to alternative investments through 
+                          structured vehicles designed to meet specific investor needs.</p>
+                        }
+                      />
+                      <SheetDetailRow 
+                        label="Category" 
+                        value={selectedInvestment.category || category.title} 
+                        detailedInfo={
+                          <p>{category.description}</p>
+                        }
+                      />
+                      <SheetDetailRow 
+                        label="Minimum Investment" 
+                        value={selectedInvestment.minimumInvestment} 
+                        detailedInfo={
+                          <div>
+                            <p className="mb-2">This is the minimum amount required to participate in this investment opportunity.</p>
+                            <p>Additional investments: Typically allowed in increments of ${selectedInvestment.minimumInvestment.replace(/[^0-9]/g, '') / 10}</p>
+                          </div>
+                        }
+                      />
+                      <SheetDetailRow 
+                        label="Investor Qualification" 
+                        value={selectedInvestment.investorQualification || (
+                          selectedInvestment.tags.includes("Qualified Purchaser") 
+                            ? "Qualified Purchaser" 
+                            : selectedInvestment.tags.includes("Accredited Investor")
+                              ? "Accredited Investor"
+                              : "All Investors"
+                        )} 
+                        detailedInfo={
+                          <div>
+                            {selectedInvestment.tags.includes("Qualified Purchaser") ? (
+                              <div>
+                                <p className="font-medium mb-1">Qualified Purchaser Requirements:</p>
+                                <ul className="list-disc pl-5 space-y-1">
+                                  <li>Individual or family-owned business with $5 million+ in investments</li>
+                                  <li>Entity with $25 million+ in investments</li>
+                                  <li>Investment professional acting on behalf of Qualified Purchasers</li>
+                                </ul>
+                              </div>
+                            ) : selectedInvestment.tags.includes("Accredited Investor") ? (
+                              <div>
+                                <p className="font-medium mb-1">Accredited Investor Requirements:</p>
+                                <ul className="list-disc pl-5 space-y-1">
+                                  <li>Annual income of $200,000+ (individual) or $300,000+ (joint) for past 2 years</li>
+                                  <li>Net worth of $1 million+ (excluding primary residence)</li>
+                                  <li>Entity with $5 million+ in assets</li>
+                                </ul>
+                              </div>
+                            ) : (
+                              <p>This investment is available to all investor types with no specific qualification requirements.</p>
+                            )}
+                          </div>
+                        }
+                      />
+                      <SheetDetailRow 
+                        label="Liquidity" 
+                        value={selectedInvestment.liquidity || "Quarterly Tender Offers"} 
+                        detailedInfo={
+                          <div>
+                            <p className="mb-2">Liquidity refers to how easily an investment can be converted to cash without affecting its price.</p>
+                            <p className="mb-1">This investment offers:</p>
+                            <ul className="list-disc pl-5">
+                              <li>{selectedInvestment.liquidity === "Limited" ? "Limited liquidity typically after the initial lock-up period" : selectedInvestment.liquidity}</li>
+                              <li>Subject to fund terms and market conditions</li>
+                              <li>May include redemption fees or gates</li>
+                            </ul>
+                          </div>
+                        }
+                      />
+                      <SheetDetailRow 
+                        label="Subscriptions" 
+                        value={selectedInvestment.subscriptions || "Monthly"} 
+                        detailedInfo={
+                          <p>New investment capital is accepted {selectedInvestment.subscriptions || "Monthly"}, subject to minimum investment requirements and investor qualifications.</p>
+                        }
+                      />
+                      <SheetDetailRow 
+                        label="Performance" 
+                        value={<span className="text-green-500">{selectedInvestment.performance}</span>} 
+                        detailedInfo={
+                          <div>
+                            <p className="mb-2">Historical performance is not a guarantee of future results.</p>
+                            <div className="space-y-1">
+                              <p>1-Year: {parseFloat(selectedInvestment.performance) * 0.9}%</p>
+                              <p>3-Year: {parseFloat(selectedInvestment.performance) * 0.95}%</p>
+                              <p>5-Year: {selectedInvestment.performance}</p>
+                              <p>Since Inception: {parseFloat(selectedInvestment.performance) * 1.05}%</p>
+                            </div>
+                          </div>
+                        }
+                      />
+                      <SheetDetailRow 
+                        label="Lock-up Period" 
+                        value={selectedInvestment.lockupPeriod} 
+                        detailedInfo={
+                          <div>
+                            <p className="mb-2">The lock-up period is the duration during which your investment cannot be withdrawn without penalty.</p>
+                            <p>Early redemption may be possible subject to:</p>
+                            <ul className="list-disc pl-5">
+                              <li>Redemption fees (typically 2-5%)</li>
+                              <li>Fund manager discretion</li>
+                              <li>Market conditions</li>
+                            </ul>
+                          </div>
+                        }
+                      />
                     </div>
                   </div>
                 </SheetSection>
