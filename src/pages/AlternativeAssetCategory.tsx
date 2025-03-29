@@ -784,16 +784,25 @@ const AlternativeAssetCategory = () => {
                 <SheetSection 
                   title="Get Started" 
                   icon={<Calendar className="h-5 w-5 text-blue-400" />}
+                  className="bg-blue-900/30 border border-blue-500/30 rounded-lg p-5"
                 >
-                  <p className="text-gray-300 mb-4">
-                    To get started, schedule a meeting with your advisor or tell them you're interested in this offering.
+                  <p className="text-gray-200 mb-4 font-medium">
+                    Ready to explore this opportunity? Take the next step by choosing one of the options below:
                   </p>
-                  <div className="flex gap-4">
-                    <Button variant="outline" className="text-white border-gray-700 hover:bg-gray-800">
+                  <div className="flex flex-col sm:flex-row gap-4">
+                    <Button 
+                      variant="outline" 
+                      className="text-white border-blue-500 hover:bg-blue-800 h-12 text-base"
+                      onClick={() => console.log("Interested in:", selectedInvestment.name)}
+                    >
+                      <Info className="h-5 w-5 mr-2" />
                       I'm Interested
                     </Button>
-                    <Button>
-                      <Calendar className="h-4 w-4 mr-2" />
+                    <Button 
+                      className="bg-blue-600 hover:bg-blue-700 h-12 text-base"
+                      onClick={() => console.log("Schedule meeting for:", selectedInvestment.name)}
+                    >
+                      <Calendar className="h-5 w-5 mr-2" />
                       Schedule a Meeting
                     </Button>
                   </div>
