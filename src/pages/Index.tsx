@@ -1,9 +1,34 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Shield } from "lucide-react";
+import { auditLog } from "@/services/auditLog/auditLogService";
 
 const Index = () => {
+  useEffect(() => {
+    // Log a simulated publish event for demonstration
+    auditLog.log(
+      "system-user", // userId 
+      "settings_change", // action type
+      "success", // status
+      {
+        userName: "Admin User",
+        userRole: "Admin",
+        ipAddress: "192.168.1.100",
+        resourceType: "Website Content",
+        resourceId: "main-site-20230615",
+        details: {
+          action: "publish",
+          environment: "production",
+          twoFactorVerified: true,
+          authMethod: "SMS",
+          changedFiles: ["src/components/HomePage.tsx", "src/styles/main.css"],
+          diff: `--- src/components/HomePage.tsx\n+++ src/components/HomePage.tsx\n@@ -12,7 +12,7 @@\n const HomePage = () => {\n   return (\n     <div>\n-      <h1>Welcome to Our Platform</h1>\n+      <h1>Welcome to Our Updated Platform</h1>\n       <p>Lorem ipsum dolor sit amet</p>\n     </div>\n   );\n`
+        }
+      }
+    );
+  }, []);
+
   return (
     <div className="container mx-auto py-10">
       <h1 className="text-3xl font-bold mb-6">Dashboard</h1>
