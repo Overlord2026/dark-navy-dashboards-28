@@ -200,6 +200,51 @@ const SheetDetailRow = ({
 
 SheetDetailRow.displayName = "SheetDetailRow"
 
+// New component for strategy section with a better readable format
+const SheetStrategySection = ({
+  className,
+  title,
+  icon,
+  strategy,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement> & {
+  title: string;
+  icon?: React.ReactNode;
+  strategy: string;
+}) => (
+  <div className={cn("pb-6", className)} {...props}>
+    <h3 className="text-lg font-bold mb-3 flex items-center">
+      {icon && <span className="mr-2">{icon}</span>}
+      {title}
+    </h3>
+    <div className="bg-slate-100 dark:bg-slate-800/50 p-5 rounded-md">
+      <div className="prose prose-sm dark:prose-invert max-w-none">
+        <h4 className="text-sm font-medium text-blue-400 mb-2">Investment Approach</h4>
+        <p className="text-gray-300 leading-relaxed mb-4">{strategy}</p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 pt-4 border-t border-slate-700/50">
+          <div className="bg-slate-800/30 p-3 rounded">
+            <h5 className="text-sm font-medium text-blue-400 mb-1">Focus Areas</h5>
+            <ul className="list-disc list-inside text-xs text-gray-300 space-y-1">
+              {strategy.split('. ').slice(0, 3).map((sentence, idx) => (
+                <li key={idx}>{sentence}</li>
+              ))}
+            </ul>
+          </div>
+          <div className="bg-slate-800/30 p-3 rounded">
+            <h5 className="text-sm font-medium text-blue-400 mb-1">Key Differentiators</h5>
+            <ul className="list-disc list-inside text-xs text-gray-300 space-y-1">
+              {strategy.split('. ').slice(-2).map((sentence, idx) => (
+                <li key={idx}>{sentence}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+)
+SheetStrategySection.displayName = "SheetStrategySection"
+
 export {
   Sheet, 
   SheetClose,
@@ -211,6 +256,7 @@ export {
   SheetOverlay, 
   SheetPortal, 
   SheetSection,
+  SheetStrategySection,
   SheetTitle, 
   SheetTrigger
 }

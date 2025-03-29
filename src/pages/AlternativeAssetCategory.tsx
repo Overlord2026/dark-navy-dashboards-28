@@ -942,14 +942,11 @@ const AlternativeAssetCategory = () => {
                 </SheetSection>
                 
                 {selectedInvestment.strategy && (
-                  <SheetSection 
+                  <SheetStrategySection 
                     title="Strategy" 
                     icon={<LineChart className="h-5 w-5 text-blue-400" />}
-                  >
-                    <p className="text-gray-300">
-                      {selectedInvestment.strategy}
-                    </p>
-                  </SheetSection>
+                    strategy={selectedInvestment.strategy}
+                  />
                 )}
                 
                 <SheetSection 
