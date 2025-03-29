@@ -12,6 +12,7 @@ import { WelcomeTrialBanner } from "@/components/dashboard/WelcomeTrialBanner";
 import { MidTrialBanner } from "@/components/dashboard/MidTrialBanner";
 import { TrialEndingSoonBanner } from "@/components/dashboard/TrialEndingSoonBanner";
 import { ExpirationNotice } from "@/components/subscription/ExpirationNotice";
+import { TrialExtensionBanner } from "@/components/subscription/TrialExtensionBanner";
 import { useSubscription } from "@/context/SubscriptionContext"; 
 import { toast } from "sonner";
 
@@ -24,7 +25,14 @@ const Dashboard = () => {
   const [showMidTrialBanner, setShowMidTrialBanner] = useState(false);
   const [showTrialEndingSoonBanner, setShowTrialEndingSoonBanner] = useState(false);
   const [showExpirationNotice, setShowExpirationNotice] = useState(false);
-  const { isInFreeTrial, daysRemainingInTrial, freeTrialEndDate } = useSubscription();
+  const [showExtensionBanner, setShowExtensionBanner] = useState(false);
+  const { 
+    isInFreeTrial, 
+    daysRemainingInTrial, 
+    freeTrialEndDate, 
+    trialWasExtended,
+    extendTrial
+  } = useSubscription();
   
   const [checklistItems, setChecklistItems] = useState([
     { id: "investor-profile", name: "Investor Profile", completed: true },
@@ -74,8 +82,16 @@ const Dashboard = () => {
           !hasSeenExpirationNotice) {
         setShowExpirationNotice(true);
       }
+      
+      const hasSeenExtensionBanner = localStorage.getItem('hasSeenExtensionBanner');
+      const hasCompletedSetup = checklistItems.filter(item => item.completed).length >= 6;
+      
+      if (hasCompletedSetup && !hasSeenExtensionBanner && !trialWasExtended) {
+        extendTrial(14);
+        setShowExtensionBanner(true);
+      }
     }
-  }, [isInFreeTrial, daysRemainingInTrial]);
+  }, [isInFreeTrial, daysRemainingInTrial, trialWasExtended, checklistItems]);
 
   const handleDismissWelcome = () => {
     setShowWelcomeBanner(false);
@@ -95,6 +111,11 @@ const Dashboard = () => {
   const handleDismissExpirationNotice = () => {
     setShowExpirationNotice(false);
     localStorage.setItem('hasSeenExpirationNotice', 'true');
+  };
+
+  const handleDismissExtensionBanner = () => {
+    setShowExtensionBanner(false);
+    localStorage.setItem('hasSeenExtensionBanner', 'true');
   };
 
   const toggleMetrics = () => {
@@ -146,6 +167,10 @@ const Dashboard = () => {
             <WelcomeTrialBanner onDismiss={handleDismissWelcome} />
           )}
           
+          {showExtensionBanner && (
+            <TrialExtensionBanner onDismiss={handleDismissExtensionBanner} />
+          )}
+
           {showMidTrialBanner && (
             <MidTrialBanner onDismiss={handleDismissMidTrial} />
           )}

@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { SubscriptionTierType } from '@/types/subscription';
 import { subscriptionTiers } from '@/data/subscriptionTiers';
@@ -14,6 +13,8 @@ interface SubscriptionContextProps {
   daysRemainingInTrial: number | null;
   startFreeTrial: () => void;
   endFreeTrial: () => void;
+  extendTrial: (days: number) => void;
+  trialWasExtended: boolean;
 }
 
 const SubscriptionContext = createContext<SubscriptionContextProps | undefined>(undefined);
@@ -25,8 +26,8 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
   const [isInFreeTrial, setIsInFreeTrial] = useState<boolean>(false);
   const [freeTrialEndDate, setFreeTrialEndDate] = useState<Date | null>(null);
   const [daysRemainingInTrial, setDaysRemainingInTrial] = useState<number | null>(null);
+  const [trialWasExtended, setTrialWasExtended] = useState<boolean>(false);
 
-  // Load free trial status from localStorage on component mount
   useEffect(() => {
     const storedTrialStatus = localStorage.getItem('freeTrialStatus');
     const storedTrialEndDate = localStorage.getItem('freeTrialEndDate');
@@ -35,39 +36,33 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
       const endDate = new Date(storedTrialEndDate);
       const now = new Date();
       
-      // Check if the trial is still valid
       if (endDate > now) {
         setIsInFreeTrial(true);
         setFreeTrialEndDate(endDate);
         
-        // Calculate days remaining
         const remainingTime = endDate.getTime() - now.getTime();
         const remainingDays = Math.ceil(remainingTime / (1000 * 60 * 60 * 24));
         setDaysRemainingInTrial(remainingDays);
         
-        // If in free trial, user gets access to premium features
         setCurrentTier('premium');
       } else {
-        // Trial has expired
         localStorage.removeItem('freeTrialStatus');
         localStorage.removeItem('freeTrialEndDate');
         setIsInFreeTrial(false);
         setFreeTrialEndDate(null);
         setDaysRemainingInTrial(null);
         
-        // When trial ends, remind user to upgrade
         toast.info('Your free trial has ended. Upgrade now to maintain premium access!', {
           action: {
             label: 'Upgrade',
             onClick: () => window.location.href = '/subscription',
           },
-          duration: 10000, // Show for 10 seconds
+          duration: 10000,
         });
       }
     }
   }, []);
 
-  // Update days remaining daily
   useEffect(() => {
     if (!isInFreeTrial || !freeTrialEndDate) return;
     
@@ -78,19 +73,15 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
       
       setDaysRemainingInTrial(remainingDays > 0 ? remainingDays : 0);
       
-      // Handle trial expiration
       if (remainingDays <= 0) {
         endFreeTrial();
       }
     };
     
-    // Calculate initially
     calculateDaysRemaining();
     
-    // Set up interval to recalculate daily
     const intervalId = setInterval(calculateDaysRemaining, 1000 * 60 * 60 * 24);
     
-    // Show notification when trial is about to end
     if (daysRemainingInTrial === 14) {
       toast.warning('Your free trial ends in 2 weeks. Upgrade now to maintain premium access!', {
         action: {
@@ -138,7 +129,6 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
     setDaysRemainingInTrial(FREE_TRIAL_DURATION_DAYS);
     setCurrentTier('premium');
     
-    // Store in localStorage
     localStorage.setItem('freeTrialStatus', 'active');
     localStorage.setItem('freeTrialEndDate', endDate.toISOString());
     
@@ -151,15 +141,51 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
     setDaysRemainingInTrial(null);
     setCurrentTier('basic');
     
-    // Clear from localStorage
     localStorage.removeItem('freeTrialStatus');
     localStorage.removeItem('freeTrialEndDate');
   };
 
+  const extendTrial = (days: number) => {
+    if (!isInFreeTrial || !freeTrialEndDate) {
+      return;
+    }
+    
+    const newEndDate = new Date(freeTrialEndDate);
+    newEndDate.setDate(newEndDate.getDate() + days);
+    
+    setFreeTrialEndDate(newEndDate);
+    setTrialWasExtended(true);
+    
+    const now = new Date();
+    const remainingTime = newEndDate.getTime() - now.getTime();
+    const remainingDays = Math.ceil(remainingTime / (1000 * 60 * 60 * 24));
+    setDaysRemainingInTrial(remainingDays > 0 ? remainingDays : 0);
+    
+    localStorage.setItem('freeTrialEndDate', newEndDate.toISOString());
+    localStorage.setItem('trialWasExtended', 'true');
+    
+    toast.success(`Congratulations! Your free trial has been extended by ${days} days.`);
+    
+    setTimeout(() => {
+      setTrialWasExtended(false);
+      localStorage.removeItem('trialWasExtended');
+    }, 5 * 60 * 1000);
+  };
+
+  useEffect(() => {
+    const wasExtended = localStorage.getItem('trialWasExtended') === 'true';
+    setTrialWasExtended(wasExtended);
+    
+    if (wasExtended) {
+      setTimeout(() => {
+        setTrialWasExtended(false);
+        localStorage.removeItem('trialWasExtended');
+      }, 5 * 60 * 1000);
+    }
+  }, []);
+
   const isFeatureAvailable = (featureId: string): boolean => {
-    // During free trial, user has access to both basic and premium features
     if (isInFreeTrial) {
-      // Check if the feature is available in the premium tier
       const premiumTier = subscriptionTiers.find(tier => tier.id === 'premium');
       if (!premiumTier) return false;
       
@@ -167,7 +193,6 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
       return premiumFeature?.included || false;
     }
     
-    // Regular subscription check
     const tier = subscriptionTiers.find(tier => tier.id === currentTier);
     if (!tier) return false;
     
@@ -178,7 +203,6 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
   const isUpgradeRequired = (featureId: string): boolean => {
     if (isFeatureAvailable(featureId)) return false;
     
-    // Check if the feature is available in any higher tier
     return subscriptionTiers.some(tier => {
       if (tier.id === currentTier) return false;
       return tier.features.some(feature => feature.id === featureId && feature.included);
@@ -188,7 +212,6 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
   const upgradeTier = (newTier: SubscriptionTierType) => {
     setCurrentTier(newTier);
     
-    // If upgrading, end free trial
     if (isInFreeTrial) {
       endFreeTrial();
     }
@@ -206,7 +229,9 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
       freeTrialEndDate,
       daysRemainingInTrial,
       startFreeTrial,
-      endFreeTrial
+      endFreeTrial,
+      extendTrial,
+      trialWasExtended
     }}>
       {children}
     </SubscriptionContext.Provider>

@@ -2,7 +2,7 @@
 import React, { ReactNode } from 'react';
 import { useSubscription } from '@/context/SubscriptionContext';
 import { Button } from '@/components/ui/button';
-import { Lock, Clock } from 'lucide-react';
+import { Lock, Clock, Gift } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
 import { PlanUpgradePrompt } from './PlanUpgradePrompt';
@@ -28,7 +28,8 @@ export function FeatureGate({
     isFeatureAvailable, 
     isUpgradeRequired, 
     isInFreeTrial, 
-    daysRemainingInTrial 
+    daysRemainingInTrial,
+    trialWasExtended
   } = useSubscription();
   const navigate = useNavigate();
   
@@ -49,8 +50,10 @@ export function FeatureGate({
   
   return (
     <div className="flex flex-col items-center justify-center p-8 bg-card border border-border rounded-lg text-center space-y-4">
-      <div className={`${isTwoWeeksOrLess ? 'bg-amber-500/10' : 'bg-primary/10'} p-3 rounded-full`}>
-        {isTwoWeeksOrLess ? (
+      <div className={`${trialWasExtended ? 'bg-green-500/10' : isTwoWeeksOrLess ? 'bg-amber-500/10' : 'bg-primary/10'} p-3 rounded-full`}>
+        {trialWasExtended ? (
+          <Gift className="h-8 w-8 text-green-500" />
+        ) : isTwoWeeksOrLess ? (
           <Clock className="h-8 w-8 text-amber-500" />
         ) : (
           <Lock className="h-8 w-8 text-primary" />
@@ -61,16 +64,21 @@ export function FeatureGate({
       {isInFreeTrial ? (
         <>
           <div className="flex items-center gap-2 mb-2">
-            <Badge variant="outline" className={`${isTwoWeeksOrLess ? 'bg-amber-100 text-amber-800 border-amber-300' : 'bg-amber-100 text-amber-800 border-amber-300'}`}>
-              {isTwoWeeksOrLess ? 'Trial Ending Soon' : 'Trial Active'}
+            <Badge variant="outline" className={`${trialWasExtended ? 'bg-green-100 text-green-800 border-green-300' : isTwoWeeksOrLess ? 'bg-amber-100 text-amber-800 border-amber-300' : 'bg-amber-100 text-amber-800 border-amber-300'}`}>
+              {trialWasExtended ? 'Trial Extended' : isTwoWeeksOrLess ? 'Trial Ending Soon' : 'Trial Active'}
             </Badge>
             {daysRemainingInTrial !== null && (
-              <Badge variant="outline" className={`${isTwoWeeksOrLess ? 'bg-amber-500/10 text-amber-500 border-amber-500/20' : 'bg-primary/10 text-primary border-primary/20'}`}>
+              <Badge variant="outline" className={`${trialWasExtended ? 'bg-green-500/10 text-green-500 border-green-500/20' : isTwoWeeksOrLess ? 'bg-amber-500/10 text-amber-500 border-amber-500/20' : 'bg-primary/10 text-primary border-primary/20'}`}>
                 {daysRemainingInTrial} days left
               </Badge>
             )}
           </div>
-          {isTwoWeeksOrLess ? (
+          {trialWasExtended ? (
+            <p className="text-muted-foreground max-w-md">
+              Good news! We've extended your trial so you can keep exploring {featureName || 'premium features'}.
+              Take advantage of this extra time to explore everything we offer!
+            </p>
+          ) : isTwoWeeksOrLess ? (
             <p className="text-muted-foreground max-w-md">
               Your 90-day trial is ending soon! Upgrade now to keep accessing all premium features 
               and avoid losing your settings and personalized data.
@@ -90,10 +98,10 @@ export function FeatureGate({
       
       <Button 
         onClick={() => navigate('/subscription')}
-        className={`mt-4 ${isTwoWeeksOrLess ? 'bg-amber-500 hover:bg-amber-600 text-white' : ''}`}
+        className={`mt-4 ${trialWasExtended ? 'bg-green-500 hover:bg-green-600 text-white' : isTwoWeeksOrLess ? 'bg-amber-500 hover:bg-amber-600 text-white' : ''}`}
       >
         {isInFreeTrial ? (
-          isTwoWeeksOrLess ? 'Keep Premium Access' : 'Upgrade to Elite Tier'
+          trialWasExtended ? 'Explore Premium Features' : isTwoWeeksOrLess ? 'Keep Premium Access' : 'Upgrade to Elite Tier'
         ) : 'Upgrade Subscription'}
       </Button>
     </div>
