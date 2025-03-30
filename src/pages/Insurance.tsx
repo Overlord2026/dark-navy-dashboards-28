@@ -18,17 +18,20 @@ const Insurance = () => {
   const [selectedProvider, setSelectedProvider] = useState<InsuranceProvider | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [isDetailPanelOpen, setIsDetailPanelOpen] = useState(false);
 
   const handleSelectType = (type: InsuranceType) => {
     setSelectedType(type);
     setSelectedProvider(type === "annuities" ? "dpl" : "pinnacle");
     setCurrentPage(1);
     setTotalPages(1); // Most have only 1 provider, can be adjusted as needed
+    setIsDetailPanelOpen(true); // Open the detail panel when type is selected
   };
 
   const handleBackToMain = () => {
     setSelectedType(null);
     setSelectedProvider(null);
+    setIsDetailPanelOpen(false);
   };
 
   const handleInterested = () => {
@@ -211,11 +214,16 @@ const Insurance = () => {
           </div>
         </Card>
 
-        {/* Provider Detail Sheet */}
-        <Sheet>
-          <SheetTrigger asChild>
-            <Button variant="outline" className="w-full">View Details</Button>
-          </SheetTrigger>
+        <Button 
+          variant="outline" 
+          className="w-full"
+          onClick={() => setIsDetailPanelOpen(true)}
+        >
+          View Details
+        </Button>
+
+        {/* Provider Detail Panel */}
+        <Sheet open={isDetailPanelOpen} onOpenChange={setIsDetailPanelOpen}>
           <SheetContent side="right" className="w-full max-w-md p-0 border-l border-gray-800 bg-[#121a2c] text-white">
             <div className="p-6 max-h-screen overflow-y-auto">
               <div className="flex justify-end">
@@ -288,9 +296,19 @@ const Insurance = () => {
                   <div className="space-y-2">
                     <div className="bg-[#0f1628] border border-gray-800 rounded-lg p-4">
                       <h4 className="font-medium">Other Offerings</h4>
+                      <p className="text-sm text-gray-400 mt-2">
+                        {selectedType === "annuities" 
+                          ? "DPL also offers term life, permanent life, and long-term care insurance options through their platform." 
+                          : "Pinnacle also provides disability insurance, business insurance, and estate planning services."}
+                      </p>
                     </div>
                     <div className="bg-[#0f1628] border border-gray-800 rounded-lg p-4">
                       <h4 className="font-medium">Top Carriers</h4>
+                      <p className="text-sm text-gray-400 mt-2">
+                        {selectedType === "annuities" 
+                          ? "DPL works with carriers like Lincoln Financial, AIG, and Pacific Life." 
+                          : "Pinnacle partners with top-rated insurers including Northwestern Mutual, New York Life, and Guardian."}
+                      </p>
                     </div>
                   </div>
                 </div>
