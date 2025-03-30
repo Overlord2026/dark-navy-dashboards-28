@@ -92,7 +92,7 @@ export function PlaidLinkDialog({ isOpen, onClose, onSuccess }: PlaidLinkDialogP
           
           <div className="p-8 flex flex-col items-center">
             <img 
-              src="/lovable-uploads/4f75e021-2c1b-4d0d-bf20-e32a077724de.png" 
+              src="/lovable-uploads/7372735a-98e1-411a-85a3-f01eff66a6be.png" 
               alt="Plaid connection illustration" 
               className="w-40 h-auto mb-4"
             />

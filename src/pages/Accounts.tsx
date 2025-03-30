@@ -11,25 +11,72 @@ import {
   Banknote,
   Building,
   Home,
-  Wallet
+  Wallet,
+  ArrowLeft
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { AccountSection } from "@/components/accounts/AccountSection";
 import { AddAccountDialog } from "@/components/accounts/AddAccountDialog";
+import { AccountLinkTypeSelector } from "@/components/accounts/AccountLinkTypeSelector";
+import { PlaidLinkDialog } from "@/components/accounts/PlaidLinkDialog";
+import { useToast } from "@/hooks/use-toast";
 
 const Accounts = () => {
+  const { toast } = useToast();
   const [showAddAccountDialog, setShowAddAccountDialog] = useState(false);
   const [selectedAccountType, setSelectedAccountType] = useState("");
+  const [showAccountTypeSelector, setShowAccountTypeSelector] = useState(false);
+  const [showPlaidDialog, setShowPlaidDialog] = useState(false);
   
   const handleAddAccount = () => {
-    setShowAddAccountDialog(true);
+    setShowAccountTypeSelector(true);
   };
 
   const handleAccountTypeSelected = (type: string) => {
     setSelectedAccountType(type);
     setShowAddAccountDialog(true);
   };
+
+  const handlePlaidSelected = () => {
+    setShowAccountTypeSelector(false);
+    setShowPlaidDialog(true);
+  };
+
+  const handleManualSelected = () => {
+    setShowAccountTypeSelector(false);
+    setShowAddAccountDialog(true);
+    setSelectedAccountType("manual");
+  };
+
+  const handlePlaidSuccess = (linkToken: string) => {
+    console.log("Plaid link successful with token:", linkToken);
+    toast({
+      title: "Account Linked",
+      description: "Your accounts have been successfully linked via Plaid"
+    });
+  };
+
+  const handleBackToAccounts = () => {
+    setShowAccountTypeSelector(false);
+    setShowAddAccountDialog(false);
+    setShowPlaidDialog(false);
+  };
+
+  if (showAccountTypeSelector) {
+    return (
+      <ThreeColumnLayout
+        activeMainItem="accounts"
+        title="Add Account"
+      >
+        <AccountLinkTypeSelector 
+          onSelectPlaid={handlePlaidSelected}
+          onSelectManual={handleManualSelected}
+          onBack={handleBackToAccounts}
+        />
+      </ThreeColumnLayout>
+    );
+  }
 
   return (
     <ThreeColumnLayout
@@ -146,9 +193,21 @@ const Accounts = () => {
             onClose={() => setShowAddAccountDialog(false)}
             onAddAccount={() => {
               setShowAddAccountDialog(false);
+              toast({
+                title: "Account Added",
+                description: "Your account has been successfully added"
+              });
             }}
             accountType={selectedAccountType || "Account"}
             sectionType={selectedAccountType || "General"}
+          />
+        )}
+
+        {showPlaidDialog && (
+          <PlaidLinkDialog
+            isOpen={showPlaidDialog}
+            onClose={() => setShowPlaidDialog(false)}
+            onSuccess={handlePlaidSuccess}
           />
         )}
       </div>
