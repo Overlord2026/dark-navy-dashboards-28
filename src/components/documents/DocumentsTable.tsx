@@ -1,13 +1,6 @@
 
 import { DocumentItem, DocumentType } from "@/types/document";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { TableRow, TableCell } from "@/components/ui/table";
 import { File, FileText, FileImage, FileSpreadsheet } from "lucide-react";
 
 interface DocumentsTableProps {
@@ -29,38 +22,25 @@ export const DocumentsTable = ({ documents }: DocumentsTableProps) => {
   };
 
   return (
-    <div className="overflow-hidden">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-[40%]">Name</TableHead>
-            <TableHead>Created</TableHead>
-            <TableHead>Type</TableHead>
-            <TableHead className="text-right">Size</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {documents.length > 0 ? (
-            documents.map((document) => (
-              <TableRow key={document.id}>
-                <TableCell className="font-medium flex items-center gap-2">
-                  {getDocumentIcon(document.type)}
-                  {document.name}
-                </TableCell>
-                <TableCell>{document.created}</TableCell>
-                <TableCell className="capitalize">{document.type}</TableCell>
-                <TableCell className="text-right">{document.size}</TableCell>
-              </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell colSpan={4} className="h-24 text-center">
-                No files
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
+    <div className="w-full">
+      {documents.length > 0 ? (
+        <div>
+          {documents.map((document) => (
+            <div 
+              key={document.id}
+              className="grid grid-cols-4 gap-4 px-4 py-3 border-b hover:bg-accent/10 cursor-pointer"
+            >
+              <div className="font-medium flex items-center gap-2">
+                {getDocumentIcon(document.type)}
+                {document.name}
+              </div>
+              <div>{document.created}</div>
+              <div className="capitalize">{document.type}</div>
+              <div>{document.size}</div>
+            </div>
+          ))}
+        </div>
+      ) : null}
     </div>
   );
 };

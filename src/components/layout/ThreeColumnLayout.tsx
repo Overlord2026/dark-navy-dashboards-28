@@ -91,7 +91,7 @@ const navigationCategories: NavCategory[] = [
     items: [
       { id: "home", label: "Home", icon: CustomHomeIcon, href: "/" },
       { id: "education", label: "Education Center", icon: GraduationCapIcon, href: "/education" },
-      { id: "vault", label: "Legacy Vault", icon: BookOpenIcon, href: "/vault" },
+      { id: "legacy-vault", label: "Legacy Vault", icon: BookOpenIcon, href: "/legacy-vault" },
       { id: "tax-budgets", label: "Tax Planning", icon: ReceiptIcon, href: "/tax-budgets" },
     ]
   },
