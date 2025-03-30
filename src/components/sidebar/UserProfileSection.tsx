@@ -13,6 +13,7 @@ import { ThemeDialog } from "@/components/ui/ThemeDialog";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "@/context/ThemeContext";
 import { useUser } from "@/context/UserContext";
+import { toast } from "sonner";
 
 interface UserProfileSectionProps {
   onMenuItemClick?: (itemId: string) => void;
@@ -57,6 +58,8 @@ export const UserProfileSection = ({
       setIsThemeDialogOpen(true);
     } else if (itemId === "log-out") {
       // Handle log out action
+      toast.success("You have been successfully logged out");
+      navigate("/home");
       if (onMenuItemClick) {
         onMenuItemClick(itemId);
       }

@@ -2,6 +2,8 @@
 import React from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Index from "./pages/Index";
+import HomePage from "./pages/HomePage";
+import LoginPage from "./pages/LoginPage";
 import CustomerProfile from "./pages/CustomerProfile";
 import SocialSecurity from "./pages/SocialSecurity";
 import LegacyVault from "./pages/LegacyVault";
@@ -48,6 +50,12 @@ function App() {
               <SubscriptionProvider>
                 <BrowserRouter>
                   <Routes>
+                    {/* Public Routes */}
+                    <Route path="/home" element={<HomePage />} />
+                    <Route path="/login" element={<LoginPage isAdvisor={false} />} />
+                    <Route path="/advisor/login" element={<LoginPage isAdvisor={true} />} />
+                    
+                    {/* Client Dashboard Routes */}
                     <Route path="/" element={<Index />} />
                     <Route path="/customer-profile" element={<CustomerProfile />} />
                     <Route path="/social-security" element={<SocialSecurity />} />
