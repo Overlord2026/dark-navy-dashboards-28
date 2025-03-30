@@ -6,7 +6,7 @@ import { PropertyManager } from "@/components/properties/PropertyManager";
 
 const Properties = () => {
   return (
-    <div className="flex h-screen bg-background">
+    <div className="flex h-screen bg-gray-950 text-white">
       <Sidebar />
       <div className="flex-1 flex flex-col overflow-hidden">
         <Header />

@@ -6,7 +6,7 @@ import { PropertySummary } from "./PropertySummary";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { Property } from "@/types/property";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@/components/ui/use-toast";
 import { useNetWorth } from "@/context/NetWorthContext";
 
 export const PropertyManager = () => {
@@ -84,6 +84,39 @@ export const PropertyManager = () => {
         usageType: "Office Space",
         annualExpenses: 24000
       }
+    },
+    {
+      id: "prop5",
+      name: "Vacation Condo",
+      type: "vacation",
+      address: "123 Beachfront Ave, Miami, FL 33139",
+      ownership: "single",
+      owner: "John Doe",
+      purchaseDate: "2020-01-15",
+      originalCost: 420000,
+      currentValue: 490000,
+      improvements: [
+        { description: "New Appliances", date: "2021-06-20", cost: 15000 }
+      ]
+    },
+    {
+      id: "prop6",
+      name: "Retail Space",
+      type: "business",
+      address: "789 Market St, San Francisco, CA 94103",
+      ownership: "llc",
+      owner: "Doe Ventures LLC",
+      purchaseDate: "2019-05-10",
+      originalCost: 750000,
+      currentValue: 850000,
+      improvements: [
+        { description: "Storefront Renovation", date: "2021-02-15", cost: 65000 }
+      ],
+      business: {
+        companyName: "Boutique Retail",
+        usageType: "Retail Space",
+        annualExpenses: 38000
+      }
     }
   ]);
 
@@ -160,7 +193,7 @@ export const PropertyManager = () => {
         <Button onClick={() => {
           setEditingProperty(null);
           setShowForm(!showForm);
-        }}>
+        }} className="bg-yellow-500 hover:bg-yellow-600 text-black">
           {showForm ? "Cancel" : <><Plus className="mr-2 h-4 w-4" /> Add Property</>}
         </Button>
       </div>
