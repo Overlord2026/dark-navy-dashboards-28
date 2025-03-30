@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -35,8 +34,8 @@ export default function HomePage() {
 
       {/* Hero Section */}
       <section className="py-20 px-4 bg-[#1B1B32] text-white">
-        <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-16 items-center">
-          <div>
+        <div className="max-w-7xl mx-auto">
+          <div className="max-w-2xl">
             <h1 className="text-4xl md:text-5xl font-bold mb-6">Financial Expertise Tailored for Your Legacy</h1>
             <p className="text-xl mb-8 text-gray-300">
               Boutique Family Office provides comprehensive wealth management services designed specifically for high-net-worth individuals and families.
@@ -52,13 +51,6 @@ export default function HomePage() {
                 <a href="#services">Explore Services</a>
               </Button>
             </div>
-          </div>
-          <div className="hidden md:block">
-            <img 
-              src="/lovable-uploads/7372735a-98e1-411a-85a3-f01eff66a6be.png" 
-              alt="Wealth Management" 
-              className="w-full h-auto rounded-lg shadow-lg"
-            />
           </div>
         </div>
       </section>
