@@ -5,13 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FileUpload } from "@/components/ui/file-upload";
-import { auditLog } from "@/services/auditLog/auditLogService";
 
 export interface UploadDocumentDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onFileUpload: (file: File, customName: string) => void;
-  activeCategory?: string;
+  activeCategory?: string | null;
   documentCategories?: any[];
 }
 
@@ -35,30 +34,6 @@ export function UploadDocumentDialog({
     if (selectedFile) {
       // Call the actual upload handler
       onFileUpload(selectedFile, customName.trim() ? customName : selectedFile.name);
-      
-      // Log the successful file upload to the audit log
-      try {
-        auditLog.log(
-          "current-user", // In a real app, this would be the actual user ID
-          "file_upload",
-          "success",
-          {
-            userName: "Current User",
-            userRole: "client",
-            resourceType: "document",
-            details: {
-              fileName: customName.trim() ? customName : selectedFile.name,
-              fileType: selectedFile.type,
-              fileSize: selectedFile.size,
-              category: activeCategory,
-              uploadTime: new Date().toISOString()
-            }
-          }
-        );
-      } catch (error) {
-        console.error("Failed to log document upload to audit log", error);
-      }
-      
       handleReset();
     }
   };
@@ -75,13 +50,17 @@ export function UploadDocumentDialog({
     onOpenChange(open);
   };
 
+  const activeCategoryName = documentCategories?.find(cat => cat.id === activeCategory)?.name;
+
   return (
     <Dialog open={open} onOpenChange={handleDialogChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Upload document</DialogTitle>
           <DialogDescription>
-            Upload a document to your secure vault.
+            {activeCategory 
+              ? `Upload a document to ${activeCategoryName}.`
+              : 'Please select a category before uploading documents.'}
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
@@ -108,7 +87,7 @@ export function UploadDocumentDialog({
           <Button variant="outline" onClick={() => handleDialogChange(false)}>
             Cancel
           </Button>
-          <Button onClick={handleSubmit} disabled={!selectedFile}>
+          <Button onClick={handleSubmit} disabled={!selectedFile || !activeCategory}>
             Upload
           </Button>
         </DialogFooter>

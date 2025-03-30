@@ -14,7 +14,7 @@ import { MidTrialBanner } from "@/components/dashboard/MidTrialBanner";
 import { useSubscription } from "@/context/SubscriptionContext";
 import { DiagnosticsAccessButton } from "@/components/diagnostics/DiagnosticsAccessButton";
 import { Button } from "@/components/ui/button";
-import { ShoppingBag } from "lucide-react";
+import { ShoppingBag, FileText } from "lucide-react";
 import { Link } from "react-router-dom";
 
 export default function Index() {
@@ -46,6 +46,12 @@ export default function Index() {
               <Link to="/marketplace">
                 <ShoppingBag className="h-4 w-4" />
                 Marketplace
+              </Link>
+            </Button>
+            <Button variant="outline" className="gap-2" asChild>
+              <Link to="/legacy-vault">
+                <FileText className="h-4 w-4" />
+                Legacy Vault
               </Link>
             </Button>
             <DiagnosticsAccessButton />
