@@ -16,16 +16,23 @@ import {
   KeyIcon,
   MapPinIcon,
   LandmarkIcon,
-  CoinsIcon
+  CoinsIcon,
+  CircleDollarSign,
+  FileTextIcon,
+  ShareIcon,
+  LineChartIcon,
+  ShieldIcon,
+  BanknoteIcon,
+  ArrowLeftRightIcon,
+  CalculatorIcon
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 type NavItem = {
   icon: React.ElementType | React.FC;
   label: string;
   href: string;
-  active?: boolean;
 };
 
 // Custom Home Icon component with the tree logo
@@ -38,13 +45,17 @@ const CustomHomeIcon: React.FC = () => (
 );
 
 const mainNavItems: NavItem[] = [
-  { icon: CustomHomeIcon, label: "Dashboard", href: "/", active: true },
-  { icon: BarChart3Icon, label: "Reports", href: "/reports" },
-  { icon: UsersIcon, label: "Clients", href: "/clients" },
-  { icon: FileIcon, label: "Documents", href: "/documents" },
-  { icon: CalendarIcon, label: "Calendar", href: "/calendar" },
-  { icon: HomeIcon, label: "Properties", href: "/properties" },
-  { icon: CoinsIcon, label: "Social Security", href: "/social-security" },
+  { icon: CustomHomeIcon, label: "Dashboard", href: "/" },
+  { icon: CircleDollarSign, label: "Accounts", href: "/accounts" },
+  { icon: FileTextIcon, label: "Documents", href: "/documents" },
+  { icon: ShareIcon, label: "Sharing", href: "/sharing" },
+  { icon: LineChartIcon, label: "Financial Plans", href: "/financial-plans" },
+  { icon: BarChart3Icon, label: "Investments", href: "/investments" },
+  { icon: ShieldIcon, label: "Insurance", href: "/insurance" },
+  { icon: BanknoteIcon, label: "Lending", href: "/lending" },
+  { icon: CoinsIcon, label: "Cash Management", href: "/cash-management" },
+  { icon: ArrowLeftRightIcon, label: "Transfers", href: "/transfers" },
+  { icon: CalculatorIcon, label: "Tax & Budgets", href: "/tax-budgets" },
 ];
 
 // Update these links to point to the properties page with different filters
@@ -64,9 +75,15 @@ const bottomNavItems: NavItem[] = [
 
 export const Sidebar = () => {
   const [collapsed, setCollapsed] = useState(false);
+  const location = useLocation();
 
   const toggleSidebar = () => {
     setCollapsed(!collapsed);
+  };
+
+  const isActive = (href: string) => {
+    return location.pathname === href || 
+           (href !== "/" && location.pathname.startsWith(href));
   };
 
   return (
@@ -85,7 +102,7 @@ export const Sidebar = () => {
               className={cn(
                 "group flex items-center py-2 px-3 rounded-md transition-colors",
                 "hover:bg-sidebar-accent",
-                item.active
+                isActive(item.href)
                   ? "bg-black text-white" 
                   : "text-sidebar-foreground"
               )}
@@ -119,7 +136,7 @@ export const Sidebar = () => {
               className={cn(
                 "group flex items-center py-2 px-3 rounded-md transition-colors",
                 "hover:bg-sidebar-accent",
-                item.active
+                isActive(item.href)
                   ? "bg-black text-white" 
                   : "text-sidebar-foreground"
               )}
