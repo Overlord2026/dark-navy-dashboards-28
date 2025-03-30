@@ -64,7 +64,7 @@ function App() {
                     <Route path="/financial-plans" element={<FinancialPlans />} />
                     <Route path="/investments" element={<Investments />} />
                     <Route path="/marketplace" element={<Marketplace />} />
-                    <Route path="/investment/:categoryId" element={<AlternativeAssetCategory />} />
+                    <Route path="/investments/alternative/:categoryId" element={<AlternativeAssetCategory />} />
                     <Route path="/advisor-profile" element={<AdvisorProfile />} />
                     <Route path="/lending" element={<Lending />} />
                     <Route path="/cash-management" element={<CashManagement />} />
