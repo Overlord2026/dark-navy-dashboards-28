@@ -51,7 +51,7 @@ const Accounts = () => {
         <div className="space-y-4">
           <AccountSection 
             icon={<CircleDollarSign className="h-5 w-5 text-primary bg-black p-1 rounded-full" />}
-            title="Farther Managed"
+            title="BFO Managed"
             amount="Unable to retrieve balance"
             initiallyOpen={true}
           >
