@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { PropertyList } from "./PropertyList";
 import { PropertyForm } from "./PropertyForm";
@@ -9,11 +8,17 @@ import { Property } from "@/types/property";
 import { useToast } from "@/components/ui/use-toast";
 import { useNetWorth } from "@/context/NetWorthContext";
 
-export const PropertyManager = () => {
+interface PropertyManagerProps {
+  initialFilter?: string | null;
+}
+
+export const PropertyManager: React.FC<PropertyManagerProps> = ({ initialFilter = null }) => {
   const { toast } = useToast();
   const { syncPropertiesToAssets } = useNetWorth();
   const [showForm, setShowForm] = useState(false);
   const [editingProperty, setEditingProperty] = useState<Property | null>(null);
+  const [activeFilter, setActiveFilter] = useState<string | null>(initialFilter);
+  
   const [properties, setProperties] = useState<Property[]>([
     {
       id: "prop1",
@@ -120,10 +125,32 @@ export const PropertyManager = () => {
     }
   ]);
 
-  // Sync properties with net worth context whenever they change
+  useEffect(() => {
+    if (initialFilter) {
+      setActiveFilter(initialFilter);
+    }
+  }, [initialFilter]);
+
   useEffect(() => {
     syncPropertiesToAssets(properties);
   }, [properties, syncPropertiesToAssets]);
+
+  const getFilteredProperties = () => {
+    if (!activeFilter) return properties;
+    
+    switch(activeFilter) {
+      case 'buildings':
+        return properties.filter(p => p.type === 'business');
+      case 'rentals':
+        return properties.filter(p => p.type === 'rental');
+      case 'locations':
+        return properties; // All properties have locations
+      case 'investments':
+        return properties.filter(p => p.type === 'business' || p.currentValue > p.originalCost * 1.1);
+      default:
+        return properties;
+    }
+  };
 
   const handleAddProperty = (property: Omit<Property, "id">) => {
     const newProperty = {
@@ -178,7 +205,6 @@ export const PropertyManager = () => {
       )
     );
     
-    // Manually sync with net worth context to ensure immediate update
     syncPropertiesToAssets(
       properties.map(prop => 
         prop.id === updatedProperty.id ? updatedProperty : prop
@@ -186,10 +212,29 @@ export const PropertyManager = () => {
     );
   };
 
+  const filteredProperties = getFilteredProperties();
+  
+  const getFilterTitle = () => {
+    if (!activeFilter) return "Your Property Portfolio";
+    
+    switch(activeFilter) {
+      case 'buildings':
+        return "Business Properties";
+      case 'rentals':
+        return "Rental Properties"; 
+      case 'locations':
+        return "Property Locations";
+      case 'investments':
+        return "Investment Properties";
+      default:
+        return "Your Property Portfolio";
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">Your Property Portfolio</h1>
+        <h1 className="text-2xl font-bold">{getFilterTitle()}</h1>
         <Button onClick={() => {
           setEditingProperty(null);
           setShowForm(!showForm);
@@ -198,7 +243,7 @@ export const PropertyManager = () => {
         </Button>
       </div>
 
-      <PropertySummary properties={properties} />
+      <PropertySummary properties={filteredProperties} />
 
       {showForm ? (
         <PropertyForm 
@@ -207,7 +252,7 @@ export const PropertyManager = () => {
         />
       ) : (
         <PropertyList 
-          properties={properties}
+          properties={filteredProperties}
           onEdit={handleEditProperty}
           onDelete={handleDeleteProperty}
           onPropertyUpdate={handlePropertyUpdate}

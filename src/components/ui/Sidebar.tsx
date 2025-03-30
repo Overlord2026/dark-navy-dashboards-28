@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { cn } from "@/lib/utils";
 import { 
@@ -18,6 +19,7 @@ import {
   CoinsIcon
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 type NavItem = {
   icon: React.ElementType | React.FC;
@@ -45,12 +47,13 @@ const mainNavItems: NavItem[] = [
   { icon: CoinsIcon, label: "Social Security", href: "/social-security" },
 ];
 
+// Update these links to point to the properties page with different filters
 const propertiesNavItems: NavItem[] = [
   { icon: HomeIcon, label: "Properties", href: "/properties" },
-  { icon: BuildingIcon, label: "Buildings", href: "/buildings" },
-  { icon: KeyIcon, label: "Rentals", href: "/rentals" },
-  { icon: MapPinIcon, label: "Locations", href: "/locations" },
-  { icon: LandmarkIcon, label: "Investments", href: "/property-investments" },
+  { icon: BuildingIcon, label: "Buildings", href: "/properties?filter=buildings" },
+  { icon: KeyIcon, label: "Rentals", href: "/properties?filter=rentals" },
+  { icon: MapPinIcon, label: "Locations", href: "/properties?filter=locations" },
+  { icon: LandmarkIcon, label: "Investments", href: "/properties?filter=investments" },
 ];
 
 const bottomNavItems: NavItem[] = [
@@ -76,9 +79,9 @@ export const Sidebar = () => {
       <div className="py-4 overflow-y-auto">
         <nav className="px-2 space-y-1">
           {mainNavItems.map((item, index) => (
-            <a
+            <Link
               key={item.label}
-              href={item.href}
+              to={item.href}
               className={cn(
                 "group flex items-center py-2 px-3 rounded-md transition-colors",
                 "hover:bg-sidebar-accent",
@@ -96,7 +99,7 @@ export const Sidebar = () => {
                 <item.icon className="h-5 w-5 mr-3 flex-shrink-0 bg-black p-0.5 rounded-sm" />
               )}
               {!collapsed && <span className="whitespace-nowrap overflow-hidden text-ellipsis">{item.label}</span>}
-            </a>
+            </Link>
           ))}
         </nav>
         
@@ -110,9 +113,9 @@ export const Sidebar = () => {
         )}
         <nav className="mt-2 px-2 space-y-1">
           {propertiesNavItems.map((item, index) => (
-            <a
+            <Link
               key={item.label}
-              href={item.href}
+              to={item.href}
               className={cn(
                 "group flex items-center py-2 px-3 rounded-md transition-colors",
                 "hover:bg-sidebar-accent",
@@ -124,7 +127,7 @@ export const Sidebar = () => {
             >
               <item.icon className="h-5 w-5 mr-3 flex-shrink-0 bg-black p-0.5 rounded-sm" />
               {!collapsed && <span className="whitespace-nowrap overflow-hidden text-ellipsis">{item.label}</span>}
-            </a>
+            </Link>
           ))}
         </nav>
       </div>
@@ -132,14 +135,14 @@ export const Sidebar = () => {
       <div className="p-2 border-t border-sidebar-border mt-auto">
         <nav className="space-y-1">
           {bottomNavItems.map((item) => (
-            <a
+            <Link
               key={item.label}
-              href={item.href}
+              to={item.href}
               className="group flex items-center py-2 px-3 rounded-md text-sidebar-foreground hover:bg-sidebar-accent transition-colors border border-primary"
             >
               <item.icon className="h-5 w-5 mr-3 flex-shrink-0 bg-black p-0.5 rounded-sm" />
               {!collapsed && <span className="whitespace-nowrap overflow-hidden text-ellipsis">{item.label}</span>}
-            </a>
+            </Link>
           ))}
         </nav>
       </div>
