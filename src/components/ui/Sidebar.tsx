@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { cn } from "@/lib/utils";
 import { 
@@ -35,17 +34,8 @@ type NavItem = {
   href: string;
 };
 
-// Custom Home Icon component with the tree logo
-const CustomHomeIcon: React.FC = () => (
-  <img 
-    src="/lovable-uploads/e4ac2159-1b66-4f15-9257-68a0f00c8311.png" 
-    alt="Home"
-    className="h-5 w-5 mr-1"
-  />
-);
-
 const mainNavItems: NavItem[] = [
-  { icon: CustomHomeIcon, label: "Dashboard", href: "/" },
+  { icon: HomeIcon, label: "Dashboard", href: "/" },
   { icon: CircleDollarSign, label: "Accounts", href: "/accounts" },
   { icon: FileTextIcon, label: "Documents", href: "/documents" },
   { icon: ShareIcon, label: "Sharing", href: "/sharing" },
@@ -108,13 +98,7 @@ export const Sidebar = () => {
               )}
               style={{ animationDelay: `${index * 50}ms` }}
             >
-              {typeof item.icon === "function" ? (
-                <div className="flex items-center justify-center bg-black rounded-sm p-0.5 mr-3">
-                  <item.icon />
-                </div>
-              ) : (
-                <item.icon className="h-5 w-5 mr-3 flex-shrink-0 bg-black p-0.5 rounded-sm" />
-              )}
+              <item.icon className="h-5 w-5 mr-3 flex-shrink-0 bg-black p-0.5 rounded-sm" />
               {!collapsed && <span className="whitespace-nowrap overflow-hidden text-ellipsis">{item.label}</span>}
             </Link>
           ))}
