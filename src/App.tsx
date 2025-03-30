@@ -1,6 +1,6 @@
 
 import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Index from "./pages/Index";
 import CustomerProfile from "./pages/CustomerProfile";
 import SocialSecurity from "./pages/SocialSecurity";
@@ -52,6 +52,8 @@ function App() {
                     <Route path="/customer-profile" element={<CustomerProfile />} />
                     <Route path="/social-security" element={<SocialSecurity />} />
                     <Route path="/legacy-vault" element={<LegacyVault />} />
+                    {/* Add redirect from /vault to /legacy-vault */}
+                    <Route path="/vault" element={<Navigate to="/legacy-vault" replace />} />
                     <Route path="/accounts" element={<Accounts />} />
                     <Route path="/properties" element={<Properties />} />
                     <Route path="/documents" element={<Documents />} />
