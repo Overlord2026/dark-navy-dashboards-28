@@ -94,15 +94,15 @@ export const UserProfileSection = ({
       
       <DropdownMenu open={isDropdownOpen} onOpenChange={handleOpenChange}>
         <DropdownMenuTrigger 
-          className={`flex items-center justify-between w-full py-1.5 rounded-md transition-colors cursor-pointer border border-primary ${
+          className={`flex items-center justify-between w-full py-1.5 rounded-md transition-colors cursor-pointer ${
             isLightTheme 
-              ? 'hover:bg-[#E9E7D8] text-[#222222]' 
-              : 'hover:bg-white/5 text-white'
+              ? 'hover:bg-[#E9E7D8] text-[#222222] border border-gray-300' 
+              : 'hover:bg-white/5 text-white border border-gray-700'
           }`}
           onClick={() => setIsDropdownOpen(!isDropdownOpen)}
         >
           <div className="flex items-center">
-            <div className="h-7 w-7 rounded-full bg-primary/20 flex items-center justify-center mr-2 text-primary-foreground font-medium border border-primary">
+            <div className="h-7 w-7 rounded-full bg-primary/20 flex items-center justify-center mr-2 text-primary-foreground font-medium border border-gray-700">
               {avatarInitials}
             </div>
             <span className="font-medium text-sm">{userName}</span>
@@ -115,7 +115,7 @@ export const UserProfileSection = ({
             isLightTheme 
               ? 'bg-[#F9F7E8] border-[#DCD8C0] text-[#222222]' 
               : 'bg-[#0F0F2D] border-gray-700 text-white'
-          } border-primary`}
+          }`}
           align="end"
           forceMount
         >

@@ -155,7 +155,7 @@ export const Sidebar = () => {
             <Link
               key={item.label}
               to={item.href}
-              className="group flex items-center py-2 px-3 rounded-md text-sidebar-foreground hover:bg-sidebar-accent transition-colors border border-primary"
+              className="group flex items-center py-2 px-3 rounded-md text-sidebar-foreground hover:bg-sidebar-accent transition-colors border border-gray-700"
             >
               <item.icon className="h-5 w-5 mr-3 flex-shrink-0 bg-black p-0.5 rounded-sm" />
               {!collapsed && <span className="whitespace-nowrap overflow-hidden text-ellipsis">{item.label}</span>}
@@ -167,7 +167,7 @@ export const Sidebar = () => {
       <Button
         variant="ghost"
         size="icon"
-        className="absolute top-4 -right-4 h-8 w-8 rounded-full bg-background border border-primary text-foreground hover:bg-accent hover:text-sidebar-primary-foreground"
+        className="absolute top-4 -right-4 h-8 w-8 rounded-full bg-background border border-gray-700 text-foreground hover:bg-accent hover:text-sidebar-primary-foreground"
         onClick={toggleSidebar}
       >
         {collapsed ? (
