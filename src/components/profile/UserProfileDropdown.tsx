@@ -40,7 +40,7 @@ export const UserProfileDropdown = ({ onOpenForm }: UserProfileDropdownProps) =>
     setDropdownKey(Date.now());
   }, [userProfile]);
   
-  // Generate initials from user's first and last name - hardcoded for Tom Brady
+  // Hardcoded initials for Tom Brady
   const initials = "TB";
   
   const menuItems = [

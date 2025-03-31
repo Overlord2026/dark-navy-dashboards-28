@@ -26,12 +26,11 @@ export const UserProfileSection = ({
 }: UserProfileSectionProps) => {
   const navigate = useNavigate();
   const { theme } = useTheme();
-  const { userProfile } = useUser();
   const isLightTheme = theme === "light";
   
-  // Generate user initials from first and last name
-  const avatarInitials = "TB"; // Hard-coded for Tom Brady
-  const userName = "Tom Brady"; // Hard-coded name
+  // Hardcoded values for Tom Brady
+  const avatarInitials = "TB"; 
+  const userName = "Tom Brady"; // Always Tom Brady
   
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [isThemeDialogOpen, setIsThemeDialogOpen] = useState(false);
