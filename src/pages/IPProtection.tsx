@@ -4,23 +4,20 @@ import { IPProtectionSettings } from "@/components/settings/IPProtectionSettings
 import { PublishAuditLogViewer } from "@/components/settings/PublishAuditLogViewer";
 import { CollaborationGuidelines } from "@/components/settings/CollaborationGuidelines";
 import { UserAccessRevocation } from "@/components/settings/UserAccessRevocation";
-import { ShieldX, Activity } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
+import { ShieldX } from "lucide-react";
+import { useUser } from "@/context/UserContext";
 import { DiagnosticsAccessButton } from "@/components/diagnostics/DiagnosticsAccessButton";
 
 export default function IPProtection() {
-  const navigate = useNavigate();
-
-  const handleDiagnosticsAccess = () => {
-    navigate("/system-diagnostics");
-  };
+  const { userProfile } = useUser();
+  const userRole = userProfile?.role || "client";
+  const isAdmin = userRole === "admin" || userRole === "system_administrator";
 
   return (
     <div className="container mx-auto py-8 space-y-8">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">IP Protection & Security</h1>
-        <DiagnosticsAccessButton />
+        {isAdmin && <DiagnosticsAccessButton />}
       </div>
       
       <Tabs defaultValue="ip-settings" className="w-full">

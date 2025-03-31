@@ -4,11 +4,20 @@ import { Activity } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { toast } from "sonner";
+import { useUser } from "@/context/UserContext";
 
 export const DiagnosticsAccessButton = () => {
   const navigate = useNavigate();
+  const { userProfile } = useUser();
+  const userRole = userProfile?.role || "client";
+  const isAdmin = userRole === "admin" || userRole === "system_administrator";
 
   const handleDiagnosticsAccess = () => {
+    if (!isAdmin) {
+      toast.error("You don't have permission to access system diagnostics");
+      return;
+    }
+    
     toast.info("Opening full diagnostics panel");
     navigate("/system-diagnostics");
   };

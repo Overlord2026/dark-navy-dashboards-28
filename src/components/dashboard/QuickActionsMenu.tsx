@@ -6,15 +6,20 @@ import { Link } from "react-router-dom";
 import { QuickDiagnosticsButton } from "@/components/diagnostics/QuickDiagnosticsButton";
 import { DiagnosticsAccessButton } from "@/components/diagnostics/DiagnosticsAccessButton";
 import { toast } from "sonner";
+import { useUser } from "@/context/UserContext";
 
 export const QuickActionsMenu = () => {
+  const { userProfile } = useUser();
+  const userRole = userProfile?.role || "client";
+  const isAdmin = userRole === "admin" || userRole === "system_administrator";
+
   const handleQuickAction = (label: string) => {
     toast.success(`Navigating to ${label}`);
   };
 
   return (
     <div className="flex items-center justify-center gap-4 w-full">
-      {/* Marketplace button */}
+      {/* Marketplace button - visible to all roles */}
       <Button 
         variant="outline" 
         className="gap-2" 
@@ -27,9 +32,13 @@ export const QuickActionsMenu = () => {
         </Link>
       </Button>
 
-      {/* Diagnostic buttons - these components already exist */}
-      <QuickDiagnosticsButton />
-      <DiagnosticsAccessButton />
+      {/* Diagnostic buttons - only visible to admin roles */}
+      {isAdmin && (
+        <>
+          <QuickDiagnosticsButton />
+          <DiagnosticsAccessButton />
+        </>
+      )}
     </div>
   );
 };

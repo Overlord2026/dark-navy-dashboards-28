@@ -8,12 +8,24 @@ import { DiagnosticsTabs } from "@/components/diagnostics/DiagnosticsTabs";
 import { LoadingState } from "@/components/diagnostics/LoadingState";
 import { logger } from "@/services/logging/loggingService";
 import { Recommendation } from "@/components/diagnostics/RecommendationsList";
+import { useUser } from "@/context/UserContext";
+import { Navigate } from "react-router-dom";
+import { ShieldX } from "lucide-react";
 
 export default function SystemDiagnostics() {
   const [isLoading, setIsLoading] = useState(false);
   const [report, setReport] = useState<any>(null);
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
   const [pageAccessError, setPageAccessError] = useState<string | null>(null);
+  const { userProfile } = useUser();
+  const userRole = userProfile?.role || "client";
+  const isAdmin = userRole === "admin" || userRole === "system_administrator";
+
+  // Redirect non-admin users
+  if (!isAdmin) {
+    toast.error("You don't have permission to access the diagnostics page");
+    return <Navigate to="/" replace />;
+  }
 
   useEffect(() => {
     // Initialize logging system when component mounts
