@@ -37,7 +37,7 @@ export const AdvisorSection = ({ advisorInfo, onViewProfile, onBookSession, coll
           >
             <div className="relative h-[30px] w-[30px] mr-3">
               <Avatar className="h-[30px] w-[30px] border-2 border-gray-700 rounded-full">
-                <AvatarFallback className="bg-black text-white">
+                <AvatarFallback className="bg-[#9F9EA1] text-white">
                   {advisorInfo.name.split(' ').map(name => name[0]).join('')}
                 </AvatarFallback>
               </Avatar>
@@ -58,7 +58,7 @@ export const AdvisorSection = ({ advisorInfo, onViewProfile, onBookSession, coll
           <div className="bg-[#1B1B32] p-6 text-white">
             <div className="flex items-start space-x-4 mb-4">
               <Avatar className="h-[70px] w-[70px] border-2 border-gray-700">
-                <AvatarFallback className="bg-black text-white text-[24px]">
+                <AvatarFallback className="bg-[#9F9EA1] text-white text-[24px]">
                   {advisorInfo.name.split(' ').map(name => name[0]).join('')}
                 </AvatarFallback>
               </Avatar>

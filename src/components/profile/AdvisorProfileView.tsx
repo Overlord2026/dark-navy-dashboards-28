@@ -2,6 +2,7 @@
 import { UserIcon, MailIcon, LinkedinIcon, PhoneIcon, MapPinIcon, FileTextIcon, GraduationCapIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 interface AdvisorInfo {
   name: string;
@@ -65,11 +66,11 @@ export const AdvisorProfileView = ({
       <div className="flex flex-col md:flex-row items-center justify-between mb-6">
         <div className="flex flex-col md:flex-row items-center">
           <div className="rounded-full overflow-hidden w-32 h-32 mb-4 md:mb-0 md:mr-6">
-            <img
-              src="/lovable-uploads/b4df25d6-12d7-4c34-874e-804e72335904.png"
-              alt={advisorInfo.name}
-              className="w-full h-full object-cover"
-            />
+            <Avatar className="w-full h-full">
+              <AvatarFallback className="bg-[#9F9EA1] text-white text-[24px]">
+                {advisorInfo.name.split(' ').map(name => name[0]).join('')}
+              </AvatarFallback>
+            </Avatar>
           </div>
           <div className="text-center md:text-left">
             <h2 className="text-2xl font-semibold text-white">{advisorInfo.name}</h2>

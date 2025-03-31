@@ -91,7 +91,7 @@ export const UserProfileDropdown = ({ onOpenForm }: UserProfileDropdownProps) =>
           onClick={() => setIsOpen(!isOpen)} // Explicit toggle on click
         >
           <div className="flex items-center">
-            <div className="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center text-white font-medium mr-3">
+            <div className="h-10 w-10 rounded-full bg-[#FFC107] flex items-center justify-center text-[#222222] font-medium mr-3">
               {initials}
             </div>
             <span className="font-medium text-white">Tom Brady</span>
