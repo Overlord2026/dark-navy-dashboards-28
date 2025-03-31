@@ -111,14 +111,118 @@ export function EducationalTabs({
       <TabsContent value="guides" className="animate-fade-in">
         <div className="space-y-6">
           <h3 className="text-xl font-semibold mb-4">Educational Guides</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {educationalResources.guides.map((guide) => (
-              <CourseCard
-                key={guide.id}
-                {...guide}
-                onClick={() => handleCourseEnrollment(guide.id, guide.title, guide.isPaid, guide.ghlUrl)}
-              />
-            ))}
+          <p className="text-muted-foreground mb-6">
+            Access our collection of comprehensive financial guides designed to help you navigate complex financial topics.
+          </p>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Card className="overflow-hidden">
+              <div className="relative pb-[65%] bg-muted">
+                <img 
+                  src="https://images.unsplash.com/photo-1579621970795-87facc2f976d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" 
+                  alt="Retirement Planning Guide" 
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+              </div>
+              <CardHeader>
+                <CardTitle className="text-lg">Retirement Planning Guide</CardTitle>
+                <CardDescription>Comprehensive strategies for a secure retirement</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground mb-4">A complete roadmap to planning your retirement, including income strategies, tax considerations, and legacy planning.</p>
+                <Button 
+                  variant="default" 
+                  className="w-full"
+                  onClick={() => window.open("https://awmfl1-my.sharepoint.com/personal/rosielle_awmfl_com/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Frosielle%5Fawmfl%5Fcom%2FDocuments%2FAWMFL%20Guides%20%2D%20Final%20Draft%2FSecured%20Guides%202025&ct=1743196082829&or=OWA%2DNT%2DMail&ga=1&ls=true", "_blank", "noopener,noreferrer")}
+                >
+                  Access Guide <ExternalLink className="h-3 w-3 ml-1" />
+                </Button>
+              </CardContent>
+            </Card>
+            
+            <Card className="overflow-hidden">
+              <div className="relative pb-[65%] bg-muted">
+                <img 
+                  src="https://images.unsplash.com/photo-1563986768609-322da13575f3?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" 
+                  alt="Estate Planning Guide" 
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+              </div>
+              <CardHeader>
+                <CardTitle className="text-lg">Estate Planning Guide</CardTitle>
+                <CardDescription>Protecting your legacy and loved ones</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground mb-4">Essential information on wills, trusts, power of attorney, and strategies to minimize estate taxes and ensure your wishes are carried out.</p>
+                <Button 
+                  variant="default" 
+                  className="w-full"
+                  onClick={() => window.open("https://awmfl1-my.sharepoint.com/personal/rosielle_awmfl_com/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Frosielle%5Fawmfl%5Fcom%2FDocuments%2FAWMFL%20Guides%20%2D%20Final%20Draft%2FSecured%20Guides%202025&ct=1743196082829&or=OWA%2DNT%2DMail&ga=1&ls=true", "_blank", "noopener,noreferrer")}
+                >
+                  Access Guide <ExternalLink className="h-3 w-3 ml-1" />
+                </Button>
+              </CardContent>
+            </Card>
+            
+            <Card className="overflow-hidden">
+              <div className="relative pb-[65%] bg-muted">
+                <img 
+                  src="https://images.unsplash.com/photo-1565372195458-9de0b320ef04?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" 
+                  alt="Tax Planning Strategies" 
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+              </div>
+              <CardHeader>
+                <CardTitle className="text-lg">Tax Planning Strategies</CardTitle>
+                <CardDescription>Optimize your tax situation</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground mb-4">Advanced tax planning techniques to help minimize your tax burden and maximize your wealth across different life stages.</p>
+                <Button 
+                  variant="default" 
+                  className="w-full"
+                  onClick={() => window.open("https://awmfl1-my.sharepoint.com/personal/rosielle_awmfl_com/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Frosielle%5Fawmfl%5Fcom%2FDocuments%2FAWMFL%20Guides%20%2D%20Final%20Draft%2FSecured%20Guides%202025&ct=1743196082829&or=OWA%2DNT%2DMail&ga=1&ls=true", "_blank", "noopener,noreferrer")}
+                >
+                  Access Guide <ExternalLink className="h-3 w-3 ml-1" />
+                </Button>
+              </CardContent>
+            </Card>
+            
+            <Card className="overflow-hidden">
+              <div className="relative pb-[65%] bg-muted">
+                <img 
+                  src="https://images.unsplash.com/photo-1434626881859-194d67b2b86f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" 
+                  alt="Investment Strategy Guide" 
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+              </div>
+              <CardHeader>
+                <CardTitle className="text-lg">Investment Strategy Guide</CardTitle>
+                <CardDescription>Building and preserving wealth</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground mb-4">Comprehensive overview of investment strategies, asset allocation, risk management, and portfolio construction principles.</p>
+                <Button 
+                  variant="default" 
+                  className="w-full"
+                  onClick={() => window.open("https://awmfl1-my.sharepoint.com/personal/rosielle_awmfl_com/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Frosielle%5Fawmfl%5Fcom%2FDocuments%2FAWMFL%20Guides%20%2D%20Final%20Draft%2FSecured%20Guides%202025&ct=1743196082829&or=OWA%2DNT%2DMail&ga=1&ls=true", "_blank", "noopener,noreferrer")}
+                >
+                  Access Guide <ExternalLink className="h-3 w-3 ml-1" />
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+          
+          <div className="mt-8 p-6 bg-primary/5 rounded-lg border border-primary/10">
+            <h4 className="text-lg font-semibold mb-2">Need a Personalized Guide?</h4>
+            <p className="mb-4">Our team can create custom financial guides tailored to your specific situation and goals.</p>
+            <Button 
+              variant="outline" 
+              className="w-full md:w-auto"
+              onClick={() => window.open("https://ghl.example.com/request-custom-guide", "_blank", "noopener,noreferrer")}
+            >
+              Request Custom Guide
+            </Button>
           </div>
         </div>
       </TabsContent>
