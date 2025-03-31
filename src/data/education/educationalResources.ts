@@ -40,6 +40,15 @@ export const educationalResources: EducationalResources = {
       level: "Beginner",
       author: "David McKnight",
       ghlUrl: "https://ghl.example.com/books/power-of-zero"
+    },
+    {
+      id: "book-wealth-mindset",
+      title: "The Psychology of Money",
+      description: "Timeless lessons on wealth, greed, and happiness.",
+      isPaid: false,
+      level: "All Levels",
+      author: "Morgan Housel",
+      ghlUrl: "https://ghl.example.com/books/psychology-of-money"
     }
   ]
 };

@@ -64,7 +64,7 @@ export default function Education() {
       secondaryMenuItems={courseCategories}
     >
       <motion.div 
-        className="space-y-6"
+        className="space-y-6 px-1"
         variants={containerVariants}
         initial="hidden"
         animate="visible"

@@ -12,6 +12,7 @@ import {
 } from "@/data/education";
 import { CourseCard } from "./CourseCard";
 import { FeaturedCategories } from "./FeaturedCategories";
+import { ExternalLink } from "lucide-react";
 
 interface EducationalTabsProps {
   activeSection: string;
@@ -30,12 +31,38 @@ export function EducationalTabs({
 }: EducationalTabsProps) {
   return (
     <Tabs defaultValue="courses" value={activeSection} className="mt-6">
-      <TabsList className="mb-6 grid grid-cols-4 gap-1 w-full max-w-lg">
-        <TabsTrigger value="courses" onClick={() => setActiveSection("courses")}>Courses</TabsTrigger>
-        <TabsTrigger value="guides" onClick={() => setActiveSection("guides")}>Guides</TabsTrigger>
-        <TabsTrigger value="books" onClick={() => setActiveSection("books")}>Recommended Reading</TabsTrigger>
-        <TabsTrigger value="allocation-models" onClick={() => setActiveSection("allocation-models")}>Allocation Models</TabsTrigger>
-      </TabsList>
+      <div className="bg-muted rounded-md p-1 mb-6">
+        <TabsList className="grid grid-cols-4 gap-1 w-full">
+          <TabsTrigger 
+            value="courses" 
+            onClick={() => setActiveSection("courses")}
+            className={`${activeSection === "courses" ? "bg-background shadow-sm" : ""} px-6 py-2 text-sm font-medium transition-colors`}
+          >
+            Courses
+          </TabsTrigger>
+          <TabsTrigger 
+            value="guides" 
+            onClick={() => setActiveSection("guides")}
+            className={`${activeSection === "guides" ? "bg-background shadow-sm" : ""} px-6 py-2 text-sm font-medium transition-colors`}
+          >
+            Guides
+          </TabsTrigger>
+          <TabsTrigger 
+            value="books" 
+            onClick={() => setActiveSection("books")}
+            className={`${activeSection === "books" ? "bg-background shadow-sm" : ""} px-6 py-2 text-sm font-medium transition-colors`}
+          >
+            Recommended Reading
+          </TabsTrigger>
+          <TabsTrigger 
+            value="allocation-models" 
+            onClick={() => setActiveSection("allocation-models")}
+            className={`${activeSection === "allocation-models" ? "bg-background shadow-sm" : ""} px-6 py-2 text-sm font-medium transition-colors`}
+          >
+            Allocation Models
+          </TabsTrigger>
+        </TabsList>
+      </div>
       
       <TabsContent value="courses" className="animate-fade-in">
         {activeCategory === "all-courses" ? (
@@ -99,6 +126,72 @@ export function EducationalTabs({
       <TabsContent value="books" className="animate-fade-in">
         <div className="space-y-6">
           <h3 className="text-xl font-semibold mb-4">Recommended Reading</h3>
+          
+          <div className="mb-8">
+            <div className="flex items-center mb-4">
+              <h4 className="text-lg font-medium">Tony Gomes Books</h4>
+              <Button 
+                variant="link" 
+                className="ml-2 text-primary flex items-center gap-1"
+                onClick={() => window.open("https://www.amazon.com/s?k=tony+gomes", "_blank", "noopener,noreferrer")}
+              >
+                View on Amazon <ExternalLink className="h-4 w-4" />
+              </Button>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-base">The 5 pillars of Wealth Creation</CardTitle>
+                  <CardDescription>By Tony Gomes</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground mb-4">A comprehensive guide to building sustainable wealth through five fundamental principles.</p>
+                  <Button 
+                    variant="outline" 
+                    className="w-full"
+                    onClick={() => window.open("https://www.amazon.com/s?k=tony+gomes", "_blank", "noopener,noreferrer")}
+                  >
+                    View on Amazon
+                  </Button>
+                </CardContent>
+              </Card>
+              
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-base">Legacy Planning Mastery</CardTitle>
+                  <CardDescription>By Tony Gomes</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground mb-4">Essential strategies to preserve your wealth and create a lasting legacy for future generations.</p>
+                  <Button 
+                    variant="outline" 
+                    className="w-full"
+                    onClick={() => window.open("https://www.amazon.com/s?k=tony+gomes", "_blank", "noopener,noreferrer")}
+                  >
+                    View on Amazon
+                  </Button>
+                </CardContent>
+              </Card>
+              
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-base">Tax-Efficient Investing</CardTitle>
+                  <CardDescription>By Tony Gomes</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground mb-4">Advanced strategies to minimize tax burden and maximize returns on your investments.</p>
+                  <Button 
+                    variant="outline" 
+                    className="w-full"
+                    onClick={() => window.open("https://www.amazon.com/s?k=tony+gomes", "_blank", "noopener,noreferrer")}
+                  >
+                    View on Amazon
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+          
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {educationalResources.books.map((book) => (
               <CourseCard
