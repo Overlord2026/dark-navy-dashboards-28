@@ -10,8 +10,8 @@ import { ScheduleMeetingDialog } from "@/components/investments/ScheduleMeetingD
 import { toast } from "sonner";
 
 // Insurance type definitions
-type InsuranceType = "term-life" | "permanent-life" | "annuities" | "long-term-care";
-type InsuranceProvider = "pinnacle" | "dpl";
+type InsuranceType = "term-life" | "permanent-life" | "annuities" | "long-term-care" | "healthcare" | "homeowners" | "automobile";
+type InsuranceProvider = "pinnacle" | "dpl" | "pacific" | "travelers";
 
 const Insurance = () => {
   const [selectedType, setSelectedType] = useState<InsuranceType | null>(null);
@@ -22,7 +22,18 @@ const Insurance = () => {
 
   const handleSelectType = (type: InsuranceType) => {
     setSelectedType(type);
-    setSelectedProvider(type === "annuities" ? "dpl" : "pinnacle");
+    
+    // Set default provider based on insurance type
+    if (type === "annuities") {
+      setSelectedProvider("dpl");
+    } else if (type === "healthcare") {
+      setSelectedProvider("pacific");
+    } else if (type === "homeowners" || type === "automobile") {
+      setSelectedProvider("travelers");
+    } else {
+      setSelectedProvider("pinnacle");
+    }
+    
     setCurrentPage(1);
     setTotalPages(1); // Most have only 1 provider, can be adjusted as needed
     setIsDetailPanelOpen(true); // Open the detail panel when type is selected
@@ -136,6 +147,72 @@ const Insurance = () => {
                 </p>
               </div>
             </Card>
+
+            {/* Healthcare Card - NEW */}
+            <Card 
+              className="bg-[#121a2c] border border-gray-800 overflow-hidden cursor-pointer hover:border-gray-600 transition-all"
+              onClick={() => handleSelectType("healthcare")}
+            >
+              <div className="p-6 space-y-4">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-xl font-semibold">Healthcare <ChevronRight className="inline h-5 w-5 opacity-70" /></h2>
+                </div>
+                <div className="h-40 flex items-center justify-center">
+                  <img 
+                    src="/lovable-uploads/8d710c1a-ccab-41d8-b202-41ad5cc5a735.png" 
+                    alt="Healthcare Insurance" 
+                    className="h-24 w-auto opacity-70"
+                  />
+                </div>
+                <p className="text-gray-400">
+                  Comprehensive health insurance plans to cover medical expenses, doctor visits, hospital stays, and prescription medications.
+                </p>
+              </div>
+            </Card>
+
+            {/* Homeowners Insurance Card - NEW */}
+            <Card 
+              className="bg-[#121a2c] border border-gray-800 overflow-hidden cursor-pointer hover:border-gray-600 transition-all"
+              onClick={() => handleSelectType("homeowners")}
+            >
+              <div className="p-6 space-y-4">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-xl font-semibold">Homeowners Insurance <ChevronRight className="inline h-5 w-5 opacity-70" /></h2>
+                </div>
+                <div className="h-40 flex items-center justify-center">
+                  <img 
+                    src="/lovable-uploads/7faf1d1a-8aff-4541-8400-18aa687704e7.png" 
+                    alt="Homeowners Insurance" 
+                    className="h-24 w-auto opacity-70"
+                  />
+                </div>
+                <p className="text-gray-400">
+                  Protection for your home and personal property against damage, theft, and liability for injuries and property damage.
+                </p>
+              </div>
+            </Card>
+
+            {/* Automobile Insurance Card - NEW */}
+            <Card 
+              className="bg-[#121a2c] border border-gray-800 overflow-hidden cursor-pointer hover:border-gray-600 transition-all"
+              onClick={() => handleSelectType("automobile")}
+            >
+              <div className="p-6 space-y-4">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-xl font-semibold">Automobile Insurance <ChevronRight className="inline h-5 w-5 opacity-70" /></h2>
+                </div>
+                <div className="h-40 flex items-center justify-center">
+                  <img 
+                    src="/lovable-uploads/333644ca-ed82-4b57-a52a-56bfe37cac74.png" 
+                    alt="Automobile Insurance" 
+                    className="h-24 w-auto opacity-70"
+                  />
+                </div>
+                <p className="text-gray-400">
+                  Coverage for financial protection against physical damage or bodily injury resulting from traffic collisions and against liability.
+                </p>
+              </div>
+            </Card>
           </div>
         </div>
       </ThreeColumnLayout>
@@ -174,25 +251,21 @@ const Insurance = () => {
 
             <div className="mt-8">
               <h3 className="text-2xl font-semibold text-gray-300 mb-4">
-                {selectedType === "annuities" ? "DPL" : "Pinnacle"}
+                {getProviderName(selectedProvider)}
               </h3>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
                   <h4 className="text-sm text-gray-400 mb-2">About</h4>
                   <p className="text-gray-300">
-                    {selectedType === "annuities" 
-                      ? "DPL Financial Partners helps RIAs and their clients access commission-free annuities. They offer access to a marketplace of insurance carriers to review and compare annuities." 
-                      : "Pinnacle is a life insurance broker that offers a range of policies including term and permanent, long-term care, disability, and annuities. They focus on providing a customized, white-glove experience."}
+                    {getProviderDescription(selectedProvider, selectedType)}
                   </p>
                 </div>
 
                 <div>
                   <h4 className="text-sm text-gray-400 mb-2">How It Works</h4>
                   <p className="text-gray-300">
-                    {selectedType === "annuities" 
-                      ? "Typically, your advisor fills out your basic information and needs. After that, DPL generates quotes within seconds for your advisor to review and share with you." 
-                      : "You provide basic qualifying information to your advisor to determine your insurance needs. Your advisor will work with Pinnacle to generate quotes on your behalf and then discuss those options with you."}
+                    {getProviderWorkflow(selectedProvider, selectedType)}
                   </p>
                 </div>
               </div>
@@ -233,7 +306,7 @@ const Insurance = () => {
               </div>
 
               <h2 className="text-2xl font-semibold mb-4">
-                {selectedType === "annuities" ? "DPL" : "Pinnacle"}
+                {getProviderName(selectedProvider)}
               </h2>
 
               <div className="space-y-6">
@@ -248,12 +321,10 @@ const Insurance = () => {
 
                 <div>
                   <h3 className="text-lg font-medium text-gray-300 mb-2">
-                    About {selectedType === "annuities" ? "DPL" : "Pinnacle"}
+                    About {getProviderName(selectedProvider)}
                   </h3>
                   <p className="text-gray-400">
-                    {selectedType === "annuities" 
-                      ? "DPL Financial Partners helps RIAs and their clients access commission-free annuities. They offer access to a marketplace of insurance carriers to review and compare annuities." 
-                      : "Pinnacle is a life insurance broker that offers a range of policies including term and permanent, long-term care, disability, and annuities. They focus on providing a customized, white-glove experience."}
+                    {getProviderDescription(selectedProvider, selectedType)}
                   </p>
                 </div>
 
@@ -262,9 +333,7 @@ const Insurance = () => {
                     How It Works
                   </h3>
                   <p className="text-gray-400">
-                    {selectedType === "annuities" 
-                      ? "Typically, your advisor fills out your basic information and needs. After that, DPL generates quotes within seconds for your advisor to review and share with you." 
-                      : "You provide basic qualifying information to your advisor to determine your insurance needs. Your advisor will work with Pinnacle to generate quotes on your behalf and then discuss those options with you."}
+                    {getProviderWorkflow(selectedProvider, selectedType)}
                   </p>
                 </div>
 
@@ -297,17 +366,13 @@ const Insurance = () => {
                     <div className="bg-[#0f1628] border border-gray-800 rounded-lg p-4">
                       <h4 className="font-medium">Other Offerings</h4>
                       <p className="text-sm text-gray-400 mt-2">
-                        {selectedType === "annuities" 
-                          ? "DPL also offers term life, permanent life, and long-term care insurance options through their platform." 
-                          : "Pinnacle also provides disability insurance, business insurance, and estate planning services."}
+                        {getProviderOtherOfferings(selectedProvider, selectedType)}
                       </p>
                     </div>
                     <div className="bg-[#0f1628] border border-gray-800 rounded-lg p-4">
                       <h4 className="font-medium">Top Carriers</h4>
                       <p className="text-sm text-gray-400 mt-2">
-                        {selectedType === "annuities" 
-                          ? "DPL works with carriers like Lincoln Financial, AIG, and Pacific Life." 
-                          : "Pinnacle partners with top-rated insurers including Northwestern Mutual, New York Life, and Guardian."}
+                        {getProviderTopCarriers(selectedProvider)}
                       </p>
                     </div>
                   </div>
@@ -332,6 +397,12 @@ function getInsuranceTitle(type: InsuranceType): string {
       return "Annuities";
     case "long-term-care":
       return "Long-Term Care";
+    case "healthcare":
+      return "Healthcare";
+    case "homeowners":
+      return "Homeowners Insurance";
+    case "automobile":
+      return "Automobile Insurance";
     default:
       return "Insurance";
   }
@@ -347,6 +418,94 @@ function getInsuranceDescription(type: InsuranceType): string {
       return "Insurance contracts used for asset accumulation or as income replacement with a stream of payments for a specified period or the rest of your life.";
     case "long-term-care":
       return "Policies to cover the costs of care related to aging or disability. Helps protect your savings and get you access to better quality care.";
+    case "healthcare":
+      return "Comprehensive health insurance plans to cover medical expenses, doctor visits, hospital stays, and prescription medications.";
+    case "homeowners":
+      return "Protection for your home and personal property against damage, theft, and liability for injuries and property damage.";
+    case "automobile":
+      return "Coverage for financial protection against physical damage or bodily injury resulting from traffic collisions and against liability.";
+    default:
+      return "";
+  }
+}
+
+// Helper functions for provider information
+function getProviderName(provider: InsuranceProvider | null): string {
+  switch (provider) {
+    case "pinnacle":
+      return "Pinnacle";
+    case "dpl":
+      return "DPL";
+    case "pacific":
+      return "Pacific Health";
+    case "travelers":
+      return "Travelers";
+    default:
+      return "Insurance Provider";
+  }
+}
+
+function getProviderDescription(provider: InsuranceProvider | null, type: InsuranceType | null): string {
+  switch (provider) {
+    case "pinnacle":
+      return "Pinnacle is a life insurance broker that offers a range of policies including term and permanent, long-term care, disability, and annuities. They focus on providing a customized, white-glove experience.";
+    case "dpl":
+      return "DPL Financial Partners helps RIAs and their clients access commission-free annuities. They offer access to a marketplace of insurance carriers to review and compare annuities.";
+    case "pacific":
+      return "Pacific Health is a leading provider of healthcare insurance solutions with flexible plans that can be tailored to individual and family needs, offering comprehensive coverage options.";
+    case "travelers":
+      return type === "homeowners" 
+        ? "Travelers is one of the nation's largest providers of homeowners insurance, offering comprehensive protection for your home and belongings." 
+        : "Travelers has been providing auto insurance protection for over 160 years, with a range of coverage options and discounts.";
+    default:
+      return "";
+  }
+}
+
+function getProviderWorkflow(provider: InsuranceProvider | null, type: InsuranceType | null): string {
+  switch (provider) {
+    case "pinnacle":
+      return "You provide basic qualifying information to your advisor to determine your insurance needs. Your advisor will work with Pinnacle to generate quotes on your behalf and then discuss those options with you.";
+    case "dpl":
+      return "Typically, your advisor fills out your basic information and needs. After that, DPL generates quotes within seconds for your advisor to review and share with you.";
+    case "pacific":
+      return "Your advisor will work with you to understand your healthcare needs and budget. Pacific Health provides a range of plans that can be compared side by side to find the best fit for your situation.";
+    case "travelers":
+      return type === "homeowners"
+        ? "Your advisor will collect details about your home, its contents, and your coverage needs to generate personalized quotes from Travelers. They'll help you select the most appropriate coverage options."
+        : "Your advisor will gather information about your vehicles, driving history, and coverage preferences to obtain competitive quotes from Travelers. They'll explain the different coverage options available.";
+    default:
+      return "";
+  }
+}
+
+function getProviderOtherOfferings(provider: InsuranceProvider | null, type: InsuranceType | null): string {
+  switch (provider) {
+    case "pinnacle":
+      return "Pinnacle also provides disability insurance, business insurance, and estate planning services.";
+    case "dpl":
+      return "DPL also offers term life, permanent life, and long-term care insurance options through their platform.";
+    case "pacific":
+      return "Pacific Health also offers dental, vision, short-term disability, and supplemental health insurance products.";
+    case "travelers":
+      return type === "homeowners"
+        ? "Travelers also offers auto, umbrella, boat, and jewelry insurance to provide comprehensive protection for all your assets."
+        : "Travelers offers homeowners, umbrella, and business insurance products to complement your auto coverage.";
+    default:
+      return "";
+  }
+}
+
+function getProviderTopCarriers(provider: InsuranceProvider | null): string {
+  switch (provider) {
+    case "pinnacle":
+      return "Pinnacle partners with top-rated insurers including Northwestern Mutual, New York Life, and Guardian.";
+    case "dpl":
+      return "DPL works with carriers like Lincoln Financial, AIG, and Pacific Life.";
+    case "pacific":
+      return "Pacific Health works with major healthcare networks including Anthem, Blue Cross Blue Shield, and United Healthcare.";
+    case "travelers":
+      return "Travelers is itself one of the top insurance carriers in the United States with an A++ financial strength rating from AM Best.";
     default:
       return "";
   }
