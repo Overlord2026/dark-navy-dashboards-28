@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import HomePage from '@/pages/HomePage';
 import CustomerProfile from '@/pages/CustomerProfile';
 import Marketplace from '@/pages/Marketplace';
@@ -19,6 +19,8 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<HomePage />} />
+            <Route path="/login" element={<Navigate to="/dashboard" />} />
+            <Route path="/dashboard" element={<CustomerProfile />} />
             <Route path="/home" element={<HomePage />} />
             <Route path="/profile" element={<CustomerProfile />} />
             <Route path="/marketplace" element={<Marketplace />} />
