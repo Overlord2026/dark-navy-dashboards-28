@@ -12,11 +12,10 @@ import { WelcomeTrialBanner } from "@/components/dashboard/WelcomeTrialBanner";
 import { TrialEndingSoonBanner } from "@/components/dashboard/TrialEndingSoonBanner";
 import { MidTrialBanner } from "@/components/dashboard/MidTrialBanner";
 import { useSubscription } from "@/context/SubscriptionContext";
-import { DiagnosticsAccessButton } from "@/components/diagnostics/DiagnosticsAccessButton";
 import { Button } from "@/components/ui/button";
-import { ShoppingBag, FileText } from "lucide-react";
+import { ShoppingBag, FileText, Activity, PanelRight } from "lucide-react";
 import { Link } from "react-router-dom";
-import { QuickDiagnosticsButton } from "@/components/diagnostics/QuickDiagnosticsButton";
+import { QuickActionsMenu } from "@/components/dashboard/QuickActionsMenu";
 
 export default function Index() {
   const { assets } = useNetWorth();
@@ -42,22 +41,7 @@ export default function Index() {
         
         <div className="flex justify-between items-center">
           <h1 className="text-3xl font-bold">Welcome Back</h1>
-          <div className="flex items-center gap-3">
-            <Button variant="outline" className="gap-2" asChild>
-              <Link to="/marketplace">
-                <ShoppingBag className="h-4 w-4" />
-                Marketplace
-              </Link>
-            </Button>
-            <Button variant="outline" className="gap-2" asChild>
-              <Link to="/legacy-vault">
-                <FileText className="h-4 w-4" />
-                Legacy Vault
-              </Link>
-            </Button>
-            <QuickDiagnosticsButton />
-            <DiagnosticsAccessButton />
-          </div>
+          <QuickActionsMenu />
         </div>
         
         <FinancialOverview />
