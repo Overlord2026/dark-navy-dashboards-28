@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { FinancialOverview } from "@/components/dashboard/FinancialOverview";
@@ -45,7 +46,10 @@ export default function Index() {
           <QuickActionsMenu />
         </div>
         
-        <FinancialOverview />
+        {/* Add an id to the FinancialOverview for easier alignment */}
+        <div id="financial-overview-section">
+          <FinancialOverview />
+        </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <NetWorthSummary />

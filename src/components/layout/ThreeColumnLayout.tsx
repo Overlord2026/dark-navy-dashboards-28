@@ -1,3 +1,4 @@
+
 import { ReactNode, useState } from "react";
 import * as React from "react";
 import { useParams, useNavigate, Link, useLocation } from "react-router-dom";
@@ -269,12 +270,6 @@ export function ThreeColumnLayout({
           )}
         >
           <div className="flex flex-col h-full">
-            {!mainSidebarCollapsed && (
-              <div className="border-b border-sidebar-border">
-                <UserProfileSection onMenuItemClick={handleProfileMenuItemClick} showLogo={false} />
-              </div>
-            )}
-            
             <div className="overflow-y-auto mt-1 flex-1">
               <nav className="px-2 space-y-1">
                 {navigationCategories.map((category) => (
@@ -378,6 +373,13 @@ export function ThreeColumnLayout({
                   </div>
                 ))}
               </nav>
+            </div>
+            
+            {/* Moved UserProfileSection down to align with Financial Overview cards */}
+            <div className={`px-4 ${isLightTheme ? 'border-[#DCD8C0]' : 'border-white/10'}`}>
+              {!mainSidebarCollapsed && (
+                <UserProfileSection onMenuItemClick={handleProfileMenuItemClick} showLogo={false} />
+              )}
             </div>
             
             <div className={`px-4 mt-auto mb-4 ${isLightTheme ? 'border-[#DCD8C0]' : 'border-white/10'}`}>
