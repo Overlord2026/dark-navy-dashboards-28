@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { GraduationCapIcon } from 'lucide-react';
 import {
@@ -19,7 +20,7 @@ import { courseCategories, featuredCourses, popularCourses } from "@/data/educat
 export const SwagEducationMenu = () => {
   const [activeTab, setActiveTab] = useState<string>("featured");
   const [activeCategory, setActiveCategory] = useState<string>("all-courses");
-  const [isProcessing, setIsProcessing] = useState<string | number | null>(null);
+  const [isProcessing, setIsProcessing] = useState<boolean>(false);
 
   // Handler for course enrollment that's compatible with our components
   const handleCourseEnrollment = (courseId: string | number, title: string, isPaid: boolean, ghlUrl?: string) => {

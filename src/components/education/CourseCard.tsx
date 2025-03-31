@@ -5,6 +5,7 @@ import { Trophy, Clock, ExternalLink } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { useState } from "react";
+import { handleCourseAccess } from "./courseUtils";
 
 export interface CourseCardProps {
   id: string | number;
@@ -37,7 +38,11 @@ export function CourseCard({
       return;
     }
     
-    if (onClick) {
+    if (ghlUrl) {
+      // If GHL URL exists, handle course access directly
+      handleCourseAccess(id, title, isPaid, ghlUrl, setIsProcessing);
+    } else if (onClick) {
+      // Fallback to onClick handler if provided
       onClick();
       setIsProcessing(true);
       

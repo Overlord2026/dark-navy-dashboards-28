@@ -5,6 +5,7 @@ import { useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { EducationalTabs } from "@/components/education/EducationalTabs";
 import { courseCategories } from "@/data/education";
+import { handleCourseAccess } from "@/components/education/courseUtils";
 
 export default function Education() {
   const [searchParams] = useSearchParams();
@@ -25,17 +26,15 @@ export default function Education() {
 
   const handleCourseEnrollment = (courseId: string | number, title: string, isPaid: boolean, ghlUrl?: string) => {
     if (ghlUrl) {
-      // Open the GHL URL in a new tab
-      window.open(ghlUrl, "_blank", "noopener,noreferrer");
-      toast.success(`Opening ${title}`);
-      return;
-    }
-    
-    // Fallback for if we somehow get here without a URL
-    if (isPaid) {
-      toast.info(`Redirecting to payment page for ${title}`);
+      // Use the handleCourseAccess utility for proper course access flow
+      handleCourseAccess(courseId, title, isPaid, ghlUrl);
     } else {
-      toast.success(`Successfully enrolled in ${title}`);
+      // Fallback for if we somehow get here without a URL
+      if (isPaid) {
+        toast.info(`Redirecting to payment page for ${title}`);
+      } else {
+        toast.success(`Successfully enrolled in ${title}`);
+      }
     }
   };
 
