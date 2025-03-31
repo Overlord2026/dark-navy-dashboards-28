@@ -7,9 +7,10 @@ import { FamilyOfficeList } from "@/components/familyoffice/FamilyOfficeList";
 import { useFamilyOffices } from "@/hooks/useFamilyOffices";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { ArrowLeft, ExternalLink } from "lucide-react";
+import { ArrowLeft, ExternalLink, FilterX, Search, History } from "lucide-react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export default function FamilyOfficeDirectory() {
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -21,8 +22,10 @@ export default function FamilyOfficeDirectory() {
   });
   const [searchHistory, setSearchHistory] = useState<string[]>([]);
   const [searchTimeout, setSearchTimeout] = useState<NodeJS.Timeout | null>(null);
+  const [showFilters, setShowFilters] = useState(false);
   
   const { familyOffices, isLoading } = useFamilyOffices();
+  const isMobile = useIsMobile();
   
   // Track search analytics
   useEffect(() => {
@@ -59,12 +62,17 @@ export default function FamilyOfficeDirectory() {
     });
     toast.success("All filters cleared");
   };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    toast.success(`Searching for "${searchQuery}"`);
+  };
   
   return (
     <ThreeColumnLayout title="Family Office Directory">
       <div className="space-y-6 px-4 py-6 max-w-7xl mx-auto">
-        <div className="flex items-center justify-between mb-6">
-          <Button variant="ghost" size="sm" asChild className="mb-4">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+          <Button variant="ghost" size="sm" asChild className="self-start">
             <Link to="/marketplace" className="flex items-center gap-2">
               <ArrowLeft className="h-4 w-4" /> 
               Back to Marketplace
@@ -83,34 +91,69 @@ export default function FamilyOfficeDirectory() {
           </Button>
         </div>
         
-        <MarketplaceHeader 
-          searchQuery={searchQuery}
-          setSearchQuery={handleSearch}
-          customTitle="Nationwide Family Office Directory"
-          customDescription="Connect with the right Family Office for your wealth management needs"
-        />
+        <form onSubmit={handleSubmit}>
+          <MarketplaceHeader 
+            searchQuery={searchQuery}
+            setSearchQuery={handleSearch}
+            customTitle="Nationwide Family Office Directory"
+            customDescription="Connect with the right Family Office for your wealth management needs"
+          />
+        </form>
         
         {searchHistory.length > 0 && (
           <div className="flex flex-wrap gap-2 items-center text-sm">
-            <span className="text-muted-foreground">Recent searches:</span>
+            <span className="flex items-center gap-1 text-muted-foreground">
+              <History className="h-3.5 w-3.5" />
+              Recent:
+            </span>
             {searchHistory.map((term) => (
               <Badge 
                 key={term} 
                 variant="outline" 
-                className="cursor-pointer"
+                className="cursor-pointer transition-colors hover:bg-muted"
                 onClick={() => setSearchQuery(term)}
               >
                 {term}
               </Badge>
             ))}
-            <Button variant="ghost" size="sm" className="text-xs" onClick={() => setSearchHistory([])}>
-              Clear history
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="text-xs h-6 px-2" 
+              onClick={() => setSearchHistory([])}
+            >
+              Clear
             </Button>
           </div>
         )}
 
+        {isMobile && (
+          <div className="flex justify-between items-center mb-2">
+            <Button
+              variant="outline"
+              size="sm"
+              className="flex items-center gap-1"
+              onClick={() => setShowFilters(!showFilters)}
+            >
+              <FilterX className="h-4 w-4" />
+              {showFilters ? "Hide Filters" : "Show Filters"}
+            </Button>
+            
+            {Object.values(filters).some(value => value !== "" && value !== 0) && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={clearFilters}
+                className="text-xs"
+              >
+                Clear All Filters
+              </Button>
+            )}
+          </div>
+        )}
+
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <div className="md:col-span-1">
+          <div className={`${isMobile && !showFilters ? 'hidden' : ''} md:col-span-1`}>
             <FamilyOfficeFilters 
               filters={filters} 
               onFilterChange={handleFilterChange} 
