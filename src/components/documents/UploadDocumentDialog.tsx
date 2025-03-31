@@ -4,15 +4,15 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { FileUpload } from "@/components/ui/file-upload";
-import { Upload } from "lucide-react";
+import { FileUploadField } from "@/components/documents/FileUploadField";
+import { DocumentCategory } from "@/types/document";
 
 export interface UploadDocumentDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onFileUpload: (file: File, customName: string) => void;
   activeCategory?: string | null;
-  documentCategories?: any[];
+  documentCategories?: DocumentCategory[];
 }
 
 export function UploadDocumentDialog({
@@ -25,10 +25,14 @@ export function UploadDocumentDialog({
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [customName, setCustomName] = useState("");
 
-  const handleFileChange = (file: File) => {
+  const handleFileChange = (file: File | null) => {
     setSelectedFile(file);
-    // Set default custom name based on file name
-    setCustomName(file.name.replace(/\.[^/.]+$/, ""));
+    // Set default custom name based on file name if a file is selected
+    if (file) {
+      setCustomName(file.name.replace(/\.[^/.]+$/, ""));
+    } else {
+      setCustomName("");
+    }
   };
 
   const handleSubmit = () => {
@@ -66,11 +70,12 @@ export function UploadDocumentDialog({
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
-            <Label htmlFor="file">File</Label>
-            <FileUpload
-              onFileChange={handleFileChange}
+            <FileUploadField
+              onFileSelect={handleFileChange}
               accept="application/pdf,image/*,.doc,.docx,.xls,.xlsx,.txt"
-              className="w-full"
+              label="Document File"
+              description="Choose a file or drag & drop it here"
+              showPreview={true}
             />
           </div>
           {selectedFile && (
