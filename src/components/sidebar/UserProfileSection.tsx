@@ -82,10 +82,10 @@ export const UserProfileSection = ({
   };
 
   return (
-    <div className={`px-4 py-3 ${isLightTheme ? 'border-[#DCD8C0]' : 'border-white/10'}`}>
+    <div className={`px-0 py-4 ${isLightTheme ? 'border-[#DCD8C0]' : 'border-white/10'}`}>
       {/* Optional logo above the user profile dropdown */}
       {showLogo && (
-        <div className="mb-3 flex justify-center">
+        <div className="mb-4 flex justify-center">
           <img 
             src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" 
             alt="Boutique Family Office Logo" 
@@ -96,18 +96,18 @@ export const UserProfileSection = ({
       
       <DropdownMenu open={isDropdownOpen} onOpenChange={handleOpenChange}>
         <DropdownMenuTrigger 
-          className={`flex items-center justify-between w-full py-3 px-4 rounded-lg transition-colors cursor-pointer border-2 ${
+          className={`flex items-center justify-between w-full mx-0 py-4 px-4 rounded-none transition-colors cursor-pointer border-y-2 ${
             isLightTheme 
-              ? 'hover:bg-[#E9E7D8] text-[#222222] border-gray-400 shadow-md' 
-              : 'hover:bg-white/5 text-white border-gray-600 shadow-md'
+              ? 'hover:bg-[#E9E7D8] text-[#222222] border-gray-400 shadow-lg' 
+              : 'hover:bg-white/5 text-white border-gray-600 shadow-lg'
           }`}
           onClick={() => setIsDropdownOpen(!isDropdownOpen)}
         >
           <div className="flex items-center">
-            <div className="h-9 w-9 rounded-full bg-[#FFC107] flex items-center justify-center mr-3 text-white font-medium border-2 border-gray-600">
+            <div className="h-12 w-12 rounded-full bg-[#FFC107] flex items-center justify-center mr-3 text-white font-medium border-2 border-gray-600">
               {avatarInitials}
             </div>
-            <span className="font-medium text-sm">{userName}</span>
+            <span className="font-medium text-base">{userName}</span>
           </div>
           <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${isLightTheme ? 'text-[#222222]/70' : 'text-white/70'} ${isDropdownOpen ? 'rotate-180' : ''}`} />
         </DropdownMenuTrigger>

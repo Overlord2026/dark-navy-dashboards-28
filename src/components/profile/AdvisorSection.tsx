@@ -29,14 +29,14 @@ export const AdvisorSection = ({ advisorInfo, onViewProfile, onBookSession, coll
   const isLightTheme = theme === "light";
   
   return (
-    <div className={`px-4 mt-auto mb-4 ${isLightTheme ? 'border-[#DCD8C0]' : 'border-white/10'}`}>
+    <div className={`px-0 mx-0 ${isLightTheme ? 'border-[#DCD8C0]' : 'border-white/10'}`}>
       <Popover>
         <PopoverTrigger asChild>
           <div 
-            className={`flex items-center w-full py-3 px-4 rounded-lg transition-colors cursor-pointer border-2 ${isLightTheme ? 'bg-white text-[#222222] border-gray-400 hover:bg-[#E9E7D8] shadow-md' : 'bg-black border-gray-600 text-white hover:bg-white/5 shadow-md'}`}
+            className={`flex items-center w-full py-4 px-4 rounded-none transition-colors cursor-pointer border-y-2 ${isLightTheme ? 'bg-white text-[#222222] border-gray-400 hover:bg-[#E9E7D8] shadow-lg' : 'bg-black border-gray-600 text-white hover:bg-white/5 shadow-lg'}`}
           >
-            <div className="relative h-[38px] w-[38px] mr-3">
-              <Avatar className="h-[38px] w-[38px] border-2 border-gray-600 rounded-full">
+            <div className="relative h-[42px] w-[42px] mr-3">
+              <Avatar className="h-[42px] w-[42px] border-2 border-gray-600 rounded-full">
                 <AvatarFallback className="bg-[#9F9EA1] text-white">
                   {advisorInfo.name.split(' ').map(name => name[0]).join('')}
                 </AvatarFallback>
