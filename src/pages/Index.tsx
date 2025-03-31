@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { ModularLayout } from "@/components/layout/ModularLayout";
 import { FinancialOverview } from "@/components/dashboard/FinancialOverview";
@@ -44,11 +43,9 @@ export default function Index() {
       <div key={dashboardKey} className="space-y-4 px-4 py-2 max-w-7xl mx-auto">
         {renderTrialBanner()}
         
-        {isAdmin && (
-          <div className="mt-1">
-            <QuickActionsMenu />
-          </div>
-        )}
+        <div className="mt-1 flex justify-end">
+          <QuickActionsMenu />
+        </div>
         
         <div id="financial-overview-section">
           <FinancialOverview />
