@@ -143,7 +143,7 @@ const NavItemLink = ({
   isLightTheme,
   onClick 
 }: NavItemLinkProps) => {
-  const Icon = item.icon;
+  const IconComponent = item.icon;
   
   return (
     <Link
@@ -161,13 +161,13 @@ const NavItemLink = ({
       onClick={onClick}
       title={isCollapsed ? item.label : undefined}
     >
-      {Icon && (
+      {IconComponent && (
         <div className={cn(
           "flex items-center justify-center rounded-sm p-0.5",
           isLightTheme ? 'bg-[#222222]' : 'bg-black',
           !isCollapsed && "mr-3"
         )}>
-          <Icon className="h-5 w-5" />
+          <IconComponent className="h-5 w-5" />
         </div>
       )}
       {!isCollapsed && <span className="whitespace-nowrap overflow-hidden text-ellipsis">{item.label}</span>}

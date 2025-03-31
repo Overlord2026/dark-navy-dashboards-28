@@ -3,9 +3,6 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import HomePage from '@/pages/HomePage';
 import CustomerProfile from '@/pages/CustomerProfile';
-import Marketplace from '@/pages/Marketplace';
-import FamilyOfficeDirectory from '@/pages/FamilyOfficeDirectory';
-import DataImportPage from '@/pages/DataImportPage';
 import CashManagement from '@/pages/CashManagement';
 import { ThemeProvider } from '@/context/ThemeContext';
 import { UserProvider } from '@/context/UserContext';
@@ -19,6 +16,25 @@ import Subscription from '@/pages/Subscription';
 import BillsManagement from '@/pages/BillsManagement';
 import AdvisorProfile from '@/pages/AdvisorProfile';
 
+// Import Marketplace Module components
+import { MarketplaceProvider } from '@/modules/marketplace/context/MarketplaceContext';
+import MarketplacePage from '@/modules/marketplace/pages/MarketplacePage';
+import FamilyOfficeDirectory from '@/pages/FamilyOfficeDirectory';
+import DataImportPage from '@/pages/DataImportPage';
+
+// Register the marketplace navigation in the main navigation
+import { registerNavItem } from '@/components/navigation/NavigationConfig';
+import { registerMarketplaceNavigation } from '@/modules/marketplace/navigation/MarketplaceNavigationConfig';
+import { ShoppingBag } from 'lucide-react';
+
+// Register marketplace in main navigation
+registerNavItem('collaboration', {
+  id: "marketplace",
+  label: "Marketplace",
+  icon: ShoppingBag,
+  href: "/marketplace"
+});
+
 function App() {
   return (
     <ThemeProvider>
@@ -26,25 +42,30 @@ function App() {
         <SubscriptionProvider>
           <NetWorthProvider>
             <BillsProvider>
-              <BrowserRouter>
-                <Routes>
-                  <Route path="/" element={<Index />} />
-                  <Route path="/landing" element={<HomePage />} />
-                  <Route path="/login" element={<Navigate to="/" />} />
-                  <Route path="/dashboard" element={<Index />} />
-                  <Route path="/home" element={<Index />} />
-                  <Route path="/profile" element={<CustomerProfile />} />
-                  <Route path="/marketplace" element={<Marketplace />} />
-                  <Route path="/family-office-directory" element={<FamilyOfficeDirectory />} />
-                  <Route path="/data-import" element={<DataImportPage />} />
-                  <Route path="/cash-management" element={<CashManagement />} />
-                  <Route path="/education" element={<Education />} />
-                  <Route path="/subscription" element={<Subscription />} />
-                  <Route path="/bills-management" element={<BillsManagement />} />
-                  <Route path="/advisor-profile" element={<AdvisorProfile />} />
-                </Routes>
-              </BrowserRouter>
-              <Toaster />
+              <MarketplaceProvider>
+                <BrowserRouter>
+                  <Routes>
+                    <Route path="/" element={<Index />} />
+                    <Route path="/landing" element={<HomePage />} />
+                    <Route path="/login" element={<Navigate to="/" />} />
+                    <Route path="/dashboard" element={<Index />} />
+                    <Route path="/home" element={<Index />} />
+                    <Route path="/profile" element={<CustomerProfile />} />
+                    
+                    {/* Marketplace Module Routes */}
+                    <Route path="/marketplace" element={<MarketplacePage />} />
+                    <Route path="/family-office-directory" element={<FamilyOfficeDirectory />} />
+                    <Route path="/data-import" element={<DataImportPage />} />
+                    
+                    <Route path="/cash-management" element={<CashManagement />} />
+                    <Route path="/education" element={<Education />} />
+                    <Route path="/subscription" element={<Subscription />} />
+                    <Route path="/bills-management" element={<BillsManagement />} />
+                    <Route path="/advisor-profile" element={<AdvisorProfile />} />
+                  </Routes>
+                </BrowserRouter>
+                <Toaster />
+              </MarketplaceProvider>
             </BillsProvider>
           </NetWorthProvider>
         </SubscriptionProvider>
