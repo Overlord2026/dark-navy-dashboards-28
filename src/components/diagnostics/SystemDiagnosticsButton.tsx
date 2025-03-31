@@ -6,41 +6,27 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { runQuickSystemCheck } from "@/services/diagnosticsService";
 
-type ButtonVariant = "default" | "destructive" | "outline" | "secondary" | "ghost" | "link" | "interested" | "advisor" | "marketplace";
-type ButtonSize = "default" | "sm" | "lg" | "icon" | "xl";
-
-interface SystemDiagnosticsButtonProps {
-  variant?: ButtonVariant;
-  size?: ButtonSize;
-  targetSystem?: "all" | "marketplace" | "financial" | "document";
-}
-
-export const SystemDiagnosticsButton = ({ 
-  variant = "default", 
-  size = "default",
-  targetSystem = "all"
-}: SystemDiagnosticsButtonProps) => {
+export const SystemDiagnosticsButton = ({ variant = "default", size = "default" }) => {
   const navigate = useNavigate();
   
   const handleRunDiagnostics = async () => {
-    const systemLabel = targetSystem === "all" ? "system" : targetSystem;
-    toast.info(`Running quick ${systemLabel} check...`);
+    toast.info("Running quick system check...");
     
     try {
-      const quickCheck = await runQuickSystemCheck(targetSystem);
+      const quickCheck = await runQuickSystemCheck();
       
       if (quickCheck.success) {
-        toast.success(`${systemLabel.charAt(0).toUpperCase() + systemLabel.slice(1)} check completed: ${quickCheck.status}`, {
+        toast.success(`System check completed: ${quickCheck.status}`, {
           description: "Navigating to detailed diagnostics report"
         });
-        navigate(`/system-diagnostics${targetSystem !== "all" ? `?focus=${targetSystem}` : ""}`);
+        navigate("/system-diagnostics");
       } else {
-        toast.error(`${systemLabel.charAt(0).toUpperCase() + systemLabel.slice(1)} check failed`, {
+        toast.error("System check failed", {
           description: "Please try again or contact support"
         });
       }
     } catch (error) {
-      toast.error(`Error running ${systemLabel} diagnostics`, {
+      toast.error("Error running diagnostics", {
         description: error instanceof Error ? error.message : "Unknown error"
       });
     }
@@ -54,13 +40,7 @@ export const SystemDiagnosticsButton = ({
       onClick={handleRunDiagnostics}
     >
       <Activity className="h-4 w-4" />
-      <span>
-        {targetSystem === "all" ? "Run Diagnostics" : 
-         targetSystem === "marketplace" ? "Check Marketplace" :
-         targetSystem === "financial" ? "Check Financials" :
-         targetSystem === "document" ? "Check Documents" : 
-         "Run Diagnostics"}
-      </span>
+      <span>Run Diagnostics</span>
     </Button>
   );
 };
