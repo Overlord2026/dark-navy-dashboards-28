@@ -3,9 +3,10 @@ import React, { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Search } from "lucide-react";
 import { PrivateInvestmentsFirmList } from "@/components/familyoffice/PrivateInvestmentsFirmList";
 import { usePrivateInvestments } from "@/hooks/usePrivateInvestments";
+import { Input } from "@/components/ui/input";
 
 export default function PrivateInvestmentsPage() {
   const { firms, isLoading } = usePrivateInvestments();
@@ -32,34 +33,50 @@ export default function PrivateInvestmentsPage() {
             </p>
           </div>
           
-          <div className="flex flex-wrap gap-3 mb-6">
+          <div className="relative mb-4">
+            <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search by firm name, strategy or investment type..."
+              className="pl-10"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+          
+          <div className="flex flex-wrap gap-3 mb-6 bg-muted/20 p-4 rounded-md">
+            <h3 className="w-full text-sm font-medium mb-2">Filter by Investment Category:</h3>
             <Button 
               variant={activeCategory === "all" ? "default" : "outline"} 
               onClick={() => setActiveCategory("all")}
+              size="sm"
             >
               All Categories
             </Button>
             <Button 
               variant={activeCategory === "private-equity" ? "default" : "outline"} 
               onClick={() => setActiveCategory("private-equity")}
+              size="sm"
             >
               Private Equity
             </Button>
             <Button 
               variant={activeCategory === "private-credit" ? "default" : "outline"} 
               onClick={() => setActiveCategory("private-credit")}
+              size="sm"
             >
               Private Credit
             </Button>
             <Button 
               variant={activeCategory === "real-estate" ? "default" : "outline"} 
               onClick={() => setActiveCategory("real-estate")}
+              size="sm"
             >
               Real Estate
             </Button>
             <Button 
               variant={activeCategory === "infrastructure" ? "default" : "outline"} 
               onClick={() => setActiveCategory("infrastructure")}
+              size="sm"
             >
               Infrastructure
             </Button>
