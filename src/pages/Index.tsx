@@ -16,6 +16,7 @@ import { DiagnosticsAccessButton } from "@/components/diagnostics/DiagnosticsAcc
 import { Button } from "@/components/ui/button";
 import { ShoppingBag, FileText } from "lucide-react";
 import { Link } from "react-router-dom";
+import { QuickDiagnosticsButton } from "@/components/diagnostics/QuickDiagnosticsButton";
 
 export default function Index() {
   const { assets } = useNetWorth();
@@ -54,6 +55,7 @@ export default function Index() {
                 Legacy Vault
               </Link>
             </Button>
+            <QuickDiagnosticsButton />
             <DiagnosticsAccessButton />
           </div>
         </div>

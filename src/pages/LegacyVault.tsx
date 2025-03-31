@@ -68,7 +68,6 @@ export default function LegacyVault() {
     setSelectedSubCategory(null);
     setBreadcrumbs([]);
     toast({
-      title: "Section changed",
       description: `You are now viewing the ${section} section`,
     });
   };
@@ -227,10 +226,10 @@ export default function LegacyVault() {
         <Tabs defaultValue="documents" value={activeSection} onValueChange={handleSectionChange} className="w-full">
           <TabsList className="grid grid-cols-7 w-full">
             {vaultSections.map((section) => {
-              const Icon = section.icon;
+              const SectionIcon = section.icon;
               return (
                 <TabsTrigger key={section.id} value={section.id} className="flex items-center gap-2">
-                  <Icon className="h-4 w-4" />
+                  <SectionIcon className="h-4 w-4" />
                   <span className="hidden sm:inline">{section.label}</span>
                 </TabsTrigger>
               );
@@ -273,14 +272,14 @@ export default function LegacyVault() {
               ) : (
                 <div className="h-[300px] flex flex-col items-center justify-center border rounded-md bg-card">
                   <div className="text-center max-w-md mx-auto">
-                    <Icon className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
+                    {/* Use the correct section icon */}
+                    {React.createElement(section.icon, { className: "h-12 w-12 mx-auto mb-4 text-muted-foreground" })}
                     <h3 className="text-xl font-medium mb-2">{section.label}</h3>
                     <p className="text-muted-foreground mb-6">
                       This section will contain your {section.label.toLowerCase()} documents and information.
                     </p>
                     <Button 
                       onClick={() => toast({
-                        title: "Coming Soon",
                         description: `The ${section.label} section is coming soon!`
                       })}
                       className="gap-2"
