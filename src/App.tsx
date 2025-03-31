@@ -79,7 +79,10 @@ function App() {
                     {/* System Diagnostics Routes */}
                     <Route path="/system-diagnostics" element={<SystemDiagnostics />} />
                     
+                    {/* Education Routes */}
                     <Route path="/education" element={<Education />} />
+                    <Route path="/education/:categoryId" element={<Education />} />
+                    
                     <Route path="/subscription" element={<Subscription />} />
                     <Route path="/advisor-profile" element={<AdvisorProfile />} />
                     <Route path="/tax-budgets" element={<Index />} />

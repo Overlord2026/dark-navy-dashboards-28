@@ -1,5 +1,6 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useParams, useSearchParams } from "react-router-dom";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { EducationalTabs } from "@/components/education/EducationalTabs";
 import { courseCategories } from "@/data/education";
@@ -7,9 +8,21 @@ import { handleCourseAccess } from "@/components/education/courseUtils";
 import { Button } from "@/components/ui/button";
 
 export default function Education() {
+  const { categoryId } = useParams();
+  const [searchParams] = useSearchParams();
+  const forceHideBadge = searchParams.get("forceHideBadge");
+  
   const [activeSection, setActiveSection] = useState("courses");
-  const [activeCategory, setActiveCategory] = useState("all-courses");
+  const [activeCategory, setActiveCategory] = useState(categoryId || "all-courses");
   const [isProcessing, setIsProcessing] = useState(false);
+
+  // Update active category when URL parameter changes
+  useEffect(() => {
+    if (categoryId) {
+      setActiveCategory(categoryId);
+      setActiveSection("courses");
+    }
+  }, [categoryId]);
 
   // Handler for course enrollment that's compatible with our components
   const handleCourseEnrollment = (courseId: string | number, title: string, isPaid: boolean, ghlUrl?: string) => {
