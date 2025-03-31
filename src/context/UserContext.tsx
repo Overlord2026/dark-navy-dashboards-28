@@ -48,7 +48,7 @@ const defaultUserProfile: UserProfile = {
   investmentGoals: ['Retirement', 'College', 'Home Purchase'],
   income: 150000,
   netWorth: 750000,
-  title: 'Mr.',
+  title: 'Mr',
   middleName: '',
   suffix: 'none',
   gender: 'Male',
@@ -64,18 +64,23 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
 
   // Load profile from localStorage on initial mount
   useEffect(() => {
-    const savedProfile = localStorage.getItem('userProfile');
-    if (savedProfile) {
-      try {
+    try {
+      const savedProfile = localStorage.getItem('userProfile');
+      if (savedProfile) {
         const parsedProfile = JSON.parse(savedProfile);
         // Convert dateOfBirth string back to Date object if it exists
         if (parsedProfile.dateOfBirth) {
           parsedProfile.dateOfBirth = new Date(parsedProfile.dateOfBirth);
         }
         setUserProfile(parsedProfile);
-      } catch (error) {
-        console.error('Error parsing saved profile:', error);
+      } else {
+        // If no profile exists in localStorage, save the default one
+        localStorage.setItem('userProfile', JSON.stringify(defaultUserProfile));
       }
+    } catch (error) {
+      console.error('Error processing saved profile:', error);
+      // If there's an error, reset to default and save it
+      localStorage.setItem('userProfile', JSON.stringify(defaultUserProfile));
     }
   }, []);
 

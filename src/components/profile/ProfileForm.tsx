@@ -33,9 +33,9 @@ export function ProfileForm({ onSave }: { onSave: () => void }) {
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: userProfile.title || "Mr",
-      firstName: userProfile.firstName,
+      firstName: userProfile.firstName || "Tim",
       middleName: userProfile.middleName || "",
-      lastName: userProfile.lastName,
+      lastName: userProfile.lastName || "Brady",
       suffix: userProfile.suffix || "none",
       gender: userProfile.gender || "Male",
       maritalStatus: userProfile.maritalStatus || "Single",
@@ -48,9 +48,9 @@ export function ProfileForm({ onSave }: { onSave: () => void }) {
     if (userProfile) {
       form.reset({
         title: userProfile.title || "Mr",
-        firstName: userProfile.firstName,
+        firstName: userProfile.firstName || "Tim",
         middleName: userProfile.middleName || "",
-        lastName: userProfile.lastName,
+        lastName: userProfile.lastName || "Brady",
         suffix: userProfile.suffix || "none",
         gender: userProfile.gender || "Male",
         maritalStatus: userProfile.maritalStatus || "Single",
@@ -77,11 +77,16 @@ export function ProfileForm({ onSave }: { onSave: () => void }) {
       });
       
       // Show success message
-      toast.success("Profile information updated successfully");
+      toast.success("Profile information updated successfully", {
+        duration: 3000,
+        position: "top-center"
+      });
       
       // Call the onSave callback to update parent components
       if (onSave) {
-        onSave();
+        setTimeout(() => {
+          onSave();
+        }, 300);
       }
     } catch (error) {
       console.error("Error updating profile:", error);

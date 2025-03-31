@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetClose } from "@/components/ui/sheet";
 import { X, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -12,6 +12,7 @@ import { TrustsForm } from "@/components/profile/TrustsForm";
 import { SecurityForm } from "@/components/profile/SecurityForm";
 import { DialogTitle } from "@/components/ui/dialog";
 import { toast } from "sonner";
+import { useUser } from "@/context/UserContext";
 
 interface ProfileFormSheetProps {
   isOpen: boolean;
@@ -26,6 +27,14 @@ export const ProfileFormSheet = ({
   activeForm, 
   onFormSave 
 }: ProfileFormSheetProps) => {
+  const { userProfile } = useUser();
+  
+  // Force re-render when profile data changes
+  useEffect(() => {
+    if (isOpen) {
+      console.log("ProfileFormSheet: UserProfile changed", userProfile);
+    }
+  }, [userProfile, isOpen]);
   
   // Handle saving the form data
   const handleSave = (formId: string) => {
@@ -33,6 +42,11 @@ export const ProfileFormSheet = ({
     if (onFormSave) {
       onFormSave(formId);
     }
+    
+    // Force close after saving
+    setTimeout(() => {
+      onOpenChange(false);
+    }, 300);
   };
 
   const renderFormContent = () => {

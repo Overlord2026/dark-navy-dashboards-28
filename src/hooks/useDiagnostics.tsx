@@ -1,94 +1,93 @@
 
-import { useState, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { runDiagnostics } from "@/services/diagnostics";
-import { SystemHealthReport } from "@/services/diagnostics/types";
+import { DiagnosticTestStatus } from "@/services/diagnostics/types";
 
-type QuickFixArea = 'performance' | 'security' | 'navigation' | 'forms' | 'database' | 'api' | 'authentication';
-type QuickFixSeverity = 'low' | 'medium' | 'high' | 'critical';
+export type QuickFixArea = 'system' | 'performance' | 'security' | 'config' | 'api';
 
-interface QuickFix {
+export interface QuickFix {
   id: string;
   name: string;
   description: string;
   area: QuickFixArea;
-  severity: QuickFixSeverity;
+  severity: string;
 }
 
-export const useDiagnostics = () => {
-  const [diagnosticResults, setDiagnosticResults] = useState<SystemHealthReport | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [loadingMessage, setLoadingMessage] = useState("Running diagnostics...");
-  const [quickFixLoading, setQuickFixLoading] = useState(false);
-
-  // Mock quick fixes based on diagnostic results
-  const quickFixes: QuickFix[] = diagnosticResults ? [
+export function useDiagnostics() {
+  const [isRunning, setIsRunning] = useState(false);
+  const [diagnosticResults, setDiagnosticResults] = useState<any>(null);
+  const [lastRunTimestamp, setLastRunTimestamp] = useState<string | null>(null);
+  const [quickFixes, setQuickFixes] = useState<QuickFix[]>([
     {
-      id: "fix-login-throttling",
-      name: "Implement Login Throttling",
-      description: "Add rate limiting for failed login attempts",
-      area: "security",
-      severity: "critical"
+      id: "fix-1",
+      name: "Optimize API response caching",
+      description: "Implement proper caching headers for REST API responses to improve performance",
+      area: "performance",
+      severity: "medium"
     },
     {
-      id: "optimize-dashboard-loading",
-      name: "Optimize Dashboard Loading",
-      description: "Reduce initial load time for dashboard components",
-      area: "performance",
+      id: "fix-2",
+      name: "Fix role permissions for advisors",
+      description: "Advisors currently have access to admin subscription page",
+      area: "security",
       severity: "high"
     },
-    ...(diagnosticResults.formValidationTests.some(test => test.status !== "success") ? [{
-      id: "fix-form-validation",
-      name: "Fix Form Validation",
-      description: "Address issues with form validation across the application",
-      area: "forms",
+    {
+      id: "fix-3",
+      name: "Update authentication tokens",
+      description: "Tax Software Integration credentials are invalid or expired",
+      area: "api",
+      severity: "high"
+    },
+    {
+      id: "fix-4",
+      name: "Fix calendar icon in mobile view",
+      description: "Calendar icon is missing in mobile view for appointments",
+      area: "config",
+      severity: "low"
+    },
+    {
+      id: "fix-5",
+      name: "Fix form validation in Loan Application",
+      description: "Form submission fails with valid data - issue with select and date fields",
+      area: "system",
       severity: "medium"
-    }] : []),
-  ] : [];
+    },
+    {
+      id: "fix-6",
+      name: "Resolve memory leak in Investment listings",
+      description: "Possible memory leak when loading large investment catalogs",
+      area: "performance",
+      severity: "high"
+    }
+  ]);
 
-  const refreshDiagnostics = useCallback(async () => {
-    setIsLoading(true);
-    setLoadingMessage("Running diagnostic tests...");
-    
+  const runSystemDiagnostics = async () => {
+    setIsRunning(true);
     try {
-      // Simulate a brief delay for UX
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
       const results = await runDiagnostics();
       setDiagnosticResults(results);
+      setLastRunTimestamp(new Date().toISOString());
+      return results;
     } catch (error) {
       console.error("Error running diagnostics:", error);
+      throw error;
     } finally {
-      setIsLoading(false);
+      setIsRunning(false);
     }
-  }, []);
+  };
 
-  // Mock function to simulate applying quick fixes
-  const applyQuickFix = useCallback(async (fixId: string) => {
-    setQuickFixLoading(true);
-    
-    try {
-      // Simulate a delay for the fix being applied
-      await new Promise(resolve => setTimeout(resolve, 1200));
-      
-      // In a real application, this would actually apply changes
-      console.log(`Applied fix: ${fixId}`);
-      
-      // Refresh diagnostics to show updated status
-      await refreshDiagnostics();
-    } catch (error) {
-      console.error("Error applying quick fix:", error);
-    } finally {
-      setQuickFixLoading(false);
-    }
-  }, [refreshDiagnostics]);
+  const getOverallStatus = (): DiagnosticTestStatus => {
+    if (!diagnosticResults) return "success";
+    return diagnosticResults.overall || "success";
+  };
 
   return {
+    isRunning,
     diagnosticResults,
-    isLoading,
-    loadingMessage,
-    refreshDiagnostics,
+    lastRunTimestamp,
     quickFixes,
-    applyQuickFix,
-    quickFixLoading
+    runSystemDiagnostics,
+    getOverallStatus
   };
-};
+}

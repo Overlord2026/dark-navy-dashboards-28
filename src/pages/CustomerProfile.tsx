@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { SetupChecklist } from "@/components/profile/SetupChecklist";
 import { UserProfileDropdown } from "@/components/profile/UserProfileDropdown";
@@ -46,6 +46,7 @@ const CustomerProfile = () => {
 
   // Force refresh of profile data when userProfile changes
   useEffect(() => {
+    console.log("CustomerProfile: UserProfile changed, refreshing view", userProfile);
     setProfileKey(Date.now());
   }, [userProfile]);
 
@@ -58,9 +59,11 @@ const CustomerProfile = () => {
   const handleCloseForm = () => {
     setActiveForm(null);
     setIsSheetOpen(false);
+    // Force refresh when form is closed
+    setProfileKey(Date.now());
   };
 
-  const handleCompleteForm = (formId: string) => {
+  const handleCompleteForm = useCallback((formId: string) => {
     console.log(`Form completed: ${formId}`);
     
     setChecklistItems(prevItems =>
@@ -72,8 +75,10 @@ const CustomerProfile = () => {
     // Force a refresh of the profile display
     setProfileKey(Date.now());
     
-    handleCloseForm();
-  };
+    // Close the form
+    setActiveForm(null);
+    setIsSheetOpen(false);
+  }, []);
 
   const handleViewAdvisorProfile = (tabId: string) => {
     setActiveAdvisorTab(tabId);
@@ -175,8 +180,15 @@ const CustomerProfile = () => {
       <UserProfileDropdown onOpenForm={handleProfileMenuItemClick} />
       
       <ProfileFormSheet 
+        key={`profile-form-${activeForm}`}
         isOpen={isSheetOpen}
-        onOpenChange={setIsSheetOpen}
+        onOpenChange={(open) => {
+          setIsSheetOpen(open);
+          if (!open) {
+            // Force refresh when sheet is closed
+            setTimeout(() => setProfileKey(Date.now()), 300);
+          }
+        }}
         activeForm={activeForm}
         onFormSave={handleCompleteForm}
       />

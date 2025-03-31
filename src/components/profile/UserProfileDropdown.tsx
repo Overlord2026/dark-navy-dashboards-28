@@ -36,6 +36,7 @@ export const UserProfileDropdown = ({ onOpenForm }: UserProfileDropdownProps) =>
   
   // Force refresh when profile changes
   useEffect(() => {
+    console.log("UserProfileDropdown: UserProfile changed, refreshing", userProfile);
     setDropdownKey(Date.now());
   }, [userProfile]);
   
