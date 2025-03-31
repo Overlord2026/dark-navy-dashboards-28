@@ -21,7 +21,7 @@ const buttonVariants = cva(
         link: "text-primary underline-offset-4 hover:underline",
         interested: "bg-yellow-500 hover:bg-yellow-600 text-black font-medium",
         advisor: "bg-[#1EAEDB] hover:bg-[#1EAEDB]/90 text-white font-medium",
-        marketplace: "bg-[#0EA5E9] hover:bg-[#0EA5E9]/90 text-white font-medium border-2 border-[#0EA5E9]/30 shadow-md",
+        marketplace: "bg-[#0EA5E9] hover:bg-[#0EA5E9]/90 text-white font-medium rounded-md",
       },
       size: {
         default: "h-10 px-4 py-2",

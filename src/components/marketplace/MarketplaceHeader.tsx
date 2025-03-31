@@ -20,7 +20,10 @@ export function MarketplaceHeader({ searchQuery, setSearchQuery }: MarketplaceHe
           </p>
         </div>
         
-        <Button className="flex items-center gap-2">
+        <Button 
+          className="flex items-center gap-2 bg-gradient-to-r from-[#0EA5E9] to-[#0891CE] shadow-sm" 
+          variant="marketplace"
+        >
           <PlusCircle className="h-4 w-4" />
           List Your Service
         </Button>

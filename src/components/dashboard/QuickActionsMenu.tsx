@@ -23,7 +23,7 @@ export const QuickActionsMenu = () => {
       <Button 
         variant="marketplace" 
         size="xl"
-        className="gap-2 transition-all" 
+        className="gap-2 transition-all shadow-md border border-[#0EA5E9]/20 bg-gradient-to-r from-[#0EA5E9] to-[#0891CE] font-medium tracking-wide" 
         asChild
         onClick={() => handleQuickAction("Family Office Services Marketplace")}
       >
