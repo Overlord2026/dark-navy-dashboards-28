@@ -6,7 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { FamilyOffice } from "@/types/familyoffice";
-import { Trash2, AlertCircle } from "lucide-react";
+import { Trash2, AlertCircle, MinusCircle, CheckCircle } from "lucide-react";
 
 interface ImportPreviewTableProps {
   data: Partial<FamilyOffice>[];
@@ -54,6 +54,10 @@ export function ImportPreviewTable({ data, onDataChange }: ImportPreviewTablePro
     return errors;
   };
 
+  // Determine the selection state
+  const allSelected = data.length > 0 && selectedRows.size === data.length;
+  const someSelected = selectedRows.size > 0 && selectedRows.size < data.length;
+
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
@@ -79,12 +83,27 @@ export function ImportPreviewTable({ data, onDataChange }: ImportPreviewTablePro
           <TableHeader>
             <TableRow>
               <TableHead className="w-12">
-                <Checkbox 
-                  checked={selectedRows.size === data.length && data.length > 0} 
-                  indeterminate={selectedRows.size > 0 && selectedRows.size < data.length}
-                  onCheckedChange={toggleAllRows}
-                  aria-label="Select all rows"
-                />
+                <div className="flex items-center justify-center">
+                  {someSelected ? (
+                    <MinusCircle 
+                      className="h-4 w-4 text-primary cursor-pointer" 
+                      onClick={toggleAllRows}
+                      aria-label="Select all rows"
+                    />
+                  ) : allSelected ? (
+                    <CheckCircle 
+                      className="h-4 w-4 text-primary cursor-pointer" 
+                      onClick={toggleAllRows}
+                      aria-label="Deselect all rows"
+                    />
+                  ) : (
+                    <Checkbox 
+                      checked={false}
+                      onCheckedChange={toggleAllRows}
+                      aria-label="Select all rows"
+                    />
+                  )}
+                </div>
               </TableHead>
               <TableHead>Name</TableHead>
               <TableHead>Location</TableHead>
