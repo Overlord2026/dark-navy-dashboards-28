@@ -8,11 +8,13 @@ import { PaymentDashboard } from "@/components/marketplace/PaymentDashboard";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PaymentProvider } from "@/context/PaymentContext";
 import { AdminPaymentDashboard } from "@/components/marketplace/AdminPaymentDashboard";
-import { usePayment } from "@/context/PaymentContext";
+import { useUser } from "@/context/UserContext";
 
 export default function MarketplacePayments() {
-  const userRole = "client"; // In a real app, this would come from auth context
-  const isAdmin = false; // In a real app, this would come from auth context
+  const { userProfile } = useUser();
+  // Check if the user is a service provider rather than a client
+  const isProvider = userProfile.role === "advisor" || userProfile.role === "consultant"; 
+  const isAdmin = userProfile.role === "admin" || userProfile.role === "system_administrator";
   
   return (
     <PaymentProvider>
@@ -43,7 +45,7 @@ export default function MarketplacePayments() {
             </TabsList>
             
             <TabsContent value="dashboard">
-              <PaymentDashboard isProvider={userRole === "provider"} />
+              <PaymentDashboard isProvider={isProvider} />
             </TabsContent>
             
             {isAdmin && (
