@@ -10,6 +10,7 @@ import PrivateInvestmentsPage from '@/pages/PrivateInvestmentsPage';
 import { ThemeProvider } from '@/context/ThemeContext';
 import { UserProvider } from '@/context/UserContext';
 import { NetWorthProvider } from '@/context/NetWorthContext';
+import { SubscriptionProvider } from '@/context/SubscriptionContext';
 import { Toaster } from 'sonner';
 import NotFound from '@/pages/NotFound';
 
@@ -17,23 +18,25 @@ function App() {
   return (
     <ThemeProvider>
       <UserProvider>
-        <NetWorthProvider>
-          <BrowserRouter>
-            <Routes>
-              {/* Redirect from root to dashboard */}
-              <Route path="/" element={<Navigate to="/dashboard" replace />} />
-              <Route path="/dashboard" element={<Index />} />
-              <Route path="/marketplace" element={<Marketplace />} />
-              <Route path="/family-office-directory" element={<FamilyOfficeDirectory />} />
-              <Route path="/data-import" element={<DataImportPage />} />
-              <Route path="/cash-management" element={<CashManagement />} />
-              <Route path="/private-investments" element={<PrivateInvestmentsPage />} />
-              {/* 404 route */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
-          <Toaster />
-        </NetWorthProvider>
+        <SubscriptionProvider>
+          <NetWorthProvider>
+            <BrowserRouter>
+              <Routes>
+                {/* Redirect from root to dashboard */}
+                <Route path="/" element={<Navigate to="/dashboard" replace />} />
+                <Route path="/dashboard" element={<Index />} />
+                <Route path="/marketplace" element={<Marketplace />} />
+                <Route path="/family-office-directory" element={<FamilyOfficeDirectory />} />
+                <Route path="/data-import" element={<DataImportPage />} />
+                <Route path="/cash-management" element={<CashManagement />} />
+                <Route path="/private-investments" element={<PrivateInvestmentsPage />} />
+                {/* 404 route */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </BrowserRouter>
+            <Toaster />
+          </NetWorthProvider>
+        </SubscriptionProvider>
       </UserProvider>
     </ThemeProvider>
   );
