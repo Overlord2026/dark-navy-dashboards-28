@@ -10,6 +10,7 @@ import {
   featuredCourses 
 } from "@/data/education";
 import { CourseCard } from "./CourseCard";
+import { FeaturedCategories } from "./FeaturedCategories";
 
 interface EducationalTabsProps {
   activeSection: string;
@@ -36,50 +37,42 @@ export function EducationalTabs({
       </TabsList>
       
       <TabsContent value="courses">
-        <CourseCategories 
-          categories={courseCategories} 
-          onSelectCategory={setActiveCategory} 
-        />
-
-        {activeCategory !== "all-courses" ? (
-          <div className="mt-10">
-            <h3 className="text-xl font-semibold mb-4">
-              {courseCategories.find(cat => cat.id === activeCategory)?.name || "Courses"}
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {coursesByCategory[activeCategory as keyof typeof coursesByCategory]?.map((course) => (
-                <CourseCard
-                  key={course.id}
-                  {...course}
-                  onClick={() => handleCourseEnrollment(course.id, course.title, course.isPaid, course.ghlUrl)}
-                />
-              ))}
-            </div>
-          </div>
+        {activeCategory === "all-courses" ? (
+          <>
+            <FeaturedCategories 
+              categories={courseCategories} 
+              onSelectCategory={setActiveCategory} 
+            />
+            
+            <CourseList 
+              title="Featured Courses" 
+              courses={featuredCourses}
+              onCourseEnrollment={handleCourseEnrollment}
+            />
+          </>
         ) : (
           <>
-            {courseCategories.slice(1).map((category) => (
-              <div key={category.id} className="mt-10">
-                <h3 className="text-xl font-semibold mb-4">{category.name}</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {coursesByCategory[category.id as keyof typeof coursesByCategory]?.map((course) => (
-                    <CourseCard
-                      key={course.id}
-                      {...course}
-                      onClick={() => handleCourseEnrollment(course.id, course.title, course.isPaid, course.ghlUrl)}
-                    />
-                  ))}
-                </div>
+            <CourseCategories 
+              categories={courseCategories} 
+              onSelectCategory={setActiveCategory} 
+            />
+
+            <div className="mt-10">
+              <h3 className="text-xl font-semibold mb-4">
+                {courseCategories.find(cat => cat.id === activeCategory)?.name || "Courses"}
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {coursesByCategory[activeCategory as keyof typeof coursesByCategory]?.map((course) => (
+                  <CourseCard
+                    key={course.id}
+                    {...course}
+                    onClick={() => handleCourseEnrollment(course.id, course.title, course.isPaid, course.ghlUrl)}
+                  />
+                ))}
               </div>
-            ))}
+            </div>
           </>
         )}
-
-        <CourseList 
-          title="Featured Courses" 
-          courses={featuredCourses}
-          onCourseEnrollment={handleCourseEnrollment}
-        />
       </TabsContent>
       
       <TabsContent value="guides">

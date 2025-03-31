@@ -1,3 +1,4 @@
+
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { toast } from "sonner";
 import { useSearchParams } from "react-router-dom";
@@ -24,7 +25,9 @@ export default function Education() {
 
   const handleCourseEnrollment = (courseId: string | number, title: string, isPaid: boolean, ghlUrl?: string) => {
     if (ghlUrl) {
-      // If we have a GHL URL, we'll open it directly (this is handled in CourseCard now)
+      // Open the GHL URL in a new tab
+      window.open(ghlUrl, "_blank", "noopener,noreferrer");
+      toast.success(`Opening ${title}`);
       return;
     }
     
