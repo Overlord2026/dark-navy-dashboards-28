@@ -21,13 +21,14 @@ export const QuickActionsMenu = () => {
     <div className="flex items-center justify-center gap-4 w-full">
       {/* Marketplace button - visible to all roles */}
       <Button 
-        variant="outline" 
-        className="gap-2" 
+        variant="marketplace" 
+        size="xl"
+        className="gap-2 transition-all" 
         asChild
         onClick={() => handleQuickAction("Marketplace")}
       >
         <Link to="/marketplace">
-          <ShoppingBag className="h-4 w-4" />
+          <ShoppingBag className="h-5 w-5" />
           Marketplace
         </Link>
       </Button>
