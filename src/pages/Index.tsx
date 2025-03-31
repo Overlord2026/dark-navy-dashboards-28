@@ -14,8 +14,6 @@ import { MidTrialBanner } from "@/components/dashboard/MidTrialBanner";
 import { useSubscription } from "@/context/SubscriptionContext";
 import { QuickActionsMenu } from "@/components/dashboard/QuickActionsMenu";
 import { useUser } from "@/context/UserContext";
-import { UserCircle } from "lucide-react";
-import { Link } from "react-router-dom";
 
 export default function Index() {
   const { assets } = useNetWorth();
@@ -47,15 +45,7 @@ export default function Index() {
         {renderTrialBanner()}
         
         <div className="flex justify-end mb-4">
-          <div className="flex items-center gap-3">
-            <Link to="/customer-profile">
-              <div className="flex items-center gap-2 p-2 hover:bg-white/5 rounded-md transition-colors cursor-pointer">
-                <UserCircle className="h-5 w-5" />
-                <span className="text-sm font-medium">Profile</span>
-              </div>
-            </Link>
-            <QuickActionsMenu />
-          </div>
+          <QuickActionsMenu />
         </div>
         
         <FinancialOverview />
