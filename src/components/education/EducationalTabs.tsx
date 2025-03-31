@@ -12,7 +12,7 @@ import {
 } from "@/data/education";
 import { CourseCard } from "./CourseCard";
 import { FeaturedCategories } from "./FeaturedCategories";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, Book } from "lucide-react";
 
 interface EducationalTabsProps {
   activeSection: string;
@@ -138,7 +138,48 @@ export function EducationalTabs({
                 View on Amazon <ExternalLink className="h-4 w-4" />
               </Button>
             </div>
+            
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <Card className="overflow-hidden">
+                <div className="relative pb-[60%] bg-muted">
+                  <img 
+                    src="/lovable-uploads/c99b3253-fc75-4097-ad44-9ef520280206.png" 
+                    alt="Life Integrated Financial Freedom by Tony Gomes" 
+                    className="absolute inset-0 w-full h-full object-cover"
+                  />
+                </div>
+                <CardHeader>
+                  <CardTitle className="text-base">Life Integrated Financial Freedom</CardTitle>
+                  <CardDescription>By Tony Gomes</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground mb-4">An Advanced Holistic Plan For Retirement - Published Feb 14, 2023</p>
+                  <div className="flex items-center mb-3">
+                    <div className="flex text-amber-500">
+                      <span>★★★★★</span>
+                    </div>
+                    <span className="text-sm ml-1">14 reviews</span>
+                  </div>
+                  <p className="text-lg font-semibold mb-3">$17.99</p>
+                  <div className="flex gap-2">
+                    <Button 
+                      variant="default" 
+                      className="w-full"
+                      onClick={() => window.open("https://www.amazon.com/Life-Integrated-Financial-Freedom-Advanced/dp/B0BVRGDMQJ/", "_blank", "noopener,noreferrer")}
+                    >
+                      Buy Now
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      className="flex-shrink-0"
+                      onClick={() => window.open("https://www.amazon.com/Life-Integrated-Financial-Freedom-Advanced/dp/B0BVRGDMQJ/#customerReviews", "_blank", "noopener,noreferrer")}
+                    >
+                      View Reviews
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+              
               <Card>
                 <CardHeader>
                   <CardTitle className="text-base">The 5 pillars of Wealth Creation</CardTitle>
@@ -163,23 +204,6 @@ export function EducationalTabs({
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm text-muted-foreground mb-4">Essential strategies to preserve your wealth and create a lasting legacy for future generations.</p>
-                  <Button 
-                    variant="outline" 
-                    className="w-full"
-                    onClick={() => window.open("https://www.amazon.com/s?k=tony+gomes", "_blank", "noopener,noreferrer")}
-                  >
-                    View on Amazon
-                  </Button>
-                </CardContent>
-              </Card>
-              
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-base">Tax-Efficient Investing</CardTitle>
-                  <CardDescription>By Tony Gomes</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-muted-foreground mb-4">Advanced strategies to minimize tax burden and maximize returns on your investments.</p>
                   <Button 
                     variant="outline" 
                     className="w-full"
