@@ -57,7 +57,7 @@ export default function Marketplace() {
                 Access exclusive investment opportunities
               </p>
             </div>
-            <Button asChild className="mt-3 sm:mt-0" variant="default" className="bg-blue-600 hover:bg-blue-700">
+            <Button asChild className="mt-3 sm:mt-0 bg-blue-600 hover:bg-blue-700">
               <Link to="/private-investments" className="flex items-center gap-2">
                 <TrendingUp className="h-4 w-4" />
                 View Opportunities
