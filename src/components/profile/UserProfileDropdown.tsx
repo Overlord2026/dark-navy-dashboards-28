@@ -87,11 +87,11 @@ export const UserProfileDropdown = ({ onOpenForm }: UserProfileDropdownProps) =>
     <div key={dropdownKey} className="fixed top-0 left-0 z-40 w-[220px] pt-4 px-5">
       <DropdownMenu open={isOpen} onOpenChange={handleOpenChange}>
         <DropdownMenuTrigger 
-          className="flex items-center justify-between w-full py-2 hover:bg-[#1c2e4a] rounded-md transition-colors cursor-pointer"
-          onClick={() => setIsOpen(!isOpen)} // Explicit toggle on click
+          className="flex items-center justify-between w-full py-3 px-4 hover:bg-[#1c2e4a] rounded-lg transition-colors cursor-pointer border-2 border-gray-600 shadow-md"
+          onClick={() => setIsOpen(!isOpen)}
         >
           <div className="flex items-center">
-            <div className="h-10 w-10 rounded-full bg-[#FFC107] flex items-center justify-center text-white font-medium mr-3">
+            <div className="h-11 w-11 rounded-full bg-[#FFC107] flex items-center justify-center text-white font-medium mr-3 border-2 border-gray-600">
               {initials}
             </div>
             <span className="font-medium text-white">Tom Brady</span>

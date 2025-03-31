@@ -33,10 +33,10 @@ export const AdvisorSection = ({ advisorInfo, onViewProfile, onBookSession, coll
       <Popover>
         <PopoverTrigger asChild>
           <div 
-            className={`flex items-center w-full py-1.5 px-3 rounded-md transition-colors cursor-pointer border ${isLightTheme ? 'bg-white text-[#222222] border-gray-300 hover:bg-[#E9E7D8]' : 'bg-black border-gray-700 text-white hover:bg-white/5'}`}
+            className={`flex items-center w-full py-3 px-4 rounded-lg transition-colors cursor-pointer border-2 ${isLightTheme ? 'bg-white text-[#222222] border-gray-400 hover:bg-[#E9E7D8] shadow-md' : 'bg-black border-gray-600 text-white hover:bg-white/5 shadow-md'}`}
           >
-            <div className="relative h-[30px] w-[30px] mr-3">
-              <Avatar className="h-[30px] w-[30px] border-2 border-gray-700 rounded-full">
+            <div className="relative h-[38px] w-[38px] mr-3">
+              <Avatar className="h-[38px] w-[38px] border-2 border-gray-600 rounded-full">
                 <AvatarFallback className="bg-[#9F9EA1] text-white">
                   {advisorInfo.name.split(' ').map(name => name[0]).join('')}
                 </AvatarFallback>
@@ -57,7 +57,7 @@ export const AdvisorSection = ({ advisorInfo, onViewProfile, onBookSession, coll
         >
           <div className="bg-[#1B1B32] p-6 text-white">
             <div className="flex items-start space-x-4 mb-4">
-              <Avatar className="h-[70px] w-[70px] border-2 border-gray-700">
+              <Avatar className="h-[70px] w-[70px] border-2 border-gray-600">
                 <AvatarFallback className="bg-[#9F9EA1] text-white text-[24px]">
                   {advisorInfo.name.split(' ').map(name => name[0]).join('')}
                 </AvatarFallback>
