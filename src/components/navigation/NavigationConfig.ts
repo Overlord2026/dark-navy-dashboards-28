@@ -27,8 +27,8 @@ import {
   CircleDollarSignIcon,
   BanknoteIcon,
   ArrowLeftRightIcon,
-  FileShieldIcon,  // Importing the correct icon
-  ShieldCheckIcon
+  ShieldCheckIcon,
+  FileTextIcon as FileShieldIcon  // Using FileTextIcon as a replacement for FileShieldIcon
 } from "lucide-react";
 
 import { NavItem } from "@/types/navigation";
@@ -128,7 +128,7 @@ export const securityNavItems: NavItem[] = [
   { 
     title: "IP Protection", 
     href: "/ip-protection", 
-    icon: FileShieldIcon  // Use the correctly imported icon
+    icon: FileShieldIcon  // Using the aliased icon
   },
   { 
     title: "Security Settings", 
