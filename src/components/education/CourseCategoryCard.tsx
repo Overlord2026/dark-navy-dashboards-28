@@ -3,7 +3,6 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Book, BookOpen, GraduationCap, Info } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { CourseCategory } from "@/types/education";
-import { useNavigate } from "react-router-dom";
 
 interface CourseCategoryCardProps {
   category: CourseCategory;
@@ -25,17 +24,13 @@ const categoryIcons: Record<string, React.ReactNode> = {
 };
 
 export function CourseCategoryCard({ category, courseCount = 0 }: CourseCategoryCardProps) {
-  const navigate = useNavigate();
-  
-  const handleClick = () => {
-    navigate(`/education?category=${category.id}`);
-  };
+  // Add a null check to ensure category exists
+  if (!category || !category.id) {
+    return null;
+  }
   
   return (
-    <Card 
-      className="h-full transition-all duration-200 hover:shadow-md cursor-pointer"
-      onClick={handleClick}
-    >
+    <Card className="h-full transition-all duration-200 hover:shadow-md cursor-pointer">
       <CardHeader className="pb-2">
         <div className="flex items-start justify-between">
           <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mb-2">

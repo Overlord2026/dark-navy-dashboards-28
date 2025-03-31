@@ -1,24 +1,19 @@
 
 import React from "react";
-import { Sidebar } from "@/components/ui/Sidebar";
-import { Header } from "@/components/ui/Header";
-import { PropertyManager } from "@/components/properties/PropertyManager";
 import { useSearchParams } from "react-router-dom";
+import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
+import { PropertyManager } from "@/components/properties/PropertyManager";
 
 const Properties = () => {
   const [searchParams] = useSearchParams();
   const filter = searchParams.get("filter");
 
   return (
-    <div className="flex h-screen bg-gray-950 text-white">
-      <Sidebar />
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <Header />
-        <main className="flex-1 overflow-y-auto p-4 md:p-6">
-          <PropertyManager initialFilter={filter} />
-        </main>
+    <ThreeColumnLayout title="Properties Management" activeMainItem="properties">
+      <div className="space-y-6 px-4 py-6 max-w-7xl mx-auto">
+        <PropertyManager initialFilter={filter} />
       </div>
-    </div>
+    </ThreeColumnLayout>
   );
 };
 

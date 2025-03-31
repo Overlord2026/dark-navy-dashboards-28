@@ -1,89 +1,65 @@
 
+import React, { useState, useEffect } from "react";
+import { useParams, useSearchParams, useNavigate } from "react-router-dom";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
-import { toast } from "sonner";
-import { useSearchParams } from "react-router-dom";
-import { useEffect, useState } from "react";
 import { EducationalTabs } from "@/components/education/EducationalTabs";
 import { courseCategories } from "@/data/education";
 import { handleCourseAccess } from "@/components/education/courseUtils";
-import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
 
 export default function Education() {
+  const { categoryId } = useParams();
   const [searchParams] = useSearchParams();
-  const [activeCategory, setActiveCategory] = useState("all-courses");
-  const [activeSection, setActiveSection] = useState("courses");
+  const navigate = useNavigate();
+  const forceHideBadge = searchParams.get("forceHideBadge");
   
+  const [activeSection, setActiveSection] = useState("courses");
+  const [activeCategory, setActiveCategory] = useState(categoryId || "all-courses");
+  const [isProcessing, setIsProcessing] = useState(false);
+
+  // Update active category when URL parameter changes
   useEffect(() => {
-    const category = searchParams.get("category");
-    const section = searchParams.get("section");
-    
-    if (category) {
-      setActiveCategory(category);
+    if (categoryId) {
+      setActiveCategory(categoryId);
       setActiveSection("courses");
-    } else if (section) {
-      setActiveSection(section);
     }
-  }, [searchParams]);
+  }, [categoryId]);
 
+  // Handler for course enrollment that's compatible with our components
   const handleCourseEnrollment = (courseId: string | number, title: string, isPaid: boolean, ghlUrl?: string) => {
-    if (ghlUrl) {
-      // Use the handleCourseAccess utility for proper course access flow
-      handleCourseAccess(courseId, title, isPaid, ghlUrl);
+    handleCourseAccess(courseId, title, isPaid, ghlUrl, setIsProcessing);
+  };
+
+  // Handler to update URL when category changes
+  const handleCategoryChange = (categoryId: string) => {
+    setActiveCategory(categoryId);
+    if (categoryId === "all-courses") {
+      navigate("/education");
     } else {
-      // Fallback for if we somehow get here without a URL
-      if (isPaid) {
-        toast.info(`Redirecting to payment page for ${title}`);
-      } else {
-        toast.success(`Successfully enrolled in ${title}`);
-      }
+      navigate(`/education/${categoryId}`);
     }
-  };
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: { 
-      opacity: 1,
-      transition: { 
-        duration: 0.3,
-        when: "beforeChildren",
-        staggerChildren: 0.1
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 }
   };
 
   return (
-    <ThreeColumnLayout 
-      title="SWAG Education Center" 
-      activeMainItem="education"
-      activeSecondaryItem={activeCategory}
-      secondaryMenuItems={courseCategories}
-    >
-      <motion.div 
-        className="space-y-6"
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-      >
-        <motion.div variants={itemVariants}>
-          <h2 className="text-2xl font-bold tracking-tight">Welcome to the SWAG Education Center</h2>
-          <p className="text-muted-foreground mt-2">
-            Explore our collection of financial education resources to help you build wealth and achieve your financial goals.
-          </p>
-          
+    <ThreeColumnLayout activeMainItem="education" title="Education Center">
+      <div className="w-full h-full bg-[#080C24] text-white">
+        <div className="max-w-7xl mx-auto p-6">
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold mb-2">Welcome to the SWAG Education Center</h1>
+            <p className="text-gray-300 text-lg">
+              Explore our collection of financial education resources to help you build wealth and achieve your financial goals.
+            </p>
+          </div>
+
           <EducationalTabs 
             activeSection={activeSection}
             activeCategory={activeCategory}
             setActiveSection={setActiveSection}
-            setActiveCategory={setActiveCategory}
+            setActiveCategory={handleCategoryChange}
             handleCourseEnrollment={handleCourseEnrollment}
           />
-        </motion.div>
-      </motion.div>
+        </div>
+      </div>
     </ThreeColumnLayout>
   );
 }

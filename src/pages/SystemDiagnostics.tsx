@@ -9,18 +9,22 @@ import { LoadingState } from "@/components/diagnostics/LoadingState";
 import { logger } from "@/services/logging/loggingService";
 import { Recommendation } from "@/components/diagnostics/RecommendationsList";
 import { useUser } from "@/context/UserContext";
-import { Navigate, Link } from "react-router-dom";
+import { Navigate, Link, useSearchParams } from "react-router-dom";
 import { ShieldX, Users, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { auditLog } from "@/services/auditLog/auditLogService";
 import { checkDiagnosticsAccess } from "@/services/diagnostics/permissionManagement";
 
 export default function SystemDiagnostics() {
+  const [searchParams] = useSearchParams();
+  const focusSystem = searchParams.get('focus') as "marketplace" | "financial" | "document" | null;
+  
   const [isLoading, setIsLoading] = useState(false);
   const [report, setReport] = useState<any>(null);
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
   const [pageAccessError, setPageAccessError] = useState<string | null>(null);
   const [hasAccess, setHasAccess] = useState(false);
+  const [activeTab, setActiveTab] = useState<string>("overview");
   const { userProfile } = useUser();
   const userRole = userProfile?.role || "client";
   const isAdmin = userRole === "admin" || userRole === "system_administrator";
@@ -69,6 +73,21 @@ export default function SystemDiagnostics() {
     checkAccess();
   }, [isAdmin, isDeveloper, userProfile, userRole]);
   
+  // Set active tab based on focus parameter
+  useEffect(() => {
+    if (focusSystem) {
+      // Map focus parameter to tab name
+      const tabMap: Record<string, string> = {
+        "marketplace": "api",
+        "financial": "performance", 
+        "document": "forms"
+      };
+      
+      const targetTab = tabMap[focusSystem] || "overview";
+      setActiveTab(targetTab);
+    }
+  }, [focusSystem]);
+  
   // Log successful page access
   useEffect(() => {
     if (hasAccess && userProfile?.id) {
@@ -105,7 +124,7 @@ export default function SystemDiagnostics() {
     // Perform a quick system check on load to see if diagnostics is accessible
     const checkSystemAccess = async () => {
       try {
-        const quickCheck = await runQuickSystemCheck();
+        const quickCheck = await runQuickSystemCheck(focusSystem || "all");
         if (!quickCheck.success) {
           setPageAccessError("Could not access system diagnostics. Please try again later.");
           toast.error("Diagnostics service is currently unavailable");
@@ -121,7 +140,7 @@ export default function SystemDiagnostics() {
     };
     
     checkSystemAccess();
-  }, []);
+  }, [focusSystem]);
 
   const runSystemCheck = async () => {
     setIsLoading(true);
@@ -436,6 +455,8 @@ export default function SystemDiagnostics() {
             report={report}
             recommendations={recommendations}
             isLoading={isLoading}
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
           />
         )}
       </div>
