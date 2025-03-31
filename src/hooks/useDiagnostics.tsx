@@ -15,6 +15,8 @@ export interface QuickFix {
 
 export function useDiagnostics() {
   const [isRunning, setIsRunning] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [quickFixLoading, setQuickFixLoading] = useState(false);
   const [diagnosticResults, setDiagnosticResults] = useState<any>(null);
   const [lastRunTimestamp, setLastRunTimestamp] = useState<string | null>(null);
   const [quickFixes, setQuickFixes] = useState<QuickFix[]>([
@@ -64,6 +66,7 @@ export function useDiagnostics() {
 
   const runSystemDiagnostics = async () => {
     setIsRunning(true);
+    setIsLoading(true);
     try {
       const results = await runDiagnostics();
       setDiagnosticResults(results);
@@ -74,6 +77,35 @@ export function useDiagnostics() {
       throw error;
     } finally {
       setIsRunning(false);
+      setIsLoading(false);
+    }
+  };
+  
+  const refreshDiagnostics = async () => {
+    setIsLoading(true);
+    try {
+      await runSystemDiagnostics();
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const applyQuickFix = async (fixId: string) => {
+    setQuickFixLoading(true);
+    try {
+      console.log(`Applying fix: ${fixId}`);
+      // Simulate fix application
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      // Remove the fixed item from the list
+      setQuickFixes(prevFixes => prevFixes.filter(fix => fix.id !== fixId));
+      
+      return true;
+    } catch (error) {
+      console.error(`Error applying fix ${fixId}:`, error);
+      return false;
+    } finally {
+      setQuickFixLoading(false);
     }
   };
 
@@ -84,10 +116,14 @@ export function useDiagnostics() {
 
   return {
     isRunning,
+    isLoading,
+    quickFixLoading,
     diagnosticResults,
     lastRunTimestamp,
     quickFixes,
     runSystemDiagnostics,
+    refreshDiagnostics,
+    applyQuickFix,
     getOverallStatus
   };
 }

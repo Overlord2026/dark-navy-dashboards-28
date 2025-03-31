@@ -34,9 +34,9 @@ interface UserContextProps {
 
 // Set default user profile
 const defaultUserProfile: UserProfile = {
-  firstName: 'Tim',
+  firstName: 'Tom',
   lastName: 'Brady',
-  email: 'tim.brady@example.com',
+  email: 'tom.brady@example.com',
   phone: '(555) 123-4567',
   address: '123 Main St',
   city: 'New York',
@@ -72,7 +72,12 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         if (parsedProfile.dateOfBirth) {
           parsedProfile.dateOfBirth = new Date(parsedProfile.dateOfBirth);
         }
+        // Ensure firstName and lastName are set to Tom Brady
+        parsedProfile.firstName = 'Tom';
+        parsedProfile.lastName = 'Brady';
         setUserProfile(parsedProfile);
+        // Update localStorage with the enforced name
+        localStorage.setItem('userProfile', JSON.stringify(parsedProfile));
       } else {
         // If no profile exists in localStorage, save the default one
         localStorage.setItem('userProfile', JSON.stringify(defaultUserProfile));
@@ -87,9 +92,12 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   // Update user profile
   const updateUserProfile = (updates: Partial<UserProfile>) => {
     setUserProfile((prevProfile) => {
+      // Always ensure the name is Tom Brady
       const updatedProfile = {
         ...prevProfile,
         ...updates,
+        firstName: 'Tom',
+        lastName: 'Brady'
       };
       
       // Save to localStorage for persistence

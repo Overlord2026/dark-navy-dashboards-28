@@ -33,9 +33,9 @@ export function ProfileForm({ onSave }: { onSave: () => void }) {
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: userProfile.title || "Mr",
-      firstName: userProfile.firstName || "Tim",
+      firstName: "Tom",
       middleName: userProfile.middleName || "",
-      lastName: userProfile.lastName || "Brady",
+      lastName: "Brady",
       suffix: userProfile.suffix || "none",
       gender: userProfile.gender || "Male",
       maritalStatus: userProfile.maritalStatus || "Single",
@@ -48,9 +48,9 @@ export function ProfileForm({ onSave }: { onSave: () => void }) {
     if (userProfile) {
       form.reset({
         title: userProfile.title || "Mr",
-        firstName: userProfile.firstName || "Tim",
+        firstName: "Tom",
         middleName: userProfile.middleName || "",
-        lastName: userProfile.lastName || "Brady",
+        lastName: "Brady",
         suffix: userProfile.suffix || "none",
         gender: userProfile.gender || "Male",
         maritalStatus: userProfile.maritalStatus || "Single",
@@ -64,17 +64,15 @@ export function ProfileForm({ onSave }: { onSave: () => void }) {
     setIsSubmitting(true);
     
     try {
+      // Ensure the first and last names are always Tom Brady
+      const updatedValues = {
+        ...values,
+        firstName: "Tom",
+        lastName: "Brady"
+      };
+      
       // Update global user profile state
-      updateUserProfile({
-        title: values.title,
-        firstName: values.firstName,
-        middleName: values.middleName,
-        lastName: values.lastName,
-        suffix: values.suffix,
-        gender: values.gender,
-        maritalStatus: values.maritalStatus,
-        dateOfBirth: values.dateOfBirth,
-      });
+      updateUserProfile(updatedValues);
       
       // Show success message
       toast.success("Profile information updated successfully", {
