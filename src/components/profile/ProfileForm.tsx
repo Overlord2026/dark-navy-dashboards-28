@@ -29,6 +29,19 @@ export function ProfileForm({ onSave }: { onSave: () => void }) {
   const { userProfile, updateUserProfile } = useUser();
   const [isSubmitting, setIsSubmitting] = useState(false);
   
+  // Convert date string to Date object if needed
+  const getInitialDate = (): Date => {
+    if (!userProfile.dateOfBirth) {
+      return new Date("1985-05-03");
+    }
+    
+    if (userProfile.dateOfBirth instanceof Date) {
+      return userProfile.dateOfBirth;
+    }
+    
+    return new Date(userProfile.dateOfBirth);
+  };
+  
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -39,7 +52,7 @@ export function ProfileForm({ onSave }: { onSave: () => void }) {
       suffix: userProfile.suffix || "none",
       gender: userProfile.gender || "Male",
       maritalStatus: userProfile.maritalStatus || "Single",
-      dateOfBirth: userProfile.dateOfBirth || new Date("1985-05-03"),
+      dateOfBirth: getInitialDate(),
     },
   });
 
@@ -54,7 +67,7 @@ export function ProfileForm({ onSave }: { onSave: () => void }) {
         suffix: userProfile.suffix || "none",
         gender: userProfile.gender || "Male",
         maritalStatus: userProfile.maritalStatus || "Single",
-        dateOfBirth: userProfile.dateOfBirth || new Date("1985-05-03"),
+        dateOfBirth: getInitialDate(),
       });
     }
   }, [userProfile, form]);
@@ -72,7 +85,7 @@ export function ProfileForm({ onSave }: { onSave: () => void }) {
       };
       
       // Update global user profile state
-      updateUserProfile(updatedValues);
+      updateUserProfile && updateUserProfile(updatedValues);
       
       // Show success message
       toast.success("Profile information updated successfully", {
@@ -108,7 +121,7 @@ export function ProfileForm({ onSave }: { onSave: () => void }) {
             <DemographicInfoSection form={form} />
             <ProfileDateOfBirthField 
               form={form} 
-              initialDate={userProfile.dateOfBirth}
+              initialDate={getInitialDate()}
             />
           </div>
           

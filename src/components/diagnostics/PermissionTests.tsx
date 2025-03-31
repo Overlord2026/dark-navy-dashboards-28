@@ -5,9 +5,10 @@ import { StatusIcon, getStatusColor } from "./StatusIcon";
 
 interface PermissionTestsProps {
   tests: any[];
+  isLoading?: boolean;
 }
 
-export const PermissionTests = ({ tests }: PermissionTestsProps) => {
+export const PermissionTests = ({ tests, isLoading = false }: PermissionTestsProps) => {
   return (
     <Card>
       <CardHeader>

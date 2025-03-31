@@ -1,14 +1,15 @@
 
+import React from "react";
 import { Globe } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { StatusIcon, getStatusColor } from "./StatusIcon";
-import { getAuthStatusBadge, getResponseTimeBadge } from "./StatusBadges";
 
 interface ApiIntegrationTestsProps {
   tests: any[];
+  isLoading?: boolean;
 }
 
-export const ApiIntegrationTests = ({ tests }: ApiIntegrationTestsProps) => {
+export const ApiIntegrationTests = ({ tests, isLoading = false }: ApiIntegrationTestsProps) => {
   return (
     <Card>
       <CardHeader>
@@ -29,17 +30,19 @@ export const ApiIntegrationTests = ({ tests }: ApiIntegrationTestsProps) => {
                     <p className="text-sm">Endpoint: {test.endpoint}</p>
                   </div>
                 </div>
-                <div className="flex flex-col items-end gap-1">
-                  <span className="text-sm px-2 py-1 rounded-full bg-muted">
-                    {test.status}
-                  </span>
-                  <div className="flex items-center gap-2">
-                    {getResponseTimeBadge(test.responseTime)}
-                    {getAuthStatusBadge(test.authStatus)}
-                  </div>
-                </div>
+                <span className="text-sm px-2 py-1 rounded-full bg-muted">
+                  {test.status}
+                </span>
               </div>
               <p className="text-sm mt-1">{test.message}</p>
+              <div className="mt-2 text-xs text-muted-foreground">
+                <div className="flex justify-between">
+                  <span>Response time: {test.responseTime}ms</span>
+                  {test.authStatus && (
+                    <span>Auth: {test.authStatus.replace('_', ' ')}</span>
+                  )}
+                </div>
+              </div>
             </div>
           ))}
         </div>

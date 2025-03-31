@@ -5,9 +5,10 @@ import { StatusIcon, getStatusColor } from "./StatusIcon";
 
 interface NavigationTestsProps {
   tests: any[];
+  isLoading?: boolean;
 }
 
-export const NavigationTests = ({ tests }: NavigationTestsProps) => {
+export const NavigationTests = ({ tests, isLoading = false }: NavigationTestsProps) => {
   return (
     <Card>
       <CardHeader>

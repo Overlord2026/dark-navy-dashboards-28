@@ -20,7 +20,7 @@ export interface UserProfile {
   suffix?: string;
   gender?: string;
   maritalStatus?: string;
-  dateOfBirth?: string;
+  dateOfBirth?: Date | string;
   investorType?: string;
   name?: string;
   updateUserProfile?: (profile: Partial<UserProfile>) => void;
@@ -94,6 +94,13 @@ const mockUserProfiles: Record<UserRole, UserProfile> = {
     name: "Consultant User"
   }
 };
+
+// Convert dateOfBirth strings to Date objects if they exist
+Object.values(mockUserProfiles).forEach(profile => {
+  if (profile.dateOfBirth && typeof profile.dateOfBirth === 'string') {
+    profile.dateOfBirth = new Date(profile.dateOfBirth);
+  }
+});
 
 interface UserProviderProps {
   children: ReactNode;

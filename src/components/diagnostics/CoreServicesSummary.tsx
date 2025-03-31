@@ -1,89 +1,83 @@
 
-import { DiagnosticResult } from "@/services/diagnostics/types";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import React from "react";
+import { Card, CardContent } from "@/components/ui/card";
 import { StatusIcon } from "./StatusIcon";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export interface CoreServicesSummaryProps {
-  navigation: DiagnosticResult;
-  forms: DiagnosticResult;
-  database: DiagnosticResult;
-  api: DiagnosticResult;
-  authentication: DiagnosticResult;
-  navigationTestCount?: { total: number; passed: number };
-  formsTestCount?: { total: number; passed: number };
-  databaseTestCount?: { total: number; passed: number };
-  apiTestCount?: { total: number; passed: number };
-  authTestCount?: { total: number; passed: number };
+  report: any;
+  isLoading: boolean;
 }
 
-export const CoreServicesSummary = ({
-  navigation,
-  forms,
-  database,
-  api,
-  authentication,
-  navigationTestCount,
-  formsTestCount,
-  databaseTestCount,
-  apiTestCount,
-  authTestCount,
-}: CoreServicesSummaryProps) => {
+export const CoreServicesSummary = ({ report, isLoading }: CoreServicesSummaryProps) => {
+  if (isLoading) {
+    return (
+      <Card>
+        <CardContent className="pt-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <div key={i} className="p-4 rounded-lg border">
+                <Skeleton className="h-4 w-24 mb-2" />
+                <Skeleton className="h-5 w-full" />
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  // If no report is available yet, show empty state
+  if (!report) {
+    return (
+      <Card>
+        <CardContent className="pt-6">
+          <p className="text-center text-muted-foreground">
+            Run diagnostics to see system health summary
+          </p>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  const services = [
+    { key: "navigation", title: "Navigation Routing" },
+    { key: "forms", title: "Form Validation" },
+    { key: "database", title: "Database Connection" },
+    { key: "api", title: "API Integration" },
+    { key: "authentication", title: "Authentication" },
+  ];
+
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>Core Services Status</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
-          <div className="flex flex-col items-center p-3 border rounded-md">
-            <h3 className="font-medium text-sm mb-2">Navigation</h3>
-            <StatusIcon status={navigation.status} />
-            {navigationTestCount && (
-              <div className="mt-1 mb-1 text-xs px-2 py-1 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300">
-                {navigationTestCount.passed} / {navigationTestCount.total} checks
+      <CardContent className="pt-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {services.map((service) => (
+            <div
+              key={service.key}
+              className="p-4 rounded-lg border flex items-start gap-2"
+            >
+              <StatusIcon status={report[service.key]?.status || "warning"} />
+              <div>
+                <h3 className="font-medium">{service.title}</h3>
+                <p className="text-sm text-muted-foreground">
+                  {report[service.key]?.message || "No data available"}
+                </p>
               </div>
-            )}
-            <span className="text-xs mt-1 text-center">{navigation.message}</span>
-          </div>
-          <div className="flex flex-col items-center p-3 border rounded-md">
-            <h3 className="font-medium text-sm mb-2">Forms</h3>
-            <StatusIcon status={forms.status} />
-            {formsTestCount && (
-              <div className="mt-1 mb-1 text-xs px-2 py-1 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300">
-                {formsTestCount.passed} / {formsTestCount.total} checks
-              </div>
-            )}
-            <span className="text-xs mt-1 text-center">{forms.message}</span>
-          </div>
-          <div className="flex flex-col items-center p-3 border rounded-md">
-            <h3 className="font-medium text-sm mb-2">Database</h3>
-            <StatusIcon status={database.status} />
-            {databaseTestCount && (
-              <div className="mt-1 mb-1 text-xs px-2 py-1 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300">
-                {databaseTestCount.passed} / {databaseTestCount.total} checks
-              </div>
-            )}
-            <span className="text-xs mt-1 text-center">{database.message}</span>
-          </div>
-          <div className="flex flex-col items-center p-3 border rounded-md">
-            <h3 className="font-medium text-sm mb-2">API</h3>
-            <StatusIcon status={api.status} />
-            {apiTestCount && (
-              <div className="mt-1 mb-1 text-xs px-2 py-1 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300">
-                {apiTestCount.passed} / {apiTestCount.total} checks
-              </div>
-            )}
-            <span className="text-xs mt-1 text-center">{api.message}</span>
-          </div>
-          <div className="flex flex-col items-center p-3 border rounded-md">
-            <h3 className="font-medium text-sm mb-2">Authentication</h3>
-            <StatusIcon status={authentication.status} />
-            {authTestCount && (
-              <div className="mt-1 mb-1 text-xs px-2 py-1 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300">
-                {authTestCount.passed} / {authTestCount.total} checks
-              </div>
-            )}
-            <span className="text-xs mt-1 text-center">{authentication.message}</span>
+            </div>
+          ))}
+          <div className="p-4 rounded-lg border flex items-start gap-2">
+            <StatusIcon status={report.overall || "warning"} />
+            <div>
+              <h3 className="font-medium">Overall System Health</h3>
+              <p className="text-sm text-muted-foreground">
+                {report.overall === "success"
+                  ? "All systems operational"
+                  : report.overall === "warning"
+                  ? "Some services require attention"
+                  : "Critical issues detected"}
+              </p>
+            </div>
           </div>
         </div>
       </CardContent>

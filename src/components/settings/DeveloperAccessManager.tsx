@@ -48,11 +48,11 @@ export const DeveloperAccessManager = () => {
             userName: userName,
             userRole: userRole,
             resourceType: "developmentAccess",
-            targetUser: developer.name,
             details: { 
               action: newAccessState ? "Grant developer access" : "Revoke developer access",
               developerId: developerId,
-              developerEmail: developer.email
+              developerEmail: developer.email,
+              developerName: developer.name
             }
           }
         );

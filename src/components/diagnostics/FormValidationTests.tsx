@@ -5,9 +5,10 @@ import { StatusIcon, getStatusColor } from "./StatusIcon";
 
 interface FormValidationTestsProps {
   tests: any[];
+  isLoading?: boolean;
 }
 
-export const FormValidationTests = ({ tests }: FormValidationTestsProps) => {
+export const FormValidationTests = ({ tests, isLoading = false }: FormValidationTestsProps) => {
   return (
     <Card>
       <CardHeader>
