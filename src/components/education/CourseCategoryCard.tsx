@@ -26,6 +26,11 @@ const categoryIcons: Record<string, React.ReactNode> = {
 };
 
 export function CourseCategoryCard({ category, courseCount = 0 }: CourseCategoryCardProps) {
+  // Add a null check to ensure category exists
+  if (!category) {
+    return null;
+  }
+  
   return (
     <Card className="h-full transition-all duration-200 hover:shadow-md cursor-pointer">
       <CardHeader className="pb-2">

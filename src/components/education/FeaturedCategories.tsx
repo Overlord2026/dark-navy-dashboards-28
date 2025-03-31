@@ -26,6 +26,7 @@ export function FeaturedCategories({ categories, onSelectCategory }: FeaturedCat
   ];
   
   // Filter categories to only show the featured ones, and in the specified order
+  // Make sure we filter out any undefined categories
   const featuredCategories = featuredCategoryIds
     .map(id => categories.find(cat => cat.id === id))
     .filter((cat): cat is CourseCategory => cat !== undefined);
