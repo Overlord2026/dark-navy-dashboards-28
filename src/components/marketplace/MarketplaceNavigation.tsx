@@ -23,12 +23,12 @@ import {
   ChevronRight 
 } from "lucide-react";
 
-type SubCategory = {
+export type SubCategory = {
   id: string;
   name: string;
 };
 
-type ServiceCategory = {
+export type ServiceCategory = {
   id: string;
   name: string;
   icon: React.ElementType;
@@ -37,7 +37,7 @@ type ServiceCategory = {
 };
 
 // Define the main marketplace categories and their subcategories
-const serviceCategories: ServiceCategory[] = [
+export const serviceCategories: ServiceCategory[] = [
   {
     id: "wealth-management",
     name: "Holistic Wealth Management & Investment Advisory",
@@ -192,5 +192,3 @@ export function MarketplaceNavigation({
     </Card>
   );
 }
-
-export { type ServiceCategory, type SubCategory, serviceCategories };
