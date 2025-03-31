@@ -12,7 +12,6 @@ import { WelcomeTrialBanner } from "@/components/dashboard/WelcomeTrialBanner";
 import { TrialEndingSoonBanner } from "@/components/dashboard/TrialEndingSoonBanner";
 import { MidTrialBanner } from "@/components/dashboard/MidTrialBanner";
 import { useSubscription } from "@/context/SubscriptionContext";
-import { Button } from "@/components/ui/button";
 import { QuickActionsMenu } from "@/components/dashboard/QuickActionsMenu";
 import { useUser } from "@/context/UserContext";
 import { UserCircle } from "lucide-react";
@@ -47,18 +46,13 @@ export default function Index() {
       <div key={dashboardKey} className="space-y-6 px-4 py-6 max-w-7xl mx-auto">
         {renderTrialBanner()}
         
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-          <div>
-            <h1 className="text-3xl font-bold">Welcome Back, Tom</h1>
-            <p className="text-muted-foreground mt-1">Here's your financial overview</p>
-          </div>
-          
+        <div className="flex justify-end mb-4">
           <div className="flex items-center gap-3">
             <Link to="/customer-profile">
-              <Button variant="outline" className="flex items-center gap-2">
-                <UserCircle className="h-4 w-4" />
-                <span>Your Profile</span>
-              </Button>
+              <div className="flex items-center gap-2 p-2 hover:bg-white/5 rounded-md transition-colors cursor-pointer">
+                <UserCircle className="h-5 w-5" />
+                <span className="text-sm font-medium">Profile</span>
+              </div>
             </Link>
             <QuickActionsMenu />
           </div>
