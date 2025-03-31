@@ -1,3 +1,4 @@
+
 import { ReactNode, useState } from "react";
 import * as React from "react";
 import { useParams, useNavigate, Link, useLocation } from "react-router-dom";
@@ -118,13 +119,8 @@ const getSecondaryMenuItems = (activeMainItem: string): MenuItem[] => {
   }
 };
 
-const CustomHomeIcon: React.FC = () => (
-  <img 
-    src="/lovable-uploads/e4ac2159-1b66-4f15-9257-68a0f00c8311.png" 
-    alt="Home"
-    className="h-5 w-5"
-  />
-);
+// Remove the custom home icon component as it's causing issues
+// The Icon component is not properly defined or imported
 
 export function ThreeColumnLayout({ 
   children, 
@@ -271,20 +267,15 @@ export function ThreeColumnLayout({
                                   isLightTheme ? "hover:bg-[#E9E7D8] hover:border-primary" : "hover:bg-white/10 hover:border-primary"
                                 )}
                               >
-                                {typeof Icon === 'function' ? (
-                                  <div className={`flex items-center justify-center rounded-sm p-0.5 mr-3 ${isLightTheme ? 'bg-[#222222]' : 'bg-black'}`}>
-                                    <Icon />
-                                  </div>
-                                ) : (
-                                  <Icon 
-                                    className={cn("h-5 w-5", !mainSidebarCollapsed && "mr-3")} 
-                                    style={{ 
-                                      backgroundColor: isLightTheme ? '#222222' : '#000', 
-                                      padding: '2px', 
-                                      borderRadius: '2px' 
-                                    }} 
-                                  />
-                                )}
+                                {/* Replace the use of Icon component */}
+                                <Icon 
+                                  className={cn("h-5 w-5", !mainSidebarCollapsed && "mr-3")} 
+                                  style={{ 
+                                    backgroundColor: isLightTheme ? '#222222' : '#000', 
+                                    padding: '2px', 
+                                    borderRadius: '2px' 
+                                  }} 
+                                />
                                 <span className="whitespace-nowrap overflow-hidden text-ellipsis">{item.title}</span>
                               </Link>
                             );
@@ -315,20 +306,15 @@ export function ThreeColumnLayout({
                               )}
                               title={item.title}
                             >
-                              {typeof Icon === 'function' ? (
-                                <div className={`flex items-center justify-center rounded-sm p-0.5 ${isLightTheme ? 'bg-[#222222]' : 'bg-black'}`}>
-                                  <Icon />
-                                </div>
-                              ) : (
-                                <Icon 
-                                  className="h-5 w-5" 
-                                  style={{ 
-                                    backgroundColor: isLightTheme ? '#222222' : '#000', 
-                                    padding: '2px', 
-                                    borderRadius: '2px' 
-                                  }} 
-                                />
-                              )}
+                              {/* Replace the use of Icon component */}
+                              <Icon 
+                                className="h-5 w-5" 
+                                style={{ 
+                                  backgroundColor: isLightTheme ? '#222222' : '#000', 
+                                  padding: '2px', 
+                                  borderRadius: '2px' 
+                                }} 
+                              />
                             </Link>
                           );
                         })}
