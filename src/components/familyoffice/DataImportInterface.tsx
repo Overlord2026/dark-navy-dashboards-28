@@ -10,12 +10,24 @@ import { WebsiteScraper } from "./WebsiteScraper";
 import { Database, FileSpreadsheet, Upload, RefreshCw, Check, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { FamilyOffice } from "@/types/familyoffice";
 
 export function DataImportInterface() {
   const [activeTab, setActiveTab] = useState<string>("file-upload");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [fileUploaded, setFileUploaded] = useState<boolean>(false);
   const [fileName, setFileName] = useState<string>("");
+  const [previewData, setPreviewData] = useState<Partial<FamilyOffice>[]>([
+    {
+      name: "Example Family Office",
+      location: "New York, NY",
+      tier: "advanced",
+      minimumAssets: 25,
+      aum: 3.5,
+      foundedYear: 2005,
+      wealthTiers: ["uhnw"]
+    }
+  ]);
   const isMobile = useIsMobile();
   
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -46,6 +58,17 @@ export function DataImportInterface() {
   const resetForm = () => {
     setFileUploaded(false);
     setFileName("");
+  };
+
+  const handleDataChange = (newData: Partial<FamilyOffice>[]) => {
+    setPreviewData(newData);
+  };
+
+  const handleDataRetrieved = (data: Partial<FamilyOffice>[]) => {
+    setPreviewData(data);
+    setFileUploaded(true);
+    setActiveTab("file-upload");
+    toast.success(`Retrieved ${data.length} family office records`);
   };
   
   return (
@@ -118,7 +141,10 @@ export function DataImportInterface() {
                     </div>
                   </div>
                   
-                  <ImportPreviewTable />
+                  <ImportPreviewTable 
+                    data={previewData}
+                    onDataChange={handleDataChange}
+                  />
                   
                   <div className="flex flex-wrap gap-3 pt-4">
                     <Button onClick={handleImport} disabled={isLoading} className="flex items-center gap-2">
@@ -135,7 +161,7 @@ export function DataImportInterface() {
           </TabsContent>
           
           <TabsContent value="scraper">
-            <WebsiteScraper />
+            <WebsiteScraper onDataRetrieved={handleDataRetrieved} />
           </TabsContent>
           
           <TabsContent value="manual">
