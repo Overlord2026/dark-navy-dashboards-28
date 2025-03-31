@@ -1,4 +1,3 @@
-
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { TaxPlanningSummary } from "@/components/dashboard/TaxPlanningSummary";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,10 +9,14 @@ import { useState } from "react";
 import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
 import { ScheduleMeetingDialog } from "@/components/investments/ScheduleMeetingDialog";
+import { UploadDocumentDialog } from "@/components/documents/UploadDocumentDialog";
 
 const TaxBudgets = () => {
   const [activeTab, setActiveTab] = useState("summary");
   const [activeSubcategory, setActiveSubcategory] = useState<string | null>(null);
+  const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
+  
+  const taxesCategoryId = "taxes";
   
   const taxPlanningSubcategories = [
     { 
@@ -131,6 +134,14 @@ const TaxBudgets = () => {
     });
   };
 
+  const handleFileUpload = (file: File, customName: string) => {
+    toast.success("Tax document uploaded successfully", {
+      description: `${customName || file.name} has been added to your tax documents.`,
+      duration: 5000
+    });
+    setIsUploadDialogOpen(false);
+  };
+
   const renderSubcategoryContent = () => {
     if (!activeSubcategory) return null;
     
@@ -185,8 +196,13 @@ const TaxBudgets = () => {
               <p className="text-xs text-muted-foreground">
                 Tax documents uploaded and processed
               </p>
-              <Button variant="outline" size="sm" className="mt-4 w-full">
-                <Upload className="h-3.5 w-3.5 mr-2" />
+              <Button 
+                variant="outline" 
+                size="lg" 
+                className="mt-4 w-full flex items-center justify-center gap-2 py-6 bg-[#1B1B32] text-white hover:bg-[#2D2D4A] border-0"
+                onClick={() => setIsUploadDialogOpen(true)}
+              >
+                <Upload className="h-5 w-5" />
                 Upload Documents
               </Button>
             </CardContent>
@@ -549,6 +565,14 @@ const TaxBudgets = () => {
           </TabsContent>
         </Tabs>
       </div>
+      
+      <UploadDocumentDialog
+        open={isUploadDialogOpen}
+        onOpenChange={setIsUploadDialogOpen}
+        onFileUpload={handleFileUpload}
+        activeCategory={taxesCategoryId}
+        documentCategories={[{ id: taxesCategoryId, name: "Taxes" }]}
+      />
     </ThreeColumnLayout>
   );
 };

@@ -7,6 +7,8 @@ import { NewFolderDialog } from "@/components/documents/NewFolderDialog";
 import { UploadDocumentDialog } from "@/components/documents/UploadDocumentDialog";
 import { useDocumentManagement } from "@/hooks/useDocumentManagement";
 import { documentCategories } from "@/data/documentCategories";
+import { Button } from "@/components/ui/button";
+import { Upload } from "lucide-react";
 
 const Documents = () => {
   const {
@@ -48,13 +50,14 @@ const Documents = () => {
               <div className="flex space-x-3">
                 <NewFolderDialog onCreateFolder={handleCreateFolder} />
                 
-                <UploadDocumentDialog 
-                  open={isUploadDialogOpen}
-                  onOpenChange={setIsUploadDialogOpen}
-                  onFileUpload={handleFileUpload}
-                  activeCategory={activeCategory}
-                  documentCategories={documentCategories}
-                />
+                <Button
+                  variant="outline"
+                  className="flex items-center gap-2 bg-[#1B1B32] text-white hover:bg-[#2D2D4A] border-0"
+                  onClick={() => setIsUploadDialogOpen(true)}
+                >
+                  <Upload className="h-5 w-5" />
+                  Upload Documents
+                </Button>
               </div>
             </div>
             
@@ -71,6 +74,14 @@ const Documents = () => {
         
         {!activeCategory && <NoCategorySelectedState />}
       </div>
+
+      <UploadDocumentDialog 
+        open={isUploadDialogOpen}
+        onOpenChange={setIsUploadDialogOpen}
+        onFileUpload={handleFileUpload}
+        activeCategory={activeCategory}
+        documentCategories={documentCategories}
+      />
     </ThreeColumnLayout>
   );
 };

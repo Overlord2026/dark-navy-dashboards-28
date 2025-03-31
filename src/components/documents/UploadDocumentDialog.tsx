@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FileUpload } from "@/components/ui/file-upload";
+import { Upload } from "lucide-react";
 
 export interface UploadDocumentDialogProps {
   open: boolean;
@@ -69,6 +70,7 @@ export function UploadDocumentDialog({
             <FileUpload
               onFileChange={handleFileChange}
               accept="application/pdf,image/*,.doc,.docx,.xls,.xlsx,.txt"
+              className="w-full"
             />
           </div>
           {selectedFile && (
@@ -83,11 +85,15 @@ export function UploadDocumentDialog({
             </div>
           )}
         </div>
-        <DialogFooter>
+        <DialogFooter className="flex justify-between">
           <Button variant="outline" onClick={() => handleDialogChange(false)}>
             Cancel
           </Button>
-          <Button onClick={handleSubmit} disabled={!selectedFile || !activeCategory}>
+          <Button 
+            onClick={handleSubmit} 
+            disabled={!selectedFile || !activeCategory}
+            className="bg-[#1B1B32] hover:bg-[#2D2D4A] text-white"
+          >
             Upload
           </Button>
         </DialogFooter>

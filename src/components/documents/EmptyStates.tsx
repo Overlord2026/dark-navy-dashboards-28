@@ -31,11 +31,10 @@ export const NoDocumentsState = ({ onUploadClick, categoryName }: EmptyStateProp
         </p>
         <Button 
           onClick={onUploadClick}
-          className="gap-2"
-          variant="outline"
+          className="flex items-center gap-2 bg-[#1B1B32] text-white hover:bg-[#2D2D4A] border-0"
         >
-          <Upload className="h-4 w-4" />
-          Upload
+          <Upload className="h-5 w-5" />
+          Upload Documents
         </Button>
       </div>
     </div>

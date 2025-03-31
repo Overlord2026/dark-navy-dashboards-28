@@ -42,11 +42,10 @@ export function FileUpload({
       <Button
         type="button"
         onClick={handleClick}
-        variant="outline"
-        className="gap-2"
+        className="gap-2 bg-[#1B1B32] text-white hover:bg-[#2D2D4A] border-0 w-full py-6 flex items-center justify-center"
       >
-        <Upload className="h-4 w-4" />
-        Upload File
+        <Upload className="h-5 w-5" />
+        Choose File to Upload
       </Button>
       <input
         type="file"

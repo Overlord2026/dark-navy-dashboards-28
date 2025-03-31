@@ -79,15 +79,16 @@ export default function LegacyVault() {
                   onClick={() => handleCreateFolder("New Folder")}
                   className="gap-2"
                 >
+                  <Folder className="h-4 w-4" />
                   <span>New Folder</span>
                 </Button>
                 <Button 
                   variant="outline"
                   onClick={() => setIsUploadDialogOpen(true)} 
-                  className="gap-2"
+                  className="gap-2 bg-[#1B1B32] text-white hover:bg-[#2D2D4A] border-0"
                 >
-                  <Upload className="h-4 w-4" />
-                  <span>Upload</span>
+                  <Upload className="h-5 w-5" />
+                  <span>Upload Documents</span>
                 </Button>
               </div>
             </div>
