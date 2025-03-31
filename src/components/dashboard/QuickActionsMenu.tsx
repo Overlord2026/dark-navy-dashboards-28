@@ -25,11 +25,11 @@ export const QuickActionsMenu = () => {
         size="xl"
         className="gap-2 transition-all" 
         asChild
-        onClick={() => handleQuickAction("Marketplace")}
+        onClick={() => handleQuickAction("Family Office Services Marketplace")}
       >
         <Link to="/marketplace">
           <ShoppingBag className="h-5 w-5" />
-          Marketplace
+          Family Office Services Marketplace
         </Link>
       </Button>
 
