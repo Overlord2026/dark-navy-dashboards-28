@@ -7,21 +7,24 @@ import FamilyOfficeDirectory from '@/pages/FamilyOfficeDirectory';
 import DataImportPage from '@/pages/DataImportPage';
 import CashManagement from '@/pages/CashManagement';
 import { ThemeProvider } from '@/context/ThemeContext';
+import { UserProvider } from '@/context/UserContext';
 import { Toaster } from 'sonner';
 
 function App() {
   return (
     <ThemeProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/marketplace" element={<Marketplace />} />
-          <Route path="/family-office-directory" element={<FamilyOfficeDirectory />} />
-          <Route path="/data-import" element={<DataImportPage />} />
-          <Route path="/cash-management" element={<CashManagement />} />
-        </Routes>
-      </BrowserRouter>
-      <Toaster />
+      <UserProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/marketplace" element={<Marketplace />} />
+            <Route path="/family-office-directory" element={<FamilyOfficeDirectory />} />
+            <Route path="/data-import" element={<DataImportPage />} />
+            <Route path="/cash-management" element={<CashManagement />} />
+          </Routes>
+        </BrowserRouter>
+        <Toaster />
+      </UserProvider>
     </ThemeProvider>
   );
 }
