@@ -270,6 +270,79 @@ export function EducationalTabs({
               </CardContent>
             </Card>
           </div>
+
+          <div className="mt-8">
+            <h4 className="text-lg font-semibold mb-4">Featured Research Papers</h4>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-base">Vanguard: The Value of an Advisor</CardTitle>
+                  <CardDescription>Published: 2023</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground mb-4">Demonstrates the importance of tax planning, behavioral coaching, and rebalancing in financial advisory services.</p>
+                  <Button 
+                    variant="default" 
+                    className="w-full"
+                    onClick={() => window.open("https://advisors.vanguard.com/insights/article/IWE_ResPuttingAValueOnValue", "_blank", "noopener,noreferrer")}
+                  >
+                    View Research <ExternalLink className="h-3 w-3 ml-1" />
+                  </Button>
+                </CardContent>
+              </Card>
+              
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-base">Morningstar: Optimal Withdrawal Strategies</CardTitle>
+                  <CardDescription>Published: 2022</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground mb-4">Highlights withdrawal strategies to extend portfolio longevity and optimize tax efficiency in retirement planning.</p>
+                  <Button 
+                    variant="default" 
+                    className="w-full"
+                    onClick={() => window.open("https://www.morningstar.com/lp/withdrawal-strategies", "_blank", "noopener,noreferrer")}
+                  >
+                    View Research <ExternalLink className="h-3 w-3 ml-1" />
+                  </Button>
+                </CardContent>
+              </Card>
+              
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-base">Russell Investments: The Financial Impact of Holistic Advice</CardTitle>
+                  <CardDescription>Published: 2023</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground mb-4">Quantifies the value of holistic financial advice in tax-aware investing and risk management frameworks.</p>
+                  <Button 
+                    variant="default" 
+                    className="w-full"
+                    onClick={() => window.open("https://russellinvestments.com/us/financial-professional/value-of-advisor", "_blank", "noopener,noreferrer")}
+                  >
+                    View Research <ExternalLink className="h-3 w-3 ml-1" />
+                  </Button>
+                </CardContent>
+              </Card>
+              
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-base">Kitces: Goals-Based Planning and Risk Mitigation</CardTitle>
+                  <CardDescription>Published: 2022</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground mb-4">Focuses on goals-based planning methodologies to mitigate risks and maximize retirement outcomes for clients.</p>
+                  <Button 
+                    variant="default" 
+                    className="w-full"
+                    onClick={() => window.open("https://www.kitces.com/blog/category/retirement-planning/", "_blank", "noopener,noreferrer")}
+                  >
+                    View Research <ExternalLink className="h-3 w-3 ml-1" />
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
           
           <div className="mt-8 p-6 bg-primary/5 rounded-lg border border-primary/10">
             <h4 className="text-lg font-semibold mb-2">Request Custom Research</h4>
