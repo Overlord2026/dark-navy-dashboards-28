@@ -44,7 +44,8 @@ export default function Index() {
       <div key={dashboardKey} className="space-y-6 px-4 py-6 max-w-7xl mx-auto">
         {renderTrialBanner()}
         
-        <div className="flex justify-end mb-4">
+        {/* Center the QuickActionsMenu below the logo */}
+        <div className="mb-6">
           <QuickActionsMenu />
         </div>
         
