@@ -13,6 +13,7 @@ export const runQuickSystemCheck = async (targetSystem: "all" | "marketplace" | 
       success: true,
       status: result.overall,
       timestamp: result.timestamp,
+      targetSystem,
       result
     };
   } catch (error) {
@@ -21,6 +22,7 @@ export const runQuickSystemCheck = async (targetSystem: "all" | "marketplace" | 
       success: false,
       status: "error",
       timestamp: new Date().toISOString(),
+      targetSystem,
       error: error instanceof Error ? error.message : "Unknown error"
     };
   }

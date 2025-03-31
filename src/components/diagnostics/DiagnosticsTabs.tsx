@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CoreServicesSummary } from "./CoreServicesSummary";
 import { NavigationTests } from "./NavigationTests";
@@ -21,14 +21,17 @@ type DiagnosticsTabsProps = {
   report: any;
   recommendations: any[];
   isLoading: boolean;
+  activeTab?: string;
+  setActiveTab?: (tab: string) => void;
 };
 
 export const DiagnosticsTabs = ({ 
   report, 
   recommendations, 
-  isLoading 
+  isLoading,
+  activeTab = "overview",
+  setActiveTab = () => {}
 }: DiagnosticsTabsProps) => {
-  const [activeTab, setActiveTab] = useState("overview");
   const { userProfile } = useUser();
   const userRole = userProfile?.role || "client";
   const isAdmin = userRole === "admin" || userRole === "system_administrator";
