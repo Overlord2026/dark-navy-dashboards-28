@@ -33,6 +33,7 @@ import {
 
 import { NavItem } from "@/types/navigation";
 
+// Client Dashboard - primary navigation for daily use
 export const mainNavItems: NavItem[] = [
   { 
     title: "Dashboard", 
@@ -45,20 +46,24 @@ export const mainNavItems: NavItem[] = [
     icon: WalletIcon 
   },
   { 
+    title: "Financial Plans", 
+    href: "/financial-plans", 
+    icon: LineChartIcon 
+  },
+  { 
     title: "Documents", 
     href: "/documents", 
     icon: FileTextIcon 
   },
   { 
-    title: "Sharing", 
-    href: "/sharing", 
-    icon: ShareIcon 
-  },
-  { 
-    title: "Financial Plans", 
-    href: "/financial-plans", 
-    icon: LineChartIcon 
-  },
+    title: "Legacy Vault", 
+    href: "/legacy-vault", 
+    icon: ShieldIcon
+  }
+];
+
+// Financial Services - products and services offered
+export const servicesNavItems: NavItem[] = [
   { 
     title: "Investments", 
     href: "/investments", 
@@ -90,22 +95,32 @@ export const mainNavItems: NavItem[] = [
     icon: CoinsIcon 
   },
   { 
-    title: "Transfers", 
-    href: "/transfers", 
-    icon: ArrowLeftRightIcon 
-  },
-  { 
-    title: "Tax & Budgets", 
-    href: "/tax-budgets", 
-    icon: CalculatorIcon 
-  },
-  { 
     title: "Marketplace", 
     href: "/marketplace", 
     icon: ShoppingBagIcon 
   }
 ];
 
+// Planning & Management - financial planning tools
+export const planningNavItems: NavItem[] = [
+  { 
+    title: "Tax & Budgets", 
+    href: "/tax-budgets", 
+    icon: CalculatorIcon 
+  },
+  { 
+    title: "Transfers", 
+    href: "/transfers", 
+    icon: ArrowLeftRightIcon 
+  },
+  { 
+    title: "Sharing", 
+    href: "/sharing", 
+    icon: ShareIcon 
+  }
+];
+
+// Properties - real estate management
 export const propertiesNavItems: NavItem[] = [
   { 
     title: "Properties", 
@@ -134,6 +149,7 @@ export const propertiesNavItems: NavItem[] = [
   }
 ];
 
+// Security items
 export const securityNavItems: NavItem[] = [
   { 
     title: "IP Protection", 
@@ -147,6 +163,7 @@ export const securityNavItems: NavItem[] = [
   }
 ];
 
+// Bottom navigation items
 export const bottomNavItems: NavItem[] = [
   { 
     title: "Help", 

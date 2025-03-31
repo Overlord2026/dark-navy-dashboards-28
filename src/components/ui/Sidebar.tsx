@@ -1,68 +1,19 @@
+
 import React, { useState } from "react";
 import { cn } from "@/lib/utils";
 import { 
   ChevronLeftIcon,
-  ChevronRightIcon,
-  BarChart3Icon, 
-  UsersIcon, 
-  FileIcon, 
-  CalendarIcon, 
-  SettingsIcon,
-  HelpCircleIcon,
-  LogOutIcon,
-  HomeIcon,
-  BuildingIcon,
-  KeyIcon,
-  MapPinIcon,
-  LandmarkIcon,
-  CoinsIcon,
-  CircleDollarSign,
-  FileTextIcon,
-  ShareIcon,
-  LineChartIcon,
-  ShieldIcon,
-  BanknoteIcon,
-  ArrowLeftRightIcon,
-  CalculatorIcon,
-  ShoppingBag
+  ChevronRightIcon
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "react-router-dom";
-
-type NavItem = {
-  icon: React.ElementType | React.FC;
-  label: string;
-  href: string;
-};
-
-const mainNavItems: NavItem[] = [
-  { icon: HomeIcon, label: "Dashboard", href: "/" },
-  { icon: CircleDollarSign, label: "Accounts", href: "/accounts" },
-  { icon: FileTextIcon, label: "Documents", href: "/documents" },
-  { icon: ShareIcon, label: "Sharing", href: "/sharing" },
-  { icon: LineChartIcon, label: "Financial Plans", href: "/financial-plans" },
-  { icon: BarChart3Icon, label: "Investments", href: "/investments" },
-  { icon: ShieldIcon, label: "Insurance", href: "/insurance" },
-  { icon: BanknoteIcon, label: "Lending", href: "/lending" },
-  { icon: CoinsIcon, label: "Cash Management", href: "/cash-management" },
-  { icon: ArrowLeftRightIcon, label: "Transfers", href: "/transfers" },
-  { icon: CalculatorIcon, label: "Tax & Budgets", href: "/tax-budgets" },
-  { icon: ShoppingBag, label: "Marketplace", href: "/marketplace" },
-];
-
-const propertiesNavItems: NavItem[] = [
-  { icon: HomeIcon, label: "Properties", href: "/properties" },
-  { icon: BuildingIcon, label: "Buildings", href: "/properties?filter=buildings" },
-  { icon: KeyIcon, label: "Rentals", href: "/properties?filter=rentals" },
-  { icon: MapPinIcon, label: "Locations", href: "/properties?filter=locations" },
-  { icon: LandmarkIcon, label: "Investments", href: "/properties?filter=investments" },
-];
-
-const bottomNavItems: NavItem[] = [
-  { icon: HelpCircleIcon, label: "Help", href: "/help" },
-  { icon: SettingsIcon, label: "Settings", href: "/settings" },
-  { icon: LogOutIcon, label: "Logout", href: "/logout" },
-];
+import { 
+  mainNavItems,
+  servicesNavItems,
+  planningNavItems,
+  propertiesNavItems,
+  bottomNavItems
+} from "@/components/navigation/NavigationConfig";
 
 export const Sidebar = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -85,10 +36,18 @@ export const Sidebar = () => {
       )}
     >
       <div className="py-4 overflow-y-auto">
+        {/* Main Navigation */}
         <nav className="px-2 space-y-1">
+          {!collapsed && (
+            <div className="px-3 mb-2">
+              <h3 className="px-2 text-xs font-semibold text-sidebar-foreground/70 uppercase tracking-wider">
+                Dashboard
+              </h3>
+            </div>
+          )}
           {mainNavItems.map((item, index) => (
             <Link
-              key={item.label}
+              key={item.title}
               to={item.href}
               className={cn(
                 "group flex items-center py-2 px-3 rounded-md transition-colors",
@@ -100,7 +59,63 @@ export const Sidebar = () => {
               style={{ animationDelay: `${index * 50}ms` }}
             >
               <item.icon className="h-5 w-5 mr-3 flex-shrink-0 bg-black p-0.5 rounded-sm" />
-              {!collapsed && <span className="whitespace-nowrap overflow-hidden text-ellipsis">{item.label}</span>}
+              {!collapsed && <span className="whitespace-nowrap overflow-hidden text-ellipsis">{item.title}</span>}
+            </Link>
+          ))}
+        </nav>
+        
+        {/* Financial Services Section */}
+        {!collapsed && (
+          <div className="mt-6 px-3">
+            <h3 className="px-2 text-xs font-semibold text-sidebar-foreground/70 uppercase tracking-wider">
+              Financial Services
+            </h3>
+          </div>
+        )}
+        <nav className="mt-2 px-2 space-y-1">
+          {servicesNavItems.map((item, index) => (
+            <Link
+              key={item.title}
+              to={item.href}
+              className={cn(
+                "group flex items-center py-2 px-3 rounded-md transition-colors",
+                "hover:bg-sidebar-accent",
+                isActive(item.href)
+                  ? "bg-black text-white" 
+                  : "text-sidebar-foreground"
+              )}
+              style={{ animationDelay: `${index * 50}ms` }}
+            >
+              <item.icon className="h-5 w-5 mr-3 flex-shrink-0 bg-black p-0.5 rounded-sm" />
+              {!collapsed && <span className="whitespace-nowrap overflow-hidden text-ellipsis">{item.title}</span>}
+            </Link>
+          ))}
+        </nav>
+        
+        {/* Planning & Management Section */}
+        {!collapsed && (
+          <div className="mt-6 px-3">
+            <h3 className="px-2 text-xs font-semibold text-sidebar-foreground/70 uppercase tracking-wider">
+              Planning & Management
+            </h3>
+          </div>
+        )}
+        <nav className="mt-2 px-2 space-y-1">
+          {planningNavItems.map((item, index) => (
+            <Link
+              key={item.title}
+              to={item.href}
+              className={cn(
+                "group flex items-center py-2 px-3 rounded-md transition-colors",
+                "hover:bg-sidebar-accent",
+                isActive(item.href)
+                  ? "bg-black text-white" 
+                  : "text-sidebar-foreground"
+              )}
+              style={{ animationDelay: `${index * 50}ms` }}
+            >
+              <item.icon className="h-5 w-5 mr-3 flex-shrink-0 bg-black p-0.5 rounded-sm" />
+              {!collapsed && <span className="whitespace-nowrap overflow-hidden text-ellipsis">{item.title}</span>}
             </Link>
           ))}
         </nav>
@@ -116,7 +131,7 @@ export const Sidebar = () => {
         <nav className="mt-2 px-2 space-y-1">
           {propertiesNavItems.map((item, index) => (
             <Link
-              key={item.label}
+              key={item.title}
               to={item.href}
               className={cn(
                 "group flex items-center py-2 px-3 rounded-md transition-colors",
@@ -128,7 +143,7 @@ export const Sidebar = () => {
               style={{ animationDelay: `${index * 50}ms` }}
             >
               <item.icon className="h-5 w-5 mr-3 flex-shrink-0 bg-black p-0.5 rounded-sm" />
-              {!collapsed && <span className="whitespace-nowrap overflow-hidden text-ellipsis">{item.label}</span>}
+              {!collapsed && <span className="whitespace-nowrap overflow-hidden text-ellipsis">{item.title}</span>}
             </Link>
           ))}
         </nav>
@@ -138,12 +153,12 @@ export const Sidebar = () => {
         <nav className="space-y-1">
           {bottomNavItems.map((item) => (
             <Link
-              key={item.label}
+              key={item.title}
               to={item.href}
               className="group flex items-center py-2 px-3 rounded-md text-sidebar-foreground hover:bg-sidebar-accent transition-colors border border-gray-700"
             >
               <item.icon className="h-5 w-5 mr-3 flex-shrink-0 bg-black p-0.5 rounded-sm" />
-              {!collapsed && <span className="whitespace-nowrap overflow-hidden text-ellipsis">{item.label}</span>}
+              {!collapsed && <span className="whitespace-nowrap overflow-hidden text-ellipsis">{item.title}</span>}
             </Link>
           ))}
         </nav>
