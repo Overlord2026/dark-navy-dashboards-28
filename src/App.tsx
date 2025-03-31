@@ -17,8 +17,9 @@ function App() {
       <UserProvider>
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<CustomerProfile />} />
+            <Route path="/" element={<Marketplace />} />
             <Route path="/home" element={<HomePage />} />
+            <Route path="/profile" element={<CustomerProfile />} />
             <Route path="/marketplace" element={<Marketplace />} />
             <Route path="/family-office-directory" element={<FamilyOfficeDirectory />} />
             <Route path="/data-import" element={<DataImportPage />} />

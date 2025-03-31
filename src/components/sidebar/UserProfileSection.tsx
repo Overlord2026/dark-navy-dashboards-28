@@ -29,7 +29,7 @@ export const UserProfileSection = ({
   const { userProfile, isLoading } = useUser();
   const isLightTheme = theme === "light";
   
-  // Derive user information from userProfile or use defaults
+  // Safely access user information, providing fallbacks if userProfile is null
   const firstName = userProfile?.firstName || "User";
   const lastName = userProfile?.lastName || "";
   const avatarInitials = firstName && lastName ? `${firstName.charAt(0)}${lastName.charAt(0)}` : "U";
@@ -61,7 +61,7 @@ export const UserProfileSection = ({
     } else if (itemId === "log-out") {
       // Handle log out action
       toast.success("You have been successfully logged out");
-      navigate("/home");
+      navigate("/marketplace");
       if (onMenuItemClick) {
         onMenuItemClick(itemId);
       }
