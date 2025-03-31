@@ -39,12 +39,12 @@ export const getStatusColor = (status: DiagnosticTestStatus): string => {
 export const getOverallStatusColor = (status: DiagnosticTestStatus): string => {
   switch (status) {
     case "success":
-      return "bg-emerald-500";
+      return "bg-emerald-500 text-white";
     case "warning":
-      return "bg-amber-500";
+      return "bg-amber-500 text-white";
     case "error":
-      return "bg-red-500";
+      return "bg-red-500 text-white";
     default:
-      return "bg-gray-400";
+      return "bg-gray-400 text-white";
   }
 };

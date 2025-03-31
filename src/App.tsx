@@ -8,20 +8,32 @@ import DataImportPage from '@/pages/DataImportPage';
 import CashManagement from '@/pages/CashManagement';
 import { ThemeProvider } from '@/context/ThemeContext';
 import { Toaster } from 'sonner';
+import { UserProvider } from '@/context/UserContext';
+import { SubscriptionProvider } from '@/context/SubscriptionContext';
+import { NetWorthProvider } from '@/context/NetWorthContext';
+import Education from '@/pages/Education';
 
 function App() {
   return (
     <ThemeProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/marketplace" element={<Marketplace />} />
-          <Route path="/family-office-directory" element={<FamilyOfficeDirectory />} />
-          <Route path="/data-import" element={<DataImportPage />} />
-          <Route path="/cash-management" element={<CashManagement />} />
-        </Routes>
-      </BrowserRouter>
-      <Toaster />
+      <UserProvider>
+        <SubscriptionProvider>
+          <NetWorthProvider>
+            <BrowserRouter>
+              <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/marketplace" element={<Marketplace />} />
+                <Route path="/family-office-directory" element={<FamilyOfficeDirectory />} />
+                <Route path="/data-import" element={<DataImportPage />} />
+                <Route path="/cash-management" element={<CashManagement />} />
+                <Route path="/education" element={<Education />} />
+                <Route path="/subscription" element={<Marketplace />} />
+              </Routes>
+            </BrowserRouter>
+            <Toaster />
+          </NetWorthProvider>
+        </SubscriptionProvider>
+      </UserProvider>
     </ThemeProvider>
   );
 }
