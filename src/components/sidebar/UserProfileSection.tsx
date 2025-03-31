@@ -104,7 +104,7 @@ export const UserProfileSection = ({
           onClick={() => setIsDropdownOpen(!isDropdownOpen)}
         >
           <div className="flex items-center">
-            <div className="h-7 w-7 rounded-full bg-[#FFC107] flex items-center justify-center mr-2 text-[#222222] font-medium border border-gray-700">
+            <div className="h-7 w-7 rounded-full bg-[#FFC107] flex items-center justify-center mr-2 text-white font-medium border border-gray-700">
               {avatarInitials}
             </div>
             <span className="font-medium text-sm">{userName}</span>
