@@ -2,27 +2,29 @@
 import React, { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { MarketplaceHeader } from "@/components/marketplace/MarketplaceHeader";
-import { MarketplaceCategories } from "@/components/marketplace/MarketplaceCategories";
-import { MarketplaceListings } from "@/components/marketplace/MarketplaceListings";
-import { MarketplaceFilters } from "@/components/marketplace/MarketplaceFilters";
+import { MarketplaceNavigation, serviceCategories } from "@/components/marketplace/MarketplaceNavigation";
+import { MarketplaceContent } from "@/components/marketplace/MarketplaceContent";
 import { useMarketplace } from "@/hooks/useMarketplace";
 
 export default function Marketplace() {
-  const [activeCategory, setActiveCategory] = useState<string>("all");
+  // Default to first category
+  const [activeCategory, setActiveCategory] = useState<string>(serviceCategories[0].id);
+  const [activeSubcategory, setActiveSubcategory] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const { listings, categories, isLoading } = useMarketplace();
+  const { categories } = useMarketplace();
 
-  const filteredListings = listings.filter(listing => {
-    const matchesCategory = activeCategory === "all" || listing.category === activeCategory;
-    const matchesSearch = searchQuery === "" || 
-      listing.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      listing.description.toLowerCase().includes(searchQuery.toLowerCase());
-    
-    return matchesCategory && matchesSearch;
-  });
+  const handleCategoryChange = (categoryId: string) => {
+    setActiveCategory(categoryId);
+    setActiveSubcategory(null); // Reset subcategory when category changes
+  };
+
+  const handleSubcategoryChange = (categoryId: string, subcategoryId: string) => {
+    setActiveCategory(categoryId);
+    setActiveSubcategory(subcategoryId);
+  };
 
   return (
-    <ThreeColumnLayout title="Marketplace">
+    <ThreeColumnLayout title="Family Office Marketplace">
       <div className="space-y-6 px-4 py-6 max-w-7xl mx-auto">
         <MarketplaceHeader 
           searchQuery={searchQuery}
@@ -30,20 +32,20 @@ export default function Marketplace() {
         />
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <div className="md:col-span-1 space-y-6">
-            <MarketplaceCategories 
-              categories={categories}
+          <div className="md:col-span-1">
+            <MarketplaceNavigation 
               activeCategory={activeCategory}
-              setActiveCategory={setActiveCategory}
+              activeSubcategory={activeSubcategory}
+              onCategoryChange={handleCategoryChange}
+              onSubcategoryChange={handleSubcategoryChange}
             />
-            
-            <MarketplaceFilters />
           </div>
           
           <div className="md:col-span-3">
-            <MarketplaceListings 
-              listings={filteredListings}
-              isLoading={isLoading}
+            <MarketplaceContent 
+              activeCategory={activeCategory}
+              activeSubcategory={activeSubcategory}
+              serviceCategories={serviceCategories}
             />
           </div>
         </div>
