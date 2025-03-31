@@ -10,6 +10,7 @@ import CashManagement from '@/pages/CashManagement';
 import { ThemeProvider } from '@/context/ThemeContext';
 import { UserProvider } from '@/context/UserContext';
 import { Toaster } from 'sonner';
+import Education from '@/pages/Education';
 
 function App() {
   return (
@@ -17,13 +18,14 @@ function App() {
       <UserProvider>
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Marketplace />} />
+            <Route path="/" element={<HomePage />} />
             <Route path="/home" element={<HomePage />} />
             <Route path="/profile" element={<CustomerProfile />} />
             <Route path="/marketplace" element={<Marketplace />} />
             <Route path="/family-office-directory" element={<FamilyOfficeDirectory />} />
             <Route path="/data-import" element={<DataImportPage />} />
             <Route path="/cash-management" element={<CashManagement />} />
+            <Route path="/education" element={<Education />} />
           </Routes>
         </BrowserRouter>
         <Toaster />

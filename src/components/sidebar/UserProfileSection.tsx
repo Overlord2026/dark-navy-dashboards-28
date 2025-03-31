@@ -61,7 +61,7 @@ export const UserProfileSection = ({
     } else if (itemId === "log-out") {
       // Handle log out action
       toast.success("You have been successfully logged out");
-      navigate("/marketplace");
+      navigate("/");
       if (onMenuItemClick) {
         onMenuItemClick(itemId);
       }
