@@ -12,32 +12,35 @@ type ButtonSize = "default" | "sm" | "lg" | "icon" | "xl";
 interface SystemDiagnosticsButtonProps {
   variant?: ButtonVariant;
   size?: ButtonSize;
+  targetSystem?: "all" | "marketplace" | "financial" | "document";
 }
 
 export const SystemDiagnosticsButton = ({ 
   variant = "default", 
-  size = "default" 
+  size = "default",
+  targetSystem = "all"
 }: SystemDiagnosticsButtonProps) => {
   const navigate = useNavigate();
   
   const handleRunDiagnostics = async () => {
-    toast.info("Running quick system check...");
+    const systemLabel = targetSystem === "all" ? "system" : targetSystem;
+    toast.info(`Running quick ${systemLabel} check...`);
     
     try {
-      const quickCheck = await runQuickSystemCheck();
+      const quickCheck = await runQuickSystemCheck(targetSystem);
       
       if (quickCheck.success) {
-        toast.success(`System check completed: ${quickCheck.status}`, {
+        toast.success(`${systemLabel.charAt(0).toUpperCase() + systemLabel.slice(1)} check completed: ${quickCheck.status}`, {
           description: "Navigating to detailed diagnostics report"
         });
-        navigate("/system-diagnostics");
+        navigate(`/system-diagnostics${targetSystem !== "all" ? `?focus=${targetSystem}` : ""}`);
       } else {
-        toast.error("System check failed", {
+        toast.error(`${systemLabel.charAt(0).toUpperCase() + systemLabel.slice(1)} check failed`, {
           description: "Please try again or contact support"
         });
       }
     } catch (error) {
-      toast.error("Error running diagnostics", {
+      toast.error(`Error running ${systemLabel} diagnostics`, {
         description: error instanceof Error ? error.message : "Unknown error"
       });
     }
@@ -51,7 +54,13 @@ export const SystemDiagnosticsButton = ({
       onClick={handleRunDiagnostics}
     >
       <Activity className="h-4 w-4" />
-      <span>Run Diagnostics</span>
+      <span>
+        {targetSystem === "all" ? "Run Diagnostics" : 
+         targetSystem === "marketplace" ? "Check Marketplace" :
+         targetSystem === "financial" ? "Check Financials" :
+         targetSystem === "document" ? "Check Documents" : 
+         "Run Diagnostics"}
+      </span>
     </Button>
   );
 };

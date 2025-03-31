@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { MarketplaceHeader } from "@/components/marketplace/MarketplaceHeader";
@@ -8,6 +7,7 @@ import { useMarketplace } from "@/hooks/useMarketplace";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Building, Database } from "lucide-react";
+import { SystemDiagnosticsButton } from "@/components/diagnostics/SystemDiagnosticsButton";
 
 export default function Marketplace() {
   // Default to first category
@@ -29,10 +29,13 @@ export default function Marketplace() {
   return (
     <ThreeColumnLayout title="Family Office Marketplace">
       <div className="space-y-6 px-4 py-6 max-w-7xl mx-auto">
-        <MarketplaceHeader 
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-        />
+        <div className="flex justify-between items-center">
+          <MarketplaceHeader 
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+          />
+          <SystemDiagnosticsButton targetSystem="marketplace" variant="outline" size="sm" />
+        </div>
 
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 flex-wrap">
           <div className="bg-muted/40 p-4 rounded-lg flex-1 flex flex-col sm:flex-row items-center justify-between">
