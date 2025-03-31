@@ -3,24 +3,24 @@ import { useState, useEffect } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { CategoryList } from "@/components/documents/CategoryList";
 import { DocumentsTable } from "@/components/documents/DocumentsTable";
-import { EmptyStates } from "@/components/documents/EmptyStates";
+import { NoDocumentsState, NoCategorySelectedState } from "@/components/documents/EmptyStates";
 import { UploadDocumentDialog } from "@/components/documents/UploadDocumentDialog";
 import { NewFolderDialog } from "@/components/documents/NewFolderDialog";
 import { Button } from "@/components/ui/button";
 import { FolderPlus, Upload } from "lucide-react";
-import { useDocumentManagement } from "@/hooks/useDocumentManagement";
-import { toast } from "sonner";
 import { documentCategories } from "@/data/documentCategories";
+import { toast } from "sonner";
+import { DocumentType } from "@/types/document";
 
 // Fixed the type definition to match the expected interface in the DocumentsTable
 interface DocumentItem {
   id: string;
   name: string;
-  type: 'folder' | 'document';
+  type: 'folder' | 'document' | DocumentType;
   category: string;
   size?: number;
   uploadedBy?: string;
-  created: string; // This was missing in the original interface
+  created: string;
   modified?: string;
   accessed?: string;
   description?: string;
@@ -187,7 +187,7 @@ export default function LegacyVault() {
             <CategoryList 
               categories={documentCategories as DocumentCategory[]} 
               activeCategory={activeCategory} 
-              onSelectCategory={setActiveCategory} 
+              onCategorySelect={setActiveCategory} 
             />
           </div>
           
@@ -198,14 +198,17 @@ export default function LegacyVault() {
               </div>
             ) : filteredDocuments.length > 0 ? (
               <DocumentsTable 
-                documents={filteredDocuments} 
+                documents={filteredDocuments as any} 
               />
             ) : (
-              <EmptyStates 
-                type={activeCategory === "all" ? "no-documents" : "no-category-documents"} 
-                onUpload={() => setIsUploadDialogOpen(true)}
-                categoryName={documentCategories.find(cat => cat.id === activeCategory)?.name || activeCategory}
-              />
+              activeCategory === "all" ? (
+                <NoCategorySelectedState />
+              ) : (
+                <NoDocumentsState 
+                  onUploadClick={() => setIsUploadDialogOpen(true)}
+                  categoryName={documentCategories.find(cat => cat.id === activeCategory)?.name || activeCategory}
+                />
+              )
             )}
           </div>
         </div>
@@ -214,13 +217,12 @@ export default function LegacyVault() {
       <UploadDocumentDialog 
         open={isUploadDialogOpen}
         onOpenChange={setIsUploadDialogOpen} 
-        categories={documentCategories as DocumentCategory[]}
-        onUpload={handleUploadDocument}
+        onFileUpload={handleUploadDocument}
+        activeCategory={activeCategory}
+        documentCategories={documentCategories as any}
       />
       
       <NewFolderDialog 
-        open={isNewFolderDialogOpen}
-        onOpenChange={setIsNewFolderDialogOpen}
         onCreateFolder={handleCreateFolder}
       />
     </ThreeColumnLayout>

@@ -34,3 +34,9 @@ export const NoDocumentsState = ({ onUploadClick, categoryName }: { onUploadClic
     </div>
   );
 };
+
+// Add this to export a combined component
+export const EmptyStates = {
+  NoCategorySelected: NoCategorySelectedState,
+  NoDocuments: NoDocumentsState
+};
