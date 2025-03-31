@@ -9,8 +9,9 @@ import { LoadingState } from "@/components/diagnostics/LoadingState";
 import { logger } from "@/services/logging/loggingService";
 import { Recommendation } from "@/components/diagnostics/RecommendationsList";
 import { useUser } from "@/context/UserContext";
-import { Navigate } from "react-router-dom";
-import { ShieldX } from "lucide-react";
+import { Navigate, Link } from "react-router-dom";
+import { ShieldX, Users, ExternalLink } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export default function SystemDiagnostics() {
   const [isLoading, setIsLoading] = useState(false);
@@ -282,11 +283,24 @@ export default function SystemDiagnostics() {
   return (
     <ThreeColumnLayout title="System Diagnostics">
       <div className="space-y-6 p-4 max-w-6xl mx-auto">
-        <DiagnosticsHeader 
-          isLoading={isLoading} 
-          report={report}
-          onRunDiagnostics={runSystemCheck}
-        />
+        <div className="flex items-center justify-between">
+          <DiagnosticsHeader 
+            isLoading={isLoading} 
+            report={report}
+            onRunDiagnostics={runSystemCheck}
+          />
+          
+          {/* Developer Access Control Link - Only visible to administrators */}
+          {isAdmin && (
+            <Button variant="outline" asChild className="gap-2">
+              <Link to="/developer-access-control">
+                <Users className="h-4 w-4" />
+                <span>Manage Developer Access</span>
+                <ExternalLink className="h-3 w-3 ml-1" />
+              </Link>
+            </Button>
+          )}
+        </div>
 
         {pageAccessError ? (
           <div className="p-8 border border-red-200 rounded-lg bg-red-50 dark:bg-red-900/20 dark:border-red-800 text-center">

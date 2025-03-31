@@ -1,13 +1,47 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Bug } from "lucide-react";
 import { QuickDiagnosticsDialog } from "./QuickDiagnosticsDialog";
 import { toast } from "sonner";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { useUser } from "@/context/UserContext";
+import { checkDiagnosticsAccess } from "@/services/diagnostics/permissionManagement";
 
 export const QuickDiagnosticsButton = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [hasAccess, setHasAccess] = useState(false);
+  const { userProfile } = useUser();
+  const userRole = userProfile?.role || "client";
+  const isAdmin = userRole === "admin" || userRole === "system_administrator";
+  const isDeveloper = userRole === "developer" || userRole === "consultant";
+
+  useEffect(() => {
+    // Admins always have access
+    if (isAdmin) {
+      setHasAccess(true);
+      return;
+    }
+    
+    // Check if the developer has been granted access
+    if (isDeveloper && userProfile?.id) {
+      const checkAccess = async () => {
+        try {
+          const canAccess = await checkDiagnosticsAccess(userProfile.id, 'diagnostics');
+          setHasAccess(canAccess);
+        } catch (error) {
+          console.error("Failed to check diagnostic access:", error);
+          setHasAccess(false);
+        }
+      };
+      
+      checkAccess();
+    } else {
+      setHasAccess(false);
+    }
+  }, [isAdmin, isDeveloper, userProfile?.id]);
+
+  if (!hasAccess) return null;
 
   return (
     <>

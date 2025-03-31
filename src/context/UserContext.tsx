@@ -1,8 +1,8 @@
-
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 
 // Define the user profile interface
 interface UserProfile {
+  id: string; // Added ID for user identification
   firstName: string;
   lastName: string;
   email: string;
@@ -23,6 +23,7 @@ interface UserProfile {
   suffix: string;
   gender: string;
   maritalStatus: string;
+  role: string; // Added role property
 }
 
 // Define the context interface
@@ -34,6 +35,7 @@ interface UserContextProps {
 
 // Set default user profile
 const defaultUserProfile: UserProfile = {
+  id: "usr123", // Default ID for Tom Brady
   firstName: 'Tom',
   lastName: 'Brady',
   email: 'tom.brady@example.com',
@@ -52,7 +54,8 @@ const defaultUserProfile: UserProfile = {
   middleName: '',
   suffix: 'none',
   gender: 'Male',
-  maritalStatus: 'Single'
+  maritalStatus: 'Single',
+  role: 'client' // Default role is client
 };
 
 // Create the context
