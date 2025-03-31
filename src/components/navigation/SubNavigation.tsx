@@ -1,60 +1,58 @@
 
 import React from "react";
-import { Link } from "react-router-dom";
+import { NavItem, NavSubItem, navigationCategories } from "./NavigationConfig";
 import { cn } from "@/lib/utils";
-import { useTheme } from "@/context/ThemeContext";
-import { NavSubItem, getSubMenuItems } from "./NavigationConfig";
+import { Link, useLocation } from "react-router-dom";
 
 interface SubNavigationProps {
   activeMainItem: string;
-  activeSecondaryItem?: string;
+  activeSecondaryItem: string | undefined;
   customItems?: NavSubItem[];
-  collapsed?: boolean;
 }
 
-export const SubNavigation: React.FC<SubNavigationProps> = ({
+export function SubNavigation({ 
   activeMainItem,
-  activeSecondaryItem = "",
-  customItems,
-  collapsed = false
-}) => {
-  const { theme } = useTheme();
-  const isLightTheme = theme === "light";
+  activeSecondaryItem,
+  customItems
+}: SubNavigationProps) {
+  const location = useLocation();
   
-  // Get menu items either from custom items or from the config
-  const menuItems = customItems || getSubMenuItems(activeMainItem);
+  // Find the correct navigation category based on activeMainItem
+  const currentCategory = navigationCategories.find(
+    (category) => category.items.some((item) => item.id === activeMainItem)
+  );
   
-  // If no menu items, don't render anything
-  if (menuItems.length === 0 || collapsed) {
+  // Find the active item within that category
+  const activeItem = currentCategory?.items.find(
+    (item) => item.id === activeMainItem
+  );
+  
+  // Use custom items if provided, otherwise use the sub-items from the active item
+  const subItems = customItems || activeItem?.subItems || [];
+  
+  if (subItems.length === 0) {
     return null;
   }
-
+  
   return (
-    <div className="flex-1 py-6 overflow-y-auto">
-      <nav className="px-4 space-y-2">
-        {menuItems.map((item) => {
-          const isActive = item.id === activeSecondaryItem || 
-                           (activeSecondaryItem === "" && item.id === menuItems[0]?.id);
-          
-          return (
-            <Link
-              key={item.id}
-              to={item.href}
-              className={cn(
-                "group flex items-center py-2 px-3 rounded-md transition-colors text-[14px] border",
-                isActive
-                  ? isLightTheme 
-                    ? "bg-[#E9E7D8] text-[#222222] font-medium border-primary" 
-                    : "bg-sidebar-accent text-accent border-primary"
-                  : isLightTheme ? "text-[#222222] border-transparent" : "text-[#E2E2E2] border-transparent",
-                isLightTheme ? "hover:bg-[#E9E7D8] hover:border-primary" : "hover:bg-sidebar-accent hover:border-primary"
-              )}
-            >
-              <span>{item.name}</span>
-            </Link>
-          );
-        })}
+    <div className="flex flex-col py-4">
+      <nav className="space-y-1 px-3">
+        {subItems.map((item) => (
+          <Link
+            key={item.id}
+            to={item.href}
+            className={cn(
+              "flex items-center px-3 py-2 text-sm rounded-md",
+              "transition-colors duration-200 ease-in-out",
+              item.id === activeSecondaryItem
+                ? "bg-accent text-accent-foreground font-medium"
+                : "text-foreground/70 hover:text-foreground hover:bg-muted"
+            )}
+          >
+            {item.label}
+          </Link>
+        ))}
       </nav>
     </div>
   );
-};
+}

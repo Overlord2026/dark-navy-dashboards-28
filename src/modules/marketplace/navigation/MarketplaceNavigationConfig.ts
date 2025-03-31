@@ -13,9 +13,6 @@ import {
   ShoppingBag
 } from "lucide-react";
 
-// Import ShoppingBag explicitly to fix the error
-import { ShoppingBag } from "lucide-react";
-
 export type MarketplaceSubItem = {
   id: string;
   name: string;
