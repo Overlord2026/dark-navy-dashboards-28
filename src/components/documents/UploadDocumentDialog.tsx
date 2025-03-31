@@ -4,15 +4,15 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { FileUploadField } from "@/components/documents/FileUploadField";
-import { DocumentCategory } from "@/types/document";
+import { FileUpload } from "@/components/ui/file-upload";
+import { Upload } from "lucide-react";
 
 export interface UploadDocumentDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onFileUpload: (file: File, customName: string) => void;
   activeCategory?: string | null;
-  documentCategories?: DocumentCategory[];
+  documentCategories?: any[];
 }
 
 export function UploadDocumentDialog({
@@ -25,14 +25,10 @@ export function UploadDocumentDialog({
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [customName, setCustomName] = useState("");
 
-  const handleFileChange = (file: File | null) => {
+  const handleFileChange = (file: File) => {
     setSelectedFile(file);
-    // Set default custom name based on file name if a file is selected
-    if (file) {
-      setCustomName(file.name.replace(/\.[^/.]+$/, ""));
-    } else {
-      setCustomName("");
-    }
+    // Set default custom name based on file name
+    setCustomName(file.name.replace(/\.[^/.]+$/, ""));
   };
 
   const handleSubmit = () => {
@@ -70,12 +66,11 @@ export function UploadDocumentDialog({
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
-            <FileUploadField
-              onFileSelect={handleFileChange}
+            <Label htmlFor="file">File</Label>
+            <FileUpload
+              onFileChange={handleFileChange}
               accept="application/pdf,image/*,.doc,.docx,.xls,.xlsx,.txt"
-              label="Document File"
-              description="Choose a file or drag & drop it here"
-              showPreview={true}
+              className="w-full"
             />
           </div>
           {selectedFile && (

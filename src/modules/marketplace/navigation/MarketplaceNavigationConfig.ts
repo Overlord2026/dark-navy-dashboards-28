@@ -9,8 +9,7 @@ import {
   FileText,
   Building,
   HandshakeIcon,
-  ClipboardList,
-  ShoppingBag
+  ClipboardList
 } from "lucide-react";
 
 export type MarketplaceSubItem = {

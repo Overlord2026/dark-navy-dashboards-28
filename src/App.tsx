@@ -15,8 +15,6 @@ import { BillsProvider } from '@/hooks/useBills';
 import Subscription from '@/pages/Subscription';
 import BillsManagement from '@/pages/BillsManagement';
 import AdvisorProfile from '@/pages/AdvisorProfile';
-import Documents from '@/pages/Documents';
-import LegacyVault from '@/pages/LegacyVault';
 
 // Import Marketplace Module components
 import { MarketplaceProvider } from '@/modules/marketplace/context/MarketplaceContext';
@@ -27,7 +25,7 @@ import DataImportPage from '@/pages/DataImportPage';
 // Register the marketplace navigation in the main navigation
 import { registerNavItem } from '@/components/navigation/NavigationConfig';
 import { registerMarketplaceNavigation } from '@/modules/marketplace/navigation/MarketplaceNavigationConfig';
-import { ShoppingBag, FileIcon } from 'lucide-react';
+import { ShoppingBag } from 'lucide-react';
 
 // Register marketplace in main navigation
 registerNavItem('collaboration', {
@@ -35,14 +33,6 @@ registerNavItem('collaboration', {
   label: "Marketplace",
   icon: ShoppingBag,
   href: "/marketplace"
-});
-
-// Register Documents/Legacy Vault in main navigation
-registerNavItem('client', {
-  id: "legacy-vault",
-  label: "Legacy Vault",
-  icon: FileIcon,
-  href: "/legacy-vault"
 });
 
 function App() {
@@ -66,10 +56,6 @@ function App() {
                     <Route path="/marketplace" element={<MarketplacePage />} />
                     <Route path="/family-office-directory" element={<FamilyOfficeDirectory />} />
                     <Route path="/data-import" element={<DataImportPage />} />
-                    
-                    {/* Document Management Routes */}
-                    <Route path="/documents" element={<Documents />} />
-                    <Route path="/legacy-vault" element={<LegacyVault />} />
                     
                     <Route path="/cash-management" element={<CashManagement />} />
                     <Route path="/education" element={<Education />} />

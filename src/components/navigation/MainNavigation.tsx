@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { ChevronDown, ChevronRight } from "lucide-react";
@@ -167,7 +167,7 @@ const NavItemLink = ({
           isLightTheme ? 'bg-[#222222]' : 'bg-black',
           !isCollapsed && "mr-3"
         )}>
-          <IconComponent className="h-5 w-5 text-white" />
+          <IconComponent className="h-5 w-5" />
         </div>
       )}
       {!isCollapsed && <span className="whitespace-nowrap overflow-hidden text-ellipsis">{item.label}</span>}

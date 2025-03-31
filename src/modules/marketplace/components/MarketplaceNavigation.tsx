@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { 
   Card, 
@@ -13,86 +14,8 @@ import {
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { 
-  BarChart3, 
-  ReceiptText, 
-  Scroll, 
-  Briefcase, 
-  Users, 
-  ChevronRight 
-} from "lucide-react";
-
-export type SubCategory = {
-  id: string;
-  name: string;
-};
-
-export type ServiceCategory = {
-  id: string;
-  name: string;
-  icon: React.ElementType;
-  description: string;
-  subcategories: SubCategory[];
-};
-
-// Define the main marketplace categories and their subcategories
-export const serviceCategories: ServiceCategory[] = [
-  {
-    id: "wealth-management",
-    name: "Holistic Wealth Management & Investment Advisory",
-    icon: BarChart3,
-    description: "Comprehensive wealth management and investment advisory services",
-    subcategories: [
-      { id: "portfolio-management", name: "Portfolio Management & Monitoring" },
-      { id: "private-markets", name: "Private Market Investment Opportunities" },
-      { id: "risk-tax-optimization", name: "Risk & Tax Optimization Strategies" }
-    ]
-  },
-  {
-    id: "tax-planning",
-    name: "Proactive Tax Planning & Optimization",
-    icon: ReceiptText,
-    description: "Advanced tax planning and optimization strategies",
-    subcategories: [
-      { id: "tax-minimization", name: "Advanced Tax Minimization Techniques" },
-      { id: "multi-state", name: "Multi-State Residency Strategies" },
-      { id: "professional-coordination", name: "CPA & Attorney Coordination" }
-    ]
-  },
-  {
-    id: "estate-planning",
-    name: "Estate & Legacy Planning",
-    icon: Scroll,
-    description: "Comprehensive estate planning and legacy preservation",
-    subcategories: [
-      { id: "estate-trust", name: "Comprehensive Estate & Trust Planning" },
-      { id: "family-legacy", name: "Family Legacy Planning (Family Legacy Box)" },
-      { id: "philanthropy", name: "Philanthropy & Charitable Giving" }
-    ]
-  },
-  {
-    id: "concierge-services",
-    name: "Concierge Lifestyle & Administrative Services",
-    icon: Briefcase,
-    description: "Premium lifestyle management and administrative services",
-    subcategories: [
-      { id: "bill-pay", name: "Bill Pay & Personal Bookkeeping" },
-      { id: "travel-property", name: "Private Travel & Property Management" },
-      { id: "exclusive-experiences", name: "Exclusive Experiences & Memberships" }
-    ]
-  },
-  {
-    id: "family-governance",
-    name: "Strategic Family Governance & Education",
-    icon: Users,
-    description: "Family governance structures and educational programs",
-    subcategories: [
-      { id: "governance-succession", name: "Family Governance & Succession Structures" },
-      { id: "next-gen", name: "Next-Generation Education Programs" },
-      { id: "strategic-philanthropy", name: "Strategic Philanthropy & Impact Investing" }
-    ]
-  }
-];
+import { ChevronRight } from "lucide-react";
+import { MarketplaceCategory, marketplaceCategories } from "../navigation/MarketplaceNavigationConfig";
 
 interface MarketplaceNavigationProps {
   activeCategory: string;
@@ -123,67 +46,66 @@ export function MarketplaceNavigation({
   };
 
   return (
-    <Card className={cn("h-full", className)}>
+    <Card className={className}>
       <CardHeader className="pb-3">
-        <CardTitle className="text-lg font-semibold">Service Categories</CardTitle>
+        <CardTitle className="text-lg">Service Categories</CardTitle>
       </CardHeader>
-      <CardContent className="px-3">
+      <CardContent className="px-2">
+        <Button
+          variant={activeCategory === "all" ? "default" : "ghost"}
+          className="w-full justify-start mb-2"
+          onClick={() => {
+            onCategoryChange("all");
+            setExpandedCategories([]);
+          }}
+        >
+          All Categories
+        </Button>
+        
         <Accordion
           type="multiple"
-          value={expandedCategories}
-          className="space-y-2"
+          defaultValue={expandedCategories}
+          className="w-full"
         >
-          {serviceCategories.map((category) => (
-            <AccordionItem 
-              key={category.id} 
-              value={category.id}
-              className={cn(
-                "border rounded-md overflow-hidden",
-                activeCategory === category.id ? "border-primary bg-accent/30" : "border-gray-200"
-              )}
-            >
-              <div className="flex flex-col">
-                <div 
-                  className={cn(
-                    "flex items-center w-full p-2 cursor-pointer hover:bg-accent/50 transition-colors",
-                    activeCategory === category.id ? "bg-accent/30" : ""
-                  )}
-                  onClick={() => onCategoryChange(category.id)}
-                >
-                  <category.icon className="h-5 w-5 mr-3 flex-shrink-0 text-foreground" />
-                  <span className="text-sm font-medium flex-grow">{category.name}</span>
-                  <AccordionTrigger 
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleCategoryToggle(category.id);
-                    }}
-                    className="!p-0 !m-0 h-6 w-6 !no-underline"
-                  />
+          {marketplaceCategories.map((category) => (
+            <AccordionItem key={category.id} value={category.id}>
+              <AccordionTrigger
+                onClick={() => handleCategoryToggle(category.id)}
+                className={cn(
+                  "py-2 px-3 text-sm font-medium",
+                  activeCategory === category.id && !activeSubcategory && "text-primary"
+                )}
+              >
+                <div className="flex items-center">
+                  <category.icon className="h-4 w-4 mr-2" />
+                  <span>{category.name.split(' ')[0]}</span>
                 </div>
-                
-                <AccordionContent className="pt-1 pb-2">
-                  <div className="pl-10 space-y-1">
-                    {category.subcategories.map((subcategory) => (
-                      <div
-                        key={subcategory.id}
-                        className={cn(
-                          "flex items-center text-sm py-1.5 px-3 rounded-md cursor-pointer transition-colors",
-                          activeSubcategory === subcategory.id 
-                            ? "bg-primary text-primary-foreground font-medium" 
-                            : "hover:bg-accent"
-                        )}
-                        onClick={() => onSubcategoryChange(category.id, subcategory.id)}
-                      >
-                        <ChevronRight className={cn(
-                          "h-3 w-3 mr-2 transition-transform",
-                          activeSubcategory === subcategory.id ? "text-primary-foreground" : "text-muted-foreground"
-                        )} />
-                        {subcategory.name}
-                      </div>
-                    ))}
-                  </div>
-                </AccordionContent>
-              </div>
+              </AccordionTrigger>
+              <AccordionContent className="pl-4">
+                <div className="space-y-1 mt-1">
+                  <Button
+                    variant={activeCategory === category.id && !activeSubcategory ? "default" : "ghost"}
+                    size="sm"
+                    className="w-full justify-start text-sm"
+                    onClick={() => onCategoryChange(category.id)}
+                  >
+                    All {category.name.split(' ')[0]}
+                  </Button>
+                  
+                  {category.subcategories.map((subcategory) => (
+                    <Button
+                      key={subcategory.id}
+                      variant={activeSubcategory === subcategory.id ? "default" : "ghost"}
+                      size="sm"
+                      className="w-full justify-start text-sm"
+                      onClick={() => onSubcategoryChange(category.id, subcategory.id)}
+                    >
+                      <ChevronRight className="h-3 w-3 mr-1" />
+                      {subcategory.name}
+                    </Button>
+                  ))}
+                </div>
+              </AccordionContent>
             </AccordionItem>
           ))}
         </Accordion>
