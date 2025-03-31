@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { SetupChecklist } from "@/components/profile/SetupChecklist";
@@ -10,6 +11,7 @@ import { ProfileFormSheet } from "@/components/profile/ProfileFormSheet";
 import { UserCircle } from "lucide-react";
 import { toast } from "sonner";
 import { useUser } from "@/context/UserContext";
+import { Button } from "@/components/ui/button";
 
 const CustomerProfile = () => {
   const { userProfile } = useUser();
@@ -134,12 +136,13 @@ const CustomerProfile = () => {
                   <p>{userProfile.phone}</p>
                 </div>
               </div>
-              <button 
+              <Button 
                 onClick={() => handleOpenForm("investor-profile")}
                 className="mt-3 text-sm text-primary hover:underline"
+                variant="link"
               >
                 Edit Profile
-              </button>
+              </Button>
             </div>
           </div>
         </div>

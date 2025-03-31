@@ -54,8 +54,8 @@ export function ProfileForm({ onSave }: { onSave: () => void }) {
       lastName: userProfile.lastName,
       suffix: userProfile.suffix || "none",
       gender: userProfile.gender || "Male",
-      maritalStatus: userProfile.maritalStatus || "Married",
-      dateOfBirth: userProfile.dateOfBirth || new Date("1963-05-03"),
+      maritalStatus: userProfile.maritalStatus || "Single",
+      dateOfBirth: userProfile.dateOfBirth || new Date("1985-05-03"),
     },
   });
 
@@ -69,8 +69,8 @@ export function ProfileForm({ onSave }: { onSave: () => void }) {
         lastName: userProfile.lastName,
         suffix: userProfile.suffix || "none",
         gender: userProfile.gender || "Male",
-        maritalStatus: userProfile.maritalStatus || "Married",
-        dateOfBirth: userProfile.dateOfBirth || new Date("1963-05-03"),
+        maritalStatus: userProfile.maritalStatus || "Single",
+        dateOfBirth: userProfile.dateOfBirth || new Date("1985-05-03"),
       });
       
       if (userProfile.dateOfBirth) {
@@ -123,7 +123,8 @@ export function ProfileForm({ onSave }: { onSave: () => void }) {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-semibold tracking-tight">Provide your profile information</h2>
+        <h2 className="text-2xl font-semibold tracking-tight">Edit Profile Information</h2>
+        <p className="text-sm text-muted-foreground mt-1">Update your personal details below</p>
       </div>
       
       <Form {...form}>
@@ -327,7 +328,7 @@ export function ProfileForm({ onSave }: { onSave: () => void }) {
               className="bg-yellow-500 hover:bg-yellow-600 text-black font-medium"
               disabled={isSubmitting}
             >
-              {isSubmitting ? "Saving..." : "Save"}
+              {isSubmitting ? "Saving..." : "Save Changes"}
             </Button>
           </div>
         </form>
