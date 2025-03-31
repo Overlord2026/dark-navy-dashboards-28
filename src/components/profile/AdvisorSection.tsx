@@ -33,7 +33,7 @@ export const AdvisorSection = ({ advisorInfo, onViewProfile, onBookSession, coll
       <Popover>
         <PopoverTrigger asChild>
           <div 
-            className={`flex items-center w-full py-1.5 px-3 rounded-md transition-colors cursor-pointer border bg-black border-gray-700`}
+            className={`flex items-center w-full py-1.5 px-3 rounded-md transition-colors cursor-pointer border ${isLightTheme ? 'bg-white text-[#222222] border-gray-300 hover:bg-[#E9E7D8]' : 'bg-black border-gray-700 text-white hover:bg-white/5'}`}
           >
             <div className="relative h-[30px] w-[30px] mr-3">
               <Avatar className="h-[30px] w-[30px] border-2 border-gray-700 rounded-full">
@@ -44,8 +44,8 @@ export const AdvisorSection = ({ advisorInfo, onViewProfile, onBookSession, coll
             </div>
             {!collapsed && (
               <div className="flex flex-col overflow-hidden">
-                <span className={`text-[14px] text-gray-200 font-medium whitespace-nowrap`}>Advisor/CFO:</span>
-                <span className={`text-[14px] text-gray-300 whitespace-nowrap truncate max-w-[150px]`}>{advisorInfo.name}</span>
+                <span className={`text-[14px] ${isLightTheme ? 'text-[#222222]' : 'text-gray-200'} font-medium whitespace-nowrap`}>Advisor/CFO:</span>
+                <span className={`text-[14px] ${isLightTheme ? 'text-[#222222]/70' : 'text-gray-300'} whitespace-nowrap truncate max-w-[150px]`}>{advisorInfo.name}</span>
               </div>
             )}
           </div>
