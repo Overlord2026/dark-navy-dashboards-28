@@ -11,6 +11,7 @@ interface PrivateInvestmentsFirmListProps {
   isLoading: boolean;
   activeCategory: string;
   searchQuery: string;
+  setSearchQuery?: (query: string) => void;
 }
 
 export function PrivateInvestmentsFirmList({ 
@@ -18,9 +19,12 @@ export function PrivateInvestmentsFirmList({
   isLoading,
   activeCategory,
   searchQuery,
+  setSearchQuery
 }: PrivateInvestmentsFirmListProps) {
   
   const filteredFirms = useMemo(() => {
+    if (!firms || !Array.isArray(firms)) return [];
+    
     return firms.filter(firm => {
       // Filter by category if not "all"
       const matchesCategory = activeCategory === "all" || firm.categories.includes(activeCategory);
@@ -84,7 +88,7 @@ export function PrivateInvestmentsFirmList({
           placeholder="Search by firm name, description, or specialties..."
           className="pl-10"
           value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
+          onChange={(e) => setSearchQuery ? setSearchQuery(e.target.value) : null}
         />
       </div>
       

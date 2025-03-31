@@ -3,9 +3,10 @@ import React, { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Search } from "lucide-react";
 import { PrivateInvestmentsFirmList } from "@/components/familyoffice/PrivateInvestmentsFirmList";
 import { usePrivateInvestments } from "@/hooks/usePrivateInvestments";
+import { Input } from "@/components/ui/input";
 
 export default function PrivateInvestmentsPage() {
   const { firms, isLoading } = usePrivateInvestments();
@@ -65,11 +66,22 @@ export default function PrivateInvestmentsPage() {
             </Button>
           </div>
           
+          <div className="relative mb-6">
+            <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search investment opportunities..."
+              className="pl-10"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+          
           <PrivateInvestmentsFirmList 
             firms={firms} 
             isLoading={isLoading}
             activeCategory={activeCategory}
             searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
           />
         </div>
       </div>
