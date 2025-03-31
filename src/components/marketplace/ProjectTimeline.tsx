@@ -102,6 +102,9 @@ export function ProjectTimeline({ projectId, isProvider = false }: ProjectTimeli
           {sortedMilestones.length > 0 ? (
             sortedMilestones.map((milestone, index) => {
               const status = getMilestoneStatus(milestone);
+              const isComplete = milestone.status === 'completed' || milestone.status === 'approved';
+              const isPastDue = isPast(new Date(milestone.dueDate)) && !isComplete;
+              
               return (
                 <div key={milestone.id} className="relative">
                   {index < sortedMilestones.length - 1 && (
@@ -113,8 +116,7 @@ export function ProjectTimeline({ projectId, isProvider = false }: ProjectTimeli
                         <CheckCircle2 className="h-6 w-6 text-green-500" />
                       ) : milestone.status === 'completed' ? (
                         <CheckCircle2 className="h-6 w-6 text-yellow-500" />
-                      ) : isPast(new Date(milestone.dueDate)) && 
-                         !(milestone.status === 'completed' || milestone.status === 'approved') ? (
+                      ) : isPastDue ? (
                         <AlertTriangle className="h-6 w-6 text-red-500" />
                       ) : (
                         <Clock className="h-6 w-6 text-blue-500" />
