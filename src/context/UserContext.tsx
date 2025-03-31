@@ -72,9 +72,11 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         if (parsedProfile.dateOfBirth) {
           parsedProfile.dateOfBirth = new Date(parsedProfile.dateOfBirth);
         }
-        // Ensure firstName and lastName are set to Tom Brady
+        
+        // ALWAYS ensure the name is Tom Brady regardless of what's in localStorage
         parsedProfile.firstName = 'Tom';
         parsedProfile.lastName = 'Brady';
+        
         setUserProfile(parsedProfile);
         // Update localStorage with the enforced name
         localStorage.setItem('userProfile', JSON.stringify(parsedProfile));
@@ -131,7 +133,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
 
 // Create a hook for using the context
 export const useUser = () => {
-  const context = useContext(UserContext);
+  const context = React.useContext(UserContext);
   if (context === undefined) {
     throw new Error('useUser must be used within a UserProvider');
   }

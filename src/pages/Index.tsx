@@ -49,7 +49,7 @@ export default function Index() {
         
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
-            <h1 className="text-3xl font-bold">Welcome Back, {userProfile.firstName}</h1>
+            <h1 className="text-3xl font-bold">Welcome Back, Tom</h1>
             <p className="text-muted-foreground mt-1">Here's your financial overview</p>
           </div>
           

@@ -30,8 +30,8 @@ export const UserProfileSection = ({
   const isLightTheme = theme === "light";
   
   // Generate user initials from first and last name
-  const avatarInitials = `${userProfile.firstName?.charAt(0) || ''}${userProfile.lastName?.charAt(0) || ''}`;
-  const userName = `${userProfile.firstName} ${userProfile.lastName}`;
+  const avatarInitials = "TB"; // Hard-coded for Tom Brady
+  const userName = "Tom Brady"; // Hard-coded name
   
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [isThemeDialogOpen, setIsThemeDialogOpen] = useState(false);

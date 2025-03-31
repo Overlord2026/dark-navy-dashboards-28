@@ -33,9 +33,9 @@ export function ProfileForm({ onSave }: { onSave: () => void }) {
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: userProfile.title || "Mr",
-      firstName: "Tom",
+      firstName: "Tom", // Always set to Tom
       middleName: userProfile.middleName || "",
-      lastName: "Brady",
+      lastName: "Brady", // Always set to Brady
       suffix: userProfile.suffix || "none",
       gender: userProfile.gender || "Male",
       maritalStatus: userProfile.maritalStatus || "Single",
@@ -48,9 +48,9 @@ export function ProfileForm({ onSave }: { onSave: () => void }) {
     if (userProfile) {
       form.reset({
         title: userProfile.title || "Mr",
-        firstName: "Tom",
+        firstName: "Tom", // Always reset to Tom
         middleName: userProfile.middleName || "",
-        lastName: "Brady",
+        lastName: "Brady", // Always reset to Brady
         suffix: userProfile.suffix || "none",
         gender: userProfile.gender || "Male",
         maritalStatus: userProfile.maritalStatus || "Single",
