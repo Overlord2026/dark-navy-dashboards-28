@@ -1,41 +1,57 @@
 
+import React from "react";
 import { Button } from "@/components/ui/button";
-import { RefreshCw } from "lucide-react";
-import { getOverallStatusColor } from "./StatusIcon";
+import { StatusIcon, getOverallStatusColor } from "./StatusIcon";
+import { RefreshCcw } from "lucide-react";
+import { formatDistanceToNow } from "date-fns";
 
-interface DiagnosticsHeaderProps {
+type DiagnosticsHeaderProps = {
   isLoading: boolean;
-  report: any | null;
+  report: any;
   onRunDiagnostics: () => void;
-}
+};
 
-export const DiagnosticsHeader = ({ isLoading, report, onRunDiagnostics }: DiagnosticsHeaderProps) => {
+export const DiagnosticsHeader = ({ 
+  isLoading, 
+  report, 
+  onRunDiagnostics 
+}: DiagnosticsHeaderProps) => {
+  const timestamp = report?.timestamp ? new Date(report.timestamp) : null;
+  const overallStatus = report?.overall || "success";
+  
   return (
-    <>
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold">System Health Check</h1>
-        <p className="text-muted-foreground mt-1">
-          Diagnostics to ensure optimal system performance
+    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 w-full">
+      <div>
+        <h1 className="text-2xl font-bold">System Diagnostics</h1>
+        <p className="text-muted-foreground text-sm mt-1">
+          {timestamp 
+            ? `Last run ${formatDistanceToNow(timestamp, { addSuffix: true })}`
+            : "Run diagnostics to check system health"
+          }
         </p>
       </div>
-
-      <div className="flex justify-between items-center mb-4">
-        <div className="flex items-center space-x-2">
-          {report && (
-            <span className={`px-3 py-1 rounded-full text-sm font-medium ${getOverallStatusColor(report.overall)}`}>
-              System Status: {report.overall.charAt(0).toUpperCase() + report.overall.slice(1)}
-            </span>
-          )}
-        </div>
+      
+      <div className="flex items-center gap-3">
+        {report && (
+          <div className={`px-3 py-1.5 rounded-full text-sm font-medium ${getOverallStatusColor(overallStatus)}`}>
+            <div className="flex items-center gap-1.5">
+              <StatusIcon status={overallStatus} size={14} />
+              <span className="capitalize">{overallStatus}</span>
+            </div>
+          </div>
+        )}
+        
         <Button 
-          onClick={onRunDiagnostics} 
-          disabled={isLoading} 
-          className="flex items-center gap-2"
+          variant="outline" 
+          size="sm"
+          className="gap-2"
+          onClick={onRunDiagnostics}
+          disabled={isLoading}
         >
-          <RefreshCw className={`h-4 w-4 ${isLoading ? "animate-spin" : ""}`} />
-          {isLoading ? "Running Diagnostics..." : "Run Diagnostics"}
+          <RefreshCcw className="h-3.5 w-3.5" />
+          {isLoading ? "Running..." : "Run Diagnostics"}
         </Button>
       </div>
-    </>
+    </div>
   );
 };
