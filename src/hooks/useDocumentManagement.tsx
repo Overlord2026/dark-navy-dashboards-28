@@ -1,44 +1,30 @@
 
-import { useState, useCallback } from "react";
-import { DocumentItem, DocumentType, DocumentCategory } from "@/types/document";
-import { toast } from "sonner";
-import { v4 as uuidv4 } from "uuid";
+import { useState } from "react";
+import { DocumentItem, DocumentType } from "@/types/document";
+import { useToast } from "@/hooks/use-toast";
 
 export const useDocumentManagement = () => {
   const [documents, setDocuments] = useState<DocumentItem[]>([]);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
-  const [isNewFolderDialogOpen, setIsNewFolderDialogOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
+  const { toast } = useToast();
 
-  const handleCreateFolder = useCallback((folderName: string) => {
+  const handleCreateFolder = (folderName: string) => {
     if (!folderName.trim()) {
-      toast.error("Please enter a folder name");
+      toast({
+        title: "Please enter a folder name",
+        variant: "destructive"
+      });
       return;
     }
     
-    if (!activeCategory) {
-      toast.error("Please select a category first");
-      return;
-    }
-    
-    const newDocument: DocumentItem = {
-      id: uuidv4(),
-      name: folderName,
-      created: new Date().toISOString(),
-      type: "folder",
-      size: "0 KB",
-      category: activeCategory
-    };
-    
-    setDocuments(prev => [...prev, newDocument]);
-    setIsNewFolderDialogOpen(false);
-    
-    toast.success(`Folder "${folderName}" created successfully`);
-  }, [activeCategory]);
+    toast({
+      title: "Folder created",
+      description: `Created folder: ${folderName}`
+    });
+  };
 
-  const handleFileUpload = useCallback((file: File, customName: string) => {
+  const handleFileUpload = (file: File, customName: string) => {
     // Determine file type based on mime type
     let documentType: DocumentType = "document";
     if (file.type.includes("pdf")) {
@@ -51,56 +37,39 @@ export const useDocumentManagement = () => {
     
     // Make sure we have an active category before uploading
     if (!activeCategory) {
-      toast.error("Please select a category first");
+      toast({
+        title: "Please select a category",
+        variant: "destructive"
+      });
       return;
     }
     
     const newDocument: DocumentItem = {
-      id: uuidv4(),
+      id: `doc-${Math.random().toString(36).substring(2, 9)}`,
       name: customName || file.name,
-      created: new Date().toISOString(),
+      created: new Date().toLocaleDateString(),
       type: documentType,
       size: `${(file.size / (1024 * 1024)).toFixed(2)} MB`,
       category: activeCategory
     };
     
-    setDocuments(prev => [...prev, newDocument]);
+    setDocuments([...documents, newDocument]);
     setIsUploadDialogOpen(false);
     
-    toast.success(`"${newDocument.name}" has been uploaded successfully to Legacy Vault`);
-  }, [activeCategory]);
-
-  const filteredDocuments = useCallback(() => {
-    if (!activeCategory) return [];
-    
-    return documents
-      .filter(doc => doc.category === activeCategory)
-      .filter(doc => {
-        if (!searchQuery) return true;
-        return doc.name.toLowerCase().includes(searchQuery.toLowerCase());
-      });
-  }, [documents, activeCategory, searchQuery]);
-
-  const deleteDocument = useCallback((documentId: string) => {
-    setDocuments(prev => prev.filter(doc => doc.id !== documentId));
-    toast.success("Document deleted successfully");
-  }, []);
+    toast({
+      title: "File uploaded",
+      description: `${newDocument.name} has been uploaded successfully to BFO Legacy Vault`
+    });
+  };
 
   return {
     documents,
     activeCategory,
     isUploadDialogOpen,
-    isNewFolderDialogOpen,
-    isLoading,
-    searchQuery,
     setActiveCategory,
     setIsUploadDialogOpen,
-    setIsNewFolderDialogOpen,
-    setIsLoading,
-    setSearchQuery,
     handleCreateFolder,
     handleFileUpload,
-    filteredDocuments: filteredDocuments(),
-    deleteDocument
+    filteredDocuments: documents.filter(doc => doc.category === activeCategory)
   };
 };

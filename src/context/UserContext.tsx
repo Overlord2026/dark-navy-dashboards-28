@@ -27,7 +27,7 @@ export interface UserProfile {
 }
 
 interface UserContextType {
-  userProfile: UserProfile | null;
+  userProfile: UserProfile;
   isLoading: boolean;
   setUserProfile: (profile: UserProfile | null) => void;
   updateUserProfile?: (updates: Partial<UserProfile>) => void;
@@ -135,7 +135,7 @@ export const UserProvider = ({ children }: UserProviderProps) => {
 
   return (
     <UserContext.Provider value={{ 
-      userProfile, 
+      userProfile: userProfile as UserProfile, 
       isLoading, 
       setUserProfile,
       updateUserProfile 

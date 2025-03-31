@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 import {
@@ -25,13 +26,11 @@ export const UserProfileSection = ({
 }: UserProfileSectionProps) => {
   const navigate = useNavigate();
   const { theme } = useTheme();
-  const { userProfile, isLoading } = useUser();
   const isLightTheme = theme === "light";
   
-  const firstName = userProfile?.firstName || "User";
-  const lastName = userProfile?.lastName || "";
-  const avatarInitials = firstName && lastName ? `${firstName.charAt(0)}${lastName.charAt(0)}` : "U";
-  const userName = firstName && lastName ? `${firstName} ${lastName}` : "User";
+  // Hardcoded values for Tom Brady
+  const avatarInitials = "TB"; 
+  const userName = "Tom Brady"; // Always Tom Brady
   
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [isThemeDialogOpen, setIsThemeDialogOpen] = useState(false);
@@ -54,52 +53,37 @@ export const UserProfileSection = ({
     console.log(`Profile menu item clicked in sidebar: ${itemId}`);
     
     if (itemId === "change-theme") {
+      // Open theme dialog
       setIsThemeDialogOpen(true);
     } else if (itemId === "log-out") {
+      // Handle log out action
       toast.success("You have been successfully logged out");
-      navigate("/landing");
+      navigate("/home");
       if (onMenuItemClick) {
         onMenuItemClick(itemId);
       }
     } else {
+      // Open the side panel with the selected form
       setActivePanelForm(itemId);
       setIsPanelOpen(true);
     }
     
+    // Close dropdown after selection
     setIsDropdownOpen(false);
   };
 
+  // Handle open state change
   const handleOpenChange = (open: boolean) => {
     setIsDropdownOpen(open);
+    // If opening and panel is open, close the panel
     if (open && isPanelOpen) {
       setIsPanelOpen(false);
     }
   };
 
-  if (isLoading) {
-    return (
-      <div className={`px-0 ${isLightTheme ? 'border-[#DCD8C0]' : 'border-white/10'}`}>
-        {showLogo && (
-          <div className="mb-2 flex justify-center">
-            <img 
-              src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" 
-              alt="Boutique Family Office Logo" 
-              className="h-16 w-auto"
-            />
-          </div>
-        )}
-        <div className="flex items-center justify-between w-full mx-0 py-2 px-4 rounded-none transition-colors border-y animate-pulse">
-          <div className="flex items-center">
-            <div className="h-9 w-9 rounded-full bg-gray-300 mr-3"></div>
-            <div className="h-4 w-24 bg-gray-300 rounded"></div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className={`px-0 ${isLightTheme ? 'border-[#DCD8C0]' : 'border-white/10'}`}>
+      {/* Optional logo above the user profile dropdown */}
       {showLogo && (
         <div className="mb-2 flex justify-center">
           <img 
@@ -147,6 +131,7 @@ export const UserProfileSection = ({
                   : 'hover:bg-white/10'
               }`}
               onSelect={(event) => {
+                // Prevent default selection behavior
                 event.preventDefault();
               }}
             >
@@ -164,6 +149,7 @@ export const UserProfileSection = ({
                   : 'hover:bg-white/10'
               }`}
               onSelect={(event) => {
+                // Prevent default selection behavior
                 event.preventDefault();
               }}
             >
