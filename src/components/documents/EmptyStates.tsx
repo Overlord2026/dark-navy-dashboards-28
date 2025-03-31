@@ -1,28 +1,36 @@
 
+import React from "react";
 import { Button } from "@/components/ui/button";
-import { FileText, Upload } from "lucide-react";
+import { FolderIcon, FileIcon, UploadIcon } from "lucide-react";
 
-interface EmptyStatesProps {
-  category: string;
-  onUpload: () => void;
-}
-
-export function EmptyStates({ category, onUpload }: EmptyStatesProps) {
+export const NoCategorySelectedState = () => {
   return (
-    <div className="flex flex-col items-center justify-center p-8 border-2 border-dashed border-border rounded-lg min-h-[300px]">
-      <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
-        <FileText className="h-8 w-8 text-muted-foreground" />
-      </div>
-      <h3 className="text-xl font-medium mb-2">No documents found</h3>
-      <p className="text-muted-foreground text-center max-w-md mb-6">
-        {category === "All Documents" 
-          ? "You don't have any documents uploaded yet." 
-          : `You don't have any documents in the ${category} category.`}
+    <div className="flex flex-col items-center justify-center py-12 px-4 border-2 border-dashed rounded-lg">
+      <FolderIcon className="h-12 w-12 text-gray-400 mb-4" />
+      <h3 className="text-lg font-medium text-gray-800 dark:text-gray-200 mb-2">
+        No Category Selected
+      </h3>
+      <p className="text-gray-500 dark:text-gray-400 text-center mb-6 max-w-md">
+        Please select a document category from the list on the left to view your documents.
       </p>
-      <Button onClick={onUpload} className="flex items-center">
-        <Upload className="h-4 w-4 mr-2" />
+    </div>
+  );
+};
+
+export const NoDocumentsState = ({ onUploadClick, categoryName }: { onUploadClick: () => void; categoryName: string }) => {
+  return (
+    <div className="flex flex-col items-center justify-center py-12 px-4 border-2 border-dashed rounded-lg">
+      <FileIcon className="h-12 w-12 text-gray-400 mb-4" />
+      <h3 className="text-lg font-medium text-gray-800 dark:text-gray-200 mb-2">
+        No Documents Found
+      </h3>
+      <p className="text-gray-500 dark:text-gray-400 text-center mb-6 max-w-md">
+        There are no documents in the <span className="font-medium">{categoryName}</span> category yet.
+      </p>
+      <Button onClick={onUploadClick} className="flex items-center gap-2">
+        <UploadIcon className="h-4 w-4" />
         Upload Document
       </Button>
     </div>
   );
-}
+};

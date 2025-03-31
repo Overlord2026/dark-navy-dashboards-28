@@ -6,7 +6,14 @@ import { useDiagnostics } from "@/hooks/useDiagnostics";
 import { AlertTriangle, Check, ExternalLink, Shield, Zap } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { StatusIcon } from "./StatusIcon"; 
-import { LoadingState } from "./LoadingState";
+
+// Fix: Create a proper LoadingState component to replace the inline one that caused the error
+const LoadingState = ({ message = "Loading..." }: { message?: string }) => (
+  <div className="flex flex-col items-center justify-center py-8">
+    <div className="w-8 h-8 border-4 border-t-blue-500 border-r-transparent border-b-blue-500 border-l-transparent rounded-full animate-spin mb-4"></div>
+    <p className="text-muted-foreground">{message}</p>
+  </div>
+);
 
 export function QuickDiagnosticsDialog({
   open,
