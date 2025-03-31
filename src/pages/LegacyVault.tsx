@@ -105,18 +105,15 @@ export default function LegacyVault() {
     ? documents
     : documents.filter(doc => doc.category === activeCategory);
 
-  // Handle document upload
-  const handleUploadDocument = (documentData: { file: File; name: string; category: string }) => {
-    // In a real app, you would upload to a server here
-    console.log("Uploading document:", documentData);
-    
+  // Handle document upload - updated the function signature to match what UploadDocumentDialog expects
+  const handleUploadDocument = (file: File, customName: string) => {
     // Create a new document object
     const newDocument: DocumentItem = {
       id: Math.random().toString(36).substring(2, 9),
-      name: documentData.name,
+      name: customName || file.name,
       type: "document",
-      category: documentData.category,
-      size: documentData.file.size,
+      category: activeCategory === "all" ? "general" : activeCategory,
+      size: file.size,
       uploadedBy: "Tom Brady",
       created: new Date().toISOString(),
       modified: new Date().toISOString(),
@@ -223,6 +220,8 @@ export default function LegacyVault() {
       />
       
       <NewFolderDialog 
+        open={isNewFolderDialogOpen}
+        onOpenChange={setIsNewFolderDialogOpen}
         onCreateFolder={handleCreateFolder}
       />
     </ThreeColumnLayout>
