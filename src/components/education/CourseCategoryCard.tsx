@@ -12,16 +12,16 @@ interface CourseCategoryCardProps {
 
 // Map of icons for different course categories
 const categoryIcons: Record<string, React.ReactNode> = {
-  "retirement-income": <Book className="h-6 w-6 text-blue-500" />,
-  "social-security": <BookOpen className="h-6 w-6 text-green-500" />,
-  "income-distribution": <GraduationCap className="h-6 w-6 text-purple-500" />,
-  "annuities": <Info className="h-6 w-6 text-amber-500" />,
-  "tax-planning": <Book className="h-6 w-6 text-red-500" />,
-  "advanced-tax": <BookOpen className="h-6 w-6 text-orange-500" />,
-  "wealth-management": <GraduationCap className="h-6 w-6 text-indigo-500" />,
-  "estate-planning": <Info className="h-6 w-6 text-teal-500" />,
-  "florida-residency": <Book className="h-6 w-6 text-cyan-500" />,
-  "texas-residency": <BookOpen className="h-6 w-6 text-lime-500" />,
+  "retirement-income": <Book className="h-6 w-6 text-primary" />,
+  "social-security": <BookOpen className="h-6 w-6 text-primary" />,
+  "income-distribution": <GraduationCap className="h-6 w-6 text-primary" />,
+  "annuities": <Info className="h-6 w-6 text-primary" />,
+  "tax-planning": <Book className="h-6 w-6 text-primary" />,
+  "advanced-tax": <BookOpen className="h-6 w-6 text-primary" />,
+  "wealth-management": <GraduationCap className="h-6 w-6 text-primary" />,
+  "estate-planning": <Info className="h-6 w-6 text-primary" />,
+  "florida-residency": <Book className="h-6 w-6 text-primary" />,
+  "texas-residency": <BookOpen className="h-6 w-6 text-primary" />,
 };
 
 export function CourseCategoryCard({ category, courseCount = 0 }: CourseCategoryCardProps) {
@@ -33,22 +33,22 @@ export function CourseCategoryCard({ category, courseCount = 0 }: CourseCategory
   
   return (
     <Card 
-      className="h-full transition-all duration-200 hover:shadow-md cursor-pointer bg-[#0F1C2E] border-blue-900/30"
+      className="h-full transition-all duration-200 hover:shadow-md cursor-pointer"
       onClick={handleClick}
     >
       <CardHeader className="pb-2">
         <div className="flex items-start justify-between">
-          <div className="w-10 h-10 rounded-full bg-blue-500/10 flex items-center justify-center mb-2">
-            {categoryIcons[category.id] || <GraduationCap className="h-6 w-6 text-blue-500" />}
+          <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mb-2">
+            {categoryIcons[category.id] || <GraduationCap className="h-6 w-6 text-primary" />}
           </div>
           {courseCount > 0 && (
-            <Badge variant="outline" className="bg-blue-500/10 text-blue-400 border-0">
+            <Badge variant="outline" className="bg-primary/10 text-primary border-0">
               {courseCount} courses
             </Badge>
           )}
         </div>
         <CardTitle className="text-lg">{category.name}</CardTitle>
-        <CardDescription className="text-muted-foreground">
+        <CardDescription className="text-muted-foreground line-clamp-2">
           {getDescriptionForCategory(category.id)}
         </CardDescription>
       </CardHeader>
@@ -56,7 +56,7 @@ export function CourseCategoryCard({ category, courseCount = 0 }: CourseCategory
         <p>Explore courses, guides, and resources</p>
       </CardContent>
       <CardFooter>
-        <div className="text-sm text-blue-400 font-medium">View Category →</div>
+        <div className="text-sm text-primary font-medium">View Category →</div>
       </CardFooter>
     </Card>
   );

@@ -19,7 +19,7 @@ export function CourseCategories({ categories, onSelectCategory }: CourseCategor
             <CardContent>
               <Button 
                 variant="outline" 
-                className="w-full"
+                className="w-full hover:bg-primary hover:text-primary-foreground"
                 onClick={() => onSelectCategory(category.id)}
               >
                 Explore Courses

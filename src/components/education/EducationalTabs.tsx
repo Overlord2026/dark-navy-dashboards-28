@@ -1,3 +1,4 @@
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CourseCategories } from "./CourseCategories";
 import { CourseList } from "./CourseList";
@@ -29,14 +30,14 @@ export function EducationalTabs({
 }: EducationalTabsProps) {
   return (
     <Tabs defaultValue="courses" value={activeSection} className="mt-6">
-      <TabsList className="mb-6">
+      <TabsList className="mb-6 grid grid-cols-4 gap-1 w-full max-w-lg">
         <TabsTrigger value="courses" onClick={() => setActiveSection("courses")}>Courses</TabsTrigger>
         <TabsTrigger value="guides" onClick={() => setActiveSection("guides")}>Guides</TabsTrigger>
         <TabsTrigger value="books" onClick={() => setActiveSection("books")}>Recommended Reading</TabsTrigger>
         <TabsTrigger value="allocation-models" onClick={() => setActiveSection("allocation-models")}>Allocation Models</TabsTrigger>
       </TabsList>
       
-      <TabsContent value="courses">
+      <TabsContent value="courses" className="animate-fade-in">
         {activeCategory === "all-courses" ? (
           <>
             <FeaturedCategories 
@@ -52,10 +53,15 @@ export function EducationalTabs({
           </>
         ) : (
           <>
-            <CourseCategories 
-              categories={courseCategories} 
-              onSelectCategory={setActiveCategory} 
-            />
+            <div className="mb-8">
+              <Button 
+                variant="ghost" 
+                className="mb-4 text-primary hover:bg-primary/10 hover:text-primary"
+                onClick={() => setActiveCategory("all-courses")}
+              >
+                ← Back to All Categories
+              </Button>
+            </div>
 
             <div className="mt-10">
               <h3 className="text-xl font-semibold mb-4">
@@ -75,7 +81,7 @@ export function EducationalTabs({
         )}
       </TabsContent>
       
-      <TabsContent value="guides">
+      <TabsContent value="guides" className="animate-fade-in">
         <div className="space-y-6">
           <h3 className="text-xl font-semibold mb-4">Educational Guides</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -90,7 +96,7 @@ export function EducationalTabs({
         </div>
       </TabsContent>
       
-      <TabsContent value="books">
+      <TabsContent value="books" className="animate-fade-in">
         <div className="space-y-6">
           <h3 className="text-xl font-semibold mb-4">Recommended Reading</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -110,7 +116,7 @@ export function EducationalTabs({
         </div>
       </TabsContent>
       
-      <TabsContent value="allocation-models">
+      <TabsContent value="allocation-models" className="animate-fade-in">
         <div className="space-y-6">
           <div className="mb-6">
             <h3 className="text-xl font-semibold mb-2">Intelligent Allocation Models</h3>
@@ -129,7 +135,7 @@ export function EducationalTabs({
             ))}
           </div>
           
-          <div className="mt-8 p-6 bg-accent/10 rounded-lg">
+          <div className="mt-8 p-6 bg-primary/5 rounded-lg border border-primary/10">
             <h4 className="text-lg font-semibold mb-2">Video Demonstrations</h4>
             <p className="mb-4">Watch video demonstrations of our Intelligent Allocation Models in action.</p>
             

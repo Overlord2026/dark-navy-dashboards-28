@@ -64,7 +64,7 @@ export function CourseCard({
             <Badge variant="info" className="text-white">Paid</Badge>
           )}
         </div>
-        <CardDescription className="mt-2 text-left">{description}</CardDescription>
+        <CardDescription className="mt-2 text-left line-clamp-3">{description}</CardDescription>
       </CardHeader>
       <CardContent className="flex-grow">
         <div className="flex items-center justify-between text-sm text-muted-foreground mb-4">

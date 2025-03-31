@@ -45,7 +45,7 @@ export default function Education() {
       activeSecondaryItem={activeCategory}
       secondaryMenuItems={courseCategories}
     >
-      <div className="space-y-6">
+      <div className="space-y-6 animate-fade-in">
         <div>
           <h2 className="text-2xl font-bold tracking-tight">Welcome to the SWAG Education Center</h2>
           <p className="text-muted-foreground mt-2">
