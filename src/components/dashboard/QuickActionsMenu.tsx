@@ -1,31 +1,72 @@
 
 import React from "react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { Bug, Activity } from "lucide-react";
-import { Link } from "react-router-dom";
-import { QuickDiagnosticsButton } from "@/components/diagnostics/QuickDiagnosticsButton";
-import { DiagnosticsAccessButton } from "@/components/diagnostics/DiagnosticsAccessButton";
+import { ChevronDown, Code, FileText, HelpCircle, RefreshCcw } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { useUser } from "@/context/UserContext";
 
-export const QuickActionsMenu = () => {
-  const { userProfile } = useUser();
-  const userRole = userProfile?.role || "client";
-  const isAdmin = userRole === "admin" || userRole === "system_administrator";
+export function QuickActionsMenu() {
+  const navigate = useNavigate();
 
-  const handleQuickAction = (label: string) => {
-    toast.success(`Navigating to ${label}`);
+  const handleViewArchitecture = () => {
+    window.open('/docs/ARCHITECTURE.md', '_blank');
+    toast.success("Architecture documentation opened");
+  };
+
+  const handleViewApiIntegration = () => {
+    window.open('/docs/API_INTEGRATION.md', '_blank');
+    toast.success("API integration documentation opened");
+  };
+
+  const handleRunDiagnostics = () => {
+    navigate("/system-diagnostics");
+  };
+
+  const handleViewLogs = () => {
+    navigate("/system-diagnostics?tab=logs");
   };
 
   return (
-    <div className="flex items-center justify-center gap-4 w-full mb-3">
-      {/* Diagnostic buttons - only visible to admin roles */}
-      {isAdmin && (
-        <>
-          <QuickDiagnosticsButton />
-          <DiagnosticsAccessButton />
-        </>
-      )}
-    </div>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="outline" className="flex items-center gap-1">
+          Quick Actions <ChevronDown className="h-4 w-4" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="w-56">
+        <DropdownMenuLabel>Administration</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        
+        <DropdownMenuItem onClick={handleViewArchitecture}>
+          <FileText className="mr-2 h-4 w-4" />
+          <span>View Architecture Docs</span>
+        </DropdownMenuItem>
+        
+        <DropdownMenuItem onClick={handleViewApiIntegration}>
+          <Code className="mr-2 h-4 w-4" />
+          <span>API Integration Guide</span>
+        </DropdownMenuItem>
+        
+        <DropdownMenuSeparator />
+        
+        <DropdownMenuItem onClick={handleRunDiagnostics}>
+          <RefreshCcw className="mr-2 h-4 w-4" />
+          <span>Run System Diagnostics</span>
+        </DropdownMenuItem>
+        
+        <DropdownMenuItem onClick={handleViewLogs}>
+          <HelpCircle className="mr-2 h-4 w-4" />
+          <span>View System Logs</span>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
-};
+}
