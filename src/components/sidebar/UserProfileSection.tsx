@@ -28,7 +28,6 @@ export const UserProfileSection = ({
   const { userProfile, isLoading } = useUser();
   const isLightTheme = theme === "light";
   
-  // Safely access user information, providing fallbacks if userProfile is null
   const firstName = userProfile?.firstName || "User";
   const lastName = userProfile?.lastName || "";
   const avatarInitials = firstName && lastName ? `${firstName.charAt(0)}${lastName.charAt(0)}` : "U";
@@ -55,29 +54,23 @@ export const UserProfileSection = ({
     console.log(`Profile menu item clicked in sidebar: ${itemId}`);
     
     if (itemId === "change-theme") {
-      // Open theme dialog
       setIsThemeDialogOpen(true);
     } else if (itemId === "log-out") {
-      // Handle log out action
       toast.success("You have been successfully logged out");
       navigate("/landing");
       if (onMenuItemClick) {
         onMenuItemClick(itemId);
       }
     } else {
-      // Open the side panel with the selected form
       setActivePanelForm(itemId);
       setIsPanelOpen(true);
     }
     
-    // Close dropdown after selection
     setIsDropdownOpen(false);
   };
 
-  // Handle open state change
   const handleOpenChange = (open: boolean) => {
     setIsDropdownOpen(open);
-    // If opening and panel is open, close the panel
     if (open && isPanelOpen) {
       setIsPanelOpen(false);
     }
@@ -107,7 +100,6 @@ export const UserProfileSection = ({
 
   return (
     <div className={`px-0 ${isLightTheme ? 'border-[#DCD8C0]' : 'border-white/10'}`}>
-      {/* Optional logo above the user profile dropdown */}
       {showLogo && (
         <div className="mb-2 flex justify-center">
           <img 
@@ -155,7 +147,6 @@ export const UserProfileSection = ({
                   : 'hover:bg-white/10'
               }`}
               onSelect={(event) => {
-                // Prevent default selection behavior
                 event.preventDefault();
               }}
             >
@@ -173,7 +164,6 @@ export const UserProfileSection = ({
                   : 'hover:bg-white/10'
               }`}
               onSelect={(event) => {
-                // Prevent default selection behavior
                 event.preventDefault();
               }}
             >

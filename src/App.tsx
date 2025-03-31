@@ -17,6 +17,7 @@ import { SubscriptionProvider } from '@/context/SubscriptionContext';
 import { BillsProvider } from '@/hooks/useBills';
 import Subscription from '@/pages/Subscription';
 import BillsManagement from '@/pages/BillsManagement';
+import AdvisorProfile from '@/pages/AdvisorProfile';
 
 function App() {
   return (
@@ -40,6 +41,7 @@ function App() {
                   <Route path="/education" element={<Education />} />
                   <Route path="/subscription" element={<Subscription />} />
                   <Route path="/bills-management" element={<BillsManagement />} />
+                  <Route path="/advisor-profile" element={<AdvisorProfile />} />
                 </Routes>
               </BrowserRouter>
               <Toaster />
