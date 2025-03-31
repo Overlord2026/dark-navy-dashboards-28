@@ -64,7 +64,8 @@ export function ProjectTimeline({ projectId, isProvider = false }: ProjectTimeli
 
   const getMilestoneStatus = (milestone: Milestone) => {
     const dueDate = new Date(milestone.dueDate);
-    const isPastDue = isPast(dueDate) && milestone.status !== 'completed' && milestone.status !== 'approved';
+    const isComplete = milestone.status === 'completed' || milestone.status === 'approved';
+    const isPastDue = isPast(dueDate) && !isComplete;
     const isUpcoming = !isPast(dueDate) && differenceInDays(dueDate, new Date()) <= 7;
     
     if (milestone.status === 'approved') {
@@ -113,7 +114,7 @@ export function ProjectTimeline({ projectId, isProvider = false }: ProjectTimeli
                       ) : milestone.status === 'completed' ? (
                         <CheckCircle2 className="h-6 w-6 text-yellow-500" />
                       ) : isPast(new Date(milestone.dueDate)) && 
-                          !(milestone.status === 'completed' || milestone.status === 'approved') ? (
+                         !(milestone.status === 'completed' || milestone.status === 'approved') ? (
                         <AlertTriangle className="h-6 w-6 text-red-500" />
                       ) : (
                         <Clock className="h-6 w-6 text-blue-500" />
