@@ -1,5 +1,5 @@
 
-import { Folder, Upload } from "lucide-react";
+import { Folder, Upload, PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface EmptyStateProps {
@@ -25,6 +25,9 @@ export const NoDocumentsState = ({ onUploadClick, categoryName }: EmptyStateProp
   return (
     <div className="h-[300px] flex flex-col items-center justify-center">
       <div className="text-center max-w-md mx-auto">
+        <div className="w-14 h-14 rounded-full bg-blue-500/10 flex items-center justify-center mx-auto mb-4">
+          <PlusCircle className="h-8 w-8 text-blue-500" />
+        </div>
         <h3 className="text-xl font-medium mb-2">No files</h3>
         <p className="text-muted-foreground mb-6">
           You haven't uploaded any files to {categoryName}

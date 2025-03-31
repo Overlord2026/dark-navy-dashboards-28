@@ -37,9 +37,11 @@ const EmptyExpenseCard = ({ type, period, onClick }: { type: string; period: str
     onClick={onClick}
   >
     <div className="flex flex-col items-center gap-2">
-      <PlusCircle className="h-6 w-6 text-blue-500" />
+      <div className="w-10 h-10 rounded-full bg-blue-500/10 flex items-center justify-center">
+        <PlusCircle className="h-6 w-6 text-blue-500" />
+      </div>
       <p className="text-muted-foreground text-center text-sm">
-        Add {type} expenses
+        Add {type.toLowerCase()} expenses
       </p>
     </div>
   </div>
@@ -127,15 +129,15 @@ export const ExpensesStep = ({ expenses = [], onExpenseUpdate }: ExpensesStepPro
     
     return (
       <div className="space-y-4">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center justify-between">
           <h3 className="text-lg font-medium text-white">{type} Expenses {period}</h3>
           <Button 
             variant="ghost" 
             size="icon" 
-            className="rounded-full w-6 h-6"
+            className="rounded-full w-8 h-8 bg-[#0F1C2E] border border-gray-700/20"
             onClick={() => handleAddExpense(type as ExpenseData["type"], period as ExpenseData["period"])}
           >
-            <PlusCircle className="w-5 h-5" />
+            <PlusCircle className="w-5 h-5 text-blue-500" />
           </Button>
         </div>
         
@@ -180,7 +182,7 @@ export const ExpensesStep = ({ expenses = [], onExpenseUpdate }: ExpensesStepPro
         <div className="flex justify-end">
           <Popover>
             <PopoverTrigger asChild>
-              <Button>
+              <Button className="bg-[#1B1B32] text-white hover:bg-[#2D2D4A] border-0">
                 Add Expense
               </Button>
             </PopoverTrigger>
@@ -211,13 +213,22 @@ export const ExpensesStep = ({ expenses = [], onExpenseUpdate }: ExpensesStepPro
         </div>
       </div>
       
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-        {["Living", "Housing", "Healthcare", "Transportation"].map(type => 
-          renderExpenseSection(type, "Before Retirement")
-        )}
-        {["Living", "Housing", "Healthcare", "Transportation"].map(type => 
-          renderExpenseSection(type, "After Retirement")
-        )}
+      <div className="grid grid-cols-1 gap-8">
+        {/* Before Retirement Expenses */}
+        <div className="space-y-6">
+          {renderExpenseSection("Healthcare", "Before Retirement")}
+          {renderExpenseSection("Transportation", "Before Retirement")}
+          {renderExpenseSection("Living", "Before Retirement")}
+          {renderExpenseSection("Housing", "Before Retirement")}
+        </div>
+        
+        {/* After Retirement Expenses */}
+        <div className="space-y-6">
+          {renderExpenseSection("Healthcare", "After Retirement")}
+          {renderExpenseSection("Transportation", "After Retirement")}
+          {renderExpenseSection("Living", "After Retirement")}
+          {renderExpenseSection("Housing", "After Retirement")}
+        </div>
       </div>
       
       <ExpensesSidePanel
