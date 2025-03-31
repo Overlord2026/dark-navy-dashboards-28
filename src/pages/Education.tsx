@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { EducationalTabs } from "@/components/education/EducationalTabs";
 import { courseCategories } from "@/data/education";
 import { handleCourseAccess } from "@/components/education/courseUtils";
+import { motion } from "framer-motion";
 
 export default function Education() {
   const [searchParams] = useSearchParams();
@@ -38,6 +39,23 @@ export default function Education() {
     }
   };
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { 
+      opacity: 1,
+      transition: { 
+        duration: 0.3,
+        when: "beforeChildren",
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 }
+  };
+
   return (
     <ThreeColumnLayout 
       title="SWAG Education Center" 
@@ -45,8 +63,13 @@ export default function Education() {
       activeSecondaryItem={activeCategory}
       secondaryMenuItems={courseCategories}
     >
-      <div className="space-y-6 animate-fade-in">
-        <div>
+      <motion.div 
+        className="space-y-6"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        <motion.div variants={itemVariants}>
           <h2 className="text-2xl font-bold tracking-tight">Welcome to the SWAG Education Center</h2>
           <p className="text-muted-foreground mt-2">
             Explore our collection of financial education resources to help you build wealth and achieve your financial goals.
@@ -59,8 +82,8 @@ export default function Education() {
             setActiveCategory={setActiveCategory}
             handleCourseEnrollment={handleCourseEnrollment}
           />
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     </ThreeColumnLayout>
   );
 }

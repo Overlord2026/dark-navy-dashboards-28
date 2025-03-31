@@ -1,20 +1,17 @@
+
 import React, { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { StepsOverview } from "./StepsOverview";
 import { ExpensesStep } from "./ExpensesStep";
 import { ExpenseData } from "./ExpensesSidePanel";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { PlanNameStep } from "./PlanNameStep";
+import { GoalsStep } from "./GoalsStep";
+import { AssetsStep } from "./AssetsStep";
+import { IncomeStep } from "./IncomeStep";
+import { SavingsStep } from "./SavingsStep";
+import { InsuranceStep } from "./InsuranceStep";
 import { toast } from "sonner";
 
 interface Goal {
@@ -72,6 +69,7 @@ export function CreatePlanDialog({
     { id: "4", name: "IRA", type: "Retirement", balance: 45000, isSelected: false },
     { id: "5", name: "Brokerage Account", type: "Investment", balance: 30000, isSelected: false },
   ]);
+  const [expenses, setExpenses] = useState<ExpenseData[]>(draftData?.expenses || []);
 
   const handleStepSelect = (stepNumber: number) => {
     setCurrentStep(stepNumber);
@@ -122,137 +120,58 @@ export function CreatePlanDialog({
     setAccounts(updatedAccounts);
     setPlanData(prev => ({ ...prev, accounts: updatedAccounts }));
   };
-
-  const [expenses, setExpenses] = useState<ExpenseData[]>(draftData?.expenses || []);
   
   const handleExpenseUpdate = (updatedExpenses: ExpenseData[]) => {
     setExpenses(updatedExpenses);
     setPlanData(prev => ({ ...prev, expenses: updatedExpenses }));
+  };
+
+  const handlePlanNameChange = (name: string) => {
+    setPlanName(name);
+    setPlanData(prev => ({ ...prev, name }));
   };
   
   const renderContent = () => {
     switch (currentStep) {
       case 1:
         return (
-          <div className="space-y-4">
-            <h2 className="text-2xl font-semibold">Plan Name</h2>
-            <p className="text-muted-foreground">
-              Give your financial plan a name to easily identify it.
-            </p>
-            <Input
-              type="text"
-              placeholder="My Financial Plan"
-              value={planName}
-              onChange={(e) => {
-                setPlanName(e.target.value);
-                setPlanData(prev => ({ ...prev, name: e.target.value }));
-              }}
-            />
-            <div className="flex justify-end gap-2">
-              <Button onClick={handleNextStep}>Next</Button>
-            </div>
-          </div>
+          <PlanNameStep 
+            planName={planName} 
+            onPlanNameChange={handlePlanNameChange} 
+            onNextStep={handleNextStep} 
+          />
         );
       case 2:
         return (
-          <div className="space-y-4">
-            <h2 className="text-2xl font-semibold">Goals</h2>
-            <p className="text-muted-foreground">
-              Set your financial goals to create a personalized plan.
-            </p>
-            {/* Goal input fields and list will go here */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="goal-name">Goal Name</Label>
-                <Input id="goal-name" type="text" placeholder="Retirement" />
-              </div>
-              <div>
-                <Label htmlFor="goal-priority">Priority</Label>
-                <Select>
-                  <SelectTrigger className="bg-[#1A2333] border-blue-900/30">
-                    <SelectValue placeholder="Select priority" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-[#1A2333] border-blue-900/30">
-                    <SelectItem value="high">High</SelectItem>
-                    <SelectItem value="medium">Medium</SelectItem>
-                    <SelectItem value="low">Low</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-            <div className="flex justify-between">
-              <Button variant="outline" onClick={handlePrevStep}>Previous</Button>
-              <Button onClick={handleNextStep}>Next</Button>
-            </div>
-          </div>
+          <GoalsStep 
+            goals={goals} 
+            onGoalUpdate={handleGoalUpdate} 
+            onNextStep={handleNextStep} 
+            onPrevStep={handlePrevStep} 
+          />
         );
       case 3:
         return (
-          <div className="space-y-6">
-            <h2 className="text-2xl font-semibold">Assets</h2>
-            <p className="text-muted-foreground mb-4">
-              Choose which accounts to add to your plan.
-            </p>
-            
-            <div className="space-y-4">
-              {accounts.map((account) => (
-                <div key={account.id} className="flex items-center justify-between p-4 bg-[#1A1A2E] rounded-lg border border-border/20">
-                  <div className="flex items-center space-x-3">
-                    <Checkbox 
-                      id={`account-${account.id}`} 
-                      checked={account.isSelected} 
-                      onCheckedChange={(checked) => handleAccountSelect(account.id, !!checked)}
-                    />
-                    <div>
-                      <Label 
-                        htmlFor={`account-${account.id}`} 
-                        className="text-base font-medium cursor-pointer"
-                      >
-                        {account.name}
-                      </Label>
-                      <p className="text-sm text-muted-foreground">{account.type}</p>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <p className="font-semibold">${account.balance.toLocaleString()}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-            
-            <div className="flex justify-between">
-              <Button variant="outline" onClick={handlePrevStep}>Previous</Button>
-              <Button onClick={handleNextStep}>Next</Button>
-            </div>
-          </div>
+          <AssetsStep 
+            accounts={accounts} 
+            onAccountSelect={handleAccountSelect} 
+            onNextStep={handleNextStep} 
+            onPrevStep={handlePrevStep} 
+          />
         );
       case 4:
         return (
-          <div className="space-y-4">
-            <h2 className="text-2xl font-semibold">Income</h2>
-            <p className="text-muted-foreground">
-              Capture all the income you earn and expect to earn.
-            </p>
-            {/* Income input fields will go here */}
-            <div className="flex justify-between">
-              <Button variant="outline" onClick={handlePrevStep}>Previous</Button>
-              <Button onClick={handleNextStep}>Next</Button>
-            </div>
-          </div>
+          <IncomeStep 
+            onNextStep={handleNextStep} 
+            onPrevStep={handlePrevStep} 
+          />
         );
       case 5:
         return (
-          <div className="space-y-4">
-            <h2 className="text-2xl font-semibold">Savings</h2>
-            <p className="text-muted-foreground">
-              Track how much you plan to save each year.
-            </p>
-            {/* Savings input fields will go here */}
-            <div className="flex justify-between">
-              <Button variant="outline" onClick={handlePrevStep}>Previous</Button>
-              <Button onClick={handleNextStep}>Next</Button>
-            </div>
-          </div>
+          <SavingsStep 
+            onNextStep={handleNextStep} 
+            onPrevStep={handlePrevStep} 
+          />
         );
       case 6:
         return (
@@ -263,17 +182,10 @@ export function CreatePlanDialog({
         );
       case 7:
         return (
-          <div className="space-y-4">
-            <h2 className="text-2xl font-semibold">Insurance</h2>
-            <p className="text-muted-foreground">
-              Add details about your current insurance coverage.
-            </p>
-            {/* Insurance input fields will go here */}
-            <div className="flex justify-between">
-              <Button variant="outline" onClick={handlePrevStep}>Previous</Button>
-              <Button onClick={handleNextStep}>Next</Button>
-            </div>
-          </div>
+          <InsuranceStep 
+            onNextStep={handleNextStep} 
+            onPrevStep={handlePrevStep} 
+          />
         );
       
       default:

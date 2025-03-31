@@ -3,6 +3,7 @@ import { useState } from "react";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip } from "recharts";
 import { InfoIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 // Sample data - this would typically come from an API
 const sampleData = [
@@ -164,6 +165,3 @@ export function NetWorthChart() {
     </div>
   );
 }
-
-// Import Button since it's used in the component
-import { Button } from "@/components/ui/button";
