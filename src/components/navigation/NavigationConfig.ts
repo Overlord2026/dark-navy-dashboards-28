@@ -1,5 +1,25 @@
 
-import { BookOpen, Building2, Calculator, CreditCard, FileText, FolderArchive, Home, LineChart, ShieldCheck, ShoppingBag, Users } from "lucide-react";
+import { 
+  BookOpen, 
+  Building2, 
+  Calculator, 
+  Calendar, 
+  CreditCard, 
+  FileText, 
+  FolderArchive, 
+  Home, 
+  LineChart, 
+  ShieldCheck, 
+  ShoppingBag, 
+  Users,
+  Wallet,
+  ArrowRightLeft,
+  Share,
+  GraduationCap,
+  Receipt,
+  Building,
+  CoinsIcon,
+} from "lucide-react";
 
 export type NavItem = {
   id: string;
@@ -24,7 +44,7 @@ export type NavCategory = {
 
 // Create navigation registry to allow dynamic registration
 const navigationRegistry: Record<string, NavItem[]> = {
-  client: [
+  main: [
     {
       id: "home",
       label: "Home",
@@ -32,16 +52,10 @@ const navigationRegistry: Record<string, NavItem[]> = {
       href: "/"
     },
     {
-      id: "cash-management",
-      label: "Cash Management",
-      icon: CreditCard,
-      href: "/cash-management"
-    },
-    {
-      id: "bills-management",
-      label: "Bills Management",
-      icon: Calculator,
-      href: "/bills-management"
+      id: "education",
+      label: "Education Center",
+      icon: GraduationCap,
+      href: "/education"
     },
     {
       id: "legacy-vault",
@@ -49,8 +63,20 @@ const navigationRegistry: Record<string, NavItem[]> = {
       icon: FolderArchive,
       href: "/legacy-vault"
     },
+    {
+      id: "tax-planning",
+      label: "Tax Planning",
+      icon: Receipt,
+      href: "/tax-budgets"
+    },
   ],
-  investments: [
+  wealth_management: [
+    {
+      id: "financial-plans",
+      label: "Financial Plans",
+      icon: LineChart,
+      href: "/financial-plans"
+    },
     {
       id: "investments",
       label: "Investments",
@@ -58,10 +84,54 @@ const navigationRegistry: Record<string, NavItem[]> = {
       href: "/investments"
     },
     {
+      id: "accounts",
+      label: "Accounts",
+      icon: Wallet,
+      href: "/accounts"
+    },
+    {
+      id: "properties",
+      label: "Properties",
+      icon: Building,
+      href: "/properties"
+    },
+    {
+      id: "social-security",
+      label: "Social Security",
+      icon: CoinsIcon,
+      href: "/social-security"
+    },
+    {
       id: "insurance",
       label: "Insurance",
       icon: ShieldCheck,
       href: "/insurance"
+    },
+  ],
+  banking: [
+    {
+      id: "cash-management",
+      label: "Cash Management",
+      icon: CreditCard,
+      href: "/cash-management"
+    },
+    {
+      id: "lending",
+      label: "Lending",
+      icon: CreditCard,
+      href: "/lending"
+    },
+    {
+      id: "transfers",
+      label: "Transfers",
+      icon: ArrowRightLeft,
+      href: "/transfers"
+    },
+    {
+      id: "bills-management",
+      label: "Bills Management",
+      icon: Calculator,
+      href: "/bills-management"
     },
   ],
   collaboration: [
@@ -72,10 +142,16 @@ const navigationRegistry: Record<string, NavItem[]> = {
       href: "/family-office-directory"
     },
     {
-      id: "education",
-      label: "Education",
-      icon: BookOpen,
-      href: "/education"
+      id: "marketplace",
+      label: "Marketplace",
+      icon: ShoppingBag,
+      href: "/marketplace"
+    },
+    {
+      id: "sharing",
+      label: "Sharing",
+      icon: Share,
+      href: "/sharing"
     },
   ],
   admin: [
@@ -96,6 +172,12 @@ const navigationRegistry: Record<string, NavItem[]> = {
       label: "Advisor Profile",
       icon: Users,
       href: "/advisor-profile"
+    },
+    {
+      id: "system-diagnostics",
+      label: "System Diagnostics",
+      icon: FileText,
+      href: "/system-diagnostics"
     },
   ]
 };
@@ -123,26 +205,32 @@ export const registerNavItem = (categoryId: string, item: NavItem) => {
 // Create categories from registry
 export const navigationCategories: NavCategory[] = [
   {
-    id: "client",
-    label: "Client Dashboard",
-    items: navigationRegistry.client || [],
+    id: "main",
+    label: "MAIN",
+    items: navigationRegistry.main || [],
     defaultExpanded: true
   },
   {
-    id: "investments",
-    label: "Investments",
-    items: navigationRegistry.investments || [],
+    id: "wealth_management",
+    label: "WEALTH MANAGEMENT",
+    items: navigationRegistry.wealth_management || [],
+    defaultExpanded: true
+  },
+  {
+    id: "banking",
+    label: "BANKING",
+    items: navigationRegistry.banking || [],
     defaultExpanded: false
   },
   {
     id: "collaboration",
-    label: "Collaboration",
+    label: "COLLABORATION",
     items: navigationRegistry.collaboration || [],
     defaultExpanded: false
   },
   {
     id: "admin",
-    label: "Admin",
+    label: "ADMIN",
     items: navigationRegistry.admin || [],
     defaultExpanded: false
   }
