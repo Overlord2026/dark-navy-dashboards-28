@@ -49,7 +49,7 @@ export function SubNavigation({
                 : "text-foreground/70 hover:text-foreground hover:bg-muted"
             )}
           >
-            {item.label}
+            {item.label || item.name} {/* Support both label and name properties */}
           </Link>
         ))}
       </nav>
