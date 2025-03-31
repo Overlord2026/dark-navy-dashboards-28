@@ -269,7 +269,7 @@ export function ThreeColumnLayout({
           )}
         >
           <div className="flex flex-col h-full">
-            <div className={`px-4 ${isLightTheme ? 'border-[#DCD8C0]' : 'border-white/10'} mt-2 mb-2`}>
+            <div className={`px-4 ${isLightTheme ? 'border-[#DCD8C0]' : 'border-white/10'} mt-4 mb-4`}>
               <UserProfileSection onMenuItemClick={handleProfileMenuItemClick} showLogo={false} />
             </div>
             

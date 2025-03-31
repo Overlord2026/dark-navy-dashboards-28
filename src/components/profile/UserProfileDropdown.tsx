@@ -84,7 +84,8 @@ export const UserProfileDropdown = ({ onOpenForm }: UserProfileDropdownProps) =>
   };
 
   return (
-    <div key={dropdownKey} className="fixed top-0 left-0 z-40 w-full pt-4">
+    <div key={dropdownKey} className="fixed z-40 hidden">
+      {/* This component is no longer being used in the main layout - removed from layout but kept here in case it's needed again */}
       <DropdownMenu open={isOpen} onOpenChange={handleOpenChange}>
         <DropdownMenuTrigger 
           className="flex items-center justify-between w-full py-4 px-4 hover:bg-[#1c2e4a] rounded-none transition-colors cursor-pointer border-y-2 border-gray-600 shadow-lg"
