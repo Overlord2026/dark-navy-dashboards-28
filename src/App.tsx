@@ -27,10 +27,32 @@ import DataImportPage from '@/pages/DataImportPage';
 
 // Register the marketplace navigation in the main navigation
 import { registerNavItem } from '@/components/navigation/NavigationConfig';
+import { registerMarketplaceNavigation } from '@/modules/marketplace/navigation/MarketplaceNavigationConfig';
 import { ShoppingBag, FileIcon, Activity } from 'lucide-react';
 
-// Note: We no longer need to manually register these items as they're now
-// part of our NavigationConfig structure by default
+// Register marketplace in main navigation
+registerNavItem('collaboration', {
+  id: "marketplace",
+  label: "Marketplace",
+  icon: ShoppingBag,
+  href: "/marketplace"
+});
+
+// Register Documents/Legacy Vault in main navigation
+registerNavItem('client', {
+  id: "legacy-vault",
+  label: "Legacy Vault",
+  icon: FileIcon,
+  href: "/legacy-vault"
+});
+
+// Register System Diagnostics in main navigation
+registerNavItem('admin', {
+  id: "system-diagnostics",
+  label: "System Diagnostics",
+  icon: Activity,
+  href: "/system-diagnostics"
+});
 
 function App() {
   return (

@@ -28,7 +28,7 @@ export default function Marketplace() {
   };
 
   return (
-    <ThreeColumnLayout title="Family Office Marketplace" activeMainItem="marketplace">
+    <ThreeColumnLayout title="Family Office Marketplace">
       <div className="space-y-6 px-4 py-6 max-w-7xl mx-auto">
         <div className="flex justify-between items-center">
           <MarketplaceHeader 

@@ -73,15 +73,15 @@ export const MainNavigation = ({
   return (
     <nav className="px-2 space-y-1 overflow-y-auto">
       {navigationCategories.map((category) => (
-        <div key={category.id} className="mb-3">
+        <div key={category.id} className="mb-2">
           {!collapsed && (
             <Collapsible
               open={expandedCategories[category.id]}
               onOpenChange={() => toggleCategory(category.id)}
             >
               <CollapsibleTrigger asChild>
-                <div className={`flex items-center justify-between p-2 text-xs uppercase tracking-wider font-bold ${
-                  isLightTheme ? 'text-[#222222]/80' : 'text-[#E2E2E2]'
+                <div className={`flex items-center justify-between p-2 text-xs uppercase tracking-wider font-semibold ${
+                  isLightTheme ? 'text-[#222222]/70' : 'text-[#E2E2E2]/70'
                 } cursor-pointer`}>
                   <span>{category.label}</span>
                   <div>
@@ -110,11 +110,6 @@ export const MainNavigation = ({
           
           {collapsed && (
             <>
-              <div className={`text-xs uppercase tracking-wider font-bold mb-1 px-2 ${
-                isLightTheme ? 'text-[#222222]/80' : 'text-[#E2E2E2]'
-              }`}>
-                {category.label}
-              </div>
               {category.items.map((item) => (
                 <NavItemLink 
                   key={item.id} 
@@ -154,13 +149,13 @@ const NavItemLink = ({
     <Link
       to={item.href}
       className={cn(
-        "group flex items-center py-2 px-3 rounded-md transition-colors text-[14px] whitespace-nowrap",
+        "group flex items-center py-2 px-3 rounded-md transition-colors text-[14px] whitespace-nowrap border",
         isActive
           ? isLightTheme 
-            ? "bg-[#E9E7D8] text-[#222222] font-medium" 
-            : "bg-[#FFC107]/10 text-[#FFC107] border border-[#FFC107]/30 font-medium"
-          : isLightTheme ? "text-[#222222]" : "text-[#E2E2E2]",
-        isLightTheme ? "hover:bg-[#E9E7D8]" : "hover:bg-[#1F1F3D]",
+            ? "bg-[#E9E7D8] text-[#222222] font-medium border-primary" 
+            : "bg-black text-[#E2E2E2] font-medium border-primary"
+          : isLightTheme ? "text-[#222222] border-transparent" : "text-[#E2E2E2] border-transparent",
+        isLightTheme ? "hover:bg-[#E9E7D8] hover:border-primary" : "hover:bg-white/10 hover:border-primary",
         isCollapsed && "justify-center px-2 my-2"
       )}
       onClick={onClick}
@@ -169,13 +164,10 @@ const NavItemLink = ({
       {IconComponent && (
         <div className={cn(
           "flex items-center justify-center rounded-sm p-0.5",
-          isLightTheme ? 'bg-[#222222]' : isActive ? 'bg-[#FFC107]' : 'bg-[#131335]',
+          isLightTheme ? 'bg-[#222222]' : 'bg-black',
           !isCollapsed && "mr-3"
         )}>
-          <IconComponent className={cn(
-            "h-5 w-5", 
-            isLightTheme ? 'text-white' : isActive ? 'text-[#131335]' : 'text-[#FFC107]'
-          )} />
+          <IconComponent className="h-5 w-5 text-white" />
         </div>
       )}
       {!isCollapsed && <span className="whitespace-nowrap overflow-hidden text-ellipsis">{item.label}</span>}
