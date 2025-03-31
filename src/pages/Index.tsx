@@ -39,10 +39,10 @@ export default function Index() {
 
   return (
     <ThreeColumnLayout title="Dashboard">
-      <div key={dashboardKey} className="space-y-5 px-4 py-4 max-w-7xl mx-auto">
+      <div key={dashboardKey} className="space-y-5 px-4 py-3 max-w-7xl mx-auto">
         {renderTrialBanner()}
         
-        <div className="mt-1">
+        <div className="mt-1 mb-2">
           <QuickActionsMenu />
         </div>
         
