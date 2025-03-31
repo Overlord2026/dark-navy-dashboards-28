@@ -18,6 +18,7 @@ import AdvisorProfile from '@/pages/AdvisorProfile';
 import Documents from '@/pages/Documents';
 import LegacyVault from '@/pages/LegacyVault';
 import SystemDiagnostics from '@/pages/SystemDiagnostics';
+import Properties from '@/pages/Properties';
 
 // Import Marketplace Module components
 import { MarketplaceProvider } from '@/modules/marketplace/context/MarketplaceContext';
@@ -48,6 +49,9 @@ function App() {
                     <Route path="/dashboard" element={<Index />} />
                     <Route path="/home" element={<Index />} />
                     <Route path="/profile" element={<CustomerProfile />} />
+                    
+                    {/* Properties Management Routes */}
+                    <Route path="/properties" element={<Properties />} />
                     
                     {/* Marketplace Module Routes */}
                     <Route path="/marketplace" element={<MarketplacePage />} />
