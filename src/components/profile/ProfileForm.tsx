@@ -103,7 +103,16 @@ export function ProfileForm({ onSave }: { onSave: () => void }) {
     
     try {
       // Update global user profile state
-      updateUserProfile(values);
+      updateUserProfile({
+        title: values.title,
+        firstName: values.firstName,
+        middleName: values.middleName,
+        lastName: values.lastName,
+        suffix: values.suffix,
+        gender: values.gender,
+        maritalStatus: values.maritalStatus,
+        dateOfBirth: values.dateOfBirth,
+      });
       
       // Show success message
       toast.success("Profile information updated successfully");

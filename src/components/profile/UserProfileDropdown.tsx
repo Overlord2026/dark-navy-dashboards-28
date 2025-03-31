@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ChevronRight } from "lucide-react";
 import { 
   UserIcon,
@@ -32,6 +32,12 @@ export const UserProfileDropdown = ({ onOpenForm }: UserProfileDropdownProps) =>
   const [isThemeDialogOpen, setIsThemeDialogOpen] = useState(false);
   const [activePanelForm, setActivePanelForm] = useState("investor-profile");
   const [isOpen, setIsOpen] = useState(false);
+  const [dropdownKey, setDropdownKey] = useState(Date.now());
+  
+  // Force refresh when profile changes
+  useEffect(() => {
+    setDropdownKey(Date.now());
+  }, [userProfile]);
   
   // Generate initials from user's first and last name
   const initials = `${userProfile.firstName?.charAt(0) || ''}${userProfile.lastName?.charAt(0) || ''}`;
@@ -77,7 +83,7 @@ export const UserProfileDropdown = ({ onOpenForm }: UserProfileDropdownProps) =>
   };
 
   return (
-    <div className="fixed top-0 left-0 z-40 w-[220px] pt-4 px-5">
+    <div key={dropdownKey} className="fixed top-0 left-0 z-40 w-[220px] pt-4 px-5">
       <DropdownMenu open={isOpen} onOpenChange={handleOpenChange}>
         <DropdownMenuTrigger 
           className="flex items-center justify-between w-full py-2 hover:bg-[#1c2e4a] rounded-md transition-colors cursor-pointer"

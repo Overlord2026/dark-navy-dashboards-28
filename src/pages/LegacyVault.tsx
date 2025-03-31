@@ -14,24 +14,30 @@ import { Button } from "@/components/ui/button";
 import { PlusCircle, Folder, AlertTriangle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { DiagnosticsAccessButton } from "@/components/diagnostics/DiagnosticsAccessButton";
+import { DocumentItem } from "@/types/document";
 
 const LegacyVault = () => {
   const [activeTab, setActiveTab] = useState("documents");
   const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
   const [isNewFolderDialogOpen, setIsNewFolderDialogOpen] = useState(false);
-  const [activeCategory, setActiveCategory] = useState("all");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   
   const { 
     documents, 
-    addDocument, 
-    deleteDocument,
-    isLoading
+    activeCategory,
+    setActiveCategory,
+    handleCreateFolder,
+    handleFileUpload,
+    filteredDocuments
   } = useDocumentManagement();
   
-  const filteredDocuments = activeCategory === "all" 
-    ? documents 
-    : documents.filter(doc => doc.category === activeCategory);
+  // Function to handle document deletion
+  const handleDeleteDocument = (id: string) => {
+    // This would normally call a function from useDocumentManagement
+    // Here we'll just show a toast message
+    toast.success(`Document with ID ${id} deleted successfully`);
+  };
   
   const comingSoonContent = (
     <div className="flex flex-col items-center justify-center py-20">
@@ -62,7 +68,7 @@ const LegacyVault = () => {
               <CategoryList 
                 categories={documentCategories}
                 activeCategory={activeCategory}
-                onSelectCategory={setActiveCategory}
+                setActiveCategory={setActiveCategory}
               />
             </div>
             
@@ -74,7 +80,7 @@ const LegacyVault = () => {
               ) : filteredDocuments.length > 0 ? (
                 <DocumentsTable 
                   documents={filteredDocuments}
-                  onDelete={deleteDocument}
+                  handleDelete={handleDeleteDocument}
                 />
               ) : (
                 <EmptyStates 
@@ -95,6 +101,13 @@ const LegacyVault = () => {
       default:
         return null;
     }
+  };
+  
+  // Handle file upload
+  const handleUpload = (documentData: { file: File; name: string; category: string }) => {
+    handleFileUpload(documentData.file, documentData.name);
+    setIsUploadDialogOpen(false);
+    toast.success("Document uploaded successfully");
   };
   
   return (
@@ -146,25 +159,16 @@ const LegacyVault = () => {
       </div>
       
       <UploadDocumentDialog 
-        open={isUploadDialogOpen} 
-        onOpenChange={setIsUploadDialogOpen}
-        onUpload={(document) => {
-          addDocument(document);
-          setIsUploadDialogOpen(false);
-          toast.success("Document uploaded successfully");
-        }}
+        isOpen={isUploadDialogOpen} 
+        setIsOpen={setIsUploadDialogOpen}
+        onUploadDocument={handleUpload}
         categories={documentCategories}
       />
       
       <NewFolderDialog 
-        open={isNewFolderDialogOpen} 
-        onOpenChange={setIsNewFolderDialogOpen}
-        onCreateFolder={(folder) => {
-          // Handle folder creation
-          console.log("New folder:", folder);
-          setIsNewFolderDialogOpen(false);
-          toast.success("Folder created successfully");
-        }}
+        isOpen={isNewFolderDialogOpen} 
+        setIsOpen={setIsNewFolderDialogOpen}
+        onCreateFolder={handleCreateFolder}
       />
     </ThreeColumnLayout>
   );

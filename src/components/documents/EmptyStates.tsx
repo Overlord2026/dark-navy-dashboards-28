@@ -1,45 +1,28 @@
 
-import { Folder, Upload, PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { FileText, Upload } from "lucide-react";
 
-interface EmptyStateProps {
-  onUploadClick: () => void;
-  categoryName?: string;
+interface EmptyStatesProps {
+  category: string;
+  onUpload: () => void;
 }
 
-export const NoCategorySelectedState = () => {
+export function EmptyStates({ category, onUpload }: EmptyStatesProps) {
   return (
-    <div className="h-[300px] flex flex-col items-center justify-center mt-6">
-      <div className="text-center max-w-md mx-auto">
-        <Folder className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-        <h3 className="text-xl font-medium mb-2">Select a category</h3>
-        <p className="text-muted-foreground mb-6">
-          Please select a document category from the list.
-        </p>
+    <div className="flex flex-col items-center justify-center p-8 border-2 border-dashed border-border rounded-lg min-h-[300px]">
+      <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
+        <FileText className="h-8 w-8 text-muted-foreground" />
       </div>
+      <h3 className="text-xl font-medium mb-2">No documents found</h3>
+      <p className="text-muted-foreground text-center max-w-md mb-6">
+        {category === "All Documents" 
+          ? "You don't have any documents uploaded yet." 
+          : `You don't have any documents in the ${category} category.`}
+      </p>
+      <Button onClick={onUpload} className="flex items-center">
+        <Upload className="h-4 w-4 mr-2" />
+        Upload Document
+      </Button>
     </div>
   );
-};
-
-export const NoDocumentsState = ({ onUploadClick, categoryName }: EmptyStateProps) => {
-  return (
-    <div className="h-[300px] flex flex-col items-center justify-center">
-      <div className="text-center max-w-md mx-auto">
-        <div className="w-14 h-14 rounded-full bg-blue-500/10 flex items-center justify-center mx-auto mb-4">
-          <PlusCircle className="h-8 w-8 text-blue-500" />
-        </div>
-        <h3 className="text-xl font-medium mb-2">No files</h3>
-        <p className="text-muted-foreground mb-6">
-          You haven't uploaded any files to {categoryName}
-        </p>
-        <Button 
-          onClick={onUploadClick}
-          className="flex items-center gap-2 bg-[#1B1B32] text-white hover:bg-[#2D2D4A] border-0"
-        >
-          <Upload className="h-5 w-5" />
-          Upload Documents
-        </Button>
-      </div>
-    </div>
-  );
-};
+}

@@ -3,12 +3,15 @@ import { useState, useCallback } from "react";
 import { runDiagnostics } from "@/services/diagnostics";
 import { SystemHealthReport } from "@/services/diagnostics/types";
 
+type QuickFixArea = 'performance' | 'security' | 'navigation' | 'forms' | 'database' | 'api' | 'authentication';
+type QuickFixSeverity = 'low' | 'medium' | 'high' | 'critical';
+
 interface QuickFix {
   id: string;
   name: string;
   description: string;
-  area: 'performance' | 'security' | 'navigation' | 'forms' | 'database' | 'api' | 'authentication';
-  severity: 'low' | 'medium' | 'high' | 'critical';
+  area: QuickFixArea;
+  severity: QuickFixSeverity;
 }
 
 export const useDiagnostics = () => {

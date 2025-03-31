@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { FinancialOverview } from "@/components/dashboard/FinancialOverview";
 import { NetWorthSummary } from "@/components/dashboard/NetWorthSummary";
@@ -22,6 +22,12 @@ export default function Index() {
   const { assets } = useNetWorth();
   const { isInFreeTrial, daysRemainingInTrial } = useSubscription();
   const { userProfile } = useUser();
+  const [dashboardKey, setDashboardKey] = useState(Date.now());
+
+  // Force refresh of dashboard when profile changes
+  useEffect(() => {
+    setDashboardKey(Date.now());
+  }, [userProfile]);
 
   // Determine which banner to show based on trial status
   const renderTrialBanner = () => {
@@ -38,7 +44,7 @@ export default function Index() {
 
   return (
     <ThreeColumnLayout title="Dashboard">
-      <div className="space-y-6 px-4 py-6 max-w-7xl mx-auto">
+      <div key={dashboardKey} className="space-y-6 px-4 py-6 max-w-7xl mx-auto">
         {renderTrialBanner()}
         
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">

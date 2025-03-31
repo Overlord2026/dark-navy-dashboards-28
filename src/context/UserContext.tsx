@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 
 // Define the user profile interface
 interface UserProfile {
@@ -34,24 +34,23 @@ interface UserContextProps {
 
 // Set default user profile
 const defaultUserProfile: UserProfile = {
-  firstName: 'Antonio',
-  lastName: 'Gomez',
-  email: 'antonio.gomez@example.com',
+  firstName: 'Tim',
+  lastName: 'Brady',
+  email: 'tim.brady@example.com',
   phone: '(555) 123-4567',
   address: '123 Main St',
   city: 'New York',
   state: 'NY',
   zipCode: '10001',
-  dateOfBirth: null,
+  dateOfBirth: new Date('1985-05-03'),
   investorType: 'Moderate',
   riskTolerance: 'Medium',
   investmentGoals: ['Retirement', 'College', 'Home Purchase'],
   income: 150000,
   netWorth: 750000,
-  // Added default values for the new properties
   title: 'Mr.',
   middleName: '',
-  suffix: '',
+  suffix: 'none',
   gender: 'Male',
   maritalStatus: 'Single'
 };
@@ -63,12 +62,37 @@ const UserContext = createContext<UserContextProps | undefined>(undefined);
 export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [userProfile, setUserProfile] = useState<UserProfile>(defaultUserProfile);
 
+  // Load profile from localStorage on initial mount
+  useEffect(() => {
+    const savedProfile = localStorage.getItem('userProfile');
+    if (savedProfile) {
+      try {
+        const parsedProfile = JSON.parse(savedProfile);
+        // Convert dateOfBirth string back to Date object if it exists
+        if (parsedProfile.dateOfBirth) {
+          parsedProfile.dateOfBirth = new Date(parsedProfile.dateOfBirth);
+        }
+        setUserProfile(parsedProfile);
+      } catch (error) {
+        console.error('Error parsing saved profile:', error);
+      }
+    }
+  }, []);
+
   // Update user profile
   const updateUserProfile = (updates: Partial<UserProfile>) => {
-    setUserProfile((prevProfile) => ({
-      ...prevProfile,
-      ...updates,
-    }));
+    setUserProfile((prevProfile) => {
+      const updatedProfile = {
+        ...prevProfile,
+        ...updates,
+      };
+      
+      // Save to localStorage for persistence
+      localStorage.setItem('userProfile', JSON.stringify(updatedProfile));
+      console.log('Profile updated:', updatedProfile);
+      
+      return updatedProfile;
+    });
   };
 
   // Check if profile is complete

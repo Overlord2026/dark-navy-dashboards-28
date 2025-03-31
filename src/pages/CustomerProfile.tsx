@@ -44,6 +44,7 @@ const CustomerProfile = () => {
     bio: "Daniel, a seasoned finance professional, guides high net worth investors through complex financial landscapes. His comprehensive approach integrates investment management, risk mitigation, tax optimization, and overall financial strategy.\n\nBeginning his career at Vanguard, Daniel honed his skills at UBS before directing client acquisition at Fisher Investments. He now brings his expertise to our firm, where he helps clients achieve their long-term financial objectives.\n\nOriginally from Asheville, NC, Daniel now resides in Sarasota, where he enjoys fitness activities, community involvement, and enjoying the coastal lifestyle."
   };
 
+  // Force refresh of profile data when userProfile changes
   useEffect(() => {
     setProfileKey(Date.now());
   }, [userProfile]);
@@ -68,6 +69,7 @@ const CustomerProfile = () => {
       )
     );
     
+    // Force a refresh of the profile display
     setProfileKey(Date.now());
     
     handleCloseForm();
