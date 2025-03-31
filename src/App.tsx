@@ -21,6 +21,7 @@ import SystemDiagnostics from '@/pages/SystemDiagnostics';
 import Properties from '@/pages/Properties';
 import Investments from '@/pages/Investments';
 import IPProtection from '@/pages/IPProtection';
+import Insurance from '@/pages/Insurance';
 
 // Import Marketplace Module components
 import { MarketplaceProvider } from '@/modules/marketplace/context/MarketplaceContext';
@@ -54,7 +55,7 @@ function App() {
                     <Route path="/investments" element={<Investments />} />
                     <Route path="/financial-plans" element={<Index />} />
                     <Route path="/accounts" element={<Index />} />
-                    <Route path="/insurance" element={<Index />} />
+                    <Route path="/insurance" element={<Insurance />} />
                     <Route path="/social-security" element={<Index />} />
                     
                     {/* Banking Routes */}
