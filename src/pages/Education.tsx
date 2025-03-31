@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from "react";
-import { useParams, useSearchParams } from "react-router-dom";
+import { useParams, useSearchParams, useNavigate } from "react-router-dom";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { EducationalTabs } from "@/components/education/EducationalTabs";
 import { courseCategories } from "@/data/education";
@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 export default function Education() {
   const { categoryId } = useParams();
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const forceHideBadge = searchParams.get("forceHideBadge");
   
   const [activeSection, setActiveSection] = useState("courses");
@@ -29,6 +30,16 @@ export default function Education() {
     handleCourseAccess(courseId, title, isPaid, ghlUrl, setIsProcessing);
   };
 
+  // Handler to update URL when category changes
+  const handleCategoryChange = (categoryId: string) => {
+    setActiveCategory(categoryId);
+    if (categoryId === "all-courses") {
+      navigate("/education");
+    } else {
+      navigate(`/education/${categoryId}`);
+    }
+  };
+
   return (
     <ThreeColumnLayout activeMainItem="education" title="Education Center">
       <div className="w-full h-full bg-[#080C24] text-white">
@@ -44,7 +55,7 @@ export default function Education() {
             activeSection={activeSection}
             activeCategory={activeCategory}
             setActiveSection={setActiveSection}
-            setActiveCategory={setActiveCategory}
+            setActiveCategory={handleCategoryChange}
             handleCourseEnrollment={handleCourseEnrollment}
           />
         </div>
