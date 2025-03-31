@@ -1,3 +1,4 @@
+
 import {
   LayoutDashboard,
   FileText,
@@ -10,7 +11,6 @@ import {
   Building2,
   Wallet,
   LucideIcon,
-  FileShield,
   Activity,
   ShoppingBag,
   FileIcon,
@@ -22,6 +22,7 @@ export interface NavItem {
   label: string;
   href: string;
   icon?: LucideIcon;
+  subItems?: NavItem[];
 }
 
 export interface NavCategory {

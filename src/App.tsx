@@ -22,12 +22,15 @@ import Properties from '@/pages/Properties';
 import Investments from '@/pages/Investments';
 import IPProtection from '@/pages/IPProtection';
 import Insurance from '@/pages/Insurance';
+import Accounts from '@/pages/Accounts';
+import SocialSecurity from '@/pages/SocialSecurity';
 
 // Import Marketplace Module components
 import { MarketplaceProvider } from '@/modules/marketplace/context/MarketplaceContext';
 import MarketplacePage from '@/modules/marketplace/pages/MarketplacePage';
 import FamilyOfficeDirectory from '@/pages/FamilyOfficeDirectory';
 import DataImportPage from '@/pages/DataImportPage';
+import NotFound from '@/pages/NotFound';
 
 // Register the marketplace navigation in the main navigation
 import { registerNavItem } from '@/components/navigation/NavigationConfig';
@@ -54,9 +57,9 @@ function App() {
                     <Route path="/properties" element={<Properties />} />
                     <Route path="/investments" element={<Investments />} />
                     <Route path="/financial-plans" element={<Index />} />
-                    <Route path="/accounts" element={<Index />} />
+                    <Route path="/accounts" element={<Accounts />} />
                     <Route path="/insurance" element={<Insurance />} />
-                    <Route path="/social-security" element={<Index />} />
+                    <Route path="/social-security" element={<SocialSecurity />} />
                     
                     {/* Banking Routes */}
                     <Route path="/cash-management" element={<CashManagement />} />
@@ -87,6 +90,9 @@ function App() {
                     <Route path="/subscription" element={<Subscription />} />
                     <Route path="/advisor-profile" element={<AdvisorProfile />} />
                     <Route path="/tax-budgets" element={<Index />} />
+                    
+                    {/* Catch-all route */}
+                    <Route path="*" element={<NotFound />} />
                   </Routes>
                 </BrowserRouter>
                 <Toaster />

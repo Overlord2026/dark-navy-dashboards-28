@@ -1,4 +1,3 @@
-
 import { ReactNode, useState } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
@@ -10,14 +9,14 @@ import { useTheme } from "@/context/ThemeContext";
 import { AdvisorSection } from "@/components/profile/AdvisorSection";
 import { MainNavigation } from "@/components/navigation/MainNavigation";
 import { SubNavigation } from "@/components/navigation/SubNavigation";
-import { NavSubItem } from "@/components/navigation/NavigationConfig";
+import { NavItem } from "@/components/navigation/NavigationConfig";
 
 interface ModularLayoutProps {
   children: ReactNode;
   title?: string;
   activeMainItem?: string;
   activeSecondaryItem?: string;
-  secondaryMenuItems?: NavSubItem[];
+  secondaryMenuItems?: NavItem[];
   breadcrumbs?: { name: string; href: string; active?: boolean }[];
 }
 

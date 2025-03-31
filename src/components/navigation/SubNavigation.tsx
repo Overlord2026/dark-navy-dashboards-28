@@ -1,13 +1,13 @@
 
 import React from "react";
-import { NavItem, NavSubItem, navigationCategories } from "./NavigationConfig";
+import { NavItem, navigationCategories } from "./NavigationConfig";
 import { cn } from "@/lib/utils";
 import { Link, useLocation } from "react-router-dom";
 
 interface SubNavigationProps {
   activeMainItem: string;
   activeSecondaryItem: string | undefined;
-  customItems?: NavSubItem[];
+  customItems?: NavItem[];
 }
 
 export function SubNavigation({ 
@@ -49,7 +49,7 @@ export function SubNavigation({
                 : "text-foreground/70 hover:text-foreground hover:bg-muted"
             )}
           >
-            {item.label} {/* Use only label property since 'name' doesn't exist on NavSubItem */}
+            {item.label}
           </Link>
         ))}
       </nav>

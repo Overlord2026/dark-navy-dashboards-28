@@ -2,12 +2,10 @@
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Book, BookOpen, GraduationCap, Info } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { CourseCategory } from "@/types/education";
 
 interface CourseCategoryCardProps {
-  category: {
-    id: string;
-    name: string;
-  };
+  category: CourseCategory;
   courseCount?: number;
 }
 
@@ -27,7 +25,7 @@ const categoryIcons: Record<string, React.ReactNode> = {
 
 export function CourseCategoryCard({ category, courseCount = 0 }: CourseCategoryCardProps) {
   // Add a null check to ensure category exists
-  if (!category) {
+  if (!category || !category.id) {
     return null;
   }
   
