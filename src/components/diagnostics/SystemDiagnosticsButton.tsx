@@ -6,7 +6,18 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { runQuickSystemCheck } from "@/services/diagnosticsService";
 
-export const SystemDiagnosticsButton = ({ variant = "default", size = "default" }) => {
+type ButtonVariant = "default" | "destructive" | "outline" | "secondary" | "ghost" | "link" | "interested" | "advisor" | "marketplace";
+type ButtonSize = "default" | "sm" | "lg" | "icon" | "xl";
+
+interface SystemDiagnosticsButtonProps {
+  variant?: ButtonVariant;
+  size?: ButtonSize;
+}
+
+export const SystemDiagnosticsButton = ({ 
+  variant = "default", 
+  size = "default" 
+}: SystemDiagnosticsButtonProps) => {
   const navigate = useNavigate();
   
   const handleRunDiagnostics = async () => {
