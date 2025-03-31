@@ -70,6 +70,16 @@ export const mainNavItems: NavItem[] = [
     icon: ShieldIcon 
   },
   { 
+    title: "Annuities", 
+    href: "/annuities", 
+    icon: CoinsIcon 
+  },
+  { 
+    title: "Fiduciary Friendly Annuities", 
+    href: "/fiduciary-annuities", 
+    icon: PiggyBankIcon 
+  },
+  { 
     title: "Lending", 
     href: "/lending", 
     icon: BanknoteIcon 
