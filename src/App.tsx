@@ -6,7 +6,6 @@ import Marketplace from '@/pages/Marketplace';
 import FamilyOfficeDirectory from '@/pages/FamilyOfficeDirectory';
 import DataImportPage from '@/pages/DataImportPage';
 import CashManagement from '@/pages/CashManagement';
-import PrivateInvestmentsPage from '@/pages/PrivateInvestmentsPage';
 import { ThemeProvider } from '@/context/ThemeContext';
 import { UserProvider } from '@/context/UserContext';
 import { Toaster } from 'sonner';
@@ -22,7 +21,6 @@ function App() {
             <Route path="/family-office-directory" element={<FamilyOfficeDirectory />} />
             <Route path="/data-import" element={<DataImportPage />} />
             <Route path="/cash-management" element={<CashManagement />} />
-            <Route path="/private-investments" element={<PrivateInvestmentsPage />} />
           </Routes>
         </BrowserRouter>
         <Toaster />
