@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -27,7 +26,7 @@ export default function HomePage() {
               <Link to="/advisor/login">Advisor Login</Link>
             </Button>
             <Button className="bg-black text-white hover:bg-black/80" asChild>
-              <Link to="/dashboard">Client Login</Link>
+              <Link to="/login">Client Login</Link>
             </Button>
           </div>
         </div>
@@ -43,7 +42,7 @@ export default function HomePage() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Button size="lg" className="bg-white text-[#1B1B32] hover:bg-white/90" asChild>
-                <Link to="/dashboard">
+                <Link to="/login">
                   Client Portal 
                   <ChevronRight className="ml-2 h-5 w-5" />
                 </Link>
@@ -162,7 +161,7 @@ export default function HomePage() {
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <Button size="lg" className="bg-black text-white hover:bg-black/80" asChild>
-              <Link to="/dashboard">Access Client Portal</Link>
+              <Link to="/login">Access Client Portal</Link>
             </Button>
             <Button size="lg" variant="outline" className="border-black text-black hover:bg-black/10" asChild>
               <a href="mailto:contact@boutiquefamilyoffice.com">Contact an Advisor</a>

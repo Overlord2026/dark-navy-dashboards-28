@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ShoppingBag } from "lucide-react";
 import { toast } from "sonner";
-import { QuickActionsMenu } from "@/components/dashboard/QuickActionsMenu";
 
 export const Header = () => {
   const handleQuickAction = (label: string) => {
@@ -15,10 +14,8 @@ export const Header = () => {
     <div className="w-full px-4 py-1 flex flex-col items-center justify-center bg-transparent z-10">
       {/* Header container with logo and marketplace button */}
       <div className="w-full max-w-7xl flex justify-between items-center">
-        {/* QuickActionsMenu on the left */}
-        <div className="flex-1 flex items-center">
-          <QuickActionsMenu />
-        </div>
+        {/* Logo on the left */}
+        <div className="flex-1"></div>
         
         {/* Centered logo */}
         <div className="flex justify-center">

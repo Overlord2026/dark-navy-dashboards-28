@@ -11,8 +11,8 @@ interface ScheduleMeetingDialogProps {
 
 export const ScheduleMeetingDialog: React.FC<ScheduleMeetingDialogProps> = ({ assetName }) => {
   const handleOpenCalendar = () => {
-    // Use a generic meeting URL that doesn't reference Farther
-    window.open("https://meetings.hubspot.com/daniel-herrera1", "_blank");
+    // The URL would typically come from the user's context or configuration
+    window.open("https://meetings.hubspot.com/daniel-herrera1?uuid=55ab1315-5daa-4009-af29-f100ee7aae67", "_blank");
   };
   
   return (
@@ -38,7 +38,7 @@ export const ScheduleMeetingDialog: React.FC<ScheduleMeetingDialogProps> = ({ as
           
           <div className="flex justify-center">
             <img 
-              src="/lovable-uploads/490e61a7-2d7a-404a-b8f6-4bd3b561dc7b.png" 
+              src="/public/lovable-uploads/4f186128-9b08-4965-a540-64cf9b0ec9ee.png" 
               alt="Calendar Preview" 
               className="max-h-52 rounded-md border shadow-sm"
             />

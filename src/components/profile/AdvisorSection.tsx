@@ -87,7 +87,7 @@ export const AdvisorSection = ({ advisorInfo, onViewProfile, onBookSession, coll
               </Link>
               
               <a 
-                href="https://meetings.hubspot.com/daniel-herrera1"
+                href="https://meetings.hubspot.com/daniel-herrera1?uuid=55ab1315-5daa-4009-af29-f100ee7aae67"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-full flex items-center justify-center py-2.5 px-4 bg-transparent hover:bg-white/10 border border-white/20 rounded-md transition-colors text-white"
