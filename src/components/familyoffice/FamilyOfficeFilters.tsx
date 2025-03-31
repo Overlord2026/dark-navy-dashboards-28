@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import { MapPin, Briefcase, DollarSign, Star } from "lucide-react";
+import { MapPin, Briefcase, DollarSign, Star, FilterX } from "lucide-react";
 
 interface FamilyOfficeFiltersProps {
   filters: {
@@ -17,9 +17,10 @@ interface FamilyOfficeFiltersProps {
     rating: number;
   };
   onFilterChange: (key: string, value: string | number) => void;
+  onClearFilters: () => void;
 }
 
-export function FamilyOfficeFilters({ filters, onFilterChange }: FamilyOfficeFiltersProps) {
+export function FamilyOfficeFilters({ filters, onFilterChange, onClearFilters }: FamilyOfficeFiltersProps) {
   const serviceAreas = [
     { id: "wealth-management", name: "Wealth Management" },
     { id: "estate-planning", name: "Estate & Legacy Planning" },
@@ -41,17 +42,14 @@ export function FamilyOfficeFilters({ filters, onFilterChange }: FamilyOfficeFil
     onFilterChange("rating", value[0]);
   };
 
-  const handleReset = () => {
-    onFilterChange("location", "");
-    onFilterChange("serviceArea", "");
-    onFilterChange("wealthTier", "");
-    onFilterChange("rating", 0);
-  };
-
   return (
     <Card className="sticky top-4">
-      <CardHeader>
+      <CardHeader className="flex flex-row items-center justify-between pb-2">
         <CardTitle>Refine Results</CardTitle>
+        <Button variant="ghost" size="sm" onClick={onClearFilters} className="h-8 px-2">
+          <FilterX className="h-4 w-4 mr-1" />
+          Clear All
+        </Button>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="space-y-3">
@@ -136,7 +134,7 @@ export function FamilyOfficeFilters({ filters, onFilterChange }: FamilyOfficeFil
           </div>
         </div>
 
-        <Button variant="outline" className="w-full" onClick={handleReset}>
+        <Button variant="outline" className="w-full" onClick={onClearFilters}>
           Reset Filters
         </Button>
       </CardContent>
