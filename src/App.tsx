@@ -17,6 +17,7 @@ import BillsManagement from '@/pages/BillsManagement';
 import AdvisorProfile from '@/pages/AdvisorProfile';
 import Documents from '@/pages/Documents';
 import LegacyVault from '@/pages/LegacyVault';
+import SystemDiagnostics from '@/pages/SystemDiagnostics';
 
 // Import Marketplace Module components
 import { MarketplaceProvider } from '@/modules/marketplace/context/MarketplaceContext';
@@ -27,7 +28,7 @@ import DataImportPage from '@/pages/DataImportPage';
 // Register the marketplace navigation in the main navigation
 import { registerNavItem } from '@/components/navigation/NavigationConfig';
 import { registerMarketplaceNavigation } from '@/modules/marketplace/navigation/MarketplaceNavigationConfig';
-import { ShoppingBag, FileIcon } from 'lucide-react';
+import { ShoppingBag, FileIcon, Activity } from 'lucide-react';
 
 // Register marketplace in main navigation
 registerNavItem('collaboration', {
@@ -43,6 +44,14 @@ registerNavItem('client', {
   label: "Legacy Vault",
   icon: FileIcon,
   href: "/legacy-vault"
+});
+
+// Register System Diagnostics in main navigation
+registerNavItem('admin', {
+  id: "system-diagnostics",
+  label: "System Diagnostics",
+  icon: Activity,
+  href: "/system-diagnostics"
 });
 
 function App() {
@@ -70,6 +79,9 @@ function App() {
                     {/* Document Management Routes */}
                     <Route path="/documents" element={<Documents />} />
                     <Route path="/legacy-vault" element={<LegacyVault />} />
+                    
+                    {/* System Diagnostics Routes */}
+                    <Route path="/system-diagnostics" element={<SystemDiagnostics />} />
                     
                     <Route path="/cash-management" element={<CashManagement />} />
                     <Route path="/education" element={<Education />} />
