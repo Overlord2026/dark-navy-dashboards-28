@@ -11,6 +11,7 @@ export default function DeveloperAccessControl() {
   const { userProfile } = useUser();
   const userRole = userProfile?.role || "client";
   const isAdmin = userRole === "admin" || userRole === "system_administrator";
+  const userName = userProfile?.displayName || "Unknown User";
 
   // Log page access
   useEffect(() => {
@@ -21,7 +22,7 @@ export default function DeveloperAccessControl() {
         "document_access",
         "success",
         {
-          userName: userProfile.name || "Unknown Administrator",
+          userName: userName,
           userRole: userRole,
           resourceType: "developerAccessControl",
           details: { action: "Access developer permissions page" }
@@ -34,7 +35,7 @@ export default function DeveloperAccessControl() {
         "document_access",
         "failure",
         {
-          userName: userProfile.name || "Unknown User",
+          userName: userName,
           userRole: userRole,
           resourceType: "developerAccessControl",
           details: { action: "Access developer permissions page" },
@@ -42,7 +43,7 @@ export default function DeveloperAccessControl() {
         }
       );
     }
-  }, [isAdmin, userProfile, userRole]);
+  }, [isAdmin, userProfile, userRole, userName]);
 
   // Redirect non-admin users
   if (!isAdmin) {

@@ -1,103 +1,84 @@
 
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Activity } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { toast } from "sonner";
+import { Bug } from "lucide-react";
+import { Link } from "react-router-dom";
 import { useUser } from "@/context/UserContext";
-import { useState, useEffect } from "react";
-import { checkDiagnosticsAccess } from "@/services/diagnostics/permissionManagement";
+import { toast } from "sonner";
 import { auditLog } from "@/services/auditLog/auditLogService";
 
 export const DiagnosticsAccessButton = () => {
-  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
   const { userProfile } = useUser();
   const userRole = userProfile?.role || "client";
   const isAdmin = userRole === "admin" || userRole === "system_administrator";
-  const isDeveloper = userRole === "developer" || userRole === "consultant";
-  const [hasAccess, setHasAccess] = useState(false);
-
-  useEffect(() => {
-    // Admins always have access
-    if (isAdmin) {
-      setHasAccess(true);
-      return;
-    }
-    
-    // Check if the developer has been granted access
-    if (isDeveloper && userProfile?.id) {
-      const checkAccess = async () => {
-        try {
-          const canAccess = await checkDiagnosticsAccess(userProfile.id, 'systemDiagnostics');
-          setHasAccess(canAccess);
-        } catch (error) {
-          console.error("Failed to check system diagnostic access:", error);
-          setHasAccess(false);
-        }
-      };
-      
-      checkAccess();
-    } else {
-      setHasAccess(false);
-    }
-  }, [isAdmin, isDeveloper, userProfile?.id]);
+  const userId = userProfile?.id || "unknown";
+  const userName = userProfile?.displayName || "Unknown User";
 
   const handleDiagnosticsAccess = () => {
-    if (!hasAccess) {
-      // Log unauthorized access attempt
+    setIsLoading(true);
+    
+    try {
+      // Log diagnostic tools access
       auditLog.log(
-        userProfile?.id || "unknown",
-        "document_access",
-        "failure",
+        userId,
+        "diagnostic_access",
+        "success",
         {
-          userName: userProfile?.name || "Unknown User",
+          userName: userName,
           userRole: userRole,
-          resourceType: "systemDiagnostics",
-          details: { action: "Access system diagnostics page" },
-          reason: "Insufficient permissions"
+          resourceType: "diagnosticTools",
+          details: { action: "Access full diagnostic tools page" }
         }
       );
       
-      toast.error("You don't have permission to access system diagnostics");
-      return;
+      // Trigger success toast
+      toast.success("Accessing system diagnostics", {
+        description: "Opening full diagnostics interface"
+      });
+      
+      // In a real app, we might do additional checks here
+      setIsLoading(false);
+    } catch (error) {
+      // Log failure
+      auditLog.log(
+        userId,
+        "diagnostic_access",
+        "failure",
+        {
+          userName: userName,
+          userRole: userRole,
+          resourceType: "diagnosticTools",
+          details: { action: "Access full diagnostic tools page" },
+          reason: error instanceof Error ? error.message : "Unknown error"
+        }
+      );
+      
+      toast.error("Could not access diagnostics", {
+        description: "Please try again or contact support"
+      });
+      
+      setIsLoading(false);
     }
-    
-    // Log successful access
-    auditLog.log(
-      userProfile?.id || "system",
-      "document_access",
-      "success",
-      {
-        userName: userProfile?.name || "Unknown User",
-        userRole: userRole,
-        resourceType: "systemDiagnostics",
-        details: { action: "Access system diagnostics page" }
-      }
-    );
-    
-    toast.info("Opening full diagnostics panel");
-    navigate("/system-diagnostics");
   };
 
-  if (!hasAccess) return null;
+  if (!isAdmin) {
+    return null;
+  }
 
   return (
-    <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <Button 
-            onClick={handleDiagnosticsAccess}
-            variant="outline"
-            className="flex items-center gap-2"
-          >
-            <Activity className="h-4 w-4" />
-            <span>System Diagnostics</span>
-          </Button>
-        </TooltipTrigger>
-        <TooltipContent>
-          <p>Access detailed system diagnostics and troubleshooting</p>
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
+    <Button
+      variant="secondary"
+      size="lg"
+      className="gap-2 transition-all"
+      asChild
+      onClick={handleDiagnosticsAccess}
+      disabled={isLoading}
+    >
+      <Link to="/system-diagnostics">
+        <Bug className="h-5 w-5" />
+        Diagnostics
+      </Link>
+    </Button>
   );
 };

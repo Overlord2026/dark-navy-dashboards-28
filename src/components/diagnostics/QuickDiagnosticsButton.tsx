@@ -1,91 +1,60 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Bug } from "lucide-react";
+import { Activity } from "lucide-react";
+import { useUser } from "@/context/UserContext";
 import { QuickDiagnosticsDialog } from "./QuickDiagnosticsDialog";
 import { toast } from "sonner";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { useUser } from "@/context/UserContext";
-import { checkDiagnosticsAccess } from "@/services/diagnostics/permissionManagement";
 import { auditLog } from "@/services/auditLog/auditLogService";
 
 export const QuickDiagnosticsButton = () => {
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [hasAccess, setHasAccess] = useState(false);
+  const [showDiagnosticsDialog, setShowDiagnosticsDialog] = useState(false);
   const { userProfile } = useUser();
   const userRole = userProfile?.role || "client";
   const isAdmin = userRole === "admin" || userRole === "system_administrator";
-  const isDeveloper = userRole === "developer" || userRole === "consultant";
+  const userId = userProfile?.id || "unknown";
+  const userName = userProfile?.displayName || "Unknown User";
 
-  useEffect(() => {
-    // Admins always have access
-    if (isAdmin) {
-      setHasAccess(true);
-      return;
-    }
-    
-    // Check if the developer has been granted access
-    if (isDeveloper && userProfile?.id) {
-      const checkAccess = async () => {
-        try {
-          const canAccess = await checkDiagnosticsAccess(userProfile.id, 'diagnostics');
-          setHasAccess(canAccess);
-        } catch (error) {
-          console.error("Failed to check diagnostic access:", error);
-          setHasAccess(false);
-        }
-      };
-      
-      checkAccess();
-    } else {
-      setHasAccess(false);
-    }
-  }, [isAdmin, isDeveloper, userProfile?.id]);
-
-  const handleOpenDiagnostics = () => {
-    // Log successful access
+  const handleShowDiagnostics = () => {
+    // Log quick diagnostics access
     auditLog.log(
-      userProfile?.id || "system",
-      "document_access",
+      userId,
+      "diagnostic_access",
       "success",
       {
-        userName: userProfile?.name || "Unknown User",
+        userName: userName,
         userRole: userRole,
         resourceType: "quickDiagnostics",
-        details: { action: "Run quick diagnostics" }
+        details: { action: "View quick diagnostics dialog" }
       }
     );
     
-    setIsDialogOpen(true);
-    toast.success("Diagnostics tool opened");
+    setShowDiagnosticsDialog(true);
+    
+    toast.success("Running quick diagnostics", {
+      description: "System health check initiated"
+    });
   };
 
-  if (!hasAccess) return null;
+  if (!isAdmin) {
+    return null;
+  }
 
   return (
     <>
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button 
-              variant="outline" 
-              size="sm" 
-              className="gap-2"
-              onClick={handleOpenDiagnostics}
-            >
-              <Bug className="h-4 w-4" />
-              <span>Run Diagnostics</span>
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>Run a quick check of your system</p>
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
+      <Button
+        variant="secondary"
+        size="lg"
+        className="gap-2 transition-all"
+        onClick={handleShowDiagnostics}
+      >
+        <Activity className="h-5 w-5" />
+        Quick Check
+      </Button>
       
-      <QuickDiagnosticsDialog 
-        open={isDialogOpen}
-        onOpenChange={setIsDialogOpen}
+      <QuickDiagnosticsDialog
+        open={showDiagnosticsDialog}
+        onOpenChange={setShowDiagnosticsDialog}
       />
     </>
   );

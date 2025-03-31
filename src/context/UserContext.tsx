@@ -1,144 +1,96 @@
-import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 
-// Define the user profile interface
-interface UserProfile {
-  id: string; // Added ID for user identification
-  firstName: string;
-  lastName: string;
+import React, { createContext, useState, useContext, useEffect, ReactNode } from "react";
+
+export type UserRole = "client" | "admin" | "advisor" | "system_administrator";
+
+export interface UserProfile {
+  id: string;
+  displayName: string; // Added displayName property for the user
   email: string;
-  phone: string;
-  address: string;
-  city: string;
-  state: string;
-  zipCode: string;
-  dateOfBirth: Date | null;
-  investorType: string;
-  riskTolerance: string;
-  investmentGoals: string[];
-  income: number;
-  netWorth: number;
-  // Added missing properties
-  title: string;
-  middleName: string;
-  suffix: string;
-  gender: string;
-  maritalStatus: string;
-  role: string; // Added role property
+  role: UserRole;
+  company?: string;
+  clientId?: string;
+  clientCount?: number;
+  isDemo?: boolean;
 }
 
-// Define the context interface
-interface UserContextProps {
-  userProfile: UserProfile;
-  updateUserProfile: (updates: Partial<UserProfile>) => void;
-  isProfileComplete: boolean;
+interface UserContextType {
+  userProfile: UserProfile | null;
+  isLoading: boolean;
+  setUserProfile: (profile: UserProfile | null) => void;
 }
 
-// Set default user profile
-const defaultUserProfile: UserProfile = {
-  id: "usr123", // Default ID for Tom Brady
-  firstName: 'Tom',
-  lastName: 'Brady',
-  email: 'tom.brady@example.com',
-  phone: '(555) 123-4567',
-  address: '123 Main St',
-  city: 'New York',
-  state: 'NY',
-  zipCode: '10001',
-  dateOfBirth: new Date('1985-05-03'),
-  investorType: 'Moderate',
-  riskTolerance: 'Medium',
-  investmentGoals: ['Retirement', 'College', 'Home Purchase'],
-  income: 150000,
-  netWorth: 750000,
-  title: 'Mr',
-  middleName: '',
-  suffix: 'none',
-  gender: 'Male',
-  maritalStatus: 'Single',
-  role: 'client' // Default role is client
+const UserContext = createContext<UserContextType | undefined>(undefined);
+
+// Mock user data for development
+const mockUserProfiles: Record<UserRole, UserProfile> = {
+  client: {
+    id: "client-123",
+    displayName: "Tom Brady",
+    email: "client@example.com",
+    role: "client"
+  },
+  admin: {
+    id: "admin-456",
+    displayName: "Admin User",
+    email: "admin@example.com",
+    role: "admin",
+    company: "Wealth Management Firm"
+  },
+  advisor: {
+    id: "advisor-789",
+    displayName: "Financial Advisor",
+    email: "advisor@example.com",
+    role: "advisor",
+    company: "Financial Planning Co.",
+    clientCount: 15
+  },
+  system_administrator: {
+    id: "sysadmin-101",
+    displayName: "System Administrator",
+    email: "sysadmin@example.com",
+    role: "system_administrator",
+    company: "Wealth Management Firm"
+  }
 };
 
-// Create the context
-const UserContext = createContext<UserContextProps | undefined>(undefined);
+interface UserProviderProps {
+  children: ReactNode;
+}
 
-// Create a provider component
-export const UserProvider = ({ children }: { children: ReactNode }) => {
-  const [userProfile, setUserProfile] = useState<UserProfile>(defaultUserProfile);
+export const UserProvider = ({ children }: UserProviderProps) => {
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Load profile from localStorage on initial mount
   useEffect(() => {
-    try {
-      const savedProfile = localStorage.getItem('userProfile');
-      if (savedProfile) {
-        const parsedProfile = JSON.parse(savedProfile);
-        // Convert dateOfBirth string back to Date object if it exists
-        if (parsedProfile.dateOfBirth) {
-          parsedProfile.dateOfBirth = new Date(parsedProfile.dateOfBirth);
-        }
-        
-        // ALWAYS ensure the name is Tom Brady regardless of what's in localStorage
-        parsedProfile.firstName = 'Tom';
-        parsedProfile.lastName = 'Brady';
-        
-        setUserProfile(parsedProfile);
-        // Update localStorage with the enforced name
-        localStorage.setItem('userProfile', JSON.stringify(parsedProfile));
-      } else {
-        // If no profile exists in localStorage, save the default one
-        localStorage.setItem('userProfile', JSON.stringify(defaultUserProfile));
-      }
-    } catch (error) {
-      console.error('Error processing saved profile:', error);
-      // If there's an error, reset to default and save it
-      localStorage.setItem('userProfile', JSON.stringify(defaultUserProfile));
-    }
+    // Simulate API call to get user profile
+    const loadUserProfile = () => {
+      setIsLoading(true);
+      
+      // Simulate network delay
+      setTimeout(() => {
+        // For development, we'll use the client user by default
+        // In a real application, this would come from an API call or auth service
+        const storedRole = localStorage.getItem("userRole") as UserRole || "client";
+        setUserProfile(mockUserProfiles[storedRole] || mockUserProfiles.client);
+        setIsLoading(false);
+      }, 800);
+    };
+
+    loadUserProfile();
   }, []);
 
-  // Update user profile
-  const updateUserProfile = (updates: Partial<UserProfile>) => {
-    setUserProfile((prevProfile) => {
-      // Always ensure the name is Tom Brady
-      const updatedProfile = {
-        ...prevProfile,
-        ...updates,
-        firstName: 'Tom',
-        lastName: 'Brady'
-      };
-      
-      // Save to localStorage for persistence
-      localStorage.setItem('userProfile', JSON.stringify(updatedProfile));
-      console.log('Profile updated:', updatedProfile);
-      
-      return updatedProfile;
-    });
-  };
-
-  // Check if profile is complete
-  const isProfileComplete = Boolean(
-    userProfile.firstName &&
-    userProfile.lastName &&
-    userProfile.email &&
-    userProfile.phone
-  );
-
   return (
-    <UserContext.Provider
-      value={{
-        userProfile,
-        updateUserProfile,
-        isProfileComplete,
-      }}
-    >
+    <UserContext.Provider value={{ userProfile, isLoading, setUserProfile }}>
       {children}
     </UserContext.Provider>
   );
 };
 
-// Create a hook for using the context
 export const useUser = () => {
-  const context = React.useContext(UserContext);
+  const context = useContext(UserContext);
   if (context === undefined) {
-    throw new Error('useUser must be used within a UserProvider');
+    throw new Error("useUser must be used within a UserProvider");
   }
   return context;
 };

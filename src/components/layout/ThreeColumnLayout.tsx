@@ -1,4 +1,3 @@
-
 import { ReactNode, useState } from "react";
 import * as React from "react";
 import { useParams, useNavigate, Link, useLocation } from "react-router-dom";
@@ -375,8 +374,7 @@ export function ThreeColumnLayout({
               </nav>
             </div>
             
-            {/* Moved UserProfileSection down to align with Financial Overview cards */}
-            <div className={`px-4 ${isLightTheme ? 'border-[#DCD8C0]' : 'border-white/10'}`}>
+            <div className={`px-4 ${isLightTheme ? 'border-[#DCD8C0]' : 'border-white/10'} mt-2 mb-2`}>
               {!mainSidebarCollapsed && (
                 <UserProfileSection onMenuItemClick={handleProfileMenuItemClick} showLogo={false} />
               )}

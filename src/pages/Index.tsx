@@ -39,14 +39,13 @@ export default function Index() {
 
   return (
     <ThreeColumnLayout title="Dashboard">
-      <div key={dashboardKey} className="space-y-6 px-4 py-4 max-w-7xl mx-auto">
+      <div key={dashboardKey} className="space-y-5 px-4 py-4 max-w-7xl mx-auto">
         {renderTrialBanner()}
         
-        <div className="mb-4">
+        <div className="mt-1">
           <QuickActionsMenu />
         </div>
         
-        {/* Add an id to the FinancialOverview for easier alignment */}
         <div id="financial-overview-section">
           <FinancialOverview />
         </div>

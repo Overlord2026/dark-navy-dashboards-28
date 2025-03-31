@@ -18,7 +18,7 @@ export const QuickActionsMenu = () => {
   };
 
   return (
-    <div className="flex items-center justify-center gap-4 w-full">
+    <div className="flex items-center justify-center gap-4 w-full mb-2">
       {/* Marketplace button - visible to all roles */}
       <Button 
         variant="marketplace" 
