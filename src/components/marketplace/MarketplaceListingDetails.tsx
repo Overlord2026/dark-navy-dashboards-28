@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { 
   Card, 
@@ -92,8 +93,8 @@ export function MarketplaceListingDetails({ listing }: MarketplaceListingDetails
         price: "Based on assets under management"
       }
     ],
-    pricingModel: listing.priceType === "hourly" ? "Hourly Rate" :
-                  listing.priceType === "one-time" ? "Fixed Project Fee" :
+    pricingModel: listing.priceType === "one-time" ? "Fixed Project Fee" :
+                  listing.priceType === "custom" ? "Custom Quote Based on Requirements" :
                   "Custom Quote Based on Requirements",
     testimonials: [
       {

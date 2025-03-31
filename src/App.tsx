@@ -15,6 +15,7 @@ import Education from "./pages/Education";
 import FinancialPlans from "./pages/FinancialPlans";
 import Investments from "./pages/Investments";
 import Marketplace from "./pages/Marketplace";
+import MarketplaceRfp from "./pages/MarketplaceRfp";
 import AlternativeAssetCategory from "./pages/AlternativeAssetCategory";
 import AdvisorProfile from "./pages/AdvisorProfile";
 import Lending from "./pages/Lending";
@@ -72,6 +73,7 @@ function App() {
                     <Route path="/financial-plans" element={<FinancialPlans />} />
                     <Route path="/investments" element={<Investments />} />
                     <Route path="/marketplace" element={<Marketplace />} />
+                    <Route path="/marketplace/rfp" element={<MarketplaceRfp />} />
                     <Route path="/investments/alternative/:categoryId" element={<AlternativeAssetCategory />} />
                     <Route path="/advisor-profile" element={<AdvisorProfile />} />
                     <Route path="/lending" element={<Lending />} />
