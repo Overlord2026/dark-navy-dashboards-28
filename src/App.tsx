@@ -11,8 +11,10 @@ import { ThemeProvider } from '@/context/ThemeContext';
 import { UserProvider } from '@/context/UserContext';
 import { NetWorthProvider } from '@/context/NetWorthContext';
 import { SubscriptionProvider } from '@/context/SubscriptionContext';
+import { BillsProvider } from '@/hooks/useBills';
 import { Toaster } from 'sonner';
 import NotFound from '@/pages/NotFound';
+import BillsManagement from '@/pages/BillsManagement';
 
 function App() {
   return (
@@ -20,21 +22,24 @@ function App() {
       <UserProvider>
         <SubscriptionProvider>
           <NetWorthProvider>
-            <BrowserRouter>
-              <Routes>
-                {/* Redirect from root to dashboard */}
-                <Route path="/" element={<Navigate to="/dashboard" replace />} />
-                <Route path="/dashboard" element={<Index />} />
-                <Route path="/marketplace" element={<Marketplace />} />
-                <Route path="/family-office-directory" element={<FamilyOfficeDirectory />} />
-                <Route path="/data-import" element={<DataImportPage />} />
-                <Route path="/cash-management" element={<CashManagement />} />
-                <Route path="/private-investments" element={<PrivateInvestmentsPage />} />
-                {/* 404 route */}
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </BrowserRouter>
-            <Toaster />
+            <BillsProvider>
+              <BrowserRouter>
+                <Routes>
+                  {/* Redirect from root to dashboard */}
+                  <Route path="/" element={<Navigate to="/dashboard" replace />} />
+                  <Route path="/dashboard" element={<Index />} />
+                  <Route path="/marketplace" element={<Marketplace />} />
+                  <Route path="/family-office-directory" element={<FamilyOfficeDirectory />} />
+                  <Route path="/data-import" element={<DataImportPage />} />
+                  <Route path="/cash-management" element={<CashManagement />} />
+                  <Route path="/private-investments" element={<PrivateInvestmentsPage />} />
+                  <Route path="/bills-management" element={<BillsManagement />} />
+                  {/* 404 route */}
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </BrowserRouter>
+              <Toaster />
+            </BillsProvider>
           </NetWorthProvider>
         </SubscriptionProvider>
       </UserProvider>
