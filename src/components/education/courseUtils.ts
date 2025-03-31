@@ -7,7 +7,7 @@ export const handleCourseAccess = (
   title: string,
   isPaid: boolean,
   ghlUrl?: string,
-  setIsProcessing?: (id: string | number | null) => void
+  setIsProcessing?: (isProcessing: boolean) => void
 ) => {
   if (isPaid) {
     // For paid courses, initiate Stripe checkout
@@ -26,10 +26,10 @@ export const initiateStripeCheckout = (
   courseId: string | number,
   title: string,
   ghlUrl?: string,
-  setIsProcessing?: (id: string | number | null) => void
+  setIsProcessing?: (isProcessing: boolean) => void
 ) => {
   if (setIsProcessing) {
-    setIsProcessing(courseId);
+    setIsProcessing(true);
   }
   
   // Simulate Stripe checkout process with a delay
@@ -48,7 +48,7 @@ export const initiateStripeCheckout = (
       // After successful payment, simulate granting access to the course
       setTimeout(() => {
         if (setIsProcessing) {
-          setIsProcessing(null);
+          setIsProcessing(false);
         }
         
         // Grant access to the course by opening the GHL URL

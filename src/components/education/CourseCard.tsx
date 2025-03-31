@@ -5,7 +5,6 @@ import { Trophy, Clock, ExternalLink } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { useState } from "react";
-import { handleCourseAccess, initiateStripeCheckout } from "./courseUtils";
 
 export interface CourseCardProps {
   id: string | number;
@@ -38,19 +37,14 @@ export function CourseCard({
       return;
     }
     
-    if (isPaid) {
-      // For paid courses, initiate Stripe checkout
-      initiateStripeCheckout(id, title, ghlUrl, () => setIsProcessing(false));
-      setIsProcessing(true);
-    } else if (ghlUrl) {
-      // For free courses, directly open the GHL URL
-      toast.success(`Accessing ${title}...`);
-      setTimeout(() => {
-        window.open(ghlUrl, "_blank", "noopener,noreferrer");
-      }, 500);
-    } else if (onClick) {
-      // Fallback to regular onClick if no URL provided
+    if (onClick) {
       onClick();
+      setIsProcessing(true);
+      
+      // Reset the processing state after 1 second for UX feedback
+      setTimeout(() => {
+        setIsProcessing(false);
+      }, 1000);
     }
   };
 
@@ -60,9 +54,9 @@ export function CourseCard({
         <div className="flex justify-between items-start">
           <CardTitle className="text-lg font-bold text-left">{title}</CardTitle>
           {!isPaid ? (
-            <Badge variant="default" className="bg-green-600 hover:bg-green-700">Free</Badge>
+            <Badge variant="success" className="text-white">Free</Badge>
           ) : (
-            <Badge variant="secondary" className="bg-blue-600 hover:bg-blue-700 text-white">Paid</Badge>
+            <Badge variant="info" className="text-white">Paid</Badge>
           )}
         </div>
         <CardDescription className="mt-2 text-left">{description}</CardDescription>
