@@ -28,41 +28,11 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "react-router-dom";
-
-type NavItem = {
-  icon: React.ElementType | React.FC;
-  label: string;
-  href: string;
-};
-
-const mainNavItems: NavItem[] = [
-  { icon: HomeIcon, label: "Dashboard", href: "/" },
-  { icon: CircleDollarSign, label: "Accounts", href: "/accounts" },
-  { icon: FileTextIcon, label: "Documents", href: "/documents" },
-  { icon: ShareIcon, label: "Sharing", href: "/sharing" },
-  { icon: LineChartIcon, label: "Financial Plans", href: "/financial-plans" },
-  { icon: BarChart3Icon, label: "Investments", href: "/investments" },
-  { icon: ShieldIcon, label: "Insurance", href: "/insurance" },
-  { icon: BanknoteIcon, label: "Lending", href: "/lending" },
-  { icon: CoinsIcon, label: "Cash Management", href: "/cash-management" },
-  { icon: ArrowLeftRightIcon, label: "Transfers", href: "/transfers" },
-  { icon: CalculatorIcon, label: "Tax & Budgets", href: "/tax-budgets" },
-  { icon: ShoppingBag, label: "Marketplace", href: "/marketplace" },
-];
-
-const propertiesNavItems: NavItem[] = [
-  { icon: HomeIcon, label: "Properties", href: "/properties" },
-  { icon: BuildingIcon, label: "Buildings", href: "/properties?filter=buildings" },
-  { icon: KeyIcon, label: "Rentals", href: "/properties?filter=rentals" },
-  { icon: MapPinIcon, label: "Locations", href: "/properties?filter=locations" },
-  { icon: LandmarkIcon, label: "Investments", href: "/properties?filter=investments" },
-];
-
-const bottomNavItems: NavItem[] = [
-  { icon: HelpCircleIcon, label: "Help", href: "/help" },
-  { icon: SettingsIcon, label: "Settings", href: "/settings" },
-  { icon: LogOutIcon, label: "Logout", href: "/logout" },
-];
+import { 
+  mainNavItems, 
+  propertiesNavItems, 
+  bottomNavItems 
+} from "@/components/navigation/NavigationConfig";
 
 export const Sidebar = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -88,7 +58,7 @@ export const Sidebar = () => {
         <nav className="px-2 space-y-1">
           {mainNavItems.map((item, index) => (
             <Link
-              key={item.label}
+              key={item.title}
               to={item.href}
               className={cn(
                 "group flex items-center py-2 px-3 rounded-md transition-colors",
@@ -100,7 +70,7 @@ export const Sidebar = () => {
               style={{ animationDelay: `${index * 50}ms` }}
             >
               <item.icon className="h-5 w-5 mr-3 flex-shrink-0 bg-black p-0.5 rounded-sm" />
-              {!collapsed && <span className="whitespace-nowrap overflow-hidden text-ellipsis">{item.label}</span>}
+              {!collapsed && <span className="whitespace-nowrap overflow-hidden text-ellipsis">{item.title}</span>}
             </Link>
           ))}
         </nav>
@@ -116,7 +86,7 @@ export const Sidebar = () => {
         <nav className="mt-2 px-2 space-y-1">
           {propertiesNavItems.map((item, index) => (
             <Link
-              key={item.label}
+              key={item.title}
               to={item.href}
               className={cn(
                 "group flex items-center py-2 px-3 rounded-md transition-colors",
@@ -128,7 +98,7 @@ export const Sidebar = () => {
               style={{ animationDelay: `${index * 50}ms` }}
             >
               <item.icon className="h-5 w-5 mr-3 flex-shrink-0 bg-black p-0.5 rounded-sm" />
-              {!collapsed && <span className="whitespace-nowrap overflow-hidden text-ellipsis">{item.label}</span>}
+              {!collapsed && <span className="whitespace-nowrap overflow-hidden text-ellipsis">{item.title}</span>}
             </Link>
           ))}
         </nav>
@@ -138,12 +108,12 @@ export const Sidebar = () => {
         <nav className="space-y-1">
           {bottomNavItems.map((item) => (
             <Link
-              key={item.label}
+              key={item.title}
               to={item.href}
               className="group flex items-center py-2 px-3 rounded-md text-sidebar-foreground hover:bg-sidebar-accent transition-colors border border-gray-700"
             >
               <item.icon className="h-5 w-5 mr-3 flex-shrink-0 bg-black p-0.5 rounded-sm" />
-              {!collapsed && <span className="whitespace-nowrap overflow-hidden text-ellipsis">{item.label}</span>}
+              {!collapsed && <span className="whitespace-nowrap overflow-hidden text-ellipsis">{item.title}</span>}
             </Link>
           ))}
         </nav>
