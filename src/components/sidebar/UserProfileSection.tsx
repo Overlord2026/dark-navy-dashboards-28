@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 import {
@@ -61,7 +60,7 @@ export const UserProfileSection = ({
     } else if (itemId === "log-out") {
       // Handle log out action
       toast.success("You have been successfully logged out");
-      navigate("/");
+      navigate("/landing");
       if (onMenuItemClick) {
         onMenuItemClick(itemId);
       }

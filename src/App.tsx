@@ -11,6 +11,7 @@ import { ThemeProvider } from '@/context/ThemeContext';
 import { UserProvider } from '@/context/UserContext';
 import { Toaster } from 'sonner';
 import Education from '@/pages/Education';
+import Index from '@/pages/Index';
 
 function App() {
   return (
@@ -18,10 +19,11 @@ function App() {
       <UserProvider>
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/login" element={<Navigate to="/dashboard" />} />
-            <Route path="/dashboard" element={<CustomerProfile />} />
-            <Route path="/home" element={<HomePage />} />
+            <Route path="/" element={<Index />} />
+            <Route path="/landing" element={<HomePage />} />
+            <Route path="/login" element={<Navigate to="/" />} />
+            <Route path="/dashboard" element={<Index />} />
+            <Route path="/home" element={<Index />} />
             <Route path="/profile" element={<CustomerProfile />} />
             <Route path="/marketplace" element={<Marketplace />} />
             <Route path="/family-office-directory" element={<FamilyOfficeDirectory />} />
