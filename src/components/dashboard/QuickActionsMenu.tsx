@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { ShoppingBag, Bug, Activity } from "lucide-react";
+import { Bug, Activity } from "lucide-react";
 import { Link } from "react-router-dom";
 import { QuickDiagnosticsButton } from "@/components/diagnostics/QuickDiagnosticsButton";
 import { DiagnosticsAccessButton } from "@/components/diagnostics/DiagnosticsAccessButton";
@@ -19,20 +19,6 @@ export const QuickActionsMenu = () => {
 
   return (
     <div className="flex items-center justify-center gap-4 w-full mb-3">
-      {/* Marketplace button - visible to all roles */}
-      <Button 
-        variant="marketplace" 
-        size="xl"
-        className="gap-2 transition-all shadow-md border border-[#0EA5E9]/20 bg-gradient-to-r from-[#0EA5E9] to-[#0891CE] font-medium tracking-wide" 
-        asChild
-        onClick={() => handleQuickAction("Family Office Marketplace")}
-      >
-        <Link to="/marketplace">
-          <ShoppingBag className="h-5 w-5" />
-          Family Office Marketplace
-        </Link>
-      </Button>
-
       {/* Diagnostic buttons - only visible to admin roles */}
       {isAdmin && (
         <>

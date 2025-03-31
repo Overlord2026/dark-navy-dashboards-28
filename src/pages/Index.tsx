@@ -20,6 +20,8 @@ export default function Index() {
   const { isInFreeTrial, daysRemainingInTrial } = useSubscription();
   const { userProfile } = useUser();
   const [dashboardKey, setDashboardKey] = useState(Date.now());
+  const userRole = userProfile?.role || "client";
+  const isAdmin = userRole === "admin" || userRole === "system_administrator";
 
   useEffect(() => {
     setDashboardKey(Date.now());
@@ -42,9 +44,11 @@ export default function Index() {
       <div key={dashboardKey} className="space-y-4 px-4 py-2 max-w-7xl mx-auto">
         {renderTrialBanner()}
         
-        <div className="mt-1">
-          <QuickActionsMenu />
-        </div>
+        {isAdmin && (
+          <div className="mt-1">
+            <QuickActionsMenu />
+          </div>
+        )}
         
         <div id="financial-overview-section">
           <FinancialOverview />
