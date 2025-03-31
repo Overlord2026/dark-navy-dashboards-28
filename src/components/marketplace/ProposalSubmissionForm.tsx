@@ -1,459 +1,584 @@
 
 import React, { useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { toast } from "sonner";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { Calendar, Clock, DollarSign, FileText, MessageSquare, Upload } from "lucide-react";
-import { FileUpload } from "@/components/ui/file-upload";
-import { Separator } from "@/components/ui/separator";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
-
-// Define the form schema
-const proposalSchema = z.object({
-  title: z.string().min(5, "Title must be at least 5 characters"),
-  servicesDescription: z.string().min(50, "Description must be at least 50 characters"),
-  workPlan: z.string().min(50, "Work plan must be at least 50 characters"),
-  pricingType: z.enum(["hourly", "fixed", "custom"]),
-  pricingAmount: z.string().optional(),
-  pricingDetails: z.string().min(10, "Please provide pricing details"),
-  estimatedTimeline: z.string().min(2, "Please specify an estimated timeline"),
-  milestones: z.string().min(10, "Please provide at least one milestone"),
-  additionalInfo: z.string().optional(),
-  contactEmail: z.string().email("Please enter a valid email"),
-  contactPhone: z.string().optional(),
-});
-
-type ProposalFormValues = z.infer<typeof proposalSchema>;
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Separator } from "@/components/ui/separator";
+import {
+  Briefcase,
+  Calendar,
+  Check,
+  Clock,
+  DollarSign,
+  Upload,
+  FileText,
+  MessageSquare,
+  ArrowRight,
+} from "lucide-react";
+import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 interface ProposalSubmissionFormProps {
   rfpId: string;
 }
 
 export function ProposalSubmissionForm({ rfpId }: ProposalSubmissionFormProps) {
-  const [supportingDocs, setSupportingDocs] = useState<File[]>([]);
+  const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
-  // Initialize the form
-  const form = useForm<ProposalFormValues>({
-    resolver: zodResolver(proposalSchema),
-    defaultValues: {
-      title: "",
-      servicesDescription: "",
-      workPlan: "",
-      pricingType: "fixed",
-      pricingAmount: "",
-      pricingDetails: "",
-      estimatedTimeline: "",
-      milestones: "",
-      additionalInfo: "",
-      contactEmail: "",
-      contactPhone: "",
-    },
+  const [proposalData, setProposalData] = useState({
+    title: "",
+    description: "",
+    serviceType: "",
+    approachDetails: "",
+    pricingType: "fixed",
+    pricingAmount: "",
+    timelineWeeks: "",
+    milestones: [
+      { title: "Initial Consultation", amount: "", description: "", dueDate: "" },
+      { title: "Strategy Development", amount: "", description: "", dueDate: "" }
+    ],
+    supportingDocs: []
   });
+  const navigate = useNavigate();
   
-  // Handle file upload
-  const handleFileChange = (file: File) => {
-    setSupportingDocs([...supportingDocs, file]);
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setProposalData(prev => ({ ...prev, [name]: value }));
   };
   
-  // Remove a file from the list
-  const removeFile = (index: number) => {
-    const newFiles = [...supportingDocs];
-    newFiles.splice(index, 1);
-    setSupportingDocs(newFiles);
+  const handlePricingTypeChange = (value: string) => {
+    setProposalData(prev => ({ ...prev, pricingType: value }));
   };
   
-  // Handle form submission
-  const onSubmit = (data: ProposalFormValues) => {
+  const handleMilestoneChange = (index: number, field: string, value: string) => {
+    setProposalData(prev => {
+      const updatedMilestones = [...prev.milestones];
+      updatedMilestones[index] = { ...updatedMilestones[index], [field]: value };
+      return { ...prev, milestones: updatedMilestones };
+    });
+  };
+  
+  const addMilestone = () => {
+    setProposalData(prev => ({
+      ...prev,
+      milestones: [...prev.milestones, { title: "", amount: "", description: "", dueDate: "" }]
+    }));
+  };
+  
+  const removeMilestone = (index: number) => {
+    if (proposalData.milestones.length <= 2) {
+      toast.error("At least two milestones are required");
+      return;
+    }
+    
+    setProposalData(prev => {
+      const updatedMilestones = [...prev.milestones];
+      updatedMilestones.splice(index, 1);
+      return { ...prev, milestones: updatedMilestones };
+    });
+  };
+  
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files && files.length > 0) {
+      // In a real app, you would upload the files to storage
+      // For now, we'll just add the file names to our state
+      const fileNames = Array.from(files).map(file => file.name);
+      setProposalData(prev => ({
+        ...prev,
+        supportingDocs: [...prev.supportingDocs, ...fileNames]
+      }));
+      
+      // Reset the file input
+      e.target.value = "";
+      toast.success("Files attached successfully");
+    }
+  };
+  
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
     setIsSubmitting(true);
     
-    // This would be an API call in a real application
+    // Simulate API call to submit proposal
     setTimeout(() => {
-      console.log("Proposal data:", data);
-      console.log("Supporting documents:", supportingDocs);
-      
-      // Show success message
-      toast.success("Proposal submitted successfully!", {
-        description: "The client will be notified of your proposal.",
-      });
-      
+      toast.success("Proposal submitted successfully!");
       setIsSubmitting(false);
-      form.reset();
-      setSupportingDocs([]);
+      navigate("/marketplace/payments");
     }, 1500);
+  };
+  
+  const nextStep = () => {
+    setStep(prev => prev + 1);
+    window.scrollTo(0, 0);
+  };
+  
+  const prevStep = () => {
+    setStep(prev => prev - 1);
+    window.scrollTo(0, 0);
+  };
+  
+  const formatCurrency = (value: string) => {
+    if (!value) return "";
+    return `$${parseInt(value).toLocaleString()}`;
   };
   
   return (
     <div className="space-y-6">
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-          {/* Basic Proposal Information */}
-          <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h2 className="text-xl font-semibold mb-4">Submit Your Proposal</h2>
+        <div className="text-sm text-muted-foreground">
+          Step {step} of 4
+        </div>
+      </div>
+      
+      {step === 1 && (
+        <div className="space-y-4">
+          <div className="grid gap-4">
             <div>
-              <h3 className="text-lg font-medium">Proposal Details</h3>
-              <p className="text-sm text-muted-foreground mb-4">
-                Provide an overview of your proposed services and approach.
-              </p>
+              <Label htmlFor="title">Proposal Title</Label>
+              <Input
+                id="title"
+                name="title"
+                value={proposalData.title}
+                onChange={handleChange}
+                placeholder="Enter a clear, concise title for your proposal"
+                required
+              />
             </div>
             
-            <FormField
-              control={form.control}
-              name="title"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Proposal Title</FormLabel>
-                  <FormControl>
-                    <Input placeholder="e.g., Comprehensive Tax Planning Solution" {...field} />
-                  </FormControl>
-                  <FormDescription>
-                    A clear, concise title for your proposal.
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div>
+              <Label htmlFor="description">Executive Summary</Label>
+              <Textarea
+                id="description"
+                name="description"
+                value={proposalData.description}
+                onChange={handleChange}
+                placeholder="Provide a brief overview of your proposal and how you'll address the client's needs"
+                rows={4}
+                required
+              />
+            </div>
             
-            <FormField
-              control={form.control}
-              name="servicesDescription"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Proposed Services</FormLabel>
-                  <FormControl>
-                    <Textarea 
-                      placeholder="Describe the services you're offering..." 
-                      className="min-h-[120px]" 
-                      {...field} 
-                    />
-                  </FormControl>
-                  <FormDescription>
-                    Detail the specific services you'll provide to address the client's needs.
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div>
+              <Label htmlFor="serviceType">Service Type</Label>
+              <Input
+                id="serviceType"
+                name="serviceType"
+                value={proposalData.serviceType}
+                onChange={handleChange}
+                placeholder="E.g., Tax Planning, Wealth Management, Estate Planning"
+                required
+              />
+            </div>
             
-            <FormField
-              control={form.control}
-              name="workPlan"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Detailed Work Plan</FormLabel>
-                  <FormControl>
-                    <Textarea 
-                      placeholder="Outline your approach and methodology..." 
-                      className="min-h-[120px]" 
-                      {...field} 
-                    />
-                  </FormControl>
-                  <FormDescription>
-                    Outline your approach, methodology, and key deliverables.
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div>
+              <Label htmlFor="approachDetails">Proposed Approach & Methodology</Label>
+              <Textarea
+                id="approachDetails"
+                name="approachDetails"
+                value={proposalData.approachDetails}
+                onChange={handleChange}
+                placeholder="Explain your approach, methodology, and how you will deliver the requested services"
+                rows={6}
+                required
+              />
+            </div>
           </div>
           
-          <Separator className="my-8" />
-          
-          {/* Pricing Section */}
-          <div className="space-y-6">
-            <div>
-              <h3 className="text-lg font-medium flex items-center">
-                <DollarSign className="h-5 w-5 mr-1" />
-                Pricing and Payment Structure
-              </h3>
-              <p className="text-sm text-muted-foreground mb-4">
-                Clearly define your pricing model and payment terms.
-              </p>
-            </div>
-            
-            <FormField
-              control={form.control}
-              name="pricingType"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Pricing Model</FormLabel>
-                  <FormControl>
-                    <RadioGroup
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                      className="flex flex-col space-y-1"
-                    >
-                      <FormItem className="flex items-center space-x-3 space-y-0">
-                        <FormControl>
-                          <RadioGroupItem value="hourly" />
-                        </FormControl>
-                        <FormLabel className="font-normal">
-                          Hourly Rate
-                        </FormLabel>
-                      </FormItem>
-                      <FormItem className="flex items-center space-x-3 space-y-0">
-                        <FormControl>
-                          <RadioGroupItem value="fixed" />
-                        </FormControl>
-                        <FormLabel className="font-normal">
-                          Fixed Price
-                        </FormLabel>
-                      </FormItem>
-                      <FormItem className="flex items-center space-x-3 space-y-0">
-                        <FormControl>
-                          <RadioGroupItem value="custom" />
-                        </FormControl>
-                        <FormLabel className="font-normal">
-                          Custom Structure
-                        </FormLabel>
-                      </FormItem>
-                    </RadioGroup>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            
-            {form.watch("pricingType") !== "custom" && (
-              <FormField
-                control={form.control}
-                name="pricingAmount"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      {form.watch("pricingType") === "hourly" 
-                        ? "Hourly Rate ($)" 
-                        : "Fixed Price ($)"}
-                    </FormLabel>
-                    <FormControl>
-                      <Input placeholder="e.g., 250" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
+          <div className="flex justify-end">
+            <Button onClick={nextStep} className="gap-2">
+              Continue to Pricing <ArrowRight className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+      )}
+      
+      {step === 2 && (
+        <div className="space-y-4">
+          <Card>
+            <CardContent className="pt-6">
+              <div className="space-y-4">
+                <div>
+                  <Label>Pricing Structure</Label>
+                  <RadioGroup 
+                    value={proposalData.pricingType} 
+                    onValueChange={handlePricingTypeChange}
+                    className="flex flex-col space-y-2 mt-2"
+                  >
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="fixed" id="fixed" />
+                      <Label htmlFor="fixed" className="cursor-pointer">Fixed Fee</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="hourly" id="hourly" />
+                      <Label htmlFor="hourly" className="cursor-pointer">Hourly Rate</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="milestone" id="milestone" />
+                      <Label htmlFor="milestone" className="cursor-pointer">Milestone-Based (Escrow)</Label>
+                    </div>
+                  </RadioGroup>
+                </div>
+                
+                {proposalData.pricingType !== "milestone" && (
+                  <div>
+                    <Label htmlFor="pricingAmount">
+                      {proposalData.pricingType === "fixed" ? "Total Fixed Fee" : "Hourly Rate"}
+                    </Label>
+                    <div className="relative">
+                      <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+                      <Input
+                        id="pricingAmount"
+                        name="pricingAmount"
+                        value={proposalData.pricingAmount}
+                        onChange={handleChange}
+                        className="pl-10"
+                        placeholder={proposalData.pricingType === "fixed" ? "10000" : "250"}
+                        type="number"
+                        required
+                      />
+                    </div>
+                  </div>
                 )}
-              />
-            )}
-            
-            <FormField
-              control={form.control}
-              name="pricingDetails"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Pricing Details</FormLabel>
-                  <FormControl>
-                    <Textarea 
-                      placeholder="Explain your pricing structure, payment schedule, etc..." 
-                      {...field} 
-                    />
-                  </FormControl>
-                  <FormDescription>
-                    Provide details about payment schedule, terms, and any additional costs.
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                
+                {proposalData.pricingType === "milestone" && (
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <Label>Milestones & Payment Schedule</Label>
+                      <Button variant="outline" size="sm" onClick={addMilestone} type="button">
+                        Add Milestone
+                      </Button>
+                    </div>
+                    
+                    {proposalData.milestones.map((milestone, index) => (
+                      <Card key={index} className="overflow-hidden">
+                        <CardContent className="p-4">
+                          <div className="grid gap-4">
+                            <div className="flex justify-between">
+                              <h4 className="font-medium text-sm">Milestone {index + 1}</h4>
+                              {index >= 2 && (
+                                <Button 
+                                  variant="ghost" 
+                                  size="sm" 
+                                  onClick={() => removeMilestone(index)}
+                                  className="h-8 px-2 text-red-500 hover:text-red-600 hover:bg-red-50"
+                                >
+                                  Remove
+                                </Button>
+                              )}
+                            </div>
+                            
+                            <div>
+                              <Label htmlFor={`milestone-${index}-title`}>Title</Label>
+                              <Input
+                                id={`milestone-${index}-title`}
+                                value={milestone.title}
+                                onChange={(e) => handleMilestoneChange(index, "title", e.target.value)}
+                                placeholder="Milestone Title"
+                                required
+                              />
+                            </div>
+                            
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                              <div>
+                                <Label htmlFor={`milestone-${index}-amount`}>Amount</Label>
+                                <div className="relative">
+                                  <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+                                  <Input
+                                    id={`milestone-${index}-amount`}
+                                    value={milestone.amount}
+                                    onChange={(e) => handleMilestoneChange(index, "amount", e.target.value)}
+                                    className="pl-10"
+                                    placeholder="5000"
+                                    type="number"
+                                    required
+                                  />
+                                </div>
+                              </div>
+                              <div>
+                                <Label htmlFor={`milestone-${index}-dueDate`}>Expected Completion Date</Label>
+                                <Input
+                                  id={`milestone-${index}-dueDate`}
+                                  type="date"
+                                  value={milestone.dueDate}
+                                  onChange={(e) => handleMilestoneChange(index, "dueDate", e.target.value)}
+                                  required
+                                />
+                              </div>
+                            </div>
+                            
+                            <div>
+                              <Label htmlFor={`milestone-${index}-description`}>Deliverables</Label>
+                              <Textarea
+                                id={`milestone-${index}-description`}
+                                value={milestone.description}
+                                onChange={(e) => handleMilestoneChange(index, "description", e.target.value)}
+                                placeholder="Describe what will be delivered in this milestone"
+                                rows={2}
+                                required
+                              />
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                    
+                    <div className="bg-muted/50 p-4 rounded-md">
+                      <h4 className="font-medium mb-2 flex items-center gap-2">
+                        <DollarSign className="h-4 w-4" />
+                        Secure Milestone Payments
+                      </h4>
+                      <p className="text-sm text-muted-foreground">
+                        With milestone-based payments, funds for each milestone are held in secure escrow and only released
+                        when the client approves the completed work. This protects both parties and ensures clear deliverables.
+                      </p>
+                    </div>
+                  </div>
+                )}
+                
+                <div>
+                  <Label htmlFor="timelineWeeks">Total Project Timeline (weeks)</Label>
+                  <Input
+                    id="timelineWeeks"
+                    name="timelineWeeks"
+                    value={proposalData.timelineWeeks}
+                    onChange={handleChange}
+                    placeholder="E.g., 4, 8, 12"
+                    type="number"
+                    required
+                  />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <div className="flex justify-between">
+            <Button variant="outline" onClick={prevStep}>
+              Back
+            </Button>
+            <Button onClick={nextStep} className="gap-2">
+              Continue <ArrowRight className="h-4 w-4" />
+            </Button>
           </div>
-          
-          <Separator className="my-8" />
-          
-          {/* Timeline Section */}
-          <div className="space-y-6">
-            <div>
-              <h3 className="text-lg font-medium flex items-center">
-                <Clock className="h-5 w-5 mr-1" />
-                Timeline and Milestones
-              </h3>
-              <p className="text-sm text-muted-foreground mb-4">
-                Define the project timeline and key milestones.
-              </p>
-            </div>
-            
-            <FormField
-              control={form.control}
-              name="estimatedTimeline"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Estimated Timeline</FormLabel>
-                  <FormControl>
-                    <Input placeholder="e.g., 3 months" {...field} />
-                  </FormControl>
-                  <FormDescription>
-                    The estimated duration to complete the project.
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            
-            <FormField
-              control={form.control}
-              name="milestones"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Key Milestones</FormLabel>
-                  <FormControl>
-                    <Textarea 
-                      placeholder="List key project milestones and their timelines..." 
-                      className="min-h-[120px]" 
-                      {...field} 
+        </div>
+      )}
+      
+      {step === 3 && (
+        <div className="space-y-4">
+          <Card>
+            <CardContent className="pt-6 space-y-6">
+              <div>
+                <Label className="block mb-2">Supporting Documents (Optional)</Label>
+                <div className="border-2 border-dashed border-muted-foreground/25 rounded-md p-6 text-center">
+                  <Upload className="h-10 w-10 text-muted-foreground/50 mx-auto mb-2" />
+                  <p className="text-sm text-muted-foreground mb-2">
+                    Drag and drop files here, or click to select files
+                  </p>
+                  <div className="relative">
+                    <Input
+                      id="file-upload"
+                      type="file"
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                      onChange={handleFileChange}
+                      multiple
                     />
-                  </FormControl>
-                  <FormDescription>
-                    List the major milestones and their expected completion dates.
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-          
-          <Separator className="my-8" />
-          
-          {/* Supporting Documents */}
-          <div className="space-y-6">
-            <div>
-              <h3 className="text-lg font-medium flex items-center">
-                <FileText className="h-5 w-5 mr-1" />
-                Supporting Documents
-              </h3>
-              <p className="text-sm text-muted-foreground mb-4">
-                Upload case studies, client references, or other relevant documents.
-              </p>
-            </div>
-            
-            <div className="space-y-4">
-              <FileUpload 
-                onFileChange={handleFileChange}
-                accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx"
-                maxSize={10 * 1024 * 1024} // 10MB
-              />
+                    <Button variant="outline" type="button">
+                      Select Files
+                    </Button>
+                  </div>
+                </div>
+              </div>
               
-              {supportingDocs.length > 0 && (
-                <div className="space-y-2">
-                  <p className="text-sm font-medium">Uploaded Documents</p>
-                  {supportingDocs.map((file, index) => (
-                    <Card key={index} className="p-0">
-                      <CardContent className="flex items-center justify-between p-3">
-                        <div className="flex items-center">
-                          <FileText className="h-4 w-4 mr-2 text-muted-foreground" />
-                          <span className="text-sm truncate max-w-[200px]">{file.name}</span>
-                        </div>
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
-                          onClick={() => removeFile(index)}
-                          className="h-8 w-8 p-0"
-                        >
-                          &times;
-                        </Button>
-                      </CardContent>
-                    </Card>
-                  ))}
+              {proposalData.supportingDocs.length > 0 && (
+                <div>
+                  <h4 className="text-sm font-medium mb-2">Attached Documents:</h4>
+                  <ul className="space-y-2">
+                    {proposalData.supportingDocs.map((doc, index) => (
+                      <li key={index} className="flex items-center gap-2 text-sm">
+                        <FileText className="h-4 w-4 text-muted-foreground" />
+                        {doc}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               )}
-            </div>
-            
-            <FormField
-              control={form.control}
-              name="additionalInfo"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Additional Information</FormLabel>
-                  <FormControl>
-                    <Textarea 
-                      placeholder="Any other relevant information to support your proposal..." 
-                      {...field} 
-                    />
-                  </FormControl>
-                  <FormDescription>
-                    Provide any other relevant information that supports your proposal.
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-          
-          <Separator className="my-8" />
-          
-          {/* Contact Information */}
-          <div className="space-y-6">
-            <div>
-              <h3 className="text-lg font-medium flex items-center">
-                <MessageSquare className="h-5 w-5 mr-1" />
-                Communication Options
-              </h3>
-              <p className="text-sm text-muted-foreground mb-4">
-                Provide your preferred contact information for client communication.
-              </p>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <FormField
-                control={form.control}
-                name="contactEmail"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Contact Email</FormLabel>
-                    <FormControl>
-                      <Input placeholder="your-email@example.com" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
               
-              <FormField
-                control={form.control}
-                name="contactPhone"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Contact Phone (Optional)</FormLabel>
-                    <FormControl>
-                      <Input placeholder="(123) 456-7890" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            
-            <div className="bg-muted/50 rounded-lg p-4 text-sm">
-              <h4 className="font-medium mb-2">Consultation Scheduling</h4>
-              <p className="text-muted-foreground mb-3">
-                Would you like to offer a free consultation to discuss the proposal in detail?
-              </p>
-              <Button variant="outline" className="gap-2">
-                <Calendar className="h-4 w-4" />
-                Add Availability for Consultations
-              </Button>
-            </div>
+              <Separator />
+              
+              <div>
+                <h4 className="font-medium mb-2">Communication Options</h4>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="border rounded-md p-4 flex items-center gap-3">
+                    <div className="bg-primary/10 p-2 rounded-full">
+                      <MessageSquare className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <h5 className="font-medium text-sm">Secure Messaging</h5>
+                      <p className="text-xs text-muted-foreground">
+                        Available within the platform
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <div className="border rounded-md p-4 flex items-center gap-3">
+                    <div className="bg-primary/10 p-2 rounded-full">
+                      <Calendar className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <h5 className="font-medium text-sm">Consultation Call</h5>
+                      <p className="text-xs text-muted-foreground">
+                        Schedule a consultation with the client
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <div className="flex justify-between">
+            <Button variant="outline" onClick={prevStep}>
+              Back
+            </Button>
+            <Button onClick={nextStep} className="gap-2">
+              Review Proposal <ArrowRight className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+      )}
+      
+      {step === 4 && (
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <Card>
+            <CardContent className="pt-6 space-y-6">
+              <div>
+                <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                  <Check className="h-5 w-5 text-green-500" />
+                  Review Your Proposal
+                </h3>
+                
+                <div className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                      <Label className="text-muted-foreground text-sm">Proposal Title</Label>
+                      <p className="font-medium">{proposalData.title}</p>
+                    </div>
+                    
+                    <div>
+                      <Label className="text-muted-foreground text-sm">Service Type</Label>
+                      <p className="font-medium">{proposalData.serviceType}</p>
+                    </div>
+                    
+                    <div>
+                      <Label className="text-muted-foreground text-sm">Timeline</Label>
+                      <p className="font-medium">{proposalData.timelineWeeks} weeks</p>
+                    </div>
+                  </div>
+                  
+                  <Separator />
+                  
+                  <div>
+                    <Label className="text-muted-foreground text-sm">Executive Summary</Label>
+                    <p className="mt-1">{proposalData.description}</p>
+                  </div>
+                  
+                  <div>
+                    <Label className="text-muted-foreground text-sm">Approach & Methodology</Label>
+                    <p className="mt-1">{proposalData.approachDetails}</p>
+                  </div>
+                  
+                  <Separator />
+                  
+                  <div>
+                    <Label className="text-muted-foreground text-sm mb-2 block">Pricing Structure</Label>
+                    <div className="flex items-center gap-2 font-medium">
+                      <DollarSign className="h-5 w-5 text-green-600" />
+                      {proposalData.pricingType === "fixed" && 
+                        <span>Fixed Fee: {formatCurrency(proposalData.pricingAmount)}</span>
+                      }
+                      
+                      {proposalData.pricingType === "hourly" && 
+                        <span>Hourly Rate: {formatCurrency(proposalData.pricingAmount)} per hour</span>
+                      }
+                      
+                      {proposalData.pricingType === "milestone" && 
+                        <span>Milestone-Based Payments (Secure Escrow)</span>
+                      }
+                    </div>
+                    
+                    {proposalData.pricingType === "milestone" && (
+                      <div className="mt-4 space-y-3">
+                        {proposalData.milestones.map((milestone, index) => (
+                          <div key={index} className="bg-muted/30 p-3 rounded-md">
+                            <div className="flex justify-between mb-1">
+                              <span className="font-medium">{milestone.title}</span>
+                              <span className="font-medium">{formatCurrency(milestone.amount)}</span>
+                            </div>
+                            <div className="flex justify-between text-sm text-muted-foreground">
+                              <span>Due: {milestone.dueDate ? new Date(milestone.dueDate).toLocaleDateString() : "Not specified"}</span>
+                            </div>
+                          </div>
+                        ))}
+                        
+                        <div className="flex justify-between font-medium pt-2">
+                          <span>Total Project Cost:</span>
+                          <span>
+                            {formatCurrency(
+                              proposalData.milestones
+                                .reduce((sum, m) => sum + (parseFloat(m.amount) || 0), 0)
+                                .toString()
+                            )}
+                          </span>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                  
+                  {proposalData.supportingDocs.length > 0 && (
+                    <>
+                      <Separator />
+                      <div>
+                        <Label className="text-muted-foreground text-sm">Supporting Documents</Label>
+                        <ul className="mt-2 space-y-1">
+                          {proposalData.supportingDocs.map((doc, index) => (
+                            <li key={index} className="flex items-center gap-2 text-sm">
+                              <FileText className="h-4 w-4 text-muted-foreground" />
+                              {doc}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <div className="bg-amber-50 border border-amber-200 rounded-md p-4 text-sm">
+            <p className="flex items-start gap-2">
+              <span className="text-amber-500 mt-1">⚠️</span>
+              <span>
+                By submitting this proposal, you agree to the Marketplace terms and conditions.
+                If your proposal is accepted and includes milestone-based payments, you acknowledge that
+                payments will be held in escrow until the client approves each milestone.
+              </span>
+            </p>
           </div>
           
-          <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-end">
-            <Button type="button" variant="outline">
-              Save as Draft
+          <div className="flex justify-between">
+            <Button variant="outline" onClick={prevStep} type="button">
+              Back
             </Button>
             <Button type="submit" disabled={isSubmitting}>
               {isSubmitting ? "Submitting..." : "Submit Proposal"}
             </Button>
           </div>
         </form>
-      </Form>
+      )}
     </div>
   );
 }

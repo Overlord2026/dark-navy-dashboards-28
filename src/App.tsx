@@ -17,6 +17,7 @@ import Investments from "./pages/Investments";
 import Marketplace from "./pages/Marketplace";
 import MarketplaceRfp from "./pages/MarketplaceRfp";
 import MarketplaceRfpDetail from "./pages/MarketplaceRfpDetail";
+import MarketplacePayments from "./pages/MarketplacePayments";
 import AlternativeAssetCategory from "./pages/AlternativeAssetCategory";
 import AdvisorProfile from "./pages/AdvisorProfile";
 import Lending from "./pages/Lending";
@@ -35,6 +36,7 @@ import { NetWorthProvider } from "@/context/NetWorthContext";
 import { ProfessionalsProvider } from "./hooks/useProfessionals";
 import { BillsProvider } from "./hooks/useBills";
 import { SubscriptionProvider } from "./context/SubscriptionContext";
+import { PaymentProvider } from "./context/PaymentContext";
 import Professionals from "./pages/Professionals";
 import BillsManagement from "./pages/BillsManagement";
 import AdvisorFeedback from "./pages/AdvisorFeedback";
@@ -50,53 +52,56 @@ function App() {
           <ProfessionalsProvider>
             <BillsProvider>
               <SubscriptionProvider>
-                <BrowserRouter>
-                  <Routes>
-                    {/* Public Routes */}
-                    <Route path="/home" element={<HomePage />} />
-                    <Route path="/login" element={<LoginPage isAdvisor={false} />} />
-                    <Route path="/advisor/login" element={<LoginPage isAdvisor={true} />} />
-                    
-                    {/* Client Dashboard Routes */}
-                    <Route path="/" element={<Index />} />
-                    <Route path="/customer-profile" element={<CustomerProfile />} />
-                    <Route path="/social-security" element={<SocialSecurity />} />
-                    <Route path="/legacy-vault" element={<LegacyVault />} />
-                    {/* Add redirect from /vault to /legacy-vault */}
-                    <Route path="/vault" element={<Navigate to="/legacy-vault" replace />} />
-                    <Route path="/accounts" element={<Accounts />} />
-                    <Route path="/properties" element={<Properties />} />
-                    <Route path="/documents" element={<Documents />} />
-                    <Route path="/tax-budgets" element={<TaxBudgets />} />
-                    <Route path="/education" element={<Education />} />
-                    <Route path="/education/course/:courseId" element={<Education />} />
-                    <Route path="/education/category/:categoryId" element={<Education />} />
-                    <Route path="/financial-plans" element={<FinancialPlans />} />
-                    <Route path="/investments" element={<Investments />} />
-                    <Route path="/marketplace" element={<Marketplace />} />
-                    <Route path="/marketplace/rfp" element={<MarketplaceRfp />} />
-                    <Route path="/marketplace/rfp/:id" element={<MarketplaceRfpDetail />} />
-                    <Route path="/investments/alternative/:categoryId" element={<AlternativeAssetCategory />} />
-                    <Route path="/advisor-profile" element={<AdvisorProfile />} />
-                    <Route path="/lending" element={<Lending />} />
-                    <Route path="/cash-management" element={<CashManagement />} />
-                    <Route path="/insurance" element={<Insurance />} />
-                    <Route path="/sharing" element={<Sharing />} />
-                    <Route path="/sharing/:sectionId" element={<Sharing />} />
-                    <Route path="/transfers" element={<Transfers />} />
-                    <Route path="/professionals" element={<Professionals />} />
-                    <Route path="/bills-management" element={<BillsManagement />} />
-                    <Route path="/subscription" element={<Subscription />} />
-                    <Route path="/admin/subscription" element={<AdminSubscription />} />
-                    <Route path="/advisor/onboarding" element={<AdvisorOnboarding />} />
-                    <Route path="/advisor/modules" element={<AdvisorModuleMarketplace />} />
-                    <Route path="/advisor-feedback" element={<AdvisorFeedback />} />
-                    <Route path="/system-diagnostics" element={<SystemDiagnostics />} />
-                    <Route path="/ip-protection" element={<IPProtection />} />
-                    <Route path="*" element={<NotFound />} />
-                  </Routes>
-                  <Toaster />
-                </BrowserRouter>
+                <PaymentProvider>
+                  <BrowserRouter>
+                    <Routes>
+                      {/* Public Routes */}
+                      <Route path="/home" element={<HomePage />} />
+                      <Route path="/login" element={<LoginPage isAdvisor={false} />} />
+                      <Route path="/advisor/login" element={<LoginPage isAdvisor={true} />} />
+                      
+                      {/* Client Dashboard Routes */}
+                      <Route path="/" element={<Index />} />
+                      <Route path="/customer-profile" element={<CustomerProfile />} />
+                      <Route path="/social-security" element={<SocialSecurity />} />
+                      <Route path="/legacy-vault" element={<LegacyVault />} />
+                      {/* Add redirect from /vault to /legacy-vault */}
+                      <Route path="/vault" element={<Navigate to="/legacy-vault" replace />} />
+                      <Route path="/accounts" element={<Accounts />} />
+                      <Route path="/properties" element={<Properties />} />
+                      <Route path="/documents" element={<Documents />} />
+                      <Route path="/tax-budgets" element={<TaxBudgets />} />
+                      <Route path="/education" element={<Education />} />
+                      <Route path="/education/course/:courseId" element={<Education />} />
+                      <Route path="/education/category/:categoryId" element={<Education />} />
+                      <Route path="/financial-plans" element={<FinancialPlans />} />
+                      <Route path="/investments" element={<Investments />} />
+                      <Route path="/marketplace" element={<Marketplace />} />
+                      <Route path="/marketplace/rfp" element={<MarketplaceRfp />} />
+                      <Route path="/marketplace/rfp/:id" element={<MarketplaceRfpDetail />} />
+                      <Route path="/marketplace/payments" element={<MarketplacePayments />} />
+                      <Route path="/investments/alternative/:categoryId" element={<AlternativeAssetCategory />} />
+                      <Route path="/advisor-profile" element={<AdvisorProfile />} />
+                      <Route path="/lending" element={<Lending />} />
+                      <Route path="/cash-management" element={<CashManagement />} />
+                      <Route path="/insurance" element={<Insurance />} />
+                      <Route path="/sharing" element={<Sharing />} />
+                      <Route path="/sharing/:sectionId" element={<Sharing />} />
+                      <Route path="/transfers" element={<Transfers />} />
+                      <Route path="/professionals" element={<Professionals />} />
+                      <Route path="/bills-management" element={<BillsManagement />} />
+                      <Route path="/subscription" element={<Subscription />} />
+                      <Route path="/admin/subscription" element={<AdminSubscription />} />
+                      <Route path="/advisor/onboarding" element={<AdvisorOnboarding />} />
+                      <Route path="/advisor/modules" element={<AdvisorModuleMarketplace />} />
+                      <Route path="/advisor-feedback" element={<AdvisorFeedback />} />
+                      <Route path="/system-diagnostics" element={<SystemDiagnostics />} />
+                      <Route path="/ip-protection" element={<IPProtection />} />
+                      <Route path="*" element={<NotFound />} />
+                    </Routes>
+                    <Toaster />
+                  </BrowserRouter>
+                </PaymentProvider>
               </SubscriptionProvider>
             </BillsProvider>
           </ProfessionalsProvider>
