@@ -115,21 +115,21 @@ export function EducationalTabs({
             Access our collection of comprehensive financial guides designed to help you navigate complex financial topics.
           </p>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card className="overflow-hidden">
-              <div className="relative pb-[65%] bg-muted">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <Card className="overflow-hidden group hover:shadow-lg transition-all">
+              <div className="relative pb-[140%] bg-muted">
                 <img 
-                  src="https://images.unsplash.com/photo-1579621970795-87facc2f976d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" 
-                  alt="Retirement Planning Guide" 
+                  src="/lovable-uploads/4a56e07f-ef12-47b6-b112-b240aba59bdf.png" 
+                  alt="Bitcoin and Blockchain Guide" 
                   className="absolute inset-0 w-full h-full object-cover"
                 />
               </div>
-              <CardHeader>
-                <CardTitle className="text-lg">Retirement Planning Guide</CardTitle>
-                <CardDescription>Comprehensive strategies for a secure retirement</CardDescription>
+              <CardHeader className="py-3">
+                <CardTitle className="text-lg">Bitcoin and Blockchain</CardTitle>
+                <CardDescription>A Retiree's Guide to Modern Wealth Management</CardDescription>
               </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground mb-4">A complete roadmap to planning your retirement, including income strategies, tax considerations, and legacy planning.</p>
+              <CardContent className="pt-0">
+                <p className="text-sm text-muted-foreground mb-4">Learn about cryptocurrency, blockchain technology, and its role in modern portfolio strategies.</p>
                 <Button 
                   variant="default" 
                   className="w-full"
@@ -140,20 +140,20 @@ export function EducationalTabs({
               </CardContent>
             </Card>
             
-            <Card className="overflow-hidden">
-              <div className="relative pb-[65%] bg-muted">
+            <Card className="overflow-hidden group hover:shadow-lg transition-all">
+              <div className="relative pb-[140%] bg-muted">
                 <img 
-                  src="https://images.unsplash.com/photo-1563986768609-322da13575f3?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" 
-                  alt="Estate Planning Guide" 
+                  src="/lovable-uploads/07bdac7d-9165-48f5-ab06-ade475828c83.png" 
+                  alt="13 Retirement Investment Blunders" 
                   className="absolute inset-0 w-full h-full object-cover"
                 />
               </div>
-              <CardHeader>
-                <CardTitle className="text-lg">Estate Planning Guide</CardTitle>
-                <CardDescription>Protecting your legacy and loved ones</CardDescription>
+              <CardHeader className="py-3">
+                <CardTitle className="text-lg">13 Retirement Investment Blunders</CardTitle>
+                <CardDescription>What Affluent Investors Need to Know</CardDescription>
               </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground mb-4">Essential information on wills, trusts, power of attorney, and strategies to minimize estate taxes and ensure your wishes are carried out.</p>
+              <CardContent className="pt-0">
+                <p className="text-sm text-muted-foreground mb-4">Essential advice on avoiding common investment mistakes that can derail your retirement plans.</p>
                 <Button 
                   variant="default" 
                   className="w-full"
@@ -164,20 +164,20 @@ export function EducationalTabs({
               </CardContent>
             </Card>
             
-            <Card className="overflow-hidden">
-              <div className="relative pb-[65%] bg-muted">
+            <Card className="overflow-hidden group hover:shadow-lg transition-all">
+              <div className="relative pb-[140%] bg-muted">
                 <img 
-                  src="https://images.unsplash.com/photo-1565372195458-9de0b320ef04?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" 
-                  alt="Tax Planning Strategies" 
+                  src="/lovable-uploads/8a734eac-b185-496b-8582-cc78d296a796.png" 
+                  alt="15 Risks That Can Derail Your Retirement" 
                   className="absolute inset-0 w-full h-full object-cover"
                 />
               </div>
-              <CardHeader>
-                <CardTitle className="text-lg">Tax Planning Strategies</CardTitle>
-                <CardDescription>Optimize your tax situation</CardDescription>
+              <CardHeader className="py-3">
+                <CardTitle className="text-lg">15 Risks That Can Derail Retirement</CardTitle>
+                <CardDescription>Protect your financial future</CardDescription>
               </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground mb-4">Advanced tax planning techniques to help minimize your tax burden and maximize your wealth across different life stages.</p>
+              <CardContent className="pt-0">
+                <p className="text-sm text-muted-foreground mb-4">Comprehensive overview of potential retirement risks and strategies to mitigate them.</p>
                 <Button 
                   variant="default" 
                   className="w-full"
@@ -188,20 +188,140 @@ export function EducationalTabs({
               </CardContent>
             </Card>
             
-            <Card className="overflow-hidden">
-              <div className="relative pb-[65%] bg-muted">
+            <Card className="overflow-hidden group hover:shadow-lg transition-all">
+              <div className="relative pb-[140%] bg-muted">
                 <img 
-                  src="https://images.unsplash.com/photo-1434626881859-194d67b2b86f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" 
-                  alt="Investment Strategy Guide" 
+                  src="/lovable-uploads/7d0f32fc-56fb-4bcb-a678-2f473a1ef54c.png" 
+                  alt="When to Retire Guide" 
                   className="absolute inset-0 w-full h-full object-cover"
                 />
               </div>
-              <CardHeader>
-                <CardTitle className="text-lg">Investment Strategy Guide</CardTitle>
-                <CardDescription>Building and preserving wealth</CardDescription>
+              <CardHeader className="py-3">
+                <CardTitle className="text-lg">When to Retire</CardTitle>
+                <CardDescription>A Quick and Easy Planning Guide</CardDescription>
               </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground mb-4">Comprehensive overview of investment strategies, asset allocation, risk management, and portfolio construction principles.</p>
+              <CardContent className="pt-0">
+                <p className="text-sm text-muted-foreground mb-4">Practical advice on timing your retirement for maximum financial security and lifestyle satisfaction.</p>
+                <Button 
+                  variant="default" 
+                  className="w-full"
+                  onClick={() => window.open("https://awmfl1-my.sharepoint.com/personal/rosielle_awmfl_com/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Frosielle%5Fawmfl%5Fcom%2FDocuments%2FAWMFL%20Guides%20%2D%20Final%20Draft%2FSecured%20Guides%202025&ct=1743196082829&or=OWA%2DNT%2DMail&ga=1&ls=true", "_blank", "noopener,noreferrer")}
+                >
+                  Access Guide <ExternalLink className="h-3 w-3 ml-1" />
+                </Button>
+              </CardContent>
+            </Card>
+            
+            <Card className="overflow-hidden group hover:shadow-lg transition-all">
+              <div className="relative pb-[140%] bg-muted">
+                <img 
+                  src="/lovable-uploads/06a287d8-9047-4181-8e04-88a782c65c19.png" 
+                  alt="Estate Planning Simplified" 
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+              </div>
+              <CardHeader className="py-3">
+                <CardTitle className="text-lg">Estate Planning Simplified</CardTitle>
+                <CardDescription>A Step-by-Step Guide</CardDescription>
+              </CardHeader>
+              <CardContent className="pt-0">
+                <p className="text-sm text-muted-foreground mb-4">Clear guidance on creating an effective estate plan to protect your assets and legacy.</p>
+                <Button 
+                  variant="default" 
+                  className="w-full"
+                  onClick={() => window.open("https://awmfl1-my.sharepoint.com/personal/rosielle_awmfl_com/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Frosielle%5Fawmfl%5Fcom%2FDocuments%2FAWMFL%20Guides%20%2D%20Final%20Draft%2FSecured%20Guides%202025&ct=1743196082829&or=OWA%2DNT%2DMail&ga=1&ls=true", "_blank", "noopener,noreferrer")}
+                >
+                  Access Guide <ExternalLink className="h-3 w-3 ml-1" />
+                </Button>
+              </CardContent>
+            </Card>
+            
+            <Card className="overflow-hidden group hover:shadow-lg transition-all">
+              <div className="relative pb-[140%] bg-muted">
+                <img 
+                  src="/lovable-uploads/d5b2e677-56c7-4359-85f0-d716de4168fa.png" 
+                  alt="Optimizing Social Security Benefits" 
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+              </div>
+              <CardHeader className="py-3">
+                <CardTitle className="text-lg">Optimizing Social Security Benefits</CardTitle>
+                <CardDescription>Maximize your retirement income</CardDescription>
+              </CardHeader>
+              <CardContent className="pt-0">
+                <p className="text-sm text-muted-foreground mb-4">Strategies to maximize your Social Security benefits as part of your overall retirement plan.</p>
+                <Button 
+                  variant="default" 
+                  className="w-full"
+                  onClick={() => window.open("https://awmfl1-my.sharepoint.com/personal/rosielle_awmfl_com/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Frosielle%5Fawmfl%5Fcom%2FDocuments%2FAWMFL%20Guides%20%2D%20Final%20Draft%2FSecured%20Guides%202025&ct=1743196082829&or=OWA%2DNT%2DMail&ga=1&ls=true", "_blank", "noopener,noreferrer")}
+                >
+                  Access Guide <ExternalLink className="h-3 w-3 ml-1" />
+                </Button>
+              </CardContent>
+            </Card>
+            
+            <Card className="overflow-hidden group hover:shadow-lg transition-all">
+              <div className="relative pb-[140%] bg-muted">
+                <img 
+                  src="/lovable-uploads/49235156-73d8-46ca-9404-c34512c3fafc.png" 
+                  alt="GPS to Retirement Hidden Tax Secrets" 
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+              </div>
+              <CardHeader className="py-3">
+                <CardTitle className="text-lg">GPS to Retirement Hidden Tax Secrets</CardTitle>
+                <CardDescription>Tax optimization strategies</CardDescription>
+              </CardHeader>
+              <CardContent className="pt-0">
+                <p className="text-sm text-muted-foreground mb-4">Insider tax planning strategies to minimize your tax burden during retirement.</p>
+                <Button 
+                  variant="default" 
+                  className="w-full"
+                  onClick={() => window.open("https://awmfl1-my.sharepoint.com/personal/rosielle_awmfl_com/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Frosielle%5Fawmfl%5Fcom%2FDocuments%2FAWMFL%20Guides%20%2D%20Final%20Draft%2FSecured%20Guides%202025&ct=1743196082829&or=OWA%2DNT%2DMail&ga=1&ls=true", "_blank", "noopener,noreferrer")}
+                >
+                  Access Guide <ExternalLink className="h-3 w-3 ml-1" />
+                </Button>
+              </CardContent>
+            </Card>
+            
+            <Card className="overflow-hidden group hover:shadow-lg transition-all">
+              <div className="relative pb-[140%] bg-muted">
+                <img 
+                  src="/lovable-uploads/94f35b13-8595-4066-b37f-2fb62be96029.png" 
+                  alt="Your GPS to Retirement Income Planning" 
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+              </div>
+              <CardHeader className="py-3">
+                <CardTitle className="text-lg">GPS to Retirement Income Planning</CardTitle>
+                <CardDescription>Secure your financial future</CardDescription>
+              </CardHeader>
+              <CardContent className="pt-0">
+                <p className="text-sm text-muted-foreground mb-4">Comprehensive approach to creating sustainable income streams throughout retirement.</p>
+                <Button 
+                  variant="default" 
+                  className="w-full"
+                  onClick={() => window.open("https://awmfl1-my.sharepoint.com/personal/rosielle_awmfl_com/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Frosielle%5Fawmfl%5Fcom%2FDocuments%2FAWMFL%20Guides%20%2D%20Final%20Draft%2FSecured%20Guides%202025&ct=1743196082829&or=OWA%2DNT%2DMail&ga=1&ls=true", "_blank", "noopener,noreferrer")}
+                >
+                  Access Guide <ExternalLink className="h-3 w-3 ml-1" />
+                </Button>
+              </CardContent>
+            </Card>
+            
+            <Card className="overflow-hidden group hover:shadow-lg transition-all">
+              <div className="relative pb-[140%] bg-muted">
+                <img 
+                  src="/lovable-uploads/63f104f0-65d0-47eb-b3ef-74ea0fb998e4.png" 
+                  alt="12 Common Estate Planning Mistakes" 
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+              </div>
+              <CardHeader className="py-3">
+                <CardTitle className="text-lg">12 Common Estate Planning Mistakes</CardTitle>
+                <CardDescription>And How to Avoid Them</CardDescription>
+              </CardHeader>
+              <CardContent className="pt-0">
+                <p className="text-sm text-muted-foreground mb-4">Critical guidance on avoiding the most common pitfalls in estate planning that can cost your family.</p>
                 <Button 
                   variant="default" 
                   className="w-full"
