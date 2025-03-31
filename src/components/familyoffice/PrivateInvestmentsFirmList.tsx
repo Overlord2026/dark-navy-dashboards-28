@@ -11,6 +11,7 @@ interface PrivateInvestmentsFirmListProps {
   isLoading: boolean;
   activeCategory: string;
   searchQuery: string;
+  setSearchQuery: (query: string) => void;
 }
 
 export function PrivateInvestmentsFirmList({ 
@@ -18,6 +19,7 @@ export function PrivateInvestmentsFirmList({
   isLoading,
   activeCategory,
   searchQuery,
+  setSearchQuery,
 }: PrivateInvestmentsFirmListProps) {
   
   const filteredFirms = useMemo(() => {

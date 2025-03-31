@@ -70,6 +70,7 @@ export default function PrivateInvestmentsPage() {
             isLoading={isLoading}
             activeCategory={activeCategory}
             searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
           />
         </div>
       </div>
