@@ -13,7 +13,7 @@ export const QuickActionsMenu = () => {
   };
 
   return (
-    <div className="flex items-center justify-center gap-3 w-full">
+    <div className="flex items-center justify-center gap-4 w-full">
       {/* Marketplace button */}
       <Button 
         variant="outline" 

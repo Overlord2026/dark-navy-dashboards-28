@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { FinancialOverview } from "@/components/dashboard/FinancialOverview";
@@ -21,12 +20,10 @@ export default function Index() {
   const { userProfile } = useUser();
   const [dashboardKey, setDashboardKey] = useState(Date.now());
 
-  // Force refresh of dashboard when profile changes
   useEffect(() => {
     setDashboardKey(Date.now());
   }, [userProfile]);
 
-  // Determine which banner to show based on trial status
   const renderTrialBanner = () => {
     if (!isInFreeTrial) return null;
     
@@ -41,11 +38,10 @@ export default function Index() {
 
   return (
     <ThreeColumnLayout title="Dashboard">
-      <div key={dashboardKey} className="space-y-4 px-4 py-2 max-w-7xl mx-auto">
+      <div key={dashboardKey} className="space-y-6 px-4 py-4 max-w-7xl mx-auto">
         {renderTrialBanner()}
         
-        {/* Center the QuickActionsMenu below the logo with minimal spacing */}
-        <div className="mb-2">
+        <div className="mb-4">
           <QuickActionsMenu />
         </div>
         
