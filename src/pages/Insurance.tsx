@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { ArrowLeft, ArrowRight, ChevronRight, X, CalendarPlus } from "lucide-react";
@@ -10,7 +9,7 @@ import { ScheduleMeetingDialog } from "@/components/investments/ScheduleMeetingD
 import { toast } from "sonner";
 
 // Insurance type definitions
-type InsuranceType = "term-life" | "permanent-life" | "annuities" | "long-term-care" | "healthcare" | "homeowners" | "automobile";
+type InsuranceType = "term-life" | "permanent-life" | "annuities" | "long-term-care" | "healthcare" | "homeowners" | "automobile" | "umbrella";
 type InsuranceProvider = "pinnacle" | "dpl" | "pacific" | "travelers";
 
 const Insurance = () => {
@@ -28,7 +27,7 @@ const Insurance = () => {
       setSelectedProvider("dpl");
     } else if (type === "healthcare") {
       setSelectedProvider("pacific");
-    } else if (type === "homeowners" || type === "automobile") {
+    } else if (type === "homeowners" || type === "automobile" || type === "umbrella") {
       setSelectedProvider("travelers");
     } else {
       setSelectedProvider("pinnacle");
@@ -148,7 +147,7 @@ const Insurance = () => {
               </div>
             </Card>
 
-            {/* Healthcare Card - NEW */}
+            {/* Healthcare Card */}
             <Card 
               className="bg-[#121a2c] border border-gray-800 overflow-hidden cursor-pointer hover:border-gray-600 transition-all"
               onClick={() => handleSelectType("healthcare")}
@@ -170,7 +169,7 @@ const Insurance = () => {
               </div>
             </Card>
 
-            {/* Homeowners Insurance Card - NEW */}
+            {/* Homeowners Insurance Card */}
             <Card 
               className="bg-[#121a2c] border border-gray-800 overflow-hidden cursor-pointer hover:border-gray-600 transition-all"
               onClick={() => handleSelectType("homeowners")}
@@ -192,7 +191,7 @@ const Insurance = () => {
               </div>
             </Card>
 
-            {/* Automobile Insurance Card - NEW */}
+            {/* Automobile Insurance Card */}
             <Card 
               className="bg-[#121a2c] border border-gray-800 overflow-hidden cursor-pointer hover:border-gray-600 transition-all"
               onClick={() => handleSelectType("automobile")}
@@ -210,6 +209,28 @@ const Insurance = () => {
                 </div>
                 <p className="text-gray-400">
                   Coverage for financial protection against physical damage or bodily injury resulting from traffic collisions and against liability.
+                </p>
+              </div>
+            </Card>
+            
+            {/* Umbrella Policies Card - NEW */}
+            <Card 
+              className="bg-[#121a2c] border border-gray-800 overflow-hidden cursor-pointer hover:border-gray-600 transition-all"
+              onClick={() => handleSelectType("umbrella")}
+            >
+              <div className="p-6 space-y-4">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-xl font-semibold">Umbrella Policies <ChevronRight className="inline h-5 w-5 opacity-70" /></h2>
+                </div>
+                <div className="h-40 flex items-center justify-center">
+                  <img 
+                    src="/lovable-uploads/86dc106a-1666-4334-909d-1ec7b1f114bc.png" 
+                    alt="Umbrella Policies" 
+                    className="h-24 w-auto opacity-70"
+                  />
+                </div>
+                <p className="text-gray-400">
+                  Additional liability insurance that provides protection beyond existing limits and coverages of your homeowners, auto, and boat insurance policies.
                 </p>
               </div>
             </Card>
@@ -403,6 +424,8 @@ function getInsuranceTitle(type: InsuranceType): string {
       return "Homeowners Insurance";
     case "automobile":
       return "Automobile Insurance";
+    case "umbrella":
+      return "Umbrella Policies";
     default:
       return "Insurance";
   }
@@ -424,6 +447,8 @@ function getInsuranceDescription(type: InsuranceType): string {
       return "Protection for your home and personal property against damage, theft, and liability for injuries and property damage.";
     case "automobile":
       return "Coverage for financial protection against physical damage or bodily injury resulting from traffic collisions and against liability.";
+    case "umbrella":
+      return "Additional liability insurance that provides protection beyond existing limits and coverages of your homeowners, auto, and boat insurance policies.";
     default:
       return "";
   }
@@ -456,6 +481,8 @@ function getProviderDescription(provider: InsuranceProvider | null, type: Insura
     case "travelers":
       return type === "homeowners" 
         ? "Travelers is one of the nation's largest providers of homeowners insurance, offering comprehensive protection for your home and belongings." 
+        : type === "umbrella"
+        ? "Travelers offers personal umbrella liability insurance that provides an extra layer of protection beyond your auto and home insurance policies."
         : "Travelers has been providing auto insurance protection for over 160 years, with a range of coverage options and discounts.";
     default:
       return "";
@@ -473,6 +500,8 @@ function getProviderWorkflow(provider: InsuranceProvider | null, type: Insurance
     case "travelers":
       return type === "homeowners"
         ? "Your advisor will collect details about your home, its contents, and your coverage needs to generate personalized quotes from Travelers. They'll help you select the most appropriate coverage options."
+        : type === "umbrella"
+        ? "Your advisor will review your existing coverages and assets to determine the appropriate umbrella policy limits. Travelers will generate quotes based on your risk profile and coverage needs."
         : "Your advisor will gather information about your vehicles, driving history, and coverage preferences to obtain competitive quotes from Travelers. They'll explain the different coverage options available.";
     default:
       return "";
@@ -490,6 +519,8 @@ function getProviderOtherOfferings(provider: InsuranceProvider | null, type: Ins
     case "travelers":
       return type === "homeowners"
         ? "Travelers also offers auto, umbrella, boat, and jewelry insurance to provide comprehensive protection for all your assets."
+        : type === "umbrella"
+        ? "Travelers offers homeowners, auto, boat, and business insurance to complement your umbrella coverage for complete protection."
         : "Travelers offers homeowners, umbrella, and business insurance products to complement your auto coverage.";
     default:
       return "";
