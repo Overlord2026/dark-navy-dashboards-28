@@ -12,27 +12,30 @@ import { UserProvider } from '@/context/UserContext';
 import { Toaster } from 'sonner';
 import Education from '@/pages/Education';
 import Index from '@/pages/Index';
+import { NetWorthProvider } from '@/context/NetWorthContext';
 
 function App() {
   return (
     <ThemeProvider>
       <UserProvider>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/landing" element={<HomePage />} />
-            <Route path="/login" element={<Navigate to="/" />} />
-            <Route path="/dashboard" element={<Index />} />
-            <Route path="/home" element={<Index />} />
-            <Route path="/profile" element={<CustomerProfile />} />
-            <Route path="/marketplace" element={<Marketplace />} />
-            <Route path="/family-office-directory" element={<FamilyOfficeDirectory />} />
-            <Route path="/data-import" element={<DataImportPage />} />
-            <Route path="/cash-management" element={<CashManagement />} />
-            <Route path="/education" element={<Education />} />
-          </Routes>
-        </BrowserRouter>
-        <Toaster />
+        <NetWorthProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/landing" element={<HomePage />} />
+              <Route path="/login" element={<Navigate to="/" />} />
+              <Route path="/dashboard" element={<Index />} />
+              <Route path="/home" element={<Index />} />
+              <Route path="/profile" element={<CustomerProfile />} />
+              <Route path="/marketplace" element={<Marketplace />} />
+              <Route path="/family-office-directory" element={<FamilyOfficeDirectory />} />
+              <Route path="/data-import" element={<DataImportPage />} />
+              <Route path="/cash-management" element={<CashManagement />} />
+              <Route path="/education" element={<Education />} />
+            </Routes>
+          </BrowserRouter>
+          <Toaster />
+        </NetWorthProvider>
       </UserProvider>
     </ThemeProvider>
   );
