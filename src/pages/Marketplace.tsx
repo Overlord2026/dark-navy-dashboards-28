@@ -7,7 +7,7 @@ import { MarketplaceContent } from "@/components/marketplace/MarketplaceContent"
 import { useMarketplace } from "@/hooks/useMarketplace";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { Building, Database } from "lucide-react";
+import { Building, Database, DollarSign, TrendingUp } from "lucide-react";
 
 export default function Marketplace() {
   // Default to first category
@@ -46,6 +46,21 @@ export default function Marketplace() {
               <Link to="/family-office-directory" className="flex items-center gap-2">
                 <Building className="h-4 w-4" />
                 Family Office Directory
+              </Link>
+            </Button>
+          </div>
+          
+          <div className="bg-blue-50 p-4 rounded-lg flex-1 flex flex-col sm:flex-row items-center justify-between">
+            <div>
+              <h3 className="font-semibold text-blue-800">Private Investments</h3>
+              <p className="text-blue-600 text-sm">
+                Access exclusive investment opportunities
+              </p>
+            </div>
+            <Button asChild className="mt-3 sm:mt-0" variant="default" className="bg-blue-600 hover:bg-blue-700">
+              <Link to="/private-investments" className="flex items-center gap-2">
+                <TrendingUp className="h-4 w-4" />
+                View Opportunities
               </Link>
             </Button>
           </div>
