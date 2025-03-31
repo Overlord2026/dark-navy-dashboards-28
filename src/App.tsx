@@ -14,6 +14,9 @@ import Education from '@/pages/Education';
 import Index from '@/pages/Index';
 import { NetWorthProvider } from '@/context/NetWorthContext';
 import { SubscriptionProvider } from '@/context/SubscriptionContext';
+import { BillsProvider } from '@/hooks/useBills';
+import Subscription from '@/pages/Subscription';
+import BillsManagement from '@/pages/BillsManagement';
 
 function App() {
   return (
@@ -21,22 +24,26 @@ function App() {
       <UserProvider>
         <SubscriptionProvider>
           <NetWorthProvider>
-            <BrowserRouter>
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/landing" element={<HomePage />} />
-                <Route path="/login" element={<Navigate to="/" />} />
-                <Route path="/dashboard" element={<Index />} />
-                <Route path="/home" element={<Index />} />
-                <Route path="/profile" element={<CustomerProfile />} />
-                <Route path="/marketplace" element={<Marketplace />} />
-                <Route path="/family-office-directory" element={<FamilyOfficeDirectory />} />
-                <Route path="/data-import" element={<DataImportPage />} />
-                <Route path="/cash-management" element={<CashManagement />} />
-                <Route path="/education" element={<Education />} />
-              </Routes>
-            </BrowserRouter>
-            <Toaster />
+            <BillsProvider>
+              <BrowserRouter>
+                <Routes>
+                  <Route path="/" element={<Index />} />
+                  <Route path="/landing" element={<HomePage />} />
+                  <Route path="/login" element={<Navigate to="/" />} />
+                  <Route path="/dashboard" element={<Index />} />
+                  <Route path="/home" element={<Index />} />
+                  <Route path="/profile" element={<CustomerProfile />} />
+                  <Route path="/marketplace" element={<Marketplace />} />
+                  <Route path="/family-office-directory" element={<FamilyOfficeDirectory />} />
+                  <Route path="/data-import" element={<DataImportPage />} />
+                  <Route path="/cash-management" element={<CashManagement />} />
+                  <Route path="/education" element={<Education />} />
+                  <Route path="/subscription" element={<Subscription />} />
+                  <Route path="/bills-management" element={<BillsManagement />} />
+                </Routes>
+              </BrowserRouter>
+              <Toaster />
+            </BillsProvider>
           </NetWorthProvider>
         </SubscriptionProvider>
       </UserProvider>
