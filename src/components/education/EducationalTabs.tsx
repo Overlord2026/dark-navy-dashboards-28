@@ -52,14 +52,14 @@ export function EducationalTabs({
             onClick={() => setActiveSection("books")}
             className={`${activeSection === "books" ? "bg-background shadow-sm" : ""} px-6 py-2 text-sm font-medium transition-colors`}
           >
-            Recommended Reading
+            Books
           </TabsTrigger>
           <TabsTrigger 
-            value="allocation-models" 
-            onClick={() => setActiveSection("allocation-models")}
-            className={`${activeSection === "allocation-models" ? "bg-background shadow-sm" : ""} px-6 py-2 text-sm font-medium transition-colors`}
+            value="whitepapers" 
+            onClick={() => setActiveSection("whitepapers")}
+            className={`${activeSection === "whitepapers" ? "bg-background shadow-sm" : ""} px-6 py-2 text-sm font-medium transition-colors`}
           >
-            Allocation Models
+            Whitepapers
           </TabsTrigger>
         </TabsList>
       </div>
@@ -125,7 +125,7 @@ export function EducationalTabs({
       
       <TabsContent value="books" className="animate-fade-in">
         <div className="space-y-6">
-          <h3 className="text-xl font-semibold mb-4">Recommended Reading</h3>
+          <h3 className="text-xl font-semibold mb-4">Recommended Books</h3>
           
           <div className="mb-8">
             <div className="flex items-center mb-4">
@@ -209,62 +209,78 @@ export function EducationalTabs({
         </div>
       </TabsContent>
       
-      <TabsContent value="allocation-models" className="animate-fade-in">
+      <TabsContent value="whitepapers" className="animate-fade-in">
         <div className="space-y-6">
           <div className="mb-6">
-            <h3 className="text-xl font-semibold mb-2">Intelligent Allocation Models</h3>
+            <h3 className="text-xl font-semibold mb-2">Research & Whitepapers</h3>
             <p className="text-muted-foreground">
-              Our proprietary allocation models are designed to optimize your portfolio based on your risk tolerance, time horizon, and financial goals.
+              Access our collection of in-depth research papers and whitepapers on various financial topics.
             </p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {coursesByCategory["intelligent-allocation"]?.map((course) => (
-              <CourseCard
-                key={course.id}
-                {...course}
-                onClick={() => handleCourseEnrollment(course.id, course.title, course.isPaid, course.ghlUrl)}
-              />
-            ))}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-base">Retirement Income Planning</CardTitle>
+                <CardDescription>Published: June 2023</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground mb-4">An in-depth analysis of sustainable retirement income strategies in the current economic environment.</p>
+                <Button 
+                  variant="default" 
+                  className="w-full"
+                  onClick={() => window.open("https://ghl.example.com/whitepapers/retirement-income", "_blank", "noopener,noreferrer")}
+                >
+                  Download PDF
+                </Button>
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-base">Tax Optimization Strategies</CardTitle>
+                <CardDescription>Published: March 2023</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground mb-4">Research on advanced tax planning techniques for high net worth individuals.</p>
+                <Button 
+                  variant="default" 
+                  className="w-full"
+                  onClick={() => window.open("https://ghl.example.com/whitepapers/tax-optimization", "_blank", "noopener,noreferrer")}
+                >
+                  Download PDF
+                </Button>
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-base">Estate Planning Best Practices</CardTitle>
+                <CardDescription>Published: January 2023</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground mb-4">Comprehensive research on modern estate planning strategies for wealth preservation.</p>
+                <Button 
+                  variant="default" 
+                  className="w-full"
+                  onClick={() => window.open("https://ghl.example.com/whitepapers/estate-planning", "_blank", "noopener,noreferrer")}
+                >
+                  Download PDF
+                </Button>
+              </CardContent>
+            </Card>
           </div>
           
           <div className="mt-8 p-6 bg-primary/5 rounded-lg border border-primary/10">
-            <h4 className="text-lg font-semibold mb-2">Video Demonstrations</h4>
-            <p className="mb-4">Watch video demonstrations of our Intelligent Allocation Models in action.</p>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-base">Conservative Model</CardTitle>
-                  <CardDescription>Suitable for near-term goals or low risk tolerance</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Button 
-                    variant="default" 
-                    className="w-full"
-                    onClick={() => window.open("https://ghl.example.com/videos/conservative-model", "_blank", "noopener,noreferrer")}
-                  >
-                    Watch Video
-                  </Button>
-                </CardContent>
-              </Card>
-              
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-base">Moderate Growth Model</CardTitle>
-                  <CardDescription>Balanced approach for medium-term goals</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Button 
-                    variant="default" 
-                    className="w-full"
-                    onClick={() => window.open("https://ghl.example.com/videos/moderate-model", "_blank", "noopener,noreferrer")}
-                  >
-                    Watch Video
-                  </Button>
-                </CardContent>
-              </Card>
-            </div>
+            <h4 className="text-lg font-semibold mb-2">Request Custom Research</h4>
+            <p className="mb-4">Need information on a specific financial topic? Our team can prepare custom research papers tailored to your needs.</p>
+            <Button 
+              variant="outline" 
+              className="w-full md:w-auto"
+              onClick={() => window.open("https://ghl.example.com/request-research", "_blank", "noopener,noreferrer")}
+            >
+              Request Custom Research
+            </Button>
           </div>
         </div>
       </TabsContent>

@@ -21,7 +21,11 @@ export default function Education() {
       setActiveCategory(category);
       setActiveSection("courses");
     } else if (section) {
-      setActiveSection(section);
+      // Make sure we validate that the section exists
+      const validSections = ["courses", "guides", "books", "whitepapers"];
+      if (validSections.includes(section)) {
+        setActiveSection(section);
+      }
     }
   }, [searchParams]);
 
