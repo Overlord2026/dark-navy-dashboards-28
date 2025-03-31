@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { ModularLayout } from "@/components/layout/ModularLayout";
 import { FinancialOverview } from "@/components/dashboard/FinancialOverview";
@@ -14,9 +13,6 @@ import { MidTrialBanner } from "@/components/dashboard/MidTrialBanner";
 import { useSubscription } from "@/context/SubscriptionContext";
 import { QuickActionsMenu } from "@/components/dashboard/QuickActionsMenu";
 import { useUser } from "@/context/UserContext";
-import { SystemDiagnosticsButton } from "@/components/diagnostics/SystemDiagnosticsButton";
-import { DiagnosticsOverview } from "@/components/diagnostics/DiagnosticsOverview";
-import { QuickDiagnosticsButton } from "@/components/diagnostics/QuickDiagnosticsButton";
 
 export default function Index() {
   const { assets } = useNetWorth();
@@ -47,8 +43,7 @@ export default function Index() {
       <div key={dashboardKey} className="space-y-4 px-4 py-2 max-w-7xl mx-auto">
         {renderTrialBanner()}
         
-        <div className="mt-1 flex justify-between items-center">
-          <QuickDiagnosticsButton />
+        <div className="mt-1 flex justify-end">
           <QuickActionsMenu />
         </div>
         
@@ -56,13 +51,12 @@ export default function Index() {
           <FinancialOverview />
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <NetWorthSummary />
           <div className="space-y-5">
             <ExpenseOptimizationCard />
             <TaxPlanningSummary />
           </div>
-          <DiagnosticsOverview />
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">

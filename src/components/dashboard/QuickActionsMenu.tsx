@@ -9,10 +9,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { ChevronDown, Code, FileText, HelpCircle, RefreshCcw, Printer, Activity, Shield } from "lucide-react";
+import { ChevronDown, Code, FileText, HelpCircle, RefreshCcw, Printer } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { SystemDiagnosticsButton } from "@/components/diagnostics/SystemDiagnosticsButton";
 
 export function QuickActionsMenu() {
   const navigate = useNavigate();
@@ -91,8 +90,8 @@ export function QuickActionsMenu() {
         <DropdownMenuSeparator />
         
         <DropdownMenuItem onClick={handleRunDiagnostics}>
-          <Activity className="mr-2 h-4 w-4" />
-          <span>Run Full Diagnostics</span>
+          <RefreshCcw className="mr-2 h-4 w-4" />
+          <span>Run System Diagnostics</span>
         </DropdownMenuItem>
         
         <DropdownMenuItem onClick={handleViewLogs}>
