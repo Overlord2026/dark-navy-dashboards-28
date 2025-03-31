@@ -7,13 +7,13 @@ import { Link } from "react-router-dom";
 
 export const Header = () => {
   return (
-    <div className="w-full px-4 py-3 flex flex-col items-center justify-between bg-transparent z-10">
-      {/* Prominent logo at top center */}
-      <div className="w-full flex justify-center mb-4">
+    <div className="w-full px-4 py-2 flex flex-col items-center justify-between bg-transparent z-10">
+      {/* Prominent logo at top center with reduced spacing */}
+      <div className="w-full flex justify-center mb-2">
         <img 
           src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" 
           alt="Boutique Family Office Logo" 
-          className="h-20 w-auto"
+          className="h-16 w-auto"
         />
       </div>
       

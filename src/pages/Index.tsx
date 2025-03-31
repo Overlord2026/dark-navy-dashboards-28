@@ -41,11 +41,11 @@ export default function Index() {
 
   return (
     <ThreeColumnLayout title="Dashboard">
-      <div key={dashboardKey} className="space-y-6 px-4 py-6 max-w-7xl mx-auto">
+      <div key={dashboardKey} className="space-y-4 px-4 py-2 max-w-7xl mx-auto">
         {renderTrialBanner()}
         
-        {/* Center the QuickActionsMenu below the logo */}
-        <div className="mb-6">
+        {/* Center the QuickActionsMenu below the logo with minimal spacing */}
+        <div className="mb-2">
           <QuickActionsMenu />
         </div>
         

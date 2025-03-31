@@ -13,25 +13,23 @@ export const QuickActionsMenu = () => {
   };
 
   return (
-    <div className="flex flex-col items-center w-full">
-      <div className="flex items-center justify-center gap-4 mt-4">
-        {/* Marketplace button */}
-        <Button 
-          variant="outline" 
-          className="gap-2" 
-          asChild
-          onClick={() => handleQuickAction("Marketplace")}
-        >
-          <Link to="/marketplace">
-            <ShoppingBag className="h-4 w-4" />
-            Marketplace
-          </Link>
-        </Button>
+    <div className="flex items-center justify-center gap-3 w-full">
+      {/* Marketplace button */}
+      <Button 
+        variant="outline" 
+        className="gap-2" 
+        asChild
+        onClick={() => handleQuickAction("Marketplace")}
+      >
+        <Link to="/marketplace">
+          <ShoppingBag className="h-4 w-4" />
+          Marketplace
+        </Link>
+      </Button>
 
-        {/* Diagnostic buttons - these components already exist */}
-        <QuickDiagnosticsButton />
-        <DiagnosticsAccessButton />
-      </div>
+      {/* Diagnostic buttons - these components already exist */}
+      <QuickDiagnosticsButton />
+      <DiagnosticsAccessButton />
     </div>
   );
 };
