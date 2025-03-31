@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useUser } from "@/context/UserContext";
 import { checkDiagnosticsAccess } from "@/services/diagnostics/permissionManagement";
+import { auditLog } from "@/services/auditLog/auditLogService";
 
 export const QuickDiagnosticsButton = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -41,6 +42,24 @@ export const QuickDiagnosticsButton = () => {
     }
   }, [isAdmin, isDeveloper, userProfile?.id]);
 
+  const handleOpenDiagnostics = () => {
+    // Log successful access
+    auditLog.log(
+      userProfile?.id || "system",
+      "document_access",
+      "success",
+      {
+        userName: userProfile?.name || "Unknown User",
+        userRole: userRole,
+        resourceType: "quickDiagnostics",
+        details: { action: "Run quick diagnostics" }
+      }
+    );
+    
+    setIsDialogOpen(true);
+    toast.success("Diagnostics tool opened");
+  };
+
   if (!hasAccess) return null;
 
   return (
@@ -52,10 +71,7 @@ export const QuickDiagnosticsButton = () => {
               variant="outline" 
               size="sm" 
               className="gap-2"
-              onClick={() => {
-                setIsDialogOpen(true);
-                toast.success("Diagnostics tool opened");
-              }}
+              onClick={handleOpenDiagnostics}
             >
               <Bug className="h-4 w-4" />
               <span>Run Diagnostics</span>

@@ -4,11 +4,45 @@ import { DeveloperAccessManager } from "@/components/settings/DeveloperAccessMan
 import { useUser } from "@/context/UserContext";
 import { Navigate } from "react-router-dom";
 import { toast } from "sonner";
+import { auditLog } from "@/services/auditLog/auditLogService";
+import { useEffect } from "react";
 
 export default function DeveloperAccessControl() {
   const { userProfile } = useUser();
   const userRole = userProfile?.role || "client";
   const isAdmin = userRole === "admin" || userRole === "system_administrator";
+
+  // Log page access
+  useEffect(() => {
+    if (isAdmin && userProfile?.id) {
+      // Log successful access to the developer access control page
+      auditLog.log(
+        userProfile.id,
+        "document_access",
+        "success",
+        {
+          userName: userProfile.name || "Unknown Administrator",
+          userRole: userRole,
+          resourceType: "developerAccessControl",
+          details: { action: "Access developer permissions page" }
+        }
+      );
+    } else if (userProfile?.id) {
+      // Log unauthorized access attempt
+      auditLog.log(
+        userProfile.id,
+        "document_access",
+        "failure",
+        {
+          userName: userProfile.name || "Unknown User",
+          userRole: userRole,
+          resourceType: "developerAccessControl",
+          details: { action: "Access developer permissions page" },
+          reason: "Insufficient permissions - admin access required"
+        }
+      );
+    }
+  }, [isAdmin, userProfile, userRole]);
 
   // Redirect non-admin users
   if (!isAdmin) {

@@ -12,18 +12,82 @@ import { useUser } from "@/context/UserContext";
 import { Navigate, Link } from "react-router-dom";
 import { ShieldX, Users, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { auditLog } from "@/services/auditLog/auditLogService";
+import { checkDiagnosticsAccess } from "@/services/diagnostics/permissionManagement";
 
 export default function SystemDiagnostics() {
   const [isLoading, setIsLoading] = useState(false);
   const [report, setReport] = useState<any>(null);
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
   const [pageAccessError, setPageAccessError] = useState<string | null>(null);
+  const [hasAccess, setHasAccess] = useState(false);
   const { userProfile } = useUser();
   const userRole = userProfile?.role || "client";
   const isAdmin = userRole === "admin" || userRole === "system_administrator";
+  const isDeveloper = userRole === "developer" || userRole === "consultant";
 
-  // Redirect non-admin users
-  if (!isAdmin) {
+  // Check access based on role
+  useEffect(() => {
+    const checkAccess = async () => {
+      // Administrators always have access
+      if (isAdmin) {
+        setHasAccess(true);
+        return;
+      }
+      
+      // Developers need explicit permission
+      if (isDeveloper && userProfile?.id) {
+        try {
+          const canAccess = await checkDiagnosticsAccess(userProfile.id, 'systemDiagnostics');
+          setHasAccess(canAccess);
+          
+          // Log the access check result
+          if (!canAccess) {
+            auditLog.log(
+              userProfile.id,
+              "document_access",
+              "failure",
+              {
+                userName: userProfile.name || "Unknown Developer",
+                userRole: userRole,
+                resourceType: "systemDiagnostics",
+                details: { action: "Access system diagnostics page" },
+                reason: "Insufficient permissions - access not granted"
+              }
+            );
+          }
+        } catch (error) {
+          console.error("Failed to check access:", error);
+          setHasAccess(false);
+          setPageAccessError("Error checking access permissions");
+        }
+      } else {
+        setHasAccess(false);
+      }
+    };
+    
+    checkAccess();
+  }, [isAdmin, isDeveloper, userProfile, userRole]);
+  
+  // Log successful page access
+  useEffect(() => {
+    if (hasAccess && userProfile?.id) {
+      auditLog.log(
+        userProfile.id,
+        "document_access",
+        "success",
+        {
+          userName: userProfile.name || "Unknown User",
+          userRole: userRole,
+          resourceType: "systemDiagnostics",
+          details: { action: "Access system diagnostics page" }
+        }
+      );
+    }
+  }, [hasAccess, userProfile, userRole]);
+
+  // Redirect users without access
+  if (!hasAccess) {
     toast.error("You don't have permission to access the diagnostics page");
     return <Navigate to="/" replace />;
   }
@@ -64,6 +128,21 @@ export default function SystemDiagnostics() {
     setPageAccessError(null);
     logger.info("Starting system health check", undefined, "SystemDiagnostics");
     
+    // Log diagnostics run in audit log
+    if (userProfile?.id) {
+      auditLog.log(
+        userProfile.id,
+        "settings_change",
+        "success",
+        {
+          userName: userProfile.name || "Unknown User",
+          userRole: userRole,
+          resourceType: "systemDiagnostics",
+          details: { action: "Run system health check" }
+        }
+      );
+    }
+    
     try {
       const diagnosticReport = await runDiagnostics();
       setReport(diagnosticReport);
@@ -74,11 +153,46 @@ export default function SystemDiagnostics() {
       
       logger.info("System health check completed successfully", undefined, "SystemDiagnostics");
       toast.success("System health check completed");
+      
+      // Log successful diagnostics completion
+      if (userProfile?.id) {
+        auditLog.log(
+          userProfile.id,
+          "settings_change",
+          "success",
+          {
+            userName: userProfile.name || "Unknown User",
+            userRole: userRole,
+            resourceType: "systemDiagnostics",
+            details: { 
+              action: "Complete system health check",
+              result: diagnosticReport.overall,
+              testsRun: Object.keys(diagnosticReport).length - 2 // Exclude timestamp and overall
+            }
+          }
+        );
+      }
     } catch (error) {
       console.error("Diagnostic error:", error);
       logger.error("Failed to complete system health check", error, "SystemDiagnostics");
       toast.error("Failed to complete system health check");
       setPageAccessError("Could not complete diagnostics. Please try again later.");
+      
+      // Log failed diagnostics run
+      if (userProfile?.id) {
+        auditLog.log(
+          userProfile.id,
+          "settings_change",
+          "failure",
+          {
+            userName: userProfile.name || "Unknown User",
+            userRole: userRole,
+            resourceType: "systemDiagnostics",
+            details: { action: "Run system health check" },
+            reason: error instanceof Error ? error.message : "Unknown error"
+          }
+        );
+      }
     } finally {
       setIsLoading(false);
     }

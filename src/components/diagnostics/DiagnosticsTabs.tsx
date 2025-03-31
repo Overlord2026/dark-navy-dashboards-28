@@ -1,4 +1,5 @@
 
+import React, { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CoreServicesSummary } from "./CoreServicesSummary";
 import { NavigationTests } from "./NavigationTests";
@@ -8,107 +9,144 @@ import { FormValidationTests } from "./FormValidationTests";
 import { ApiIntegrationTests } from "./ApiIntegrationTests";
 import { RoleSimulationTests } from "./RoleSimulationTests";
 import { PerformanceTests } from "./PerformanceTests";
-import { RecommendationsList, Recommendation } from "./RecommendationsList";
+import { SecurityTests } from "./SecurityTests";
+import { RecommendationsList } from "./RecommendationsList";
 import { LogViewer } from "./LogViewer";
 import { LoggingConfiguration } from "./LoggingConfiguration";
-import { SecurityTests } from "./SecurityTests";
 import { AuditLogViewer } from "./AuditLogViewer";
+import { useUser } from "@/context/UserContext";
+import { DiagnosticsAuditViewer } from "./DiagnosticsAuditViewer";
 
-interface DiagnosticsTabsProps {
+type DiagnosticsTabsProps = {
   report: any;
-  recommendations: string[] | Recommendation[];
+  recommendations: any[];
   isLoading: boolean;
-}
+};
 
-export const DiagnosticsTabs = ({ report, recommendations, isLoading }: DiagnosticsTabsProps) => {
-  if (!report) return null;
-
-  // Calculate test counts
-  const navigationTestCount = report.navigationTests ? {
-    total: report.navigationTests.length,
-    passed: report.navigationTests.filter((t: any) => t.status === 'success').length
-  } : undefined;
-
-  const formsTestCount = report.formValidationTests ? {
-    total: report.formValidationTests.length,
-    passed: report.formValidationTests.filter((t: any) => t.status === 'success').length
-  } : undefined;
-
-  const apiTestCount = report.apiIntegrationTests ? {
-    total: report.apiIntegrationTests.length,
-    passed: report.apiIntegrationTests.filter((t: any) => t.status === 'success').length
-  } : undefined;
-
-  const authTestCount = report.securityTests ? {
-    total: report.securityTests.filter((t: any) => t.category === 'authentication').length,
-    passed: report.securityTests.filter((t: any) => 
-      t.category === 'authentication' && t.status === 'success'
-    ).length
-  } : undefined;
-
+export const DiagnosticsTabs = ({ 
+  report, 
+  recommendations, 
+  isLoading 
+}: DiagnosticsTabsProps) => {
+  const [activeTab, setActiveTab] = useState("overview");
+  const { userProfile } = useUser();
+  const userRole = userProfile?.role || "client";
+  const isAdmin = userRole === "admin" || userRole === "system_administrator";
+  
   return (
-    <Tabs defaultValue="overview" className="space-y-4">
-      <TabsList className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 w-full">
+    <Tabs 
+      defaultValue="overview" 
+      value={activeTab}
+      onValueChange={setActiveTab}
+      className="space-y-4"
+    >
+      <TabsList className="grid grid-cols-2 md:grid-cols-5 lg:grid-cols-9 gap-1">
         <TabsTrigger value="overview">Overview</TabsTrigger>
-        <TabsTrigger value="details">Details</TabsTrigger>
-        <TabsTrigger value="security">Security</TabsTrigger>
+        <TabsTrigger value="navigation">Navigation</TabsTrigger>
+        <TabsTrigger value="permissions">Permissions</TabsTrigger>
+        <TabsTrigger value="forms">Forms</TabsTrigger>
+        <TabsTrigger value="api">API</TabsTrigger>
+        <TabsTrigger value="roles">Roles</TabsTrigger>
         <TabsTrigger value="performance">Performance</TabsTrigger>
-        <TabsTrigger value="logs">Logs</TabsTrigger>
+        <TabsTrigger value="security">Security</TabsTrigger>
         <TabsTrigger value="recommendations">Recommendations</TabsTrigger>
+        {isAdmin && (
+          <>
+            <TabsTrigger value="logs">System Logs</TabsTrigger>
+            <TabsTrigger value="audit-logs">Security Audit</TabsTrigger>
+            <TabsTrigger value="diagnostics-logs">Diagnostics Audit</TabsTrigger>
+          </>
+        )}
       </TabsList>
 
-      <TabsContent value="overview" className="space-y-4">
-        <CoreServicesSummary 
-          navigation={report.navigation}
-          forms={report.forms}
-          database={report.database}
-          api={report.api}
-          authentication={report.authentication}
-          navigationTestCount={navigationTestCount}
-          formsTestCount={formsTestCount}
-          apiTestCount={apiTestCount}
-          authTestCount={authTestCount}
+      {/* Overview Tab */}
+      <TabsContent value="overview">
+        <CoreServicesSummary report={report} isLoading={isLoading} />
+      </TabsContent>
+
+      {/* Navigation Tab */}
+      <TabsContent value="navigation">
+        <NavigationTests 
+          tests={report?.navigationTests || []}
+          isLoading={isLoading}
         />
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <NavigationTests tests={report.navigationTests} />
-          <ApiIntegrationTests tests={report.apiIntegrationTests} />
-        </div>
       </TabsContent>
 
-      <TabsContent value="details" className="space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <IconTests tests={report.iconTests} />
-          <FormValidationTests tests={report.formValidationTests} />
-        </div>
+      {/* Permissions Tab */}
+      <TabsContent value="permissions">
+        <PermissionTests 
+          tests={report?.permissionsTests || []}
+          isLoading={isLoading}
+        />
       </TabsContent>
 
-      <TabsContent value="security" className="space-y-4">
-        <div className="grid grid-cols-1 gap-4">
-          <SecurityTests tests={report.securityTests || []} />
-          <PermissionTests tests={report.permissionsTests} />
-          <RoleSimulationTests tests={report.roleSimulationTests} />
-        </div>
-        <div className="grid grid-cols-1 gap-4">
-          <AuditLogViewer />
-        </div>
+      {/* Forms Tab */}
+      <TabsContent value="forms">
+        <FormValidationTests 
+          tests={report?.formValidationTests || []}
+          isLoading={isLoading}
+        />
       </TabsContent>
 
-      <TabsContent value="performance" className="space-y-4">
-        <PerformanceTests tests={report.performanceTests} />
+      {/* API Tab */}
+      <TabsContent value="api">
+        <ApiIntegrationTests 
+          tests={report?.apiIntegrationTests || []}
+          isLoading={isLoading}
+        />
       </TabsContent>
 
-      <TabsContent value="logs" className="space-y-4">
-        <div className="grid grid-cols-1 gap-4">
-          <LogViewer />
-        </div>
-        <div className="grid grid-cols-1 gap-4">
-          <LoggingConfiguration />
-        </div>
+      {/* Roles Tab */}
+      <TabsContent value="roles">
+        <RoleSimulationTests 
+          tests={report?.roleSimulationTests || []}
+          isLoading={isLoading}
+        />
       </TabsContent>
 
+      {/* Performance Tab */}
+      <TabsContent value="performance">
+        <PerformanceTests 
+          tests={report?.performanceTests || []}
+          isLoading={isLoading}
+        />
+      </TabsContent>
+
+      {/* Security Tab */}
+      <TabsContent value="security">
+        <SecurityTests 
+          tests={report?.securityTests || []}
+          isLoading={isLoading}
+        />
+      </TabsContent>
+
+      {/* Recommendations Tab */}
       <TabsContent value="recommendations">
-        <RecommendationsList recommendations={recommendations} isLoading={isLoading} />
+        <RecommendationsList 
+          recommendations={recommendations}
+          isLoading={isLoading}
+        />
       </TabsContent>
+
+      {/* Admin-only tabs */}
+      {isAdmin && (
+        <>
+          <TabsContent value="logs">
+            <div className="grid grid-cols-1 gap-8">
+              <LoggingConfiguration />
+              <LogViewer />
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="audit-logs">
+            <AuditLogViewer />
+          </TabsContent>
+          
+          <TabsContent value="diagnostics-logs">
+            <DiagnosticsAuditViewer />
+          </TabsContent>
+        </>
+      )}
     </Tabs>
   );
 };

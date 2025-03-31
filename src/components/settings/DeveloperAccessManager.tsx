@@ -21,6 +21,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { useUser } from "@/context/UserContext";
 import { getDevelopers, updateDeveloperAccess } from "@/services/diagnostics/permissionManagement";
+import { auditLog } from "@/services/auditLog/auditLogService";
 
 interface Developer {
   id: string;
@@ -58,6 +59,9 @@ export function DeveloperAccessManager() {
   
   const handleAccessChange = async (developerId: string, accessType: 'diagnostics' | 'systemDiagnostics', value: boolean) => {
     try {
+      // Get developer info for audit log
+      const developer = developers.find(dev => dev.id === developerId);
+      
       // Update the local state optimistically
       setDevelopers(prevDevelopers => 
         prevDevelopers.map(dev => 
@@ -74,11 +78,49 @@ export function DeveloperAccessManager() {
       // Send update to API (simulated)
       await updateDeveloperAccess(developerId, accessType, value);
       
+      // Log the permission change in audit logs
+      auditLog.log(
+        userProfile?.id || "admin",
+        "permission_change",
+        "success",
+        {
+          userName: userProfile?.name || "Unknown Administrator",
+          userRole: userRole,
+          resourceType: "developerAccess",
+          resourceId: developerId,
+          details: { 
+            action: value ? "Grant access" : "Revoke access",
+            accessType: accessType,
+            developerName: developer?.name || "Unknown Developer",
+            developerEmail: developer?.email || "Unknown Email",
+            developerRole: developer?.role || "Unknown Role",
+          }
+        }
+      );
+      
       // Show success message
       toast.success(`Access ${value ? 'granted' : 'revoked'} successfully`);
     } catch (error) {
       console.error(`Failed to update ${accessType} access:`, error);
       toast.error(`Failed to update access`);
+      
+      // Log the failed permission change attempt
+      auditLog.log(
+        userProfile?.id || "admin",
+        "permission_change",
+        "failure",
+        {
+          userName: userProfile?.name || "Unknown Administrator",
+          userRole: userRole,
+          resourceType: "developerAccess",
+          resourceId: developerId,
+          details: { 
+            action: value ? "Grant access" : "Revoke access",
+            accessType: accessType
+          },
+          reason: error instanceof Error ? error.message : "Unknown error"
+        }
+      );
       
       // Revert the local state change since the server update failed
       setDevelopers(prevDevelopers => [...prevDevelopers]);
