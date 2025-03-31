@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext, ReactNode, useState } from 'react';
+import React, { createContext, useContext, ReactNode } from 'react';
 import { Bill, BillCategory, BillOptimizationInsight } from '@/types/bill';
 import { useBillsManagement, BillsManagementHook } from './useBillsManagement';
 import { useInsightsManagement, InsightsManagementHook } from './useInsightsManagement';
@@ -11,10 +11,7 @@ interface BillsContextProps extends BillsManagementHook, InsightsManagementHook 
 const BillsContext = createContext<BillsContextProps | undefined>(undefined);
 
 export function BillsProvider({ children }: { children: ReactNode }) {
-  // First initialize the bills hook
   const billsManagement = useBillsManagement();
-  
-  // Then pass the bills to the insights hook
   const insightsManagement = useInsightsManagement(billsManagement.bills);
 
   // Combine both hooks into a single context
