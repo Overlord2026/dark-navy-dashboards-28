@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { cn } from "@/lib/utils";
 import { 
@@ -24,7 +23,8 @@ import {
   ShieldIcon,
   BanknoteIcon,
   ArrowLeftRightIcon,
-  CalculatorIcon
+  CalculatorIcon,
+  ShoppingBag
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "react-router-dom";
@@ -47,9 +47,9 @@ const mainNavItems: NavItem[] = [
   { icon: CoinsIcon, label: "Cash Management", href: "/cash-management" },
   { icon: ArrowLeftRightIcon, label: "Transfers", href: "/transfers" },
   { icon: CalculatorIcon, label: "Tax & Budgets", href: "/tax-budgets" },
+  { icon: ShoppingBag, label: "Marketplace", href: "/marketplace" },
 ];
 
-// Update these links to point to the properties page with different filters
 const propertiesNavItems: NavItem[] = [
   { icon: HomeIcon, label: "Properties", href: "/properties" },
   { icon: BuildingIcon, label: "Buildings", href: "/properties?filter=buildings" },

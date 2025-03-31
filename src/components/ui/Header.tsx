@@ -31,7 +31,7 @@ export const Header = () => {
           <Button 
             variant="marketplace" 
             size="sm"
-            className="gap-2 transition-all shadow-md border border-[#0EA5E9]/20 bg-gradient-to-r from-[#0EA5E9] to-[#0891CE] hover:bg-gradient-to-r hover:from-[#0891CE] hover:to-[#0EA5E9] font-medium tracking-wide text-xs md:text-sm rounded-lg px-3 py-1.5" 
+            className="gap-2 transition-all shadow-md border border-[#0EA5E9]/20 bg-gradient-to-r from-[#0EA5E9] to-[#0891CE] hover:bg-gradient-to-r hover:from-[#0891CE] hover:to-[#0EA5E9] font-medium tracking-wide text-xs md:text-sm rounded-lg px-3 py-1.5 animate-pulse" 
             asChild
             onClick={() => handleQuickAction("Family Office Marketplace")}
           >
