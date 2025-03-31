@@ -19,6 +19,8 @@ import Documents from '@/pages/Documents';
 import LegacyVault from '@/pages/LegacyVault';
 import SystemDiagnostics from '@/pages/SystemDiagnostics';
 import Properties from '@/pages/Properties';
+import Investments from '@/pages/Investments';
+import IPProtection from '@/pages/IPProtection';
 
 // Import Marketplace Module components
 import { MarketplaceProvider } from '@/modules/marketplace/context/MarketplaceContext';
@@ -29,9 +31,6 @@ import DataImportPage from '@/pages/DataImportPage';
 // Register the marketplace navigation in the main navigation
 import { registerNavItem } from '@/components/navigation/NavigationConfig';
 import { ShoppingBag, FileIcon, Activity } from 'lucide-react';
-
-// Note: We no longer need to manually register these items as they're now
-// part of our NavigationConfig structure by default
 
 function App() {
   return (
@@ -50,8 +49,23 @@ function App() {
                     <Route path="/home" element={<Index />} />
                     <Route path="/profile" element={<CustomerProfile />} />
                     
-                    {/* Properties Management Routes */}
+                    {/* Wealth Management Routes */}
                     <Route path="/properties" element={<Properties />} />
+                    <Route path="/investments" element={<Investments />} />
+                    <Route path="/financial-plans" element={<Index />} />
+                    <Route path="/accounts" element={<Index />} />
+                    <Route path="/insurance" element={<Index />} />
+                    <Route path="/social-security" element={<Index />} />
+                    
+                    {/* Banking Routes */}
+                    <Route path="/cash-management" element={<CashManagement />} />
+                    <Route path="/lending" element={<Index />} />
+                    <Route path="/transfers" element={<Index />} />
+                    <Route path="/bills-management" element={<BillsManagement />} />
+                    
+                    {/* Collaboration Routes */}
+                    <Route path="/sharing" element={<Index />} />
+                    <Route path="/ip-protection" element={<IPProtection />} />
                     
                     {/* Marketplace Module Routes */}
                     <Route path="/marketplace" element={<MarketplacePage />} />
@@ -65,11 +79,10 @@ function App() {
                     {/* System Diagnostics Routes */}
                     <Route path="/system-diagnostics" element={<SystemDiagnostics />} />
                     
-                    <Route path="/cash-management" element={<CashManagement />} />
                     <Route path="/education" element={<Education />} />
                     <Route path="/subscription" element={<Subscription />} />
-                    <Route path="/bills-management" element={<BillsManagement />} />
                     <Route path="/advisor-profile" element={<AdvisorProfile />} />
+                    <Route path="/tax-budgets" element={<Index />} />
                   </Routes>
                 </BrowserRouter>
                 <Toaster />

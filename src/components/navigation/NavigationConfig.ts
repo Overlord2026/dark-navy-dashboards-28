@@ -153,6 +153,12 @@ const navigationRegistry: Record<string, NavItem[]> = {
       icon: Share,
       href: "/sharing"
     },
+    {
+      id: "ip-protection",
+      label: "IP Protection",
+      icon: ShieldCheck,
+      href: "/ip-protection"
+    },
   ],
   admin: [
     {
