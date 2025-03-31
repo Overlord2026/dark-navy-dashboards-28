@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from "react";
-import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
+import { ModularLayout } from "@/components/layout/ModularLayout";
 import { FinancialOverview } from "@/components/dashboard/FinancialOverview";
 import { NetWorthSummary } from "@/components/dashboard/NetWorthSummary";
 import { ExpenseOptimizationCard } from "@/components/dashboard/ExpenseOptimizationCard";
@@ -40,7 +40,7 @@ export default function Index() {
   };
 
   return (
-    <ThreeColumnLayout title="Dashboard">
+    <ModularLayout title="Dashboard" activeMainItem="home">
       <div key={dashboardKey} className="space-y-4 px-4 py-2 max-w-7xl mx-auto">
         {renderTrialBanner()}
         
@@ -67,6 +67,6 @@ export default function Index() {
           <UpcomingBillsCard />
         </div>
       </div>
-    </ThreeColumnLayout>
+    </ModularLayout>
   );
 }
