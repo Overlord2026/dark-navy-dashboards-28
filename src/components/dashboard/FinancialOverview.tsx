@@ -26,7 +26,7 @@ export const FinancialOverview = ({ showBusinessMetrics = false }: FinancialOver
         <div className="text-3xl font-semibold mb-1">
           {showBusinessMetrics ? "$97,843" : "$9,650"}
         </div>
-        <div className="flex items-center text-sm mb-4">
+        <div className="flex items-center text-sm mb-3">
           <span className="text-green-400 flex items-center mr-2">
             <TrendingUp className="h-3 w-3 mr-1" />
             {showBusinessMetrics ? "8.2%" : "4.5%"}
@@ -52,7 +52,7 @@ export const FinancialOverview = ({ showBusinessMetrics = false }: FinancialOver
         <div className="text-3xl font-semibold mb-1">
           {showBusinessMetrics ? "$64,973" : "$6,473"}
         </div>
-        <div className="flex items-center text-sm mb-4">
+        <div className="flex items-center text-sm mb-3">
           <span className="text-amber-400 flex items-center mr-2">
             <TrendingUp className="h-3 w-3 mr-1" />
             {showBusinessMetrics ? "3.7%" : "2.9%"}
@@ -78,7 +78,7 @@ export const FinancialOverview = ({ showBusinessMetrics = false }: FinancialOver
         <div className="text-3xl font-semibold mb-1">
           {showBusinessMetrics ? "$32,870" : "$3,177"}
         </div>
-        <div className="flex items-center text-sm mb-4">
+        <div className="flex items-center text-sm mb-3">
           <span className="text-green-400 flex items-center mr-2">
             <TrendingUp className="h-3 w-3 mr-1" />
             {showBusinessMetrics ? "12.5%" : "5.8%"}
@@ -104,7 +104,7 @@ export const FinancialOverview = ({ showBusinessMetrics = false }: FinancialOver
         <div className="text-3xl font-semibold mb-1">
           {showBusinessMetrics ? "33.4%" : "18.5%"}
         </div>
-        <div className="flex items-center text-sm mb-4">
+        <div className="flex items-center text-sm mb-3">
           <span className="text-green-400 flex items-center mr-2">
             <TrendingUp className="h-3 w-3 mr-1" />
             {showBusinessMetrics ? "2.3%" : "1.2%"}

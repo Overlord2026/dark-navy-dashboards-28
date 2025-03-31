@@ -44,14 +44,14 @@ export const NetWorthSummary = () => {
   const owners = Array.from(new Set(assets.map(asset => asset.owner)));
 
   return (
-    <div className="bg-[#121a2c]/80 rounded-lg p-4 border border-gray-800">
-      <div className="flex items-center justify-between mb-4">
+    <div className="bg-[#121a2c]/80 rounded-lg p-3 border border-gray-800">
+      <div className="flex items-center justify-between mb-3">
         <h2 className="text-xl font-semibold flex items-center">
           <Wallet className="mr-2 h-5 w-5 text-blue-400" />
           Net Worth Summary
         </h2>
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" className="h-7 w-7">
+          <Button variant="ghost" size="icon" className="h-6 w-6">
             <Maximize2 className="h-4 w-4" />
             <span className="sr-only">Expand</span>
           </Button>
@@ -62,29 +62,29 @@ export const NetWorthSummary = () => {
         </div>
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-        <div className="bg-[#1a2236] p-4 rounded-lg border border-gray-800">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
+        <div className="bg-[#1a2236] p-3 rounded-lg border border-gray-800">
           <div className="text-sm text-gray-400 mb-1">Total Assets</div>
           <div className="text-2xl font-semibold">{formatCurrency(totalNetWorth)}</div>
-          <div className="text-xs text-green-400 mt-1">+$124,500 (5.3%)</div>
+          <div className="text-xs text-green-400">+$124,500 (5.3%)</div>
         </div>
         
-        <div className="bg-[#1a2236] p-4 rounded-lg border border-gray-800">
+        <div className="bg-[#1a2236] p-3 rounded-lg border border-gray-800">
           <div className="text-sm text-gray-400 mb-1">Total Liabilities</div>
           <div className="text-2xl font-semibold">{formatCurrency(845210)}</div>
-          <div className="text-xs text-red-400 mt-1">+$12,300 (1.5%)</div>
+          <div className="text-xs text-red-400">+$12,300 (1.5%)</div>
         </div>
         
-        <div className="bg-[#1a2236] p-4 rounded-lg border border-gray-800 relative">
+        <div className="bg-[#1a2236] p-3 rounded-lg border border-gray-800 relative">
           <div className="text-sm text-gray-400 mb-1">Net Worth</div>
           <div className="text-2xl font-semibold text-blue-400">{formatCurrency(totalNetWorth - 845210)}</div>
-          <div className="text-xs text-green-400 mt-1">+$112,200 (7.5%)</div>
+          <div className="text-xs text-green-400">+$112,200 (7.5%)</div>
           
           {propertyCount > 0 && (
             <Button 
               variant="ghost" 
               size="sm" 
-              className="absolute top-2 right-2 text-xs flex items-center text-blue-400 hover:text-blue-300"
+              className="absolute top-1 right-1 text-xs flex items-center text-blue-400 hover:text-blue-300"
               onClick={() => navigate('/properties')}
             >
               <Home className="h-3 w-3 mr-1" />
@@ -94,10 +94,10 @@ export const NetWorthSummary = () => {
         </div>
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <div>
-          <h3 className="text-sm font-medium mb-3">Asset Allocation</h3>
-          <div className="space-y-3">
+          <h3 className="text-sm font-medium mb-2">Asset Allocation</h3>
+          <div className="space-y-2">
             <AssetItem 
               label="Real Estate" 
               value={formatCurrency(realEstateValue)} 
@@ -134,8 +134,8 @@ export const NetWorthSummary = () => {
         </div>
         
         <div>
-          <h3 className="text-sm font-medium mb-3">Ownership Breakdown</h3>
-          <div className="space-y-3">
+          <h3 className="text-sm font-medium mb-2">Ownership Breakdown</h3>
+          <div className="space-y-2">
             {owners.map((owner, index) => {
               const ownerAssets = getAssetsByOwner(owner);
               const ownerTotal = ownerAssets.reduce((sum, asset) => sum + asset.value, 0);
@@ -159,9 +159,9 @@ export const NetWorthSummary = () => {
             })}
           </div>
           
-          <div className="mt-6">
-            <h3 className="text-sm font-medium mb-3">Liability Breakdown</h3>
-            <div className="space-y-3">
+          <div className="mt-4">
+            <h3 className="text-sm font-medium mb-2">Liability Breakdown</h3>
+            <div className="space-y-2">
               <AssetItem label="Mortgage" value="$685,000" percentage={81} color="bg-red-500" />
               <AssetItem label="Auto Loans" value="$48,210" percentage={6} color="bg-orange-500" />
               <AssetItem label="Student Loans" value="$72,000" percentage={9} color="bg-pink-500" />

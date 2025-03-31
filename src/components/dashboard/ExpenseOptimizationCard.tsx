@@ -26,10 +26,10 @@ export const ExpenseOptimizationCard = () => {
         <TrendingDownIcon className="h-4 w-4 text-green-500" />
       </CardHeader>
       <CardContent>
-        <div className="space-y-4">
-          <div className="flex items-start gap-3">
+        <div className="space-y-3">
+          <div className="flex items-start gap-2">
             <div className="bg-green-100 dark:bg-green-900/30 p-2 rounded-full">
-              <LightbulbIcon className="h-5 w-5 text-green-600 dark:text-green-400" />
+              <LightbulbIcon className="h-4 w-4 text-green-600 dark:text-green-400" />
             </div>
             <div>
               <h4 className="text-sm font-medium">Potential Savings Found</h4>
@@ -49,7 +49,7 @@ export const ExpenseOptimizationCard = () => {
           {insights.length > 0 && (
             <>
               <div>
-                <p className="text-sm text-muted-foreground mb-2">Top recommendations:</p>
+                <p className="text-sm text-muted-foreground mb-1">Top recommendations:</p>
                 <ul className="text-sm space-y-1">
                   {insights
                     .sort((a, b) => b.potentialSavings - a.potentialSavings)
@@ -66,13 +66,13 @@ export const ExpenseOptimizationCard = () => {
               </div>
 
               {Object.keys(insightsByType).length > 0 && (
-                <div className="pt-2 border-t border-border">
-                  <p className="text-xs text-muted-foreground mb-2">Insight types:</p>
-                  <div className="flex flex-wrap gap-2">
+                <div className="pt-1 border-t border-border">
+                  <p className="text-xs text-muted-foreground mb-1">Insight types:</p>
+                  <div className="flex flex-wrap gap-1">
                     {Object.entries(insightsByType).map(([type, count]) => (
                       <span 
                         key={type} 
-                        className="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full"
+                        className="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded-full"
                       >
                         {type} ({count})
                       </span>
@@ -84,7 +84,7 @@ export const ExpenseOptimizationCard = () => {
           )}
 
           <Button 
-            className="w-full text-sm flex items-center justify-center gap-1"
+            className="w-full text-sm flex items-center justify-center gap-1 mt-1"
             size="sm"
             onClick={() => navigate("/bills-management")}
           >
