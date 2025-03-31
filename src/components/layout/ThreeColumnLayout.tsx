@@ -1,3 +1,4 @@
+
 import { ReactNode, useState } from "react";
 import * as React from "react";
 import { useParams, useNavigate, Link, useLocation } from "react-router-dom";
@@ -250,12 +251,12 @@ export function ThreeColumnLayout({
 
   return (
     <div className={`flex flex-col h-screen overflow-hidden ${isLightTheme ? 'bg-[#F9F7E8]' : 'bg-[#12121C]'}`}>
-      <div className="w-full flex justify-center items-center py-3 border-b z-50 bg-inherit sticky top-0" style={{ borderColor: isLightTheme ? '#DCD8C0' : 'rgba(255,255,255,0.1)' }}>
+      <div className="w-full flex justify-center items-center py-2 border-b z-50 bg-inherit sticky top-0" style={{ borderColor: isLightTheme ? '#DCD8C0' : 'rgba(255,255,255,0.1)' }}>
         <div className="container flex justify-center items-center">
           <img 
             src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" 
             alt="Boutique Family Office Logo" 
-            className="h-16 w-auto"
+            className="h-14 w-auto"
           />
         </div>
       </div>
@@ -269,11 +270,11 @@ export function ThreeColumnLayout({
           )}
         >
           <div className="flex flex-col h-full">
-            <div className={`px-4 ${isLightTheme ? 'border-[#DCD8C0]' : 'border-white/10'} mt-4 mb-4`}>
+            <div className={`px-4 ${isLightTheme ? 'border-[#DCD8C0]' : 'border-white/10'} mt-2 mb-2`}>
               <UserProfileSection onMenuItemClick={handleProfileMenuItemClick} showLogo={false} />
             </div>
             
-            <div className="overflow-y-auto mt-1 flex-1">
+            <div className="overflow-y-auto mt-0 flex-1">
               <nav className="px-2 space-y-1">
                 {navigationCategories.map((category) => (
                   <div key={category.id} className="mb-2">
@@ -378,7 +379,7 @@ export function ThreeColumnLayout({
               </nav>
             </div>
             
-            <div className={`px-4 mt-auto mb-4 ${isLightTheme ? 'border-[#DCD8C0]' : 'border-white/10'}`}>
+            <div className={`px-4 mt-auto mb-3 ${isLightTheme ? 'border-[#DCD8C0]' : 'border-white/10'}`}>
               <AdvisorSection 
                 advisorInfo={advisorInfo} 
                 onViewProfile={handleViewProfile} 
@@ -435,7 +436,7 @@ export function ThreeColumnLayout({
             </div>
           ) : null}
           
-          <main className="flex-1 overflow-y-auto p-4 font-sans w-full">
+          <main className="flex-1 overflow-y-auto p-3 font-sans w-full">
             {children}
           </main>
         </div>

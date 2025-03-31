@@ -113,8 +113,8 @@ const CustomerProfile = () => {
 
   return (
     <ThreeColumnLayout activeMainItem="home" title="Home">
-      <div className="mx-auto w-full max-w-6xl space-y-6 animate-fade-in p-4">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+      <div className="mx-auto w-full max-w-6xl space-y-4 animate-fade-in p-3">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
           <div>
             <h1 className="text-[24px] font-semibold mb-1 text-[#E2E2E2]">Client Profile</h1>
             <div className="flex items-center text-muted-foreground">
@@ -122,7 +122,7 @@ const CustomerProfile = () => {
             </div>
           </div>
           
-          <div key={profileKey} className="mt-4 md:mt-0 bg-card rounded-lg p-4 border border-border/50 shadow-md">
+          <div key={profileKey} className="mt-3 md:mt-0 bg-card rounded-lg p-4 border border-border/50 shadow-md">
             <div className="flex items-center space-x-4">
               <div className="h-12 w-12 rounded-full bg-primary/20 flex items-center justify-center">
                 <UserCircle className="h-8 w-8 text-primary" />
@@ -132,7 +132,7 @@ const CustomerProfile = () => {
                 <p className="text-sm text-muted-foreground">{userProfile.investorType}</p>
               </div>
             </div>
-            <div className="mt-3 pt-3 border-t border-border/50">
+            <div className="mt-2 pt-2 border-t border-border/50">
               <div className="grid grid-cols-2 gap-2 text-sm">
                 <div>
                   <p className="text-muted-foreground">Email:</p>
@@ -145,7 +145,7 @@ const CustomerProfile = () => {
               </div>
               <Button 
                 onClick={() => handleOpenForm("investor-profile")}
-                className="mt-3 text-sm text-primary hover:underline"
+                className="mt-2 text-sm text-primary hover:underline"
                 variant="link"
               >
                 Edit Profile
@@ -162,7 +162,7 @@ const CustomerProfile = () => {
             onBookSession={() => window.open("https://meetings.hubspot.com/daniel-herrera1?uuid=55ab1315-5daa-4009-af29-f100ee7aae67", "_blank")}
           />
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
             <div className="lg:col-span-2">
               <AccountSummaryCard />
             </div>
