@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { ArrowLeft, ArrowRight, ChevronRight, X, CalendarPlus } from "lucide-react";
@@ -10,7 +11,22 @@ import { toast } from "sonner";
 
 // Insurance type definitions
 type InsuranceType = "term-life" | "permanent-life" | "annuities" | "long-term-care" | "healthcare" | "homeowners" | "automobile" | "umbrella";
-type InsuranceProvider = "pinnacle" | "dpl" | "pacific" | "travelers";
+type InsuranceProvider = "pinnacle" | "dpl" | "pacific" | "travelers" | "guardian" | "metlife" | "progressive" | "statefarm";
+
+// Provider info type
+interface ProviderInfo {
+  id: InsuranceProvider;
+  name: string;
+  description: string;
+  workflow: string;
+  otherOfferings: string;
+  topCarriers: string;
+}
+
+// Insurance type info
+interface InsuranceTypeInfo {
+  providers: InsuranceProvider[];
+}
 
 const Insurance = () => {
   const [selectedType, setSelectedType] = useState<InsuranceType | null>(null);
@@ -19,22 +35,28 @@ const Insurance = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [isDetailPanelOpen, setIsDetailPanelOpen] = useState(false);
 
+  // Map insurance types to their available providers
+  const insuranceTypeProviders: Record<InsuranceType, InsuranceTypeInfo> = {
+    "term-life": { providers: ["pinnacle", "guardian", "metlife"] },
+    "permanent-life": { providers: ["pinnacle", "guardian", "metlife"] },
+    "annuities": { providers: ["dpl", "pinnacle", "metlife"] },
+    "long-term-care": { providers: ["pinnacle", "guardian", "metlife"] },
+    "healthcare": { providers: ["pacific", "metlife"] },
+    "homeowners": { providers: ["travelers", "statefarm", "progressive"] },
+    "automobile": { providers: ["travelers", "statefarm", "progressive"] },
+    "umbrella": { providers: ["travelers", "statefarm", "metlife"] },
+  };
+
   const handleSelectType = (type: InsuranceType) => {
     setSelectedType(type);
     
-    // Set default provider based on insurance type
-    if (type === "annuities") {
-      setSelectedProvider("dpl");
-    } else if (type === "healthcare") {
-      setSelectedProvider("pacific");
-    } else if (type === "homeowners" || type === "automobile" || type === "umbrella") {
-      setSelectedProvider("travelers");
-    } else {
-      setSelectedProvider("pinnacle");
-    }
+    // Set default provider to the first one available for this type
+    const providers = insuranceTypeProviders[type].providers;
+    setSelectedProvider(providers[0]);
     
+    // Set total pages based on number of providers
+    setTotalPages(providers.length);
     setCurrentPage(1);
-    setTotalPages(1); // Most have only 1 provider, can be adjusted as needed
     setIsDetailPanelOpen(true); // Open the detail panel when type is selected
   };
 
@@ -49,6 +71,37 @@ const Insurance = () => {
       description: "Your advisor has been notified about your interest",
       duration: 5000,
     });
+  };
+
+  const handleNextProvider = () => {
+    if (selectedType) {
+      const providers = insuranceTypeProviders[selectedType].providers;
+      if (currentPage < providers.length) {
+        setCurrentPage(prev => prev + 1);
+        setSelectedProvider(providers[currentPage]);
+      }
+    }
+  };
+
+  const handlePrevProvider = () => {
+    if (selectedType) {
+      const providers = insuranceTypeProviders[selectedType].providers;
+      if (currentPage > 1) {
+        setCurrentPage(prev => prev - 1);
+        setSelectedProvider(providers[currentPage - 2]);
+      }
+    }
+  };
+
+  const selectProvider = (provider: InsuranceProvider) => {
+    setSelectedProvider(provider);
+    if (selectedType) {
+      const providers = insuranceTypeProviders[selectedType].providers;
+      const index = providers.indexOf(provider);
+      if (index !== -1) {
+        setCurrentPage(index + 1);
+      }
+    }
   };
 
   // Render the main insurance overview
@@ -240,6 +293,9 @@ const Insurance = () => {
     );
   }
 
+  // Get available providers for the selected insurance type
+  const providers = selectedType ? insuranceTypeProviders[selectedType].providers : [];
+
   // Render the insurance type detail page
   return (
     <ThreeColumnLayout activeMainItem="insurance" title={getInsuranceTitle(selectedType)}>
@@ -259,7 +315,9 @@ const Insurance = () => {
             Back
           </Button>
           <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-400">Partners (1)</span>
+            <span className="text-sm text-gray-400">
+              Partners ({providers.length})
+            </span>
           </div>
         </div>
 
@@ -291,15 +349,47 @@ const Insurance = () => {
                 </div>
               </div>
 
+              {/* Provider selection buttons */}
+              <div className="mt-6 mb-4">
+                <h4 className="text-sm text-gray-400 mb-2">Available Providers</h4>
+                <div className="flex flex-wrap gap-2">
+                  {providers.map((provider) => (
+                    <Button
+                      key={provider}
+                      variant={selectedProvider === provider ? "default" : "outline"}
+                      size="sm"
+                      className={selectedProvider === provider 
+                        ? "bg-blue-600 hover:bg-blue-700" 
+                        : "border-gray-700 text-white hover:bg-[#1c2e4a]"}
+                      onClick={() => selectProvider(provider)}
+                    >
+                      {getProviderName(provider)}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+
               <div className="flex justify-between items-center mt-8">
                 <div className="text-sm text-gray-400">
-                  1–1 of 1
+                  {currentPage}–{providers.length} of {providers.length}
                 </div>
                 <div className="flex gap-2">
-                  <Button variant="outline" size="icon" disabled className="h-8 w-8 p-0">
+                  <Button 
+                    variant="outline" 
+                    size="icon" 
+                    className="h-8 w-8 p-0"
+                    disabled={currentPage <= 1}
+                    onClick={handlePrevProvider}
+                  >
                     <ArrowLeft className="h-4 w-4" />
                   </Button>
-                  <Button variant="outline" size="icon" disabled className="h-8 w-8 p-0">
+                  <Button 
+                    variant="outline" 
+                    size="icon" 
+                    className="h-8 w-8 p-0"
+                    disabled={currentPage >= providers.length}
+                    onClick={handleNextProvider}
+                  >
                     <ArrowRight className="h-4 w-4" />
                   </Button>
                 </div>
@@ -358,6 +448,28 @@ const Insurance = () => {
                   </p>
                 </div>
 
+                {/* Provider selection in detail panel */}
+                <div>
+                  <h3 className="text-lg font-medium text-gray-300 mb-2">
+                    Other Available Providers
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {providers.map((provider) => (
+                      <Button
+                        key={provider}
+                        variant={selectedProvider === provider ? "default" : "outline"}
+                        size="sm"
+                        className={selectedProvider === provider 
+                          ? "bg-blue-600 hover:bg-blue-700" 
+                          : "border-gray-700 text-white hover:bg-[#1c2e4a]"}
+                        onClick={() => selectProvider(provider)}
+                      >
+                        {getProviderName(provider)}
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+
                 <div className="bg-[#0f1628] border border-gray-800 rounded-lg p-6">
                   <h3 className="text-lg font-medium text-white mb-4">
                     Get Started
@@ -374,7 +486,7 @@ const Insurance = () => {
                       I'm Interested
                     </Button>
                     <ScheduleMeetingDialog 
-                      assetName={`${getInsuranceTitle(selectedType)} Insurance`} 
+                      assetName={`${getInsuranceTitle(selectedType)} Insurance by ${getProviderName(selectedProvider)}`} 
                     />
                   </div>
                 </div>
@@ -465,6 +577,14 @@ function getProviderName(provider: InsuranceProvider | null): string {
       return "Pacific Health";
     case "travelers":
       return "Travelers";
+    case "guardian":
+      return "Guardian";
+    case "metlife":
+      return "MetLife";
+    case "progressive":
+      return "Progressive";
+    case "statefarm":
+      return "State Farm";
     default:
       return "Insurance Provider";
   }
@@ -484,6 +604,22 @@ function getProviderDescription(provider: InsuranceProvider | null, type: Insura
         : type === "umbrella"
         ? "Travelers offers personal umbrella liability insurance that provides an extra layer of protection beyond your auto and home insurance policies."
         : "Travelers has been providing auto insurance protection for over 160 years, with a range of coverage options and discounts.";
+    case "guardian":
+      return type === "term-life" || type === "permanent-life"
+        ? "Guardian has been a mutual insurance company for over 150 years, offering reliable and competitive life insurance products with strong financial ratings."
+        : "Guardian provides comprehensive insurance solutions with a focus on customer service and long-term stability.";
+    case "metlife":
+      return "MetLife is one of the world's leading financial services companies, providing insurance, annuities, and employee benefit programs with a global presence and strong financial foundation.";
+    case "progressive":
+      return type === "automobile"
+        ? "Progressive is known for innovative auto insurance solutions, competitive rates, and their Name Your Price® tool that helps find coverage to fit your budget."
+        : "Progressive offers a wide range of insurance products with a focus on customization and savings through bundling multiple policies.";
+    case "statefarm":
+      return type === "homeowners"
+        ? "State Farm is the largest provider of homeowners insurance in the United States, offering comprehensive coverage options and personalized service through local agents."
+        : type === "automobile"
+        ? "State Farm is the nation's largest auto insurer, known for personalized service through a network of local agents and competitive rates."
+        : "State Farm offers a wide range of insurance and financial products with a focus on personalized service through a network of dedicated agents.";
     default:
       return "";
   }
@@ -503,6 +639,14 @@ function getProviderWorkflow(provider: InsuranceProvider | null, type: Insurance
         : type === "umbrella"
         ? "Your advisor will review your existing coverages and assets to determine the appropriate umbrella policy limits. Travelers will generate quotes based on your risk profile and coverage needs."
         : "Your advisor will gather information about your vehicles, driving history, and coverage preferences to obtain competitive quotes from Travelers. They'll explain the different coverage options available.";
+    case "guardian":
+      return "Your advisor will work with Guardian to determine the right coverage for your needs. Guardian offers a thorough underwriting process that may include medical exams for certain policies to ensure accurate pricing.";
+    case "metlife":
+      return "MetLife offers a streamlined application process. Your advisor will help gather your information and requirements, then work with MetLife underwriters to find the most appropriate coverage options.";
+    case "progressive":
+      return "Progressive offers quick online quotes that your advisor can help you navigate. For most auto policies, you can customize your coverage options and see price changes in real-time.";
+    case "statefarm":
+      return "Your State Farm agent will work directly with you to understand your needs and provide personalized recommendations. State Farm focuses on building long-term relationships through their agent network.";
     default:
       return "";
   }
@@ -522,6 +666,14 @@ function getProviderOtherOfferings(provider: InsuranceProvider | null, type: Ins
         : type === "umbrella"
         ? "Travelers offers homeowners, auto, boat, and business insurance to complement your umbrella coverage for complete protection."
         : "Travelers offers homeowners, umbrella, and business insurance products to complement your auto coverage.";
+    case "guardian":
+      return "Guardian also offers disability income insurance, dental insurance, vision insurance, and workplace benefits solutions.";
+    case "metlife":
+      return "MetLife provides a comprehensive range of products including dental, vision, disability, and critical illness insurance, as well as retirement planning solutions.";
+    case "progressive":
+      return "Progressive offers a wide range of other insurance including motorcycle, boat, RV, and commercial auto insurance, as well as home and renters insurance.";
+    case "statefarm":
+      return "State Farm provides nearly 100 products and services including banking, retirement planning, disability insurance, and small business insurance.";
     default:
       return "";
   }
@@ -537,6 +689,14 @@ function getProviderTopCarriers(provider: InsuranceProvider | null): string {
       return "Pacific Health works with major healthcare networks including Anthem, Blue Cross Blue Shield, and United Healthcare.";
     case "travelers":
       return "Travelers is itself one of the top insurance carriers in the United States with an A++ financial strength rating from AM Best.";
+    case "guardian":
+      return "Guardian is itself a leading carrier with excellent financial strength ratings, including an A++ rating from AM Best.";
+    case "metlife":
+      return "MetLife is one of the world's largest insurance companies with an A+ rating from AM Best and extensive global coverage.";
+    case "progressive":
+      return "Progressive is one of the largest auto insurers in the United States, with an A+ rating from AM Best.";
+    case "statefarm":
+      return "State Farm is the largest property and casualty insurance provider in the US with an A++ financial strength rating from AM Best.";
     default:
       return "";
   }
