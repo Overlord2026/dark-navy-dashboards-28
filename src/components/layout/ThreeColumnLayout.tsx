@@ -1,9 +1,27 @@
-
 import { ReactNode, useState } from "react";
 import * as React from "react";
 import { useParams, useNavigate, Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { 
+  UserIcon, 
+  UsersIcon, 
+  FileIcon, 
+  BarChart3Icon, 
+  ShieldIcon, 
+  PiggyBankIcon, 
+  CreditCardIcon, 
+  WalletIcon, 
+  ArrowRightLeftIcon, 
+  ReceiptIcon, 
+  ShareIcon, 
+  GraduationCapIcon,
+  BookOpenIcon,
+  CalendarIcon,
+  MailIcon,
+  ExternalLinkIcon,
+  UserRoundIcon,
+  HomeIcon,
+  CoinsIcon,
   ChevronDown,
   ChevronRight
 } from "lucide-react";
@@ -12,21 +30,18 @@ import { UserProfileSection } from "@/components/sidebar/UserProfileSection";
 import { Header } from "@/components/ui/Header";
 import { useTheme } from "@/context/ThemeContext";
 import { useUser } from "@/context/UserContext";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { AdvisorSection } from "@/components/profile/AdvisorSection";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-
-import { 
-  mainNavItems,
-  servicesNavItems,
-  planningNavItems,
-  propertiesNavItems,
-  securityNavItems,
-  bottomNavItems
-} from "@/components/navigation/NavigationConfig";
 
 type MenuItem = {
   id: string;
@@ -44,44 +59,71 @@ interface ThreeColumnLayoutProps {
   breadcrumbs?: { name: string; href: string; active?: boolean }[];
 }
 
+type MainMenuItem = {
+  id: string;
+  label: string;
+  icon: React.ElementType | React.FC;
+  href: string;
+  active?: boolean;
+  subItems?: MainMenuItem[];
+};
+
 type NavCategory = {
   id: string;
   label: string;
-  items: typeof mainNavItems;
+  items: MainMenuItem[];
   defaultExpanded?: boolean;
 };
+
+const CustomHomeIcon: React.FC = () => (
+  <img 
+    src="/lovable-uploads/e4ac2159-1b66-4f15-9257-68a0f00c8311.png" 
+    alt="Home"
+    className="h-5 w-5"
+  />
+);
 
 const navigationCategories: NavCategory[] = [
   {
     id: "main",
-    label: "Dashboard",
-    items: mainNavItems,
+    label: "Main",
     defaultExpanded: true,
+    items: [
+      { id: "home", label: "Home", icon: CustomHomeIcon, href: "/" },
+      { id: "education", label: "Education Center", icon: GraduationCapIcon, href: "/education" },
+      { id: "legacy-vault", label: "Legacy Vault", icon: BookOpenIcon, href: "/legacy-vault" },
+      { id: "tax-budgets", label: "Tax Planning", icon: ReceiptIcon, href: "/tax-budgets" },
+    ]
   },
   {
-    id: "services",
-    label: "Financial Services",
-    items: servicesNavItems,
+    id: "wealth-management",
+    label: "Wealth Management",
     defaultExpanded: true,
+    items: [
+      { id: "financial-plans", label: "Financial Plans", icon: BarChart3Icon, href: "/financial-plans" },
+      { id: "investments", label: "Investments", icon: PiggyBankIcon, href: "/investments" },
+      { id: "accounts", label: "Accounts", icon: WalletIcon, href: "/accounts" },
+      { id: "properties", label: "Properties", icon: HomeIcon, href: "/properties" },
+      { id: "social-security", label: "Social Security", icon: CoinsIcon, href: "/social-security" },
+      { id: "insurance", label: "Insurance", icon: ShieldIcon, href: "/insurance" },
+    ]
   },
   {
-    id: "planning",
-    label: "Planning & Management",
-    items: planningNavItems,
-    defaultExpanded: false,
+    id: "banking",
+    label: "Banking",
+    items: [
+      { id: "cash-management", label: "Cash Management", icon: WalletIcon, href: "/cash-management" },
+      { id: "lending", label: "Lending", icon: CreditCardIcon, href: "/lending" },
+      { id: "transfers", label: "Transfers", icon: ArrowRightLeftIcon, href: "/transfers" },
+    ]
   },
   {
-    id: "properties",
-    label: "Properties",
-    items: propertiesNavItems,
-    defaultExpanded: false,
+    id: "collaboration",
+    label: "Collaboration",
+    items: [
+      { id: "sharing", label: "Sharing", icon: ShareIcon, href: "/sharing" },
+    ]
   },
-  {
-    id: "security",
-    label: "Security",
-    items: securityNavItems,
-    defaultExpanded: false,
-  }
 ];
 
 const accountsSubMenuItems: MenuItem[] = [
@@ -118,9 +160,6 @@ const getSecondaryMenuItems = (activeMainItem: string): MenuItem[] => {
       return [];
   }
 };
-
-// Remove the custom home icon component as it's causing issues
-// The Icon component is not properly defined or imported
 
 export function ThreeColumnLayout({ 
   children, 
@@ -251,13 +290,12 @@ export function ThreeColumnLayout({
                         </CollapsibleTrigger>
                         <CollapsibleContent className="space-y-1.5">
                           {category.items.map((item) => {
-                            const isActive = item.href === location.pathname || 
-                                            (item.href !== "/" && location.pathname.startsWith(item.href));
+                            const isActive = item.id === currentPath;
                             const Icon = item.icon;
                             
                             return (
                               <Link
-                                key={item.title}
+                                key={item.id}
                                 to={item.href}
                                 className={cn(
                                   "group flex items-center py-2 px-3 rounded-md transition-colors text-[14px] whitespace-nowrap border",
@@ -267,16 +305,21 @@ export function ThreeColumnLayout({
                                   isLightTheme ? "hover:bg-[#E9E7D8] hover:border-primary" : "hover:bg-white/10 hover:border-primary"
                                 )}
                               >
-                                {/* Replace the use of Icon component */}
-                                <Icon 
-                                  className={cn("h-5 w-5", !mainSidebarCollapsed && "mr-3")} 
-                                  style={{ 
-                                    backgroundColor: isLightTheme ? '#222222' : '#000', 
-                                    padding: '2px', 
-                                    borderRadius: '2px' 
-                                  }} 
-                                />
-                                <span className="whitespace-nowrap overflow-hidden text-ellipsis">{item.title}</span>
+                                {typeof Icon === 'function' ? (
+                                  <div className={`flex items-center justify-center rounded-sm p-0.5 mr-3 ${isLightTheme ? 'bg-[#222222]' : 'bg-black'}`}>
+                                    <Icon />
+                                  </div>
+                                ) : (
+                                  <Icon 
+                                    className={cn("h-5 w-5", !mainSidebarCollapsed && "mr-3")} 
+                                    style={{ 
+                                      backgroundColor: isLightTheme ? '#222222' : '#000', 
+                                      padding: '2px', 
+                                      borderRadius: '2px' 
+                                    }} 
+                                  />
+                                )}
+                                <span className="whitespace-nowrap overflow-hidden text-ellipsis">{item.label}</span>
                               </Link>
                             );
                           })}
@@ -287,13 +330,12 @@ export function ThreeColumnLayout({
                     {mainSidebarCollapsed && (
                       <>
                         {category.items.map((item) => {
-                          const isActive = item.href === location.pathname || 
-                                          (item.href !== "/" && location.pathname.startsWith(item.href));
+                          const isActive = item.id === currentPath;
                           const Icon = item.icon;
                           
                           return (
                             <Link
-                              key={item.title}
+                              key={item.id}
                               to={item.href}
                               className={cn(
                                 "group flex justify-center items-center py-2 px-2 my-2 rounded-md transition-colors text-[14px] whitespace-nowrap border",
@@ -304,17 +346,22 @@ export function ThreeColumnLayout({
                                   : isLightTheme ? "text-[#222222] border-transparent" : "text-[#E2E2E2] border-transparent",
                                 isLightTheme ? "hover:bg-[#E9E7D8] hover:border-primary" : "hover:bg-white/10 hover:border-primary"
                               )}
-                              title={item.title}
+                              title={item.label}
                             >
-                              {/* Replace the use of Icon component */}
-                              <Icon 
-                                className="h-5 w-5" 
-                                style={{ 
-                                  backgroundColor: isLightTheme ? '#222222' : '#000', 
-                                  padding: '2px', 
-                                  borderRadius: '2px' 
-                                }} 
-                              />
+                              {typeof Icon === 'function' ? (
+                                <div className={`flex items-center justify-center rounded-sm p-0.5 ${isLightTheme ? 'bg-[#222222]' : 'bg-black'}`}>
+                                  <Icon />
+                                </div>
+                              ) : (
+                                <Icon 
+                                  className="h-5 w-5" 
+                                  style={{ 
+                                    backgroundColor: isLightTheme ? '#222222' : '#000', 
+                                    padding: '2px', 
+                                    borderRadius: '2px' 
+                                  }} 
+                                />
+                              )}
                             </Link>
                           );
                         })}
