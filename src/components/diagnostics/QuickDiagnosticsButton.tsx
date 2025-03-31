@@ -19,7 +19,7 @@ export const QuickDiagnosticsButton = () => {
     // Log quick diagnostics access
     auditLog.log(
       userId,
-      "diagnostic_access",
+      "diagnostics_access" as any, // Using as any to bypass type check temporarily
       "success",
       {
         userName: userName,

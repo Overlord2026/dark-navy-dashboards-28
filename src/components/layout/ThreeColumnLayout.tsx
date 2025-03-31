@@ -269,6 +269,10 @@ export function ThreeColumnLayout({
           )}
         >
           <div className="flex flex-col h-full">
+            <div className={`px-4 ${isLightTheme ? 'border-[#DCD8C0]' : 'border-white/10'} mt-2 mb-2`}>
+              <UserProfileSection onMenuItemClick={handleProfileMenuItemClick} showLogo={false} />
+            </div>
+            
             <div className="overflow-y-auto mt-1 flex-1">
               <nav className="px-2 space-y-1">
                 {navigationCategories.map((category) => (
@@ -372,12 +376,6 @@ export function ThreeColumnLayout({
                   </div>
                 ))}
               </nav>
-            </div>
-            
-            <div className={`px-4 ${isLightTheme ? 'border-[#DCD8C0]' : 'border-white/10'} mt-2 mb-2`}>
-              {!mainSidebarCollapsed && (
-                <UserProfileSection onMenuItemClick={handleProfileMenuItemClick} showLogo={false} />
-              )}
             </div>
             
             <div className={`px-4 mt-auto mb-4 ${isLightTheme ? 'border-[#DCD8C0]' : 'border-white/10'}`}>

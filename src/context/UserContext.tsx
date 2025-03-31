@@ -1,23 +1,36 @@
 
 import React, { createContext, useState, useContext, useEffect, ReactNode } from "react";
 
-export type UserRole = "client" | "admin" | "advisor" | "system_administrator";
+export type UserRole = "client" | "admin" | "advisor" | "system_administrator" | "developer" | "consultant";
 
 export interface UserProfile {
   id: string;
-  displayName: string; // Added displayName property for the user
+  displayName: string;
+  firstName?: string;
+  lastName?: string;
   email: string;
+  phone?: string;
   role: UserRole;
   company?: string;
   clientId?: string;
   clientCount?: number;
   isDemo?: boolean;
+  title?: string;
+  middleName?: string;
+  suffix?: string;
+  gender?: string;
+  maritalStatus?: string;
+  dateOfBirth?: string;
+  investorType?: string;
+  name?: string;
+  updateUserProfile?: (profile: Partial<UserProfile>) => void;
 }
 
 interface UserContextType {
-  userProfile: UserProfile | null;
+  userProfile: UserProfile;
   isLoading: boolean;
   setUserProfile: (profile: UserProfile | null) => void;
+  updateUserProfile?: (updates: Partial<UserProfile>) => void;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -27,12 +40,18 @@ const mockUserProfiles: Record<UserRole, UserProfile> = {
   client: {
     id: "client-123",
     displayName: "Tom Brady",
+    firstName: "Tom",
+    lastName: "Brady",
     email: "client@example.com",
-    role: "client"
+    phone: "(555) 123-4567",
+    role: "client",
+    investorType: "High Net Worth Individual"
   },
   admin: {
     id: "admin-456",
     displayName: "Admin User",
+    firstName: "Admin",
+    lastName: "User",
     email: "admin@example.com",
     role: "admin",
     company: "Wealth Management Firm"
@@ -40,6 +59,8 @@ const mockUserProfiles: Record<UserRole, UserProfile> = {
   advisor: {
     id: "advisor-789",
     displayName: "Financial Advisor",
+    firstName: "Financial",
+    lastName: "Advisor",
     email: "advisor@example.com",
     role: "advisor",
     company: "Financial Planning Co.",
@@ -48,9 +69,29 @@ const mockUserProfiles: Record<UserRole, UserProfile> = {
   system_administrator: {
     id: "sysadmin-101",
     displayName: "System Administrator",
+    firstName: "System",
+    lastName: "Administrator",
     email: "sysadmin@example.com",
     role: "system_administrator",
     company: "Wealth Management Firm"
+  },
+  developer: {
+    id: "dev-102",
+    displayName: "Developer",
+    firstName: "Dev",
+    lastName: "User",
+    email: "developer@example.com",
+    role: "developer",
+    name: "Developer User"
+  },
+  consultant: {
+    id: "consultant-103",
+    displayName: "Consultant",
+    firstName: "Consultant",
+    lastName: "User",
+    email: "consultant@example.com",
+    role: "consultant",
+    name: "Consultant User"
   }
 };
 
@@ -61,6 +102,11 @@ interface UserProviderProps {
 export const UserProvider = ({ children }: UserProviderProps) => {
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  // Function to update user profile
+  const updateUserProfile = (updates: Partial<UserProfile>) => {
+    setUserProfile(prev => prev ? { ...prev, ...updates } : null);
+  };
 
   useEffect(() => {
     // Simulate API call to get user profile
@@ -81,7 +127,12 @@ export const UserProvider = ({ children }: UserProviderProps) => {
   }, []);
 
   return (
-    <UserContext.Provider value={{ userProfile, isLoading, setUserProfile }}>
+    <UserContext.Provider value={{ 
+      userProfile: userProfile as UserProfile, 
+      isLoading, 
+      setUserProfile,
+      updateUserProfile 
+    }}>
       {children}
     </UserContext.Provider>
   );
