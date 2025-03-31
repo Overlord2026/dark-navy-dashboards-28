@@ -11,6 +11,7 @@ interface AdvisorInfo {
   phone: string;
   office: string;
   bio: string;
+  linkedin?: string;
 }
 
 interface AdvisorProfileViewProps {
@@ -18,13 +19,15 @@ interface AdvisorProfileViewProps {
   activeTab: string;
   onTabChange: (value: string) => void;
   onBookSession: () => void;
+  onEditProfile?: () => void;
 }
 
 export const AdvisorProfileView = ({ 
   advisorInfo, 
   activeTab, 
   onTabChange, 
-  onBookSession 
+  onBookSession,
+  onEditProfile
 }: AdvisorProfileViewProps) => {
   
   const renderTabContent = () => {
@@ -77,21 +80,40 @@ export const AdvisorProfileView = ({
               </a>
             </div>
             <div className="flex items-center mt-2 text-white/80">
-              <a href="#" className="flex items-center hover:text-white">
-                <LinkedinIcon className="h-4 w-4 mr-2" />
-                <span>LinkedIn</span>
-              </a>
+              {advisorInfo.linkedin ? (
+                <a href={advisorInfo.linkedin} target="_blank" rel="noopener noreferrer" className="flex items-center hover:text-white">
+                  <LinkedinIcon className="h-4 w-4 mr-2" />
+                  <span>LinkedIn</span>
+                </a>
+              ) : (
+                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="flex items-center hover:text-white">
+                  <LinkedinIcon className="h-4 w-4 mr-2" />
+                  <span>LinkedIn</span>
+                </a>
+              )}
             </div>
           </div>
         </div>
-        <a 
-          href="https://meetings.hubspot.com/daniel-herrera1?uuid=55ab1315-5daa-4009-af29-f100ee7aae67"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mt-4 md:mt-0 bg-white text-[#0a1021] hover:bg-white/90 px-4 py-2 rounded-md font-medium inline-flex items-center"
-        >
-          Book a session
-        </a>
+        <div className="flex flex-col space-y-2 mt-4 md:mt-0">
+          <a 
+            href="https://meetings.hubspot.com/daniel-herrera1?uuid=55ab1315-5daa-4009-af29-f100ee7aae67"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-white text-[#0a1021] hover:bg-white/90 px-4 py-2 rounded-md font-medium inline-flex items-center"
+            onClick={onBookSession}
+          >
+            Book a session
+          </a>
+          {onEditProfile && (
+            <Button 
+              variant="outline" 
+              className="border-white/20 text-white hover:bg-white/10"
+              onClick={onEditProfile}
+            >
+              Edit Profile
+            </Button>
+          )}
+        </div>
       </div>
       
       <Tabs value={activeTab} onValueChange={onTabChange} className="w-full">

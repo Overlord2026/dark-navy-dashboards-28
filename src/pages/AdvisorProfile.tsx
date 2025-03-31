@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -5,14 +6,16 @@ import { Button } from "@/components/ui/button";
 import { Calendar, UserIcon, MailIcon, LinkedinIcon, PhoneIcon, MapPinIcon, GraduationCapIcon, ArrowLeft, BriefcaseIcon, HeadphonesIcon } from "lucide-react";
 import { Drawer, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerClose } from "@/components/ui/drawer";
 import { AdvisorDetailView } from "@/components/profile/AdvisorDetailView";
+import { AdvisorProfileEditForm } from "@/components/profile/AdvisorProfileEditForm";
+import { AdvisorProfileView } from "@/components/profile/AdvisorProfileView";
 import { Link } from "react-router-dom";
 
 const AdvisorProfile = () => {
   const [activeTab, setActiveTab] = useState("bio");
   const [isBookingDrawerOpen, setIsBookingDrawerOpen] = useState(false);
   const [showDetailView, setShowDetailView] = useState(false);
-
-  const advisorInfo = {
+  const [isEditing, setIsEditing] = useState(false);
+  const [advisorInfo, setAdvisorInfo] = useState({
     name: "Daniel Zamora",
     title: "Certified Financial Planner™",
     location: "Sarasota, FL",
@@ -21,6 +24,7 @@ const AdvisorProfile = () => {
     phone: "(800) 555-1234",
     office: "Sarasota, FL",
     hometown: "Asheville, NC",
+    linkedin: "https://linkedin.com/in/danielzamora",
     education: [
       "Pine View Academy - Sarasota, Florida (Top of class at top 10 school in the country)",
       "Bachelor of Science in Finance - University of North Carolina at Charlotte",
@@ -65,6 +69,14 @@ const AdvisorProfile = () => {
       "Asset Allocation"
     ],
     bio: "Daniel, a seasoned finance professional, guides high net worth investors. His approach blends investment management, risk mitigation, tax optimization, and overall strategy. Starting at Vanguard, then UBS, he directed client acquisition at Fisher Investments before joining BFO. Originally from Asheville, NC, Daniel now resides in Sarasota, enjoying fitness, community activities, and sunny days by the water."
+  });
+
+  const handleSaveAdvisorInfo = (updatedInfo) => {
+    setAdvisorInfo({
+      ...advisorInfo,
+      ...updatedInfo
+    });
+    setIsEditing(false);
   };
 
   const renderTabContent = () => {
@@ -167,6 +179,26 @@ const AdvisorProfile = () => {
             <AdvisorDetailView advisorInfo={advisorInfo} />
           </div>
         </div>
+      ) : isEditing ? (
+        <div className="mx-auto w-full max-w-6xl space-y-6 p-4 animate-fade-in">
+          <Button 
+            variant="ghost" 
+            className="mb-4 text-white"
+            onClick={() => setIsEditing(false)}
+          >
+            <ArrowLeft className="h-5 w-5 mr-2" />
+            Back
+          </Button>
+          
+          <div className="bg-[#0a1021] rounded-lg p-6 md:p-8">
+            <h2 className="text-xl font-semibold text-white mb-6">Edit Advisor Profile</h2>
+            <AdvisorProfileEditForm 
+              advisorInfo={advisorInfo}
+              onSave={handleSaveAdvisorInfo}
+              onCancel={() => setIsEditing(false)}
+            />
+          </div>
+        </div>
       ) : (
         <div className="mx-auto w-full max-w-6xl space-y-6 p-4 animate-fade-in">
           <div className="bg-[#0a1021] rounded-lg p-6 md:p-8">
@@ -188,7 +220,7 @@ const AdvisorProfile = () => {
                       <MailIcon className="h-4 w-4 mr-2" />
                       <span>{advisorInfo.email}</span>
                     </a>
-                    <a href="#" className="flex items-center text-white/80 hover:text-white">
+                    <a href={advisorInfo.linkedin || "https://linkedin.com"} target="_blank" rel="noopener noreferrer" className="flex items-center text-white/80 hover:text-white">
                       <LinkedinIcon className="h-4 w-4 mr-2" />
                       <span>LinkedIn</span>
                     </a>
@@ -221,6 +253,13 @@ const AdvisorProfile = () => {
                   onClick={() => setShowDetailView(true)}
                 >
                   View full profile
+                </Button>
+                <Button
+                  variant="outline"
+                  className="border-white/20 text-white hover:bg-white/10"
+                  onClick={() => setIsEditing(true)}
+                >
+                  Edit Profile
                 </Button>
               </div>
             </div>
@@ -268,7 +307,7 @@ const AdvisorProfile = () => {
                   <div className="mx-auto w-24 h-24 rounded-full overflow-hidden mb-4">
                     <img
                       src="/lovable-uploads/b4df25d6-12d7-4c34-874e-804e72335904.png"
-                      alt="Daniel Zamora"
+                      alt={advisorInfo.name}
                       className="w-full h-full object-cover"
                     />
                   </div>
