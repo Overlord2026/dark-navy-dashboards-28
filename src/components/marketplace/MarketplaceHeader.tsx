@@ -1,45 +1,43 @@
 
 import React from "react";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search, Send } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Search } from "lucide-react";
 
 interface MarketplaceHeaderProps {
   searchQuery: string;
   setSearchQuery: (query: string) => void;
+  customTitle?: string;
+  customDescription?: string;
 }
 
 export function MarketplaceHeader({ 
   searchQuery, 
-  setSearchQuery 
+  setSearchQuery,
+  customTitle,
+  customDescription
 }: MarketplaceHeaderProps) {
+  const title = customTitle || "Family Office Marketplace";
+  const description = customDescription || "Discover trusted service providers for your wealth management needs";
+  
   return (
     <div className="flex flex-col space-y-4">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Family Office Marketplace</h1>
-          <p className="text-muted-foreground max-w-2xl mt-1">
-            Access premium services specifically designed for high-net-worth families and their unique needs.
-          </p>
-        </div>
-        
-        <Button asChild className="gap-2">
-          <Link to="/marketplace/rfp">
-            <Send className="h-4 w-4" />
-            Submit RFP
-          </Link>
-        </Button>
+      <div className="space-y-2">
+        <h1 className="text-3xl font-bold">{title}</h1>
+        <p className="text-muted-foreground">{description}</p>
       </div>
       
-      <div className="relative max-w-md">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-        <Input
-          placeholder="Search services, providers, or keywords..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="pl-10"
-        />
+      <div className="flex items-center space-x-2">
+        <div className="relative flex-1">
+          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Search for services or providers..."
+            className="pl-9"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+        <Button type="submit">Search</Button>
       </div>
     </div>
   );

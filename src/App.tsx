@@ -1,4 +1,3 @@
-
 import React from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Index from "./pages/Index";
@@ -42,6 +41,7 @@ import BillsManagement from "./pages/BillsManagement";
 import AdvisorFeedback from "./pages/AdvisorFeedback";
 import SystemDiagnostics from "./pages/SystemDiagnostics";
 import IPProtection from "./pages/IPProtection";
+import FamilyOfficeDirectory from "./pages/FamilyOfficeDirectory";
 import { Toaster } from "./components/ui/sonner";
 
 function App() {
@@ -97,6 +97,7 @@ function App() {
                       <Route path="/advisor-feedback" element={<AdvisorFeedback />} />
                       <Route path="/system-diagnostics" element={<SystemDiagnostics />} />
                       <Route path="/ip-protection" element={<IPProtection />} />
+                      <Route path="/family-office-directory" element={<FamilyOfficeDirectory />} />
                       <Route path="*" element={<NotFound />} />
                     </Routes>
                     <Toaster />

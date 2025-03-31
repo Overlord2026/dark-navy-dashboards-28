@@ -5,6 +5,9 @@ import { MarketplaceHeader } from "@/components/marketplace/MarketplaceHeader";
 import { MarketplaceNavigation, serviceCategories } from "@/components/marketplace/MarketplaceNavigation";
 import { MarketplaceContent } from "@/components/marketplace/MarketplaceContent";
 import { useMarketplace } from "@/hooks/useMarketplace";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
+import { Building } from "lucide-react";
 
 export default function Marketplace() {
   // Default to first category
@@ -31,6 +34,21 @@ export default function Marketplace() {
           setSearchQuery={setSearchQuery}
         />
 
+        <div className="bg-muted/40 p-4 rounded-lg mb-6 flex flex-col sm:flex-row items-center justify-between">
+          <div>
+            <h3 className="font-semibold text-lg">Find the Perfect Family Office</h3>
+            <p className="text-muted-foreground text-sm">
+              Browse our nationwide directory of Family Offices and wealth management providers
+            </p>
+          </div>
+          <Button asChild className="mt-3 sm:mt-0" variant="default">
+            <Link to="/family-office-directory" className="flex items-center gap-2">
+              <Building className="h-4 w-4" />
+              Family Office Directory
+            </Link>
+          </Button>
+        </div>
+        
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <div className="md:col-span-1">
             <MarketplaceNavigation 
