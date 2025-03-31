@@ -58,7 +58,7 @@ export const useDocumentManagement = () => {
     
     toast({
       title: "File uploaded",
-      description: `${newDocument.name} has been uploaded successfully`
+      description: `${newDocument.name} has been uploaded successfully to BFO Legacy Vault`
     });
   };
 

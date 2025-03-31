@@ -2,6 +2,9 @@
 import { DocumentCategory } from "@/types/document";
 
 export const documentCategories: DocumentCategory[] = [
+  { id: "documents-to-sign", name: "Documents to Sign" },
+  { id: "bfo-records", name: "BFO Records" },
+  { id: "alternative-investments", name: "Alternative Investments" },
   { id: "business-ownership", name: "Business Ownership" },
   { id: "education", name: "Education" },
   { id: "employer-agreements", name: "Employer Agreements" },
