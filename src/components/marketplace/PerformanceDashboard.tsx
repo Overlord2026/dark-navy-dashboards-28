@@ -1,4 +1,3 @@
-
 import React from "react";
 import { usePayment, Project, Milestone, Feedback } from "@/context/PaymentContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,6 +10,7 @@ import { useUser } from "@/context/UserContext";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { Link } from "react-router-dom";
 
 interface PerformanceDashboardProps {
   isProvider?: boolean;
@@ -20,20 +20,16 @@ export function PerformanceDashboard({ isProvider = false }: PerformanceDashboar
   const { projects, milestones, getFeedbackForProject } = usePayment();
   const { userProfile } = useUser();
   
-  // Filter projects based on the user's role
   const userProjects = isProvider
     ? projects.filter(project => project.providerId === userProfile.id)
     : projects.filter(project => project.clientId === userProfile.id);
   
-  // Get all milestones for user's projects
   const userMilestones = milestones.filter(milestone => 
     userProjects.some(project => project.id === milestone.projectId)
   );
   
-  // Get all feedback for user's projects
   const allFeedback = userProjects.flatMap(project => getFeedbackForProject(project.id));
   
-  // Calculate various metrics
   const activeProjects = userProjects.filter(project => project.status === 'active').length;
   const completedProjects = userProjects.filter(project => project.status === 'completed').length;
   
@@ -59,12 +55,10 @@ export function PerformanceDashboard({ isProvider = false }: PerformanceDashboar
     return project.status === 'active' && overdueCount === 0;
   }).length;
   
-  // Calculate average rating
   const averageRating = allFeedback.length > 0 
     ? allFeedback.reduce((sum, fb) => sum + fb.rating, 0) / allFeedback.length 
     : 0;
   
-  // Prepare data for charts
   const statusData = [
     { name: 'Active', value: activeProjects, color: '#2563eb' },
     { name: 'Completed', value: completedProjects, color: '#16a34a' }
@@ -81,8 +75,7 @@ export function PerformanceDashboard({ isProvider = false }: PerformanceDashboar
     amount: project.totalAmount
   }));
   
-  // Rating distribution
-  const ratingDistribution = [0, 0, 0, 0, 0]; // For ratings 1-5
+  const ratingDistribution = [0, 0, 0, 0, 0];
   allFeedback.forEach(fb => {
     if (fb.rating >= 1 && fb.rating <= 5) {
       ratingDistribution[fb.rating - 1]++;
@@ -94,7 +87,6 @@ export function PerformanceDashboard({ isProvider = false }: PerformanceDashboar
     count: ratingDistribution[rating - 1]
   }));
   
-  // Upcoming milestones
   const upcomingMilestones = userMilestones
     .filter(milestone => 
       (milestone.status === 'pending' || milestone.status === 'in-progress') &&

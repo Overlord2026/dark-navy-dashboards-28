@@ -112,7 +112,8 @@ export function ProjectTimeline({ projectId, isProvider = false }: ProjectTimeli
                         <CheckCircle2 className="h-6 w-6 text-green-500" />
                       ) : milestone.status === 'completed' ? (
                         <CheckCircle2 className="h-6 w-6 text-yellow-500" />
-                      ) : isPast(new Date(milestone.dueDate)) && milestone.status !== 'approved' ? (
+                      ) : isPast(new Date(milestone.dueDate)) && 
+                          (milestone.status !== 'completed' && milestone.status !== 'approved') ? (
                         <AlertTriangle className="h-6 w-6 text-red-500" />
                       ) : (
                         <Clock className="h-6 w-6 text-blue-500" />
