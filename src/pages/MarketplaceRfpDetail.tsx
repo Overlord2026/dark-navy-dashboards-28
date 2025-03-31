@@ -2,16 +2,17 @@
 import React, { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, DollarSign } from "lucide-react";
+import { ArrowLeft, DollarSign, Clock, MessageSquare } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import { RfpDetailView } from "@/components/marketplace/RfpDetailView";
 import { PaymentProvider } from "@/context/PaymentContext";
 import { PaymentDashboard } from "@/components/marketplace/PaymentDashboard";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ProjectManagement } from "@/components/marketplace/ProjectManagement";
 
 export default function MarketplaceRfpDetail() {
   const { id } = useParams();
-  const [showPayments, setShowPayments] = useState(false);
+  const [activeTab, setActiveTab] = useState<string>("rfp-details");
   
   return (
     <PaymentProvider>
@@ -28,13 +29,23 @@ export default function MarketplaceRfpDetail() {
               
               <div className="flex gap-2">
                 <Button 
-                  variant={showPayments ? "default" : "outline"}
+                  variant={activeTab === "payments" ? "default" : "outline"}
                   size="sm"
                   className="gap-1"
-                  onClick={() => setShowPayments(true)}
+                  onClick={() => setActiveTab("payments")}
                 >
                   <DollarSign className="h-4 w-4" />
-                  View Payments
+                  Payments
+                </Button>
+                
+                <Button
+                  variant={activeTab === "project-management" ? "default" : "outline"}
+                  size="sm"
+                  className="gap-1"
+                  onClick={() => setActiveTab("project-management")}
+                >
+                  <Clock className="h-4 w-4" />
+                  Project Management
                 </Button>
                 
                 <Button
@@ -56,26 +67,35 @@ export default function MarketplaceRfpDetail() {
             </p>
           </div>
           
-          {showPayments ? (
-            <div className="space-y-6">
-              <Tabs defaultValue="project-payments">
-                <TabsList className="mb-4">
-                  <TabsTrigger value="project-payments">Project Payments</TabsTrigger>
-                  <TabsTrigger value="rfp-details" onClick={() => setShowPayments(false)}>RFP Details</TabsTrigger>
-                </TabsList>
-                
-                <TabsContent value="project-payments">
-                  <PaymentDashboard projectId={`proj_${id}`} />
-                </TabsContent>
-                
-                <TabsContent value="rfp-details">
-                  <RfpDetailView rfpId={id} />
-                </TabsContent>
-              </Tabs>
-            </div>
-          ) : (
-            <RfpDetailView rfpId={id} />
-          )}
+          <Tabs value={activeTab} onValueChange={setActiveTab}>
+            <TabsList className="mb-4">
+              <TabsTrigger value="rfp-details">RFP Details</TabsTrigger>
+              <TabsTrigger value="project-management">
+                <span className="flex items-center gap-1">
+                  <Clock className="h-4 w-4" />
+                  Project Management
+                </span>
+              </TabsTrigger>
+              <TabsTrigger value="payments">
+                <span className="flex items-center gap-1">
+                  <DollarSign className="h-4 w-4" />
+                  Payments
+                </span>
+              </TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="rfp-details">
+              <RfpDetailView rfpId={id} />
+            </TabsContent>
+            
+            <TabsContent value="project-management">
+              <ProjectManagement projectId={`proj_${id}`} />
+            </TabsContent>
+            
+            <TabsContent value="payments">
+              <PaymentDashboard projectId={`proj_${id}`} />
+            </TabsContent>
+          </Tabs>
         </div>
       </ThreeColumnLayout>
     </PaymentProvider>

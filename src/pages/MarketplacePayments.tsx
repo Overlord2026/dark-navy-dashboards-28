@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PaymentProvider } from "@/context/PaymentContext";
 import { AdminPaymentDashboard } from "@/components/marketplace/AdminPaymentDashboard";
 import { useUser } from "@/context/UserContext";
+import { PerformanceDashboard } from "@/components/marketplace/PerformanceDashboard";
 
 export default function MarketplacePayments() {
   const { userProfile } = useUser();
@@ -18,7 +19,7 @@ export default function MarketplacePayments() {
   
   return (
     <PaymentProvider>
-      <ThreeColumnLayout title="Payment Management - Family Office Marketplace">
+      <ThreeColumnLayout title="Payment & Project Management - Family Office Marketplace">
         <div className="space-y-6 px-4 py-6 max-w-7xl mx-auto">
           <div className="flex flex-col gap-2">
             <div className="flex items-center">
@@ -30,21 +31,26 @@ export default function MarketplacePayments() {
               </Button>
             </div>
             
-            <h1 className="text-3xl font-bold tracking-tight">Payment Management</h1>
+            <h1 className="text-3xl font-bold tracking-tight">Project & Payment Management</h1>
             <p className="text-muted-foreground">
-              Securely manage milestone-based payments and track project financial progress
+              Track project progress, manage milestones, and securely handle payments
             </p>
           </div>
           
-          <Tabs defaultValue={isAdmin ? "admin" : "dashboard"}>
+          <Tabs defaultValue="performance">
             <TabsList className="mb-6">
-              <TabsTrigger value="dashboard">Payment Dashboard</TabsTrigger>
+              <TabsTrigger value="performance">Performance Dashboard</TabsTrigger>
+              <TabsTrigger value="payments">Payment Details</TabsTrigger>
               {isAdmin && (
                 <TabsTrigger value="admin">Admin Controls</TabsTrigger>
               )}
             </TabsList>
             
-            <TabsContent value="dashboard">
+            <TabsContent value="performance">
+              <PerformanceDashboard isProvider={isProvider} />
+            </TabsContent>
+            
+            <TabsContent value="payments">
               <PaymentDashboard isProvider={isProvider} />
             </TabsContent>
             
