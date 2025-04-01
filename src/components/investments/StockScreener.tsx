@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { fetchStockData } from "@/services/stockScreenerService";
+import { generateStockAnalysis } from "@/services/aiAnalysisService";
 import { 
   ArrowUpRight, 
   ArrowDownRight, 
@@ -15,7 +16,8 @@ import {
   Building, 
   Briefcase,
   CalendarClock,
-  CircleDollarSign
+  CircleDollarSign,
+  Brain
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -25,6 +27,8 @@ export const StockScreener: React.FC = () => {
   const [stockData, setStockData] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
+  const [aiAnalysis, setAiAnalysis] = useState<string | null>(null);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
 
   const handleSearch = async () => {
     if (!symbol.trim()) {
@@ -34,6 +38,7 @@ export const StockScreener: React.FC = () => {
     
     setLoading(true);
     setError(null);
+    setAiAnalysis(null);
     
     try {
       const data = await fetchStockData(symbol);
@@ -57,6 +62,24 @@ export const StockScreener: React.FC = () => {
       toast.error(errorMessage);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleGetAIAnalysis = async () => {
+    if (!stockData) return;
+    
+    setIsAnalyzing(true);
+    toast.info(`Generating AI analysis for ${stockData.symbol}...`);
+    
+    try {
+      const analysis = await generateStockAnalysis(stockData);
+      setAiAnalysis(analysis);
+      toast.success("AI analysis complete");
+    } catch (error) {
+      console.error("Error getting AI analysis:", error);
+      toast.error("Failed to generate AI analysis");
+    } finally {
+      setIsAnalyzing(false);
     }
   };
 
@@ -243,19 +266,64 @@ export const StockScreener: React.FC = () => {
                 <div className="font-medium">${stockData.week52Low?.toFixed(2) || 'N/A'}</div>
               </div>
             </div>
+
+            {!aiAnalysis && (
+              <div className="flex flex-col md:flex-row gap-4 mb-6">
+                <Button 
+                  onClick={handleGetAIAnalysis} 
+                  disabled={isAnalyzing} 
+                  className="flex items-center gap-2"
+                >
+                  <Brain className="h-4 w-4" /> 
+                  {isAnalyzing ? "Analyzing..." : "Get AI Analysis"}
+                </Button>
+                <Button 
+                  variant="outline" 
+                  className="flex items-center gap-2"
+                  onClick={handleScheduleAppointment}
+                >
+                  <CalendarClock className="h-4 w-4" /> Consult with Advisor
+                </Button>
+                <Button className="flex items-center gap-2">
+                  <Briefcase className="h-4 w-4" /> Add to Portfolio
+                </Button>
+              </div>
+            )}
             
-            <div className="flex flex-col md:flex-row gap-4 mt-6">
-              <Button className="flex items-center gap-2">
-                <Briefcase className="h-4 w-4" /> Add to Portfolio
-              </Button>
-              <Button 
-                variant="outline" 
-                className="flex items-center gap-2"
-                onClick={handleScheduleAppointment}
-              >
-                <CalendarClock className="h-4 w-4" /> Consult with Advisor
-              </Button>
-            </div>
+            {aiAnalysis && (
+              <div className="space-y-6">
+                <Card className="bg-muted/20 border">
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-lg flex items-center gap-2">
+                      <Brain className="h-5 w-5" /> AI Investment Analysis
+                    </CardTitle>
+                    <CardDescription>
+                      AI-powered insights for {stockData.symbol}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-sm space-y-3 leading-relaxed">
+                      {aiAnalysis.split('\n\n').map((paragraph, i) => (
+                        <p key={i}>{paragraph}</p>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                <div className="flex flex-col md:flex-row gap-4">
+                  <Button 
+                    variant="outline" 
+                    className="flex items-center gap-2"
+                    onClick={handleScheduleAppointment}
+                  >
+                    <CalendarClock className="h-4 w-4" /> Consult with Advisor
+                  </Button>
+                  <Button className="flex items-center gap-2">
+                    <Briefcase className="h-4 w-4" /> Add to Portfolio
+                  </Button>
+                </div>
+              </div>
+            )}
           </CardContent>
         </Card>
       )}
