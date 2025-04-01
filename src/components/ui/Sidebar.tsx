@@ -28,7 +28,7 @@ export const Sidebar = () => {
   const { theme } = useTheme();
   const isLightTheme = theme === "light";
 
-  // Define navigation categories
+  // Define navigation categories with updated labels
   const navigationCategories: NavCategory[] = [
     {
       id: "home",

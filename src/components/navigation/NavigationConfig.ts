@@ -37,7 +37,7 @@ import {
 
 import { NavItem } from "@/types/navigation";
 
-// 🏠 Home category
+// 🏠 Home category (moved Investments, Insurance, and Lending here)
 export const homeNavItems: NavItem[] = [
   { 
     title: "Dashboard Overview", 
@@ -66,7 +66,7 @@ export const homeNavItems: NavItem[] = [
   }
 ];
 
-// 🎓 Education & Solutions category
+// 🎓 Education & Solutions category (removed Investments, Insurance, and Lending)
 export const educationSolutionsNavItems: NavItem[] = [
   { 
     title: "Education Center", 
