@@ -18,6 +18,7 @@ import Marketplace from "./pages/Marketplace";
 import MarketplaceRfp from "./pages/MarketplaceRfp";
 import MarketplaceRfpDetail from "./pages/MarketplaceRfpDetail";
 import AlternativeAssetCategory from "./pages/AlternativeAssetCategory";
+import ViewAllOfferings from "./pages/ViewAllOfferings";
 import AdvisorProfile from "./pages/AdvisorProfile";
 import Lending from "./pages/Lending";
 import CashManagement from "./pages/CashManagement";
@@ -42,6 +43,7 @@ import AdvisorFeedback from "./pages/AdvisorFeedback";
 import SystemDiagnostics from "./pages/SystemDiagnostics";
 import IPProtection from "./pages/IPProtection";
 import { Toaster } from "./components/ui/sonner";
+import AllAlternativeInvestments from "./pages/AllAlternativeInvestments";
 
 function App() {
   return (
@@ -78,6 +80,8 @@ function App() {
                     <Route path="/marketplace/rfp" element={<MarketplaceRfp />} />
                     <Route path="/marketplace/rfp/:id" element={<MarketplaceRfpDetail />} />
                     <Route path="/investments/alternative/:categoryId" element={<AlternativeAssetCategory />} />
+                    <Route path="/investments/alternative/:categoryId/view-all" element={<ViewAllOfferings />} />
+                    <Route path="/investments/alternative/all" element={<AllAlternativeInvestments />} />
                     <Route path="/advisor-profile" element={<AdvisorProfile />} />
                     <Route path="/lending" element={<Lending />} />
                     <Route path="/cash-management" element={<CashManagement />} />
