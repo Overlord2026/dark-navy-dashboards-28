@@ -11,8 +11,13 @@ interface ScheduleMeetingDialogProps {
 
 export const ScheduleMeetingDialog: React.FC<ScheduleMeetingDialogProps> = ({ assetName }) => {
   const handleOpenCalendar = () => {
-    // Use the new Calendly link instead of the previous one
+    // Use the Calendly link for scheduling
     window.open("https://calendly.com/tonygomes/60min", "_blank");
+    
+    toast.success("Opening scheduling page", {
+      description: `Schedule a meeting to discuss ${assetName} with your advisor.`,
+      duration: 3000,
+    });
   };
   
   return (
@@ -38,7 +43,7 @@ export const ScheduleMeetingDialog: React.FC<ScheduleMeetingDialogProps> = ({ as
           
           <div className="flex justify-center">
             <img 
-              src="/public/lovable-uploads/4f186128-9b08-4965-a540-64cf9b0ec9ee.png" 
+              src="/lovable-uploads/4f186128-9b08-4965-a540-64cf9b0ec9ee.png" 
               alt="Calendar Preview" 
               className="max-h-52 rounded-md border shadow-sm"
             />

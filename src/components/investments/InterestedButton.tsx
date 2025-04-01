@@ -12,7 +12,7 @@ export const InterestedButton: React.FC<InterestedButtonProps> = ({ assetName })
   const handleInterested = () => {
     // In a real application, this would send a notification to the advisor and CFO
     toast.success("Your interest has been registered!", {
-      description: `Your advisor and CFO have been notified about your interest in ${assetName}.`,
+      description: `Your advisor has been notified about your interest in ${assetName}. They will contact you to discuss this opportunity further.`,
       duration: 5000,
     });
   };
