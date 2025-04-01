@@ -1,4 +1,3 @@
-
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -23,7 +22,8 @@ import {
   Network,
   ArrowRight,
   ShieldCheck,
-  Loader2
+  Loader2,
+  Info
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Progress } from "@/components/ui/progress";
@@ -35,6 +35,7 @@ import { investmentCategories } from "@/components/navigation/NavigationConfig";
 import { useMarketData } from "@/hooks/useMarketData";
 import { InterestedButton } from "@/components/investments/InterestedButton";
 import { ScheduleMeetingDialog } from "@/components/investments/ScheduleMeetingDialog";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 const Investments = () => {
   const [activeTab, setActiveTab] = useState("overview");
@@ -51,12 +52,12 @@ const Investments = () => {
   ];
 
   const portfolioPerformance = [
-    { period: "1 Day", return: 0.75, amount: 1932.25 },
-    { period: "1 Week", return: 1.35, amount: 3478.12 },
-    { period: "1 Month", return: 2.75, amount: 7082.50 },
-    { period: "3 Months", return: 4.85, amount: 12489.75 },
-    { period: "YTD", return: 8.25, amount: 21255.00 },
-    { period: "1 Year", return: 12.65, amount: 32594.75 }
+    { period: "1 Day", return: 0.75, amount: 1932.25, isHypothetical: true },
+    { period: "1 Week", return: 1.35, amount: 3478.12, isHypothetical: true },
+    { period: "1 Month", return: 2.75, amount: 7082.50, isHypothetical: true },
+    { period: "3 Months", return: 4.85, amount: 12489.75, isHypothetical: true },
+    { period: "YTD", return: 8.25, amount: 21255.00, isHypothetical: true },
+    { period: "1 Year", return: 12.65, amount: 32594.75, isHypothetical: true }
   ];
 
   const allocation = [
@@ -234,8 +235,23 @@ const Investments = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
-                <CardTitle>Portfolio Performance</CardTitle>
-                <CardDescription>Returns over different time periods</CardDescription>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <CardTitle>Portfolio Performance</CardTitle>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <Info className="h-4 w-4 text-muted-foreground" />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p className="max-w-xs">All returns shown are hypothetical and for illustrative purposes only. Past performance does not guarantee future results.</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </div>
+                  <div className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded-md">Hypothetical</div>
+                </div>
+                <CardDescription>Illustrative returns over different time periods</CardDescription>
               </CardHeader>
               <CardContent>
                 <Table>
@@ -381,13 +397,30 @@ const Investments = () => {
         <TabsContent value="performance" className="mt-6">
           <Card>
             <CardHeader>
-              <CardTitle>Portfolio Performance</CardTitle>
-              <CardDescription>Performance metrics over various timeframes</CardDescription>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <CardTitle>Portfolio Performance</CardTitle>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <Info className="h-4 w-4 text-muted-foreground" />
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p className="max-w-xs">All returns shown are hypothetical and for illustrative purposes only. These figures do not represent actual investment results.</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
+                <div className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded-md">Hypothetical</div>
+              </div>
+              <CardDescription>Illustrative performance metrics over various timeframes</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <h3 className="text-lg font-medium mb-4">Performance Over Time</h3>
+                  <h3 className="text-lg font-medium mb-4 flex items-center gap-1">
+                    Hypothetical Performance
+                  </h3>
                   <Table>
                     <TableHeader>
                       <TableRow>
@@ -413,27 +446,49 @@ const Investments = () => {
                 </div>
                 
                 <div>
-                  <h3 className="text-lg font-medium mb-4">Performance Metrics</h3>
+                  <h3 className="text-lg font-medium mb-4 flex items-center gap-1">
+                    Hypothetical Metrics
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <Info className="h-4 w-4 text-muted-foreground" />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>These metrics are hypothetical and do not represent actual investment performance.</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </h3>
                   <div className="space-y-4">
                     <div className="p-4 bg-[#121a2c] rounded-lg">
                       <p className="text-sm text-gray-400">Alpha (1 Year)</p>
                       <p className="text-2xl font-semibold text-green-500">+2.34%</p>
-                      <p className="text-xs text-gray-400 mt-1">Outperformed benchmark by 2.34%</p>
+                      <p className="text-xs text-gray-400 mt-1">Hypothetical outperformance</p>
                     </div>
                     
                     <div className="p-4 bg-[#121a2c] rounded-lg">
                       <p className="text-sm text-gray-400">Beta (1 Year)</p>
                       <p className="text-2xl font-semibold">0.87</p>
-                      <p className="text-xs text-gray-400 mt-1">Less volatile than the market</p>
+                      <p className="text-xs text-gray-400 mt-1">Hypothetical volatility measure</p>
                     </div>
                     
                     <div className="p-4 bg-[#121a2c] rounded-lg">
                       <p className="text-sm text-gray-400">Sharpe Ratio</p>
                       <p className="text-2xl font-semibold">1.85</p>
-                      <p className="text-xs text-gray-400 mt-1">Good risk-adjusted return</p>
+                      <p className="text-xs text-gray-400 mt-1">Hypothetical risk-adjusted return</p>
                     </div>
                   </div>
                 </div>
+              </div>
+              <div className="bg-amber-50 border border-amber-200 text-amber-800 p-3 mt-6 text-sm rounded-md">
+                <p className="flex items-center">
+                  <Info className="h-4 w-4 mr-2 flex-shrink-0" />
+                  <span>
+                    <strong>Important Disclosure:</strong> The performance data shown represents hypothetical, backtested performance. 
+                    Hypothetical performance is not an indicator of future actual results. The results reflect performance of a strategy not historically offered to investors and does 
+                    not represent returns that any investor actually attained. Please consult with your financial advisor before making any investment decisions.
+                  </span>
+                </p>
               </div>
             </CardContent>
           </Card>
