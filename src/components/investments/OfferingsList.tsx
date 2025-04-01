@@ -1,5 +1,5 @@
-
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -48,19 +48,16 @@ export const OfferingsList: React.FC<OfferingsListProps> = ({ offerings, categor
   const [minimumFilter, setMinimumFilter] = useState<string>("all");
 
   const filteredOfferings = offerings.filter(offering => {
-    // Search term filter
     const matchesSearch = searchTerm === "" || 
       offering.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       offering.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
       offering.firm.toLowerCase().includes(searchTerm.toLowerCase());
     
-    // Type filter
     const matchesType = filterType === "all" || 
       (filterType === "accredited" && offering.investorQualification?.includes("Accredited")) ||
       (filterType === "qualified" && offering.investorQualification?.includes("Qualified")) ||
       (filterType === "non-accredited" && offering.investorQualification?.includes("Non-Accredited"));
     
-    // Minimum investment filter
     let matchesMinimum = true;
     if (minimumFilter !== "all") {
       const amount = parseInt(offering.minimumInvestment.replace(/[^0-9]/g, ''));
@@ -74,7 +71,6 @@ export const OfferingsList: React.FC<OfferingsListProps> = ({ offerings, categor
     return matchesSearch && matchesType && matchesMinimum;
   });
 
-  // For the initial view, show only 4 offerings unless in full view mode
   const displayedOfferings = isFullView ? filteredOfferings : filteredOfferings.slice(0, 4);
 
   return (
