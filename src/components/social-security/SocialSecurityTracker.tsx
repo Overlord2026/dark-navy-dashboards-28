@@ -28,7 +28,9 @@ export const SocialSecurityTracker = () => {
   const [familyMembers, setFamilyMembers] = useState<FamilyMemberAccount[]>([
     {
       id: "1",
-      name: `${userProfile.firstName} ${userProfile.lastName}`,
+      name: userProfile?.firstName && userProfile?.lastName 
+        ? `${userProfile.firstName} ${userProfile.lastName}` 
+        : "Primary User",
       relationship: "Self",
       estimates: {
         age62: 2100,
