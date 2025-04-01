@@ -38,12 +38,14 @@ interface Offering {
 interface OfferingsListProps {
   offerings: Offering[];
   categoryId: string;
+  isFullView?: boolean;
 }
 
-export const OfferingsList: React.FC<OfferingsListProps> = ({ offerings, categoryId }) => {
+export const OfferingsList: React.FC<OfferingsListProps> = ({ offerings, categoryId, isFullView = false }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterType, setFilterType] = useState<string>("all");
   const [showFilters, setShowFilters] = useState(false);
+  const [minimumFilter, setMinimumFilter] = useState<string>("all");
 
   const filteredOfferings = offerings.filter(offering => {
     // Search term filter
@@ -58,8 +60,22 @@ export const OfferingsList: React.FC<OfferingsListProps> = ({ offerings, categor
       (filterType === "qualified" && offering.investorQualification?.includes("Qualified")) ||
       (filterType === "non-accredited" && offering.investorQualification?.includes("Non-Accredited"));
     
-    return matchesSearch && matchesType;
+    // Minimum investment filter
+    let matchesMinimum = true;
+    if (minimumFilter !== "all") {
+      const amount = parseInt(offering.minimumInvestment.replace(/[^0-9]/g, ''));
+      if (minimumFilter === "under25k" && amount > 25000) matchesMinimum = false;
+      if (minimumFilter === "25k-100k" && (amount < 25000 || amount > 100000)) matchesMinimum = false;
+      if (minimumFilter === "100k-250k" && (amount < 100000 || amount > 250000)) matchesMinimum = false;
+      if (minimumFilter === "250k-1m" && (amount < 250000 || amount > 1000000)) matchesMinimum = false;
+      if (minimumFilter === "over1m" && amount < 1000000) matchesMinimum = false;
+    }
+    
+    return matchesSearch && matchesType && matchesMinimum;
   });
+
+  // For the initial view, show only 4 offerings unless in full view mode
+  const displayedOfferings = isFullView ? filteredOfferings : filteredOfferings.slice(0, 4);
 
   return (
     <div className="space-y-6">
@@ -107,13 +123,29 @@ export const OfferingsList: React.FC<OfferingsListProps> = ({ offerings, categor
                 </SelectContent>
               </Select>
             </div>
+            <div className="w-full md:w-64">
+              <p className="text-sm font-medium mb-2">Minimum Investment</p>
+              <Select value={minimumFilter} onValueChange={setMinimumFilter}>
+                <SelectTrigger>
+                  <SelectValue placeholder="All Minimums" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Minimums</SelectItem>
+                  <SelectItem value="under25k">Under $25,000</SelectItem>
+                  <SelectItem value="25k-100k">$25,000 - $100,000</SelectItem>
+                  <SelectItem value="100k-250k">$100,000 - $250,000</SelectItem>
+                  <SelectItem value="250k-1m">$250,000 - $1,000,000</SelectItem>
+                  <SelectItem value="over1m">Over $1,000,000</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </div>
       )}
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {filteredOfferings.length > 0 ? (
-          filteredOfferings.map(offering => (
+        {displayedOfferings.length > 0 ? (
+          displayedOfferings.map(offering => (
             <OfferingCard key={offering.id} offering={offering} categoryId={categoryId} />
           ))
         ) : (
@@ -123,12 +155,23 @@ export const OfferingsList: React.FC<OfferingsListProps> = ({ offerings, categor
             <Button variant="outline" className="mt-4" onClick={() => {
               setSearchTerm("");
               setFilterType("all");
+              setMinimumFilter("all");
             }}>
               Clear Filters
             </Button>
           </div>
         )}
       </div>
+      
+      {!isFullView && filteredOfferings.length > 4 && (
+        <div className="flex justify-center mt-4">
+          <Button variant="outline" asChild>
+            <Link to={`/investments/alternative/${categoryId}/view-all`}>
+              View All Offerings ({filteredOfferings.length})
+            </Link>
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

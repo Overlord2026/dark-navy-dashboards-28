@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ExternalLink } from "lucide-react";
+import { ChevronLeft, ExternalLink, DollarSign } from "lucide-react";
 import { InterestedButton } from "./InterestedButton";
 import { ScheduleMeetingDialog } from "./ScheduleMeetingDialog";
 import { OfferingDetailsTabs } from "./OfferingDetailsTabs";
@@ -62,11 +62,15 @@ export const OfferingCard: React.FC<OfferingCardProps> = ({ offering, categoryId
           ))}
         </div>
         
-        <div className="grid grid-cols-2 gap-4">
+        <div className="bg-blue-50 p-3 rounded-md flex items-center">
+          <DollarSign className="h-5 w-5 text-blue-500 mr-2" />
           <div>
-            <p className="text-sm text-muted-foreground">Minimum</p>
-            <p className="font-medium">{offering.minimumInvestment}</p>
+            <p className="text-sm font-semibold text-blue-700">Minimum Investment</p>
+            <p className="font-bold text-blue-900">{offering.minimumInvestment}</p>
           </div>
+        </div>
+        
+        <div className="grid grid-cols-2 gap-4">
           <div>
             <p className="text-sm text-muted-foreground">Performance</p>
             <p className="font-medium text-green-500">{offering.performance}</p>
@@ -89,6 +93,12 @@ export const OfferingCard: React.FC<OfferingCardProps> = ({ offering, categoryId
             <div>
               <p className="text-sm text-muted-foreground">Platform</p>
               <p className="font-medium">{offering.platform}</p>
+            </div>
+          )}
+          {offering.liquidity && (
+            <div>
+              <p className="text-sm text-muted-foreground">Liquidity</p>
+              <p className="font-medium">{offering.liquidity}</p>
             </div>
           )}
         </div>
