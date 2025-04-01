@@ -36,8 +36,52 @@ const ALPHA_VANTAGE_API_KEY = '7386117b0dec4ccbb04b7d84b4b80257';
 // Helper function to safely parse numeric values
 const safeParseFloat = (value: any): number | null => {
   if (value === undefined || value === null || value === '') return null;
-  const parsed = parseFloat(value);
+  
+  // If the value is already a number, return it
+  if (typeof value === 'number') return value;
+  
+  // Convert to string and clean it (remove commas, dollar signs, etc.)
+  const stringValue = String(value).replace(/[$,]/g, '');
+  const parsed = parseFloat(stringValue);
+  
   return isNaN(parsed) ? null : parsed;
+};
+
+// Helper to parse market cap which might be in different formats
+const parseMarketCap = (value: any): number | null => {
+  if (value === undefined || value === null || value === '') return null;
+  
+  // If already a number, return it
+  if (typeof value === 'number') return value;
+  
+  // Convert to string and clean it
+  const stringValue = String(value).replace(/[$,]/g, '');
+  
+  // Check for shorthand notations (B for billions, M for millions, T for trillions)
+  if (stringValue.includes('T') || stringValue.includes('t')) {
+    return parseFloat(stringValue.replace(/[Tt]/g, '')) * 1000000000000;
+  } else if (stringValue.includes('B') || stringValue.includes('b')) {
+    return parseFloat(stringValue.replace(/[Bb]/g, '')) * 1000000000;
+  } else if (stringValue.includes('M') || stringValue.includes('m')) {
+    return parseFloat(stringValue.replace(/[Mm]/g, '')) * 1000000;
+  } else {
+    return safeParseFloat(stringValue);
+  }
+};
+
+// Helper to parse dividend yield which might be a percentage or decimal
+const parseDividendYield = (value: any): number | null => {
+  if (value === undefined || value === null || value === '') return null;
+  
+  // Convert to string and clean it
+  const stringValue = String(value).replace(/[$,%]/g, '');
+  const parsed = safeParseFloat(stringValue);
+  
+  if (parsed === null) return null;
+  
+  // If it's a very small decimal (like 0.0234), it's likely a ratio rather than a percentage
+  // Convert to percentage (multiply by 100)
+  return parsed < 1 ? parsed * 100 : parsed;
 };
 
 /**
@@ -103,25 +147,10 @@ export const fetchStockData = async (symbol: string): Promise<StockData> => {
         sector = overviewData.Sector || sector;
         industry = overviewData.Industry || industry;
         
-        // Properly parse numeric values, handling potential formatting issues
+        // Parse numeric values with improved handling
         peRatio = safeParseFloat(overviewData.PERatio);
-        
-        // Market cap might be returned as a string with commas
-        if (overviewData.MarketCapitalization) {
-          // Remove any non-numeric characters except decimal point
-          const cleanMarketCap = overviewData.MarketCapitalization.toString().replace(/[^\d.]/g, '');
-          marketCap = safeParseFloat(cleanMarketCap);
-        }
-        
-        // Dividend yield often comes as a decimal (e.g., 0.0234 for 2.34%)
-        if (overviewData.DividendYield) {
-          dividendYield = safeParseFloat(overviewData.DividendYield);
-          // Convert to percentage if it's a decimal less than 1
-          if (dividendYield !== null && dividendYield < 1) {
-            dividendYield = dividendYield * 100;
-          }
-        }
-        
+        marketCap = parseMarketCap(overviewData.MarketCapitalization);
+        dividendYield = parseDividendYield(overviewData.DividendYield);
         week52High = safeParseFloat(overviewData['52WeekHigh']);
         week52Low = safeParseFloat(overviewData['52WeekLow']);
       }
@@ -205,24 +234,10 @@ export const fetchStockData = async (symbol: string): Promise<StockData> => {
         sector = overviewData.Sector || sector;
         industry = overviewData.Industry || industry;
         
-        // Properly parse numeric values with improved handling
+        // Parse numeric values with improved handling
         peRatio = safeParseFloat(overviewData.PERatio);
-        
-        // Handle market cap which might be returned as a string with commas
-        if (overviewData.MarketCapitalization) {
-          const cleanMarketCap = overviewData.MarketCapitalization.toString().replace(/[^\d.]/g, '');
-          marketCap = safeParseFloat(cleanMarketCap);
-        }
-        
-        // Handle dividend yield
-        if (overviewData.DividendYield) {
-          dividendYield = safeParseFloat(overviewData.DividendYield);
-          // Convert to percentage if it's a decimal less than 1
-          if (dividendYield !== null && dividendYield < 1) {
-            dividendYield = dividendYield * 100;
-          }
-        }
-        
+        marketCap = parseMarketCap(overviewData.MarketCapitalization);
+        dividendYield = parseDividendYield(overviewData.DividendYield);
         week52High = safeParseFloat(overviewData['52WeekHigh']);
         week52Low = safeParseFloat(overviewData['52WeekLow']);
       }
