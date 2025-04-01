@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "lucide-react";
+import { CalendarClock } from "lucide-react";
 import { toast } from "sonner";
 
 interface ScheduleMeetingButtonProps {
@@ -25,7 +25,7 @@ export const ScheduleMeetingButton: React.FC<ScheduleMeetingButtonProps> = ({ of
       className="w-full" 
       onClick={handleScheduleMeeting}
     >
-      <Calendar className="h-4 w-4 mr-2" /> 
+      <CalendarClock className="h-4 w-4 mr-2" /> 
       Schedule a Meeting
     </Button>
   );

@@ -1,3 +1,4 @@
+
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -32,6 +33,8 @@ import { Link } from "react-router-dom";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { investmentCategories } from "@/components/navigation/NavigationConfig";
 import { useMarketData } from "@/hooks/useMarketData";
+import { InterestedButton } from "@/components/investments/InterestedButton";
+import { ScheduleMeetingDialog } from "@/components/investments/ScheduleMeetingDialog";
 
 const Investments = () => {
   const [activeTab, setActiveTab] = useState("overview");
@@ -186,6 +189,7 @@ const Investments = () => {
                 <TableHead>Assigned to Accounts</TableHead>
                 <TableHead>Trading Groups Applied</TableHead>
                 <TableHead>Created</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -200,6 +204,16 @@ const Investments = () => {
                   <TableCell>{portfolio.assignedAccounts}</TableCell>
                   <TableCell>{portfolio.tradingGroups}</TableCell>
                   <TableCell>{portfolio.created}</TableCell>
+                  <TableCell className="text-right">
+                    <div className="flex items-center justify-end gap-2">
+                      <div className="w-32">
+                        <InterestedButton assetName={portfolio.name} />
+                      </div>
+                      <div className="w-48">
+                        <ScheduleMeetingDialog assetName={portfolio.name} />
+                      </div>
+                    </div>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
