@@ -1,3 +1,4 @@
+
 // Service to fetch stock data from free APIs
 
 interface StockData {
@@ -208,9 +209,6 @@ export const fetchStockData = async (symbol: string): Promise<StockData> => {
       return stockData;
     }
     
-    // We no longer use Yahoo Finance API - remove that part and just use the mock data fallback
-    // if both Twelve Data and Alpha Vantage fail
-    
     // For demo purposes only: Return mock data for common tickers even on error
     // This ensures the UI always shows something when testing with known tickers
     if (normalizedSymbol === 'AAPL' || normalizedSymbol === 'MSFT' || 
@@ -327,6 +325,28 @@ export const fetchStockData = async (symbol: string): Promise<StockData> => {
     }
     
     // Return a placeholder with error info for non-mock data
+    return {
+      symbol: normalizedSymbol,
+      companyName: normalizedSymbol,
+      sector: 'Unknown',
+      industry: 'Unknown',
+      price: 0,
+      change: 0,
+      changePercent: 0,
+      marketCap: null,
+      peRatio: null,
+      dividendYield: null,
+      volume: 0,
+      avgVolume: 0,
+      week52High: null,
+      week52Low: null,
+      isLoading: false,
+      error: 'Could not fetch stock data'
+    };
+  } catch (error) {
+    console.error("Error fetching stock data:", error);
+    
+    // Return a placeholder with error info
     return {
       symbol: normalizedSymbol,
       companyName: normalizedSymbol,
