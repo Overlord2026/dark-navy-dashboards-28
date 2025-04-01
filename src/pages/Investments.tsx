@@ -676,11 +676,7 @@ const Investments = () => {
     <div className="animate-fade-in space-y-6">
       <div className="flex items-center justify-between mb-4">
         <h1 className="text-2xl font-semibold">Alternative Assets</h1>
-        <div className="space-x-3">
-          <Button className="bg-white text-black hover:bg-slate-100">
-            <Plus className="mr-2 h-4 w-4" />
-            Add Alternative Asset
-          </Button>
+        <div>
           <Button variant="outline" className="flex items-center">
             View All
             <ArrowRight className="ml-2 h-4 w-4" />
