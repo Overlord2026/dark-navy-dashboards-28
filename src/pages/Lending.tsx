@@ -21,6 +21,7 @@ import { Card } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { LenderDetail } from "@/components/lending/LenderDetail";
 import { LoanCategoryCard } from "@/components/lending/LoanCategoryCard";
+import { SecuritiesBasedLoansContent } from "@/components/lending/SecuritiesBasedLoansContent";
 
 // Loan categories data
 const loanCategories = [
@@ -63,6 +64,7 @@ const loanCategories = [
 
 // Lenders data
 const lenders = [
+  // Home Loan lenders
   {
     id: "bny-mellon",
     name: "BNY Mellon",
@@ -95,6 +97,52 @@ const lenders = [
     howItWorks: "Typically, your advisor fills out your basic information and lending needs. After that, UPTIQ generates quotes within 1-5 business days for the advisor to review and share with you.",
     otherOfferings: ["Jumbo Loans", "Specialized Financing"],
     topUnderwriters: ["UPTIQ Network", "Regional Banks"]
+  },
+  
+  // Securities-Based Loan lenders
+  {
+    id: "morgan-stanley",
+    name: "Morgan Stanley",
+    category: "Securities-Based Loans",
+    offering: "Portfolio Loan Account",
+    description: "A flexible line of credit backed by your investment portfolio.",
+    about: "Morgan Stanley offers securities-based lending solutions that allow you to borrow against the eligible securities in your pledged brokerage account. This gives you access to funds without selling your investments.",
+    howItWorks: "Your advisor will analyze your portfolio to determine eligibility and maximum loan value. Morgan Stanley typically offers up to 50-95% of your portfolio value depending on the types of securities held.",
+    otherOfferings: ["Tailored Lending", "Mortgage Loans", "Express Loans"],
+    topUnderwriters: ["Morgan Stanley Bank", "Morgan Stanley Private Bank"]
+  },
+  {
+    id: "goldman-sachs",
+    name: "Goldman Sachs",
+    category: "Securities-Based Loans",
+    offering: "Select Line of Credit",
+    description: "Premium securities-based lending solution for high-net-worth clients.",
+    about: "Goldman Sachs offers securities-based lending that provides liquidity while keeping your investment strategy intact. Their Select Line of Credit offers competitive rates and flexible terms for qualified clients.",
+    howItWorks: "Your advisor will initiate the application process. Goldman Sachs will evaluate your portfolio and typically provide a decision within 2-3 business days. Once approved, funds can be accessed quickly.",
+    otherOfferings: ["Private Bank Lending", "Structured Lending", "Art-Secured Lending"],
+    topUnderwriters: ["Goldman Sachs Bank USA", "Goldman Sachs International"]
+  },
+  {
+    id: "ubs",
+    name: "UBS",
+    category: "Securities-Based Loans",
+    offering: "Variable Credit Line",
+    description: "Flexible credit solution backed by your UBS investment portfolio.",
+    about: "UBS offers securities-based lending through their Variable Credit Line program, allowing you to access liquidity without disrupting your long-term investment strategy. Competitive rates are based on portfolio composition and loan amount.",
+    howItWorks: "Your advisor will help you determine eligibility and complete the application. Once approved, you can access funds through your UBS account. Interest is charged only on the amount you use.",
+    otherOfferings: ["Fixed Rate Loans", "Mortgage Financing", "Commercial Real Estate"],
+    topUnderwriters: ["UBS Bank USA", "UBS Financial Services"]
+  },
+  {
+    id: "first-republic",
+    name: "First Republic",
+    category: "Securities-Based Loans",
+    offering: "Portfolio Line of Credit",
+    description: "Premium securities-backed lending with personalized service.",
+    about: "First Republic's Portfolio Line of Credit allows you to use your eligible investment securities as collateral while maintaining ownership of your portfolio. This solution offers attractive interest rates and personalized service.",
+    howItWorks: "After your advisor initiates the process, First Republic assigns a dedicated banker to work with you directly. This banker will help structure your line of credit based on your specific needs and portfolio composition.",
+    otherOfferings: ["Professional Loan Programs", "Jumbo Mortgages", "Business Banking"],
+    topUnderwriters: ["First Republic Bank"]
   }
 ];
 
@@ -105,11 +153,6 @@ const Lending = () => {
   const [isLenderDetailOpen, setIsLenderDetailOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const { toast } = useToast();
-
-  const filteredLenders = selectedCategory 
-    ? lenders.filter(lender => lender.category === 
-      loanCategories.find(cat => cat.id === selectedCategory)?.title) 
-    : [];
 
   const handleCategorySelect = (categoryId: string) => {
     setSelectedCategory(categoryId);
@@ -129,6 +172,11 @@ const Lending = () => {
     }
   };
 
+  const filteredLenders = selectedCategory 
+    ? lenders.filter(lender => lender.category === 
+      loanCategories.find(cat => cat.id === selectedCategory)?.title) 
+    : [];
+
   const handlePageChange = (direction: 'next' | 'prev') => {
     if (direction === 'next' && currentPage < Math.ceil(filteredLenders.length / 2)) {
       setCurrentPage(currentPage + 1);
@@ -139,6 +187,9 @@ const Lending = () => {
 
   const paginatedLenders = filteredLenders.slice((currentPage - 1) * 2, currentPage * 2);
   const totalPages = Math.ceil(filteredLenders.length / 2);
+
+  // Special rendering for Securities-Based Loans
+  const isSecuritiesBasedLoans = selectedCategory === "securities-loans";
 
   return (
     <ThreeColumnLayout 
@@ -163,7 +214,7 @@ const Lending = () => {
                 ? "Lending Solutions" 
                 : loanCategories.find(cat => cat.id === selectedCategory)?.title}
             </h1>
-            {activeTab === "lenders" && selectedCategory && (
+            {activeTab === "lenders" && selectedCategory && !isSecuritiesBasedLoans && (
               <p className="text-muted-foreground">
                 {loanCategories.find(cat => cat.id === selectedCategory)?.description}
               </p>
@@ -185,58 +236,64 @@ const Lending = () => {
 
         {activeTab === "lenders" && (
           <>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
-              {paginatedLenders.map((lender) => (
-                <Card 
-                  key={lender.id} 
-                  className="p-6 hover:shadow-md transition-all cursor-pointer"
-                  onClick={() => handleLenderSelect(lender.id)}
-                >
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h3 className="text-xl font-medium mb-1">{lender.name}</h3>
-                      <p className="text-muted-foreground mb-4">{lender.offering}</p>
-                      
-                      <div className="mb-4">
-                        <h4 className="font-medium text-sm mb-1">About</h4>
-                        <p className="text-sm text-muted-foreground">{lender.about.substring(0, 150)}...</p>
+            {isSecuritiesBasedLoans ? (
+              <SecuritiesBasedLoansContent />
+            ) : (
+              <>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
+                  {paginatedLenders.map((lender) => (
+                    <Card 
+                      key={lender.id} 
+                      className="p-6 hover:shadow-md transition-all cursor-pointer"
+                      onClick={() => handleLenderSelect(lender.id)}
+                    >
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <h3 className="text-xl font-medium mb-1">{lender.name}</h3>
+                          <p className="text-muted-foreground mb-4">{lender.offering}</p>
+                          
+                          <div className="mb-4">
+                            <h4 className="font-medium text-sm mb-1">About</h4>
+                            <p className="text-sm text-muted-foreground">{lender.about.substring(0, 150)}...</p>
+                          </div>
+                          
+                          <div>
+                            <h4 className="font-medium text-sm mb-1">How It Works</h4>
+                            <p className="text-sm text-muted-foreground">{lender.howItWorks.substring(0, 150)}...</p>
+                          </div>
+                        </div>
+                        <ChevronRight className="h-5 w-5 text-muted-foreground" />
                       </div>
-                      
-                      <div>
-                        <h4 className="font-medium text-sm mb-1">How It Works</h4>
-                        <p className="text-sm text-muted-foreground">{lender.howItWorks.substring(0, 150)}...</p>
-                      </div>
+                    </Card>
+                  ))}
+                </div>
+                
+                {totalPages > 1 && (
+                  <div className="flex justify-between items-center mt-6">
+                    <div className="text-sm text-muted-foreground">
+                      Page {currentPage} of {totalPages}
                     </div>
-                    <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                    <div className="flex gap-2">
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        onClick={() => handlePageChange('prev')}
+                        disabled={currentPage === 1}
+                      >
+                        <ChevronLeft className="h-4 w-4" />
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        onClick={() => handlePageChange('next')}
+                        disabled={currentPage === totalPages}
+                      >
+                        <ChevronRight className="h-4 w-4" />
+                      </Button>
+                    </div>
                   </div>
-                </Card>
-              ))}
-            </div>
-            
-            {totalPages > 1 && (
-              <div className="flex justify-between items-center mt-6">
-                <div className="text-sm text-muted-foreground">
-                  Page {currentPage} of {totalPages}
-                </div>
-                <div className="flex gap-2">
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    onClick={() => handlePageChange('prev')}
-                    disabled={currentPage === 1}
-                  >
-                    <ChevronLeft className="h-4 w-4" />
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    onClick={() => handlePageChange('next')}
-                    disabled={currentPage === totalPages}
-                  >
-                    <ChevronRight className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
+                )}
+              </>
             )}
           </>
         )}
