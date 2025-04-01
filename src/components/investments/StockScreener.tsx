@@ -56,24 +56,9 @@ export const StockScreener: React.FC = () => {
     
     setLoadingHistory(true);
     try {
-      // Calculate the days to fetch based on timeframe
-      let days = 30; // Default for 1M
-      if (timeframe === "3M") days = 90;
-      if (timeframe === "6M") days = 180;
-      if (timeframe === "1Y") days = 365;
-      
-      try {
-        // Use the fetchStockPriceHistory function from the service
-        const historyData = await fetchStockPriceHistory(stockSymbol, timeframe);
-        setPriceHistory(historyData);
-      } catch (error) {
-        console.error("Error fetching price history from service:", error);
-        // Fallback to mock data if the service fails
-        const currentPrice = stockData?.price || 100;
-        const mockHistory = generateMockPriceHistory(currentPrice, days);
-        setPriceHistory(mockHistory);
-        console.warn("Using mock price history due to API error");
-      }
+      // Use the fetchStockPriceHistory function from the service
+      const historyData = await fetchStockPriceHistory(stockSymbol, timeframe);
+      setPriceHistory(historyData);
     } catch (err) {
       console.error("Error in fetchPriceHistory:", err);
       // Generate mock data based on the current price as fallback
@@ -81,12 +66,12 @@ export const StockScreener: React.FC = () => {
       const daysToGenerate = calculateDaysFromTimeframe(timeframe);
       const mockHistory = generateMockPriceHistory(currentPrice, daysToGenerate);
       setPriceHistory(mockHistory);
+      toast.error("Could not fetch real price history. Using estimated data.");
     } finally {
       setLoadingHistory(false);
     }
   };
 
-  // Helper function to calculate days from timeframe
   const calculateDaysFromTimeframe = (timeframe: "1M" | "3M" | "6M" | "1Y"): number => {
     switch(timeframe) {
       case "3M": return 90;
@@ -96,7 +81,6 @@ export const StockScreener: React.FC = () => {
     }
   };
 
-  // Generate realistic mock price history based on current price
   const generateMockPriceHistory = (currentPrice: number, days: number = 30): PriceHistoryDataPoint[] => {
     if (!currentPrice) return [];
     

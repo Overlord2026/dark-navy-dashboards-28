@@ -1,4 +1,3 @@
-
 // Service to fetch stock data from free APIs
 
 interface StockData {
@@ -29,7 +28,8 @@ interface PriceHistoryDataPoint {
 const stockDataCache: Record<string, { data: StockData, timestamp: number }> = {};
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes in milliseconds
 
-// API key for Alpha Vantage
+// API keys
+const TWELVE_DATA_API_KEY = '7386117b0dec4ccbb04b7d84b4b80257'; // User's API key
 const ALPHA_VANTAGE_API_KEY = '7386117b0dec4ccbb04b7d84b4b80257';
 
 /**
@@ -48,9 +48,9 @@ export const fetchStockData = async (symbol: string): Promise<StockData> => {
   
   // If not in cache or cache expired, fetch from API
   try {
-    // Try Twelve Data API first
+    // Try Twelve Data API first with user's API key
     const twelveDataResponse = await fetch(
-      `https://api.twelvedata.com/quote?symbol=${normalizedSymbol}&apikey=demo`
+      `https://api.twelvedata.com/quote?symbol=${normalizedSymbol}&apikey=${TWELVE_DATA_API_KEY}`
     );
     
     if (!twelveDataResponse.ok) {
@@ -208,67 +208,8 @@ export const fetchStockData = async (symbol: string): Promise<StockData> => {
       return stockData;
     }
     
-    // If both APIs failed, try Yahoo Finance API (via RapidAPI) as a last resort
-    console.log("Trying Yahoo Finance API as last resort...");
-    const yahooOptions = {
-      method: 'GET',
-      headers: {
-        'X-RapidAPI-Key': 'demo-key', // Using demo key
-        'X-RapidAPI-Host': 'apidojo-yahoo-finance-v1.p.rapidapi.com'
-      }
-    };
-    
-    const yahooResponse = await fetch(
-      `https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-summary?symbol=${normalizedSymbol}&region=US`,
-      yahooOptions
-    );
-    
-    if (!yahooResponse.ok) {
-      throw new Error(`Failed to fetch Yahoo Finance data for ${normalizedSymbol}`);
-    }
-    
-    const yahooData = await yahooResponse.json();
-    
-    if (!yahooData.price) {
-      throw new Error(`No Yahoo Finance data found for symbol ${normalizedSymbol}`);
-    }
-    
-    // Parse Yahoo Finance data
-    const price = yahooData.price.regularMarketPrice.raw || 0;
-    const change = yahooData.price.regularMarketChange.raw || 0;
-    const changePercent = yahooData.price.regularMarketChangePercent.raw || 0;
-    const volume = yahooData.price.regularMarketVolume.raw || 0;
-    const avgVolume = yahooData.price.averageDailyVolume10Day.raw || 0;
-    
-    const stockData: StockData = {
-      symbol: normalizedSymbol,
-      companyName: yahooData.quoteType.shortName || normalizedSymbol,
-      sector: yahooData.summaryProfile?.sector || 'N/A',
-      industry: yahooData.summaryProfile?.industry || 'N/A',
-      price,
-      change,
-      changePercent,
-      marketCap: yahooData.price.marketCap?.raw || null,
-      peRatio: yahooData.summaryDetail?.trailingPE?.raw || null,
-      dividendYield: yahooData.summaryDetail?.dividendYield?.raw 
-        ? yahooData.summaryDetail.dividendYield.raw * 100 
-        : null,
-      volume,
-      avgVolume,
-      week52High: yahooData.summaryDetail?.fiftyTwoWeekHigh?.raw || null,
-      week52Low: yahooData.summaryDetail?.fiftyTwoWeekLow?.raw || null,
-      isLoading: false
-    };
-    
-    // Cache the result
-    stockDataCache[cacheKey] = {
-      data: stockData,
-      timestamp: Date.now()
-    };
-    
-    return stockData;
-  } catch (error) {
-    console.error('Error fetching stock data:', error);
+    // We no longer use Yahoo Finance API - remove that part and just use the mock data fallback
+    // if both Twelve Data and Alpha Vantage fail
     
     // For demo purposes only: Return mock data for common tickers even on error
     // This ensures the UI always shows something when testing with known tickers
@@ -409,7 +350,6 @@ export const fetchStockData = async (symbol: string): Promise<StockData> => {
 
 /**
  * Fetches historical price data for a stock
- * Note: This function is used directly in the component without caching in this service
  */
 export const fetchStockPriceHistory = async (symbol: string, timeframe: "1M" | "3M" | "6M" | "1Y"): Promise<PriceHistoryDataPoint[]> => {
   // Calculate days based on timeframe
@@ -419,9 +359,9 @@ export const fetchStockPriceHistory = async (symbol: string, timeframe: "1M" | "
   if (timeframe === "1Y") days = 365;
   
   try {
-    // Try TwelveData API first
+    // Use TwelveData API with the user's API key
     const response = await fetch(
-      `https://api.twelvedata.com/time_series?symbol=${symbol}&interval=1day&outputsize=${days}&apikey=demo`
+      `https://api.twelvedata.com/time_series?symbol=${symbol}&interval=1day&outputsize=${days}&apikey=${TWELVE_DATA_API_KEY}`
     );
     
     if (!response.ok) {
