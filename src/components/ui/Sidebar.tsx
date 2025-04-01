@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { cn } from "@/lib/utils";
 import { 
@@ -11,10 +10,9 @@ import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "react-router-dom";
 import { 
   homeNavItems,
+  educationSolutionsNavItems,
   familyWealthNavItems,
-  bankingNavItems,
   collaborationNavItems,
-  securityNavItems,
   bottomNavItems 
 } from "@/components/navigation/NavigationConfig";
 import { NavCategory, NavItem } from "@/types/navigation";
@@ -28,29 +26,29 @@ export const Sidebar = () => {
   const { theme } = useTheme();
   const isLightTheme = theme === "light";
 
-  // Updated navigation categories to match the UI in the image
+  // Updated navigation categories to match the requested structure
   const navigationCategories: NavCategory[] = [
     {
-      id: "main",
-      label: "MAIN",
+      id: "home",
+      label: "HOME",
       items: homeNavItems,
       defaultExpanded: true
     },
     {
-      id: "wealth-management",
-      label: "WEALTH MANAGEMENT",
+      id: "education-solutions",
+      label: "EDUCATION & SOLUTIONS",
+      items: educationSolutionsNavItems,
+      defaultExpanded: true
+    },
+    {
+      id: "family-wealth",
+      label: "FAMILY WEALTH",
       items: familyWealthNavItems,
       defaultExpanded: true
     },
     {
-      id: "banking",
-      label: "BANKING",
-      items: bankingNavItems,
-      defaultExpanded: true
-    },
-    {
-      id: "collaboration",
-      label: "COLLABORATION",
+      id: "collaboration-sharing",
+      label: "COLLABORATION & SHARING",
       items: collaborationNavItems,
       defaultExpanded: true
     }
