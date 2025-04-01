@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, ExternalLink } from "lucide-react";
 import { InterestedButton } from "./InterestedButton";
 import { ScheduleMeetingDialog } from "./ScheduleMeetingDialog";
 import { OfferingDetailsTabs } from "./OfferingDetailsTabs";
@@ -46,7 +46,7 @@ interface OfferingCardProps {
 
 export const OfferingCard: React.FC<OfferingCardProps> = ({ offering, categoryId }) => {
   return (
-    <Card key={offering.id} className="overflow-hidden hover:shadow-md transition-shadow duration-300">
+    <Card key={offering.id} className="overflow-hidden hover:shadow-md transition-shadow duration-300 border-gray-200">
       <CardHeader className="pb-2">
         <div className="flex items-start justify-between gap-2">
           <div>
@@ -58,7 +58,7 @@ export const OfferingCard: React.FC<OfferingCardProps> = ({ offering, categoryId
       <CardContent className="space-y-4">
         <div className="flex flex-wrap gap-1">
           {offering.tags.map((tag, i) => (
-            <Badge key={i} variant="outline" className="text-xs">{tag}</Badge>
+            <Badge key={i} variant="outline" className={`text-xs ${i === 0 ? "bg-blue-50" : i === 1 ? "bg-green-50" : "bg-purple-50"}`}>{tag}</Badge>
           ))}
         </div>
         
@@ -79,12 +79,24 @@ export const OfferingCard: React.FC<OfferingCardProps> = ({ offering, categoryId
             <p className="text-sm text-muted-foreground">Firm</p>
             <p className="font-medium">{offering.firm}</p>
           </div>
+          {offering.investorQualification && (
+            <div>
+              <p className="text-sm text-muted-foreground">Investor Type</p>
+              <p className="font-medium">{offering.investorQualification}</p>
+            </div>
+          )}
+          {offering.platform && (
+            <div>
+              <p className="text-sm text-muted-foreground">Platform</p>
+              <p className="font-medium">{offering.platform}</p>
+            </div>
+          )}
         </div>
 
         <div className="flex gap-3 pt-3">
           <Sheet>
             <SheetTrigger asChild>
-              <ScheduleMeetingDialog assetName={offering.name} />
+              <Button variant="outline" className="flex-1">View Details</Button>
             </SheetTrigger>
             <SheetContent className="w-full sm:max-w-xl overflow-y-auto">
               <SheetHeader className="mb-6">
@@ -104,6 +116,7 @@ export const OfferingCard: React.FC<OfferingCardProps> = ({ offering, categoryId
               <OfferingDetailsTabs offering={offering} />
             </SheetContent>
           </Sheet>
+          <ScheduleMeetingDialog assetName={offering.name} />
           <InterestedButton assetName={offering.name} />
         </div>
       </CardContent>
