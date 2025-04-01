@@ -2,7 +2,7 @@
 // Service to handle AI analysis using OpenAI API
 
 // OpenAI API key
-const OPENAI_API_KEY = "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";
+const OPENAI_API_KEY = "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";
 
 /**
  * Generate AI analysis for a stock based on its data
