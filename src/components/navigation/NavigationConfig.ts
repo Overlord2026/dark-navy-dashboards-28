@@ -1,75 +1,42 @@
-
 import { 
   HomeIcon, 
-  BarChart3Icon, 
+  GraduationCapIcon,
   BookIcon, 
-  CalculatorIcon, 
-  ChartBarIcon, 
-  CreditCardIcon, 
-  FileIcon, 
+  BarChart3Icon,
   FileTextIcon, 
-  GraduationCapIcon, 
-  LayoutDashboardIcon, 
-  LineChartIcon, 
-  PiggyBankIcon, 
-  ReceiptIcon, 
-  SettingsIcon, 
-  ShareIcon, 
-  ShieldIcon, 
-  ShoppingBagIcon, 
   UserIcon, 
   WalletIcon,
   BuildingIcon,
-  KeyIcon,
-  MapPinIcon,
   LandmarkIcon,
   CoinsIcon,
-  CircleDollarSignIcon,
   BanknoteIcon,
-  ArrowLeftRightIcon,
-  ShieldCheckIcon,
-  FileTextIcon as FileShieldIcon,
-  BookOpenIcon,
+  ShieldIcon,
+  ShareIcon,
   Users2Icon,
   HeartHandshakeIcon,
   VaultIcon,
-  GemIcon,
-  BriefcaseIcon,
-  TrendingUpIcon
+  BookOpenIcon,
+  LineChartIcon,
+  CircleDollarSignIcon
 } from "lucide-react";
 
 import { NavItem } from "@/types/navigation";
 
-// MAIN category
+// HOME category
 export const homeNavItems: NavItem[] = [
   { 
     title: "Home", 
     href: "/", 
     icon: HomeIcon 
-  },
+  }
+];
+
+// EDUCATION & SOLUTIONS category
+export const educationSolutionsNavItems: NavItem[] = [
   { 
     title: "Education Center", 
     href: "/education", 
     icon: GraduationCapIcon 
-  },
-  { 
-    title: "Legacy Vault", 
-    href: "/legacy-vault", 
-    icon: VaultIcon 
-  },
-  { 
-    title: "Tax Planning", 
-    href: "/tax-budgets", 
-    icon: ReceiptIcon 
-  }
-];
-
-// WEALTH MANAGEMENT category
-export const wealthManagementNavItems: NavItem[] = [
-  { 
-    title: "Financial Plans", 
-    href: "/financial-plans", 
-    icon: LineChartIcon 
   },
   { 
     title: "Investments", 
@@ -77,14 +44,43 @@ export const wealthManagementNavItems: NavItem[] = [
     icon: BarChart3Icon 
   },
   { 
-    title: "Accounts", 
+    title: "Insurance", 
+    href: "/insurance", 
+    icon: ShieldIcon 
+  },
+  { 
+    title: "Lending", 
+    href: "/lending", 
+    icon: BanknoteIcon 
+  }
+];
+
+// FAMILY WEALTH category
+export const familyWealthNavItems: NavItem[] = [
+  { 
+    title: "Financial Plans", 
+    href: "/financial-plans", 
+    icon: LineChartIcon 
+  },
+  { 
+    title: "Accounts Overview", 
     href: "/accounts", 
     icon: WalletIcon 
   },
   { 
-    title: "Properties", 
-    href: "/properties", 
-    icon: BuildingIcon 
+    title: "Insurance & Annuities", 
+    href: "/insurance", 
+    icon: ShieldIcon 
+  },
+  { 
+    title: "Banking", 
+    href: "/cash-management", 
+    icon: BanknoteIcon 
+  },
+  { 
+    title: "Legacy Vault", 
+    href: "/legacy-vault", 
+    icon: VaultIcon 
   },
   { 
     title: "Social Security", 
@@ -92,32 +88,13 @@ export const wealthManagementNavItems: NavItem[] = [
     icon: CircleDollarSignIcon 
   },
   { 
-    title: "Insurance", 
-    href: "/insurance", 
-    icon: ShieldIcon 
+    title: "Real Estate & Properties", 
+    href: "/properties", 
+    icon: BuildingIcon 
   }
 ];
 
-// BANKING category
-export const bankingNavItems: NavItem[] = [
-  { 
-    title: "Cash Management", 
-    href: "/cash-management", 
-    icon: CoinsIcon 
-  },
-  { 
-    title: "Lending", 
-    href: "/lending", 
-    icon: BanknoteIcon 
-  },
-  { 
-    title: "Transfers", 
-    href: "/transfers", 
-    icon: ArrowLeftRightIcon 
-  }
-];
-
-// COLLABORATION category
+// COLLABORATION & SHARING category
 export const collaborationNavItems: NavItem[] = [
   { 
     title: "Document Sharing", 
@@ -136,7 +113,7 @@ export const collaborationNavItems: NavItem[] = [
   }
 ];
 
-// Bottom navigation items
+// Bottom navigation items (unchanged)
 export const bottomNavItems: NavItem[] = [
   { 
     title: "Help", 
@@ -146,16 +123,16 @@ export const bottomNavItems: NavItem[] = [
   { 
     title: "Settings", 
     href: "/settings", 
-    icon: SettingsIcon 
+    icon: UserIcon 
   }
 ];
 
-// INVESTMENTS categories (for the investments page)
+// INVESTMENTS categories (for the investments page, unchanged)
 export const investmentCategories: NavItem[] = [
   {
     title: "Private Equity",
     href: "/investments/alternative/private-equity",
-    icon: BriefcaseIcon
+    icon: LandmarkIcon
   },
   {
     title: "Private Debt",
@@ -174,9 +151,8 @@ export const investmentCategories: NavItem[] = [
   }
 ];
 
-// Clean up exports - remove deprecated exports to prevent confusion
-// These are empty arrays for backward compatibility if needed
-export const educationSolutionsNavItems: NavItem[] = [];
-export const familyWealthNavItems: NavItem[] = [];
+// Remove deprecated exports for backward compatibility
+export const wealthManagementNavItems: NavItem[] = [];
+export const bankingNavItems: NavItem[] = [];
 export const securityNavItems: NavItem[] = [];
 export const propertiesNavItems: NavItem[] = [];

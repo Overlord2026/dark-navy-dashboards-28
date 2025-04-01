@@ -1,29 +1,29 @@
+
 import { ReactNode, useState } from "react";
 import * as React from "react";
 import { useParams, useNavigate, Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { 
   UserIcon, 
-  UsersIcon, 
-  FileIcon, 
+  HomeIcon,
   BarChart3Icon, 
   ShieldIcon, 
-  PiggyBankIcon, 
-  CreditCardIcon, 
+  BanknoteIcon, 
   WalletIcon, 
-  ArrowRightLeftIcon, 
-  ReceiptIcon, 
+  FileTextIcon, 
   ShareIcon, 
   GraduationCapIcon,
   BookOpenIcon,
-  CalendarIcon,
-  MailIcon,
-  ExternalLinkIcon,
   UserRoundIcon,
-  HomeIcon,
   CoinsIcon,
   ChevronDown,
-  ChevronRight
+  ChevronRight,
+  BuildingIcon,
+  Users2Icon,
+  HeartHandshakeIcon,
+  VaultIcon,
+  LineChartIcon,
+  CircleDollarSignIcon
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { UserProfileSection } from "@/components/sidebar/UserProfileSection";
@@ -83,45 +83,48 @@ const CustomHomeIcon: React.FC = () => (
   />
 );
 
+// Updated navigation categories based on the new structure
 const navigationCategories: NavCategory[] = [
   {
-    id: "main",
-    label: "Main",
+    id: "home",
+    label: "Home",
     defaultExpanded: true,
     items: [
       { id: "home", label: "Home", icon: CustomHomeIcon, href: "/" },
-      { id: "education", label: "Education Center", icon: GraduationCapIcon, href: "/education" },
-      { id: "legacy-vault", label: "Legacy Vault", icon: BookOpenIcon, href: "/legacy-vault" },
-      { id: "tax-budgets", label: "Tax Planning", icon: ReceiptIcon, href: "/tax-budgets" },
     ]
   },
   {
-    id: "wealth-management",
-    label: "Wealth Management",
+    id: "education-solutions",
+    label: "Education & Solutions",
     defaultExpanded: true,
     items: [
-      { id: "financial-plans", label: "Financial Plans", icon: BarChart3Icon, href: "/financial-plans" },
-      { id: "investments", label: "Investments", icon: PiggyBankIcon, href: "/investments" },
-      { id: "accounts", label: "Accounts", icon: WalletIcon, href: "/accounts" },
-      { id: "properties", label: "Properties", icon: HomeIcon, href: "/properties" },
-      { id: "social-security", label: "Social Security", icon: CoinsIcon, href: "/social-security" },
+      { id: "education", label: "Education Center", icon: GraduationCapIcon, href: "/education" },
+      { id: "investments", label: "Investments", icon: BarChart3Icon, href: "/investments" },
       { id: "insurance", label: "Insurance", icon: ShieldIcon, href: "/insurance" },
+      { id: "lending", label: "Lending", icon: BanknoteIcon, href: "/lending" },
     ]
   },
   {
-    id: "banking",
-    label: "Banking",
+    id: "family-wealth",
+    label: "Family Wealth",
+    defaultExpanded: true,
     items: [
-      { id: "cash-management", label: "Cash Management", icon: WalletIcon, href: "/cash-management" },
-      { id: "lending", label: "Lending", icon: CreditCardIcon, href: "/lending" },
-      { id: "transfers", label: "Transfers", icon: ArrowRightLeftIcon, href: "/transfers" },
+      { id: "financial-plans", label: "Financial Plans", icon: LineChartIcon, href: "/financial-plans" },
+      { id: "accounts", label: "Accounts Overview", icon: WalletIcon, href: "/accounts" },
+      { id: "insurance", label: "Insurance & Annuities", icon: ShieldIcon, href: "/insurance" },
+      { id: "cash-management", label: "Banking", icon: BanknoteIcon, href: "/cash-management" },
+      { id: "legacy-vault", label: "Legacy Vault", icon: VaultIcon, href: "/legacy-vault" },
+      { id: "social-security", label: "Social Security", icon: CircleDollarSignIcon, href: "/social-security" },
+      { id: "properties", label: "Real Estate & Properties", icon: BuildingIcon, href: "/properties" },
     ]
   },
   {
     id: "collaboration",
-    label: "Collaboration",
+    label: "Collaboration & Sharing",
     items: [
-      { id: "sharing", label: "Sharing", icon: ShareIcon, href: "/sharing" },
+      { id: "documents", label: "Document Sharing", icon: FileTextIcon, href: "/documents" },
+      { id: "professionals", label: "Professional Access", icon: Users2Icon, href: "/professionals" },
+      { id: "sharing", label: "Family Member Access", icon: ShareIcon, href: "/sharing" },
     ]
   },
 ];

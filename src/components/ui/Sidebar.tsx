@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { 
@@ -11,8 +10,8 @@ import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "react-router-dom";
 import { 
   homeNavItems,
-  wealthManagementNavItems,
-  bankingNavItems,
+  educationSolutionsNavItems,
+  familyWealthNavItems,
   collaborationNavItems,
   bottomNavItems 
 } from "@/components/navigation/NavigationConfig";
@@ -43,29 +42,29 @@ export const Sidebar = () => {
     });
   }, []);
 
-  // Updated navigation categories with clear and consistent naming
+  // Updated navigation categories with the new structure
   const navigationCategories: NavCategory[] = [
     {
-      id: "main",
-      label: "MAIN",
+      id: "home",
+      label: "HOME",
       items: homeNavItems,
       defaultExpanded: true
     },
     {
-      id: "wealth-management",
-      label: "WEALTH MANAGEMENT",
-      items: wealthManagementNavItems,
+      id: "education-solutions",
+      label: "EDUCATION & SOLUTIONS",
+      items: educationSolutionsNavItems,
       defaultExpanded: true
     },
     {
-      id: "banking",
-      label: "BANKING",
-      items: bankingNavItems,
+      id: "family-wealth",
+      label: "FAMILY WEALTH",
+      items: familyWealthNavItems,
       defaultExpanded: true
     },
     {
       id: "collaboration",
-      label: "COLLABORATION",
+      label: "COLLABORATION & SHARING",
       items: collaborationNavItems,
       defaultExpanded: true
     }
