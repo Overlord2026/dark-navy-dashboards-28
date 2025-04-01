@@ -14,7 +14,8 @@ import {
   DollarSign, 
   Building, 
   Briefcase,
-  CalendarClock
+  CalendarClock,
+  CircleDollarSign
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -181,18 +182,21 @@ export const StockScreener: React.FC = () => {
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-              <div className="bg-card text-card-foreground rounded-lg border shadow-sm p-4">
+              <div className="bg-card text-card-foreground rounded-lg border shadow-sm p-4 hover:shadow-md transition-shadow">
                 <div className="flex flex-col gap-1">
                   <div className="text-muted-foreground text-sm flex items-center">
-                    <DollarSign className="h-4 w-4 mr-1" /> Market Cap
+                    <CircleDollarSign className="h-4 w-4 mr-1" /> Market Cap
                   </div>
                   <div className="text-xl font-bold">
                     {formatLargeNumber(stockData.marketCap)}
                   </div>
+                  <div className="text-xs text-muted-foreground mt-1">
+                    Total company value
+                  </div>
                 </div>
               </div>
               
-              <div className="bg-card text-card-foreground rounded-lg border shadow-sm p-4">
+              <div className="bg-card text-card-foreground rounded-lg border shadow-sm p-4 hover:shadow-md transition-shadow">
                 <div className="flex flex-col gap-1">
                   <div className="text-muted-foreground text-sm flex items-center">
                     <BarChart className="h-4 w-4 mr-1" /> P/E Ratio
@@ -200,16 +204,22 @@ export const StockScreener: React.FC = () => {
                   <div className="text-xl font-bold">
                     {stockData.peRatio !== null ? stockData.peRatio.toFixed(2) : 'N/A'}
                   </div>
+                  <div className="text-xs text-muted-foreground mt-1">
+                    Price to Earnings ratio
+                  </div>
                 </div>
               </div>
               
-              <div className="bg-card text-card-foreground rounded-lg border shadow-sm p-4">
+              <div className="bg-card text-card-foreground rounded-lg border shadow-sm p-4 hover:shadow-md transition-shadow">
                 <div className="flex flex-col gap-1">
                   <div className="text-muted-foreground text-sm flex items-center">
                     <TrendingUp className="h-4 w-4 mr-1" /> Dividend Yield
                   </div>
                   <div className="text-xl font-bold">
                     {formatPercent(stockData.dividendYield)}
+                  </div>
+                  <div className="text-xs text-muted-foreground mt-1">
+                    Annual dividend/stock price
                   </div>
                 </div>
               </div>
