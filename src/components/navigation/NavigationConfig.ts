@@ -28,31 +28,54 @@ import {
   BanknoteIcon,
   ArrowLeftRightIcon,
   ShieldCheckIcon,
-  FileTextIcon as FileShieldIcon  // Using FileTextIcon as a replacement for FileShieldIcon
+  FileTextIcon as FileShieldIcon,
+  BookOpenIcon,
+  Users2Icon,
+  HeartHandshakeIcon,
+  VaultIcon
 } from "lucide-react";
 
 import { NavItem } from "@/types/navigation";
 
-export const mainNavItems: NavItem[] = [
+// Main Home category
+export const homeNavItems: NavItem[] = [
   { 
     title: "Dashboard", 
     href: "/", 
     icon: HomeIcon 
   },
   { 
+    title: "Customer Profile", 
+    href: "/customer-profile", 
+    icon: UserIcon 
+  }
+];
+
+// Education & Solutions category
+export const educationSolutionsNavItems: NavItem[] = [
+  { 
+    title: "Education Center", 
+    href: "/education", 
+    icon: GraduationCapIcon 
+  },
+  { 
+    title: "Marketplace", 
+    href: "/marketplace", 
+    icon: ShoppingBagIcon 
+  },
+  { 
+    title: "Tax & Budgets", 
+    href: "/tax-budgets", 
+    icon: CalculatorIcon 
+  }
+];
+
+// Family Wealth category
+export const familyWealthNavItems: NavItem[] = [
+  { 
     title: "Accounts", 
     href: "/accounts", 
     icon: WalletIcon 
-  },
-  { 
-    title: "Documents", 
-    href: "/documents", 
-    icon: FileTextIcon 
-  },
-  { 
-    title: "Sharing", 
-    href: "/sharing", 
-    icon: ShareIcon 
   },
   { 
     title: "Financial Plans", 
@@ -63,6 +86,11 @@ export const mainNavItems: NavItem[] = [
     title: "Investments", 
     href: "/investments", 
     icon: BarChart3Icon 
+  },
+  { 
+    title: "Properties", 
+    href: "/properties", 
+    icon: BuildingIcon 
   },
   { 
     title: "Insurance", 
@@ -80,6 +108,16 @@ export const mainNavItems: NavItem[] = [
     icon: PiggyBankIcon 
   },
   { 
+    title: "Social Security", 
+    href: "/social-security", 
+    icon: CircleDollarSignIcon 
+  },
+  { 
+    title: "Legacy Vault", 
+    href: "/legacy-vault", 
+    icon: VaultIcon 
+  },
+  { 
     title: "Lending", 
     href: "/lending", 
     icon: BanknoteIcon 
@@ -93,19 +131,48 @@ export const mainNavItems: NavItem[] = [
     title: "Transfers", 
     href: "/transfers", 
     icon: ArrowLeftRightIcon 
-  },
-  { 
-    title: "Tax & Budgets", 
-    href: "/tax-budgets", 
-    icon: CalculatorIcon 
-  },
-  { 
-    title: "Marketplace", 
-    href: "/marketplace", 
-    icon: ShoppingBagIcon 
   }
 ];
 
+// Collaboration & Sharing category
+export const collaborationNavItems: NavItem[] = [
+  { 
+    title: "Sharing", 
+    href: "/sharing", 
+    icon: ShareIcon 
+  },
+  { 
+    title: "Professionals", 
+    href: "/professionals", 
+    icon: Users2Icon 
+  },
+  { 
+    title: "Documents", 
+    href: "/documents", 
+    icon: FileTextIcon 
+  },
+  { 
+    title: "Bill Management", 
+    href: "/bills-management", 
+    icon: ReceiptIcon 
+  }
+];
+
+// Security category
+export const securityNavItems: NavItem[] = [
+  { 
+    title: "IP Protection", 
+    href: "/ip-protection", 
+    icon: FileShieldIcon
+  },
+  { 
+    title: "Security Settings", 
+    href: "/security-settings", 
+    icon: ShieldCheckIcon 
+  }
+];
+
+// Properties sub-menu
 export const propertiesNavItems: NavItem[] = [
   { 
     title: "Properties", 
@@ -134,24 +201,11 @@ export const propertiesNavItems: NavItem[] = [
   }
 ];
 
-export const securityNavItems: NavItem[] = [
-  { 
-    title: "IP Protection", 
-    href: "/ip-protection", 
-    icon: FileShieldIcon  // Using the aliased icon
-  },
-  { 
-    title: "Security Settings", 
-    href: "/security-settings", 
-    icon: ShieldCheckIcon 
-  }
-];
-
 export const bottomNavItems: NavItem[] = [
   { 
     title: "Help", 
     href: "/help", 
-    icon: SettingsIcon 
+    icon: HeartHandshakeIcon 
   },
   { 
     title: "Settings", 

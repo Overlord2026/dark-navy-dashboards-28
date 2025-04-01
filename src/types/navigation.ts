@@ -10,3 +10,10 @@ export interface NavItem {
   external?: boolean;
   submenu?: NavItem[];
 }
+
+export interface NavCategory {
+  id: string;
+  label: string;
+  items: NavItem[];
+  defaultExpanded?: boolean;
+}
