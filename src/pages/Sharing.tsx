@@ -53,6 +53,14 @@ export default function Sharing() {
     setShowAddCollaborator(true);
   };
 
+  const handleRemoveCollaborator = (id: string) => {
+    setCollaborators(collaborators.filter(collaborator => collaborator.id !== id));
+    toast({
+      title: "Collaborator removed",
+      description: "The collaborator has been removed successfully.",
+    });
+  };
+
   return (
     <ThreeColumnLayout 
       title="Sharing" 
@@ -113,7 +121,12 @@ export default function Sharing() {
                             </td>
                             <td className="p-2 text-right">
                               <Button variant="ghost" size="sm">Edit</Button>
-                              <Button variant="ghost" size="sm" className="text-destructive">
+                              <Button 
+                                variant="ghost" 
+                                size="sm" 
+                                className="text-destructive"
+                                onClick={() => handleRemoveCollaborator(collaborator.id)}
+                              >
                                 Remove
                               </Button>
                             </td>

@@ -11,6 +11,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
+import { ProfessionalType } from "@/types/professional";
 
 type AddCollaboratorDialogProps = {
   onAddCollaborator: (collaborator: {
@@ -29,6 +30,7 @@ const formSchema = z.object({
   lastName: z.string().min(1, "Last name is required"),
   email: z.string().email("Invalid email address"),
   role: z.string().min(1, "Role is required"),
+  collaboratorType: z.string().min(1, "Collaborator type is required"),
   accessLevel: z.enum(["full", "limited"]),
 });
 
@@ -49,6 +51,7 @@ export function AddCollaboratorDialog({
       lastName: "",
       email: "",
       role: "",
+      collaboratorType: "",
       accessLevel: "limited",
     },
   });
@@ -81,7 +84,7 @@ export function AddCollaboratorDialog({
     onAddCollaborator({
       name: `${values.firstName} ${values.lastName}`,
       email: values.email,
-      role: values.role,
+      role: values.collaboratorType,
       accessLevel: values.accessLevel as "full" | "limited",
     });
     
@@ -223,7 +226,7 @@ export function AddCollaboratorDialog({
                   <div className="bg-[#0c1428] p-4 rounded-md mb-2">
                     <FormField
                       control={form.control}
-                      name="role"
+                      name="collaboratorType"
                       render={({ field }) => (
                         <FormItem className="mb-4">
                           <FormLabel className="flex items-center gap-1 text-sm font-normal text-white">
