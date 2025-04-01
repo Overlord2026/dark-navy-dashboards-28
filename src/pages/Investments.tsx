@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ChevronRight, Briefcase, BarChart3, ArrowUpRight, ShieldCheck } from "lucide-react";
 import { IntelligentAllocationTab } from "@/components/investments/IntelligentAllocationTab";
 import { Badge } from "@/components/ui/badge";
@@ -24,6 +24,7 @@ interface PortfolioModel {
 }
 
 const Investments = () => {
+  const navigate = useNavigate();
   const [selectedTab, setSelectedTab] = useState("private-market");
   
   // Portfolio models data
@@ -104,23 +105,23 @@ const Investments = () => {
 
   // Handler for portfolio model cards
   const handlePortfolioClick = (model: PortfolioModel) => {
-    toast.success(`Opening ${model.name} by ${model.provider}`);
-    // In a real implementation, this would navigate to the portfolio details page
-    // navigate(`/investments/models/${model.id}`);
+    navigate(`/investments/models/${model.id}`);
   };
 
   // Handler for the View All button
   const handleViewAllModels = () => {
-    toast.info("Viewing all model portfolios");
-    // In a real implementation, this would navigate to a comprehensive list view
-    // navigate("/investments/models/all");
+    navigate("/investments/models/all");
   };
 
   // Handler for the Start Building button
   const handleStartBuildingClick = () => {
-    toast.success("Opening portfolio builder");
-    // In a real implementation, this would navigate to the portfolio builder
-    window.location.href = "/investments/builder";
+    navigate("/investments/builder");
+  };
+
+  // Handler for View Details buttons on portfolio cards
+  const handleViewDetails = (e: React.MouseEvent, model: PortfolioModel) => {
+    e.stopPropagation();
+    navigate(`/investments/models/${model.id}/details`);
   };
 
   return (
@@ -315,7 +316,6 @@ const Investments = () => {
                         <div className="flex justify-between items-center">
                           <Briefcase className="h-10 w-10 text-blue-500" />
                           <Badge 
-                            variant="outline" 
                             className={`bg-${model.badge.color}-50 text-${model.badge.color}-700 dark:bg-${model.badge.color}-900 dark:text-${model.badge.color}-300 border-${model.badge.color}-200 dark:border-${model.badge.color}-800`}
                           >
                             {model.badge.text}
@@ -339,10 +339,7 @@ const Investments = () => {
                         <Button 
                           size="sm" 
                           className="w-full mt-2"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            toast.success(`Viewing details for ${model.name}`);
-                          }}
+                          onClick={(e) => handleViewDetails(e, model)}
                         >
                           View Details
                         </Button>

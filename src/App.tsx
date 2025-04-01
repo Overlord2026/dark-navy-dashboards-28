@@ -48,6 +48,9 @@ import IPProtection from "./pages/IPProtection";
 import { Toaster } from "./components/ui/sonner";
 import AllAlternativeInvestments from "./pages/AllAlternativeInvestments";
 import EstatePlanning from "./pages/EstatePlanning";
+import PortfolioModelDetail from "./pages/PortfolioModelDetail";
+import AllModelPortfolios from "./pages/AllModelPortfolios";
+import PortfolioBuilder from "./pages/PortfolioBuilder";
 
 function App() {
   return (
@@ -81,8 +84,11 @@ function App() {
                     <Route path="/financial-plans" element={<FinancialPlans />} />
                     <Route path="/investments" element={<Investments />} />
                     <Route path="/investments/performance" element={<InvestmentPerformance />} />
-                    <Route path="/investments/builder" element={<InvestmentBuilder />} />
+                    <Route path="/investments/builder" element={<PortfolioBuilder />} />
                     <Route path="/investments/risk" element={<InvestmentRisk />} />
+                    <Route path="/investments/models/:modelId" element={<PortfolioModelDetail />} />
+                    <Route path="/investments/models/:modelId/details" element={<PortfolioModelDetail />} />
+                    <Route path="/investments/models/all" element={<AllModelPortfolios />} />
                     <Route path="/marketplace" element={<Marketplace />} />
                     <Route path="/marketplace/rfp" element={<MarketplaceRfp />} />
                     <Route path="/marketplace/rfp/:id" element={<MarketplaceRfpDetail />} />
