@@ -105,7 +105,7 @@ export const Sidebar = () => {
            (href !== "/" && location.pathname.startsWith(href));
   };
 
-  // Define these variables only once
+  // Define advisor info and related functions only once
   const advisorInfo = {
     name: "Daniel Zamora",
     title: "Senior Financial Advisor",
@@ -252,8 +252,7 @@ export const Sidebar = () => {
                   ? isLightTheme 
                     ? "bg-[#E9E7D8] text-[#222222] font-medium border-primary" 
                     : "bg-black text-white border-primary" 
-                  : isLightTheme 
-                    ? "text-[#222222] border-transparent hover:bg-[#E9E7D8] hover:border-primary" 
+                  : isLightTheme ? "text-[#222222] border-transparent hover:bg-[#E9E7D8] hover:border-primary" 
                     : "text-sidebar-foreground border-transparent hover:bg-sidebar-accent",
               )}
               title={collapsed ? item.title : undefined}
