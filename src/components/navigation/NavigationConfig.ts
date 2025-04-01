@@ -1,3 +1,4 @@
+
 import { 
   HomeIcon, 
   GraduationCapIcon,
@@ -69,7 +70,7 @@ export const familyWealthNavItems: NavItem[] = [
   },
   { 
     title: "Insurance & Annuities", 
-    href: "/insurance", 
+    href: "/personal-insurance", 
     icon: ShieldIcon 
   },
   { 

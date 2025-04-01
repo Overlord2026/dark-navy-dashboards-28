@@ -22,6 +22,7 @@ import AdvisorProfile from "./pages/AdvisorProfile";
 import Lending from "./pages/Lending";
 import CashManagement from "./pages/CashManagement";
 import Insurance from "./pages/Insurance";
+import PersonalInsurance from "./pages/PersonalInsurance";
 import Sharing from "./pages/Sharing";
 import Transfers from "./pages/Transfers";
 import NotFound from "./pages/NotFound";
@@ -81,6 +82,7 @@ function App() {
                     <Route path="/lending" element={<Lending />} />
                     <Route path="/cash-management" element={<CashManagement />} />
                     <Route path="/insurance" element={<Insurance />} />
+                    <Route path="/personal-insurance" element={<PersonalInsurance />} />
                     <Route path="/sharing" element={<Sharing />} />
                     <Route path="/sharing/:sectionId" element={<Sharing />} />
                     <Route path="/transfers" element={<Transfers />} />
