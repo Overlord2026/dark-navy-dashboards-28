@@ -14,6 +14,9 @@ import TaxBudgets from "./pages/TaxBudgets";
 import Education from "./pages/Education";
 import FinancialPlans from "./pages/FinancialPlans";
 import Investments from "./pages/Investments";
+import InvestmentPerformance from "./pages/InvestmentPerformance";
+import InvestmentBuilder from "./pages/InvestmentBuilder";
+import InvestmentRisk from "./pages/InvestmentRisk";
 import Marketplace from "./pages/Marketplace";
 import MarketplaceRfp from "./pages/MarketplaceRfp";
 import MarketplaceRfpDetail from "./pages/MarketplaceRfpDetail";
@@ -76,6 +79,9 @@ function App() {
                     <Route path="/education/category/:categoryId" element={<Education />} />
                     <Route path="/financial-plans" element={<FinancialPlans />} />
                     <Route path="/investments" element={<Investments />} />
+                    <Route path="/investments/performance" element={<InvestmentPerformance />} />
+                    <Route path="/investments/builder" element={<InvestmentBuilder />} />
+                    <Route path="/investments/risk" element={<InvestmentRisk />} />
                     <Route path="/marketplace" element={<Marketplace />} />
                     <Route path="/marketplace/rfp" element={<MarketplaceRfp />} />
                     <Route path="/marketplace/rfp/:id" element={<MarketplaceRfpDetail />} />

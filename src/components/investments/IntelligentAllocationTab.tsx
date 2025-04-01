@@ -308,7 +308,7 @@ export const IntelligentAllocationTab = () => {
           </CardHeader>
           <CardContent>
             <p className="text-sm text-muted-foreground mb-4">
-              Track and analyze the performance of your portfolio models against benchmarks and peers.
+              Track and analyze the performance of your portfolio models against benchmarks and peers with AI-powered insights.
             </p>
             <Button variant="outline" className="w-full" asChild>
               <Link to="/investments/performance">
@@ -328,7 +328,7 @@ export const IntelligentAllocationTab = () => {
           </CardHeader>
           <CardContent>
             <p className="text-sm text-muted-foreground mb-4">
-              Design personalized investment portfolios using our intelligent allocation tools and models.
+              Design personalized investment portfolios using our intelligent allocation tools and AI-optimized models.
             </p>
             <Button variant="outline" className="w-full" asChild>
               <Link to="/investments/builder">
@@ -348,7 +348,7 @@ export const IntelligentAllocationTab = () => {
           </CardHeader>
           <CardContent>
             <p className="text-sm text-muted-foreground mb-4">
-              Analyze and understand the risk characteristics of your investment models and allocations.
+              Analyze and understand the risk characteristics of your investment models with AI-powered risk assessment tools.
             </p>
             <Button variant="outline" className="w-full" asChild>
               <Link to="/investments/risk">
