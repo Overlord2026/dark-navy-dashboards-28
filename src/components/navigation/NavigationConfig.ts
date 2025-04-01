@@ -48,15 +48,6 @@ export const homeNavItems: NavItem[] = [
     title: "Customer Profile", 
     href: "/customer-profile", 
     icon: UserIcon 
-  }
-];
-
-// 🎓 Education & Solutions category
-export const educationSolutionsNavItems: NavItem[] = [
-  { 
-    title: "Education Center", 
-    href: "/education", 
-    icon: GraduationCapIcon 
   },
   { 
     title: "Investments", 
@@ -72,6 +63,15 @@ export const educationSolutionsNavItems: NavItem[] = [
     title: "Lending", 
     href: "/lending", 
     icon: BanknoteIcon 
+  }
+];
+
+// 🎓 Education & Solutions category
+export const educationSolutionsNavItems: NavItem[] = [
+  { 
+    title: "Education Center", 
+    href: "/education", 
+    icon: GraduationCapIcon 
   }
 ];
 
