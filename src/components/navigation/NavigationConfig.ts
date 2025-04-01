@@ -37,7 +37,7 @@ import {
 
 import { NavItem } from "@/types/navigation";
 
-// 🏠 Home category (moved Investments, Insurance, and Lending here)
+// 🏠 Home category
 export const homeNavItems: NavItem[] = [
   { 
     title: "Dashboard Overview", 
@@ -48,6 +48,15 @@ export const homeNavItems: NavItem[] = [
     title: "Customer Profile", 
     href: "/customer-profile", 
     icon: UserIcon 
+  }
+];
+
+// 🎓 Education & Solutions category - moved Investments here
+export const educationSolutionsNavItems: NavItem[] = [
+  { 
+    title: "Education Center", 
+    href: "/education", 
+    icon: GraduationCapIcon 
   },
   { 
     title: "Investments", 
@@ -66,16 +75,7 @@ export const homeNavItems: NavItem[] = [
   }
 ];
 
-// 🎓 Education & Solutions category (removed Investments, Insurance, and Lending)
-export const educationSolutionsNavItems: NavItem[] = [
-  { 
-    title: "Education Center", 
-    href: "/education", 
-    icon: GraduationCapIcon 
-  }
-];
-
-// 📊 Family Wealth category
+// 📊 Family Wealth category - removed Investments
 export const familyWealthNavItems: NavItem[] = [
   { 
     title: "Financial Plans", 

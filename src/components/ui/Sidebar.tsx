@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { cn } from "@/lib/utils";
 import { 
@@ -28,7 +27,7 @@ export const Sidebar = () => {
   const { theme } = useTheme();
   const isLightTheme = theme === "light";
 
-  // Define navigation categories with updated labels
+  // Define navigation categories with updated menu structure
   const navigationCategories: NavCategory[] = [
     {
       id: "home",
