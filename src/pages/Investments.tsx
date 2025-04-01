@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
@@ -8,11 +9,124 @@ import { IntelligentAllocationTab } from "@/components/investments/IntelligentAl
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 
+// Portfolio model type definition
+interface PortfolioModel {
+  id: string;
+  name: string;
+  provider: string;
+  description: string;
+  returnRate: string;
+  riskLevel: string;
+  badge: {
+    text: string;
+    color: string;
+  };
+}
+
 const Investments = () => {
+  const [selectedTab, setSelectedTab] = useState("private-market");
+  
+  // Portfolio models data
+  const portfolioModels: PortfolioModel[] = [
+    {
+      id: "income-focus",
+      name: "Income Focus",
+      provider: "Dimensional Fund Advisors",
+      description: "Prioritizes stable income with lower volatility",
+      returnRate: "+5.8%",
+      riskLevel: "Low",
+      badge: {
+        text: "Conservative",
+        color: "blue"
+      }
+    },
+    {
+      id: "growth-income",
+      name: "Growth & Income",
+      provider: "BlackRock",
+      description: "Balance between growth and stable income",
+      returnRate: "+8.2%",
+      riskLevel: "Medium",
+      badge: {
+        text: "Balanced",
+        color: "indigo"
+      }
+    },
+    {
+      id: "maximum-growth",
+      name: "Maximum Growth",
+      provider: "Vanguard",
+      description: "Focus on long-term capital appreciation",
+      returnRate: "+12.5%",
+      riskLevel: "High",
+      badge: {
+        text: "Aggressive",
+        color: "purple"
+      }
+    },
+    {
+      id: "sustainable-future",
+      name: "Sustainable Future",
+      provider: "Alpha Architect",
+      description: "ESG-focused investments with positive impact",
+      returnRate: "+9.6%",
+      riskLevel: "Medium",
+      badge: {
+        text: "ESG",
+        color: "emerald"
+      }
+    },
+    {
+      id: "dynamic-allocation",
+      name: "Dynamic Allocation",
+      provider: "Boutique Family Office",
+      description: "Active management with tactical shifts",
+      returnRate: "+10.3%",
+      riskLevel: "Medium-High",
+      badge: {
+        text: "Tactical",
+        color: "amber"
+      }
+    },
+    {
+      id: "international-focus",
+      name: "International Focus",
+      provider: "BlackRock",
+      description: "Diversified exposure to global markets",
+      returnRate: "+7.8%",
+      riskLevel: "Medium",
+      badge: {
+        text: "Global",
+        color: "red"
+      }
+    },
+  ];
+
+  // Handler for portfolio model cards
+  const handlePortfolioClick = (model: PortfolioModel) => {
+    toast.success(`Opening ${model.name} by ${model.provider}`);
+    // In a real implementation, this would navigate to the portfolio details page
+    // navigate(`/investments/models/${model.id}`);
+  };
+
+  // Handler for the View All button
+  const handleViewAllModels = () => {
+    toast.info("Viewing all model portfolios");
+    // In a real implementation, this would navigate to a comprehensive list view
+    // navigate("/investments/models/all");
+  };
+
+  // Handler for the Start Building button
+  const handleStartBuildingClick = () => {
+    toast.success("Opening portfolio builder");
+    // In a real implementation, this would navigate to the portfolio builder
+    window.location.href = "/investments/builder";
+  };
+
   return (
     <ThreeColumnLayout activeMainItem="investments" title="Investments">
       <div className="space-y-8">
-        <Tabs defaultValue="private-market" className="w-full">
+        <Tabs defaultValue="private-market" className="w-full" onValueChange={setSelectedTab}>
           <TabsList className="w-full mb-6">
             <TabsTrigger value="private-market" className="flex-1">Private Market Alpha</TabsTrigger>
             <TabsTrigger value="model-portfolios" className="flex-1">Model Portfolios</TabsTrigger>
@@ -151,12 +265,12 @@ const Investments = () => {
             </div>
           </TabsContent>
           
-          {/* New Model Portfolios Tab */}
+          {/* Model Portfolios Tab */}
           <TabsContent value="model-portfolios" className="space-y-8">
             <div className="space-y-6">
               <div className="flex justify-between items-center">
                 <h2 className="text-2xl font-semibold">Model Portfolios</h2>
-                <Button variant="outline" onClick={() => toast.info("Exploring all model portfolios")} className="flex items-center gap-1">
+                <Button variant="outline" onClick={handleViewAllModels} className="flex items-center gap-1">
                   View All <ChevronRight className="h-4 w-4" />
                 </Button>
               </div>
@@ -191,168 +305,50 @@ const Investments = () => {
                 <h3 className="text-xl font-medium">Featured Model Portfolios</h3>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  <div className="bg-card hover:bg-accent text-card-foreground rounded-lg border shadow-sm p-6 cursor-pointer">
-                    <div className="flex flex-col gap-4">
-                      <div className="flex justify-between items-center">
-                        <Briefcase className="h-10 w-10 text-blue-500" />
-                        <Badge variant="outline" className="bg-blue-50 text-blue-700 dark:bg-blue-900 dark:text-blue-300 border-blue-200 dark:border-blue-800">
-                          Conservative
-                        </Badge>
-                      </div>
-                      <div>
-                        <h4 className="text-lg font-medium">Income Focus</h4>
-                        <p className="text-muted-foreground text-sm mt-1">Prioritizes stable income with lower volatility</p>
-                      </div>
-                      <div className="grid grid-cols-2 gap-2 text-sm mt-2">
-                        <div>
-                          <p className="text-muted-foreground">Return (5Y)</p>
-                          <p className="font-medium text-emerald-500">+5.8%</p>
+                  {portfolioModels.map((model) => (
+                    <div 
+                      key={model.id} 
+                      className="bg-card hover:bg-accent text-card-foreground rounded-lg border shadow-sm p-6 cursor-pointer"
+                      onClick={() => handlePortfolioClick(model)}
+                    >
+                      <div className="flex flex-col gap-4">
+                        <div className="flex justify-between items-center">
+                          <Briefcase className="h-10 w-10 text-blue-500" />
+                          <Badge 
+                            variant="outline" 
+                            className={`bg-${model.badge.color}-50 text-${model.badge.color}-700 dark:bg-${model.badge.color}-900 dark:text-${model.badge.color}-300 border-${model.badge.color}-200 dark:border-${model.badge.color}-800`}
+                          >
+                            {model.badge.text}
+                          </Badge>
                         </div>
                         <div>
-                          <p className="text-muted-foreground">Risk Level</p>
-                          <p className="font-medium">Low</p>
+                          <h4 className="text-lg font-medium">{model.name}</h4>
+                          <p className="text-muted-foreground text-sm mt-1">{model.description}</p>
+                          <p className="text-xs text-blue-600 mt-1">Provider: {model.provider}</p>
                         </div>
+                        <div className="grid grid-cols-2 gap-2 text-sm mt-2">
+                          <div>
+                            <p className="text-muted-foreground">Return (5Y)</p>
+                            <p className="font-medium text-emerald-500">{model.returnRate}</p>
+                          </div>
+                          <div>
+                            <p className="text-muted-foreground">Risk Level</p>
+                            <p className="font-medium">{model.riskLevel}</p>
+                          </div>
+                        </div>
+                        <Button 
+                          size="sm" 
+                          className="w-full mt-2"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            toast.success(`Viewing details for ${model.name}`);
+                          }}
+                        >
+                          View Details
+                        </Button>
                       </div>
-                      <Button size="sm" className="w-full mt-2">View Details</Button>
                     </div>
-                  </div>
-                  
-                  <div className="bg-card hover:bg-accent text-card-foreground rounded-lg border shadow-sm p-6 cursor-pointer">
-                    <div className="flex flex-col gap-4">
-                      <div className="flex justify-between items-center">
-                        <BarChart3 className="h-10 w-10 text-indigo-500" />
-                        <Badge variant="outline" className="bg-indigo-50 text-indigo-700 dark:bg-indigo-900 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800">
-                          Balanced
-                        </Badge>
-                      </div>
-                      <div>
-                        <h4 className="text-lg font-medium">Growth & Income</h4>
-                        <p className="text-muted-foreground text-sm mt-1">Balance between growth and stable income</p>
-                      </div>
-                      <div className="grid grid-cols-2 gap-2 text-sm mt-2">
-                        <div>
-                          <p className="text-muted-foreground">Return (5Y)</p>
-                          <p className="font-medium text-emerald-500">+8.2%</p>
-                        </div>
-                        <div>
-                          <p className="text-muted-foreground">Risk Level</p>
-                          <p className="font-medium">Medium</p>
-                        </div>
-                      </div>
-                      <Button size="sm" className="w-full mt-2">View Details</Button>
-                    </div>
-                  </div>
-                  
-                  <div className="bg-card hover:bg-accent text-card-foreground rounded-lg border shadow-sm p-6 cursor-pointer">
-                    <div className="flex flex-col gap-4">
-                      <div className="flex justify-between items-center">
-                        <ArrowUpRight className="h-10 w-10 text-purple-500" />
-                        <Badge variant="outline" className="bg-purple-50 text-purple-700 dark:bg-purple-900 dark:text-purple-300 border-purple-200 dark:border-purple-800">
-                          Aggressive
-                        </Badge>
-                      </div>
-                      <div>
-                        <h4 className="text-lg font-medium">Maximum Growth</h4>
-                        <p className="text-muted-foreground text-sm mt-1">Focus on long-term capital appreciation</p>
-                      </div>
-                      <div className="grid grid-cols-2 gap-2 text-sm mt-2">
-                        <div>
-                          <p className="text-muted-foreground">Return (5Y)</p>
-                          <p className="font-medium text-emerald-500">+12.5%</p>
-                        </div>
-                        <div>
-                          <p className="text-muted-foreground">Risk Level</p>
-                          <p className="font-medium">High</p>
-                        </div>
-                      </div>
-                      <Button size="sm" className="w-full mt-2">View Details</Button>
-                    </div>
-                  </div>
-                  
-                  <div className="bg-card hover:bg-accent text-card-foreground rounded-lg border shadow-sm p-6 cursor-pointer">
-                    <div className="flex flex-col gap-4">
-                      <div className="flex justify-between items-center">
-                        <ShieldCheck className="h-10 w-10 text-emerald-500" />
-                        <Badge variant="outline" className="bg-emerald-50 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800">
-                          ESG
-                        </Badge>
-                      </div>
-                      <div>
-                        <h4 className="text-lg font-medium">Sustainable Future</h4>
-                        <p className="text-muted-foreground text-sm mt-1">ESG-focused investments with positive impact</p>
-                      </div>
-                      <div className="grid grid-cols-2 gap-2 text-sm mt-2">
-                        <div>
-                          <p className="text-muted-foreground">Return (5Y)</p>
-                          <p className="font-medium text-emerald-500">+9.6%</p>
-                        </div>
-                        <div>
-                          <p className="text-muted-foreground">Risk Level</p>
-                          <p className="font-medium">Medium</p>
-                        </div>
-                      </div>
-                      <Button size="sm" className="w-full mt-2">View Details</Button>
-                    </div>
-                  </div>
-                  
-                  <div className="bg-card hover:bg-accent text-card-foreground rounded-lg border shadow-sm p-6 cursor-pointer">
-                    <div className="flex flex-col gap-4">
-                      <div className="flex justify-between items-center">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-amber-500">
-                          <path d="M12 3V4M12 20V21M21 12H20M4 12H3M18.364 18.364L17.657 17.657M6.343 6.343L5.636 5.636M18.364 5.636L17.657 6.343M6.343 17.657L5.636 18.364M16 12C16 14.2091 14.2091 16 12 16C9.79086 16 8 14.2091 8 12C8 9.79086 9.79086 8 12 8C14.2091 8 16 9.79086 16 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                        </svg>
-                        <Badge variant="outline" className="bg-amber-50 text-amber-700 dark:bg-amber-900 dark:text-amber-300 border-amber-200 dark:border-amber-800">
-                          Tactical
-                        </Badge>
-                      </div>
-                      <div>
-                        <h4 className="text-lg font-medium">Dynamic Allocation</h4>
-                        <p className="text-muted-foreground text-sm mt-1">Active management with tactical shifts</p>
-                      </div>
-                      <div className="grid grid-cols-2 gap-2 text-sm mt-2">
-                        <div>
-                          <p className="text-muted-foreground">Return (5Y)</p>
-                          <p className="font-medium text-emerald-500">+10.3%</p>
-                        </div>
-                        <div>
-                          <p className="text-muted-foreground">Risk Level</p>
-                          <p className="font-medium">Medium-High</p>
-                        </div>
-                      </div>
-                      <Button size="sm" className="w-full mt-2">View Details</Button>
-                    </div>
-                  </div>
-                  
-                  <div className="bg-card hover:bg-accent text-card-foreground rounded-lg border shadow-sm p-6 cursor-pointer">
-                    <div className="flex flex-col gap-4">
-                      <div className="flex justify-between items-center">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-red-500">
-                          <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" strokeWidth="2" />
-                          <path d="M8.5 14.5L15.5 7.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                          <path d="M7 10L10 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                          <path d="M14 17L17 14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                        </svg>
-                        <Badge variant="outline" className="bg-red-50 text-red-700 dark:bg-red-900 dark:text-red-300 border-red-200 dark:border-red-800">
-                          Global
-                        </Badge>
-                      </div>
-                      <div>
-                        <h4 className="text-lg font-medium">International Focus</h4>
-                        <p className="text-muted-foreground text-sm mt-1">Diversified exposure to global markets</p>
-                      </div>
-                      <div className="grid grid-cols-2 gap-2 text-sm mt-2">
-                        <div>
-                          <p className="text-muted-foreground">Return (5Y)</p>
-                          <p className="font-medium text-emerald-500">+7.8%</p>
-                        </div>
-                        <div>
-                          <p className="text-muted-foreground">Risk Level</p>
-                          <p className="font-medium">Medium</p>
-                        </div>
-                      </div>
-                      <Button size="sm" className="w-full mt-2">View Details</Button>
-                    </div>
-                  </div>
+                  ))}
                 </div>
               </div>
               
@@ -360,7 +356,7 @@ const Investments = () => {
                 <h3 className="text-xl font-medium mb-4">Portfolio Builder</h3>
                 <div className="bg-card border rounded-lg p-6">
                   <p className="text-muted-foreground mb-4">Create a customized model portfolio based on your risk tolerance and investment goals.</p>
-                  <Button className="w-full sm:w-auto">Start Building</Button>
+                  <Button className="w-full sm:w-auto" onClick={handleStartBuildingClick}>Start Building</Button>
                 </div>
               </div>
             </div>
