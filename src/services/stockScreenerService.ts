@@ -33,6 +33,13 @@ const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes in milliseconds
 const TWELVE_DATA_API_KEY = '7386117b0dec4ccbb04b7d84b4b80257'; // User's API key
 const ALPHA_VANTAGE_API_KEY = '7386117b0dec4ccbb04b7d84b4b80257';
 
+// Helper function to safely parse numeric values
+const safeParseFloat = (value: any): number | null => {
+  if (value === undefined || value === null || value === '') return null;
+  const parsed = parseFloat(value);
+  return isNaN(parsed) ? null : parsed;
+};
+
 /**
  * Fetches stock data using multiple APIs for redundancy
  */
@@ -59,6 +66,7 @@ export const fetchStockData = async (symbol: string): Promise<StockData> => {
     }
     
     const twelveData = await twelveDataResponse.json();
+    console.log("Twelve Data response:", twelveData);
 
     // Check for error response from TwelveData
     if (twelveData.code === 400 || twelveData.code === 401 || twelveData.status === 'error') {
@@ -66,9 +74,9 @@ export const fetchStockData = async (symbol: string): Promise<StockData> => {
       // Fall back to Alpha Vantage with real API key
     } else if (twelveData.symbol) {
       // Process Twelve Data response if valid
-      const price = parseFloat(twelveData.close || 0);
-      const change = parseFloat(twelveData.change || 0);
-      const changePercent = parseFloat(twelveData.percent_change || 0);
+      const price = safeParseFloat(twelveData.close) || 0;
+      const change = safeParseFloat(twelveData.change) || 0;
+      const changePercent = safeParseFloat(twelveData.percent_change) || 0;
       
       // Also fetch company overview from Alpha Vantage with real API key
       const overviewResponse = await fetch(
@@ -80,6 +88,7 @@ export const fetchStockData = async (symbol: string): Promise<StockData> => {
       }
       
       const overviewData = await overviewResponse.json();
+      console.log("Alpha Vantage overview data:", overviewData);
       
       // Check if we got valid data from Alpha Vantage
       let sector = 'Unknown';
@@ -93,11 +102,28 @@ export const fetchStockData = async (symbol: string): Promise<StockData> => {
       if (overviewData.Symbol && !overviewData.Information) {
         sector = overviewData.Sector || sector;
         industry = overviewData.Industry || industry;
-        peRatio = overviewData.PERatio ? parseFloat(overviewData.PERatio) : null;
-        marketCap = overviewData.MarketCapitalization ? parseFloat(overviewData.MarketCapitalization) : null;
-        dividendYield = overviewData.DividendYield ? parseFloat(overviewData.DividendYield) * 100 : null;
-        week52High = overviewData['52WeekHigh'] ? parseFloat(overviewData['52WeekHigh']) : null;
-        week52Low = overviewData['52WeekLow'] ? parseFloat(overviewData['52WeekLow']) : null;
+        
+        // Properly parse numeric values, handling potential formatting issues
+        peRatio = safeParseFloat(overviewData.PERatio);
+        
+        // Market cap might be returned as a string with commas
+        if (overviewData.MarketCapitalization) {
+          // Remove any non-numeric characters except decimal point
+          const cleanMarketCap = overviewData.MarketCapitalization.toString().replace(/[^\d.]/g, '');
+          marketCap = safeParseFloat(cleanMarketCap);
+        }
+        
+        // Dividend yield often comes as a decimal (e.g., 0.0234 for 2.34%)
+        if (overviewData.DividendYield) {
+          dividendYield = safeParseFloat(overviewData.DividendYield);
+          // Convert to percentage if it's a decimal less than 1
+          if (dividendYield !== null && dividendYield < 1) {
+            dividendYield = dividendYield * 100;
+          }
+        }
+        
+        week52High = safeParseFloat(overviewData['52WeekHigh']);
+        week52Low = safeParseFloat(overviewData['52WeekLow']);
       }
       
       // Construct the stock data object from Twelve Data
@@ -139,14 +165,16 @@ export const fetchStockData = async (symbol: string): Promise<StockData> => {
     }
     
     const quoteData = await quoteResponse.json();
+    console.log("Alpha Vantage quote data:", quoteData);
     
     // Check if Alpha Vantage returned valid data
     if (quoteData["Global Quote"] && !quoteData.Information) {
       const globalQuote = quoteData["Global Quote"];
       
-      const price = parseFloat(globalQuote["05. price"] || 0);
-      const change = parseFloat(globalQuote["09. change"] || 0);
-      const changePercent = parseFloat(globalQuote["10. change percent"].replace('%', '') || 0);
+      const price = safeParseFloat(globalQuote["05. price"]) || 0;
+      const change = safeParseFloat(globalQuote["09. change"]) || 0;
+      const changePercent = globalQuote["10. change percent"] ? 
+        safeParseFloat(globalQuote["10. change percent"].replace('%', '')) || 0 : 0;
       const volume = parseInt(globalQuote["06. volume"] || '0');
       
       // Fetch additional company information
@@ -159,6 +187,7 @@ export const fetchStockData = async (symbol: string): Promise<StockData> => {
       }
       
       const overviewData = await overviewResponse.json();
+      console.log("Alpha Vantage overview data (from quote flow):", overviewData);
       
       // Use overview data if available
       let companyName = normalizedSymbol;
@@ -175,11 +204,27 @@ export const fetchStockData = async (symbol: string): Promise<StockData> => {
         companyName = overviewData.Name || normalizedSymbol;
         sector = overviewData.Sector || sector;
         industry = overviewData.Industry || industry;
-        peRatio = overviewData.PERatio ? parseFloat(overviewData.PERatio) : null;
-        marketCap = overviewData.MarketCapitalization ? parseFloat(overviewData.MarketCapitalization) : null;
-        dividendYield = overviewData.DividendYield ? parseFloat(overviewData.DividendYield) * 100 : null;
-        week52High = overviewData['52WeekHigh'] ? parseFloat(overviewData['52WeekHigh']) : null;
-        week52Low = overviewData['52WeekLow'] ? parseFloat(overviewData['52WeekLow']) : null;
+        
+        // Properly parse numeric values with improved handling
+        peRatio = safeParseFloat(overviewData.PERatio);
+        
+        // Handle market cap which might be returned as a string with commas
+        if (overviewData.MarketCapitalization) {
+          const cleanMarketCap = overviewData.MarketCapitalization.toString().replace(/[^\d.]/g, '');
+          marketCap = safeParseFloat(cleanMarketCap);
+        }
+        
+        // Handle dividend yield
+        if (overviewData.DividendYield) {
+          dividendYield = safeParseFloat(overviewData.DividendYield);
+          // Convert to percentage if it's a decimal less than 1
+          if (dividendYield !== null && dividendYield < 1) {
+            dividendYield = dividendYield * 100;
+          }
+        }
+        
+        week52High = safeParseFloat(overviewData['52WeekHigh']);
+        week52Low = safeParseFloat(overviewData['52WeekLow']);
       }
       
       const stockData: StockData = {
