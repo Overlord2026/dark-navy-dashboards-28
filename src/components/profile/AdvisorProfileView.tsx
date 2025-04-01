@@ -97,7 +97,7 @@ export const AdvisorProfileView = ({
         </div>
         <div className="flex flex-col space-y-2 mt-4 md:mt-0">
           <a 
-            href="https://meetings.hubspot.com/daniel-herrera1?uuid=55ab1315-5daa-4009-af29-f100ee7aae67"
+            href="https://calendly.com/tonygomes/60min"
             target="_blank"
             rel="noopener noreferrer"
             className="bg-white text-[#0a1021] hover:bg-white/90 px-4 py-2 rounded-md font-medium inline-flex items-center"

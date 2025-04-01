@@ -10,10 +10,12 @@ interface ScheduleMeetingButtonProps {
 
 export const ScheduleMeetingButton: React.FC<ScheduleMeetingButtonProps> = ({ offeringName }) => {
   const handleScheduleMeeting = () => {
-    // In a real application, this would open a calendar scheduling interface or send a notification to the advisor
-    toast.success("Meeting request sent!", {
-      description: `Your advisor has been notified about your interest in scheduling a meeting regarding ${offeringName}.`,
-      duration: 5000,
+    // Open the new Calendly link directly
+    window.open("https://calendly.com/tonygomes/60min", "_blank");
+    
+    toast.success("Opening scheduling page", {
+      description: `Schedule a meeting regarding ${offeringName}.`,
+      duration: 3000,
     });
   };
   

@@ -28,6 +28,12 @@ interface BookSessionDrawerProps {
 }
 
 export const BookSessionDrawer = ({ isOpen, onOpenChange, advisorInfo }: BookSessionDrawerProps) => {
+  const handleContinue = () => {
+    // Open the new Calendly link in a new tab
+    window.open("https://calendly.com/tonygomes/60min", "_blank");
+    onOpenChange(false);
+  };
+  
   return (
     <Drawer open={isOpen} onOpenChange={onOpenChange}>
       <DrawerContent className="bg-white">
@@ -110,7 +116,7 @@ export const BookSessionDrawer = ({ isOpen, onOpenChange, advisorInfo }: BookSes
           </div>
           
           <DrawerFooter>
-            <Button>Continue</Button>
+            <Button onClick={handleContinue}>Continue to Calendly</Button>
             <DrawerClose asChild>
               <Button variant="outline">Cancel</Button>
             </DrawerClose>

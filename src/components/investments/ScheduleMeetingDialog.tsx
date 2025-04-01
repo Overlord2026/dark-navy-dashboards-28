@@ -11,8 +11,8 @@ interface ScheduleMeetingDialogProps {
 
 export const ScheduleMeetingDialog: React.FC<ScheduleMeetingDialogProps> = ({ assetName }) => {
   const handleOpenCalendar = () => {
-    // The URL would typically come from the user's context or configuration
-    window.open("https://meetings.hubspot.com/daniel-herrera1?uuid=55ab1315-5daa-4009-af29-f100ee7aae67", "_blank");
+    // Use the new Calendly link instead of the previous one
+    window.open("https://calendly.com/tonygomes/60min", "_blank");
   };
   
   return (
