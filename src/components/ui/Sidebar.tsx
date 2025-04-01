@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { cn } from "@/lib/utils";
 import { 
@@ -10,8 +11,8 @@ import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "react-router-dom";
 import { 
   homeNavItems,
-  educationSolutionsNavItems,
   familyWealthNavItems,
+  bankingNavItems,
   collaborationNavItems,
   securityNavItems,
   bottomNavItems 
@@ -27,29 +28,29 @@ export const Sidebar = () => {
   const { theme } = useTheme();
   const isLightTheme = theme === "light";
 
-  // Define navigation categories with updated menu structure
+  // Updated navigation categories to match the UI in the image
   const navigationCategories: NavCategory[] = [
     {
-      id: "home",
-      label: "Home",
+      id: "main",
+      label: "MAIN",
       items: homeNavItems,
       defaultExpanded: true
     },
     {
-      id: "education-solutions",
-      label: "Education & Solutions",
-      items: educationSolutionsNavItems,
-      defaultExpanded: true
-    },
-    {
-      id: "family-wealth",
-      label: "Family Wealth",
+      id: "wealth-management",
+      label: "WEALTH MANAGEMENT",
       items: familyWealthNavItems,
       defaultExpanded: true
     },
     {
+      id: "banking",
+      label: "BANKING",
+      items: bankingNavItems,
+      defaultExpanded: true
+    },
+    {
       id: "collaboration",
-      label: "Collaboration & Sharing",
+      label: "COLLABORATION",
       items: collaborationNavItems,
       defaultExpanded: true
     }
@@ -169,6 +170,26 @@ export const Sidebar = () => {
         </div>
       </div>
     );
+  };
+
+  const advisorInfo = {
+    name: "Daniel Zamora",
+    title: "Senior Financial Advisor",
+    email: "Daniel@awmfl.com",
+    phone: "(555) 123-4567",
+    location: "Sarasota, FL",
+    office: "Sarasota Office",
+    bio: "Daniel has over 15 years of experience in wealth management and financial planning."
+  };
+
+  const handleBookSession = () => {
+    console.log("Book session clicked");
+    // This would typically open a booking calendar or external link
+  };
+
+  const handleViewProfile = (tabId: string) => {
+    console.log("View profile tab:", tabId);
+    // Navigate to advisor profile or open a modal
   };
 
   return (
