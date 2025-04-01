@@ -10,7 +10,11 @@ import {
   TrendingUp, 
   Shield, 
   Home,
-  CircleDot
+  CircleDot,
+  Briefcase,
+  Users,
+  Building,
+  DollarSign
 } from "lucide-react";
 
 interface MarketplaceCategoriesProps {
@@ -33,6 +37,10 @@ export function MarketplaceCategories({
       case "trending-up": return <TrendingUp className="h-4 w-4" />;
       case "shield": return <Shield className="h-4 w-4" />;
       case "home": return <Home className="h-4 w-4" />;
+      case "briefcase": return <Briefcase className="h-4 w-4" />;
+      case "users": return <Users className="h-4 w-4" />;
+      case "building": return <Building className="h-4 w-4" />;
+      case "dollar-sign": return <DollarSign className="h-4 w-4" />;
       default: return <CircleDot className="h-4 w-4" />;
     }
   };

@@ -20,7 +20,11 @@ import {
   Scroll, 
   Briefcase, 
   Users, 
-  ChevronRight 
+  ChevronRight,
+  DollarSign,
+  Building,
+  LineChart,
+  CalendarClock
 } from "lucide-react";
 
 export type SubCategory = {
@@ -57,7 +61,8 @@ export const serviceCategories: ServiceCategory[] = [
     subcategories: [
       { id: "tax-minimization", name: "Advanced Tax Minimization Techniques" },
       { id: "multi-state", name: "Multi-State Residency Strategies" },
-      { id: "professional-coordination", name: "CPA & Attorney Coordination" }
+      { id: "professional-coordination", name: "CPA & Attorney Coordination" },
+      { id: "business-tax-strategy", name: "Business Owner Tax Strategies" }
     ]
   },
   {
@@ -69,6 +74,18 @@ export const serviceCategories: ServiceCategory[] = [
       { id: "estate-trust", name: "Comprehensive Estate & Trust Planning" },
       { id: "family-legacy", name: "Family Legacy Planning (Family Legacy Box)" },
       { id: "philanthropy", name: "Philanthropy & Charitable Giving" }
+    ]
+  },
+  {
+    id: "business-services",
+    name: "Business Owner Services",
+    icon: Building,
+    description: "Specialized services for business owners and entrepreneurs",
+    subcategories: [
+      { id: "exit-planning", name: "Business Exit Planning & Strategy" },
+      { id: "liquidity-planning", name: "Liquidity Planning & Execution" },
+      { id: "cfo-services", name: "Fractional CFO Services" },
+      { id: "succession-planning", name: "Business Succession Planning" }
     ]
   },
   {
@@ -90,7 +107,22 @@ export const serviceCategories: ServiceCategory[] = [
     subcategories: [
       { id: "governance-succession", name: "Family Governance & Succession Structures" },
       { id: "next-gen", name: "Next-Generation Education Programs" },
-      { id: "strategic-philanthropy", name: "Strategic Philanthropy & Impact Investing" }
+      { id: "strategic-philanthropy", name: "Strategic Philanthropy & Impact Investing" },
+      { id: "family-meetings", name: "Family Meeting Facilitation" },
+      { id: "conflict-resolution", name: "Family Conflict Resolution" }
+    ]
+  },
+  {
+    id: "boutique-services",
+    name: "Specialized Boutique Services",
+    icon: DollarSign,
+    description: "Highly specialized services for unique family office needs",
+    subcategories: [
+      { id: "private-placement", name: "Private Placement Life Insurance" },
+      { id: "art-advisory", name: "Art Advisory & Collection Management" },
+      { id: "family-security", name: "Family Security & Privacy" },
+      { id: "venture-capital", name: "Family Venture Capital Access" },
+      { id: "cross-border", name: "Cross-Border Planning & Compliance" }
     ]
   }
 ];
