@@ -1,7 +1,6 @@
-
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { Property, PropertyType, OwnershipType, PropertyFormData } from "@/types/property";
+import { Property, PropertyType, OwnershipType, PropertyFormData, PropertyValuation } from "@/types/property";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -20,9 +19,13 @@ import { useTheme } from "@/context/ThemeContext";
 interface PropertyFormProps {
   property?: Property;
   onSubmit: (property: any) => void;
+  initialData?: {
+    address?: string;
+    valuation?: PropertyValuation;
+  };
 }
 
-export const PropertyForm: React.FC<PropertyFormProps> = ({ property, onSubmit }) => {
+export const PropertyForm: React.FC<PropertyFormProps> = ({ property, onSubmit, initialData }) => {
   const { theme } = useTheme();
   const isLightTheme = theme === "light";
   const isEditing = !!property;
@@ -39,22 +42,34 @@ export const PropertyForm: React.FC<PropertyFormProps> = ({ property, onSubmit }
     improvements: property.improvements || [],
     rental: property.rental,
     business: property.business,
-    notes: property.notes || ""
+    notes: property.notes || "",
+    valuation: property.valuation
   } : {
     name: "",
     type: "primary" as PropertyType,
-    address: "",
+    address: initialData?.address || "",
     ownership: "single" as OwnershipType,
     owner: "",
     purchaseDate: new Date().toISOString().split('T')[0],
     originalCost: 0,
-    currentValue: 0,
+    currentValue: initialData?.valuation?.estimatedValue || 0,
     improvements: [],
-    notes: ""
+    notes: "",
+    valuation: initialData?.valuation
   };
   
   const form = useForm<PropertyFormData>({ defaultValues });
   const watchType = form.watch("type");
+  
+  useEffect(() => {
+    if (initialData?.address) {
+      form.setValue('address', initialData.address);
+    }
+    if (initialData?.valuation) {
+      form.setValue('currentValue', initialData.valuation.estimatedValue);
+      form.setValue('valuation', initialData.valuation);
+    }
+  }, [initialData, form]);
   
   const [improvements, setImprovements] = useState(defaultValues.improvements || []);
   const [newImprovement, setNewImprovement] = useState({ description: "", date: "", cost: 0 });
@@ -74,7 +89,6 @@ export const PropertyForm: React.FC<PropertyFormProps> = ({ property, onSubmit }
   });
   
   const handleFormSubmit = (data: PropertyFormData) => {
-    // Combine form data with improvements and rental/business details
     const formattedData = {
       ...data,
       improvements,
@@ -87,6 +101,8 @@ export const PropertyForm: React.FC<PropertyFormProps> = ({ property, onSubmit }
       if (property.valuation) {
         formattedData.valuation = property.valuation;
       }
+    } else if (initialData?.valuation) {
+      formattedData.valuation = initialData.valuation;
     }
     
     onSubmit(formattedData);
@@ -257,7 +273,6 @@ export const PropertyForm: React.FC<PropertyFormProps> = ({ property, onSubmit }
                   />
                 </div>
                 
-                {/* Improvements Section */}
                 <div className="border p-4 rounded-md space-y-3">
                   <Label>Improvements & Renovations</Label>
                   
@@ -327,7 +342,6 @@ export const PropertyForm: React.FC<PropertyFormProps> = ({ property, onSubmit }
                   </div>
                 </div>
                 
-                {/* Rental Property Specific Fields */}
                 {watchType === "rental" && (
                   <div className="border p-4 rounded-md space-y-3">
                     <Label>Rental Property Details</Label>
@@ -390,7 +404,6 @@ export const PropertyForm: React.FC<PropertyFormProps> = ({ property, onSubmit }
                   </div>
                 )}
                 
-                {/* Business Property Specific Fields */}
                 {watchType === "business" && (
                   <div className="border p-4 rounded-md space-y-3">
                     <Label>Business Property Details</Label>

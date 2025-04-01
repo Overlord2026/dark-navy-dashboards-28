@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 import { PropertyList } from "./PropertyList";
 import { PropertyForm } from "./PropertyForm";
 import { PropertySummary } from "./PropertySummary";
+import { PropertyLookupTool } from "./PropertyLookupTool";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
-import { Property } from "@/types/property";
+import { Property, PropertyValuation } from "@/types/property";
 import { useToast } from "@/components/ui/use-toast";
 import { useNetWorth } from "@/context/NetWorthContext";
 
@@ -18,6 +19,7 @@ export const PropertyManager: React.FC<PropertyManagerProps> = ({ initialFilter 
   const [showForm, setShowForm] = useState(false);
   const [editingProperty, setEditingProperty] = useState<Property | null>(null);
   const [activeFilter, setActiveFilter] = useState<string | null>(initialFilter);
+  const [newPropertyData, setNewPropertyData] = useState<{address?: string, valuation?: PropertyValuation}>({});
   
   const [properties, setProperties] = useState<Property[]>([
     {
@@ -212,6 +214,12 @@ export const PropertyManager: React.FC<PropertyManagerProps> = ({ initialFilter 
     );
   };
 
+  const handlePropertyLookup = (address: string, valuation: PropertyValuation) => {
+    setNewPropertyData({ address, valuation });
+    setEditingProperty(null);
+    setShowForm(true);
+  };
+
   const filteredProperties = getFilteredProperties();
   
   const getFilterTitle = () => {
@@ -237,11 +245,14 @@ export const PropertyManager: React.FC<PropertyManagerProps> = ({ initialFilter 
         <h1 className="text-2xl font-bold">{getFilterTitle()}</h1>
         <Button onClick={() => {
           setEditingProperty(null);
+          setNewPropertyData({});
           setShowForm(!showForm);
         }} className="bg-yellow-500 hover:bg-yellow-600 text-black">
           {showForm ? "Cancel" : <><Plus className="mr-2 h-4 w-4" /> Add Property</>}
         </Button>
       </div>
+
+      {!showForm && <PropertyLookupTool onAddProperty={handlePropertyLookup} />}
 
       <PropertySummary properties={filteredProperties} />
 
@@ -249,6 +260,7 @@ export const PropertyManager: React.FC<PropertyManagerProps> = ({ initialFilter 
         <PropertyForm 
           onSubmit={editingProperty ? handleUpdateProperty : handleAddProperty} 
           property={editingProperty}
+          initialData={newPropertyData}
         />
       ) : (
         <PropertyList 
