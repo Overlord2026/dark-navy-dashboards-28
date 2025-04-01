@@ -1,4 +1,3 @@
-
 import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
@@ -11,11 +10,11 @@ import {
   CardTitle 
 } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { ChevronLeft, Download, Briefcase, BarChart3, PieChart, LineChart, TrendingUp, AlertCircle } from "lucide-react";
+import { ChevronLeft, Download, Briefcase, BarChart3, PieChart, LineChart, TrendingUp, AlertCircle, CalendarClock } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
+import { ScheduleMeetingDialog } from "@/components/investments/ScheduleMeetingDialog";
 
-// Portfolio model type definition
 interface PortfolioModel {
   id: string;
   name: string;
@@ -29,7 +28,6 @@ interface PortfolioModel {
   };
 }
 
-// Sample portfolio models data
 const portfolioModels: PortfolioModel[] = [
   {
     id: "income-focus",
@@ -125,44 +123,43 @@ const PortfolioModelDetail = () => {
   }
 
   const handleInvest = () => {
-    toast.success(`Starting investment process for ${portfolioModel.name}`);
+    toast.success(`Starting investment process for ${portfolioModel!.name}`);
     // In a real implementation, this would navigate to an investment flow
   };
 
   const handleDownloadFactsheet = () => {
-    toast.success(`Downloading fact sheet for ${portfolioModel.name}`);
+    toast.success(`Downloading fact sheet for ${portfolioModel!.name}`);
     // In a real implementation, this would trigger a download
   };
 
   const handleScheduleConsultation = () => {
+    window.open("https://calendly.com/tonygomes/60min", "_blank");
     toast.success("Opening scheduling calendar");
-    // In a real implementation, this would navigate to a scheduling page
   };
 
   return (
-    <ThreeColumnLayout activeMainItem="investments" title={`${portfolioModel.name} | Model Portfolio`}>
+    <ThreeColumnLayout activeMainItem="investments" title={`${portfolioModel!.name} | Model Portfolio`}>
       <div className="space-y-8">
         <div className="flex items-center justify-between">
           <Button variant="outline" size="sm" onClick={() => navigate('/investments')} className="flex items-center gap-1">
             <ChevronLeft className="h-4 w-4" /> Back to Investments
           </Button>
           <Badge 
-            className={`bg-${portfolioModel.badge.color}-50 text-${portfolioModel.badge.color}-700 dark:bg-${portfolioModel.badge.color}-900 dark:text-${portfolioModel.badge.color}-300 border-${portfolioModel.badge.color}-200 dark:border-${portfolioModel.badge.color}-800 py-1 px-3`}
+            className={`bg-${portfolioModel!.badge.color}-50 text-${portfolioModel!.badge.color}-700 dark:bg-${portfolioModel!.badge.color}-900 dark:text-${portfolioModel!.badge.color}-300 border-${portfolioModel!.badge.color}-200 dark:border-${portfolioModel!.badge.color}-800 py-1 px-3`}
           >
-            {portfolioModel.badge.text}
+            {portfolioModel!.badge.text}
           </Badge>
         </div>
 
         <div className="flex flex-col md:flex-row gap-8">
-          {/* Left sidebar */}
           <div className="w-full md:w-1/3 space-y-6">
             <Card>
               <CardHeader className="pb-2">
                 <div className="flex justify-between items-center">
                   <div>
-                    <CardTitle className="text-2xl">{portfolioModel.name}</CardTitle>
+                    <CardTitle className="text-2xl">{portfolioModel!.name}</CardTitle>
                     <CardDescription className="text-sm mt-1">
-                      Provided by {portfolioModel.provider}
+                      Provided by {portfolioModel!.provider}
                     </CardDescription>
                   </div>
                   <Briefcase className="h-12 w-12 text-primary" />
@@ -171,19 +168,19 @@ const PortfolioModelDetail = () => {
               <CardContent className="pt-4 space-y-6">
                 <div>
                   <h3 className="text-sm font-medium text-muted-foreground mb-2">Description</h3>
-                  <p className="text-sm">{portfolioModel.description}</p>
+                  <p className="text-sm">{portfolioModel!.description}</p>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <h3 className="text-xs font-medium text-muted-foreground">5-Year Return</h3>
                     <div className="text-xl font-bold text-emerald-500 flex items-center gap-1">
-                      <TrendingUp className="h-4 w-4" /> {portfolioModel.returnRate}
+                      <TrendingUp className="h-4 w-4" /> {portfolioModel!.returnRate}
                     </div>
                   </div>
                   <div>
                     <h3 className="text-xs font-medium text-muted-foreground">Risk Level</h3>
-                    <div className="text-xl font-bold">{portfolioModel.riskLevel}</div>
+                    <div className="text-xl font-bold">{portfolioModel!.riskLevel}</div>
                   </div>
                 </div>
 
@@ -194,8 +191,8 @@ const PortfolioModelDetail = () => {
                   <Button variant="outline" className="w-full" onClick={handleDownloadFactsheet}>
                     <Download className="h-4 w-4 mr-2" /> Download Fact Sheet
                   </Button>
-                  <Button variant="outline" className="w-full" onClick={handleScheduleConsultation}>
-                    Schedule Consultation
+                  <Button variant="outline" className="w-full flex items-center justify-center gap-2" onClick={handleScheduleConsultation}>
+                    <CalendarClock className="h-4 w-4" /> Schedule Consultation
                   </Button>
                 </div>
               </CardContent>
@@ -232,7 +229,6 @@ const PortfolioModelDetail = () => {
             </Card>
           </div>
 
-          {/* Main content */}
           <div className="w-full md:w-2/3">
             <Tabs defaultValue="performance">
               <TabsList className="w-full mb-6">
@@ -270,7 +266,7 @@ const PortfolioModelDetail = () => {
                       </div>
                       <div className="text-center">
                         <div className="text-sm text-muted-foreground">5 Year</div>
-                        <div className="text-lg font-bold text-emerald-500">{portfolioModel.returnRate}</div>
+                        <div className="text-lg font-bold text-emerald-500">{portfolioModel!.returnRate}</div>
                       </div>
                       <div className="text-center">
                         <div className="text-sm text-muted-foreground">Since Inception</div>

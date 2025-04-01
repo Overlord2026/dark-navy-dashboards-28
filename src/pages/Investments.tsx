@@ -1,13 +1,13 @@
-
 import React, { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Link, useNavigate } from "react-router-dom";
-import { ChevronRight, Briefcase, BarChart3, ArrowUpRight, ShieldCheck } from "lucide-react";
+import { ChevronRight, Briefcase, BarChart3, ArrowUpRight, ShieldCheck, CalendarClock } from "lucide-react";
 import { IntelligentAllocationTab } from "@/components/investments/IntelligentAllocationTab";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
+import { ScheduleMeetingDialog } from "@/components/investments/ScheduleMeetingDialog";
 
 // Portfolio model type definition
 interface PortfolioModel {
@@ -122,6 +122,15 @@ const Investments = () => {
   const handleViewDetails = (e: React.MouseEvent, model: PortfolioModel) => {
     e.stopPropagation();
     navigate(`/investments/models/${model.id}/details`);
+  };
+
+  // Handler for scheduling appointments
+  const handleScheduleAppointment = (e: React.MouseEvent, assetName: string) => {
+    e.stopPropagation();
+    window.open("https://calendly.com/tonygomes/60min", "_blank");
+    toast.success("Opening scheduling page", {
+      description: `Schedule a meeting to discuss ${assetName} with your advisor.`,
+    });
   };
 
   return (
@@ -336,13 +345,23 @@ const Investments = () => {
                             <p className="font-medium">{model.riskLevel}</p>
                           </div>
                         </div>
-                        <Button 
-                          size="sm" 
-                          className="w-full mt-2"
-                          onClick={(e) => handleViewDetails(e, model)}
-                        >
-                          View Details
-                        </Button>
+                        <div className="grid grid-cols-2 gap-2">
+                          <Button 
+                            size="sm" 
+                            className="w-full mt-2"
+                            onClick={(e) => handleViewDetails(e, model)}
+                          >
+                            View Details
+                          </Button>
+                          <Button 
+                            variant="outline"
+                            size="sm" 
+                            className="w-full mt-2"
+                            onClick={(e) => handleScheduleAppointment(e, model.name)}
+                          >
+                            <CalendarClock className="h-3 w-3 mr-1" /> Consult
+                          </Button>
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -353,7 +372,21 @@ const Investments = () => {
                 <h3 className="text-xl font-medium mb-4">Portfolio Builder</h3>
                 <div className="bg-card border rounded-lg p-6">
                   <p className="text-muted-foreground mb-4">Create a customized model portfolio based on your risk tolerance and investment goals.</p>
-                  <Button className="w-full sm:w-auto" onClick={handleStartBuildingClick}>Start Building</Button>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <Button className="w-full" onClick={handleStartBuildingClick}>Start Building</Button>
+                    <Button 
+                      variant="outline" 
+                      className="w-full flex items-center justify-center gap-2"
+                      onClick={(e) => {
+                        window.open("https://calendly.com/tonygomes/60min", "_blank");
+                        toast.success("Opening scheduling page", {
+                          description: "Schedule a consultation with an advisor to discuss portfolio options.",
+                        });
+                      }}
+                    >
+                      <CalendarClock className="h-4 w-4" /> Schedule Consultation
+                    </Button>
+                  </div>
                 </div>
               </div>
             </div>
