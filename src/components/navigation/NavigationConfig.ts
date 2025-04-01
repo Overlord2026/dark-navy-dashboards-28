@@ -18,7 +18,8 @@ import {
   VaultIcon,
   BookOpenIcon,
   LineChartIcon,
-  CircleDollarSignIcon
+  CircleDollarSignIcon,
+  BriefcaseIcon
 } from "lucide-react";
 
 import { NavItem } from "@/types/navigation";
@@ -128,7 +129,7 @@ export const bottomNavItems: NavItem[] = [
   }
 ];
 
-// INVESTMENTS categories (for the investments page, unchanged)
+// INVESTMENTS categories (updated for Private Market Alpha)
 export const investmentCategories: NavItem[] = [
   {
     title: "Private Equity",
@@ -149,6 +150,11 @@ export const investmentCategories: NavItem[] = [
     title: "Real Assets",
     href: "/investments/alternative/real-assets",
     icon: BuildingIcon
+  },
+  {
+    title: "Model Portfolios",
+    href: "/investments/model-portfolios",
+    icon: BriefcaseIcon
   }
 ];
 
