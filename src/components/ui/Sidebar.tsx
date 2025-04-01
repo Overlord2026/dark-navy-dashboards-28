@@ -43,7 +43,7 @@ export const Sidebar = () => {
     });
   }, []);
 
-  // Updated navigation categories to match the requested structure
+  // Updated navigation categories with clear and consistent naming
   const navigationCategories: NavCategory[] = [
     {
       id: "main",
@@ -105,7 +105,7 @@ export const Sidebar = () => {
            (href !== "/" && location.pathname.startsWith(href));
   };
 
-  // Define advisor info and related functions only once
+  // Define advisor info and related functions
   const advisorInfo = {
     name: "Daniel Zamora",
     title: "Senior Financial Advisor",

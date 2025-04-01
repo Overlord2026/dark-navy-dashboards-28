@@ -1,3 +1,4 @@
+
 import { 
   HomeIcon, 
   BarChart3Icon, 
@@ -36,7 +37,7 @@ import {
 
 import { NavItem } from "@/types/navigation";
 
-// Main category
+// MAIN category
 export const homeNavItems: NavItem[] = [
   { 
     title: "Home", 
@@ -60,7 +61,7 @@ export const homeNavItems: NavItem[] = [
   }
 ];
 
-// Wealth Management category
+// WEALTH MANAGEMENT category
 export const wealthManagementNavItems: NavItem[] = [
   { 
     title: "Financial Plans", 
@@ -94,7 +95,7 @@ export const wealthManagementNavItems: NavItem[] = [
   }
 ];
 
-// Banking category
+// BANKING category
 export const bankingNavItems: NavItem[] = [
   { 
     title: "Cash Management", 
@@ -113,7 +114,7 @@ export const bankingNavItems: NavItem[] = [
   }
 ];
 
-// Collaboration category
+// COLLABORATION category
 export const collaborationNavItems: NavItem[] = [
   { 
     title: "Document Sharing", 
@@ -146,6 +147,9 @@ export const bottomNavItems: NavItem[] = [
   }
 ];
 
-// Keeping these exports for backward compatibility
-export const educationSolutionsNavItems = [];
-export const familyWealthNavItems = [];
+// Clean up exports - remove deprecated exports to prevent confusion
+// These are empty arrays for backward compatibility if needed
+export const educationSolutionsNavItems: NavItem[] = [];
+export const familyWealthNavItems: NavItem[] = [];
+export const securityNavItems: NavItem[] = [];
+export const propertiesNavItems: NavItem[] = [];
