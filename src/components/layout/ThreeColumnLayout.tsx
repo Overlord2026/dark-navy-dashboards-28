@@ -126,13 +126,7 @@ const navigationCategories: NavCategory[] = [
   },
 ];
 
-const accountsSubMenuItems: MenuItem[] = [
-  { id: "all-accounts", name: "All Accounts", active: true },
-  { id: "checking", name: "Checking" },
-  { id: "savings", name: "Savings" },
-  { id: "investment", name: "Investment" },
-  { id: "retirement", name: "Retirement" },
-];
+const accountsSubMenuItems: MenuItem[] = [];
 
 const sharingSubMenuItems: MenuItem[] = [
   { id: "shared-with-me", name: "Shared With Me", active: true },
