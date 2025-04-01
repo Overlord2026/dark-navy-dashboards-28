@@ -90,6 +90,7 @@ export const Sidebar = () => {
            (href !== "/" && location.pathname.startsWith(href));
   };
 
+  // Define these variables only once
   const advisorInfo = {
     name: "Daniel Zamora",
     title: "Senior Financial Advisor",
@@ -170,26 +171,6 @@ export const Sidebar = () => {
         </div>
       </div>
     );
-  };
-
-  const advisorInfo = {
-    name: "Daniel Zamora",
-    title: "Senior Financial Advisor",
-    email: "Daniel@awmfl.com",
-    phone: "(555) 123-4567",
-    location: "Sarasota, FL",
-    office: "Sarasota Office",
-    bio: "Daniel has over 15 years of experience in wealth management and financial planning."
-  };
-
-  const handleBookSession = () => {
-    console.log("Book session clicked");
-    // This would typically open a booking calendar or external link
-  };
-
-  const handleViewProfile = (tabId: string) => {
-    console.log("View profile tab:", tabId);
-    // Navigate to advisor profile or open a modal
   };
 
   return (
