@@ -2,8 +2,12 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft } from "lucide-react";
-import { OfferingCard } from "@/components/investments/OfferingCard";
+import { ChevronLeft, Filter, Search } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { DollarSign } from "lucide-react";
 
 // Combine all mock offerings into a single array
 const mockOfferings = {
@@ -524,6 +528,7 @@ const AllAlternativeInvestments = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterCategory, setFilterCategory] = useState<string>("all");
   const [minimumFilter, setMinimumFilter] = useState<string>("all");
+  const [showFilters, setShowFilters] = useState(true);
 
   useEffect(() => {
     setIsLoading(true);
@@ -559,6 +564,16 @@ const AllAlternativeInvestments = () => {
     return matchesSearch && matchesCategory && matchesMinimum;
   });
 
+  const getCategoryName = (categoryId: string) => {
+    switch(categoryId) {
+      case "private-equity": return "Private Equity";
+      case "private-debt": return "Private Debt";
+      case "digital-assets": return "Digital Assets";
+      case "real-assets": return "Real Assets";
+      default: return "Unknown";
+    }
+  };
+
   return (
     <ThreeColumnLayout activeMainItem="investments" title="All Alternative Investments">
       <div className="space-y-6">
@@ -574,86 +589,138 @@ const AllAlternativeInvestments = () => {
         </div>
 
         {/* Filters */}
-        <div className="p-4 border rounded-lg bg-gray-50 space-y-4">
-          <h2 className="font-medium">Filter Investments</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
-              <label className="text-sm font-medium block mb-2">Search</label>
-              <input
-                type="text"
-                placeholder="Search offerings..."
-                className="w-full p-2 border rounded"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-            </div>
-            <div>
-              <label className="text-sm font-medium block mb-2">Category</label>
-              <select 
-                className="w-full p-2 border rounded"
-                value={filterCategory}
-                onChange={(e) => setFilterCategory(e.target.value)}
-              >
-                <option value="all">All Categories</option>
-                <option value="private-equity">Private Equity</option>
-                <option value="private-debt">Private Debt</option>
-                <option value="digital-assets">Digital Assets</option>
-                <option value="real-assets">Real Assets</option>
-              </select>
-            </div>
-            <div>
-              <label className="text-sm font-medium block mb-2">Minimum Investment</label>
-              <select 
-                className="w-full p-2 border rounded"
-                value={minimumFilter}
-                onChange={(e) => setMinimumFilter(e.target.value)}
-              >
-                <option value="all">All Minimums</option>
-                <option value="under100k">Under $100,000</option>
-                <option value="100k-500k">$100,000 - $500,000</option>
-                <option value="500k-1m">$500,000 - $1,000,000</option>
-                <option value="1m-5m">$1,000,000 - $5,000,000</option>
-                <option value="over5m">Over $5,000,000</option>
-              </select>
-            </div>
+        <div className="bg-card rounded-lg border shadow-sm p-6">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-medium">Filter Investments</h2>
+            <Button 
+              variant="outline" 
+              className="flex items-center gap-2"
+              onClick={() => setShowFilters(!showFilters)}
+            >
+              <Filter className="h-4 w-4" />
+              Filters {showFilters ? "▲" : "▼"}
+            </Button>
           </div>
+
+          {showFilters && (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <p className="text-sm font-medium mb-2">Search</p>
+                <div className="relative">
+                  <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    placeholder="Search offerings..."
+                    className="pl-8"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                </div>
+              </div>
+              
+              <div>
+                <p className="text-sm font-medium mb-2">Category</p>
+                <Select value={filterCategory} onValueChange={setFilterCategory}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="All Categories" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Categories</SelectItem>
+                    <SelectItem value="private-equity">Private Equity</SelectItem>
+                    <SelectItem value="private-debt">Private Debt</SelectItem>
+                    <SelectItem value="digital-assets">Digital Assets</SelectItem>
+                    <SelectItem value="real-assets">Real Assets</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div>
+                <p className="text-sm font-medium mb-2">Minimum Investment</p>
+                <Select value={minimumFilter} onValueChange={setMinimumFilter}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="All Minimums" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Minimums</SelectItem>
+                    <SelectItem value="under100k">Under $100,000</SelectItem>
+                    <SelectItem value="100k-500k">$100,000 - $500,000</SelectItem>
+                    <SelectItem value="500k-1m">$500,000 - $1,000,000</SelectItem>
+                    <SelectItem value="1m-5m">$1,000,000 - $5,000,000</SelectItem>
+                    <SelectItem value="over5m">Over $5,000,000</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          )}
         </div>
 
+        {/* Results */}
         {isLoading ? (
-          <div className="flex justify-center items-center h-64">
-            <p>Loading offerings...</p>
+          <div className="flex items-center justify-center h-40">
+            <p>Loading investments...</p>
+          </div>
+        ) : filteredOfferings.length === 0 ? (
+          <div className="text-center p-12 border rounded-lg">
+            <h3 className="text-lg font-medium mb-2">No investments found</h3>
+            <p className="text-muted-foreground mb-6">
+              Try adjusting your search or filter criteria
+            </p>
+            <Button 
+              variant="outline" 
+              onClick={() => {
+                setSearchTerm("");
+                setFilterCategory("all");
+                setMinimumFilter("all");
+              }}
+            >
+              Clear Filters
+            </Button>
           </div>
         ) : (
-          <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredOfferings.length > 0 ? (
-                filteredOfferings.map(offering => (
-                  <div key={offering.id} className="h-full">
-                    <OfferingCard 
-                      offering={offering} 
-                      categoryId={offering.category} 
-                    />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredOfferings.map((offering) => (
+              <Card key={offering.id} className="overflow-hidden hover:shadow-md transition-shadow duration-300">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-xl">{offering.name}</CardTitle>
+                  <CardDescription className="line-clamp-2">{offering.description}</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="flex flex-wrap gap-1">
+                    <Badge variant="outline" className="bg-primary/10 text-primary">{getCategoryName(offering.category)}</Badge>
+                    {offering.tags.slice(0, 2).map((tag: string, i: number) => (
+                      <Badge key={i} variant="outline" className="bg-secondary/50">{tag}</Badge>
+                    ))}
                   </div>
-                ))
-              ) : (
-                <div className="col-span-3 p-8 text-center border rounded-md">
-                  <h3 className="font-medium text-lg">No offerings match your criteria</h3>
-                  <p className="text-muted-foreground mt-2">Try adjusting your search filters</p>
-                  <Button variant="outline" className="mt-4" onClick={() => {
-                    setSearchTerm("");
-                    setFilterCategory("all");
-                    setMinimumFilter("all");
-                  }}>
-                    Clear Filters
+                  
+                  <div className="bg-primary/10 p-3 rounded-md flex items-center">
+                    <DollarSign className="h-5 w-5 text-primary mr-2" />
+                    <div>
+                      <p className="text-sm font-semibold">Minimum Investment</p>
+                      <p className="font-bold">{offering.minimumInvestment}</p>
+                    </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <p className="text-sm text-muted-foreground">Performance</p>
+                      <p className="font-medium text-emerald-500">{offering.performance}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">Firm</p>
+                      <p className="font-medium">{offering.firm}</p>
+                    </div>
+                  </div>
+                  
+                  <Button 
+                    variant="outline" 
+                    className="w-full" 
+                    onClick={() => navigate(`/investments/alternative/${offering.category}?id=${offering.id}`)}
+                  >
+                    View Details
                   </Button>
-                </div>
-              )}
-            </div>
-            
-            <div className="mt-6 text-sm text-muted-foreground">
-              Showing {filteredOfferings.length} of {allOfferings.length} total offerings
-            </div>
-          </>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         )}
       </div>
     </ThreeColumnLayout>
