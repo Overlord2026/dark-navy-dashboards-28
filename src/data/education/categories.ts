@@ -12,6 +12,7 @@ export const courseCategories: CourseCategory[] = [
   { id: "wealth-management", name: "Holistic Wealth Management" },
   { id: "estate-planning", name: "Estate Planning Basics" },
   { id: "advanced-estate-planning", name: "Advanced Estate Planning" },
+  { id: "family-legacy", name: "Family Legacy Planning" },
   { id: "investment-management", name: "Investment Management" },
   { id: "private-market-alpha", name: "Private Market Alpha" },
   { id: "model-portfolios", name: "Model Portfolios" },

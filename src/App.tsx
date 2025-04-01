@@ -47,6 +47,7 @@ import SystemDiagnostics from "./pages/SystemDiagnostics";
 import IPProtection from "./pages/IPProtection";
 import { Toaster } from "./components/ui/sonner";
 import AllAlternativeInvestments from "./pages/AllAlternativeInvestments";
+import EstatePlanning from "./pages/EstatePlanning";
 
 function App() {
   return (
@@ -93,6 +94,7 @@ function App() {
                     <Route path="/cash-management" element={<CashManagement />} />
                     <Route path="/insurance" element={<Insurance />} />
                     <Route path="/personal-insurance" element={<PersonalInsurance />} />
+                    <Route path="/estate-planning" element={<EstatePlanning />} />
                     <Route path="/sharing" element={<Sharing />} />
                     <Route path="/sharing/:sectionId" element={<Sharing />} />
                     <Route path="/transfers" element={<Transfers />} />

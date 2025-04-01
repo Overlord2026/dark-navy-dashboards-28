@@ -1,4 +1,3 @@
-
 import { 
   HomeIcon, 
   GraduationCapIcon,
@@ -19,7 +18,8 @@ import {
   BookOpenIcon,
   LineChartIcon,
   CircleDollarSignIcon,
-  BriefcaseIcon
+  BriefcaseIcon,
+  ArchiveIcon
 } from "lucide-react";
 
 import { NavItem } from "@/types/navigation";
@@ -54,6 +54,11 @@ export const educationSolutionsNavItems: NavItem[] = [
     title: "Lending", 
     href: "/lending", 
     icon: BanknoteIcon 
+  },
+  { 
+    title: "Estate Planning", 
+    href: "/estate-planning", 
+    icon: ArchiveIcon 
   }
 ];
 
