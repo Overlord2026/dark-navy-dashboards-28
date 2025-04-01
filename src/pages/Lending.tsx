@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { 
@@ -22,6 +21,10 @@ import { useToast } from "@/hooks/use-toast";
 import { LenderDetail } from "@/components/lending/LenderDetail";
 import { LoanCategoryCard } from "@/components/lending/LoanCategoryCard";
 import { SecuritiesBasedLoansContent } from "@/components/lending/SecuritiesBasedLoansContent";
+import { HomeLoansContent } from "@/components/lending/HomeLoansContent";
+import { CommercialLoansContent } from "@/components/lending/CommercialLoansContent";
+import { SpecialtyLoansContent } from "@/components/lending/SpecialtyLoansContent";
+import { PersonalLoansContent } from "@/components/lending/PersonalLoansContent";
 
 // Loan categories data
 const loanCategories = [
@@ -188,8 +191,22 @@ const Lending = () => {
   const paginatedLenders = filteredLenders.slice((currentPage - 1) * 2, currentPage * 2);
   const totalPages = Math.ceil(filteredLenders.length / 2);
 
-  // Special rendering for Securities-Based Loans
-  const isSecuritiesBasedLoans = selectedCategory === "securities-loans";
+  const renderCategoryContent = () => {
+    switch (selectedCategory) {
+      case "home-loans":
+        return <HomeLoansContent />;
+      case "securities-loans":
+        return <SecuritiesBasedLoansContent />;
+      case "commercial-loans":
+        return <CommercialLoansContent />;
+      case "specialty-loans":
+        return <SpecialtyLoansContent />;
+      case "personal-loans":
+        return <PersonalLoansContent />;
+      default:
+        return null;
+    }
+  };
 
   return (
     <ThreeColumnLayout 
@@ -214,7 +231,7 @@ const Lending = () => {
                 ? "Lending Solutions" 
                 : loanCategories.find(cat => cat.id === selectedCategory)?.title}
             </h1>
-            {activeTab === "lenders" && selectedCategory && !isSecuritiesBasedLoans && (
+            {activeTab === "lenders" && selectedCategory && !renderCategoryContent() && (
               <p className="text-muted-foreground">
                 {loanCategories.find(cat => cat.id === selectedCategory)?.description}
               </p>
@@ -236,9 +253,7 @@ const Lending = () => {
 
         {activeTab === "lenders" && (
           <>
-            {isSecuritiesBasedLoans ? (
-              <SecuritiesBasedLoansContent />
-            ) : (
+            {renderCategoryContent() || (
               <>
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
                   {paginatedLenders.map((lender) => (
