@@ -70,7 +70,7 @@ const CATEGORY_DATA = {
       },
       {
         id: 3,
-        name: "Blackstone Private Equity Strategies Fund, (TE) L.P. ("BXPE Tax Exempt")",
+        name: "Blackstone Private Equity Strategies Fund, (TE) L.P. (\"BXPE Tax Exempt\")",
         description: "BXPE seeks to provide institutional-quality exposure to Blackstone's private equity platform designed for tax-exempt investors such as IRAs, 401(k)s and other retirement accounts. Access to Blackstone's private capital platform with $300+ billion in AUM.",
         minimumInvestment: "$10,000",
         performance: "+17.5% IRR",
@@ -97,7 +97,7 @@ const CATEGORY_DATA = {
       {
         id: 4,
         name: "CAIS Vista Foundation Fund V, L.P.",
-        description: "Vista Foundation Fund V, L.P. ("the Partnership", the "Fund" or "VFF V") was formed by Vista Equity Partners Management, LLC (and, when the context requires, together with its affiliates, "Vista" or the "Firm") primarily to pursue controlling interests in small- and middle-market enterprise software, data and technology-enabled solutions companies with enterprise values generally between $200 million and $750 million.",
+        description: "Vista Foundation Fund V, L.P. (\"the Partnership\", the \"Fund\" or \"VFF V\") was formed by Vista Equity Partners Management, LLC (and, when the context requires, together with its affiliates, \"Vista\" or the \"Firm\") primarily to pursue controlling interests in small- and middle-market enterprise software, data and technology-enabled solutions companies with enterprise values generally between $200 million and $750 million.",
         minimumInvestment: "$100,000",
         performance: "+22.3% IRR",
         lockupPeriod: "7-10 years",
@@ -253,7 +253,7 @@ const CATEGORY_DATA = {
       {
         id: 10,
         name: "Bonaccord Capital Partners Fund III",
-        description: "Bonaccord Capital Partners II ("the Fund") is a middle market GP stakes fund with a focus on making growth capital investments in mid-market private markets sponsors across private equity, private credit, real assets, and real estate. The fund aims to deliver attractive risk-adjusted returns driven by both dividend yields and capital appreciation.",
+        description: "Bonaccord Capital Partners II (\"the Fund\") is a middle market GP stakes fund with a focus on making growth capital investments in mid-market private markets sponsors across private equity, private credit, real assets, and real estate. The fund aims to deliver attractive risk-adjusted returns driven by both dividend yields and capital appreciation.",
         minimumInvestment: "$250,000",
         performance: "+19.5% IRR",
         lockupPeriod: "8-10 years",
