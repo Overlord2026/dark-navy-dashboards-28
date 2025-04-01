@@ -1,11 +1,12 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { BarChart2, TrendingUp, Shield, ChevronRight, ExternalLink } from "lucide-react";
+import { BarChart2, TrendingUp, Shield, ChevronRight, ExternalLink, Plus, Filter, Share } from "lucide-react";
 import { Link } from "react-router-dom";
+import { toast } from "sonner";
 
 interface PortfolioModel {
   id: string;
@@ -96,6 +97,39 @@ const portfolioModels: PortfolioModel[] = [
 ];
 
 export const IntelligentAllocationTab = () => {
+  const [selectedModels, setSelectedModels] = useState<string[]>([]);
+
+  const handleFindPortfolios = () => {
+    toast.success("Opening portfolio discovery tool");
+    // This would open a portfolio finder/filter dialog in a real implementation
+  };
+
+  const handleManageGroups = () => {
+    toast.success("Opening group management tool");
+    // This would open a group management dialog in a real implementation
+  };
+
+  const handleCreatePortfolio = () => {
+    toast.success("Starting new portfolio creation");
+    // This would open the portfolio creation wizard in a real implementation
+  };
+
+  const handleCreateModelOfModels = () => {
+    toast.success("Starting new Model of Models creation");
+    // This would open the Model of Models creation wizard in a real implementation
+  };
+
+  const handleModelRowClick = (modelId: string) => {
+    // Toggle selection of a model
+    if (selectedModels.includes(modelId)) {
+      setSelectedModels(selectedModels.filter(id => id !== modelId));
+      toast.info(`Deselected model: ${portfolioModels.find(m => m.id === modelId)?.name}`);
+    } else {
+      setSelectedModels([...selectedModels, modelId]);
+      toast.info(`Selected model: ${portfolioModels.find(m => m.id === modelId)?.name}`);
+    }
+  };
+
   return (
     <div className="space-y-8">
       <div className="flex justify-between items-center">
@@ -104,14 +138,14 @@ export const IntelligentAllocationTab = () => {
           <p className="text-muted-foreground">Professionally managed portfolio models</p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline">
-            Find Portfolios
+          <Button variant="outline" onClick={handleFindPortfolios}>
+            <Filter className="mr-1 h-4 w-4" /> Find Portfolios
           </Button>
-          <Button variant="outline">
-            Manage Groups
+          <Button variant="outline" onClick={handleManageGroups}>
+            <Share className="mr-1 h-4 w-4" /> Manage Groups
           </Button>
-          <Button>
-            Create Portfolio
+          <Button onClick={handleCreatePortfolio}>
+            <Plus className="mr-1 h-4 w-4" /> Create Portfolio
           </Button>
         </div>
       </div>
@@ -138,7 +172,8 @@ export const IntelligentAllocationTab = () => {
             {portfolioModels.map((model) => (
               <div 
                 key={model.id} 
-                className="grid grid-cols-12 gap-2 p-4 border-t items-center hover:bg-accent/10 transition-colors"
+                className={`grid grid-cols-12 gap-2 p-4 border-t items-center hover:bg-accent/10 transition-colors cursor-pointer ${selectedModels.includes(model.id) ? 'bg-primary/5' : ''}`}
+                onClick={() => handleModelRowClick(model.id)}
               >
                 <div className="col-span-4 flex items-center gap-3">
                   <div className="text-primary">
@@ -203,7 +238,8 @@ export const IntelligentAllocationTab = () => {
             {portfolioModels.filter(model => model.type === "Sleeve").map((model) => (
               <div 
                 key={model.id} 
-                className="grid grid-cols-12 gap-2 p-4 border-t items-center hover:bg-accent/10 transition-colors"
+                className={`grid grid-cols-12 gap-2 p-4 border-t items-center hover:bg-accent/10 transition-colors cursor-pointer ${selectedModels.includes(model.id) ? 'bg-primary/5' : ''}`}
+                onClick={() => handleModelRowClick(model.id)}
               >
                 <div className="col-span-4 flex items-center gap-3">
                   <div className="text-primary">
@@ -254,8 +290,8 @@ export const IntelligentAllocationTab = () => {
           <div className="p-8 text-center border rounded-md">
             <h3 className="font-medium text-lg">No Model of Models Defined</h3>
             <p className="text-muted-foreground mt-2">You haven't created any Model of Models yet</p>
-            <Button className="mt-4">
-              Create Model of Models
+            <Button className="mt-4" onClick={handleCreateModelOfModels}>
+              <Plus className="mr-1 h-4 w-4" /> Create Model of Models
             </Button>
           </div>
         </TabsContent>
