@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -16,7 +15,6 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 
-// Sample risk data
 const portfolioRiskData = [
   { name: "Volatility", value: 14.3, benchmark: 15.1, rating: "Good" },
   { name: "Drawdown", value: 18.6, benchmark: 19.2, rating: "Fair" },
@@ -67,7 +65,6 @@ const InvestmentRisk = () => {
     setIsAnalyzing(true);
     toast.info("Analyzing portfolio risks with AI...");
     
-    // Simulate AI analysis with a timeout
     setTimeout(() => {
       setAiInsights(
         "Your portfolio has a moderate-high risk profile (67/100) which is appropriate for your stated growth objectives. " +
@@ -85,9 +82,8 @@ const InvestmentRisk = () => {
   const recalculateRisk = () => {
     toast.info("Recalculating portfolio risk...");
     
-    // Simulate recalculation with a timeout
     setTimeout(() => {
-      setRiskScore(Math.floor(Math.random() * 20) + 60); // Random score between 60-80
+      setRiskScore(Math.floor(Math.random() * 20) + 60);
       toast.success("Risk assessment updated");
     }, 1500);
   };
@@ -425,8 +421,17 @@ const InvestmentRisk = () => {
                         <Legend />
                         <Bar 
                           dataKey="impact" 
-                          name="Portfolio Impact" 
-                          fill={(entry) => (entry.impact >= 0 ? '#82ca9d' : '#ff8042')}
+                          name="Positive Impact" 
+                          fill="#82ca9d"
+                          isAnimationActive={true}
+                          data={riskScenarioData.filter(item => item.impact >= 0)}
+                        />
+                        <Bar 
+                          dataKey="impact" 
+                          name="Negative Impact" 
+                          fill="#ff8042"
+                          isAnimationActive={true}
+                          data={riskScenarioData.filter(item => item.impact < 0)}
                         />
                       </BarChart>
                     </ResponsiveContainer>
