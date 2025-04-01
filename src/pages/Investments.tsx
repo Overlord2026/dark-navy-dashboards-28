@@ -20,7 +20,8 @@ import {
   LineChart,
   Landmark,
   Network,
-  ArrowRight
+  ArrowRight,
+  ShieldCheck
 } from "lucide-react";
 import { useState } from "react";
 import { Progress } from "@/components/ui/progress";
@@ -28,6 +29,7 @@ import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMe
 import { cn } from "@/lib/utils";
 import { Link } from "react-router-dom";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
+import { investmentCategories } from "@/components/navigation/NavigationConfig";
 
 const Investments = () => {
   const [activeTab, setActiveTab] = useState("overview");
@@ -64,9 +66,9 @@ const Investments = () => {
     { id: 1, name: "Private Equity Fund Alpha", value: 125000, allocation: 15, performance: 18.5, risk: "High" },
     { id: 2, name: "Real Estate Trust Beta", value: 200000, allocation: 25, performance: 12.3, risk: "Medium" },
     { id: 3, name: "Venture Capital Fund Gamma", value: 150000, allocation: 18, performance: 22.7, risk: "Very High" },
-    { id: 4, name: "Hedge Fund Delta", value: 175000, allocation: 22, performance: 9.8, risk: "Medium-High" },
-    { id: 5, name: "Cryptocurrency Portfolio", value: 80000, allocation: 10, performance: -5.2, risk: "Very High" },
-    { id: 6, name: "Commodities Basket", value: 75000, allocation: 10, performance: 7.5, risk: "Medium" }
+    { id: 4, name: "Private Debt Fund Delta", value: 175000, allocation: 22, performance: 9.8, risk: "Medium-High" },
+    { id: 5, name: "Digital Assets Portfolio", value: 80000, allocation: 10, performance: -5.2, risk: "Very High" },
+    { id: 6, name: "Structured Products Basket", value: 75000, allocation: 10, performance: 7.5, risk: "Medium" }
   ];
 
   const totalAlternativeValue = alternativeAssets.reduce((sum, asset) => sum + asset.value, 0);
@@ -138,14 +140,6 @@ const Investments = () => {
     },
     { 
       id: 3, 
-      title: "Hedge Fund", 
-      slug: "hedge-fund",
-      description: "Actively managed investment pools with diverse strategies",
-      icon: <LineChart className="h-10 w-10 text-green-500" />,
-      trend: "+7.5% YTD"
-    },
-    { 
-      id: 4, 
       title: "Venture Capital", 
       slug: "venture-capital",
       description: "Investments in early-stage, high-potential startups",
@@ -153,15 +147,7 @@ const Investments = () => {
       trend: "+16.2% YTD"
     },
     { 
-      id: 5, 
-      title: "Collectibles", 
-      slug: "collectibles",
-      description: "Art, luxury watches, memorabilia, rare items",
-      icon: <Wine className="h-10 w-10 text-amber-500" />,
-      trend: "+5.3% YTD"
-    },
-    { 
-      id: 6, 
+      id: 4, 
       title: "Digital Assets", 
       slug: "digital-assets",
       description: "Cryptocurrencies, NFTs, blockchain investments",
@@ -169,7 +155,7 @@ const Investments = () => {
       trend: "-2.8% YTD"
     },
     { 
-      id: 7, 
+      id: 5, 
       title: "Real Assets", 
       slug: "real-assets",
       description: "Real estate, infrastructure, commodities, natural resources",
@@ -177,11 +163,11 @@ const Investments = () => {
       trend: "+9.1% YTD"
     },
     { 
-      id: 8, 
+      id: 6, 
       title: "Structured Investments", 
       slug: "structured-investments",
       description: "Notes, derivatives, insurance-linked securities",
-      icon: <HardHat className="h-10 w-10 text-rose-500" />,
+      icon: <ShieldCheck className="h-10 w-10 text-rose-500" />,
       trend: "+4.6% YTD"
     }
   ];

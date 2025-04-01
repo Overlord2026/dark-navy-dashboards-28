@@ -32,7 +32,10 @@ import {
   BookOpenIcon,
   Users2Icon,
   HeartHandshakeIcon,
-  VaultIcon
+  VaultIcon,
+  GemIcon,
+  BriefcaseIcon,
+  TrendingUpIcon
 } from "lucide-react";
 
 import { NavItem } from "@/types/navigation";
@@ -144,6 +147,46 @@ export const bottomNavItems: NavItem[] = [
     title: "Settings", 
     href: "/settings", 
     icon: SettingsIcon 
+  }
+];
+
+// INVESTMENTS categories (for the investments page)
+export const investmentCategories: NavItem[] = [
+  {
+    title: "Private Equity",
+    href: "/investments/alternative/private-equity",
+    icon: BriefcaseIcon,
+    description: "Investments in non-public companies, buyouts, growth equity"
+  },
+  {
+    title: "Private Debt",
+    href: "/investments/alternative/private-debt",
+    icon: LandmarkIcon,
+    description: "Direct lending, mezzanine financing, distressed debt"
+  },
+  {
+    title: "Venture Capital",
+    href: "/investments/alternative/venture-capital",
+    icon: TrendingUpIcon,
+    description: "Investments in early-stage, high-potential startups"
+  },
+  {
+    title: "Digital Assets",
+    href: "/investments/alternative/digital-assets",
+    icon: CoinsIcon,
+    description: "Cryptocurrencies, NFTs, blockchain investments"
+  },
+  {
+    title: "Real Assets",
+    href: "/investments/alternative/real-assets",
+    icon: BuildingIcon,
+    description: "Real estate, infrastructure, commodities, natural resources"
+  },
+  {
+    title: "Structured Investments",
+    href: "/investments/alternative/structured-investments",
+    icon: ShieldCheckIcon,
+    description: "Notes, derivatives, insurance-linked securities"
   }
 ];
 
