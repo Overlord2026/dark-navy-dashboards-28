@@ -1,8 +1,8 @@
 
-// Service to handle AI analysis using aimlapi
+// Service to handle AI analysis using OpenAI ChatGPT API
 
-// aimlapi API key
-const AIMLAPI_KEY = "312487759cea4f1d9c3918624f8d3fe1";
+// OpenAI API key
+const OPENAI_API_KEY = "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";
 
 /**
  * Generate AI analysis for a stock based on its data
@@ -32,15 +32,15 @@ export const generateStockAnalysis = async (stockData: any): Promise<string> => 
       Format the response in 3-4 short paragraphs without any preamble or introduction.
     `;
 
-    // Using the correct endpoint from aimlapi.com
-    const response = await fetch("https://api.aimlapi.com/api/generate", {
+    // Using OpenAI API endpoint
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "x-api-key": AIMLAPI_KEY
+        "Authorization": `Bearer ${OPENAI_API_KEY}`
       },
       body: JSON.stringify({
-        model: "gpt-3.5-turbo",
+        model: "gpt-4o-mini",
         messages: [
           {
             role: "system",
@@ -59,7 +59,7 @@ export const generateStockAnalysis = async (stockData: any): Promise<string> => 
     const data = await response.json();
     
     if (data.error) {
-      console.error("aimlapi API error:", data.error);
+      console.error("OpenAI API error:", data.error);
       return `Error generating analysis: ${data.error.message || "Unknown error"}`;
     }
     
@@ -101,15 +101,15 @@ export const generatePortfolioAnalysis = async (
       Format the response in 4-5 paragraphs without any preamble or introduction.
     `;
 
-    // Using the correct endpoint from aimlapi.com
-    const response = await fetch("https://api.aimlapi.com/api/generate", {
+    // Using OpenAI API endpoint
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "x-api-key": AIMLAPI_KEY
+        "Authorization": `Bearer ${OPENAI_API_KEY}`
       },
       body: JSON.stringify({
-        model: "gpt-3.5-turbo",
+        model: "gpt-4o-mini",
         messages: [
           {
             role: "system",
@@ -128,7 +128,7 @@ export const generatePortfolioAnalysis = async (
     const data = await response.json();
     
     if (data.error) {
-      console.error("aimlapi API error:", data.error);
+      console.error("OpenAI API error:", data.error);
       return `Error generating portfolio analysis: ${data.error.message || "Unknown error"}`;
     }
     
