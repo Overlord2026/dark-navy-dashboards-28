@@ -11,8 +11,38 @@ interface MarketData {
 
 // Cache for market data to avoid excessive API calls
 const marketDataCache: Record<string, { data: MarketData, timestamp: number }> = {};
-const CACHE_DURATION = 60 * 60 * 1000; // 1 hour in milliseconds
+const CACHE_DURATION = 15 * 60 * 1000; // 15 minutes in milliseconds
 
+/**
+ * Fetches data from Alpha Vantage API for a specific symbol
+ * Using the free tier with demo API key for educational purposes
+ */
+const fetchAlphaVantageData = async (symbol: string): Promise<number> => {
+  const response = await fetch(
+    `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=demo`
+  );
+  
+  if (!response.ok) {
+    throw new Error(`Failed to fetch data for ${symbol}`);
+  }
+  
+  const data = await response.json();
+  
+  // Check if we have the expected data structure
+  if (!data['Global Quote'] || !data['Global Quote']['10. change percent']) {
+    throw new Error('Invalid API response format');
+  }
+  
+  // Extract the change percentage (format: "2.3200%")
+  const changePercentStr = data['Global Quote']['10. change percent'];
+  const changePercent = parseFloat(changePercentStr.replace('%', ''));
+  
+  return changePercent;
+};
+
+/**
+ * Get live performance data for private equity using SPY ETF as a proxy
+ */
 export const getPrivateEquityData = async (): Promise<MarketData> => {
   const cacheKey = 'private-equity';
   
@@ -23,53 +53,13 @@ export const getPrivateEquityData = async (): Promise<MarketData> => {
   }
 
   try {
-    // For private equity, we'll use S&P Listed Private Equity Index as a proxy
-    // Using Alpha Vantage API to get data for ETFs that track private equity
-    const response = await fetch(
-      `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=PSP&apikey=demo`
-    );
-    
-    if (!response.ok) {
-      throw new Error('Failed to fetch private equity data');
-    }
-    
-    const data = await response.json();
-    
-    // Calculate YTD performance
-    const timeSeries = data['Time Series (Daily)'];
-    if (!timeSeries) {
-      throw new Error('Invalid API response format');
-    }
-    
-    const dates = Object.keys(timeSeries).sort().reverse();
-    
-    // Get most recent price
-    const latestPrice = parseFloat(timeSeries[dates[0]]['4. close']);
-    
-    // Get first price of the year
-    const currentYear = new Date().getFullYear();
-    let yearStartDate = `${currentYear}-01-01`;
-    
-    // Find the first trading day of the year
-    let yearStartPrice;
-    for (const date of dates) {
-      if (date.startsWith(currentYear.toString()) && date >= yearStartDate) {
-        yearStartPrice = parseFloat(timeSeries[date]['4. close']);
-        break;
-      }
-    }
-    
-    // Fallback to the last price of previous year if first trading day not found
-    if (!yearStartPrice) {
-      yearStartPrice = latestPrice * 0.9; // Fallback: assume approximately 10% growth
-    }
-    
-    const ytdPerformance = ((latestPrice - yearStartPrice) / yearStartPrice) * 100;
+    // For private equity, we'll use SPY (S&P 500 ETF) as a proxy
+    const changePercent = await fetchAlphaVantageData('SPY');
     
     const result: MarketData = {
       id: 'private-equity',
       name: 'Private Equity',
-      ytdPerformance: parseFloat(ytdPerformance.toFixed(1)),
+      ytdPerformance: parseFloat(changePercent.toFixed(1)),
       isLoading: false
     };
     
@@ -83,7 +73,7 @@ export const getPrivateEquityData = async (): Promise<MarketData> => {
   } catch (error) {
     console.error('Error fetching private equity data:', error);
     
-    // Return fallback data with reasonable estimate
+    // Return fallback data
     return {
       id: 'private-equity',
       name: 'Private Equity',
@@ -94,6 +84,9 @@ export const getPrivateEquityData = async (): Promise<MarketData> => {
   }
 };
 
+/**
+ * Get live performance data for private debt using LQD ETF as a proxy
+ */
 export const getPrivateDebtData = async (): Promise<MarketData> => {
   const cacheKey = 'private-debt';
   
@@ -103,47 +96,13 @@ export const getPrivateDebtData = async (): Promise<MarketData> => {
   }
 
   try {
-    // For private debt, we'll use corporate bond ETFs as a proxy
-    const response = await fetch(
-      `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=LQD&apikey=demo`
-    );
-    
-    if (!response.ok) {
-      throw new Error('Failed to fetch private debt data');
-    }
-    
-    const data = await response.json();
-    
-    // Calculate YTD performance similar to private equity
-    const timeSeries = data['Time Series (Daily)'];
-    if (!timeSeries) {
-      throw new Error('Invalid API response format');
-    }
-    
-    const dates = Object.keys(timeSeries).sort().reverse();
-    const latestPrice = parseFloat(timeSeries[dates[0]]['4. close']);
-    
-    const currentYear = new Date().getFullYear();
-    let yearStartDate = `${currentYear}-01-01`;
-    
-    let yearStartPrice;
-    for (const date of dates) {
-      if (date.startsWith(currentYear.toString()) && date >= yearStartDate) {
-        yearStartPrice = parseFloat(timeSeries[date]['4. close']);
-        break;
-      }
-    }
-    
-    if (!yearStartPrice) {
-      yearStartPrice = latestPrice * 0.92; // Fallback
-    }
-    
-    const ytdPerformance = ((latestPrice - yearStartPrice) / yearStartPrice) * 100;
+    // For private debt, we'll use LQD (iShares iBoxx $ Investment Grade Corporate Bond ETF)
+    const changePercent = await fetchAlphaVantageData('LQD');
     
     const result: MarketData = {
       id: 'private-debt',
       name: 'Private Debt',
-      ytdPerformance: parseFloat(ytdPerformance.toFixed(1)),
+      ytdPerformance: parseFloat(changePercent.toFixed(1)),
       isLoading: false
     };
     
@@ -165,6 +124,9 @@ export const getPrivateDebtData = async (): Promise<MarketData> => {
   }
 };
 
+/**
+ * Get live performance data for digital assets using GBTC ETF as a proxy
+ */
 export const getDigitalAssetsData = async (): Promise<MarketData> => {
   const cacheKey = 'digital-assets';
   
@@ -174,48 +136,13 @@ export const getDigitalAssetsData = async (): Promise<MarketData> => {
   }
 
   try {
-    // Using CoinGecko API for crypto performance
-    const response = await fetch(
-      'https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=365&interval=daily'
-    );
-    
-    if (!response.ok) {
-      throw new Error('Failed to fetch digital assets data');
-    }
-    
-    const data = await response.json();
-    
-    // Extract prices array [[timestamp, price], ...]
-    const prices = data.prices;
-    if (!prices || !Array.isArray(prices)) {
-      throw new Error('Invalid API response format');
-    }
-    
-    // Get current price (last element)
-    const currentPrice = prices[prices.length - 1][1];
-    
-    // Get price at the beginning of the year
-    const currentYear = new Date().getFullYear();
-    const yearStart = new Date(`${currentYear}-01-01T00:00:00Z`).getTime();
-    
-    // Find the closest price to year start
-    let yearStartPrice = currentPrice;
-    let minDiff = Number.MAX_SAFE_INTEGER;
-    
-    for (const [timestamp, price] of prices) {
-      const diff = Math.abs(timestamp - yearStart);
-      if (diff < minDiff) {
-        minDiff = diff;
-        yearStartPrice = price;
-      }
-    }
-    
-    const ytdPerformance = ((currentPrice - yearStartPrice) / yearStartPrice) * 100;
+    // For digital assets, use GBTC (Grayscale Bitcoin Trust)
+    const changePercent = await fetchAlphaVantageData('GBTC');
     
     const result: MarketData = {
       id: 'digital-assets',
       name: 'Digital Assets',
-      ytdPerformance: parseFloat(ytdPerformance.toFixed(1)),
+      ytdPerformance: parseFloat(changePercent.toFixed(1)),
       isLoading: false
     };
     
@@ -230,13 +157,16 @@ export const getDigitalAssetsData = async (): Promise<MarketData> => {
     return {
       id: 'digital-assets',
       name: 'Digital Assets',
-      ytdPerformance: -2.8, // Fallback value
+      ytdPerformance: 15.8, // Fallback value
       isLoading: false,
       error: error instanceof Error ? error.message : 'Unknown error'
     };
   }
 };
 
+/**
+ * Get live performance data for real assets using XLRE ETF as a proxy
+ */
 export const getRealAssetsData = async (): Promise<MarketData> => {
   const cacheKey = 'real-assets';
   
@@ -246,46 +176,13 @@ export const getRealAssetsData = async (): Promise<MarketData> => {
   }
 
   try {
-    // For real assets, we'll use a real estate ETF as a proxy
-    const response = await fetch(
-      `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=XLRE&apikey=demo`
-    );
-    
-    if (!response.ok) {
-      throw new Error('Failed to fetch real assets data');
-    }
-    
-    const data = await response.json();
-    
-    const timeSeries = data['Time Series (Daily)'];
-    if (!timeSeries) {
-      throw new Error('Invalid API response format');
-    }
-    
-    const dates = Object.keys(timeSeries).sort().reverse();
-    const latestPrice = parseFloat(timeSeries[dates[0]]['4. close']);
-    
-    const currentYear = new Date().getFullYear();
-    let yearStartDate = `${currentYear}-01-01`;
-    
-    let yearStartPrice;
-    for (const date of dates) {
-      if (date.startsWith(currentYear.toString()) && date >= yearStartDate) {
-        yearStartPrice = parseFloat(timeSeries[date]['4. close']);
-        break;
-      }
-    }
-    
-    if (!yearStartPrice) {
-      yearStartPrice = latestPrice * 0.91; // Fallback
-    }
-    
-    const ytdPerformance = ((latestPrice - yearStartPrice) / yearStartPrice) * 100;
+    // For real assets, use XLRE (Real Estate Select Sector SPDR Fund)
+    const changePercent = await fetchAlphaVantageData('XLRE');
     
     const result: MarketData = {
       id: 'real-assets',
       name: 'Real Assets',
-      ytdPerformance: parseFloat(ytdPerformance.toFixed(1)),
+      ytdPerformance: parseFloat(changePercent.toFixed(1)),
       isLoading: false
     };
     
@@ -309,17 +206,52 @@ export const getRealAssetsData = async (): Promise<MarketData> => {
 
 // Function to fetch all investment category data at once
 export const getAllInvestmentCategoryData = async (): Promise<Record<string, MarketData>> => {
-  const [privateEquity, privateDebt, digitalAssets, realAssets] = await Promise.all([
-    getPrivateEquityData(),
-    getPrivateDebtData(),
-    getDigitalAssetsData(),
-    getRealAssetsData()
-  ]);
-  
-  return {
-    'private-equity': privateEquity,
-    'private-debt': privateDebt,
-    'digital-assets': digitalAssets,
-    'real-assets': realAssets
-  };
+  try {
+    const [privateEquity, privateDebt, digitalAssets, realAssets] = await Promise.all([
+      getPrivateEquityData(),
+      getPrivateDebtData(),
+      getDigitalAssetsData(),
+      getRealAssetsData()
+    ]);
+    
+    return {
+      'private-equity': privateEquity,
+      'private-debt': privateDebt,
+      'digital-assets': digitalAssets,
+      'real-assets': realAssets
+    };
+  } catch (error) {
+    console.error('Error fetching all investment category data:', error);
+    // Return fallback data
+    return {
+      'private-equity': {
+        id: 'private-equity',
+        name: 'Private Equity',
+        ytdPerformance: 12.4,
+        isLoading: false,
+        error: 'Failed to fetch data'
+      },
+      'private-debt': {
+        id: 'private-debt',
+        name: 'Private Debt',
+        ytdPerformance: 8.7,
+        isLoading: false,
+        error: 'Failed to fetch data'
+      },
+      'digital-assets': {
+        id: 'digital-assets',
+        name: 'Digital Assets',
+        ytdPerformance: 15.8,
+        isLoading: false,
+        error: 'Failed to fetch data'
+      },
+      'real-assets': {
+        id: 'real-assets',
+        name: 'Real Assets',
+        ytdPerformance: 9.1,
+        isLoading: false,
+        error: 'Failed to fetch data'
+      }
+    };
+  }
 };

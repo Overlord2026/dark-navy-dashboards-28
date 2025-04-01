@@ -1,6 +1,7 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { getAllInvestmentCategoryData } from '@/services/marketDataService';
+import { toast } from 'sonner';
 
 interface MarketData {
   id: string;
@@ -14,29 +15,45 @@ export const useMarketData = () => {
   const [marketData, setMarketData] = useState<Record<string, MarketData>>({});
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setIsLoading(true);
-        const data = await getAllInvestmentCategoryData();
-        setMarketData(data);
-        setError(null);
-      } catch (err) {
-        console.error('Error fetching market data:', err);
-        setError(err instanceof Error ? err.message : 'Failed to fetch market data');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchData();
-
-    // Set up a refresh interval (every 30 minutes)
-    const intervalId = setInterval(fetchData, 30 * 60 * 1000);
-
-    return () => clearInterval(intervalId);
+  const fetchData = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      const data = await getAllInvestmentCategoryData();
+      setMarketData(data);
+      setLastUpdated(new Date());
+      setError(null);
+    } catch (err) {
+      console.error('Error fetching market data:', err);
+      const errorMessage = err instanceof Error ? err.message : 'Failed to fetch market data';
+      setError(errorMessage);
+      toast.error(`Error loading market data: ${errorMessage}`);
+    } finally {
+      setIsLoading(false);
+    }
   }, []);
 
-  return { marketData, isLoading, error };
+  const refreshData = useCallback(async () => {
+    toast.info('Refreshing market data...');
+    await fetchData();
+    toast.success('Market data refreshed');
+  }, [fetchData]);
+
+  useEffect(() => {
+    fetchData();
+
+    // Set up a refresh interval (every 15 minutes)
+    const intervalId = setInterval(fetchData, 15 * 60 * 1000);
+
+    return () => clearInterval(intervalId);
+  }, [fetchData]);
+
+  return { 
+    marketData, 
+    isLoading, 
+    error, 
+    refreshData,
+    lastUpdated
+  };
 };
