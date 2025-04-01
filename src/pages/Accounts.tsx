@@ -12,7 +12,8 @@ import {
   Building,
   Home,
   Wallet,
-  ArrowLeft
+  ArrowLeft,
+  Landmark
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
@@ -107,6 +108,21 @@ const Accounts = () => {
               <Button variant="outline" className="mt-2">
                 <ExternalLink className="mr-2 h-4 w-4" />
                 Complete Setup
+              </Button>
+            </div>
+          </AccountSection>
+
+          <AccountSection 
+            icon={<Landmark className="h-5 w-5 text-yellow-500 bg-black p-1 rounded-full" />}
+            title="401K/457/403B Plans"
+            amount="$0.00"
+            initiallyOpen={false}
+          >
+            <div className="p-4 text-center text-muted-foreground">
+              <p>No retirement plans linked.</p>
+              <Button variant="outline" className="mt-2" onClick={() => handleAccountTypeSelected("retirement")}>
+                <PlusCircle className="mr-2 h-4 w-4" />
+                Add Retirement Plan
               </Button>
             </div>
           </AccountSection>
