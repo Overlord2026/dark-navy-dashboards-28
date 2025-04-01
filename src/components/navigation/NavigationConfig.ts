@@ -59,6 +59,21 @@ export const educationSolutionsNavItems: NavItem[] = [
     icon: GraduationCapIcon 
   },
   { 
+    title: "Investments", 
+    href: "/investments", 
+    icon: BarChart3Icon 
+  },
+  { 
+    title: "Insurance", 
+    href: "/insurance", 
+    icon: ShieldIcon 
+  },
+  { 
+    title: "Lending", 
+    href: "/lending", 
+    icon: BanknoteIcon 
+  },
+  { 
     title: "Marketplace", 
     href: "/marketplace", 
     icon: ShoppingBagIcon 
@@ -73,44 +88,53 @@ export const educationSolutionsNavItems: NavItem[] = [
 // Family Wealth category
 export const familyWealthNavItems: NavItem[] = [
   { 
-    title: "Accounts", 
-    href: "/accounts", 
-    icon: WalletIcon 
-  },
-  { 
     title: "Financial Plans", 
     href: "/financial-plans", 
     icon: LineChartIcon 
   },
   { 
-    title: "Investments", 
-    href: "/investments", 
-    icon: BarChart3Icon 
+    title: "Accounts Overview", 
+    href: "/accounts", 
+    icon: WalletIcon 
   },
   { 
-    title: "Properties", 
-    href: "/properties", 
-    icon: BuildingIcon 
-  },
-  { 
-    title: "Insurance", 
+    title: "Insurance & Annuities", 
     href: "/insurance", 
-    icon: ShieldIcon 
+    icon: ShieldIcon,
+    submenu: [
+      {
+        title: "Insurance",
+        href: "/insurance",
+        icon: ShieldIcon
+      },
+      {
+        title: "Annuities",
+        href: "/annuities",
+        icon: CoinsIcon
+      },
+      {
+        title: "Fiduciary Friendly Annuities",
+        href: "/fiduciary-annuities",
+        icon: PiggyBankIcon
+      }
+    ]
   },
   { 
-    title: "Annuities", 
-    href: "/annuities", 
-    icon: CoinsIcon 
-  },
-  { 
-    title: "Fiduciary Friendly Annuities", 
-    href: "/fiduciary-annuities", 
-    icon: PiggyBankIcon 
-  },
-  { 
-    title: "Social Security", 
-    href: "/social-security", 
-    icon: CircleDollarSignIcon 
+    title: "Banking", 
+    href: "/banking", 
+    icon: BanknoteIcon,
+    submenu: [
+      {
+        title: "Cash Management",
+        href: "/cash-management",
+        icon: CoinsIcon
+      },
+      {
+        title: "Transfers",
+        href: "/transfers",
+        icon: ArrowLeftRightIcon
+      }
+    ]
   },
   { 
     title: "Legacy Vault", 
@@ -118,38 +142,60 @@ export const familyWealthNavItems: NavItem[] = [
     icon: VaultIcon 
   },
   { 
-    title: "Lending", 
-    href: "/lending", 
-    icon: BanknoteIcon 
+    title: "Social Security", 
+    href: "/social-security", 
+    icon: CircleDollarSignIcon 
   },
   { 
-    title: "Cash Management", 
-    href: "/cash-management", 
-    icon: CoinsIcon 
-  },
-  { 
-    title: "Transfers", 
-    href: "/transfers", 
-    icon: ArrowLeftRightIcon 
+    title: "Real Estate & Properties", 
+    href: "/properties", 
+    icon: BuildingIcon,
+    submenu: [
+      {
+        title: "Properties Overview",
+        href: "/properties",
+        icon: BuildingIcon
+      },
+      {
+        title: "Buildings",
+        href: "/properties?filter=buildings",
+        icon: BuildingIcon
+      },
+      {
+        title: "Rentals",
+        href: "/properties?filter=rentals",
+        icon: KeyIcon
+      },
+      {
+        title: "Locations",
+        href: "/properties?filter=locations",
+        icon: MapPinIcon
+      },
+      {
+        title: "Investments",
+        href: "/properties?filter=investments",
+        icon: LandmarkIcon
+      }
+    ]
   }
 ];
 
 // Collaboration & Sharing category
 export const collaborationNavItems: NavItem[] = [
   { 
-    title: "Sharing", 
-    href: "/sharing", 
-    icon: ShareIcon 
+    title: "Document Sharing", 
+    href: "/documents", 
+    icon: FileTextIcon 
   },
   { 
-    title: "Professionals", 
+    title: "Professional Access", 
     href: "/professionals", 
     icon: Users2Icon 
   },
   { 
-    title: "Documents", 
-    href: "/documents", 
-    icon: FileTextIcon 
+    title: "Family Member Access", 
+    href: "/sharing", 
+    icon: ShareIcon 
   },
   { 
     title: "Bill Management", 

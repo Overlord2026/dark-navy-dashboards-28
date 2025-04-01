@@ -6,9 +6,6 @@ import {
   ChevronRightIcon,
   ChevronDown,
   ChevronUp,
-  Users2Icon,
-  HeartHandshakeIcon,
-  VaultIcon
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "react-router-dom";
@@ -20,7 +17,7 @@ import {
   securityNavItems,
   bottomNavItems 
 } from "@/components/navigation/NavigationConfig";
-import { NavCategory } from "@/types/navigation";
+import { NavCategory, NavItem } from "@/types/navigation";
 import { useTheme } from "@/context/ThemeContext";
 import { UserProfileSection } from "@/components/sidebar/UserProfileSection";
 import { AdvisorSection } from "@/components/profile/AdvisorSection";
@@ -67,6 +64,9 @@ export const Sidebar = () => {
     }, {} as Record<string, boolean>)
   );
 
+  // Track expanded submenu items
+  const [expandedSubmenus, setExpandedSubmenus] = useState<Record<string, boolean>>({});
+
   const toggleSidebar = () => {
     setCollapsed(!collapsed);
   };
@@ -75,6 +75,13 @@ export const Sidebar = () => {
     setExpandedCategories(prev => ({
       ...prev,
       [categoryId]: !prev[categoryId]
+    }));
+  };
+
+  const toggleSubmenu = (itemTitle: string) => {
+    setExpandedSubmenus(prev => ({
+      ...prev,
+      [itemTitle]: !prev[itemTitle]
     }));
   };
 
@@ -101,6 +108,68 @@ export const Sidebar = () => {
   const handleViewProfile = (tabId: string) => {
     console.log("View profile tab:", tabId);
     // Navigate to advisor profile or open a modal
+  };
+
+  const renderNavItem = (item: NavItem, hasSubmenu = false) => {
+    // Check if item has submenu
+    const hasSubItems = item.submenu && item.submenu.length > 0;
+    const isSubmenuExpanded = expandedSubmenus[item.title] || false;
+
+    return (
+      <div key={item.title} className="mb-1">
+        <div className="flex flex-col">
+          <div className="flex items-center">
+            <Link
+              to={item.href}
+              className={cn(
+                "group flex items-center py-2 px-3 rounded-md transition-colors border w-full",
+                isActive(item.href)
+                  ? isLightTheme 
+                    ? "bg-[#E9E7D8] text-[#222222] font-medium border-primary" 
+                    : "bg-black text-white border-primary" 
+                  : isLightTheme 
+                    ? "text-[#222222] border-transparent hover:bg-[#E9E7D8] hover:border-primary" 
+                    : "text-sidebar-foreground border-transparent hover:bg-sidebar-accent",
+                hasSubmenu && "ml-4"
+              )}
+              title={collapsed ? item.title : undefined}
+            >
+              <item.icon 
+                className={cn(
+                  "h-5 w-5 flex-shrink-0", 
+                  !collapsed && "mr-3",
+                  "bg-black p-0.5 rounded-sm"
+                )} 
+              />
+              {!collapsed && (
+                <span className="whitespace-nowrap overflow-hidden text-ellipsis flex-1">{item.title}</span>
+              )}
+              {!collapsed && hasSubItems && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-5 w-5 p-0"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    toggleSubmenu(item.title);
+                  }}
+                >
+                  {isSubmenuExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                </Button>
+              )}
+            </Link>
+          </div>
+          
+          {/* Render submenu items if expanded */}
+          {!collapsed && hasSubItems && isSubmenuExpanded && (
+            <div className="pl-4 mt-1">
+              {item.submenu!.map((subItem) => renderNavItem(subItem, true))}
+            </div>
+          )}
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -138,34 +207,7 @@ export const Sidebar = () => {
             
             {(collapsed || expandedCategories[category.id]) && (
               <nav className="px-2 space-y-1 mt-1">
-                {category.items.map((item) => (
-                  <Link
-                    key={item.title}
-                    to={item.href}
-                    className={cn(
-                      "group flex items-center py-2 px-3 rounded-md transition-colors border",
-                      isActive(item.href)
-                        ? isLightTheme 
-                          ? "bg-[#E9E7D8] text-[#222222] font-medium border-primary" 
-                          : "bg-black text-white border-primary" 
-                        : isLightTheme 
-                          ? "text-[#222222] border-transparent hover:bg-[#E9E7D8] hover:border-primary" 
-                          : "text-sidebar-foreground border-transparent hover:bg-sidebar-accent",
-                    )}
-                    title={collapsed ? item.title : undefined}
-                  >
-                    <item.icon 
-                      className={cn(
-                        "h-5 w-5 flex-shrink-0", 
-                        !collapsed && "mr-3",
-                        "bg-black p-0.5 rounded-sm"
-                      )} 
-                    />
-                    {!collapsed && (
-                      <span className="whitespace-nowrap overflow-hidden text-ellipsis">{item.title}</span>
-                    )}
-                  </Link>
-                ))}
+                {category.items.map((item) => renderNavItem(item))}
               </nav>
             )}
           </div>
