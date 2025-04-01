@@ -21,19 +21,22 @@ import {
   Landmark,
   Network,
   ArrowRight,
-  ShieldCheck
+  ShieldCheck,
+  Loader2
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Progress } from "@/components/ui/progress";
 import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger, navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
 import { Link } from "react-router-dom";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { investmentCategories } from "@/components/navigation/NavigationConfig";
+import { useMarketData } from "@/hooks/useMarketData";
 
 const Investments = () => {
   const [activeTab, setActiveTab] = useState("overview");
   const [activeSection, setActiveSection] = useState("model-portfolios");
+  const { marketData, isLoading: isMarketDataLoading } = useMarketData();
 
   const holdings = [
     { id: 1, symbol: "VTI", name: "Vanguard Total Stock Market ETF", shares: 152, price: 245.68, value: 37343.36, change: 1.23 },
@@ -65,10 +68,8 @@ const Investments = () => {
   const alternativeAssets = [
     { id: 1, name: "Private Equity Fund Alpha", value: 125000, allocation: 15, performance: 18.5, risk: "High" },
     { id: 2, name: "Real Estate Trust Beta", value: 200000, allocation: 25, performance: 12.3, risk: "Medium" },
-    { id: 3, name: "Venture Capital Fund Gamma", value: 150000, allocation: 18, performance: 22.7, risk: "Very High" },
-    { id: 4, name: "Private Debt Fund Delta", value: 175000, allocation: 22, performance: 9.8, risk: "Medium-High" },
-    { id: 5, name: "Digital Assets Portfolio", value: 80000, allocation: 10, performance: -5.2, risk: "Very High" },
-    { id: 6, name: "Structured Products Basket", value: 75000, allocation: 10, performance: 7.5, risk: "Medium" }
+    { id: 3, name: "Private Debt Fund Gamma", value: 175000, allocation: 22, performance: 9.8, risk: "Medium-High" },
+    { id: 4, name: "Digital Assets Portfolio", value: 80000, allocation: 10, performance: -5.2, risk: "Very High" }
   ];
 
   const totalAlternativeValue = alternativeAssets.reduce((sum, asset) => sum + asset.value, 0);
@@ -128,7 +129,8 @@ const Investments = () => {
       slug: "private-equity",
       description: "Investments in non-public companies, buyouts, growth equity", 
       icon: <Briefcase className="h-10 w-10 text-purple-500" />,
-      trend: "+12.4% YTD"
+      trend: isMarketDataLoading ? "Loading..." : 
+             `${marketData['private-equity']?.ytdPerformance >= 0 ? '+' : ''}${marketData['private-equity']?.ytdPerformance || 12.4}% YTD`
     },
     { 
       id: 2, 
@@ -136,15 +138,8 @@ const Investments = () => {
       slug: "private-debt",
       description: "Direct lending, mezzanine financing, distressed debt",
       icon: <Landmark className="h-10 w-10 text-blue-500" />,
-      trend: "+8.7% YTD"
-    },
-    { 
-      id: 3, 
-      title: "Venture Capital", 
-      slug: "venture-capital",
-      description: "Investments in early-stage, high-potential startups",
-      icon: <Network className="h-10 w-10 text-cyan-500" />,
-      trend: "+16.2% YTD"
+      trend: isMarketDataLoading ? "Loading..." : 
+             `${marketData['private-debt']?.ytdPerformance >= 0 ? '+' : ''}${marketData['private-debt']?.ytdPerformance || 8.7}% YTD`
     },
     { 
       id: 4, 
@@ -152,7 +147,8 @@ const Investments = () => {
       slug: "digital-assets",
       description: "Cryptocurrencies, NFTs, blockchain investments",
       icon: <Bitcoin className="h-10 w-10 text-orange-500" />,
-      trend: "-2.8% YTD"
+      trend: isMarketDataLoading ? "Loading..." : 
+             `${marketData['digital-assets']?.ytdPerformance >= 0 ? '+' : ''}${marketData['digital-assets']?.ytdPerformance || -2.8}% YTD`
     },
     { 
       id: 5, 
@@ -160,15 +156,8 @@ const Investments = () => {
       slug: "real-assets",
       description: "Real estate, infrastructure, commodities, natural resources",
       icon: <Building className="h-10 w-10 text-indigo-500" />,
-      trend: "+9.1% YTD"
-    },
-    { 
-      id: 6, 
-      title: "Structured Investments", 
-      slug: "structured-investments",
-      description: "Notes, derivatives, insurance-linked securities",
-      icon: <ShieldCheck className="h-10 w-10 text-rose-500" />,
-      trend: "+4.6% YTD"
+      trend: isMarketDataLoading ? "Loading..." : 
+             `${marketData['real-assets']?.ytdPerformance >= 0 ? '+' : ''}${marketData['real-assets']?.ytdPerformance || 9.1}% YTD`
     }
   ];
 
@@ -682,7 +671,11 @@ const Investments = () => {
                   <CardHeader className="pb-2">
                     <div className="flex justify-between items-center">
                       {category.icon}
-                      <p className={`text-sm font-medium ${category.trend.includes('-') ? 'text-red-500' : 'text-green-500'}`}>
+                      <p className={`text-sm font-medium flex items-center ${
+                        isMarketDataLoading ? "text-gray-500" : 
+                        (category.trend.includes('-') ? 'text-red-500' : 'text-green-500')
+                      }`}>
+                        {isMarketDataLoading && <Loader2 className="h-3 w-3 mr-1 animate-spin" />}
                         {category.trend}
                       </p>
                     </div>

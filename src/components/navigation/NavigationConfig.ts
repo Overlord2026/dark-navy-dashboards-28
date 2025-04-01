@@ -155,38 +155,22 @@ export const investmentCategories: NavItem[] = [
   {
     title: "Private Equity",
     href: "/investments/alternative/private-equity",
-    icon: BriefcaseIcon,
-    description: "Investments in non-public companies, buyouts, growth equity"
+    icon: BriefcaseIcon
   },
   {
     title: "Private Debt",
     href: "/investments/alternative/private-debt",
-    icon: LandmarkIcon,
-    description: "Direct lending, mezzanine financing, distressed debt"
-  },
-  {
-    title: "Venture Capital",
-    href: "/investments/alternative/venture-capital",
-    icon: TrendingUpIcon,
-    description: "Investments in early-stage, high-potential startups"
+    icon: LandmarkIcon
   },
   {
     title: "Digital Assets",
     href: "/investments/alternative/digital-assets",
-    icon: CoinsIcon,
-    description: "Cryptocurrencies, NFTs, blockchain investments"
+    icon: CoinsIcon
   },
   {
     title: "Real Assets",
     href: "/investments/alternative/real-assets",
-    icon: BuildingIcon,
-    description: "Real estate, infrastructure, commodities, natural resources"
-  },
-  {
-    title: "Structured Investments",
-    href: "/investments/alternative/structured-investments",
-    icon: ShieldCheckIcon,
-    description: "Notes, derivatives, insurance-linked securities"
+    icon: BuildingIcon
   }
 ];
 
