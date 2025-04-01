@@ -1,3 +1,4 @@
+
 import { 
   HomeIcon, 
   BarChart3Icon, 
@@ -45,7 +46,7 @@ export const homeNavItems: NavItem[] = [
   }
 ];
 
-// Education & Solutions category
+// Education & Solutions category (updated as requested)
 export const educationSolutionsNavItems: NavItem[] = [
   { 
     title: "Education Center", 
@@ -69,7 +70,7 @@ export const educationSolutionsNavItems: NavItem[] = [
   }
 ];
 
-// Family Wealth category
+// Family Wealth category (updated as requested)
 export const familyWealthNavItems: NavItem[] = [
   { 
     title: "Financial Plans", 
@@ -108,7 +109,7 @@ export const familyWealthNavItems: NavItem[] = [
   }
 ];
 
-// Collaboration & Sharing category
+// Collaboration & Sharing category (updated as requested)
 export const collaborationNavItems: NavItem[] = [
   { 
     title: "Document Sharing", 
