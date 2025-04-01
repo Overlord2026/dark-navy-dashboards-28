@@ -32,14 +32,25 @@ export const generateStockAnalysis = async (stockData: any): Promise<string> => 
       Format the response in 3-4 short paragraphs without any preamble or introduction.
     `;
 
-    const response = await fetch("https://api.aimlapi.com/generate", {
+    // Using the correct endpoint from aimlapi.com
+    const response = await fetch("https://api.aimlapi.com/api/generate", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${AIMLAPI_KEY}`
+        "x-api-key": AIMLAPI_KEY
       },
       body: JSON.stringify({
-        prompt: prompt,
+        model: "gpt-3.5-turbo",
+        messages: [
+          {
+            role: "system",
+            content: "You are a financial advisor with expertise in stock analysis. Provide concise, professional insights."
+          },
+          {
+            role: "user",
+            content: prompt
+          }
+        ],
         max_tokens: 500,
         temperature: 0.7
       })
@@ -52,7 +63,7 @@ export const generateStockAnalysis = async (stockData: any): Promise<string> => 
       return `Error generating analysis: ${data.error.message || "Unknown error"}`;
     }
     
-    return data.text || data.response || data.generated_text || "Analysis could not be generated.";
+    return data.choices?.[0]?.message?.content || "Analysis could not be generated.";
   } catch (error) {
     console.error("Error generating stock analysis:", error);
     return "Unable to generate analysis at this time. Please try again later.";
@@ -90,14 +101,25 @@ export const generatePortfolioAnalysis = async (
       Format the response in 4-5 paragraphs without any preamble or introduction.
     `;
 
-    const response = await fetch("https://api.aimlapi.com/generate", {
+    // Using the correct endpoint from aimlapi.com
+    const response = await fetch("https://api.aimlapi.com/api/generate", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${AIMLAPI_KEY}`
+        "x-api-key": AIMLAPI_KEY
       },
       body: JSON.stringify({
-        prompt: prompt,
+        model: "gpt-3.5-turbo",
+        messages: [
+          {
+            role: "system",
+            content: "You are a portfolio manager with expertise in asset allocation and investment strategy. Provide concise, professional portfolio analysis."
+          },
+          {
+            role: "user",
+            content: prompt
+          }
+        ],
         max_tokens: 800,
         temperature: 0.7
       })
@@ -110,7 +132,7 @@ export const generatePortfolioAnalysis = async (
       return `Error generating portfolio analysis: ${data.error.message || "Unknown error"}`;
     }
     
-    return data.text || data.response || data.generated_text || "Portfolio analysis could not be generated.";
+    return data.choices?.[0]?.message?.content || "Portfolio analysis could not be generated.";
   } catch (error) {
     console.error("Error generating portfolio analysis:", error);
     return "Unable to generate portfolio analysis at this time. Please try again later.";
