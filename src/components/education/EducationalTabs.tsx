@@ -1,4 +1,3 @@
-
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CourseCategories } from "./CourseCategories";
 import { CourseList } from "./CourseList";
@@ -365,11 +364,11 @@ export function EducationalTabs({
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <Card className="overflow-hidden">
-                <div className="relative pb-[60%] bg-muted">
+                <div className="relative h-[400px] bg-muted flex justify-center">
                   <img 
                     src="/lovable-uploads/c99b3253-fc75-4097-ad44-9ef520280206.png" 
                     alt="Life Integrated Financial Freedom by Tony Gomes" 
-                    className="absolute inset-0 w-full h-full object-cover"
+                    className="h-full object-contain"
                   />
                 </div>
                 <CardHeader>
@@ -405,6 +404,13 @@ export function EducationalTabs({
               </Card>
               
               <Card>
+                <div className="relative h-[400px] bg-muted flex justify-center">
+                  <img 
+                    src="/lovable-uploads/4f186128-9b08-4965-a540-64cf9b0ec9ee.png" 
+                    alt="The 5 pillars of Wealth Creation by Tony Gomes" 
+                    className="h-full object-contain"
+                  />
+                </div>
                 <CardHeader>
                   <CardTitle className="text-base">The 5 pillars of Wealth Creation</CardTitle>
                   <CardDescription>By Tony Gomes</CardDescription>
@@ -422,6 +428,13 @@ export function EducationalTabs({
               </Card>
               
               <Card>
+                <div className="relative h-[400px] bg-muted flex justify-center">
+                  <img 
+                    src="/lovable-uploads/7f52d8e5-bf6b-4533-8c1b-f933a43cfce7.png" 
+                    alt="Legacy Planning Mastery by Tony Gomes" 
+                    className="h-full object-contain"
+                  />
+                </div>
                 <CardHeader>
                   <CardTitle className="text-base">Legacy Planning Mastery</CardTitle>
                   <CardDescription>By Tony Gomes</CardDescription>
