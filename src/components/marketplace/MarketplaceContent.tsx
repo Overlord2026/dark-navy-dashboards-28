@@ -1,21 +1,26 @@
 
 import React from "react";
-import { ServiceCategory, SubCategory } from "./MarketplaceNavigation";
+import { ServiceCategory } from "./MarketplaceNavigation";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { MarketplaceListings } from "./MarketplaceListings";
 import { useMarketplace } from "@/hooks/useMarketplace";
 import { Skeleton } from "@/components/ui/skeleton";
+import { MarketplaceListing } from "@/hooks/useMarketplace";
 
 interface MarketplaceContentProps {
   activeCategory: string;
   activeSubcategory: string | null;
   serviceCategories: ServiceCategory[];
+  filteredListings?: MarketplaceListing[];
+  isSearching?: boolean;
 }
 
 export function MarketplaceContent({
   activeCategory,
   activeSubcategory,
-  serviceCategories
+  serviceCategories,
+  filteredListings,
+  isSearching = false
 }: MarketplaceContentProps) {
   const { listings, isLoading } = useMarketplace();
   
@@ -23,8 +28,8 @@ export function MarketplaceContent({
   const currentCategory = serviceCategories.find(category => category.id === activeCategory);
   const currentSubcategory = currentCategory?.subcategories.find(sub => sub.id === activeSubcategory);
 
-  // Filter listings based on selected category and subcategory
-  const filteredListings = listings.filter(listing => {
+  // If filtered listings are provided, use them; otherwise, filter the listings
+  const displayListings = filteredListings || listings.filter(listing => {
     // If viewing a specific subcategory
     if (activeSubcategory) {
       return listing.category === activeCategory && listing.subcategory === activeSubcategory;
@@ -59,14 +64,18 @@ export function MarketplaceContent({
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold tracking-tight mb-2">
-          {currentSubcategory 
-            ? currentSubcategory.name 
-            : currentCategory?.name || "All Services"}
+          {isSearching 
+            ? `Search Results for "${isSearching}"`
+            : currentSubcategory 
+              ? currentSubcategory.name 
+              : currentCategory?.name || "All Services"}
         </h1>
         <p className="text-muted-foreground">
-          {currentSubcategory 
-            ? `Browse our selection of ${currentSubcategory.name.toLowerCase()} services.`
-            : currentCategory?.description || "Browse our complete selection of family office services."}
+          {isSearching
+            ? `Found ${displayListings.length} service${displayListings.length !== 1 ? 's' : ''} matching your search.`
+            : currentSubcategory 
+              ? `Browse our selection of ${currentSubcategory.name.toLowerCase()} services.`
+              : currentCategory?.description || "Browse our complete selection of family office services."}
         </p>
       </div>
 
@@ -74,12 +83,12 @@ export function MarketplaceContent({
         <CardHeader className="pb-3">
           <CardTitle className="text-lg">Available Services</CardTitle>
           <CardDescription>
-            {filteredListings.length} service{filteredListings.length !== 1 ? 's' : ''} available
+            {displayListings.length} service{displayListings.length !== 1 ? 's' : ''} available
           </CardDescription>
         </CardHeader>
         <CardContent>
           <MarketplaceListings 
-            listings={filteredListings} 
+            listings={displayListings} 
             isLoading={isLoading} 
           />
         </CardContent>

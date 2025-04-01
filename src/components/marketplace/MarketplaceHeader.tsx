@@ -2,7 +2,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search, Send } from "lucide-react";
+import { Search, Send, X } from "lucide-react";
 import { Link } from "react-router-dom";
 
 interface MarketplaceHeaderProps {
@@ -38,8 +38,16 @@ export function MarketplaceHeader({
           placeholder="Search services, providers, or keywords..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="pl-10"
+          className="pl-10 pr-10"
         />
+        {searchQuery && (
+          <button 
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4"
+            onClick={() => setSearchQuery("")}
+          >
+            <X className="h-4 w-4" />
+          </button>
+        )}
       </div>
     </div>
   );
