@@ -11,8 +11,8 @@ import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "react-router-dom";
 import { 
   homeNavItems,
-  educationSolutionsNavItems,
-  familyWealthNavItems,
+  wealthManagementNavItems,
+  bankingNavItems,
   collaborationNavItems,
   bottomNavItems 
 } from "@/components/navigation/NavigationConfig";
@@ -46,26 +46,26 @@ export const Sidebar = () => {
   // Updated navigation categories to match the requested structure
   const navigationCategories: NavCategory[] = [
     {
-      id: "home",
-      label: "HOME",
+      id: "main",
+      label: "MAIN",
       items: homeNavItems,
       defaultExpanded: true
     },
     {
-      id: "education-solutions",
-      label: "EDUCATION & SOLUTIONS",
-      items: educationSolutionsNavItems,
+      id: "wealth-management",
+      label: "WEALTH MANAGEMENT",
+      items: wealthManagementNavItems,
       defaultExpanded: true
     },
     {
-      id: "family-wealth",
-      label: "FAMILY WEALTH",
-      items: familyWealthNavItems,
+      id: "banking",
+      label: "BANKING",
+      items: bankingNavItems,
       defaultExpanded: true
     },
     {
-      id: "collaboration-sharing",
-      label: "COLLABORATION & SHARING",
+      id: "collaboration",
+      label: "COLLABORATION",
       items: collaborationNavItems,
       defaultExpanded: true
     }
@@ -143,8 +143,7 @@ export const Sidebar = () => {
                   ? isLightTheme 
                     ? "bg-[#E9E7D8] text-[#222222] font-medium border-primary" 
                     : "bg-black text-white border-primary" 
-                  : isLightTheme 
-                    ? "text-[#222222] border-transparent hover:bg-[#E9E7D8] hover:border-primary" 
+                  : isLightTheme ? "text-[#222222] border-transparent hover:bg-[#E9E7D8] hover:border-primary" 
                     : "text-sidebar-foreground border-transparent hover:bg-sidebar-accent",
                 hasSubmenu && "ml-4"
               )}

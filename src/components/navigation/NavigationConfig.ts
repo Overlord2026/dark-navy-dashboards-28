@@ -1,4 +1,3 @@
-
 import { 
   HomeIcon, 
   BarChart3Icon, 
@@ -37,60 +36,17 @@ import {
 
 import { NavItem } from "@/types/navigation";
 
-// Home category
+// Main category
 export const homeNavItems: NavItem[] = [
   { 
     title: "Home", 
     href: "/", 
     icon: HomeIcon 
-  }
-];
-
-// Education & Solutions category
-export const educationSolutionsNavItems: NavItem[] = [
+  },
   { 
     title: "Education Center", 
     href: "/education", 
     icon: GraduationCapIcon 
-  },
-  { 
-    title: "Investments", 
-    href: "/investments", 
-    icon: BarChart3Icon 
-  },
-  { 
-    title: "Insurance", 
-    href: "/insurance", 
-    icon: ShieldIcon 
-  },
-  { 
-    title: "Lending", 
-    href: "/lending", 
-    icon: BanknoteIcon 
-  }
-];
-
-// Family Wealth category
-export const familyWealthNavItems: NavItem[] = [
-  { 
-    title: "Financial Plans", 
-    href: "/financial-plans", 
-    icon: LineChartIcon 
-  },
-  { 
-    title: "Accounts Overview", 
-    href: "/accounts", 
-    icon: WalletIcon 
-  },
-  { 
-    title: "Insurance & Annuities", 
-    href: "/insurance", 
-    icon: ShieldIcon 
-  },
-  { 
-    title: "Banking", 
-    href: "/cash-management", 
-    icon: CoinsIcon 
   },
   { 
     title: "Legacy Vault", 
@@ -98,18 +54,66 @@ export const familyWealthNavItems: NavItem[] = [
     icon: VaultIcon 
   },
   { 
+    title: "Tax Planning", 
+    href: "/tax-budgets", 
+    icon: ReceiptIcon 
+  }
+];
+
+// Wealth Management category
+export const wealthManagementNavItems: NavItem[] = [
+  { 
+    title: "Financial Plans", 
+    href: "/financial-plans", 
+    icon: LineChartIcon 
+  },
+  { 
+    title: "Investments", 
+    href: "/investments", 
+    icon: BarChart3Icon 
+  },
+  { 
+    title: "Accounts", 
+    href: "/accounts", 
+    icon: WalletIcon 
+  },
+  { 
+    title: "Properties", 
+    href: "/properties", 
+    icon: BuildingIcon 
+  },
+  { 
     title: "Social Security", 
     href: "/social-security", 
     icon: CircleDollarSignIcon 
   },
   { 
-    title: "Real Estate & Properties", 
-    href: "/properties", 
-    icon: BuildingIcon 
+    title: "Insurance", 
+    href: "/insurance", 
+    icon: ShieldIcon 
   }
 ];
 
-// Collaboration & Sharing category
+// Banking category
+export const bankingNavItems: NavItem[] = [
+  { 
+    title: "Cash Management", 
+    href: "/cash-management", 
+    icon: CoinsIcon 
+  },
+  { 
+    title: "Lending", 
+    href: "/lending", 
+    icon: BanknoteIcon 
+  },
+  { 
+    title: "Transfers", 
+    href: "/transfers", 
+    icon: ArrowLeftRightIcon 
+  }
+];
+
+// Collaboration category
 export const collaborationNavItems: NavItem[] = [
   { 
     title: "Document Sharing", 
@@ -143,6 +147,5 @@ export const bottomNavItems: NavItem[] = [
 ];
 
 // Keeping these exports for backward compatibility
-export const securityNavItems = [];
-export const bankingNavItems = [];
-export const propertiesNavItems = [];
+export const educationSolutionsNavItems = [];
+export const familyWealthNavItems = [];
