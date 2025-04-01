@@ -37,10 +37,10 @@ import {
 
 import { NavItem } from "@/types/navigation";
 
-// Main Home category
+// 🏠 Home category
 export const homeNavItems: NavItem[] = [
   { 
-    title: "Dashboard", 
+    title: "Dashboard Overview", 
     href: "/", 
     icon: HomeIcon 
   },
@@ -51,7 +51,7 @@ export const homeNavItems: NavItem[] = [
   }
 ];
 
-// Education & Solutions category
+// 🎓 Education & Solutions category
 export const educationSolutionsNavItems: NavItem[] = [
   { 
     title: "Education Center", 
@@ -72,20 +72,10 @@ export const educationSolutionsNavItems: NavItem[] = [
     title: "Lending", 
     href: "/lending", 
     icon: BanknoteIcon 
-  },
-  { 
-    title: "Marketplace", 
-    href: "/marketplace", 
-    icon: ShoppingBagIcon 
-  },
-  { 
-    title: "Tax & Budgets", 
-    href: "/tax-budgets", 
-    icon: CalculatorIcon 
   }
 ];
 
-// Family Wealth category
+// 📊 Family Wealth category
 export const familyWealthNavItems: NavItem[] = [
   { 
     title: "Financial Plans", 
@@ -180,7 +170,7 @@ export const familyWealthNavItems: NavItem[] = [
   }
 ];
 
-// Collaboration & Sharing category
+// 🤝 Collaboration & Sharing category
 export const collaborationNavItems: NavItem[] = [
   { 
     title: "Document Sharing", 
@@ -196,11 +186,6 @@ export const collaborationNavItems: NavItem[] = [
     title: "Family Member Access", 
     href: "/sharing", 
     icon: ShareIcon 
-  },
-  { 
-    title: "Bill Management", 
-    href: "/bills-management", 
-    icon: ReceiptIcon 
   }
 ];
 
