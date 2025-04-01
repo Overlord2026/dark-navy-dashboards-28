@@ -1,10 +1,9 @@
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
-import { fetchStockData } from "@/services/stockScreenerService";
+import { fetchStockData, fetchStockPriceHistory } from "@/services/stockScreenerService";
 import { generateStockAnalysis } from "@/services/aiAnalysisService";
 import { 
   ArrowUpRight, 
@@ -63,47 +62,37 @@ export const StockScreener: React.FC = () => {
       if (timeframe === "6M") days = 180;
       if (timeframe === "1Y") days = 365;
       
-      // Use the fetchStockPriceHistory function from the service
-      const response = await fetch(
-        `https://api.twelvedata.com/time_series?symbol=${stockSymbol}&interval=1day&outputsize=${days}&apikey=demo`
-      );
-      
-      if (!response.ok) throw new Error("Failed to fetch price history");
-      
-      const data = await response.json();
-      
-      if (data.status === "error") {
-        // If TwelveData fails, use our mock data generator but based on real current price
+      try {
+        // Use the fetchStockPriceHistory function from the service
+        const historyData = await fetchStockPriceHistory(stockSymbol, timeframe);
+        setPriceHistory(historyData);
+      } catch (error) {
+        console.error("Error fetching price history from service:", error);
+        // Fallback to mock data if the service fails
         const currentPrice = stockData?.price || 100;
         const mockHistory = generateMockPriceHistory(currentPrice, days);
         setPriceHistory(mockHistory);
-        console.warn("Using mock price history due to API limits");
-      } else if (data.values && Array.isArray(data.values)) {
-        // Format the real data from TwelveData
-        const formattedData = data.values
-          .slice(0, days)
-          .map((item: any) => ({
-            date: item.datetime,
-            price: parseFloat(item.close)
-          }))
-          .reverse(); // TwelveData returns newest first, we want oldest first
-        
-        setPriceHistory(formattedData);
-      } else {
-        // Fallback to mock data if the response structure is unexpected
-        const currentPrice = stockData?.price || 100;
-        const mockHistory = generateMockPriceHistory(currentPrice, days);
-        setPriceHistory(mockHistory);
-        console.warn("Unexpected API response format, using mock data");
+        console.warn("Using mock price history due to API error");
       }
     } catch (err) {
-      console.error("Error fetching price history:", err);
+      console.error("Error in fetchPriceHistory:", err);
       // Generate mock data based on the current price as fallback
       const currentPrice = stockData?.price || 100;
-      const mockHistory = generateMockPriceHistory(currentPrice, days);
+      const daysToGenerate = calculateDaysFromTimeframe(timeframe);
+      const mockHistory = generateMockPriceHistory(currentPrice, daysToGenerate);
       setPriceHistory(mockHistory);
     } finally {
       setLoadingHistory(false);
+    }
+  };
+
+  // Helper function to calculate days from timeframe
+  const calculateDaysFromTimeframe = (timeframe: "1M" | "3M" | "6M" | "1Y"): number => {
+    switch(timeframe) {
+      case "3M": return 90;
+      case "6M": return 180;
+      case "1Y": return 365;
+      default: return 30; // 1M is default
     }
   };
 
