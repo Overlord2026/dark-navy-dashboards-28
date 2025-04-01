@@ -1,8 +1,8 @@
 
-// Service to handle AI analysis using OpenAI API
+// Service to handle AI analysis using aimlapi
 
-// OpenAI API key
-const OPENAI_API_KEY = "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";
+// aimlapi API key
+const AIMLAPI_KEY = "312487759cea4f1d9c3918624f8d3fe1";
 
 /**
  * Generate AI analysis for a stock based on its data
@@ -32,37 +32,27 @@ export const generateStockAnalysis = async (stockData: any): Promise<string> => 
       Format the response in 3-4 short paragraphs without any preamble or introduction.
     `;
 
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+    const response = await fetch("https://api.aimlapi.com/generate", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${OPENAI_API_KEY}`
+        "Authorization": `Bearer ${AIMLAPI_KEY}`
       },
       body: JSON.stringify({
-        model: "gpt-4o",
-        messages: [
-          {
-            role: "system",
-            content: "You are a financial advisor with expertise in stock analysis. Provide concise, professional insights."
-          },
-          {
-            role: "user",
-            content: prompt
-          }
-        ],
-        temperature: 0.7,
-        max_tokens: 500
+        prompt: prompt,
+        max_tokens: 500,
+        temperature: 0.7
       })
     });
 
     const data = await response.json();
     
     if (data.error) {
-      console.error("OpenAI API error:", data.error);
+      console.error("aimlapi API error:", data.error);
       return `Error generating analysis: ${data.error.message || "Unknown error"}`;
     }
     
-    return data.choices[0].message.content.trim();
+    return data.text || data.response || data.generated_text || "Analysis could not be generated.";
   } catch (error) {
     console.error("Error generating stock analysis:", error);
     return "Unable to generate analysis at this time. Please try again later.";
@@ -100,37 +90,27 @@ export const generatePortfolioAnalysis = async (
       Format the response in 4-5 paragraphs without any preamble or introduction.
     `;
 
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+    const response = await fetch("https://api.aimlapi.com/generate", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${OPENAI_API_KEY}`
+        "Authorization": `Bearer ${AIMLAPI_KEY}`
       },
       body: JSON.stringify({
-        model: "gpt-4o",
-        messages: [
-          {
-            role: "system",
-            content: "You are a portfolio manager with expertise in asset allocation and investment strategy. Provide concise, professional portfolio analysis."
-          },
-          {
-            role: "user",
-            content: prompt
-          }
-        ],
-        temperature: 0.7,
-        max_tokens: 800
+        prompt: prompt,
+        max_tokens: 800,
+        temperature: 0.7
       })
     });
 
     const data = await response.json();
     
     if (data.error) {
-      console.error("OpenAI API error:", data.error);
+      console.error("aimlapi API error:", data.error);
       return `Error generating portfolio analysis: ${data.error.message || "Unknown error"}`;
     }
     
-    return data.choices[0].message.content.trim();
+    return data.text || data.response || data.generated_text || "Portfolio analysis could not be generated.";
   } catch (error) {
     console.error("Error generating portfolio analysis:", error);
     return "Unable to generate portfolio analysis at this time. Please try again later.";
