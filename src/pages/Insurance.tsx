@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
-import { ArrowLeft, ArrowRight, ChevronRight, X, CalendarPlus } from "lucide-react";
+import { ArrowLeft, ArrowRight, ChevronRight, X, ShieldCheck, Shield, ShieldAlert, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet";
@@ -25,6 +25,27 @@ interface ProviderInfo {
 // Insurance type info
 interface InsuranceTypeInfo {
   providers: InsuranceProvider[];
+}
+
+// Helper function to get appropriate icon for insurance type
+function getInsuranceIcon(type: InsuranceType) {
+  switch (type) {
+    case "term-life":
+    case "permanent-life":
+      return <Shield className="h-16 w-16 text-blue-400" />;
+    case "annuities":
+    case "fiduciary-annuities":
+      return <ShieldCheck className="h-16 w-16 text-green-400" />;
+    case "long-term-care":
+    case "healthcare":
+      return <ShieldAlert className="h-16 w-16 text-amber-400" />;
+    case "homeowners":
+    case "automobile":
+    case "umbrella":
+      return <Shield className="h-16 w-16 text-purple-400" />;
+    default:
+      return <Shield className="h-16 w-16 text-gray-400" />;
+  }
 }
 
 const Insurance = () => {
@@ -122,11 +143,7 @@ const Insurance = () => {
                   <h2 className="text-xl font-semibold">Term Life <ChevronRight className="inline h-5 w-5 opacity-70" /></h2>
                 </div>
                 <div className="h-40 flex items-center justify-center">
-                  <img 
-                    src="/lovable-uploads/8d710c1a-ccab-41d8-b202-41ad5cc5a735.png" 
-                    alt="Term Life Insurance" 
-                    className="h-24 w-auto opacity-70"
-                  />
+                  <Shield className="h-24 w-24 text-blue-400 opacity-70" />
                 </div>
                 <p className="text-gray-400">
                   Affordable policies to protect your loved ones for a set term, usually between 10 and 30 years.
@@ -144,11 +161,7 @@ const Insurance = () => {
                   <h2 className="text-xl font-semibold">Permanent Life <ChevronRight className="inline h-5 w-5 opacity-70" /></h2>
                 </div>
                 <div className="h-40 flex items-center justify-center">
-                  <img 
-                    src="/lovable-uploads/7faf1d1a-8aff-4541-8400-18aa687704e7.png" 
-                    alt="Permanent Life Insurance" 
-                    className="h-24 w-auto opacity-70"
-                  />
+                  <Shield className="h-24 w-24 text-blue-400 opacity-70" />
                 </div>
                 <p className="text-gray-400">
                   Policies with lifelong coverage and the opportunity to build cash value, which accumulates on a tax-deferred basis.
@@ -166,11 +179,7 @@ const Insurance = () => {
                   <h2 className="text-xl font-semibold">Annuities <ChevronRight className="inline h-5 w-5 opacity-70" /></h2>
                 </div>
                 <div className="h-40 flex items-center justify-center">
-                  <img 
-                    src="/lovable-uploads/333644ca-ed82-4b57-a52a-56bfe37cac74.png" 
-                    alt="Annuities" 
-                    className="h-24 w-auto opacity-70"
-                  />
+                  <ShieldCheck className="h-24 w-24 text-green-400 opacity-70" />
                 </div>
                 <p className="text-gray-400">
                   Insurance contracts used for asset accumulation or as income replacement with a stream of payments for a specified period or the rest of your life.
@@ -188,11 +197,7 @@ const Insurance = () => {
                   <h2 className="text-xl font-semibold">Fiduciary Friendly Annuities <ChevronRight className="inline h-5 w-5 opacity-70" /></h2>
                 </div>
                 <div className="h-40 flex items-center justify-center">
-                  <img 
-                    src="/lovable-uploads/333644ca-ed82-4b57-a52a-56bfe37cac74.png" 
-                    alt="Fiduciary Friendly Annuities" 
-                    className="h-24 w-auto opacity-70"
-                  />
+                  <ShieldCheck className="h-24 w-24 text-green-400 opacity-70" />
                 </div>
                 <p className="text-gray-400">
                   Low-cost, transparent annuity solutions designed specifically for fiduciary advisors with no commissions and client-centric features.
@@ -210,11 +215,7 @@ const Insurance = () => {
                   <h2 className="text-xl font-semibold">Long-Term Care <ChevronRight className="inline h-5 w-5 opacity-70" /></h2>
                 </div>
                 <div className="h-40 flex items-center justify-center">
-                  <img 
-                    src="/lovable-uploads/86dc106a-1666-4334-909d-1ec7b1f114bc.png" 
-                    alt="Long-Term Care" 
-                    className="h-24 w-auto opacity-70"
-                  />
+                  <ShieldAlert className="h-24 w-24 text-amber-400 opacity-70" />
                 </div>
                 <p className="text-gray-400">
                   Policies to cover the costs of care related to aging or disability. Helps protect your savings and get you access to better quality care.
@@ -232,11 +233,7 @@ const Insurance = () => {
                   <h2 className="text-xl font-semibold">Healthcare <ChevronRight className="inline h-5 w-5 opacity-70" /></h2>
                 </div>
                 <div className="h-40 flex items-center justify-center">
-                  <img 
-                    src="/lovable-uploads/8d710c1a-ccab-41d8-b202-41ad5cc5a735.png" 
-                    alt="Healthcare Insurance" 
-                    className="h-24 w-auto opacity-70"
-                  />
+                  <ShieldAlert className="h-24 w-24 text-amber-400 opacity-70" />
                 </div>
                 <p className="text-gray-400">
                   Comprehensive health insurance plans to cover medical expenses, doctor visits, hospital stays, and prescription medications.
@@ -254,11 +251,7 @@ const Insurance = () => {
                   <h2 className="text-xl font-semibold">Homeowners Insurance <ChevronRight className="inline h-5 w-5 opacity-70" /></h2>
                 </div>
                 <div className="h-40 flex items-center justify-center">
-                  <img 
-                    src="/lovable-uploads/7faf1d1a-8aff-4541-8400-18aa687704e7.png" 
-                    alt="Homeowners Insurance" 
-                    className="h-24 w-auto opacity-70"
-                  />
+                  <Shield className="h-24 w-24 text-purple-400 opacity-70" />
                 </div>
                 <p className="text-gray-400">
                   Protection for your home and personal property against damage, theft, and liability for injuries and property damage.
@@ -276,11 +269,7 @@ const Insurance = () => {
                   <h2 className="text-xl font-semibold">Automobile Insurance <ChevronRight className="inline h-5 w-5 opacity-70" /></h2>
                 </div>
                 <div className="h-40 flex items-center justify-center">
-                  <img 
-                    src="/lovable-uploads/333644ca-ed82-4b57-a52a-56bfe37cac74.png" 
-                    alt="Automobile Insurance" 
-                    className="h-24 w-auto opacity-70"
-                  />
+                  <Shield className="h-24 w-24 text-purple-400 opacity-70" />
                 </div>
                 <p className="text-gray-400">
                   Coverage for financial protection against physical damage or bodily injury resulting from traffic collisions and against liability.
@@ -298,11 +287,7 @@ const Insurance = () => {
                   <h2 className="text-xl font-semibold">Umbrella Policies <ChevronRight className="inline h-5 w-5 opacity-70" /></h2>
                 </div>
                 <div className="h-40 flex items-center justify-center">
-                  <img 
-                    src="/lovable-uploads/86dc106a-1666-4334-909d-1ec7b1f114bc.png" 
-                    alt="Umbrella Policies" 
-                    className="h-24 w-auto opacity-70"
-                  />
+                  <Shield className="h-24 w-24 text-purple-400 opacity-70" />
                 </div>
                 <p className="text-gray-400">
                   Additional liability insurance that provides protection beyond existing limits and coverages of your homeowners, auto, and boat insurance policies.
