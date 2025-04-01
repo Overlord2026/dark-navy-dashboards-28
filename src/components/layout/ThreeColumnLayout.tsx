@@ -1,4 +1,3 @@
-
 import { ReactNode, useState } from "react";
 import * as React from "react";
 import { useParams, useNavigate, Link, useLocation } from "react-router-dom";
@@ -23,7 +22,8 @@ import {
   HeartHandshakeIcon,
   VaultIcon,
   LineChartIcon,
-  CircleDollarSignIcon
+  CircleDollarSignIcon,
+  ArchiveIcon
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { UserProfileSection } from "@/components/sidebar/UserProfileSection";
@@ -102,6 +102,7 @@ const navigationCategories: NavCategory[] = [
       { id: "investments", label: "Investments", icon: BarChart3Icon, href: "/investments" },
       { id: "insurance", label: "Insurance", icon: ShieldIcon, href: "/insurance" },
       { id: "lending", label: "Lending", icon: BanknoteIcon, href: "/lending" },
+      { id: "estate-planning", label: "Estate Planning", icon: ArchiveIcon, href: "/estate-planning" },
     ]
   },
   {
@@ -335,7 +336,7 @@ export function ThreeColumnLayout({
                               key={item.id}
                               to={item.href}
                               className={cn(
-                                "group flex justify-center items-center py-2 px-2 my-2 rounded-md transition-colors text-[14px] whitespace-nowrap border",
+                                "group flex justify-center items-center py-2 px-2 my-2 rounded-md transition-colors text-[14px] border",
                                 isActive
                                   ? isLightTheme 
                                     ? "bg-[#E9E7D8] text-[#222222] font-medium border-primary" 
