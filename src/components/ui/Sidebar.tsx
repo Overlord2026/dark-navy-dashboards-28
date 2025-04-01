@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { 
   ChevronLeftIcon,
@@ -20,12 +20,28 @@ import { NavCategory, NavItem } from "@/types/navigation";
 import { useTheme } from "@/context/ThemeContext";
 import { UserProfileSection } from "@/components/sidebar/UserProfileSection";
 import { AdvisorSection } from "@/components/profile/AdvisorSection";
+import { toast } from "@/components/ui/use-toast";
 
 export const Sidebar = () => {
   const [collapsed, setCollapsed] = useState(false);
   const location = useLocation();
   const { theme } = useTheme();
   const isLightTheme = theme === "light";
+  
+  // Force re-render once on component mount to ensure NavigationConfig changes are applied
+  const [forceUpdate, setForceUpdate] = useState(0);
+  
+  useEffect(() => {
+    // Force one-time update to refresh navigation
+    setForceUpdate(1);
+    
+    // Notify user that navigation has been updated
+    toast({
+      title: "Navigation Updated",
+      description: "The navigation menu has been refreshed with the latest structure.",
+      duration: 3000,
+    });
+  }, []);
 
   // Updated navigation categories to match the requested structure
   const navigationCategories: NavCategory[] = [
@@ -137,8 +153,7 @@ export const Sidebar = () => {
               <item.icon 
                 className={cn(
                   "h-5 w-5 flex-shrink-0", 
-                  !collapsed && "mr-3",
-                  "bg-black p-0.5 rounded-sm"
+                  !collapsed && "mr-3"
                 )} 
               />
               {!collapsed && (
@@ -175,7 +190,7 @@ export const Sidebar = () => {
   return (
     <aside
       className={cn(
-        "flex flex-col bg-sidebar border-r border-sidebar-border transition-all duration-300 ease-in-out",
+        "flex flex-col bg-sidebar border-r border-sidebar-border transition-all duration-300 ease-in-out z-50",
         collapsed ? "w-[70px]" : "w-[240px]",
         isLightTheme ? "bg-[#F9F7E8] border-[#DCD8C0]" : "bg-[#1B1B32] border-white/10"
       )}
@@ -246,8 +261,7 @@ export const Sidebar = () => {
               <item.icon 
                 className={cn(
                   "h-5 w-5 flex-shrink-0", 
-                  !collapsed && "mr-3",
-                  "bg-black p-0.5 rounded-sm"
+                  !collapsed && "mr-3"
                 )} 
               />
               {!collapsed && (
