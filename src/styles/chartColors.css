@@ -1,0 +1,10 @@
+
+:root {
+  --color-emerald: #10b981;
+  --color-destructive: #ef4444;
+}
+
+.dark {
+  --color-emerald: #34d399;
+  --color-destructive: #f87171;
+}
