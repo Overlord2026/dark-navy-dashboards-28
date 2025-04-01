@@ -40,14 +40,6 @@ export const ScheduleMeetingDialog: React.FC<ScheduleMeetingDialogProps> = ({ as
           <p className="text-sm text-muted-foreground">
             You'll be redirected to your advisor's calendar to select a convenient time for your meeting.
           </p>
-          
-          <div className="flex justify-center">
-            <img 
-              src="/lovable-uploads/4f186128-9b08-4965-a540-64cf9b0ec9ee.png" 
-              alt="Calendar Preview" 
-              className="max-h-52 rounded-md border shadow-sm"
-            />
-          </div>
         </div>
         
         <div className="flex justify-end">
