@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Link, useNavigate } from "react-router-dom";
-import { ChevronRight, Briefcase, BarChart3, ArrowUpRight, ShieldCheck, CalendarClock } from "lucide-react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { ChevronRight, Briefcase, BarChart3, ArrowUpRight, ShieldCheck, CalendarClock, SearchIcon } from "lucide-react";
 import { IntelligentAllocationTab } from "@/components/investments/IntelligentAllocationTab";
+import { StockScreener } from "@/components/investments/StockScreener";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { ScheduleMeetingDialog } from "@/components/investments/ScheduleMeetingDialog";
@@ -25,9 +26,19 @@ interface PortfolioModel {
 
 const Investments = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [selectedTab, setSelectedTab] = useState("private-market");
   
-  // Portfolio models data
+  // Parse the URL query parameters to check for tab selection
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const tabParam = params.get("tab");
+    if (tabParam && ["private-market", "model-portfolios", "intelligent", "stock-screener"].includes(tabParam)) {
+      setSelectedTab(tabParam);
+    }
+  }, [location.search]);
+  
+  // Portfolio models data definition
   const portfolioModels: PortfolioModel[] = [
     {
       id: "income-focus",
@@ -133,14 +144,24 @@ const Investments = () => {
     });
   };
 
+  // Handler for tab changes to update URL
+  const handleTabChange = (value: string) => {
+    setSelectedTab(value);
+    navigate(`/investments?tab=${value}`, { replace: true });
+  };
+
   return (
     <ThreeColumnLayout activeMainItem="investments" title="Investments">
       <div className="space-y-8">
-        <Tabs defaultValue="private-market" className="w-full" onValueChange={setSelectedTab}>
+        <Tabs value={selectedTab} className="w-full" onValueChange={handleTabChange}>
           <TabsList className="w-full mb-6">
             <TabsTrigger value="private-market" className="flex-1">Private Market Alpha</TabsTrigger>
             <TabsTrigger value="model-portfolios" className="flex-1">Model Portfolios</TabsTrigger>
             <TabsTrigger value="intelligent" className="flex-1">Intelligent Allocation</TabsTrigger>
+            <TabsTrigger value="stock-screener" className="flex-1">
+              <SearchIcon className="h-4 w-4 mr-2" />
+              Stock Screener
+            </TabsTrigger>
           </TabsList>
           
           <TabsContent value="private-market" className="space-y-8">
@@ -394,6 +415,11 @@ const Investments = () => {
           
           <TabsContent value="intelligent">
             <IntelligentAllocationTab />
+          </TabsContent>
+
+          {/* New Stock Screener Tab */}
+          <TabsContent value="stock-screener">
+            <StockScreener />
           </TabsContent>
         </Tabs>
       </div>

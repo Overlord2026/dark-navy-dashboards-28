@@ -19,7 +19,8 @@ import {
   LineChartIcon,
   CircleDollarSignIcon,
   BriefcaseIcon,
-  ArchiveIcon
+  ArchiveIcon,
+  SearchIcon
 } from "lucide-react";
 
 import { NavItem } from "@/types/navigation";
@@ -134,7 +135,7 @@ export const bottomNavItems: NavItem[] = [
   }
 ];
 
-// INVESTMENTS categories (updated for Private Market Alpha)
+// INVESTMENTS categories (updated for Private Market Alpha and Stock Screener)
 export const investmentCategories: NavItem[] = [
   {
     title: "Private Equity",
@@ -160,6 +161,11 @@ export const investmentCategories: NavItem[] = [
     title: "Model Portfolios",
     href: "/investments/model-portfolios",
     icon: BriefcaseIcon
+  },
+  {
+    title: "Stock Screener",
+    href: "/investments?tab=stock-screener",
+    icon: SearchIcon
   }
 ];
 
