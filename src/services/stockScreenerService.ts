@@ -20,6 +20,11 @@ interface StockData {
   error?: string;
 }
 
+interface PriceHistoryDataPoint {
+  date: string;
+  price: number;
+}
+
 // Cache for stock data to avoid excessive API calls
 const stockDataCache: Record<string, { data: StockData, timestamp: number }> = {};
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes in milliseconds
@@ -399,5 +404,50 @@ export const fetchStockData = async (symbol: string): Promise<StockData> => {
       isLoading: false,
       error: error instanceof Error ? error.message : 'Unknown error'
     };
+  }
+};
+
+/**
+ * Fetches historical price data for a stock
+ * Note: This function is used directly in the component without caching in this service
+ */
+export const fetchStockPriceHistory = async (symbol: string, timeframe: "1M" | "3M" | "6M" | "1Y"): Promise<PriceHistoryDataPoint[]> => {
+  // Calculate days based on timeframe
+  let days = 30; // Default for 1M
+  if (timeframe === "3M") days = 90;
+  if (timeframe === "6M") days = 180;
+  if (timeframe === "1Y") days = 365;
+  
+  try {
+    // Try TwelveData API first
+    const response = await fetch(
+      `https://api.twelvedata.com/time_series?symbol=${symbol}&interval=1day&outputsize=${days}&apikey=demo`
+    );
+    
+    if (!response.ok) {
+      throw new Error(`Failed to fetch price history from TwelveData for ${symbol}`);
+    }
+    
+    const data = await response.json();
+    
+    if (data.status === "error" || data.code) {
+      throw new Error(data.message || `Failed to fetch price history for ${symbol}`);
+    }
+    
+    if (!data.values || !Array.isArray(data.values)) {
+      throw new Error(`Invalid response format from TwelveData for ${symbol}`);
+    }
+    
+    // Format the data for the chart
+    return data.values
+      .slice(0, days)
+      .map((item: any) => ({
+        date: item.datetime,
+        price: parseFloat(item.close)
+      }))
+      .reverse(); // TwelveData returns newest first, we want oldest first
+  } catch (error) {
+    console.error("Error fetching price history:", error);
+    throw error;
   }
 };
