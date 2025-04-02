@@ -9,7 +9,6 @@ export const documentCategories: DocumentCategory[] = [
   { id: "education", name: "Education" },
   { id: "employer-agreements", name: "Employer Agreements" },
   { id: "estate-planning", name: "Estate Planning" },
-  { id: "insurance-policies", name: "Insurance Policies" },
   { id: "leases", name: "Leases" },
   { id: "other", name: "Other" },
   { id: "property-ownership", name: "Property Ownership" },

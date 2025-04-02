@@ -49,7 +49,7 @@ interface DocumentCategory {
 const importantDocumentCategories = documentCategories.filter(cat => 
   ["documents-to-sign", "bfo-records", "alternative-investments", 
    "business-ownership", "education", "employer-agreements", 
-   "insurance-policies", "leases", "property-ownership", 
+   "leases", "property-ownership", 
    "statements", "taxes", "vehicles"].includes(cat.id)
 );
 

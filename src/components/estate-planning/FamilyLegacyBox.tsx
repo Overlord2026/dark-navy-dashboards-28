@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { 
   Card, 
@@ -18,7 +17,6 @@ import { FileUpload } from "@/components/ui/file-upload";
 import { toast } from "sonner";
 import { 
   ArchiveIcon, 
-  CheckCircle2, 
   Circle, 
   ExternalLink, 
   FileText, 
@@ -174,7 +172,6 @@ export const FamilyLegacyBox = () => {
           subItem.id === subItemId ? { ...subItem, completed: !subItem.completed } : subItem
         );
         
-        // Check if all subitems are completed to update parent status
         const allCompleted = updatedSubItems.every(subItem => subItem.completed);
         
         return { 
@@ -224,7 +221,6 @@ export const FamilyLegacyBox = () => {
   const handleShare = () => {
     if (!selectedDocument || !shareEmail || !selectedCategory) return;
     
-    // Simple email validation
     if (!/\S+@\S+\.\S+/.test(shareEmail)) {
       toast.error("Please enter a valid email address");
       return;
@@ -259,7 +255,6 @@ export const FamilyLegacyBox = () => {
     setOpenShareDialog(true);
   };
 
-  // Calculate completion percentage
   const completedItems = checklist.filter(item => item.completed).length;
   const totalItems = checklist.length;
   const completionPercentage = (completedItems / totalItems) * 100;
@@ -550,7 +545,6 @@ export const FamilyLegacyBox = () => {
         </CardContent>
       </Card>
       
-      {/* Upload Document Dialog */}
       <Dialog open={openUploadDialog} onOpenChange={setOpenUploadDialog}>
         <DialogContent>
           <DialogHeader>
@@ -580,7 +574,6 @@ export const FamilyLegacyBox = () => {
         </DialogContent>
       </Dialog>
       
-      {/* Share Document Dialog */}
       <Dialog open={openShareDialog} onOpenChange={setOpenShareDialog}>
         <DialogContent>
           <DialogHeader>
