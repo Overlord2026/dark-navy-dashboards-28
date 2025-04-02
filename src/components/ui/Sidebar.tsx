@@ -1,4 +1,3 @@
-
 import React, { useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
@@ -22,10 +21,6 @@ import { logger } from "@/services/logging/loggingService";
 /**
  * Main sidebar component for the application
  * This is the primary sidebar implementation used throughout the app
- * 
- * NOTE: There is another sidebar implementation in `src/components/ui/sidebar-new.tsx` which
- * is a more generic implementation based on shadcn/ui. That component could eventually replace
- * this one for better consistency, but both are kept for now to avoid breaking changes.
  */
 export const Sidebar = () => {
   const { theme } = useTheme();
@@ -80,14 +75,19 @@ export const Sidebar = () => {
       forceUpdate
     }, "SidebarComponent");
     
-    // Detailed logging for Banking submenu
-    if (expandedSubmenus["Banking"] !== undefined) {
-      logger.debug("Banking submenu state", {
-        isExpanded: expandedSubmenus["Banking"] ? "true" : "false",
-        forceUpdateCount: forceUpdate
-      }, "BankingSubmenuState");
-    }
-  }, [expandedSubmenus, expandedCategories, collapsed, forceUpdate]);
+    // Log all items with submenus for debugging
+    navigationCategories.forEach(category => {
+      category.items.forEach(item => {
+        if (item.submenu && item.submenu.length > 0) {
+          logger.debug(`Menu item with submenu: ${item.title}`, {
+            categoryId: category.id,
+            isExpanded: expandedSubmenus[item.title] ? "yes" : "no",
+            submenuItems: item.submenu.map(i => i.title).join(', ')
+          }, "MenuItemsWithSubmenus");
+        }
+      });
+    });
+  }, [expandedSubmenus, expandedCategories, collapsed, forceUpdate, navigationCategories]);
 
   // Helper function to toggle a specific submenu
   const toggleSpecificSubmenu = (submenuTitle: string) => {
@@ -161,7 +161,7 @@ export const Sidebar = () => {
           />
         ))}
         
-        {/* Debug buttons for each submenu */}
+        {/* Enhanced debug panel for menu testing */}
         {!collapsed && (
           <div className="px-3 mt-4 space-y-2">
             <h4 className="text-xs font-semibold px-2 text-gray-500">MENU DEBUG PANEL</h4>
@@ -182,7 +182,7 @@ export const Sidebar = () => {
               {expandedSubmenus["Banking"] ? "Close" : "Open"} Banking Menu
             </Button>
             
-            {/* Collaboration debug button */}
+            {/* Collaboration category debug button */}
             <Button
               size="sm"
               variant="outline"
@@ -196,6 +196,22 @@ export const Sidebar = () => {
               data-category-toggle="collaboration"
             >
               {expandedCategories["collaboration"] ? "Close" : "Open"} Collaboration
+            </Button>
+            
+            {/* Force update button */}
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => setForceUpdate(prev => prev + 1)}
+              className={cn(
+                "w-full text-xs", 
+                isLightTheme 
+                  ? "border-primary bg-[#E9E7D8] text-[#222222] hover:bg-[#DCD8C0]" 
+                  : "border-primary bg-black text-white hover:bg-sidebar-accent"
+              )}
+              data-force-update="trigger"
+            >
+              Force Menu Update
             </Button>
             
             {/* State debug button */}

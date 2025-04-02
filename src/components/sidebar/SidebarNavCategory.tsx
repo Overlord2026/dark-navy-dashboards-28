@@ -33,12 +33,8 @@ export const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
   toggleSubmenu,
   hasActiveChild = () => false
 }) => {
-  // Track local submenu state for verification
-  const [localSubmenuState, setLocalSubmenuState] = useState<Record<string, boolean>>({});
-  
   // Enhanced logging for debugging
   useEffect(() => {
-    // Log the props and state every time they change
     logger.debug(`SidebarNavCategory ${id} render`, {
       categoryId: id,
       isExpanded,
@@ -49,41 +45,25 @@ export const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
 
   // Handle clicks on category headers
   const handleCategoryClick = () => {
+    logger.debug(`Category header clicked: ${id}`, { 
+      wasExpanded: isExpanded, 
+      willBe: !isExpanded 
+    }, "CategoryToggle");
     onToggle(id);
   };
 
   // Enhanced submenu toggle handler with extra logging
   const handleSubmenuToggle = (title: string, e: React.MouseEvent) => {
-    logger.debug(`CLICK: Submenu toggle for ${title} in category ${id}`, {
+    logger.debug(`Submenu toggle clicked: ${title} in ${id}`, {
       categoryId: id,
       itemTitle: title,
       currentExpanded: expandedSubmenus[title] ? "yes" : "no",
-      event: "click"
     }, "SubmenuToggleClick");
-    
-    // Update local state for verification
-    setLocalSubmenuState(prev => ({
-      ...prev,
-      [title]: !prev[title]
-    }));
     
     // Call the actual toggle function
     if (toggleSubmenu) {
       toggleSubmenu(title, e);
     }
-    
-    // Verify the toggle worked
-    setTimeout(() => {
-      logger.debug(`AFTER CLICK: Submenu state check for ${title}`, {
-        actualState: expandedSubmenus[title] ? "expanded" : "collapsed",
-        localState: localSubmenuState[title] ? "expanded" : "collapsed"
-      }, "SubmenuToggleVerify");
-    }, 50);
-  };
-
-  // Determine if an item has a submenu
-  const itemHasSubmenu = (item: NavItem) => {
-    return item.submenu && item.submenu.length > 0;
   };
 
   return (
@@ -117,7 +97,7 @@ export const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
           data-category-items={id}
         >
           {items.map((item) => {
-            const hasSubmenu = itemHasSubmenu(item);
+            const hasSubmenu = item.submenu && item.submenu.length > 0;
             const submenuIsExpanded = expandedSubmenus[item.title] === true;
             
             // For items with submenu, check if any submenu item is active
@@ -128,6 +108,16 @@ export const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
               const anySubmenuActive = hasActiveChild(item.submenu || []);
               // A parent menu with # href should only be considered active if a submenu item is active
               itemIsActive = item.href === "#" ? anySubmenuActive : itemIsActive || anySubmenuActive;
+            }
+            
+            // Additional logging for menu items with submenus
+            if (hasSubmenu) {
+              logger.debug(`Rendering menu item with submenu: ${item.title}`, {
+                hasSubmenu,
+                submenuIsExpanded,
+                itemIsActive,
+                submenuItems: item.submenu?.map(i => i.title).join(', ')
+              }, "SidebarMenuRender");
             }
             
             return (
@@ -205,12 +195,11 @@ export const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
                   </Link>
                 )}
                 
-                {/* Render submenu with improved visibility and position */}
+                {/* Enhanced submenu rendering with better visibility */}
                 {!collapsed && hasSubmenu && submenuIsExpanded && (
                   <div 
-                    className="ml-8 space-y-1 mt-1 relative"
+                    className="ml-8 space-y-1 mt-1 relative bg-sidebar-accent/10 rounded-md p-1"
                     style={{
-                      backgroundColor: isLightTheme ? '#F9F7E8' : '#1B1B32',
                       display: 'block',
                       opacity: 1,
                       maxHeight: '500px',

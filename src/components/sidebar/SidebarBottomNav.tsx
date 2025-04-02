@@ -44,6 +44,16 @@ export const SidebarBottomNav: React.FC<SidebarBottomNavProps> = ({
       }, "SidebarBottomNav");
     }
   }, [items, expandedSubmenus, collapsed]);
+  
+  const handleSubmenuToggle = (title: string, e: React.MouseEvent) => {
+    logger.debug(`Bottom nav submenu toggle: ${title}`, {
+      currentExpanded: expandedSubmenus[title] ? "yes" : "no",
+    }, "BottomNavToggle");
+    
+    if (toggleSubmenu) {
+      toggleSubmenu(title, e);
+    }
+  };
 
   return (
     <nav 
@@ -64,14 +74,14 @@ export const SidebarBottomNav: React.FC<SidebarBottomNavProps> = ({
           itemIsActive = item.href === "#" ? anySubmenuActive : itemIsActive || anySubmenuActive;
         }
         
-        // Additional debugging for Banking item
-        if (item.title === "Banking") {
-          logger.debug(`Rendering Banking menu item`, {
+        // Additional debugging for items
+        if (hasSubmenu) {
+          logger.debug(`Rendering bottom nav item with submenu: ${item.title}`, {
             hasSubmenu,
             submenuIsExpanded,
             itemIsActive,
-            submenuLength: item.submenu?.length || 0
-          }, "SidebarBottomNav");
+            submenuItems: item.submenu?.map(i => i.title).join(', ')
+          }, "BottomNavRender");
         }
         
         return (
@@ -97,11 +107,7 @@ export const SidebarBottomNav: React.FC<SidebarBottomNavProps> = ({
                   hasSubmenu && !collapsed && "justify-between",
                   "cursor-pointer"
                 )}
-                onClick={(e) => {
-                  logger.debug(`Bottom nav submenu clicked: ${item.title}`, 
-                    { title: item.title, hasSubmenu, currentlyExpanded: submenuIsExpanded }, "SidebarBottomNav");
-                  toggleSubmenu(item.title, e);
-                }}
+                onClick={(e) => handleSubmenuToggle(item.title, e)}
                 title={collapsed ? item.title : undefined}
                 data-submenu-trigger={item.title}
                 data-expanded={submenuIsExpanded ? "true" : "false"}
@@ -153,18 +159,17 @@ export const SidebarBottomNav: React.FC<SidebarBottomNavProps> = ({
               </Link>
             )}
             
-            {/* Render submenu with improved visibility and z-index */}
+            {/* Enhanced submenu rendering with better visibility */}
             {!collapsed && hasSubmenu && submenuIsExpanded && (
               <div 
-                className="ml-8 mt-1 space-y-1 z-50 overflow-visible"
+                className="ml-8 mt-1 space-y-1 z-50 overflow-visible bg-sidebar-accent/10 rounded-md p-1"
                 style={{
-                  position: 'static', // Static position for proper layout flow
                   display: 'block',
                   opacity: 1,
                   width: '100%',
                   marginTop: '0.25rem',
                   paddingLeft: '0.5rem',
-                  backgroundColor: isLightTheme ? '#F9F7E8' : '#1B1B32', // Match parent background
+                  zIndex: 50,
                 }}
                 data-submenu-content={item.title}
                 data-expanded="true"
