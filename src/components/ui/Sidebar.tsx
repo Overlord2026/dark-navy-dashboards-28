@@ -1,13 +1,8 @@
-import React, { useState, useEffect } from "react";
+
+import React from "react";
 import { cn } from "@/lib/utils";
-import { 
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  ChevronDown,
-  ChevronUp,
-} from "lucide-react";
+import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Link, useLocation } from "react-router-dom";
 import { 
   homeNavItems,
   educationSolutionsNavItems,
@@ -15,24 +10,18 @@ import {
   collaborationNavItems,
   bottomNavItems 
 } from "@/components/navigation/NavigationConfig";
-import { NavCategory, NavItem } from "@/types/navigation";
+import { NavCategory } from "@/types/navigation";
 import { useTheme } from "@/context/ThemeContext";
 import { UserProfileSection } from "@/components/sidebar/UserProfileSection";
 import { AdvisorSection } from "@/components/profile/AdvisorSection";
-import { toast } from "@/components/ui/use-toast";
+import { SidebarNavCategory } from "@/components/sidebar/SidebarNavCategory";
+import { SidebarBottomNav } from "@/components/sidebar/SidebarBottomNav";
+import { useSidebarState } from "@/hooks/useSidebarState";
 
 export const Sidebar = () => {
-  const [collapsed, setCollapsed] = useState(false);
-  const location = useLocation();
   const { theme } = useTheme();
   const isLightTheme = theme === "light";
   
-  const [forceUpdate, setForceUpdate] = useState(0);
-  
-  useEffect(() => {
-    setForceUpdate(1);
-  }, []);
-
   const navigationCategories: NavCategory[] = [
     {
       id: "home",
@@ -60,39 +49,15 @@ export const Sidebar = () => {
     }
   ];
 
-  const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>(
-    navigationCategories.reduce((acc, category) => {
-      acc[category.id] = category.defaultExpanded ?? false;
-      return acc;
-    }, {} as Record<string, boolean>)
-  );
-
-  const [expandedSubmenus, setExpandedSubmenus] = useState<Record<string, boolean>>({});
-
-  const toggleSidebar = () => {
-    setCollapsed(!collapsed);
-  };
-
-  const toggleCategory = (categoryId: string) => {
-    setExpandedCategories(prev => ({
-      ...prev,
-      [categoryId]: !prev[categoryId]
-    }));
-  };
-
-  const toggleSubmenu = (itemTitle: string, e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setExpandedSubmenus(prev => ({
-      ...prev,
-      [itemTitle]: !prev[itemTitle]
-    }));
-  };
-
-  const isActive = (href: string) => {
-    return location.pathname === href || 
-           (href !== "/" && location.pathname.startsWith(href));
-  };
+  const { 
+    collapsed, 
+    expandedCategories, 
+    expandedSubmenus,
+    toggleSidebar, 
+    toggleCategory, 
+    toggleSubmenu, 
+    isActive 
+  } = useSidebarState(navigationCategories);
 
   const advisorInfo = {
     name: "Daniel Zamora",
@@ -112,65 +77,6 @@ export const Sidebar = () => {
     console.log("View profile tab:", tabId);
   };
 
-  const renderNavItem = (item: NavItem, hasSubmenu = false) => {
-    const hasSubItems = item.submenu && item.submenu.length > 0;
-    const isSubmenuExpanded = expandedSubmenus[item.title] || false;
-    
-    const isItemActive = isActive(item.href);
-    const isAnyChildActive = hasSubItems && item.submenu?.some(subItem => isActive(subItem.href));
-    const shouldShowActive = isItemActive || isAnyChildActive;
-
-    return (
-      <div key={item.title} className="mb-1">
-        <div className="flex flex-col">
-          <div className="flex items-center">
-            <Link
-              to={hasSubItems ? "#" : item.href}
-              onClick={(e) => hasSubItems ? toggleSubmenu(item.title, e) : undefined}
-              className={cn(
-                "group flex items-center py-2 px-3 rounded-md transition-colors border w-full",
-                shouldShowActive
-                  ? isLightTheme 
-                    ? "bg-[#E9E7D8] text-[#222222] font-medium border-primary" 
-                    : "bg-black text-white border-primary" 
-                  : isLightTheme ? "text-[#222222] border-transparent hover:bg-[#E9E7D8] hover:border-primary" 
-                    : "text-sidebar-foreground border-transparent hover:bg-sidebar-accent",
-                hasSubmenu && "ml-4"
-              )}
-              title={collapsed ? item.title : undefined}
-            >
-              <item.icon 
-                className={cn(
-                  "h-5 w-5 flex-shrink-0", 
-                  !collapsed && "mr-3"
-                )} 
-              />
-              {!collapsed && (
-                <span className="whitespace-nowrap overflow-hidden text-ellipsis flex-1">{item.title}</span>
-              )}
-              {!collapsed && hasSubItems && (
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-5 w-5 p-0"
-                  onClick={(e) => toggleSubmenu(item.title, e)}
-                >
-                  {isSubmenuExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-                </Button>
-              )}
-            </Link>
-          </div>
-          
-          {!collapsed && hasSubItems && isSubmenuExpanded && (
-            <div className="pl-4 mt-1">
-              {item.submenu!.map((subItem) => renderNavItem(subItem, true))}
-            </div>
-          )}
-        </div>
-      </div>
-    );
-  };
-
   return (
     <aside
       className={cn(
@@ -185,29 +91,19 @@ export const Sidebar = () => {
         </div>
 
         {navigationCategories.map((category) => (
-          <div key={category.id} className="mb-3">
-            {!collapsed && (
-              <div 
-                className={`flex items-center justify-between px-4 py-2 text-xs uppercase font-semibold tracking-wider ${
-                  isLightTheme ? 'text-[#222222]/70' : 'text-[#E2E2E2]/70'
-                }`}
-                onClick={() => toggleCategory(category.id)}
-                style={{ cursor: 'pointer' }}
-              >
-                <span>{category.label}</span>
-                {expandedCategories[category.id] ? 
-                  <ChevronUp className="h-4 w-4" /> : 
-                  <ChevronDown className="h-4 w-4" />
-                }
-              </div>
-            )}
-            
-            {(collapsed || expandedCategories[category.id]) && (
-              <nav className="px-2 space-y-1 mt-1">
-                {category.items.map((item) => renderNavItem(item))}
-              </nav>
-            )}
-          </div>
+          <SidebarNavCategory
+            key={category.id}
+            id={category.id}
+            label={category.label}
+            items={category.items}
+            isExpanded={expandedCategories[category.id]}
+            onToggle={toggleCategory}
+            collapsed={collapsed}
+            isActive={isActive}
+            isLightTheme={isLightTheme}
+            expandedSubmenus={expandedSubmenus}
+            toggleSubmenu={toggleSubmenu}
+          />
         ))}
       </div>
 
@@ -221,34 +117,12 @@ export const Sidebar = () => {
           />
         </div>
 
-        <nav className="space-y-1">
-          {bottomNavItems.map((item) => (
-            <Link
-              key={item.title}
-              to={item.href}
-              className={cn(
-                "group flex items-center py-2 px-3 rounded-md transition-colors border",
-                isActive(item.href)
-                  ? isLightTheme 
-                    ? "bg-[#E9E7D8] text-[#222222] font-medium border-primary" 
-                    : "bg-black text-white border-primary" 
-                  : isLightTheme ? "text-[#222222] border-transparent hover:bg-[#E9E7D8] hover:border-primary" 
-                    : "text-sidebar-foreground border-transparent hover:bg-sidebar-accent",
-              )}
-              title={collapsed ? item.title : undefined}
-            >
-              <item.icon 
-                className={cn(
-                  "h-5 w-5 flex-shrink-0", 
-                  !collapsed && "mr-3"
-                )} 
-              />
-              {!collapsed && (
-                <span className="whitespace-nowrap overflow-hidden text-ellipsis">{item.title}</span>
-              )}
-            </Link>
-          ))}
-        </nav>
+        <SidebarBottomNav 
+          items={bottomNavItems}
+          collapsed={collapsed}
+          isActive={isActive}
+          isLightTheme={isLightTheme}
+        />
       </div>
 
       <Button
@@ -265,4 +139,4 @@ export const Sidebar = () => {
       </Button>
     </aside>
   );
-}
+};
