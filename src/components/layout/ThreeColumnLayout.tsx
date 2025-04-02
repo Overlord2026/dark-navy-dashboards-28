@@ -23,7 +23,8 @@ import {
   VaultIcon,
   LineChartIcon,
   CircleDollarSignIcon,
-  ArchiveIcon
+  ArchiveIcon,
+  PieChart
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { UserProfileSection } from "@/components/sidebar/UserProfileSection";
@@ -100,6 +101,7 @@ const navigationCategories: NavCategory[] = [
     items: [
       { id: "education", label: "Education Center", icon: GraduationCapIcon, href: "/education" },
       { id: "investments", label: "Investments", icon: BarChart3Icon, href: "/investments" },
+      { id: "tax-planning", label: "Proactive Tax Planning", icon: PieChart, href: "/education/tax-planning" },
       { id: "insurance", label: "Insurance", icon: ShieldIcon, href: "/insurance" },
       { id: "lending", label: "Lending", icon: BanknoteIcon, href: "/lending" },
       { id: "estate-planning", label: "Estate Planning", icon: ArchiveIcon, href: "/estate-planning" },

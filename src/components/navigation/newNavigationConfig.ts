@@ -15,10 +15,10 @@ export const navigation: NavigationItem[] = [
     children: [
       { label: "Education Center", href: "/education" },
       { label: "Investments", href: "/investments" },
+      { label: "Proactive Tax Planning", href: "/education/tax-planning", icon: <PieChart /> },
       { label: "Insurance", href: "/insurance" },
       { label: "Lending", href: "/lending" },
       { label: "Estate Planning", href: "/estate-planning" },
-      { label: "Proactive Tax Planning", href: "/education/tax-planning", icon: <PieChart /> },
     ]
   },
   // You can add other sections here as needed
