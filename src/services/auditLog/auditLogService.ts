@@ -1,8 +1,8 @@
-
 // Export the AuditEventType for use in other files
 export type AuditEventType = 'login' | 'logout' | 'document_access' | 'document_modification' | 
   'password_change' | 'profile_update' | 'settings_change' | 'permission_change' | 
-  'system_change' | 'diagnostics_access' | 'api_access' | 'mfa_enabled';
+  'system_change' | 'diagnostics_access' | 'api_access' | 'mfa_enabled' |
+  'document_creation' | 'document_share' | 'document_notification';
 
 export interface AuditLogEntry {
   id: string;

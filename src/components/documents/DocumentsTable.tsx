@@ -11,6 +11,7 @@ export interface DocumentsTableProps {
   onShareDocument?: (document: DocumentItem) => void;
   onDeleteDocument?: (document: DocumentItem) => void;
   onViewDocument?: (document: DocumentItem) => void;
+  onDownloadDocument?: (document: DocumentItem) => void;
   extraColumns?: {
     header: string;
     cell: (document: DocumentItem) => React.ReactNode;
@@ -22,7 +23,8 @@ export const DocumentsTable: React.FC<DocumentsTableProps> = ({
   onEditDocument, 
   onShareDocument, 
   onDeleteDocument,
-  onViewDocument, 
+  onViewDocument,
+  onDownloadDocument,
   extraColumns = []
 }) => {
   const getDocumentIcon = (type: string) => {
@@ -75,9 +77,20 @@ export const DocumentsTable: React.FC<DocumentsTableProps> = ({
                     variant="ghost" 
                     size="icon" 
                     onClick={() => onViewDocument(document)}
-                    title="View Document"
+                    aria-label="View Document"
                   >
                     <Eye className="h-4 w-4" />
+                  </Button>
+                )}
+                
+                {onDownloadDocument && (
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    onClick={() => onDownloadDocument(document)}
+                    aria-label="Download Document"
+                  >
+                    <Download className="h-4 w-4" />
                   </Button>
                 )}
                 
@@ -86,7 +99,7 @@ export const DocumentsTable: React.FC<DocumentsTableProps> = ({
                     variant="ghost" 
                     size="icon" 
                     onClick={() => onEditDocument(document)}
-                    title="Edit Document"
+                    aria-label="Edit Document"
                   >
                     <Edit className="h-4 w-4" />
                   </Button>
@@ -97,7 +110,7 @@ export const DocumentsTable: React.FC<DocumentsTableProps> = ({
                     variant="ghost" 
                     size="icon" 
                     onClick={() => onShareDocument(document)}
-                    title="Share Document"
+                    aria-label="Share Document"
                   >
                     <Share2 className="h-4 w-4" />
                   </Button>
@@ -108,7 +121,7 @@ export const DocumentsTable: React.FC<DocumentsTableProps> = ({
                     variant="ghost" 
                     size="icon" 
                     onClick={() => onDeleteDocument(document)}
-                    title="Delete Document"
+                    aria-label="Delete Document"
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>

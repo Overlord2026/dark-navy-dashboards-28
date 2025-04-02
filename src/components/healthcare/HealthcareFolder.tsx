@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -7,13 +6,11 @@ import { NoDocumentsState } from "@/components/documents/EmptyStates";
 import { Button } from "@/components/ui/button";
 import { NewFolderDialog } from "@/components/documents/NewFolderDialog";
 import { UploadDocumentDialog } from "@/components/documents/UploadDocumentDialog";
-import { ShareDocumentDialog } from "@/components/documents/ShareDocumentDialog";
 import { healthcareCategories } from "@/data/documentCategories";
 import { healthcareTags, DocumentItem, DocumentTag, HealthcareAccessLevel, DocumentPermission } from "@/types/document";
 import { Upload, FolderPlus, Tag, Lock, Shield, Users, Eye, FileEdit, History, LayoutDashboard, Bell, FileText } from "lucide-react";
 import { CategoryList } from "@/components/documents/CategoryList";
-import { toast } from "@/hooks/use-toast";
-import { HealthcareDocumentPermissions } from "./HealthcareDocumentPermissions";
+import { toast } from "sonner";
 import { auditLog } from "@/services/auditLog/auditLogService";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
@@ -23,6 +20,8 @@ import { HealthcareDashboard } from "./HealthcareDashboard";
 import { HealthcareNotifications } from "./HealthcareNotifications";
 import { HealthcareTemplates } from "./HealthcareTemplates";
 import { DocumentVersionControl } from "./DocumentVersionControl";
+import { HealthcareShareDialog } from "./HealthcareShareDialog";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
 
 interface HealthcareFolderProps {
   documents: DocumentItem[];
@@ -44,76 +43,26 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
   const [selectedDocument, setSelectedDocument] = useState<DocumentItem | null>(null);
   const [showOnlyEncrypted, setShowOnlyEncrypted] = useState(false);
   const [showAccessLog, setShowAccessLog] = useState(false);
+  const [healthcareDocuments, setHealthcareDocuments] = useLocalStorage<DocumentItem[]>("healthcare-documents", []);
   
   const userId = "Tom Brady"; // In a real app, this would come from auth context
 
-  // Sample data for HealthcareNotifications
-  const medications = [
-    { 
-      id: "med1", 
-      name: "Lisinopril", 
-      dosage: "20mg", 
-      frequency: "Once daily", 
-      nextRefill: new Date(new Date().setDate(new Date().getDate() + 7)),
-      doctor: "Dr. Smith",
-      pharmacy: "CVS Pharmacy"
-    },
-    { 
-      id: "med2", 
-      name: "Metformin", 
-      dosage: "500mg", 
-      frequency: "Twice daily", 
-      nextRefill: new Date(new Date().setDate(new Date().getDate() + 14)),
-      doctor: "Dr. Johnson",
-      pharmacy: "Walgreens"
-    },
-    { 
-      id: "med3", 
-      name: "Atorvastatin", 
-      dosage: "10mg", 
-      frequency: "Once daily", 
-      nextRefill: new Date(new Date().setDate(new Date().getDate() + 3)),
-      doctor: "Dr. Smith",
-      pharmacy: "CVS Pharmacy"
+  // Initialize documents from localStorage if we have them
+  useEffect(() => {
+    if (healthcareDocuments.length > 0 && documents.length === 0) {
+      // Only add them to the main documents array if they're not already there
+      healthcareDocuments.forEach(doc => {
+        onAddDocument(doc);
+      });
     }
-  ];
-
-  const upcomingAppointments = [
-    {
-      id: "apt1",
-      title: "Annual Physical",
-      doctor: "Dr. Sarah Smith",
-      location: "City Medical Group",
-      date: new Date(new Date().setDate(new Date().getDate() + 14)),
-      time: "10:00 AM",
-      notes: "Fasting required"
-    },
-    {
-      id: "apt2",
-      title: "Cardiology Follow-up",
-      doctor: "Dr. James Johnson",
-      location: "Specialty Care Associates",
-      date: new Date(new Date().setDate(new Date().getDate() + 7)),
-      time: "2:30 PM",
-      notes: "Bring medication list"
-    },
-    {
-      id: "apt3",
-      title: "Lab Work",
-      doctor: "Metro Health Partners",
-      location: "Metro Health Lab",
-      date: new Date(new Date().setDate(new Date().getDate() + 3)),
-      time: "8:15 AM",
-      notes: "Fasting required"
-    }
-  ];
+  }, [healthcareDocuments, documents, onAddDocument]);
   
-  const healthcareDocuments = documents.filter(doc => 
-    doc.category === activeSubcategory || 
-    (activeSubcategory === "healthcare" && healthcareCategories.some(c => c.id === doc.category))
-  );
-  
-  const filteredDocuments = healthcareDocuments
+  // Filter documents by category and tags
+  const filteredDocuments = documents
+    .filter(doc => 
+      doc.category === activeSubcategory || 
+      (activeSubcategory === "healthcare" && healthcareCategories.some(c => c.id === doc.category))
+    )
     .filter(doc => selectedTags.length > 0 ? doc.tags?.some(tag => selectedTags.includes(tag)) : true)
     .filter(doc => showOnlyEncrypted ? doc.encrypted === true : true);
 
@@ -148,11 +97,15 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
     };
     
     onAddDocument(newDocument);
+    
+    // Also save to localStorage
+    setHealthcareDocuments([...healthcareDocuments, newDocument]);
+    
     setIsUploadDialogOpen(false);
     
     auditLog.log(
       userId,
-      "document_modification",
+      "document_creation",
       "success",
       {
         userName: userId,
@@ -167,8 +120,7 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
       }
     );
     
-    toast({
-      title: "Healthcare document uploaded successfully",
+    toast.success("Healthcare document uploaded successfully", {
       description: "Document is encrypted and set to private by default"
     });
   };
@@ -179,7 +131,7 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
     
     auditLog.log(
       userId,
-      "document_modification",
+      "document_creation",
       "success",
       {
         userName: userId,
@@ -226,6 +178,52 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
     setIsShareDialogOpen(true);
   };
 
+  const handleDocumentShare = (document: DocumentItem, collaboratorIds: string[]) => {
+    // In a real app, this would update the document permissions via an API
+    // For this demo, we'll just update the local state
+    
+    // Here we should look up the collaborator details from the IDs
+    // This is simplified for the demo
+    const collaboratorPermissions: DocumentPermission[] = collaboratorIds.map(id => ({
+      userId: id,
+      userName: `Collaborator ${id}`, // In a real app, look up the actual name
+      accessLevel: "view", // Default access level - real app would have more granular control
+      grantedAt: new Date().toISOString(),
+      grantedBy: userId
+    }));
+    
+    // Keep the owner's permission
+    const ownerPermission = document.permissions?.find(p => p.userId === document.uploadedBy);
+    
+    // Update the document
+    const updatedDocument: DocumentItem = {
+      ...document,
+      permissions: [
+        ...(ownerPermission ? [ownerPermission] : []),
+        ...collaboratorPermissions
+      ],
+      shared: true
+    };
+    
+    // Update documents in state/storage
+    const updatedDocuments = documents.map(doc => 
+      doc.id === document.id ? updatedDocument : doc
+    );
+    
+    // Update localStorage
+    setHealthcareDocuments(
+      healthcareDocuments.map(doc => 
+        doc.id === document.id ? updatedDocument : doc
+      )
+    );
+    
+    // In a real app, this would trigger a re-render with the updated document
+    // For this demo, we'll just show a toast
+    toast.success(`Document shared with ${collaboratorIds.length} collaborator(s)`, {
+      description: "They'll be notified about this document"
+    });
+  };
+
   const handleViewDocument = (document: DocumentItem) => {
     auditLog.log(
       userId,
@@ -243,8 +241,7 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
       }
     );
     
-    toast({
-      title: `Viewing ${document.name}`,
+    toast.success(`Viewing ${document.name}`, {
       description: "Document access has been logged"
     });
   };
@@ -258,7 +255,7 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
   const documentAccessLogs = auditLog.getLogs({
     eventType: "document_access", 
     userId: userId
-  }).filter(log => log.metadata?.resourceType?.includes("healthcare"));
+  }).filter(log => log.metadata?.resourceType?.includes('healthcare'));
 
   return (
     <div className="space-y-6">
@@ -391,7 +388,9 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
                               {document.encrypted && (
                                 <Tooltip>
                                   <TooltipTrigger asChild>
-                                    <Lock className="h-4 w-4 text-green-500" />
+                                    <div>
+                                      <Lock className="h-4 w-4 text-green-500" />
+                                    </div>
                                   </TooltipTrigger>
                                   <TooltipContent>Encrypted</TooltipContent>
                                 </Tooltip>
@@ -399,7 +398,9 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
                               {document.isPrivate && (
                                 <Tooltip>
                                   <TooltipTrigger asChild>
-                                    <Eye className="h-4 w-4 text-amber-500" />
+                                    <div>
+                                      <Eye className="h-4 w-4 text-amber-500" />
+                                    </div>
                                   </TooltipTrigger>
                                   <TooltipContent>Private</TooltipContent>
                                 </Tooltip>
@@ -442,8 +443,64 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
         
         <TabsContent value="reminders">
           <HealthcareNotifications 
-            upcomingAppointments={upcomingAppointments} 
-            medications={medications}
+            upcomingAppointments={[
+              {
+                id: "apt1",
+                title: "Annual Physical",
+                doctor: "Dr. Sarah Smith",
+                location: "City Medical Group",
+                date: new Date(new Date().setDate(new Date().getDate() + 14)),
+                time: "10:00 AM",
+                notes: "Fasting required"
+              },
+              {
+                id: "apt2",
+                title: "Cardiology Follow-up",
+                doctor: "Dr. James Johnson",
+                location: "Specialty Care Associates",
+                date: new Date(new Date().setDate(new Date().getDate() + 7)),
+                time: "2:30 PM",
+                notes: "Bring medication list"
+              },
+              {
+                id: "apt3",
+                title: "Lab Work",
+                doctor: "Metro Health Partners",
+                location: "Metro Health Lab",
+                date: new Date(new Date().setDate(new Date().getDate() + 3)),
+                time: "8:15 AM",
+                notes: "Fasting required"
+              }
+            ]} 
+            medications={[
+              { 
+                id: "med1", 
+                name: "Lisinopril", 
+                dosage: "20mg", 
+                frequency: "Once daily", 
+                nextRefill: new Date(new Date().setDate(new Date().getDate() + 7)),
+                doctor: "Dr. Smith",
+                pharmacy: "CVS Pharmacy"
+              },
+              { 
+                id: "med2", 
+                name: "Metformin", 
+                dosage: "500mg", 
+                frequency: "Twice daily", 
+                nextRefill: new Date(new Date().setDate(new Date().getDate() + 14)),
+                doctor: "Dr. Johnson",
+                pharmacy: "Walgreens"
+              },
+              { 
+                id: "med3", 
+                name: "Atorvastatin", 
+                dosage: "10mg", 
+                frequency: "Once daily", 
+                nextRefill: new Date(new Date().setDate(new Date().getDate() + 3)),
+                doctor: "Dr. Smith",
+                pharmacy: "CVS Pharmacy"
+              }
+            ]}
             policies={[
               {
                 id: "health-policy-1",
@@ -485,16 +542,11 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
         onCreateFolder={handleCreateFolder}
       />
       
-      <ShareDocumentDialog
+      <HealthcareShareDialog
         open={isShareDialogOpen}
         onOpenChange={setIsShareDialogOpen}
         document={selectedDocument}
-      />
-      
-      <HealthcareDocumentPermissions
-        open={isPermissionDialogOpen}
-        onOpenChange={setIsPermissionDialogOpen}
-        document={selectedDocument}
+        onShareComplete={handleDocumentShare}
       />
     </div>
   );
