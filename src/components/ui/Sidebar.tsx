@@ -60,6 +60,12 @@ export const Sidebar = () => {
     hasActiveChild 
   } = useSidebarState(navigationCategories);
 
+  // Log current submenu state for debugging
+  React.useEffect(() => {
+    console.log("Current expandedSubmenus state:", expandedSubmenus);
+    console.log("Family wealth expanded:", expandedCategories["family-wealth"]);
+  }, [expandedSubmenus, expandedCategories]);
+
   const advisorInfo = {
     name: "Daniel Zamora",
     title: "Senior Financial Advisor",

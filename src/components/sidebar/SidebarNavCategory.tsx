@@ -67,7 +67,7 @@ export const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
             }
             
             return (
-              <div key={item.title} className="group">
+              <div key={item.title} className="group mb-1">
                 {/* For items with submenu, we'll handle the click event to toggle submenu */}
                 {hasSubmenu ? (
                   <div

@@ -54,7 +54,6 @@ export function useSidebarState(navigationCategories: NavCategory[]) {
   
   // Auto-expand submenu when a child route is active
   useEffect(() => {
-    const currentPath = location.pathname;
     let hasExpandedSubmenu = false;
     
     // First pass: Check for submenu item exact matches (highest priority)
@@ -128,10 +127,14 @@ export function useSidebarState(navigationCategories: NavCategory[]) {
     }
     
     // Toggle the clicked submenu
-    setExpandedSubmenus(prev => ({
-      ...prev,
-      [itemTitle]: !prev[itemTitle]
-    }));
+    setExpandedSubmenus(prev => {
+      const newState = {
+        ...prev,
+        [itemTitle]: !prev[itemTitle]
+      };
+      console.log("Toggling submenu", itemTitle, "New state:", newState);
+      return newState;
+    });
     
     // Force a rerender to ensure UI reflects current state
     setForceUpdate(prev => prev + 1);
