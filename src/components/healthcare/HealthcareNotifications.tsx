@@ -77,18 +77,23 @@ export const HealthcareNotifications: React.FC<HealthcareNotificationsProps> = (
   const getDaysRemaining = (date: Date | string): number => {
     if (!date) return 0;
     
-    const targetDate = typeof date === 'string' ? new Date(date) : date;
-    const today = new Date();
-    
-    // Reset time part for accurate day calculation
-    today.setHours(0, 0, 0, 0);
-    const targetWithoutTime = new Date(targetDate);
-    targetWithoutTime.setHours(0, 0, 0, 0);
-    
-    const diffTime = targetWithoutTime.getTime() - today.getTime();
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    
-    return diffDays;
+    try {
+      const targetDate = typeof date === 'string' ? new Date(date) : date;
+      const today = new Date();
+      
+      // Reset time part for accurate day calculation
+      today.setHours(0, 0, 0, 0);
+      const targetWithoutTime = new Date(targetDate);
+      targetWithoutTime.setHours(0, 0, 0, 0);
+      
+      const diffTime = targetWithoutTime.getTime() - today.getTime();
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      
+      return diffDays;
+    } catch (error) {
+      console.error("Error calculating days remaining:", error);
+      return 0;
+    }
   };
   
   const getUrgencyColor = (days: number): string => {

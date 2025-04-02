@@ -8,7 +8,7 @@ import { NewFolderDialog } from "@/components/documents/NewFolderDialog";
 import { UploadDocumentDialog } from "@/components/documents/UploadDocumentDialog";
 import { healthcareCategories } from "@/data/documentCategories";
 import { healthcareTags, DocumentItem, DocumentTag, HealthcareAccessLevel, DocumentPermission } from "@/types/document";
-import { Upload, FolderPlus, Tag, Lock, Shield, Users, Eye, FileEdit, History, LayoutDashboard, Bell, FileText } from "lucide-react";
+import { Upload, FolderPlus, Tag, Lock, Shield, Users, Eye, FileEdit, History, LayoutDashboard, Bell, FileText, ArrowLeft, Pill, Trash2, Edit } from "lucide-react";
 import { CategoryList } from "@/components/documents/CategoryList";
 import { toast } from "sonner";
 import { auditLog } from "@/services/auditLog/auditLogService";
@@ -22,6 +22,14 @@ import { HealthcareTemplates } from "./HealthcareTemplates";
 import { DocumentVersionControl } from "./DocumentVersionControl";
 import { HealthcareShareDialog } from "./HealthcareShareDialog";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useNavigate } from "react-router-dom";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 
 interface HealthcareFolderProps {
   documents: DocumentItem[];
@@ -29,23 +37,55 @@ interface HealthcareFolderProps {
   onCreateFolder: (folderName: string, category: string) => void;
 }
 
+const prescriptionSchema = z.object({
+  name: z.string().min(2, { message: "Medication name is required" }),
+  dosage: z.string().min(1, { message: "Dosage is required" }),
+  frequency: z.string().min(1, { message: "Frequency is required" }),
+  nextRefill: z.string().min(1, { message: "Next refill date is required" }),
+  doctor: z.string().optional(),
+  pharmacy: z.string().optional(),
+  notes: z.string().optional(),
+});
+
+export type Prescription = z.infer<typeof prescriptionSchema>;
+
 export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
   documents,
   onAddDocument,
   onCreateFolder
 }) => {
+  const navigate = useNavigate();
   const [activeSubcategory, setActiveSubcategory] = useState<string>("healthcare");
   const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
   const [isNewFolderDialogOpen, setIsNewFolderDialogOpen] = useState(false);
   const [isPermissionDialogOpen, setIsPermissionDialogOpen] = useState(false);
   const [isShareDialogOpen, setIsShareDialogOpen] = useState(false);
+  const [isPrescriptionDialogOpen, setIsPrescriptionDialogOpen] = useState(false);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [selectedDocument, setSelectedDocument] = useState<DocumentItem | null>(null);
   const [showOnlyEncrypted, setShowOnlyEncrypted] = useState(false);
   const [showAccessLog, setShowAccessLog] = useState(false);
   const [healthcareDocuments, setHealthcareDocuments] = useLocalStorage<DocumentItem[]>("healthcare-documents", []);
+  const [prescriptions, setPrescriptions] = useLocalStorage<Prescription[]>("healthcare-prescriptions", []);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [selectedPrescription, setSelectedPrescription] = useState<Prescription | null>(null);
+  const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
+  const [prescriptionToDelete, setPrescriptionToDelete] = useState<Prescription | null>(null);
   
   const userId = "Tom Brady";
+
+  const form = useForm<Prescription>({
+    resolver: zodResolver(prescriptionSchema),
+    defaultValues: {
+      name: "",
+      dosage: "",
+      frequency: "",
+      nextRefill: new Date().toISOString().split('T')[0],
+      doctor: "",
+      pharmacy: "",
+      notes: "",
+    },
+  });
 
   useEffect(() => {
     if (healthcareDocuments.length > 0 && documents.length === 0) {
@@ -54,6 +94,17 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
       });
     }
   }, [healthcareDocuments, documents, onAddDocument]);
+
+  useEffect(() => {
+    if (selectedPrescription && isEditMode) {
+      form.reset({
+        ...selectedPrescription,
+        nextRefill: typeof selectedPrescription.nextRefill === 'string' 
+          ? selectedPrescription.nextRefill.split('T')[0] 
+          : new Date(selectedPrescription.nextRefill).toISOString().split('T')[0],
+      });
+    }
+  }, [selectedPrescription, isEditMode, form]);
   
   const filteredDocuments = documents
     .filter(doc => 
@@ -227,6 +278,76 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
     });
   };
 
+  const handleAddPrescription = (data: Prescription) => {
+    if (isEditMode && selectedPrescription) {
+      const updatedPrescriptions = prescriptions.map(prescription => 
+        prescription.name === selectedPrescription.name ? data : prescription
+      );
+      setPrescriptions(updatedPrescriptions);
+      toast.success("Prescription updated successfully");
+    } else {
+      setPrescriptions([...prescriptions, data]);
+      toast.success("Prescription added successfully");
+    }
+    
+    form.reset();
+    setIsPrescriptionDialogOpen(false);
+    setIsEditMode(false);
+    setSelectedPrescription(null);
+    
+    auditLog.log(
+      userId,
+      isEditMode ? "prescription_update" : "prescription_add",
+      "success",
+      {
+        userName: userId,
+        details: {
+          action: isEditMode ? "update_prescription" : "add_prescription",
+          prescriptionName: data.name,
+        }
+      }
+    );
+  };
+
+  const handleEditPrescription = (prescription: Prescription) => {
+    setSelectedPrescription(prescription);
+    setIsEditMode(true);
+    setIsPrescriptionDialogOpen(true);
+  };
+
+  const handleDeletePrescription = (prescription: Prescription) => {
+    setPrescriptionToDelete(prescription);
+    setIsDeleteAlertOpen(true);
+  };
+
+  const confirmDeletePrescription = () => {
+    if (prescriptionToDelete) {
+      const updatedPrescriptions = prescriptions.filter(p => p.name !== prescriptionToDelete.name);
+      setPrescriptions(updatedPrescriptions);
+      
+      auditLog.log(
+        userId,
+        "prescription_delete",
+        "success",
+        {
+          userName: userId,
+          details: {
+            action: "delete_prescription",
+            prescriptionName: prescriptionToDelete.name,
+          }
+        }
+      );
+      
+      toast.success("Prescription deleted successfully");
+    }
+    setIsDeleteAlertOpen(false);
+    setPrescriptionToDelete(null);
+  };
+
+  const handleNavigateBack = () => {
+    navigate('/legacy-vault');
+  };
+
   const relevantTags = activeSubcategory === "healthcare" 
     ? healthcareTags 
     : healthcareTags.filter(tag => tag.category === activeSubcategory);
@@ -238,17 +359,70 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
     userId: userId
   }).filter(log => log.metadata?.resourceType?.includes('healthcare'));
 
+  const formatDate = (date: string | Date): string => {
+    if (!date) return '';
+    
+    try {
+      if (typeof date === 'string') {
+        return new Date(date).toLocaleDateString();
+      }
+      return date.toLocaleDateString();
+    } catch (error) {
+      console.error("Error formatting date:", error);
+      return String(date);
+    }
+  };
+
+  const getDaysRemaining = (date: string | Date): number => {
+    if (!date) return 0;
+    
+    try {
+      const targetDate = typeof date === 'string' ? new Date(date) : date;
+      const today = new Date();
+      
+      today.setHours(0, 0, 0, 0);
+      const targetWithoutTime = new Date(targetDate);
+      targetWithoutTime.setHours(0, 0, 0, 0);
+      
+      const diffTime = targetWithoutTime.getTime() - today.getTime();
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      
+      return diffDays;
+    } catch (error) {
+      console.error("Error calculating days remaining:", error);
+      return 0;
+    }
+  };
+
+  const getUrgencyColor = (days: number): string => {
+    if (days < 0) return "text-red-500";
+    if (days < 3) return "text-amber-500";
+    if (days < 7) return "text-yellow-500";
+    return "text-green-500";
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <div>
-          <h2 className="text-2xl font-bold flex items-center gap-2">
-            <Shield className="h-5 w-5 text-blue-500" />
-            Healthcare Documents
-          </h2>
-          <p className="text-sm text-muted-foreground">
-            Securely store and share your sensitive health information
-          </p>
+        <div className="flex items-center gap-2">
+          <Button 
+            variant="ghost" 
+            size="sm"
+            onClick={handleNavigateBack}
+            className="flex items-center gap-1"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back
+          </Button>
+          <div>
+            <h2 className="text-2xl font-bold flex items-center gap-2">
+              <Shield className="h-5 w-5 text-blue-500" />
+              Healthcare Documents
+            </h2>
+            <p className="text-sm text-muted-foreground">
+              Securely store and share your sensitive health information
+            </p>
+          </div>
         </div>
         
         <div className="flex space-x-2">
@@ -280,6 +454,10 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
           <TabsTrigger value="documents" className="flex items-center gap-1">
             <FileEdit className="h-4 w-4" />
             Documents
+          </TabsTrigger>
+          <TabsTrigger value="prescriptions" className="flex items-center gap-1">
+            <Pill className="h-4 w-4" />
+            Prescriptions
           </TabsTrigger>
           <TabsTrigger value="reminders" className="flex items-center gap-1">
             <Bell className="h-4 w-4" />
@@ -421,6 +599,114 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
             </div>
           </div>
         </TabsContent>
+
+        <TabsContent value="prescriptions">
+          <div className="space-y-6">
+            <div className="flex justify-between items-center">
+              <h3 className="text-xl font-medium">Manage Prescriptions</h3>
+              <Button 
+                onClick={() => {
+                  form.reset();
+                  setIsEditMode(false);
+                  setSelectedPrescription(null);
+                  setIsPrescriptionDialogOpen(true);
+                }}
+                className="flex items-center gap-2"
+              >
+                <Pill className="h-4 w-4" />
+                Add Prescription
+              </Button>
+            </div>
+
+            {prescriptions.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {prescriptions.map((prescription, index) => (
+                  <Card key={index} className="overflow-hidden">
+                    <CardHeader className="pb-2 flex flex-row justify-between items-start">
+                      <div>
+                        <CardTitle className="text-lg">{prescription.name}</CardTitle>
+                        <p className="text-sm text-muted-foreground">{prescription.dosage}</p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          onClick={() => handleEditPrescription(prescription)}
+                          className="h-8 w-8 p-0"
+                        >
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          onClick={() => handleDeletePrescription(prescription)}
+                          className="h-8 w-8 p-0 text-red-500 hover:text-red-600"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </CardHeader>
+                    <CardContent className="space-y-2">
+                      <div className="text-sm">
+                        <div className="flex items-center">
+                          <Label className="w-24 font-medium">Frequency:</Label>
+                          <span>{prescription.frequency}</span>
+                        </div>
+                        <div className="flex items-center">
+                          <Label className="w-24 font-medium">Next Refill:</Label>
+                          <span className={getUrgencyColor(getDaysRemaining(prescription.nextRefill))}>
+                            {formatDate(prescription.nextRefill)} ({getDaysRemaining(prescription.nextRefill) < 0 
+                              ? `${Math.abs(getDaysRemaining(prescription.nextRefill))} days ago` 
+                              : getDaysRemaining(prescription.nextRefill) === 0 
+                                ? "Today" 
+                                : `in ${getDaysRemaining(prescription.nextRefill)} days`})
+                          </span>
+                        </div>
+                        {prescription.doctor && (
+                          <div className="flex items-center">
+                            <Label className="w-24 font-medium">Doctor:</Label>
+                            <span>{prescription.doctor}</span>
+                          </div>
+                        )}
+                        {prescription.pharmacy && (
+                          <div className="flex items-center">
+                            <Label className="w-24 font-medium">Pharmacy:</Label>
+                            <span>{prescription.pharmacy}</span>
+                          </div>
+                        )}
+                        {prescription.notes && (
+                          <div className="mt-2">
+                            <Label className="font-medium">Notes:</Label>
+                            <p className="text-muted-foreground">{prescription.notes}</p>
+                          </div>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            ) : (
+              <Card className="p-8 text-center">
+                <div className="mx-auto bg-muted rounded-full w-12 h-12 flex items-center justify-center mb-4">
+                  <Pill className="h-6 w-6 text-muted-foreground" />
+                </div>
+                <h3 className="text-lg font-medium mb-2">No Prescriptions Added</h3>
+                <p className="text-muted-foreground mb-4">
+                  Add your medication prescriptions to keep track of refills and important information.
+                </p>
+                <Button 
+                  onClick={() => {
+                    form.reset();
+                    setIsPrescriptionDialogOpen(true);
+                  }}
+                  className="mx-auto"
+                >
+                  Add Your First Prescription
+                </Button>
+              </Card>
+            )}
+          </div>
+        </TabsContent>
         
         <TabsContent value="reminders">
           <HealthcareNotifications 
@@ -429,7 +715,7 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
                 id: "apt1",
                 title: "Annual Physical",
                 doctor: "Dr. Sarah Smith",
-                date: new Date(new Date().setDate(new Date().getDate() + 14)).toISOString(),
+                date: new Date(new Date().setDate(new Date().getDate() + 14)),
                 time: "10:00 AM",
                 notes: "Fasting required",
                 location: "City Medical Group"
@@ -438,7 +724,7 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
                 id: "apt2",
                 title: "Cardiology Follow-up",
                 doctor: "Dr. James Johnson",
-                date: new Date(new Date().setDate(new Date().getDate() + 7)).toISOString(),
+                date: new Date(new Date().setDate(new Date().getDate() + 7)),
                 time: "2:30 PM",
                 notes: "Bring medication list",
                 location: "Specialty Care Associates"
@@ -447,41 +733,21 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
                 id: "apt3",
                 title: "Lab Work",
                 doctor: "Metro Health Partners",
-                date: new Date(new Date().setDate(new Date().getDate() + 3)).toISOString(),
+                date: new Date(new Date().setDate(new Date().getDate() + 3)),
                 time: "8:15 AM",
                 notes: "Fasting required",
                 location: "Metro Health Lab"
               }
             ]} 
-            medications={[
-              { 
-                id: "med1", 
-                name: "Lisinopril", 
-                nextRefill: new Date(new Date().setDate(new Date().getDate() + 7)).toISOString(),
-                dosage: "20mg", 
-                frequency: "Once daily", 
-                doctor: "Dr. Smith",
-                pharmacy: "CVS Pharmacy"
-              },
-              { 
-                id: "med2", 
-                name: "Metformin", 
-                nextRefill: new Date(new Date().setDate(new Date().getDate() + 14)).toISOString(),
-                dosage: "500mg", 
-                frequency: "Twice daily", 
-                doctor: "Dr. Johnson",
-                pharmacy: "Walgreens"
-              },
-              { 
-                id: "med3", 
-                name: "Atorvastatin", 
-                nextRefill: new Date(new Date().setDate(new Date().getDate() + 3)).toISOString(),
-                dosage: "10mg", 
-                frequency: "Once daily", 
-                doctor: "Dr. Smith",
-                pharmacy: "CVS Pharmacy"
-              }
-            ]}
+            medications={prescriptions.map(p => ({
+              id: p.name,
+              name: p.name,
+              nextRefill: p.nextRefill,
+              dosage: p.dosage,
+              frequency: p.frequency,
+              doctor: p.doctor,
+              pharmacy: p.pharmacy
+            }))}
             policies={[
               {
                 id: "health-policy-1",
@@ -508,6 +774,139 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
           />
         </TabsContent>
       </Tabs>
+
+      <Dialog open={isPrescriptionDialogOpen} onOpenChange={setIsPrescriptionDialogOpen}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle>{isEditMode ? 'Edit Prescription' : 'Add New Prescription'}</DialogTitle>
+            <DialogDescription>
+              {isEditMode
+                ? "Update the prescription details below."
+                : "Enter the details about your medication prescription."}
+            </DialogDescription>
+          </DialogHeader>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(handleAddPrescription)} className="space-y-4">
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Medication Name</FormLabel>
+                    <FormControl>
+                      <Input {...field} placeholder="e.g., Lisinopril" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="dosage"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Dosage</FormLabel>
+                      <FormControl>
+                        <Input {...field} placeholder="e.g., 20mg" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="frequency"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Frequency</FormLabel>
+                      <FormControl>
+                        <Input {...field} placeholder="e.g., Once daily" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <FormField
+                control={form.control}
+                name="nextRefill"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Next Refill Date</FormLabel>
+                    <FormControl>
+                      <Input type="date" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="doctor"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Prescribing Doctor</FormLabel>
+                      <FormControl>
+                        <Input {...field} placeholder="e.g., Dr. Smith" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="pharmacy"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Pharmacy</FormLabel>
+                      <FormControl>
+                        <Input {...field} placeholder="e.g., CVS Pharmacy" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <FormField
+                control={form.control}
+                name="notes"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Notes (Optional)</FormLabel>
+                    <FormControl>
+                      <Input {...field} placeholder="Additional information" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <DialogFooter>
+                <Button type="submit">{isEditMode ? 'Update Prescription' : 'Add Prescription'}</Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
+
+      <AlertDialog open={isDeleteAlertOpen} onOpenChange={setIsDeleteAlertOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently delete the prescription "{prescriptionToDelete?.name}". 
+              This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction className="bg-red-500 hover:bg-red-600" onClick={confirmDeletePrescription}>
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       <UploadDocumentDialog
         open={isUploadDialogOpen}
