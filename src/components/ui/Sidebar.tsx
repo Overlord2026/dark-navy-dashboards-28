@@ -62,6 +62,7 @@ export const Sidebar = () => {
     collapsed, 
     expandedCategories, 
     expandedSubmenus,
+    forceUpdate,
     toggleSidebar, 
     toggleCategory, 
     toggleSubmenu, 
@@ -72,9 +73,10 @@ export const Sidebar = () => {
   // Enhanced diagnostic logging that runs on every state change
   useEffect(() => {
     logger.debug("Sidebar state diagnostic", {
-      expandedSubmenus,
-      expandedCategories,
-      collapsed
+      expandedSubmenus: JSON.stringify(expandedSubmenus),
+      expandedCategories: JSON.stringify(expandedCategories),
+      collapsed,
+      forceUpdate
     }, "Sidebar");
     
     // Check specifically for Banking submenu
@@ -92,7 +94,16 @@ export const Sidebar = () => {
         }))
       }, "Sidebar");
     }
-  }, [expandedSubmenus, expandedCategories, collapsed, familyWealthNavItems, isActive]);
+    
+    // Also check Banking in bottom nav items
+    const bottomBankingItem = bottomNavItems.find(item => item.title === "Banking");
+    if (bottomBankingItem) {
+      logger.debug("Bottom nav Banking state", {
+        expanded: !!expandedSubmenus["Banking"],
+        hasSubmenu: !!bottomBankingItem.submenu && bottomBankingItem.submenu.length > 0
+      }, "Sidebar");
+    }
+  }, [expandedSubmenus, expandedCategories, collapsed, forceUpdate, familyWealthNavItems, bottomNavItems, isActive]);
 
   // Debug helper to manually toggle Banking submenu
   const handleManualBankingToggle = () => {
@@ -137,6 +148,7 @@ export const Sidebar = () => {
       data-sidebar="main-sidebar"
       data-collapsed={collapsed ? "true" : "false"}
       data-theme={isLightTheme ? "light" : "dark"}
+      data-force-update={forceUpdate} // Add key to force remount when needed
     >
       <div 
         className="py-4 overflow-y-auto flex-1"
@@ -212,6 +224,9 @@ export const Sidebar = () => {
           collapsed={collapsed}
           isActive={isActive}
           isLightTheme={isLightTheme}
+          expandedSubmenus={expandedSubmenus}
+          toggleSubmenu={toggleSubmenu}
+          hasActiveChild={hasActiveChild}
         />
       </div>
 

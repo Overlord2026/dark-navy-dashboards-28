@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { NavItem } from "@/types/navigation";
@@ -25,14 +25,25 @@ export const SidebarBottomNav: React.FC<SidebarBottomNavProps> = ({
   toggleSubmenu,
   hasActiveChild = () => false
 }) => {
-  // Debug helper for submenu state
-  React.useEffect(() => {
+  // Enhanced debugging - log when component renders and what submenu states are
+  useEffect(() => {
     logger.debug("SidebarBottomNav rendered", {
       itemCount: items.length,
-      expandedSubmenus,
-      collapsed
+      expandedSubmenus: JSON.stringify(expandedSubmenus),
+      collapsed,
+      itemTitles: items.map(i => i.title)
     }, "SidebarBottomNav");
-  }, [items.length, expandedSubmenus, collapsed]);
+    
+    // Special focus on Banking submenu
+    const bankingItem = items.find(item => item.title === "Banking");
+    if (bankingItem) {
+      logger.debug("Banking item in BottomNav", {
+        expanded: !!expandedSubmenus["Banking"],
+        hasSubmenu: !!bankingItem.submenu && bankingItem.submenu.length > 0,
+        submenuItems: bankingItem.submenu?.map(s => s.title).join(", ")
+      }, "SidebarBottomNav");
+    }
+  }, [items, expandedSubmenus, collapsed]);
 
   return (
     <nav 
@@ -53,6 +64,16 @@ export const SidebarBottomNav: React.FC<SidebarBottomNavProps> = ({
           itemIsActive = item.href === "#" ? anySubmenuActive : itemIsActive || anySubmenuActive;
         }
         
+        // Additional debugging for Banking item
+        if (item.title === "Banking") {
+          logger.debug(`Rendering Banking menu item`, {
+            hasSubmenu,
+            submenuIsExpanded,
+            itemIsActive,
+            submenuLength: item.submenu?.length || 0
+          }, "SidebarBottomNav");
+        }
+        
         return (
           <div 
             key={item.title} 
@@ -60,6 +81,7 @@ export const SidebarBottomNav: React.FC<SidebarBottomNavProps> = ({
             data-bottom-nav-item={item.title}
             data-has-submenu={hasSubmenu ? "true" : "false"}
             data-active={itemIsActive ? "true" : "false"}
+            data-expanded={submenuIsExpanded ? "true" : "false"}
           >
             {hasSubmenu && toggleSubmenu ? (
               <div
@@ -77,7 +99,7 @@ export const SidebarBottomNav: React.FC<SidebarBottomNavProps> = ({
                 )}
                 onClick={(e) => {
                   logger.debug(`Bottom nav submenu clicked: ${item.title}`, 
-                    { title: item.title, hasSubmenu }, "SidebarBottomNav");
+                    { title: item.title, hasSubmenu, currentlyExpanded: submenuIsExpanded }, "SidebarBottomNav");
                   toggleSubmenu(item.title, e);
                 }}
                 title={collapsed ? item.title : undefined}
@@ -132,9 +154,9 @@ export const SidebarBottomNav: React.FC<SidebarBottomNavProps> = ({
             )}
             
             {/* Render submenu with improved visibility and z-index */}
-            {!collapsed && hasSubmenu && submenuIsExpanded && toggleSubmenu && (
+            {!collapsed && hasSubmenu && submenuIsExpanded && (
               <div 
-                className="ml-8 mt-1 space-y-1 z-50 bg-inherit overflow-visible"
+                className="ml-8 mt-1 space-y-1 z-50 overflow-visible"
                 style={{
                   position: 'static', // Static position for proper layout flow
                   display: 'block',
@@ -142,6 +164,7 @@ export const SidebarBottomNav: React.FC<SidebarBottomNavProps> = ({
                   width: '100%',
                   marginTop: '0.25rem',
                   paddingLeft: '0.5rem',
+                  backgroundColor: isLightTheme ? '#F9F7E8' : '#1B1B32', // Match parent background
                 }}
                 data-submenu-content={item.title}
                 data-expanded="true"
