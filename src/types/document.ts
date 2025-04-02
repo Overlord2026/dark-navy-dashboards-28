@@ -14,6 +14,8 @@ export interface DocumentItem {
   description?: string;
   shared?: boolean;
   favorited?: boolean;
+  shareLink?: string;
+  sharedWith?: string[];
 }
 
 export interface DocumentCategory {

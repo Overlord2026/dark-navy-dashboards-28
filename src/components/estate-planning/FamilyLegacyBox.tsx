@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { 
   Card, 
@@ -26,7 +27,10 @@ import {
   ChevronDown,
   ChevronUp,
   FilePlus,
-  Eye
+  Eye,
+  LinkIcon,
+  Copy,
+  Check
 } from "lucide-react";
 
 interface ChecklistItem {
@@ -50,6 +54,7 @@ interface DocumentItem {
   dateUploaded: string;
   size: string;
   sharedWith: string[];
+  shareLink?: string;
 }
 
 export const FamilyLegacyBox = () => {
@@ -60,6 +65,8 @@ export const FamilyLegacyBox = () => {
   const [selectedCategory, setSelectedCategory] = useState<ChecklistItem | null>(null);
   const [selectedDocument, setSelectedDocument] = useState<DocumentItem | null>(null);
   const [shareEmail, setShareEmail] = useState("");
+  const [shareLink, setShareLink] = useState("");
+  const [copySuccess, setCopySuccess] = useState(false);
   const [checklist, setChecklist] = useState<ChecklistItem[]>([
     { 
       id: "trusts", 
@@ -246,6 +253,51 @@ export const FamilyLegacyBox = () => {
     toast.success(`Document shared with ${shareEmail}`);
   };
 
+  const generateShareLink = () => {
+    if (!selectedDocument || !selectedCategory) return;
+    
+    // Generate a unique shareable link (in a real app, this would be a secure token)
+    const link = `https://secure-legacy-vault.example.com/share/${selectedCategory.id}/${selectedDocument.id}/${Math.random().toString(36).substring(2, 15)}`;
+    
+    // Update document with share link
+    setChecklist(prev => prev.map(item => 
+      item.id === selectedCategory.id 
+        ? { 
+            ...item, 
+            documents: item.documents.map(doc => 
+              doc.id === selectedDocument.id 
+                ? { ...doc, shareLink: link }
+                : doc
+            ) 
+          } 
+        : item
+    ));
+    
+    setShareLink(link);
+    
+    return link;
+  };
+
+  const copyLinkToClipboard = async () => {
+    let link = shareLink;
+    
+    // If no share link exists yet, generate one
+    if (!link) {
+      link = generateShareLink() || "";
+    }
+    
+    try {
+      await navigator.clipboard.writeText(link);
+      setCopySuccess(true);
+      toast.success("Link copied to clipboard");
+      
+      // Reset copy success after 2 seconds
+      setTimeout(() => setCopySuccess(false), 2000);
+    } catch (err) {
+      toast.error("Failed to copy link");
+    }
+  };
+
   const openUpload = (category: ChecklistItem) => {
     setSelectedCategory(category);
     setOpenUploadDialog(true);
@@ -254,6 +306,9 @@ export const FamilyLegacyBox = () => {
   const openShare = (category: ChecklistItem, document: DocumentItem) => {
     setSelectedCategory(category);
     setSelectedDocument(document);
+    setShareEmail("");
+    // If document has a share link, set it
+    setShareLink(document.shareLink || "");
     setOpenShareDialog(true);
   };
 
@@ -374,7 +429,20 @@ export const FamilyLegacyBox = () => {
                                     <FileText className="h-3 w-3" />
                                     <span>{doc.name}</span>
                                   </div>
-                                  <div className="text-xs text-muted-foreground">{doc.dateUploaded}</div>
+                                  <div className="flex items-center gap-2">
+                                    <span className="text-xs text-muted-foreground">{doc.dateUploaded}</span>
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      className="h-6 w-6 p-0"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        openShare(item, doc);
+                                      }}
+                                    >
+                                      <Share2 className="h-3 w-3" />
+                                    </Button>
+                                  </div>
                                 </div>
                               ))}
                               {item.documents.length > 2 && (
@@ -443,7 +511,7 @@ export const FamilyLegacyBox = () => {
                             className="flex items-center gap-1"
                             onClick={() => openUpload(category)}
                           >
-                            <UploadCloud className="h-3 w-3" />
+                            <FilePlus className="h-3 w-3" />
                             Add Document
                           </Button>
                         </div>
@@ -505,28 +573,53 @@ export const FamilyLegacyBox = () => {
                   </div>
                   
                   {checklist.map((category) => (
-                    category.documents.some(doc => doc.sharedWith.length > 0) && (
-                      <div key={category.id} className="border rounded-lg overflow-hidden">
+                    category.documents.some(doc => doc.sharedWith.length > 0 || doc.shareLink) && (
+                      <div key={category.id} className="border rounded-lg overflow-hidden mb-4">
                         <div className="bg-muted/40 p-3 font-medium">
                           {category.title}
                         </div>
                         <div className="divide-y">
-                          {category.documents.filter(doc => doc.sharedWith.length > 0).map((doc) => (
+                          {category.documents.filter(doc => doc.sharedWith.length > 0 || doc.shareLink).map((doc) => (
                             <div key={doc.id} className="p-3">
                               <div className="flex items-center justify-between mb-2">
-                                <p className="font-medium">{doc.name}</p>
+                                <p className="font-medium flex items-center gap-2">
+                                  <FileText className="h-4 w-4 text-primary" />
+                                  {doc.name}
+                                </p>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  className="flex items-center gap-1"
+                                  onClick={() => openShare(category, doc)}
+                                >
+                                  <Share2 className="h-3 w-3" />
+                                  Manage Sharing
+                                </Button>
                               </div>
-                              <div className="bg-muted/20 p-2 rounded-lg">
-                                <p className="text-xs font-medium mb-1">Shared with:</p>
-                                <div className="flex flex-wrap gap-1">
-                                  {doc.sharedWith.map((email, idx) => (
-                                    <div key={idx} className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full flex items-center">
-                                      <Users2 className="h-3 w-3 mr-1" />
-                                      {email}
-                                    </div>
-                                  ))}
+                              
+                              {doc.sharedWith.length > 0 && (
+                                <div className="bg-muted/20 p-2 rounded-lg mb-2">
+                                  <p className="text-xs font-medium mb-1">Shared with:</p>
+                                  <div className="flex flex-wrap gap-1">
+                                    {doc.sharedWith.map((email, idx) => (
+                                      <div key={idx} className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full flex items-center">
+                                        <Users2 className="h-3 w-3 mr-1" />
+                                        {email}
+                                      </div>
+                                    ))}
+                                  </div>
                                 </div>
-                              </div>
+                              )}
+                              
+                              {doc.shareLink && (
+                                <div className="bg-muted/20 p-2 rounded-lg">
+                                  <p className="text-xs font-medium mb-1">Shareable link:</p>
+                                  <div className="flex items-center gap-2">
+                                    <LinkIcon className="h-3 w-3 text-primary" />
+                                    <span className="text-xs truncate flex-1">{doc.shareLink}</span>
+                                  </div>
+                                </div>
+                              )}
                             </div>
                           ))}
                         </div>
@@ -534,7 +627,7 @@ export const FamilyLegacyBox = () => {
                     )
                   ))}
                   
-                  {!checklist.some(category => category.documents.some(doc => doc.sharedWith.length > 0)) && (
+                  {!checklist.some(category => category.documents.some(doc => doc.sharedWith.length > 0 || doc.shareLink)) && (
                     <div className="text-center p-12 border rounded-lg">
                       <Share2 className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
                       <h3 className="text-lg font-medium mb-2">No documents shared yet</h3>
@@ -650,23 +743,69 @@ export const FamilyLegacyBox = () => {
                 {selectedDocument?.name}
               </div>
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="share-email">Email Address</Label>
-              <Input 
-                id="share-email" 
-                type="email" 
-                placeholder="Enter email address" 
-                value={shareEmail}
-                onChange={(e) => setShareEmail(e.target.value)}
-              />
-              <p className="text-xs text-muted-foreground">
-                This person will receive an email with a secure link to view this document.
-              </p>
+            
+            <div className="border-t pt-4">
+              <h4 className="font-medium mb-2">Share by Email</h4>
+              <div className="space-y-2">
+                <Label htmlFor="share-email">Email Address</Label>
+                <Input 
+                  id="share-email" 
+                  type="email" 
+                  placeholder="Enter email address" 
+                  value={shareEmail}
+                  onChange={(e) => setShareEmail(e.target.value)}
+                />
+                <p className="text-xs text-muted-foreground">
+                  This person will receive an email with a secure link to view this document.
+                </p>
+                <Button 
+                  onClick={handleShare} 
+                  disabled={!shareEmail}
+                  size="sm"
+                  className="w-full mt-1"
+                >
+                  Send Email Invitation
+                </Button>
+              </div>
+            </div>
+            
+            <div className="border-t pt-4">
+              <h4 className="font-medium mb-2">Create Shareable Link</h4>
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <Input 
+                    value={shareLink} 
+                    placeholder="Generate a shareable link"
+                    readOnly
+                  />
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={copyLinkToClipboard}
+                    className="flex-shrink-0"
+                  >
+                    {copySuccess ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                  </Button>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Anyone with this link can view the document. Links expire after 30 days.
+                </p>
+                {!shareLink && (
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={generateShareLink}
+                    className="w-full mt-1"
+                  >
+                    <LinkIcon className="h-4 w-4 mr-2" />
+                    Generate Link
+                  </Button>
+                )}
+              </div>
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setOpenShareDialog(false)}>Cancel</Button>
-            <Button onClick={handleShare}>Share Document</Button>
+            <Button variant="outline" onClick={() => setOpenShareDialog(false)}>Close</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -692,9 +831,17 @@ export const FamilyLegacyBox = () => {
               </div>
             </div>
           </div>
-          <DialogFooter>
+          <DialogFooter className="flex justify-between">
             <Button variant="outline" onClick={() => setOpenViewDialog(false)}>Close</Button>
-            <Button onClick={() => openShare(selectedCategory!, selectedDocument!)}>Share Document</Button>
+            <div className="flex gap-2">
+              <Button onClick={() => {
+                setOpenViewDialog(false);
+                setTimeout(() => openShare(selectedCategory!, selectedDocument!), 100);
+              }}>
+                <Share2 className="h-4 w-4 mr-2" />
+                Share Document
+              </Button>
+            </div>
           </DialogFooter>
         </DialogContent>
       </Dialog>
