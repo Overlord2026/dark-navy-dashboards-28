@@ -41,6 +41,16 @@ export const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
       expandedSubmenus: JSON.stringify(expandedSubmenus),
       submenuItems: items.filter(item => item.submenu).map(item => item.title).join(', ')
     }, "SidebarCategory");
+    
+    // Focus on Banking submenu for debugging
+    const bankingItem = items.find(item => item.title === "Banking");
+    if (bankingItem) {
+      logger.debug(`Banking item in category ${id}`, {
+        hasSubmenu: !!bankingItem.submenu && bankingItem.submenu.length > 0,
+        submenuItems: bankingItem.submenu?.map(s => s.title).join(", "),
+        expanded: !!expandedSubmenus["Banking"]
+      }, "BankingDebug");
+    }
   }, [id, items, isExpanded, expandedSubmenus]);
 
   // Handle clicks on category headers
@@ -59,6 +69,10 @@ export const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
       itemTitle: title,
       currentExpanded: expandedSubmenus[title] ? "yes" : "no",
     }, "SubmenuToggleClick");
+    
+    // Prevent default browser behavior
+    e.preventDefault();
+    e.stopPropagation();
     
     // Call the actual toggle function
     if (toggleSubmenu) {
@@ -98,7 +112,7 @@ export const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
         >
           {items.map((item) => {
             const hasSubmenu = item.submenu && item.submenu.length > 0;
-            const submenuIsExpanded = expandedSubmenus[item.title] === true;
+            const submenuIsExpanded = !!expandedSubmenus[item.title];
             
             // For items with submenu, check if any submenu item is active
             let itemIsActive = isActive(item.href);
@@ -198,13 +212,12 @@ export const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
                 {/* Enhanced submenu rendering with better visibility */}
                 {!collapsed && hasSubmenu && submenuIsExpanded && (
                   <div 
-                    className="ml-8 space-y-1 mt-1 relative bg-sidebar-accent/10 rounded-md p-1"
+                    className="ml-8 space-y-1 mt-1 bg-sidebar-accent/10 rounded-md p-1 z-50"
                     style={{
                       display: 'block',
                       opacity: 1,
                       maxHeight: '500px',
                       overflow: 'visible',
-                      zIndex: 20,
                       position: 'relative'
                     }}
                     data-submenu-content={item.title}

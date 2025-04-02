@@ -34,14 +34,17 @@ export const SidebarBottomNav: React.FC<SidebarBottomNavProps> = ({
       itemTitles: items.map(i => i.title)
     }, "SidebarBottomNav");
     
-    // Special focus on Banking submenu
-    const bankingItem = items.find(item => item.title === "Banking");
-    if (bankingItem) {
-      logger.debug("Banking item in BottomNav", {
-        expanded: !!expandedSubmenus["Banking"],
-        hasSubmenu: !!bankingItem.submenu && bankingItem.submenu.length > 0,
-        submenuItems: bankingItem.submenu?.map(s => s.title).join(", ")
-      }, "SidebarBottomNav");
+    // Check for items with submenus in bottom nav
+    const itemsWithSubmenus = items.filter(item => item.submenu && item.submenu.length > 0);
+    if (itemsWithSubmenus.length > 0) {
+      logger.debug("Bottom nav items with submenus", {
+        count: itemsWithSubmenus.length,
+        items: itemsWithSubmenus.map(i => ({
+          title: i.title,
+          expanded: !!expandedSubmenus[i.title],
+          submenuCount: i.submenu?.length
+        }))
+      }, "BottomNavSubmenus");
     }
   }, [items, expandedSubmenus, collapsed]);
   
@@ -49,6 +52,10 @@ export const SidebarBottomNav: React.FC<SidebarBottomNavProps> = ({
     logger.debug(`Bottom nav submenu toggle: ${title}`, {
       currentExpanded: expandedSubmenus[title] ? "yes" : "no",
     }, "BottomNavToggle");
+    
+    // Prevent default browser behavior
+    e.preventDefault();
+    e.stopPropagation();
     
     if (toggleSubmenu) {
       toggleSubmenu(title, e);
@@ -87,7 +94,7 @@ export const SidebarBottomNav: React.FC<SidebarBottomNavProps> = ({
         return (
           <div 
             key={item.title} 
-            className="group relative" 
+            className="group relative mb-1" 
             data-bottom-nav-item={item.title}
             data-has-submenu={hasSubmenu ? "true" : "false"}
             data-active={itemIsActive ? "true" : "false"}
@@ -162,14 +169,16 @@ export const SidebarBottomNav: React.FC<SidebarBottomNavProps> = ({
             {/* Enhanced submenu rendering with better visibility */}
             {!collapsed && hasSubmenu && submenuIsExpanded && (
               <div 
-                className="ml-8 mt-1 space-y-1 z-50 overflow-visible bg-sidebar-accent/10 rounded-md p-1"
+                className="ml-8 mt-1 space-y-1 bg-sidebar-accent/10 rounded-md p-1 z-50"
                 style={{
                   display: 'block',
                   opacity: 1,
+                  maxHeight: '500px',
                   width: '100%',
                   marginTop: '0.25rem',
                   paddingLeft: '0.5rem',
-                  zIndex: 50,
+                  overflow: 'visible',
+                  position: 'relative'
                 }}
                 data-submenu-content={item.title}
                 data-expanded="true"

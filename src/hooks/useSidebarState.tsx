@@ -142,7 +142,7 @@ export function useSidebarState(navigationCategories: NavCategory[]) {
     });
   };
 
-  // Fix submenu toggling to ensure state changes are properly registered
+  // Improved submenu toggling to ensure state changes are properly registered
   const toggleSubmenu = (itemTitle: string, e: React.MouseEvent) => {
     // Always prevent default behavior to stop navigation
     if (e) {
@@ -154,12 +154,9 @@ export function useSidebarState(navigationCategories: NavCategory[]) {
     logger.debug(`Toggling submenu "${itemTitle}"`, 
       { title: itemTitle, currentState: expandedSubmenus[itemTitle] ? "expanded" : "collapsed" }, "SubmenuToggle");
     
-    // Create a new state with the toggled value
-    const newExpandedState = !expandedSubmenus[itemTitle];
-    
     // Update the state with a completely new object to ensure React detects the change
     setExpandedSubmenus(prev => {
-      const newState = {...prev, [itemTitle]: newExpandedState};
+      const newState = {...prev, [itemTitle]: !prev[itemTitle]};
       
       // Log the state transition
       logger.debug(`Submenu "${itemTitle}" state transition`, 
@@ -172,14 +169,6 @@ export function useSidebarState(navigationCategories: NavCategory[]) {
     
     // Force a rerender to ensure UI reflects current state
     setForceUpdate(prev => prev + 1);
-    
-    // Add a delayed check to verify the state was updated
-    setTimeout(() => {
-      logger.debug(`After toggle: submenu "${itemTitle}" state check`, {
-        updatedValue: newExpandedState ? "expanded" : "collapsed",
-        forceUpdateCount: forceUpdate + 1
-      }, "SubmenuStateCheck");
-    }, 50);
   };
 
   // Debug function to log the current state
@@ -205,6 +194,7 @@ export function useSidebarState(navigationCategories: NavCategory[]) {
     isActive,
     hasActiveChild,
     setCollapsed,
-    debugState
+    debugState,
+    setForceUpdate
   };
 }

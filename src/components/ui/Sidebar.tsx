@@ -1,3 +1,4 @@
+
 import React, { useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
@@ -63,7 +64,8 @@ export const Sidebar = () => {
     toggleSubmenu, 
     isActive,
     hasActiveChild,
-    debugState
+    debugState,
+    setForceUpdate
   } = useSidebarState(navigationCategories);
 
   // Debug logging on mount and when state changes
