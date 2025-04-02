@@ -61,11 +61,11 @@ export const diagnoseBillPayButtons = (): ButtonDiagnosticResult[] => {
       buttonName: "Manage Payment Methods",
       hasEventHandler: true,
       eventHandlerFunction: "handleManagePaymentMethods",
-      triggersStateChange: false, 
+      triggersStateChange: true, 
       triggersNavigation: false,
       triggersNetworkRequest: false,
-      implementationStatus: 'partial',
-      details: "Only shows a toast notification. No payment methods form or dialog is implemented."
+      implementationStatus: 'complete',
+      details: "Opens a functional payment methods management dialog with complete functionality."
     },
     {
       buttonName: "Advanced Bill Paying Providers",

@@ -11,6 +11,7 @@ import { AdvancedBillPayingProvidersDialog } from "@/components/billpay/Advanced
 import { BillPayButtonDiagnostics } from "@/components/billpay/BillPayButtonDiagnostics";
 import { AddBillDialog } from "@/components/billpay/AddBillDialog";
 import { PayBillDialog } from "@/components/billpay/PayBillDialog";
+import { PaymentMethodsDialog, PaymentMethod, DEFAULT_PAYMENT_METHODS } from "@/components/billpay/PaymentMethodsDialog";
 
 // Define bill type for TypeScript
 interface Bill {
@@ -49,10 +50,12 @@ const BillPay = () => {
   const [showDiagnosticsDialog, setShowDiagnosticsDialog] = useState(false);
   const [diagnosticButtonName, setDiagnosticButtonName] = useState<string | undefined>(undefined);
   
-  // New state for dialogs
+  // State for dialogs
   const [showAddBillDialog, setShowAddBillDialog] = useState(false);
   const [showPayBillDialog, setShowPayBillDialog] = useState(false);
+  const [showPaymentMethodsDialog, setShowPaymentMethodsDialog] = useState(false);
   const [billToPay, setBillToPay] = useState<Bill | null>(null);
+  const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>(DEFAULT_PAYMENT_METHODS);
 
   const handleQuickPay = (billId: number) => {
     const bill = upcomingBills.find(b => b.id === billId);
@@ -75,11 +78,7 @@ const BillPay = () => {
   };
   
   const handleManagePaymentMethods = () => {
-    toast({
-      title: "Manage Payment Methods",
-      description: "Access your payment methods settings",
-      duration: 3000,
-    });
+    setShowPaymentMethodsDialog(true);
   };
 
   const handleAddBill = (newBill: Bill) => {
@@ -104,6 +103,23 @@ const BillPay = () => {
     if (daysUntilDue <= 3) return "destructive";
     if (daysUntilDue <= 7) return "warning";
     return "secondary";
+  };
+
+  const handleAddPaymentMethod = (method: PaymentMethod) => {
+    setPaymentMethods(prev => [...prev, method]);
+  };
+
+  const handleSetDefault = (id: string) => {
+    setPaymentMethods(prev => 
+      prev.map(method => ({
+        ...method,
+        isDefault: method.id === id
+      }))
+    );
+  };
+
+  const handleRemovePaymentMethod = (id: string) => {
+    setPaymentMethods(prev => prev.filter(method => method.id !== id));
   };
 
   return (
@@ -388,6 +404,15 @@ const BillPay = () => {
             setBillToPay(null);
           }}
           bill={billToPay}
+        />
+
+        <PaymentMethodsDialog
+          isOpen={showPaymentMethodsDialog}
+          onClose={() => setShowPaymentMethodsDialog(false)}
+          paymentMethods={paymentMethods}
+          onAddPaymentMethod={handleAddPaymentMethod}
+          onSetDefault={handleSetDefault}
+          onRemove={handleRemovePaymentMethod}
         />
 
         <BillPayButtonDiagnostics 

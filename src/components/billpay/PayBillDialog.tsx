@@ -28,7 +28,8 @@ import {
   Building, 
   Wallet, 
   CheckCircle2, 
-  Info 
+  Info,
+  Plus
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
@@ -42,21 +43,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-
-interface PaymentMethod {
-  id: string;
-  name: string;
-  type: "card" | "bank" | "wallet";
-  lastFour?: string;
-  expiry?: string;
-  isDefault?: boolean;
-}
-
-const PAYMENT_METHODS: PaymentMethod[] = [
-  { id: "card1", name: "Chase Sapphire", type: "card", lastFour: "4123", expiry: "05/27", isDefault: true },
-  { id: "bank1", name: "Wells Fargo Checking", type: "bank", lastFour: "6789" },
-  { id: "wallet1", name: "PayPal", type: "wallet" }
-];
+import { PaymentMethodsDialog, PaymentMethod, DEFAULT_PAYMENT_METHODS } from "./PaymentMethodsDialog";
 
 const paymentFormSchema = z.object({
   paymentMethodId: z.string({
@@ -83,18 +70,20 @@ export function PayBillDialog({ isOpen, onClose, bill }: PayBillDialogProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [selectedPayment, setSelectedPayment] = useState<PaymentMethod | null>(null);
+  const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>(DEFAULT_PAYMENT_METHODS);
+  const [showPaymentMethodsDialog, setShowPaymentMethodsDialog] = useState(false);
   
   const form = useForm<PaymentFormValues>({
     resolver: zodResolver(paymentFormSchema),
     defaultValues: {
-      paymentMethodId: PAYMENT_METHODS.find(m => m.isDefault)?.id || "",
+      paymentMethodId: paymentMethods.find(m => m.isDefault)?.id || "",
     },
   });
 
   // Reset form when dialog opens with a new bill
   React.useEffect(() => {
     if (isOpen && bill) {
-      const defaultMethod = PAYMENT_METHODS.find(m => m.isDefault);
+      const defaultMethod = paymentMethods.find(m => m.isDefault);
       form.reset({
         paymentMethodId: defaultMethod?.id || "",
       });
@@ -102,10 +91,10 @@ export function PayBillDialog({ isOpen, onClose, bill }: PayBillDialogProps) {
         setSelectedPayment(defaultMethod);
       }
     }
-  }, [isOpen, bill, form]);
+  }, [isOpen, bill, form, paymentMethods]);
 
   function handleSubmit(data: PaymentFormValues) {
-    const paymentMethod = PAYMENT_METHODS.find(m => m.id === data.paymentMethodId);
+    const paymentMethod = paymentMethods.find(m => m.id === data.paymentMethodId);
     setSelectedPayment(paymentMethod || null);
     setShowConfirmation(true);
   }
@@ -136,6 +125,44 @@ export function PayBillDialog({ isOpen, onClose, bill }: PayBillDialogProps) {
       case "wallet": return <Wallet className="h-5 w-5" />;
       default: return <CreditCard className="h-5 w-5" />;
     }
+  };
+
+  const handleAddPaymentMethod = (method: PaymentMethod) => {
+    setPaymentMethods(prev => [...prev, method]);
+    setShowPaymentMethodsDialog(false);
+    
+    // Auto-select the newly added payment method
+    form.setValue("paymentMethodId", method.id);
+    setSelectedPayment(method);
+  };
+
+  const handleSetDefault = (id: string) => {
+    setPaymentMethods(prev => 
+      prev.map(method => ({
+        ...method,
+        isDefault: method.id === id
+      }))
+    );
+  };
+
+  const handleRemovePaymentMethod = (id: string) => {
+    setPaymentMethods(prev => prev.filter(method => method.id !== id));
+    
+    // If the removed method was selected, reset the form
+    if (form.getValues().paymentMethodId === id) {
+      const defaultMethod = paymentMethods.find(m => m.isDefault && m.id !== id);
+      if (defaultMethod) {
+        form.setValue("paymentMethodId", defaultMethod.id);
+        setSelectedPayment(defaultMethod);
+      } else {
+        form.setValue("paymentMethodId", "");
+        setSelectedPayment(null);
+      }
+    }
+  };
+
+  const handleManagePaymentMethods = () => {
+    setShowPaymentMethodsDialog(true);
   };
 
   if (!bill) return null;
@@ -173,14 +200,26 @@ export function PayBillDialog({ isOpen, onClose, bill }: PayBillDialogProps) {
                 name="paymentMethodId"
                 render={({ field }) => (
                   <FormItem className="space-y-3">
-                    <FormLabel>Payment Method</FormLabel>
+                    <div className="flex items-center justify-between">
+                      <FormLabel>Payment Method</FormLabel>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="h-7 px-2 text-xs"
+                        onClick={handleManagePaymentMethods}
+                        type="button"
+                      >
+                        <Plus className="mr-1 h-3 w-3" />
+                        Manage
+                      </Button>
+                    </div>
                     <FormControl>
                       <RadioGroup
                         onValueChange={field.onChange}
-                        defaultValue={field.value}
+                        value={field.value}
                         className="space-y-3"
                       >
-                        {PAYMENT_METHODS.map((method) => (
+                        {paymentMethods.map((method) => (
                           <div
                             key={method.id}
                             className={`flex items-center space-x-3 rounded-md border p-3 ${
@@ -222,11 +261,21 @@ export function PayBillDialog({ isOpen, onClose, bill }: PayBillDialogProps) {
                 )}
               />
               
+              <Button 
+                variant="outline" 
+                type="button" 
+                className="w-full mt-4" 
+                onClick={handleManagePaymentMethods}
+              >
+                <Plus className="mr-2 h-4 w-4" />
+                Add New Payment Method
+              </Button>
+              
               <DialogFooter className="pt-4">
                 <DialogClose asChild>
                   <Button variant="outline" type="button">Cancel</Button>
                 </DialogClose>
-                <Button type="submit">Continue to Payment</Button>
+                <Button type="submit" disabled={!form.getValues().paymentMethodId}>Continue to Payment</Button>
               </DialogFooter>
             </form>
           </Form>
@@ -300,6 +349,15 @@ export function PayBillDialog({ isOpen, onClose, bill }: PayBillDialogProps) {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <PaymentMethodsDialog
+        isOpen={showPaymentMethodsDialog}
+        onClose={() => setShowPaymentMethodsDialog(false)}
+        paymentMethods={paymentMethods}
+        onAddPaymentMethod={handleAddPaymentMethod}
+        onSetDefault={handleSetDefault}
+        onRemove={handleRemovePaymentMethod}
+      />
     </>
   );
 }
