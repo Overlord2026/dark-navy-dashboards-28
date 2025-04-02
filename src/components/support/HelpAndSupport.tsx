@@ -1,7 +1,7 @@
 
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { HelpCircle } from "lucide-react";
+import { HelpCircle, MessageCircle } from "lucide-react";
 import { HelpAndTutorialsDialog } from "./HelpAndTutorialsDialog";
 import { SupportChatbot } from "./SupportChatbot";
 
@@ -24,6 +24,16 @@ export function HelpAndSupport() {
         >
           <HelpCircle className="h-4 w-4 mr-2" />
           Help & Tutorials
+        </Button>
+        
+        <Button 
+          onClick={() => setShowChatbot(true)}
+          variant="primary"
+          size="sm"
+          className="shadow-md"
+        >
+          <MessageCircle className="h-4 w-4 mr-2" />
+          Chat Support
         </Button>
       </div>
 
