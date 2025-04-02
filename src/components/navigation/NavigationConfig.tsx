@@ -25,6 +25,7 @@ import {
   LifeBuoyIcon,
   Wallet,
   ExternalLink,
+  Receipt,
 } from "lucide-react";
 
 // Home Section
@@ -41,7 +42,7 @@ export const homeNavItems = [
   },
   {
     title: "Banking",
-    href: "/cash-management",
+    href: "/banking",
     icon: BanknoteIcon,
     submenu: [
       {
@@ -53,6 +54,11 @@ export const homeNavItems = [
         title: "Transfers",
         href: "/banking-transfers",
         icon: ArrowRightLeftIcon
+      },
+      {
+        title: "Bill Paying",
+        href: "/banking/bill-paying",
+        icon: Receipt
       },
       {
         title: "Funding Accounts",

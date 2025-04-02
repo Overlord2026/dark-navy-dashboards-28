@@ -94,10 +94,15 @@ const AppRoutes: React.FC = () => {
       <Route path="/estate-planning" element={<EstatePlanning />} />
       <Route path="/properties" element={<Properties />} />
       <Route path="/social-security" element={<SocialSecurity />} />
+
+      {/* Banking Routes */}
+      <Route path="/banking" element={<Navigate to="/cash-management" />} />
       <Route path="/cash-management" element={<CashManagement />} />
       <Route path="/transfers" element={<Transfers />} />
       <Route path="/banking-transfers" element={<BankingTransfers />} />
       <Route path="/banking/bill-paying" element={<BillPaying />} />
+      <Route path="/funding-accounts" element={<FundingAccounts />} />
+      
       <Route path="/legacy-vault" element={<LegacyVault />} />
       <Route path="/sharing" element={<Sharing />} />
       <Route path="/sharing/:sectionId" element={<Sharing />} />
@@ -116,7 +121,6 @@ const AppRoutes: React.FC = () => {
       <Route path="/marketplace/rfp" element={<MarketplaceRfp />} />
       <Route path="/marketplace/rfp/:rfpId" element={<MarketplaceRfpDetail />} />
       <Route path="/tax-budgets" element={<TaxBudgets />} />
-      <Route path="/funding-accounts" element={<FundingAccounts />} />
       <Route path="/login" element={<Navigate to="/" />} />
       
       {isAdmin && (
