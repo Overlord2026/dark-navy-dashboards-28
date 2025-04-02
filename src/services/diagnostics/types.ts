@@ -5,12 +5,17 @@ export interface DiagnosticResult {
   status: DiagnosticTestStatus;
   message: string;
   details?: string;
+  documentationUrl?: string;
+  canAutoFix?: boolean;
 }
 
 export interface NavigationTestResult {
   route: string;
   status: DiagnosticTestStatus;
   message: string;
+  documentationUrl?: string;
+  canAutoFix?: boolean;
+  fixMessage?: string;
 }
 
 export interface PermissionsTestResult {
@@ -18,6 +23,9 @@ export interface PermissionsTestResult {
   permission: string;
   status: DiagnosticTestStatus;
   message: string;
+  documentationUrl?: string;
+  canAutoFix?: boolean;
+  fixMessage?: string;
 }
 
 export interface IconTestResult {
@@ -25,6 +33,9 @@ export interface IconTestResult {
   location: string;
   status: DiagnosticTestStatus;
   message: string;
+  documentationUrl?: string;
+  canAutoFix?: boolean;
+  fixMessage?: string;
 }
 
 export interface FormValidationTestResult {
@@ -37,7 +48,11 @@ export interface FormValidationTestResult {
     fieldType: string;
     status: DiagnosticTestStatus;
     message: string;
+    canAutoFix?: boolean;
   }[];
+  documentationUrl?: string;
+  canAutoFix?: boolean;
+  fixMessage?: string;
 }
 
 export interface ApiIntegrationTestResult {
@@ -47,6 +62,9 @@ export interface ApiIntegrationTestResult {
   status: DiagnosticTestStatus;
   message: string;
   authStatus?: string;
+  documentationUrl?: string;
+  canAutoFix?: boolean;
+  fixMessage?: string;
 }
 
 export interface RoleSimulationTestResult {
@@ -56,6 +74,9 @@ export interface RoleSimulationTestResult {
   status: DiagnosticTestStatus;
   message: string;
   expectedAccess: boolean;
+  documentationUrl?: string;
+  canAutoFix?: boolean;
+  fixMessage?: string;
 }
 
 export interface PerformanceTestResult {
@@ -67,6 +88,9 @@ export interface PerformanceTestResult {
   cpuUsage: number;
   concurrentUsers: number;
   endpoint: string;
+  documentationUrl?: string;
+  canAutoFix?: boolean;
+  fixMessage?: string;
 }
 
 export interface SecurityTestResult {
@@ -76,6 +100,9 @@ export interface SecurityTestResult {
   message: string;
   severity: string;
   remediation?: string;
+  documentationUrl?: string;
+  canAutoFix?: boolean;
+  fixMessage?: string;
 }
 
 export type AuditEventType = 'login' | 'logout' | 'document_access' | 'document_modification' | 

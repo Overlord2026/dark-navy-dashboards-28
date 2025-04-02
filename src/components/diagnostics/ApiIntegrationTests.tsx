@@ -1,10 +1,12 @@
 
 import React from "react";
-import { Globe, ChevronDown, ChevronUp } from "lucide-react";
+import { Globe, ChevronDown, ExternalLink, Wrench } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { StatusIcon, getStatusColor } from "./StatusIcon";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { useDiagnostics } from "@/hooks/useDiagnostics";
 
 interface ApiIntegrationTestsProps {
   tests: any[];
@@ -12,6 +14,8 @@ interface ApiIntegrationTestsProps {
 }
 
 export const ApiIntegrationTests = ({ tests, isLoading = false }: ApiIntegrationTestsProps) => {
+  const { applyDiagnosticFix, fixInProgress } = useDiagnostics();
+  
   return (
     <Card>
       <CardHeader>
@@ -48,6 +52,43 @@ export const ApiIntegrationTests = ({ tests, isLoading = false }: ApiIntegration
                   )}
                 </div>
               </CollapsibleTrigger>
+              
+              {test.status !== "success" && (
+                <div className="px-3 pt-0 pb-3">
+                  <div className="flex flex-wrap gap-2">
+                    {test.canAutoFix && (
+                      <Button 
+                        variant="default" 
+                        size="sm" 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          applyDiagnosticFix(`api-${index}`, "apiIntegration", test.service);
+                        }}
+                        disabled={fixInProgress === `api-${index}`}
+                        className="flex items-center gap-1"
+                      >
+                        <Wrench className="h-3.5 w-3.5" />
+                        {fixInProgress === `api-${index}` ? "Fixing..." : "Fix Issue"}
+                      </Button>
+                    )}
+                    
+                    {test.documentationUrl && (
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          window.open(test.documentationUrl, '_blank');
+                        }}
+                        className="flex items-center gap-1"
+                      >
+                        <ExternalLink className="h-3.5 w-3.5" />
+                        Learn More
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              )}
               
               <CollapsibleContent>
                 <div className="p-3 pt-0 border-t mt-2">
@@ -100,6 +141,13 @@ export const ApiIntegrationTests = ({ tests, isLoading = false }: ApiIntegration
                             >
                               View API documentation
                             </a>
+                          </div>
+                        )}
+                        
+                        {test.fixMessage && (
+                          <div className="mt-3">
+                            <h4 className="text-sm font-medium mb-1">Fix Details:</h4>
+                            <p className="text-sm">{test.fixMessage}</p>
                           </div>
                         )}
                       </>

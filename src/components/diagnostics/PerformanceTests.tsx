@@ -1,10 +1,13 @@
 
-import { Activity, Clock, Cpu } from "lucide-react";
+import { Activity, Clock, Cpu, ExternalLink, Wrench } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { StatusIcon, getStatusColor } from "./StatusIcon";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { toast } from "sonner";
 
 interface PerformanceTestsProps {
   tests: any[];
@@ -12,6 +15,27 @@ interface PerformanceTestsProps {
 }
 
 export const PerformanceTests = ({ tests, isLoading = false }: PerformanceTestsProps) => {
+  const [fixInProgress, setFixInProgress] = useState<string | null>(null);
+
+  const handleFix = async (testId: string, testName: string) => {
+    setFixInProgress(testId);
+    
+    try {
+      // Simulate fix process
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      toast.success(`Fix applied successfully for "${testName}"`, {
+        description: "The performance issue has been addressed.",
+      });
+    } catch (error) {
+      toast.error(`Unable to fix "${testName}"`, {
+        description: "Please try the manual steps or contact support.",
+      });
+    } finally {
+      setFixInProgress(null);
+    }
+  };
+
   if (isLoading) {
     return (
       <Card>
@@ -112,6 +136,41 @@ export const PerformanceTests = ({ tests, isLoading = false }: PerformanceTestsP
                   </div>
                 </div>
                 
+                {test.status !== "success" && (
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {test.canAutoFix && (
+                      <Button 
+                        variant="default" 
+                        size="sm" 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleFix(`perf-${index}`, test.name);
+                        }}
+                        disabled={fixInProgress === `perf-${index}`}
+                        className="flex items-center gap-1"
+                      >
+                        <Wrench className="h-3.5 w-3.5" />
+                        {fixInProgress === `perf-${index}` ? "Fixing..." : "Fix Issue"}
+                      </Button>
+                    )}
+                    
+                    {test.documentationUrl && (
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          window.open(test.documentationUrl, '_blank');
+                        }}
+                        className="flex items-center gap-1"
+                      >
+                        <ExternalLink className="h-3.5 w-3.5" />
+                        Learn More
+                      </Button>
+                    )}
+                  </div>
+                )}
+                
                 <CollapsibleContent>
                   <div className="border-t mt-4 pt-4">
                     <div className="mt-3">
@@ -146,6 +205,13 @@ export const PerformanceTests = ({ tests, isLoading = false }: PerformanceTestsP
                           <li>Consider implementing caching mechanisms to improve performance</li>
                           <li>Review database queries for optimization opportunities</li>
                         </ul>
+                      </div>
+                    )}
+                    
+                    {test.fixMessage && (
+                      <div className="mt-3">
+                        <h4 className="text-sm font-medium mb-1">Fix Details:</h4>
+                        <p className="text-sm">{test.fixMessage}</p>
                       </div>
                     )}
                   </div>

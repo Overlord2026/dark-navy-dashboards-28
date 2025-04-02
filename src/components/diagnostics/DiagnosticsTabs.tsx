@@ -16,6 +16,7 @@ import { LoggingConfiguration } from "./LoggingConfiguration";
 import { AuditLogViewer } from "./AuditLogViewer";
 import { useUser } from "@/context/UserContext";
 import { DiagnosticsAuditViewer } from "./DiagnosticsAuditViewer";
+import { useDiagnostics } from "@/hooks/useDiagnostics";
 
 type DiagnosticsTabsProps = {
   report: any;
@@ -32,6 +33,7 @@ export const DiagnosticsTabs = ({
   const { userProfile } = useUser();
   const userRole = userProfile?.role || "client";
   const isAdmin = userRole === "admin" || userRole === "system_administrator";
+  const diagnostics = useDiagnostics();
   
   return (
     <Tabs 

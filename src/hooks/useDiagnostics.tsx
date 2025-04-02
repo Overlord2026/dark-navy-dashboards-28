@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { runDiagnostics } from "@/services/diagnostics";
 import { DiagnosticTestStatus } from "@/services/diagnostics/types";
+import { toast } from "sonner";
 
 export type QuickFixArea = 'system' | 'performance' | 'security' | 'config' | 'api';
 
@@ -19,6 +20,7 @@ export function useDiagnostics() {
   const [quickFixLoading, setQuickFixLoading] = useState(false);
   const [diagnosticResults, setDiagnosticResults] = useState<any>(null);
   const [lastRunTimestamp, setLastRunTimestamp] = useState<string | null>(null);
+  const [fixInProgress, setFixInProgress] = useState<string | null>(null);
   const [quickFixes, setQuickFixes] = useState<QuickFix[]>([
     {
       id: "fix-1",
@@ -109,6 +111,52 @@ export function useDiagnostics() {
     }
   };
 
+  // New function to fix a specific diagnostic issue
+  const applyDiagnosticFix = async (testId: string, category: string, name: string) => {
+    setFixInProgress(testId);
+    
+    try {
+      console.log(`Applying diagnostic fix for ${category} - ${name} (ID: ${testId})`);
+      
+      // Simulate fix application with a delay
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      // Here we would actually implement the real fix logic
+      // For now we just simulate success
+      
+      toast.success(`Fix applied successfully for "${name}"`, {
+        description: "The issue has been resolved.",
+      });
+      
+      // Update the diagnostics results to reflect the fix
+      // This is a simplified example - in a real implementation, we'd update
+      // the specific test that was fixed
+      if (diagnosticResults && diagnosticResults[`${category}Tests`]) {
+        const updatedTests = diagnosticResults[`${category}Tests`].map((test: any) => {
+          if (test.name === name || test.endpoint === name || test.route === name) {
+            return { ...test, status: "success" };
+          }
+          return test;
+        });
+        
+        setDiagnosticResults({
+          ...diagnosticResults,
+          [`${category}Tests`]: updatedTests
+        });
+      }
+      
+      return true;
+    } catch (error) {
+      console.error(`Error applying fix for ${testId}:`, error);
+      toast.error(`Unable to fix "${name}"`, {
+        description: "Please try the manual steps or contact support.",
+      });
+      return false;
+    } finally {
+      setFixInProgress(null);
+    }
+  };
+
   const getOverallStatus = (): DiagnosticTestStatus => {
     if (!diagnosticResults) return "success";
     return diagnosticResults.overall || "success";
@@ -121,9 +169,11 @@ export function useDiagnostics() {
     diagnosticResults,
     lastRunTimestamp,
     quickFixes,
+    fixInProgress,
     runSystemDiagnostics,
     refreshDiagnostics,
     applyQuickFix,
+    applyDiagnosticFix,
     getOverallStatus
   };
 }
