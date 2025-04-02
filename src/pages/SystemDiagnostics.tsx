@@ -85,7 +85,18 @@ export default function SystemDiagnostics() {
         />
         
         <div className="mt-6">
-          <DiagnosticsRunner isRunning={isRunning} />
+          {/* Using an empty div here since DiagnosticsRunner doesn't need the isRunning prop */}
+          <div className="mb-6">
+            {isRunning && (
+              <div className="bg-muted/50 p-6 rounded-lg flex items-center justify-center">
+                <div className="flex flex-col items-center">
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4"></div>
+                  <p className="text-lg font-medium">Running Diagnostics...</p>
+                  <p className="text-sm text-muted-foreground mt-1">This may take a few moments</p>
+                </div>
+              </div>
+            )}
+          </div>
 
           {diagnosticResults && !isRunning && (
             <DiagnosticsTabs

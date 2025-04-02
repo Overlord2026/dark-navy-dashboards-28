@@ -61,7 +61,7 @@ export function CourseCard({
           {!isPaid ? (
             <Badge variant="success" className="text-white">Free</Badge>
           ) : (
-            <Badge variant="info" className="text-white">Paid</Badge>
+            <Badge variant="secondary" className="text-white">Paid</Badge>
           )}
         </div>
         <CardDescription className="mt-2 text-left line-clamp-3">{description}</CardDescription>
