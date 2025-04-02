@@ -16,7 +16,7 @@ import Properties from "@/pages/Properties";
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <IndexPage />,
+    element: <Dashboard />,
   },
   {
     path: "/dashboard",
