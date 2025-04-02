@@ -17,15 +17,15 @@ export function DiagnosticsProvider({ children }: { children: React.ReactNode })
   
   useEffect(() => {
     // Check if in development mode
-    const isDev = process.env.NODE_ENV === 'development' || 
+    const isDev = import.meta.env.DEV || 
                   window.location.hostname === 'localhost' ||
                   window.location.hostname.includes('lovableproject.com');
     setIsDevelopmentMode(isDev);
     
     // Check if in CI mode
-    const isCI = process.env.CI === 'true' || 
-                 process.env.CI === '1' || 
-                 process.env.GITHUB_ACTIONS === 'true';
+    const isCI = import.meta.env.CI === 'true' || 
+                 import.meta.env.CI === '1' || 
+                 import.meta.env.GITHUB_ACTIONS === 'true';
     setIsCiMode(isCI);
     
     // Check if URL has a diagnostics parameter

@@ -32,9 +32,14 @@ jobs:
         
       - name: Build application
         run: npm run build
+        env:
+          CI: true
         
       - name: Run diagnostics tests
         run: node ./dist/services/diagnostics/ci-scripts/run-diagnostics.js --outputFile=diagnostics-report.json --failOnError=true --notifyOnWarning=true
+        env:
+          CI: true
+          GITHUB_ACTIONS: true
         
       - name: Upload diagnostics report
         if: always() # Upload even if tests fail
