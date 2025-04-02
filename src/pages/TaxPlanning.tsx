@@ -1,11 +1,23 @@
-
 import React from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Calendar, FileText, Calculator, BookOpen, BarChart, PiggyBank } from "lucide-react";
+import { 
+  Calendar, 
+  FileText, 
+  Calculator, 
+  BookOpen, 
+  BarChart, 
+  PiggyBank, 
+  ExternalLink,
+  ArrowRight,
+  HeartIcon
+} from "lucide-react";
 import { motion } from "framer-motion";
+import { InterestedButton } from "@/components/investments/InterestedButton";
+import { ScheduleMeetingDialog } from "@/components/investments/ScheduleMeetingDialog";
+import { Link } from "react-router-dom";
 
 export default function TaxPlanning() {
   const containerVariants = {
@@ -45,9 +57,10 @@ export default function TaxPlanning() {
 
         <motion.div variants={itemVariants}>
           <Tabs defaultValue="overview" className="w-full">
-            <TabsList className="grid w-full grid-cols-4">
+            <TabsList className="grid w-full grid-cols-5">
               <TabsTrigger value="overview">Overview</TabsTrigger>
               <TabsTrigger value="strategies">Strategies</TabsTrigger>
+              <TabsTrigger value="roth-conversion">Roth Conversion</TabsTrigger>
               <TabsTrigger value="resources">Resources</TabsTrigger>
               <TabsTrigger value="calendar">Tax Calendar</TabsTrigger>
             </TabsList>
@@ -202,6 +215,163 @@ export default function TaxPlanning() {
                       <li>SECURE Act implications</li>
                     </ul>
                     <Button className="mt-4" variant="outline">Learn More</Button>
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
+            
+            <TabsContent value="roth-conversion" className="mt-6">
+              <div className="grid gap-6 md:grid-cols-2">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center">
+                      <Calculator className="mr-2 h-5 w-5 text-primary" />
+                      What is a Roth IRA Conversion?
+                    </CardTitle>
+                    <CardDescription>
+                      Understanding the process and benefits of converting traditional retirement assets
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground">
+                      A Roth IRA conversion is the process of transferring retirement funds from a Traditional IRA, 401(k), 
+                      or similar tax-deferred account into a Roth IRA. Unlike traditional retirement accounts where 
+                      contributions are tax-deductible but withdrawals are taxed, Roth IRAs are funded with after-tax 
+                      dollars but provide tax-free growth and qualified withdrawals.
+                    </p>
+                    <h4 className="font-medium mt-4 mb-2">Key Benefits:</h4>
+                    <ul className="list-disc pl-5 space-y-1 text-sm text-muted-foreground">
+                      <li>Tax-free withdrawals in retirement</li>
+                      <li>No required minimum distributions (RMDs)</li>
+                      <li>Tax-free inheritance for beneficiaries</li>
+                      <li>Protection against future tax rate increases</li>
+                    </ul>
+                    <h4 className="font-medium mt-4 mb-2">Considerations:</h4>
+                    <ul className="list-disc pl-5 space-y-1 text-sm text-muted-foreground">
+                      <li>Converted amounts are taxable in the year of conversion</li>
+                      <li>May push you into a higher tax bracket</li>
+                      <li>Ideal when you have funds to pay the tax without using retirement assets</li>
+                      <li>5-year rule applies before tax-free withdrawals of converted amounts</li>
+                    </ul>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center">
+                      <Calculator className="mr-2 h-5 w-5 text-primary" />
+                      Roth Conversion Calculator
+                    </CardTitle>
+                    <CardDescription>
+                      Estimate the potential benefits and tax implications of a Roth conversion
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="pb-0">
+                    <p className="text-sm text-muted-foreground mb-4">
+                      Our Roth Conversion Calculator helps you analyze the potential long-term benefits 
+                      against the immediate tax costs. Enter a few details about your situation to get 
+                      a preliminary analysis.
+                    </p>
+                    <div className="border rounded-lg p-4 mb-4">
+                      <h4 className="font-medium text-center mb-4">Roth Conversion Analysis Tool</h4>
+                      <Button variant="outline" className="w-full flex items-center justify-center">
+                        <Calculator className="mr-2 h-4 w-4" />
+                        Open Roth Conversion Calculator
+                      </Button>
+                    </div>
+                  </CardContent>
+                  <CardFooter className="flex flex-col space-y-3 pt-0">
+                    <InterestedButton assetName="Roth IRA Conversion" />
+                    <ScheduleMeetingDialog assetName="Roth IRA Conversion" />
+                  </CardFooter>
+                </Card>
+              </div>
+
+              <div className="mt-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center">
+                      <BookOpen className="mr-2 h-5 w-5 text-primary" />
+                      Educational Resources
+                    </CardTitle>
+                    <CardDescription>
+                      Learn more about Roth conversions through our curated resources
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid gap-4 md:grid-cols-3">
+                      <div className="border rounded-lg p-4">
+                        <h4 className="font-medium">Internal Courses</h4>
+                        <ul className="mt-2 space-y-3 text-sm">
+                          <li>
+                            <Link to="/education?category=retirement" className="flex items-center text-primary hover:underline">
+                              <ArrowRight className="h-3 w-3 mr-1" />
+                              Roth IRA Fundamentals
+                            </Link>
+                          </li>
+                          <li>
+                            <Link to="/education?category=tax-planning" className="flex items-center text-primary hover:underline">
+                              <ArrowRight className="h-3 w-3 mr-1" />
+                              Tax-Efficient Retirement Planning
+                            </Link>
+                          </li>
+                          <li>
+                            <Link to="/education?category=tax-planning" className="flex items-center text-primary hover:underline">
+                              <ArrowRight className="h-3 w-3 mr-1" />
+                              Advanced Roth Conversion Strategies
+                            </Link>
+                          </li>
+                        </ul>
+                      </div>
+                      
+                      <div className="border rounded-lg p-4">
+                        <h4 className="font-medium">External Resources</h4>
+                        <ul className="mt-2 space-y-3 text-sm">
+                          <li>
+                            <a href="https://www.irs.gov/retirement-plans/roth-iras" target="_blank" rel="noopener noreferrer" className="flex items-center text-primary hover:underline">
+                              <ExternalLink className="h-3 w-3 mr-1" />
+                              IRS: Roth IRA Guidelines
+                            </a>
+                          </li>
+                          <li>
+                            <a href="https://www.investopedia.com/roth-ira-conversion-4770973" target="_blank" rel="noopener noreferrer" className="flex items-center text-primary hover:underline">
+                              <ExternalLink className="h-3 w-3 mr-1" />
+                              Investopedia: Roth Conversions
+                            </a>
+                          </li>
+                          <li>
+                            <a href="https://www.fidelity.com/viewpoints/retirement/convert-to-roth" target="_blank" rel="noopener noreferrer" className="flex items-center text-primary hover:underline">
+                              <ExternalLink className="h-3 w-3 mr-1" />
+                              Fidelity: Converting to a Roth IRA
+                            </a>
+                          </li>
+                        </ul>
+                      </div>
+                      
+                      <div className="border rounded-lg p-4">
+                        <h4 className="font-medium">Free Downloads</h4>
+                        <ul className="mt-2 space-y-3 text-sm">
+                          <li>
+                            <Button variant="link" className="h-auto p-0 flex items-center text-primary hover:underline">
+                              <FileText className="h-3 w-3 mr-1" />
+                              Roth Conversion Checklist
+                            </Button>
+                          </li>
+                          <li>
+                            <Button variant="link" className="h-auto p-0 flex items-center text-primary hover:underline">
+                              <FileText className="h-3 w-3 mr-1" />
+                              Tax Bracket Strategy Guide
+                            </Button>
+                          </li>
+                          <li>
+                            <Button variant="link" className="h-auto p-0 flex items-center text-primary hover:underline">
+                              <FileText className="h-3 w-3 mr-1" />
+                              Roth vs. Traditional Comparison
+                            </Button>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
                   </CardContent>
                 </Card>
               </div>
