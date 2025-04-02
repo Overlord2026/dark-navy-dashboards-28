@@ -1,15 +1,14 @@
-
 import React, { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Calendar, Clock, CreditCard, Plus, ArrowUp, Wallet, Receipt, FileText, BanknoteIcon, CreditCard as CreditCardIcon, ExternalLink } from "lucide-react";
+import { Calendar, Clock, CreditCard, Plus, ArrowUp, Wallet, Receipt, FileText, BanknoteIcon, CreditCard as CreditCardIcon, ExternalLink, ActivityIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { DashboardHeader } from "@/components/ui/DashboardHeader";
 import { AdvancedBillPayingProvidersDialog } from "@/components/billpay/AdvancedBillPayingProvidersDialog";
+import { BillPayButtonDiagnostics } from "@/components/billpay/BillPayButtonDiagnostics";
 
-// Sample data for the dashboard
 const upcomingBills = [
   { id: 1, name: "Electricity Bill", amount: 85.75, dueDate: "2025-04-15", category: "Utilities" },
   { id: 2, name: "Internet Service", amount: 69.99, dueDate: "2025-04-18", category: "Utilities" },
@@ -33,6 +32,8 @@ const BillPay = () => {
   const { toast } = useToast();
   const [selectedBill, setSelectedBill] = useState<number | null>(null);
   const [showAdvancedProvidersDialog, setShowAdvancedProvidersDialog] = useState(false);
+  const [showDiagnosticsDialog, setShowDiagnosticsDialog] = useState(false);
+  const [diagnosticButtonName, setDiagnosticButtonName] = useState<string | undefined>(undefined);
 
   const handleQuickPay = (billId: number) => {
     setSelectedBill(billId);
@@ -42,7 +43,6 @@ const BillPay = () => {
       duration: 3000,
     });
     
-    // Reset selection after toast
     setTimeout(() => setSelectedBill(null), 1000);
   };
 
@@ -70,7 +70,11 @@ const BillPay = () => {
     });
   };
 
-  // Get days until due
+  const runDiagnostics = (buttonName: string) => {
+    setDiagnosticButtonName(buttonName);
+    setShowDiagnosticsDialog(true);
+  };
+
   const getDaysUntilDue = (dueDate: string) => {
     const today = new Date();
     const due = new Date(dueDate);
@@ -79,7 +83,6 @@ const BillPay = () => {
     return diffDays;
   };
 
-  // Get badge color based on due days
   const getDueBadgeVariant = (dueDate: string) => {
     const daysUntilDue = getDaysUntilDue(dueDate);
     if (daysUntilDue <= 3) return "destructive";
@@ -95,51 +98,89 @@ const BillPay = () => {
           text="Manage and schedule all your bill payments from one centralized location."
         />
         
-        {/* Action Buttons Row */}
         <div className="flex flex-wrap gap-4 mt-2">
-          <Button 
-            variant="default" 
-            size="lg" 
-            className="gap-2" 
-            onClick={handleAddNewBill}
-          >
-            <Plus className="h-4 w-4" />
-            Create New Bill
-          </Button>
+          <div className="relative group">
+            <Button 
+              variant="default" 
+              size="lg" 
+              className="gap-2" 
+              onClick={handleAddNewBill}
+            >
+              <Plus className="h-4 w-4" />
+              Create New Bill
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              className="absolute -top-3 -right-3 h-6 w-6 p-0 bg-amber-100 border-amber-300 text-amber-700 opacity-0 group-hover:opacity-100 transition-opacity"
+              onClick={() => runDiagnostics("Create New Bill")}
+            >
+              <ActivityIcon className="h-3 w-3" />
+            </Button>
+          </div>
           
-          <Button 
-            variant="outline" 
-            size="lg" 
-            className="gap-2" 
-            onClick={handleViewAllBills}
-          >
-            <FileText className="h-4 w-4" />
-            View All Bills
-          </Button>
+          <div className="relative group">
+            <Button 
+              variant="outline" 
+              size="lg" 
+              className="gap-2" 
+              onClick={handleViewAllBills}
+            >
+              <FileText className="h-4 w-4" />
+              View All Bills
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              className="absolute -top-3 -right-3 h-6 w-6 p-0 bg-amber-100 border-amber-300 text-amber-700 opacity-0 group-hover:opacity-100 transition-opacity"
+              onClick={() => runDiagnostics("View All Bills")}
+            >
+              <ActivityIcon className="h-3 w-3" />
+            </Button>
+          </div>
           
-          <Button 
-            variant="outline" 
-            size="lg" 
-            className="gap-2" 
-            onClick={handleManagePaymentMethods}
-          >
-            <CreditCardIcon className="h-4 w-4" />
-            Manage Payment Methods
-          </Button>
+          <div className="relative group">
+            <Button 
+              variant="outline" 
+              size="lg" 
+              className="gap-2" 
+              onClick={handleManagePaymentMethods}
+            >
+              <CreditCardIcon className="h-4 w-4" />
+              Manage Payment Methods
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              className="absolute -top-3 -right-3 h-6 w-6 p-0 bg-amber-100 border-amber-300 text-amber-700 opacity-0 group-hover:opacity-100 transition-opacity"
+              onClick={() => runDiagnostics("Manage Payment Methods")}
+            >
+              <ActivityIcon className="h-3 w-3" />
+            </Button>
+          </div>
 
-          <Button 
-            variant="outline" 
-            size="lg" 
-            className="gap-2 border-blue-300 text-blue-600 hover:bg-blue-50 hover:text-blue-700"
-            onClick={() => setShowAdvancedProvidersDialog(true)}
-          >
-            <ExternalLink className="h-4 w-4" />
-            Advanced Bill Paying Providers
-          </Button>
+          <div className="relative group">
+            <Button 
+              variant="outline" 
+              size="lg" 
+              className="gap-2 border-blue-300 text-blue-600 hover:bg-blue-50 hover:text-blue-700"
+              onClick={() => setShowAdvancedProvidersDialog(true)}
+            >
+              <ExternalLink className="h-4 w-4" />
+              Advanced Bill Paying Providers
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              className="absolute -top-3 -right-3 h-6 w-6 p-0 bg-amber-100 border-amber-300 text-amber-700 opacity-0 group-hover:opacity-100 transition-opacity"
+              onClick={() => runDiagnostics("Advanced Bill Paying Providers")}
+            >
+              <ActivityIcon className="h-3 w-3" />
+            </Button>
+          </div>
         </div>
         
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
-          {/* Upcoming Bills Section */}
           <Card className="lg:col-span-2">
             <CardHeader className="flex flex-row items-center justify-between">
               <div>
@@ -151,10 +192,20 @@ const BillPay = () => {
                   Bills due in the next 30 days
                 </CardDescription>
               </div>
-              <Button variant="outline" size="sm" onClick={handleAddNewBill}>
-                <Plus className="h-4 w-4 mr-2" />
-                Add Bill
-              </Button>
+              <div className="relative group">
+                <Button variant="outline" size="sm" onClick={handleAddNewBill}>
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add Bill
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="absolute -top-3 -right-3 h-6 w-6 p-0 bg-amber-100 border-amber-300 text-amber-700 opacity-0 group-hover:opacity-100 transition-opacity"
+                  onClick={() => runDiagnostics("Add Bill")}
+                >
+                  <ActivityIcon className="h-3 w-3" />
+                </Button>
+              </div>
             </CardHeader>
             <CardContent>
               {upcomingBills.length === 0 ? (
@@ -180,15 +231,25 @@ const BillPay = () => {
                             Due in {getDaysUntilDue(bill.dueDate)} days
                           </Badge>
                         </div>
-                        <Button 
-                          variant="secondary" 
-                          size="sm"
-                          onClick={() => handleQuickPay(bill.id)}
-                          className="whitespace-nowrap"
-                        >
-                          <CreditCard className="h-4 w-4 mr-2" />
-                          Pay Now
-                        </Button>
+                        <div className="relative group">
+                          <Button 
+                            variant="secondary" 
+                            size="sm"
+                            onClick={() => handleQuickPay(bill.id)}
+                            className="whitespace-nowrap"
+                          >
+                            <CreditCard className="h-4 w-4 mr-2" />
+                            Pay Now
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="absolute -top-3 -right-3 h-6 w-6 p-0 bg-amber-100 border-amber-300 text-amber-700 opacity-0 group-hover:opacity-100 transition-opacity"
+                            onClick={() => runDiagnostics("Pay Now")}
+                          >
+                            <ActivityIcon className="h-3 w-3" />
+                          </Button>
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -202,7 +263,6 @@ const BillPay = () => {
             </CardFooter>
           </Card>
 
-          {/* Quick Pay Section */}
           <Card>
             <CardHeader>
               <CardTitle className="text-xl flex items-center gap-2">
@@ -241,7 +301,6 @@ const BillPay = () => {
             </CardContent>
           </Card>
           
-          {/* Recent Payments Section */}
           <Card className="lg:col-span-3">
             <CardHeader>
               <CardTitle className="text-xl flex items-center gap-2">
@@ -299,7 +358,12 @@ const BillPay = () => {
           </Card>
         </div>
 
-        {/* Advanced Bill Paying Providers Dialog */}
+        <BillPayButtonDiagnostics 
+          isOpen={showDiagnosticsDialog}
+          onClose={() => setShowDiagnosticsDialog(false)}
+          selectedButton={diagnosticButtonName}
+        />
+
         <AdvancedBillPayingProvidersDialog 
           isOpen={showAdvancedProvidersDialog}
           onClose={() => setShowAdvancedProvidersDialog(false)}
