@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -18,6 +17,7 @@ import { auditLog } from "@/services/auditLog/auditLogService";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface HealthcareFolderProps {
   documents: DocumentItem[];
@@ -47,13 +47,11 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
     (activeSubcategory === "healthcare" && healthcareCategories.some(c => c.id === doc.category))
   );
   
-  // Filter documents based on selected tags and encryption filter
   const filteredDocuments = healthcareDocuments
     .filter(doc => selectedTags.length > 0 ? doc.tags?.some(tag => selectedTags.includes(tag)) : true)
     .filter(doc => showOnlyEncrypted ? doc.encrypted === true : true);
 
   const handleUploadDocument = (file: File, customName: string) => {
-    // Determine document type based on file extension
     let docType: "pdf" | "image" | "document" = "document";
     if (file.type.includes("pdf")) {
       docType = "pdf";
@@ -71,8 +69,8 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
       size: file.size,
       uploadedBy: userId,
       tags: selectedTags,
-      encrypted: true, // Default all healthcare documents to encrypted
-      isPrivate: true, // Default to private
+      encrypted: true,
+      isPrivate: true,
       permissions: [
         {
           userId: userId,
@@ -86,7 +84,6 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
     onAddDocument(newDocument);
     setIsUploadDialogOpen(false);
     
-    // Log the document upload in the audit trail
     auditLog.log(
       userId,
       "document_modification",
@@ -113,7 +110,6 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
     onCreateFolder(folderName, activeSubcategory);
     setIsNewFolderDialogOpen(false);
     
-    // Log folder creation in audit trail
     auditLog.log(
       userId,
       "document_modification",
@@ -142,7 +138,6 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
     setSelectedDocument(document);
     setIsPermissionDialogOpen(true);
     
-    // Log access to permission settings in audit trail
     auditLog.log(
       userId,
       "document_access",
@@ -165,7 +160,6 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
   };
 
   const handleViewDocument = (document: DocumentItem) => {
-    // Log document access in audit trail
     auditLog.log(
       userId,
       "document_access",
@@ -187,14 +181,12 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
     });
   };
 
-  // Filter tags relevant to the selected subcategory
   const relevantTags = activeSubcategory === "healthcare" 
     ? healthcareTags 
     : healthcareTags.filter(tag => tag.category === activeSubcategory);
 
   const activeSubcategoryName = healthcareCategories.find(cat => cat.id === activeSubcategory)?.name || "Healthcare";
   
-  // Access log from auditLog service
   const documentAccessLogs = auditLog.getLogs({
     eventType: "document_access", 
     userId: userId
@@ -311,8 +303,24 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
                         header: "Privacy",
                         cell: (document) => (
                           <div className="flex items-center space-x-1">
-                            {document.encrypted && <Lock className="h-4 w-4 text-green-500" title="Encrypted" />}
-                            {document.isPrivate && <Eye className="h-4 w-4 text-amber-500" title="Private" />}
+                            <TooltipProvider>
+                              {document.encrypted && (
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <Lock className="h-4 w-4 text-green-500" />
+                                  </TooltipTrigger>
+                                  <TooltipContent>Encrypted</TooltipContent>
+                                </Tooltip>
+                              )}
+                              {document.isPrivate && (
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <Eye className="h-4 w-4 text-amber-500" />
+                                  </TooltipTrigger>
+                                  <TooltipContent>Private</TooltipContent>
+                                </Tooltip>
+                              )}
+                            </TooltipProvider>
                           </div>
                         )
                       },

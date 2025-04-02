@@ -3,18 +3,27 @@ import { DocumentItem, DocumentType } from "@/types/document";
 import { File, FileText, FileImage, FileSpreadsheet, Folder, Edit, Trash2, Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
+interface ColumnDefinition {
+  header: string;
+  cell: (document: DocumentItem) => React.ReactNode;
+}
+
 interface DocumentsTableProps {
   documents: DocumentItem[];
   onEditDocument?: (document: DocumentItem) => void;
   onDeleteDocument?: (document: DocumentItem) => void;
   onShareDocument?: (document: DocumentItem) => void;
+  onViewDocument?: (document: DocumentItem) => void;
+  extraColumns?: ColumnDefinition[];
 }
 
 export const DocumentsTable = ({ 
   documents,
   onEditDocument,
   onDeleteDocument,
-  onShareDocument
+  onShareDocument,
+  onViewDocument,
+  extraColumns = []
 }: DocumentsTableProps) => {
   const getDocumentIcon = (type: DocumentType) => {
     switch (type) {
@@ -45,10 +54,21 @@ export const DocumentsTable = ({
     <div className="w-full">
       {documents.length > 0 ? (
         <div>
+          <div className="grid grid-cols-5 gap-4 px-4 py-3 border-b bg-muted/20 font-medium">
+            <div className="col-span-2">Name</div>
+            <div>Date</div>
+            <div>Type</div>
+            {extraColumns.map((column, index) => (
+              <div key={`header-${index}`}>{column.header}</div>
+            ))}
+            <div className="text-right">Actions</div>
+          </div>
           {documents.map((document) => (
             <div 
               key={document.id}
               className="grid grid-cols-5 gap-4 px-4 py-3 border-b hover:bg-accent/10"
+              onClick={() => onViewDocument?.(document)}
+              style={{ cursor: onViewDocument ? 'pointer' : 'default' }}
             >
               <div className="font-medium flex items-center gap-2 col-span-2">
                 {getDocumentIcon(document.type)}
@@ -56,13 +76,19 @@ export const DocumentsTable = ({
               </div>
               <div>{new Date(document.created).toLocaleDateString()}</div>
               <div className="capitalize">{document.type}</div>
+              {extraColumns.map((column, index) => (
+                <div key={`cell-${document.id}-${index}`}>{column.cell(document)}</div>
+              ))}
               <div className="flex items-center justify-end gap-2">
                 {onEditDocument && (
                   <Button 
                     variant="ghost" 
                     size="sm" 
                     className="h-8 w-8 p-0" 
-                    onClick={() => onEditDocument(document)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onEditDocument(document);
+                    }}
                   >
                     <Edit className="h-4 w-4" />
                     <span className="sr-only">Edit</span>
@@ -73,7 +99,10 @@ export const DocumentsTable = ({
                     variant="ghost" 
                     size="sm" 
                     className="h-8 w-8 p-0" 
-                    onClick={() => onShareDocument(document)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onShareDocument(document);
+                    }}
                   >
                     <Share2 className="h-4 w-4" />
                     <span className="sr-only">Share</span>
@@ -84,7 +113,10 @@ export const DocumentsTable = ({
                     variant="ghost" 
                     size="sm" 
                     className="h-8 w-8 p-0 text-destructive hover:text-destructive hover:bg-destructive/10" 
-                    onClick={() => onDeleteDocument(document)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onDeleteDocument(document);
+                    }}
                   >
                     <Trash2 className="h-4 w-4" />
                     <span className="sr-only">Delete</span>
