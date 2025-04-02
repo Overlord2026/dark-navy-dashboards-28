@@ -1,4 +1,3 @@
-
 import { 
   HomeIcon, 
   GraduationCapIcon,
@@ -103,13 +102,18 @@ export const familyWealthNavItems: NavItem[] = [
       },
       {
         title: "Transfers",
-        href: "/transfers",
+        href: "/banking-transfers",
         icon: ArrowRightLeft
       },
       {
         title: "Bill Paying",
         href: "/banking/bill-paying",
         icon: Receipt
+      },
+      {
+        title: "Funding Accounts",
+        href: "/funding-accounts",
+        icon: WalletIcon
       }
     ]
   },
