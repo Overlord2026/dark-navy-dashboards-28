@@ -1,3 +1,4 @@
+
 import { 
   HomeIcon, 
   GraduationCapIcon,
@@ -20,7 +21,8 @@ import {
   CircleDollarSignIcon,
   BriefcaseIcon,
   ArchiveIcon,
-  SearchIcon
+  SearchIcon,
+  ArrowRightLeft
 } from "lucide-react";
 
 import { NavItem } from "@/types/navigation";
@@ -83,7 +85,19 @@ export const familyWealthNavItems: NavItem[] = [
   { 
     title: "Banking", 
     href: "/cash-management", 
-    icon: BanknoteIcon 
+    icon: BanknoteIcon,
+    submenu: [
+      {
+        title: "Cash Management",
+        href: "/cash-management",
+        icon: BanknoteIcon
+      },
+      {
+        title: "Transfers",
+        href: "/transfers",
+        icon: ArrowRightLeft
+      }
+    ]
   },
   { 
     title: "Legacy Vault", 
