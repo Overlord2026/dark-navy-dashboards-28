@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Calendar, Clock, CreditCard, Plus, ArrowUp, Wallet, Receipt } from "lucide-react";
+import { Calendar, Clock, CreditCard, Plus, ArrowUp, Wallet, Receipt, FileText, BanknoteIcon, CreditCard as CreditCardIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { DashboardHeader } from "@/components/ui/DashboardHeader";
@@ -46,8 +46,24 @@ const BillPay = () => {
 
   const handleAddNewBill = () => {
     toast({
-      title: "Add New Bill",
-      description: "Feature coming soon",
+      title: "Create New Bill",
+      description: "Feature will be implemented soon",
+      duration: 3000,
+    });
+  };
+  
+  const handleViewAllBills = () => {
+    toast({
+      title: "View All Bills",
+      description: "Showing all your bills history and scheduled payments",
+      duration: 3000,
+    });
+  };
+  
+  const handleManagePaymentMethods = () => {
+    toast({
+      title: "Manage Payment Methods",
+      description: "Access your payment methods settings",
       duration: 3000,
     });
   };
@@ -76,6 +92,39 @@ const BillPay = () => {
           heading="Bill Payment Center" 
           text="Manage and schedule all your bill payments from one centralized location."
         />
+        
+        {/* Action Buttons Row */}
+        <div className="flex flex-wrap gap-4 mt-2">
+          <Button 
+            variant="default" 
+            size="lg" 
+            className="gap-2" 
+            onClick={handleAddNewBill}
+          >
+            <Plus className="h-4 w-4" />
+            Create New Bill
+          </Button>
+          
+          <Button 
+            variant="outline" 
+            size="lg" 
+            className="gap-2" 
+            onClick={handleViewAllBills}
+          >
+            <FileText className="h-4 w-4" />
+            View All Bills
+          </Button>
+          
+          <Button 
+            variant="outline" 
+            size="lg" 
+            className="gap-2" 
+            onClick={handleManagePaymentMethods}
+          >
+            <CreditCardIcon className="h-4 w-4" />
+            Manage Payment Methods
+          </Button>
+        </div>
         
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
           {/* Upcoming Bills Section */}
@@ -135,7 +184,7 @@ const BillPay = () => {
               )}
             </CardContent>
             <CardFooter className="border-t pt-4 flex justify-center">
-              <Button variant="ghost" size="sm">
+              <Button variant="ghost" size="sm" onClick={handleViewAllBills}>
                 View All Bills
               </Button>
             </CardFooter>
@@ -231,7 +280,7 @@ const BillPay = () => {
               <Button variant="ghost" size="sm">
                 Download Statement
               </Button>
-              <Button variant="ghost" size="sm">
+              <Button variant="ghost" size="sm" onClick={handleViewAllBills}>
                 View All Transactions
               </Button>
             </CardFooter>
