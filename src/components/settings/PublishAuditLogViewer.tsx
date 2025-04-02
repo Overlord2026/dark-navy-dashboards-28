@@ -1,294 +1,180 @@
 
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
 import { auditLog, AuditLogEntry } from "@/services/auditLog/auditLogService";
-import { format } from "date-fns";
-import { AlertCircle, Download, Filter, RefreshCw, Search, FileCode, User2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { RefreshCw, Search, Download } from "lucide-react";
+import { Input } from "@/components/ui/input";
 
-interface PublishAuditLogProps {
-  className?: string;
-}
-
-export const PublishAuditLogViewer = ({ className }: PublishAuditLogProps) => {
+export function PublishAuditLogViewer() {
   const [logs, setLogs] = useState<AuditLogEntry[]>([]);
   const [filteredLogs, setFilteredLogs] = useState<AuditLogEntry[]>([]);
-  const [statusFilter, setStatusFilter] = useState<"all" | "success" | "failure">("all");
   const [searchTerm, setSearchTerm] = useState("");
-  const [timeRange, setTimeRange] = useState<number>(30); // days
   
-  const fetchLogs = () => {
-    const startDate = new Date();
-    startDate.setDate(startDate.getDate() - timeRange);
-    
-    // Filter only for publish-related actions
-    const publishActions = ['settings_change', 'document_access', 'api_access'];
-    
-    const fetchedLogs = auditLog.getLogs({
-      startDate: timeRange ? startDate : undefined,
-      status: statusFilter !== "all" ? statusFilter : undefined
-    });
-    
-    // Further filter for publish-related actions and those containing "publish" in details
-    const publishLogs = fetchedLogs.filter(log => 
-      publishActions.includes(log.action) || 
-      (log.details && 
-        typeof log.details === 'object' && 
-        log.details.action && 
-        log.details.action.toLowerCase().includes('publish'))
-    );
-    
-    setLogs(publishLogs);
-    filterLogs(publishLogs, searchTerm);
+  const refreshLogs = () => {
+    setLogs(auditLog.getRecentEntries(100));
   };
-
+  
   useEffect(() => {
-    fetchLogs();
-    // Refresh logs every 60 seconds
-    const interval = setInterval(fetchLogs, 60000);
+    refreshLogs();
+    // Set up an interval to refresh logs every 30 seconds
+    const interval = setInterval(refreshLogs, 30000);
     return () => clearInterval(interval);
-  }, [timeRange, statusFilter]);
-
+  }, []);
+  
   useEffect(() => {
-    filterLogs(logs, searchTerm);
-  }, [searchTerm]);
-
-  const filterLogs = (logsToFilter: AuditLogEntry[], term: string) => {
-    if (!term) {
-      setFilteredLogs(logsToFilter);
+    if (!searchTerm.trim()) {
+      setFilteredLogs(logs);
       return;
     }
     
-    const filtered = logsToFilter.filter(log => 
-      (log.userId && log.userId.toLowerCase().includes(term.toLowerCase())) ||
-      (log.userName && log.userName.toLowerCase().includes(term.toLowerCase())) ||
-      (log.resourceId && log.resourceId.toLowerCase().includes(term.toLowerCase())) ||
-      (log.resourceType && log.resourceType.toLowerCase().includes(term.toLowerCase())) ||
-      (log.details && JSON.stringify(log.details).toLowerCase().includes(term.toLowerCase())) ||
-      (log.reason && log.reason.toLowerCase().includes(term.toLowerCase()))
+    const term = searchTerm.toLowerCase();
+    const filtered = logs.filter(log => 
+      log.userId.toLowerCase().includes(term) ||
+      log.eventType.toLowerCase().includes(term) ||
+      (log.metadata?.userName || '').toLowerCase().includes(term) ||
+      (log.metadata?.resourceId || '').toLowerCase().includes(term) ||
+      (log.metadata?.resourceType || '').toLowerCase().includes(term) ||
+      JSON.stringify(log.metadata?.details || {}).toLowerCase().includes(term) ||
+      (log.metadata?.reason || '').toLowerCase().includes(term)
     );
     
     setFilteredLogs(filtered);
-  };
-
-  const getStatusClass = (status: 'success' | 'failure') => {
-    return status === 'success' 
-      ? 'bg-green-50 border-green-200 dark:bg-green-950/30 dark:border-green-800' 
-      : 'bg-red-50 border-red-200 dark:bg-red-950/30 dark:border-red-800';
-  };
-
+  }, [logs, searchTerm]);
+  
   const exportLogs = () => {
-    const logData = JSON.stringify(filteredLogs, null, 2);
-    const blob = new Blob([logData], { type: 'application/json' });
+    const logsJson = JSON.stringify(logs, null, 2);
+    const blob = new Blob([logsJson], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
+    
     const a = document.createElement('a');
     a.href = url;
-    a.download = `publish-audit-logs-${format(new Date(), 'yyyy-MM-dd-HH-mm')}.json`;
+    a.download = `audit-logs-${new Date().toISOString().split('T')[0]}.json`;
     document.body.appendChild(a);
     a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    
+    // Clean up
+    setTimeout(() => {
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }, 100);
   };
-
-  const has2FADetails = (log: AuditLogEntry) => {
-    return log.details && 
-           typeof log.details === 'object' && 
-           (log.details.twoFactorVerified !== undefined || 
-            log.details.authMethod !== undefined);
-  };
-
-  const hasCodeChanges = (log: AuditLogEntry) => {
-    return log.details && 
-           typeof log.details === 'object' && 
-           (log.details.changedFiles !== undefined || 
-            log.details.diff !== undefined);
-  };
-
+  
   return (
-    <Card className={className}>
-      <CardHeader>
-        <CardTitle className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <FileCode className="h-5 w-5" />
-            Publishing Audit Logs
-          </div>
-          <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" onClick={fetchLogs}>
-              <RefreshCw className="h-4 w-4 mr-1" />
-              Refresh
-            </Button>
-            <Button variant="outline" size="sm" onClick={exportLogs}>
-              <Download className="h-4 w-4 mr-1" />
-              Export
-            </Button>
-          </div>
-        </CardTitle>
+    <Card className="w-full">
+      <CardHeader className="flex flex-row items-center justify-between pb-2">
+        <CardTitle className="text-xl">Publication Audit Logs</CardTitle>
+        <div className="flex space-x-2">
+          <Button variant="outline" size="sm" onClick={refreshLogs}>
+            <RefreshCw className="h-4 w-4 mr-2" />
+            Refresh
+          </Button>
+          <Button variant="outline" size="sm" onClick={exportLogs}>
+            <Download className="h-4 w-4 mr-2" />
+            Export
+          </Button>
+        </div>
       </CardHeader>
       <CardContent>
-        <div className="space-y-4">
-          <div className="flex flex-col md:flex-row gap-4">
-            <div className="flex-1">
-              <div className="relative">
-                <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Search publish logs..."
-                  className="pl-8"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-              </div>
-            </div>
-            <div className="flex gap-2">
-              <div className="w-32">
-                <Select
-                  value={statusFilter}
-                  onValueChange={(value) => setStatusFilter(value as "all" | "success" | "failure")}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Status</SelectItem>
-                    <SelectItem value="success">Success</SelectItem>
-                    <SelectItem value="failure">Failure</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="w-32">
-                <Select
-                  value={timeRange.toString()}
-                  onValueChange={(value) => setTimeRange(parseInt(value))}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Time range" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="7">Last week</SelectItem>
-                    <SelectItem value="30">Last month</SelectItem>
-                    <SelectItem value="90">Last 3 months</SelectItem>
-                    <SelectItem value="180">Last 6 months</SelectItem>
-                    <SelectItem value="365">Last year</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
+        <div className="mb-4">
+          <div className="relative">
+            <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search audit logs..."
+              className="pl-8"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
           </div>
-
-          <div className="text-sm text-muted-foreground">
-            {filteredLogs.length} {filteredLogs.length === 1 ? 'publish action' : 'publish actions'} found
+        </div>
+        
+        <div className="rounded-md border">
+          <div className="overflow-auto max-h-[400px]">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b bg-muted/50">
+                  <th className="h-10 px-2 text-left align-middle font-medium">Time</th>
+                  <th className="h-10 px-2 text-left align-middle font-medium">User</th>
+                  <th className="h-10 px-2 text-left align-middle font-medium">Event</th>
+                  <th className="h-10 px-2 text-left align-middle font-medium">Status</th>
+                  <th className="h-10 px-2 text-left align-middle font-medium">Details</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredLogs.length > 0 ? (
+                  filteredLogs.map((log) => (
+                    <tr key={log.id} className="border-b transition-colors hover:bg-muted/50">
+                      <td className="p-2 align-middle text-sm">
+                        {new Date(log.timestamp).toLocaleString()}
+                      </td>
+                      <td className="p-2 align-middle">
+                        <div className="font-medium text-sm">{log.userId}</div>
+                        {log.metadata?.userName && (
+                          <div className="text-xs text-muted-foreground">{log.metadata.userName}</div>
+                        )}
+                        {log.metadata?.userRole && (
+                          <div className="text-xs text-muted-foreground">Role: {log.metadata.userRole}</div>
+                        )}
+                        {log.metadata?.ipAddress && (
+                          <div className="text-xs text-muted-foreground">IP: {log.metadata.ipAddress}</div>
+                        )}
+                      </td>
+                      <td className="p-2 align-middle">
+                        <div className="font-medium text-sm">
+                          {log.eventType.replace(/_/g, ' ')}
+                        </div>
+                        {log.metadata?.resourceId && (
+                          <div className="text-xs text-muted-foreground">
+                            Resource: {log.metadata.resourceId}
+                          </div>
+                        )}
+                      </td>
+                      <td className="p-2 align-middle">
+                        <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                          log.status === 'success'
+                            ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'
+                            : 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300'
+                        }`}>
+                          {log.status}
+                        </span>
+                      </td>
+                      <td className="p-2 align-middle text-sm">
+                        {log.metadata?.details && (
+                          <div>
+                            {log.metadata.details.action && (
+                              <div className="font-medium">{log.metadata.details.action}</div>
+                            )}
+                            {log.metadata.details.result && (
+                              <div className={`text-xs ${
+                                log.metadata.details.result === 'success'
+                                  ? 'text-green-600 dark:text-green-400'
+                                  : 'text-red-600 dark:text-red-400'
+                              }`}>
+                                Result: {log.metadata.details.result}
+                              </div>
+                            )}
+                            {log.metadata.reason && (
+                              <div className="text-xs text-red-600 mt-1">
+                                Reason: {log.metadata.reason}
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={5} className="h-24 text-center">
+                      No matching audit logs found.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
           </div>
-
-          <ScrollArea className="h-[500px] rounded border">
-            {filteredLogs.length > 0 ? (
-              <div className="space-y-2 p-4">
-                {filteredLogs.map((log) => (
-                  <div
-                    key={log.id}
-                    className={`p-3 rounded-md border ${getStatusClass(log.status)}`}
-                  >
-                    <div className="flex items-start gap-2">
-                      <FileCode className="h-4 w-4 text-blue-500 mt-1" />
-                      <div className="flex-1">
-                        <div className="flex justify-between">
-                          <span className="font-medium">
-                            Publish Action
-                            {log.resourceType && ` - ${log.resourceType}`}
-                          </span>
-                          <div className="flex items-center gap-2">
-                            <span className={`text-xs px-2 py-1 rounded-full ${
-                              log.status === 'success' ? 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-200' : 
-                              'bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-200'
-                            }`}>
-                              {log.status}
-                            </span>
-                            <span className="text-xs text-muted-foreground">
-                              {format(new Date(log.timestamp), 'MMM d, yyyy HH:mm:ss')}
-                            </span>
-                          </div>
-                        </div>
-                        
-                        <div className="text-xs text-muted-foreground mt-1 flex gap-4">
-                          <div className="flex items-center gap-1">
-                            <User2 className="h-3 w-3" />
-                            <span>User: {log.userName || log.userId}</span>
-                          </div>
-                          {log.userRole && <span>Role: {log.userRole}</span>}
-                          {log.ipAddress && <span>IP: {log.ipAddress}</span>}
-                        </div>
-                        
-                        {log.resourceId && (
-                          <div className="text-xs text-muted-foreground mt-1">
-                            Resource ID: {log.resourceId}
-                          </div>
-                        )}
-                        
-                        {has2FADetails(log) && (
-                          <div className="mt-1 text-xs font-medium text-blue-600 dark:text-blue-400">
-                            2FA Verification: {log.details?.twoFactorVerified ? 'Confirmed' : 'Not Verified'}
-                            {log.details?.authMethod && ` (Method: ${log.details.authMethod})`}
-                          </div>
-                        )}
-                        
-                        {log.reason && (
-                          <div className="mt-1 text-xs font-medium text-red-600 dark:text-red-400">
-                            Reason: {log.reason}
-                          </div>
-                        )}
-                        
-                        {hasCodeChanges(log) && (
-                          <div className="mt-2 text-sm">
-                            <div className="font-medium text-xs mb-1">Code Changes:</div>
-                            <div className="bg-background/50 p-2 rounded text-xs">
-                              {log.details?.changedFiles && (
-                                <div className="mb-2">
-                                  <span className="font-medium">Changed Files: </span>
-                                  {Array.isArray(log.details.changedFiles) 
-                                    ? log.details.changedFiles.join(', ')
-                                    : log.details.changedFiles}
-                                </div>
-                              )}
-                              {log.details?.diff && (
-                                <details>
-                                  <summary className="cursor-pointer hover:text-blue-500 transition-colors">
-                                    View Code Diff
-                                  </summary>
-                                  <pre className="mt-2 overflow-x-auto text-xs whitespace-pre-wrap">
-                                    {typeof log.details.diff === 'object' 
-                                      ? JSON.stringify(log.details.diff, null, 2)
-                                      : log.details.diff}
-                                  </pre>
-                                </details>
-                              )}
-                            </div>
-                          </div>
-                        )}
-                        
-                        {log.details && !hasCodeChanges(log) && !has2FADetails(log) && (
-                          <div className="mt-2 text-sm">
-                            <div className="font-medium text-xs mb-1">Details:</div>
-                            <pre className="bg-background/50 p-2 rounded text-xs overflow-x-auto">
-                              {typeof log.details === 'object' 
-                                ? JSON.stringify(log.details, null, 2)
-                                : log.details}
-                            </pre>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="h-full flex items-center justify-center p-4 text-muted-foreground">
-                No publish audit logs found for the selected filters
-              </div>
-            )}
-          </ScrollArea>
         </div>
       </CardContent>
     </Card>
   );
-};
+}

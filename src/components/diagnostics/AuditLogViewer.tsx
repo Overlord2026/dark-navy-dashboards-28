@@ -33,7 +33,7 @@ export function AuditLogViewer() {
     const filtered = logs.filter(log => 
       log.userId.toLowerCase().includes(term) ||
       log.eventType.toLowerCase().includes(term) ||
-      JSON.stringify(log.metadata).toLowerCase().includes(term)
+      JSON.stringify(log.metadata || {}).toLowerCase().includes(term)
     );
     
     setFilteredLogs(filtered);
@@ -132,7 +132,7 @@ export function AuditLogViewer() {
                       <span className={`px-2 py-0.5 text-xs rounded-full ${getEventTypeColor(log.eventType)}`}>
                         {log.eventType.replace('_', ' ')}
                       </span>
-                      {getResultBadge(log.result)}
+                      {getResultBadge(log.status || log.result || 'success')}
                     </div>
                   </div>
                   <div className="flex items-start justify-between">
@@ -155,7 +155,7 @@ export function AuditLogViewer() {
                       <p className="text-xs">
                         {log.metadata.details.action}
                       </p>
-                      {log.result === 'failure' && log.metadata.reason && (
+                      {log.status === 'failure' && log.metadata.reason && (
                         <p className="text-xs text-red-500 mt-1">
                           Reason: {log.metadata.reason}
                         </p>

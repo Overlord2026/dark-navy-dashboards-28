@@ -10,6 +10,7 @@ export interface AuditLogEntry {
   eventType: AuditEventType;
   timestamp: Date;
   status: 'success' | 'failure';
+  result: 'success' | 'failure'; // Adding this for backward compatibility
   userName?: string;
   userRole?: string;
   ipAddress?: string;
@@ -17,6 +18,22 @@ export interface AuditLogEntry {
   resourceType?: string;
   details?: Record<string, any>;
   reason?: string;
+  metadata?: {
+    userName?: string;
+    userRole?: string;
+    ipAddress?: string;
+    resourceId?: string;
+    resourceType?: string;
+    details?: {
+      action?: string;
+      result?: string;
+      testsConducted?: string;
+      [key: string]: any;
+    };
+    reason?: string;
+    [key: string]: any;
+  };
+  action?: string;
 }
 
 class AuditLogService {
@@ -42,7 +59,9 @@ class AuditLogService {
       eventType,
       timestamp: new Date(),
       status,
-      ...additionalInfo
+      result: status, // For backward compatibility
+      ...additionalInfo,
+      metadata: additionalInfo // Also store in metadata for compatibility
     };
 
     this.logs.push(logEntry);
@@ -64,6 +83,13 @@ class AuditLogService {
         });
       })
       .sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
+  }
+
+  // Add getRecentEntries method
+  getRecentEntries(limit: number = 100): AuditLogEntry[] {
+    return [...this.logs]
+      .sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime())
+      .slice(0, limit);
   }
 }
 
