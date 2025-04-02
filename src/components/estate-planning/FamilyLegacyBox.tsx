@@ -6,7 +6,7 @@ import { DocumentChecklist } from "./DocumentChecklist";
 import { UploadedDocuments } from "./UploadedDocuments";
 import { SharedDocuments } from "./SharedDocuments";
 import { ResourcesCard } from "./ResourcesCard";
-import { DocumentDialogs } from "./DocumentDialogs";
+import { UploadDocumentDialog, ShareDocumentDialog, TaxReturnUploadDialog } from "@/components/estate-planning/DocumentDialogs";
 import { CompletionProgress } from "./CompletionProgress";
 import { toast } from "sonner";
 
@@ -50,6 +50,15 @@ export const FamilyLegacyBox: React.FC = () => {
       sharedWith: ["Sarah Johnson (Financial Advisor)"],
     },
   ]);
+
+  // Sample shared documents (filtered from the main documents array)
+  const sharedDocuments = documents.filter(doc => doc.sharedWith && doc.sharedWith.length > 0).map(doc => ({
+    id: doc.id,
+    name: doc.name,
+    sharedWith: doc.sharedWith || [],
+    date: doc.date,
+    status: "active"
+  }));
 
   const handleUploadDocument = (documentType: string) => {
     setSelectedDocument(documentType);
@@ -160,7 +169,10 @@ export const FamilyLegacyBox: React.FC = () => {
                 />
               </TabsContent>
               <TabsContent value="shared">
-                <SharedDocuments documents={documents} onViewDocument={handleViewDocument} />
+                <SharedDocuments
+                  sharedDocuments={sharedDocuments}
+                  onViewDocument={handleViewDocument}
+                />
               </TabsContent>
             </Tabs>
           </CardContent>
@@ -171,17 +183,21 @@ export const FamilyLegacyBox: React.FC = () => {
       
       <ResourcesCard />
       
-      <DocumentDialogs
-        uploadDialogOpen={uploadDialogOpen}
-        shareDialogOpen={shareDialogOpen}
-        viewDialogOpen={viewDialogOpen}
-        selectedDocument={selectedDocument}
-        selectedDocumentDetails={selectedDocumentDetails}
-        onUploadDialogClose={() => setUploadDialogOpen(false)}
-        onShareDialogClose={() => setShareDialogOpen(false)}
-        onViewDialogClose={() => setViewDialogOpen(false)}
-        onDocumentUpload={handleDocumentUpload}
-        onDocumentShare={handleDocumentShare}
+      {/* Dialogs */}
+      <UploadDocumentDialog 
+        open={uploadDialogOpen} 
+        onClose={() => setUploadDialogOpen(false)} 
+      />
+      
+      <ShareDocumentDialog 
+        open={shareDialogOpen} 
+        onClose={() => setShareDialogOpen(false)} 
+        documentId={selectedDocument || ""} 
+      />
+      
+      <TaxReturnUploadDialog 
+        open={false} 
+        onClose={() => {}} 
       />
     </div>
   );
