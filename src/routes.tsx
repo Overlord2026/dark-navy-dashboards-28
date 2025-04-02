@@ -30,7 +30,7 @@ import AdvisorOnboarding from "./pages/AdvisorOnboarding";
 import AdvisorFeedback from "./pages/AdvisorFeedback";
 import AdvisorModuleMarketplace from "./pages/AdvisorModuleMarketplace";
 import ProfessionalSignup from "./pages/ProfessionalSignup";
-import SubscriptionPlans from "./components/subscription/SubscriptionPlans";
+import { SubscriptionPlans } from "./components/subscription/SubscriptionPlans";
 import Subscription from "./pages/Subscription";
 import ViewAllOfferings from "./pages/ViewAllOfferings";
 import AdminSubscription from "./pages/AdminSubscription";
