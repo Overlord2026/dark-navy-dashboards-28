@@ -47,6 +47,7 @@ export default function LegacyVault() {
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("documents");
   
+  // This data is only for the LegacyBox tab, not the main documents tab
   const legacyBoxDocuments: DocumentItem[] = [
     {
       id: "1",
@@ -95,6 +96,8 @@ export default function LegacyVault() {
   ];
   
   useEffect(() => {
+    // Initialize with empty documents after a short delay
+    // This ensures no documents appear incorrectly in the Important Documents tab
     setTimeout(() => {
       setDocuments([]);
       setIsLoading(false);
@@ -109,7 +112,8 @@ export default function LegacyVault() {
     const newDocument: DocumentItem = {
       id: Math.random().toString(36).substring(2, 9),
       name: customName || file.name,
-      type: "document",
+      type: file.type.includes("pdf") ? "pdf" : 
+            file.type.includes("image") ? "image" : "document",
       category: activeCategory === "all" ? "general" : activeCategory,
       size: file.size,
       uploadedBy: "Tom Brady",
@@ -165,10 +169,6 @@ export default function LegacyVault() {
   const handleDeleteDocument = (document: DocumentItem) => {
     setDocuments(prev => prev.filter(doc => doc.id !== document.id));
     toast.success("Document deleted successfully");
-  };
-
-  const handleExternalLink = () => {
-    window.open("https://www.trustandwill.com", "_blank");
   };
 
   return (
