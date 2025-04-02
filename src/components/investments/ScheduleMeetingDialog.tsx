@@ -16,9 +16,13 @@ import { auditLog } from "@/services/auditLog/auditLogService";
 
 interface ScheduleMeetingDialogProps {
   assetName: string;
+  consultationType?: "investment" | "estate" | "tax" | "general";
 }
 
-export const ScheduleMeetingDialog: React.FC<ScheduleMeetingDialogProps> = ({ assetName }) => {
+export const ScheduleMeetingDialog: React.FC<ScheduleMeetingDialogProps> = ({ 
+  assetName,
+  consultationType = "investment" 
+}) => {
   const [isOpen, setIsOpen] = React.useState(false);
 
   const handleSchedule = () => {
@@ -34,7 +38,8 @@ export const ScheduleMeetingDialog: React.FC<ScheduleMeetingDialogProps> = ({ as
         resourceId: assetName,
         details: {
           action: "schedule_consultation",
-          assetName
+          assetName,
+          consultationType
         }
       }
     );
@@ -55,6 +60,16 @@ export const ScheduleMeetingDialog: React.FC<ScheduleMeetingDialogProps> = ({ as
     setIsOpen(open);
   };
 
+  const getConsultationTypeLabel = () => {
+    switch (consultationType) {
+      case "investment": return "investment";
+      case "estate": return "estate planning";
+      case "tax": return "tax strategy";
+      case "general": return "financial planning";
+      default: return "investment";
+    }
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
@@ -72,7 +87,7 @@ export const ScheduleMeetingDialog: React.FC<ScheduleMeetingDialogProps> = ({ as
         <div className="py-4">
           <div className="space-y-4">
             <div className="bg-muted rounded-lg p-4">
-              <h4 className="font-medium mb-2">Benefits of a Consultation:</h4>
+              <h4 className="font-medium mb-2">Benefits of a {getConsultationTypeLabel()} consultation:</h4>
               <ul className="list-disc pl-5 space-y-1 text-sm">
                 <li>Get personalized advice tailored to your financial situation</li>
                 <li>Understand the risks and potential returns of this investment</li>

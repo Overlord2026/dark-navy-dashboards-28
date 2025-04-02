@@ -30,7 +30,7 @@ export const InterestedButton: React.FC<InterestedButtonProps> = ({ assetName, o
       size="icon"
       disabled={isInterested}
       onClick={handleInterested}
-      className={isInterested ? "bg-red-500 hover:bg-red-600" : ""}
+      className={isInterested ? "bg-red-500 hover:bg-red-600 border-red-500" : ""}
     >
       <Heart className={`h-4 w-4 ${isInterested ? "fill-white" : ""}`} />
     </Button>
