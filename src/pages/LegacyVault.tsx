@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { CategoryList } from "@/components/documents/CategoryList";
@@ -47,7 +46,7 @@ export default function LegacyVault() {
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("documents");
   
-  const mockDocuments: DocumentItem[] = [
+  const legacyBoxDocuments: DocumentItem[] = [
     {
       id: "1",
       name: "Estate Plan",
@@ -65,7 +64,7 @@ export default function LegacyVault() {
     {
       id: "3",
       name: "Living Trust.pdf",
-      type: "document",
+      type: "pdf",
       category: "estate-planning",
       size: 1200000,
       uploadedBy: "Tom Brady",
@@ -75,7 +74,7 @@ export default function LegacyVault() {
     {
       id: "4",
       name: "Power of Attorney.pdf",
-      type: "document",
+      type: "pdf",
       category: "estate-planning",
       size: 850000,
       uploadedBy: "Tom Brady",
@@ -85,7 +84,7 @@ export default function LegacyVault() {
     {
       id: "5",
       name: "Life Insurance Policy.pdf",
-      type: "document",
+      type: "pdf",
       category: "insurance",
       size: 1500000,
       uploadedBy: "Tom Brady",
@@ -96,7 +95,7 @@ export default function LegacyVault() {
   
   useEffect(() => {
     setTimeout(() => {
-      setDocuments(mockDocuments);
+      setDocuments([]);
       setIsLoading(false);
     }, 1000);
   }, []);
