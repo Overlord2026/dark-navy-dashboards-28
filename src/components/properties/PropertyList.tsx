@@ -58,13 +58,13 @@ export const PropertyList: React.FC<PropertyListProps> = ({
       case "primary":
         return "Primary Residence";
       case "vacation":
-        return "Vacation Property";
+        return "Vacation Properties";
       case "rental":
-        return "Rental Property";
+        return "Rental Properties";
       case "business":
-        return "Business Property";
+        return "Business Properties";
       default:
-        return "Property";
+        return "Properties";
     }
   };
 
@@ -133,7 +133,7 @@ export const PropertyList: React.FC<PropertyListProps> = ({
             <div key={type} className="space-y-4">
               <h2 className="text-xl font-semibold capitalize flex items-center">
                 {getPropertyTypeIcon(type)}
-                <span className="ml-2">{getPropertyTypeName(type)}s</span>
+                <span className="ml-2">{getPropertyTypeName(type)}</span>
                 <span className="text-sm text-gray-400 ml-2">({typeProperties.length})</span>
               </h2>
               
