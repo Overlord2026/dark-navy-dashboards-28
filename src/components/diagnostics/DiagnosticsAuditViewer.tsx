@@ -1,250 +1,105 @@
 
-import React, { useState, useEffect } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useState, useEffect } from "react";
+import { Card, CardContent } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
+import { RefreshCw, Zap, Calendar } from "lucide-react";
 import { auditLog, AuditLogEntry } from "@/services/auditLog/auditLogService";
-import { format } from "date-fns";
-import { AlertCircle, Download, Filter, RefreshCw, Search, Activity, ShieldCheck } from "lucide-react";
 
-export const DiagnosticsAuditViewer = () => {
+export function DiagnosticsAuditViewer() {
   const [logs, setLogs] = useState<AuditLogEntry[]>([]);
-  const [filteredLogs, setFilteredLogs] = useState<AuditLogEntry[]>([]);
-  const [statusFilter, setStatusFilter] = useState<"all" | "success" | "failure">("all");
-  const [searchTerm, setSearchTerm] = useState("");
-  const [timeRange, setTimeRange] = useState<number>(7); // days
   
-  const fetchLogs = () => {
-    const startDate = new Date();
-    startDate.setDate(startDate.getDate() - timeRange);
-    
-    // Get diagnostics specific logs
-    const fetchedLogs = auditLog.getLogs({
-      startDate: timeRange ? startDate : undefined,
-      status: statusFilter !== "all" ? statusFilter : undefined
-    });
-    
-    // Filter for diagnostics-related actions
-    const diagnosticsLogs = fetchedLogs.filter(log => 
-      (log.resourceType === 'diagnostics' || 
-      log.resourceType === 'systemDiagnostics' || 
-      log.resourceType === 'quickDiagnostics' || 
-      log.resourceType === 'developerAccess' ||
-      (log.details && typeof log.details === 'object' && 
-        log.details.action && (
-          log.details.action.includes('diagnostic') || 
-          log.details.action.includes('system health')
-        )
-      ))
+  const refreshLogs = () => {
+    // Get all diagnostics-related logs
+    const allLogs = auditLog.getRecentEntries(200);
+    const diagnosticsLogs = allLogs.filter(log => 
+      log.eventType === 'diagnostics_access' || 
+      (log.eventType === 'settings_change' && 
+       log.metadata?.resourceType === 'diagnostics')
     );
-    
     setLogs(diagnosticsLogs);
-    filterLogs(diagnosticsLogs, searchTerm);
   };
-
+  
   useEffect(() => {
-    fetchLogs();
-    // Refresh logs every 60 seconds
-    const interval = setInterval(fetchLogs, 60000);
+    refreshLogs();
+    // Set up an interval to refresh logs every 10 seconds
+    const interval = setInterval(refreshLogs, 10000);
     return () => clearInterval(interval);
-  }, [timeRange, statusFilter]);
-
-  useEffect(() => {
-    filterLogs(logs, searchTerm);
-  }, [searchTerm]);
-
-  const filterLogs = (logsToFilter: AuditLogEntry[], term: string) => {
-    if (!term) {
-      setFilteredLogs(logsToFilter);
-      return;
-    }
-    
-    const filtered = logsToFilter.filter(log => 
-      (log.userId && log.userId.toLowerCase().includes(term.toLowerCase())) ||
-      (log.userName && log.userName.toLowerCase().includes(term.toLowerCase())) ||
-      (log.userRole && log.userRole.toLowerCase().includes(term.toLowerCase())) ||
-      (log.resourceId && log.resourceId.toLowerCase().includes(term.toLowerCase())) ||
-      (log.resourceType && log.resourceType.toLowerCase().includes(term.toLowerCase())) ||
-      (log.details && JSON.stringify(log.details).toLowerCase().includes(term.toLowerCase())) ||
-      (log.reason && log.reason.toLowerCase().includes(term.toLowerCase()))
-    );
-    
-    setFilteredLogs(filtered);
-  };
-
-  const getStatusClass = (status: 'success' | 'failure') => {
-    return status === 'success' 
-      ? 'bg-green-50 border-green-200 dark:bg-green-950/30 dark:border-green-800' 
-      : 'bg-red-50 border-red-200 dark:bg-red-950/30 dark:border-red-800';
-  };
-
-  const getActionIcon = (log: AuditLogEntry) => {
-    if (log.resourceType === 'developerAccess' || log.action === 'permission_change') {
-      return <ShieldCheck className="h-4 w-4 text-purple-500" />;
-    } else {
-      return <Activity className="h-4 w-4 text-blue-500" />;
-    }
-  };
-
-  const exportLogs = () => {
-    const logData = JSON.stringify(filteredLogs, null, 2);
-    const blob = new Blob([logData], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `diagnostics-audit-logs-${format(new Date(), 'yyyy-MM-dd-HH-mm')}.json`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  };
-
+  }, []);
+  
   return (
-    <Card className="h-full">
-      <CardHeader>
-        <CardTitle className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <AlertCircle className="h-5 w-5" />
-            Diagnostics Access Audit Logs
-          </div>
-          <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" onClick={fetchLogs}>
-              <RefreshCw className="h-4 w-4 mr-1" />
-              Refresh
-            </Button>
-            <Button variant="outline" size="sm" onClick={exportLogs}>
-              <Download className="h-4 w-4 mr-1" />
-              Export
-            </Button>
-          </div>
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-4">
-          <div className="flex flex-col md:flex-row gap-4">
-            <div className="flex-1">
-              <div className="relative">
-                <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Search diagnostics logs..."
-                  className="pl-8"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-              </div>
-            </div>
-            <div className="flex gap-2">
-              <div className="w-32">
-                <Select
-                  value={statusFilter}
-                  onValueChange={(value) => setStatusFilter(value as "all" | "success" | "failure")}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Status</SelectItem>
-                    <SelectItem value="success">Success</SelectItem>
-                    <SelectItem value="failure">Failure</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="w-32">
-                <Select
-                  value={timeRange.toString()}
-                  onValueChange={(value) => setTimeRange(parseInt(value))}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Time range" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="1">Last 24h</SelectItem>
-                    <SelectItem value="7">Last week</SelectItem>
-                    <SelectItem value="30">Last month</SelectItem>
-                    <SelectItem value="90">Last 3 months</SelectItem>
-                    <SelectItem value="0">All logs</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-          </div>
-
-          <div className="text-sm text-muted-foreground">
-            {filteredLogs.length} {filteredLogs.length === 1 ? 'entry' : 'entries'} found
-          </div>
-
-          <ScrollArea className="h-[500px] rounded border">
-            {filteredLogs.length > 0 ? (
-              <div className="space-y-2 p-4">
-                {filteredLogs.map((log) => (
-                  <div
-                    key={log.id}
-                    className={`p-3 rounded-md border ${getStatusClass(log.status)}`}
-                  >
-                    <div className="flex items-start gap-2">
-                      {getActionIcon(log)}
-                      <div className="flex-1">
-                        <div className="flex justify-between">
-                          <span className="font-medium">
-                            {log.resourceType === 'developerAccess' ? 'Developer Permission Change' : 'Diagnostics Access'}
-                            {log.resourceType && log.resourceType !== 'developerAccess' && ` - ${log.resourceType}`}
-                          </span>
-                          <div className="flex items-center gap-2">
-                            <span className={`text-xs px-2 py-1 rounded-full ${
-                              log.status === 'success' ? 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-200' : 
-                              'bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-200'
-                            }`}>
-                              {log.status}
-                            </span>
-                            <span className="text-xs text-muted-foreground">
-                              {format(new Date(log.timestamp), 'MMM d, yyyy HH:mm:ss')}
-                            </span>
-                          </div>
+    <Card>
+      <CardContent className="pt-6">
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-lg font-medium">Diagnostics Activity</h3>
+          <Button variant="outline" size="sm" onClick={refreshLogs} className="gap-1">
+            <RefreshCw className="h-4 w-4" />
+            <span>Refresh</span>
+          </Button>
+        </div>
+        
+        <ScrollArea className="h-[400px] rounded-md border">
+          {logs.length > 0 ? (
+            <div className="p-4 space-y-4">
+              {logs.map((log) => (
+                <div key={log.id} className="border-b pb-4 last:border-0">
+                  <div className="flex items-start">
+                    <div className={`p-2 rounded-full mr-3 ${
+                      log.metadata?.details?.action?.includes('Run')
+                        ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/20'
+                        : 'bg-green-100 text-green-800 dark:bg-green-900/20'
+                    }`}>
+                      {log.metadata?.details?.action?.includes('Run') ? (
+                        <Zap className="h-4 w-4" />
+                      ) : (
+                        <Calendar className="h-4 w-4" />
+                      )}
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <p className="font-medium">
+                            {log.metadata?.details?.action || "Diagnostics activity"}
+                          </p>
+                          <p className="text-sm text-muted-foreground">
+                            By {log.metadata?.userName || log.userId}
+                            {log.metadata?.userRole ? ` (${log.metadata.userRole})` : ''}
+                          </p>
                         </div>
-                        
-                        <div className="text-xs text-muted-foreground mt-1 flex gap-4">
-                          <span>User: {log.userName || log.userId}</span>
-                          {log.userRole && <span>Role: {log.userRole}</span>}
-                          {log.ipAddress && <span>IP: {log.ipAddress}</span>}
-                        </div>
-                        
-                        {log.resourceId && (
-                          <div className="text-xs text-muted-foreground mt-1">
-                            {log.resourceType === 'developerAccess' ? 'Developer ID' : 'Resource ID'}: {log.resourceId}
-                          </div>
-                        )}
-                        
-                        {log.reason && (
-                          <div className="mt-1 text-xs font-medium text-red-600 dark:text-red-400">
-                            Reason: {log.reason}
-                          </div>
-                        )}
-                        
-                        {log.details && (
-                          <div className="mt-2 text-sm">
-                            <div className="font-medium text-xs mb-1">Details:</div>
-                            <pre className="bg-background/50 p-2 rounded text-xs overflow-x-auto">
-                              {typeof log.details === 'object' 
-                                ? JSON.stringify(log.details, null, 2)
-                                : log.details}
-                            </pre>
-                          </div>
-                        )}
+                        <span className="text-xs text-muted-foreground">
+                          {new Date(log.timestamp).toLocaleString()}
+                        </span>
                       </div>
+                      
+                      {log.metadata?.details?.result && (
+                        <div className={`mt-2 text-sm ${
+                          log.metadata.details.result === 'success'
+                            ? 'text-green-600 dark:text-green-400'
+                            : log.metadata.details.result === 'warning'
+                              ? 'text-yellow-600 dark:text-yellow-400'
+                              : 'text-red-600 dark:text-red-400'
+                        }`}>
+                          Result: {log.metadata.details.result}
+                        </div>
+                      )}
+                      
+                      {log.metadata?.details?.testsConducted && (
+                        <p className="text-sm mt-1">
+                          Tests conducted: {log.metadata.details.testsConducted}
+                        </p>
+                      )}
                     </div>
                   </div>
-                ))}
-              </div>
-            ) : (
-              <div className="h-full flex items-center justify-center p-4 text-muted-foreground">
-                No diagnostics audit logs found for the selected filters
-              </div>
-            )}
-          </ScrollArea>
-        </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="flex items-center justify-center h-full">
+              <p className="text-muted-foreground">No diagnostics audit logs to display</p>
+            </div>
+          )}
+        </ScrollArea>
       </CardContent>
     </Card>
   );
-};
+}

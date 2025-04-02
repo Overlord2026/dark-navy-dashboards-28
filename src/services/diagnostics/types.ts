@@ -1,17 +1,10 @@
 
-// Types for diagnostic results
-export type DiagnosticTestStatus = 'success' | 'warning' | 'error';
+export type DiagnosticTestStatus = "success" | "warning" | "error" | "unknown";
 
 export interface DiagnosticResult {
   status: DiagnosticTestStatus;
   message: string;
   details?: string;
-}
-
-export interface DiagnosticTestResult {
-  name?: string;
-  status: DiagnosticTestStatus;
-  message: string;
 }
 
 export interface NavigationTestResult {
@@ -34,19 +27,17 @@ export interface IconTestResult {
   message: string;
 }
 
-export interface FormFieldTestResult {
-  fieldName: string;
-  fieldType: string;
-  status: DiagnosticTestStatus;
-  message: string;
-}
-
 export interface FormValidationTestResult {
   formName: string;
   location: string;
   status: DiagnosticTestStatus;
   message: string;
-  fields?: FormFieldTestResult[];
+  fields?: {
+    fieldName: string;
+    fieldType: string;
+    status: DiagnosticTestStatus;
+    message: string;
+  }[];
 }
 
 export interface ApiIntegrationTestResult {
@@ -55,71 +46,34 @@ export interface ApiIntegrationTestResult {
   responseTime: number;
   status: DiagnosticTestStatus;
   message: string;
-  authStatus?: 'valid' | 'expired' | 'invalid' | 'not_tested';
+  authStatus?: string;
 }
 
 export interface RoleSimulationTestResult {
   role: string;
   module: string;
-  accessStatus: 'granted' | 'denied' | 'error';
+  accessStatus: string;
   status: DiagnosticTestStatus;
   message: string;
   expectedAccess: boolean;
 }
 
-export interface PerformanceTestResult extends DiagnosticTestResult {
-  responseTime?: number; // in ms
-  memoryUsage?: number; // in MB
-  cpuUsage?: number; // percentage
-  concurrentUsers?: number;
-  endpoint?: string;
-}
-
-export interface SecurityTestResult extends DiagnosticTestResult {
-  severity: 'low' | 'medium' | 'high' | 'critical';
-  category: 'authentication' | 'data-protection' | 'authorization' | 'file-security' | 'input-validation';
-  remediation?: string;
-}
-
-export interface SystemHealthReport {
-  navigation: DiagnosticResult;
-  forms: DiagnosticResult;
-  database: DiagnosticResult;
-  api: DiagnosticResult;
-  authentication: DiagnosticResult;
-  navigationTests: NavigationTestResult[];
-  permissionsTests: PermissionsTestResult[];
-  iconTests: IconTestResult[];
-  formValidationTests: FormValidationTestResult[];
-  apiIntegrationTests: ApiIntegrationTestResult[];
-  roleSimulationTests: RoleSimulationTestResult[];
-  performanceTests: PerformanceTestResult[];
-  securityTests: SecurityTestResult[];
-  overall: DiagnosticTestStatus;
-  timestamp: string;
-}
-
-// Logging system types
-export type LogLevel = 'info' | 'warning' | 'error' | 'critical';
-
-export interface LogEntry {
-  id: string;
-  timestamp: string;
-  level: LogLevel;
+export interface PerformanceTestResult {
+  name: string;
+  status: DiagnosticTestStatus;
   message: string;
-  details?: any;
-  source?: string;
-  stackTrace?: string;
+  responseTime: number;
+  memoryUsage: number;
+  cpuUsage: number;
+  concurrentUsers: number;
+  endpoint: string;
 }
 
-export interface LogConfig {
-  minLevel: LogLevel;
-  retentionPeriod: number; // in days
-  maxEntries?: number;
-  enableRealTimeAlerts: boolean;
-  alertThreshold: {
-    critical: number; // Number of critical errors to trigger alert
-    error: number;    // Number of errors to trigger alert
-    timeWindow: number; // Time window in minutes
-  };
+export interface SecurityTestResult {
+  name: string;
+  category: string;
+  status: DiagnosticTestStatus;
+  message: string;
+  severity: string;
+  remediation?: string;
 }
