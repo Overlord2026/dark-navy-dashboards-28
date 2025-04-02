@@ -1,34 +1,19 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Bug } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Activity, Navigation } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { useUser } from "@/context/UserContext";
-import { toast } from "sonner";
-import { auditLog } from "@/services/auditLog/auditLogService";
+import { QuickNavigationCheck } from "./QuickNavigationCheck";
 
 export const DiagnosticsAccessButton = () => {
+  const navigate = useNavigate();
   const { userProfile } = useUser();
   const userRole = userProfile?.role || "client";
   const isAdmin = userRole === "admin" || userRole === "system_administrator";
-  const userId = userProfile?.id || "unknown";
-  const userName = userProfile?.displayName || "Unknown User";
 
-  const handleNavigateToDiagnostics = () => {
-    // Log diagnostics access
-    auditLog.log(
-      userId,
-      "diagnostics_access" as any, // Using as any to bypass type check temporarily
-      "success",
-      {
-        userName: userName,
-        userRole: userRole,
-        resourceType: "systemDiagnostics",
-        details: { action: "Navigate to diagnostics page" }
-      }
-    );
-    
-    toast.success("Accessing system diagnostics");
+  const handleOpenDiagnostics = () => {
+    navigate("/admin/system-diagnostics");
   };
 
   if (!isAdmin) {
@@ -36,17 +21,18 @@ export const DiagnosticsAccessButton = () => {
   }
 
   return (
-    <Button 
-      variant="ghost" 
-      size="lg"
-      className="gap-2 border border-gray-600"
-      asChild
-      onClick={handleNavigateToDiagnostics}
-    >
-      <Link to="/system-diagnostics">
-        <Bug className="h-5 w-5" />
-        System Diagnostics
-      </Link>
-    </Button>
+    <div className="flex gap-2">
+      <QuickNavigationCheck buttonText="Check Navigation" />
+      
+      <Button
+        variant="outline"
+        size="sm"
+        className="gap-2"
+        onClick={handleOpenDiagnostics}
+      >
+        <Activity className="h-4 w-4" />
+        Full Diagnostics
+      </Button>
+    </div>
   );
 };
