@@ -158,10 +158,13 @@ export function useSidebarState(navigationCategories: NavCategory[]) {
     setExpandedSubmenus(prev => {
       const newState = {...prev, [itemTitle]: !prev[itemTitle]};
       
-      // Log the state transition
+      // Enhanced logging for debugging submenu state transitions
       logger.debug(`Submenu "${itemTitle}" state transition`, 
-        { from: prev[itemTitle] ? "expanded" : "collapsed", 
-          to: newState[itemTitle] ? "expanded" : "collapsed" }, 
+        { 
+          from: prev[itemTitle] ? "expanded" : "collapsed", 
+          to: newState[itemTitle] ? "expanded" : "collapsed",
+          allSubmenus: JSON.stringify({...prev, [itemTitle]: !prev[itemTitle]})
+        }, 
         "SubmenuToggle");
       
       return newState;
@@ -183,6 +186,38 @@ export function useSidebarState(navigationCategories: NavCategory[]) {
     return { collapsed, expandedCategories, expandedSubmenus, forceUpdate };
   };
 
+  // Function to expand a specific submenu
+  const expandSubmenu = (itemTitle: string) => {
+    if (!expandedSubmenus[itemTitle]) {
+      logger.debug(`Manually expanding submenu "${itemTitle}"`, 
+        { currentState: "collapsed", newState: "expanded" }, "ExpandSubmenu");
+      
+      setExpandedSubmenus(prev => ({
+        ...prev,
+        [itemTitle]: true
+      }));
+      
+      // Force a rerender
+      setForceUpdate(prev => prev + 1);
+    }
+  };
+
+  // Function to collapse a specific submenu
+  const collapseSubmenu = (itemTitle: string) => {
+    if (expandedSubmenus[itemTitle]) {
+      logger.debug(`Manually collapsing submenu "${itemTitle}"`, 
+        { currentState: "expanded", newState: "collapsed" }, "CollapseSubmenu");
+      
+      setExpandedSubmenus(prev => ({
+        ...prev,
+        [itemTitle]: false
+      }));
+      
+      // Force a rerender
+      setForceUpdate(prev => prev + 1);
+    }
+  };
+
   return {
     collapsed,
     expandedCategories,
@@ -191,6 +226,8 @@ export function useSidebarState(navigationCategories: NavCategory[]) {
     toggleSidebar,
     toggleCategory,
     toggleSubmenu,
+    expandSubmenu,
+    collapseSubmenu,
     isActive,
     hasActiveChild,
     setCollapsed,

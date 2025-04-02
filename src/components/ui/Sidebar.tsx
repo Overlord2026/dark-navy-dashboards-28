@@ -62,6 +62,8 @@ export const Sidebar = () => {
     toggleSidebar, 
     toggleCategory, 
     toggleSubmenu, 
+    expandSubmenu,
+    collapseSubmenu,
     isActive,
     hasActiveChild,
     debugState,
@@ -89,6 +91,18 @@ export const Sidebar = () => {
         }
       });
     });
+
+    // Check for Banking and Collaboration menus specifically
+    const bankingItem = familyWealthNavItems.find(item => item.title === "Banking");
+    if (bankingItem) {
+      logger.debug("Banking menu state", {
+        hasSubmenu: !!bankingItem.submenu && bankingItem.submenu.length > 0,
+        submenuItems: bankingItem.submenu?.map(s => s.title).join(", "),
+        expanded: !!expandedSubmenus["Banking"],
+        href: bankingItem.href
+      }, "BankingMenuDebug");
+    }
+    
   }, [expandedSubmenus, expandedCategories, collapsed, forceUpdate, navigationCategories]);
 
   // Helper function to toggle a specific submenu
@@ -103,6 +117,16 @@ export const Sidebar = () => {
     }, "ManualSubmenuToggle");
     
     toggleSubmenu(submenuTitle, mockEvent);
+  };
+
+  // Force expand a specific submenu
+  const forceExpandSubmenu = (submenuTitle: string) => {
+    expandSubmenu(submenuTitle);
+  };
+
+  // Force collapse a specific submenu
+  const forceCollapseSubmenu = (submenuTitle: string) => {
+    collapseSubmenu(submenuTitle);
   };
 
   const advisorInfo = {
@@ -168,53 +192,71 @@ export const Sidebar = () => {
           <div className="px-3 mt-4 space-y-2">
             <h4 className="text-xs font-semibold px-2 text-gray-500">MENU DEBUG PANEL</h4>
             
-            {/* Banking submenu debug button */}
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => toggleSpecificSubmenu("Banking")}
-              className={cn(
-                "w-full text-xs", 
-                isLightTheme 
-                  ? "border-primary bg-[#E9E7D8] text-[#222222] hover:bg-[#DCD8C0]" 
-                  : "border-primary bg-black text-white hover:bg-sidebar-accent"
-              )}
-              data-menu-toggle="Banking"
-            >
-              {expandedSubmenus["Banking"] ? "Close" : "Open"} Banking Menu
-            </Button>
+            {/* Banking submenu debug buttons */}
+            <div className="flex gap-1">
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => toggleSpecificSubmenu("Banking")}
+                className={cn(
+                  "flex-1 text-xs", 
+                  isLightTheme 
+                    ? "border-primary bg-[#E9E7D8] text-[#222222] hover:bg-[#DCD8C0]" 
+                    : "border-primary bg-black text-white hover:bg-sidebar-accent"
+                )}
+                data-menu-toggle="Banking"
+              >
+                {expandedSubmenus["Banking"] ? "Close" : "Open"} Banking
+              </Button>
+              
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => forceExpandSubmenu("Banking")}
+                className={cn(
+                  "flex-1 text-xs", 
+                  isLightTheme 
+                    ? "border-green-500 bg-green-100 text-green-800 hover:bg-green-200" 
+                    : "border-green-500 bg-green-900/20 text-green-400 hover:bg-green-900/30"
+                )}
+                data-menu-expand="Banking"
+              >
+                Force Expand
+              </Button>
+            </div>
             
-            {/* Collaboration category debug button */}
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => toggleCategory("collaboration")}
-              className={cn(
-                "w-full text-xs", 
-                isLightTheme 
-                  ? "border-primary bg-[#E9E7D8] text-[#222222] hover:bg-[#DCD8C0]" 
-                  : "border-primary bg-black text-white hover:bg-sidebar-accent"
-              )}
-              data-category-toggle="collaboration"
-            >
-              {expandedCategories["collaboration"] ? "Close" : "Open"} Collaboration
-            </Button>
-            
-            {/* Force update button */}
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => setForceUpdate(prev => prev + 1)}
-              className={cn(
-                "w-full text-xs", 
-                isLightTheme 
-                  ? "border-primary bg-[#E9E7D8] text-[#222222] hover:bg-[#DCD8C0]" 
-                  : "border-primary bg-black text-white hover:bg-sidebar-accent"
-              )}
-              data-force-update="trigger"
-            >
-              Force Menu Update
-            </Button>
+            {/* Collaboration submenu debug buttons */}
+            <div className="flex gap-1">
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => toggleCategory("collaboration")}
+                className={cn(
+                  "flex-1 text-xs", 
+                  isLightTheme 
+                    ? "border-primary bg-[#E9E7D8] text-[#222222] hover:bg-[#DCD8C0]" 
+                    : "border-primary bg-black text-white hover:bg-sidebar-accent"
+                )}
+                data-category-toggle="collaboration"
+              >
+                {expandedCategories["collaboration"] ? "Close" : "Open"} Collab
+              </Button>
+              
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => setForceUpdate(prev => prev + 1)}
+                className={cn(
+                  "flex-1 text-xs", 
+                  isLightTheme 
+                    ? "border-blue-500 bg-blue-100 text-blue-800 hover:bg-blue-200" 
+                    : "border-blue-500 bg-blue-900/20 text-blue-400 hover:bg-blue-900/30"
+                )}
+                data-force-update="trigger"
+              >
+                Force Update
+              </Button>
+            </div>
             
             {/* State debug button */}
             <Button

@@ -33,8 +33,13 @@ export const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
   toggleSubmenu,
   hasActiveChild = () => false
 }) => {
+  // Track whether this component was rendered
+  const [componentRendered, setComponentRendered] = useState(false);
+  
   // Enhanced logging for debugging
   useEffect(() => {
+    setComponentRendered(true);
+    
     logger.debug(`SidebarNavCategory ${id} render`, {
       categoryId: id,
       isExpanded,
@@ -48,7 +53,8 @@ export const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
       logger.debug(`Banking item in category ${id}`, {
         hasSubmenu: !!bankingItem.submenu && bankingItem.submenu.length > 0,
         submenuItems: bankingItem.submenu?.map(s => s.title).join(", "),
-        expanded: !!expandedSubmenus["Banking"]
+        expanded: !!expandedSubmenus["Banking"],
+        categoryExpanded: isExpanded
       }, "BankingDebug");
     }
   }, [id, items, isExpanded, expandedSubmenus]);
@@ -85,6 +91,7 @@ export const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
       className="mb-4"
       data-sidebar-category={id}
       data-expanded={isExpanded ? "true" : "false"}
+      data-component-rendered={componentRendered ? "true" : "false"}
     >
       {/* Category Label */}
       {!collapsed && (
@@ -130,6 +137,7 @@ export const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
                 hasSubmenu,
                 submenuIsExpanded,
                 itemIsActive,
+                categoryId: id,
                 submenuItems: item.submenu?.map(i => i.title).join(', ')
               }, "SidebarMenuRender");
             }
@@ -142,6 +150,7 @@ export const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
                 data-has-submenu={hasSubmenu ? "true" : "false"}
                 data-active={itemIsActive ? "true" : "false"}
                 data-submenu-expanded={submenuIsExpanded ? "true" : "false"}
+                data-category-id={id}
               >
                 {hasSubmenu && toggleSubmenu ? (
                   <button
@@ -217,11 +226,15 @@ export const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
                       display: 'block',
                       opacity: 1,
                       maxHeight: '500px',
+                      width: 'calc(100% - 2rem)',
                       overflow: 'visible',
-                      position: 'relative'
+                      position: 'relative',
+                      paddingTop: '0.5rem',
+                      paddingBottom: '0.5rem'
                     }}
                     data-submenu-content={item.title}
                     data-expanded="true"
+                    data-submenu-visible="true"
                   >
                     {item.submenu?.map((subItem) => (
                       <Link
