@@ -7,6 +7,9 @@ import { ThemeProvider as NextThemesProvider } from "./components/ui/ThemeProvid
 import { ThemeProvider as CustomThemeProvider } from "./context/ThemeContext";
 import { NetWorthProvider } from "./context/NetWorthContext";
 import { SubscriptionProvider } from "./context/SubscriptionContext";
+import { DiagnosticsProvider } from "./context/DiagnosticsContext";
+import { DiagnosticsTrigger } from "./components/diagnostics/DiagnosticsTrigger";
+import { DiagnosticsSummary } from "./components/diagnostics/DiagnosticsSummary";
 
 function App() {
   return (
@@ -15,10 +18,14 @@ function App() {
         <UserProvider>
           <NetWorthProvider>
             <SubscriptionProvider>
-              <BrowserRouter>
-                <AppRoutes />
-                <Toaster position="top-right" />
-              </BrowserRouter>
+              <DiagnosticsProvider>
+                <BrowserRouter>
+                  <AppRoutes />
+                  <Toaster position="top-right" />
+                  <DiagnosticsTrigger />
+                  <DiagnosticsSummary />
+                </BrowserRouter>
+              </DiagnosticsProvider>
             </SubscriptionProvider>
           </NetWorthProvider>
         </UserProvider>

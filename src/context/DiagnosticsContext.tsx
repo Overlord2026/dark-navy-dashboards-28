@@ -1,0 +1,65 @@
+
+import React, { createContext, useContext, useState, useEffect } from 'react';
+
+type DiagnosticsContextType = {
+  isDiagnosticsModeEnabled: boolean;
+  toggleDiagnosticsMode: () => void;
+  isDevelopmentMode: boolean;
+};
+
+const DiagnosticsContext = createContext<DiagnosticsContextType | undefined>(undefined);
+
+export function DiagnosticsProvider({ children }: { children: React.ReactNode }) {
+  const [isDiagnosticsModeEnabled, setIsDiagnosticsModeEnabled] = useState(false);
+  const [isDevelopmentMode, setIsDevelopmentMode] = useState(false);
+  
+  useEffect(() => {
+    // Check if in development mode
+    const isDev = process.env.NODE_ENV === 'development' || 
+                  window.location.hostname === 'localhost' ||
+                  window.location.hostname.includes('lovableproject.com');
+    setIsDevelopmentMode(isDev);
+    
+    // Check if URL has a diagnostics parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('diagnostics')) {
+      setIsDiagnosticsModeEnabled(true);
+    }
+    
+    // Set up keyboard shortcut: Alt+Shift+D
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (isDev && e.altKey && e.shiftKey && e.key === 'D') {
+        setIsDiagnosticsModeEnabled(prev => !prev);
+      }
+    };
+    
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
+  
+  const toggleDiagnosticsMode = () => {
+    setIsDiagnosticsModeEnabled(prev => !prev);
+  };
+  
+  return (
+    <DiagnosticsContext.Provider
+      value={{
+        isDiagnosticsModeEnabled,
+        toggleDiagnosticsMode,
+        isDevelopmentMode
+      }}
+    >
+      {children}
+    </DiagnosticsContext.Provider>
+  );
+}
+
+export function useDiagnosticsContext() {
+  const context = useContext(DiagnosticsContext);
+  if (context === undefined) {
+    throw new Error('useDiagnosticsContext must be used within a DiagnosticsProvider');
+  }
+  return context;
+}
