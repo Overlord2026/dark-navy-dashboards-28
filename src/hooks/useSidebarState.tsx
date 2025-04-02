@@ -30,6 +30,7 @@ export const useSidebarState = (navigationCategories: NavCategory[]) => {
           );
           
           if (hasActiveChild) {
+            // Expand the submenu with the active child
             setExpandedSubmenus(prev => ({
               ...prev,
               [item.title]: true
@@ -46,6 +47,7 @@ export const useSidebarState = (navigationCategories: NavCategory[]) => {
     });
   }, [location.pathname, navigationCategories]);
   
+  // Initial force update to ensure proper rendering
   useEffect(() => {
     setForceUpdate(1);
   }, []);
@@ -64,6 +66,8 @@ export const useSidebarState = (navigationCategories: NavCategory[]) => {
   const toggleSubmenu = (itemTitle: string, e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    
+    // Toggle the clicked submenu
     setExpandedSubmenus(prev => ({
       ...prev,
       [itemTitle]: !prev[itemTitle]
