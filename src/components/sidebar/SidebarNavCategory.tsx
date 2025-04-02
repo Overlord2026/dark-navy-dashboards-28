@@ -54,7 +54,7 @@ export const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
         <div className="space-y-1 px-3">
           {items.map((item) => {
             const hasSubmenu = item.submenu && item.submenu.length > 0;
-            const submenuIsExpanded = expandedSubmenus[item.title];
+            const submenuIsExpanded = !!expandedSubmenus[item.title]; // Ensure boolean value
             
             // For items with submenu, check if any submenu item is active
             let itemIsActive = isActive(item.href);
@@ -67,7 +67,7 @@ export const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
             }
             
             return (
-              <div key={item.title} className="group mb-1">
+              <div key={item.title} className="group mb-1 relative">
                 {/* For items with submenu, we'll handle the click event to toggle submenu */}
                 {hasSubmenu ? (
                   <div
@@ -83,6 +83,7 @@ export const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
                       hasSubmenu && "justify-between"
                     )}
                     onClick={(e) => toggleSubmenu(item.title, e)}
+                    data-submenu-trigger={item.title}
                   >
                     <div className="flex items-center">
                       <item.icon className={cn("h-5 w-5 flex-shrink-0", !collapsed && "mr-3")} />
@@ -120,7 +121,10 @@ export const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
                 
                 {/* Render submenu if expanded */}
                 {!collapsed && hasSubmenu && submenuIsExpanded && (
-                  <div className="ml-8 mt-1 space-y-1">
+                  <div 
+                    className="ml-8 mt-1 space-y-1 z-10 bg-inherit"
+                    data-submenu-content={item.title}
+                  >
                     {item.submenu?.map((subItem) => (
                       <Link
                         key={subItem.href}

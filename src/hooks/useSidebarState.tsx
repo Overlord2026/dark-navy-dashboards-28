@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { NavCategory } from "@/types/navigation";
 import { useLocation } from "react-router-dom";
 
@@ -17,7 +17,7 @@ export function useSidebarState(navigationCategories: NavCategory[]) {
   const [forceUpdate, setForceUpdate] = useState(0);
   
   // Determine if a link is active
-  const isActive = (href: string) => {
+  const isActive = useCallback((href: string) => {
     // Special case for "#" links (parent menu items)
     if (href === "#") {
       return false;
@@ -39,21 +39,23 @@ export function useSidebarState(navigationCategories: NavCategory[]) {
     }
     
     return false;
-  };
+  }, [location.pathname]);
   
   /**
    * Checks if a parent menu with submenu has any active child
    */
-  const hasActiveChild = (submenuItems: any[]) => {
+  const hasActiveChild = useCallback((submenuItems: any[]) => {
     if (!submenuItems || submenuItems.length === 0) {
       return false;
     }
     
     return submenuItems.some(subItem => isActive(subItem.href));
-  };
+  }, [isActive]);
   
   // Auto-expand submenu when a child route is active
   useEffect(() => {
+    // Don't auto-expand if the user has manually collapsed a submenu
+    // We'll only auto-expand on initial load or navigation changes
     let hasExpandedSubmenu = false;
     
     // First pass: Check for submenu item exact matches (highest priority)
@@ -106,7 +108,7 @@ export function useSidebarState(navigationCategories: NavCategory[]) {
     
     // Force a rerender to ensure UI reflects current state
     setForceUpdate(prev => prev + 1);
-  }, [location.pathname, navigationCategories]);
+  }, [location.pathname, navigationCategories, hasActiveChild, isActive]);
 
   const toggleSidebar = () => {
     setCollapsed(!collapsed);
@@ -126,13 +128,16 @@ export function useSidebarState(navigationCategories: NavCategory[]) {
       e.stopPropagation();
     }
     
-    // Toggle the clicked submenu
+    // Toggle the clicked submenu with a more reliable toggle pattern
     setExpandedSubmenus(prev => {
+      const currentlyExpanded = !!prev[itemTitle];
+      console.log(`Toggling submenu "${itemTitle}" from ${currentlyExpanded} to ${!currentlyExpanded}`);
+      
       const newState = {
         ...prev,
-        [itemTitle]: !prev[itemTitle]
+        [itemTitle]: !currentlyExpanded
       };
-      console.log("Toggling submenu", itemTitle, "New state:", newState);
+      
       return newState;
     });
     

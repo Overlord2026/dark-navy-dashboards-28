@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -60,11 +60,35 @@ export const Sidebar = () => {
     hasActiveChild 
   } = useSidebarState(navigationCategories);
 
-  // Log current submenu state for debugging
-  React.useEffect(() => {
+  // Enhanced diagnostic logging
+  useEffect(() => {
+    console.log("=== SIDEBAR STATE DIAGNOSTIC ===");
     console.log("Current expandedSubmenus state:", expandedSubmenus);
     console.log("Family wealth expanded:", expandedCategories["family-wealth"]);
-  }, [expandedSubmenus, expandedCategories]);
+    
+    // Check specifically for Banking submenu
+    const bankingItem = familyWealthNavItems.find(item => item.title === "Banking");
+    if (bankingItem) {
+      console.log("Banking item config:", {
+        title: bankingItem.title,
+        href: bankingItem.href,
+        hasSubmenu: !!bankingItem.submenu && bankingItem.submenu.length > 0,
+        submenuExpanded: !!expandedSubmenus["Banking"]
+      });
+    } else {
+      console.log("Banking item not found in familyWealthNavItems");
+    }
+  }, [expandedSubmenus, expandedCategories, familyWealthNavItems]);
+
+  // Add debugging click handler to help diagnose Banking menu issues
+  const handleManualBankingToggle = () => {
+    const bankingItem = familyWealthNavItems.find(item => item.title === "Banking");
+    if (bankingItem) {
+      const mockEvent = { preventDefault: () => {}, stopPropagation: () => {} } as React.MouseEvent;
+      console.log("Manually toggling Banking submenu");
+      toggleSubmenu("Banking", mockEvent);
+    }
+  };
 
   const advisorInfo = {
     name: "Daniel Zamora",
@@ -113,6 +137,20 @@ export const Sidebar = () => {
             hasActiveChild={hasActiveChild}
           />
         ))}
+        
+        {/* Debugging button - will be hidden in production */}
+        {process.env.NODE_ENV !== 'production' && !collapsed && (
+          <div className="px-3 mt-2">
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={handleManualBankingToggle}
+              className="w-full text-xs"
+            >
+              Debug: Toggle Banking Menu
+            </Button>
+          </div>
+        )}
       </div>
 
       <div className="p-2 border-t mt-auto" style={{ borderColor: isLightTheme ? '#DCD8C0' : 'rgba(255,255,255,0.1)' }}>
