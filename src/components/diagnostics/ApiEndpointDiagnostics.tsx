@@ -1,247 +1,170 @@
 
 import React, { useEffect } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useApiDiagnostics } from '@/hooks/useApiDiagnostics';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { StatusIcon } from './StatusIcon';
 import { Button } from '@/components/ui/button';
-import { RefreshCw, Server } from 'lucide-react';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { Check, AlertTriangle, X, RotateCw, Clock } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
-import { useDiagnosticsContext } from '@/context/DiagnosticsContext';
 
-export function ApiEndpointDiagnostics() {
-  const {
-    results,
-    isRunning,
-    lastRun,
-    error,
+export const ApiEndpointDiagnostics = () => {
+  const { 
+    results, 
+    isRunning, 
+    lastRun, 
+    error, 
     runApiDiagnostics,
-    getApiDiagnosticsSummary
+    getApiDiagnosticsSummary 
   } = useApiDiagnostics();
   
-  const { isDevelopmentMode } = useDiagnosticsContext();
-  
-  // Run diagnostics once when the component mounts
+  // Run diagnostics on component mount if we don't have results yet
   useEffect(() => {
-    if (isDevelopmentMode && results.length === 0) {
+    if (results.length === 0 && !isRunning) {
       runApiDiagnostics();
     }
-  }, [isDevelopmentMode, results.length, runApiDiagnostics]);
+  }, [results.length, isRunning, runApiDiagnostics]);
   
   const summary = getApiDiagnosticsSummary();
   
-  const getStatusColor = (status: 'success' | 'warning' | 'error'): string => {
-    switch (status) {
-      case 'success':
-        return 'border-green-200 bg-green-50 dark:border-green-900 dark:bg-green-950/20';
-      case 'warning':
-        return 'border-yellow-200 bg-yellow-50 dark:border-yellow-900 dark:bg-yellow-950/20';
-      case 'error':
-        return 'border-red-200 bg-red-50 dark:border-red-900 dark:bg-red-950/20';
-      default:
-        return 'border-gray-200 bg-gray-50 dark:border-gray-800 dark:bg-gray-950/20';
-    }
-  };
-  
-  const getMethodColor = (method: string): string => {
-    switch (method.toUpperCase()) {
-      case 'GET':
-        return 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300';
-      case 'POST':
-        return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300';
-      case 'PUT':
-        return 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300';
-      case 'DELETE':
-        return 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300';
-      default:
-        return 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-300';
-    }
-  };
-  
   return (
-    <Card className="w-full">
-      <CardHeader className="pb-2">
-        <div className="flex items-center justify-between">
+    <Card>
+      <CardHeader className="pb-3">
+        <div className="flex justify-between items-center">
+          <CardTitle className="text-xl">API Endpoint Diagnostics</CardTitle>
           <div className="flex items-center gap-2">
-            <Server className="h-5 w-5" />
-            <CardTitle>API Endpoint Diagnostics</CardTitle>
+            <Button 
+              onClick={() => runApiDiagnostics()}
+              disabled={isRunning}
+              variant="outline"
+              size="sm"
+              className="flex items-center gap-1"
+            >
+              <RotateCw className={`h-4 w-4 ${isRunning ? "animate-spin" : ""}`} />
+              Run Diagnostics
+            </Button>
+            {lastRun && (
+              <Badge variant="outline" className="flex items-center gap-1">
+                <Clock className="h-3 w-3" />
+                <span className="text-xs">
+                  {new Date(lastRun).toLocaleTimeString()}
+                </span>
+              </Badge>
+            )}
           </div>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={runApiDiagnostics}
-            disabled={isRunning}
-            className="flex items-center gap-1"
-          >
-            <RefreshCw className={`h-3.5 w-3.5 ${isRunning ? 'animate-spin' : ''}`} />
-            {isRunning ? 'Running...' : 'Run Diagnostics'}
-          </Button>
         </div>
-        
-        {lastRun && (
-          <div className="text-xs text-muted-foreground">
-            Last run: {new Date(lastRun).toLocaleString()}
-          </div>
-        )}
-        
-        {summary.total > 0 && (
-          <div className="flex items-center gap-2 text-sm mt-1">
-            <Badge variant={summary.overall === 'success' ? 'success' : summary.overall}>
-              {summary.overall.toUpperCase()}
-            </Badge>
-            <span>
-              {summary.success} succeeded, {summary.warnings} warnings, {summary.errors} errors
-            </span>
-          </div>
-        )}
       </CardHeader>
-      
       <CardContent>
         {error && (
-          <div className="mb-4 p-3 border rounded-md border-red-200 bg-red-50 text-red-800 dark:border-red-900 dark:bg-red-950/20 dark:text-red-300">
-            <p className="font-medium">Error running diagnostics</p>
-            <p className="text-sm">{error.message}</p>
+          <div className="mb-4 p-4 border border-red-200 bg-red-50 text-red-800 rounded-md">
+            <p className="font-semibold">Error running API diagnostics:</p>
+            <p>{error.message}</p>
           </div>
         )}
         
-        {isRunning && results.length === 0 && (
-          <div className="flex justify-center items-center p-6">
-            <div className="flex flex-col items-center">
-              <RefreshCw className="h-8 w-8 animate-spin text-muted-foreground" />
-              <p className="mt-2 text-muted-foreground">Running API diagnostics...</p>
-            </div>
+        <div className="mb-4 grid grid-cols-4 gap-3 text-center">
+          <div className="p-3 border rounded-md">
+            <div className="text-lg font-bold">{summary.total}</div>
+            <div className="text-sm text-muted-foreground">Total Endpoints</div>
           </div>
-        )}
-        
-        {!isRunning && results.length === 0 && (
-          <div className="text-center p-6 border rounded-md border-dashed">
-            <Server className="h-8 w-8 mx-auto text-muted-foreground" />
-            <h3 className="mt-2 font-medium">No API Diagnostics Run Yet</h3>
-            <p className="text-sm text-muted-foreground mt-1">
-              Run the diagnostics to test all API endpoints in the application.
-            </p>
-            <Button
-              variant="secondary"
-              onClick={runApiDiagnostics}
-              className="mt-4"
-            >
-              Run Now
-            </Button>
+          <div className="p-3 border rounded-md bg-green-50 border-green-200">
+            <div className="text-lg font-bold text-green-600">{summary.success}</div>
+            <div className="text-sm text-green-700">Success</div>
           </div>
-        )}
+          <div className="p-3 border rounded-md bg-amber-50 border-amber-200">
+            <div className="text-lg font-bold text-amber-600">{summary.warnings}</div>
+            <div className="text-sm text-amber-700">Warnings</div>
+          </div>
+          <div className="p-3 border rounded-md bg-red-50 border-red-200">
+            <div className="text-lg font-bold text-red-600">{summary.errors}</div>
+            <div className="text-sm text-red-700">Errors</div>
+          </div>
+        </div>
         
-        {results.length > 0 && (
-          <div className="space-y-3">
-            {results.map((result, index) => (
-              <Collapsible
-                key={index}
-                className={`rounded-md border ${getStatusColor(result.status)}`}
-              >
-                <CollapsibleTrigger className="w-full p-3 text-left">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <StatusIcon status={result.status} />
-                      <div>
-                        <span className="font-medium">{result.name}</span>
-                        <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                          <Badge variant="outline" className={`text-xs ${getMethodColor(result.method)}`}>
-                            {result.method}
-                          </Badge>
-                          <span>{result.url}</span>
-                        </div>
-                      </div>
+        <div className="border rounded-md overflow-hidden">
+          <table className="min-w-full">
+            <thead className="bg-muted/50">
+              <tr>
+                <th className="px-4 py-2 text-left">Endpoint</th>
+                <th className="px-4 py-2 text-left">Method</th>
+                <th className="px-4 py-2 text-left">Status</th>
+                <th className="px-4 py-2 text-right">Response Time</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y">
+              {isRunning ? (
+                <tr>
+                  <td colSpan={4} className="px-4 py-6 text-center">
+                    <div className="flex flex-col items-center justify-center">
+                      <RotateCw className="h-6 w-6 animate-spin mb-2" />
+                      <p>Testing API endpoints...</p>
                     </div>
-                    <Badge variant={result.status}>
-                      {result.status.toUpperCase()}
-                    </Badge>
-                  </div>
-                </CollapsibleTrigger>
-                
-                <CollapsibleContent>
-                  <Separator />
-                  <div className="p-3 text-sm space-y-2">
-                    <div>
-                      <span className="font-medium">Response Time:</span>{' '}
-                      <span className={
-                        result.responseTime < 200 
-                          ? 'text-green-600 dark:text-green-400' 
-                          : result.responseTime < 1000 
-                            ? 'text-amber-600 dark:text-amber-400' 
-                            : 'text-red-600 dark:text-red-400'
+                  </td>
+                </tr>
+              ) : results.length === 0 ? (
+                <tr>
+                  <td colSpan={4} className="px-4 py-6 text-center text-muted-foreground">
+                    No API diagnostics data available
+                  </td>
+                </tr>
+              ) : (
+                results.map((result, index) => (
+                  <tr key={index} className="hover:bg-muted/30">
+                    <td className="px-4 py-3 overflow-hidden text-ellipsis">
+                      <div className="font-medium">{result.name}</div>
+                      <div className="text-sm text-muted-foreground truncate max-w-[220px]">
+                        {result.url}
+                      </div>
+                    </td>
+                    <td className="px-4 py-3">
+                      <Badge variant="outline" className={
+                        result.method === "GET" ? "bg-blue-50 border-blue-200 text-blue-800" :
+                        result.method === "POST" ? "bg-green-50 border-green-200 text-green-800" :
+                        result.method === "PUT" ? "bg-amber-50 border-amber-200 text-amber-800" :
+                        result.method === "DELETE" ? "bg-red-50 border-red-200 text-red-800" :
+                        ""
                       }>
-                        {result.responseTime}ms
-                      </span>
-                    </div>
-                    
-                    {result.responseStatus && (
-                      <div>
-                        <span className="font-medium">HTTP Status:</span>{' '}
-                        <span className={
-                          result.responseStatus >= 200 && result.responseStatus < 300
-                            ? 'text-green-600 dark:text-green-400'
-                            : result.responseStatus >= 300 && result.responseStatus < 400
-                              ? 'text-amber-600 dark:text-amber-400'
-                              : 'text-red-600 dark:text-red-400'
-                        }>
-                          {result.responseStatus}
-                        </span>
+                        {result.method}
+                      </Badge>
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="flex items-center gap-1">
+                        {result.status === 'success' ? (
+                          <Check className="h-4 w-4 text-green-600" />
+                        ) : result.status === 'warning' ? (
+                          <AlertTriangle className="h-4 w-4 text-amber-600" />
+                        ) : (
+                          <X className="h-4 w-4 text-red-600" />
+                        )}
+                        {result.status === 'success' ? (
+                          <span className="text-green-600">Success</span>
+                        ) : result.status === 'warning' ? (
+                          <span className="text-amber-600">Warning</span>
+                        ) : (
+                          <span className="text-red-600">Error</span>
+                        )}
                       </div>
-                    )}
-                    
-                    <div>
-                      <span className="font-medium">Expected Data:</span>{' '}
-                      <code className="bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded text-xs">
-                        {result.expectedDataStructure}
-                      </code>
-                    </div>
-                    
-                    {result.actualDataStructure && (
-                      <div>
-                        <span className="font-medium">Actual Data:</span>{' '}
-                        <code className="bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded text-xs">
-                          {result.actualDataStructure}
-                        </code>
-                        {' '}
-                        <span className={result.structureMatch ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}>
-                          {result.structureMatch ? '(Matches)' : '(Mismatch)'}
-                        </span>
+                      {result.errorMessage && (
+                        <div className="text-xs text-muted-foreground mt-1">
+                          {result.errorMessage}
+                        </div>
+                      )}
+                    </td>
+                    <td className="px-4 py-3 text-right">
+                      <div className="font-mono">
+                        {result.responseTime.toFixed(0)}ms
                       </div>
-                    )}
-                    
-                    {result.authStatus && (
-                      <div>
-                        <span className="font-medium">Auth Status:</span>{' '}
-                        <span className={
-                          result.authStatus === 'valid'
-                            ? 'text-green-600 dark:text-green-400'
-                            : 'text-red-600 dark:text-red-400'
-                        }>
-                          {result.authStatus}
-                        </span>
-                      </div>
-                    )}
-                    
-                    {result.errorMessage && (
-                      <div className="mt-3 p-2 border rounded-md border-red-200 bg-red-50 text-red-800 dark:border-red-900 dark:bg-red-950/20 dark:text-red-300">
-                        <span className="font-medium">Error:</span>{' '}
-                        <span>{result.errorMessage}</span>
-                      </div>
-                    )}
-                    
-                    {result.status === 'warning' && !result.errorMessage && (
-                      <div className="mt-3 p-2 border rounded-md border-yellow-200 bg-yellow-50 text-yellow-800 dark:border-yellow-900 dark:bg-yellow-950/20 dark:text-yellow-300">
-                        <span className="font-medium">Warning:</span>{' '}
-                        <span>The API call completed but with warnings.</span>
-                      </div>
-                    )}
-                  </div>
-                </CollapsibleContent>
-              </Collapsible>
-            ))}
-          </div>
-        )}
+                      {result.responseStatus && (
+                        <div className="text-xs text-muted-foreground">
+                          Status: {result.responseStatus}
+                        </div>
+                      )}
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </CardContent>
     </Card>
   );
-}
+};

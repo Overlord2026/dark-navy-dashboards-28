@@ -1,20 +1,37 @@
 
 #!/usr/bin/env node
+import { runDiagnostics } from '../index';
 
-import { runAllTabDiagnostics } from '../tabDiagnostics';
-import { testFinancialPlanOperations } from '../financialPlanTests';
-
-async function runDiagnostics() {
-  console.log("Running tab diagnostics...");
-  const tabResults = await runAllTabDiagnostics();
-  console.log("Tab diagnostics results:", JSON.stringify(tabResults, null, 2));
-
-  console.log("Running financial plan tests...");
-  const planResults = await testFinancialPlanOperations();
-  console.log("Financial plan test results:", JSON.stringify(planResults, null, 2));
+/**
+ * This script runs all diagnostics and outputs the results.
+ * It's intended to be run in CI environments to validate the system.
+ */
+async function main() {
+  console.log("Starting diagnostic tests...");
+  
+  try {
+    const results = await runDiagnostics();
+    
+    console.log("Diagnostic tests completed.");
+    console.log("Results:", JSON.stringify(results, null, 2));
+    
+    // Check for critical errors
+    const hasErrors = Object.values(results).some(
+      (result: any) => result.status === "error" || 
+      (Array.isArray(result) && result.some(item => item.status === "error"))
+    );
+    
+    if (hasErrors) {
+      console.error("Diagnostic tests detected critical errors!");
+      process.exit(1);
+    } else {
+      console.log("All critical tests passed.");
+      process.exit(0);
+    }
+  } catch (error) {
+    console.error("Error running diagnostics:", error);
+    process.exit(1);
+  }
 }
 
-runDiagnostics().catch(error => {
-  console.error("Error running diagnostics:", error);
-  process.exit(1);
-});
+main();

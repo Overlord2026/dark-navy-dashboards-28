@@ -4,7 +4,7 @@ import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowDownIcon, ArrowUpIcon, Calendar, PencilIcon, Plus, Repeat } from "lucide-react";
+import { ArrowDownIcon, ArrowUpIcon, Calendar, Repeat } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -251,9 +251,9 @@ const Transfers = () => {
     <ThreeColumnLayout title="Transfers">
       <div className="container mx-auto px-4 py-8 max-w-6xl">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground">Transfers & Payments</h1>
+          <h1 className="text-3xl font-bold text-foreground">Transfers</h1>
           <p className="text-muted-foreground mt-2">
-            Move money between your accounts, pay bills, or send money to others.
+            Move money between your accounts or to external accounts.
           </p>
         </div>
         
