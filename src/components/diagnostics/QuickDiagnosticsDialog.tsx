@@ -58,9 +58,9 @@ export function QuickDiagnosticsDialog({
     }
   };
   
-  const getAreaBadge = (category: string) => {
-    // Updated to use category instead of area to match the QuickFix type
-    switch (category) {
+  const getAreaBadge = (area: string) => {
+    // Updated to use area instead of category to match the QuickFix type
+    switch (area) {
       case "security":
         return <Badge variant="outline" className="bg-red-50 text-red-800 border-red-200">Security</Badge>;
       case "performance":
@@ -147,7 +147,7 @@ export function QuickDiagnosticsDialog({
                             <p className="text-sm text-muted-foreground mb-2">
                               {fix.description}
                             </p>
-                            <div>{getAreaBadge(fix.category)}</div>
+                            <div>{getAreaBadge(fix.severity)}</div>
                           </div>
                           <div className="ml-4">
                             <Button
