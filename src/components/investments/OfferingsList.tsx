@@ -40,9 +40,15 @@ interface OfferingsListProps {
   offerings: Offering[];
   categoryId: string;
   isFullView?: boolean;
+  onLike?: (assetName: string) => void;
 }
 
-export const OfferingsList: React.FC<OfferingsListProps> = ({ offerings, categoryId, isFullView = false }) => {
+export const OfferingsList: React.FC<OfferingsListProps> = ({ 
+  offerings, 
+  categoryId, 
+  isFullView = false,
+  onLike
+}) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterType, setFilterType] = useState<string>("all");
   const [showFilters, setShowFilters] = useState(false);
@@ -143,7 +149,12 @@ export const OfferingsList: React.FC<OfferingsListProps> = ({ offerings, categor
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {displayedOfferings.length > 0 ? (
           displayedOfferings.map(offering => (
-            <OfferingCard key={offering.id} offering={offering} categoryId={categoryId} />
+            <OfferingCard 
+              key={offering.id} 
+              offering={offering} 
+              categoryId={categoryId}
+              onLike={onLike}
+            />
           ))
         ) : (
           <div className="col-span-2 p-8 text-center border rounded-md">

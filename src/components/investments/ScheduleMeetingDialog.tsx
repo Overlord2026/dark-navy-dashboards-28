@@ -1,52 +1,97 @@
 
 import React from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { CalendarClock } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { CalendarClock, ExternalLink } from "lucide-react";
 import { toast } from "sonner";
+import { auditLog } from "@/services/auditLog/auditLogService";
 
 interface ScheduleMeetingDialogProps {
   assetName: string;
 }
 
 export const ScheduleMeetingDialog: React.FC<ScheduleMeetingDialogProps> = ({ assetName }) => {
-  const handleOpenCalendar = () => {
-    // Use the specified Calendly link for scheduling
-    window.open("https://calendly.com/tombrady/60min", "_blank");
+  const [isOpen, setIsOpen] = React.useState(false);
+
+  const handleSchedule = () => {
+    // Log the scheduling action
+    const userId = "current-user"; // In a real app, this would come from auth context
     
+    auditLog.log(
+      userId,
+      "document_access",
+      "success",
+      {
+        resourceType: "investment_scheduling",
+        resourceId: assetName,
+        details: {
+          action: "schedule_consultation",
+          assetName
+        }
+      }
+    );
+    
+    // Open Calendly in a new tab
+    window.open("https://calendly.com/tonygomes/60min", "_blank");
+    
+    // Show success toast
     toast.success("Opening scheduling page", {
-      description: `Schedule a meeting to discuss ${assetName} with your advisor.`,
-      duration: 3000,
+      description: `Schedule a consultation about ${assetName} with your advisor.`,
     });
+    
+    // Close the dialog
+    setIsOpen(false);
   };
   
+  const handleOpenChange = (open: boolean) => {
+    setIsOpen(open);
+  };
+
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button variant="outline" className="w-full flex items-center justify-center gap-2">
+        <Button variant="secondary" size="icon">
           <CalendarClock className="h-4 w-4" />
-          Schedule an Appointment
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Schedule Appointment with Advisor</DialogTitle>
+          <DialogTitle>Schedule a Consultation</DialogTitle>
           <DialogDescription>
-            Book a consultation about {assetName} with your financial advisor.
+            Discuss {assetName} with a financial advisor to determine if it's suitable for your portfolio.
           </DialogDescription>
         </DialogHeader>
-        
-        <div className="flex flex-col space-y-4 py-4">
-          <p className="text-sm text-muted-foreground">
-            You'll be redirected to your advisor's calendar to select a convenient time for your meeting.
-          </p>
+        <div className="py-4">
+          <div className="space-y-4">
+            <div className="bg-muted rounded-lg p-4">
+              <h4 className="font-medium mb-2">Benefits of a Consultation:</h4>
+              <ul className="list-disc pl-5 space-y-1 text-sm">
+                <li>Get personalized advice tailored to your financial situation</li>
+                <li>Understand the risks and potential returns of this investment</li>
+                <li>Learn how it fits within your overall portfolio strategy</li>
+                <li>Explore tax implications and structuring options</li>
+              </ul>
+            </div>
+            <p className="text-sm text-muted-foreground">
+              Your advisor will help you evaluate this opportunity and determine if it aligns with your financial goals and risk tolerance.
+            </p>
+          </div>
         </div>
-        
-        <div className="flex justify-end">
-          <Button onClick={handleOpenCalendar}>
-            Continue to Calendar
+        <DialogFooter>
+          <Button variant="outline" onClick={() => setIsOpen(false)}>Cancel</Button>
+          <Button onClick={handleSchedule} className="gap-2">
+            <CalendarClock className="h-4 w-4" />
+            Schedule Meeting
           </Button>
-        </div>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

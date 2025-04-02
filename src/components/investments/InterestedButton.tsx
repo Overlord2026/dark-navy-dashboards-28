@@ -1,30 +1,38 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { HeartIcon } from "lucide-react";
+import { Heart } from "lucide-react";
 import { toast } from "sonner";
 
 interface InterestedButtonProps {
   assetName: string;
+  onInterested?: () => void;
 }
 
-export const InterestedButton: React.FC<InterestedButtonProps> = ({ assetName }) => {
+export const InterestedButton: React.FC<InterestedButtonProps> = ({ assetName, onInterested }) => {
+  const [isInterested, setIsInterested] = React.useState(false);
+  
   const handleInterested = () => {
-    // In a real application, this would send a notification to the advisor and CFO
-    toast.success("Your interest has been registered!", {
-      description: `Your advisor has been notified about your interest in ${assetName}. They will contact you to discuss this opportunity further.`,
-      duration: 5000,
+    setIsInterested(true);
+    
+    toast.success(`You've expressed interest in ${assetName}`, {
+      description: "Your advisor will be notified about your interest.",
     });
+    
+    if (onInterested) {
+      onInterested();
+    }
   };
   
   return (
     <Button 
-      variant="interested" 
-      className="w-full" 
+      variant={isInterested ? "default" : "outline"} 
+      size="icon"
+      disabled={isInterested}
       onClick={handleInterested}
+      className={isInterested ? "bg-red-500 hover:bg-red-600" : ""}
     >
-      <HeartIcon className="h-4 w-4 mr-1" /> 
-      I'm Interested
+      <Heart className={`h-4 w-4 ${isInterested ? "fill-white" : ""}`} />
     </Button>
   );
 };

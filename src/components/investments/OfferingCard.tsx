@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ExternalLink, DollarSign } from "lucide-react";
+import { ChevronLeft, ExternalLink, DollarSign, Heart } from "lucide-react";
 import { InterestedButton } from "./InterestedButton";
 import { ScheduleMeetingDialog } from "./ScheduleMeetingDialog";
 import { OfferingDetailsTabs } from "./OfferingDetailsTabs";
@@ -42,9 +42,19 @@ interface Offering {
 interface OfferingCardProps {
   offering: Offering;
   categoryId: string;
+  onLike?: (assetName: string) => void;
 }
 
-export const OfferingCard: React.FC<OfferingCardProps> = ({ offering, categoryId }) => {
+export const OfferingCard: React.FC<OfferingCardProps> = ({ offering, categoryId, onLike }) => {
+  const [isLiked, setIsLiked] = React.useState(false);
+  
+  const handleLike = () => {
+    setIsLiked(!isLiked);
+    if (!isLiked && onLike) {
+      onLike(offering.name);
+    }
+  };
+
   return (
     <Card key={offering.id} className="overflow-hidden hover:shadow-md transition-shadow duration-300 border-gray-200">
       <CardHeader className="pb-2">
@@ -53,6 +63,15 @@ export const OfferingCard: React.FC<OfferingCardProps> = ({ offering, categoryId
             <CardTitle className="text-xl mb-1">{offering.name}</CardTitle>
             <CardDescription className="line-clamp-2">{offering.description}</CardDescription>
           </div>
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className={`${isLiked ? 'text-red-500' : 'text-muted-foreground'}`}
+            onClick={handleLike}
+          >
+            <Heart className={`h-5 w-5 ${isLiked ? 'fill-red-500' : ''}`} />
+            <span className="sr-only">Like</span>
+          </Button>
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -127,7 +146,9 @@ export const OfferingCard: React.FC<OfferingCardProps> = ({ offering, categoryId
             </SheetContent>
           </Sheet>
           <ScheduleMeetingDialog assetName={offering.name} />
-          <InterestedButton assetName={offering.name} />
+          <InterestedButton assetName={offering.name} onInterested={() => {
+            if (onLike) onLike(offering.name);
+          }} />
         </div>
       </CardContent>
     </Card>

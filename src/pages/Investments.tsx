@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
@@ -9,6 +10,7 @@ import { StockScreener } from "@/components/investments/StockScreener";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { ScheduleMeetingDialog } from "@/components/investments/ScheduleMeetingDialog";
+import { getAllInvestmentCategoryData } from "@/services/marketDataService";
 
 // Portfolio model type definition
 interface PortfolioModel {
@@ -28,6 +30,8 @@ const Investments = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [selectedTab, setSelectedTab] = useState("private-market");
+  const [alternativeData, setAlternativeData] = useState<any>({});
+  const [isLoading, setIsLoading] = useState(true);
   
   // Parse the URL query parameters to check for tab selection
   useEffect(() => {
@@ -37,6 +41,30 @@ const Investments = () => {
       setSelectedTab(tabParam);
     }
   }, [location.search]);
+  
+  // Fetch market data for alternative investments
+  useEffect(() => {
+    const fetchMarketData = async () => {
+      try {
+        setIsLoading(true);
+        const data = await getAllInvestmentCategoryData();
+        setAlternativeData(data);
+      } catch (error) {
+        console.error("Error fetching market data:", error);
+        // Set fallback data
+        setAlternativeData({
+          'private-equity': { ytdPerformance: 12.4 },
+          'private-debt': { ytdPerformance: 8.7 },
+          'digital-assets': { ytdPerformance: 15.8 },
+          'real-assets': { ytdPerformance: 9.1 }
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    fetchMarketData();
+  }, []);
   
   // Portfolio models data definition
   const portfolioModels: PortfolioModel[] = [
@@ -165,7 +193,7 @@ const Investments = () => {
           </TabsList>
           
           <TabsContent value="private-market" className="space-y-8">
-            {/* Private Market Alpha Section (previously Alternative Assets) */}
+            {/* Private Market Alpha Section */}
             <div className="space-y-6">
               <div className="flex justify-between items-center">
                 <h2 className="text-2xl font-semibold">Private Market Alpha</h2>
@@ -214,7 +242,12 @@ const Investments = () => {
                           <path d="M12 3V21" stroke="currentColor" strokeWidth="2" />
                           <path d="M3 12H21" stroke="currentColor" strokeWidth="2" />
                         </svg>
-                        <span className="text-emerald-500">+12.4% YTD</span>
+                        <span className="text-emerald-500">
+                          {isLoading 
+                            ? "Loading..." 
+                            : `+${alternativeData['private-equity']?.ytdPerformance?.toFixed(1) || '12.4'}% YTD`
+                          }
+                        </span>
                       </div>
                       <div>
                         <h4 className="text-lg font-medium">Private Equity</h4>
@@ -236,7 +269,12 @@ const Investments = () => {
                           <path d="M7 11H17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
                           <path d="M7 16H14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
                         </svg>
-                        <span className="text-emerald-500">+8.7% YTD</span>
+                        <span className="text-emerald-500">
+                          {isLoading 
+                            ? "Loading..." 
+                            : `+${alternativeData['private-debt']?.ytdPerformance?.toFixed(1) || '8.7'}% YTD`
+                          }
+                        </span>
                       </div>
                       <div>
                         <h4 className="text-lg font-medium">Private Debt</h4>
@@ -256,7 +294,12 @@ const Investments = () => {
                           <path d="M12 9V15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
                           <path d="M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21Z" stroke="currentColor" strokeWidth="2" />
                         </svg>
-                        <span className="text-red-500">-8.7% YTD</span>
+                        <span className={alternativeData['digital-assets']?.ytdPerformance < 0 ? "text-red-500" : "text-emerald-500"}>
+                          {isLoading 
+                            ? "Loading..." 
+                            : `${alternativeData['digital-assets']?.ytdPerformance < 0 ? "" : "+"}${alternativeData['digital-assets']?.ytdPerformance?.toFixed(1) || '15.8'}% YTD`
+                          }
+                        </span>
                       </div>
                       <div>
                         <h4 className="text-lg font-medium">Digital Assets</h4>
@@ -280,7 +323,12 @@ const Investments = () => {
                           <path d="M9 15V15.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                           <path d="M9 18V18.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
-                        <span className="text-emerald-500">+9.1% YTD</span>
+                        <span className="text-emerald-500">
+                          {isLoading 
+                            ? "Loading..." 
+                            : `+${alternativeData['real-assets']?.ytdPerformance?.toFixed(1) || '9.1'}% YTD`
+                          }
+                        </span>
                       </div>
                       <div>
                         <h4 className="text-lg font-medium">Real Assets</h4>
@@ -417,7 +465,7 @@ const Investments = () => {
             <IntelligentAllocationTab />
           </TabsContent>
 
-          {/* New Stock Screener Tab */}
+          {/* Stock Screener Tab */}
           <TabsContent value="stock-screener">
             <StockScreener />
           </TabsContent>

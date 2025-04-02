@@ -81,7 +81,8 @@ const AppRoutes: React.FC = () => {
       <Route path="/investments/all-models" element={<AllModelPortfolios />} />
       <Route path="/investments/model/:modelId" element={<PortfolioModelDetail />} />
       <Route path="/investments/alternatives" element={<AllAlternativeInvestments />} />
-      <Route path="/investments/alternatives/:categoryId" element={<AlternativeAssetCategory />} />
+      <Route path="/investments/alternative/:categoryId" element={<AlternativeAssetCategory />} />
+      <Route path="/investments/alternative/:categoryId/view-all" element={<ViewAllOfferings />} />
       <Route path="/investments/portfolio-builder" element={<PortfolioBuilder />} />
       <Route path="/investments/investment-builder" element={<InvestmentBuilder />} />
       <Route path="/investments/performance" element={<InvestmentPerformance />} />
