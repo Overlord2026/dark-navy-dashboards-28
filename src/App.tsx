@@ -74,6 +74,7 @@ function App() {
                     <Route path="/customer-profile" element={<CustomerProfile />} />
                     <Route path="/social-security" element={<SocialSecurity />} />
                     <Route path="/legacy-vault" element={<LegacyVault />} />
+                    <Route path="/secure-family-vault" element={<Navigate to="/legacy-vault" replace />} />
                     {/* Add redirect from /vault to /legacy-vault */}
                     <Route path="/vault" element={<Navigate to="/legacy-vault" replace />} />
                     <Route path="/accounts" element={<Accounts />} />

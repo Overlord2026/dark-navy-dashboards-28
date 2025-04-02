@@ -7,10 +7,19 @@ import { NoDocumentsState, NoCategorySelectedState } from "@/components/document
 import { UploadDocumentDialog } from "@/components/documents/UploadDocumentDialog";
 import { NewFolderDialog } from "@/components/documents/NewFolderDialog";
 import { Button } from "@/components/ui/button";
-import { FolderPlus, Upload } from "lucide-react";
+import { FolderPlus, Upload, ExternalLink, VaultIcon, ArchiveIcon } from "lucide-react";
 import { documentCategories } from "@/data/documentCategories";
 import { toast } from "sonner";
 import { DocumentType } from "@/types/document";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { FamilyLegacyBox } from "@/components/estate-planning/FamilyLegacyBox";
+import { 
+  Card, 
+  CardContent, 
+  CardDescription, 
+  CardHeader, 
+  CardTitle 
+} from "@/components/ui/card";
 
 // Fixed the type definition to match the expected interface in the DocumentsTable
 interface DocumentItem {
@@ -42,6 +51,7 @@ export default function LegacyVault() {
   const [isNewFolderDialogOpen, setIsNewFolderDialogOpen] = useState(false);
   const [documents, setDocuments] = useState<DocumentItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState("documents");
   
   // Fixed the mock data to include the 'created' property
   const mockDocuments: DocumentItem[] = [
@@ -151,64 +161,83 @@ export default function LegacyVault() {
   };
 
   return (
-    <ThreeColumnLayout activeMainItem="legacy-vault" title="Legacy Vault">
+    <ThreeColumnLayout activeMainItem="legacy-vault" title="Secure Family Vault">
       <div className="container mx-auto p-4 space-y-6">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
           <div>
-            <h1 className="text-2xl font-bold mb-1">Legacy Vault</h1>
+            <h1 className="text-2xl font-bold mb-1">Secure Family Vault</h1>
             <p className="text-muted-foreground">Store and organize your important documents securely</p>
-          </div>
-          
-          <div className="flex space-x-4 mt-4 md:mt-0">
-            <Button 
-              onClick={() => setIsNewFolderDialogOpen(true)}
-              variant="outline"
-              className="flex items-center"
-            >
-              <FolderPlus className="mr-2 h-4 w-4" />
-              New Folder
-            </Button>
-            
-            <Button 
-              onClick={() => setIsUploadDialogOpen(true)} 
-              className="flex items-center"
-            >
-              <Upload className="mr-2 h-4 w-4" />
-              Upload
-            </Button>
           </div>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <div className="md:col-span-1">
-            <CategoryList 
-              categories={documentCategories as DocumentCategory[]} 
-              activeCategory={activeCategory} 
-              onCategorySelect={setActiveCategory} 
-            />
-          </div>
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList className="grid w-full grid-cols-2 mb-6">
+            <TabsTrigger value="documents" className="flex items-center gap-2">
+              <VaultIcon className="h-4 w-4" />
+              Important Documents
+            </TabsTrigger>
+            <TabsTrigger value="legacy-box" className="flex items-center gap-2">
+              <ArchiveIcon className="h-4 w-4" />
+              Family Legacy Box
+            </TabsTrigger>
+          </TabsList>
           
-          <div className="md:col-span-3">
-            {isLoading ? (
-              <div className="flex justify-center items-center h-64">
-                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
-              </div>
-            ) : filteredDocuments.length > 0 ? (
-              <DocumentsTable 
-                documents={filteredDocuments as any} 
-              />
-            ) : (
-              activeCategory === "all" ? (
-                <NoCategorySelectedState />
-              ) : (
-                <NoDocumentsState 
-                  onUploadClick={() => setIsUploadDialogOpen(true)}
-                  categoryName={documentCategories.find(cat => cat.id === activeCategory)?.name || activeCategory}
+          <TabsContent value="documents" className="space-y-4">
+            <div className="flex justify-end space-x-4">
+              <Button 
+                onClick={() => setIsNewFolderDialogOpen(true)}
+                variant="outline"
+                className="flex items-center"
+              >
+                <FolderPlus className="mr-2 h-4 w-4" />
+                New Folder
+              </Button>
+              
+              <Button 
+                onClick={() => setIsUploadDialogOpen(true)} 
+                className="flex items-center"
+              >
+                <Upload className="mr-2 h-4 w-4" />
+                Upload
+              </Button>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+              <div className="md:col-span-1">
+                <CategoryList 
+                  categories={documentCategories as DocumentCategory[]} 
+                  activeCategory={activeCategory} 
+                  onCategorySelect={setActiveCategory} 
                 />
-              )
-            )}
-          </div>
-        </div>
+              </div>
+              
+              <div className="md:col-span-3">
+                {isLoading ? (
+                  <div className="flex justify-center items-center h-64">
+                    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+                  </div>
+                ) : filteredDocuments.length > 0 ? (
+                  <DocumentsTable 
+                    documents={filteredDocuments as any} 
+                  />
+                ) : (
+                  activeCategory === "all" ? (
+                    <NoCategorySelectedState />
+                  ) : (
+                    <NoDocumentsState 
+                      onUploadClick={() => setIsUploadDialogOpen(true)}
+                      categoryName={documentCategories.find(cat => cat.id === activeCategory)?.name || activeCategory}
+                    />
+                  )
+                )}
+              </div>
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="legacy-box">
+            <FamilyLegacyBox />
+          </TabsContent>
+        </Tabs>
       </div>
       
       <UploadDocumentDialog 
