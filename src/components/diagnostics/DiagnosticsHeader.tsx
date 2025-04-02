@@ -1,6 +1,6 @@
 
 import { Button } from "@/components/ui/button";
-import { RefreshCw, ArrowRight, AlertTriangle, Zap } from "lucide-react";
+import { RefreshCw, ArrowRight, AlertTriangle, Zap, CheckCircle } from "lucide-react";
 import { getOverallStatusColor } from "./StatusIcon";
 import { DiagnosticTestStatus } from "@/services/diagnostics/types";
 import { QuickFix, useDiagnostics } from "@/hooks/useDiagnostics";
@@ -33,6 +33,19 @@ export const DiagnosticsHeader = ({
         return 'bg-blue-500';
       default:
         return 'bg-gray-500';
+    }
+  };
+
+  const getSeverityIcon = (severity: string) => {
+    switch (severity) {
+      case 'high':
+        return <AlertTriangle className="h-4 w-4 text-red-500 mr-2" />;
+      case 'medium':
+        return <Zap className="h-4 w-4 text-yellow-500 mr-2" />;
+      case 'low':
+        return <CheckCircle className="h-4 w-4 text-blue-500 mr-2" />;
+      default:
+        return <Zap className="h-4 w-4 text-gray-500 mr-2" />;
     }
   };
 
@@ -87,16 +100,18 @@ export const DiagnosticsHeader = ({
           <div className="col-span-2">
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-lg font-medium">Recommended Actions</h3>
-              <span className="text-sm text-muted-foreground">{quickFixes.length} issue{quickFixes.length > 1 ? 's' : ''} found</span>
+              <div className="flex items-center">
+                <span className="text-sm text-muted-foreground">{quickFixes.length} issue{quickFixes.length > 1 ? 's' : ''} found</span>
+                {isLoading && <RefreshCw className="ml-2 h-3 w-3 animate-spin" />}
+              </div>
             </div>
             
             {quickFixes.length > 0 ? (
               <div className="space-y-2">
                 {quickFixes.slice(0, 3).map((fix) => (
-                  <div key={fix.id} className="flex items-center justify-between p-2 rounded-lg border">
+                  <div key={fix.id} className="flex items-center justify-between p-3 rounded-lg border hover:bg-muted/30 transition-colors">
                     <div className="flex items-center">
-                      {fix.severity === 'high' && <AlertTriangle className="h-4 w-4 text-red-500 mr-2" />}
-                      {fix.severity === 'medium' && <Zap className="h-4 w-4 text-yellow-500 mr-2" />}
+                      {getSeverityIcon(fix.severity)}
                       <div>
                         <span className="text-sm font-medium">{fix.name}</span>
                         <div className="flex items-center mt-0.5">
