@@ -28,7 +28,7 @@ export function SupportChatbot({ onClose }: SupportChatbotProps) {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      content: 'Hello! I'm your virtual assistant. How can I help you today?',
+      content: "Hello! I'm your virtual assistant. How can I help you today?",
       sender: 'bot',
       timestamp: new Date()
     }
@@ -62,13 +62,13 @@ export function SupportChatbot({ onClose }: SupportChatbotProps) {
       const botResponses: {[key: string]: string} = {
         'bill': 'You can manage your bills in the Bill Pay section. Would you like a tutorial on setting up bill payments?',
         'payment': 'To make a payment, navigate to the Bill Pay section and click "New Payment". You can also set up automatic payments for recurring bills.',
-        'help': 'I'm here to help! You can ask me about bill payments, account management, or any other features of our platform.',
+        'help': "I'm here to help! You can ask me about bill payments, account management, or any other features of our platform.",
         'contact': 'You can contact our support team at support@boutiquefamilyoffice.com or call us at (555) 123-4567 during business hours.',
         'security': 'We take security seriously. All your data is encrypted and we use industry-standard security measures to protect your information.',
         'provider': 'You can connect bill payment providers in the Advanced Bill Paying Providers section. We support BILL.com, Melio, Vic.ai, and Glean.ai.'
       };
       
-      let botResponse = 'I'm not sure I understand. Could you rephrase your question or choose from common topics like bill payments, account security, or connecting payment providers?';
+      let botResponse = "I'm not sure I understand. Could you rephrase your question or choose from common topics like bill payments, account security, or connecting payment providers?";
       
       // Check if any keywords match
       for (const [keyword, response] of Object.entries(botResponses)) {
