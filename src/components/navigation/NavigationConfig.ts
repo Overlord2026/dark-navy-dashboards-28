@@ -1,3 +1,4 @@
+
 import { 
   HomeIcon, 
   GraduationCapIcon,
@@ -115,7 +116,7 @@ export const familyWealthNavItems: NavItem[] = [
     icon: BuildingIcon 
   },
   { 
-    title: "BillPay", 
+    title: "Bill Pay", 
     href: "/billpay", 
     icon: Receipt 
   }

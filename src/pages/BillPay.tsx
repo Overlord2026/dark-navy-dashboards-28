@@ -70,7 +70,7 @@ const BillPay = () => {
   };
 
   return (
-    <ThreeColumnLayout title="BillPay">
+    <ThreeColumnLayout title="Bill Pay">
       <div className="space-y-6 px-4 py-6 max-w-7xl mx-auto">
         <DashboardHeader 
           heading="Bill Payment Center" 

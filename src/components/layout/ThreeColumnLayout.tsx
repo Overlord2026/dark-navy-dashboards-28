@@ -123,7 +123,7 @@ const navigationCategories: NavCategory[] = [
       { id: "legacy-vault", label: "Secure Family Vault", icon: VaultIcon, href: "/legacy-vault" },
       { id: "social-security", label: "Social Security", icon: CircleDollarSignIcon, href: "/social-security" },
       { id: "properties", label: "Real Estate & Properties", icon: BuildingIcon, href: "/properties" },
-      { id: "billpay", label: "BillPay", icon: Receipt, href: "/billpay" },
+      { id: "billpay", label: "Bill Pay", icon: Receipt, href: "/billpay" },
     ]
   },
   {

@@ -1,4 +1,3 @@
-
 export type LogLevel = "error" | "warning" | "info" | "debug" | "success";
 
 export interface LogEntry {
@@ -60,4 +59,19 @@ export interface DiagnosticSummary {
   warnings: number;
   errors: number;
   timestamp: string;
+}
+
+export interface QuickFix {
+  id: string;
+  title: string;
+  description: string;
+  severity: 'critical' | 'high' | 'medium' | 'low';
+  fixFunction?: () => void;
+}
+
+export interface FixHistoryEntry {
+  id: string;
+  timestamp: string;
+  description: string;
+  status: 'success' | 'failed' | 'pending';
 }
