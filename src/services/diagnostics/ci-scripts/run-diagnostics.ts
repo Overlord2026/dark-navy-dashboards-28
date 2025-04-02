@@ -1,10 +1,12 @@
 
-#!/usr/bin/env node
 import { runDiagnostics } from '../index';
 
 /**
  * This script runs all diagnostics and outputs the results.
  * It's intended to be run in CI environments to validate the system.
+ * 
+ * Note: The compiled JavaScript version of this file will have a shebang
+ * to enable direct execution in CI environments.
  */
 async function main() {
   console.log("Starting diagnostic tests...");
