@@ -21,7 +21,8 @@ import {
   BriefcaseIcon,
   ArchiveIcon,
   SearchIcon,
-  ArrowRightLeft
+  ArrowRightLeft,
+  Calculator
 } from "lucide-react";
 
 import { NavItem } from "@/types/navigation";
@@ -61,6 +62,11 @@ export const educationSolutionsNavItems: NavItem[] = [
     title: "Estate Planning", 
     href: "/estate-planning", 
     icon: ArchiveIcon 
+  },
+  { 
+    title: "Proactive Tax Planning", 
+    href: "/tax-planning", 
+    icon: Calculator 
   }
 ];
 

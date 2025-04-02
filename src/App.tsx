@@ -53,6 +53,7 @@ import EstatePlanning from "./pages/EstatePlanning";
 import PortfolioModelDetail from "./pages/PortfolioModelDetail";
 import AllModelPortfolios from "./pages/AllModelPortfolios";
 import PortfolioBuilder from "./pages/PortfolioBuilder";
+import TaxPlanning from "./pages/TaxPlanning";
 
 function App() {
   return (
@@ -81,6 +82,7 @@ function App() {
                     <Route path="/properties" element={<Properties />} />
                     <Route path="/documents" element={<Documents />} />
                     <Route path="/tax-budgets" element={<TaxBudgets />} />
+                    <Route path="/tax-planning" element={<TaxPlanning />} />
                     <Route path="/education" element={<Education />} />
                     <Route path="/education/course/:courseId" element={<Education />} />
                     <Route path="/education/category/:categoryId" element={<Education />} />

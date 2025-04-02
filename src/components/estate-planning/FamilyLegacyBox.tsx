@@ -1,348 +1,187 @@
-import React, { useState } from "react";
-import { 
-  Card, 
-  CardContent, 
-  CardDescription, 
-  CardHeader, 
-  CardTitle 
-} from "@/components/ui/card";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
-import { DocumentItem } from "@/types/document";
-import { toast } from "sonner";
-import { ArchiveIcon, Lock } from "lucide-react";
 
+import React, { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DocumentChecklist } from "./DocumentChecklist";
 import { UploadedDocuments } from "./UploadedDocuments";
 import { SharedDocuments } from "./SharedDocuments";
 import { ResourcesCard } from "./ResourcesCard";
-import { CompletionProgress } from "./CompletionProgress";
 import { DocumentDialogs } from "./DocumentDialogs";
+import { CompletionProgress } from "./CompletionProgress";
+import { toast } from "sonner";
 
-interface ChecklistItem {
-  id: string;
-  title: string;
-  completed: boolean;
-  documents: DocumentItem[];
-  subItems?: SubChecklistItem[];
-  expanded?: boolean;
-}
-
-interface SubChecklistItem {
-  id: string;
-  title: string;
-  completed: boolean;
-}
-
-export const FamilyLegacyBox = () => {
-  const [activeTab, setActiveTab] = useState("checklist");
-  const [openUploadDialog, setOpenUploadDialog] = useState(false);
-  const [openShareDialog, setOpenShareDialog] = useState(false);
-  const [openViewDialog, setOpenViewDialog] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState<ChecklistItem | null>(null);
-  const [selectedDocument, setSelectedDocument] = useState<DocumentItem | null>(null);
-  const [shareEmail, setShareEmail] = useState("");
-  const [shareLink, setShareLink] = useState("");
-  const [copySuccess, setCopySuccess] = useState(false);
-  const [checklist, setChecklist] = useState<ChecklistItem[]>([
-    { 
-      id: "trusts", 
-      title: "General Trusts", 
-      completed: false, 
-      documents: [],
-      expanded: false,
-      subItems: [
-        { id: "revocable", title: "Revocable", completed: false },
-        { id: "irrevocable", title: "Irrevocable", completed: false },
-        { id: "special-needs", title: "Special Needs", completed: false },
-        { id: "other-trusts", title: "Other", completed: false }
-      ]
+export const FamilyLegacyBox: React.FC = () => {
+  const [activeTab, setActiveTab] = useState("overview");
+  const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
+  const [shareDialogOpen, setShareDialogOpen] = useState(false);
+  const [viewDialogOpen, setViewDialogOpen] = useState(false);
+  const [selectedDocument, setSelectedDocument] = useState<string | null>(null);
+  const [selectedDocumentDetails, setSelectedDocumentDetails] = useState<any | null>(null);
+  
+  // Sample documents data (this would typically come from an API)
+  const [documents, setDocuments] = useState<any[]>([
+    {
+      id: "will",
+      name: "Last Will and Testament",
+      description: "My last will and testament document",
+      status: "completed",
+      url: "#",
+      date: new Date("2023-05-15"),
+      uploadedBy: "John Smith",
+      sharedWith: ["Sarah Johnson (Financial Advisor)", "James Wilson (Estate Attorney)"],
     },
-    { 
-      id: "wills", 
-      title: "Wills", 
-      completed: true, 
-      documents: [
-        { id: "doc1", name: "Last Will and Testament.pdf", dateUploaded: "May 15, 2023", size: "1.2 MB", sharedWith: ["spouse@example.com"] }
-      ] 
+    {
+      id: "trust",
+      name: "Trust Documents",
+      description: "Family trust documentation",
+      status: "completed",
+      url: "#",
+      date: new Date("2023-04-10"),
+      uploadedBy: "John Smith",
     },
-    { 
-      id: "beneficiaries", 
-      title: "Beneficiaries for Each Account", 
-      completed: false, 
-      documents: [] 
+    {
+      id: "lifeInsurance",
+      name: "Life Insurance Policy",
+      description: "Term life insurance policy documents",
+      status: "completed",
+      url: "#",
+      date: new Date("2023-06-22"),
+      uploadedBy: "John Smith",
+      sharedWith: ["Sarah Johnson (Financial Advisor)"],
     },
-    { 
-      id: "financial-poa", 
-      title: "Financial Power of Attorney", 
-      completed: false, 
-      documents: [] 
-    },
-    { 
-      id: "medical-poa", 
-      title: "Medical/Healthcare Power of Attorney", 
-      completed: true, 
-      documents: [
-        { id: "doc2", name: "Healthcare Directive.pdf", dateUploaded: "June 3, 2023", size: "0.8 MB", sharedWith: [] }
-      ] 
-    },
-    { 
-      id: "living-will", 
-      title: "Living Will", 
-      completed: false, 
-      documents: [] 
-    },
-    { 
-      id: "guardianship", 
-      title: "Guardianship Documents", 
-      completed: false, 
-      documents: [] 
-    },
-    { 
-      id: "advanced-healthcare", 
-      title: "Advanced Healthcare Directive", 
-      completed: true, 
-      documents: [
-        { id: "doc3", name: "Healthcare Instructions.pdf", dateUploaded: "June 5, 2023", size: "1.5 MB", sharedWith: ["doctor@example.com"] }
-      ] 
-    },
-    { 
-      id: "property-deeds", 
-      title: "Real Estate Property Deeds", 
-      completed: false, 
-      documents: [] 
-    },
-    { 
-      id: "lady-bird-deeds", 
-      title: "Lady Bird Deeds", 
-      completed: false, 
-      documents: [] 
-    },
-    { 
-      id: "property-distribution", 
-      title: "Personal Property Distributions", 
-      completed: false, 
-      documents: [] 
-    },
-    { 
-      id: "charitable-trusts", 
-      title: "Charitable Remainder Trusts", 
-      completed: false, 
-      documents: [] 
-    },
-    { 
-      id: "donor-funds", 
-      title: "Donor Advised Funds", 
-      completed: false, 
-      documents: [] 
-    },
-    { 
-      id: "florida-trusts", 
-      title: "Florida Dynasty Trusts", 
-      completed: false, 
-      documents: [] 
-    }
   ]);
 
-  const openUpload = (category: ChecklistItem) => {
-    setSelectedCategory(category);
-    setOpenUploadDialog(true);
+  const handleUploadDocument = (documentType: string) => {
+    setSelectedDocument(documentType);
+    setUploadDialogOpen(true);
   };
 
-  const openShare = (category: ChecklistItem, document: DocumentItem) => {
-    setSelectedCategory(category);
-    setSelectedDocument(document);
-    setShareEmail("");
-    setShareLink(document.shareLink || "");
-    setOpenShareDialog(true);
+  const handleShareDocument = (documentId: string) => {
+    setSelectedDocument(documentId);
+    const document = documents.find((doc) => doc.id === documentId);
+    setSelectedDocumentDetails(document);
+    setShareDialogOpen(true);
   };
 
-  const viewDocument = (category: ChecklistItem, document: DocumentItem) => {
-    setSelectedCategory(category);
-    setSelectedDocument(document);
-    setOpenViewDialog(true);
+  const handleViewDocument = (documentId: string) => {
+    const document = documents.find((doc) => doc.id === documentId);
+    setSelectedDocument(documentId);
+    setSelectedDocumentDetails(document);
+    setViewDialogOpen(true);
   };
 
-  const handleUpload = (file: File) => {
-    if (!selectedCategory) return;
-    
-    const newDocument: DocumentItem = {
-      id: `doc-${Date.now()}`,
-      name: file.name,
-      dateUploaded: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-      size: `${(file.size / (1024 * 1024)).toFixed(1)} MB`,
-      sharedWith: []
+  const handleDocumentUpload = (documentType: string, data: any) => {
+    // In a real app, this would send the data to an API
+    const newDocument = {
+      id: documentType,
+      name: data.documentName,
+      description: data.description,
+      status: "completed",
+      url: "#",
+      date: new Date(),
+      uploadedBy: "John Smith",
     };
-    
-    setChecklist(prev => prev.map(item => 
-      item.id === selectedCategory.id 
-        ? { ...item, documents: [...item.documents, newDocument] } 
-        : item
-    ));
-    
-    setOpenUploadDialog(false);
-    toast.success(`Document uploaded to ${selectedCategory.title}`);
-  };
 
-  const handleShare = () => {
-    if (!selectedDocument || !shareEmail || !selectedCategory) return;
+    // Update documents list - either add new or replace existing
+    const existingIndex = documents.findIndex((doc) => doc.id === documentType);
     
-    if (!/\S+@\S+\.\S+/.test(shareEmail)) {
-      toast.error("Please enter a valid email address");
-      return;
-    }
-    
-    setChecklist(prev => prev.map(item => 
-      item.id === selectedCategory.id 
-        ? { 
-            ...item, 
-            documents: item.documents.map(doc => 
-              doc.id === selectedDocument.id 
-                ? { ...doc, sharedWith: [...doc.sharedWith, shareEmail] }
-                : doc
-            ) 
-          } 
-        : item
-    ));
-    
-    setOpenShareDialog(false);
-    setShareEmail("");
-    toast.success(`Document shared with ${shareEmail}`);
-  };
-
-  const generateShareLink = () => {
-    if (!selectedDocument || !selectedCategory) return;
-    
-    const link = `https://secure-legacy-vault.example.com/share/${selectedCategory.id}/${selectedDocument.id}/${Math.random().toString(36).substring(2, 15)}`;
-    
-    setChecklist(prev => prev.map(item => 
-      item.id === selectedCategory.id 
-        ? { 
-            ...item, 
-            documents: item.documents.map(doc => 
-              doc.id === selectedDocument.id 
-                ? { ...doc, shareLink: link }
-                : doc
-            ) 
-          } 
-        : item
-    ));
-    
-    setShareLink(link);
-    
-    return link;
-  };
-
-  const copyLinkToClipboard = async () => {
-    let link = shareLink;
-    
-    if (!link) {
-      link = generateShareLink() || "";
-    }
-    
-    try {
-      await navigator.clipboard.writeText(link);
-      setCopySuccess(true);
-      toast.success("Link copied to clipboard");
-      
-      setTimeout(() => setCopySuccess(false), 2000);
-    } catch (err) {
-      toast.error("Failed to copy link");
+    if (existingIndex >= 0) {
+      const updatedDocuments = [...documents];
+      updatedDocuments[existingIndex] = newDocument;
+      setDocuments(updatedDocuments);
+      toast.success("Document updated successfully");
+    } else {
+      setDocuments([...documents, newDocument]);
+      toast.success("Document uploaded successfully");
     }
   };
 
-  const completedItems = checklist.filter(item => item.completed).length;
-  const totalItems = checklist.length;
+  const handleDocumentShare = (documentId: string, sharedWith: string[]) => {
+    // In a real app, this would send the sharing info to an API
+    const updatedDocuments = documents.map((doc) => {
+      if (doc.id === documentId) {
+        // Convert IDs to names (simplified example)
+        const sharedWithNames = sharedWith.map((id) => {
+          // This is a simplified example - in a real app you would lookup the name from the ID
+          const lookup: Record<string, string> = {
+            "1": "James Wilson (Estate Attorney)",
+            "2": "Sarah Johnson (Financial Advisor)",
+            "3": "Michael Brown (CPA)",
+            "4": "Jennifer Davis (Insurance Agent)",
+            "101": "Robert Smith (Spouse)",
+            "102": "Emma Smith (Child)",
+            "103": "Daniel Smith (Child)",
+            "104": "Margaret Johnson (Parent)",
+          };
+          return lookup[id] || id;
+        });
+        
+        return {
+          ...doc,
+          sharedWith: sharedWithNames,
+        };
+      }
+      return doc;
+    });
+    
+    setDocuments(updatedDocuments);
+    toast.success("Document shared successfully");
+  };
+
+  // Calculate completion metrics
+  const totalDocuments = 9; // Total number of checklist items
+  const completedDocuments = documents.length;
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col lg:flex-row gap-6 items-start">
-        <div className="w-full lg:w-3/4">
-          <Card className="h-full shadow-md border-gray-200">
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <ArchiveIcon className="h-6 w-6 text-primary" />
-                  <CardTitle>Family Legacy Box</CardTitle>
-                </div>
-                <div className="flex gap-2">
-                  <Button 
-                    className="flex items-center gap-2" 
-                    variant="vault"
-                    onClick={() => window.open('/legacy-vault', '_blank')}
-                  >
-                    <Lock className="h-4 w-4" />
-                    Secure Client Vault
-                  </Button>
-                </div>
-              </div>
-              <CardDescription>
-                Organize, store, and securely share your most important estate planning documents.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                <TabsList className="grid grid-cols-3 mb-6">
-                  <TabsTrigger value="checklist">Document Checklist</TabsTrigger>
-                  <TabsTrigger value="uploaded">Uploaded Documents</TabsTrigger>
-                  <TabsTrigger value="shared">Shared Documents</TabsTrigger>
-                </TabsList>
-
-                <TabsContent value="checklist">
-                  <DocumentChecklist 
-                    checklist={checklist}
-                    setChecklist={setChecklist}
-                    onUpload={openUpload}
-                    onShare={openShare}
-                    setActiveTab={setActiveTab}
-                  />
-                </TabsContent>
-
-                <TabsContent value="uploaded">
-                  <UploadedDocuments 
-                    checklist={checklist}
-                    onUpload={openUpload}
-                    onView={viewDocument}
-                    onShare={openShare}
-                  />
-                </TabsContent>
-
-                <TabsContent value="shared">
-                  <SharedDocuments 
-                    checklist={checklist}
-                    onShare={openShare}
-                  />
-                </TabsContent>
-              </Tabs>
-            </CardContent>
-          </Card>
-        </div>
+    <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+      <div className="lg:col-span-3 space-y-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>Family Legacy Box</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Tabs defaultValue="overview" value={activeTab} onValueChange={setActiveTab}>
+              <TabsList className="grid w-full grid-cols-3">
+                <TabsTrigger value="overview">Document Overview</TabsTrigger>
+                <TabsTrigger value="uploaded">My Documents</TabsTrigger>
+                <TabsTrigger value="shared">Shared Documents</TabsTrigger>
+              </TabsList>
+              <TabsContent value="overview">
+                <DocumentChecklist
+                  onUploadDocument={handleUploadDocument}
+                  documents={documents}
+                />
+              </TabsContent>
+              <TabsContent value="uploaded">
+                <UploadedDocuments
+                  documents={documents}
+                  onViewDocument={handleViewDocument}
+                  onShareDocument={handleShareDocument}
+                />
+              </TabsContent>
+              <TabsContent value="shared">
+                <SharedDocuments documents={documents} onViewDocument={handleViewDocument} />
+              </TabsContent>
+            </Tabs>
+          </CardContent>
+        </Card>
         
-        <ResourcesCard />
+        <CompletionProgress completedItems={completedDocuments} totalItems={totalDocuments} />
       </div>
       
-      <CompletionProgress 
-        completedItems={completedItems}
-        totalItems={totalItems}
-      />
+      <ResourcesCard />
       
-      <DocumentDialogs 
-        openUploadDialog={openUploadDialog}
-        setOpenUploadDialog={setOpenUploadDialog}
-        openShareDialog={openShareDialog}
-        setOpenShareDialog={setOpenShareDialog}
-        openViewDialog={openViewDialog}
-        setOpenViewDialog={setOpenViewDialog}
-        selectedCategory={selectedCategory}
+      <DocumentDialogs
+        uploadDialogOpen={uploadDialogOpen}
+        shareDialogOpen={shareDialogOpen}
+        viewDialogOpen={viewDialogOpen}
         selectedDocument={selectedDocument}
-        handleUpload={handleUpload}
-        handleShare={handleShare}
-        generateShareLink={generateShareLink}
-        copyLinkToClipboard={copyLinkToClipboard}
-        shareEmail={shareEmail}
-        setShareEmail={setShareEmail}
-        shareLink={shareLink}
-        copySuccess={copySuccess}
+        selectedDocumentDetails={selectedDocumentDetails}
+        onUploadDialogClose={() => setUploadDialogOpen(false)}
+        onShareDialogClose={() => setShareDialogOpen(false)}
+        onViewDialogClose={() => setViewDialogOpen(false)}
+        onDocumentUpload={handleDocumentUpload}
+        onDocumentShare={handleDocumentShare}
       />
     </div>
   );

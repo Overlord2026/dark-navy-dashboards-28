@@ -1,111 +1,93 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { FileText, FilePlus, Eye, Share2, UploadCloud } from "lucide-react";
-import { DocumentItem } from "@/types/document";
+import { Calendar, FileText, Share } from "lucide-react";
+import { format } from "date-fns";
 
-interface ChecklistItem {
+interface DocumentItem {
   id: string;
-  title: string;
-  completed: boolean;
-  documents: DocumentItem[];
-  subItems?: SubChecklistItem[];
-  expanded?: boolean;
-}
-
-interface SubChecklistItem {
-  id: string;
-  title: string;
-  completed: boolean;
+  name: string;
+  description: string;
+  status: "notStarted" | "inProgress" | "completed";
+  url?: string;
+  date?: Date;
+  uploadedBy?: string;
+  sharedWith?: string[];
 }
 
 interface UploadedDocumentsProps {
-  checklist: ChecklistItem[];
-  onUpload: (category: ChecklistItem) => void;
-  onView: (category: ChecklistItem, document: DocumentItem) => void;
-  onShare: (category: ChecklistItem, document: DocumentItem) => void;
+  documents: DocumentItem[];
+  onViewDocument: (documentId: string) => void;
+  onShareDocument: (documentId: string) => void;
 }
 
 export const UploadedDocuments: React.FC<UploadedDocumentsProps> = ({
-  checklist,
-  onUpload,
-  onView,
-  onShare,
+  documents,
+  onViewDocument,
+  onShareDocument,
 }) => {
-  return (
-    <div className="space-y-4">
-      <div className="bg-muted/30 p-4 rounded-lg">
-        <p className="text-sm">
-          View and manage all your uploaded documents across categories.
+  if (documents.length === 0) {
+    return (
+      <div className="text-center py-12">
+        <FileText className="mx-auto h-12 w-12 text-muted-foreground" />
+        <h3 className="mt-4 text-lg font-medium">No Documents Yet</h3>
+        <p className="mt-2 text-sm text-muted-foreground">
+          You haven't uploaded any documents yet. Go to the Document Overview tab to get started.
         </p>
       </div>
-      
-      {checklist.map((category) => (
-        category.documents.length > 0 && (
-          <div key={category.id} className="border rounded-lg overflow-hidden mb-4">
-            <div className="bg-muted/40 p-3 font-medium flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <FileText className="h-4 w-4" />
-                {category.title}
+    );
+  }
+
+  return (
+    <div className="space-y-4 mt-4">
+      <h3 className="font-medium text-lg">My Uploaded Documents</h3>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {documents.map((document) => (
+          <div
+            key={document.id}
+            className="border rounded-lg p-4 hover:border-primary transition-colors"
+          >
+            <div className="flex items-start justify-between">
+              <div className="flex items-start space-x-3">
+                <FileText className="h-5 w-5 text-primary mt-1" />
+                <div>
+                  <h4 className="font-medium">{document.name}</h4>
+                  <p className="text-sm text-muted-foreground">
+                    {document.description}
+                  </p>
+                  {document.date && (
+                    <div className="flex items-center text-xs text-muted-foreground mt-2">
+                      <Calendar className="h-3 w-3 mr-1" />
+                      <span>
+                        Uploaded on {format(new Date(document.date), "MMM d, yyyy")}
+                      </span>
+                    </div>
+                  )}
+                </div>
               </div>
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className="flex items-center gap-1"
-                onClick={() => onUpload(category)}
+            </div>
+            <div className="flex space-x-2 mt-4">
+              <Button
+                variant="outline"
+                size="sm"
+                className="flex-1"
+                onClick={() => onViewDocument(document.id)}
               >
-                <FilePlus className="h-3 w-3" />
-                Add Document
+                View
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                className="flex-1"
+                onClick={() => onShareDocument(document.id)}
+              >
+                <Share className="h-4 w-4 mr-1" />
+                Share
               </Button>
             </div>
-            <div className="divide-y">
-              {category.documents.map((doc) => (
-                <div key={doc.id} className="p-3 flex items-center justify-between hover:bg-muted/10">
-                  <div>
-                    <p className="font-medium flex items-center gap-2">
-                      <FileText className="h-4 w-4 text-primary" />
-                      {doc.name}
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      Uploaded: {doc.dateUploaded} • {doc.size}
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Button 
-                      variant="outline" 
-                      size="sm"
-                      className="flex items-center gap-1"
-                      onClick={() => onView(category, doc)}
-                    >
-                      <Eye className="h-3 w-3" />
-                      View
-                    </Button>
-                    <Button 
-                      variant="outline" 
-                      size="sm"
-                      className="flex items-center gap-1"
-                      onClick={() => onShare(category, doc)}
-                    >
-                      <Share2 className="h-3 w-3" />
-                      Share
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </div>
           </div>
-        )
-      ))}
-      
-      {!checklist.some(category => category.documents.length > 0) && (
-        <div className="text-center p-12 border rounded-lg">
-          <UploadCloud className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-          <h3 className="text-lg font-medium mb-2">No documents uploaded yet</h3>
-          <p className="text-muted-foreground mb-6">
-            Start uploading documents from the Document Checklist tab.
-          </p>
-        </div>
-      )}
+        ))}
+      </div>
     </div>
   );
 };

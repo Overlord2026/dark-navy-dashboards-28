@@ -1,215 +1,218 @@
 
-import React from "react";
+import React, { useState } from "react";
+import { CheckCircle, Upload, Info, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
-import { FileText, ChevronUp, ChevronDown, FilePlus, Eye, Share2 } from "lucide-react";
-import { toast } from "sonner";
-import { DocumentItem } from "@/types/document";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { format } from "date-fns";
 
-interface ChecklistItem {
+interface DocumentItem {
   id: string;
-  title: string;
-  completed: boolean;
-  documents: DocumentItem[];
-  subItems?: SubChecklistItem[];
-  expanded?: boolean;
-}
-
-interface SubChecklistItem {
-  id: string;
-  title: string;
-  completed: boolean;
+  name: string;
+  description: string;
+  status: "notStarted" | "inProgress" | "completed";
+  url?: string;
+  date?: Date;
+  uploadedBy?: string;
+  sharedWith?: string[];
 }
 
 interface DocumentChecklistProps {
-  checklist: ChecklistItem[];
-  setChecklist: React.Dispatch<React.SetStateAction<ChecklistItem[]>>;
-  onUpload: (category: ChecklistItem) => void;
-  onShare: (category: ChecklistItem, document: DocumentItem) => void;
-  setActiveTab: (tab: string) => void;
+  onUploadDocument: (documentType: string) => void;
+  documents: DocumentItem[];
 }
 
 export const DocumentChecklist: React.FC<DocumentChecklistProps> = ({
-  checklist,
-  setChecklist,
-  onUpload,
-  onShare,
-  setActiveTab,
+  onUploadDocument,
+  documents,
 }) => {
-  const handleChecklistToggle = (id: string) => {
-    setChecklist(prev => prev.map(item => 
-      item.id === id ? { ...item, completed: !item.completed } : item
-    ));
-    toast.success(`Status updated for ${checklist.find(item => item.id === id)?.title}`);
-  };
+  const [expandedGroups, setExpandedGroups] = useState<string[]>([
+    "estatePlanning",
+    "advancedDirectives",
+    "insuranceDocuments",
+  ]);
 
-  const handleSubItemToggle = (parentId: string, subItemId: string) => {
-    setChecklist(prev => prev.map(item => {
-      if (item.id === parentId && item.subItems) {
-        const updatedSubItems = item.subItems.map(subItem => 
-          subItem.id === subItemId ? { ...subItem, completed: !subItem.completed } : subItem
-        );
-        
-        const allCompleted = updatedSubItems.every(subItem => subItem.completed);
-        
-        return { 
-          ...item, 
-          subItems: updatedSubItems,
-          completed: allCompleted
-        };
-      }
-      return item;
-    }));
-    
-    const parentItem = checklist.find(item => item.id === parentId);
-    const subItem = parentItem?.subItems?.find(subItem => subItem.id === subItemId);
-    
-    if (parentItem && subItem) {
-      toast.success(`Status updated for ${subItem.title} in ${parentItem.title}`);
+  const toggleGroup = (group: string) => {
+    if (expandedGroups.includes(group)) {
+      setExpandedGroups(expandedGroups.filter((g) => g !== group));
+    } else {
+      setExpandedGroups([...expandedGroups, group]);
     }
   };
 
-  const toggleExpand = (id: string) => {
-    setChecklist(prev => prev.map(item => 
-      item.id === id ? { ...item, expanded: !item.expanded } : item
-    ));
+  const documentGroups = [
+    {
+      id: "estatePlanning",
+      title: "Estate Planning Documents",
+      items: [
+        {
+          id: "will",
+          name: "Last Will and Testament",
+          description:
+            "A legal document that communicates a person's final wishes.",
+        },
+        {
+          id: "trust",
+          name: "Trust Documents",
+          description:
+            "Legal agreements that hold property for beneficiaries.",
+        },
+        {
+          id: "powerOfAttorney",
+          name: "Power of Attorney",
+          description:
+            "Legal authorization for someone to act on your behalf.",
+        },
+      ],
+    },
+    {
+      id: "advancedDirectives",
+      title: "Advanced Directives",
+      items: [
+        {
+          id: "livingWill",
+          name: "Living Will",
+          description:
+            "Document specifying medical treatments you would or would not want.",
+        },
+        {
+          id: "healthcareProxy",
+          name: "Healthcare Proxy",
+          description:
+            "A person designated to make health decisions if you cannot.",
+        },
+        {
+          id: "dnr",
+          name: "Do Not Resuscitate (DNR) Order",
+          description: "Instructs healthcare providers not to perform CPR.",
+        },
+      ],
+    },
+    {
+      id: "insuranceDocuments",
+      title: "Insurance Documents",
+      items: [
+        {
+          id: "lifeInsurance",
+          name: "Life Insurance Policies",
+          description:
+            "Documentation of life insurance coverage and beneficiaries.",
+        },
+        {
+          id: "healthInsurance",
+          name: "Health Insurance Policies",
+          description: "Documentation of health insurance coverage.",
+        },
+        {
+          id: "disabilityInsurance",
+          name: "Disability Insurance",
+          description: "Documentation of disability insurance coverage.",
+        },
+      ],
+    },
+  ];
+
+  const getDocumentStatus = (documentId: string) => {
+    const document = documents.find((doc) => doc.id === documentId);
+    return document ? document.status : "notStarted";
+  };
+
+  const getDocumentDate = (documentId: string) => {
+    const document = documents.find((doc) => doc.id === documentId);
+    return document && document.date
+      ? format(new Date(document.date), "MMM d, yyyy")
+      : null;
   };
 
   return (
-    <div className="space-y-4">
-      <div className="bg-muted/30 p-4 rounded-lg">
-        <p className="text-sm">
-          Use this checklist to track your estate planning documents. Upload each document and mark it as completed.
-        </p>
-      </div>
-      
-      <div className="space-y-4">
-        {checklist.map((item) => (
-          <div key={item.id} className="border rounded-lg hover:bg-muted/20 transition-colors">
-            <div className="flex items-center justify-between p-3">
-              <div className="flex items-center gap-3">
-                {item.subItems && item.subItems.length > 0 ? (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="p-0 h-5 w-5"
-                    onClick={() => toggleExpand(item.id)}
-                  >
-                    {item.expanded ? 
-                      <ChevronUp className="h-4 w-4" /> : 
-                      <ChevronDown className="h-4 w-4" />
-                    }
-                  </Button>
+    <>
+      <div className="mt-6 space-y-4">
+        {documentGroups.map((group) => (
+          <div key={group.id} className="border rounded-lg overflow-hidden">
+            <div
+              className="flex items-center justify-between p-4 bg-muted cursor-pointer"
+              onClick={() => toggleGroup(group.id)}
+            >
+              <h3 className="text-lg font-medium">{group.title}</h3>
+              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                {expandedGroups.includes(group.id) ? (
+                  <CheckCircle className="h-5 w-5" />
                 ) : (
-                  <div className="flex items-center h-5 space-x-2">
-                    <Checkbox 
-                      id={item.id} 
-                      checked={item.completed} 
-                      onCheckedChange={() => handleChecklistToggle(item.id)}
-                    />
-                  </div>
+                  <Info className="h-5 w-5" />
                 )}
-                <Label htmlFor={item.id} className="font-medium">
-                  {item.title}
-                </Label>
-                <span className="text-xs bg-muted px-2 py-1 rounded-full">
-                  {item.documents.length} file{item.documents.length !== 1 ? 's' : ''}
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  className="flex items-center gap-1"
-                  onClick={() => onUpload(item)}
-                >
-                  <FilePlus className="h-3 w-3" />
-                  Add Document
-                </Button>
-                {item.documents.length > 0 && (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="flex items-center gap-1"
-                    onClick={() => setActiveTab("uploaded")}
-                  >
-                    <Eye className="h-3 w-3" />
-                    View All
-                  </Button>
-                )}
-              </div>
+              </Button>
             </div>
-            
-            {item.documents.length > 0 && (
-              <div className="border-t px-3 py-2 bg-muted/10">
-                <div className="text-xs text-muted-foreground mb-1">Recent Documents:</div>
-                <div className="space-y-1">
-                  {item.documents.slice(0, 2).map((doc) => (
-                    <div key={doc.id} className="flex items-center justify-between text-sm py-1">
-                      <div className="flex items-center gap-2">
-                        <FileText className="h-3 w-3" />
-                        <span>{doc.name}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs text-muted-foreground">{doc.dateUploaded}</span>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-6 w-6 p-0"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            onShare(item, doc);
-                          }}
-                        >
-                          <Share2 className="h-3 w-3" />
-                        </Button>
-                      </div>
-                    </div>
-                  ))}
-                  {item.documents.length > 2 && (
-                    <div className="text-xs text-primary cursor-pointer pt-1" onClick={() => setActiveTab("uploaded")}>
-                      + {item.documents.length - 2} more
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-            
-            {item.subItems && item.expanded && (
-              <div className="border-t px-3 py-2 bg-muted/10">
-                <div className="space-y-2 pl-6">
-                  {item.subItems.map((subItem) => (
-                    <div key={subItem.id} className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="flex items-center h-5 space-x-2">
-                          <Checkbox 
-                            id={`${item.id}-${subItem.id}`} 
-                            checked={subItem.completed} 
-                            onCheckedChange={() => handleSubItemToggle(item.id, subItem.id)}
-                          />
-                          <Label htmlFor={`${item.id}-${subItem.id}`}>
-                            {subItem.title}
-                          </Label>
+
+            {expandedGroups.includes(group.id) && (
+              <div className="divide-y">
+                {group.items.map((item) => {
+                  const status = getDocumentStatus(item.id);
+                  const date = getDocumentDate(item.id);
+
+                  return (
+                    <div
+                      key={item.id}
+                      className="p-4 flex items-center justify-between"
+                    >
+                      <div className="flex-1">
+                        <div className="flex items-center">
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <span className="mr-2">
+                                  <FileText className="h-5 w-5 text-primary" />
+                                </span>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p>{item.description}</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                          <span
+                            className={
+                              status === "completed"
+                                ? "text-primary font-medium"
+                                : ""
+                            }
+                          >
+                            {item.name}
+                          </span>
                         </div>
+                        {date && (
+                          <p className="text-sm text-muted-foreground mt-1">
+                            Last updated: {date}
+                          </p>
+                        )}
                       </div>
-                      <Button 
-                        variant="ghost" 
-                        size="sm" 
-                        className="h-7 text-xs"
-                        onClick={() => onUpload(item)}
-                      >
-                        <UploadCloud className="h-3 w-3 mr-1" />
-                        Upload
-                      </Button>
+                      <div>
+                        {status === "completed" ? (
+                          <Button variant="outline" size="sm" className="ml-2">
+                            View
+                          </Button>
+                        ) : (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="ml-2"
+                            onClick={() => onUploadDocument(item.id)}
+                          >
+                            <Upload className="h-4 w-4 mr-1" />
+                            Upload
+                          </Button>
+                        )}
+                      </div>
                     </div>
-                  ))}
-                </div>
+                  );
+                })}
               </div>
             )}
           </div>
         ))}
       </div>
-    </div>
+    </>
   );
 };
