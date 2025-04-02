@@ -1,10 +1,10 @@
 
 import React from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Calculator, FileText, BookOpen, Clock, BarChart, CalendarDays } from "lucide-react";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Calendar, FileText, Calculator, BookOpen, BarChart, PiggyBank } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function TaxPlanning() {
@@ -30,7 +30,7 @@ export default function TaxPlanning() {
       title="Proactive Tax Planning" 
       activeMainItem="education"
     >
-      <motion.div 
+      <motion.div
         className="space-y-6 px-1"
         variants={containerVariants}
         initial="hidden"
@@ -39,293 +39,378 @@ export default function TaxPlanning() {
         <motion.div variants={itemVariants}>
           <h2 className="text-2xl font-bold tracking-tight">Proactive Tax Planning</h2>
           <p className="text-muted-foreground mt-2">
-            Stay ahead of tax changes and optimize your financial strategy with proactive tax planning.
+            Optimize your tax strategy and minimize your tax burden through proactive planning.
           </p>
-          
-          <Tabs defaultValue="overview" className="mt-6">
+        </motion.div>
+
+        <motion.div variants={itemVariants}>
+          <Tabs defaultValue="overview" className="w-full">
             <TabsList className="grid w-full grid-cols-4">
               <TabsTrigger value="overview">Overview</TabsTrigger>
-              <TabsTrigger value="strategies">Tax Strategies</TabsTrigger>
+              <TabsTrigger value="strategies">Strategies</TabsTrigger>
               <TabsTrigger value="resources">Resources</TabsTrigger>
               <TabsTrigger value="calendar">Tax Calendar</TabsTrigger>
             </TabsList>
             
-            <TabsContent value="overview" className="space-y-6 mt-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <Calculator className="mr-2 h-5 w-5 text-primary" />
-                    Tax Planning Fundamentals
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <p>
-                    Proactive tax planning is about making strategic decisions throughout the year to minimize your tax 
-                    burden legally and efficiently. Unlike tax preparation, which happens after the fact, tax planning 
-                    allows you to take advantage of opportunities before tax season arrives.
-                  </p>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
-                    <div className="border rounded-lg p-4">
-                      <h3 className="font-medium text-lg mb-2 flex items-center">
-                        <Clock className="mr-2 h-4 w-4 text-primary" />
-                        Year-Round Approach
-                      </h3>
-                      <p className="text-sm text-muted-foreground">
-                        Tax planning should be a continuous process, not just a year-end activity. Regular reviews help 
-                        identify opportunities and avoid surprises.
-                      </p>
-                    </div>
-                    
-                    <div className="border rounded-lg p-4">
-                      <h3 className="font-medium text-lg mb-2 flex items-center">
-                        <BarChart className="mr-2 h-4 w-4 text-primary" />
-                        Tax-Efficient Investing
-                      </h3>
-                      <p className="text-sm text-muted-foreground">
-                        Learn how to structure your investments to minimize tax impact while maximizing returns 
-                        through asset location and timing strategies.
-                      </p>
-                    </div>
-                  </div>
-                  
-                  <Button className="mt-4">Schedule a Tax Planning Session</Button>
-                </CardContent>
-              </Card>
-              
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <TabsContent value="overview" className="mt-6">
+              <div className="grid gap-6 md:grid-cols-2">
                 <Card>
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-md">Tax-Loss Harvesting</CardTitle>
+                  <CardHeader>
+                    <CardTitle className="flex items-center">
+                      <Calculator className="mr-2 h-5 w-5 text-primary" />
+                      Why Tax Planning Matters
+                    </CardTitle>
+                    <CardDescription>
+                      Understanding the importance of proactive tax strategy
+                    </CardDescription>
                   </CardHeader>
                   <CardContent>
                     <p className="text-sm text-muted-foreground">
-                      Offset capital gains with strategic selling of underperforming investments.
+                      Tax planning is not just about filing returns correctly, but about implementing strategies year-round to minimize tax liability and maximize wealth retention. Proactive tax planning can lead to significant savings and help you achieve your financial goals faster.
                     </p>
-                    <Button variant="link" className="p-0 h-auto mt-2">Learn more</Button>
+                    <Button className="mt-4" variant="outline">Learn More</Button>
                   </CardContent>
                 </Card>
-                
+
                 <Card>
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-md">Retirement Contributions</CardTitle>
+                  <CardHeader>
+                    <CardTitle className="flex items-center">
+                      <PiggyBank className="mr-2 h-5 w-5 text-primary" />
+                      Key Tax Planning Areas
+                    </CardTitle>
+                    <CardDescription>
+                      Focus areas for effective tax optimization
+                    </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm text-muted-foreground">
-                      Maximize tax-advantaged retirement accounts to reduce current tax liability.
-                    </p>
-                    <Button variant="link" className="p-0 h-auto mt-2">Learn more</Button>
+                    <ul className="list-disc pl-5 space-y-2 text-sm text-muted-foreground">
+                      <li>Income timing and character</li>
+                      <li>Deduction and credit maximization</li>
+                      <li>Investment tax efficiency</li>
+                      <li>Retirement account optimization</li>
+                      <li>Estate and gift tax planning</li>
+                      <li>Business entity structuring</li>
+                    </ul>
+                    <Button className="mt-4" variant="outline">Explore Areas</Button>
                   </CardContent>
                 </Card>
-                
+              </div>
+
+              <div className="mt-6">
                 <Card>
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-md">Income Shifting</CardTitle>
+                  <CardHeader>
+                    <CardTitle className="flex items-center">
+                      <BarChart className="mr-2 h-5 w-5 text-primary" />
+                      Your Tax Planning Journey
+                    </CardTitle>
+                    <CardDescription>
+                      A personalized roadmap to tax efficiency
+                    </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm text-muted-foreground">
-                      Strategically time income and deductions to minimize tax brackets.
-                    </p>
-                    <Button variant="link" className="p-0 h-auto mt-2">Learn more</Button>
+                    <div className="space-y-4">
+                      <p className="text-sm text-muted-foreground">
+                        Our approach to tax planning is tailored to your specific financial situation and goals. We'll help you develop a comprehensive tax strategy that adapts to changing tax laws and your evolving financial circumstances.
+                      </p>
+                      <div className="grid gap-4 md:grid-cols-3">
+                        <div className="border rounded-lg p-4">
+                          <h4 className="font-medium text-center">Assessment</h4>
+                          <p className="text-xs text-center text-muted-foreground mt-2">
+                            Evaluate your current tax situation and identify opportunities
+                          </p>
+                        </div>
+                        <div className="border rounded-lg p-4">
+                          <h4 className="font-medium text-center">Strategy</h4>
+                          <p className="text-xs text-center text-muted-foreground mt-2">
+                            Develop customized tax planning strategies
+                          </p>
+                        </div>
+                        <div className="border rounded-lg p-4">
+                          <h4 className="font-medium text-center">Implementation</h4>
+                          <p className="text-xs text-center text-muted-foreground mt-2">
+                            Execute tax optimization techniques with ongoing review
+                          </p>
+                        </div>
+                      </div>
+                      <Button className="w-full mt-2">Begin Tax Assessment</Button>
+                    </div>
                   </CardContent>
                 </Card>
               </div>
             </TabsContent>
             
-            <TabsContent value="strategies" className="space-y-6 mt-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Advanced Tax Strategies</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-6">
-                    <div className="border-b pb-4">
-                      <h3 className="font-medium text-lg mb-2">Charitable Giving Strategies</h3>
-                      <p className="text-sm text-muted-foreground mb-2">
-                        Maximize the tax benefits of your charitable contributions through donor-advised 
-                        funds, bunching, and qualified charitable distributions.
-                      </p>
-                      <Button variant="outline" size="sm">View Strategy Details</Button>
-                    </div>
-                    
-                    <div className="border-b pb-4">
-                      <h3 className="font-medium text-lg mb-2">Estate and Gift Tax Planning</h3>
-                      <p className="text-sm text-muted-foreground mb-2">
-                        Understand how to leverage annual gift tax exclusions, lifetime exemptions, 
-                        and trusts to minimize estate taxes.
-                      </p>
-                      <Button variant="outline" size="sm">View Strategy Details</Button>
-                    </div>
-                    
-                    <div className="border-b pb-4">
-                      <h3 className="font-medium text-lg mb-2">Business Entity Optimization</h3>
-                      <p className="text-sm text-muted-foreground mb-2">
-                        Choose the right business structure (LLC, S-Corp, C-Corp) to optimize tax benefits 
-                        for business owners.
-                      </p>
-                      <Button variant="outline" size="sm">View Strategy Details</Button>
-                    </div>
-                    
-                    <div>
-                      <h3 className="font-medium text-lg mb-2">Tax Credits and Deductions</h3>
-                      <p className="text-sm text-muted-foreground mb-2">
-                        Identify often-overlooked tax credits and deductions that apply to your specific situation.
-                      </p>
-                      <Button variant="outline" size="sm">View Strategy Details</Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+            <TabsContent value="strategies" className="mt-6">
+              <div className="grid gap-6 md:grid-cols-2">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Income Strategies</CardTitle>
+                    <CardDescription>Techniques to optimize income taxation</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="list-disc pl-5 space-y-2 text-sm text-muted-foreground">
+                      <li>Income shifting to lower tax brackets</li>
+                      <li>Capital gains harvesting</li>
+                      <li>Qualified business income deductions</li>
+                      <li>Timing of income recognition</li>
+                    </ul>
+                    <Button className="mt-4" variant="outline">Learn More</Button>
+                  </CardContent>
+                </Card>
+                
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Deduction Strategies</CardTitle>
+                    <CardDescription>Methods to maximize tax deductions</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="list-disc pl-5 space-y-2 text-sm text-muted-foreground">
+                      <li>Itemization vs. standard deduction</li>
+                      <li>Charitable contribution optimization</li>
+                      <li>Business expense planning</li>
+                      <li>Home office and property deductions</li>
+                    </ul>
+                    <Button className="mt-4" variant="outline">Learn More</Button>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Investment Strategies</CardTitle>
+                    <CardDescription>Tax-efficient investment approaches</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="list-disc pl-5 space-y-2 text-sm text-muted-foreground">
+                      <li>Tax-advantaged accounts utilization</li>
+                      <li>Asset location optimization</li>
+                      <li>Tax-loss harvesting techniques</li>
+                      <li>Qualified Opportunity Zones</li>
+                    </ul>
+                    <Button className="mt-4" variant="outline">Learn More</Button>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Retirement Strategies</CardTitle>
+                    <CardDescription>Maximizing retirement tax benefits</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="list-disc pl-5 space-y-2 text-sm text-muted-foreground">
+                      <li>Traditional vs. Roth conversions</li>
+                      <li>Required minimum distribution planning</li>
+                      <li>Social Security taxation management</li>
+                      <li>SECURE Act implications</li>
+                    </ul>
+                    <Button className="mt-4" variant="outline">Learn More</Button>
+                  </CardContent>
+                </Card>
+              </div>
             </TabsContent>
             
-            <TabsContent value="resources" className="space-y-6 mt-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <TabsContent value="resources" className="mt-6">
+              <div className="grid gap-6 md:grid-cols-3">
                 <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center">
                       <BookOpen className="mr-2 h-5 w-5 text-primary" />
-                      Educational Resources
+                      Tax Guides
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <ul className="space-y-4">
-                      <li className="flex items-start">
-                        <FileText className="h-5 w-5 mr-2 mt-0.5 text-primary" />
-                        <div>
-                          <h4 className="font-medium">2024 Tax Planning Guide</h4>
-                          <p className="text-sm text-muted-foreground">
-                            Comprehensive overview of tax planning strategies for the current year.
-                          </p>
-                          <Button variant="link" className="p-0 h-auto mt-1">Download PDF</Button>
-                        </div>
-                      </li>
-                      
-                      <li className="flex items-start">
-                        <FileText className="h-5 w-5 mr-2 mt-0.5 text-primary" />
-                        <div>
-                          <h4 className="font-medium">Tax-Efficient Investing</h4>
-                          <p className="text-sm text-muted-foreground">
-                            Learn how to minimize taxes while maximizing investment returns.
-                          </p>
-                          <Button variant="link" className="p-0 h-auto mt-1">Download PDF</Button>
-                        </div>
-                      </li>
-                      
-                      <li className="flex items-start">
-                        <FileText className="h-5 w-5 mr-2 mt-0.5 text-primary" />
-                        <div>
-                          <h4 className="font-medium">Retirement Account Taxation</h4>
-                          <p className="text-sm text-muted-foreground">
-                            Guide to taxes for various retirement accounts and distribution strategies.
-                          </p>
-                          <Button variant="link" className="p-0 h-auto mt-1">Download PDF</Button>
-                        </div>
-                      </li>
-                    </ul>
+                    <div className="space-y-4">
+                      <div className="border-b pb-3">
+                        <h4 className="font-medium">Complete Tax Planning Guide</h4>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Comprehensive overview of tax optimization strategies
+                        </p>
+                        <Button variant="link" className="p-0 h-auto mt-1">Download PDF</Button>
+                      </div>
+                      <div className="border-b pb-3">
+                        <h4 className="font-medium">Tax-Loss Harvesting Guide</h4>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          How to optimize investment losses for tax benefits
+                        </p>
+                        <Button variant="link" className="p-0 h-auto mt-1">Download PDF</Button>
+                      </div>
+                      <div>
+                        <h4 className="font-medium">Retirement Tax Strategies</h4>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Tax-efficient retirement planning techniques
+                        </p>
+                        <Button variant="link" className="p-0 h-auto mt-1">Download PDF</Button>
+                      </div>
+                    </div>
                   </CardContent>
                 </Card>
-                
+
                 <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center">
-                      <CalendarDays className="mr-2 h-5 w-5 text-primary" />
-                      Upcoming Webinars
+                      <FileText className="mr-2 h-5 w-5 text-primary" />
+                      Tax Forms & Worksheets
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <ul className="space-y-4">
-                      <li className="border-b pb-3">
-                        <h4 className="font-medium">Year-End Tax Planning Strategies</h4>
-                        <p className="text-sm text-muted-foreground">October 15, 2024 • 1:00 PM EST</p>
-                        <Button size="sm" className="mt-2">Register Now</Button>
-                      </li>
-                      
-                      <li className="border-b pb-3">
-                        <h4 className="font-medium">Tax-Efficient Estate Planning</h4>
-                        <p className="text-sm text-muted-foreground">November 10, 2024 • 2:00 PM EST</p>
-                        <Button size="sm" className="mt-2">Register Now</Button>
-                      </li>
-                      
-                      <li>
-                        <h4 className="font-medium">Preparing for Tax Season 2025</h4>
-                        <p className="text-sm text-muted-foreground">December 5, 2024 • 1:00 PM EST</p>
-                        <Button size="sm" className="mt-2">Register Now</Button>
-                      </li>
-                    </ul>
+                    <div className="space-y-4">
+                      <div className="border-b pb-3">
+                        <h4 className="font-medium">Tax Planning Worksheet</h4>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Fillable worksheet to organize your tax planning
+                        </p>
+                        <Button variant="link" className="p-0 h-auto mt-1">Download</Button>
+                      </div>
+                      <div className="border-b pb-3">
+                        <h4 className="font-medium">Charitable Giving Tracker</h4>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Track your charitable contributions for tax purposes
+                        </p>
+                        <Button variant="link" className="p-0 h-auto mt-1">Download</Button>
+                      </div>
+                      <div>
+                        <h4 className="font-medium">Business Expense Log</h4>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Template for tracking deductible business expenses
+                        </p>
+                        <Button variant="link" className="p-0 h-auto mt-1">Download</Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center">
+                      <Calculator className="mr-2 h-5 w-5 text-primary" />
+                      Tax Calculators
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="border-b pb-3">
+                        <h4 className="font-medium">Income Tax Estimator</h4>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Estimate your annual tax liability
+                        </p>
+                        <Button variant="link" className="p-0 h-auto mt-1">Open Calculator</Button>
+                      </div>
+                      <div className="border-b pb-3">
+                        <h4 className="font-medium">Capital Gains Calculator</h4>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Calculate tax impact of investment sales
+                        </p>
+                        <Button variant="link" className="p-0 h-auto mt-1">Open Calculator</Button>
+                      </div>
+                      <div>
+                        <h4 className="font-medium">Roth Conversion Calculator</h4>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Analyze the tax impact of Roth conversions
+                        </p>
+                        <Button variant="link" className="p-0 h-auto mt-1">Open Calculator</Button>
+                      </div>
+                    </div>
                   </CardContent>
                 </Card>
               </div>
             </TabsContent>
             
-            <TabsContent value="calendar" className="space-y-6 mt-6">
+            <TabsContent value="calendar" className="mt-6">
               <Card>
                 <CardHeader>
-                  <CardTitle>2024 Tax Calendar</CardTitle>
+                  <CardTitle className="flex items-center">
+                    <Calendar className="mr-2 h-5 w-5 text-primary" />
+                    2023 Tax Calendar
+                  </CardTitle>
+                  <CardDescription>
+                    Key tax dates and deadlines to remember
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-6">
-                    <div className="border-b pb-4">
-                      <h3 className="font-medium text-lg mb-2">Q1 (January - March)</h3>
-                      <ul className="space-y-2">
-                        <li className="flex items-start">
-                          <span className="font-medium mr-2">Jan 16:</span>
-                          <span className="text-sm text-muted-foreground">Q4 estimated tax payment due</span>
-                        </li>
-                        <li className="flex items-start">
-                          <span className="font-medium mr-2">Jan 31:</span>
-                          <span className="text-sm text-muted-foreground">W-2 and 1099 forms due to recipients</span>
-                        </li>
-                        <li className="flex items-start">
-                          <span className="font-medium mr-2">Mar 15:</span>
-                          <span className="text-sm text-muted-foreground">S-Corporation and partnership returns due</span>
-                        </li>
-                      </ul>
+                  <div className="space-y-4">
+                    <div className="grid gap-4 md:grid-cols-3">
+                      <div className="border rounded-lg p-4">
+                        <h4 className="font-medium">Q1 (Jan-Mar)</h4>
+                        <ul className="mt-2 space-y-2 text-sm">
+                          <li className="flex justify-between">
+                            <span>Jan 15</span>
+                            <span className="text-muted-foreground">Q4 Estimated Tax</span>
+                          </li>
+                          <li className="flex justify-between">
+                            <span>Jan 31</span>
+                            <span className="text-muted-foreground">W-2 & 1099 Deadline</span>
+                          </li>
+                          <li className="flex justify-between">
+                            <span>Mar 15</span>
+                            <span className="text-muted-foreground">S-Corp/Partnership Returns</span>
+                          </li>
+                        </ul>
+                      </div>
+                      
+                      <div className="border rounded-lg p-4">
+                        <h4 className="font-medium">Q2 (Apr-Jun)</h4>
+                        <ul className="mt-2 space-y-2 text-sm">
+                          <li className="flex justify-between">
+                            <span>Apr 15</span>
+                            <span className="text-muted-foreground">Individual Tax Deadline</span>
+                          </li>
+                          <li className="flex justify-between">
+                            <span>Apr 15</span>
+                            <span className="text-muted-foreground">Q1 Estimated Tax</span>
+                          </li>
+                          <li className="flex justify-between">
+                            <span>Jun 15</span>
+                            <span className="text-muted-foreground">Q2 Estimated Tax</span>
+                          </li>
+                        </ul>
+                      </div>
+                      
+                      <div className="border rounded-lg p-4">
+                        <h4 className="font-medium">Q3 (Jul-Sep)</h4>
+                        <ul className="mt-2 space-y-2 text-sm">
+                          <li className="flex justify-between">
+                            <span>Sep 15</span>
+                            <span className="text-muted-foreground">Q3 Estimated Tax</span>
+                          </li>
+                          <li className="flex justify-between">
+                            <span>Sep 15</span>
+                            <span className="text-muted-foreground">Extended Partnership Returns</span>
+                          </li>
+                          <li className="flex justify-between">
+                            <span>Sep 30</span>
+                            <span className="text-muted-foreground">Trust Returns Due</span>
+                          </li>
+                        </ul>
+                      </div>
                     </div>
                     
-                    <div className="border-b pb-4">
-                      <h3 className="font-medium text-lg mb-2">Q2 (April - June)</h3>
-                      <ul className="space-y-2">
-                        <li className="flex items-start">
-                          <span className="font-medium mr-2">Apr 15:</span>
-                          <span className="text-sm text-muted-foreground">Individual tax returns due</span>
-                        </li>
-                        <li className="flex items-start">
-                          <span className="font-medium mr-2">Apr 15:</span>
-                          <span className="text-sm text-muted-foreground">Q1 estimated tax payment due</span>
-                        </li>
-                        <li className="flex items-start">
-                          <span className="font-medium mr-2">Jun 15:</span>
-                          <span className="text-sm text-muted-foreground">Q2 estimated tax payment due</span>
-                        </li>
-                      </ul>
+                    <div className="grid gap-4 md:grid-cols-3">
+                      <div className="border rounded-lg p-4">
+                        <h4 className="font-medium">Q4 (Oct-Dec)</h4>
+                        <ul className="mt-2 space-y-2 text-sm">
+                          <li className="flex justify-between">
+                            <span>Oct 15</span>
+                            <span className="text-muted-foreground">Extended Individual Returns</span>
+                          </li>
+                          <li className="flex justify-between">
+                            <span>Dec 31</span>
+                            <span className="text-muted-foreground">Last Day for Tax Moves</span>
+                          </li>
+                        </ul>
+                      </div>
+                      
+                      <div className="border rounded-lg p-4 md:col-span-2">
+                        <h4 className="font-medium">Year-End Tax Planning</h4>
+                        <p className="text-sm text-muted-foreground mt-2">
+                          December is the last opportunity to implement many tax-saving strategies for the current year. 
+                          Schedule your year-end tax planning session at least 45 days before December 31st.
+                        </p>
+                        <Button className="mt-3" size="sm">Schedule Review</Button>
+                      </div>
                     </div>
                     
-                    <div className="border-b pb-4">
-                      <h3 className="font-medium text-lg mb-2">Q3 (July - September)</h3>
-                      <ul className="space-y-2">
-                        <li className="flex items-start">
-                          <span className="font-medium mr-2">Sep 15:</span>
-                          <span className="text-sm text-muted-foreground">Q3 estimated tax payment due</span>
-                        </li>
-                        <li className="flex items-start">
-                          <span className="font-medium mr-2">Sep 15:</span>
-                          <span className="text-sm text-muted-foreground">Extended S-Corporation and partnership returns due</span>
-                        </li>
-                      </ul>
-                    </div>
-                    
-                    <div>
-                      <h3 className="font-medium text-lg mb-2">Q4 (October - December)</h3>
-                      <ul className="space-y-2">
-                        <li className="flex items-start">
-                          <span className="font-medium mr-2">Oct 15:</span>
-                          <span className="text-sm text-muted-foreground">Extended individual tax returns due</span>
-                        </li>
-                        <li className="flex items-start">
-                          <span className="font-medium mr-2">Dec 31:</span>
-                          <span className="text-sm text-muted-foreground">Last day for tax-loss harvesting and charitable contributions</span>
-                        </li>
-                      </ul>
+                    <div className="mt-4">
+                      <Button variant="outline" className="w-full">
+                        Download Complete Tax Calendar
+                      </Button>
                     </div>
                   </div>
                 </CardContent>

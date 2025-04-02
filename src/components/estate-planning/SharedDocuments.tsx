@@ -1,105 +1,96 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { FileText, Share2, Users2, LinkIcon } from "lucide-react";
-import { DocumentItem } from "@/types/document";
+import { Calendar, FileText, Share, User } from "lucide-react";
+import { format } from "date-fns";
 
-interface ChecklistItem {
+interface SharedDocument {
   id: string;
-  title: string;
-  completed: boolean;
-  documents: DocumentItem[];
-  subItems?: SubChecklistItem[];
-  expanded?: boolean;
+  name: string;
+  sharedBy?: string;
+  sharedWith: string[];
+  date?: Date;
+  status: "active" | "expired";
 }
 
-interface SubChecklistItem {
-  id: string;
-  title: string;
-  completed: boolean;
-}
-
-interface SharedDocumentsProps {
-  checklist: ChecklistItem[];
-  onShare: (category: ChecklistItem, document: DocumentItem) => void;
+export interface SharedDocumentsProps {
+  sharedDocuments: SharedDocument[];
+  onViewDocument: (documentId: string) => void;
 }
 
 export const SharedDocuments: React.FC<SharedDocumentsProps> = ({
-  checklist,
-  onShare,
+  sharedDocuments,
+  onViewDocument,
 }) => {
-  return (
-    <div className="space-y-4">
-      <div className="bg-muted/30 p-4 rounded-lg">
-        <p className="text-sm">
-          Manage documents you've shared with family members, advisors, or other third parties.
+  if (sharedDocuments.length === 0) {
+    return (
+      <div className="text-center py-12">
+        <Share className="mx-auto h-12 w-12 text-muted-foreground" />
+        <h3 className="mt-4 text-lg font-medium">No Shared Documents</h3>
+        <p className="mt-2 text-sm text-muted-foreground">
+          You haven't shared any documents with others yet.
         </p>
       </div>
-      
-      {checklist.map((category) => (
-        category.documents.some(doc => doc.sharedWith.length > 0 || doc.shareLink) && (
-          <div key={category.id} className="border rounded-lg overflow-hidden mb-4">
-            <div className="bg-muted/40 p-3 font-medium">
-              {category.title}
-            </div>
-            <div className="divide-y">
-              {category.documents.filter(doc => doc.sharedWith.length > 0 || doc.shareLink).map((doc) => (
-                <div key={doc.id} className="p-3">
-                  <div className="flex items-center justify-between mb-2">
-                    <p className="font-medium flex items-center gap-2">
-                      <FileText className="h-4 w-4 text-primary" />
-                      {doc.name}
-                    </p>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="flex items-center gap-1"
-                      onClick={() => onShare(category, doc)}
-                    >
-                      <Share2 className="h-3 w-3" />
-                      Manage Sharing
-                    </Button>
+    );
+  }
+
+  return (
+    <div className="space-y-4 mt-4">
+      <h3 className="font-medium text-lg">Shared Documents</h3>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {sharedDocuments.map((document) => (
+          <div
+            key={document.id}
+            className="border rounded-lg p-4 hover:border-primary transition-colors"
+          >
+            <div className="flex items-start justify-between">
+              <div className="flex items-start space-x-3">
+                <FileText className="h-5 w-5 text-primary mt-1" />
+                <div>
+                  <h4 className="font-medium">{document.name}</h4>
+                  <div className="flex items-center text-xs text-muted-foreground mt-2">
+                    {document.sharedWith.length > 0 && (
+                      <div className="flex items-center mr-3">
+                        <User className="h-3 w-3 mr-1" />
+                        <span>
+                          Shared with {document.sharedWith.length} {document.sharedWith.length === 1 ? "person" : "people"}
+                        </span>
+                      </div>
+                    )}
+                    {document.date && (
+                      <div className="flex items-center">
+                        <Calendar className="h-3 w-3 mr-1" />
+                        <span>
+                          {format(new Date(document.date), "MMM d, yyyy")}
+                        </span>
+                      </div>
+                    )}
                   </div>
-                  
-                  {doc.sharedWith.length > 0 && (
-                    <div className="bg-muted/20 p-2 rounded-lg mb-2">
-                      <p className="text-xs font-medium mb-1">Shared with:</p>
-                      <div className="flex flex-wrap gap-1">
-                        {doc.sharedWith.map((email, idx) => (
-                          <div key={idx} className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full flex items-center">
-                            <Users2 className="h-3 w-3 mr-1" />
-                            {email}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                  
-                  {doc.shareLink && (
-                    <div className="bg-muted/20 p-2 rounded-lg">
-                      <p className="text-xs font-medium mb-1">Shareable link:</p>
-                      <div className="flex items-center gap-2">
-                        <LinkIcon className="h-3 w-3 text-primary" />
-                        <span className="text-xs truncate flex-1">{doc.shareLink}</span>
-                      </div>
-                    </div>
-                  )}
                 </div>
-              ))}
+              </div>
+              <span
+                className={`text-xs px-2 py-1 rounded-full ${
+                  document.status === "active"
+                    ? "bg-green-100 text-green-800"
+                    : "bg-amber-100 text-amber-800"
+                }`}
+              >
+                {document.status === "active" ? "Active" : "Expired"}
+              </span>
+            </div>
+            <div className="mt-4">
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-full"
+                onClick={() => onViewDocument(document.id)}
+              >
+                View
+              </Button>
             </div>
           </div>
-        )
-      ))}
-      
-      {!checklist.some(category => category.documents.some(doc => doc.sharedWith.length > 0 || doc.shareLink)) && (
-        <div className="text-center p-12 border rounded-lg">
-          <Share2 className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-          <h3 className="text-lg font-medium mb-2">No documents shared yet</h3>
-          <p className="text-muted-foreground mb-6">
-            You haven't shared any documents with others.
-          </p>
-        </div>
-      )}
+        ))}
+      </div>
     </div>
   );
 };
