@@ -5,7 +5,7 @@ export const testFormValidation = (): FormValidationTestResult[] => {
   // Sample validation tests for different forms
   return [
     {
-      form: "LoginForm",
+      form: "login", // Added the required form property
       formName: "Login Form",
       location: "/login",
       status: "warning",
@@ -26,7 +26,7 @@ export const testFormValidation = (): FormValidationTestResult[] => {
       ]
     },
     {
-      form: "RegistrationForm",
+      form: "registration", // Added the required form property
       formName: "Registration Form",
       location: "/register",
       status: "success",
@@ -53,14 +53,14 @@ export const testFormValidation = (): FormValidationTestResult[] => {
       ]
     },
     {
-      form: "ContactForm",
+      form: "contact", // Added the required form property
       formName: "Contact Form",
       location: "/contact",
       status: "success",
       message: "All validation rules work as expected"
     },
     {
-      form: "PaymentForm",
+      form: "payment", // Added the required form property
       formName: "Payment Form",
       location: "/checkout/payment",
       status: "error",
@@ -87,7 +87,7 @@ export const testFormValidation = (): FormValidationTestResult[] => {
       ]
     },
     {
-      form: "ProfileForm",
+      form: "profile", // Added the required form property
       formName: "Profile Update Form",
       location: "/profile",
       status: "warning",

@@ -1,65 +1,56 @@
 
-import React from 'react';
+import React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { NavigationTests } from './NavigationTests';
-import { PermissionTests } from './PermissionTests';
-import { IconTests } from './IconTests';
-import { FormValidationTests } from './FormValidationTests';
-import { ApiIntegrationTests } from './ApiIntegrationTests';
-import { RoleSimulationTests } from './RoleSimulationTests';
-import { PerformanceTests } from './PerformanceTests';
-import { SecurityTests } from './SecurityTests';
-import { ApiEndpointDiagnostics } from './ApiEndpointDiagnostics';
+import { PerformanceTests } from "./PerformanceTests";
+import { NavigationTests } from "./NavigationTests";
+import { PermissionTests } from "./PermissionTests";
+import { SecurityTests } from "./SecurityTests";
+import { FormValidationTests } from "./FormValidationTests";
+import { QuickFix } from "@/types/diagnostics";
+import { FixHistoryEntry } from "@/types/diagnostics";
+import { IconTests } from "./IconTests";
 
-export const DiagnosticsTabs = ({ results }: { results: any }) => {
+interface DiagnosticsTabsProps {
+  results: any;
+  recommendations?: QuickFix[];
+  isLoading?: boolean;
+  fixHistory?: FixHistoryEntry[];
+}
+
+// The component now accepts all the props being passed to it
+export const DiagnosticsTabs: React.FC<DiagnosticsTabsProps> = ({ 
+  results,
+  recommendations = [],
+  isLoading = false,
+  fixHistory = []
+}) => {
   return (
     <Tabs defaultValue="navigation" className="w-full">
-      <TabsList className="grid w-full grid-cols-3 md:grid-cols-5 lg:grid-cols-9">
+      <TabsList className="grid grid-cols-6 mb-4">
         <TabsTrigger value="navigation">Navigation</TabsTrigger>
-        <TabsTrigger value="permissions">Permissions</TabsTrigger>
-        <TabsTrigger value="icons">Icons</TabsTrigger>
-        <TabsTrigger value="forms">Forms</TabsTrigger>
-        <TabsTrigger value="api-integrations">API Integrations</TabsTrigger>
-        <TabsTrigger value="api-endpoints">API Endpoints</TabsTrigger>
-        <TabsTrigger value="roles">Roles</TabsTrigger>
         <TabsTrigger value="performance">Performance</TabsTrigger>
+        <TabsTrigger value="permissions">Permissions</TabsTrigger>
         <TabsTrigger value="security">Security</TabsTrigger>
+        <TabsTrigger value="forms">Forms</TabsTrigger>
+        <TabsTrigger value="icons">Icons</TabsTrigger>
       </TabsList>
-      
-      <TabsContent value="navigation" className="mt-4">
+      <TabsContent value="navigation">
         <NavigationTests tests={results.navigationTests || []} />
       </TabsContent>
-      
-      <TabsContent value="permissions" className="mt-4">
-        <PermissionTests tests={results.permissionsTests || []} />
-      </TabsContent>
-      
-      <TabsContent value="icons" className="mt-4">
-        <IconTests tests={results.iconTests || []} />
-      </TabsContent>
-      
-      <TabsContent value="forms" className="mt-4">
-        <FormValidationTests tests={results.formValidationTests || []} />
-      </TabsContent>
-      
-      <TabsContent value="api-integrations" className="mt-4">
-        <ApiIntegrationTests tests={results.apiIntegrationTests || []} />
-      </TabsContent>
-      
-      <TabsContent value="api-endpoints" className="mt-4">
-        <ApiEndpointDiagnostics />
-      </TabsContent>
-      
-      <TabsContent value="roles" className="mt-4">
-        <RoleSimulationTests tests={results.roleSimulationTests || []} />
-      </TabsContent>
-      
-      <TabsContent value="performance" className="mt-4">
+      <TabsContent value="performance">
         <PerformanceTests tests={results.performanceTests || []} />
       </TabsContent>
-      
-      <TabsContent value="security" className="mt-4">
+      <TabsContent value="permissions">
+        <PermissionTests tests={results.permissionTests || []} />
+      </TabsContent>
+      <TabsContent value="security">
         <SecurityTests tests={results.securityTests || []} />
+      </TabsContent>
+      <TabsContent value="forms">
+        <FormValidationTests tests={results.formValidationTests || []} />
+      </TabsContent>
+      <TabsContent value="icons">
+        <IconTests tests={results.iconTests || []} />
       </TabsContent>
     </Tabs>
   );
