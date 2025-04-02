@@ -40,7 +40,7 @@ export const homeNavItems = [
     icon: UserIcon
   },
   {
-    title: "Banking",
+    title: "Cash Management",
     href: "/cash-management",
     icon: BanknoteIcon,
     submenu: [
