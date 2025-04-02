@@ -4,7 +4,7 @@ import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowDownIcon, ArrowUpIcon, Calendar, Repeat } from "lucide-react";
+import { ArrowDownIcon, ArrowUpIcon, Calendar, Repeat, Plus } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";

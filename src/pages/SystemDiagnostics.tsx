@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
@@ -55,7 +54,6 @@ export default function SystemDiagnostics() {
     }
   }, [diagnosticResults, isLoading, runSystemDiagnostics]);
 
-  // Calculate issue counts
   const calculateIssueCounts = () => {
     if (!diagnosticResults) {
       return { errors: 0, warnings: 0, success: 0 };
@@ -80,11 +78,9 @@ export default function SystemDiagnostics() {
 
   const issueCounts = calculateIssueCounts();
 
-  // Critical issues - prioritize display of these
   const getCriticalIssues = () => {
     if (!diagnosticResults) return [];
     
-    // Prioritize security issues first
     const securityIssues = (diagnosticResults.securityTests || [])
       .filter(test => test.status === "error" && test.severity === "critical")
       .map(test => ({
@@ -94,7 +90,6 @@ export default function SystemDiagnostics() {
         severity: test.severity
       }));
       
-    // Then API issues
     const apiIssues = (diagnosticResults.apiIntegrationTests || [])
       .filter(test => test.status === "error")
       .map(test => ({
@@ -185,7 +180,6 @@ export default function SystemDiagnostics() {
           </div>
         )}
 
-        {/* Status Summary Cards (visible when not loading and have results) */}
         {diagnosticResults && !isLoading && !isRunning && (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             <Card className="bg-red-50 border-red-200 dark:bg-red-900/20 dark:border-red-800">
@@ -204,7 +198,6 @@ export default function SystemDiagnostics() {
                   size="sm" 
                   className="text-red-800 dark:text-red-300 hover:text-red-900 hover:bg-red-100 dark:hover:bg-red-800/40"
                   onClick={() => {
-                    // Find first tab with errors
                     const tabsWithErrors = ["security", "api", "navigation", "permissions", "forms"];
                     for (const tab of tabsWithErrors) {
                       if (diagnosticResults[`${tab}Tests`]?.some((t: any) => t.status === "error")) {
@@ -237,7 +230,6 @@ export default function SystemDiagnostics() {
                   size="sm" 
                   className="text-yellow-800 dark:text-yellow-300 hover:text-yellow-900 hover:bg-yellow-100 dark:hover:bg-yellow-800/40"
                   onClick={() => {
-                    // Find first tab with warnings
                     const tabsWithWarnings = ["security", "performance", "api", "navigation"];
                     for (const tab of tabsWithWarnings) {
                       if (diagnosticResults[`${tab}Tests`]?.some((t: any) => t.status === "warning")) {
@@ -290,20 +282,16 @@ export default function SystemDiagnostics() {
         />
         
         <div className="mt-6">
-          {/* Running diagnostics indicator */}
-          <div className="mb-6">
-            {isRunning && (
-              <div className="bg-muted/50 p-6 rounded-lg flex items-center justify-center">
-                <div className="flex flex-col items-center">
-                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4"></div>
-                  <p className="text-lg font-medium">Running Diagnostics...</p>
-                  <p className="text-sm text-muted-foreground mt-1">This may take a few moments</p>
-                </div>
+          {isRunning && (
+            <div className="bg-muted/50 p-6 rounded-lg flex items-center justify-center">
+              <div className="flex flex-col items-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4"></div>
+                <p className="text-lg font-medium">Running Diagnostics...</p>
+                <p className="text-sm text-muted-foreground mt-1">This may take a few moments</p>
               </div>
-            )}
-          </div>
+            </div>
+          )}
 
-          {/* Critical issues alert */}
           {criticalIssues.length > 0 && !isRunning && (
             <Card className="mb-6 border-red-200 dark:border-red-800">
               <CardHeader className="bg-red-50 dark:bg-red-900/20 border-b border-red-200 dark:border-red-800">
@@ -340,7 +328,7 @@ export default function SystemDiagnostics() {
 
           {diagnosticResults && !isRunning && (
             <DiagnosticsTabs
-              report={diagnosticResults}
+              results={diagnosticResults}
               recommendations={quickFixes}
               isLoading={isLoading}
               fixHistory={fixHistory}

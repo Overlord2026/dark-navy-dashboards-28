@@ -1,44 +1,50 @@
 
-import { PermissionsTestResult } from './types';
+import { PermissionTestResult } from './types';
 
-export const testPermissions = (): PermissionsTestResult[] => {
-  // In a real app, would test user role permissions against routes and features
+export const testPermissions = (): PermissionTestResult[] => {
+  // Sample permission tests for different roles and resources
   return [
     {
-      role: "client",
-      permission: "view-dashboard",
-      status: "success",
-      message: "Clients can view dashboard"
-    },
-    {
-      role: "client",
-      permission: "access-documents",
-      status: "success",
-      message: "Clients can access documents"
-    },
-    {
-      role: "advisor",
-      permission: "view-client-profiles",
-      status: "success",
-      message: "Advisors can view client profiles"
-    },
-    {
-      role: "client",
-      permission: "modify-advisor-settings",
-      status: "error",
-      message: "Permission conflict: Clients should not be able to modify advisor settings"
-    },
-    {
-      role: "advisor",
-      permission: "create-financial-plans",
-      status: "success",
-      message: "Advisors can create financial plans"
-    },
-    {
+      name: "Admin View Dashboard",
       role: "admin",
-      permission: "manage-subscriptions",
+      permission: "view:dashboard",
+      status: "success",
+      message: "Admin can access dashboard as expected"
+    },
+    {
+      name: "Admin Manage Users",
+      role: "admin",
+      permission: "manage:users",
+      status: "success",
+      message: "Admin can manage users as expected"
+    },
+    {
+      name: "Editor Edit Content",
+      role: "editor",
+      permission: "edit:content",
+      status: "success",
+      message: "Editor can edit content as expected"
+    },
+    {
+      name: "Viewer Edit Content",
+      role: "viewer",
+      permission: "edit:content",
+      status: "error",
+      message: "Viewer should not be able to edit content but permissions allow it"
+    },
+    {
+      name: "Admin Access Analytics",
+      role: "admin",
+      permission: "access:analytics",
+      status: "success",
+      message: "Admin can access analytics as expected"
+    },
+    {
+      name: "Editor Publish Content",
+      role: "editor",
+      permission: "publish:content",
       status: "warning",
-      message: "Admin subscription management partially available - some features hidden"
+      message: "Editor can publish content but approval workflow is not enforced"
     }
   ];
 };

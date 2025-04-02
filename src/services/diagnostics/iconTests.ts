@@ -2,49 +2,56 @@
 import { IconTestResult } from './types';
 
 export const testIcons = (): IconTestResult[] => {
-  // In a real app, would verify all icons are rendering correctly
+  // Sample icon tests for different parts of the application
   return [
     {
+      name: "HomeIcon",
       icon: "HomeIcon",
-      location: "Sidebar",
+      location: "Navigation Menu",
       status: "success",
-      message: "Home icon displays correctly"
+      message: "Icon renders correctly in all themes"
     },
     {
-      icon: "DocumentIcon",
-      location: "Documents Page",
-      status: "success",
-      message: "Document icon displays correctly"
-    },
-    {
-      icon: "UserIcon",
-      location: "Profile Page",
-      status: "success",
-      message: "User icon displays correctly"
-    },
-    {
+      name: "SettingsIcon",
       icon: "SettingsIcon",
-      location: "Settings Menu",
+      location: "Profile Dropdown",
       status: "success",
-      message: "Settings icon displays correctly"
+      message: "Icon renders correctly in all themes"
     },
     {
-      icon: "ChartIcon",
-      location: "Financial Overview",
-      status: "warning",
-      message: "Chart icon may not display correctly in dark mode"
-    },
-    {
+      name: "NotificationIcon",
       icon: "BellIcon",
-      location: "Notifications",
+      location: "Header",
       status: "success",
-      message: "Bell icon displays correctly"
+      message: "Icon renders correctly in all themes"
     },
     {
-      icon: "CalendarIcon",
-      location: "Appointments",
+      name: "SearchIcon",
+      icon: "SearchIcon",
+      location: "Global Search",
+      status: "success",
+      message: "Icon renders correctly in all themes"
+    },
+    {
+      name: "AlertIcon",
+      icon: "AlertTriangleIcon",
+      location: "Error Messages",
+      status: "warning",
+      message: "Icon may not be visible in high contrast mode"
+    },
+    {
+      name: "UserIcon",
+      icon: "UserIcon",
+      location: "Profile Section",
+      status: "success",
+      message: "Icon renders correctly in all themes"
+    },
+    {
+      name: "DocsIcon",
+      icon: "FileTextIcon",
+      location: "Documentation Links",
       status: "error",
-      message: "Calendar icon missing in mobile view"
+      message: "Icon fails to render in Safari browser"
     }
   ];
 };

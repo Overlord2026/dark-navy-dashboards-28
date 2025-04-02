@@ -2,97 +2,108 @@
 import { FormValidationTestResult } from './types';
 
 export const testFormValidation = (): FormValidationTestResult[] => {
-  // In a real app, this would run actual form validation tests
+  // Sample validation tests for different forms
   return [
     {
-      formName: "Advisor Feedback Form",
-      location: "/advisor-feedback",
+      form: "LoginForm",
+      formName: "Login Form",
+      location: "/login",
       status: "warning",
-      message: "Form allows submission with empty ratings",
-      fields: [
-        {
-          fieldName: "ratings",
-          fieldType: "star-rating",
-          status: "warning",
-          message: "Star ratings can be empty on submission"
-        },
-        {
-          fieldName: "comments",
-          fieldType: "textarea",
-          status: "success",
-          message: "Text areas properly validate and trim input"
-        }
-      ]
-    },
-    {
-      formName: "Contact Information Form",
-      location: "/customer-profile",
-      status: "success",
-      message: "All fields validate correctly",
+      message: "Form validation has minor issues with error display",
       fields: [
         {
           fieldName: "email",
           fieldType: "email",
           status: "success",
-          message: "Email validation working correctly"
+          message: "Email validation works correctly"
         },
         {
-          fieldName: "phone",
-          fieldType: "tel",
-          status: "success",
-          message: "Phone number validation working correctly"
+          fieldName: "password",
+          fieldType: "password",
+          status: "warning",
+          message: "Password strength indicator not showing for some password patterns"
         }
       ]
     },
     {
-      formName: "Property Form",
-      location: "/properties",
+      form: "RegistrationForm",
+      formName: "Registration Form",
+      location: "/register",
       status: "success",
-      message: "Form validates all required fields"
-    },
-    {
-      formName: "Loan Application Form",
-      location: "/lending",
-      status: "error",
-      message: "Form submission fails with valid data",
+      message: "All validation rules work as expected",
       fields: [
         {
-          fieldName: "loanAmount",
+          fieldName: "email",
+          fieldType: "email",
+          status: "success",
+          message: "Email validation works correctly"
+        },
+        {
+          fieldName: "password",
+          fieldType: "password",
+          status: "success",
+          message: "Password validation works correctly"
+        },
+        {
+          fieldName: "confirmPassword",
+          fieldType: "password",
+          status: "success",
+          message: "Password matching validation works correctly"
+        }
+      ]
+    },
+    {
+      form: "ContactForm",
+      formName: "Contact Form",
+      location: "/contact",
+      status: "success",
+      message: "All validation rules work as expected"
+    },
+    {
+      form: "PaymentForm",
+      formName: "Payment Form",
+      location: "/checkout/payment",
+      status: "error",
+      message: "Critical validation issues found",
+      fields: [
+        {
+          fieldName: "cardNumber",
+          fieldType: "number",
+          status: "error",
+          message: "Card number validation fails to detect invalid card numbers"
+        },
+        {
+          fieldName: "cvv",
           fieldType: "number",
           status: "success",
-          message: "Numeric validation working correctly"
+          message: "CVV validation works correctly"
         },
         {
-          fieldName: "purpose",
-          fieldType: "select",
-          status: "error",
-          message: "Select field not saving value on submission"
-        },
-        {
-          fieldName: "startDate",
+          fieldName: "expiryDate",
           fieldType: "date",
           status: "error",
-          message: "Date picker not selecting correct date format"
+          message: "Allows selection of past dates"
         }
       ]
     },
     {
-      formName: "Document Upload Form",
-      location: "/documents",
+      form: "ProfileForm",
+      formName: "Profile Update Form",
+      location: "/profile",
       status: "warning",
-      message: "File validation partially working",
+      message: "Form has some validation inconsistencies",
       fields: [
         {
-          fieldName: "fileUpload",
-          fieldType: "file",
+          fieldName: "phoneNumber",
+          fieldType: "tel",
           status: "warning",
-          message: "Accepts improper file types despite validation"
+          message: "Phone number validation accepts some invalid formats"
         },
         {
-          fieldName: "documentType",
-          fieldType: "select",
+          fieldName: "address",
+          fieldType: "text",
           status: "success",
-          message: "Document type selection works correctly"
+          message: "Address validation works correctly"
         }
       ]
     }
