@@ -6,6 +6,16 @@ interface UserProfile {
   name?: string;
   displayName?: string;
   email?: string;
+  firstName?: string;
+  lastName?: string;
+  middleName?: string;
+  title?: string;
+  suffix?: string;
+  gender?: string;
+  maritalStatus?: string;
+  dateOfBirth?: Date;
+  phone?: string;
+  investorType?: string;
   role: 'client' | 'advisor' | 'admin' | 'system_administrator' | 'developer' | 'consultant' | 'accountant' | 'attorney';
   permissions?: string[];
 }
@@ -39,8 +49,12 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
           name: 'Admin User',
           displayName: 'Admin',
           email: 'admin@example.com',
+          firstName: 'Tom',
+          lastName: 'Brady',
           role: 'admin',
-          permissions: ['all']
+          permissions: ['all'],
+          phone: '(555) 123-4567',
+          investorType: 'High Net Worth Individual'
         };
         
         setUserProfile(mockUser);
@@ -66,9 +80,13 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
         id: 'user-123',
         name: 'Demo User',
         displayName: email.split('@')[0],
+        firstName: 'Tom',
+        lastName: 'Brady',
         email,
         role: 'admin',
-        permissions: ['all']
+        permissions: ['all'],
+        phone: '(555) 123-4567',
+        investorType: 'High Net Worth Individual'
       };
       
       setUserProfile(mockUser);

@@ -28,7 +28,7 @@ export function SecurityForm({ onSave }: { onSave: () => void }) {
       // Log failed attempt to audit log
       auditLog.log(
         "current-user", // In a real application, this would be the actual user ID
-        "mfa_enabled",
+        "profile_update",
         "failure",
         {
           userName: "Current User",
@@ -72,7 +72,7 @@ export function SecurityForm({ onSave }: { onSave: () => void }) {
       // Log failed OTP verification
       auditLog.log(
         "current-user",
-        "mfa_enabled",
+        "profile_update",
         "failure",
         {
           userName: "Current User",
@@ -95,7 +95,7 @@ export function SecurityForm({ onSave }: { onSave: () => void }) {
       // Log successful MFA enablement to audit log
       auditLog.log(
         "current-user",
-        "mfa_enabled",
+        "settings_change",
         "success",
         {
           userName: "Current User",
