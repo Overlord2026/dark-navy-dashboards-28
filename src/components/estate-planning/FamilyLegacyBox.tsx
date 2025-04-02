@@ -4,8 +4,7 @@ import {
   CardContent, 
   CardDescription, 
   CardHeader, 
-  CardTitle, 
-  CardFooter 
+  CardTitle 
 } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
