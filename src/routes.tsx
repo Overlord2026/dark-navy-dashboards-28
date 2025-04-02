@@ -51,6 +51,7 @@ import DeveloperAccessControl from "./pages/DeveloperAccessControl";
 import IPProtection from "./pages/IPProtection";
 import SystemHealthDashboard from "./pages/SystemHealthDashboard";
 import BankingTransfers from "./pages/BankingTransfers";
+import BillPaying from "./pages/BillPaying";
 
 import { useUser } from "./context/UserContext";
 
@@ -96,6 +97,7 @@ const AppRoutes: React.FC = () => {
       <Route path="/cash-management" element={<CashManagement />} />
       <Route path="/transfers" element={<Transfers />} />
       <Route path="/banking-transfers" element={<BankingTransfers />} />
+      <Route path="/banking/bill-paying" element={<BillPaying />} />
       <Route path="/legacy-vault" element={<LegacyVault />} />
       <Route path="/sharing" element={<Sharing />} />
       <Route path="/sharing/:sectionId" element={<Sharing />} />

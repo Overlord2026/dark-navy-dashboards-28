@@ -24,7 +24,9 @@ import {
   SearchIcon,
   ArrowRightLeft,
   Calculator,
-  PieChart
+  PieChart,
+  CreditCard,
+  Receipt
 } from "lucide-react";
 
 import { NavItem } from "@/types/navigation";
@@ -91,7 +93,7 @@ export const familyWealthNavItems: NavItem[] = [
   },
   { 
     title: "Banking", 
-    href: "/cash-management", 
+    href: "/banking", 
     icon: BanknoteIcon,
     submenu: [
       {
@@ -103,6 +105,11 @@ export const familyWealthNavItems: NavItem[] = [
         title: "Transfers",
         href: "/transfers",
         icon: ArrowRightLeft
+      },
+      {
+        title: "Bill Paying",
+        href: "/banking/bill-paying",
+        icon: Receipt
       }
     ]
   },
