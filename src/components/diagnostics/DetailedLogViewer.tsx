@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Search, ArrowDownUp, AlertCircle, Info, Bug, RefreshCw } from "lucide-react";
+import { toast } from "sonner";
 
 // Define the log entry type with specific level types
 interface LogEntry {
