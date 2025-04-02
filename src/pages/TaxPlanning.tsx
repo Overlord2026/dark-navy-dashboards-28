@@ -13,7 +13,7 @@ import {
   ExternalLink,
   ArrowRight,
   Check,
-  Buildings,
+  Building,
   UserSquare
 } from "lucide-react";
 import { motion } from "framer-motion";
@@ -281,7 +281,7 @@ export default function TaxPlanning() {
                 
                 <div className="border rounded-lg p-4">
                   <h4 className="font-medium flex items-center">
-                    <Buildings className="h-4 w-4 mr-2 text-primary" />
+                    <Building className="h-4 w-4 mr-2 text-primary" />
                     State Residency Planning
                   </h4>
                   <p className="text-sm text-muted-foreground mt-2">
