@@ -57,6 +57,23 @@ jobs:
         with:
           name: diagnostics-report
           path: diagnostics-report.json
+      
+      - name: Run API endpoint verification
+        run: |
+          echo "Running API endpoint verification..."
+          node ./dist/services/diagnostics/ci-scripts/verify-api-endpoints.js \
+            --outputFile=api-endpoints-report.json \
+            --failOnError=true
+        env:
+          VITE_APP_ENV: 'ci'
+          VITE_APP_API_URL: 'https://api.example.com'
+          
+      - name: Upload API endpoint verification report
+        if: always() # Upload even if tests fail
+        uses: actions/upload-artifact@v3
+        with:
+          name: api-endpoints-report
+          path: api-endpoints-report.json
           
       - name: Run Jest tests for diagnostics
         run: npm test -- --testPathPattern=services/diagnostics
@@ -113,6 +130,7 @@ jobs:
               const categories = [
                 { key: 'navigationTests', name: 'Navigation' },
                 { key: 'apiIntegrationTests', name: 'API Integration' },
+                { key: 'apiEndpointTests', name: 'API Endpoints' },
                 { key: 'securityTests', name: 'Security' }
               ];
               

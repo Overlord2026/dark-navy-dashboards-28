@@ -38,6 +38,21 @@ export interface NavigationDiagnosticResult {
   consoleErrors?: string[];
 }
 
+export interface ApiEndpointDiagnosticResult {
+  name: string;
+  url: string;
+  method: string;
+  status: "success" | "warning" | "error";
+  responseTime: number;
+  responseStatus?: number;
+  responseSize?: number;
+  errorMessage?: string;
+  expectedDataStructure: string;
+  actualDataStructure?: string;
+  structureMatch?: boolean;
+  authStatus?: "valid" | "invalid" | "expired" | "missing";
+}
+
 export interface DiagnosticSummary {
   overall: "success" | "warning" | "error";
   total: number;

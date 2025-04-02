@@ -8,6 +8,7 @@ import { testApiIntegrations } from './apiIntegrationTests';
 import { testRoleSimulations } from './roleSimulationTests';
 import { runPerformanceTests } from './performanceTests';
 import { runSecurityTests } from './securityTests';
+import { testApiEndpoints } from './apiDiagnostics';
 import { DiagnosticTestStatus } from './types';
 import { logger } from '../logging/loggingService';
 import { auditLog } from '../auditLog/auditLogService';
@@ -68,6 +69,9 @@ export const runDiagnostics = async () => {
     // API integration tests - Check connections to all external services and APIs
     const apiIntegrationTests = await testApiIntegrations();
     
+    // API endpoint tests - Verify all API endpoints used in the application
+    const apiEndpointTests = await testApiEndpoints();
+    
     // Role simulation tests - Simulate different user roles to verify access controls
     const roleSimulationTests = await testRoleSimulations();
     
@@ -86,6 +90,7 @@ export const runDiagnostics = async () => {
       ...iconTests.map(item => item.status),
       ...formValidationTests.map(item => item.status),
       ...apiIntegrationTests.map(item => item.status),
+      ...apiEndpointTests.map(item => item.status),
       ...roleSimulationTests.map(item => item.status),
       ...performanceTests.map(item => item.status),
       ...securityTests.map(item => item.status),
@@ -111,6 +116,7 @@ export const runDiagnostics = async () => {
       iconTests,
       formValidationTests,
       apiIntegrationTests,
+      apiEndpointTests,
       roleSimulationTests,
       performanceTests,
       securityTests,

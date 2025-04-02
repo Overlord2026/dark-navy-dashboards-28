@@ -1,277 +1,66 @@
 
-import React, { useState } from "react";
+import React from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CoreServicesSummary } from "./CoreServicesSummary";
-import { NavigationTests } from "./NavigationTests";
-import { PermissionTests } from "./PermissionTests";
-import { IconTests } from "./IconTests";
-import { FormValidationTests } from "./FormValidationTests";
-import { ApiIntegrationTests } from "./ApiIntegrationTests";
-import { RoleSimulationTests } from "./RoleSimulationTests";
-import { PerformanceTests } from "./PerformanceTests";
-import { SecurityTests } from "./SecurityTests";
-import { RecommendationsList } from "./RecommendationsList";
-import { LogViewer } from "./LogViewer";
-import { LoggingConfiguration } from "./LoggingConfiguration";
-import { AuditLogViewer } from "./AuditLogViewer";
-import { useUser } from "@/context/UserContext";
-import { DiagnosticsAuditViewer } from "./DiagnosticsAuditViewer";
-import { useDiagnostics } from "@/hooks/useDiagnostics";
-import { DetailedLogViewer } from "./DetailedLogViewer";
-import { FixHistoryLog } from "./FixHistoryLog";
-import { 
-  LayoutDashboard, 
-  Navigation, 
-  ShieldAlert, 
-  FileText, 
-  Globe, 
-  Users, 
-  Zap, 
-  Lock, 
-  Lightbulb,
-  FileTerminal,
-  Shield,
-  ActivitySquare,
-  History
-} from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { DiagnosticTestStatus } from "@/services/diagnostics/types";
+import { NavigationTests } from './NavigationTests';
+import { PermissionTests } from './PermissionTests';
+import { IconTests } from './IconTests';
+import { FormValidationTests } from './FormValidationTests';
+import { ApiIntegrationTests } from './ApiIntegrationTests';
+import { RoleSimulationTests } from './RoleSimulationTests';
+import { PerformanceTests } from './PerformanceTests';
+import { SecurityTests } from './SecurityTests';
+import { ApiEndpointDiagnostics } from './ApiEndpointDiagnostics';
 
-type DiagnosticsTabsProps = {
-  report: any;
-  recommendations: any[];
-  isLoading: boolean;
-  fixHistory?: any[];
-};
-
-export const DiagnosticsTabs = ({ 
-  report, 
-  recommendations, 
-  isLoading,
-  fixHistory = []
-}: DiagnosticsTabsProps) => {
-  const [activeTab, setActiveTab] = useState("overview");
-  const { userProfile } = useUser();
-  const userRole = userProfile?.role || "client";
-  const isAdmin = userRole === "admin" || userRole === "system_administrator";
-  const diagnostics = useDiagnostics();
-
-  // Helper to count issues for each tab
-  const countIssues = (tests: any[] = [], status: DiagnosticTestStatus = "error"): number => {
-    return tests.filter(test => test.status === status).length;
-  };
-  
-  // Create status badges for tabs
-  const createStatusBadge = (count: number, status: DiagnosticTestStatus = "error") => {
-    if (count === 0) return null;
-    
-    return (
-      <Badge
-        variant={status === "error" ? "destructive" : status === "warning" ? "warning" : "default"}
-        className="ml-1.5"
-      >
-        {count}
-      </Badge>
-    );
-  };
-  
-  const navigationIssues = countIssues(report?.navigationTests);
-  const permissionsIssues = countIssues(report?.permissionsTests);
-  const formsIssues = countIssues(report?.formValidationTests);
-  const apiIssues = countIssues(report?.apiIntegrationTests);
-  const rolesIssues = countIssues(report?.roleSimulationTests);
-  const performanceIssues = countIssues(report?.performanceTests);
-  const securityIssues = countIssues(report?.securityTests);
-  
+export const DiagnosticsTabs = ({ results }: { results: any }) => {
   return (
-    <Tabs 
-      defaultValue="overview" 
-      value={activeTab}
-      onValueChange={setActiveTab}
-      className="space-y-4"
-    >
-      <TabsList className="grid grid-cols-2 md:grid-cols-5 lg:grid-cols-10 gap-1">
-        <TabsTrigger value="overview" className="flex items-center gap-1">
-          <LayoutDashboard className="h-4 w-4" />
-          <span className="hidden md:inline">Overview</span>
-        </TabsTrigger>
-        
-        <TabsTrigger value="navigation" className="flex items-center gap-1">
-          <Navigation className="h-4 w-4" />
-          <span className="hidden md:inline">Navigation</span>
-          {createStatusBadge(navigationIssues)}
-        </TabsTrigger>
-        
-        <TabsTrigger value="permissions" className="flex items-center gap-1">
-          <ShieldAlert className="h-4 w-4" />
-          <span className="hidden md:inline">Permissions</span>
-          {createStatusBadge(permissionsIssues)}
-        </TabsTrigger>
-        
-        <TabsTrigger value="forms" className="flex items-center gap-1">
-          <FileText className="h-4 w-4" />
-          <span className="hidden md:inline">Forms</span>
-          {createStatusBadge(formsIssues)}
-        </TabsTrigger>
-        
-        <TabsTrigger value="api" className="flex items-center gap-1">
-          <Globe className="h-4 w-4" />
-          <span className="hidden md:inline">API</span>
-          {createStatusBadge(apiIssues)}
-        </TabsTrigger>
-        
-        <TabsTrigger value="roles" className="flex items-center gap-1">
-          <Users className="h-4 w-4" />
-          <span className="hidden md:inline">Roles</span>
-          {createStatusBadge(rolesIssues)}
-        </TabsTrigger>
-        
-        <TabsTrigger value="performance" className="flex items-center gap-1">
-          <Zap className="h-4 w-4" />
-          <span className="hidden md:inline">Performance</span>
-          {createStatusBadge(performanceIssues)}
-        </TabsTrigger>
-        
-        <TabsTrigger value="security" className="flex items-center gap-1">
-          <Lock className="h-4 w-4" />
-          <span className="hidden md:inline">Security</span>
-          {createStatusBadge(securityIssues)}
-        </TabsTrigger>
-        
-        <TabsTrigger value="recommendations" className="flex items-center gap-1">
-          <Lightbulb className="h-4 w-4" />
-          <span className="hidden md:inline">Recommendations</span>
-        </TabsTrigger>
-        
-        <TabsTrigger value="history" className="flex items-center gap-1">
-          <History className="h-4 w-4" />
-          <span className="hidden md:inline">Fix History</span>
-        </TabsTrigger>
-        
-        {isAdmin && (
-          <>
-            <TabsTrigger value="logs" className="flex items-center gap-1">
-              <FileTerminal className="h-4 w-4" />
-              <span className="hidden md:inline">System Logs</span>
-            </TabsTrigger>
-            
-            <TabsTrigger value="audit-logs" className="flex items-center gap-1">
-              <Shield className="h-4 w-4" />
-              <span className="hidden md:inline">Security Audit</span>
-            </TabsTrigger>
-            
-            <TabsTrigger value="diagnostics-logs" className="flex items-center gap-1">
-              <ActivitySquare className="h-4 w-4" />
-              <span className="hidden md:inline">Diagnostics Audit</span>
-            </TabsTrigger>
-          </>
-        )}
+    <Tabs defaultValue="navigation" className="w-full">
+      <TabsList className="grid w-full grid-cols-3 md:grid-cols-5 lg:grid-cols-9">
+        <TabsTrigger value="navigation">Navigation</TabsTrigger>
+        <TabsTrigger value="permissions">Permissions</TabsTrigger>
+        <TabsTrigger value="icons">Icons</TabsTrigger>
+        <TabsTrigger value="forms">Forms</TabsTrigger>
+        <TabsTrigger value="api-integrations">API Integrations</TabsTrigger>
+        <TabsTrigger value="api-endpoints">API Endpoints</TabsTrigger>
+        <TabsTrigger value="roles">Roles</TabsTrigger>
+        <TabsTrigger value="performance">Performance</TabsTrigger>
+        <TabsTrigger value="security">Security</TabsTrigger>
       </TabsList>
-
-      {/* Overview Tab */}
-      <TabsContent value="overview">
-        <CoreServicesSummary report={report} isLoading={isLoading} />
-      </TabsContent>
-
-      {/* Navigation Tab */}
-      <TabsContent value="navigation">
-        <NavigationTests 
-          tests={report?.navigationTests || []}
-          isLoading={isLoading}
-        />
-      </TabsContent>
-
-      {/* Permissions Tab */}
-      <TabsContent value="permissions">
-        <PermissionTests 
-          tests={report?.permissionsTests || []}
-          isLoading={isLoading}
-        />
-      </TabsContent>
-
-      {/* Forms Tab */}
-      <TabsContent value="forms">
-        <FormValidationTests 
-          tests={report?.formValidationTests || []}
-          isLoading={isLoading}
-        />
-      </TabsContent>
-
-      {/* API Tab */}
-      <TabsContent value="api">
-        <ApiIntegrationTests 
-          tests={report?.apiIntegrationTests || []}
-          isLoading={isLoading}
-        />
-      </TabsContent>
-
-      {/* Roles Tab */}
-      <TabsContent value="roles">
-        <RoleSimulationTests 
-          tests={report?.roleSimulationTests || []}
-          isLoading={isLoading}
-        />
-      </TabsContent>
-
-      {/* Performance Tab */}
-      <TabsContent value="performance">
-        <PerformanceTests 
-          tests={report?.performanceTests || []}
-          isLoading={isLoading}
-        />
-      </TabsContent>
-
-      {/* Security Tab */}
-      <TabsContent value="security">
-        <SecurityTests 
-          tests={report?.securityTests || []}
-          isLoading={isLoading}
-        />
-      </TabsContent>
-
-      {/* Recommendations Tab */}
-      <TabsContent value="recommendations">
-        <RecommendationsList 
-          recommendations={recommendations}
-          isLoading={isLoading}
-        />
+      
+      <TabsContent value="navigation" className="mt-4">
+        <NavigationTests tests={results.navigationTests || []} />
       </TabsContent>
       
-      {/* Fix History Tab */}
-      <TabsContent value="history">
-        <div className="grid grid-cols-1 gap-8">
-          <div className="bg-card p-6 rounded-lg border">
-            <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
-              <History className="h-5 w-5" />
-              Fix History
-            </h2>
-            <p className="text-muted-foreground mb-6">
-              A record of all system issues that have been resolved
-            </p>
-            <FixHistoryLog />
-          </div>
-        </div>
+      <TabsContent value="permissions" className="mt-4">
+        <PermissionTests tests={results.permissionsTests || []} />
       </TabsContent>
-
-      {/* Admin-only tabs */}
-      {isAdmin && (
-        <>
-          <TabsContent value="logs">
-            <div className="grid grid-cols-1 gap-8">
-              <LoggingConfiguration />
-              <DetailedLogViewer />
-            </div>
-          </TabsContent>
-          
-          <TabsContent value="audit-logs">
-            <AuditLogViewer />
-          </TabsContent>
-          
-          <TabsContent value="diagnostics-logs">
-            <DiagnosticsAuditViewer />
-          </TabsContent>
-        </>
-      )}
+      
+      <TabsContent value="icons" className="mt-4">
+        <IconTests tests={results.iconTests || []} />
+      </TabsContent>
+      
+      <TabsContent value="forms" className="mt-4">
+        <FormValidationTests tests={results.formValidationTests || []} />
+      </TabsContent>
+      
+      <TabsContent value="api-integrations" className="mt-4">
+        <ApiIntegrationTests tests={results.apiIntegrationTests || []} />
+      </TabsContent>
+      
+      <TabsContent value="api-endpoints" className="mt-4">
+        <ApiEndpointDiagnostics />
+      </TabsContent>
+      
+      <TabsContent value="roles" className="mt-4">
+        <RoleSimulationTests tests={results.roleSimulationTests || []} />
+      </TabsContent>
+      
+      <TabsContent value="performance" className="mt-4">
+        <PerformanceTests tests={results.performanceTests || []} />
+      </TabsContent>
+      
+      <TabsContent value="security" className="mt-4">
+        <SecurityTests tests={results.securityTests || []} />
+      </TabsContent>
     </Tabs>
   );
 };
