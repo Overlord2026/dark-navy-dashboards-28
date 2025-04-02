@@ -17,7 +17,6 @@ import { FileUpload } from "@/components/ui/file-upload";
 import { toast } from "sonner";
 import { 
   ArchiveIcon, 
-  Circle, 
   ExternalLink, 
   FileText, 
   Lock, 
@@ -25,7 +24,9 @@ import {
   UploadCloud, 
   Users2,
   ChevronDown,
-  ChevronUp 
+  ChevronUp,
+  FilePlus,
+  Eye
 } from "lucide-react";
 
 interface ChecklistItem {
@@ -55,6 +56,7 @@ export const FamilyLegacyBox = () => {
   const [activeTab, setActiveTab] = useState("checklist");
   const [openUploadDialog, setOpenUploadDialog] = useState(false);
   const [openShareDialog, setOpenShareDialog] = useState(false);
+  const [openViewDialog, setOpenViewDialog] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<ChecklistItem | null>(null);
   const [selectedDocument, setSelectedDocument] = useState<DocumentItem | null>(null);
   const [shareEmail, setShareEmail] = useState("");
@@ -255,6 +257,12 @@ export const FamilyLegacyBox = () => {
     setOpenShareDialog(true);
   };
 
+  const viewDocument = (category: ChecklistItem, document: DocumentItem) => {
+    setSelectedCategory(category);
+    setSelectedDocument(document);
+    setOpenViewDialog(true);
+  };
+
   const completedItems = checklist.filter(item => item.completed).length;
   const totalItems = checklist.length;
   const completionPercentage = (completedItems / totalItems) * 100;
@@ -328,38 +336,82 @@ export const FamilyLegacyBox = () => {
                             <Label htmlFor={item.id} className="font-medium">
                               {item.title}
                             </Label>
+                            <span className="text-xs bg-muted px-2 py-1 rounded-full">
+                              {item.documents.length} file{item.documents.length !== 1 ? 's' : ''}
+                            </span>
                           </div>
                           <div className="flex items-center gap-2">
-                            <span className="text-xs text-muted-foreground">
-                              {item.documents.length} document{item.documents.length !== 1 ? 's' : ''}
-                            </span>
                             <Button 
                               variant="outline" 
                               size="sm" 
                               className="flex items-center gap-1"
                               onClick={() => openUpload(item)}
                             >
-                              <UploadCloud className="h-3 w-3" />
-                              Upload
+                              <FilePlus className="h-3 w-3" />
+                              Add Document
                             </Button>
+                            {item.documents.length > 0 && (
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="flex items-center gap-1"
+                                onClick={() => setActiveTab("uploaded")}
+                              >
+                                <Eye className="h-3 w-3" />
+                                View All
+                              </Button>
+                            )}
                           </div>
                         </div>
+                        
+                        {item.documents.length > 0 && (
+                          <div className="border-t px-3 py-2 bg-muted/10">
+                            <div className="text-xs text-muted-foreground mb-1">Recent Documents:</div>
+                            <div className="space-y-1">
+                              {item.documents.slice(0, 2).map((doc) => (
+                                <div key={doc.id} className="flex items-center justify-between text-sm py-1">
+                                  <div className="flex items-center gap-2">
+                                    <FileText className="h-3 w-3" />
+                                    <span>{doc.name}</span>
+                                  </div>
+                                  <div className="text-xs text-muted-foreground">{doc.dateUploaded}</div>
+                                </div>
+                              ))}
+                              {item.documents.length > 2 && (
+                                <div className="text-xs text-primary cursor-pointer pt-1" onClick={() => setActiveTab("uploaded")}>
+                                  + {item.documents.length - 2} more
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        )}
                         
                         {item.subItems && item.expanded && (
                           <div className="border-t px-3 py-2 bg-muted/10">
                             <div className="space-y-2 pl-6">
                               {item.subItems.map((subItem) => (
-                                <div key={subItem.id} className="flex items-center gap-3">
-                                  <div className="flex items-center h-5 space-x-2">
-                                    <Checkbox 
-                                      id={`${item.id}-${subItem.id}`} 
-                                      checked={subItem.completed} 
-                                      onCheckedChange={() => handleSubItemToggle(item.id, subItem.id)}
-                                    />
-                                    <Label htmlFor={`${item.id}-${subItem.id}`}>
-                                      {subItem.title}
-                                    </Label>
+                                <div key={subItem.id} className="flex items-center justify-between">
+                                  <div className="flex items-center gap-3">
+                                    <div className="flex items-center h-5 space-x-2">
+                                      <Checkbox 
+                                        id={`${item.id}-${subItem.id}`} 
+                                        checked={subItem.completed} 
+                                        onCheckedChange={() => handleSubItemToggle(item.id, subItem.id)}
+                                      />
+                                      <Label htmlFor={`${item.id}-${subItem.id}`}>
+                                        {subItem.title}
+                                      </Label>
+                                    </div>
                                   </div>
+                                  <Button 
+                                    variant="ghost" 
+                                    size="sm" 
+                                    className="h-7 text-xs"
+                                    onClick={() => openUpload(item)}
+                                  >
+                                    <UploadCloud className="h-3 w-3 mr-1" />
+                                    Upload
+                                  </Button>
                                 </div>
                               ))}
                             </div>
@@ -379,7 +431,7 @@ export const FamilyLegacyBox = () => {
                   
                   {checklist.map((category) => (
                     category.documents.length > 0 && (
-                      <div key={category.id} className="border rounded-lg overflow-hidden">
+                      <div key={category.id} className="border rounded-lg overflow-hidden mb-4">
                         <div className="bg-muted/40 p-3 font-medium flex items-center justify-between">
                           <div className="flex items-center gap-2">
                             <FileText className="h-4 w-4" />
@@ -399,12 +451,24 @@ export const FamilyLegacyBox = () => {
                           {category.documents.map((doc) => (
                             <div key={doc.id} className="p-3 flex items-center justify-between hover:bg-muted/10">
                               <div>
-                                <p className="font-medium">{doc.name}</p>
+                                <p className="font-medium flex items-center gap-2">
+                                  <FileText className="h-4 w-4 text-primary" />
+                                  {doc.name}
+                                </p>
                                 <p className="text-xs text-muted-foreground">
                                   Uploaded: {doc.dateUploaded} • {doc.size}
                                 </p>
                               </div>
                               <div className="flex items-center gap-2">
+                                <Button 
+                                  variant="outline" 
+                                  size="sm"
+                                  className="flex items-center gap-1"
+                                  onClick={() => viewDocument(category, doc)}
+                                >
+                                  <Eye className="h-3 w-3" />
+                                  View
+                                </Button>
                                 <Button 
                                   variant="outline" 
                                   size="sm"
@@ -548,7 +612,7 @@ export const FamilyLegacyBox = () => {
       <Dialog open={openUploadDialog} onOpenChange={setOpenUploadDialog}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Upload Document</DialogTitle>
+            <DialogTitle>Upload Document to {selectedCategory?.title}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
@@ -603,6 +667,34 @@ export const FamilyLegacyBox = () => {
           <DialogFooter>
             <Button variant="outline" onClick={() => setOpenShareDialog(false)}>Cancel</Button>
             <Button onClick={handleShare}>Share Document</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      
+      <Dialog open={openViewDialog} onOpenChange={setOpenViewDialog}>
+        <DialogContent className="max-w-3xl">
+          <DialogHeader>
+            <DialogTitle>{selectedDocument?.name}</DialogTitle>
+          </DialogHeader>
+          <div className="py-4">
+            <div className="bg-muted/20 p-4 rounded-md h-[400px] flex items-center justify-center">
+              <div className="text-center">
+                <FileText className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+                <p className="text-muted-foreground">
+                  Document preview would appear here in a production environment
+                </p>
+                <div className="mt-4 text-sm">
+                  <p><strong>Name:</strong> {selectedDocument?.name}</p>
+                  <p><strong>Uploaded:</strong> {selectedDocument?.dateUploaded}</p>
+                  <p><strong>Size:</strong> {selectedDocument?.size}</p>
+                  <p><strong>Category:</strong> {selectedCategory?.title}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setOpenViewDialog(false)}>Close</Button>
+            <Button onClick={() => openShare(selectedCategory!, selectedDocument!)}>Share Document</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
