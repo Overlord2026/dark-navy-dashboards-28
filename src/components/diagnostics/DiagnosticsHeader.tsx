@@ -1,9 +1,11 @@
 
 import { Button } from "@/components/ui/button";
-import { RefreshCw } from "lucide-react";
+import { RefreshCw, ArrowRight, AlertTriangle, Zap } from "lucide-react";
 import { getOverallStatusColor } from "./StatusIcon";
 import { DiagnosticTestStatus } from "@/services/diagnostics/types";
-import { QuickFix } from "@/hooks/useDiagnostics";
+import { QuickFix, useDiagnostics } from "@/hooks/useDiagnostics";
+import { Card, CardContent } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
 
 interface DiagnosticsHeaderProps {
   isLoading: boolean;
@@ -18,39 +20,119 @@ export const DiagnosticsHeader = ({
   status, 
   quickFixes 
 }: DiagnosticsHeaderProps) => {
+  const { applyQuickFix, quickFixLoading } = useDiagnostics();
+
+  // Get color based on severity
+  const getSeverityColor = (severity: string) => {
+    switch (severity) {
+      case 'high':
+        return 'bg-red-500';
+      case 'medium':
+        return 'bg-yellow-500';
+      case 'low':
+        return 'bg-blue-500';
+      default:
+        return 'bg-gray-500';
+    }
+  };
+
+  // Get health percentage based on status
+  const getHealthPercentage = () => {
+    switch (status) {
+      case 'success':
+        return 100;
+      case 'warning':
+        return 70;
+      case 'error':
+        return 30;
+      default:
+        return 50;
+    }
+  };
+
   return (
-    <div className="bg-card p-4 rounded-lg border mb-6">
-      <div className="flex items-center justify-between mb-4">
-        <div>
-          <h2 className="text-xl font-semibold">System Status</h2>
-          <p className="text-muted-foreground text-sm mt-1">
-            {timestamp ? `Last check: ${new Date(timestamp).toLocaleString()}` : 'No diagnostics run yet'}
-          </p>
-        </div>
-        <div className={`px-3 py-1 rounded-full text-sm font-medium ${getOverallStatusColor(status)}`}>
-          {status.charAt(0).toUpperCase() + status.slice(1)}
-        </div>
-      </div>
-      
-      {quickFixes.length > 0 && (
-        <div className="mt-4 pt-4 border-t">
-          <div className="flex items-center justify-between mb-2">
-            <h3 className="font-medium">Recommended Actions</h3>
-            <span className="text-sm text-muted-foreground">{quickFixes.length} issue{quickFixes.length > 1 ? 's' : ''} found</span>
+    <Card className="mb-6">
+      <CardContent className="pt-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* Status Card */}
+          <div className="col-span-1 flex flex-col">
+            <div className="mb-2 flex items-center justify-between">
+              <h2 className="text-xl font-semibold">System Status</h2>
+              <div className={`px-3 py-1 rounded-full text-sm font-medium ${getOverallStatusColor(status)}`}>
+                {status.charAt(0).toUpperCase() + status.slice(1)}
+              </div>
+            </div>
+            <p className="text-muted-foreground text-sm mb-4">
+              {timestamp ? `Last check: ${new Date(timestamp).toLocaleString()}` : 'No diagnostics run yet'}
+            </p>
+            
+            <div className="mt-auto">
+              <div className="flex items-center justify-between mb-1.5">
+                <span className="text-sm font-medium">Health</span>
+                <span className="text-sm font-medium">{getHealthPercentage()}%</span>
+              </div>
+              <Progress 
+                value={getHealthPercentage()} 
+                className="h-2.5" 
+                indicatorClassName={
+                  status === "success" ? "bg-green-500" : 
+                  status === "warning" ? "bg-yellow-500" : 
+                  "bg-red-500"
+                }
+              />
+            </div>
           </div>
-          <ul className="space-y-1 text-sm">
-            {quickFixes.slice(0, 3).map((fix) => (
-              <li key={fix.id} className="flex items-center gap-1.5">
-                <span className={`w-2 h-2 rounded-full ${fix.severity === 'high' ? 'bg-destructive' : fix.severity === 'medium' ? 'bg-warning' : 'bg-blue-500'}`}></span>
-                <span>{fix.name}</span>
-              </li>
-            ))}
-            {quickFixes.length > 3 && (
-              <li className="text-sm text-muted-foreground">+{quickFixes.length - 3} more issues...</li>
+          
+          {/* Quick Fixes */}
+          <div className="col-span-2">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-lg font-medium">Recommended Actions</h3>
+              <span className="text-sm text-muted-foreground">{quickFixes.length} issue{quickFixes.length > 1 ? 's' : ''} found</span>
+            </div>
+            
+            {quickFixes.length > 0 ? (
+              <div className="space-y-2">
+                {quickFixes.slice(0, 3).map((fix) => (
+                  <div key={fix.id} className="flex items-center justify-between p-2 rounded-lg border">
+                    <div className="flex items-center">
+                      {fix.severity === 'high' && <AlertTriangle className="h-4 w-4 text-red-500 mr-2" />}
+                      {fix.severity === 'medium' && <Zap className="h-4 w-4 text-yellow-500 mr-2" />}
+                      <div>
+                        <span className="text-sm font-medium">{fix.name}</span>
+                        <div className="flex items-center mt-0.5">
+                          <span className={`w-2 h-2 rounded-full ${getSeverityColor(fix.severity)}`}></span>
+                          <span className="text-xs text-muted-foreground ml-1.5">{fix.area} | {fix.severity} priority</span>
+                        </div>
+                      </div>
+                    </div>
+                    <Button 
+                      size="sm" 
+                      onClick={() => applyQuickFix(fix.id)}
+                      disabled={quickFixLoading}
+                      className="gap-1"
+                    >
+                      Apply Fix
+                      <ArrowRight className="h-3 w-3" />
+                    </Button>
+                  </div>
+                ))}
+                
+                {quickFixes.length > 3 && (
+                  <div className="text-center pt-1">
+                    <Button variant="ghost" size="sm" className="text-sm">
+                      View {quickFixes.length - 3} more issues
+                    </Button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-300 p-3 rounded-lg border border-green-200 dark:border-green-800">
+                <p className="text-sm">No issues found requiring immediate action.</p>
+              </div>
             )}
-          </ul>
+          </div>
         </div>
-      )}
-    </div>
+      </CardContent>
+    </Card>
   );
 };

@@ -2,13 +2,15 @@
 import React, { useState, useEffect } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
-import { RefreshCw, ActivitySquare } from "lucide-react";
+import { RefreshCw, ActivitySquare, Zap, AlertTriangle, ShieldAlert } from "lucide-react";
 import { DiagnosticsHeader } from "@/components/diagnostics/DiagnosticsHeader";
 import { DiagnosticsRunner } from "@/components/diagnostics/DiagnosticsRunner";
 import { DiagnosticsTabs } from "@/components/diagnostics/DiagnosticsTabs";
 import { useDiagnostics } from "@/hooks/useDiagnostics";
 import { toast } from "sonner";
 import { NavigationDiagnostics } from "@/components/diagnostics/NavigationDiagnostics";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { DiagnosticTestStatus } from "@/services/diagnostics/types";
 
 export default function SystemDiagnostics() {
   const {
@@ -42,6 +44,60 @@ export default function SystemDiagnostics() {
       runSystemDiagnostics();
     }
   }, [diagnosticResults, isLoading, runSystemDiagnostics]);
+
+  // Calculate issue counts
+  const calculateIssueCounts = () => {
+    if (!diagnosticResults) {
+      return { errors: 0, warnings: 0, success: 0 };
+    }
+
+    const allTests = [
+      ...(diagnosticResults.securityTests || []),
+      ...(diagnosticResults.navigationTests || []),
+      ...(diagnosticResults.permissionsTests || []),
+      ...(diagnosticResults.formValidationTests || []),
+      ...(diagnosticResults.apiIntegrationTests || []),
+      ...(diagnosticResults.roleSimulationTests || []),
+      ...(diagnosticResults.performanceTests || [])
+    ];
+
+    return {
+      errors: allTests.filter(test => test.status === "error").length,
+      warnings: allTests.filter(test => test.status === "warning").length,
+      success: allTests.filter(test => test.status === "success").length
+    };
+  };
+
+  const issueCounts = calculateIssueCounts();
+
+  // Critical issues - prioritize display of these
+  const getCriticalIssues = () => {
+    if (!diagnosticResults) return [];
+    
+    // Prioritize security issues first
+    const securityIssues = (diagnosticResults.securityTests || [])
+      .filter(test => test.status === "error" && test.severity === "critical")
+      .map(test => ({
+        type: "security",
+        name: test.name,
+        message: test.message,
+        severity: test.severity
+      }));
+      
+    // Then API issues
+    const apiIssues = (diagnosticResults.apiIntegrationTests || [])
+      .filter(test => test.status === "error")
+      .map(test => ({
+        type: "api",
+        name: test.service,
+        message: test.message,
+        severity: "high"
+      }));
+      
+    return [...securityIssues, ...apiIssues].slice(0, 3);
+  };
+
+  const criticalIssues = getCriticalIssues();
 
   return (
     <ThreeColumnLayout title="System Diagnostics">
@@ -77,6 +133,103 @@ export default function SystemDiagnostics() {
           </div>
         )}
 
+        {/* Status Summary Cards (visible when not loading and have results) */}
+        {diagnosticResults && !isLoading && !isRunning && (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <Card className="bg-red-50 border-red-200 dark:bg-red-900/20 dark:border-red-800">
+              <CardContent className="p-4 flex items-center justify-between">
+                <div className="flex items-center">
+                  <div className="w-10 h-10 rounded-full bg-red-100 dark:bg-red-800/30 flex items-center justify-center mr-3">
+                    <AlertTriangle className="h-5 w-5 text-red-600 dark:text-red-400" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-red-800 dark:text-red-300 font-medium">Errors</p>
+                    <p className="text-2xl font-bold text-red-900 dark:text-red-400">{issueCounts.errors}</p>
+                  </div>
+                </div>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="text-red-800 dark:text-red-300 hover:text-red-900 hover:bg-red-100 dark:hover:bg-red-800/40"
+                  onClick={() => {
+                    // Find first tab with errors
+                    const tabsWithErrors = ["security", "api", "navigation", "permissions", "forms"];
+                    for (const tab of tabsWithErrors) {
+                      if (diagnosticResults[`${tab}Tests`]?.some((t: any) => t.status === "error")) {
+                        document.querySelector(`[value="${tab}"]`)?.dispatchEvent(
+                          new MouseEvent('click', { bubbles: true })
+                        );
+                        break;
+                      }
+                    }
+                  }}
+                >
+                  View
+                </Button>
+              </CardContent>
+            </Card>
+            
+            <Card className="bg-yellow-50 border-yellow-200 dark:bg-yellow-900/20 dark:border-yellow-800">
+              <CardContent className="p-4 flex items-center justify-between">
+                <div className="flex items-center">
+                  <div className="w-10 h-10 rounded-full bg-yellow-100 dark:bg-yellow-800/30 flex items-center justify-center mr-3">
+                    <ShieldAlert className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-yellow-800 dark:text-yellow-300 font-medium">Warnings</p>
+                    <p className="text-2xl font-bold text-yellow-900 dark:text-yellow-400">{issueCounts.warnings}</p>
+                  </div>
+                </div>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="text-yellow-800 dark:text-yellow-300 hover:text-yellow-900 hover:bg-yellow-100 dark:hover:bg-yellow-800/40"
+                  onClick={() => {
+                    // Find first tab with warnings
+                    const tabsWithWarnings = ["security", "performance", "api", "navigation"];
+                    for (const tab of tabsWithWarnings) {
+                      if (diagnosticResults[`${tab}Tests`]?.some((t: any) => t.status === "warning")) {
+                        document.querySelector(`[value="${tab}"]`)?.dispatchEvent(
+                          new MouseEvent('click', { bubbles: true })
+                        );
+                        break;
+                      }
+                    }
+                  }}
+                >
+                  View
+                </Button>
+              </CardContent>
+            </Card>
+            
+            <Card className="bg-green-50 border-green-200 dark:bg-green-900/20 dark:border-green-800">
+              <CardContent className="p-4 flex items-center justify-between">
+                <div className="flex items-center">
+                  <div className="w-10 h-10 rounded-full bg-green-100 dark:bg-green-800/30 flex items-center justify-center mr-3">
+                    <Zap className="h-5 w-5 text-green-600 dark:text-green-400" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-green-800 dark:text-green-300 font-medium">Passed</p>
+                    <p className="text-2xl font-bold text-green-900 dark:text-green-400">{issueCounts.success}</p>
+                  </div>
+                </div>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="text-green-800 dark:text-green-300 hover:text-green-900 hover:bg-green-100 dark:hover:bg-green-800/40"
+                  onClick={() => {
+                    document.querySelector(`[value="overview"]`)?.dispatchEvent(
+                      new MouseEvent('click', { bubbles: true })
+                    );
+                  }}
+                >
+                  View
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
         <DiagnosticsHeader
           isLoading={isLoading}
           timestamp={lastRunTimestamp}
@@ -85,7 +238,7 @@ export default function SystemDiagnostics() {
         />
         
         <div className="mt-6">
-          {/* Using an empty div here since DiagnosticsRunner doesn't need the isRunning prop */}
+          {/* Running diagnostics indicator */}
           <div className="mb-6">
             {isRunning && (
               <div className="bg-muted/50 p-6 rounded-lg flex items-center justify-center">
@@ -97,6 +250,31 @@ export default function SystemDiagnostics() {
               </div>
             )}
           </div>
+
+          {/* Critical issues alert */}
+          {criticalIssues.length > 0 && !isRunning && (
+            <Card className="mb-6 border-red-200 dark:border-red-800">
+              <CardHeader className="bg-red-50 dark:bg-red-900/20 border-b border-red-200 dark:border-red-800">
+                <CardTitle className="flex items-center gap-2 text-red-900 dark:text-red-400">
+                  <AlertTriangle className="h-5 w-5" />
+                  Critical Issues Detected
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="pt-4">
+                <ul className="space-y-2">
+                  {criticalIssues.map((issue, index) => (
+                    <li key={index} className="flex items-start gap-2">
+                      <AlertTriangle className="h-4 w-4 text-red-500 mt-0.5" />
+                      <div>
+                        <p className="font-medium">{issue.name}</p>
+                        <p className="text-sm text-muted-foreground">{issue.message}</p>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
+          )}
 
           {diagnosticResults && !isRunning && (
             <DiagnosticsTabs
