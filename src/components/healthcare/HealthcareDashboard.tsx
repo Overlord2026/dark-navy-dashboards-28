@@ -225,8 +225,9 @@ export function HealthcareDashboard({ documents }: HealthcareDashboardProps) {
     .sort((a, b) => a.nextRefill.getTime() - b.nextRefill.getTime());
   
   // Calculate days to show urgency
-  const getDaysFromNow = (date: Date): number => {
-    return Math.ceil((date.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
+  const getDaysFromNow = (date: Date | string): number => {
+    const dateObject = date instanceof Date ? date : new Date(date);
+    return Math.ceil((dateObject.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
   };
   
   // Get badge variant based on days remaining
@@ -288,7 +289,7 @@ export function HealthcareDashboard({ documents }: HealthcareDashboardProps) {
                           
                           {new Date(policy.renewalDate) > new Date() && 
                             new Date(policy.renewalDate) < new Date(new Date().setDate(new Date().getDate() + 30)) && (
-                            <Badge variant={getUrgencyBadge(getDaysFromNow(new Date(policy.renewalDate)))} className="text-[10px] px-1 py-0">
+                            <Badge variant={getUrgencyBadge(getDaysFromNow(policy.renewalDate))} className="text-[10px] px-1 py-0">
                               Soon
                             </Badge>
                           )}
@@ -426,9 +427,9 @@ export function HealthcareDashboard({ documents }: HealthcareDashboardProps) {
                           <p className="text-xs text-muted-foreground">{policy.provider}</p>
                         </div>
                         
-                        <Badge variant={getUrgencyBadge(getDaysFromNow(new Date(policy.renewalDate)))}>
-                          {getDaysFromNow(new Date(policy.renewalDate)) <= 30 ? 
-                            `${getDaysFromNow(new Date(policy.renewalDate))} days` : 
+                        <Badge variant={getUrgencyBadge(getDaysFromNow(policy.renewalDate))}>
+                          {getDaysFromNow(policy.renewalDate) <= 30 ? 
+                            `${getDaysFromNow(policy.renewalDate)} days` : 
                             format(new Date(policy.renewalDate), 'MMM d, yyyy')}
                         </Badge>
                       </div>
@@ -591,3 +592,4 @@ export function HealthcareDashboard({ documents }: HealthcareDashboardProps) {
     </div>
   );
 }
+
