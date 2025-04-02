@@ -16,6 +16,36 @@ export const useSidebarState = (navigationCategories: NavCategory[]) => {
   const [expandedSubmenus, setExpandedSubmenus] = useState<Record<string, boolean>>({});
   const [forceUpdate, setForceUpdate] = useState(0);
   
+  // Auto-expand submenu when a child route is active
+  useEffect(() => {
+    const currentPath = location.pathname;
+    
+    // Check all navigation categories for matching submenu items
+    navigationCategories.forEach(category => {
+      category.items.forEach(item => {
+        if (item.submenu) {
+          const hasActiveChild = item.submenu.some(subItem => 
+            currentPath === subItem.href || 
+            (subItem.href !== "/" && currentPath.startsWith(subItem.href))
+          );
+          
+          if (hasActiveChild) {
+            setExpandedSubmenus(prev => ({
+              ...prev,
+              [item.title]: true
+            }));
+            
+            // Also expand the parent category
+            setExpandedCategories(prev => ({
+              ...prev,
+              [category.id]: true
+            }));
+          }
+        }
+      });
+    });
+  }, [location.pathname, navigationCategories]);
+  
   useEffect(() => {
     setForceUpdate(1);
   }, []);
