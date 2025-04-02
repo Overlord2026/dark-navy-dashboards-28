@@ -5,10 +5,18 @@ import { Button } from "@/components/ui/button";
 import { FileUpload } from "@/components/ui/file-upload";
 import { toast } from "sonner";
 import { Cloud, File } from "lucide-react";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export interface DocumentDialogProps {
   open: boolean;
   onClose: () => void;
+}
+
+export interface ShareDocumentDialogProps extends DocumentDialogProps {
+  documentId: string;
 }
 
 export function TaxReturnUploadDialog({ open, onClose }: DocumentDialogProps) {
@@ -102,6 +110,245 @@ export function TaxReturnUploadDialog({ open, onClose }: DocumentDialogProps) {
               {isUploading ? "Uploading..." : "Upload"}
             </Button>
           </div>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+export function UploadDocumentDialog({ open, onClose }: DocumentDialogProps) {
+  const [documentName, setDocumentName] = useState("");
+  const [description, setDescription] = useState("");
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  
+  const handleFileChange = (file: File) => {
+    setSelectedFile(file);
+    if (!documentName) {
+      // Set a default document name based on the file name
+      setDocumentName(file.name.split('.')[0]);
+    }
+  };
+  
+  const handleSubmit = () => {
+    if (!selectedFile) {
+      toast.error("Please select a file to upload");
+      return;
+    }
+    
+    if (!documentName.trim()) {
+      toast.error("Please provide a document name");
+      return;
+    }
+    
+    setIsUploading(true);
+    
+    // Simulate upload process
+    setTimeout(() => {
+      toast.success("Document uploaded successfully", {
+        description: `"${documentName}" has been added to your documents.`
+      });
+      setIsUploading(false);
+      // Reset form
+      setDocumentName("");
+      setDescription("");
+      setSelectedFile(null);
+      onClose();
+    }, 1500);
+  };
+  
+  return (
+    <Dialog open={open} onOpenChange={(open) => !open && onClose()}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>Upload Document</DialogTitle>
+          <DialogDescription>
+            Add a document to your legacy box
+          </DialogDescription>
+        </DialogHeader>
+        
+        <div className="grid gap-4 py-4">
+          <div className="space-y-2">
+            <Label htmlFor="document-name">Document Name</Label>
+            <Input
+              id="document-name"
+              value={documentName}
+              onChange={(e) => setDocumentName(e.target.value)}
+              placeholder="e.g., Last Will and Testament"
+            />
+          </div>
+          
+          <div className="space-y-2">
+            <Label htmlFor="description">Description (Optional)</Label>
+            <Textarea
+              id="description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Add a brief description of this document"
+              rows={3}
+            />
+          </div>
+          
+          <div className="space-y-2">
+            <Label>Upload File</Label>
+            <FileUpload 
+              onFileChange={handleFileChange}
+              accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png"
+              maxSize={20 * 1024 * 1024} // 20MB limit
+            />
+            
+            {selectedFile && (
+              <div className="mt-2 flex items-center justify-between bg-secondary/20 p-2 rounded-md">
+                <div className="flex items-center gap-2">
+                  <File className="h-4 w-4" />
+                  <span className="text-sm truncate max-w-[200px]">{selectedFile.name}</span>
+                  <span className="text-xs text-muted-foreground">
+                    ({(selectedFile.size / (1024 * 1024)).toFixed(2)} MB)
+                  </span>
+                </div>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setSelectedFile(null)}
+                  className="h-8 w-8 p-0"
+                >
+                  &times;
+                </Button>
+              </div>
+            )}
+          </div>
+        </div>
+        
+        <DialogFooter>
+          <Button variant="outline" onClick={onClose}>
+            Cancel
+          </Button>
+          <Button 
+            onClick={handleSubmit} 
+            disabled={isUploading || !selectedFile || !documentName.trim()}
+          >
+            {isUploading ? "Uploading..." : "Upload"}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+export function ShareDocumentDialog({ open, onClose, documentId }: ShareDocumentDialogProps) {
+  const [selectedContacts, setSelectedContacts] = useState<string[]>([]);
+  const [isSharing, setIsSharing] = useState(false);
+  
+  // Sample contacts data
+  const contactOptions = [
+    { id: "1", name: "James Wilson", role: "Estate Attorney" },
+    { id: "2", name: "Sarah Johnson", role: "Financial Advisor" },
+    { id: "3", name: "Michael Brown", role: "CPA" },
+    { id: "4", name: "Jennifer Davis", role: "Insurance Agent" },
+    { id: "101", name: "Robert Smith", role: "Spouse" },
+    { id: "102", name: "Emma Smith", role: "Child" },
+    { id: "103", name: "Daniel Smith", role: "Child" },
+    { id: "104", name: "Margaret Johnson", role: "Parent" },
+  ];
+  
+  const handleToggleContact = (contactId: string) => {
+    setSelectedContacts(prev => 
+      prev.includes(contactId) 
+        ? prev.filter(id => id !== contactId) 
+        : [...prev, contactId]
+    );
+  };
+  
+  const handleShare = () => {
+    if (selectedContacts.length === 0) {
+      toast.error("Please select at least one contact to share with");
+      return;
+    }
+    
+    setIsSharing(true);
+    
+    // Simulate sharing process
+    setTimeout(() => {
+      const contactNames = selectedContacts.map(id => 
+        contactOptions.find(c => c.id === id)?.name
+      ).filter(Boolean);
+      
+      toast.success(`Document shared successfully`, {
+        description: `Document shared with ${contactNames.join(", ")}`
+      });
+      setIsSharing(false);
+      setSelectedContacts([]);
+      onClose();
+    }, 1500);
+  };
+  
+  return (
+    <Dialog open={open} onOpenChange={(open) => !open && onClose()}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>Share Document</DialogTitle>
+          <DialogDescription>
+            Select people to share this document with
+          </DialogDescription>
+        </DialogHeader>
+        
+        <div className="py-4">
+          <div className="mb-4">
+            <h4 className="text-sm font-medium mb-2">Professionals</h4>
+            <div className="space-y-2">
+              {contactOptions.filter(c => parseInt(c.id) < 100).map(contact => (
+                <div key={contact.id} className="flex items-center space-x-2">
+                  <Checkbox 
+                    id={`contact-${contact.id}`}
+                    checked={selectedContacts.includes(contact.id)}
+                    onCheckedChange={() => handleToggleContact(contact.id)}
+                  />
+                  <Label 
+                    htmlFor={`contact-${contact.id}`}
+                    className="flex-1 flex justify-between text-sm"
+                  >
+                    <span>{contact.name}</span>
+                    <span className="text-muted-foreground">{contact.role}</span>
+                  </Label>
+                </div>
+              ))}
+            </div>
+          </div>
+          
+          <div>
+            <h4 className="text-sm font-medium mb-2">Family Members</h4>
+            <div className="space-y-2">
+              {contactOptions.filter(c => parseInt(c.id) >= 100).map(contact => (
+                <div key={contact.id} className="flex items-center space-x-2">
+                  <Checkbox 
+                    id={`contact-${contact.id}`}
+                    checked={selectedContacts.includes(contact.id)}
+                    onCheckedChange={() => handleToggleContact(contact.id)}
+                  />
+                  <Label 
+                    htmlFor={`contact-${contact.id}`}
+                    className="flex-1 flex justify-between text-sm"
+                  >
+                    <span>{contact.name}</span>
+                    <span className="text-muted-foreground">{contact.role}</span>
+                  </Label>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+        
+        <DialogFooter>
+          <Button variant="outline" onClick={onClose}>
+            Cancel
+          </Button>
+          <Button 
+            onClick={handleShare} 
+            disabled={isSharing || selectedContacts.length === 0}
+          >
+            {isSharing ? "Sharing..." : "Share Document"}
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
