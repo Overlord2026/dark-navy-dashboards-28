@@ -25,10 +25,21 @@ export function useSidebarState(navigationCategories: NavCategory[]) {
     navigationCategories.forEach(category => {
       category.items.forEach(item => {
         if (item.submenu) {
-          const hasActiveChild = item.submenu.some(subItem => 
-            currentPath === subItem.href || 
-            (subItem.href !== "/" && currentPath.startsWith(subItem.href + "/"))
-          );
+          // Check if any submenu items match the current path
+          const hasActiveChild = item.submenu.some(subItem => {
+            // For exact matches
+            if (currentPath === subItem.href) {
+              return true;
+            }
+            
+            // For nested routes (e.g., /cash-management/details)
+            if (subItem.href !== "/" && subItem.href !== "#" && 
+                currentPath.startsWith(subItem.href + "/")) {
+              return true;
+            }
+            
+            return false;
+          });
           
           if (hasActiveChild) {
             // Expand the submenu with the active child
@@ -52,13 +63,24 @@ export function useSidebarState(navigationCategories: NavCategory[]) {
     // Second pass: Check for direct item matches if no submenu was expanded
     if (!hasExpandedSubmenu) {
       navigationCategories.forEach(category => {
-        const hasDirectMatch = category.items.some(item => 
-          item.href !== '#' && (
-            currentPath === item.href || 
-            (item.href !== "/" && 
-             (currentPath === item.href || currentPath.startsWith(item.href + "/")))
-          )
-        );
+        // Skip items with href="#" as they're just parent menu items
+        const hasDirectMatch = category.items.some(item => {
+          if (item.href === "#") {
+            return false;
+          }
+          
+          // Check for exact match
+          if (currentPath === item.href) {
+            return true;
+          }
+          
+          // Check for nested routes
+          if (item.href !== "/" && currentPath.startsWith(item.href + "/")) {
+            return true;
+          }
+          
+          return false;
+        });
         
         if (hasDirectMatch) {
           // Expand the category with the direct match
@@ -88,6 +110,7 @@ export function useSidebarState(navigationCategories: NavCategory[]) {
   };
 
   const toggleSubmenu = (itemTitle: string, e: React.MouseEvent) => {
+    // Prevent default behavior for parent menu items with "#" href
     e.preventDefault();
     e.stopPropagation();
     
@@ -99,7 +122,7 @@ export function useSidebarState(navigationCategories: NavCategory[]) {
   };
 
   const isActive = (href: string) => {
-    // Special case for "#" links (like Banking parent menu)
+    // Special case for "#" links (parent menu items)
     if (href === "#") {
       return false;
     }
@@ -110,7 +133,7 @@ export function useSidebarState(navigationCategories: NavCategory[]) {
     }
     
     // For non-root links, check if the current path starts with the href
-    if (href !== "/" && location.pathname.startsWith(href)) {
+    if (href !== "/" && href !== "#" && location.pathname.startsWith(href)) {
       // Make sure we're not getting false positives
       // For example, /insurance shouldn't match /insurance-claims
       // But we still want /accounts/settings to match /accounts
@@ -123,6 +146,17 @@ export function useSidebarState(navigationCategories: NavCategory[]) {
     return false;
   };
 
+  /**
+   * Checks if a parent menu with submenu has any active child
+   */
+  const hasActiveChild = (submenuItems: any[]) => {
+    if (!submenuItems || submenuItems.length === 0) {
+      return false;
+    }
+    
+    return submenuItems.some(subItem => isActive(subItem.href));
+  };
+
   return {
     collapsed,
     expandedCategories,
@@ -132,6 +166,7 @@ export function useSidebarState(navigationCategories: NavCategory[]) {
     toggleCategory,
     toggleSubmenu,
     isActive,
+    hasActiveChild,
     setCollapsed
   };
 }
