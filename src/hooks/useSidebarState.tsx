@@ -142,7 +142,7 @@ export function useSidebarState(navigationCategories: NavCategory[]) {
     });
   };
 
-  // Completely rewritten submenu toggle implementation with guaranteed synchronization
+  // Completely rewritten submenu toggle implementation to ensure reliable operation
   const toggleSubmenu = (itemTitle: string, e: React.MouseEvent) => {
     // Always prevent default behavior to stop navigation
     if (e) {
@@ -150,40 +150,50 @@ export function useSidebarState(navigationCategories: NavCategory[]) {
       e.stopPropagation();
     }
 
-    logger.debug(`Toggling submenu "${itemTitle}"`, 
-      { itemTitle, wasExpanded: expandedSubmenus[itemTitle] }, "SidebarState");
+    logger.debug(`EXPLICIT TOGGLE: Submenu "${itemTitle}"`, 
+      { title: itemTitle, currentState: expandedSubmenus[itemTitle] ? "expanded" : "collapsed" }, "SidebarState");
     
-    // Create a copy to avoid state mutations
-    const updatedSubmenus = { ...expandedSubmenus };
-    const currentState = Boolean(updatedSubmenus[itemTitle]);
-    const newState = !currentState;
+    // Set a direct value rather than using functional updates to ensure deterministic behavior
+    const newState = !expandedSubmenus[itemTitle];
     
-    // Update the local copy first
-    updatedSubmenus[itemTitle] = newState;
+    setExpandedSubmenus(prev => {
+      const updatedState = { ...prev, [itemTitle]: newState };
+      
+      // Special debugging for Banking menu
+      if (itemTitle === "Banking") {
+        logger.debug("BANKING MENU STATE UPDATE", {
+          was: prev["Banking"] ? "expanded" : "collapsed",
+          willBe: newState ? "expanded" : "collapsed",
+          allSubmenus: JSON.stringify(updatedState),
+          timestamp: new Date().toISOString()
+        }, "BankingMenu");
+      }
+      
+      return updatedState;
+    });
     
-    // Log the state change with enhanced details for debugging
-    logger.debug(`Submenu "${itemTitle}" state change`, {
-      before: currentState,
-      after: newState,
-      allSubmenus: JSON.stringify(updatedSubmenus),
-      timestamp: new Date().toISOString()
-    }, "SidebarState");
+    // Forcibly update UI to ensure changes are applied
+    setForceUpdate(prev => prev + 1);
     
-    // Special logging for Banking menu
-    if (itemTitle === "Banking") {
-      logger.debug("BANKING MENU STATE CHANGE", {
-        wasExpanded: currentState,
-        willBe: newState,
-        allSubmenus: JSON.stringify(updatedSubmenus),
-        timestamp: new Date().toISOString()
-      }, "BankingMenu");
-    }
-    
-    // Update the state using the complete new object to avoid partial updates
-    setExpandedSubmenus(updatedSubmenus);
-    
-    // Force UI update to ensure menu visibility changes are applied immediately
-    setTimeout(() => setForceUpdate(prev => prev + 1), 0);
+    // Double-check that state was updated as expected after a short delay
+    setTimeout(() => {
+      logger.debug(`Submenu toggle verification for "${itemTitle}"`, {
+        expectedState: newState,
+        actualState: expandedSubmenus[itemTitle],
+        forceUpdateCounter: forceUpdate
+      }, "SidebarState");
+      
+      // If the state didn't update as expected, force another update
+      if (expandedSubmenus[itemTitle] !== newState) {
+        logger.debug(`Correcting submenu state for "${itemTitle}"`, {
+          current: expandedSubmenus[itemTitle],
+          shouldBe: newState
+        }, "SidebarState");
+        
+        setExpandedSubmenus(prev => ({ ...prev, [itemTitle]: newState }));
+        setForceUpdate(prev => prev + 1);
+      }
+    }, 50);
   };
 
   return {

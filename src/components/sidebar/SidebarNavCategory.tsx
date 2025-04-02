@@ -1,9 +1,9 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
-import { ChevronDown, ChevronRight } from "lucide-react";
-import { NavItem } from "@/types/navigation";
 import { cn } from "@/lib/utils";
+import { NavItem } from "@/types/navigation";
+import { ChevronDown, ChevronRight } from "lucide-react";
 import { logger } from "@/services/logging/loggingService";
 
 interface SidebarNavCategoryProps {
@@ -15,9 +15,9 @@ interface SidebarNavCategoryProps {
   collapsed: boolean;
   isActive: (href: string) => boolean;
   isLightTheme: boolean;
-  expandedSubmenus: Record<string, boolean>;
-  toggleSubmenu: (title: string, e: React.MouseEvent) => void;
-  hasActiveChild: (submenuItems: any[]) => boolean;
+  expandedSubmenus?: Record<string, boolean>;
+  toggleSubmenu?: (title: string, e: React.MouseEvent) => void;
+  hasActiveChild?: (submenuItems: any[]) => boolean;
 }
 
 export const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
@@ -29,45 +29,72 @@ export const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
   collapsed,
   isActive,
   isLightTheme,
-  expandedSubmenus,
+  expandedSubmenus = {},
   toggleSubmenu,
-  hasActiveChild
+  hasActiveChild = () => false
 }) => {
-  // Debug render to help track component updates
+  // Log key state for debugging
   React.useEffect(() => {
-    logger.debug(`SidebarNavCategory "${id}" rendered`, { 
-      isExpanded, 
-      collapsed,
-      items: items.map(i => i.title),
-      expandedSubmenus
-    }, "SidebarNavCategory");
-  }, [id, isExpanded, collapsed, items, expandedSubmenus]);
+    // Check for Banking item specifically
+    const bankingItem = items.find(item => item.title === "Banking");
+    if (bankingItem) {
+      logger.debug(`SidebarNavCategory render with Banking item`, {
+        categoryId: id,
+        bankingExpanded: expandedSubmenus["Banking"] ? "yes" : "no",
+        hasSubmenu: bankingItem.submenu ? "yes" : "no",
+        submenuCount: bankingItem.submenu?.length || 0
+      }, "SidebarCategory");
+    }
+  }, [id, items, expandedSubmenus]);
+
+  // Handle clicks on category headers
+  const handleCategoryClick = () => {
+    onToggle(id);
+  };
 
   return (
-    <div className="mb-4" data-sidebar-category={id} data-expanded={isExpanded}>
+    <div 
+      className="mb-4"
+      data-sidebar-category={id}
+      data-expanded={isExpanded ? "true" : "false"}
+    >
+      {/* Category Label */}
       {!collapsed && (
         <div 
-          className={`flex items-center justify-between px-4 py-2 text-xs uppercase tracking-wider font-semibold cursor-pointer ${
-            isLightTheme ? 'text-[#222222]/70' : 'text-white/70'
-          }`}
-          onClick={() => onToggle(id)}
-          data-sidebar-category-header={id}
+          className={`flex items-center justify-between p-2 cursor-pointer ${isLightTheme ? 'text-[#222222]/70' : 'text-[#E2E2E2]/70'}`} 
+          onClick={handleCategoryClick}
+          data-category-header={id}
         >
-          <span>{label}</span>
-          {isExpanded ? (
-            <ChevronDown className="h-3 w-3" />
-          ) : (
-            <ChevronRight className="h-3 w-3" />
-          )}
+          <span className="text-xs uppercase tracking-wider font-semibold">{label}</span>
+          <div>
+            {isExpanded ? (
+              <ChevronDown className="h-4 w-4" />
+            ) : (
+              <ChevronRight className="h-4 w-4" />
+            )}
+          </div>
         </div>
       )}
       
+      {/* Category Items */}
       {(isExpanded || collapsed) && (
-        <div className="space-y-1 px-3" data-sidebar-category-content={id}>
+        <div 
+          className="px-2 py-1 space-y-1"
+          data-category-items={id}
+        >
           {items.map((item) => {
             const hasSubmenu = item.submenu && item.submenu.length > 0;
-            // Ensure boolean value with double negation
-            const submenuIsExpanded = !!expandedSubmenus[item.title]; 
+            const submenuIsExpanded = expandedSubmenus[item.title] === true;
+            
+            // Special log for Banking item
+            if (item.title === "Banking") {
+              logger.debug(`Rendering Banking item`, {
+                hasSubmenu,
+                submenuIsExpanded,
+                expandedState: expandedSubmenus["Banking"],
+                submenuLength: item.submenu?.length || 0
+              }, "BankingItem");
+            }
             
             // For items with submenu, check if any submenu item is active
             let itemIsActive = isActive(item.href);
@@ -82,37 +109,43 @@ export const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
             return (
               <div 
                 key={item.title} 
-                className="group mb-1 relative" 
-                data-sidebar-item={item.title}
+                className="group relative mb-1"
+                data-nav-item={item.title}
                 data-has-submenu={hasSubmenu ? "true" : "false"}
-                data-item-active={itemIsActive ? "true" : "false"}
+                data-active={itemIsActive ? "true" : "false"}
+                data-submenu-expanded={submenuIsExpanded ? "true" : "false"}
               >
-                {/* For items with submenu, we'll handle the click event to toggle submenu */}
-                {hasSubmenu ? (
+                {hasSubmenu && toggleSubmenu ? (
                   <div
                     className={cn(
-                      "group flex items-center rounded-md py-2 px-3 text-sm transition-colors border whitespace-nowrap cursor-pointer",
+                      "group flex items-center py-2 px-3 rounded-md transition-colors border",
                       itemIsActive
-                        ? isLightTheme
-                          ? "bg-[#E9E7D8] text-[#222222] font-medium border-primary"
-                          : "bg-black text-white border-primary"
-                        : isLightTheme
-                          ? "text-[#222222] border-transparent hover:bg-[#E9E7D8] hover:border-primary"
-                          : "text-white border-transparent hover:bg-sidebar-accent",
-                      hasSubmenu && "justify-between"
+                        ? isLightTheme 
+                          ? "bg-[#E9E7D8] text-[#222222] font-medium border-primary" 
+                          : "bg-black text-white border-primary" 
+                        : isLightTheme 
+                          ? "text-[#222222] border-transparent hover:bg-[#E9E7D8] hover:border-primary" 
+                          : "text-sidebar-foreground border-transparent hover:bg-sidebar-accent",
+                      hasSubmenu && !collapsed && "justify-between",
+                      "cursor-pointer"
                     )}
                     onClick={(e) => {
-                      logger.debug(`Submenu item clicked: ${item.title}`, 
-                        { title: item.title, hasSubmenu }, "SidebarNavCategory");
+                      logger.debug(`Submenu clicked in category: ${item.title}`, 
+                        { category: id, item: item.title, expanded: submenuIsExpanded }, "CategorySubmenu");
                       toggleSubmenu(item.title, e);
                     }}
+                    title={collapsed ? item.title : undefined}
                     data-submenu-trigger={item.title}
-                    data-item-title={item.title}
                     data-expanded={submenuIsExpanded ? "true" : "false"}
                   >
                     <div className="flex items-center">
-                      <item.icon className={cn("h-5 w-5 flex-shrink-0", !collapsed && "mr-3")} />
-                      {!collapsed && <span>{item.title}</span>}
+                      <item.icon 
+                        className={cn(
+                          "h-5 w-5 flex-shrink-0", 
+                          !collapsed && "mr-3"
+                        )} 
+                      />
+                      {!collapsed && <span className="whitespace-nowrap overflow-hidden text-ellipsis">{item.title}</span>}
                     </div>
                     
                     {!collapsed && hasSubmenu && (
@@ -127,47 +160,47 @@ export const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
                   <Link
                     to={item.href}
                     className={cn(
-                      "group flex items-center rounded-md py-2 px-3 text-sm transition-colors border whitespace-nowrap",
+                      "group flex items-center py-2 px-3 rounded-md transition-colors border",
                       itemIsActive
-                        ? isLightTheme
-                          ? "bg-[#E9E7D8] text-[#222222] font-medium border-primary"
-                          : "bg-black text-white border-primary"
-                        : isLightTheme
-                          ? "text-[#222222] border-transparent hover:bg-[#E9E7D8] hover:border-primary"
-                          : "text-white border-transparent hover:bg-sidebar-accent"
+                        ? isLightTheme 
+                          ? "bg-[#E9E7D8] text-[#222222] font-medium border-primary" 
+                          : "bg-black text-white border-primary" 
+                        : isLightTheme 
+                          ? "text-[#222222] border-transparent hover:bg-[#E9E7D8] hover:border-primary" 
+                          : "text-sidebar-foreground border-transparent hover:bg-sidebar-accent",
                     )}
-                    data-item-link={item.title}
+                    title={collapsed ? item.title : undefined}
+                    data-nav-link={item.title}
+                    data-active={isActive(item.href) ? "true" : "false"}
                   >
-                    <div className="flex items-center">
-                      <item.icon className={cn("h-5 w-5 flex-shrink-0", !collapsed && "mr-3")} />
-                      {!collapsed && <span>{item.title}</span>}
-                    </div>
+                    <item.icon 
+                      className={cn(
+                        "h-5 w-5 flex-shrink-0", 
+                        !collapsed && "mr-3"
+                      )} 
+                    />
+                    {!collapsed && (
+                      <span className="whitespace-nowrap overflow-hidden text-ellipsis">{item.title}</span>
+                    )}
                   </Link>
                 )}
                 
-                {/* Render submenu with improved visibility and z-index */}
+                {/* Render submenu */}
                 {!collapsed && hasSubmenu && submenuIsExpanded && (
                   <div 
-                    className="ml-8 mt-1 space-y-1 z-50 bg-inherit overflow-visible"
+                    className="ml-8 space-y-1 mt-1 relative z-50 block"
                     style={{
-                      position: 'static', // Static position for proper layout flow
-                      display: 'block',
-                      opacity: 1,
-                      width: '100%',
-                      marginTop: '0.25rem',
-                      paddingLeft: '0.5rem',
+                      backgroundColor: isLightTheme ? '#F9F7E8' : '#1B1B32'
                     }}
                     data-submenu-content={item.title}
                     data-expanded="true"
-                    data-submenu-visible="true"
-                    data-parent-item={item.title}
                   >
                     {item.submenu?.map((subItem) => (
                       <Link
                         key={subItem.href}
                         to={subItem.href}
                         className={cn(
-                          "flex items-center rounded-md py-1.5 px-3 text-sm transition-colors border border-transparent w-full",
+                          "flex items-center rounded-md py-1.5 px-3 text-sm transition-colors border border-transparent",
                           isActive(subItem.href)
                             ? isLightTheme
                               ? "bg-[#E9E7D8] text-[#222222] font-medium border-primary"
