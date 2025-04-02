@@ -21,13 +21,13 @@ export function useSidebarState(navigationCategories: NavCategory[]) {
     const currentPath = location.pathname;
     let hasExpandedSubmenu = false;
     
-    // Check all navigation categories for matching submenu items
+    // First pass: Check for submenu item exact matches (highest priority)
     navigationCategories.forEach(category => {
       category.items.forEach(item => {
         if (item.submenu) {
           const hasActiveChild = item.submenu.some(subItem => 
             currentPath === subItem.href || 
-            (subItem.href !== "/" && currentPath.startsWith(subItem.href))
+            (subItem.href !== "/" && currentPath.startsWith(subItem.href + "/"))
           );
           
           if (hasActiveChild) {
@@ -49,12 +49,15 @@ export function useSidebarState(navigationCategories: NavCategory[]) {
       });
     });
     
-    // If no submenu was expanded, we'll still check for direct matches
+    // Second pass: Check for direct item matches if no submenu was expanded
     if (!hasExpandedSubmenu) {
       navigationCategories.forEach(category => {
         const hasDirectMatch = category.items.some(item => 
-          item.href !== '#' && (currentPath === item.href || 
-          (item.href !== "/" && currentPath.startsWith(item.href)))
+          item.href !== '#' && (
+            currentPath === item.href || 
+            (item.href !== "/" && 
+             (currentPath === item.href || currentPath.startsWith(item.href + "/")))
+          )
         );
         
         if (hasDirectMatch) {
@@ -101,7 +104,7 @@ export function useSidebarState(navigationCategories: NavCategory[]) {
       return false;
     }
     
-    // Check for exact match first
+    // Check for exact match first (highest priority)
     if (location.pathname === href) {
       return true;
     }
