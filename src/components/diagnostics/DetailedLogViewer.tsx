@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Search, ArrowDownUp, AlertCircle, Info, Bug, RefreshCw } from "lucide-react";
+import { Search, ArrowDownUp, AlertCircle, Info, Bug, RefreshCw, FileText } from "lucide-react";
 import { toast } from "sonner";
 import { runDiagnostics } from "@/services/diagnosticsService";
 
@@ -13,7 +13,7 @@ import { runDiagnostics } from "@/services/diagnosticsService";
 interface LogEntry {
   id: string;
   timestamp: string;
-  level: "error" | "warning" | "info" | "debug";
+  level: "error" | "warning" | "info" | "debug" | "success";
   message: string;
   source: string;
   details?: string;
@@ -219,7 +219,7 @@ export const DetailedLogViewer = () => {
   };
   
   // Get icon for log level
-  const getLogLevelIcon = (level: "error" | "warning" | "info" | "debug") => {
+  const getLogLevelIcon = (level: "error" | "warning" | "info" | "debug" | "success") => {
     switch (level) {
       case "error":
         return <AlertCircle className="h-4 w-4 text-red-500" />;
@@ -229,13 +229,15 @@ export const DetailedLogViewer = () => {
         return <Info className="h-4 w-4 text-blue-500" />;
       case "debug":
         return <Bug className="h-4 w-4 text-gray-500" />;
+      case "success":
+        return <Info className="h-4 w-4 text-green-500" />;
       default:
         return <Info className="h-4 w-4" />;
     }
   };
   
   // Get badge for log level
-  const getLogLevelBadge = (level: "error" | "warning" | "info" | "debug") => {
+  const getLogLevelBadge = (level: "error" | "warning" | "info" | "debug" | "success") => {
     switch (level) {
       case "error":
         return <Badge variant="destructive">Error</Badge>;
@@ -245,6 +247,8 @@ export const DetailedLogViewer = () => {
         return <Badge variant="outline" className="bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-500">Info</Badge>;
       case "debug":
         return <Badge variant="outline" className="bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-500">Debug</Badge>;
+      case "success":
+        return <Badge variant="outline" className="bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-500">Success</Badge>;
       default:
         return <Badge variant="outline">Unknown</Badge>;
     }
@@ -402,6 +406,3 @@ export const DetailedLogViewer = () => {
     </Card>
   );
 };
-
-// Add the missing FileText icon import
-import { FileText } from "lucide-react";

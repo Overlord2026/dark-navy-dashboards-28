@@ -246,6 +246,53 @@ export const DiagnosticsWizard = () => {
       });
     });
 
+    // Add medium priority issues
+    mediumPriorityIssues.forEach((issue, index) => {
+      // Determine the category based on the issue
+      let category = "system";
+      if (issue.service) category = "apiIntegration";
+      else if (issue.route) category = "navigation";
+      else if (issue.formId) category = "formValidation";
+      else if (issue.testName && issue.testName.includes("security")) category = "security";
+      else if (issue.responseTime) category = "performance";
+
+      steps.push({
+        id: `medium-${index}`,
+        title: `Medium Priority: ${issue.name || issue.service || "System Issue"}`,
+        description: "These issues can be fixed after more critical ones",
+        component: (
+          <div className="py-4 space-y-4">
+            <div className="flex items-center p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-md">
+              <Zap className="h-5 w-5 text-yellow-500 mr-3 flex-shrink-0" />
+              <div className="font-medium">Medium Priority Issue</div>
+            </div>
+            
+            <div className="space-y-2">
+              <h3 className="font-medium">{issue.name || issue.service || "System Issue"}</h3>
+              <p className="text-muted-foreground">{issue.message}</p>
+              
+              {issue.details && (
+                <div className="bg-muted p-3 rounded-md text-sm mt-2">
+                  <pre className="whitespace-pre-wrap font-mono text-xs">{issue.details}</pre>
+                </div>
+              )}
+            </div>
+            
+            <div className="flex justify-end mt-4">
+              <Button
+                onClick={() => handleApplyFix(issue, category)}
+                disabled={fixInProgress === `wizard-${issue.id || issue.name}`}
+                className="gap-2"
+              >
+                <Wrench className="h-4 w-4" />
+                {fixInProgress === `wizard-${issue.id || issue.name}` ? "Fixing..." : "Fix Issue"}
+              </Button>
+            </div>
+          </div>
+        )
+      });
+    });
+
     // Add final summary step
     steps.push({
       id: "summary",

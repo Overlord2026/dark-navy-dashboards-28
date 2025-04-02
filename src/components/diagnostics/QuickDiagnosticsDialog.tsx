@@ -6,6 +6,7 @@ import { useDiagnostics } from "@/hooks/useDiagnostics";
 import { AlertTriangle, Check, ExternalLink, Shield, Zap } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { StatusIcon } from "./StatusIcon"; 
+import { toast } from "sonner";
 
 // Fix: Create a proper LoadingState component to replace the inline one that caused the error
 const LoadingState = ({ message = "Loading..." }: { message?: string }) => (
@@ -29,7 +30,9 @@ export function QuickDiagnosticsDialog({
     refreshDiagnostics, 
     quickFixes,
     applyQuickFix,
-    quickFixLoading
+    quickFixLoading,
+    applyDiagnosticFix,
+    fixInProgress
   } = useDiagnostics();
 
   // Calculate status counts
@@ -79,6 +82,21 @@ export function QuickDiagnosticsDialog({
     }
     
     return "System health looks good";
+  };
+
+  // Handle fixing a specific issue
+  const handleFixIssue = async (test: any, category: string) => {
+    if (fixInProgress) return;
+    
+    const testId = `quick-${test.id || test.name}`;
+    try {
+      await applyDiagnosticFix(testId, category, test.name || test.service || test.route);
+      toast.success(`Fixed: ${test.name || test.service || test.route}`);
+      await refreshDiagnostics();
+    } catch (error) {
+      toast.error("Failed to apply fix");
+      console.error("Fix application error:", error);
+    }
   };
 
   const renderStatusSummary = () => {
@@ -219,26 +237,92 @@ export function QuickDiagnosticsDialog({
                     {diagnosticResults.securityTests
                       .filter(test => test.status !== "success")
                       .map((test, index) => (
-                        <div key={`sec-${index}`} className="p-3 border rounded-lg flex items-start">
-                          <StatusIcon status={test.status} className="mt-0.5 mr-2" />
-                          <div>
-                            <p className="font-medium">{test.name}</p>
-                            <p className="text-sm text-muted-foreground">Security: {test.severity} severity</p>
+                        <div key={`sec-${index}`} className="p-3 border rounded-lg flex items-start justify-between">
+                          <div className="flex items-start">
+                            <StatusIcon status={test.status} className="mt-0.5 mr-2" />
+                            <div>
+                              <p className="font-medium">{test.name}</p>
+                              <p className="text-sm text-muted-foreground">Security: {test.severity} severity</p>
+                            </div>
                           </div>
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => handleFixIssue(test, "security")}
+                            disabled={fixInProgress === `quick-${test.id || test.name}`}
+                          >
+                            {fixInProgress === `quick-${test.id || test.name}` ? "Fixing..." : "Fix Issue"}
+                          </Button>
                         </div>
                       ))}
                     
                     {diagnosticResults.performanceTests
                       .filter(test => test.status !== "success")
                       .map((test, index) => (
-                        <div key={`perf-${index}`} className="p-3 border rounded-lg flex items-start">
-                          <StatusIcon status={test.status} className="mt-0.5 mr-2" />
-                          <div>
-                            <p className="font-medium">{test.name}</p>
-                            <p className="text-sm text-muted-foreground">
-                              Response time: {test.responseTime}ms | CPU: {test.cpuUsage}%
-                            </p>
+                        <div key={`perf-${index}`} className="p-3 border rounded-lg flex items-start justify-between">
+                          <div className="flex items-start">
+                            <StatusIcon status={test.status} className="mt-0.5 mr-2" />
+                            <div>
+                              <p className="font-medium">{test.name}</p>
+                              <p className="text-sm text-muted-foreground">
+                                Response time: {test.responseTime}ms | CPU: {test.cpuUsage}%
+                              </p>
+                            </div>
                           </div>
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => handleFixIssue(test, "performance")}
+                            disabled={fixInProgress === `quick-${test.id || test.name}`}
+                          >
+                            {fixInProgress === `quick-${test.id || test.name}` ? "Fixing..." : "Fix Issue"}
+                          </Button>
+                        </div>
+                      ))}
+                    
+                    {diagnosticResults.apiIntegrationTests
+                      .filter(test => test.status !== "success")
+                      .map((test, index) => (
+                        <div key={`api-${index}`} className="p-3 border rounded-lg flex items-start justify-between">
+                          <div className="flex items-start">
+                            <StatusIcon status={test.status} className="mt-0.5 mr-2" />
+                            <div>
+                              <p className="font-medium">{test.service} ({test.endpoint})</p>
+                              <p className="text-sm text-muted-foreground">
+                                Response time: {test.responseTime}ms
+                              </p>
+                            </div>
+                          </div>
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => handleFixIssue(test, "apiIntegration")}
+                            disabled={fixInProgress === `quick-${test.id || test.name}`}
+                          >
+                            {fixInProgress === `quick-${test.id || test.name}` ? "Fixing..." : "Fix Issue"}
+                          </Button>
+                        </div>
+                      ))}
+                    
+                    {diagnosticResults.navigationTests
+                      .filter(test => test.status !== "success")
+                      .map((test, index) => (
+                        <div key={`nav-${index}`} className="p-3 border rounded-lg flex items-start justify-between">
+                          <div className="flex items-start">
+                            <StatusIcon status={test.status} className="mt-0.5 mr-2" />
+                            <div>
+                              <p className="font-medium">{test.route}</p>
+                              <p className="text-sm text-muted-foreground">{test.message}</p>
+                            </div>
+                          </div>
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => handleFixIssue(test, "navigation")}
+                            disabled={fixInProgress === `quick-${test.id || test.route}`}
+                          >
+                            {fixInProgress === `quick-${test.id || test.route}` ? "Fixing..." : "Fix Issue"}
+                          </Button>
                         </div>
                       ))}
                   </div>
