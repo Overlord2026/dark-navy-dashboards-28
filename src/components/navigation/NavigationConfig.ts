@@ -26,13 +26,19 @@ import {
   Calculator,
   PieChart,
   CreditCard,
-  Receipt
+  Receipt,
+  LayoutDashboardIcon,
 } from "lucide-react";
 
 import { NavItem } from "@/types/navigation";
 
 // HOME category
 export const homeNavItems: NavItem[] = [
+  { 
+    title: "Dashboard", 
+    href: "/dashboard", 
+    icon: LayoutDashboardIcon 
+  },
   { 
     title: "Home", 
     href: "/", 
@@ -153,6 +159,11 @@ export const bottomNavItems: NavItem[] = [
     title: "Settings", 
     href: "/settings", 
     icon: UserIcon 
+  },
+  {
+    title: "Debug",
+    href: "/debug",
+    icon: SearchIcon
   }
 ];
 

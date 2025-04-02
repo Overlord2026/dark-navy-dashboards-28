@@ -1,9 +1,8 @@
 
-import { useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { AlertTriangleIcon } from "lucide-react";
-import { Link } from "react-router-dom";
 
 const NotFound = () => {
   const location = useLocation();
@@ -25,9 +24,14 @@ const NotFound = () => {
         <p className="text-xl text-muted-foreground mb-6">
           The page you're looking for doesn't exist or has been moved.
         </p>
-        <Button asChild className="bg-accent hover:bg-accent/90 text-white">
-          <Link to="/">Return to Dashboard</Link>
-        </Button>
+        <div className="space-y-2">
+          <Button asChild className="bg-accent hover:bg-accent/90 text-white w-full">
+            <Link to="/">Return to Home</Link>
+          </Button>
+          <Button asChild variant="outline" className="w-full">
+            <Link to="/dashboard">Go to Dashboard</Link>
+          </Button>
+        </div>
       </div>
     </div>
   );

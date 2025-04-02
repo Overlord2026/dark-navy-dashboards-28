@@ -11,6 +11,7 @@ import BankingTransfers from "@/pages/BankingTransfers";
 import FundingAccounts from "@/pages/FundingAccounts";
 import SocialSecurity from "@/pages/SocialSecurity";
 import NotFound from "@/pages/NotFound";
+import Properties from "@/pages/Properties";
 
 export const router = createBrowserRouter([
   {
@@ -49,6 +50,10 @@ export const router = createBrowserRouter([
     path: "/social-security",
     element: <SocialSecurity />,
   },
+  {
+    path: "/properties",
+    element: <Properties />,
+  },
   // Education & Solutions routes
   {
     path: "/education",
@@ -57,6 +62,30 @@ export const router = createBrowserRouter([
   {
     path: "/investments",
     element: <NotFound />, // Placeholder until we implement this page
+  },
+  {
+    path: "/investments/alternative/private-equity",
+    element: <NotFound />, // Placeholder for private equity investments
+  },
+  {
+    path: "/investments/alternative/private-debt",
+    element: <NotFound />, // Placeholder for private debt investments
+  },
+  {
+    path: "/investments/alternative/digital-assets",
+    element: <NotFound />, // Placeholder for digital assets
+  },
+  {
+    path: "/investments/alternative/real-assets",
+    element: <NotFound />, // Placeholder for real assets
+  },
+  {
+    path: "/investments/model-portfolios",
+    element: <NotFound />, // Placeholder for model portfolios
+  },
+  {
+    path: "/investments/stock-screener",
+    element: <NotFound />, // Placeholder for stock screener
   },
   {
     path: "/education/tax-planning",
@@ -91,10 +120,6 @@ export const router = createBrowserRouter([
     path: "/legacy-vault",
     element: <NotFound />, // Placeholder until we implement this page
   },
-  {
-    path: "/properties",
-    element: <NotFound />, // Placeholder until we implement this page
-  },
   // Collaboration & Sharing routes
   {
     path: "/documents",
@@ -102,6 +127,11 @@ export const router = createBrowserRouter([
   },
   {
     path: "/sharing",
+    element: <NotFound />, // Placeholder until we implement this page
+  },
+  // Bottom nav routes
+  {
+    path: "/help",
     element: <NotFound />, // Placeholder until we implement this page
   },
   // Catch-all route for 404 pages
