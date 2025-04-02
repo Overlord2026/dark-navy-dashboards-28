@@ -45,6 +45,19 @@ interface DocumentCategory {
   count?: number;
 }
 
+// Define the document categories that should appear under "Important Documents"
+const importantDocumentCategories = documentCategories.filter(cat => 
+  ["documents-to-sign", "bfo-records", "alternative-investments", 
+   "business-ownership", "education", "employer-agreements", 
+   "insurance-policies", "leases", "property-ownership", 
+   "statements", "taxes", "vehicles"].includes(cat.id)
+);
+
+// Define the document categories that should appear under "Family Legacy Box"
+const estateDocumentCategories = documentCategories.filter(cat => 
+  ["estate-planning", "trusts", "other"].includes(cat.id)
+);
+
 export default function LegacyVault() {
   const [activeCategory, setActiveCategory] = useState("all");
   const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
@@ -205,7 +218,7 @@ export default function LegacyVault() {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
               <div className="md:col-span-1">
                 <CategoryList 
-                  categories={documentCategories as DocumentCategory[]} 
+                  categories={importantDocumentCategories as DocumentCategory[]} 
                   activeCategory={activeCategory} 
                   onCategorySelect={setActiveCategory} 
                 />
