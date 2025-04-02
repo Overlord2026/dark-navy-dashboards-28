@@ -25,6 +25,7 @@ import { PlaidLinkDialog } from "@/components/accounts/PlaidLinkDialog";
 import { useToast } from "@/hooks/use-toast";
 import { ManageFundingDialog } from "@/components/accounts/ManageFundingDialog";
 import { Link } from "react-router-dom";
+import { LoanTypeDropdown } from "@/components/accounts/LoanTypeDropdown";
 
 const Accounts = () => {
   const { toast } = useToast();
@@ -33,6 +34,7 @@ const Accounts = () => {
   const [showAccountTypeSelector, setShowAccountTypeSelector] = useState(false);
   const [showPlaidDialog, setShowPlaidDialog] = useState(false);
   const [showManageFundingDialog, setShowManageFundingDialog] = useState(false);
+  const [loanType, setLoanType] = useState("mortgage");
   
   // Sample linked funding accounts - in a real app, this would come from an API
   const fundingAccounts = [
@@ -76,6 +78,22 @@ const Accounts = () => {
 
   const handleManageFunding = () => {
     setShowManageFundingDialog(true);
+  };
+
+  const handleCompleteSetup = () => {
+    toast({
+      title: "Setup Required",
+      description: "Redirecting to complete your account setup process"
+    });
+    // In a real app, this would redirect to the setup flow
+  };
+
+  const handleLoanTypeChange = (value: string) => {
+    setLoanType(value);
+    toast({
+      title: "Loan Type Selected",
+      description: `You've selected a ${value} loan type`
+    });
   };
 
   if (showAccountTypeSelector) {
@@ -168,7 +186,7 @@ const Accounts = () => {
           >
             <div className="p-4 text-center text-muted-foreground">
               <p>Complete your account setup to view managed accounts.</p>
-              <Button variant="outline" className="mt-2">
+              <Button variant="outline" className="mt-2" onClick={handleCompleteSetup}>
                 <ExternalLink className="mr-2 h-4 w-4" />
                 Complete Setup
               </Button>
@@ -226,8 +244,17 @@ const Accounts = () => {
             amount="$0.00"
             initiallyOpen={false}
           >
-            <div className="p-4 text-center text-muted-foreground">
+            <div className="p-4 text-center text-muted-foreground space-y-4">
               <p>No loan accounts linked.</p>
+              
+              <div className="max-w-md mx-auto">
+                <label className="block text-sm font-medium mb-2">Loan Type</label>
+                <LoanTypeDropdown 
+                  value={loanType} 
+                  onValueChange={handleLoanTypeChange} 
+                />
+              </div>
+              
               <Button variant="outline" className="mt-2" onClick={() => handleAccountTypeSelected("loan")}>
                 <PlusCircle className="mr-2 h-4 w-4" />
                 Add Loan
