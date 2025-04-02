@@ -1,38 +1,54 @@
 
-export const getAuthStatusBadge = (status: string) => {
-  switch (status) {
-    case 'valid':
-      return <span className="text-xs px-2 py-1 rounded-full bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-200">Valid</span>;
-    case 'expired':
-      return <span className="text-xs px-2 py-1 rounded-full bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-200">Expired</span>;
-    case 'invalid':
-      return <span className="text-xs px-2 py-1 rounded-full bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-200">Invalid</span>;
-    default:
-      return <span className="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-200">Not Tested</span>;
-  }
-};
+import React from "react";
+import { Badge } from "@/components/ui/badge";
+import { DiagnosticTestStatus } from "@/services/diagnostics/types";
 
-export const getResponseTimeBadge = (time: number) => {
-  if (time === 0) {
-    return <span className="text-xs px-2 py-1 rounded-full bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-200">Timeout</span>;
-  } else if (time < 300) {
-    return <span className="text-xs px-2 py-1 rounded-full bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-200">{time}ms</span>;
-  } else if (time < 600) {
-    return <span className="text-xs px-2 py-1 rounded-full bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-200">{time}ms</span>;
-  } else {
-    return <span className="text-xs px-2 py-1 rounded-full bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-200">{time}ms</span>;
-  }
-};
+interface StatusBadgesProps {
+  total: number;
+  success: number;
+  warnings: number;
+  errors: number;
+  status: DiagnosticTestStatus | string;
+}
 
-export const getAccessStatusBadge = (status: string) => {
-  switch (status) {
-    case 'granted':
-      return <span className="text-xs px-2 py-1 rounded-full bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-200">Access Granted</span>;
-    case 'denied':
-      return <span className="text-xs px-2 py-1 rounded-full bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-200">Access Denied</span>;
-    case 'error':
-      return <span className="text-xs px-2 py-1 rounded-full bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-200">Test Error</span>;
-    default:
-      return <span className="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-200">Not Tested</span>;
-  }
-};
+export function StatusBadges({ total, success, warnings, errors, status }: StatusBadgesProps) {
+  return (
+    <div className="flex flex-wrap gap-2">
+      <Badge variant="outline" className="bg-muted/50">
+        Total: {total}
+      </Badge>
+      <Badge 
+        variant="outline" 
+        className="bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300"
+      >
+        Success: {success}
+      </Badge>
+      {warnings > 0 && (
+        <Badge 
+          variant="outline" 
+          className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300"
+        >
+          Warnings: {warnings}
+        </Badge>
+      )}
+      {errors > 0 && (
+        <Badge 
+          variant="outline" 
+          className="bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300"
+        >
+          Errors: {errors}
+        </Badge>
+      )}
+      <Badge 
+        variant="outline" 
+        className={`
+          ${status === "success" ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300" : ""}
+          ${status === "warning" ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300" : ""}
+          ${status === "error" ? "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300" : ""}
+        `}
+      >
+        Status: {status}
+      </Badge>
+    </div>
+  );
+}

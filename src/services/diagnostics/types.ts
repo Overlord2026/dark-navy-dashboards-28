@@ -1,3 +1,4 @@
+
 import { NavigationDiagnosticResult, LogLevel } from "@/types/diagnostics";
 
 export type DiagnosticTestStatus = "success" | "warning" | "error";
@@ -23,6 +24,14 @@ export interface ApiIntegrationTestResult {
   responseTime?: number;
   statusCode?: number;
   errorDetails?: string;
+  service?: string;
+  authStatus?: string;
+  errorCode?: string;
+  canAutoFix?: boolean;
+  documentationUrl?: string;
+  documentation?: string;
+  fixMessage?: string;
+  lastUpdated?: string;
 }
 
 export interface FormValidationTestResult {
@@ -33,6 +42,7 @@ export interface FormValidationTestResult {
     field: string;
     error: string;
   }[];
+  formName?: string;
 }
 
 export interface IconTestResult {
@@ -40,6 +50,7 @@ export interface IconTestResult {
   status: DiagnosticTestStatus;
   message: string;
   rendered?: boolean;
+  icon?: string;
 }
 
 export interface RoleSimulationTestResult {
@@ -51,6 +62,7 @@ export interface RoleSimulationTestResult {
     expected: boolean;
     actual: boolean;
   }[];
+  module?: string;
 }
 
 export interface PerformanceTestResult {
@@ -64,6 +76,7 @@ export interface PerformanceTestResult {
     responseTime?: number;
   };
   recommendation?: string;
+  responseTime?: number;
 }
 
 export interface SecurityTestResult {
@@ -73,4 +86,13 @@ export interface SecurityTestResult {
   severity?: "low" | "medium" | "high" | "critical";
   details?: string;
   recommendation?: string;
+  category?: string;
+  remediation?: string;
 }
+
+export interface DiagnosticResult {
+  status: DiagnosticTestStatus;
+  message: string;
+}
+
+export type PermissionsTestResult = PermissionTestResult;
