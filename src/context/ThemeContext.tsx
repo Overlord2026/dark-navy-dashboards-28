@@ -1,5 +1,6 @@
 
 import React, { createContext, useContext, useState, useEffect } from "react";
+import { useTheme as useNextTheme } from "next-themes";
 
 type Theme = "dark" | "light";
 
@@ -11,10 +12,20 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<Theme>(
+  const { theme: nextTheme, setTheme: setNextTheme } = useNextTheme();
+  
+  const [theme, setThemeState] = useState<Theme>(
     () => (localStorage.getItem("theme") as Theme) || "dark"
   );
 
+  // Sync with next-themes
+  useEffect(() => {
+    if (nextTheme === "dark" || nextTheme === "light") {
+      setThemeState(nextTheme);
+    }
+  }, [nextTheme]);
+
+  // Set theme in localStorage and update DOM
   useEffect(() => {
     localStorage.setItem("theme", theme);
     
@@ -41,6 +52,12 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       document.body.classList.remove("bg-[#F9F7E8]");
     }
   }, [theme]);
+
+  // Custom setTheme function that updates both states
+  const setTheme = (newTheme: Theme) => {
+    setThemeState(newTheme);
+    setNextTheme(newTheme);
+  };
 
   return (
     <ThemeContext.Provider value={{ theme, setTheme }}>
