@@ -1,3 +1,4 @@
+
 import { ReactNode, useState } from "react";
 import * as React from "react";
 import { useParams, useNavigate, Link, useLocation } from "react-router-dom";
@@ -24,7 +25,9 @@ import {
   LineChartIcon,
   CircleDollarSignIcon,
   ArchiveIcon,
-  PieChart
+  PieChart,
+  ArrowRightLeft,
+  Receipt
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { UserProfileSection } from "@/components/sidebar/UserProfileSection";
@@ -114,8 +117,19 @@ const navigationCategories: NavCategory[] = [
     items: [
       { id: "financial-plans", label: "Financial Plans", icon: LineChartIcon, href: "/financial-plans" },
       { id: "accounts", label: "Accounts Overview", icon: WalletIcon, href: "/accounts" },
-      { id: "insurance", label: "Insurance & Annuities", icon: ShieldIcon, href: "/insurance" },
-      { id: "cash-management", label: "Banking", icon: BanknoteIcon, href: "/cash-management" },
+      { id: "personal-insurance", label: "Insurance & Annuities", icon: ShieldIcon, href: "/personal-insurance" },
+      { 
+        id: "banking", 
+        label: "Banking", 
+        icon: BanknoteIcon, 
+        href: "#",
+        subItems: [
+          { id: "cash-management", label: "Cash Management", icon: BanknoteIcon, href: "/cash-management" },
+          { id: "banking-transfers", label: "Transfers", icon: ArrowRightLeft, href: "/banking-transfers" },
+          { id: "bill-paying", label: "Bill Paying", icon: Receipt, href: "/banking/bill-paying" },
+          { id: "funding-accounts", label: "Funding Accounts", icon: WalletIcon, href: "/funding-accounts" }
+        ]
+      },
       { id: "legacy-vault", label: "Secure Family Vault", icon: VaultIcon, href: "/legacy-vault" },
       { id: "social-security", label: "Social Security", icon: CircleDollarSignIcon, href: "/social-security" },
       { id: "properties", label: "Real Estate & Properties", icon: BuildingIcon, href: "/properties" },

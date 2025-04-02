@@ -75,6 +75,10 @@ export function useSidebarState(navigationCategories: NavCategory[]) {
   };
 
   const isActive = (href: string) => {
+    // Special case for "#" links (like Banking parent menu)
+    if (href === "#") {
+      return false;
+    }
     return location.pathname === href || 
            (href !== "/" && location.pathname.startsWith(href));
   };

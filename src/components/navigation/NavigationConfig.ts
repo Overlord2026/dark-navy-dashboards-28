@@ -1,3 +1,4 @@
+
 import { 
   HomeIcon, 
   GraduationCapIcon,
@@ -92,7 +93,7 @@ export const familyWealthNavItems: NavItem[] = [
   },
   { 
     title: "Banking", 
-    href: "/banking", 
+    href: "#", // Changed from "/banking" to "#" to prevent navigation
     icon: BanknoteIcon,
     submenu: [
       {

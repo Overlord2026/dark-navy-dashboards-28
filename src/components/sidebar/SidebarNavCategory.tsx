@@ -51,12 +51,17 @@ export const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
       {(isExpanded || collapsed) && (
         <div className="space-y-1 px-3">
           {items.map((item) => {
-            const itemIsActive = isActive(item.href);
             const hasSubmenu = item.submenu && item.submenu.length > 0;
             const submenuIsExpanded = expandedSubmenus[item.title];
             
+            // For items with submenu, check if any submenu item is active
+            let itemIsActive = isActive(item.href);
+            if (hasSubmenu) {
+              itemIsActive = itemIsActive || item.submenu?.some(subItem => isActive(subItem.href)) || false;
+            }
+            
             return (
-              <div key={item.href} className="group">
+              <div key={item.title} className="group">
                 <Link
                   to={hasSubmenu ? "#" : item.href}
                   className={cn(
