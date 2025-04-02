@@ -94,30 +94,27 @@ export const Sidebar = () => {
         }))
       }, "Sidebar");
     }
-    
-    // Also check Banking in bottom nav items
-    const bottomBankingItem = bottomNavItems.find(item => item.title === "Banking");
-    if (bottomBankingItem) {
-      logger.debug("Bottom nav Banking state", {
-        expanded: !!expandedSubmenus["Banking"],
-        hasSubmenu: !!bottomBankingItem.submenu && bottomBankingItem.submenu.length > 0
-      }, "Sidebar");
-    }
-  }, [expandedSubmenus, expandedCategories, collapsed, forceUpdate, familyWealthNavItems, bottomNavItems, isActive]);
+  }, [expandedSubmenus, expandedCategories, collapsed, forceUpdate, familyWealthNavItems, isActive]);
 
-  // Debug helper to manually toggle Banking submenu
-  const handleManualBankingToggle = () => {
-    const bankingItem = familyWealthNavItems.find(item => item.title === "Banking");
-    if (bankingItem) {
-      const mockEvent = { 
-        preventDefault: () => {}, 
-        stopPropagation: () => {} 
-      } as React.MouseEvent;
-      logger.debug("Manually toggling Banking submenu", {
-        current: expandedSubmenus["Banking"]
-      }, "Sidebar");
-      toggleSubmenu("Banking", mockEvent);
-    }
+  // Test function to manually toggle Banking submenu
+  const handleBankingClick = () => {
+    const mockEvent = { 
+      preventDefault: () => {}, 
+      stopPropagation: () => {} 
+    } as React.MouseEvent;
+    
+    logger.debug("Manually toggling Banking menu", {
+      currentState: expandedSubmenus["Banking"] ? "expanded" : "collapsed"
+    }, "BankingToggle");
+    
+    toggleSubmenu("Banking", mockEvent);
+    
+    // Log state after toggling
+    setTimeout(() => {
+      logger.debug("Banking menu state after toggle", {
+        nowExpanded: expandedSubmenus["Banking"] ? "yes" : "no"
+      }, "BankingToggle");
+    }, 100);
   };
 
   const advisorInfo = {
@@ -136,6 +133,15 @@ export const Sidebar = () => {
 
   const handleViewProfile = (tabId: string) => {
     logger.debug("View profile tab clicked", { tabId }, "Sidebar");
+  };
+
+  // Check if any banking submenu item is active
+  const isBankingActive = () => {
+    const bankingItem = familyWealthNavItems.find(item => item.title === "Banking");
+    if (bankingItem && bankingItem.submenu) {
+      return hasActiveChild(bankingItem.submenu);
+    }
+    return false;
   };
 
   return (
@@ -178,23 +184,20 @@ export const Sidebar = () => {
           />
         ))}
         
-        {/* Debugging button with improved visibility */}
+        {/* Test button for Banking submenu */}
         {!collapsed && (
-          <div 
-            className="px-3 mt-2"
-            data-sidebar-debug="banking-toggle"
-          >
+          <div className="px-3 mt-2">
             <Button
               size="sm"
               variant="outline"
-              onClick={handleManualBankingToggle}
+              onClick={handleBankingClick}
               className={cn(
                 "w-full text-xs", 
                 isLightTheme 
                   ? "border-primary bg-[#E9E7D8] text-[#222222] hover:bg-[#DCD8C0]" 
                   : "border-primary bg-black text-white hover:bg-sidebar-accent"
               )}
-              data-banking-submenu-state={expandedSubmenus["Banking"] ? "expanded" : "collapsed"}
+              data-banking-toggle="test"
             >
               {expandedSubmenus["Banking"] ? "Close" : "Open"} Banking Menu
             </Button>

@@ -142,58 +142,32 @@ export function useSidebarState(navigationCategories: NavCategory[]) {
     });
   };
 
-  // Completely rewritten submenu toggle implementation to ensure reliable operation
+  // Completely rewritten submenu toggle implementation
   const toggleSubmenu = (itemTitle: string, e: React.MouseEvent) => {
     // Always prevent default behavior to stop navigation
     if (e) {
       e.preventDefault();
       e.stopPropagation();
     }
-
-    logger.debug(`EXPLICIT TOGGLE: Submenu "${itemTitle}"`, 
-      { title: itemTitle, currentState: expandedSubmenus[itemTitle] ? "expanded" : "collapsed" }, "SidebarState");
     
-    // Set a direct value rather than using functional updates to ensure deterministic behavior
-    const newState = !expandedSubmenus[itemTitle];
+    logger.debug(`Toggling submenu "${itemTitle}"`, 
+      { title: itemTitle, currentState: expandedSubmenus[itemTitle] }, "SubmenuToggle");
     
+    // Direct state update for better reliability
     setExpandedSubmenus(prev => {
-      const updatedState = { ...prev, [itemTitle]: newState };
+      const newValue = !prev[itemTitle];
       
-      // Special debugging for Banking menu
-      if (itemTitle === "Banking") {
-        logger.debug("BANKING MENU STATE UPDATE", {
-          was: prev["Banking"] ? "expanded" : "collapsed",
-          willBe: newState ? "expanded" : "collapsed",
-          allSubmenus: JSON.stringify(updatedState),
-          timestamp: new Date().toISOString()
-        }, "BankingMenu");
-      }
+      logger.debug(`Setting submenu state for "${itemTitle}"`, 
+        { from: prev[itemTitle], to: newValue }, "SubmenuToggle");
       
-      return updatedState;
+      return {
+        ...prev, 
+        [itemTitle]: newValue
+      };
     });
     
-    // Forcibly update UI to ensure changes are applied
+    // Force a rerender after state update
     setForceUpdate(prev => prev + 1);
-    
-    // Double-check that state was updated as expected after a short delay
-    setTimeout(() => {
-      logger.debug(`Submenu toggle verification for "${itemTitle}"`, {
-        expectedState: newState,
-        actualState: expandedSubmenus[itemTitle],
-        forceUpdateCounter: forceUpdate
-      }, "SidebarState");
-      
-      // If the state didn't update as expected, force another update
-      if (expandedSubmenus[itemTitle] !== newState) {
-        logger.debug(`Correcting submenu state for "${itemTitle}"`, {
-          current: expandedSubmenus[itemTitle],
-          shouldBe: newState
-        }, "SidebarState");
-        
-        setExpandedSubmenus(prev => ({ ...prev, [itemTitle]: newState }));
-        setForceUpdate(prev => prev + 1);
-      }
-    }, 50);
   };
 
   return {

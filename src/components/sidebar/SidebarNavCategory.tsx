@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { NavItem } from "@/types/navigation";
@@ -33,8 +33,8 @@ export const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
   toggleSubmenu,
   hasActiveChild = () => false
 }) => {
-  // Log key state for debugging
-  React.useEffect(() => {
+  // Enhanced logging for debugging
+  useEffect(() => {
     // Check for Banking item specifically
     const bankingItem = items.find(item => item.title === "Banking");
     if (bankingItem) {
@@ -132,7 +132,9 @@ export const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
                     onClick={(e) => {
                       logger.debug(`Submenu clicked in category: ${item.title}`, 
                         { category: id, item: item.title, expanded: submenuIsExpanded }, "CategorySubmenu");
-                      toggleSubmenu(item.title, e);
+                      if (toggleSubmenu) {
+                        toggleSubmenu(item.title, e);
+                      }
                     }}
                     title={collapsed ? item.title : undefined}
                     data-submenu-trigger={item.title}
@@ -185,12 +187,16 @@ export const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
                   </Link>
                 )}
                 
-                {/* Render submenu */}
+                {/* Render submenu with improved visibility and position */}
                 {!collapsed && hasSubmenu && submenuIsExpanded && (
                   <div 
                     className="ml-8 space-y-1 mt-1 relative z-50 block"
                     style={{
-                      backgroundColor: isLightTheme ? '#F9F7E8' : '#1B1B32'
+                      backgroundColor: isLightTheme ? '#F9F7E8' : '#1B1B32',
+                      display: 'block',
+                      opacity: 1,
+                      maxHeight: '500px',
+                      overflow: 'visible'
                     }}
                     data-submenu-content={item.title}
                     data-expanded="true"
@@ -200,7 +206,7 @@ export const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
                         key={subItem.href}
                         to={subItem.href}
                         className={cn(
-                          "flex items-center rounded-md py-1.5 px-3 text-sm transition-colors border border-transparent",
+                          "flex items-center rounded-md py-1.5 px-3 text-sm transition-colors border border-transparent w-full",
                           isActive(subItem.href)
                             ? isLightTheme
                               ? "bg-[#E9E7D8] text-[#222222] font-medium border-primary"
