@@ -1,11 +1,14 @@
 
 import React from "react";
 import { createBrowserRouter } from "react-router-dom";
-import { IndexPage } from "@/routes/IndexPage";
-import { Dashboard } from "@/routes/Dashboard";
-import { Settings } from "@/routes/Settings";
-import { Professionals } from "@/routes/Professionals";
-import { DebugPage } from "@/routes/DebugPage";
+import IndexPage from "@/pages/IndexPage";
+import Dashboard from "@/pages/Dashboard";
+import Settings from "@/pages/Settings";
+import Professionals from "@/pages/Professionals";
+import { DebugPage } from "@/pages/DebugPage";
+import CashManagement from "@/pages/CashManagement";
+import BankingTransfers from "@/pages/BankingTransfers";
+import FundingAccounts from "@/pages/FundingAccounts";
 
 export const router = createBrowserRouter([
   {
@@ -27,5 +30,17 @@ export const router = createBrowserRouter([
   {
     path: "/debug",
     element: <DebugPage />,
+  },
+  {
+    path: "/cash-management",
+    element: <CashManagement />,
+  },
+  {
+    path: "/banking-transfers",
+    element: <BankingTransfers />,
+  },
+  {
+    path: "/funding-accounts",
+    element: <FundingAccounts />,
   },
 ]);
