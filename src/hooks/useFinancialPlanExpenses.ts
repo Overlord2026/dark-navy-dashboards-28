@@ -1,86 +1,99 @@
 
-import { useFinancialPlans } from "@/context/FinancialPlanContext";
+import { useState, useEffect, useCallback } from "react";
 import { Expense } from "@/types/financial-plan";
-import { v4 as uuidv4 } from "uuid";
 import { toast } from "sonner";
+import { getFinancialPlanService } from "@/services/financial-plans/FinancialPlanServiceFactory";
 
 export const useFinancialPlanExpenses = (planId: string) => {
-  const { plans, updatePlan } = useFinancialPlans();
+  const [expenses, setExpenses] = useState<Expense[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
   
-  const plan = plans.find(p => p.id === planId);
-  const expenses = plan?.expenses || [];
+  const service = getFinancialPlanService();
   
-  const addExpense = (expense: Omit<Expense, "id">): Expense => {
-    if (!plan) {
-      toast.error("Plan not found");
-      throw new Error("Plan not found");
+  // Load expenses for the specified plan
+  const loadExpenses = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const plan = await service.getPlanById(planId);
+      if (!plan) {
+        throw new Error("Plan not found");
+      }
+      
+      setExpenses(plan.expenses || []);
+    } catch (err) {
+      setError(err instanceof Error ? err : new Error('Unknown error loading expenses'));
+      toast.error('Error loading expenses');
+    } finally {
+      setLoading(false);
     }
-    
-    const newExpense: Expense = {
-      ...expense,
-      id: uuidv4()
-    };
-    
-    const updatedExpenses = [...expenses, newExpense];
-    
-    updatePlan(planId, { expenses: updatedExpenses });
-    
-    return newExpense;
+  }, [planId, service]);
+  
+  // Initialize on component mount or when planId changes
+  useEffect(() => {
+    loadExpenses();
+  }, [loadExpenses]);
+  
+  // Add an expense
+  const addExpense = async (expense: Omit<Expense, "id">): Promise<Expense> => {
+    try {
+      const newExpense = await service.addExpense(planId, expense);
+      setExpenses(prev => [...prev, newExpense]);
+      return newExpense;
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error adding expense';
+      toast.error(errorMessage);
+      throw err;
+    }
   };
   
-  const updateExpense = (expenseId: string, data: Partial<Expense>): Expense | null => {
-    if (!plan) {
-      toast.error("Plan not found");
-      throw new Error("Plan not found");
+  // Update an expense
+  const updateExpense = async (expenseId: string, data: Partial<Expense>): Promise<Expense | null> => {
+    try {
+      const updatedExpense = await service.updateExpense(planId, expenseId, data);
+      if (updatedExpense) {
+        setExpenses(prev => 
+          prev.map(e => e.id === expenseId ? updatedExpense : e)
+        );
+      }
+      return updatedExpense;
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error updating expense';
+      toast.error(errorMessage);
+      throw err;
     }
-    
-    const expenseIndex = expenses.findIndex(e => e.id === expenseId);
-    if (expenseIndex === -1) {
-      toast.error("Expense not found");
-      return null;
-    }
-    
-    const updatedExpense = {
-      ...expenses[expenseIndex],
-      ...data
-    };
-    
-    const updatedExpenses = [...expenses];
-    updatedExpenses[expenseIndex] = updatedExpense;
-    
-    updatePlan(planId, { expenses: updatedExpenses });
-    
-    return updatedExpense;
   };
   
-  const deleteExpense = (expenseId: string): boolean => {
-    if (!plan) {
-      toast.error("Plan not found");
-      throw new Error("Plan not found");
+  // Delete an expense
+  const deleteExpense = async (expenseId: string): Promise<boolean> => {
+    try {
+      const success = await service.deleteExpense(planId, expenseId);
+      if (success) {
+        setExpenses(prev => prev.filter(e => e.id !== expenseId));
+      }
+      return success;
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error deleting expense';
+      toast.error(errorMessage);
+      throw err;
     }
-    
-    const updatedExpenses = expenses.filter(e => e.id !== expenseId);
-    
-    if (updatedExpenses.length === expenses.length) {
-      toast.error("Expense not found");
-      return false;
-    }
-    
-    updatePlan(planId, { expenses: updatedExpenses });
-    toast.success("Expense deleted");
-    
-    return true;
   };
   
+  // Filter expenses by type and period
   const getExpensesByTypeAndPeriod = (type: Expense["type"], period: Expense["period"]): Expense[] => {
     return expenses.filter(e => e.type === type && e.period === period);
   };
   
   return {
     expenses,
+    loading,
+    error,
     addExpense,
     updateExpense,
     deleteExpense,
-    getExpensesByTypeAndPeriod
+    getExpensesByTypeAndPeriod,
+    refreshExpenses: loadExpenses
   };
 };
