@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -9,7 +10,7 @@ import { UploadDocumentDialog } from "@/components/documents/UploadDocumentDialo
 import { ShareDocumentDialog } from "@/components/documents/ShareDocumentDialog";
 import { healthcareCategories } from "@/data/documentCategories";
 import { healthcareTags, DocumentItem, DocumentTag, HealthcareAccessLevel, DocumentPermission } from "@/types/document";
-import { Upload, FolderPlus, Tag, Lock, Shield, Users, Eye, FileEdit, History } from "lucide-react";
+import { Upload, FolderPlus, Tag, Lock, Shield, Users, Eye, FileEdit, History, LayoutDashboard } from "lucide-react";
 import { CategoryList } from "@/components/documents/CategoryList";
 import { toast } from "sonner";
 import { HealthcareDocumentPermissions } from "./HealthcareDocumentPermissions";
@@ -18,6 +19,7 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { HealthcareDashboard } from "./HealthcareDashboard";
 
 interface HealthcareFolderProps {
   documents: DocumentItem[];
@@ -225,8 +227,12 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
         </div>
       </div>
 
-      <Tabs defaultValue="documents" className="w-full">
+      <Tabs defaultValue="dashboard" className="w-full">
         <TabsList className="mb-4">
+          <TabsTrigger value="dashboard" className="flex items-center gap-1">
+            <LayoutDashboard className="h-4 w-4" />
+            Dashboard
+          </TabsTrigger>
           <TabsTrigger value="documents" className="flex items-center gap-1">
             <FileEdit className="h-4 w-4" />
             Documents
@@ -236,6 +242,10 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
             Access Logs
           </TabsTrigger>
         </TabsList>
+        
+        <TabsContent value="dashboard">
+          <HealthcareDashboard documents={documents} />
+        </TabsContent>
       
         <TabsContent value="documents">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
