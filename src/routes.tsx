@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Index from "@/pages/Index";
@@ -52,6 +51,7 @@ import DeveloperAccessControl from "./pages/DeveloperAccessControl";
 import IPProtection from "./pages/IPProtection";
 import SystemHealthDashboard from "./pages/SystemHealthDashboard";
 import BankingTransfers from "./pages/BankingTransfers";
+import BillPay from "./pages/BillPay";
 
 import { useUser } from "./context/UserContext";
 
@@ -60,7 +60,6 @@ const AppRoutes: React.FC = () => {
   const isAdmin = userProfile?.role === "admin" || userProfile?.role === "system_administrator";
   const isDeveloper = isAdmin || userProfile?.role === "developer";
 
-  // Wrap all routes with appropriate context
   if (!isAuthenticated) {
     return (
       <Routes>
@@ -94,13 +93,12 @@ const AppRoutes: React.FC = () => {
       <Route path="/personal-insurance" element={<PersonalInsurance />} />
       <Route path="/lending" element={<Lending />} />
       <Route path="/estate-planning" element={<EstatePlanning />} />
+      <Route path="/billpay" element={<BillPay />} />
       <Route path="/properties" element={<Properties />} />
       <Route path="/social-security" element={<SocialSecurity />} />
       
-      {/* Cash Management section - now the main entry point for financial operations */}
       <Route path="/cash-management" element={<CashManagement />} />
       
-      {/* Keep these routes for direct access, but they're now secondary entry points */}
       <Route path="/transfers" element={<Transfers />} />
       <Route path="/banking-transfers" element={<BankingTransfers />} />
       <Route path="/funding-accounts" element={<FundingAccounts />} />
@@ -136,7 +134,6 @@ const AppRoutes: React.FC = () => {
         </>
       )}
       
-      {/* Developer-only diagnostic routes */}
       {isDeveloper && (
         <>
           <Route path="/dev/diagnostics" element={<NavigationDiagnostics />} />

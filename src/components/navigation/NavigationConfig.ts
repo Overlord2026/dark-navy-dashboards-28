@@ -1,4 +1,3 @@
-
 import { 
   HomeIcon, 
   GraduationCapIcon,
@@ -24,7 +23,8 @@ import {
   SearchIcon,
   ArrowRightLeft,
   Calculator,
-  PieChart
+  PieChart,
+  Receipt
 } from "lucide-react";
 
 import { NavItem } from "@/types/navigation";
@@ -113,6 +113,11 @@ export const familyWealthNavItems: NavItem[] = [
     title: "Real Estate & Properties", 
     href: "/properties", 
     icon: BuildingIcon 
+  },
+  { 
+    title: "BillPay", 
+    href: "/billpay", 
+    icon: Receipt 
   }
 ];
 
