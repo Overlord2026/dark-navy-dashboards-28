@@ -49,6 +49,11 @@ export const educationSolutionsNavItems: NavItem[] = [
     icon: BarChart3Icon 
   },
   { 
+    title: "Proactive Tax Planning", 
+    href: "/tax-planning", 
+    icon: Calculator 
+  },
+  { 
     title: "Insurance", 
     href: "/insurance", 
     icon: ShieldIcon 
@@ -62,11 +67,6 @@ export const educationSolutionsNavItems: NavItem[] = [
     title: "Estate Planning", 
     href: "/estate-planning", 
     icon: ArchiveIcon 
-  },
-  { 
-    title: "Proactive Tax Planning", 
-    href: "/tax-planning", 
-    icon: Calculator 
   }
 ];
 
