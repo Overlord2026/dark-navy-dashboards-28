@@ -14,6 +14,14 @@ export interface QuickFix {
   severity: string;
 }
 
+interface FixHistoryEntry {
+  id: string;
+  name: string;
+  timestamp: string;
+  area: QuickFixArea;
+  severity: string;
+}
+
 export function useDiagnostics() {
   const [isRunning, setIsRunning] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -66,6 +74,20 @@ export function useDiagnostics() {
     }
   ]);
 
+  // Load fix history from localStorage on mount
+  const [fixHistory, setFixHistory] = useState<FixHistoryEntry[]>([]);
+  useEffect(() => {
+    const storedHistory = localStorage.getItem('diagnostics-fix-history');
+    if (storedHistory) {
+      try {
+        setFixHistory(JSON.parse(storedHistory));
+      } catch (e) {
+        console.error("Error loading fix history:", e);
+        setFixHistory([]);
+      }
+    }
+  }, []);
+
   const runSystemDiagnostics = async () => {
     setIsRunning(true);
     setIsLoading(true);
@@ -87,8 +109,36 @@ export function useDiagnostics() {
     setIsLoading(true);
     try {
       await runSystemDiagnostics();
+      toast.success("Diagnostics re-check completed", {
+        description: "System status has been updated."
+      });
+    } catch (error) {
+      toast.error("Failed to re-check diagnostics", {
+        description: error instanceof Error ? error.message : "Unknown error"
+      });
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  // Save a fix to the history
+  const addFixToHistory = (fix: QuickFix) => {
+    const historyEntry: FixHistoryEntry = {
+      id: fix.id,
+      name: fix.name,
+      timestamp: new Date().toISOString(),
+      area: fix.area,
+      severity: fix.severity
+    };
+    
+    const updatedHistory = [historyEntry, ...fixHistory].slice(0, 20); // Keep only the latest 20 entries
+    setFixHistory(updatedHistory);
+    
+    // Save to localStorage
+    try {
+      localStorage.setItem('diagnostics-fix-history', JSON.stringify(updatedHistory));
+    } catch (e) {
+      console.error("Error saving fix history:", e);
     }
   };
 
@@ -98,6 +148,18 @@ export function useDiagnostics() {
       console.log(`Applying fix: ${fixId}`);
       // Simulate fix application
       await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      // Find the fix that was applied
+      const appliedFix = quickFixes.find(fix => fix.id === fixId);
+      if (appliedFix) {
+        // Add to history
+        addFixToHistory(appliedFix);
+        
+        // Show success message
+        toast.success(`Fixed: ${appliedFix.name}`, {
+          description: "Issue has been resolved successfully."
+        });
+      }
       
       // Remove the fixed item from the list
       setQuickFixes(prevFixes => prevFixes.filter(fix => fix.id !== fixId));
@@ -126,6 +188,15 @@ export function useDiagnostics() {
       
       toast.success(`Fix applied successfully for "${name}"`, {
         description: "The issue has been resolved.",
+      });
+      
+      // Add to fix history
+      addFixToHistory({
+        id: testId,
+        name,
+        description: `${category} issue fixed`,
+        area: category as QuickFixArea,
+        severity: "medium" // Default since we don't have this info
       });
       
       // Update the diagnostics results to reflect the fix
@@ -170,6 +241,7 @@ export function useDiagnostics() {
     lastRunTimestamp,
     quickFixes,
     fixInProgress,
+    fixHistory,
     runSystemDiagnostics,
     refreshDiagnostics,
     applyQuickFix,

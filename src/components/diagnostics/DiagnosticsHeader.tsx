@@ -1,11 +1,13 @@
 
 import { Button } from "@/components/ui/button";
-import { RefreshCw, ArrowRight, AlertTriangle, Zap, CheckCircle } from "lucide-react";
+import { RefreshCw, ArrowRight, AlertTriangle, Zap, CheckCircle, History } from "lucide-react";
 import { getOverallStatusColor } from "./StatusIcon";
 import { DiagnosticTestStatus } from "@/services/diagnostics/types";
 import { QuickFix, useDiagnostics } from "@/hooks/useDiagnostics";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import { useState } from "react";
+import { FixHistoryLog } from "./FixHistoryLog";
 
 interface DiagnosticsHeaderProps {
   isLoading: boolean;
@@ -20,7 +22,9 @@ export const DiagnosticsHeader = ({
   status, 
   quickFixes 
 }: DiagnosticsHeaderProps) => {
-  const { applyQuickFix, quickFixLoading } = useDiagnostics();
+  const { applyQuickFix, quickFixLoading, refreshDiagnostics } = useDiagnostics();
+  const [rerunning, setRerunning] = useState(false);
+  const [showFixHistory, setShowFixHistory] = useState(false);
 
   // Get color based on severity
   const getSeverityColor = (severity: string) => {
@@ -63,6 +67,16 @@ export const DiagnosticsHeader = ({
     }
   };
 
+  // Handle re-running diagnostics
+  const handleRerunDiagnostics = async () => {
+    setRerunning(true);
+    try {
+      await refreshDiagnostics();
+    } finally {
+      setRerunning(false);
+    }
+  };
+
   return (
     <Card className="mb-6">
       <CardContent className="pt-6">
@@ -78,6 +92,32 @@ export const DiagnosticsHeader = ({
             <p className="text-muted-foreground text-sm mb-4">
               {timestamp ? `Last check: ${new Date(timestamp).toLocaleString()}` : 'No diagnostics run yet'}
             </p>
+            
+            <div className="mt-1 mb-4">
+              <Button 
+                onClick={handleRerunDiagnostics} 
+                disabled={rerunning || isLoading}
+                className="w-full gap-2"
+                variant="outline"
+              >
+                <RefreshCw className={`h-4 w-4 ${rerunning ? 'animate-spin' : ''}`} />
+                {rerunning ? 'Re-checking...' : 'Re-run Diagnostics'}
+              </Button>
+            </div>
+            
+            <div>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="mb-3 gap-1 text-xs text-muted-foreground"
+                onClick={() => setShowFixHistory(!showFixHistory)}
+              >
+                <History className="h-3.5 w-3.5" />
+                {showFixHistory ? 'Hide Fix History' : 'Show Fix History'}
+              </Button>
+              
+              {showFixHistory && <FixHistoryLog />}
+            </div>
             
             <div className="mt-auto">
               <div className="flex items-center justify-between mb-1.5">
