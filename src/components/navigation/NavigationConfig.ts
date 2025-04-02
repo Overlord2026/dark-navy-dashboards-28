@@ -93,7 +93,7 @@ export const familyWealthNavItems: NavItem[] = [
   },
   { 
     title: "Banking", 
-    href: "#", // Changed from "/banking" to "#" to prevent navigation
+    href: "#", // Ensuring this is set to "#" to prevent navigation and enable submenu toggle
     icon: BanknoteIcon,
     submenu: [
       {

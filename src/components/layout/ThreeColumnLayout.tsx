@@ -1,4 +1,3 @@
-
 import { ReactNode, useState } from "react";
 import * as React from "react";
 import { useParams, useNavigate, Link, useLocation } from "react-router-dom";
@@ -87,7 +86,6 @@ const CustomHomeIcon: React.FC = () => (
   />
 );
 
-// Updated navigation categories based on the new structure
 const navigationCategories: NavCategory[] = [
   {
     id: "home",

@@ -77,7 +77,6 @@ export const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
                   )}
                   onClick={(e) => {
                     if (hasSubmenu) {
-                      e.preventDefault();
                       toggleSubmenu(item.title, e);
                     }
                   }}
