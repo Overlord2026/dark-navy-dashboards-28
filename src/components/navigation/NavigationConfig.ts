@@ -1,3 +1,4 @@
+
 import { 
   HomeIcon, 
   GraduationCapIcon,
@@ -22,7 +23,8 @@ import {
   ArchiveIcon,
   SearchIcon,
   ArrowRightLeft,
-  Calculator
+  Calculator,
+  PieChart
 } from "lucide-react";
 
 import { NavItem } from "@/types/navigation";
@@ -50,8 +52,8 @@ export const educationSolutionsNavItems: NavItem[] = [
   },
   { 
     title: "Proactive Tax Planning", 
-    href: "/tax-planning", 
-    icon: Calculator 
+    href: "/education/tax-planning", 
+    icon: PieChart 
   },
   { 
     title: "Insurance", 
