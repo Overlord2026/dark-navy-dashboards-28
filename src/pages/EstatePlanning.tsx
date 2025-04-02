@@ -8,8 +8,23 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { ArchiveIcon, CheckCircle2, Clock, FileText, List, Shield, Users2 } from "lucide-react";
+import { 
+  ArchiveIcon, 
+  CheckCircle2, 
+  Clock, 
+  FileText, 
+  List, 
+  Shield, 
+  Users2, 
+  ExternalLink,
+  Upload,
+  Lock,
+  FileCheck,
+  CheckCircle,
+  Circle
+} from "lucide-react";
 import { toast } from "sonner";
+import { FamilyLegacyBox } from "@/components/estate-planning/FamilyLegacyBox";
 
 export default function EstatePlanning() {
   const [showInterestDialog, setShowInterestDialog] = useState(false);
@@ -182,6 +197,7 @@ export default function EstatePlanning() {
           <Tabs defaultValue="services" className="w-full">
             <TabsList className="w-full mb-6">
               <TabsTrigger value="services" className="flex-1">Our Services</TabsTrigger>
+              <TabsTrigger value="family-legacy-box" className="flex-1">Family Legacy Box</TabsTrigger>
               <TabsTrigger value="process" className="flex-1">Our Process</TabsTrigger>
               <TabsTrigger value="resources" className="flex-1">Resources</TabsTrigger>
             </TabsList>
@@ -207,6 +223,10 @@ export default function EstatePlanning() {
                   </Card>
                 ))}
               </div>
+            </TabsContent>
+
+            <TabsContent value="family-legacy-box" className="space-y-6">
+              <FamilyLegacyBox />
             </TabsContent>
 
             <TabsContent value="process" className="space-y-6">
