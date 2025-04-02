@@ -1,6 +1,19 @@
 
 export type DocumentType = "pdf" | "image" | "spreadsheet" | "document" | "folder" | "legal" | "medical" | "financial" | "property" | "healthcare" | "insurance" | "prescription";
 
+// Access level types for healthcare documents
+export type HealthcareAccessLevel = "none" | "view" | "edit" | "full";
+
+export interface DocumentPermission {
+  userId: string;
+  userEmail?: string;
+  userName?: string;
+  userRole?: string;
+  accessLevel: HealthcareAccessLevel;
+  grantedBy?: string;
+  grantedAt?: string;
+}
+
 export interface DocumentItem {
   id: string;
   name: string;
@@ -18,6 +31,11 @@ export interface DocumentItem {
   sharedWith?: string[];
   tags?: string[]; // Adding tags for categorization
   subcategory?: string; // For organizing within categories
+  permissions?: DocumentPermission[]; // Per-document permissions
+  encrypted?: boolean; // Flag to indicate if document is encrypted
+  isPrivate?: boolean; // Flag to mark document as private/sensitive
+  lastAccessedBy?: string; // Last person who accessed the document
+  lastAccessedAt?: string; // When the document was last accessed
 }
 
 export interface DocumentCategory {
@@ -48,4 +66,15 @@ export const healthcareTags: DocumentTag[] = [
   { id: "imaging", name: "Imaging Results", category: "medical-records" },
   { id: "surgical", name: "Surgical Records", category: "medical-records" },
   { id: "insurance-card", name: "Insurance Card", category: "insurance-coverage" },
+];
+
+// Healthcare professional role types
+export const healthcareProfessionalRoles = [
+  "Primary Care Physician",
+  "Specialist",
+  "Pharmacist",
+  "Insurance Agent",
+  "Family Member",
+  "Financial Advisor",
+  "Other"
 ];
