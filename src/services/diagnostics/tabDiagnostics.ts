@@ -1,4 +1,3 @@
-
 import { logger } from '../logging/loggingService';
 import { NavigationTestResult } from './types';
 import { testFinancialPlanOperations } from './financialPlanTests';
@@ -76,7 +75,6 @@ export const diagnoseFinancialPlansTab = async (): Promise<NavigationTestResult>
   }
 };
 
-// Add the missing functions
 export const diagnoseTransfersTab = async (): Promise<NavigationTestResult> => {
   try {
     logger.info("Running Transfers tab diagnostics");
