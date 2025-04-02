@@ -26,6 +26,7 @@ export function useSidebarState(navigationCategories: NavCategory[]) {
     
     // Check for exact match first (highest priority)
     if (location.pathname === href) {
+      logger.debug(`Exact match found for ${href}`, { href, pathname: location.pathname }, "isActive");
       return true;
     }
     
@@ -35,6 +36,7 @@ export function useSidebarState(navigationCategories: NavCategory[]) {
       // For example, /insurance shouldn't match /insurance-claims
       const nextCharInPath = location.pathname.charAt(href.length);
       if (nextCharInPath === "" || nextCharInPath === "/") {
+        logger.debug(`Partial match found for ${href}`, { href, pathname: location.pathname }, "isActive");
         return true;
       }
     }
@@ -50,7 +52,13 @@ export function useSidebarState(navigationCategories: NavCategory[]) {
       return false;
     }
     
-    return submenuItems.some(subItem => isActive(subItem.href));
+    const hasActive = submenuItems.some(subItem => isActive(subItem.href));
+    if (hasActive) {
+      logger.debug(`Found active child in submenu`, 
+        { items: submenuItems.map(i => i.title), pathname: location.pathname }, "hasActiveChild");
+    }
+    
+    return hasActive;
   }, [isActive]);
   
   // Auto-expand submenu when a child route is active
@@ -134,7 +142,7 @@ export function useSidebarState(navigationCategories: NavCategory[]) {
     });
   };
 
-  // Robust submenu toggle implementation with synchronous state tracking
+  // Robust submenu toggle implementation with enhanced debug logging
   const toggleSubmenu = (itemTitle: string, e: React.MouseEvent) => {
     // Always prevent default behavior to stop navigation
     if (e) {
@@ -152,6 +160,15 @@ export function useSidebarState(navigationCategories: NavCategory[]) {
       
       logger.debug(`Submenu state transition: "${itemTitle}" ${currentlyExpanded ? "expanded" : "collapsed"} -> ${newExpanded ? "expanded" : "collapsed"}`, 
         { itemTitle, before: currentlyExpanded, after: newExpanded }, "SidebarState");
+      
+      // Add special logging for the Banking menu to help debug
+      if (itemTitle === "Banking") {
+        logger.debug("BANKING MENU STATE CHANGE", {
+          wasExpanded: currentlyExpanded,
+          willBe: newExpanded,
+          timestamp: new Date().toISOString()
+        }, "BankingMenu");
+      }
       
       const newState = { ...prevState, [itemTitle]: newExpanded };
       
