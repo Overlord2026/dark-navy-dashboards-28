@@ -19,6 +19,7 @@ export function useSidebarState(navigationCategories: NavCategory[]) {
   // Auto-expand submenu when a child route is active
   useEffect(() => {
     const currentPath = location.pathname;
+    let hasExpandedSubmenu = false;
     
     // Check all navigation categories for matching submenu items
     navigationCategories.forEach(category => {
@@ -41,10 +42,30 @@ export function useSidebarState(navigationCategories: NavCategory[]) {
               ...prev,
               [category.id]: true
             }));
+            
+            hasExpandedSubmenu = true;
           }
         }
       });
     });
+    
+    // If no submenu was expanded, we'll still check for direct matches
+    if (!hasExpandedSubmenu) {
+      navigationCategories.forEach(category => {
+        const hasDirectMatch = category.items.some(item => 
+          item.href !== '#' && (currentPath === item.href || 
+          (item.href !== "/" && currentPath.startsWith(item.href)))
+        );
+        
+        if (hasDirectMatch) {
+          // Expand the category with the direct match
+          setExpandedCategories(prev => ({
+            ...prev,
+            [category.id]: true
+          }));
+        }
+      });
+    }
   }, [location.pathname, navigationCategories]);
   
   // Initial force update to ensure proper rendering
@@ -79,8 +100,24 @@ export function useSidebarState(navigationCategories: NavCategory[]) {
     if (href === "#") {
       return false;
     }
-    return location.pathname === href || 
-           (href !== "/" && location.pathname.startsWith(href));
+    
+    // Check for exact match first
+    if (location.pathname === href) {
+      return true;
+    }
+    
+    // For non-root links, check if the current path starts with the href
+    if (href !== "/" && location.pathname.startsWith(href)) {
+      // Make sure we're not getting false positives
+      // For example, /insurance shouldn't match /insurance-claims
+      // But we still want /accounts/settings to match /accounts
+      const nextCharInPath = location.pathname.charAt(href.length);
+      if (nextCharInPath === "" || nextCharInPath === "/") {
+        return true;
+      }
+    }
+    
+    return false;
   };
 
   return {

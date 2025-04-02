@@ -56,8 +56,12 @@ export const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
             
             // For items with submenu, check if any submenu item is active
             let itemIsActive = isActive(item.href);
+            
+            // Only check submenu items if this is a parent menu with submenus
             if (hasSubmenu) {
-              itemIsActive = itemIsActive || item.submenu?.some(subItem => isActive(subItem.href)) || false;
+              const anySubmenuActive = item.submenu?.some(subItem => isActive(subItem.href)) || false;
+              // A parent menu with # href should only be considered active if a submenu item is active
+              itemIsActive = item.href === "#" ? anySubmenuActive : itemIsActive || anySubmenuActive;
             }
             
             return (
@@ -77,6 +81,7 @@ export const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
                   )}
                   onClick={(e) => {
                     if (hasSubmenu) {
+                      e.preventDefault(); // Prevent navigation for parent items with submenus
                       toggleSubmenu(item.title, e);
                     }
                   }}
