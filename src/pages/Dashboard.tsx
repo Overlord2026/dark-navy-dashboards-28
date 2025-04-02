@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { FinancialOverview } from "@/components/dashboard/FinancialOverview";
 import { NetWorthSummary } from "@/components/dashboard/NetWorthSummary";
@@ -9,10 +9,19 @@ import { RecentActivity } from "@/components/dashboard/RecentActivity";
 import { UpcomingBillsCard } from "@/components/dashboard/UpcomingBillsCard";
 import { AdminActions } from "@/components/dashboard/AdminActions";
 import { useUser } from "@/context/UserContext";
+import { useSubscription } from "@/context/SubscriptionContext";
+import { WelcomeTrialBanner } from "@/components/dashboard/WelcomeTrialBanner";
 
 export default function Dashboard() {
   const { userProfile } = useUser();
+  const { isInFreeTrial } = useSubscription();
+  const [showWelcomeBanner, setShowWelcomeBanner] = useState(true);
+  
   const isAdmin = userProfile?.role === "admin" || userProfile?.role === "system_administrator";
+
+  const handleDismissBanner = () => {
+    setShowWelcomeBanner(false);
+  };
 
   return (
     <ThreeColumnLayout title="Dashboard">
@@ -21,6 +30,10 @@ export default function Dashboard() {
           <div className="mt-1">
             <AdminActions />
           </div>
+        )}
+        
+        {isInFreeTrial && showWelcomeBanner && (
+          <WelcomeTrialBanner onDismiss={handleDismissBanner} />
         )}
         
         <div id="financial-overview-section">
