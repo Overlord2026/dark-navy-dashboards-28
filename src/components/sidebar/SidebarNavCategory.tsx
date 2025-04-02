@@ -70,7 +70,12 @@ export const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
                         : "text-white border-transparent hover:bg-sidebar-accent",
                     hasSubmenu && "justify-between"
                   )}
-                  onClick={hasSubmenu ? (e) => toggleSubmenu(item.title, e) : undefined}
+                  onClick={(e) => {
+                    if (hasSubmenu) {
+                      e.preventDefault();
+                      toggleSubmenu(item.title, e);
+                    }
+                  }}
                 >
                   <div className="flex items-center">
                     <item.icon className={cn("h-5 w-5 flex-shrink-0", !collapsed && "mr-3")} />
