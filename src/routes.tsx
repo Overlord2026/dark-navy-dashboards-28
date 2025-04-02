@@ -3,7 +3,6 @@ import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Index from "@/pages/Index";
 import Dashboard from "@/pages/Dashboard";
-import BillsManagement from "./pages/BillsManagement";
 import NotFound from "./pages/NotFound";
 import LoginPage from "./pages/LoginPage";
 import Documents from "./pages/Documents";
@@ -73,7 +72,6 @@ const AppRoutes: React.FC = () => {
     <Routes>
       <Route path="/" element={<Index />} />
       <Route path="/dashboard" element={<Dashboard />} />
-      <Route path="/bills" element={<BillsManagement />} />
       <Route path="/documents" element={<Documents />} />
       <Route path="/documents/:sectionId" element={<Documents />} />
       <Route path="/home" element={<HomePage />} />
