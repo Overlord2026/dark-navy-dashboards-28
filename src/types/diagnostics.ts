@@ -13,6 +13,36 @@ export interface LogEntry {
     file?: string;
     line?: number;
     stackTrace?: string;
+    route?: string;
+    navigationTab?: string;
+    apiEndpoint?: string;
   };
   recommendations?: string[];
+}
+
+export interface NavigationDiagnosticResult {
+  route: string;
+  status: "success" | "warning" | "error";
+  message: string;
+  componentStatus?: {
+    rendered: boolean;
+    loadTime?: number;
+    errors?: string[];
+  };
+  apiStatus?: {
+    endpoint: string;
+    status: "success" | "warning" | "error";
+    responseTime?: number;
+    errorMessage?: string;
+  }[];
+  consoleErrors?: string[];
+}
+
+export interface DiagnosticSummary {
+  overall: "success" | "warning" | "error";
+  total: number;
+  success: number;
+  warnings: number;
+  errors: number;
+  timestamp: string;
 }

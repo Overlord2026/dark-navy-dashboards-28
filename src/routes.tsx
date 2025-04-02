@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Index from "@/pages/Index";
@@ -23,6 +24,7 @@ import FundingAccounts from "./pages/FundingAccounts";
 import LegacyVault from "./pages/LegacyVault";
 import TaxPlanning from "./pages/TaxPlanning";
 import SystemDiagnostics from "./pages/SystemDiagnostics";
+import NavigationDiagnostics from "./pages/NavigationDiagnostics";
 import CustomerProfile from "./pages/CustomerProfile";
 import AdvisorProfile from "./pages/AdvisorProfile";
 import AdvisorOnboarding from "./pages/AdvisorOnboarding";
@@ -56,6 +58,7 @@ import { useUser } from "./context/UserContext";
 const AppRoutes: React.FC = () => {
   const { isAuthenticated, userProfile } = useUser();
   const isAdmin = userProfile?.role === "admin" || userProfile?.role === "system_administrator";
+  const isDeveloper = isAdmin || userProfile?.role === "developer";
 
   // Wrap all routes with appropriate context
   if (!isAuthenticated) {
@@ -126,9 +129,17 @@ const AppRoutes: React.FC = () => {
         <>
           <Route path="/admin/subscription" element={<AdminSubscription />} />
           <Route path="/admin/system-diagnostics" element={<SystemDiagnostics />} />
+          <Route path="/admin/navigation-diagnostics" element={<NavigationDiagnostics />} />
           <Route path="/admin/developer-access" element={<DeveloperAccessControl />} />
           <Route path="/admin/ip-protection" element={<IPProtection />} />
           <Route path="/admin/system-health" element={<SystemHealthDashboard />} />
+        </>
+      )}
+      
+      {/* Developer-only diagnostic routes */}
+      {isDeveloper && (
+        <>
+          <Route path="/dev/diagnostics" element={<NavigationDiagnostics />} />
         </>
       )}
       

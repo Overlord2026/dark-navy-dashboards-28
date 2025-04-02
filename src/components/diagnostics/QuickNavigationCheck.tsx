@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Navigation } from "lucide-react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { NavigationDiagnostics } from "./NavigationDiagnostics";
+import NavigationDiagnosticModule from "./NavigationDiagnosticModule";
 
 interface QuickNavigationCheckProps {
   buttonText?: string;
@@ -35,7 +35,7 @@ export function QuickNavigationCheck({
         </DialogHeader>
         
         <div className="mt-4">
-          <NavigationDiagnostics />
+          <NavigationDiagnosticModule />
         </div>
       </DialogContent>
     </Dialog>
