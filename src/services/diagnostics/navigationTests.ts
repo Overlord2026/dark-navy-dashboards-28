@@ -1,48 +1,104 @@
 
+import { tabDiagnostics } from './tabDiagnostics';
 import { NavigationTestResult } from './types';
+import { logger } from '../logging/loggingService';
 
-export const testNavigationRoutes = (): NavigationTestResult[] => {
-  // In a real app, would attempt to navigate to each route and verify it loads properly
-  return [
-    {
-      route: "/",
-      status: "success",
-      message: "Dashboard loads successfully"
-    },
-    {
-      route: "/customer-profile",
-      status: "success",
-      message: "Customer profile loads successfully"
-    },
-    {
-      route: "/documents",
-      status: "success",
-      message: "Documents page loads successfully"
-    },
-    {
-      route: "/investments",
-      status: "warning",
-      message: "Investment page loads with warnings - some alternative assets may not display properly"
-    },
-    {
-      route: "/education/course/fin101",
-      status: "error",
-      message: "Error loading course content - missing course data"
-    },
-    {
-      route: "/advisor/modules",
-      status: "success",
-      message: "Advisor modules page loads successfully"
-    },
-    {
-      route: "/professionals",
-      status: "success",
-      message: "Professionals directory loads successfully"
-    }
-  ];
-};
-
-// Add the missing testNavigation function
+/**
+ * Runs comprehensive tests on all application navigation routes
+ * 
+ * This function tests the accessibility and functionality of all navigation
+ * routes in the application. It performs the following checks:
+ * 
+ * 1. Dashboard tab accessibility and rendering
+ * 2. Cash Management tab accessibility and rendering
+ * 3. Any additional tabs that have been registered with the tabDiagnostics module
+ * 
+ * Each route is tested for:
+ * - Whether it can be navigated to
+ * - Whether all components render correctly
+ * - Whether any console errors occur during rendering
+ * - API requests that occur during page load
+ * 
+ * Results are returned as an array of NavigationTestResult objects, each containing
+ * the route path, test status, and a descriptive message.
+ * 
+ * @returns {Promise<NavigationTestResult[]>} An array of test results for all navigation routes
+ * 
+ * @throws Will throw an error if testing a specific route fails unexpectedly,
+ *         but attempts to continue testing other routes
+ * 
+ * @example
+ * // How to add a new tab test:
+ * // 1. In tabDiagnostics.ts, add a new diagnostic function for your tab
+ * export const diagnoseNewFeatureTab = async (): Promise<NavigationDiagnosticResult> => {
+ *   try {
+ *     // Test logic for the new tab
+ *     return {
+ *       route: '/new-feature',
+ *       status: 'success',
+ *       message: 'New Feature tab loaded successfully'
+ *     };
+ *   } catch (error) {
+ *     return {
+ *       route: '/new-feature',
+ *       status: 'error',
+ *       message: `Error loading New Feature tab: ${error instanceof Error ? error.message : 'Unknown error'}`
+ *     };
+ *   }
+ * };
+ * 
+ * // 2. Add the new diagnostic function to runAllTabDiagnostics in tabDiagnostics.ts
+ * // 3. The testNavigation function will automatically include your new test
+ */
 export const testNavigation = async (): Promise<NavigationTestResult[]> => {
-  return testNavigationRoutes();
+  logger.info("Starting navigation tests", undefined, "NavigationTests");
+  
+  try {
+    // Run individual tab diagnostics
+    const dashboardResult = await tabDiagnostics.diagnoseDashboardTab().catch(error => ({
+      route: '/dashboard',
+      status: 'error' as const,
+      message: `Error testing dashboard tab: ${error instanceof Error ? error.message : 'Unknown error'}`
+    }));
+    
+    const cashManagementResult = await tabDiagnostics.diagnoseCashManagementTab().catch(error => ({
+      route: '/cash-management',
+      status: 'error' as const,
+      message: `Error testing cash management tab: ${error instanceof Error ? error.message : 'Unknown error'}`
+    }));
+    
+    // Run all registered tab diagnostics
+    // This will catch any new tabs that have been added through the tabDiagnostics module
+    const allTabsResults = await tabDiagnostics.runAllTabDiagnostics().catch(error => {
+      logger.error("Failed to run all tab diagnostics", error, "NavigationTests");
+      return { dashboard: dashboardResult }; // Fallback to just the dashboard result
+    });
+    
+    // Compile results into a single array
+    const results: NavigationTestResult[] = [
+      dashboardResult,
+      cashManagementResult,
+      
+      // Add results from allTabsResults that aren't already included
+      ...Object.values(allTabsResults)
+        .filter(result => 
+          result.route !== '/dashboard' && 
+          result.route !== '/cash-management'
+        )
+    ];
+    
+    logger.info("Navigation tests completed", { totalTests: results.length }, "NavigationTests");
+    
+    return results;
+  } catch (error) {
+    // Catch and log any unexpected errors in the testing process itself
+    logger.error("Unexpected error in navigation tests", error, "NavigationTests");
+    
+    // Return a minimal result set with the error
+    return [{
+      route: 'navigation-tests',
+      status: 'error',
+      message: `Failed to run navigation tests: ${error instanceof Error ? error.message : 'Unknown error'}`
+    }];
+  }
 };

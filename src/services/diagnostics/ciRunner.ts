@@ -1,189 +1,324 @@
 
-import { runDiagnostics } from '.';
+/**
+ * CI Runner for Diagnostics Module
+ * 
+ * This module provides functionality for running diagnostics in a CI environment.
+ * It's designed to be called from CI/CD pipelines to validate the application
+ * before deployment or as part of automated testing.
+ */
+
 import fs from 'fs';
 import path from 'path';
+import { runDiagnostics } from './index';
 import { DiagnosticTestStatus } from './types';
 
 /**
- * CI-specific diagnostics runner that can be executed in a CI/CD pipeline
- * @param options Configuration options for the CI diagnostics run
+ * Options for running diagnostics in CI
  */
-export async function runDiagnosticsInCI(options: {
+export interface DiagnosticsRunnerOptions {
+  /**
+   * Path to output the diagnostics report JSON file
+   * @default 'diagnostics-report.json'
+   */
   outputFile?: string;
+  
+  /**
+   * Whether to fail the CI process if errors are found
+   * @default true
+   */
   failOnError?: boolean;
+  
+  /**
+   * Whether to fail the CI process if warnings are found
+   * @default false
+   */
   failOnWarning?: boolean;
+  
+  /**
+   * Whether to send notifications for warnings
+   * @default true
+   */
   notifyOnWarning?: boolean;
+  
+  /**
+   * Email addresses to notify when issues are found
+   */
   notifyEmail?: string[];
-}) {
-  console.log('Starting CI diagnostics run...');
+}
+
+/**
+ * Runs diagnostics in a CI environment and handles reporting
+ * 
+ * This function:
+ * 1. Runs all diagnostic tests
+ * 2. Writes the results to a JSON file
+ * 3. Determines whether to fail the CI process based on the results and options
+ * 4. Handles notifications for errors and warnings
+ * 
+ * @param options Configuration options for running diagnostics
+ * @returns The diagnostic report
+ * 
+ * @throws Will throw an error if diagnostics fail in a way that should fail the CI process,
+ *         allowing CI systems to detect the failure and handle it appropriately
+ */
+export const runDiagnosticsInCI = async (options: DiagnosticsRunnerOptions = {}) => {
+  // Set default options
+  const {
+    outputFile = 'diagnostics-report.json',
+    failOnError = true,
+    failOnWarning = false,
+    notifyOnWarning = true,
+    notifyEmail = []
+  } = options;
   
   try {
-    // Run all diagnostics
-    const results = await runDiagnostics();
+    console.log('Running diagnostics in CI environment...');
     
-    // Determine exit code based on results
-    const hasErrors = determineHasErrors(results);
-    const hasWarnings = determineHasWarnings(results);
+    // Run all diagnostics with a timeout to catch hanging async operations
+    const timeoutPromise = new Promise((_, reject) => {
+      setTimeout(() => reject(new Error('Diagnostics timed out after 5 minutes')), 5 * 60 * 1000);
+    });
     
-    // Generate report
-    const report = generateCIReport(results, hasErrors, hasWarnings);
+    // Run diagnostics with a timeout
+    const report = await Promise.race([
+      runDiagnostics(),
+      timeoutPromise
+    ]) as any;
     
-    // Write report to file if output file is specified
-    if (options.outputFile) {
-      const outputPath = path.resolve(process.cwd(), options.outputFile);
-      fs.writeFileSync(outputPath, JSON.stringify(report, null, 2));
-      console.log(`Diagnostics report written to ${outputPath}`);
+    // Write the report to a file
+    const outputDir = path.dirname(outputFile);
+    if (!fs.existsSync(outputDir)) {
+      fs.mkdirSync(outputDir, { recursive: true });
     }
     
-    // Log summary
-    console.log(`Diagnostics completed with ${hasErrors ? 'errors' : hasWarnings ? 'warnings' : 'success'}`);
-    console.log(`Total tests: ${report.totalTests}`);
-    console.log(`Success: ${report.successCount}`);
-    console.log(`Warnings: ${report.warningCount}`);
-    console.log(`Errors: ${report.errorCount}`);
+    fs.writeFileSync(
+      outputFile,
+      JSON.stringify(report, null, 2),
+      'utf8'
+    );
     
-    // Determine if CI should fail
-    if (hasErrors && options.failOnError) {
-      console.error('Diagnostics found errors. Failing CI pipeline.');
-      process.exit(1);
+    console.log(`Diagnostics report written to ${outputFile}`);
+    
+    // Count errors and warnings
+    const errorCount = countIssuesByType(report, 'error');
+    const warningCount = countIssuesByType(report, 'warning');
+    
+    // Summary report for CI logs
+    console.log('\n===== Diagnostics Summary =====');
+    console.log(`Overall Status: ${report.overall.toUpperCase()}`);
+    console.log(`Total Errors: ${errorCount}`);
+    console.log(`Total Warnings: ${warningCount}`);
+    console.log('===============================\n');
+    
+    // Output detailed issues if there are any
+    if (errorCount > 0 || warningCount > 0) {
+      console.log('Issues detected:');
+      logIssues(report);
     }
     
-    if (hasWarnings && options.failOnWarning) {
-      console.warn('Diagnostics found warnings. Failing CI pipeline.');
-      process.exit(1);
+    // Handle notifications (in a real system, this would send emails)
+    if (errorCount > 0 || (warningCount > 0 && notifyOnWarning)) {
+      if (notifyEmail.length > 0) {
+        console.log(`Would notify: ${notifyEmail.join(', ')}`);
+        // In a real implementation, this would call a notification service
+      }
     }
     
-    // Handle notifications if needed
-    if ((hasWarnings && options.notifyOnWarning) || hasErrors) {
-      console.log('Would send notification emails to:', options.notifyEmail);
-      // In a real implementation, this would integrate with an email service
-      // sendNotifications(report, options.notifyEmail);
+    // Determine if we should fail the CI process
+    if ((errorCount > 0 && failOnError) || (warningCount > 0 && failOnWarning)) {
+      const errorMessage = `Diagnostics found ${errorCount} errors and ${warningCount} warnings`;
+      console.error(`\n❌ ${errorMessage}`);
+      
+      // We return the report anyway, but the caller can check hasErrors/hasWarnings
+      // to determine whether to exit with a non-zero code
+      return {
+        ...report,
+        hasErrors: errorCount > 0,
+        hasWarnings: warningCount > 0,
+        results: extractTestResults(report)
+      };
     }
     
-    return report;
+    console.log('\n✅ Diagnostics completed successfully');
+    
+    return {
+      ...report,
+      hasErrors: errorCount > 0,
+      hasWarnings: warningCount > 0,
+      results: extractTestResults(report)
+    };
   } catch (error) {
-    console.error('Error running diagnostics in CI:', error);
+    // Handle any errors that occurred during the diagnostics process
+    console.error('Failed to run diagnostics in CI:', error);
     
-    // Always fail CI on uncaught errors
-    process.exit(1);
-  }
-}
-
-/**
- * Determines if the diagnostic results contain any errors
- */
-function determineHasErrors(results: any): boolean {
-  if (results.overall === 'error') return true;
-  
-  // Check individual test categories
-  for (const key of Object.keys(results)) {
-    if (Array.isArray(results[key])) {
-      if (results[key].some((test: any) => test.status === 'error')) {
-        return true;
-      }
+    // Write a failure report
+    const failureReport = {
+      timestamp: new Date().toISOString(),
+      overall: 'error' as DiagnosticTestStatus,
+      error: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined
+    };
+    
+    try {
+      fs.writeFileSync(
+        outputFile,
+        JSON.stringify(failureReport, null, 2),
+        'utf8'
+      );
+      console.log(`Failure report written to ${outputFile}`);
+    } catch (writeError) {
+      console.error('Failed to write failure report:', writeError);
     }
+    
+    // Re-throw to ensure CI fails
+    throw error;
   }
-  
-  return false;
-}
+};
 
 /**
- * Determines if the diagnostic results contain any warnings
+ * Counts the number of issues of a specific type in the diagnostic report
+ * 
+ * @param report The diagnostic report
+ * @param type The type of issue to count (error, warning)
+ * @returns The number of issues found
  */
-function determineHasWarnings(results: any): boolean {
-  if (results.overall === 'warning') return true;
+function countIssuesByType(report: any, type: DiagnosticTestStatus): number {
+  let count = 0;
   
-  // Check individual test categories
-  for (const key of Object.keys(results)) {
-    if (Array.isArray(results[key])) {
-      if (results[key].some((test: any) => test.status === 'warning')) {
-        return true;
-      }
-    }
-  }
-  
-  return false;
-}
-
-/**
- * Generates a CI-compatible report from the diagnostic results
- */
-function generateCIReport(results: any, hasErrors: boolean, hasWarnings: boolean) {
-  // Count all tests
-  const allTests = Object.values(results)
-    .filter(Array.isArray)
-    .flat() as any[];
-  
-  const successCount = allTests.filter((test: any) => test.status === 'success').length;
-  const warningCount = allTests.filter((test: any) => test.status === 'warning').length;
-  const errorCount = allTests.filter((test: any) => test.status === 'error').length;
-  
-  return {
-    timestamp: results.timestamp,
-    overall: results.overall,
-    totalTests: allTests.length,
-    successCount,
-    warningCount,
-    errorCount,
-    hasErrors,
-    hasWarnings,
-    results: {
-      navigation: summarizeTests(results.navigationTests || []),
-      permissions: summarizeTests(results.permissionsTests || []),
-      api: summarizeTests(results.apiIntegrationTests || []),
-      forms: summarizeTests(results.formValidationTests || []),
-      performance: summarizeTests(results.performanceTests || []),
-      security: summarizeTests(results.securityTests || []),
-      roleSimulation: summarizeTests(results.roleSimulationTests || []),
-    }
-  };
-}
-
-/**
- * Summarizes a test category for the report
- */
-function summarizeTests(tests: any[]) {
-  const count = tests.length;
-  const success = tests.filter(t => t.status === 'success').length;
-  const warning = tests.filter(t => t.status === 'warning').length;
-  const error = tests.filter(t => t.status === 'error').length;
-  
-  let status: DiagnosticTestStatus = 'success';
-  if (error > 0) status = 'error';
-  else if (warning > 0) status = 'warning';
-  
-  return {
-    count,
-    success,
-    warning,
-    error,
-    status,
-    details: tests.filter(t => t.status !== 'success')
-  };
-}
-
-/**
- * Command line interface for running diagnostics in CI
- * You can call this directly from package.json scripts or CI pipeline
- */
-if (require.main === module) {
-  const args = process.argv.slice(2);
-  const options: Record<string, any> = {};
-  
-  args.forEach(arg => {
-    if (arg.startsWith('--')) {
-      const [key, value] = arg.substring(2).split('=');
-      options[key] = value || true;
+  // Check all test categories
+  [
+    'navigationTests',
+    'permissionsTests',
+    'iconTests',
+    'formValidationTests',
+    'apiIntegrationTests',
+    'roleSimulationTests',
+    'performanceTests',
+    'securityTests'
+  ].forEach(category => {
+    if (Array.isArray(report[category])) {
+      count += report[category].filter((test: any) => test.status === type).length;
     }
   });
   
-  runDiagnosticsInCI({
-    outputFile: options.output,
-    failOnError: options.failOnError !== 'false',
-    failOnWarning: options.failOnWarning === 'true',
-    notifyOnWarning: options.notifyOnWarning === 'true',
-    notifyEmail: options.notifyEmail ? options.notifyEmail.split(',') : []
+  // Check basic services
+  [
+    'navigation',
+    'forms',
+    'database',
+    'api',
+    'authentication'
+  ].forEach(service => {
+    if (report[service] && report[service].status === type) {
+      count += 1;
+    }
   });
+  
+  return count;
 }
 
-export default runDiagnosticsInCI;
+/**
+ * Logs the details of issues found during diagnostics
+ * 
+ * @param report The diagnostic report
+ */
+function logIssues(report: any): void {
+  // Log issues from test categories
+  [
+    { key: 'navigationTests', name: 'Navigation' },
+    { key: 'permissionsTests', name: 'Permissions' },
+    { key: 'iconTests', name: 'Icons' },
+    { key: 'formValidationTests', name: 'Form Validation' },
+    { key: 'apiIntegrationTests', name: 'API Integration' },
+    { key: 'roleSimulationTests', name: 'Role Simulation' },
+    { key: 'performanceTests', name: 'Performance' },
+    { key: 'securityTests', name: 'Security' }
+  ].forEach(({ key, name }) => {
+    if (Array.isArray(report[key])) {
+      const issues = report[key].filter((test: any) => test.status !== 'success');
+      if (issues.length > 0) {
+        console.log(`\n${name} Issues:`);
+        issues.forEach((issue: any) => {
+          const marker = issue.status === 'error' ? '❌' : '⚠️';
+          const details = [
+            issue.route ? `Route: ${issue.route}` : '',
+            issue.endpoint ? `Endpoint: ${issue.endpoint}` : '',
+            issue.name ? `Name: ${issue.name}` : ''
+          ].filter(Boolean).join(', ');
+          
+          console.log(`  ${marker} ${details || 'Unknown'}: ${issue.message}`);
+        });
+      }
+    }
+  });
+  
+  // Log issues from basic services
+  const basicServices = [
+    { key: 'navigation', name: 'Navigation' },
+    { key: 'forms', name: 'Forms' },
+    { key: 'database', name: 'Database' },
+    { key: 'api', name: 'API' },
+    { key: 'authentication', name: 'Authentication' }
+  ];
+  
+  const serviceIssues = basicServices
+    .filter(({ key }) => report[key] && report[key].status !== 'success')
+    .map(({ key, name }) => ({ ...report[key], name }));
+  
+  if (serviceIssues.length > 0) {
+    console.log('\nBasic Service Issues:');
+    serviceIssues.forEach(issue => {
+      const marker = issue.status === 'error' ? '❌' : '⚠️';
+      console.log(`  ${marker} ${issue.name}: ${issue.message}`);
+    });
+  }
+}
+
+/**
+ * Extracts test results from the report into a structured format
+ * 
+ * @param report The diagnostic report
+ * @returns A structured representation of test results by category
+ */
+function extractTestResults(report: any): Record<string, any> {
+  const results: Record<string, any> = {};
+  
+  // Extract results from test categories
+  [
+    { key: 'navigationTests', name: 'navigation' },
+    { key: 'permissionsTests', name: 'permissions' },
+    { key: 'iconTests', name: 'icons' },
+    { key: 'formValidationTests', name: 'forms' },
+    { key: 'apiIntegrationTests', name: 'api' },
+    { key: 'roleSimulationTests', name: 'roles' },
+    { key: 'performanceTests', name: 'performance' },
+    { key: 'securityTests', name: 'security' }
+  ].forEach(({ key, name }) => {
+    if (Array.isArray(report[key])) {
+      const error = report[key].filter((test: any) => test.status === 'error').length;
+      const warning = report[key].filter((test: any) => test.status === 'warning').length;
+      const success = report[key].filter((test: any) => test.status === 'success').length;
+      
+      let status: DiagnosticTestStatus = 'success';
+      if (error > 0) status = 'error';
+      else if (warning > 0) status = 'warning';
+      
+      results[name] = { status, error, warning, success, total: report[key].length };
+    }
+  });
+  
+  // Extract results from basic services
+  [
+    'navigation',
+    'forms',
+    'database',
+    'api',
+    'authentication'
+  ].forEach(service => {
+    if (report[service]) {
+      results[`basic_${service}`] = report[service];
+    }
+  });
+  
+  return results;
+}

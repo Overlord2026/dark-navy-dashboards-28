@@ -34,9 +34,19 @@ jobs:
         run: npm run build
         env:
           CI: true
+          # Set other required environment variables here
+          # These will be made available to the app via import.meta.env
+          VITE_APP_ENV: 'ci'
+          VITE_APP_API_URL: 'https://api.example.com'
         
       - name: Run diagnostics tests
-        run: node ./dist/services/diagnostics/ci-scripts/run-diagnostics.js --outputFile=diagnostics-report.json --failOnError=true --notifyOnWarning=true
+        run: |
+          echo "Running diagnostics with verbose output"
+          node ./dist/services/diagnostics/ci-scripts/run-diagnostics.js \
+            --outputFile=diagnostics-report.json \
+            --failOnError=true \
+            --notifyOnWarning=true \
+            --notifyEmail=team@example.com
         env:
           CI: true
           GITHUB_ACTIONS: true
@@ -67,3 +77,75 @@ jobs:
               title: `🚨 Diagnostics check failed on ${context.payload.ref}`,
               body: `Diagnostics tests failed on ${context.payload.ref}. [View diagnostics report](${run_url}).\n\nSee details in the [Actions tab](${run_url}).`
             });
+
+      # Add additional step to post diagnostic summary as a comment on the PR
+      - name: Comment on PR with diagnostics summary
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            
+            try {
+              const report = JSON.parse(fs.readFileSync('diagnostics-report.json', 'utf8'));
+              
+              // Create a markdown summary of the diagnostics
+              let summary = `## Diagnostics Summary\n\n`;
+              summary += `Status: ${report.overall.toUpperCase()}\n\n`;
+              
+              // Add emoji based on status
+              const statusEmoji = {
+                success: '✅',
+                warning: '⚠️',
+                error: '❌'
+              };
+              
+              // Add basic services section
+              summary += `### Basic Services\n\n`;
+              ['navigation', 'forms', 'database', 'api', 'authentication'].forEach(service => {
+                if (report[service]) {
+                  const emoji = statusEmoji[report[service].status] || '❓';
+                  summary += `- ${emoji} ${service}: ${report[service].message}\n`;
+                }
+              });
+              
+              // Add test category summaries
+              const categories = [
+                { key: 'navigationTests', name: 'Navigation' },
+                { key: 'apiIntegrationTests', name: 'API Integration' },
+                { key: 'securityTests', name: 'Security' }
+              ];
+              
+              summary += `\n### Test Categories\n\n`;
+              categories.forEach(({ key, name }) => {
+                if (Array.isArray(report[key])) {
+                  const total = report[key].length;
+                  const success = report[key].filter(t => t.status === 'success').length;
+                  const warning = report[key].filter(t => t.status === 'warning').length;
+                  const error = report[key].filter(t => t.status === 'error').length;
+                  
+                  let emoji = '✅';
+                  if (error > 0) emoji = '❌';
+                  else if (warning > 0) emoji = '⚠️';
+                  
+                  summary += `- ${emoji} ${name}: ${success}/${total} passed`;
+                  if (warning > 0) summary += `, ${warning} warnings`;
+                  if (error > 0) summary += `, ${error} errors`;
+                  summary += '\n';
+                }
+              });
+              
+              // Add documentation link
+              summary += `\n[View full diagnostics report](${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID})`;
+              
+              // Post the comment on the PR
+              const pr_number = context.issue.number;
+              github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: pr_number,
+                body: summary
+              });
+            } catch (error) {
+              console.error('Failed to comment on PR:', error);
+            }
