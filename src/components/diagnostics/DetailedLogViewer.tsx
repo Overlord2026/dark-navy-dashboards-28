@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Search, ArrowDownUp, AlertCircle, Info, Bug, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
+import { runDiagnostics } from "@/services/diagnosticsService";
 
 // Define the log entry type with specific level types
 interface LogEntry {
@@ -23,6 +24,7 @@ export const DetailedLogViewer = () => {
   const [filter, setFilter] = useState("");
   const [sortDesc, setSortDesc] = useState(true);
   const [expandedLog, setExpandedLog] = useState<string | null>(null);
+  const [isRunningFullTest, setIsRunningFullTest] = useState(false);
   
   // Simulate fetching logs
   useEffect(() => {
@@ -75,6 +77,124 @@ export const DetailedLogViewer = () => {
     
     fetchLogs();
   }, []);
+  
+  // Run a full system diagnostic test
+  const runFullSystemDiagnostic = async () => {
+    setIsRunningFullTest(true);
+    toast.info("Running comprehensive system diagnostic test...");
+    
+    try {
+      // Run the diagnostics
+      const results = await runDiagnostics();
+      
+      // Generate detailed logs from the diagnostic results
+      const newLogs: LogEntry[] = [];
+      
+      // Add an overall summary log
+      newLogs.push({
+        id: `diagnostic-summary-${Date.now()}`,
+        timestamp: new Date().toISOString(),
+        level: results.overall as "error" | "warning" | "info" | "success",
+        message: `System Diagnostic Test: Overall status is ${results.overall}`,
+        source: "DiagnosticService",
+        details: `Completed full diagnostic scan at ${new Date().toLocaleString()}. Found ${
+          Object.values(results).flat().filter((test: any) => test.status === "error").length
+        } errors and ${
+          Object.values(results).flat().filter((test: any) => test.status === "warning").length
+        } warnings.`
+      });
+      
+      // Add logs for security tests
+      results.securityTests?.forEach((test: any, index: number) => {
+        newLogs.push({
+          id: `security-${index}-${Date.now()}`,
+          timestamp: new Date().toISOString(),
+          level: test.status as "error" | "warning" | "info" | "debug",
+          message: `Security Test: ${test.name}`,
+          source: "SecurityService",
+          details: `${test.message}${test.severity ? ` | Severity: ${test.severity}` : ''}${
+            test.remediation ? ` | Remediation: ${test.remediation}` : ''
+          }`
+        });
+      });
+      
+      // Add logs for API integration tests
+      results.apiIntegrationTests?.forEach((test: any, index: number) => {
+        newLogs.push({
+          id: `api-${index}-${Date.now()}`,
+          timestamp: new Date().toISOString(),
+          level: test.status as "error" | "warning" | "info" | "debug",
+          message: `API Test: ${test.service} (${test.endpoint})`,
+          source: "ApiService",
+          details: `${test.message} | Response Time: ${test.responseTime}ms${
+            test.authStatus ? ` | Auth Status: ${test.authStatus}` : ''
+          }`
+        });
+      });
+      
+      // Add logs for navigation tests
+      results.navigationTests?.forEach((test: any, index: number) => {
+        newLogs.push({
+          id: `nav-${index}-${Date.now()}`,
+          timestamp: new Date().toISOString(),
+          level: test.status as "error" | "warning" | "info" | "debug",
+          message: `Navigation Test: ${test.route}`,
+          source: "RouterService",
+          details: test.message
+        });
+      });
+      
+      // Add logs for permission tests
+      results.permissionsTests?.forEach((test: any, index: number) => {
+        newLogs.push({
+          id: `perm-${index}-${Date.now()}`,
+          timestamp: new Date().toISOString(),
+          level: test.status as "error" | "warning" | "info" | "debug",
+          message: `Permission Test: ${test.role} - ${test.permission}`,
+          source: "AuthorizationService",
+          details: test.message
+        });
+      });
+      
+      // Add logs for performance tests
+      results.performanceTests?.forEach((test: any, index: number) => {
+        newLogs.push({
+          id: `perf-${index}-${Date.now()}`,
+          timestamp: new Date().toISOString(),
+          level: test.status as "error" | "warning" | "info" | "debug",
+          message: `Performance Test: ${test.name}`,
+          source: "PerformanceService",
+          details: `${test.message} | Response Time: ${test.responseTime}ms | CPU: ${test.cpuUsage}% | Memory: ${test.memoryUsage}MB`
+        });
+      });
+      
+      // Set the new logs
+      setLogs(newLogs);
+      
+      toast.success("System diagnostic test completed", {
+        description: "Check the logs for detailed results"
+      });
+    } catch (error) {
+      toast.error("Failed to run diagnostic test", {
+        description: error instanceof Error ? error.message : "An unknown error occurred"
+      });
+      
+      // Add error log
+      setLogs([
+        {
+          id: `diagnostic-error-${Date.now()}`,
+          timestamp: new Date().toISOString(),
+          level: "error",
+          message: "Failed to run system diagnostic test",
+          source: "DiagnosticService",
+          details: error instanceof Error ? error.message : "An unknown error occurred"
+        },
+        ...logs
+      ]);
+    } finally {
+      setIsRunningFullTest(false);
+    }
+  };
   
   // Filter and sort logs
   const filteredLogs = logs
@@ -137,6 +257,24 @@ export const DetailedLogViewer = () => {
     // For now, just shuffle the order a bit to simulate refresh
     setLogs(prev => [...prev].sort(() => Math.random() - 0.5));
   };
+
+  // Export logs as JSON for backend developers
+  const exportLogs = () => {
+    const logData = JSON.stringify(logs, null, 2);
+    const blob = new Blob([logData], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `system-diagnostic-logs-${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    
+    toast.success("Logs exported successfully", {
+      description: "Diagnostic data has been saved as JSON file"
+    });
+  };
   
   return (
     <Card>
@@ -145,37 +283,75 @@ export const DetailedLogViewer = () => {
         <CardDescription>Detailed logs for system diagnostics and debugging</CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="flex items-center gap-2 mb-4">
-          <div className="relative flex-1">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              type="text"
-              placeholder="Filter logs..."
-              className="pl-8"
-              value={filter}
-              onChange={(e) => setFilter(e.target.value)}
-            />
+        <div className="flex flex-col gap-4 mb-4">
+          <div className="flex items-center gap-2">
+            <div className="relative flex-1">
+              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Input
+                type="text"
+                placeholder="Filter logs..."
+                className="pl-8"
+                value={filter}
+                onChange={(e) => setFilter(e.target.value)}
+              />
+            </div>
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => setSortDesc(!sortDesc)}
+              title={sortDesc ? "Newest first" : "Oldest first"}
+            >
+              <ArrowDownUp className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={handleRefresh}
+              title="Refresh logs"
+            >
+              <RefreshCw className="h-4 w-4" />
+            </Button>
           </div>
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => setSortDesc(!sortDesc)}
-            title={sortDesc ? "Newest first" : "Oldest first"}
-          >
-            <ArrowDownUp className="h-4 w-4" />
-          </Button>
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={handleRefresh}
-            title="Refresh logs"
-          >
-            <RefreshCw className="h-4 w-4" />
-          </Button>
+          
+          <div className="flex flex-wrap gap-2">
+            <Button 
+              onClick={runFullSystemDiagnostic} 
+              disabled={isRunningFullTest}
+              className="gap-2"
+            >
+              {isRunningFullTest ? (
+                <>
+                  <RefreshCw className="h-4 w-4 animate-spin" />
+                  Running Full Diagnostic...
+                </>
+              ) : (
+                <>
+                  <Bug className="h-4 w-4" />
+                  Run System-Wide Diagnostic
+                </>
+              )}
+            </Button>
+            
+            <Button 
+              variant="outline" 
+              onClick={exportLogs}
+              className="gap-2"
+              disabled={logs.length === 0 || isRunningFullTest}
+            >
+              <FileText className="h-4 w-4" />
+              Export For Developers
+            </Button>
+          </div>
         </div>
         
         <ScrollArea className="h-[400px] rounded-md border p-4">
-          {filteredLogs.length > 0 ? (
+          {isRunningFullTest ? (
+            <div className="flex flex-col items-center justify-center h-full py-12">
+              <div className="w-16 h-16 border-4 border-t-blue-500 border-r-transparent border-b-blue-500 border-l-transparent rounded-full animate-spin mb-4"></div>
+              <p className="text-center font-medium">Running Comprehensive System Diagnostics</p>
+              <p className="text-sm text-muted-foreground mt-2">This may take a moment as we test all system components...</p>
+            </div>
+          ) : filteredLogs.length > 0 ? (
             <div className="space-y-3">
               {filteredLogs.map((log) => (
                 <div 
@@ -217,7 +393,7 @@ export const DetailedLogViewer = () => {
                   <Button variant="link" onClick={() => setFilter("")}>Clear filter</Button>
                 </>
               ) : (
-                <p>No logs available</p>
+                <p>No logs available. Run a system-wide diagnostic to generate logs.</p>
               )}
             </div>
           )}
@@ -226,3 +402,6 @@ export const DetailedLogViewer = () => {
     </Card>
   );
 };
+
+// Add the missing FileText icon import
+import { FileText } from "lucide-react";
