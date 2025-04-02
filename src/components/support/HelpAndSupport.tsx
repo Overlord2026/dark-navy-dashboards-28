@@ -28,7 +28,7 @@ export function HelpAndSupport() {
         
         <Button 
           onClick={() => setShowChatbot(true)}
-          variant="primary"
+          variant="default"
           size="sm"
           className="shadow-md"
         >
