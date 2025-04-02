@@ -1,12 +1,14 @@
 
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { toast } from "sonner";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { EducationalTabs } from "@/components/education/EducationalTabs";
 import { courseCategories } from "@/data/education";
 import { handleCourseAccess } from "@/components/education/courseUtils";
 import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { ArrowRight } from "lucide-react";
 
 export default function Education() {
   const [searchParams] = useSearchParams();
@@ -78,6 +80,14 @@ export default function Education() {
           <p className="text-muted-foreground mt-2">
             Explore our collection of financial education resources to help you build wealth and achieve your financial goals.
           </p>
+          
+          <div className="mt-4 mb-6">
+            <Link to="/education/tax-planning">
+              <Button variant="outline" className="flex items-center gap-2">
+                Proactive Tax Planning <ArrowRight className="h-4 w-4" />
+              </Button>
+            </Link>
+          </div>
           
           <EducationalTabs 
             activeSection={activeSection}

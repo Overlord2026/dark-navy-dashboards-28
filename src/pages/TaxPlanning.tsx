@@ -1,3 +1,4 @@
+
 import React from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -38,8 +39,10 @@ export default function TaxPlanning() {
 
   return (
     <ThreeColumnLayout 
-      title="Proactive Tax Planning" 
+      title="Tax Planning" 
       activeMainItem="education"
+      activeSecondaryItem="tax-planning"
+      secondaryMenuItems={[]}
     >
       <motion.div
         className="space-y-6 px-1"
