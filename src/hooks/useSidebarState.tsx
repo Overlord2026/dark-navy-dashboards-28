@@ -121,15 +121,20 @@ export function useSidebarState(navigationCategories: NavCategory[]) {
   };
 
   const toggleSubmenu = (itemTitle: string, e: React.MouseEvent) => {
-    // Prevent default behavior for parent menu items with "#" href
-    e.preventDefault();
-    e.stopPropagation();
+    // Always prevent default behavior to stop navigation
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     
     // Toggle the clicked submenu
     setExpandedSubmenus(prev => ({
       ...prev,
       [itemTitle]: !prev[itemTitle]
     }));
+    
+    // Force a rerender to ensure UI reflects current state
+    setForceUpdate(prev => prev + 1);
   };
 
   return {

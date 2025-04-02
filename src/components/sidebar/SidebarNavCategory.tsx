@@ -68,40 +68,57 @@ export const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
             
             return (
               <div key={item.title} className="group">
-                <Link
-                  to={item.href}
-                  className={cn(
-                    "group flex items-center rounded-md py-2 px-3 text-sm transition-colors border whitespace-nowrap",
-                    itemIsActive
-                      ? isLightTheme
-                        ? "bg-[#E9E7D8] text-[#222222] font-medium border-primary"
-                        : "bg-black text-white border-primary"
-                      : isLightTheme
-                        ? "text-[#222222] border-transparent hover:bg-[#E9E7D8] hover:border-primary"
-                        : "text-white border-transparent hover:bg-sidebar-accent",
-                    hasSubmenu && "justify-between"
-                  )}
-                  onClick={(e) => {
-                    if (hasSubmenu) {
-                      // Always prevent navigation for items with submenus
-                      toggleSubmenu(item.title, e);
-                    }
-                  }}
-                >
-                  <div className="flex items-center">
-                    <item.icon className={cn("h-5 w-5 flex-shrink-0", !collapsed && "mr-3")} />
-                    {!collapsed && <span>{item.title}</span>}
+                {/* For items with submenu, we'll handle the click event to toggle submenu */}
+                {hasSubmenu ? (
+                  <div
+                    className={cn(
+                      "group flex items-center rounded-md py-2 px-3 text-sm transition-colors border whitespace-nowrap cursor-pointer",
+                      itemIsActive
+                        ? isLightTheme
+                          ? "bg-[#E9E7D8] text-[#222222] font-medium border-primary"
+                          : "bg-black text-white border-primary"
+                        : isLightTheme
+                          ? "text-[#222222] border-transparent hover:bg-[#E9E7D8] hover:border-primary"
+                          : "text-white border-transparent hover:bg-sidebar-accent",
+                      hasSubmenu && "justify-between"
+                    )}
+                    onClick={(e) => toggleSubmenu(item.title, e)}
+                  >
+                    <div className="flex items-center">
+                      <item.icon className={cn("h-5 w-5 flex-shrink-0", !collapsed && "mr-3")} />
+                      {!collapsed && <span>{item.title}</span>}
+                    </div>
+                    
+                    {!collapsed && hasSubmenu && (
+                      submenuIsExpanded ? (
+                        <ChevronDown className="h-4 w-4" />
+                      ) : (
+                        <ChevronRight className="h-4 w-4" />
+                      )
+                    )}
                   </div>
-                  
-                  {!collapsed && hasSubmenu && (
-                    submenuIsExpanded ? (
-                      <ChevronDown className="h-4 w-4" />
-                    ) : (
-                      <ChevronRight className="h-4 w-4" />
-                    )
-                  )}
-                </Link>
+                ) : (
+                  <Link
+                    to={item.href}
+                    className={cn(
+                      "group flex items-center rounded-md py-2 px-3 text-sm transition-colors border whitespace-nowrap",
+                      itemIsActive
+                        ? isLightTheme
+                          ? "bg-[#E9E7D8] text-[#222222] font-medium border-primary"
+                          : "bg-black text-white border-primary"
+                        : isLightTheme
+                          ? "text-[#222222] border-transparent hover:bg-[#E9E7D8] hover:border-primary"
+                          : "text-white border-transparent hover:bg-sidebar-accent"
+                    )}
+                  >
+                    <div className="flex items-center">
+                      <item.icon className={cn("h-5 w-5 flex-shrink-0", !collapsed && "mr-3")} />
+                      {!collapsed && <span>{item.title}</span>}
+                    </div>
+                  </Link>
+                )}
                 
+                {/* Render submenu if expanded */}
                 {!collapsed && hasSubmenu && submenuIsExpanded && (
                   <div className="ml-8 mt-1 space-y-1">
                     {item.submenu?.map((subItem) => (
