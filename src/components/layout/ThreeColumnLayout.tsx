@@ -119,7 +119,6 @@ const navigationCategories: NavCategory[] = [
       { id: "cash-management", label: "Cash Management", icon: BanknoteIcon, href: "/cash-management" },
       { id: "tax-budgets", label: "Tax & Budgets", icon: Calculator, href: "/tax-budgets" },
       { id: "transfers", label: "Transfers", icon: ArrowRightLeft, href: "/transfers" },
-      { id: "funding-accounts", label: "Funding Accounts", icon: WalletIcon, href: "/funding-accounts" },
       { id: "legacy-vault", label: "Secure Family Vault", icon: VaultIcon, href: "/legacy-vault" },
       { id: "social-security", label: "Social Security", icon: CircleDollarSignIcon, href: "/social-security" },
       { id: "properties", label: "Real Estate & Properties", icon: BuildingIcon, href: "/properties" },

@@ -100,11 +100,6 @@ export const familyWealthNavItems: NavItem[] = [
     icon: ArrowRightLeft 
   },
   { 
-    title: "Funding Accounts", 
-    href: "/funding-accounts", 
-    icon: WalletIcon 
-  },
-  { 
     title: "Secure Family Vault", 
     href: "/legacy-vault", 
     icon: VaultIcon 

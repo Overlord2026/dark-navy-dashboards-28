@@ -1,6 +1,6 @@
 
 import { ReactNode } from "react";
-import { PieChart, BanknoteIcon, ArrowRightLeft, Wallet } from "lucide-react";
+import { PieChart, BanknoteIcon, ArrowRightLeft } from "lucide-react";
 import { LucideIcon } from "lucide-react";
 
 interface NavigationItem {
@@ -31,7 +31,6 @@ export const navigation: NavigationItem[] = [
         icon: BanknoteIcon,
         children: [
           { label: "Transfers", href: "/transfers", icon: ArrowRightLeft },
-          { label: "Funding Accounts", href: "/funding-accounts", icon: Wallet },
         ]
       },
       // Add other financial management items here if needed

@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -67,12 +66,12 @@ const CashManagement = () => {
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-foreground">Cash Management</h1>
           <p className="text-muted-foreground mt-2">
-            Manage your cash flow, accounts, transfers, and funding sources.
+            Manage your cash flow, accounts, and transfers.
           </p>
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid grid-cols-3 mb-6">
+          <TabsList className="grid grid-cols-2 mb-6">
             <TabsTrigger value="overview" className="flex items-center gap-2">
               <BanknoteIcon className="h-4 w-4" />
               <span>Overview</span>
@@ -80,10 +79,6 @@ const CashManagement = () => {
             <TabsTrigger value="transfers" className="flex items-center gap-2">
               <ArrowRightLeft className="h-4 w-4" />
               <span>Transfers</span>
-            </TabsTrigger>
-            <TabsTrigger value="funding" className="flex items-center gap-2">
-              <Wallet className="h-4 w-4" />
-              <span>Funding Accounts</span>
             </TabsTrigger>
           </TabsList>
 
@@ -278,51 +273,6 @@ const CashManagement = () => {
               <Button variant="default" className="w-full" asChild>
                 <Link to="/transfers">
                   Go to Full Transfer Center <ArrowRightIcon className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
-            </div>
-          </TabsContent>
-
-          {/* Funding Accounts Tab */}
-          <TabsContent value="funding">
-            <div className="space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Funding Accounts</CardTitle>
-                  <CardDescription>
-                    Manage the accounts you use to fund transfers and payments
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <p className="text-sm text-muted-foreground">
-                    Funding accounts are used to deposit and withdraw funds for transfers, payments, and investments.
-                    You can select existing linked accounts or add new ones manually.
-                  </p>
-                  
-                  <div className="space-y-4 mt-4">
-                    <h3 className="text-sm font-medium">Available Funding Accounts</h3>
-                    {accounts.map((account) => (
-                      <div key={account.id} className="flex justify-between items-center p-4 border rounded-md">
-                        <div>
-                          <p className="font-medium">{account.name}</p>
-                          <p className="text-sm text-muted-foreground">{account.institution}</p>
-                        </div>
-                        <Button 
-                          variant="outline" 
-                          size="sm"
-                          onClick={() => toast.success(`${account.name} set as primary funding account`)}
-                        >
-                          Set as Primary
-                        </Button>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Button variant="default" className="w-full" asChild>
-                <Link to="/funding-accounts">
-                  Manage Funding Accounts <ArrowRightIcon className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
             </div>
