@@ -349,7 +349,7 @@ export function ThreeColumnLayout({
                                     ? "bg-[#E9E7D8] text-[#222222] font-medium border-primary" 
                                     : "bg-black text-[#E2E2E2] font-medium border-primary"
                                   : isLightTheme ? "text-[#222222] border-transparent" : "text-[#E2E2E2] border-transparent",
-                                isLightTheme ? "hover:bg-[#E9E7D8] hover:border-primary" : "hover:bg-white/10 hover:border-primary"
+                                isLightTheme ? "hover:bg-[#E9E7D8] hover:border-primary" : "hover:bg-sidebar-accent hover:border-primary"
                               )}
                               title={item.label}
                             >
