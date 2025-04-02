@@ -1,23 +1,12 @@
 
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Search, ArrowDownUp, AlertCircle, Info, Bug, RefreshCw, FileText } from "lucide-react";
 import { toast } from "sonner";
 import { runDiagnostics } from "@/services/diagnosticsService";
-
-// Define the log entry type with specific level types
-interface LogEntry {
-  id: string;
-  timestamp: string;
-  level: "error" | "warning" | "info" | "debug" | "success";
-  message: string;
-  source: string;
-  details?: string;
-}
+import { LogEntry, LogLevel } from "@/types/diagnostics";
+import { LogsToolbar } from "./LogsToolbar";
+import { LogsList } from "./LogsList";
 
 export const DetailedLogViewer = () => {
   const [logs, setLogs] = useState<LogEntry[]>([]);
@@ -94,7 +83,7 @@ export const DetailedLogViewer = () => {
       newLogs.push({
         id: `diagnostic-summary-${Date.now()}`,
         timestamp: new Date().toISOString(),
-        level: results.overall as "error" | "warning" | "info" | "success",
+        level: results.overall as LogLevel,
         message: `System Diagnostic Test: Overall status is ${results.overall}`,
         source: "DiagnosticService",
         details: `Completed full diagnostic scan at ${new Date().toLocaleString()}. Found ${
@@ -109,7 +98,7 @@ export const DetailedLogViewer = () => {
         newLogs.push({
           id: `security-${index}-${Date.now()}`,
           timestamp: new Date().toISOString(),
-          level: test.status as "error" | "warning" | "info" | "debug",
+          level: test.status as LogLevel,
           message: `Security Test: ${test.name}`,
           source: "SecurityService",
           details: `${test.message}${test.severity ? ` | Severity: ${test.severity}` : ''}${
@@ -123,7 +112,7 @@ export const DetailedLogViewer = () => {
         newLogs.push({
           id: `api-${index}-${Date.now()}`,
           timestamp: new Date().toISOString(),
-          level: test.status as "error" | "warning" | "info" | "debug",
+          level: test.status as LogLevel,
           message: `API Test: ${test.service} (${test.endpoint})`,
           source: "ApiService",
           details: `${test.message} | Response Time: ${test.responseTime}ms${
@@ -137,7 +126,7 @@ export const DetailedLogViewer = () => {
         newLogs.push({
           id: `nav-${index}-${Date.now()}`,
           timestamp: new Date().toISOString(),
-          level: test.status as "error" | "warning" | "info" | "debug",
+          level: test.status as LogLevel,
           message: `Navigation Test: ${test.route}`,
           source: "RouterService",
           details: test.message
@@ -149,7 +138,7 @@ export const DetailedLogViewer = () => {
         newLogs.push({
           id: `perm-${index}-${Date.now()}`,
           timestamp: new Date().toISOString(),
-          level: test.status as "error" | "warning" | "info" | "debug",
+          level: test.status as LogLevel,
           message: `Permission Test: ${test.role} - ${test.permission}`,
           source: "AuthorizationService",
           details: test.message
@@ -161,7 +150,7 @@ export const DetailedLogViewer = () => {
         newLogs.push({
           id: `perf-${index}-${Date.now()}`,
           timestamp: new Date().toISOString(),
-          level: test.status as "error" | "warning" | "info" | "debug",
+          level: test.status as LogLevel,
           message: `Performance Test: ${test.name}`,
           source: "PerformanceService",
           details: `${test.message} | Response Time: ${test.responseTime}ms | CPU: ${test.cpuUsage}% | Memory: ${test.memoryUsage}MB`
@@ -209,51 +198,6 @@ export const DetailedLogViewer = () => {
       return sortDesc ? timeB - timeA : timeA - timeB;
     });
   
-  // Toggle log details
-  const toggleLogDetails = (logId: string) => {
-    if (expandedLog === logId) {
-      setExpandedLog(null);
-    } else {
-      setExpandedLog(logId);
-    }
-  };
-  
-  // Get icon for log level
-  const getLogLevelIcon = (level: "error" | "warning" | "info" | "debug" | "success") => {
-    switch (level) {
-      case "error":
-        return <AlertCircle className="h-4 w-4 text-red-500" />;
-      case "warning":
-        return <AlertCircle className="h-4 w-4 text-yellow-500" />;
-      case "info":
-        return <Info className="h-4 w-4 text-blue-500" />;
-      case "debug":
-        return <Bug className="h-4 w-4 text-gray-500" />;
-      case "success":
-        return <Info className="h-4 w-4 text-green-500" />;
-      default:
-        return <Info className="h-4 w-4" />;
-    }
-  };
-  
-  // Get badge for log level
-  const getLogLevelBadge = (level: "error" | "warning" | "info" | "debug" | "success") => {
-    switch (level) {
-      case "error":
-        return <Badge variant="destructive">Error</Badge>;
-      case "warning":
-        return <Badge variant="outline" className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-500">Warning</Badge>;
-      case "info":
-        return <Badge variant="outline" className="bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-500">Info</Badge>;
-      case "debug":
-        return <Badge variant="outline" className="bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-500">Debug</Badge>;
-      case "success":
-        return <Badge variant="outline" className="bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-500">Success</Badge>;
-      default:
-        return <Badge variant="outline">Unknown</Badge>;
-    }
-  };
-  
   // Refresh logs
   const handleRefresh = () => {
     // In a real app, this would re-fetch logs from the API
@@ -287,120 +231,27 @@ export const DetailedLogViewer = () => {
         <CardDescription>Detailed logs for system diagnostics and debugging</CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="flex flex-col gap-4 mb-4">
-          <div className="flex items-center gap-2">
-            <div className="relative flex-1">
-              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input
-                type="text"
-                placeholder="Filter logs..."
-                className="pl-8"
-                value={filter}
-                onChange={(e) => setFilter(e.target.value)}
-              />
-            </div>
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={() => setSortDesc(!sortDesc)}
-              title={sortDesc ? "Newest first" : "Oldest first"}
-            >
-              <ArrowDownUp className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={handleRefresh}
-              title="Refresh logs"
-            >
-              <RefreshCw className="h-4 w-4" />
-            </Button>
-          </div>
-          
-          <div className="flex flex-wrap gap-2">
-            <Button 
-              onClick={runFullSystemDiagnostic} 
-              disabled={isRunningFullTest}
-              className="gap-2"
-            >
-              {isRunningFullTest ? (
-                <>
-                  <RefreshCw className="h-4 w-4 animate-spin" />
-                  Running Full Diagnostic...
-                </>
-              ) : (
-                <>
-                  <Bug className="h-4 w-4" />
-                  Run System-Wide Diagnostic
-                </>
-              )}
-            </Button>
-            
-            <Button 
-              variant="outline" 
-              onClick={exportLogs}
-              className="gap-2"
-              disabled={logs.length === 0 || isRunningFullTest}
-            >
-              <FileText className="h-4 w-4" />
-              Export For Developers
-            </Button>
-          </div>
-        </div>
+        <LogsToolbar 
+          filter={filter}
+          setFilter={setFilter}
+          sortDesc={sortDesc}
+          setSortDesc={setSortDesc}
+          handleRefresh={handleRefresh}
+          exportLogs={exportLogs}
+          runFullSystemDiagnostic={runFullSystemDiagnostic}
+          isRunningFullTest={isRunningFullTest}
+          logsCount={logs.length}
+        />
         
         <ScrollArea className="h-[400px] rounded-md border p-4">
-          {isRunningFullTest ? (
-            <div className="flex flex-col items-center justify-center h-full py-12">
-              <div className="w-16 h-16 border-4 border-t-blue-500 border-r-transparent border-b-blue-500 border-l-transparent rounded-full animate-spin mb-4"></div>
-              <p className="text-center font-medium">Running Comprehensive System Diagnostics</p>
-              <p className="text-sm text-muted-foreground mt-2">This may take a moment as we test all system components...</p>
-            </div>
-          ) : filteredLogs.length > 0 ? (
-            <div className="space-y-3">
-              {filteredLogs.map((log) => (
-                <div 
-                  key={log.id}
-                  className="p-3 rounded-md border hover:bg-muted/50 cursor-pointer"
-                  onClick={() => toggleLogDetails(log.id)}
-                >
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-start gap-3">
-                      <div className="mt-0.5">{getLogLevelIcon(log.level)}</div>
-                      <div>
-                        <div className="font-medium">{log.message}</div>
-                        <div className="text-sm text-muted-foreground">
-                          {new Date(log.timestamp).toLocaleString()} • Source: {log.source}
-                        </div>
-                      </div>
-                    </div>
-                    <div>
-                      {getLogLevelBadge(log.level)}
-                    </div>
-                  </div>
-                  
-                  {expandedLog === log.id && log.details && (
-                    <div className="mt-3 pt-3 border-t text-sm">
-                      <div className="font-medium mb-1">Details:</div>
-                      <div className="bg-muted p-2 rounded font-mono text-xs overflow-x-auto">
-                        {log.details}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center text-muted-foreground py-12">
-              {filter ? (
-                <>
-                  <p>No logs matching "{filter}"</p>
-                  <Button variant="link" onClick={() => setFilter("")}>Clear filter</Button>
-                </>
-              ) : (
-                <p>No logs available. Run a system-wide diagnostic to generate logs.</p>
-              )}
-            </div>
-          )}
+          <LogsList 
+            logs={filteredLogs}
+            isLoading={isRunningFullTest}
+            filter={filter}
+            expandedLog={expandedLog}
+            setExpandedLog={setExpandedLog}
+            setFilter={setFilter}
+          />
         </ScrollArea>
       </CardContent>
     </Card>
