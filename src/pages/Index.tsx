@@ -16,57 +16,85 @@ import { QuickActionsMenu } from "@/components/dashboard/QuickActionsMenu";
 import { useUser } from "@/context/UserContext";
 
 export default function Index() {
-  const { assets } = useNetWorth();
-  const { isInFreeTrial, daysRemainingInTrial } = useSubscription();
-  const { userProfile } = useUser();
-  const [dashboardKey, setDashboardKey] = useState(Date.now());
-  const userRole = userProfile?.role || "client";
-  const isAdmin = userRole === "admin" || userRole === "system_administrator";
-
-  useEffect(() => {
-    setDashboardKey(Date.now());
-  }, [userProfile]);
-
-  const renderTrialBanner = () => {
-    if (!isInFreeTrial) return null;
+  console.log('Index page rendering');
+  
+  try {
+    // Access context hooks
+    const { assets } = useNetWorth();
+    console.log('Index: useNetWorth hook loaded successfully', assets.length);
     
-    if (daysRemainingInTrial && daysRemainingInTrial >= 10) {
-      return <WelcomeTrialBanner onDismiss={() => {}} />;
-    } else if (daysRemainingInTrial && daysRemainingInTrial >= 5) {
-      return <MidTrialBanner onDismiss={() => {}} />;
-    } else {
-      return <TrialEndingSoonBanner onDismiss={() => {}} />;
-    }
-  };
+    const { isInFreeTrial, daysRemainingInTrial } = useSubscription();
+    console.log('Index: useSubscription hook loaded successfully', { isInFreeTrial, daysRemainingInTrial });
+    
+    const { userProfile } = useUser();
+    console.log('Index: useUser hook loaded successfully', userProfile?.role);
+    
+    const [dashboardKey, setDashboardKey] = useState(Date.now());
+    const userRole = userProfile?.role || "client";
+    const isAdmin = userRole === "admin" || userRole === "system_administrator";
 
-  return (
-    <ThreeColumnLayout title="Dashboard">
-      <div key={dashboardKey} className="space-y-4 px-4 py-2 max-w-7xl mx-auto">
-        {renderTrialBanner()}
-        
-        {isAdmin && (
-          <div className="mt-1">
-            <QuickActionsMenu />
+    useEffect(() => {
+      setDashboardKey(Date.now());
+    }, [userProfile]);
+
+    const renderTrialBanner = () => {
+      if (!isInFreeTrial) return null;
+      
+      if (daysRemainingInTrial && daysRemainingInTrial >= 10) {
+        return <WelcomeTrialBanner onDismiss={() => {}} />;
+      } else if (daysRemainingInTrial && daysRemainingInTrial >= 5) {
+        return <MidTrialBanner onDismiss={() => {}} />;
+      } else {
+        return <TrialEndingSoonBanner onDismiss={() => {}} />;
+      }
+    };
+
+    return (
+      <ThreeColumnLayout title="Dashboard">
+        <div key={dashboardKey} className="space-y-4 px-4 py-2 max-w-7xl mx-auto">
+          {renderTrialBanner()}
+          
+          {isAdmin && (
+            <div className="mt-1">
+              <QuickActionsMenu />
+            </div>
+          )}
+          
+          <div id="financial-overview-section">
+            <FinancialOverview />
           </div>
-        )}
-        
-        <div id="financial-overview-section">
-          <FinancialOverview />
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          <NetWorthSummary />
-          <div className="space-y-5">
-            <ExpenseOptimizationCard />
-            <TaxPlanningSummary />
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <NetWorthSummary />
+            <div className="space-y-5">
+              <ExpenseOptimizationCard />
+              <TaxPlanningSummary />
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <RecentActivity />
+            <UpcomingBillsCard />
           </div>
         </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          <RecentActivity />
-          <UpcomingBillsCard />
+      </ThreeColumnLayout>
+    );
+  } catch (error) {
+    console.error('Error in Index page:', error);
+    return (
+      <ThreeColumnLayout title="Dashboard">
+        <div className="space-y-4 px-4 py-2 max-w-7xl mx-auto">
+          <div className="p-8 text-center bg-red-900/20 rounded-lg border border-red-800">
+            <h2 className="text-xl font-bold text-red-400 mb-2">Error Loading Dashboard</h2>
+            <p className="text-gray-300">
+              We encountered an error while loading your dashboard. Please try refreshing the page.
+            </p>
+            <pre className="mt-4 text-left bg-gray-900 p-4 rounded text-xs overflow-auto">
+              {String(error)}
+            </pre>
+          </div>
         </div>
-      </div>
-    </ThreeColumnLayout>
-  );
+      </ThreeColumnLayout>
+    );
+  }
 }

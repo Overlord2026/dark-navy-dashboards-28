@@ -29,6 +29,8 @@ interface NetWorthContextType {
 const NetWorthContext = createContext<NetWorthContextType | undefined>(undefined);
 
 export const NetWorthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  console.log('NetWorthProvider rendering');
+  
   const [assets, setAssets] = useState<Asset[]>([
     {
       id: 'cash1',
@@ -113,17 +115,21 @@ export const NetWorthProvider: React.FC<{ children: ReactNode }> = ({ children }
     setAssets([...nonPropertyAssets, ...propertyAssets]);
   };
 
+  const contextValue = {
+    assets, 
+    addAsset, 
+    updateAsset, 
+    removeAsset, 
+    getTotalNetWorth, 
+    getTotalAssetsByType,
+    syncPropertiesToAssets,
+    getAssetsByOwner
+  };
+
+  console.log('NetWorthProvider context created with assets:', assets.length);
+
   return (
-    <NetWorthContext.Provider value={{ 
-      assets, 
-      addAsset, 
-      updateAsset, 
-      removeAsset, 
-      getTotalNetWorth, 
-      getTotalAssetsByType,
-      syncPropertiesToAssets,
-      getAssetsByOwner
-    }}>
+    <NetWorthContext.Provider value={contextValue}>
       {children}
     </NetWorthContext.Provider>
   );
@@ -131,8 +137,11 @@ export const NetWorthProvider: React.FC<{ children: ReactNode }> = ({ children }
 
 export const useNetWorth = () => {
   const context = useContext(NetWorthContext);
+  
   if (context === undefined) {
+    console.error('useNetWorth called outside of NetWorthProvider');
     throw new Error('useNetWorth must be used within a NetWorthProvider');
   }
+  
   return context;
 };

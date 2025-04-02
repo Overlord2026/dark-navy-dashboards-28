@@ -59,6 +59,7 @@ const AppRoutes: React.FC = () => {
   const { isAuthenticated, userProfile } = useUser();
   const isAdmin = userProfile?.role === "admin" || userProfile?.role === "system_administrator";
 
+  // Wrap all routes with appropriate context
   if (!isAuthenticated) {
     return (
       <Routes>
