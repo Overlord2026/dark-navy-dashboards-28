@@ -10,9 +10,9 @@ import { UploadDocumentDialog } from "@/components/documents/UploadDocumentDialo
 import { ShareDocumentDialog } from "@/components/documents/ShareDocumentDialog";
 import { healthcareCategories } from "@/data/documentCategories";
 import { healthcareTags, DocumentItem, DocumentTag, HealthcareAccessLevel, DocumentPermission } from "@/types/document";
-import { Upload, FolderPlus, Tag, Lock, Shield, Users, Eye, FileEdit, History, LayoutDashboard } from "lucide-react";
+import { Upload, FolderPlus, Tag, Lock, Shield, Users, Eye, FileEdit, History, LayoutDashboard, Bell, FileText } from "lucide-react";
 import { CategoryList } from "@/components/documents/CategoryList";
-import { toast } from "sonner";
+import { toast } from "@/hooks/use-toast";
 import { HealthcareDocumentPermissions } from "./HealthcareDocumentPermissions";
 import { auditLog } from "@/services/auditLog/auditLogService";
 import { Switch } from "@/components/ui/switch";
@@ -20,6 +20,9 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { HealthcareDashboard } from "./HealthcareDashboard";
+import { HealthcareNotifications } from "./HealthcareNotifications";
+import { HealthcareTemplates } from "./HealthcareTemplates";
+import { DocumentVersionControl } from "./DocumentVersionControl";
 
 interface HealthcareFolderProps {
   documents: DocumentItem[];
@@ -44,6 +47,67 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
   
   const userId = "Tom Brady"; // In a real app, this would come from auth context
 
+  // Sample data for HealthcareNotifications
+  const medications = [
+    { 
+      id: "med1", 
+      name: "Lisinopril", 
+      dosage: "20mg", 
+      frequency: "Once daily", 
+      nextRefill: new Date(new Date().setDate(new Date().getDate() + 7)),
+      doctor: "Dr. Smith",
+      pharmacy: "CVS Pharmacy"
+    },
+    { 
+      id: "med2", 
+      name: "Metformin", 
+      dosage: "500mg", 
+      frequency: "Twice daily", 
+      nextRefill: new Date(new Date().setDate(new Date().getDate() + 14)),
+      doctor: "Dr. Johnson",
+      pharmacy: "Walgreens"
+    },
+    { 
+      id: "med3", 
+      name: "Atorvastatin", 
+      dosage: "10mg", 
+      frequency: "Once daily", 
+      nextRefill: new Date(new Date().setDate(new Date().getDate() + 3)),
+      doctor: "Dr. Smith",
+      pharmacy: "CVS Pharmacy"
+    }
+  ];
+
+  const upcomingAppointments = [
+    {
+      id: "apt1",
+      title: "Annual Physical",
+      doctor: "Dr. Sarah Smith",
+      location: "City Medical Group",
+      date: new Date(new Date().setDate(new Date().getDate() + 14)),
+      time: "10:00 AM",
+      notes: "Fasting required"
+    },
+    {
+      id: "apt2",
+      title: "Cardiology Follow-up",
+      doctor: "Dr. James Johnson",
+      location: "Specialty Care Associates",
+      date: new Date(new Date().setDate(new Date().getDate() + 7)),
+      time: "2:30 PM",
+      notes: "Bring medication list"
+    },
+    {
+      id: "apt3",
+      title: "Lab Work",
+      doctor: "Metro Health Partners",
+      location: "Metro Health Lab",
+      date: new Date(new Date().setDate(new Date().getDate() + 3)),
+      time: "8:15 AM",
+      notes: "Fasting required"
+    }
+  ];
+  
   const healthcareDocuments = documents.filter(doc => 
     doc.category === activeSubcategory || 
     (activeSubcategory === "healthcare" && healthcareCategories.some(c => c.id === doc.category))
@@ -103,7 +167,8 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
       }
     );
     
-    toast.success("Healthcare document uploaded successfully", {
+    toast({
+      title: "Healthcare document uploaded successfully",
       description: "Document is encrypted and set to private by default"
     });
   };
@@ -178,7 +243,8 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
       }
     );
     
-    toast.info(`Viewing ${document.name}`, {
+    toast({
+      title: `Viewing ${document.name}`,
       description: "Document access has been logged"
     });
   };
@@ -237,9 +303,17 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
             <FileEdit className="h-4 w-4" />
             Documents
           </TabsTrigger>
-          <TabsTrigger value="access-logs" className="flex items-center gap-1">
+          <TabsTrigger value="reminders" className="flex items-center gap-1">
+            <Bell className="h-4 w-4" />
+            Reminders
+          </TabsTrigger>
+          <TabsTrigger value="templates" className="flex items-center gap-1">
+            <FileText className="h-4 w-4" />
+            Templates
+          </TabsTrigger>
+          <TabsTrigger value="version-history" className="flex items-center gap-1">
             <History className="h-4 w-4" />
-            Access Logs
+            Version History
           </TabsTrigger>
         </TabsList>
         
@@ -366,41 +440,34 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
           </div>
         </TabsContent>
         
-        <TabsContent value="access-logs">
-          <Card className="border border-border/30">
-            <CardHeader>
-              <CardTitle className="text-lg">Document Access History</CardTitle>
-            </CardHeader>
-            <CardContent>
-              {documentAccessLogs.length > 0 ? (
-                <div className="space-y-4 max-h-[500px] overflow-y-auto pr-2">
-                  {documentAccessLogs.map(log => (
-                    <div key={log.id} className="border-b pb-4 last:border-0 last:pb-0">
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <h4 className="font-medium">{log.metadata?.details?.action || "Accessed"}: {log.metadata?.details?.documentName}</h4>
-                          <p className="text-sm text-muted-foreground">{new Date(log.timestamp).toLocaleString()}</p>
-                        </div>
-                        <Badge variant={log.status === "success" ? "default" : "destructive"}>
-                          {log.status}
-                        </Badge>
-                      </div>
-                      <div className="mt-2 text-sm">
-                        <p>User: {log.userId}</p>
-                        {log.metadata?.details?.category && (
-                          <p>Category: {log.metadata.details.category}</p>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center py-8">
-                  <p className="text-muted-foreground">No access logs available</p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
+        <TabsContent value="reminders">
+          <HealthcareNotifications 
+            upcomingAppointments={upcomingAppointments} 
+            medications={medications}
+            policies={[
+              {
+                id: "health-policy-1",
+                name: "Medicare Supplement Plan F",
+                endDate: new Date(new Date().setDate(new Date().getDate() + 25)).toISOString()
+              },
+              {
+                id: "health-policy-2",
+                name: "Dental Insurance",
+                endDate: new Date(new Date().setDate(new Date().getDate() + 5)).toISOString()
+              }
+            ]}
+          />
+        </TabsContent>
+        
+        <TabsContent value="templates">
+          <HealthcareTemplates onAddDocument={onAddDocument} />
+        </TabsContent>
+        
+        <TabsContent value="version-history">
+          <DocumentVersionControl 
+            documents={documents} 
+            onViewDocument={handleViewDocument} 
+          />
         </TabsContent>
       </Tabs>
 

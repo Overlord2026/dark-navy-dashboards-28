@@ -1,132 +1,123 @@
 
-import { DocumentItem, DocumentType } from "@/types/document";
-import { File, FileText, FileImage, FileSpreadsheet, Folder, Edit, Trash2, Share2 } from "lucide-react";
+import React from "react";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { DocumentItem } from "@/types/document";
 import { Button } from "@/components/ui/button";
+import { Eye, Edit, Share2, Trash2, Download } from "lucide-react";
 
-interface ColumnDefinition {
-  header: string;
-  cell: (document: DocumentItem) => React.ReactNode;
-}
-
-interface DocumentsTableProps {
+export interface DocumentsTableProps {
   documents: DocumentItem[];
   onEditDocument?: (document: DocumentItem) => void;
-  onDeleteDocument?: (document: DocumentItem) => void;
   onShareDocument?: (document: DocumentItem) => void;
+  onDeleteDocument?: (document: DocumentItem) => void;
   onViewDocument?: (document: DocumentItem) => void;
-  extraColumns?: ColumnDefinition[];
+  extraColumns?: {
+    header: string;
+    cell: (document: DocumentItem) => React.ReactNode;
+  }[];
 }
 
-export const DocumentsTable = ({ 
-  documents,
-  onEditDocument,
+export const DocumentsTable: React.FC<DocumentsTableProps> = ({ 
+  documents, 
+  onEditDocument, 
+  onShareDocument, 
   onDeleteDocument,
-  onShareDocument,
-  onViewDocument,
+  onViewDocument, 
   extraColumns = []
-}: DocumentsTableProps) => {
-  const getDocumentIcon = (type: DocumentType) => {
+}) => {
+  const getDocumentIcon = (type: string) => {
     switch (type) {
-      case "folder":
-        return <Folder className="h-5 w-5 text-yellow-400" />;
-      case "pdf":
-        return <File className="h-5 w-5 text-red-400" />;
-      case "image":
-        return <FileImage className="h-5 w-5 text-blue-400" />;
-      case "spreadsheet":
-        return <FileSpreadsheet className="h-5 w-5 text-green-400" />;
-      default:
-        return <FileText className="h-5 w-5 text-gray-400" />;
+      case "pdf": return "📄";
+      case "image": return "🖼️";
+      case "spreadsheet": return "📊";
+      case "folder": return "📁";
+      default: return "📄";
     }
   };
-
-  const formatFileSize = (size: string | number | undefined) => {
-    if (!size) return "";
-    
-    if (typeof size === "string") return size;
-    
-    // Convert bytes to MB with 2 decimal places
-    const sizeInMB = (size / (1024 * 1024)).toFixed(2);
-    return `${sizeInMB} MB`;
-  };
-
+  
   return (
-    <div className="w-full">
-      {documents.length > 0 ? (
-        <div>
-          <div className="grid grid-cols-5 gap-4 px-4 py-3 border-b bg-muted/20 font-medium">
-            <div className="col-span-2">Name</div>
-            <div>Date</div>
-            <div>Type</div>
-            {extraColumns.map((column, index) => (
-              <div key={`header-${index}`}>{column.header}</div>
-            ))}
-            <div className="text-right">Actions</div>
-          </div>
-          {documents.map((document) => (
-            <div 
-              key={document.id}
-              className="grid grid-cols-5 gap-4 px-4 py-3 border-b hover:bg-accent/10"
-              onClick={() => onViewDocument?.(document)}
-              style={{ cursor: onViewDocument ? 'pointer' : 'default' }}
-            >
-              <div className="font-medium flex items-center gap-2 col-span-2">
-                {getDocumentIcon(document.type)}
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead>Name</TableHead>
+          <TableHead>Date</TableHead>
+          <TableHead>Size</TableHead>
+          {extraColumns?.map((col, index) => (
+            <TableHead key={`extra-col-${index}`}>{col.header}</TableHead>
+          ))}
+          <TableHead className="text-right">Actions</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {documents.map(document => (
+          <TableRow key={document.id}>
+            <TableCell className="font-medium">
+              <div className="flex items-center">
+                <span className="mr-2" aria-hidden="true">
+                  {getDocumentIcon(document.type)}
+                </span>
                 {document.name}
               </div>
-              <div>{new Date(document.created).toLocaleDateString()}</div>
-              <div className="capitalize">{document.type}</div>
-              {extraColumns.map((column, index) => (
-                <div key={`cell-${document.id}-${index}`}>{column.cell(document)}</div>
-              ))}
-              <div className="flex items-center justify-end gap-2">
+            </TableCell>
+            <TableCell>{document.created ? new Date(document.created).toLocaleDateString() : '-'}</TableCell>
+            <TableCell>{typeof document.size === 'number' ? `${(document.size / (1024 * 1024)).toFixed(2)} MB` : document.size || '-'}</TableCell>
+            
+            {extraColumns?.map((col, index) => (
+              <TableCell key={`document-${document.id}-col-${index}`}>
+                {col.cell(document)}
+              </TableCell>
+            ))}
+            
+            <TableCell className="text-right">
+              <div className="flex justify-end space-x-2">
+                {onViewDocument && (
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    onClick={() => onViewDocument(document)}
+                    title="View Document"
+                  >
+                    <Eye className="h-4 w-4" />
+                  </Button>
+                )}
+                
                 {onEditDocument && (
                   <Button 
                     variant="ghost" 
-                    size="sm" 
-                    className="h-8 w-8 p-0" 
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onEditDocument(document);
-                    }}
+                    size="icon" 
+                    onClick={() => onEditDocument(document)}
+                    title="Edit Document"
                   >
                     <Edit className="h-4 w-4" />
-                    <span className="sr-only">Edit</span>
                   </Button>
                 )}
+                
                 {onShareDocument && (
                   <Button 
                     variant="ghost" 
-                    size="sm" 
-                    className="h-8 w-8 p-0" 
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onShareDocument(document);
-                    }}
+                    size="icon" 
+                    onClick={() => onShareDocument(document)}
+                    title="Share Document"
                   >
                     <Share2 className="h-4 w-4" />
-                    <span className="sr-only">Share</span>
                   </Button>
                 )}
+                
                 {onDeleteDocument && (
                   <Button 
                     variant="ghost" 
-                    size="sm" 
-                    className="h-8 w-8 p-0 text-destructive hover:text-destructive hover:bg-destructive/10" 
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onDeleteDocument(document);
-                    }}
+                    size="icon" 
+                    onClick={() => onDeleteDocument(document)}
+                    title="Delete Document"
                   >
                     <Trash2 className="h-4 w-4" />
-                    <span className="sr-only">Delete</span>
                   </Button>
                 )}
               </div>
-            </div>
-          ))}
-        </div>
-      ) : null}
-    </div>
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
   );
 };
