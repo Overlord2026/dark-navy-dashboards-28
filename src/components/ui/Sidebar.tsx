@@ -34,13 +34,6 @@ export const Sidebar = () => {
   useEffect(() => {
     // Force one-time update to refresh navigation
     setForceUpdate(1);
-    
-    // Notify user that navigation has been updated
-    toast({
-      title: "Navigation Updated",
-      description: "The navigation menu has been refreshed with the latest structure.",
-      duration: 3000,
-    });
   }, []);
 
   // Updated navigation categories with the new structure
@@ -93,7 +86,9 @@ export const Sidebar = () => {
     }));
   };
 
-  const toggleSubmenu = (itemTitle: string) => {
+  const toggleSubmenu = (itemTitle: string, e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     setExpandedSubmenus(prev => ({
       ...prev,
       [itemTitle]: !prev[itemTitle]
@@ -130,16 +125,22 @@ export const Sidebar = () => {
     // Check if item has submenu
     const hasSubItems = item.submenu && item.submenu.length > 0;
     const isSubmenuExpanded = expandedSubmenus[item.title] || false;
+    
+    // Determine if this item or any of its children is active
+    const isItemActive = isActive(item.href);
+    const isAnyChildActive = hasSubItems && item.submenu?.some(subItem => isActive(subItem.href));
+    const shouldShowActive = isItemActive || isAnyChildActive;
 
     return (
       <div key={item.title} className="mb-1">
         <div className="flex flex-col">
           <div className="flex items-center">
             <Link
-              to={item.href}
+              to={hasSubItems ? "#" : item.href}
+              onClick={(e) => hasSubItems ? toggleSubmenu(item.title, e) : undefined}
               className={cn(
                 "group flex items-center py-2 px-3 rounded-md transition-colors border w-full",
-                isActive(item.href)
+                shouldShowActive
                   ? isLightTheme 
                     ? "bg-[#E9E7D8] text-[#222222] font-medium border-primary" 
                     : "bg-black text-white border-primary" 
@@ -163,11 +164,7 @@ export const Sidebar = () => {
                   variant="ghost"
                   size="icon"
                   className="h-5 w-5 p-0"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    toggleSubmenu(item.title);
-                  }}
+                  onClick={(e) => toggleSubmenu(item.title, e)}
                 >
                   {isSubmenuExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
                 </Button>
