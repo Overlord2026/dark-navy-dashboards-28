@@ -12,16 +12,16 @@ function App() {
   return (
     <NextThemesProvider defaultTheme="system" storageKey="vite-ui-theme">
       <CustomThemeProvider>
-        <UserProvider>
-          <NetWorthProvider>
-            <SubscriptionProvider>
-              <BrowserRouter>
+        <BrowserRouter>
+          <UserProvider>
+            <NetWorthProvider>
+              <SubscriptionProvider>
                 <AppRoutes />
                 <Toaster position="top-right" />
-              </BrowserRouter>
-            </SubscriptionProvider>
-          </NetWorthProvider>
-        </UserProvider>
+              </SubscriptionProvider>
+            </NetWorthProvider>
+          </UserProvider>
+        </BrowserRouter>
       </CustomThemeProvider>
     </NextThemesProvider>
   );
