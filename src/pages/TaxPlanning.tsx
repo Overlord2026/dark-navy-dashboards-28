@@ -11,8 +11,7 @@ import {
   BarChart, 
   PiggyBank, 
   ExternalLink,
-  ArrowRight,
-  HeartIcon
+  ArrowRight
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { InterestedButton } from "@/components/investments/InterestedButton";
