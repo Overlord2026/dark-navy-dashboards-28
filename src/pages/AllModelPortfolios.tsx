@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
@@ -271,6 +270,8 @@ const AllModelPortfolios = () => {
     navigate(`/investments/models/${model.id}`);
   };
 
+  // ... keep existing code (handlers for clearing filters)
+
   const handleClearFilters = () => {
     setSearchQuery("");
     setFilterProvider(null);
@@ -441,7 +442,7 @@ const AllModelPortfolios = () => {
                           className="w-full mt-2"
                           onClick={(e) => {
                             e.stopPropagation();
-                            navigate(`/investments/models/${model.id}/details`);
+                            navigate(`/investments/models/${model.id}`);
                           }}
                         >
                           View Details
@@ -513,7 +514,7 @@ const AllModelPortfolios = () => {
                               size="sm"
                               onClick={(e) => {
                                 e.stopPropagation();
-                                navigate(`/investments/models/${model.id}/details`);
+                                navigate(`/investments/models/${model.id}`);
                               }}
                             >
                               Details

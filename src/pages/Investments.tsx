@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
@@ -160,7 +159,7 @@ const Investments = () => {
   // Handler for View Details buttons on portfolio cards
   const handleViewDetails = (e: React.MouseEvent, model: PortfolioModel) => {
     e.stopPropagation();
-    navigate(`/investments/models/${model.id}/details`);
+    navigate(`/investments/models/${model.id}`);
   };
 
   // Handler for scheduling appointments

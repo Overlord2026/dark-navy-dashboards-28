@@ -1,11 +1,10 @@
-
 import React, { useState } from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { BarChart2, TrendingUp, Shield, ChevronRight, ExternalLink, Plus, Filter, Share } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 interface PortfolioModel {
@@ -98,6 +97,7 @@ const portfolioModels: PortfolioModel[] = [
 
 export const IntelligentAllocationTab = () => {
   const [selectedModels, setSelectedModels] = useState<string[]>([]);
+  const navigate = useNavigate();
 
   const handleFindPortfolios = () => {
     toast.success("Opening portfolio discovery tool");
@@ -128,6 +128,11 @@ export const IntelligentAllocationTab = () => {
       setSelectedModels([...selectedModels, modelId]);
       toast.info(`Selected model: ${portfolioModels.find(m => m.id === modelId)?.name}`);
     }
+  };
+
+  const handleViewPortfolioDetails = (modelId: string, e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent row click event
+    navigate(`/investments/models/${modelId}`);
   };
 
   return (
@@ -218,6 +223,16 @@ export const IntelligentAllocationTab = () => {
                     </Badge>
                   ))}
                 </div>
+                <div className="col-span-1 flex justify-end">
+                  <Button 
+                    variant="ghost" 
+                    size="sm"
+                    onClick={(e) => handleViewPortfolioDetails(model.id, e)}
+                    className="opacity-70 hover:opacity-100"
+                  >
+                    Details
+                  </Button>
+                </div>
               </div>
             ))}
           </div>
@@ -280,6 +295,16 @@ export const IntelligentAllocationTab = () => {
                       {tag}
                     </Badge>
                   ))}
+                </div>
+                <div className="col-span-1 flex justify-end">
+                  <Button 
+                    variant="ghost" 
+                    size="sm"
+                    onClick={(e) => handleViewPortfolioDetails(model.id, e)}
+                    className="opacity-70 hover:opacity-100"
+                  >
+                    Details
+                  </Button>
                 </div>
               </div>
             ))}
