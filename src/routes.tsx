@@ -10,6 +10,7 @@ import CashManagement from "@/pages/CashManagement";
 import BankingTransfers from "@/pages/BankingTransfers";
 import FundingAccounts from "@/pages/FundingAccounts";
 import SocialSecurity from "@/pages/SocialSecurity";
+import NotFound from "@/pages/NotFound";
 
 export const router = createBrowserRouter([
   {
@@ -47,6 +48,66 @@ export const router = createBrowserRouter([
   {
     path: "/social-security",
     element: <SocialSecurity />,
+  },
+  // Education & Solutions routes
+  {
+    path: "/education",
+    element: <NotFound />, // Placeholder until we implement this page
+  },
+  {
+    path: "/investments",
+    element: <NotFound />, // Placeholder until we implement this page
+  },
+  {
+    path: "/education/tax-planning",
+    element: <NotFound />, // Placeholder until we implement this page
+  },
+  {
+    path: "/insurance",
+    element: <NotFound />, // Placeholder until we implement this page
+  },
+  {
+    path: "/lending",
+    element: <NotFound />, // Placeholder until we implement this page
+  },
+  {
+    path: "/estate-planning",
+    element: <NotFound />, // Placeholder until we implement this page
+  },
+  // Family Wealth routes
+  {
+    path: "/financial-plans",
+    element: <NotFound />, // Placeholder until we implement this page
+  },
+  {
+    path: "/accounts",
+    element: <NotFound />, // Placeholder until we implement this page
+  },
+  {
+    path: "/personal-insurance",
+    element: <NotFound />, // Placeholder until we implement this page
+  },
+  {
+    path: "/legacy-vault",
+    element: <NotFound />, // Placeholder until we implement this page
+  },
+  {
+    path: "/properties",
+    element: <NotFound />, // Placeholder until we implement this page
+  },
+  // Collaboration & Sharing routes
+  {
+    path: "/documents",
+    element: <NotFound />, // Placeholder until we implement this page
+  },
+  {
+    path: "/sharing",
+    element: <NotFound />, // Placeholder until we implement this page
+  },
+  // Catch-all route for 404 pages
+  {
+    path: "*",
+    element: <NotFound />,
   },
 ]);
 

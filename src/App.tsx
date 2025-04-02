@@ -1,5 +1,4 @@
 
-import { BrowserRouter } from "react-router-dom";
 import { Toaster } from "sonner";
 import { router } from "./routes";
 import { RouterProvider } from "react-router-dom";
