@@ -9,6 +9,7 @@ import { DebugPage } from "@/pages/DebugPage";
 import CashManagement from "@/pages/CashManagement";
 import BankingTransfers from "@/pages/BankingTransfers";
 import FundingAccounts from "@/pages/FundingAccounts";
+import SocialSecurity from "@/pages/SocialSecurity";
 
 export const router = createBrowserRouter([
   {
@@ -43,4 +44,13 @@ export const router = createBrowserRouter([
     path: "/funding-accounts",
     element: <FundingAccounts />,
   },
+  {
+    path: "/social-security",
+    element: <SocialSecurity />,
+  },
 ]);
+
+// Add default export to fix the TS error
+export default function Routes() {
+  return null;
+}

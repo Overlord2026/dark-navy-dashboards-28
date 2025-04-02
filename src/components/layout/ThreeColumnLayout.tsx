@@ -116,18 +116,9 @@ const navigationCategories: NavCategory[] = [
       { id: "financial-plans", label: "Financial Plans", icon: LineChartIcon, href: "/financial-plans" },
       { id: "accounts", label: "Accounts Overview", icon: WalletIcon, href: "/accounts" },
       { id: "personal-insurance", label: "Insurance & Annuities", icon: ShieldIcon, href: "/personal-insurance" },
-      { 
-        id: "banking", 
-        label: "Banking", 
-        icon: BanknoteIcon, 
-        href: "#",
-        subItems: [
-          { id: "cash-management", label: "Cash Management", icon: BanknoteIcon, href: "/cash-management" },
-          { id: "banking-transfers", label: "Transfers", icon: ArrowRightLeft, href: "/banking-transfers" },
-          { id: "bill-paying", label: "Bill Paying", icon: Receipt, href: "/banking/bill-paying" },
-          { id: "funding-accounts", label: "Funding Accounts", icon: WalletIcon, href: "/funding-accounts" }
-        ]
-      },
+      { id: "cash-management", label: "Cash Management", icon: BanknoteIcon, href: "/cash-management" },
+      { id: "banking-transfers", label: "Transfers", icon: ArrowRightLeft, href: "/banking-transfers" },
+      { id: "funding-accounts", label: "Funding Accounts", icon: WalletIcon, href: "/funding-accounts" },
       { id: "legacy-vault", label: "Secure Family Vault", icon: VaultIcon, href: "/legacy-vault" },
       { id: "social-security", label: "Social Security", icon: CircleDollarSignIcon, href: "/social-security" },
       { id: "properties", label: "Real Estate & Properties", icon: BuildingIcon, href: "/properties" },

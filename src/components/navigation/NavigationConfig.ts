@@ -92,31 +92,19 @@ export const familyWealthNavItems: NavItem[] = [
     icon: ShieldIcon 
   },
   { 
-    title: "Banking", 
-    href: "#", // Using "#" for parent menu items
-    icon: BanknoteIcon,
-    submenu: [
-      {
-        title: "Cash Management",
-        href: "/cash-management",
-        icon: BanknoteIcon
-      },
-      {
-        title: "Transfers",
-        href: "/banking-transfers",
-        icon: ArrowRightLeft
-      },
-      {
-        title: "Bill Paying",
-        href: "/banking/bill-paying",
-        icon: Receipt
-      },
-      {
-        title: "Funding Accounts",
-        href: "/funding-accounts",
-        icon: WalletIcon
-      }
-    ]
+    title: "Cash Management", 
+    href: "/cash-management", 
+    icon: BanknoteIcon 
+  },
+  { 
+    title: "Transfers", 
+    href: "/banking-transfers", 
+    icon: ArrowRightLeft 
+  },
+  { 
+    title: "Funding Accounts", 
+    href: "/funding-accounts", 
+    icon: WalletIcon 
   },
   { 
     title: "Secure Family Vault", 
