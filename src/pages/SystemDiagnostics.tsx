@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
-import { RefreshCw, ActivitySquare, Zap, AlertTriangle, ShieldAlert } from "lucide-react";
+import { RefreshCw, ActivitySquare, Zap, AlertTriangle, ShieldAlert, Wrench, FileText } from "lucide-react";
 import { DiagnosticsHeader } from "@/components/diagnostics/DiagnosticsHeader";
 import { DiagnosticsRunner } from "@/components/diagnostics/DiagnosticsRunner";
 import { DiagnosticsTabs } from "@/components/diagnostics/DiagnosticsTabs";
@@ -11,6 +11,9 @@ import { toast } from "sonner";
 import { NavigationDiagnostics } from "@/components/diagnostics/NavigationDiagnostics";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DiagnosticTestStatus } from "@/services/diagnostics/types";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { DiagnosticsWizard } from "@/components/diagnostics/DiagnosticsWizard";
+import { DetailedLogViewer } from "@/components/diagnostics/DetailedLogViewer";
 
 export default function SystemDiagnostics() {
   const {
@@ -21,10 +24,13 @@ export default function SystemDiagnostics() {
     quickFixes,
     runSystemDiagnostics,
     refreshDiagnostics,
-    getOverallStatus
+    getOverallStatus,
+    fixHistory
   } = useDiagnostics();
 
   const [navigatorExpanded, setNavigatorExpanded] = useState(false);
+  const [isWizardOpen, setIsWizardOpen] = useState(false);
+  const [isLogViewerOpen, setIsLogViewerOpen] = useState(false);
 
   const handleRunDiagnostics = async () => {
     if (isRunning) return;
@@ -32,9 +38,13 @@ export default function SystemDiagnostics() {
     toast.info("Starting full system diagnostics...");
     try {
       await refreshDiagnostics();
-      toast.success("Diagnostics completed");
+      toast.success("Diagnostics completed", {
+        description: "System status has been updated"
+      });
     } catch (error) {
-      toast.error("Diagnostics failed to complete");
+      toast.error("Diagnostics failed to complete", {
+        description: error instanceof Error ? error.message : "Unknown error occurred"
+      });
       console.error("Diagnostics error:", error);
     }
   };
@@ -105,7 +115,7 @@ export default function SystemDiagnostics() {
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
           <h1 className="text-2xl font-bold mb-2 sm:mb-0">System Diagnostics</h1>
           
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             <Button
               variant="secondary"
               onClick={handleRunDiagnostics}
@@ -115,6 +125,48 @@ export default function SystemDiagnostics() {
               <RefreshCw className={`h-4 w-4 ${isRunning ? 'animate-spin' : ''}`} />
               {isRunning ? "Running..." : "Run Full Diagnostics"}
             </Button>
+            
+            <Dialog open={isWizardOpen} onOpenChange={setIsWizardOpen}>
+              <DialogTrigger asChild>
+                <Button
+                  variant="default"
+                  className="gap-2"
+                >
+                  <Wrench className="h-4 w-4" />
+                  Repair Wizard
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+                <DialogHeader>
+                  <DialogTitle>System Repair Wizard</DialogTitle>
+                  <DialogDescription>
+                    Follow these steps to fix system issues in order of priority
+                  </DialogDescription>
+                </DialogHeader>
+                <DiagnosticsWizard />
+              </DialogContent>
+            </Dialog>
+            
+            <Dialog open={isLogViewerOpen} onOpenChange={setIsLogViewerOpen}>
+              <DialogTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="gap-2"
+                >
+                  <FileText className="h-4 w-4" />
+                  Detailed Logs
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
+                <DialogHeader>
+                  <DialogTitle>System Logs</DialogTitle>
+                  <DialogDescription>
+                    Detailed diagnostic logs and events
+                  </DialogDescription>
+                </DialogHeader>
+                <DetailedLogViewer />
+              </DialogContent>
+            </Dialog>
             
             <Button
               variant="outline"
@@ -272,6 +324,16 @@ export default function SystemDiagnostics() {
                     </li>
                   ))}
                 </ul>
+                
+                <div className="mt-4 flex justify-end">
+                  <Button 
+                    onClick={() => setIsWizardOpen(true)}
+                    className="gap-2"
+                  >
+                    <Wrench className="h-4 w-4" />
+                    Fix Issues
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           )}
@@ -281,6 +343,7 @@ export default function SystemDiagnostics() {
               report={diagnosticResults}
               recommendations={quickFixes}
               isLoading={isLoading}
+              fixHistory={fixHistory}
             />
           )}
         </div>

@@ -17,6 +17,8 @@ import { AuditLogViewer } from "./AuditLogViewer";
 import { useUser } from "@/context/UserContext";
 import { DiagnosticsAuditViewer } from "./DiagnosticsAuditViewer";
 import { useDiagnostics } from "@/hooks/useDiagnostics";
+import { DetailedLogViewer } from "./DetailedLogViewer";
+import { FixHistoryLog } from "./FixHistoryLog";
 import { 
   LayoutDashboard, 
   Navigation, 
@@ -29,7 +31,8 @@ import {
   Lightbulb,
   FileTerminal,
   Shield,
-  ActivitySquare
+  ActivitySquare,
+  History
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { DiagnosticTestStatus } from "@/services/diagnostics/types";
@@ -38,12 +41,14 @@ type DiagnosticsTabsProps = {
   report: any;
   recommendations: any[];
   isLoading: boolean;
+  fixHistory?: any[];
 };
 
 export const DiagnosticsTabs = ({ 
   report, 
   recommendations, 
-  isLoading 
+  isLoading,
+  fixHistory = []
 }: DiagnosticsTabsProps) => {
   const [activeTab, setActiveTab] = useState("overview");
   const { userProfile } = useUser();
@@ -85,7 +90,7 @@ export const DiagnosticsTabs = ({
       onValueChange={setActiveTab}
       className="space-y-4"
     >
-      <TabsList className="grid grid-cols-2 md:grid-cols-5 lg:grid-cols-9 gap-1">
+      <TabsList className="grid grid-cols-2 md:grid-cols-5 lg:grid-cols-10 gap-1">
         <TabsTrigger value="overview" className="flex items-center gap-1">
           <LayoutDashboard className="h-4 w-4" />
           <span className="hidden md:inline">Overview</span>
@@ -136,6 +141,11 @@ export const DiagnosticsTabs = ({
         <TabsTrigger value="recommendations" className="flex items-center gap-1">
           <Lightbulb className="h-4 w-4" />
           <span className="hidden md:inline">Recommendations</span>
+        </TabsTrigger>
+        
+        <TabsTrigger value="history" className="flex items-center gap-1">
+          <History className="h-4 w-4" />
+          <span className="hidden md:inline">Fix History</span>
         </TabsTrigger>
         
         {isAdmin && (
@@ -226,6 +236,22 @@ export const DiagnosticsTabs = ({
           isLoading={isLoading}
         />
       </TabsContent>
+      
+      {/* Fix History Tab */}
+      <TabsContent value="history">
+        <div className="grid grid-cols-1 gap-8">
+          <div className="bg-card p-6 rounded-lg border">
+            <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+              <History className="h-5 w-5" />
+              Fix History
+            </h2>
+            <p className="text-muted-foreground mb-6">
+              A record of all system issues that have been resolved
+            </p>
+            <FixHistoryLog />
+          </div>
+        </div>
+      </TabsContent>
 
       {/* Admin-only tabs */}
       {isAdmin && (
@@ -233,7 +259,7 @@ export const DiagnosticsTabs = ({
           <TabsContent value="logs">
             <div className="grid grid-cols-1 gap-8">
               <LoggingConfiguration />
-              <LogViewer />
+              <DetailedLogViewer />
             </div>
           </TabsContent>
           
