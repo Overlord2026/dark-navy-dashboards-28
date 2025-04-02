@@ -7,6 +7,7 @@ import { ThemeProvider as NextThemesProvider } from "./components/ui/ThemeProvid
 import { ThemeProvider as CustomThemeProvider } from "./context/ThemeContext";
 import { NetWorthProvider } from "./context/NetWorthContext";
 import { SubscriptionProvider } from "./context/SubscriptionContext";
+import { BillsProvider } from "./hooks/useBills";
 
 function App() {
   return (
@@ -15,10 +16,12 @@ function App() {
         <UserProvider>
           <NetWorthProvider>
             <SubscriptionProvider>
-              <BrowserRouter>
-                <AppRoutes />
-                <Toaster position="top-right" />
-              </BrowserRouter>
+              <BillsProvider>
+                <BrowserRouter>
+                  <AppRoutes />
+                  <Toaster position="top-right" />
+                </BrowserRouter>
+              </BillsProvider>
             </SubscriptionProvider>
           </NetWorthProvider>
         </UserProvider>
