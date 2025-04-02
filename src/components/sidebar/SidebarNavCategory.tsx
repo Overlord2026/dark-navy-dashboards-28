@@ -16,6 +16,7 @@ interface SidebarNavCategoryProps {
   isLightTheme: boolean;
   expandedSubmenus: Record<string, boolean>;
   toggleSubmenu: (title: string, e: React.MouseEvent) => void;
+  hasActiveChild: (submenuItems: any[]) => boolean;
 }
 
 export const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
@@ -28,7 +29,8 @@ export const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
   isActive,
   isLightTheme,
   expandedSubmenus,
-  toggleSubmenu
+  toggleSubmenu,
+  hasActiveChild
 }) => {
   return (
     <div className="mb-4">
@@ -59,7 +61,7 @@ export const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
             
             // Only check submenu items if this is a parent menu with submenus
             if (hasSubmenu) {
-              const anySubmenuActive = item.submenu?.some(subItem => isActive(subItem.href)) || false;
+              const anySubmenuActive = hasActiveChild(item.submenu || []);
               // A parent menu with # href should only be considered active if a submenu item is active
               itemIsActive = item.href === "#" ? anySubmenuActive : itemIsActive || anySubmenuActive;
             }
@@ -81,7 +83,7 @@ export const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
                   )}
                   onClick={(e) => {
                     if (hasSubmenu) {
-                      e.preventDefault(); // Prevent navigation for parent items with submenus
+                      // Always prevent navigation for items with submenus
                       toggleSubmenu(item.title, e);
                     }
                   }}

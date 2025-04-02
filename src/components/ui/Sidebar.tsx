@@ -56,7 +56,8 @@ export const Sidebar = () => {
     toggleSidebar, 
     toggleCategory, 
     toggleSubmenu, 
-    isActive 
+    isActive,
+    hasActiveChild 
   } = useSidebarState(navigationCategories);
 
   const advisorInfo = {
@@ -103,6 +104,7 @@ export const Sidebar = () => {
             isLightTheme={isLightTheme}
             expandedSubmenus={expandedSubmenus}
             toggleSubmenu={toggleSubmenu}
+            hasActiveChild={hasActiveChild}
           />
         ))}
       </div>
