@@ -1,10 +1,12 @@
-
 import { useState, useEffect } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { CategoryList } from "@/components/documents/CategoryList";
 import { DocumentsTable } from "@/components/documents/DocumentsTable";
 import { NoDocumentsState, NoCategorySelectedState } from "@/components/documents/EmptyStates";
 import { UploadDocumentDialog } from "@/components/documents/UploadDocumentDialog";
+import { EditDocumentDialog } from "@/components/documents/EditDocumentDialog";
+import { ShareDocumentDialog } from "@/components/documents/ShareDocumentDialog";
+import { DeleteDocumentDialog } from "@/components/documents/DeleteDocumentDialog";
 import { NewFolderDialog } from "@/components/documents/NewFolderDialog";
 import { Button } from "@/components/ui/button";
 import { FolderPlus, Upload, ExternalLink, VaultIcon, ArchiveIcon } from "lucide-react";
@@ -21,7 +23,6 @@ import {
   CardTitle 
 } from "@/components/ui/card";
 
-// Fixed the type definition to match the expected interface in the DocumentsTable
 interface DocumentItem {
   id: string;
   name: string;
@@ -37,7 +38,6 @@ interface DocumentItem {
   favorited?: boolean;
 }
 
-// Define the DocumentCategory type to match what's expected in CategoryList
 interface DocumentCategory {
   id: string;
   name: string;
@@ -45,7 +45,6 @@ interface DocumentCategory {
   count?: number;
 }
 
-// Define the document categories that should appear under "Important Documents"
 const importantDocumentCategories = documentCategories.filter(cat => 
   ["documents-to-sign", "bfo-records", "alternative-investments", 
    "business-ownership", "education", "employer-agreements", 
@@ -53,7 +52,6 @@ const importantDocumentCategories = documentCategories.filter(cat =>
    "statements", "taxes", "vehicles"].includes(cat.id)
 );
 
-// Define the document categories that should appear under "Family Legacy Box"
 const estateDocumentCategories = documentCategories.filter(cat => 
   ["estate-planning", "trusts", "other"].includes(cat.id)
 );
@@ -62,11 +60,14 @@ export default function LegacyVault() {
   const [activeCategory, setActiveCategory] = useState("all");
   const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
   const [isNewFolderDialogOpen, setIsNewFolderDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isShareDialogOpen, setIsShareDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [selectedDocument, setSelectedDocument] = useState<DocumentItem | null>(null);
   const [documents, setDocuments] = useState<DocumentItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("documents");
   
-  // Fixed the mock data to include the 'created' property
   const mockDocuments: DocumentItem[] = [
     {
       id: "1",
@@ -114,23 +115,18 @@ export default function LegacyVault() {
     }
   ];
   
-  // Load documents on mount
   useEffect(() => {
-    // Simulate loading documents from an API
     setTimeout(() => {
       setDocuments(mockDocuments);
       setIsLoading(false);
     }, 1000);
   }, []);
 
-  // Filter documents based on active category
   const filteredDocuments = activeCategory === "all"
     ? documents
     : documents.filter(doc => doc.category === activeCategory);
 
-  // Handle document upload - updated the function signature to match what UploadDocumentDialog expects
   const handleUploadDocument = (file: File, customName: string) => {
-    // Create a new document object
     const newDocument: DocumentItem = {
       id: Math.random().toString(36).substring(2, 9),
       name: customName || file.name,
@@ -142,19 +138,12 @@ export default function LegacyVault() {
       modified: new Date().toISOString(),
     };
     
-    // Add the new document to the list
     setDocuments(prev => [...prev, newDocument]);
-    
-    // Show success message
     toast.success("Document uploaded successfully");
-    
-    // Close the dialog
     setIsUploadDialogOpen(false);
   };
 
-  // Handle folder creation
   const handleCreateFolder = (folderName: string) => {
-    // Create a new folder object
     const newFolder: DocumentItem = {
       id: Math.random().toString(36).substring(2, 9),
       name: folderName,
@@ -163,14 +152,40 @@ export default function LegacyVault() {
       created: new Date().toISOString(),
     };
     
-    // Add the new folder to the list
     setDocuments(prev => [...prev, newFolder]);
-    
-    // Show success message
     toast.success("Folder created successfully");
-    
-    // Close the dialog
     setIsNewFolderDialogOpen(false);
+  };
+
+  const handleEditDocument = (document: DocumentItem) => {
+    setSelectedDocument(document);
+    setIsEditDialogOpen(true);
+  };
+
+  const handleSaveDocument = (document: DocumentItem, newName: string) => {
+    setDocuments(prev => 
+      prev.map(doc => 
+        doc.id === document.id 
+          ? { ...doc, name: newName, modified: new Date().toISOString() } 
+          : doc
+      )
+    );
+    toast.success("Document updated successfully");
+  };
+
+  const handleShareDocument = (document: DocumentItem) => {
+    setSelectedDocument(document);
+    setIsShareDialogOpen(true);
+  };
+
+  const handleDeleteDialog = (document: DocumentItem) => {
+    setSelectedDocument(document);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const handleDeleteDocument = (document: DocumentItem) => {
+    setDocuments(prev => prev.filter(doc => doc.id !== document.id));
+    toast.success("Document deleted successfully");
   };
 
   return (
@@ -231,7 +246,10 @@ export default function LegacyVault() {
                   </div>
                 ) : filteredDocuments.length > 0 ? (
                   <DocumentsTable 
-                    documents={filteredDocuments as any} 
+                    documents={filteredDocuments as any}
+                    onEditDocument={handleEditDocument}
+                    onShareDocument={handleShareDocument}
+                    onDeleteDocument={handleDeleteDialog}
                   />
                 ) : (
                   activeCategory === "all" ? (
@@ -265,6 +283,26 @@ export default function LegacyVault() {
         open={isNewFolderDialogOpen}
         onOpenChange={setIsNewFolderDialogOpen}
         onCreateFolder={handleCreateFolder}
+      />
+
+      <EditDocumentDialog
+        open={isEditDialogOpen}
+        onOpenChange={setIsEditDialogOpen}
+        document={selectedDocument}
+        onSave={handleSaveDocument}
+      />
+
+      <ShareDocumentDialog
+        open={isShareDialogOpen}
+        onOpenChange={setIsShareDialogOpen}
+        document={selectedDocument}
+      />
+
+      <DeleteDocumentDialog
+        open={isDeleteDialogOpen}
+        onOpenChange={setIsDeleteDialogOpen}
+        document={selectedDocument}
+        onConfirm={handleDeleteDocument}
       />
     </ThreeColumnLayout>
   );
