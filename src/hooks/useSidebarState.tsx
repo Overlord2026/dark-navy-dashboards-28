@@ -27,18 +27,7 @@ export function useSidebarState(navigationCategories: NavCategory[]) {
         if (item.submenu) {
           // Check if any submenu items match the current path
           const hasActiveChild = item.submenu.some(subItem => {
-            // For exact matches
-            if (currentPath === subItem.href) {
-              return true;
-            }
-            
-            // For nested routes (e.g., /cash-management/details)
-            if (subItem.href !== "/" && subItem.href !== "#" && 
-                currentPath.startsWith(subItem.href + "/")) {
-              return true;
-            }
-            
-            return false;
+            return isActive(subItem.href);
           });
           
           if (hasActiveChild) {
@@ -69,17 +58,7 @@ export function useSidebarState(navigationCategories: NavCategory[]) {
             return false;
           }
           
-          // Check for exact match
-          if (currentPath === item.href) {
-            return true;
-          }
-          
-          // Check for nested routes
-          if (item.href !== "/" && currentPath.startsWith(item.href + "/")) {
-            return true;
-          }
-          
-          return false;
+          return isActive(item.href);
         });
         
         if (hasDirectMatch) {
@@ -91,12 +70,10 @@ export function useSidebarState(navigationCategories: NavCategory[]) {
         }
       });
     }
+    
+    // Force a rerender to ensure UI reflects current state
+    setForceUpdate(prev => prev + 1);
   }, [location.pathname, navigationCategories]);
-  
-  // Initial force update to ensure proper rendering
-  useEffect(() => {
-    setForceUpdate(1);
-  }, []);
 
   const toggleSidebar = () => {
     setCollapsed(!collapsed);
@@ -136,7 +113,6 @@ export function useSidebarState(navigationCategories: NavCategory[]) {
     if (href !== "/" && href !== "#" && location.pathname.startsWith(href)) {
       // Make sure we're not getting false positives
       // For example, /insurance shouldn't match /insurance-claims
-      // But we still want /accounts/settings to match /accounts
       const nextCharInPath = location.pathname.charAt(href.length);
       if (nextCharInPath === "" || nextCharInPath === "/") {
         return true;
