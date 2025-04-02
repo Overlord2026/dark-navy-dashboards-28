@@ -1,6 +1,6 @@
 
 import { NavItem } from "@/types/navigation";
-import { NavigationTestResult } from './types';
+import { NavigationDiagnosticResult } from '@/types/diagnostics';
 import { 
   homeNavItems,
   educationSolutionsNavItems,
@@ -8,15 +8,44 @@ import {
   collaborationNavItems,
   investmentCategories
 } from "@/components/navigation/NavigationConfig";
+import { 
+  runAllTabDiagnostics,
+  diagnoseDashboardTab, 
+  diagnoseCashManagementTab,
+  diagnoseTransfersTab,
+  diagnoseFundingAccountsTab,
+  diagnoseInvestmentsTab
+} from "./tabDiagnostics";
 
 /**
  * Tests whether a specific route is accessible
  */
-export const testRoute = async (route: string): Promise<NavigationTestResult> => {
+export const testRoute = async (route: string): Promise<NavigationDiagnosticResult> => {
   try {
     // In a real implementation, this would attempt to navigate to the route
     // and check for errors. For now, we'll simulate a successful test.
     console.log(`Testing route: ${route}`);
+    
+    // For specific routes, use the dedicated diagnostic functions
+    if (route === "/") {
+      return await diagnoseDashboardTab();
+    }
+    
+    if (route === "/cash-management") {
+      return await diagnoseCashManagementTab();
+    }
+    
+    if (route === "/transfers") {
+      return await diagnoseTransfersTab();
+    }
+    
+    if (route === "/funding-accounts") {
+      return await diagnoseFundingAccountsTab();
+    }
+    
+    if (route === "/investments") {
+      return await diagnoseInvestmentsTab();
+    }
     
     // Simulate some routes having issues
     if (route.includes('investment-builder')) {
@@ -52,8 +81,8 @@ export const testRoute = async (route: string): Promise<NavigationTestResult> =>
 /**
  * Tests all routes from a navigation item array
  */
-export const testNavItemRoutes = async (navItems: NavItem[]): Promise<NavigationTestResult[]> => {
-  const results: NavigationTestResult[] = [];
+export const testNavItemRoutes = async (navItems: NavItem[]): Promise<NavigationDiagnosticResult[]> => {
+  const results: NavigationDiagnosticResult[] = [];
   
   for (const item of navItems) {
     // Test the main item
@@ -73,14 +102,35 @@ export const testNavItemRoutes = async (navItems: NavItem[]): Promise<Navigation
 /**
  * Tests all navigation categories from the NavigationConfig
  */
-export const testAllNavigationRoutes = async (): Promise<Record<string, NavigationTestResult[]>> => {
-  return {
+export const testAllNavigationRoutes = async (): Promise<Record<string, NavigationDiagnosticResult[]>> => {
+  // Get tab-specific diagnostics
+  const tabResults = await runAllTabDiagnostics();
+  
+  // Get route-based diagnostics
+  const routeResults = {
     home: await testNavItemRoutes(homeNavItems),
     educationSolutions: await testNavItemRoutes(educationSolutionsNavItems),
     familyWealth: await testNavItemRoutes(familyWealthNavItems),
     collaboration: await testNavItemRoutes(collaborationNavItems),
     investments: await testNavItemRoutes(investmentCategories)
   };
+  
+  // Combine the results
+  // For any routes tested in both systems, prefer the tab-specific results
+  Object.entries(tabResults).forEach(([tabName, result]) => {
+    // Find which category contains this tab's route
+    for (const [category, routes] of Object.entries(routeResults)) {
+      const updatedRoutes = routes.map(route => {
+        if (route.route === result.route) {
+          return result;
+        }
+        return route;
+      });
+      routeResults[category as keyof typeof routeResults] = updatedRoutes;
+    }
+  });
+  
+  return routeResults;
 };
 
 /**
@@ -92,7 +142,7 @@ export const getNavigationDiagnosticsSummary = async (): Promise<{
   successCount: number;
   warningCount: number;
   errorCount: number;
-  results: Record<string, NavigationTestResult[]>;
+  results: Record<string, NavigationDiagnosticResult[]>;
 }> => {
   const results = await testAllNavigationRoutes();
   
