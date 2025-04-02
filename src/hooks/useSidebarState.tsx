@@ -66,6 +66,8 @@ export function useSidebarState(navigationCategories: NavCategory[]) {
           const itemHasActiveChild = hasActiveChild(item.submenu);
           
           if (itemHasActiveChild) {
+            console.log(`Auto-expanding submenu "${item.title}" because it has an active child`);
+            
             // Expand the submenu with the active child
             setExpandedSubmenus(prev => ({
               ...prev,
@@ -121,28 +123,35 @@ export function useSidebarState(navigationCategories: NavCategory[]) {
     }));
   };
 
+  // Fixed and more reliable submenu toggle implementation
   const toggleSubmenu = (itemTitle: string, e: React.MouseEvent) => {
     // Always prevent default behavior to stop navigation
     if (e) {
       e.preventDefault();
       e.stopPropagation();
     }
+
+    console.log(`[toggleSubmenu] Toggling submenu "${itemTitle}"`);
     
-    // Toggle the clicked submenu with a more reliable toggle pattern
-    setExpandedSubmenus(prev => {
-      const currentlyExpanded = !!prev[itemTitle];
-      console.log(`Toggling submenu "${itemTitle}" from ${currentlyExpanded} to ${!currentlyExpanded}`);
+    // Enhanced toggle implementation to ensure state updates properly
+    setExpandedSubmenus(prevState => {
+      const currentlyExpanded = !!prevState[itemTitle];
+      const newState = { ...prevState };
       
-      const newState = {
-        ...prev,
-        [itemTitle]: !currentlyExpanded
-      };
+      // Toggle the specific submenu
+      newState[itemTitle] = !currentlyExpanded;
+      
+      console.log(`[toggleSubmenu] "${itemTitle}" was ${currentlyExpanded ? "expanded" : "collapsed"}, now ${!currentlyExpanded ? "expanded" : "collapsed"}`);
+      console.log(`[toggleSubmenu] New expandedSubmenus state:`, newState);
       
       return newState;
     });
     
     // Force a rerender to ensure UI reflects current state
-    setForceUpdate(prev => prev + 1);
+    setTimeout(() => {
+      setForceUpdate(prev => prev + 1);
+      console.log(`[toggleSubmenu] Force update triggered after toggle`);
+    }, 0);
   };
 
   return {

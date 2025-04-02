@@ -84,6 +84,7 @@ export const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
                     )}
                     onClick={(e) => toggleSubmenu(item.title, e)}
                     data-submenu-trigger={item.title}
+                    data-item-title={item.title}
                   >
                     <div className="flex items-center">
                       <item.icon className={cn("h-5 w-5 flex-shrink-0", !collapsed && "mr-3")} />
@@ -119,11 +120,13 @@ export const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
                   </Link>
                 )}
                 
-                {/* Render submenu if expanded */}
+                {/* Render submenu if expanded with improved visibility */}
                 {!collapsed && hasSubmenu && submenuIsExpanded && (
                   <div 
-                    className="ml-8 mt-1 space-y-1 z-10 bg-inherit"
+                    className="ml-8 mt-1 space-y-1 z-20 bg-inherit"
                     data-submenu-content={item.title}
+                    data-expanded="true"
+                    style={{ display: 'block' }} /* Explicit display property */
                   >
                     {item.submenu?.map((subItem) => (
                       <Link
