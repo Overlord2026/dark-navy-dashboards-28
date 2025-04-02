@@ -114,7 +114,7 @@ const navigationCategories: NavCategory[] = [
       { id: "accounts", label: "Accounts Overview", icon: WalletIcon, href: "/accounts" },
       { id: "insurance", label: "Insurance & Annuities", icon: ShieldIcon, href: "/insurance" },
       { id: "cash-management", label: "Banking", icon: BanknoteIcon, href: "/cash-management" },
-      { id: "legacy-vault", label: "Legacy Vault", icon: VaultIcon, href: "/legacy-vault" },
+      { id: "legacy-vault", label: "Secure Family Vault", icon: VaultIcon, href: "/legacy-vault" },
       { id: "social-security", label: "Social Security", icon: CircleDollarSignIcon, href: "/social-security" },
       { id: "properties", label: "Real Estate & Properties", icon: BuildingIcon, href: "/properties" },
     ]

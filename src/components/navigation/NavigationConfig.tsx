@@ -115,7 +115,7 @@ export const familyWealthNavItems = [
     icon: ScrollTextIcon
   },
   {
-    title: "Legacy Vault",
+    title: "Secure Family Vault",
     href: "/legacy-vault",
     icon: KeyIcon
   },

@@ -1,4 +1,3 @@
-
 import { 
   HomeIcon, 
   GraduationCapIcon,
@@ -100,7 +99,7 @@ export const familyWealthNavItems: NavItem[] = [
     ]
   },
   { 
-    title: "Legacy Vault", 
+    title: "Secure Family Vault", 
     href: "/legacy-vault", 
     icon: VaultIcon 
   },
@@ -178,7 +177,7 @@ export const investmentCategories: NavItem[] = [
   },
   {
     title: "Stock Screener",
-    href: "/investments?tab=stock-screener",
+    href: "/investments/stock-screener",
     icon: SearchIcon
   }
 ];
