@@ -1,11 +1,12 @@
 
 import { ReactNode } from "react";
 import { PieChart } from "lucide-react";
+import { LucideIcon } from "lucide-react";
 
 interface NavigationItem {
   label: string;
   href?: string;
-  icon?: ReactNode;
+  icon?: LucideIcon;  // Changed from ReactNode to LucideIcon
   children?: NavigationItem[];
 }
 
