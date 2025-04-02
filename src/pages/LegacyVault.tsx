@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { CategoryList } from "@/components/documents/CategoryList";
@@ -180,7 +181,7 @@ export default function LegacyVault() {
           </div>
 
           <Button
-            onClick={handleExternalLink}
+            onClick={() => window.open('https://trustandwill.com', '_blank')}
             variant="outline"
             className="flex items-center mt-4 md:mt-0 bg-white border-primary text-primary hover:bg-primary hover:text-white transition-colors"
           >

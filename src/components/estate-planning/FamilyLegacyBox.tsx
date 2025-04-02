@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { 
   Card, 
@@ -643,14 +644,24 @@ export const FamilyLegacyBox = () => {
           <CardContent className="space-y-6">
             <div>
               <h4 className="font-medium mb-2">DIY Estate Planning</h4>
-              <Button 
-                variant="outline" 
-                className="w-full flex items-center justify-between"
-                onClick={() => window.open('https://trustandwill.com', '_blank')}
-              >
-                <span>Trust and Will</span>
-                <ExternalLink className="h-4 w-4" />
-              </Button>
+              <div className="space-y-2">
+                <Button 
+                  variant="outline" 
+                  className="w-full flex items-center justify-between"
+                  onClick={() => window.open('https://trustandwill.com', '_blank')}
+                >
+                  <span>Trust and Will</span>
+                  <ExternalLink className="h-4 w-4" />
+                </Button>
+                <Button 
+                  variant="outline" 
+                  className="w-full flex items-center justify-between"
+                  onClick={() => window.open('https://wealth.com', '_blank')}
+                >
+                  <span>Wealth.com</span>
+                  <ExternalLink className="h-4 w-4" />
+                </Button>
+              </div>
             </div>
             
             <div>
