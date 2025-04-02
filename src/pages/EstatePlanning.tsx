@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { FamilyLegacyBox } from "@/components/estate-planning/FamilyLegacyBox";
+import { SecureTaxReturnAnalysis } from "@/components/estate-planning/SecureTaxReturnAnalysis";
 
 export default function EstatePlanning() {
   const [showInterestDialog, setShowInterestDialog] = useState(false);
@@ -203,6 +204,9 @@ export default function EstatePlanning() {
             </TabsList>
 
             <TabsContent value="services" className="space-y-6">
+              {/* Add the Secure Tax Return Analysis component at the top of the Services tab */}
+              <SecureTaxReturnAnalysis />
+              
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {services.map((service) => (
                   <Card key={service.title} className="h-full">
