@@ -1,6 +1,8 @@
 
 import React from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
+import { Button } from "@/components/ui/button";
+import { PlusCircle, ListFilter, CreditCard } from "lucide-react";
 
 export default function BillPaying() {
   return (
@@ -11,6 +13,21 @@ export default function BillPaying() {
           <p className="text-muted-foreground mb-6">
             Manage, schedule, and track all your bill payments in one place. Our bill paying service helps you stay organized and never miss a payment.
           </p>
+
+          <div className="flex flex-wrap gap-4 mb-8">
+            <Button className="flex items-center gap-2">
+              <PlusCircle className="w-4 h-4" />
+              Create New Bill
+            </Button>
+            <Button variant="outline" className="flex items-center gap-2">
+              <ListFilter className="w-4 h-4" />
+              View All Bills
+            </Button>
+            <Button variant="secondary" className="flex items-center gap-2">
+              <CreditCard className="w-4 h-4" />
+              Manage Payment Methods
+            </Button>
+          </div>
           
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             <div className="bg-background p-4 rounded-md border border-border">
