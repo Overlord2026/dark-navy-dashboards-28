@@ -1,6 +1,6 @@
 
 import { DocumentItem, DocumentType } from "@/types/document";
-import { File, FileText, FileImage, FileSpreadsheet, Edit, Trash2, Share2 } from "lucide-react";
+import { File, FileText, FileImage, FileSpreadsheet, Folder, Edit, Trash2, Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface DocumentsTableProps {
@@ -18,6 +18,8 @@ export const DocumentsTable = ({
 }: DocumentsTableProps) => {
   const getDocumentIcon = (type: DocumentType) => {
     switch (type) {
+      case "folder":
+        return <Folder className="h-5 w-5 text-yellow-400" />;
       case "pdf":
         return <File className="h-5 w-5 text-red-400" />;
       case "image":
@@ -27,6 +29,16 @@ export const DocumentsTable = ({
       default:
         return <FileText className="h-5 w-5 text-gray-400" />;
     }
+  };
+
+  const formatFileSize = (size: string | number | undefined) => {
+    if (!size) return "";
+    
+    if (typeof size === "string") return size;
+    
+    // Convert bytes to MB with 2 decimal places
+    const sizeInMB = (size / (1024 * 1024)).toFixed(2);
+    return `${sizeInMB} MB`;
   };
 
   return (
@@ -42,7 +54,7 @@ export const DocumentsTable = ({
                 {getDocumentIcon(document.type)}
                 {document.name}
               </div>
-              <div>{document.created}</div>
+              <div>{new Date(document.created).toLocaleDateString()}</div>
               <div className="capitalize">{document.type}</div>
               <div className="flex items-center justify-end gap-2">
                 {onEditDocument && (

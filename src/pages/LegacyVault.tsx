@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { CategoryList } from "@/components/documents/CategoryList";
@@ -12,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { FolderPlus, Upload, ExternalLink, VaultIcon, ArchiveIcon } from "lucide-react";
 import { documentCategories } from "@/data/documentCategories";
 import { toast } from "sonner";
-import { DocumentType } from "@/types/document";
+import { DocumentType, DocumentItem, DocumentCategory } from "@/types/document";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { FamilyLegacyBox } from "@/components/estate-planning/FamilyLegacyBox";
 import { 
@@ -22,28 +23,6 @@ import {
   CardHeader, 
   CardTitle 
 } from "@/components/ui/card";
-
-interface DocumentItem {
-  id: string;
-  name: string;
-  type: 'folder' | 'document' | DocumentType;
-  category: string;
-  size?: number;
-  uploadedBy?: string;
-  created: string;
-  modified?: string;
-  accessed?: string;
-  description?: string;
-  shared?: boolean;
-  favorited?: boolean;
-}
-
-interface DocumentCategory {
-  id: string;
-  name: string;
-  icon?: React.ReactNode;
-  count?: number;
-}
 
 const importantDocumentCategories = documentCategories.filter(cat => 
   ["documents-to-sign", "bfo-records", "alternative-investments", 
@@ -188,6 +167,10 @@ export default function LegacyVault() {
     toast.success("Document deleted successfully");
   };
 
+  const handleExternalLink = () => {
+    window.open("https://www.trustandwill.com", "_blank");
+  };
+
   return (
     <ThreeColumnLayout activeMainItem="legacy-vault" title="Secure Family Vault">
       <div className="container mx-auto p-4 space-y-6">
@@ -196,6 +179,15 @@ export default function LegacyVault() {
             <h1 className="text-2xl font-bold mb-1">Secure Family Vault</h1>
             <p className="text-muted-foreground">Store and organize your important documents securely</p>
           </div>
+
+          <Button
+            onClick={handleExternalLink}
+            variant="outline"
+            className="flex items-center mt-4 md:mt-0 bg-white border-primary text-primary hover:bg-primary hover:text-white transition-colors"
+          >
+            <ExternalLink className="mr-2 h-4 w-4" />
+            DIY with Trust & Will
+          </Button>
         </div>
         
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
@@ -246,7 +238,7 @@ export default function LegacyVault() {
                   </div>
                 ) : filteredDocuments.length > 0 ? (
                   <DocumentsTable 
-                    documents={filteredDocuments as any}
+                    documents={filteredDocuments}
                     onEditDocument={handleEditDocument}
                     onShareDocument={handleShareDocument}
                     onDeleteDocument={handleDeleteDialog}

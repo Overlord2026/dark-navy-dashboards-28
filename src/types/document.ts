@@ -1,13 +1,19 @@
 
-export type DocumentType = "pdf" | "image" | "spreadsheet" | "document";
+export type DocumentType = "pdf" | "image" | "spreadsheet" | "document" | "folder";
 
 export interface DocumentItem {
   id: string;
   name: string;
   created: string;
   type: DocumentType;
-  size: string;
+  size?: number | string;
   category: string;
+  uploadedBy?: string;
+  modified?: string;
+  accessed?: string;
+  description?: string;
+  shared?: boolean;
+  favorited?: boolean;
 }
 
 export interface DocumentCategory {
