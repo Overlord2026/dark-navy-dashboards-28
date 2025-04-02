@@ -93,7 +93,7 @@ export const familyWealthNavItems: NavItem[] = [
   },
   { 
     title: "Banking", 
-    href: "#", // Ensuring this is set to "#" to prevent navigation and enable submenu toggle
+    href: "#", // Using "#" to prevent navigation and enable submenu toggle
     icon: BanknoteIcon,
     submenu: [
       {
@@ -154,7 +154,7 @@ export const collaborationNavItems: NavItem[] = [
   }
 ];
 
-// Bottom navigation items (unchanged)
+// Bottom navigation items
 export const bottomNavItems: NavItem[] = [
   { 
     title: "Help", 
@@ -168,7 +168,7 @@ export const bottomNavItems: NavItem[] = [
   }
 ];
 
-// INVESTMENTS categories (updated for Private Market Alpha and Stock Screener)
+// INVESTMENTS categories
 export const investmentCategories: NavItem[] = [
   {
     title: "Private Equity",

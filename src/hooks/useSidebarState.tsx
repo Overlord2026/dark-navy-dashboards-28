@@ -16,6 +16,42 @@ export function useSidebarState(navigationCategories: NavCategory[]) {
   const [expandedSubmenus, setExpandedSubmenus] = useState<Record<string, boolean>>({});
   const [forceUpdate, setForceUpdate] = useState(0);
   
+  // Determine if a link is active
+  const isActive = (href: string) => {
+    // Special case for "#" links (parent menu items)
+    if (href === "#") {
+      return false;
+    }
+    
+    // Check for exact match first (highest priority)
+    if (location.pathname === href) {
+      return true;
+    }
+    
+    // For non-root links, check if the current path starts with the href
+    if (href !== "/" && href !== "#" && location.pathname.startsWith(href)) {
+      // Make sure we're not getting false positives
+      // For example, /insurance shouldn't match /insurance-claims
+      const nextCharInPath = location.pathname.charAt(href.length);
+      if (nextCharInPath === "" || nextCharInPath === "/") {
+        return true;
+      }
+    }
+    
+    return false;
+  };
+  
+  /**
+   * Checks if a parent menu with submenu has any active child
+   */
+  const hasActiveChild = (submenuItems: any[]) => {
+    if (!submenuItems || submenuItems.length === 0) {
+      return false;
+    }
+    
+    return submenuItems.some(subItem => isActive(subItem.href));
+  };
+  
   // Auto-expand submenu when a child route is active
   useEffect(() => {
     const currentPath = location.pathname;
@@ -26,11 +62,9 @@ export function useSidebarState(navigationCategories: NavCategory[]) {
       category.items.forEach(item => {
         if (item.submenu) {
           // Check if any submenu items match the current path
-          const hasActiveChild = item.submenu.some(subItem => {
-            return isActive(subItem.href);
-          });
+          const itemHasActiveChild = hasActiveChild(item.submenu);
           
-          if (hasActiveChild) {
+          if (itemHasActiveChild) {
             // Expand the submenu with the active child
             setExpandedSubmenus(prev => ({
               ...prev,
@@ -96,41 +130,6 @@ export function useSidebarState(navigationCategories: NavCategory[]) {
       ...prev,
       [itemTitle]: !prev[itemTitle]
     }));
-  };
-
-  const isActive = (href: string) => {
-    // Special case for "#" links (parent menu items)
-    if (href === "#") {
-      return false;
-    }
-    
-    // Check for exact match first (highest priority)
-    if (location.pathname === href) {
-      return true;
-    }
-    
-    // For non-root links, check if the current path starts with the href
-    if (href !== "/" && href !== "#" && location.pathname.startsWith(href)) {
-      // Make sure we're not getting false positives
-      // For example, /insurance shouldn't match /insurance-claims
-      const nextCharInPath = location.pathname.charAt(href.length);
-      if (nextCharInPath === "" || nextCharInPath === "/") {
-        return true;
-      }
-    }
-    
-    return false;
-  };
-
-  /**
-   * Checks if a parent menu with submenu has any active child
-   */
-  const hasActiveChild = (submenuItems: any[]) => {
-    if (!submenuItems || submenuItems.length === 0) {
-      return false;
-    }
-    
-    return submenuItems.some(subItem => isActive(subItem.href));
   };
 
   return {

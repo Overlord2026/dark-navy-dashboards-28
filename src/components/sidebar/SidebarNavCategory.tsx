@@ -69,7 +69,7 @@ export const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
             return (
               <div key={item.title} className="group">
                 <Link
-                  to={hasSubmenu ? "#" : item.href}
+                  to={item.href}
                   className={cn(
                     "group flex items-center rounded-md py-2 px-3 text-sm transition-colors border whitespace-nowrap",
                     itemIsActive
