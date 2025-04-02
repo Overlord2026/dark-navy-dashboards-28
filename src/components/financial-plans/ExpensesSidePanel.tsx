@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -44,7 +43,7 @@ export const ExpensesSidePanel = ({ isOpen, onClose, expense, onSave }: Expenses
       type: "Healthcare",
       period: "Before Retirement",
       amount: 0,
-      owner: "Antonio Gomez",
+      owner: "Tom Brady",
     }
   );
 
@@ -60,7 +59,7 @@ export const ExpensesSidePanel = ({ isOpen, onClose, expense, onSave }: Expenses
         type: "Healthcare",
         period: "Before Retirement",
         amount: 0,
-        owner: "Antonio Gomez",
+        owner: "Tom Brady",
       });
     }
   }, [expense, isOpen]);
@@ -182,7 +181,7 @@ export const ExpensesSidePanel = ({ isOpen, onClose, expense, onSave }: Expenses
                       <SelectValue placeholder="Select owner" />
                     </SelectTrigger>
                     <SelectContent className="bg-[#0A1022] border-blue-900/30">
-                      <SelectItem value="Antonio Gomez">Antonio Gomez</SelectItem>
+                      <SelectItem value="Tom Brady">Tom Brady</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>

@@ -37,7 +37,7 @@ export const NetWorthProvider: React.FC<{ children: ReactNode }> = ({ children }
       name: 'Checking Account',
       type: 'cash',
       value: 25000,
-      owner: 'Antonio Gomez',
+      owner: 'Tom Brady',
       lastUpdated: new Date().toISOString().split('T')[0]
     },
     {
@@ -45,7 +45,7 @@ export const NetWorthProvider: React.FC<{ children: ReactNode }> = ({ children }
       name: 'Stock Portfolio',
       type: 'investment',
       value: 350000,
-      owner: 'Antonio Gomez',
+      owner: 'Tom Brady',
       lastUpdated: new Date().toISOString().split('T')[0]
     },
     {
@@ -53,7 +53,7 @@ export const NetWorthProvider: React.FC<{ children: ReactNode }> = ({ children }
       name: '401(k)',
       type: 'retirement',
       value: 420000,
-      owner: 'Antonio Gomez',
+      owner: 'Tom Brady',
       lastUpdated: new Date().toISOString().split('T')[0]
     }
   ]);

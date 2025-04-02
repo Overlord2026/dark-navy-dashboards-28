@@ -107,7 +107,7 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
       return;
     }
     
-    const owner = "Antonio Gomez";
+    const owner = "Tom Brady";
     const newGoal: Goal = {
       id: `temp-goal-${Date.now()}`,
       title: goalType,
