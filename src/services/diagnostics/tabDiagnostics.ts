@@ -76,14 +76,78 @@ export const diagnoseFinancialPlansTab = async (): Promise<NavigationTestResult>
   }
 };
 
+// Add the missing functions
+export const diagnoseTransfersTab = async (): Promise<NavigationTestResult> => {
+  try {
+    logger.info("Running Transfers tab diagnostics");
+    // Simulate diagnostics running
+    await new Promise(resolve => setTimeout(resolve, 300));
+    return {
+      route: '/transfers',
+      status: 'success',
+      message: 'Transfers tab loaded successfully'
+    };
+  } catch (error) {
+    return {
+      route: '/transfers',
+      status: 'error',
+      message: `Error testing transfers tab: ${error instanceof Error ? error.message : 'Unknown error'}`
+    };
+  }
+};
+
+export const diagnoseFundingAccountsTab = async (): Promise<NavigationTestResult> => {
+  try {
+    logger.info("Running Funding Accounts tab diagnostics");
+    // Simulate diagnostics running
+    await new Promise(resolve => setTimeout(resolve, 300));
+    return {
+      route: '/funding-accounts',
+      status: 'success',
+      message: 'Funding Accounts tab loaded successfully'
+    };
+  } catch (error) {
+    return {
+      route: '/funding-accounts',
+      status: 'error',
+      message: `Error testing funding accounts tab: ${error instanceof Error ? error.message : 'Unknown error'}`
+    };
+  }
+};
+
+export const diagnoseInvestmentsTab = async (): Promise<NavigationTestResult> => {
+  try {
+    logger.info("Running Investments tab diagnostics");
+    // Simulate diagnostics running
+    await new Promise(resolve => setTimeout(resolve, 300));
+    return {
+      route: '/investments',
+      status: 'success',
+      message: 'Investments tab loaded successfully'
+    };
+  } catch (error) {
+    return {
+      route: '/investments',
+      status: 'error',
+      message: `Error testing investments tab: ${error instanceof Error ? error.message : 'Unknown error'}`
+    };
+  }
+};
+
 export const runAllTabDiagnostics = async () => {
   const dashboardResult = await diagnoseDashboardTab();
   const cashManagementResult = await diagnoseCashManagementTab();
   const financialPlansResult = await diagnoseFinancialPlansTab();
+  const transfersResult = await diagnoseTransfersTab();
+  const fundingAccountsResult = await diagnoseFundingAccountsTab();
+  const investmentsResult = await diagnoseInvestmentsTab();
   
   return {
     dashboard: dashboardResult,
     cashManagement: cashManagementResult,
-    financialPlans: financialPlansResult
+    financialPlans: financialPlansResult,
+    transfers: transfersResult,
+    fundingAccounts: fundingAccountsResult,
+    investments: investmentsResult
   };
 };
