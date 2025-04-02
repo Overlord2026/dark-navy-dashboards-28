@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { NavCategory } from "@/types/navigation";
 import { useLocation } from "react-router-dom";
 
-export const useSidebarState = (navigationCategories: NavCategory[]) => {
+export function useSidebarState(navigationCategories: NavCategory[]) {
   const location = useLocation();
   
   const [collapsed, setCollapsed] = useState(false);
@@ -90,4 +90,4 @@ export const useSidebarState = (navigationCategories: NavCategory[]) => {
     isActive,
     setCollapsed
   };
-};
+}

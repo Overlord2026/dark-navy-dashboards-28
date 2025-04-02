@@ -28,7 +28,7 @@ interface NetWorthContextType {
 // Create context
 const NetWorthContext = createContext<NetWorthContextType | undefined>(undefined);
 
-export const NetWorthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export function NetWorthProvider({ children }: { children: ReactNode }) {
   console.log('NetWorthProvider rendering');
   
   const [assets, setAssets] = useState<Asset[]>([
@@ -133,9 +133,9 @@ export const NetWorthProvider: React.FC<{ children: ReactNode }> = ({ children }
       {children}
     </NetWorthContext.Provider>
   );
-};
+}
 
-export const useNetWorth = () => {
+export function useNetWorth() {
   const context = useContext(NetWorthContext);
   
   if (context === undefined) {
@@ -144,4 +144,4 @@ export const useNetWorth = () => {
   }
   
   return context;
-};
+}
