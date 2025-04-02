@@ -259,6 +259,11 @@ export const FamilyLegacyBox = () => {
     setOpenShareDialog(true);
   };
 
+  // Calculate completion percentage
+  const completedItems = checklist.filter(item => item.completed).length;
+  const totalItems = checklist.length;
+  const completionPercentage = (completedItems / totalItems) * 100;
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col lg:flex-row gap-6 items-start">
@@ -527,38 +532,22 @@ export const FamilyLegacyBox = () => {
       
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">Document Completion Progress</CardTitle>
+          <CardTitle className="text-lg">Completion Progress</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {checklist.map((item) => (
-              <div key={item.id} className="flex items-center gap-3">
-                {item.completed ? (
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                ) : (
-                  <Circle className="h-5 w-5 text-muted-foreground" />
-                )}
-                <span className={item.completed ? "line-through text-muted-foreground" : ""}>
-                  {item.title}
-                </span>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-        <CardFooter>
           <div className="w-full">
-            <div className="flex justify-between text-sm mb-1">
+            <div className="flex justify-between text-sm mb-2">
               <span>Completion Status</span>
-              <span>{checklist.filter(item => item.completed).length} of {checklist.length} completed</span>
+              <span>{completedItems} of {totalItems} completed</span>
             </div>
             <div className="w-full bg-muted h-2 rounded-full overflow-hidden">
               <div 
                 className="bg-green-500 h-full rounded-full transition-all duration-300 ease-in-out" 
-                style={{ width: `${(checklist.filter(item => item.completed).length / checklist.length) * 100}%` }}
+                style={{ width: `${completionPercentage}%` }}
               ></div>
             </div>
           </div>
-        </CardFooter>
+        </CardContent>
       </Card>
       
       {/* Upload Document Dialog */}
