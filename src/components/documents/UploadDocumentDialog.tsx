@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FileUpload } from "@/components/ui/file-upload";
-import { Upload } from "lucide-react";
+import { Upload, File, FileTextIcon, FileImage, Table } from "lucide-react";
 
 export interface UploadDocumentDialogProps {
   open: boolean;
@@ -53,11 +53,24 @@ export function UploadDocumentDialog({
 
   const activeCategoryName = documentCategories?.find(cat => cat.id === activeCategory)?.name;
 
+  // Get appropriate icon based on file type
+  const getFileIcon = (file: File) => {
+    const type = file.type;
+    if (type.includes('pdf')) {
+      return <FileTextIcon className="h-10 w-10 text-red-500" />;
+    } else if (type.includes('image')) {
+      return <FileImage className="h-10 w-10 text-blue-500" />;
+    } else if (type.includes('spreadsheet') || type.includes('excel') || type.includes('csv')) {
+      return <Table className="h-10 w-10 text-green-500" />;
+    }
+    return <File className="h-10 w-10 text-gray-500" />;
+  };
+
   return (
     <Dialog open={open} onOpenChange={handleDialogChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Upload document</DialogTitle>
+          <DialogTitle className="text-xl">Upload document</DialogTitle>
           <DialogDescription>
             {activeCategory 
               ? `Upload a document to ${activeCategoryName}.`
@@ -66,23 +79,39 @@ export function UploadDocumentDialog({
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
-            <Label htmlFor="file">File</Label>
+            <Label htmlFor="file" className="text-sm font-medium">File</Label>
             <FileUpload
               onFileChange={handleFileChange}
               accept="application/pdf,image/*,.doc,.docx,.xls,.xlsx,.txt"
               className="w-full"
             />
           </div>
+          
           {selectedFile && (
-            <div className="grid gap-2">
-              <Label htmlFor="name">Document Name</Label>
-              <Input
-                id="name"
-                value={customName}
-                onChange={(e) => setCustomName(e.target.value)}
-                placeholder="Enter a custom name for this document"
-              />
-            </div>
+            <>
+              <div className="flex items-center justify-center p-4 bg-slate-50 dark:bg-slate-800 rounded-md">
+                <div className="flex flex-col items-center gap-2">
+                  {getFileIcon(selectedFile)}
+                  <span className="text-sm text-gray-600 dark:text-gray-300 truncate max-w-[200px]">
+                    {selectedFile.name}
+                  </span>
+                  <span className="text-xs text-gray-500">
+                    {(selectedFile.size / (1024 * 1024)).toFixed(2)} MB
+                  </span>
+                </div>
+              </div>
+
+              <div className="grid gap-2">
+                <Label htmlFor="name" className="text-sm font-medium">Document Name</Label>
+                <Input
+                  id="name"
+                  value={customName}
+                  onChange={(e) => setCustomName(e.target.value)}
+                  placeholder="Enter a custom name for this document"
+                  className="border-gray-300"
+                />
+              </div>
+            </>
           )}
         </div>
         <DialogFooter className="flex justify-between">
@@ -92,8 +121,9 @@ export function UploadDocumentDialog({
           <Button 
             onClick={handleSubmit} 
             disabled={!selectedFile || !activeCategory}
-            className="bg-[#1B1B32] hover:bg-[#2D2D4A] text-white"
+            variant="vault"
           >
+            <Upload className="h-4 w-4 mr-1" />
             Upload
           </Button>
         </DialogFooter>

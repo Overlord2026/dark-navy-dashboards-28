@@ -1,5 +1,5 @@
 
-export type DocumentType = "pdf" | "image" | "spreadsheet" | "document" | "folder";
+export type DocumentType = "pdf" | "image" | "spreadsheet" | "document" | "folder" | "legal" | "medical" | "financial" | "property";
 
 export interface DocumentItem {
   id: string;
@@ -21,4 +21,6 @@ export interface DocumentItem {
 export interface DocumentCategory {
   id: string;
   name: string;
+  icon?: string;
+  description?: string;
 }

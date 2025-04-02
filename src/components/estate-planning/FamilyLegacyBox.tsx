@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { 
   Card, 
@@ -256,10 +255,8 @@ export const FamilyLegacyBox = () => {
   const generateShareLink = () => {
     if (!selectedDocument || !selectedCategory) return;
     
-    // Generate a unique shareable link (in a real app, this would be a secure token)
     const link = `https://secure-legacy-vault.example.com/share/${selectedCategory.id}/${selectedDocument.id}/${Math.random().toString(36).substring(2, 15)}`;
     
-    // Update document with share link
     setChecklist(prev => prev.map(item => 
       item.id === selectedCategory.id 
         ? { 
@@ -281,7 +278,6 @@ export const FamilyLegacyBox = () => {
   const copyLinkToClipboard = async () => {
     let link = shareLink;
     
-    // If no share link exists yet, generate one
     if (!link) {
       link = generateShareLink() || "";
     }
@@ -291,7 +287,6 @@ export const FamilyLegacyBox = () => {
       setCopySuccess(true);
       toast.success("Link copied to clipboard");
       
-      // Reset copy success after 2 seconds
       setTimeout(() => setCopySuccess(false), 2000);
     } catch (err) {
       toast.error("Failed to copy link");
@@ -307,7 +302,6 @@ export const FamilyLegacyBox = () => {
     setSelectedCategory(category);
     setSelectedDocument(document);
     setShareEmail("");
-    // If document has a share link, set it
     setShareLink(document.shareLink || "");
     setOpenShareDialog(true);
   };
@@ -326,7 +320,7 @@ export const FamilyLegacyBox = () => {
     <div className="space-y-6">
       <div className="flex flex-col lg:flex-row gap-6 items-start">
         <div className="w-full lg:w-3/4">
-          <Card className="h-full">
+          <Card className="h-full shadow-md border-gray-200">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -335,7 +329,8 @@ export const FamilyLegacyBox = () => {
                 </div>
                 <div className="flex gap-2">
                   <Button 
-                    className="flex items-center gap-2 bg-primary text-white" 
+                    className="flex items-center gap-2" 
+                    variant="vault"
                     onClick={() => window.open('/legacy-vault', '_blank')}
                   >
                     <Lock className="h-4 w-4" />
