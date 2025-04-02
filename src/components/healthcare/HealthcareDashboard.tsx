@@ -33,7 +33,7 @@ interface Medication {
   name: string;
   dosage: string;
   frequency: string;
-  nextRefill: Date;
+  nextRefill: string; // Changed from Date to string for consistency
   doctor: string;
   pharmacy: string;
 }
@@ -54,7 +54,7 @@ interface HealthcareAppointment {
   title: string;
   doctor: string;
   location: string;
-  date: Date;
+  date: string; // Changed from Date to string for consistency
   time: string;
   notes?: string;
 }
@@ -112,7 +112,7 @@ export function HealthcareDashboard({ documents }: HealthcareDashboardProps) {
           name: "Lisinopril", 
           dosage: "20mg", 
           frequency: "Once daily", 
-          nextRefill: new Date(new Date().setDate(new Date().getDate() + 7)),
+          nextRefill: new Date(new Date().setDate(new Date().getDate() + 7)).toISOString(),
           doctor: "Dr. Smith",
           pharmacy: "CVS Pharmacy"
         },
@@ -121,7 +121,7 @@ export function HealthcareDashboard({ documents }: HealthcareDashboardProps) {
           name: "Metformin", 
           dosage: "500mg", 
           frequency: "Twice daily", 
-          nextRefill: new Date(new Date().setDate(new Date().getDate() + 14)),
+          nextRefill: new Date(new Date().setDate(new Date().getDate() + 14)).toISOString(),
           doctor: "Dr. Johnson",
           pharmacy: "Walgreens"
         },
@@ -130,7 +130,7 @@ export function HealthcareDashboard({ documents }: HealthcareDashboardProps) {
           name: "Atorvastatin", 
           dosage: "10mg", 
           frequency: "Once daily", 
-          nextRefill: new Date(new Date().setDate(new Date().getDate() + 3)),
+          nextRefill: new Date(new Date().setDate(new Date().getDate() + 3)).toISOString(),
           doctor: "Dr. Smith",
           pharmacy: "CVS Pharmacy"
         }
@@ -177,7 +177,7 @@ export function HealthcareDashboard({ documents }: HealthcareDashboardProps) {
           title: "Annual Physical",
           doctor: "Dr. Sarah Smith",
           location: "City Medical Group",
-          date: new Date(new Date().setDate(new Date().getDate() + 14)),
+          date: new Date(new Date().setDate(new Date().getDate() + 14)).toISOString(),
           time: "10:00 AM",
           notes: "Fasting required"
         },
@@ -186,7 +186,7 @@ export function HealthcareDashboard({ documents }: HealthcareDashboardProps) {
           title: "Cardiology Follow-up",
           doctor: "Dr. James Johnson",
           location: "Heart Specialists",
-          date: new Date(new Date().setDate(new Date().getDate() + 7)),
+          date: new Date(new Date().setDate(new Date().getDate() + 7)).toISOString(),
           time: "2:30 PM",
           notes: "Bring medication list"
         },
@@ -195,7 +195,7 @@ export function HealthcareDashboard({ documents }: HealthcareDashboardProps) {
           title: "Lab Work",
           doctor: "Metro Health Partners",
           location: "Metro Health Lab",
-          date: new Date(new Date().setDate(new Date().getDate() + 3)),
+          date: new Date(new Date().setDate(new Date().getDate() + 3)).toISOString(),
           time: "8:15 AM",
           notes: "Fasting required"
         }
@@ -221,8 +221,8 @@ export function HealthcareDashboard({ documents }: HealthcareDashboardProps) {
     .sort((a, b) => new Date(a.renewalDate).getTime() - new Date(b.renewalDate).getTime());
   
   const upcomingRefills = medications
-    .filter(med => med.nextRefill > new Date())
-    .sort((a, b) => a.nextRefill.getTime() - b.nextRefill.getTime());
+    .filter(med => new Date(med.nextRefill) > new Date())
+    .sort((a, b) => new Date(a.nextRefill).getTime() - new Date(b.nextRefill).getTime());
   
   // Calculate days to show urgency
   const getDaysFromNow = (date: Date | string): number => {
@@ -335,7 +335,7 @@ export function HealthcareDashboard({ documents }: HealthcareDashboardProps) {
                       <div className="mt-2 text-xs">
                         <div className="flex items-center justify-between">
                           <span className="text-muted-foreground">Next refill:</span>
-                          <span>{medication.nextRefill.toLocaleDateString()}</span>
+                          <span>{new Date(medication.nextRefill).toLocaleDateString()}</span>
                         </div>
                         <div className="flex items-center justify-between mt-1">
                           <span className="text-muted-foreground">Prescribed by:</span>
@@ -379,8 +379,8 @@ export function HealthcareDashboard({ documents }: HealthcareDashboardProps) {
                     {upcomingAppointments.slice(0, 3).map(appointment => (
                       <div key={appointment.id} className="flex items-center gap-3 p-3 border rounded-lg">
                         <div className="bg-accent rounded-md w-12 h-12 flex flex-col items-center justify-center flex-shrink-0">
-                          <span className="text-xs font-medium">{format(appointment.date, 'MMM')}</span>
-                          <span className="text-lg font-bold">{format(appointment.date, 'd')}</span>
+                          <span className="text-xs font-medium">{format(new Date(appointment.date), 'MMM')}</span>
+                          <span className="text-lg font-bold">{format(new Date(appointment.date), 'd')}</span>
                         </div>
                         
                         <div className="flex-1 min-w-0">
@@ -448,8 +448,8 @@ export function HealthcareDashboard({ documents }: HealthcareDashboardProps) {
                     {upcomingRefills.slice(0, 3).map(medication => (
                       <div key={medication.id} className="flex items-center gap-3 p-3 border rounded-lg">
                         <div className="bg-accent rounded-md w-12 h-12 flex flex-col items-center justify-center flex-shrink-0">
-                          <span className="text-xs font-medium">{format(medication.nextRefill, 'MMM')}</span>
-                          <span className="text-lg font-bold">{format(medication.nextRefill, 'd')}</span>
+                          <span className="text-xs font-medium">{format(new Date(medication.nextRefill), 'MMM')}</span>
+                          <span className="text-lg font-bold">{format(new Date(medication.nextRefill), 'd')}</span>
                         </div>
                         
                         <div className="flex-1 min-w-0">
@@ -592,4 +592,3 @@ export function HealthcareDashboard({ documents }: HealthcareDashboardProps) {
     </div>
   );
 }
-
