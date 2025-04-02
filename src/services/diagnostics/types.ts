@@ -80,4 +80,5 @@ export interface SecurityTestResult {
 
 export type AuditEventType = 'login' | 'logout' | 'document_access' | 'document_modification' | 
   'password_change' | 'profile_update' | 'settings_change' | 'permission_change' | 
-  'system_change' | 'diagnostics_access' | 'api_access' | 'mfa_enabled';
+  'system_change' | 'diagnostics_access' | 'api_access' | 'mfa_enabled' |
+  'prescription_add' | 'prescription_update' | 'prescription_delete';

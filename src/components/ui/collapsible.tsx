@@ -33,7 +33,9 @@ const CollapsibleContent = React.forwardRef<
     )}
     {...props}
   >
-    {children}
+    <div className="animate-in fade-in-50">
+      {children}
+    </div>
   </CollapsiblePrimitive.CollapsibleContent>
 ))
 CollapsibleContent.displayName = "CollapsibleContent"
