@@ -1,3 +1,4 @@
+
 import { 
   HomeIcon, 
   GraduationCapIcon,
@@ -50,7 +51,7 @@ export const educationSolutionsNavItems: NavItem[] = [
     icon: BarChart3Icon 
   },
   { 
-    title: "Proactive Tax Planning", 
+    title: "Tax Planning", 
     href: "/education/tax-planning", 
     icon: PieChart 
   },

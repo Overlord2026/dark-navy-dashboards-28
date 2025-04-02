@@ -84,7 +84,7 @@ export default function Education() {
           <div className="mt-4 mb-6">
             <Link to="/education/tax-planning">
               <Button variant="outline" className="flex items-center gap-2">
-                Proactive Tax Planning <ArrowRight className="h-4 w-4" />
+                Tax Planning <ArrowRight className="h-4 w-4" />
               </Button>
             </Link>
           </div>

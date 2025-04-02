@@ -102,7 +102,7 @@ const navigationCategories: NavCategory[] = [
     items: [
       { id: "education", label: "Education Center", icon: GraduationCapIcon, href: "/education" },
       { id: "investments", label: "Investments", icon: BarChart3Icon, href: "/investments" },
-      { id: "tax-planning", label: "Proactive Tax Planning", icon: PieChart, href: "/education/tax-planning" },
+      { id: "tax-planning", label: "Tax Planning", icon: PieChart, href: "/education/tax-planning" },
       { id: "insurance", label: "Insurance", icon: ShieldIcon, href: "/insurance" },
       { id: "lending", label: "Lending", icon: BanknoteIcon, href: "/lending" },
       { id: "estate-planning", label: "Estate Planning", icon: ArchiveIcon, href: "/estate-planning" },

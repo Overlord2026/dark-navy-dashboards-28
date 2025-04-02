@@ -55,7 +55,7 @@ export default function TaxPlanning() {
       >
         {/* Introductory header + description */}
         <motion.div variants={itemVariants}>
-          <h2 className="text-2xl font-bold tracking-tight">Proactive Tax Planning</h2>
+          <h2 className="text-2xl font-bold tracking-tight">Tax Planning</h2>
           <p className="text-muted-foreground mt-2">
             Optimize your tax strategy and minimize your tax burden through proactive planning.
           </p>
