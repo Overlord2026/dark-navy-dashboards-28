@@ -429,7 +429,7 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
                 id: "apt1",
                 title: "Annual Physical",
                 doctor: "Dr. Sarah Smith",
-                date: new Date(new Date().setDate(new Date().getDate() + 14)),
+                date: new Date(new Date().setDate(new Date().getDate() + 14)).toISOString(),
                 time: "10:00 AM",
                 notes: "Fasting required",
                 location: "City Medical Group"
@@ -438,7 +438,7 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
                 id: "apt2",
                 title: "Cardiology Follow-up",
                 doctor: "Dr. James Johnson",
-                date: new Date(new Date().setDate(new Date().getDate() + 7)),
+                date: new Date(new Date().setDate(new Date().getDate() + 7)).toISOString(),
                 time: "2:30 PM",
                 notes: "Bring medication list",
                 location: "Specialty Care Associates"
@@ -447,7 +447,7 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
                 id: "apt3",
                 title: "Lab Work",
                 doctor: "Metro Health Partners",
-                date: new Date(new Date().setDate(new Date().getDate() + 3)),
+                date: new Date(new Date().setDate(new Date().getDate() + 3)).toISOString(),
                 time: "8:15 AM",
                 notes: "Fasting required",
                 location: "Metro Health Lab"
@@ -457,7 +457,7 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
               { 
                 id: "med1", 
                 name: "Lisinopril", 
-                nextRefill: new Date(new Date().setDate(new Date().getDate() + 7)),
+                nextRefill: new Date(new Date().setDate(new Date().getDate() + 7)).toISOString(),
                 dosage: "20mg", 
                 frequency: "Once daily", 
                 doctor: "Dr. Smith",
@@ -466,7 +466,7 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
               { 
                 id: "med2", 
                 name: "Metformin", 
-                nextRefill: new Date(new Date().setDate(new Date().getDate() + 14)),
+                nextRefill: new Date(new Date().setDate(new Date().getDate() + 14)).toISOString(),
                 dosage: "500mg", 
                 frequency: "Twice daily", 
                 doctor: "Dr. Johnson",
@@ -475,7 +475,7 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
               { 
                 id: "med3", 
                 name: "Atorvastatin", 
-                nextRefill: new Date(new Date().setDate(new Date().getDate() + 3)),
+                nextRefill: new Date(new Date().setDate(new Date().getDate() + 3)).toISOString(),
                 dosage: "10mg", 
                 frequency: "Once daily", 
                 doctor: "Dr. Smith",

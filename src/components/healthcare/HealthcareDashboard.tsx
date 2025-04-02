@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -33,7 +32,7 @@ interface Medication {
   name: string;
   dosage: string;
   frequency: string;
-  nextRefill: string; // Changed from Date to string for consistency
+  nextRefill: string;
   doctor: string;
   pharmacy: string;
 }
@@ -54,7 +53,7 @@ interface HealthcareAppointment {
   title: string;
   doctor: string;
   location: string;
-  date: string; // Changed from Date to string for consistency
+  date: string;
   time: string;
   notes?: string;
 }
@@ -226,7 +225,9 @@ export function HealthcareDashboard({ documents }: HealthcareDashboardProps) {
   
   // Calculate days to show urgency
   const getDaysFromNow = (date: Date | string): number => {
-    const dateObject = date instanceof Date ? date : new Date(date);
+    if (!date) return 0;
+    
+    const dateObject = typeof date === 'string' ? new Date(date) : date;
     return Math.ceil((dateObject.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
   };
   

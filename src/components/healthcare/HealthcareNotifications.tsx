@@ -14,7 +14,7 @@ export interface UpcomingAppointment {
   title: string;
   doctor: string;
   location: string;
-  date: Date;
+  date: Date | string;
   time: string;
   notes?: string;
 }
@@ -24,7 +24,7 @@ export interface Medication {
   name: string;
   dosage: string;
   frequency: string;
-  nextRefill: Date;
+  nextRefill: Date | string;
   doctor?: string;
   pharmacy?: string;
 }
@@ -75,6 +75,8 @@ export const HealthcareNotifications: React.FC<HealthcareNotificationsProps> = (
   };
   
   const getDaysRemaining = (date: Date | string): number => {
+    if (!date) return 0;
+    
     const targetDate = typeof date === 'string' ? new Date(date) : date;
     const today = new Date();
     
@@ -139,6 +141,9 @@ export const HealthcareNotifications: React.FC<HealthcareNotificationsProps> = (
             {upcomingAppointments.length > 0 ? (
               upcomingAppointments.map(appointment => {
                 const daysUntil = getDaysRemaining(appointment.date);
+                const appointmentDate = typeof appointment.date === 'string' 
+                  ? new Date(appointment.date) 
+                  : appointment.date;
                 
                 return (
                   <Card key={appointment.id} className="overflow-hidden">
@@ -153,7 +158,8 @@ export const HealthcareNotifications: React.FC<HealthcareNotificationsProps> = (
                         <div className="flex items-center text-sm">
                           <Calendar className="h-4 w-4 mr-2" />
                           <span className={getUrgencyColor(daysUntil)}>
-                            {appointment.date.toLocaleDateString()} ({daysUntil < 0 ? `${Math.abs(daysUntil)} days ago` : daysUntil === 0 ? "Today" : `in ${daysUntil} days`})
+                            {appointmentDate.toLocaleDateString()} 
+                            ({daysUntil < 0 ? `${Math.abs(daysUntil)} days ago` : daysUntil === 0 ? "Today" : `in ${daysUntil} days`})
                           </span>
                         </div>
                         <div className="flex items-center text-sm">
@@ -201,6 +207,9 @@ export const HealthcareNotifications: React.FC<HealthcareNotificationsProps> = (
             {medications.length > 0 ? (
               medications.map(medication => {
                 const daysUntil = getDaysRemaining(medication.nextRefill);
+                const refillDate = typeof medication.nextRefill === 'string' 
+                  ? new Date(medication.nextRefill) 
+                  : medication.nextRefill;
                 
                 return (
                   <Card key={medication.id} className="overflow-hidden">
@@ -219,7 +228,8 @@ export const HealthcareNotifications: React.FC<HealthcareNotificationsProps> = (
                         <div className="flex items-center text-sm">
                           <Calendar className="h-4 w-4 mr-2" />
                           <span className={getUrgencyColor(daysUntil)}>
-                            Next refill: {medication.nextRefill.toLocaleDateString()} ({daysUntil < 0 ? `${Math.abs(daysUntil)} days ago` : daysUntil === 0 ? "Today" : `in ${daysUntil} days`})
+                            Next refill: {refillDate.toLocaleDateString()} 
+                            ({daysUntil < 0 ? `${Math.abs(daysUntil)} days ago` : daysUntil === 0 ? "Today" : `in ${daysUntil} days`})
                           </span>
                         </div>
                         {medication.doctor && (
@@ -275,7 +285,8 @@ export const HealthcareNotifications: React.FC<HealthcareNotificationsProps> = (
                         <div className="flex items-center text-sm">
                           <Calendar className="h-4 w-4 mr-2" />
                           <span className={getUrgencyColor(daysUntil)}>
-                            Renewal: {new Date(policy.endDate).toLocaleDateString()} ({daysUntil < 0 ? `${Math.abs(daysUntil)} days ago` : daysUntil === 0 ? "Today" : `in ${daysUntil} days`})
+                            Renewal: {new Date(policy.endDate).toLocaleDateString()} 
+                            ({daysUntil < 0 ? `${Math.abs(daysUntil)} days ago` : daysUntil === 0 ? "Today" : `in ${daysUntil} days`})
                           </span>
                         </div>
                         {policy.provider && (
