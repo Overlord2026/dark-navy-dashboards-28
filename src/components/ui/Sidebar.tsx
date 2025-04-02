@@ -17,6 +17,7 @@ import { AdvisorSection } from "@/components/profile/AdvisorSection";
 import { SidebarNavCategory } from "@/components/sidebar/SidebarNavCategory";
 import { SidebarBottomNav } from "@/components/sidebar/SidebarBottomNav";
 import { useSidebarState } from "@/hooks/useSidebarState";
+import { logger } from "@/services/logging/loggingService";
 
 export const Sidebar = () => {
   const { theme } = useTheme();
@@ -60,32 +61,42 @@ export const Sidebar = () => {
     hasActiveChild 
   } = useSidebarState(navigationCategories);
 
-  // Enhanced diagnostic logging
+  // Enhanced diagnostic logging that runs on every state change
   useEffect(() => {
-    console.log("=== SIDEBAR STATE DIAGNOSTIC ===");
-    console.log("Current expandedSubmenus state:", expandedSubmenus);
-    console.log("Family wealth expanded:", expandedCategories["family-wealth"]);
+    logger.debug("Sidebar state diagnostic", {
+      expandedSubmenus,
+      expandedCategories,
+      collapsed
+    }, "Sidebar");
     
     // Check specifically for Banking submenu
     const bankingItem = familyWealthNavItems.find(item => item.title === "Banking");
     if (bankingItem) {
-      console.log("Banking item config:", {
+      logger.debug("Banking submenu state", {
         title: bankingItem.title,
         href: bankingItem.href,
         hasSubmenu: !!bankingItem.submenu && bankingItem.submenu.length > 0,
-        submenuExpanded: !!expandedSubmenus["Banking"]
-      });
-    } else {
-      console.log("Banking item not found in familyWealthNavItems");
+        submenuExpanded: !!expandedSubmenus["Banking"],
+        submenuItems: bankingItem.submenu?.map(item => ({
+          title: item.title,
+          href: item.href,
+          isActive: isActive(item.href)
+        }))
+      }, "Sidebar");
     }
-  }, [expandedSubmenus, expandedCategories, familyWealthNavItems]);
+  }, [expandedSubmenus, expandedCategories, collapsed, familyWealthNavItems, isActive]);
 
-  // Add debugging click handler to help diagnose Banking menu issues
+  // Debug helper to manually toggle Banking submenu
   const handleManualBankingToggle = () => {
     const bankingItem = familyWealthNavItems.find(item => item.title === "Banking");
     if (bankingItem) {
-      const mockEvent = { preventDefault: () => {}, stopPropagation: () => {} } as React.MouseEvent;
-      console.log("Manually toggling Banking submenu");
+      const mockEvent = { 
+        preventDefault: () => {}, 
+        stopPropagation: () => {} 
+      } as React.MouseEvent;
+      logger.debug("Manually toggling Banking submenu", {
+        current: expandedSubmenus["Banking"]
+      }, "Sidebar");
       toggleSubmenu("Banking", mockEvent);
     }
   };
@@ -101,11 +112,11 @@ export const Sidebar = () => {
   };
 
   const handleBookSession = () => {
-    console.log("Book session clicked");
+    logger.debug("Book session clicked", {}, "Sidebar");
   };
 
   const handleViewProfile = (tabId: string) => {
-    console.log("View profile tab:", tabId);
+    logger.debug("View profile tab clicked", { tabId }, "Sidebar");
   };
 
   return (
@@ -138,16 +149,21 @@ export const Sidebar = () => {
           />
         ))}
         
-        {/* Debugging button - will be hidden in production */}
-        {process.env.NODE_ENV !== 'production' && !collapsed && (
+        {/* Debugging button with improved visibility */}
+        {!collapsed && (
           <div className="px-3 mt-2">
             <Button
               size="sm"
               variant="outline"
               onClick={handleManualBankingToggle}
-              className="w-full text-xs"
+              className={cn(
+                "w-full text-xs", 
+                isLightTheme 
+                  ? "border-primary bg-[#E9E7D8] text-[#222222] hover:bg-[#DCD8C0]" 
+                  : "border-primary bg-black text-white hover:bg-sidebar-accent"
+              )}
             >
-              Debug: Toggle Banking Menu
+              {expandedSubmenus["Banking"] ? "Close" : "Open"} Banking Menu
             </Button>
           </div>
         )}

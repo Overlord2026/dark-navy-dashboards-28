@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { NavItem } from "@/types/navigation";
 import { cn } from "@/lib/utils";
+import { logger } from "@/services/logging/loggingService";
 
 interface SidebarNavCategoryProps {
   id: string;
@@ -32,6 +33,16 @@ export const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
   toggleSubmenu,
   hasActiveChild
 }) => {
+  // Debug render to help track component updates
+  React.useEffect(() => {
+    logger.debug(`SidebarNavCategory "${id}" rendered`, { 
+      isExpanded, 
+      collapsed,
+      items: items.map(i => i.title),
+      expandedSubmenus
+    }, "SidebarNavCategory");
+  }, [id, isExpanded, collapsed, items, expandedSubmenus]);
+
   return (
     <div className="mb-4">
       {!collapsed && (
@@ -54,7 +65,8 @@ export const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
         <div className="space-y-1 px-3">
           {items.map((item) => {
             const hasSubmenu = item.submenu && item.submenu.length > 0;
-            const submenuIsExpanded = !!expandedSubmenus[item.title]; // Ensure boolean value
+            // Ensure boolean value with double negation
+            const submenuIsExpanded = !!expandedSubmenus[item.title]; 
             
             // For items with submenu, check if any submenu item is active
             let itemIsActive = isActive(item.href);
@@ -82,9 +94,14 @@ export const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
                           : "text-white border-transparent hover:bg-sidebar-accent",
                       hasSubmenu && "justify-between"
                     )}
-                    onClick={(e) => toggleSubmenu(item.title, e)}
+                    onClick={(e) => {
+                      logger.debug(`Submenu item clicked: ${item.title}`, 
+                        { title: item.title, hasSubmenu }, "SidebarNavCategory");
+                      toggleSubmenu(item.title, e);
+                    }}
                     data-submenu-trigger={item.title}
                     data-item-title={item.title}
+                    data-expanded={submenuIsExpanded ? "true" : "false"}
                   >
                     <div className="flex items-center">
                       <item.icon className={cn("h-5 w-5 flex-shrink-0", !collapsed && "mr-3")} />
@@ -120,13 +137,18 @@ export const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
                   </Link>
                 )}
                 
-                {/* Render submenu if expanded with improved visibility */}
+                {/* Render submenu with improved visibility and debugging attributes */}
                 {!collapsed && hasSubmenu && submenuIsExpanded && (
                   <div 
                     className="ml-8 mt-1 space-y-1 z-20 bg-inherit"
                     data-submenu-content={item.title}
                     data-expanded="true"
-                    style={{ display: 'block' }} /* Explicit display property */
+                    data-submenu-visible="true"
+                    style={{ 
+                      display: 'block',
+                      position: 'relative',
+                      opacity: 1
+                    }}
                   >
                     {item.submenu?.map((subItem) => (
                       <Link

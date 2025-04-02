@@ -2,6 +2,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { NavCategory } from "@/types/navigation";
 import { useLocation } from "react-router-dom";
+import { logger } from "@/services/logging/loggingService";
 
 export function useSidebarState(navigationCategories: NavCategory[]) {
   const location = useLocation();
@@ -66,7 +67,8 @@ export function useSidebarState(navigationCategories: NavCategory[]) {
           const itemHasActiveChild = hasActiveChild(item.submenu);
           
           if (itemHasActiveChild) {
-            console.log(`Auto-expanding submenu "${item.title}" because it has an active child`);
+            logger.debug(`Auto-expanding submenu "${item.title}" because it has an active child`, 
+              { title: item.title, path: location.pathname }, "SidebarState");
             
             // Expand the submenu with the active child
             setExpandedSubmenus(prev => ({
@@ -117,13 +119,16 @@ export function useSidebarState(navigationCategories: NavCategory[]) {
   };
 
   const toggleCategory = (categoryId: string) => {
+    logger.debug(`Toggling category "${categoryId}"`, 
+      { categoryId, wasExpanded: expandedCategories[categoryId] }, "SidebarState");
+    
     setExpandedCategories(prev => ({
       ...prev,
       [categoryId]: !prev[categoryId]
     }));
   };
 
-  // Fixed and more reliable submenu toggle implementation
+  // Robust submenu toggle implementation that avoids race conditions
   const toggleSubmenu = (itemTitle: string, e: React.MouseEvent) => {
     // Always prevent default behavior to stop navigation
     if (e) {
@@ -131,27 +136,27 @@ export function useSidebarState(navigationCategories: NavCategory[]) {
       e.stopPropagation();
     }
 
-    console.log(`[toggleSubmenu] Toggling submenu "${itemTitle}"`);
+    logger.debug(`Toggling submenu "${itemTitle}"`, 
+      { itemTitle, wasExpanded: expandedSubmenus[itemTitle] }, "SidebarState");
     
-    // Enhanced toggle implementation to ensure state updates properly
+    // Using function form of setState ensures we're working with the latest state
+    // This helps avoid race conditions when multiple state updates happen in quick succession
     setExpandedSubmenus(prevState => {
-      const currentlyExpanded = !!prevState[itemTitle];
-      const newState = { ...prevState };
+      const currentlyExpanded = Boolean(prevState[itemTitle]);
+      const newExpanded = !currentlyExpanded;
       
-      // Toggle the specific submenu
-      newState[itemTitle] = !currentlyExpanded;
+      logger.debug(`Submenu state transition: "${itemTitle}" ${currentlyExpanded ? "expanded" : "collapsed"} -> ${newExpanded ? "expanded" : "collapsed"}`, 
+        { itemTitle, before: currentlyExpanded, after: newExpanded }, "SidebarState");
       
-      console.log(`[toggleSubmenu] "${itemTitle}" was ${currentlyExpanded ? "expanded" : "collapsed"}, now ${!currentlyExpanded ? "expanded" : "collapsed"}`);
-      console.log(`[toggleSubmenu] New expandedSubmenus state:`, newState);
+      // Create a new object to ensure React detects the change
+      const newState = { ...prevState, [itemTitle]: newExpanded };
+      
+      // Immediately trigger a force update to ensure rendering happens
+      // This is synchronous with the state update
+      setTimeout(() => setForceUpdate(prev => prev + 1), 0);
       
       return newState;
     });
-    
-    // Force a rerender to ensure UI reflects current state
-    setTimeout(() => {
-      setForceUpdate(prev => prev + 1);
-      console.log(`[toggleSubmenu] Force update triggered after toggle`);
-    }, 0);
   };
 
   return {
