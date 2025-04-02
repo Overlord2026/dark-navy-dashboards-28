@@ -1,3 +1,4 @@
+
 import { 
   HomeIcon, 
   GraduationCapIcon,
@@ -92,6 +93,16 @@ export const familyWealthNavItems: NavItem[] = [
     title: "Tax & Budgets", 
     href: "/tax-budgets", 
     icon: Calculator 
+  },
+  { 
+    title: "Transfers", 
+    href: "/transfers", 
+    icon: ArrowRightLeft 
+  },
+  { 
+    title: "Funding Accounts", 
+    href: "/funding-accounts", 
+    icon: WalletIcon 
   },
   { 
     title: "Secure Family Vault", 

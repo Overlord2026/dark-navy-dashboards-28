@@ -25,7 +25,8 @@ import {
   CircleDollarSignIcon,
   ArchiveIcon,
   PieChart,
-  ArrowRightLeft
+  ArrowRightLeft,
+  Calculator
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { UserProfileSection } from "@/components/sidebar/UserProfileSection";
@@ -116,6 +117,7 @@ const navigationCategories: NavCategory[] = [
       { id: "financial-plans", label: "Financial Plans", icon: LineChartIcon, href: "/financial-plans" },
       { id: "accounts", label: "Accounts Overview", icon: WalletIcon, href: "/accounts" },
       { id: "cash-management", label: "Cash Management", icon: BanknoteIcon, href: "/cash-management" },
+      { id: "tax-budgets", label: "Tax & Budgets", icon: Calculator, href: "/tax-budgets" },
       { id: "transfers", label: "Transfers", icon: ArrowRightLeft, href: "/transfers" },
       { id: "funding-accounts", label: "Funding Accounts", icon: WalletIcon, href: "/funding-accounts" },
       { id: "legacy-vault", label: "Secure Family Vault", icon: VaultIcon, href: "/legacy-vault" },
