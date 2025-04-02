@@ -4,7 +4,8 @@ export type AuditEventType = 'login' | 'logout' | 'document_access' | 'document_
   'password_change' | 'profile_update' | 'settings_change' | 'permission_change' | 
   'system_change' | 'diagnostics_access' | 'api_access' | 'mfa_enabled' |
   'document_creation' | 'document_share' | 'document_notification' |
-  'appointment_reminder' | 'medication_reminder' | 'insurance_reminder';
+  'appointment_reminder' | 'medication_reminder' | 'insurance_reminder' |
+  'prescription_add' | 'prescription_update' | 'prescription_delete';
 
 export interface AuditLogEntry {
   id: string;
