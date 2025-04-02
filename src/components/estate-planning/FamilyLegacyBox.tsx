@@ -25,7 +25,9 @@ import {
   Lock, 
   Share2, 
   UploadCloud, 
-  Users2 
+  Users2,
+  ChevronDown,
+  ChevronUp 
 } from "lucide-react";
 
 interface ChecklistItem {
@@ -33,6 +35,14 @@ interface ChecklistItem {
   title: string;
   completed: boolean;
   documents: DocumentItem[];
+  subItems?: SubChecklistItem[];
+  expanded?: boolean;
+}
+
+interface SubChecklistItem {
+  id: string;
+  title: string;
+  completed: boolean;
 }
 
 interface DocumentItem {
@@ -51,22 +61,103 @@ export const FamilyLegacyBox = () => {
   const [selectedDocument, setSelectedDocument] = useState<DocumentItem | null>(null);
   const [shareEmail, setShareEmail] = useState("");
   const [checklist, setChecklist] = useState<ChecklistItem[]>([
-    { id: "trusts", title: "Trusts", completed: false, documents: [] },
-    { id: "wills", title: "Wills", completed: true, documents: [
-      { id: "doc1", name: "Last Will and Testament.pdf", dateUploaded: "May 15, 2023", size: "1.2 MB", sharedWith: ["spouse@example.com"] }
-    ] },
-    { id: "financial-poa", title: "Financial Power of Attorney", completed: false, documents: [] },
-    { id: "medical-poa", title: "Medical/Healthcare Power of Attorney", completed: true, documents: [
-      { id: "doc2", name: "Healthcare Directive.pdf", dateUploaded: "June 3, 2023", size: "0.8 MB", sharedWith: [] }
-    ] },
-    { id: "living-will", title: "Living Will", completed: false, documents: [] },
-    { id: "guardianship", title: "Guardianship Documents", completed: false, documents: [] },
-    { id: "advanced-healthcare", title: "Advanced Healthcare Directive", completed: true, documents: [
-      { id: "doc3", name: "Healthcare Instructions.pdf", dateUploaded: "June 5, 2023", size: "1.5 MB", sharedWith: ["doctor@example.com"] }
-    ] },
-    { id: "property-deeds", title: "Real Estate Property Deeds", completed: false, documents: [] },
-    { id: "bird-deeds", title: "Bird Deeds (Enhanced Life Estate Deeds)", completed: false, documents: [] },
-    { id: "property-distribution", title: "Personal Property Distributions", completed: false, documents: [] }
+    { 
+      id: "trusts", 
+      title: "General Trusts", 
+      completed: false, 
+      documents: [],
+      expanded: false,
+      subItems: [
+        { id: "revocable", title: "Revocable", completed: false },
+        { id: "irrevocable", title: "Irrevocable", completed: false },
+        { id: "special-needs", title: "Special Needs", completed: false },
+        { id: "other-trusts", title: "Other", completed: false }
+      ]
+    },
+    { 
+      id: "wills", 
+      title: "Wills", 
+      completed: true, 
+      documents: [
+        { id: "doc1", name: "Last Will and Testament.pdf", dateUploaded: "May 15, 2023", size: "1.2 MB", sharedWith: ["spouse@example.com"] }
+      ] 
+    },
+    { 
+      id: "beneficiaries", 
+      title: "Beneficiaries for Each Account", 
+      completed: false, 
+      documents: [] 
+    },
+    { 
+      id: "financial-poa", 
+      title: "Financial Power of Attorney", 
+      completed: false, 
+      documents: [] 
+    },
+    { 
+      id: "medical-poa", 
+      title: "Medical/Healthcare Power of Attorney", 
+      completed: true, 
+      documents: [
+        { id: "doc2", name: "Healthcare Directive.pdf", dateUploaded: "June 3, 2023", size: "0.8 MB", sharedWith: [] }
+      ] 
+    },
+    { 
+      id: "living-will", 
+      title: "Living Will", 
+      completed: false, 
+      documents: [] 
+    },
+    { 
+      id: "guardianship", 
+      title: "Guardianship Documents", 
+      completed: false, 
+      documents: [] 
+    },
+    { 
+      id: "advanced-healthcare", 
+      title: "Advanced Healthcare Directive", 
+      completed: true, 
+      documents: [
+        { id: "doc3", name: "Healthcare Instructions.pdf", dateUploaded: "June 5, 2023", size: "1.5 MB", sharedWith: ["doctor@example.com"] }
+      ] 
+    },
+    { 
+      id: "property-deeds", 
+      title: "Real Estate Property Deeds", 
+      completed: false, 
+      documents: [] 
+    },
+    { 
+      id: "lady-bird-deeds", 
+      title: "Lady Bird Deeds", 
+      completed: false, 
+      documents: [] 
+    },
+    { 
+      id: "property-distribution", 
+      title: "Personal Property Distributions", 
+      completed: false, 
+      documents: [] 
+    },
+    { 
+      id: "charitable-trusts", 
+      title: "Charitable Remainder Trusts", 
+      completed: false, 
+      documents: [] 
+    },
+    { 
+      id: "donor-funds", 
+      title: "Donor Advised Funds", 
+      completed: false, 
+      documents: [] 
+    },
+    { 
+      id: "florida-trusts", 
+      title: "Florida Dynasty Trusts", 
+      completed: false, 
+      documents: [] 
+    }
   ]);
 
   const handleChecklistToggle = (id: string) => {
@@ -74,6 +165,39 @@ export const FamilyLegacyBox = () => {
       item.id === id ? { ...item, completed: !item.completed } : item
     ));
     toast.success(`Status updated for ${checklist.find(item => item.id === id)?.title}`);
+  };
+
+  const handleSubItemToggle = (parentId: string, subItemId: string) => {
+    setChecklist(prev => prev.map(item => {
+      if (item.id === parentId && item.subItems) {
+        const updatedSubItems = item.subItems.map(subItem => 
+          subItem.id === subItemId ? { ...subItem, completed: !subItem.completed } : subItem
+        );
+        
+        // Check if all subitems are completed to update parent status
+        const allCompleted = updatedSubItems.every(subItem => subItem.completed);
+        
+        return { 
+          ...item, 
+          subItems: updatedSubItems,
+          completed: allCompleted
+        };
+      }
+      return item;
+    }));
+    
+    const parentItem = checklist.find(item => item.id === parentId);
+    const subItem = parentItem?.subItems?.find(subItem => subItem.id === subItemId);
+    
+    if (parentItem && subItem) {
+      toast.success(`Status updated for ${subItem.title} in ${parentItem.title}`);
+    }
+  };
+
+  const toggleExpand = (id: string) => {
+    setChecklist(prev => prev.map(item => 
+      item.id === id ? { ...item, expanded: !item.expanded } : item
+    ));
   };
 
   const handleUpload = (file: File) => {
@@ -177,33 +301,70 @@ export const FamilyLegacyBox = () => {
                   
                   <div className="space-y-4">
                     {checklist.map((item) => (
-                      <div key={item.id} className="flex items-center justify-between p-3 border rounded-lg hover:bg-muted/20 transition-colors">
-                        <div className="flex items-center gap-3">
-                          <div className="flex items-center h-5 space-x-2">
-                            <Checkbox 
-                              id={item.id} 
-                              checked={item.completed} 
-                              onCheckedChange={() => handleChecklistToggle(item.id)}
-                            />
+                      <div key={item.id} className="border rounded-lg hover:bg-muted/20 transition-colors">
+                        <div className="flex items-center justify-between p-3">
+                          <div className="flex items-center gap-3">
+                            {item.subItems && item.subItems.length > 0 ? (
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="p-0 h-5 w-5"
+                                onClick={() => toggleExpand(item.id)}
+                              >
+                                {item.expanded ? 
+                                  <ChevronUp className="h-4 w-4" /> : 
+                                  <ChevronDown className="h-4 w-4" />
+                                }
+                              </Button>
+                            ) : (
+                              <div className="flex items-center h-5 space-x-2">
+                                <Checkbox 
+                                  id={item.id} 
+                                  checked={item.completed} 
+                                  onCheckedChange={() => handleChecklistToggle(item.id)}
+                                />
+                              </div>
+                            )}
                             <Label htmlFor={item.id} className="font-medium">
                               {item.title}
                             </Label>
                           </div>
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs text-muted-foreground">
+                              {item.documents.length} document{item.documents.length !== 1 ? 's' : ''}
+                            </span>
+                            <Button 
+                              variant="outline" 
+                              size="sm" 
+                              className="flex items-center gap-1"
+                              onClick={() => openUpload(item)}
+                            >
+                              <UploadCloud className="h-3 w-3" />
+                              Upload
+                            </Button>
+                          </div>
                         </div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-xs text-muted-foreground">
-                            {item.documents.length} document{item.documents.length !== 1 ? 's' : ''}
-                          </span>
-                          <Button 
-                            variant="outline" 
-                            size="sm" 
-                            className="flex items-center gap-1"
-                            onClick={() => openUpload(item)}
-                          >
-                            <UploadCloud className="h-3 w-3" />
-                            Upload
-                          </Button>
-                        </div>
+                        
+                        {item.subItems && item.expanded && (
+                          <div className="border-t px-3 py-2 bg-muted/10">
+                            <div className="space-y-2 pl-6">
+                              {item.subItems.map((subItem) => (
+                                <div key={subItem.id} className="flex items-center gap-3">
+                                  <div className="flex items-center h-5 space-x-2">
+                                    <Checkbox 
+                                      id={`${item.id}-${subItem.id}`} 
+                                      checked={subItem.completed} 
+                                      onCheckedChange={() => handleSubItemToggle(item.id, subItem.id)}
+                                    />
+                                    <Label htmlFor={`${item.id}-${subItem.id}`}>
+                                      {subItem.title}
+                                    </Label>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
                       </div>
                     ))}
                   </div>
@@ -392,7 +553,7 @@ export const FamilyLegacyBox = () => {
             </div>
             <div className="w-full bg-muted h-2 rounded-full overflow-hidden">
               <div 
-                className="bg-green-500 h-full rounded-full" 
+                className="bg-green-500 h-full rounded-full transition-all duration-300 ease-in-out" 
                 style={{ width: `${(checklist.filter(item => item.completed).length / checklist.length) * 100}%` }}
               ></div>
             </div>
