@@ -13,6 +13,7 @@ import { DiagnosticsSummary } from "./components/diagnostics/DiagnosticsSummary"
 import { NavigationHealthIndicator } from "./components/diagnostics/NavigationHealthIndicator";
 import SimpleDiagnosticsView from "./components/diagnostics/SimpleDiagnosticsView";
 import { FinancialPlanProvider } from "./context/FinancialPlanContext";
+import { HelpAndSupport } from "./components/support/HelpAndSupport";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
                 <FinancialPlanProvider>
                   <BrowserRouter>
                     <AppRoutes />
+                    <HelpAndSupport />
                     <Toaster position="top-right" />
                     <DiagnosticsTrigger />
                     <DiagnosticsSummary />
