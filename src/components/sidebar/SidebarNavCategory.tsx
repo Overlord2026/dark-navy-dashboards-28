@@ -44,13 +44,14 @@ export const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
   }, [id, isExpanded, collapsed, items, expandedSubmenus]);
 
   return (
-    <div className="mb-4">
+    <div className="mb-4" data-sidebar-category={id} data-expanded={isExpanded}>
       {!collapsed && (
         <div 
           className={`flex items-center justify-between px-4 py-2 text-xs uppercase tracking-wider font-semibold cursor-pointer ${
             isLightTheme ? 'text-[#222222]/70' : 'text-white/70'
           }`}
           onClick={() => onToggle(id)}
+          data-sidebar-category-header={id}
         >
           <span>{label}</span>
           {isExpanded ? (
@@ -62,7 +63,7 @@ export const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
       )}
       
       {(isExpanded || collapsed) && (
-        <div className="space-y-1 px-3">
+        <div className="space-y-1 px-3" data-sidebar-category-content={id}>
           {items.map((item) => {
             const hasSubmenu = item.submenu && item.submenu.length > 0;
             // Ensure boolean value with double negation
@@ -79,7 +80,13 @@ export const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
             }
             
             return (
-              <div key={item.title} className="group mb-1 relative">
+              <div 
+                key={item.title} 
+                className="group mb-1 relative" 
+                data-sidebar-item={item.title}
+                data-has-submenu={hasSubmenu ? "true" : "false"}
+                data-item-active={itemIsActive ? "true" : "false"}
+              >
                 {/* For items with submenu, we'll handle the click event to toggle submenu */}
                 {hasSubmenu ? (
                   <div
@@ -129,6 +136,7 @@ export const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
                           ? "text-[#222222] border-transparent hover:bg-[#E9E7D8] hover:border-primary"
                           : "text-white border-transparent hover:bg-sidebar-accent"
                     )}
+                    data-item-link={item.title}
                   >
                     <div className="flex items-center">
                       <item.icon className={cn("h-5 w-5 flex-shrink-0", !collapsed && "mr-3")} />
@@ -140,18 +148,19 @@ export const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
                 {/* Render submenu with improved visibility and z-index */}
                 {!collapsed && hasSubmenu && submenuIsExpanded && (
                   <div 
-                    className="ml-8 mt-1 space-y-1 z-50 bg-inherit overflow-visible absolute left-0 right-0"
+                    className="ml-8 mt-1 space-y-1 z-50 bg-inherit overflow-visible"
                     style={{
-                      position: 'static', // Changed from absolute to static for proper layout flow
+                      position: 'static', // Static position for proper layout flow
                       display: 'block',
                       opacity: 1,
                       width: '100%',
-                      marginTop: '0.25rem', // Small space from parent
-                      paddingLeft: '0.5rem', // Indent from parent
+                      marginTop: '0.25rem',
+                      paddingLeft: '0.5rem',
                     }}
                     data-submenu-content={item.title}
                     data-expanded="true"
                     data-submenu-visible="true"
+                    data-parent-item={item.title}
                   >
                     {item.submenu?.map((subItem) => (
                       <Link
@@ -167,6 +176,9 @@ export const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
                               ? "text-[#222222] hover:bg-[#E9E7D8] hover:border-primary"
                               : "text-white hover:bg-sidebar-accent"
                         )}
+                        data-submenu-item={subItem.title}
+                        data-parent-menu={item.title}
+                        data-active={isActive(subItem.href) ? "true" : "false"}
                       >
                         <subItem.icon className="h-4 w-4 mr-2" />
                         <span>{subItem.title}</span>

@@ -19,6 +19,14 @@ import { SidebarBottomNav } from "@/components/sidebar/SidebarBottomNav";
 import { useSidebarState } from "@/hooks/useSidebarState";
 import { logger } from "@/services/logging/loggingService";
 
+/**
+ * Main sidebar component for the application
+ * This is the primary sidebar implementation used throughout the app
+ * 
+ * NOTE: There is another sidebar implementation in `src/components/ui/sidebar-new.tsx` which
+ * is a more generic implementation based on shadcn/ui. That component could eventually replace
+ * this one for better consistency, but both are kept for now to avoid breaking changes.
+ */
 export const Sidebar = () => {
   const { theme } = useTheme();
   const isLightTheme = theme === "light";
@@ -126,9 +134,18 @@ export const Sidebar = () => {
         collapsed ? "w-[70px]" : "w-[240px]",
         isLightTheme ? "bg-[#F9F7E8] border-[#DCD8C0]" : "bg-[#1B1B32] border-white/10"
       )}
+      data-sidebar="main-sidebar"
+      data-collapsed={collapsed ? "true" : "false"}
+      data-theme={isLightTheme ? "light" : "dark"}
     >
-      <div className="py-4 overflow-y-auto flex-1">
-        <div className={`px-4 ${isLightTheme ? 'border-[#DCD8C0]' : 'border-white/10'} mt-2 mb-4`}>
+      <div 
+        className="py-4 overflow-y-auto flex-1"
+        data-sidebar-content="main"
+      >
+        <div 
+          className={`px-4 ${isLightTheme ? 'border-[#DCD8C0]' : 'border-white/10'} mt-2 mb-4`}
+          data-sidebar-section="user-profile"
+        >
           <UserProfileSection showLogo={false} />
         </div>
 
@@ -151,7 +168,10 @@ export const Sidebar = () => {
         
         {/* Debugging button with improved visibility */}
         {!collapsed && (
-          <div className="px-3 mt-2">
+          <div 
+            className="px-3 mt-2"
+            data-sidebar-debug="banking-toggle"
+          >
             <Button
               size="sm"
               variant="outline"
@@ -162,6 +182,7 @@ export const Sidebar = () => {
                   ? "border-primary bg-[#E9E7D8] text-[#222222] hover:bg-[#DCD8C0]" 
                   : "border-primary bg-black text-white hover:bg-sidebar-accent"
               )}
+              data-banking-submenu-state={expandedSubmenus["Banking"] ? "expanded" : "collapsed"}
             >
               {expandedSubmenus["Banking"] ? "Close" : "Open"} Banking Menu
             </Button>
@@ -169,8 +190,15 @@ export const Sidebar = () => {
         )}
       </div>
 
-      <div className="p-2 border-t mt-auto" style={{ borderColor: isLightTheme ? '#DCD8C0' : 'rgba(255,255,255,0.1)' }}>
-        <div className={`px-2 mb-3 ${isLightTheme ? 'border-[#DCD8C0]' : 'border-white/10'}`}>
+      <div 
+        className="p-2 border-t mt-auto" 
+        style={{ borderColor: isLightTheme ? '#DCD8C0' : 'rgba(255,255,255,0.1)' }}
+        data-sidebar-section="footer"
+      >
+        <div 
+          className={`px-2 mb-3 ${isLightTheme ? 'border-[#DCD8C0]' : 'border-white/10'}`}
+          data-sidebar-section="advisor"
+        >
           <AdvisorSection 
             advisorInfo={advisorInfo} 
             onViewProfile={handleViewProfile} 
@@ -192,6 +220,8 @@ export const Sidebar = () => {
         size="icon"
         className="absolute top-4 -right-4 h-8 w-8 rounded-full bg-background border border-gray-700 text-foreground hover:bg-accent hover:text-sidebar-primary-foreground"
         onClick={toggleSidebar}
+        data-sidebar-toggle="main"
+        aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
       >
         {collapsed ? (
           <ChevronRightIcon className="h-4 w-4" />

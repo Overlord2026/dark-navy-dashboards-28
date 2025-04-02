@@ -18,7 +18,10 @@ export const SidebarBottomNav: React.FC<SidebarBottomNavProps> = ({
   isLightTheme
 }) => {
   return (
-    <nav className="space-y-1">
+    <nav 
+      className="space-y-1"
+      data-sidebar-section="bottom-nav"
+    >
       {items.map((item) => (
         <Link
           key={item.title}
@@ -33,6 +36,8 @@ export const SidebarBottomNav: React.FC<SidebarBottomNavProps> = ({
                 : "text-sidebar-foreground border-transparent hover:bg-sidebar-accent",
           )}
           title={collapsed ? item.title : undefined}
+          data-bottom-nav-item={item.title}
+          data-active={isActive(item.href) ? "true" : "false"}
         >
           <item.icon 
             className={cn(

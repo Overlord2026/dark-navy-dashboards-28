@@ -55,9 +55,9 @@ export function useSidebarState(navigationCategories: NavCategory[]) {
   
   // Auto-expand submenu when a child route is active
   useEffect(() => {
-    // Don't auto-expand if the user has manually collapsed a submenu
-    // We'll only auto-expand on initial load or navigation changes
-    let hasExpandedSubmenu = false;
+    let stateChanged = false;
+    const newSubmenuState = {...expandedSubmenus};
+    const newCategoryState = {...expandedCategories};
     
     // First pass: Check for submenu item exact matches (highest priority)
     navigationCategories.forEach(category => {
@@ -66,30 +66,24 @@ export function useSidebarState(navigationCategories: NavCategory[]) {
           // Check if any submenu items match the current path
           const itemHasActiveChild = hasActiveChild(item.submenu);
           
-          if (itemHasActiveChild) {
+          if (itemHasActiveChild && !expandedSubmenus[item.title]) {
             logger.debug(`Auto-expanding submenu "${item.title}" because it has an active child`, 
               { title: item.title, path: location.pathname }, "SidebarState");
             
             // Expand the submenu with the active child
-            setExpandedSubmenus(prev => ({
-              ...prev,
-              [item.title]: true
-            }));
+            newSubmenuState[item.title] = true;
             
             // Also expand the parent category
-            setExpandedCategories(prev => ({
-              ...prev,
-              [category.id]: true
-            }));
+            newCategoryState[category.id] = true;
             
-            hasExpandedSubmenu = true;
+            stateChanged = true;
           }
         }
       });
     });
     
     // Second pass: Check for direct item matches if no submenu was expanded
-    if (!hasExpandedSubmenu) {
+    if (!stateChanged) {
       navigationCategories.forEach(category => {
         // Skip items with href="#" as they're just parent menu items
         const hasDirectMatch = category.items.some(item => {
@@ -100,21 +94,26 @@ export function useSidebarState(navigationCategories: NavCategory[]) {
           return isActive(item.href);
         });
         
-        if (hasDirectMatch) {
+        if (hasDirectMatch && !expandedCategories[category.id]) {
           // Expand the category with the direct match
-          setExpandedCategories(prev => ({
-            ...prev,
-            [category.id]: true
-          }));
+          newCategoryState[category.id] = true;
+          stateChanged = true;
         }
       });
     }
     
-    // Force a rerender to ensure UI reflects current state
-    setForceUpdate(prev => prev + 1);
-  }, [location.pathname, navigationCategories, hasActiveChild, isActive]);
+    // Only update state if changes were made
+    if (stateChanged) {
+      setExpandedSubmenus(newSubmenuState);
+      setExpandedCategories(newCategoryState);
+      // Force a rerender to ensure UI reflects current state
+      setForceUpdate(prev => prev + 1);
+    }
+  }, [location.pathname, navigationCategories, hasActiveChild, isActive, expandedSubmenus, expandedCategories]);
 
   const toggleSidebar = () => {
+    logger.debug(`Toggling sidebar collapsed state`, 
+      { wasCollapsed: collapsed, willBe: !collapsed }, "SidebarState");
     setCollapsed(!collapsed);
   };
 
@@ -122,13 +121,20 @@ export function useSidebarState(navigationCategories: NavCategory[]) {
     logger.debug(`Toggling category "${categoryId}"`, 
       { categoryId, wasExpanded: expandedCategories[categoryId] }, "SidebarState");
     
-    setExpandedCategories(prev => ({
-      ...prev,
-      [categoryId]: !prev[categoryId]
-    }));
+    setExpandedCategories(prev => {
+      const newState = {
+        ...prev,
+        [categoryId]: !prev[categoryId]
+      };
+      
+      logger.debug(`Category state updated: "${categoryId}"`, 
+        { before: prev[categoryId], after: !prev[categoryId] }, "SidebarState");
+      
+      return newState;
+    });
   };
 
-  // Robust submenu toggle implementation that avoids race conditions
+  // Robust submenu toggle implementation with synchronous state tracking
   const toggleSubmenu = (itemTitle: string, e: React.MouseEvent) => {
     // Always prevent default behavior to stop navigation
     if (e) {
@@ -139,8 +145,7 @@ export function useSidebarState(navigationCategories: NavCategory[]) {
     logger.debug(`Toggling submenu "${itemTitle}"`, 
       { itemTitle, wasExpanded: expandedSubmenus[itemTitle] }, "SidebarState");
     
-    // Using function form of setState ensures we're working with the latest state
-    // This helps avoid race conditions when multiple state updates happen in quick succession
+    // Using function form of setState to ensure we're working with the latest state
     setExpandedSubmenus(prevState => {
       const currentlyExpanded = Boolean(prevState[itemTitle]);
       const newExpanded = !currentlyExpanded;
@@ -148,12 +153,10 @@ export function useSidebarState(navigationCategories: NavCategory[]) {
       logger.debug(`Submenu state transition: "${itemTitle}" ${currentlyExpanded ? "expanded" : "collapsed"} -> ${newExpanded ? "expanded" : "collapsed"}`, 
         { itemTitle, before: currentlyExpanded, after: newExpanded }, "SidebarState");
       
-      // Create a new object to ensure React detects the change
       const newState = { ...prevState, [itemTitle]: newExpanded };
       
-      // Immediately trigger a force update to ensure rendering happens
-      // This is synchronous with the state update
-      setTimeout(() => setForceUpdate(prev => prev + 1), 0);
+      // Trigger a force update in the next microtask
+      queueMicrotask(() => setForceUpdate(prev => prev + 1));
       
       return newState;
     });
