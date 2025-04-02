@@ -1,9 +1,9 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
-import { ChevronDown, ChevronUp } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { ChevronDown, ChevronRight } from "lucide-react";
 import { NavItem } from "@/types/navigation";
+import { cn } from "@/lib/utils";
 
 interface SidebarNavCategoryProps {
   id: string;
@@ -15,7 +15,7 @@ interface SidebarNavCategoryProps {
   isActive: (href: string) => boolean;
   isLightTheme: boolean;
   expandedSubmenus: Record<string, boolean>;
-  toggleSubmenu: (itemTitle: string, e: React.MouseEvent) => void;
+  toggleSubmenu: (title: string, e: React.MouseEvent) => void;
 }
 
 export const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
@@ -31,164 +31,89 @@ export const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
   toggleSubmenu
 }) => {
   return (
-    <div key={id} className="mb-3">
+    <div className="mb-4">
       {!collapsed && (
         <div 
-          className={`flex items-center justify-between px-4 py-2 text-xs uppercase font-semibold tracking-wider ${
-            isLightTheme ? 'text-[#222222]/70' : 'text-[#E2E2E2]/70'
+          className={`flex items-center justify-between px-4 py-2 text-xs uppercase tracking-wider font-semibold cursor-pointer ${
+            isLightTheme ? 'text-[#222222]/70' : 'text-white/70'
           }`}
           onClick={() => onToggle(id)}
-          style={{ cursor: 'pointer' }}
         >
           <span>{label}</span>
-          {isExpanded ? 
-            <ChevronUp className="h-4 w-4" /> : 
-            <ChevronDown className="h-4 w-4" />
-          }
+          {isExpanded ? (
+            <ChevronDown className="h-3 w-3" />
+          ) : (
+            <ChevronRight className="h-3 w-3" />
+          )}
         </div>
       )}
       
-      {(collapsed || isExpanded) && (
-        <nav className="px-2 space-y-1 mt-1">
-          {items.map((item) => (
-            <SidebarNavItem 
-              key={item.title}
-              item={item}
-              collapsed={collapsed}
-              isActive={isActive}
-              isLightTheme={isLightTheme}
-              expandedSubmenus={expandedSubmenus}
-              toggleSubmenu={toggleSubmenu}
-            />
-          ))}
-        </nav>
-      )}
-    </div>
-  );
-};
-
-interface SidebarNavItemProps {
-  item: NavItem;
-  hasSubmenu?: boolean;
-  collapsed: boolean;
-  isActive: (href: string) => boolean;
-  isLightTheme: boolean;
-  expandedSubmenus: Record<string, boolean>;
-  toggleSubmenu: (itemTitle: string, e: React.MouseEvent) => void;
-}
-
-export const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
-  item,
-  hasSubmenu = false,
-  collapsed,
-  isActive,
-  isLightTheme,
-  expandedSubmenus,
-  toggleSubmenu
-}) => {
-  const hasSubItems = item.submenu && item.submenu.length > 0;
-  const isSubmenuExpanded = expandedSubmenus[item.title] || false;
-  
-  const isItemActive = isActive(item.href);
-  const isAnyChildActive = hasSubItems && item.submenu?.some(subItem => isActive(subItem.href));
-  const shouldShowActive = isItemActive || isAnyChildActive;
-
-  return (
-    <div className="mb-1">
-      <div className="flex flex-col">
-        <div className="flex items-center">
-          {hasSubItems ? (
-            <div 
-              className={cn(
-                "group flex items-center py-2 px-3 rounded-md transition-colors border w-full",
-                shouldShowActive
-                  ? isLightTheme 
-                    ? "bg-[#E9E7D8] text-[#222222] font-medium border-primary" 
-                    : "bg-black text-white border-primary" 
-                  : isLightTheme ? "text-[#222222] border-transparent hover:bg-[#E9E7D8] hover:border-primary" 
-                    : "text-sidebar-foreground border-transparent hover:bg-sidebar-accent",
-                hasSubmenu && "ml-4"
-              )}
-              onClick={(e) => toggleSubmenu(item.title, e)}
-              style={{ cursor: 'pointer' }}
-            >
-              <item.icon 
-                className={cn(
-                  "h-5 w-5 flex-shrink-0", 
-                  !collapsed && "mr-3"
-                )} 
-              />
-              {!collapsed && (
-                <>
-                  <span className="whitespace-nowrap overflow-hidden text-ellipsis flex-1">{item.title}</span>
-                  <button
-                    className="h-5 w-5 p-0 flex items-center justify-center"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      toggleSubmenu(item.title, e);
-                    }}
-                  >
-                    {isSubmenuExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-                  </button>
-                </>
-              )}
-            </div>
-          ) : (
-            <Link
-              to={item.href}
-              className={cn(
-                "group flex items-center py-2 px-3 rounded-md transition-colors border w-full",
-                shouldShowActive
-                  ? isLightTheme 
-                    ? "bg-[#E9E7D8] text-[#222222] font-medium border-primary" 
-                    : "bg-black text-white border-primary" 
-                  : isLightTheme ? "text-[#222222] border-transparent hover:bg-[#E9E7D8] hover:border-primary" 
-                    : "text-sidebar-foreground border-transparent hover:bg-sidebar-accent",
-                hasSubmenu && "ml-4"
-              )}
-              title={collapsed ? item.title : undefined}
-            >
-              <item.icon 
-                className={cn(
-                  "h-5 w-5 flex-shrink-0", 
-                  !collapsed && "mr-3"
-                )} 
-              />
-              {!collapsed && (
-                <span className="whitespace-nowrap overflow-hidden text-ellipsis">{item.title}</span>
-              )}
-            </Link>
-          )}
-        </div>
-        
-        {!collapsed && hasSubItems && isSubmenuExpanded && (
-          <div className="pl-4 mt-1 space-y-1">
-            {item.submenu!.map((subItem) => (
-              <Link
-                key={subItem.title}
-                to={subItem.href}
-                className={cn(
-                  "group flex items-center py-2 px-3 rounded-md transition-colors border w-full",
-                  isActive(subItem.href)
-                    ? isLightTheme 
-                      ? "bg-[#E9E7D8] text-[#222222] font-medium border-primary" 
-                      : "bg-black text-white border-primary" 
-                    : isLightTheme ? "text-[#222222] border-transparent hover:bg-[#E9E7D8] hover:border-primary" 
-                      : "text-sidebar-foreground border-transparent hover:bg-sidebar-accent",
-                  "ml-4"
-                )}
-              >
-                <subItem.icon 
+      {(isExpanded || collapsed) && (
+        <div className="space-y-1 px-3">
+          {items.map((item) => {
+            const itemIsActive = isActive(item.href);
+            const hasSubmenu = item.submenu && item.submenu.length > 0;
+            const submenuIsExpanded = expandedSubmenus[item.title];
+            
+            return (
+              <div key={item.href} className="group">
+                <Link
+                  to={hasSubmenu ? "#" : item.href}
                   className={cn(
-                    "h-5 w-5 flex-shrink-0 mr-3"
-                  )} 
-                />
-                <span className="whitespace-nowrap overflow-hidden text-ellipsis">{subItem.title}</span>
-              </Link>
-            ))}
-          </div>
-        )}
-      </div>
+                    "group flex items-center rounded-md py-2 px-3 text-sm transition-colors border whitespace-nowrap",
+                    itemIsActive
+                      ? isLightTheme
+                        ? "bg-[#E9E7D8] text-[#222222] font-medium border-primary"
+                        : "bg-black text-white border-primary"
+                      : isLightTheme
+                        ? "text-[#222222] border-transparent hover:bg-[#E9E7D8] hover:border-primary"
+                        : "text-white border-transparent hover:bg-sidebar-accent",
+                    hasSubmenu && "justify-between"
+                  )}
+                  onClick={hasSubmenu ? (e) => toggleSubmenu(item.title, e) : undefined}
+                >
+                  <div className="flex items-center">
+                    <item.icon className={cn("h-5 w-5 flex-shrink-0", !collapsed && "mr-3")} />
+                    {!collapsed && <span>{item.title}</span>}
+                  </div>
+                  
+                  {!collapsed && hasSubmenu && (
+                    submenuIsExpanded ? (
+                      <ChevronDown className="h-4 w-4" />
+                    ) : (
+                      <ChevronRight className="h-4 w-4" />
+                    )
+                  )}
+                </Link>
+                
+                {!collapsed && hasSubmenu && submenuIsExpanded && (
+                  <div className="ml-8 mt-1 space-y-1">
+                    {item.submenu?.map((subItem) => (
+                      <Link
+                        key={subItem.href}
+                        to={subItem.href}
+                        className={cn(
+                          "flex items-center rounded-md py-1.5 px-3 text-sm transition-colors border border-transparent",
+                          isActive(subItem.href)
+                            ? isLightTheme
+                              ? "bg-[#E9E7D8] text-[#222222] font-medium border-primary"
+                              : "bg-black text-white border-primary"
+                            : isLightTheme
+                              ? "text-[#222222] hover:bg-[#E9E7D8] hover:border-primary"
+                              : "text-white hover:bg-sidebar-accent"
+                        )}
+                      >
+                        <subItem.icon className="h-4 w-4 mr-2" />
+                        <span>{subItem.title}</span>
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 };
