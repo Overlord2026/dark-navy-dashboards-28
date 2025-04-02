@@ -3,10 +3,11 @@ import React, { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Calendar, Clock, CreditCard, Plus, ArrowUp, Wallet, Receipt, FileText, BanknoteIcon, CreditCard as CreditCardIcon } from "lucide-react";
+import { Calendar, Clock, CreditCard, Plus, ArrowUp, Wallet, Receipt, FileText, BanknoteIcon, CreditCard as CreditCardIcon, ExternalLink } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { DashboardHeader } from "@/components/ui/DashboardHeader";
+import { AdvancedBillPayingProvidersDialog } from "@/components/billpay/AdvancedBillPayingProvidersDialog";
 
 // Sample data for the dashboard
 const upcomingBills = [
@@ -31,6 +32,7 @@ const frequentBills = [
 const BillPay = () => {
   const { toast } = useToast();
   const [selectedBill, setSelectedBill] = useState<number | null>(null);
+  const [showAdvancedProvidersDialog, setShowAdvancedProvidersDialog] = useState(false);
 
   const handleQuickPay = (billId: number) => {
     setSelectedBill(billId);
@@ -123,6 +125,16 @@ const BillPay = () => {
           >
             <CreditCardIcon className="h-4 w-4" />
             Manage Payment Methods
+          </Button>
+
+          <Button 
+            variant="outline" 
+            size="lg" 
+            className="gap-2 border-blue-300 text-blue-600 hover:bg-blue-50 hover:text-blue-700"
+            onClick={() => setShowAdvancedProvidersDialog(true)}
+          >
+            <ExternalLink className="h-4 w-4" />
+            Advanced Bill Paying Providers
           </Button>
         </div>
         
@@ -286,6 +298,12 @@ const BillPay = () => {
             </CardFooter>
           </Card>
         </div>
+
+        {/* Advanced Bill Paying Providers Dialog */}
+        <AdvancedBillPayingProvidersDialog 
+          isOpen={showAdvancedProvidersDialog}
+          onClose={() => setShowAdvancedProvidersDialog(false)}
+        />
       </div>
     </ThreeColumnLayout>
   );

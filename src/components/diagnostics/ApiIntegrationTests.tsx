@@ -33,7 +33,10 @@ export function ApiIntegrationTests({
   };
   
   const isFixApplied = (serviceName: string) => {
-    return fixHistory.some(fix => fix.title === serviceName);
+    return fixHistory.some(fix => 
+      // Changed from fix.title to fix.service to match the FixHistoryEntry type
+      fix.service === serviceName
+    );
   };
   
   const getStatusIcon = (status: string) => {
