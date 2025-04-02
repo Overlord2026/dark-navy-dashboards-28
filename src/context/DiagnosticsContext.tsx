@@ -5,6 +5,7 @@ type DiagnosticsContextType = {
   isDiagnosticsModeEnabled: boolean;
   toggleDiagnosticsMode: () => void;
   isDevelopmentMode: boolean;
+  isCiMode: boolean;
 };
 
 const DiagnosticsContext = createContext<DiagnosticsContextType | undefined>(undefined);
@@ -12,6 +13,7 @@ const DiagnosticsContext = createContext<DiagnosticsContextType | undefined>(und
 export function DiagnosticsProvider({ children }: { children: React.ReactNode }) {
   const [isDiagnosticsModeEnabled, setIsDiagnosticsModeEnabled] = useState(false);
   const [isDevelopmentMode, setIsDevelopmentMode] = useState(false);
+  const [isCiMode, setIsCiMode] = useState(false);
   
   useEffect(() => {
     // Check if in development mode
@@ -20,9 +22,20 @@ export function DiagnosticsProvider({ children }: { children: React.ReactNode })
                   window.location.hostname.includes('lovableproject.com');
     setIsDevelopmentMode(isDev);
     
+    // Check if in CI mode
+    const isCI = process.env.CI === 'true' || 
+                 process.env.CI === '1' || 
+                 process.env.GITHUB_ACTIONS === 'true';
+    setIsCiMode(isCI);
+    
     // Check if URL has a diagnostics parameter
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.has('diagnostics')) {
+      setIsDiagnosticsModeEnabled(true);
+    }
+    
+    // Enable diagnostics automatically in CI mode
+    if (isCI) {
       setIsDiagnosticsModeEnabled(true);
     }
     
@@ -48,7 +61,8 @@ export function DiagnosticsProvider({ children }: { children: React.ReactNode })
       value={{
         isDiagnosticsModeEnabled,
         toggleDiagnosticsMode,
-        isDevelopmentMode
+        isDevelopmentMode,
+        isCiMode
       }}
     >
       {children}

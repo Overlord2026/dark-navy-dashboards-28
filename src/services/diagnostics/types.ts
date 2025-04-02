@@ -15,6 +15,7 @@ export interface PermissionTestResult {
   resource?: string;
   expected?: boolean;
   actual?: boolean;
+  permission?: string; // Added for compatibility
 }
 
 export interface ApiIntegrationTestResult {
@@ -43,6 +44,8 @@ export interface FormValidationTestResult {
     error: string;
   }[];
   formName?: string;
+  location?: string; // Added for compatibility
+  fields?: any[]; // Added for compatibility
 }
 
 export interface IconTestResult {
@@ -51,6 +54,7 @@ export interface IconTestResult {
   message: string;
   rendered?: boolean;
   icon?: string;
+  location?: string; // Added for compatibility
 }
 
 export interface RoleSimulationTestResult {
@@ -63,6 +67,8 @@ export interface RoleSimulationTestResult {
     actual: boolean;
   }[];
   module?: string;
+  accessStatus?: string; // Added for compatibility
+  expectedAccess?: boolean; // Added for compatibility
 }
 
 export interface PerformanceTestResult {
@@ -77,6 +83,10 @@ export interface PerformanceTestResult {
   };
   recommendation?: string;
   responseTime?: number;
+  memoryUsage?: number; // Added for compatibility
+  cpuUsage?: number; // Added for compatibility
+  concurrentUsers?: number; // Added for compatibility
+  endpoint?: string; // Added for compatibility
 }
 
 export interface SecurityTestResult {
@@ -93,6 +103,7 @@ export interface SecurityTestResult {
 export interface DiagnosticResult {
   status: DiagnosticTestStatus;
   message: string;
+  details?: string; // Added for compatibility
 }
 
 export type PermissionsTestResult = PermissionTestResult;
