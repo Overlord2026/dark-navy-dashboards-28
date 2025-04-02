@@ -150,24 +150,54 @@ export function useSidebarState(navigationCategories: NavCategory[]) {
       e.stopPropagation();
     }
     
-    logger.debug(`Toggling submenu "${itemTitle}"`, 
+    logger.debug(`BEFORE Toggle: submenu "${itemTitle}"`, 
       { title: itemTitle, currentState: expandedSubmenus[itemTitle] }, "SubmenuToggle");
     
-    // Direct state update for better reliability
+    // Use a functional update to ensure we're working with the latest state
     setExpandedSubmenus(prev => {
+      // Toggle the value
       const newValue = !prev[itemTitle];
       
-      logger.debug(`Setting submenu state for "${itemTitle}"`, 
+      logger.debug(`DURING Toggle: submenu "${itemTitle}"`, 
         { from: prev[itemTitle], to: newValue }, "SubmenuToggle");
       
-      return {
-        ...prev, 
-        [itemTitle]: newValue
-      };
+      // Create a new object to ensure React detects the change
+      const newState = { ...prev, [itemTitle]: newValue };
+      
+      // Debug log the entire state
+      logger.debug(`Submenu state update`, {
+        itemTitle,
+        previousState: prev[itemTitle] ? "expanded" : "collapsed",
+        newState: newValue ? "expanded" : "collapsed",
+        allMenus: Object.keys(newState).filter(key => newState[key]).join(', ')
+      }, "SubmenuStateUpdate");
+      
+      // Return the new state
+      return newState;
     });
     
-    // Force a rerender after state update
+    // Force a re-render
     setForceUpdate(prev => prev + 1);
+    
+    // Add a delayed check to verify the state was updated
+    setTimeout(() => {
+      logger.debug(`AFTER Toggle: submenu "${itemTitle}" state check`, {
+        currentValue: expandedSubmenus[itemTitle] ? "expanded" : "collapsed",
+        forceUpdateCount: forceUpdate
+      }, "SubmenuStateCheck");
+    }, 50);
+  };
+
+  // Debug function to log the current state
+  const debugState = () => {
+    logger.debug("Current sidebar state", {
+      collapsed,
+      expandedCategories: JSON.stringify(expandedCategories),
+      expandedSubmenus: JSON.stringify(expandedSubmenus),
+      forceUpdate
+    }, "SidebarStateDebug");
+    
+    return { collapsed, expandedCategories, expandedSubmenus, forceUpdate };
   };
 
   return {
@@ -180,6 +210,7 @@ export function useSidebarState(navigationCategories: NavCategory[]) {
     toggleSubmenu,
     isActive,
     hasActiveChild,
-    setCollapsed
+    setCollapsed,
+    debugState
   };
 }

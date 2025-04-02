@@ -67,54 +67,40 @@ export const Sidebar = () => {
     toggleCategory, 
     toggleSubmenu, 
     isActive,
-    hasActiveChild 
+    hasActiveChild,
+    debugState
   } = useSidebarState(navigationCategories);
 
-  // Enhanced diagnostic logging that runs on every state change
+  // Debug logging on mount and when state changes
   useEffect(() => {
-    logger.debug("Sidebar state diagnostic", {
+    logger.debug("Sidebar component rendered", {
       expandedSubmenus: JSON.stringify(expandedSubmenus),
       expandedCategories: JSON.stringify(expandedCategories),
       collapsed,
       forceUpdate
-    }, "Sidebar");
+    }, "SidebarComponent");
     
-    // Check specifically for Banking submenu
-    const bankingItem = familyWealthNavItems.find(item => item.title === "Banking");
-    if (bankingItem) {
+    // Detailed logging for Banking submenu
+    if (expandedSubmenus["Banking"] !== undefined) {
       logger.debug("Banking submenu state", {
-        title: bankingItem.title,
-        href: bankingItem.href,
-        hasSubmenu: !!bankingItem.submenu && bankingItem.submenu.length > 0,
-        submenuExpanded: !!expandedSubmenus["Banking"],
-        submenuItems: bankingItem.submenu?.map(item => ({
-          title: item.title,
-          href: item.href,
-          isActive: isActive(item.href)
-        }))
-      }, "Sidebar");
+        isExpanded: expandedSubmenus["Banking"] ? "true" : "false",
+        forceUpdateCount: forceUpdate
+      }, "BankingSubmenuState");
     }
-  }, [expandedSubmenus, expandedCategories, collapsed, forceUpdate, familyWealthNavItems, isActive]);
+  }, [expandedSubmenus, expandedCategories, collapsed, forceUpdate]);
 
-  // Test function to manually toggle Banking submenu
-  const handleBankingClick = () => {
+  // Helper function to toggle a specific submenu
+  const toggleSpecificSubmenu = (submenuTitle: string) => {
     const mockEvent = { 
       preventDefault: () => {}, 
       stopPropagation: () => {} 
     } as React.MouseEvent;
     
-    logger.debug("Manually toggling Banking menu", {
-      currentState: expandedSubmenus["Banking"] ? "expanded" : "collapsed"
-    }, "BankingToggle");
+    logger.debug(`Manual toggle for ${submenuTitle} menu`, {
+      currentState: expandedSubmenus[submenuTitle] ? "expanded" : "collapsed"
+    }, "ManualSubmenuToggle");
     
-    toggleSubmenu("Banking", mockEvent);
-    
-    // Log state after toggling
-    setTimeout(() => {
-      logger.debug("Banking menu state after toggle", {
-        nowExpanded: expandedSubmenus["Banking"] ? "yes" : "no"
-      }, "BankingToggle");
-    }, 100);
+    toggleSubmenu(submenuTitle, mockEvent);
   };
 
   const advisorInfo = {
@@ -133,15 +119,6 @@ export const Sidebar = () => {
 
   const handleViewProfile = (tabId: string) => {
     logger.debug("View profile tab clicked", { tabId }, "Sidebar");
-  };
-
-  // Check if any banking submenu item is active
-  const isBankingActive = () => {
-    const bankingItem = familyWealthNavItems.find(item => item.title === "Banking");
-    if (bankingItem && bankingItem.submenu) {
-      return hasActiveChild(bankingItem.submenu);
-    }
-    return false;
   };
 
   return (
@@ -184,22 +161,60 @@ export const Sidebar = () => {
           />
         ))}
         
-        {/* Test button for Banking submenu */}
+        {/* Debug buttons for each submenu */}
         {!collapsed && (
-          <div className="px-3 mt-2">
+          <div className="px-3 mt-4 space-y-2">
+            <h4 className="text-xs font-semibold px-2 text-gray-500">MENU DEBUG PANEL</h4>
+            
+            {/* Banking submenu debug button */}
             <Button
               size="sm"
               variant="outline"
-              onClick={handleBankingClick}
+              onClick={() => toggleSpecificSubmenu("Banking")}
               className={cn(
                 "w-full text-xs", 
                 isLightTheme 
                   ? "border-primary bg-[#E9E7D8] text-[#222222] hover:bg-[#DCD8C0]" 
                   : "border-primary bg-black text-white hover:bg-sidebar-accent"
               )}
-              data-banking-toggle="test"
+              data-menu-toggle="Banking"
             >
               {expandedSubmenus["Banking"] ? "Close" : "Open"} Banking Menu
+            </Button>
+            
+            {/* Collaboration debug button */}
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => toggleCategory("collaboration")}
+              className={cn(
+                "w-full text-xs", 
+                isLightTheme 
+                  ? "border-primary bg-[#E9E7D8] text-[#222222] hover:bg-[#DCD8C0]" 
+                  : "border-primary bg-black text-white hover:bg-sidebar-accent"
+              )}
+              data-category-toggle="collaboration"
+            >
+              {expandedCategories["collaboration"] ? "Close" : "Open"} Collaboration
+            </Button>
+            
+            {/* State debug button */}
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => {
+                const state = debugState();
+                logger.debug("Sidebar state debug", state, "SidebarStateDebug");
+              }}
+              className={cn(
+                "w-full text-xs", 
+                isLightTheme 
+                  ? "border-primary bg-[#E9E7D8] text-[#222222] hover:bg-[#DCD8C0]" 
+                  : "border-primary bg-black text-white hover:bg-sidebar-accent"
+              )}
+              data-debug="state"
+            >
+              Log Menu State
             </Button>
           </div>
         )}

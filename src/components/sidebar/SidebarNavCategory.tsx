@@ -1,5 +1,5 @@
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { NavItem } from "@/types/navigation";
@@ -33,23 +33,52 @@ export const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
   toggleSubmenu,
   hasActiveChild = () => false
 }) => {
+  // Track local submenu state for verification
+  const [localSubmenuState, setLocalSubmenuState] = useState<Record<string, boolean>>({});
+  
   // Enhanced logging for debugging
   useEffect(() => {
-    // Check for Banking item specifically
-    const bankingItem = items.find(item => item.title === "Banking");
-    if (bankingItem) {
-      logger.debug(`SidebarNavCategory render with Banking item`, {
-        categoryId: id,
-        bankingExpanded: expandedSubmenus["Banking"] ? "yes" : "no",
-        hasSubmenu: bankingItem.submenu ? "yes" : "no",
-        submenuCount: bankingItem.submenu?.length || 0
-      }, "SidebarCategory");
-    }
-  }, [id, items, expandedSubmenus]);
+    // Log the props and state every time they change
+    logger.debug(`SidebarNavCategory ${id} render`, {
+      categoryId: id,
+      isExpanded,
+      expandedSubmenus: JSON.stringify(expandedSubmenus),
+      submenuItems: items.filter(item => item.submenu).map(item => item.title).join(', ')
+    }, "SidebarCategory");
+  }, [id, items, isExpanded, expandedSubmenus]);
 
   // Handle clicks on category headers
   const handleCategoryClick = () => {
     onToggle(id);
+  };
+
+  // Enhanced submenu toggle handler with extra logging
+  const handleSubmenuToggle = (title: string, e: React.MouseEvent) => {
+    logger.debug(`CLICK: Submenu toggle for ${title} in category ${id}`, {
+      categoryId: id,
+      itemTitle: title,
+      currentExpanded: expandedSubmenus[title] ? "yes" : "no",
+      event: "click"
+    }, "SubmenuToggleClick");
+    
+    // Update local state for verification
+    setLocalSubmenuState(prev => ({
+      ...prev,
+      [title]: !prev[title]
+    }));
+    
+    // Call the actual toggle function
+    if (toggleSubmenu) {
+      toggleSubmenu(title, e);
+    }
+    
+    // Verify the toggle worked
+    setTimeout(() => {
+      logger.debug(`AFTER CLICK: Submenu state check for ${title}`, {
+        actualState: expandedSubmenus[title] ? "expanded" : "collapsed",
+        localState: localSubmenuState[title] ? "expanded" : "collapsed"
+      }, "SubmenuToggleVerify");
+    }, 50);
   };
 
   return (
@@ -86,16 +115,6 @@ export const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
             const hasSubmenu = item.submenu && item.submenu.length > 0;
             const submenuIsExpanded = expandedSubmenus[item.title] === true;
             
-            // Special log for Banking item
-            if (item.title === "Banking") {
-              logger.debug(`Rendering Banking item`, {
-                hasSubmenu,
-                submenuIsExpanded,
-                expandedState: expandedSubmenus["Banking"],
-                submenuLength: item.submenu?.length || 0
-              }, "BankingItem");
-            }
-            
             // For items with submenu, check if any submenu item is active
             let itemIsActive = isActive(item.href);
             
@@ -129,13 +148,7 @@ export const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
                       hasSubmenu && !collapsed && "justify-between",
                       "cursor-pointer"
                     )}
-                    onClick={(e) => {
-                      logger.debug(`Submenu clicked in category: ${item.title}`, 
-                        { category: id, item: item.title, expanded: submenuIsExpanded }, "CategorySubmenu");
-                      if (toggleSubmenu) {
-                        toggleSubmenu(item.title, e);
-                      }
-                    }}
+                    onClick={(e) => handleSubmenuToggle(item.title, e)}
                     title={collapsed ? item.title : undefined}
                     data-submenu-trigger={item.title}
                     data-expanded={submenuIsExpanded ? "true" : "false"}
@@ -190,13 +203,15 @@ export const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
                 {/* Render submenu with improved visibility and position */}
                 {!collapsed && hasSubmenu && submenuIsExpanded && (
                   <div 
-                    className="ml-8 space-y-1 mt-1 relative z-50 block"
+                    className="ml-8 space-y-1 mt-1 relative"
                     style={{
                       backgroundColor: isLightTheme ? '#F9F7E8' : '#1B1B32',
                       display: 'block',
                       opacity: 1,
                       maxHeight: '500px',
-                      overflow: 'visible'
+                      overflow: 'visible',
+                      zIndex: 20,
+                      position: 'relative'
                     }}
                     data-submenu-content={item.title}
                     data-expanded="true"
