@@ -6,7 +6,7 @@ import { NavigationTests } from "./NavigationTests";
 import { PermissionTests } from "./PermissionTests";
 import { SecurityTests } from "./SecurityTests";
 import { FormValidationTests } from "./FormValidationTests";
-import { QuickFix } from "@/types/diagnostics";
+import { QuickFix } from "@/hooks/useDiagnostics";
 import { FixHistoryEntry } from "@/types/diagnostics";
 import { IconTests } from "./IconTests";
 
@@ -14,7 +14,7 @@ interface DiagnosticsTabsProps {
   results: any;
   recommendations?: QuickFix[];
   isLoading?: boolean;
-  fixHistory?: FixHistoryEntry[];
+  fixHistory?: any[];
 }
 
 // The component now accepts all the props being passed to it

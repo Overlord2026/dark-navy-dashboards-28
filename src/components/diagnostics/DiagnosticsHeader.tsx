@@ -96,8 +96,8 @@ export const DiagnosticsHeader = ({
     try {
       const result = await applyQuickFix(fixId);
       if (result) {
-        const fixName = quickFixes.find(f => f.id === fixId)?.name || "issue";
-        toast.success(`Fixed: ${fixName}`, {
+        const fixTitle = quickFixes.find(f => f.id === fixId)?.title || "issue"; // Changed from 'name' to 'title'
+        toast.success(`Fixed: ${fixTitle}`, {
           description: "The issue has been resolved successfully"
         });
       } else {
@@ -231,7 +231,7 @@ export const DiagnosticsHeader = ({
                         <div className="flex items-center">
                           {getSeverityIcon(fix.severity)}
                           <div>
-                            <span className="text-sm font-medium">{fix.name}</span>
+                            <span className="text-sm font-medium">{fix.title}</span> {/* Changed from 'name' to 'title' */}
                             <div className="flex items-center mt-0.5">
                               <span className={`w-2 h-2 rounded-full ${getSeverityColor(fix.severity)}`}></span>
                               <span className="text-xs text-muted-foreground ml-1.5">{fix.area} | {fix.severity} priority</span>
@@ -248,7 +248,7 @@ export const DiagnosticsHeader = ({
                             </DialogTrigger>
                             <DialogContent>
                               <DialogHeader>
-                                <DialogTitle>{fix.name}</DialogTitle>
+                                <DialogTitle>{fix.title}</DialogTitle> {/* Changed from 'name' to 'title' */}
                                 <DialogDescription>Issue details and recommended fix</DialogDescription>
                               </DialogHeader>
                               <div className="space-y-4 py-4">
@@ -326,7 +326,7 @@ export const DiagnosticsHeader = ({
                         <div className="flex items-center">
                           {getSeverityIcon(fix.severity)}
                           <div>
-                            <span className="text-sm font-medium">{fix.name}</span>
+                            <span className="text-sm font-medium">{fix.title}</span> {/* Changed from 'name' to 'title' */}
                             <div className="flex items-center mt-0.5">
                               <span className={`w-2 h-2 rounded-full ${getSeverityColor(fix.severity)}`}></span>
                               <span className="text-xs text-muted-foreground ml-1.5">{fix.area} | {fix.severity} priority</span>
@@ -360,7 +360,7 @@ export const DiagnosticsHeader = ({
                         <div key={fix.id} className="p-3 rounded-lg border hover:bg-muted/30 transition-colors">
                           <div className="flex justify-between items-start">
                             <div>
-                              <span className="text-sm font-medium">{fix.name}</span>
+                              <span className="text-sm font-medium">{fix.title}</span> {/* Changed from 'name' to 'title' */}
                               <div className="text-xs text-muted-foreground mt-0.5">{fix.area}</div>
                             </div>
                             <Button 

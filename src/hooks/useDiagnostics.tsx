@@ -3,23 +3,28 @@ import { useState, useEffect } from "react";
 import { runDiagnostics } from "@/services/diagnostics";
 import { DiagnosticTestStatus } from "@/services/diagnostics/types";
 import { toast } from "sonner";
+import { QuickFix as DiagnosticsQuickFix, FixHistoryEntry as DiagnosticsFixHistory } from "@/types/diagnostics";
 
 export type QuickFixArea = 'system' | 'performance' | 'security' | 'config' | 'api';
 
+// Update the QuickFix interface to match the one in diagnostics.ts
 export interface QuickFix {
   id: string;
-  name: string;
+  title: string; // Changed from 'name' to 'title' to match diagnostics.ts
   description: string;
   area: QuickFixArea;
-  severity: string;
+  severity: 'critical' | 'high' | 'medium' | 'low';
 }
 
+// Update the FixHistoryEntry interface to match the one in diagnostics.ts
 interface FixHistoryEntry {
   id: string;
-  name: string;
+  title: string; // Was 'name' before
   timestamp: string;
   area: QuickFixArea;
   severity: string;
+  description: string; // Added to match diagnostics.ts
+  status: 'success' | 'failed' | 'pending'; // Added to match diagnostics.ts
 }
 
 export function useDiagnostics() {
@@ -32,42 +37,42 @@ export function useDiagnostics() {
   const [quickFixes, setQuickFixes] = useState<QuickFix[]>([
     {
       id: "fix-1",
-      name: "Optimize API response caching",
+      title: "Optimize API response caching", // Changed from 'name' to 'title'
       description: "Implement proper caching headers for REST API responses to improve performance",
       area: "performance",
       severity: "medium"
     },
     {
       id: "fix-2",
-      name: "Fix role permissions for advisors",
+      title: "Fix role permissions for advisors", // Changed from 'name' to 'title'
       description: "Advisors currently have access to admin subscription page",
       area: "security",
       severity: "high"
     },
     {
       id: "fix-3",
-      name: "Update authentication tokens",
+      title: "Update authentication tokens", // Changed from 'name' to 'title'
       description: "Tax Software Integration credentials are invalid or expired",
       area: "api",
       severity: "high"
     },
     {
       id: "fix-4",
-      name: "Fix calendar icon in mobile view",
+      title: "Fix calendar icon in mobile view", // Changed from 'name' to 'title'
       description: "Calendar icon is missing in mobile view for appointments",
       area: "config",
       severity: "low"
     },
     {
       id: "fix-5",
-      name: "Fix form validation in Loan Application",
+      title: "Fix form validation in Loan Application", // Changed from 'name' to 'title'
       description: "Form submission fails with valid data - issue with select and date fields",
       area: "system",
       severity: "medium"
     },
     {
       id: "fix-6",
-      name: "Resolve memory leak in Investment listings",
+      title: "Resolve memory leak in Investment listings", // Changed from 'name' to 'title'
       description: "Possible memory leak when loading large investment catalogs",
       area: "performance",
       severity: "high"
@@ -125,10 +130,12 @@ export function useDiagnostics() {
   const addFixToHistory = (fix: QuickFix) => {
     const historyEntry: FixHistoryEntry = {
       id: fix.id,
-      name: fix.name,
+      title: fix.title, // Changed from 'name' to 'title'
       timestamp: new Date().toISOString(),
       area: fix.area,
-      severity: fix.severity
+      severity: fix.severity,
+      description: fix.description, // Added to match diagnostics.ts
+      status: 'success' // Added to match diagnostics.ts
     };
     
     const updatedHistory = [historyEntry, ...fixHistory].slice(0, 20); // Keep only the latest 20 entries
@@ -156,7 +163,7 @@ export function useDiagnostics() {
         addFixToHistory(appliedFix);
         
         // Show success message
-        toast.success(`Fixed: ${appliedFix.name}`, {
+        toast.success(`Fixed: ${appliedFix.title}`, { // Changed from 'name' to 'title'
           description: "Issue has been resolved successfully."
         });
       }
@@ -193,7 +200,7 @@ export function useDiagnostics() {
       // Add to fix history
       addFixToHistory({
         id: testId,
-        name,
+        title: name, // Changed from 'name' to 'title'
         description: `${category} issue fixed`,
         area: category as QuickFixArea,
         severity: "medium" // Default since we don't have this info
