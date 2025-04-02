@@ -86,6 +86,7 @@ function App() {
                     <Route path="/education" element={<Education />} />
                     <Route path="/education/course/:courseId" element={<Education />} />
                     <Route path="/education/category/:categoryId" element={<Education />} />
+                    <Route path="/education/tax-planning" element={<TaxPlanning />} />
                     <Route path="/financial-plans" element={<FinancialPlans />} />
                     <Route path="/investments" element={<Investments />} />
                     <Route path="/investments/performance" element={<InvestmentPerformance />} />
