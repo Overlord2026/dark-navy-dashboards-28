@@ -8,4 +8,11 @@ export interface LogEntry {
   message: string;
   source: string;
   details?: string;
+  related?: {
+    component?: string;
+    file?: string;
+    line?: number;
+    stackTrace?: string;
+  };
+  recommendations?: string[];
 }

@@ -1,8 +1,9 @@
 
 import React from "react";
 import { Badge } from "@/components/ui/badge";
-import { AlertCircle, Info, Bug } from "lucide-react";
+import { AlertCircle, Info, Bug, CheckCircle, AlertTriangle, ChevronDown } from "lucide-react";
 import { LogEntry, LogLevel } from "@/types/diagnostics";
+import { AccordionTrigger } from "@/components/ui/accordion";
 
 interface LogEntryItemProps {
   log: LogEntry;
@@ -21,13 +22,13 @@ export const LogEntryItem: React.FC<LogEntryItemProps> = ({
       case "error":
         return <AlertCircle className="h-4 w-4 text-red-500" />;
       case "warning":
-        return <AlertCircle className="h-4 w-4 text-yellow-500" />;
+        return <AlertTriangle className="h-4 w-4 text-yellow-500" />;
       case "info":
         return <Info className="h-4 w-4 text-blue-500" />;
       case "debug":
         return <Bug className="h-4 w-4 text-gray-500" />;
       case "success":
-        return <Info className="h-4 w-4 text-green-500" />;
+        return <CheckCircle className="h-4 w-4 text-green-500" />;
       default:
         return <Info className="h-4 w-4" />;
     }
@@ -52,33 +53,23 @@ export const LogEntryItem: React.FC<LogEntryItemProps> = ({
   };
 
   return (
-    <div 
-      className="p-3 rounded-md border hover:bg-muted/50 cursor-pointer"
-      onClick={onToggleExpand}
-    >
-      <div className="flex items-start justify-between">
-        <div className="flex items-start gap-3">
-          <div className="mt-0.5">{getLogLevelIcon(log.level)}</div>
-          <div>
-            <div className="font-medium">{log.message}</div>
-            <div className="text-sm text-muted-foreground">
-              {new Date(log.timestamp).toLocaleString()} • Source: {log.source}
+    <AccordionTrigger className="hover:no-underline">
+      <div className="p-3 w-full text-left">
+        <div className="flex items-start justify-between">
+          <div className="flex items-start gap-3">
+            <div className="mt-0.5">{getLogLevelIcon(log.level)}</div>
+            <div>
+              <div className="font-medium">{log.message}</div>
+              <div className="text-sm text-muted-foreground">
+                {new Date(log.timestamp).toLocaleString()} • Source: {log.source}
+              </div>
             </div>
           </div>
-        </div>
-        <div>
-          {getLogLevelBadge(log.level)}
-        </div>
-      </div>
-      
-      {isExpanded && log.details && (
-        <div className="mt-3 pt-3 border-t text-sm">
-          <div className="font-medium mb-1">Details:</div>
-          <div className="bg-muted p-2 rounded font-mono text-xs overflow-x-auto">
-            {log.details}
+          <div className="flex items-center gap-2">
+            {getLogLevelBadge(log.level)}
           </div>
         </div>
-      )}
-    </div>
+      </div>
+    </AccordionTrigger>
   );
 };
