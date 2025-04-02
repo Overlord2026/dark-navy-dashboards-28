@@ -84,9 +84,9 @@ export const SidebarBottomNav: React.FC<SidebarBottomNavProps> = ({
             data-expanded={submenuIsExpanded ? "true" : "false"}
           >
             {hasSubmenu && toggleSubmenu ? (
-              <div
+              <button
                 className={cn(
-                  "group flex items-center py-2 px-3 rounded-md transition-colors border",
+                  "group flex items-center py-2 px-3 rounded-md transition-colors border w-full",
                   itemIsActive
                     ? isLightTheme 
                       ? "bg-[#E9E7D8] text-[#222222] font-medium border-primary" 
@@ -123,7 +123,7 @@ export const SidebarBottomNav: React.FC<SidebarBottomNavProps> = ({
                     <ChevronRight className="h-4 w-4" />
                   )
                 )}
-              </div>
+              </button>
             ) : (
               <Link
                 to={item.href}

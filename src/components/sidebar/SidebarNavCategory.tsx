@@ -81,6 +81,11 @@ export const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
     }, 50);
   };
 
+  // Determine if an item has a submenu
+  const itemHasSubmenu = (item: NavItem) => {
+    return item.submenu && item.submenu.length > 0;
+  };
+
   return (
     <div 
       className="mb-4"
@@ -112,7 +117,7 @@ export const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
           data-category-items={id}
         >
           {items.map((item) => {
-            const hasSubmenu = item.submenu && item.submenu.length > 0;
+            const hasSubmenu = itemHasSubmenu(item);
             const submenuIsExpanded = expandedSubmenus[item.title] === true;
             
             // For items with submenu, check if any submenu item is active
@@ -135,9 +140,9 @@ export const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
                 data-submenu-expanded={submenuIsExpanded ? "true" : "false"}
               >
                 {hasSubmenu && toggleSubmenu ? (
-                  <div
+                  <button
                     className={cn(
-                      "group flex items-center py-2 px-3 rounded-md transition-colors border",
+                      "group flex items-center py-2 px-3 rounded-md transition-colors border w-full",
                       itemIsActive
                         ? isLightTheme 
                           ? "bg-[#E9E7D8] text-[#222222] font-medium border-primary" 
@@ -170,7 +175,7 @@ export const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
                         <ChevronRight className="h-4 w-4" />
                       )
                     )}
-                  </div>
+                  </button>
                 ) : (
                   <Link
                     to={item.href}

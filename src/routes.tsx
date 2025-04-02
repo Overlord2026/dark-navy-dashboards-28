@@ -96,7 +96,7 @@ const AppRoutes: React.FC = () => {
       <Route path="/social-security" element={<SocialSecurity />} />
 
       {/* Banking Routes */}
-      <Route path="/banking" element={<Navigate to="/cash-management" />} />
+      <Route path="/banking" element={<CashManagement />} /> {/* Redirect to Cash Management */}
       <Route path="/cash-management" element={<CashManagement />} />
       <Route path="/transfers" element={<Transfers />} />
       <Route path="/banking-transfers" element={<BankingTransfers />} />
@@ -110,6 +110,7 @@ const AppRoutes: React.FC = () => {
       <Route path="/education/:sectionId" element={<Education />} />
       <Route path="/education/tax-planning" element={<TaxPlanning />} />
       <Route path="/professionals" element={<Professionals />} />
+      <Route path="/professionals/:sectionId" element={<Professionals />} /> {/* Add support for section ID */}
       <Route path="/professionals/signup" element={<ProfessionalSignup />} />
       <Route path="/profile" element={<CustomerProfile />} />
       <Route path="/advisor-profile" element={<AdvisorProfile />} />

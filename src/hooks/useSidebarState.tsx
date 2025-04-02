@@ -142,7 +142,7 @@ export function useSidebarState(navigationCategories: NavCategory[]) {
     });
   };
 
-  // Completely rewritten submenu toggle implementation
+  // Complete rewrite of toggleSubmenu function with direct state update
   const toggleSubmenu = (itemTitle: string, e: React.MouseEvent) => {
     // Always prevent default behavior to stop navigation
     if (e) {
@@ -150,40 +150,31 @@ export function useSidebarState(navigationCategories: NavCategory[]) {
       e.stopPropagation();
     }
     
+    // Log the current state before making changes
     logger.debug(`BEFORE Toggle: submenu "${itemTitle}"`, 
       { title: itemTitle, currentState: expandedSubmenus[itemTitle] }, "SubmenuToggle");
     
-    // Use a functional update to ensure we're working with the latest state
-    setExpandedSubmenus(prev => {
-      // Toggle the value
-      const newValue = !prev[itemTitle];
-      
-      logger.debug(`DURING Toggle: submenu "${itemTitle}"`, 
-        { from: prev[itemTitle], to: newValue }, "SubmenuToggle");
-      
-      // Create a new object to ensure React detects the change
-      const newState = { ...prev, [itemTitle]: newValue };
-      
-      // Debug log the entire state
-      logger.debug(`Submenu state update`, {
-        itemTitle,
-        previousState: prev[itemTitle] ? "expanded" : "collapsed",
-        newState: newValue ? "expanded" : "collapsed",
-        allMenus: Object.keys(newState).filter(key => newState[key]).join(', ')
-      }, "SubmenuStateUpdate");
-      
-      // Return the new state
-      return newState;
-    });
+    // Create a new state object to ensure React detects the change
+    const newSubmenuState = {
+      ...expandedSubmenus,
+      [itemTitle]: !expandedSubmenus[itemTitle]
+    };
     
-    // Force a re-render
+    // Log the state transition
+    logger.debug(`DURING Toggle: submenu "${itemTitle}"`, 
+      { from: expandedSubmenus[itemTitle], to: !expandedSubmenus[itemTitle] }, "SubmenuToggle");
+    
+    // Update state directly without callback to simplify
+    setExpandedSubmenus(newSubmenuState);
+    
+    // Force a rerender
     setForceUpdate(prev => prev + 1);
     
     // Add a delayed check to verify the state was updated
     setTimeout(() => {
       logger.debug(`AFTER Toggle: submenu "${itemTitle}" state check`, {
-        currentValue: expandedSubmenus[itemTitle] ? "expanded" : "collapsed",
-        forceUpdateCount: forceUpdate
+        currentValue: newSubmenuState[itemTitle] ? "expanded" : "collapsed",
+        forceUpdateCount: forceUpdate + 1
       }, "SubmenuStateCheck");
     }, 50);
   };
