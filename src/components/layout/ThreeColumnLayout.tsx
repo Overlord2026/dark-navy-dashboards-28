@@ -24,9 +24,7 @@ import {
   LineChartIcon,
   CircleDollarSignIcon,
   ArchiveIcon,
-  PieChart,
-  ArrowRightLeft,
-  Receipt
+  PieChart
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { UserProfileSection } from "@/components/sidebar/UserProfileSection";
@@ -86,6 +84,7 @@ const CustomHomeIcon: React.FC = () => (
   />
 );
 
+// Updated navigation categories based on the new structure
 const navigationCategories: NavCategory[] = [
   {
     id: "home",
@@ -115,10 +114,8 @@ const navigationCategories: NavCategory[] = [
     items: [
       { id: "financial-plans", label: "Financial Plans", icon: LineChartIcon, href: "/financial-plans" },
       { id: "accounts", label: "Accounts Overview", icon: WalletIcon, href: "/accounts" },
-      { id: "personal-insurance", label: "Insurance & Annuities", icon: ShieldIcon, href: "/personal-insurance" },
-      { id: "cash-management", label: "Cash Management", icon: BanknoteIcon, href: "/cash-management" },
-      { id: "banking-transfers", label: "Transfers", icon: ArrowRightLeft, href: "/banking-transfers" },
-      { id: "funding-accounts", label: "Funding Accounts", icon: WalletIcon, href: "/funding-accounts" },
+      { id: "insurance", label: "Insurance & Annuities", icon: ShieldIcon, href: "/insurance" },
+      { id: "cash-management", label: "Banking", icon: BanknoteIcon, href: "/cash-management" },
       { id: "legacy-vault", label: "Secure Family Vault", icon: VaultIcon, href: "/legacy-vault" },
       { id: "social-security", label: "Social Security", icon: CircleDollarSignIcon, href: "/social-security" },
       { id: "properties", label: "Real Estate & Properties", icon: BuildingIcon, href: "/properties" },

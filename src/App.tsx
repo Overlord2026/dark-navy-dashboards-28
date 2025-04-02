@@ -1,7 +1,7 @@
 
+import { BrowserRouter } from "react-router-dom";
 import { Toaster } from "sonner";
-import { router } from "./routes";
-import { RouterProvider } from "react-router-dom";
+import AppRoutes from "./routes";
 import { UserProvider } from "./context/UserContext";
 import { ThemeProvider as NextThemesProvider } from "./components/ui/ThemeProvider";
 import { ThemeProvider as CustomThemeProvider } from "./context/ThemeContext";
@@ -15,8 +15,10 @@ function App() {
         <UserProvider>
           <NetWorthProvider>
             <SubscriptionProvider>
-              <RouterProvider router={router} />
-              <Toaster position="top-right" />
+              <BrowserRouter>
+                <AppRoutes />
+                <Toaster position="top-right" />
+              </BrowserRouter>
             </SubscriptionProvider>
           </NetWorthProvider>
         </UserProvider>

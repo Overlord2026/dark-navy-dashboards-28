@@ -24,21 +24,13 @@ import {
   SearchIcon,
   ArrowRightLeft,
   Calculator,
-  PieChart,
-  CreditCard,
-  Receipt,
-  LayoutDashboardIcon,
+  PieChart
 } from "lucide-react";
 
 import { NavItem } from "@/types/navigation";
 
 // HOME category
 export const homeNavItems: NavItem[] = [
-  { 
-    title: "Dashboard", 
-    href: "/dashboard", 
-    icon: LayoutDashboardIcon 
-  },
   { 
     title: "Home", 
     href: "/", 
@@ -98,19 +90,21 @@ export const familyWealthNavItems: NavItem[] = [
     icon: ShieldIcon 
   },
   { 
-    title: "Cash Management", 
+    title: "Banking", 
     href: "/cash-management", 
-    icon: BanknoteIcon 
-  },
-  { 
-    title: "Transfers", 
-    href: "/banking-transfers", 
-    icon: ArrowRightLeft 
-  },
-  { 
-    title: "Funding Accounts", 
-    href: "/funding-accounts", 
-    icon: WalletIcon 
+    icon: BanknoteIcon,
+    submenu: [
+      {
+        title: "Cash Management",
+        href: "/cash-management",
+        icon: BanknoteIcon
+      },
+      {
+        title: "Transfers",
+        href: "/transfers",
+        icon: ArrowRightLeft
+      }
+    ]
   },
   { 
     title: "Secure Family Vault", 
@@ -148,7 +142,7 @@ export const collaborationNavItems: NavItem[] = [
   }
 ];
 
-// Bottom navigation items
+// Bottom navigation items (unchanged)
 export const bottomNavItems: NavItem[] = [
   { 
     title: "Help", 
@@ -159,15 +153,10 @@ export const bottomNavItems: NavItem[] = [
     title: "Settings", 
     href: "/settings", 
     icon: UserIcon 
-  },
-  {
-    title: "Debug",
-    href: "/debug",
-    icon: SearchIcon
   }
 ];
 
-// INVESTMENTS categories
+// INVESTMENTS categories (updated for Private Market Alpha and Stock Screener)
 export const investmentCategories: NavItem[] = [
   {
     title: "Private Equity",
