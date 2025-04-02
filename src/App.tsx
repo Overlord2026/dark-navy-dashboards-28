@@ -12,6 +12,7 @@ import { DiagnosticsTrigger } from "./components/diagnostics/DiagnosticsTrigger"
 import { DiagnosticsSummary } from "./components/diagnostics/DiagnosticsSummary";
 import { NavigationHealthIndicator } from "./components/diagnostics/NavigationHealthIndicator";
 import SimpleDiagnosticsView from "./components/diagnostics/SimpleDiagnosticsView";
+import { FinancialPlanProvider } from "./context/FinancialPlanContext";
 
 function App() {
   return (
@@ -21,14 +22,16 @@ function App() {
           <NetWorthProvider>
             <SubscriptionProvider>
               <DiagnosticsProvider>
-                <BrowserRouter>
-                  <AppRoutes />
-                  <Toaster position="top-right" />
-                  <DiagnosticsTrigger />
-                  <DiagnosticsSummary />
-                  <NavigationHealthIndicator />
-                  <SimpleDiagnosticsView />
-                </BrowserRouter>
+                <FinancialPlanProvider>
+                  <BrowserRouter>
+                    <AppRoutes />
+                    <Toaster position="top-right" />
+                    <DiagnosticsTrigger />
+                    <DiagnosticsSummary />
+                    <NavigationHealthIndicator />
+                    <SimpleDiagnosticsView />
+                  </BrowserRouter>
+                </FinancialPlanProvider>
               </DiagnosticsProvider>
             </SubscriptionProvider>
           </NetWorthProvider>
