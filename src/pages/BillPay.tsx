@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
@@ -8,8 +9,20 @@ import { useToast } from "@/hooks/use-toast";
 import { DashboardHeader } from "@/components/ui/DashboardHeader";
 import { AdvancedBillPayingProvidersDialog } from "@/components/billpay/AdvancedBillPayingProvidersDialog";
 import { BillPayButtonDiagnostics } from "@/components/billpay/BillPayButtonDiagnostics";
+import { AddBillDialog } from "@/components/billpay/AddBillDialog";
+import { PayBillDialog } from "@/components/billpay/PayBillDialog";
 
-const upcomingBills = [
+// Define bill type for TypeScript
+interface Bill {
+  id: number;
+  name: string;
+  amount: number;
+  dueDate: string;
+  category: string;
+}
+
+// Initial bills data
+const initialUpcomingBills: Bill[] = [
   { id: 1, name: "Electricity Bill", amount: 85.75, dueDate: "2025-04-15", category: "Utilities" },
   { id: 2, name: "Internet Service", amount: 69.99, dueDate: "2025-04-18", category: "Utilities" },
   { id: 3, name: "Water Bill", amount: 42.50, dueDate: "2025-04-25", category: "Utilities" },
@@ -30,28 +43,27 @@ const frequentBills = [
 
 const BillPay = () => {
   const { toast } = useToast();
+  const [upcomingBills, setUpcomingBills] = useState<Bill[]>(initialUpcomingBills);
   const [selectedBill, setSelectedBill] = useState<number | null>(null);
   const [showAdvancedProvidersDialog, setShowAdvancedProvidersDialog] = useState(false);
   const [showDiagnosticsDialog, setShowDiagnosticsDialog] = useState(false);
   const [diagnosticButtonName, setDiagnosticButtonName] = useState<string | undefined>(undefined);
+  
+  // New state for dialogs
+  const [showAddBillDialog, setShowAddBillDialog] = useState(false);
+  const [showPayBillDialog, setShowPayBillDialog] = useState(false);
+  const [billToPay, setBillToPay] = useState<Bill | null>(null);
 
   const handleQuickPay = (billId: number) => {
-    setSelectedBill(billId);
-    toast({
-      title: "Payment initiated",
-      description: "Your payment is being processed.",
-      duration: 3000,
-    });
-    
-    setTimeout(() => setSelectedBill(null), 1000);
+    const bill = upcomingBills.find(b => b.id === billId);
+    if (bill) {
+      setBillToPay(bill);
+      setShowPayBillDialog(true);
+    }
   };
 
   const handleAddNewBill = () => {
-    toast({
-      title: "Create New Bill",
-      description: "Feature will be implemented soon",
-      duration: 3000,
-    });
+    setShowAddBillDialog(true);
   };
   
   const handleViewAllBills = () => {
@@ -68,6 +80,10 @@ const BillPay = () => {
       description: "Access your payment methods settings",
       duration: 3000,
     });
+  };
+
+  const handleAddBill = (newBill: Bill) => {
+    setUpcomingBills(prev => [...prev, newBill]);
   };
 
   const runDiagnostics = (buttonName: string) => {
@@ -357,6 +373,22 @@ const BillPay = () => {
             </CardFooter>
           </Card>
         </div>
+
+        {/* Dialogs */}
+        <AddBillDialog 
+          isOpen={showAddBillDialog} 
+          onClose={() => setShowAddBillDialog(false)} 
+          onAddBill={handleAddBill}
+        />
+
+        <PayBillDialog
+          isOpen={showPayBillDialog}
+          onClose={() => {
+            setShowPayBillDialog(false);
+            setBillToPay(null);
+          }}
+          bill={billToPay}
+        />
 
         <BillPayButtonDiagnostics 
           isOpen={showDiagnosticsDialog}

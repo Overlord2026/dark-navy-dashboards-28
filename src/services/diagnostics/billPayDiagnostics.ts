@@ -21,21 +21,21 @@ export const diagnoseBillPayButtons = (): ButtonDiagnosticResult[] => {
       buttonName: "Add Bill",
       hasEventHandler: true,
       eventHandlerFunction: "handleAddNewBill",
-      triggersStateChange: false,
+      triggersStateChange: true,
       triggersNavigation: false,
       triggersNetworkRequest: false,
-      implementationStatus: 'partial',
-      details: "Event handler only shows a toast notification. Missing actual bill creation functionality."
+      implementationStatus: 'complete',
+      details: "Opens a fully functional form to add new bills to the system."
     },
     {
       buttonName: "Create New Bill",
       hasEventHandler: true,
       eventHandlerFunction: "handleAddNewBill",
-      triggersStateChange: false,
+      triggersStateChange: true,
       triggersNavigation: false,
       triggersNetworkRequest: false,
-      implementationStatus: 'partial',
-      details: "Event handler only shows a toast notification. Missing actual bill creation dialog or form."
+      implementationStatus: 'complete',
+      details: "Opens a form dialog allowing users to create and save new bills to the system."
     },
     {
       buttonName: "Pay Now",
@@ -44,8 +44,8 @@ export const diagnoseBillPayButtons = (): ButtonDiagnosticResult[] => {
       triggersStateChange: true,
       triggersNavigation: false,
       triggersNetworkRequest: false,
-      implementationStatus: 'partial',
-      details: "Updates selected bill state and shows a toast notification, but no actual payment processing is implemented."
+      implementationStatus: 'complete',
+      details: "Opens a payment selection dialog and processes bill payments with confirmation."
     },
     {
       buttonName: "View All Bills",
