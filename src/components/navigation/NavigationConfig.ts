@@ -1,4 +1,3 @@
-
 import { 
   HomeIcon, 
   GraduationCapIcon,
@@ -83,11 +82,6 @@ export const familyWealthNavItems: NavItem[] = [
     title: "Accounts Overview", 
     href: "/accounts", 
     icon: WalletIcon 
-  },
-  { 
-    title: "Insurance & Annuities", 
-    href: "/personal-insurance", 
-    icon: ShieldIcon 
   },
   { 
     title: "Banking", 
