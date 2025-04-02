@@ -9,7 +9,7 @@ import {
   familyWealthNavItems,
   collaborationNavItems,
   bottomNavItems 
-} from "@/components/navigation/NavigationConfig.ts"; // Updated to use the .ts file
+} from "@/components/navigation/NavigationConfig.ts"; // Using the TS file
 import { NavCategory } from "@/types/navigation";
 import { useTheme } from "@/context/ThemeContext";
 import { UserProfileSection } from "@/components/sidebar/UserProfileSection";
