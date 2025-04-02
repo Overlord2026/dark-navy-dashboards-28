@@ -43,7 +43,7 @@ export const diagnoseBillPayButtons = (): ButtonDiagnosticResult[] => {
       eventHandlerFunction: "handleQuickPay",
       triggersStateChange: true,
       triggersNavigation: false,
-      triggersNetworkRequest: false,
+      triggersNetworkRequest: true,
       implementationStatus: 'complete',
       details: "Opens a payment selection dialog and processes bill payments with confirmation."
     },
