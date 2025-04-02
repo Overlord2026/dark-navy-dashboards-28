@@ -1,4 +1,3 @@
-
 import { 
   HomeIcon, 
   GraduationCapIcon,
@@ -87,19 +86,17 @@ export const familyWealthNavItems: NavItem[] = [
   { 
     title: "Cash Management", 
     href: "/cash-management", 
-    icon: BanknoteIcon,
-    submenu: [
-      {
-        title: "Cash Management",
-        href: "/cash-management",
-        icon: BanknoteIcon
-      },
-      {
-        title: "Transfers",
-        href: "/transfers",
-        icon: ArrowRightLeft
-      }
-    ]
+    icon: BanknoteIcon
+  },
+  {
+    title: "Transfers",
+    href: "/transfers",
+    icon: ArrowRightLeft
+  },
+  {
+    title: "Funding Accounts",
+    href: "/funding-accounts",
+    icon: WalletIcon
   },
   { 
     title: "Secure Family Vault", 

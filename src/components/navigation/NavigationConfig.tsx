@@ -1,4 +1,3 @@
-
 import {
   HomeIcon,
   LayoutDashboardIcon,
@@ -42,24 +41,17 @@ export const homeNavItems = [
   {
     title: "Cash Management",
     href: "/cash-management",
-    icon: BanknoteIcon,
-    submenu: [
-      {
-        title: "Cash Management",
-        href: "/cash-management",
-        icon: BanknoteIcon
-      },
-      {
-        title: "Transfers",
-        href: "/banking-transfers",
-        icon: ArrowRightLeftIcon
-      },
-      {
-        title: "Funding Accounts",
-        href: "/funding-accounts",
-        icon: Wallet
-      }
-    ]
+    icon: BanknoteIcon
+  },
+  {
+    title: "Transfers",
+    href: "/transfers",
+    icon: ArrowRightLeftIcon
+  },
+  {
+    title: "Funding Accounts",
+    href: "/funding-accounts",
+    icon: Wallet
   },
   {
     title: "Accounts",
