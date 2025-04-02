@@ -1,4 +1,3 @@
-
 import { 
   HomeIcon, 
   GraduationCapIcon,
@@ -89,16 +88,6 @@ export const familyWealthNavItems: NavItem[] = [
     href: "/cash-management", 
     icon: BanknoteIcon
   },
-  {
-    title: "Transfers",
-    href: "/transfers",
-    icon: ArrowRightLeft
-  },
-  {
-    title: "Funding Accounts",
-    href: "/funding-accounts",
-    icon: WalletIcon
-  },
   { 
     title: "Secure Family Vault", 
     href: "/legacy-vault", 
@@ -149,7 +138,7 @@ export const bottomNavItems: NavItem[] = [
   }
 ];
 
-// INVESTMENTS categories (updated for Private Market Alpha and Stock Screener)
+// INVESTMENTS categories (unchanged)
 export const investmentCategories: NavItem[] = [
   {
     title: "Private Equity",

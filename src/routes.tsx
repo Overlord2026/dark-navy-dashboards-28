@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Index from "@/pages/Index";
@@ -20,6 +19,7 @@ import Sharing from "./pages/Sharing";
 import Education from "./pages/Education";
 import Professionals from "./pages/Professionals";
 import Transfers from "./pages/Transfers";
+import FundingAccounts from "./pages/FundingAccounts";
 import LegacyVault from "./pages/LegacyVault";
 import TaxPlanning from "./pages/TaxPlanning";
 import SystemDiagnostics from "./pages/SystemDiagnostics";
@@ -37,7 +37,6 @@ import Marketplace from "./pages/Marketplace";
 import MarketplaceRfp from "./pages/MarketplaceRfp";
 import MarketplaceRfpDetail from "./pages/MarketplaceRfpDetail";
 import TaxBudgets from "./pages/TaxBudgets";
-import FundingAccounts from "./pages/FundingAccounts";
 import PersonalInsurance from "./pages/PersonalInsurance";
 import AllModelPortfolios from "./pages/AllModelPortfolios";
 import PortfolioModelDetail from "./pages/PortfolioModelDetail";
@@ -93,9 +92,15 @@ const AppRoutes: React.FC = () => {
       <Route path="/estate-planning" element={<EstatePlanning />} />
       <Route path="/properties" element={<Properties />} />
       <Route path="/social-security" element={<SocialSecurity />} />
+      
+      {/* Cash Management section - now the main entry point for financial operations */}
       <Route path="/cash-management" element={<CashManagement />} />
+      
+      {/* Keep these routes for direct access, but they're now secondary entry points */}
       <Route path="/transfers" element={<Transfers />} />
       <Route path="/banking-transfers" element={<BankingTransfers />} />
+      <Route path="/funding-accounts" element={<FundingAccounts />} />
+      
       <Route path="/legacy-vault" element={<LegacyVault />} />
       <Route path="/sharing" element={<Sharing />} />
       <Route path="/sharing/:sectionId" element={<Sharing />} />
@@ -114,7 +119,6 @@ const AppRoutes: React.FC = () => {
       <Route path="/marketplace/rfp" element={<MarketplaceRfp />} />
       <Route path="/marketplace/rfp/:rfpId" element={<MarketplaceRfpDetail />} />
       <Route path="/tax-budgets" element={<TaxBudgets />} />
-      <Route path="/funding-accounts" element={<FundingAccounts />} />
       <Route path="/login" element={<Navigate to="/" />} />
       
       {isAdmin && (
