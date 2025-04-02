@@ -1,6 +1,6 @@
 
 import React from "react";
-import { DashboardHeader } from "@/components/ui/Header";
+import { DashboardHeader } from "@/components/ui/DashboardHeader";
 import NavigationDiagnosticModule from "@/components/diagnostics/NavigationDiagnosticModule";
 
 const NavigationDiagnostics: React.FC = () => {

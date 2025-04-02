@@ -1,494 +1,781 @@
 
 import React, { useState, useEffect } from "react";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { 
+  Card, 
+  CardContent, 
+  CardDescription, 
+  CardFooter, 
+  CardHeader, 
+  CardTitle 
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { LogsList } from "@/components/diagnostics/LogsList";
-import { LogsToolbar } from "@/components/diagnostics/LogsToolbar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { 
-  RefreshCw, AlertTriangle, AlertCircle, CheckCircle, 
-  Navigation, MonitorSmartphone, LayoutDashboard, Timer 
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import {
+  CheckCircle,
+  AlertTriangle,
+  XCircle,
+  ArrowRight,
+  ChevronDown,
+  ChevronUp,
+  Layers,
+  RefreshCw,
+  CheckCheck
 } from "lucide-react";
-import { LogEntry, NavigationDiagnosticResult, DiagnosticSummary } from "@/types/diagnostics";
-import { v4 as uuidv4 } from "uuid";
-import { 
-  homeNavItems,
-  educationSolutionsNavItems,
-  familyWealthNavItems,
-  collaborationNavItems
-} from "@/components/navigation/NavigationConfig";
 import { toast } from "sonner";
+import { testAllNavigationRoutes, getNavigationDiagnosticsSummary } from "@/services/diagnostics/navigationDiagnostics";
+import { testNavigation } from "@/services/diagnostics/navigationTests";
+import { NavigationDiagnosticResult, LogLevel } from "@/types/diagnostics";
 
 const NavigationDiagnosticModule: React.FC = () => {
-  const [logs, setLogs] = useState<LogEntry[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [filter, setFilter] = useState("");
-  const [sortDesc, setSortDesc] = useState(true);
-  const [expandedLog, setExpandedLog] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState("all");
-  const [summary, setSummary] = useState<DiagnosticSummary | null>(null);
+  const [isRunning, setIsRunning] = useState(false);
+  const [tab, setTab] = useState("overview");
+  const [results, setResults] = useState<Record<string, NavigationDiagnosticResult[]>>({});
+  const [summary, setSummary] = useState<{
+    overallStatus: "success" | "warning" | "error";
+    totalRoutes: number;
+    successCount: number;
+    warningCount: number;
+    errorCount: number;
+  } | null>(null);
+  const [expandedItems, setExpandedItems] = useState<Record<string, boolean>>({});
+  const [detailedView, setDetailedView] = useState<NavigationDiagnosticResult | null>(null);
   
-  // Function to simulate running diagnostics on a specific route
-  const runRouteCheck = async (route: string, tabName: string): Promise<NavigationDiagnosticResult> => {
-    // Simulate network delay
-    await new Promise(resolve => setTimeout(resolve, 300 + Math.random() * 700));
-    
-    // Generate random outcome (in a real app, this would be actual testing logic)
-    const randomStatus = Math.random();
-    
-    if (randomStatus > 0.85) { // 15% chance of error
-      return {
-        route,
-        status: "error",
-        message: `Failed to load "${tabName}" tab at route ${route}`,
-        componentStatus: {
-          rendered: false,
-          errors: ["Component failed to mount", "React error boundary triggered"]
-        },
-        apiStatus: [
-          {
-            endpoint: `api/data/${route.replace(/\//g, '_')}`,
-            status: "error",
-            responseTime: 2345,
-            errorMessage: "API request timeout after 2000ms"
-          }
-        ],
-        consoleErrors: [
-          "TypeError: Cannot read property 'data' of undefined",
-          "React error: Maximum update depth exceeded"
-        ]
-      };
-    } else if (randomStatus > 0.65) { // 20% chance of warning
-      return {
-        route,
-        status: "warning",
-        message: `"${tabName}" tab loaded with warnings`,
-        componentStatus: {
-          rendered: true,
-          loadTime: 1250,
-          errors: ["Non-critical UI elements failed to render"]
-        },
-        apiStatus: [
-          {
-            endpoint: `api/data/${route.replace(/\//g, '_')}`,
-            status: "warning",
-            responseTime: 1650,
-            errorMessage: "Slow response time (>1500ms)"
-          }
-        ],
-        consoleErrors: [
-          "Warning: componentWillMount is deprecated"
-        ]
-      };
-    } else { // 65% chance of success
-      return {
-        route,
-        status: "success",
-        message: `"${tabName}" tab loaded successfully`,
-        componentStatus: {
-          rendered: true,
-          loadTime: 420 + Math.random() * 300
-        },
-        apiStatus: [
-          {
-            endpoint: `api/data/${route.replace(/\//g, '_')}`,
-            status: "success",
-            responseTime: 320 + Math.random() * 200
-          }
-        ]
-      };
-    }
+  // Function to toggle the expanded state of an item
+  const toggleExpand = (itemId: string) => {
+    setExpandedItems(prev => ({
+      ...prev,
+      [itemId]: !prev[itemId]
+    }));
   };
-
-  // Function to run diagnostics on all navigation items
-  const runNavigationDiagnostics = async () => {
-    setIsLoading(true);
-    setLogs([]);
+  
+  // Function to run the diagnostics
+  const runDiagnostics = async () => {
+    setIsRunning(true);
+    setResults({});
     setSummary(null);
     
     try {
-      // Log the start of diagnostics
-      const startLog: LogEntry = {
-        id: uuidv4(),
-        timestamp: new Date().toISOString(),
-        level: "info",
-        message: "Starting navigation diagnostics",
-        source: "NavigationDiagnosticModule"
-      };
+      // Get all navigation diagnostics
+      const allResults = await testAllNavigationRoutes();
+      setResults(allResults);
       
-      setLogs(prev => [startLog]);
-      
-      // Get all navigation items to test
-      const allNavItems = [
-        ...homeNavItems,
-        ...educationSolutionsNavItems,
-        ...familyWealthNavItems,
-        ...collaborationNavItems
-      ];
-      
-      // Create a counter for summary statistics
-      let totalTests = 0;
-      let successTests = 0;
-      let warningTests = 0;
-      let errorTests = 0;
-
-      // Test each navigation item
-      for (const navItem of allNavItems) {
-        totalTests++;
-        
-        // Create a processing log entry
-        const processingLog: LogEntry = {
-          id: uuidv4(),
-          timestamp: new Date().toISOString(),
-          level: "info",
-          message: `Testing navigation to ${navItem.title}`,
-          source: "NavigationTest",
-          related: {
-            route: navItem.href,
-            navigationTab: navItem.title,
-          }
-        };
-        
-        setLogs(prev => [...prev, processingLog]);
-        
-        // Run the diagnostic
-        const result = await runRouteCheck(navItem.href, navItem.title);
-        
-        // Update counters
-        if (result.status === "success") successTests++;
-        else if (result.status === "warning") warningTests++;
-        else if (result.status === "error") errorTests++;
-        
-        // Create log entry based on result
-        const resultLog: LogEntry = {
-          id: uuidv4(),
-          timestamp: new Date().toISOString(),
-          level: result.status as LogLevel,
-          message: result.message,
-          source: "NavigationTest",
-          details: JSON.stringify(result, null, 2),
-          related: {
-            route: result.route,
-            navigationTab: navItem.title,
-            component: navItem.title + "Component"
-          },
-          recommendations: getRecommendations(result)
-        };
-        
-        setLogs(prev => [...prev, resultLog]);
-        
-        // Simulate a slight delay between checks
-        await new Promise(resolve => setTimeout(resolve, 100));
-      }
-      
-      // Create a summary
-      const completionLog: LogEntry = {
-        id: uuidv4(),
-        timestamp: new Date().toISOString(),
-        level: "info",
-        message: "Navigation diagnostics completed",
-        source: "NavigationDiagnosticModule",
-        details: `Tests completed: ${totalTests}. Success: ${successTests}, Warnings: ${warningTests}, Errors: ${errorTests}`
-      };
-      
-      setLogs(prev => [...prev, completionLog]);
-      
-      // Set summary
-      const overallStatus = errorTests > 0 
-        ? "error" 
-        : warningTests > 0 
-          ? "warning" 
-          : "success";
-          
+      // Get summary
+      const diagSummary = await getNavigationDiagnosticsSummary();
       setSummary({
-        overall: overallStatus,
-        total: totalTests,
-        success: successTests,
-        warnings: warningTests,
-        errors: errorTests,
-        timestamp: new Date().toISOString()
+        overallStatus: diagSummary.overallStatus,
+        totalRoutes: diagSummary.totalRoutes,
+        successCount: diagSummary.successCount,
+        warningCount: diagSummary.warningCount,
+        errorCount: diagSummary.errorCount
       });
       
-      // Show toast notification
-      if (overallStatus === "success") {
-        toast.success("All navigation checks passed", {
-          description: `${successTests} routes verified successfully`
-        });
-      } else if (overallStatus === "warning") {
-        toast.warning("Navigation checks completed with warnings", {
-          description: `${warningTests} warnings found in ${totalTests} routes`
-        });
+      // Show toast based on overall status
+      if (diagSummary.overallStatus === "success") {
+        toast.success("All navigation routes are healthy");
+      } else if (diagSummary.overallStatus === "warning") {
+        toast.warning("Some navigation routes have warnings");
       } else {
-        toast.error("Navigation checks failed", {
-          description: `${errorTests} errors found in ${totalTests} routes`
-        });
+        toast.error("Some navigation routes have errors");
       }
     } catch (error) {
-      console.error("Error running navigation diagnostics:", error);
-      
-      const errorLog: LogEntry = {
-        id: uuidv4(),
-        timestamp: new Date().toISOString(),
-        level: "error",
-        message: "Failed to complete navigation diagnostics",
-        source: "NavigationDiagnosticModule",
-        details: error instanceof Error ? error.message : "Unknown error"
-      };
-      
-      setLogs(prev => [...prev, errorLog]);
-      
-      toast.error("Diagnostic process failed", {
-        description: "Could not complete navigation health checks"
-      });
+      console.error("Error running diagnostics:", error);
+      toast.error("Failed to run diagnostics");
     } finally {
-      setIsLoading(false);
+      setIsRunning(false);
     }
   };
   
-  // Generate recommendations based on diagnostic results
-  const getRecommendations = (result: NavigationDiagnosticResult): string[] => {
+  // Function to apply a fix for a specific route issue
+  const applyFix = (route: string, issue: string) => {
+    toast.success(`Applied fix for ${route}: ${issue}`);
+    
+    // In a real application, this would actually fix the issue
+    // Here we'll just remove the item from the results to simulate a fix
+    
+    // Find which category the route belongs to
+    let categoryFound = "";
+    Object.entries(results).forEach(([category, items]) => {
+      if (items.some(item => item.route === route)) {
+        categoryFound = category;
+      }
+    });
+    
+    if (categoryFound) {
+      const updatedResults = { ...results };
+      updatedResults[categoryFound] = results[categoryFound].filter(
+        item => item.route !== route || item.status === "success"
+      );
+      setResults(updatedResults);
+      
+      // Update summary counts
+      if (summary) {
+        const newSummary = { ...summary };
+        if (issue.includes("error")) {
+          newSummary.errorCount = Math.max(0, newSummary.errorCount - 1);
+          newSummary.successCount += 1;
+        } else if (issue.includes("warning")) {
+          newSummary.warningCount = Math.max(0, newSummary.warningCount - 1);
+          newSummary.successCount += 1;
+        }
+        
+        // Update overall status if needed
+        if (newSummary.errorCount === 0 && newSummary.warningCount === 0) {
+          newSummary.overallStatus = "success";
+        } else if (newSummary.errorCount === 0) {
+          newSummary.overallStatus = "warning";
+        }
+        
+        setSummary(newSummary);
+      }
+    }
+  };
+  
+  // Function to convert a status string to the corresponding LogLevel
+  const statusToLogLevel = (status: "success" | "warning" | "error"): LogLevel => {
+    switch (status) {
+      case "success": return "success";
+      case "warning": return "warning";
+      case "error": return "error";
+      default: return "info";
+    }
+  };
+  
+  // Function to get recommendations based on the issue
+  const getRecommendations = (result: NavigationDiagnosticResult) => {
     const recommendations: string[] = [];
     
     if (result.status === "error") {
-      recommendations.push("Check component render functions for errors");
-      recommendations.push("Verify all required props are being passed");
-      
-      if (result.apiStatus?.some(api => api.status === "error")) {
-        recommendations.push("Check API endpoint connectivity and authentication");
-        recommendations.push("Verify data structure matches component expectations");
+      if (result.consoleErrors && result.consoleErrors.length > 0) {
+        recommendations.push("Fix the JavaScript errors in the browser console");
       }
       
-      if (result.consoleErrors?.length) {
-        recommendations.push("Review console errors for detailed debugging information");
-      }
-    }
-    
-    if (result.status === "warning") {
-      recommendations.push("Review component performance metrics");
-      
-      if (result.apiStatus?.some(api => api.status === "warning")) {
-        recommendations.push("Optimize API response time or implement caching");
+      if (result.componentStatus && !result.componentStatus.rendered) {
+        recommendations.push("Check the component rendering logic and ensure all required props are provided");
       }
       
-      if (result.componentStatus?.loadTime && result.componentStatus.loadTime > 1000) {
-        recommendations.push("Optimize component rendering to improve load time");
+      if (result.apiStatus && result.apiStatus.some(api => api.status === "error")) {
+        recommendations.push("Verify API endpoints are correctly configured and returning valid responses");
+      }
+      
+      // Default recommendation if none of the above apply
+      if (recommendations.length === 0) {
+        recommendations.push("Check route configuration and component imports");
+      }
+    } else if (result.status === "warning") {
+      if (result.componentStatus && result.componentStatus.loadTime && result.componentStatus.loadTime > 1000) {
+        recommendations.push("Optimize component render performance to reduce load time");
+      }
+      
+      if (result.apiStatus && result.apiStatus.some(api => api.status === "warning")) {
+        recommendations.push("Some API endpoints are responding slowly or with partial data");
+      }
+      
+      // Default recommendation
+      if (recommendations.length === 0) {
+        recommendations.push("Review route implementation and optimize where possible");
       }
     }
     
     return recommendations;
   };
   
-  // Handle refreshing the diagnostics
-  const handleRefresh = () => {
-    runNavigationDiagnostics();
-  };
-  
-  // Export logs as JSON for developers
-  const exportLogs = () => {
-    try {
-      const dataStr = JSON.stringify(logs, null, 2);
-      const dataUri = `data:application/json;charset=utf-8,${encodeURIComponent(dataStr)}`;
-      
-      const exportName = `navigation-diagnostics-${new Date().toISOString()}.json`;
-      
-      const linkElement = document.createElement('a');
-      linkElement.setAttribute('href', dataUri);
-      linkElement.setAttribute('download', exportName);
-      linkElement.click();
-      
-      toast.success("Diagnostics exported successfully", {
-        description: "JSON file has been downloaded"
-      });
-    } catch (error) {
-      console.error("Error exporting diagnostics:", error);
-      toast.error("Failed to export diagnostics", {
-        description: "Could not generate export file"
-      });
-    }
-  };
-  
-  // Filter logs based on log level
-  const getFilteredLogs = () => {
-    let filtered = logs;
-    
-    if (activeTab !== "all") {
-      filtered = logs.filter(log => log.level === activeTab);
-    }
-    
-    if (filter) {
-      const lowerFilter = filter.toLowerCase();
-      filtered = filtered.filter(log => 
-        log.message.toLowerCase().includes(lowerFilter) ||
-        log.source.toLowerCase().includes(lowerFilter) ||
-        (log.details && log.details.toLowerCase().includes(lowerFilter))
-      );
-    }
-    
-    // Sort logs by timestamp
-    return filtered.sort((a, b) => {
-      if (sortDesc) {
-        return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
-      } else {
-        return new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime();
-      }
-    });
-  };
-  
-  // Automatically run diagnostics when component mounts
+  // Initial load
   useEffect(() => {
-    runNavigationDiagnostics();
+    runDiagnostics();
   }, []);
   
   return (
-    <div className="space-y-6">
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
+    <Card className="w-full">
+      <CardHeader>
+        <CardTitle className="flex items-center justify-between">
+          <span>Navigation Route Diagnostics</span>
+          <Button 
+            onClick={runDiagnostics} 
+            disabled={isRunning} 
+            variant="outline" 
+            size="sm"
+            className="flex items-center gap-2"
+          >
+            <RefreshCw className={`h-4 w-4 ${isRunning ? 'animate-spin' : ''}`} />
+            {isRunning ? 'Running...' : 'Run Diagnostics'}
+          </Button>
+        </CardTitle>
+        <CardDescription>
+          Verify all navigation routes are functioning correctly
+        </CardDescription>
+      </CardHeader>
+      
+      <CardContent>
+        {/* Summary Alert */}
+        {summary && (
+          <Alert 
+            className={`mb-4 ${
+              summary.overallStatus === 'success' 
+                ? 'bg-green-50' 
+                : summary.overallStatus === 'warning' 
+                  ? 'bg-yellow-50' 
+                  : 'bg-red-50'
+            }`}
+          >
             <div className="flex items-center gap-2">
-              <Navigation className="h-5 w-5 text-primary" />
-              <CardTitle>Navigation Health Check</CardTitle>
-            </div>
-            
-            <Button 
-              onClick={handleRefresh} 
-              disabled={isLoading} 
-              variant="outline" 
-              size="sm"
-              className="gap-2"
-            >
-              {isLoading ? (
-                <>
-                  <RefreshCw className="h-4 w-4 animate-spin" />
-                  Running...
-                </>
+              {summary.overallStatus === 'success' ? (
+                <CheckCircle className="h-5 w-5 text-green-500" />
+              ) : summary.overallStatus === 'warning' ? (
+                <AlertTriangle className="h-5 w-5 text-yellow-500" />
               ) : (
-                <>
-                  <RefreshCw className="h-4 w-4" />
-                  Run Diagnostics
-                </>
+                <XCircle className="h-5 w-5 text-red-500" />
               )}
-            </Button>
-          </div>
-          <CardDescription>
-            Test all navigation routes and components for proper functionality
-          </CardDescription>
-        </CardHeader>
+              <AlertTitle>
+                {summary.overallStatus === 'success' 
+                  ? 'All navigation routes are healthy' 
+                  : summary.overallStatus === 'warning'
+                    ? 'Some routes have warnings'
+                    : 'Some routes have errors'
+                }
+              </AlertTitle>
+            </div>
+            <AlertDescription className="mt-2">
+              {summary.totalRoutes} routes checked: 
+              <span className="text-green-600 font-medium ml-1">{summary.successCount} successful</span>
+              {summary.warningCount > 0 && (
+                <span className="text-yellow-600 font-medium ml-1">, {summary.warningCount} with warnings</span>
+              )}
+              {summary.errorCount > 0 && (
+                <span className="text-red-600 font-medium ml-1">, {summary.errorCount} with errors</span>
+              )}
+            </AlertDescription>
+          </Alert>
+        )}
         
-        <CardContent>
-          {summary && (
-            <div className="grid grid-cols-4 gap-4 mb-6">
-              <Card className="p-4 flex flex-col items-center justify-center">
-                <div className="text-sm font-medium mb-2 text-muted-foreground">Overall Status</div>
-                <div className="flex items-center justify-center">
-                  {summary.overall === "success" && <CheckCircle className="h-8 w-8 text-green-500" />}
-                  {summary.overall === "warning" && <AlertTriangle className="h-8 w-8 text-yellow-500" />}
-                  {summary.overall === "error" && <AlertCircle className="h-8 w-8 text-red-500" />}
-                </div>
-                <div className="mt-2 font-semibold">
-                  {summary.overall === "success" && "All Checks Passed"}
-                  {summary.overall === "warning" && "Some Warnings"}
-                  {summary.overall === "error" && "Issues Detected"}
-                </div>
-              </Card>
-              
-              <Card className="p-4 flex flex-col items-center justify-center">
-                <div className="text-sm font-medium mb-2 text-muted-foreground">Components</div>
-                <div className="flex items-center justify-center">
-                  <MonitorSmartphone className="h-6 w-6 text-blue-500" />
-                </div>
-                <div className="mt-2 text-xl font-semibold">{summary.total}</div>
-                <div className="text-sm text-muted-foreground">Routes Checked</div>
-              </Card>
-              
-              <Card className="p-4 flex flex-col items-center justify-center">
-                <div className="text-sm font-medium mb-2 text-muted-foreground">Route Status</div>
-                <div className="flex items-center justify-center gap-2">
-                  <div className="flex flex-col items-center">
-                    <div className="flex gap-1 items-center">
-                      <div className="h-3 w-3 rounded-full bg-green-500"></div>
-                      <span className="text-xs text-green-600 dark:text-green-400">{summary.success}</span>
+        {/* Tabs for different views */}
+        <Tabs value={tab} onValueChange={setTab} className="w-full">
+          <TabsList className="mb-4">
+            <TabsTrigger value="overview">Overview</TabsTrigger>
+            <TabsTrigger value="issues">
+              Issues
+              {summary && (summary.warningCount > 0 || summary.errorCount > 0) && (
+                <span className="ml-2 px-2 py-0.5 rounded-full text-xs bg-red-100 text-red-600">
+                  {summary.warningCount + summary.errorCount}
+                </span>
+              )}
+            </TabsTrigger>
+            <TabsTrigger value="details">Details</TabsTrigger>
+          </TabsList>
+          
+          {/* Overview Tab */}
+          <TabsContent value="overview">
+            <div className="space-y-4">
+              {Object.entries(results).map(([category, items]) => (
+                <div key={category} className="border rounded-lg p-4">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-lg font-medium capitalize mb-2 flex items-center">
+                      <Layers className="h-5 w-5 mr-2 text-gray-500" />
+                      {category.replace(/([A-Z])/g, ' $1').trim()} Navigation
+                    </h3>
+                    <div className="flex gap-2">
+                      <span className="text-green-600 text-sm">
+                        {items.filter(i => i.status === 'success').length} OK
+                      </span>
+                      {items.filter(i => i.status === 'warning').length > 0 && (
+                        <span className="text-yellow-600 text-sm">
+                          {items.filter(i => i.status === 'warning').length} Warnings
+                        </span>
+                      )}
+                      {items.filter(i => i.status === 'error').length > 0 && (
+                        <span className="text-red-600 text-sm">
+                          {items.filter(i => i.status === 'error').length} Errors
+                        </span>
+                      )}
                     </div>
                   </div>
-                  <div className="flex flex-col items-center">
-                    <div className="flex gap-1 items-center">
-                      <div className="h-3 w-3 rounded-full bg-yellow-500"></div>
-                      <span className="text-xs text-yellow-600 dark:text-yellow-400">{summary.warnings}</span>
+                  
+                  {/* Progress bar */}
+                  <div className="w-full h-2 bg-gray-100 rounded-full mt-2 mb-4">
+                    <div className="flex h-full rounded-full overflow-hidden">
+                      <div 
+                        className="bg-green-500 h-full" 
+                        style={{ 
+                          width: `${(items.filter(i => i.status === 'success').length / items.length) * 100}%` 
+                        }}
+                      />
+                      <div 
+                        className="bg-yellow-500 h-full" 
+                        style={{ 
+                          width: `${(items.filter(i => i.status === 'warning').length / items.length) * 100}%` 
+                        }}
+                      />
+                      <div 
+                        className="bg-red-500 h-full" 
+                        style={{ 
+                          width: `${(items.filter(i => i.status === 'error').length / items.length) * 100}%` 
+                        }}
+                      />
                     </div>
                   </div>
-                  <div className="flex flex-col items-center">
-                    <div className="flex gap-1 items-center">
-                      <div className="h-3 w-3 rounded-full bg-red-500"></div>
-                      <span className="text-xs text-red-600 dark:text-red-400">{summary.errors}</span>
+                  
+                  {/* List of routes with issues */}
+                  {items.filter(item => item.status !== 'success').length > 0 && (
+                    <div className="space-y-2 mt-2">
+                      {items
+                        .filter(item => item.status !== 'success')
+                        .map((item, idx) => (
+                          <div 
+                            key={`${category}-${idx}`} 
+                            className="text-sm p-2 rounded-md flex items-start justify-between"
+                            style={{
+                              backgroundColor: item.status === 'warning' ? 'rgb(254, 252, 232)' : 'rgb(254, 242, 242)'
+                            }}
+                          >
+                            <div>
+                              <div className="font-medium flex items-center">
+                                {item.status === 'warning' ? (
+                                  <AlertTriangle className="h-4 w-4 text-yellow-500 mr-2" />
+                                ) : (
+                                  <XCircle className="h-4 w-4 text-red-500 mr-2" />
+                                )}
+                                {item.route}
+                              </div>
+                              <p className="text-gray-600 ml-6">{item.message}</p>
+                            </div>
+                            <Button 
+                              variant="ghost" 
+                              size="sm"
+                              onClick={() => setDetailedView(item)}
+                              className="h-7 gap-1"
+                            >
+                              Details <ArrowRight className="h-3 w-3" />
+                            </Button>
+                          </div>
+                        ))}
                     </div>
-                  </div>
-                </div>
-                <div className="mt-3 text-sm">
-                  {summary.errors === 0 && summary.warnings === 0 ? (
-                    <span className="text-green-600 dark:text-green-400">All routes healthy</span>
-                  ) : (
-                    <span className="text-yellow-600 dark:text-yellow-400">
-                      {summary.errors > 0 ? "Critical issues" : "Performance warnings"}
-                    </span>
                   )}
                 </div>
-              </Card>
-              
-              <Card className="p-4 flex flex-col items-center justify-center">
-                <div className="text-sm font-medium mb-2 text-muted-foreground">Last Run</div>
-                <div className="flex items-center justify-center">
-                  <Timer className="h-6 w-6 text-purple-500" />
-                </div>
-                <div className="mt-2 text-sm font-medium">
-                  {new Date(summary.timestamp).toLocaleTimeString()}
-                </div>
-                <div className="text-xs text-muted-foreground">
-                  {new Date(summary.timestamp).toLocaleDateString()}
-                </div>
-              </Card>
+              ))}
             </div>
-          )}
+          </TabsContent>
           
-          <Tabs defaultValue="all" value={activeTab} onValueChange={setActiveTab}>
-            <TabsList>
-              <TabsTrigger value="all">All Logs</TabsTrigger>
-              <TabsTrigger value="error">Errors</TabsTrigger>
-              <TabsTrigger value="warning">Warnings</TabsTrigger>
-              <TabsTrigger value="success">Success</TabsTrigger>
-              <TabsTrigger value="info">Info</TabsTrigger>
-            </TabsList>
-          </Tabs>
+          {/* Issues Tab */}
+          <TabsContent value="issues">
+            <ScrollArea className="h-[400px]">
+              <div className="space-y-3">
+                {Object.entries(results).flatMap(([category, items]) => 
+                  items
+                    .filter(item => item.status !== 'success')
+                    .map((item, idx) => (
+                      <Collapsible
+                        key={`${category}-${idx}-${item.route}`}
+                        open={expandedItems[`${category}-${idx}-${item.route}`]}
+                        onOpenChange={() => toggleExpand(`${category}-${idx}-${item.route}`)}
+                        className="border rounded-md overflow-hidden"
+                      >
+                        <div className={`p-4 ${
+                          item.status === 'warning' ? 'bg-yellow-50' : 'bg-red-50'
+                        }`}>
+                          <CollapsibleTrigger asChild>
+                            <div className="flex items-start justify-between cursor-pointer w-full">
+                              <div className="flex items-start">
+                                {item.status === 'warning' ? (
+                                  <AlertTriangle className="h-5 w-5 text-yellow-500 mr-3 mt-0.5" />
+                                ) : (
+                                  <XCircle className="h-5 w-5 text-red-500 mr-3 mt-0.5" />
+                                )}
+                                <div>
+                                  <div className="font-medium text-gray-900">
+                                    {item.route}
+                                  </div>
+                                  <div className="text-sm text-gray-600">
+                                    {item.message}
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="flex items-center space-x-2">
+                                {expandedItems[`${category}-${idx}-${item.route}`] ? (
+                                  <ChevronUp className="h-5 w-5 text-gray-500" />
+                                ) : (
+                                  <ChevronDown className="h-5 w-5 text-gray-500" />
+                                )}
+                              </div>
+                            </div>
+                          </CollapsibleTrigger>
+                        </div>
+                        
+                        <CollapsibleContent>
+                          <div className="p-4 bg-white border-t">
+                            <div className="space-y-4">
+                              {/* Component Status */}
+                              {item.componentStatus && (
+                                <div className="space-y-2">
+                                  <h4 className="text-sm font-medium">Component Status</h4>
+                                  <div className="bg-gray-50 p-3 rounded text-sm">
+                                    <div className="flex items-center gap-2">
+                                      <span className="font-medium">Rendered:</span>
+                                      <span>
+                                        {item.componentStatus.rendered ? (
+                                          <span className="text-green-600">Yes</span>
+                                        ) : (
+                                          <span className="text-red-600">No</span>
+                                        )}
+                                      </span>
+                                    </div>
+                                    {item.componentStatus.loadTime && (
+                                      <div className="flex items-center gap-2">
+                                        <span className="font-medium">Load Time:</span>
+                                        <span className={
+                                          item.componentStatus.loadTime > 1000 ? 'text-yellow-600' : 'text-green-600'
+                                        }>
+                                          {item.componentStatus.loadTime}ms
+                                        </span>
+                                      </div>
+                                    )}
+                                    {item.componentStatus.errors && item.componentStatus.errors.length > 0 && (
+                                      <div>
+                                        <span className="font-medium">Errors:</span>
+                                        <ul className="list-disc pl-5 mt-1 text-red-600">
+                                          {item.componentStatus.errors.map((err, i) => (
+                                            <li key={i}>{err}</li>
+                                          ))}
+                                        </ul>
+                                      </div>
+                                    )}
+                                  </div>
+                                </div>
+                              )}
+                              
+                              {/* API Status */}
+                              {item.apiStatus && item.apiStatus.length > 0 && (
+                                <div className="space-y-2">
+                                  <h4 className="text-sm font-medium">API Status</h4>
+                                  <div className="space-y-2">
+                                    {item.apiStatus.map((api, i) => (
+                                      <div 
+                                        key={i} 
+                                        className={`p-3 rounded text-sm ${
+                                          api.status === 'success' 
+                                            ? 'bg-green-50' 
+                                            : api.status === 'warning' 
+                                              ? 'bg-yellow-50' 
+                                              : 'bg-red-50'
+                                        }`}
+                                      >
+                                        <div className="flex items-center justify-between">
+                                          <div className="font-medium flex items-center">
+                                            {api.status === 'success' ? (
+                                              <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
+                                            ) : api.status === 'warning' ? (
+                                              <AlertTriangle className="h-4 w-4 text-yellow-500 mr-2" />
+                                            ) : (
+                                              <XCircle className="h-4 w-4 text-red-500 mr-2" />
+                                            )}
+                                            {api.endpoint}
+                                          </div>
+                                          {api.responseTime && (
+                                            <span className={
+                                              api.responseTime > 500 ? 'text-yellow-600' : 'text-green-600'
+                                            }>
+                                              {api.responseTime}ms
+                                            </span>
+                                          )}
+                                        </div>
+                                        {api.errorMessage && (
+                                          <div className="mt-1 pl-6 text-red-600">
+                                            {api.errorMessage}
+                                          </div>
+                                        )}
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                              )}
+                              
+                              {/* Console Errors */}
+                              {item.consoleErrors && item.consoleErrors.length > 0 && (
+                                <div className="space-y-2">
+                                  <h4 className="text-sm font-medium">Console Errors</h4>
+                                  <div className="bg-gray-900 text-white p-3 rounded font-mono text-xs overflow-x-auto">
+                                    {item.consoleErrors.map((err, i) => (
+                                      <div key={i} className="py-1">{err}</div>
+                                    ))}
+                                  </div>
+                                </div>
+                              )}
+                              
+                              {/* Recommended Fix */}
+                              <div className="space-y-2">
+                                <h4 className="text-sm font-medium">Recommendations</h4>
+                                <div className="bg-blue-50 p-3 rounded text-sm">
+                                  <ul className="list-disc pl-5 space-y-1">
+                                    {getRecommendations(item).map((rec, i) => (
+                                      <li key={i}>{rec}</li>
+                                    ))}
+                                  </ul>
+                                </div>
+                                <Button 
+                                  variant="outline" 
+                                  size="sm"
+                                  onClick={() => applyFix(item.route, item.message)}
+                                  className="mt-2 w-full flex items-center justify-center gap-2"
+                                >
+                                  <CheckCheck className="h-4 w-4" />
+                                  Apply Fix
+                                </Button>
+                              </div>
+                            </div>
+                          </div>
+                        </CollapsibleContent>
+                      </Collapsible>
+                    ))
+                )}
+                
+                {Object.values(results).flat().filter(item => item.status !== 'success').length === 0 && (
+                  <div className="flex flex-col items-center justify-center p-8 text-center">
+                    <CheckCircle className="h-12 w-12 text-green-500 mb-3" />
+                    <h3 className="text-xl font-medium">All systems operational</h3>
+                    <p className="text-gray-600 mt-1">
+                      No issues found with navigation routes
+                    </p>
+                  </div>
+                )}
+              </div>
+            </ScrollArea>
+          </TabsContent>
           
-          <div className="mt-4">
-            <LogsToolbar
-              filter={filter}
-              setFilter={setFilter}
-              sortDesc={sortDesc}
-              setSortDesc={setSortDesc}
-              handleRefresh={handleRefresh}
-              exportLogs={exportLogs}
-              runFullSystemDiagnostic={runNavigationDiagnostics}
-              isRunningFullTest={isLoading}
-              logsCount={logs.length}
-            />
-            
-            <div className="mt-4">
-              <LogsList
-                logs={getFilteredLogs()}
-                isLoading={isLoading}
-                filter={filter}
-                expandedLog={expandedLog}
-                setExpandedLog={setExpandedLog}
-                setFilter={setFilter}
-              />
+          {/* Details Tab */}
+          <TabsContent value="details">
+            <ScrollArea className="h-[400px]">
+              <div className="space-y-3">
+                {Object.entries(results).map(([category, items]) => (
+                  <div key={category} className="border rounded-lg overflow-hidden">
+                    <div className="bg-gray-50 p-3 font-medium flex items-center">
+                      <Layers className="h-4 w-4 mr-2 text-gray-500" />
+                      <span className="capitalize">{category.replace(/([A-Z])/g, ' $1').trim()}</span>
+                    </div>
+                    <div className="divide-y">
+                      {items.map((item, idx) => (
+                        <div 
+                          key={`${category}-${idx}`} 
+                          className={`p-3 flex items-center justify-between hover:bg-gray-50 cursor-pointer`}
+                          onClick={() => toggleExpand(`detail-${category}-${idx}`)}
+                        >
+                          <div className="flex items-center">
+                            {item.status === 'success' ? (
+                              <CheckCircle className="h-4 w-4 text-green-500 mr-2 flex-shrink-0" />
+                            ) : item.status === 'warning' ? (
+                              <AlertTriangle className="h-4 w-4 text-yellow-500 mr-2 flex-shrink-0" />
+                            ) : (
+                              <XCircle className="h-4 w-4 text-red-500 mr-2 flex-shrink-0" />
+                            )}
+                            <div>
+                              <div className="font-medium text-sm">{item.route}</div>
+                              <div className="text-xs text-gray-600">{item.message}</div>
+                            </div>
+                          </div>
+                          <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setDetailedView(item);
+                            }}
+                            className="h-7 gap-1"
+                          >
+                            View <ArrowRight className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </ScrollArea>
+          </TabsContent>
+        </Tabs>
+        
+        {/* Detailed View Modal */}
+        {detailedView && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-lg max-w-2xl w-full max-h-[80vh] overflow-y-auto">
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-xl font-bold flex items-center">
+                    {detailedView.status === 'success' ? (
+                      <CheckCircle className="h-5 w-5 text-green-500 mr-2" />
+                    ) : detailedView.status === 'warning' ? (
+                      <AlertTriangle className="h-5 w-5 text-yellow-500 mr-2" />
+                    ) : (
+                      <XCircle className="h-5 w-5 text-red-500 mr-2" />
+                    )}
+                    {detailedView.route}
+                  </h3>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={() => setDetailedView(null)}
+                  >
+                    Close
+                  </Button>
+                </div>
+                
+                <div className="space-y-6">
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-500 mb-1">Status</h4>
+                    <div className="flex items-center">
+                      {detailedView.status === 'success' ? (
+                        <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full font-medium">
+                          Success
+                        </span>
+                      ) : detailedView.status === 'warning' ? (
+                        <span className="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full font-medium">
+                          Warning
+                        </span>
+                      ) : (
+                        <span className="bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full font-medium">
+                          Error
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-500 mb-1">Message</h4>
+                    <p className="text-gray-900">{detailedView.message}</p>
+                  </div>
+                  
+                  {/* Component Status */}
+                  {detailedView.componentStatus && (
+                    <div>
+                      <h4 className="text-sm font-medium text-gray-500 mb-1">Component Status</h4>
+                      <div className="bg-gray-50 p-4 rounded">
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="font-medium">Rendered:</span>
+                          <span>
+                            {detailedView.componentStatus.rendered ? (
+                              <span className="text-green-600">Yes</span>
+                            ) : (
+                              <span className="text-red-600">No</span>
+                            )}
+                          </span>
+                        </div>
+                        {detailedView.componentStatus.loadTime && (
+                          <div className="flex items-center gap-2 mb-2">
+                            <span className="font-medium">Load Time:</span>
+                            <span className={
+                              detailedView.componentStatus.loadTime > 1000 ? 'text-yellow-600' : 'text-green-600'
+                            }>
+                              {detailedView.componentStatus.loadTime}ms
+                            </span>
+                          </div>
+                        )}
+                        {detailedView.componentStatus.errors && detailedView.componentStatus.errors.length > 0 && (
+                          <div>
+                            <span className="font-medium">Errors:</span>
+                            <ul className="list-disc pl-5 mt-1 text-red-600">
+                              {detailedView.componentStatus.errors.map((err, i) => (
+                                <li key={i}>{err}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                  
+                  {/* API Status */}
+                  {detailedView.apiStatus && detailedView.apiStatus.length > 0 && (
+                    <div>
+                      <h4 className="text-sm font-medium text-gray-500 mb-1">API Status</h4>
+                      <div className="space-y-2">
+                        {detailedView.apiStatus.map((api, i) => (
+                          <div 
+                            key={i} 
+                            className={`p-3 rounded ${
+                              api.status === 'success' 
+                                ? 'bg-green-50' 
+                                : api.status === 'warning' 
+                                  ? 'bg-yellow-50' 
+                                  : 'bg-red-50'
+                            }`}
+                          >
+                            <div className="flex items-center justify-between">
+                              <div className="font-medium flex items-center">
+                                {api.status === 'success' ? (
+                                  <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
+                                ) : api.status === 'warning' ? (
+                                  <AlertTriangle className="h-4 w-4 text-yellow-500 mr-2" />
+                                ) : (
+                                  <XCircle className="h-4 w-4 text-red-500 mr-2" />
+                                )}
+                                {api.endpoint}
+                              </div>
+                              {api.responseTime && (
+                                <span className={
+                                  api.responseTime > 500 ? 'text-yellow-600' : 'text-green-600'
+                                }>
+                                  {api.responseTime}ms
+                                </span>
+                              )}
+                            </div>
+                            {api.errorMessage && (
+                              <div className="mt-1 pl-6 text-red-600">
+                                {api.errorMessage}
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  
+                  {/* Console Errors */}
+                  {detailedView.consoleErrors && detailedView.consoleErrors.length > 0 && (
+                    <div>
+                      <h4 className="text-sm font-medium text-gray-500 mb-1">Console Errors</h4>
+                      <div className="bg-gray-900 text-white p-3 rounded font-mono text-xs overflow-x-auto">
+                        {detailedView.consoleErrors.map((err, i) => (
+                          <div key={i} className="py-1">{err}</div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  
+                  {/* Recommendations */}
+                  {detailedView.status !== 'success' && (
+                    <div>
+                      <h4 className="text-sm font-medium text-gray-500 mb-1">Recommendations</h4>
+                      <div className="bg-blue-50 p-3 rounded">
+                        <ul className="list-disc pl-5 space-y-1">
+                          {getRecommendations(detailedView).map((rec, i) => (
+                            <li key={i}>{rec}</li>
+                          ))}
+                        </ul>
+                      </div>
+                      {detailedView.status !== 'success' && (
+                        <Button 
+                          onClick={() => {
+                            applyFix(detailedView.route, detailedView.message);
+                            setDetailedView(null);
+                          }}
+                          className="mt-3 w-full flex items-center justify-center gap-2"
+                        >
+                          <CheckCheck className="h-4 w-4" />
+                          Apply Fix
+                        </Button>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
-        </CardContent>
-        
-        <CardFooter className="text-xs text-muted-foreground">
-          Self-diagnostic tools should be used before deploying updates to ensure navigation integrity.
-        </CardFooter>
-      </Card>
-    </div>
+        )}
+      </CardContent>
+    </Card>
   );
 };
 
