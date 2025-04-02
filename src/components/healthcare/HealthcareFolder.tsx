@@ -45,19 +45,16 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
   const [showAccessLog, setShowAccessLog] = useState(false);
   const [healthcareDocuments, setHealthcareDocuments] = useLocalStorage<DocumentItem[]>("healthcare-documents", []);
   
-  const userId = "Tom Brady"; // In a real app, this would come from auth context
+  const userId = "Tom Brady";
 
-  // Initialize documents from localStorage if we have them
   useEffect(() => {
     if (healthcareDocuments.length > 0 && documents.length === 0) {
-      // Only add them to the main documents array if they're not already there
       healthcareDocuments.forEach(doc => {
         onAddDocument(doc);
       });
     }
   }, [healthcareDocuments, documents, onAddDocument]);
   
-  // Filter documents by category and tags
   const filteredDocuments = documents
     .filter(doc => 
       doc.category === activeSubcategory || 
@@ -98,7 +95,6 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
     
     onAddDocument(newDocument);
     
-    // Also save to localStorage
     setHealthcareDocuments([...healthcareDocuments, newDocument]);
     
     setIsUploadDialogOpen(false);
@@ -179,23 +175,16 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
   };
 
   const handleDocumentShare = (document: DocumentItem, collaboratorIds: string[]) => {
-    // In a real app, this would update the document permissions via an API
-    // For this demo, we'll just update the local state
-    
-    // Here we should look up the collaborator details from the IDs
-    // This is simplified for the demo
     const collaboratorPermissions: DocumentPermission[] = collaboratorIds.map(id => ({
       userId: id,
-      userName: `Collaborator ${id}`, // In a real app, look up the actual name
-      accessLevel: "view", // Default access level - real app would have more granular control
+      userName: `Collaborator ${id}`,
+      accessLevel: "view",
       grantedAt: new Date().toISOString(),
       grantedBy: userId
     }));
     
-    // Keep the owner's permission
     const ownerPermission = document.permissions?.find(p => p.userId === document.uploadedBy);
     
-    // Update the document
     const updatedDocument: DocumentItem = {
       ...document,
       permissions: [
@@ -205,20 +194,12 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
       shared: true
     };
     
-    // Update documents in state/storage
-    const updatedDocuments = documents.map(doc => 
-      doc.id === document.id ? updatedDocument : doc
-    );
-    
-    // Update localStorage
     setHealthcareDocuments(
       healthcareDocuments.map(doc => 
         doc.id === document.id ? updatedDocument : doc
       )
     );
     
-    // In a real app, this would trigger a re-render with the updated document
-    // For this demo, we'll just show a toast
     toast.success(`Document shared with ${collaboratorIds.length} collaborator(s)`, {
       description: "They'll be notified about this document"
     });
@@ -448,55 +429,55 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
                 id: "apt1",
                 title: "Annual Physical",
                 doctor: "Dr. Sarah Smith",
-                location: "City Medical Group",
                 date: new Date(new Date().setDate(new Date().getDate() + 14)),
                 time: "10:00 AM",
-                notes: "Fasting required"
+                notes: "Fasting required",
+                location: "City Medical Group"
               },
               {
                 id: "apt2",
                 title: "Cardiology Follow-up",
                 doctor: "Dr. James Johnson",
-                location: "Specialty Care Associates",
                 date: new Date(new Date().setDate(new Date().getDate() + 7)),
                 time: "2:30 PM",
-                notes: "Bring medication list"
+                notes: "Bring medication list",
+                location: "Specialty Care Associates"
               },
               {
                 id: "apt3",
                 title: "Lab Work",
                 doctor: "Metro Health Partners",
-                location: "Metro Health Lab",
                 date: new Date(new Date().setDate(new Date().getDate() + 3)),
                 time: "8:15 AM",
-                notes: "Fasting required"
+                notes: "Fasting required",
+                location: "Metro Health Lab"
               }
             ]} 
             medications={[
               { 
                 id: "med1", 
                 name: "Lisinopril", 
+                nextRefill: new Date(new Date().setDate(new Date().getDate() + 7)),
                 dosage: "20mg", 
                 frequency: "Once daily", 
-                nextRefill: new Date(new Date().setDate(new Date().getDate() + 7)),
                 doctor: "Dr. Smith",
                 pharmacy: "CVS Pharmacy"
               },
               { 
                 id: "med2", 
                 name: "Metformin", 
+                nextRefill: new Date(new Date().setDate(new Date().getDate() + 14)),
                 dosage: "500mg", 
                 frequency: "Twice daily", 
-                nextRefill: new Date(new Date().setDate(new Date().getDate() + 14)),
                 doctor: "Dr. Johnson",
                 pharmacy: "Walgreens"
               },
               { 
                 id: "med3", 
                 name: "Atorvastatin", 
+                nextRefill: new Date(new Date().setDate(new Date().getDate() + 3)),
                 dosage: "10mg", 
                 frequency: "Once daily", 
-                nextRefill: new Date(new Date().setDate(new Date().getDate() + 3)),
                 doctor: "Dr. Smith",
                 pharmacy: "CVS Pharmacy"
               }
