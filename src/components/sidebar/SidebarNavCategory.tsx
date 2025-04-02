@@ -137,25 +137,28 @@ export const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
                   </Link>
                 )}
                 
-                {/* Render submenu with improved visibility and debugging attributes */}
+                {/* Render submenu with improved visibility and z-index */}
                 {!collapsed && hasSubmenu && submenuIsExpanded && (
                   <div 
-                    className="ml-8 mt-1 space-y-1 z-20 bg-inherit"
+                    className="ml-8 mt-1 space-y-1 z-50 bg-inherit overflow-visible absolute left-0 right-0"
+                    style={{
+                      position: 'static', // Changed from absolute to static for proper layout flow
+                      display: 'block',
+                      opacity: 1,
+                      width: '100%',
+                      marginTop: '0.25rem', // Small space from parent
+                      paddingLeft: '0.5rem', // Indent from parent
+                    }}
                     data-submenu-content={item.title}
                     data-expanded="true"
                     data-submenu-visible="true"
-                    style={{ 
-                      display: 'block',
-                      position: 'relative',
-                      opacity: 1
-                    }}
                   >
                     {item.submenu?.map((subItem) => (
                       <Link
                         key={subItem.href}
                         to={subItem.href}
                         className={cn(
-                          "flex items-center rounded-md py-1.5 px-3 text-sm transition-colors border border-transparent",
+                          "flex items-center rounded-md py-1.5 px-3 text-sm transition-colors border border-transparent w-full",
                           isActive(subItem.href)
                             ? isLightTheme
                               ? "bg-[#E9E7D8] text-[#222222] font-medium border-primary"
