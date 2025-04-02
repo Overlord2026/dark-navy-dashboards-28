@@ -10,6 +10,7 @@ import { SubscriptionProvider } from "./context/SubscriptionContext";
 import { DiagnosticsProvider } from "./context/DiagnosticsContext";
 import { DiagnosticsTrigger } from "./components/diagnostics/DiagnosticsTrigger";
 import { DiagnosticsSummary } from "./components/diagnostics/DiagnosticsSummary";
+import { NavigationHealthIndicator } from "./components/diagnostics/NavigationHealthIndicator";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
                   <Toaster position="top-right" />
                   <DiagnosticsTrigger />
                   <DiagnosticsSummary />
+                  <NavigationHealthIndicator />
                 </BrowserRouter>
               </DiagnosticsProvider>
             </SubscriptionProvider>

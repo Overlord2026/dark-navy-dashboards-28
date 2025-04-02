@@ -33,11 +33,10 @@ jobs:
       - name: Build application
         run: npm run build
         env:
-          CI: true
-          # Set other required environment variables here
-          # These will be made available to the app via import.meta.env
+          # Use import.meta.env instead of process.env
           VITE_APP_ENV: 'ci'
           VITE_APP_API_URL: 'https://api.example.com'
+          VITE_DIAGNOSTICS_ENABLED: 'true'
         
       - name: Run diagnostics tests
         run: |
@@ -46,10 +45,11 @@ jobs:
             --outputFile=diagnostics-report.json \
             --failOnError=true \
             --notifyOnWarning=true \
-            --notifyEmail=team@example.com
+            --timeout=120000
         env:
-          CI: true
-          GITHUB_ACTIONS: true
+          VITE_APP_ENV: 'ci'
+          VITE_APP_API_URL: 'https://api.example.com'
+          VITE_DIAGNOSTICS_ENABLED: 'true'
         
       - name: Upload diagnostics report
         if: always() # Upload even if tests fail
