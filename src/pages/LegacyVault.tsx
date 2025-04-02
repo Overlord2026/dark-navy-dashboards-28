@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { CategoryList } from "@/components/documents/CategoryList";
@@ -10,12 +9,13 @@ import { ShareDocumentDialog } from "@/components/documents/ShareDocumentDialog"
 import { DeleteDocumentDialog } from "@/components/documents/DeleteDocumentDialog";
 import { NewFolderDialog } from "@/components/documents/NewFolderDialog";
 import { Button } from "@/components/ui/button";
-import { FolderPlus, Upload, ExternalLink, VaultIcon, ArchiveIcon } from "lucide-react";
-import { documentCategories } from "@/data/documentCategories";
+import { FolderPlus, Upload, ExternalLink, VaultIcon, ArchiveIcon, HeartPulseIcon } from "lucide-react";
+import { documentCategories, healthcareCategories } from "@/data/documentCategories";
 import { toast } from "sonner";
 import { DocumentType, DocumentItem, DocumentCategory } from "@/types/document";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { FamilyLegacyBox } from "@/components/estate-planning/FamilyLegacyBox";
+import { HealthcareFolder } from "@/components/healthcare/HealthcareFolder";
 import { 
   Card, 
   CardContent, 
@@ -47,7 +47,6 @@ export default function LegacyVault() {
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("documents");
   
-  // This data is only for the LegacyBox tab, not the main documents tab
   const legacyBoxDocuments: DocumentItem[] = [
     {
       id: "1",
@@ -96,8 +95,6 @@ export default function LegacyVault() {
   ];
   
   useEffect(() => {
-    // Initialize with empty documents after a short delay
-    // This ensures no documents appear incorrectly in the Important Documents tab
     setTimeout(() => {
       setDocuments([]);
       setIsLoading(false);
@@ -126,18 +123,22 @@ export default function LegacyVault() {
     setIsUploadDialogOpen(false);
   };
 
-  const handleCreateFolder = (folderName: string) => {
+  const handleCreateFolder = (folderName: string, category: string = activeCategory) => {
     const newFolder: DocumentItem = {
       id: Math.random().toString(36).substring(2, 9),
       name: folderName,
       type: "folder",
-      category: activeCategory === "all" ? "general" : activeCategory,
+      category: category === "all" ? "general" : category,
       created: new Date().toISOString(),
     };
     
     setDocuments(prev => [...prev, newFolder]);
     toast.success("Folder created successfully");
     setIsNewFolderDialogOpen(false);
+  };
+
+  const handleAddDocument = (document: DocumentItem) => {
+    setDocuments(prev => [...prev, document]);
   };
 
   const handleEditDocument = (document: DocumentItem) => {
@@ -191,7 +192,7 @@ export default function LegacyVault() {
         </div>
         
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-2 mb-6">
+          <TabsList className="grid w-full grid-cols-3 mb-6">
             <TabsTrigger value="documents" className="flex items-center gap-2">
               <VaultIcon className="h-4 w-4" />
               Important Documents
@@ -199,6 +200,10 @@ export default function LegacyVault() {
             <TabsTrigger value="legacy-box" className="flex items-center gap-2">
               <ArchiveIcon className="h-4 w-4" />
               Family Legacy Box
+            </TabsTrigger>
+            <TabsTrigger value="healthcare" className="flex items-center gap-2">
+              <HeartPulseIcon className="h-4 w-4" />
+              Healthcare
             </TabsTrigger>
           </TabsList>
           
@@ -259,6 +264,14 @@ export default function LegacyVault() {
           
           <TabsContent value="legacy-box">
             <FamilyLegacyBox />
+          </TabsContent>
+
+          <TabsContent value="healthcare">
+            <HealthcareFolder 
+              documents={documents} 
+              onAddDocument={handleAddDocument}
+              onCreateFolder={handleCreateFolder}
+            />
           </TabsContent>
         </Tabs>
       </div>
