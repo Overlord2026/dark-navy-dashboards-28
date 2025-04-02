@@ -23,6 +23,8 @@ import {
   Settings2Icon,
   HelpCircleIcon,
   LifeBuoyIcon,
+  Wallet,
+  ExternalLink,
 } from "lucide-react";
 
 // Home Section
@@ -51,6 +53,11 @@ export const homeNavItems = [
         title: "Transfers",
         href: "/banking-transfers",
         icon: ArrowRightLeftIcon
+      },
+      {
+        title: "Funding Accounts",
+        href: "/funding-accounts",
+        icon: Wallet
       }
     ]
   },

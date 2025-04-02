@@ -26,6 +26,7 @@ import AdvisorProfile from "./pages/AdvisorProfile";
 import Lending from "./pages/Lending";
 import CashManagement from "./pages/CashManagement";
 import BankingTransfers from "./pages/BankingTransfers";
+import FundingAccounts from "./pages/FundingAccounts";
 import Insurance from "./pages/Insurance";
 import PersonalInsurance from "./pages/PersonalInsurance";
 import Sharing from "./pages/Sharing";
@@ -100,6 +101,7 @@ function App() {
                     <Route path="/lending" element={<Lending />} />
                     <Route path="/cash-management" element={<CashManagement />} />
                     <Route path="/banking-transfers" element={<BankingTransfers />} />
+                    <Route path="/funding-accounts" element={<FundingAccounts />} />
                     <Route path="/insurance" element={<Insurance />} />
                     <Route path="/personal-insurance" element={<PersonalInsurance />} />
                     <Route path="/estate-planning" element={<EstatePlanning />} />
