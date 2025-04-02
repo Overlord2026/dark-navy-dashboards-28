@@ -1,5 +1,5 @@
 
-import { tabDiagnostics } from './tabDiagnostics';
+import * as tabDiagnostics from './tabDiagnostics';
 import { NavigationTestResult } from './types';
 import { logger } from '../logging/loggingService';
 
