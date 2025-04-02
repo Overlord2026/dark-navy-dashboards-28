@@ -89,6 +89,11 @@ export const familyWealthNavItems: NavItem[] = [
     icon: BanknoteIcon
   },
   { 
+    title: "Tax & Budgets", 
+    href: "/tax-budgets", 
+    icon: Calculator 
+  },
+  { 
     title: "Secure Family Vault", 
     href: "/legacy-vault", 
     icon: VaultIcon 
@@ -124,7 +129,7 @@ export const collaborationNavItems: NavItem[] = [
   }
 ];
 
-// Bottom navigation items (unchanged)
+// Bottom navigation items
 export const bottomNavItems: NavItem[] = [
   { 
     title: "Help", 
@@ -138,7 +143,7 @@ export const bottomNavItems: NavItem[] = [
   }
 ];
 
-// INVESTMENTS categories (unchanged)
+// INVESTMENTS categories
 export const investmentCategories: NavItem[] = [
   {
     title: "Private Equity",

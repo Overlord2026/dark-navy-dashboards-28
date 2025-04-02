@@ -107,6 +107,7 @@ const AppRoutes: React.FC = () => {
       <Route path="/education" element={<Education />} />
       <Route path="/education/:sectionId" element={<Education />} />
       <Route path="/education/tax-planning" element={<TaxPlanning />} />
+      <Route path="/tax-budgets" element={<TaxBudgets />} />
       <Route path="/professionals" element={<Professionals />} />
       <Route path="/professionals/signup" element={<ProfessionalSignup />} />
       <Route path="/profile" element={<CustomerProfile />} />
@@ -118,7 +119,6 @@ const AppRoutes: React.FC = () => {
       <Route path="/marketplace" element={<Marketplace />} />
       <Route path="/marketplace/rfp" element={<MarketplaceRfp />} />
       <Route path="/marketplace/rfp/:rfpId" element={<MarketplaceRfpDetail />} />
-      <Route path="/tax-budgets" element={<TaxBudgets />} />
       <Route path="/login" element={<Navigate to="/" />} />
       
       {isAdmin && (
