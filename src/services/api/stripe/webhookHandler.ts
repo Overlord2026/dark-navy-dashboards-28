@@ -8,6 +8,8 @@ import {
   processPaymentIntentSucceeded 
 } from './eventHandlers';
 import { authenticateRequest } from '../auth/authUtils';
+import { logger } from '@/services/logging/loggingService';
+import { UserToken } from '@/types/api'; // Fix missing import
 
 /**
  * Handle incoming Stripe webhook events
@@ -21,6 +23,7 @@ export const handleStripeWebhook = async (
     const isValid = verifyWebhookSignature(payload, signature);
     
     if (!isValid) {
+      logger.warning('Invalid webhook signature received', { signature }, 'StripeWebhook');
       return {
         success: false,
         error: 'Invalid webhook signature',
@@ -35,7 +38,7 @@ export const handleStripeWebhook = async (
     // Parse the event data
     const event: StripeWebhookEvent = JSON.parse(payload);
     
-    console.log(`Processing Stripe webhook event: ${event.type}`);
+    logger.info(`Processing Stripe webhook event: ${event.type}`, { eventId: event.id }, 'StripeWebhook');
     
     let processed = false;
     
@@ -52,7 +55,7 @@ export const handleStripeWebhook = async (
       // Add more event types as needed
       
       default:
-        console.log(`Unhandled event type: ${event.type}`);
+        logger.info(`Unhandled event type: ${event.type}`, { eventId: event.id }, 'StripeWebhook');
         // Return success but indicate event was not processed
         return {
           success: true,
@@ -63,6 +66,12 @@ export const handleStripeWebhook = async (
             error: 'Event type not handled'
           }
         };
+    }
+    
+    if (processed) {
+      logger.info(`Successfully processed event: ${event.type}`, { eventId: event.id }, 'StripeWebhook');
+    } else {
+      logger.error(`Failed to process event: ${event.type}`, { eventId: event.id }, 'StripeWebhook');
     }
     
     return {
@@ -77,7 +86,7 @@ export const handleStripeWebhook = async (
         : `Event received but processing failed: ${event.type}`
     };
   } catch (error) {
-    console.error('Error handling webhook:', error);
+    logger.error('Error handling webhook:', error, 'StripeWebhook');
     return {
       success: false,
       error: 'Failed to process webhook event',
@@ -103,6 +112,7 @@ export const processStripeWebhook = async (
   // instead of tokens for authentication
   
   if (!rawBody || !stripeSignature) {
+    logger.warning('Missing webhook payload or signature', {}, 'StripeWebhook');
     return {
       success: false,
       error: 'Missing webhook payload or signature',
@@ -129,13 +139,17 @@ export const authenticatedStripeEndpoint = async <T, U>(
   const { isAuthenticated, user, errorResponse } = authenticateRequest<T>(token);
   
   if (!isAuthenticated || !user) {
+    logger.warning('Unauthorized access attempt to Stripe endpoint', 
+      { authorized: isAuthenticated }, 'StripeAuth');
     return errorResponse!;
   }
   
   try {
+    logger.info('Authenticated request to Stripe endpoint', 
+      { userId: user.id }, 'StripeEndpoint');
     return await handler(user);
   } catch (error) {
-    console.error('Error in authenticated Stripe endpoint:', error);
+    logger.error('Error in authenticated Stripe endpoint:', error, 'StripeEndpoint');
     return {
       success: false,
       error: 'An unexpected error occurred while processing your request',

@@ -3,6 +3,7 @@ import { ApiResponse, UserToken } from '@/types/api';
 import { toast } from 'sonner';
 import { getAllCourses } from '@/data/education/courseUtils';
 import { verifyToken, authenticateRequest } from './auth/authUtils';
+import { logger } from '@/services/logging/loggingService';
 
 // Interface for detailed course content
 export interface CourseContent {
@@ -43,10 +44,13 @@ export const fetchCourseDetailsById = async (
   courseId: string | number
 ): Promise<ApiResponse<DetailedCourse>> => {
   try {
+    logger.info(`Fetching course details for courseId: ${courseId}`, {}, 'CourseAPI');
+    
     // Verify authentication token using our central utility
     const { isAuthenticated, user, errorResponse } = authenticateRequest<DetailedCourse>(token);
     
     if (!isAuthenticated || !user) {
+      logger.warning('Unauthorized attempt to access course details', { courseId }, 'CourseAPI');
       return errorResponse!;
     }
     
@@ -55,11 +59,14 @@ export const fetchCourseDetailsById = async (
     const baseCourse = courses.find(c => c.id.toString() === courseId.toString());
     
     if (!baseCourse) {
+      logger.warning(`Course not found: ${courseId}`, {}, 'CourseAPI');
       return {
         success: false,
         error: 'Course not found',
       };
     }
+    
+    logger.info(`Found course: ${baseCourse.title}`, { courseId }, 'CourseAPI');
     
     // In a real application, we would fetch additional details from GHL API
     // For demonstration, we'll enhance the course with mock detailed data
@@ -130,13 +137,14 @@ export const fetchCourseDetailsById = async (
       }
     };
     
+    logger.info(`Successfully retrieved course details: ${baseCourse.title}`, { courseId }, 'CourseAPI');
     return {
       success: true,
       data: detailedCourse,
       message: 'Course details retrieved successfully',
     };
   } catch (error) {
-    console.error('Error fetching course details:', error);
+    logger.error('Error fetching course details:', error, 'CourseAPI');
     return {
       success: false,
       error: 'Failed to retrieve course details. Please try again later.',
@@ -169,17 +177,24 @@ export const enrollUserInCourse = async (
   enrollmentData: CourseEnrollmentRequest
 ): Promise<ApiResponse<CourseEnrollmentResponse>> => {
   try {
+    const { courseId, userData } = enrollmentData;
+    
+    logger.info('Processing course enrollment request', { 
+      courseId, 
+      hasUserData: !!userData 
+    }, 'CourseAPI');
+    
     // Verify authentication token using our central utility
     const { isAuthenticated, user, errorResponse } = authenticateRequest<CourseEnrollmentResponse>(token);
     
     if (!isAuthenticated || !user) {
+      logger.warning('Unauthorized attempt to enroll in course', { courseId }, 'CourseAPI');
       return errorResponse!;
     }
     
-    const { courseId, userData } = enrollmentData;
-    
     // Validate courseId
     if (!courseId) {
+      logger.error('Missing courseId in enrollment request', {}, 'CourseAPI');
       return {
         success: false,
         error: 'Course ID is required',
@@ -191,11 +206,17 @@ export const enrollUserInCourse = async (
     const course = courses.find(c => c.id.toString() === courseId.toString());
     
     if (!course) {
+      logger.warning(`Enrollment attempted for non-existent course: ${courseId}`, {}, 'CourseAPI');
       return {
         success: false,
         error: 'Course not found',
       };
     }
+    
+    logger.info(`Enrolling user in course: ${course.title}`, { 
+      courseId, 
+      userId: user.id 
+    }, 'CourseAPI');
     
     // In a real application, we would make an API call to GHL to enroll the user
     // For demonstration, we'll simulate a successful enrollment
@@ -212,13 +233,18 @@ export const enrollUserInCourse = async (
       accessUrl: course.ghlUrl,
     };
     
+    logger.info('User successfully enrolled in course', { 
+      courseId, 
+      enrollmentId: enrollmentResponse.enrollmentId 
+    }, 'CourseAPI');
+    
     return {
       success: true,
       data: enrollmentResponse,
       message: `Successfully enrolled in ${course.title}`,
     };
   } catch (error) {
-    console.error('Error enrolling user in course:', error);
+    logger.error('Error enrolling user in course:', error, 'CourseAPI');
     return {
       success: false,
       error: 'Failed to complete enrollment. Please try again later.',

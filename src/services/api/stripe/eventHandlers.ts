@@ -1,6 +1,7 @@
 
 import { StripeWebhookEvent } from '../types/webhookTypes';
 import { enrollUserInCourse } from '../ghlCourseApi';
+import { logger } from '@/services/logging/loggingService';
 
 /**
  * Process a checkout.session.completed event
@@ -17,9 +18,21 @@ export const processCheckoutSessionCompleted = async (
     const userId = session.metadata?.userId;
     
     if (!courseId) {
-      console.error('Course ID not found in session metadata');
+      logger.error('Course ID not found in session metadata', { 
+        eventId: event.id,
+        session: {
+          id: session.id,
+          metadata: session.metadata
+        }
+      }, 'StripeEventHandler');
       return false;
     }
+    
+    logger.info('Processing checkout.session.completed', {
+      eventId: event.id,
+      courseId,
+      customerEmail: session.customer_email
+    }, 'StripeEventHandler');
     
     // Use server-side token for API calls
     // In a real app, this would be a secure server-to-server authentication
@@ -34,17 +47,28 @@ export const processCheckoutSessionCompleted = async (
       }
     };
     
+    logger.info('Enrolling user in course', { 
+      courseId, 
+      userEmail: session.customer_email 
+    }, 'StripeEventHandler');
+    
     const response = await enrollUserInCourse(apiToken, enrollmentData);
     
     if (response.success) {
-      console.log('Enrollment updated successfully:', response.data);
+      logger.info('Enrollment updated successfully', { 
+        courseId, 
+        enrollmentId: response.data?.enrollmentId 
+      }, 'StripeEventHandler');
       return true;
     } else {
-      console.error('Failed to update enrollment:', response.error);
+      logger.error('Failed to update enrollment', { 
+        courseId, 
+        error: response.error 
+      }, 'StripeEventHandler');
       return false;
     }
   } catch (error) {
-    console.error('Error processing checkout session completed event:', error);
+    logger.error('Error processing checkout session completed event:', error, 'StripeEventHandler');
     return false;
   }
 };
@@ -64,9 +88,21 @@ export const processPaymentIntentSucceeded = async (
     const userId = paymentIntent.metadata?.userId;
     
     if (!courseId) {
-      console.error('Course ID not found in payment intent metadata');
+      logger.error('Course ID not found in payment intent metadata', { 
+        eventId: event.id,
+        paymentIntent: {
+          id: paymentIntent.id,
+          metadata: paymentIntent.metadata
+        }
+      }, 'StripeEventHandler');
       return false;
     }
+    
+    logger.info('Processing payment_intent.succeeded', {
+      eventId: event.id,
+      courseId,
+      paymentIntentId: paymentIntent.id
+    }, 'StripeEventHandler');
     
     // Similar logic to checkout.session.completed
     // Use server-side token for API calls
@@ -82,17 +118,28 @@ export const processPaymentIntentSucceeded = async (
       }
     };
     
+    logger.info('Enrolling user in course via payment intent', { 
+      courseId, 
+      userId 
+    }, 'StripeEventHandler');
+    
     const response = await enrollUserInCourse(apiToken, enrollmentData);
     
     if (response.success) {
-      console.log('Enrollment updated successfully via payment intent:', response.data);
+      logger.info('Enrollment updated successfully via payment intent', { 
+        courseId, 
+        enrollmentId: response.data?.enrollmentId 
+      }, 'StripeEventHandler');
       return true;
     } else {
-      console.error('Failed to update enrollment via payment intent:', response.error);
+      logger.error('Failed to update enrollment via payment intent', { 
+        courseId, 
+        error: response.error 
+      }, 'StripeEventHandler');
       return false;
     }
   } catch (error) {
-    console.error('Error processing payment intent succeeded event:', error);
+    logger.error('Error processing payment intent succeeded event:', error, 'StripeEventHandler');
     return false;
   }
 };
