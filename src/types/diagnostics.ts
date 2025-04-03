@@ -16,7 +16,7 @@ export interface LogEntry {
     navigationTab?: string;
     apiEndpoint?: string;
   };
-  recommendations?: string[];
+  recommendations?: string[] | Recommendation[];
 }
 
 export interface NavigationDiagnosticResult {
@@ -35,6 +35,7 @@ export interface NavigationDiagnosticResult {
     errorMessage?: string;
   }[];
   consoleErrors?: string[];
+  recommendations?: Recommendation[];
 }
 
 export interface ApiEndpointDiagnosticResult {
@@ -50,6 +51,7 @@ export interface ApiEndpointDiagnosticResult {
   actualDataStructure?: string;
   structureMatch?: boolean;
   authStatus?: "valid" | "invalid" | "expired" | "missing";
+  recommendations?: Recommendation[];
 }
 
 export interface DiagnosticSummary {
@@ -59,6 +61,7 @@ export interface DiagnosticSummary {
   warnings: number;
   errors: number;
   timestamp: string;
+  recommendations?: Recommendation[];
 }
 
 export interface QuickFix {
@@ -66,6 +69,7 @@ export interface QuickFix {
   title: string;
   description: string;
   severity: 'critical' | 'high' | 'medium' | 'low';
+  category: 'performance' | 'security' | 'accessibility' | 'reliability' | 'usability';
   fixFunction?: () => void;
 }
 
@@ -74,4 +78,19 @@ export interface FixHistoryEntry {
   timestamp: string;
   description: string;
   status: 'success' | 'failed' | 'pending';
+}
+
+export interface Recommendation {
+  id: string;
+  text: string;
+  priority: 'critical' | 'high' | 'medium' | 'low';
+  category: 'performance' | 'security' | 'accessibility' | 'reliability' | 'usability';
+  actionable: boolean;
+  action?: {
+    label: string;
+    handler?: string;
+  };
+  relatedTest?: string;
+  impact?: string;
+  effort?: 'easy' | 'medium' | 'hard';
 }
