@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback } from 'react';
 import { FinancialPlan, FinancialGoal, FinancialPlansSummary } from '@/types/financial-plan';
 import { getFinancialPlanService } from '@/services/financial-plans/FinancialPlanServiceFactory';
@@ -41,6 +40,7 @@ export const useFinancialPlans = () => {
       setSummary(plansSummary);
     } catch (err) {
       setError(err instanceof Error ? err : new Error('Unknown error loading plans'));
+      // Only keep this critical error toast
       toast.error('Error loading financial plans');
     } finally {
       setLoading(false);
@@ -60,6 +60,7 @@ export const useFinancialPlans = () => {
       return newPlan;
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Unknown error creating plan';
+      // Only keep this critical error toast
       toast.error(errorMessage);
       throw err;
     }
@@ -81,8 +82,8 @@ export const useFinancialPlans = () => {
       }
       return updatedPlan;
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Unknown error updating plan';
       // Disable toast for plan updates to prevent ghost toasts
+      // const errorMessage = err instanceof Error ? err.message : 'Unknown error updating plan';
       // toast.error(errorMessage);
       throw err;
     }
@@ -97,7 +98,6 @@ export const useFinancialPlans = () => {
       }
       return success;
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Unknown error deleting plan';
       // Intentionally not showing toast for deleted plans
       throw err;
     }
@@ -110,8 +110,8 @@ export const useFinancialPlans = () => {
       await loadPlans(); // Reload plans to ensure consistency
       return savedDraft;
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Unknown error saving draft';
       // Disable toast for drafts to prevent ghost toasts
+      // const errorMessage = err instanceof Error ? err.message : 'Unknown error saving draft';
       // toast.error(errorMessage);
       throw err;
     }
@@ -123,8 +123,8 @@ export const useFinancialPlans = () => {
       await service.setActivePlan(id);
       await loadPlans(); // Reload plans to ensure consistency
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Unknown error setting active plan';
       // Disable toast for active plan changes to prevent ghost toasts
+      // const errorMessage = err instanceof Error ? err.message : 'Unknown error setting active plan';
       // toast.error(errorMessage);
       throw err;
     }
@@ -139,8 +139,8 @@ export const useFinancialPlans = () => {
       }
       return success;
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Unknown error updating goal';
       // Disable toast notifications for goals to prevent ghost toasts
+      // const errorMessage = err instanceof Error ? err.message : 'Unknown error updating goal';
       // toast.error(errorMessage);
       throw err;
     }
@@ -156,8 +156,8 @@ export const useFinancialPlans = () => {
         )
       );
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Unknown error toggling favorite';
       // Disable toast for favorite toggling to prevent ghost toasts
+      // const errorMessage = err instanceof Error ? err.message : 'Unknown error toggling favorite';
       // toast.error(errorMessage);
       throw err;
     }
@@ -172,8 +172,8 @@ export const useFinancialPlans = () => {
       }
       return duplicatedPlan;
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Unknown error duplicating plan';
       // Disable toast for plan duplication to prevent ghost toasts
+      // const errorMessage = err instanceof Error ? err.message : 'Unknown error duplicating plan';
       // toast.error(errorMessage);
       throw err;
     }

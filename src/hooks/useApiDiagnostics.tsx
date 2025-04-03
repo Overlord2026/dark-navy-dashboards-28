@@ -1,4 +1,3 @@
-
 import { useState, useCallback } from 'react';
 import { ApiEndpointDiagnosticResult } from '@/types/diagnostics';
 import { testApiEndpoints } from '@/services/diagnostics/apiDiagnostics';
@@ -19,32 +18,35 @@ export function useApiDiagnostics() {
       setResults(diagnosticResults);
       setLastRun(new Date().toISOString());
       
-      // Show toast notification
-      const errorCount = diagnosticResults.filter(r => r.status === 'error').length;
-      const warningCount = diagnosticResults.filter(r => r.status === 'warning').length;
+      // Disable toast notifications for API diagnostics
+      // const errorCount = diagnosticResults.filter(r => r.status === 'error').length;
+      // const warningCount = diagnosticResults.filter(r => r.status === 'warning').length;
       
-      if (errorCount > 0) {
-        toast.error(`API Diagnostics complete with ${errorCount} errors`, {
-          description: `${warningCount} warnings were also found.`
-        });
-      } else if (warningCount > 0) {
-        toast.warning(`API Diagnostics complete with ${warningCount} warnings`, {
-          description: 'No critical errors were found.'
-        });
-      } else {
-        toast.success('API Diagnostics completed successfully', {
-          description: 'All API endpoints are operating as expected.'
-        });
-      }
+      // if (errorCount > 0) {
+      //   toast.error(`API Diagnostics complete with ${errorCount} errors`, {
+      //     description: `${warningCount} warnings were also found.`
+      //   });
+      // } else if (warningCount > 0) {
+      //   toast.warning(`API Diagnostics complete with ${warningCount} warnings`, {
+      //     description: 'No critical errors were found.'
+      //   });
+      // } else {
+      //   toast.success('API Diagnostics completed successfully', {
+      //     description: 'All API endpoints are operating as expected.'
+      //   });
+      // }
       
       return diagnosticResults;
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "Unknown error";
       setError(err instanceof Error ? err : new Error(errorMessage));
       
-      toast.error('API Diagnostics failed to run', {
-        description: errorMessage
-      });
+      // Only keep permission-related toast errors
+      if (errorMessage.toLowerCase().includes("permission")) {
+        toast.error('API Diagnostics failed to run', {
+          description: errorMessage
+        });
+      }
       
       return [];
     } finally {

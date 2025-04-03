@@ -15,30 +15,24 @@ export function Toaster() {
   return (
     <ToastProvider>
       {toasts
-        // Filter out ALL plan deleted notifications completely
+        // Ultra-aggressive filtering to prevent ghost toasts using whitelist approach
         .filter(toast => {
-          if (!toast) return true;
+          if (!toast) return false; // Block empty toasts
           
           // Convert toast content to lowercase strings for case-insensitive comparison
           const titleText = (toast.title?.toString() || '').toLowerCase();
           const descriptionText = (toast.description?.toString() || '').toLowerCase();
           
-          // Filter out any toast that contains any variation of "plan deleted", "deleted plan", or just "deleted"
-          return !(
-            titleText.includes('plan deleted') || 
-            descriptionText.includes('plan deleted') ||
-            titleText.includes('deleted plan') || 
-            descriptionText.includes('deleted plan') ||
-            titleText.includes('deleted') || 
-            descriptionText.includes('deleted') ||
-            titleText.includes('goal updated') ||
-            descriptionText.includes('goal updated') ||
-            // Additional checks for any toast that doesn't have visible content
-            (titleText.trim() === '' && descriptionText.trim() === '') ||
-            // Check for 'ghost' toasts with minimal content
-            (titleText === 'goal updated' && descriptionText === '') ||
-            // Even more aggressive filtering - remove very short toasts
-            (titleText.length < 5 && descriptionText.length < 5)
+          // Only allow very specific, critical toasts
+          const allowedPatterns = [
+            "error loading financial plans",
+            "unknown error creating plan",
+            "you don't have permission"
+          ];
+          
+          // Only allow toasts that match our whitelist
+          return allowedPatterns.some(pattern => 
+            titleText.includes(pattern) || descriptionText.includes(pattern)
           );
         })
         .map(function ({ id, title, description, action, ...props }) {
