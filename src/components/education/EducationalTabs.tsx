@@ -1,7 +1,7 @@
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CourseList } from "./CourseList";
-import { courseCategories, featuredCourses, popularCourses } from "@/data/education";
+import { courseCategories, featuredCourses, popularCourses, allCourses } from "@/data/education";
 import { ProfessionalsProvider } from "@/hooks/useProfessionals";
 import { ProfessionalsDirectory } from "@/components/professionals/ProfessionalsDirectory";
 
@@ -28,6 +28,8 @@ export function EducationalTabs({
     switch(categoryId) {
       case "popular":
         return popularCourses;
+      case "all-courses":
+        return allCourses; // Use the complete list for all courses
       default:
         // Default to featured courses
         return featuredCourses;
