@@ -24,6 +24,21 @@ export const verifyWebhookSignature = (
     return false;
   }
   
+  // Prevent excessive payload size to avoid DoS attacks
+  if (payload.length > 1000000) { // 1MB limit
+    logger.error('Payload size exceeds limit', {
+      payloadSize: payload.length
+    }, 'StripeWebhook');
+    return false;
+  }
+  
+  // Validate signature format before processing
+  const signatureRegex = /^[a-zA-Z0-9=_-]+$/;
+  if (!signatureRegex.test(signature)) {
+    logger.error('Invalid signature format', {}, 'StripeWebhook');
+    return false;
+  }
+  
   logger.info('Verifying webhook signature', {
     signatureLength: signature.length,
     payloadSize: payload.length
@@ -63,8 +78,16 @@ export const verifyWebhookSignature = (
  */
 export const sanitizeWebhookPayload = (payload: string): string => {
   try {
+    // Check for payload size to prevent DoS attacks
+    if (payload.length > 1000000) { // 1MB limit
+      throw new Error('Payload size exceeds limit');
+    }
+    
     // Parse and re-stringify to ensure it's valid JSON without modifications
     const parsed = JSON.parse(payload);
+    
+    // Additional sanitization could be added here for specific fields
+    
     return JSON.stringify(parsed);
   } catch (error) {
     logger.error('Invalid JSON payload received:', error, 'StripeWebhook');
@@ -82,11 +105,25 @@ export const validateWebhookEvent = (event: StripeWebhookEvent): boolean => {
     return false;
   }
   
+  // Validate event ID format (additional security check)
+  const eventIdRegex = /^evt_[a-zA-Z0-9]+$/;
+  if (!eventIdRegex.test(event.id)) {
+    logger.error('Invalid event ID format', { eventId: event.id }, 'StripeWebhook');
+    return false;
+  }
+  
   // Additional specific validations based on event type
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object;
     if (!session.id || session.id.trim() === '') {
       logger.error('Missing session ID in checkout.session.completed event', { event }, 'StripeWebhook');
+      return false;
+    }
+    
+    // Validate session ID format
+    const sessionIdRegex = /^cs_[a-zA-Z0-9]+$/;
+    if (!sessionIdRegex.test(session.id)) {
+      logger.error('Invalid session ID format', { sessionId: session.id }, 'StripeWebhook');
       return false;
     }
   }
