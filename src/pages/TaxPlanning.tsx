@@ -21,6 +21,7 @@ import { InterestedButton } from "@/components/investments/InterestedButton";
 import { ScheduleMeetingDialog } from "@/components/investments/ScheduleMeetingDialog";
 import { Link } from "react-router-dom";
 import { SecureTaxReturnAnalysis } from "@/components/estate-planning/SecureTaxReturnAnalysis";
+import { AccountingSoftwareIntegration } from "@/components/tax-planning/AccountingSoftwareIntegration";
 
 export default function TaxPlanning() {
   const containerVariants = {
@@ -59,6 +60,11 @@ export default function TaxPlanning() {
           <p className="text-muted-foreground mt-2">
             Optimize your tax strategy and minimize your tax burden through proactive planning.
           </p>
+        </motion.div>
+
+        {/* Accounting Software Integration */}
+        <motion.div variants={itemVariants}>
+          <AccountingSoftwareIntegration />
         </motion.div>
 
         {/* Roth IRA Conversion */}
