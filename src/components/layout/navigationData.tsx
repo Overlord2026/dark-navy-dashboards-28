@@ -117,6 +117,46 @@ export const educationSubMenuItems: MenuItem[] = [
   { id: "premium", name: "Premium Courses" },
 ];
 
+// New investment submenu items for alternative investments
+export const investmentSubMenuItems: MenuItem[] = [
+  { id: "overview", name: "Overview", active: true },
+  { id: "alternative", name: "Alternative Investments" },
+  { id: "private-equity", name: "Private Equity" },
+  { id: "private-debt", name: "Private Debt" },
+  { id: "real-assets", name: "Real Assets" },
+  { id: "digital-assets", name: "Digital Assets" },
+  { id: "portfolio", name: "My Portfolio" },
+];
+
+// Fund manager submenu for each category
+export const privateEquityProviders: MenuItem[] = [
+  { id: "all-pe", name: "All Private Equity", active: true },
+  { id: "blackstone-pe", name: "Blackstone" },
+  { id: "apollo-pe", name: "Apollo" },
+  { id: "kkr-pe", name: "KKR" },
+  { id: "stepstone-pe", name: "StepStone" },
+  { id: "amg-pantheon", name: "AMG Pantheon" },
+  { id: "hamilton-lane", name: "Hamilton Lane" },
+];
+
+export const privateDebtProviders: MenuItem[] = [
+  { id: "all-pd", name: "All Private Debt", active: true },
+  { id: "ares-pd", name: "Ares" },
+  { id: "blackstone-pd", name: "Blackstone Credit" },
+  { id: "apollo-pd", name: "Apollo" },
+  { id: "cliffwater-pd", name: "Cliffwater" },
+  { id: "stepstone-pd", name: "StepStone" },
+  { id: "kkr-pd", name: "KKR" },
+];
+
+export const realAssetsProviders: MenuItem[] = [
+  { id: "all-ra", name: "All Real Assets", active: true },
+  { id: "blackstone-ra", name: "Blackstone Real Estate" },
+  { id: "brookfield-ra", name: "Brookfield" },
+  { id: "hancock-ra", name: "Hancock" },
+  { id: "gip-ra", name: "Global Infrastructure Partners" },
+];
+
 export const getSecondaryMenuItems = (activeMainItem: string): MenuItem[] => {
   switch (activeMainItem) {
     case "accounts":
@@ -125,6 +165,14 @@ export const getSecondaryMenuItems = (activeMainItem: string): MenuItem[] => {
       return sharingSubMenuItems;
     case "education":
       return educationSubMenuItems;
+    case "investments":
+      return investmentSubMenuItems;
+    case "private-equity":
+      return privateEquityProviders;
+    case "private-debt":
+      return privateDebtProviders;
+    case "real-assets":
+      return realAssetsProviders;
     default:
       return [];
   }
