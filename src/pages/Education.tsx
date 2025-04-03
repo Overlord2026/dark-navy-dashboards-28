@@ -1,4 +1,3 @@
-
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { toast } from "sonner";
 import { useSearchParams, Link } from "react-router-dom";

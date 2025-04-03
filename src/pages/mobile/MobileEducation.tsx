@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { MobileLayout } from "@/components/layout/MobileLayout";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -32,7 +31,6 @@ export default function MobileEducation() {
   return (
     <MobileLayout title="Education Center" showAddButton={false}>
       <div className="p-4 space-y-6 pb-20">
-        {/* Welcome Section */}
         <div>
           <h2 className="text-xl font-bold mb-2">Financial Education Center</h2>
           <p className="text-gray-400 text-sm">
@@ -40,7 +38,6 @@ export default function MobileEducation() {
           </p>
         </div>
 
-        {/* Search Bar */}
         <div className="relative">
           <div className="absolute inset-y-0 left-2 flex items-center pointer-events-none">
             <Search className="h-4 w-4 text-gray-400" />
@@ -54,7 +51,6 @@ export default function MobileEducation() {
           />
         </div>
 
-        {/* Tabs */}
         <Tabs defaultValue="featured" value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="grid grid-cols-2 w-full bg-[#1B1B32] border border-[#2A2A45]">
             <TabsTrigger value="featured" className="text-sm">Featured</TabsTrigger>
@@ -90,7 +86,6 @@ export default function MobileEducation() {
           </TabsContent>
         </Tabs>
 
-        {/* Categories */}
         <div className="space-y-3">
           <h3 className="text-lg font-medium">Browse by Topic</h3>
           <div className="grid grid-cols-2 gap-3">
@@ -114,7 +109,6 @@ export default function MobileEducation() {
           </Button>
         </div>
 
-        {/* Education Resources */}
         <div className="space-y-3">
           <h3 className="text-lg font-medium">Other Resources</h3>
           <Card className="bg-[#1B1B32] border border-[#2A2A45]">
@@ -179,7 +173,6 @@ export default function MobileEducation() {
   );
 }
 
-// Helper function to get icons for categories
 function getCategoryIcon(categoryId: string) {
   switch (categoryId) {
     case "retirement-income":
