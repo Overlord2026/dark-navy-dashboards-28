@@ -54,6 +54,7 @@ import BankingTransfers from "./pages/BankingTransfers";
 import BillPay from "./pages/BillPay";
 
 import { useUser } from "./context/UserContext";
+import { TutorialButton } from "./components/navigation/TutorialButton";
 
 const AppRoutes: React.FC = () => {
   const { isAuthenticated, userProfile } = useUser();

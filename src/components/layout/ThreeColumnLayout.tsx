@@ -87,7 +87,6 @@ const CustomHomeIcon: React.FC = () => (
   />
 );
 
-// Updated navigation categories based on the new structure
 const navigationCategories: NavCategory[] = [
   {
     id: "home",
@@ -307,7 +306,7 @@ export function ThreeColumnLayout({
                                   isActive
                                     ? isLightTheme ? "bg-[#E9E7D8] text-[#222222] font-medium border-primary" : "bg-black text-[#E2E2E2] font-medium border-primary"
                                     : isLightTheme ? "text-[#222222] border-transparent" : "text-[#E2E2E2] border-transparent",
-                                  isLightTheme ? "hover:bg-[#E9E7D8] hover:border-primary" : "hover:bg-white/10 hover:border-primary"
+                                  isLightTheme ? "hover:bg-[#E9E7D8] hover:border-primary" : "hover:bg-sidebar-accent hover:border-primary"
                                 )}
                               >
                                 {typeof Icon === 'function' ? (
@@ -347,7 +346,7 @@ export function ThreeColumnLayout({
                                 isActive
                                   ? isLightTheme 
                                     ? "bg-[#E9E7D8] text-[#222222] font-medium border-primary" 
-                                    : "bg-black text-[#E2E2E2] font-medium border-primary"
+                                    : "bg-sidebar-accent text-accent border-primary"
                                   : isLightTheme ? "text-[#222222] border-transparent" : "text-[#E2E2E2] border-transparent",
                                 isLightTheme ? "hover:bg-[#E9E7D8] hover:border-primary" : "hover:bg-sidebar-accent hover:border-primary"
                               )}
@@ -435,6 +434,10 @@ export function ThreeColumnLayout({
           ) : null}
           
           <main className="flex-1 overflow-y-auto p-3 font-sans w-full">
+            <div className="flex justify-between items-center mb-4">
+              <h1 className="text-2xl font-bold">{title}</h1>
+              <TutorialButton tabId={currentPath} size="default" variant="default" />
+            </div>
             {children}
           </main>
         </div>

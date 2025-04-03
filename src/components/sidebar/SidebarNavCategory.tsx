@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { NavItem } from "@/types/navigation";
+import { TutorialButton } from "@/components/navigation/TutorialButton";
 
 interface SidebarNavCategoryProps {
   id: string;
@@ -92,16 +93,19 @@ export const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
   const isItemActive = isActive(item.href);
   const isAnyChildActive = hasSubItems && item.submenu?.some(subItem => isActive(subItem.href));
   const shouldShowActive = isItemActive || isAnyChildActive;
+  
+  // Extract tabId from href (e.g., "/investments" -> "investments")
+  const tabId = item.href.split('/')[1] || item.href;
 
   return (
     <div className="mb-1">
       <div className="flex flex-col">
-        <div className="flex items-center">
+        <div className="flex items-center justify-between group">
           <Link
             to={hasSubItems ? "#" : item.href}
             onClick={(e) => hasSubItems ? toggleSubmenu(item.title, e) : undefined}
             className={cn(
-              "group flex items-center py-2 px-3 rounded-md transition-colors border w-full",
+              "group flex items-center py-2 px-3 rounded-md transition-colors border flex-1",
               shouldShowActive
                 ? isLightTheme 
                   ? "bg-[#E9E7D8] text-[#222222] font-medium border-primary" 
@@ -130,6 +134,14 @@ export const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
               </button>
             )}
           </Link>
+          
+          {!collapsed && shouldShowActive && (
+            <TutorialButton 
+              tabId={tabId} 
+              className="ml-1 opacity-0 group-hover:opacity-100 transition-opacity"
+              size="icon"
+            />
+          )}
         </div>
         
         {!collapsed && hasSubItems && isSubmenuExpanded && (
