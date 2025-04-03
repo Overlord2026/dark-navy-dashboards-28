@@ -55,7 +55,10 @@ export const AdvisorProfileEditForm = ({
     // In a real app, this would save to a database
     setTimeout(() => {
       onSave(formData);
-      toast.success("Advisor profile updated successfully");
+      
+      // Disable toast to prevent ghost notifications
+      // toast.success("Advisor profile updated successfully");
+      
       setIsSubmitting(false);
     }, 500);
   };

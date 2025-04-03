@@ -38,16 +38,6 @@ export function ThreeColumnLayout({
       return acc;
     }, {} as Record<string, boolean>)
   );
-  
-  const advisorInfo = {
-    name: "Daniel Zamora",
-    title: "Senior Financial Advisor",
-    email: "Daniel@awmfl.com",
-    phone: "(555) 123-4567",
-    location: "Sarasota, FL",
-    office: "Sarasota Office",
-    bio: "Daniel has over 15 years of experience in wealth management and financial planning."
-  };
 
   const handleBookSession = () => {
     console.log("Book session clicked");
@@ -129,7 +119,6 @@ export function ThreeColumnLayout({
             
             <div className={`px-4 mt-auto mb-3 ${isLightTheme ? 'border-[#DCD8C0]' : 'border-white/10'}`}>
               <AdvisorSection 
-                advisorInfo={advisorInfo} 
                 onViewProfile={handleViewProfile} 
                 onBookSession={handleBookSession} 
                 collapsed={mainSidebarCollapsed} 

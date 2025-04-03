@@ -59,16 +59,6 @@ export const Sidebar = () => {
     isActive 
   } = useSidebarState(navigationCategories);
 
-  const advisorInfo = {
-    name: "Daniel Zamora",
-    title: "Senior Financial Advisor",
-    email: "Daniel@awmfl.com",
-    phone: "(555) 123-4567",
-    location: "Sarasota, FL",
-    office: "Sarasota Office",
-    bio: "Daniel has over 15 years of experience in wealth management and financial planning."
-  };
-
   const handleBookSession = () => {
     console.log("Book session clicked");
   };
@@ -110,7 +100,6 @@ export const Sidebar = () => {
       <div className="p-2 border-t mt-auto" style={{ borderColor: isLightTheme ? '#DCD8C0' : 'rgba(255,255,255,0.1)' }}>
         <div className={`px-2 mb-3 ${isLightTheme ? 'border-[#DCD8C0]' : 'border-white/10'}`}>
           <AdvisorSection 
-            advisorInfo={advisorInfo} 
             onViewProfile={handleViewProfile} 
             onBookSession={handleBookSession} 
             collapsed={collapsed} 

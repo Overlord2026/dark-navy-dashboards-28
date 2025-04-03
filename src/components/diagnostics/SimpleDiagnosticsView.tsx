@@ -43,10 +43,8 @@ const SimpleDiagnosticsView: React.FC = () => {
   const { isDevelopmentMode, isDiagnosticsModeEnabled } = useDiagnosticsContext();
   const { userProfile } = useUser();
   
-  // Only show in development mode or when diagnostics are enabled AND user is admin
-  const userRole = userProfile?.role || "client";
-  const isAdmin = userRole === "admin" || userRole === "system_administrator";
-  const isVisible = (isDevelopmentMode || isDiagnosticsModeEnabled) && isAdmin;
+  // DISABLED: Never show this component on the main dashboard
+  const isVisible = false; // Always hide this component
 
   useEffect(() => {
     if (!isVisible) return;
@@ -161,80 +159,7 @@ const SimpleDiagnosticsView: React.FC = () => {
              (priorityOrder[b.priority as keyof typeof priorityOrder] || 4);
     });
 
-  return (
-    <Card className="max-w-md mx-auto my-4">
-      <CardHeader className="pb-2">
-        <div className="flex justify-between items-center">
-          <CardTitle className="flex items-center">
-            <span>Admin Tools: Navigation Diagnostics</span>
-            {loading ? (
-              <Loader2 className="h-4 w-4 animate-spin ml-2" />
-            ) : null}
-          </CardTitle>
-          
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            onClick={() => {
-              setLoading(true);
-              testNavigation().then(navResults => {
-                setResults(navResults);
-                setLoading(false);
-              });
-            }}
-            aria-label="Refresh diagnostics"
-          >
-            Refresh
-          </Button>
-        </div>
-        
-        <DiagnosticStats stats={stats} />
-      </CardHeader>
-      
-      <CardContent>
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-2">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="results">Results</TabsTrigger>
-            <TabsTrigger value="recommendations">
-              Recommendations
-              {allRecommendations.length > 0 && (
-                <Badge className="ml-2 h-5 w-5 p-0 flex items-center justify-center" aria-label={`${allRecommendations.length} recommendations`}>
-                  {allRecommendations.length}
-                </Badge>
-              )}
-            </TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="results" className="mt-2">
-            {loading && results.length === 0 ? (
-              <div className="flex flex-col items-center py-4" aria-live="polite" aria-busy="true">
-                <Loader2 className="h-8 w-8 animate-spin mb-2" />
-                <p className="text-sm text-muted-foreground">Running diagnostics...</p>
-              </div>
-            ) : (
-              <ul className="space-y-2" aria-label="Diagnostic results">
-                {results.map((result) => (
-                  <DiagnosticResultItem key={result.route} result={result} />
-                ))}
-              </ul>
-            )}
-          </TabsContent>
-          
-          <TabsContent value="recommendations" className="mt-2">
-            <RecommendationsList 
-              recommendations={allRecommendations}
-              isLoading={loading}
-              onActionClick={handleRecommendationAction}
-            />
-          </TabsContent>
-        </Tabs>
-        
-        <div className="text-xs text-muted-foreground mt-4 text-right">
-          Last updated: {new Date().toLocaleTimeString()}
-        </div>
-      </CardContent>
-    </Card>
-  );
+  return null; // Always return null to never show this component
 };
 
 export default SimpleDiagnosticsView;

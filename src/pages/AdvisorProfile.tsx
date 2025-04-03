@@ -8,73 +8,17 @@ import { AdvisorDetailView } from "@/components/profile/AdvisorDetailView";
 import { AdvisorProfileEditForm } from "@/components/profile/AdvisorProfileEditForm";
 import { AdvisorProfileView } from "@/components/profile/AdvisorProfileView";
 import { Link } from "react-router-dom";
+import { useAdvisor } from "@/context/AdvisorContext";
 
 const AdvisorProfile = () => {
   const [activeTab, setActiveTab] = useState("bio");
   const [isBookingDrawerOpen, setIsBookingDrawerOpen] = useState(false);
   const [showDetailView, setShowDetailView] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [advisorInfo, setAdvisorInfo] = useState({
-    name: "Daniel Zamora",
-    title: "Certified Financial Planner™",
-    location: "Sarasota, FL",
-    email: "Daniel@awmfl.com",
-    serviceEmail: "Service@awmfl.com",
-    phone: "(800) 555-1234",
-    office: "Sarasota, FL",
-    hometown: "Asheville, NC",
-    linkedin: "https://linkedin.com/in/danielzamora",
-    education: [
-      "Pine View Academy - Sarasota, Florida (Top of class at top 10 school in the country)",
-      "Bachelor of Science in Finance - University of North Carolina at Charlotte",
-      "Certified Financial Planner™ (CFP®) - Certified Financial Planner Board of Standards"
-    ],
-    experience: [
-      {
-        company: "AWM Financial Advisors",
-        title: "Senior Financial Advisor",
-        period: "2020 - Present",
-        description: "Provide comprehensive financial planning and investment management services to high-net-worth individuals and families."
-      },
-      {
-        company: "Fisher Investments",
-        title: "Client Acquisition Director",
-        period: "2017 - 2020",
-        description: "Led team responsible for client acquisition and relationship management, consistently exceeding quarterly targets."
-      },
-      {
-        company: "UBS Financial Services",
-        title: "Wealth Management Advisor",
-        period: "2013 - 2017",
-        description: "Developed personalized financial strategies for affluent clients with focus on retirement planning and wealth preservation."
-      },
-      {
-        company: "Vanguard",
-        title: "Financial Advisor",
-        period: "2010 - 2013",
-        description: "Provided investment guidance and financial planning services to individual investors."
-      }
-    ],
-    certifications: [
-      "Certified Financial Planner™ (CFP®)",
-      "Chartered Financial Analyst (CFA) Level II Candidate",
-      "Series 7 & 66 Licenses"
-    ],
-    specialties: [
-      "Retirement Planning",
-      "Tax-Efficient Investment Strategies",
-      "Estate Planning",
-      "Risk Management",
-      "Asset Allocation"
-    ],
-    bio: "Daniel, a seasoned finance professional, guides high net worth investors. His approach blends investment management, risk mitigation, tax optimization, and overall strategy. Starting at Vanguard, then UBS, he directed client acquisition at Fisher Investments before joining BFO. Originally from Asheville, NC, Daniel now resides in Sarasota, enjoying fitness, community activities, and sunny days by the water."
-  });
+  const { advisorInfo, updateAdvisorInfo } = useAdvisor();
 
   const handleSaveAdvisorInfo = (updatedInfo) => {
-    setAdvisorInfo({
-      ...advisorInfo,
-      ...updatedInfo
-    });
+    updateAdvisorInfo(updatedInfo);
     setIsEditing(false);
   };
 
@@ -89,7 +33,7 @@ const AdvisorProfile = () => {
       case "experience":
         return (
           <div className="text-white/80 mt-4 space-y-6">
-            {advisorInfo.experience.map((exp, index) => (
+            {advisorInfo.experience?.map((exp, index) => (
               <div key={index} className="flex items-start">
                 <BriefcaseIcon className="h-5 w-5 mr-3 mt-0.5 flex-shrink-0" />
                 <div>
@@ -98,7 +42,11 @@ const AdvisorProfile = () => {
                   <p className="text-sm">{exp.description}</p>
                 </div>
               </div>
-            ))}
+            )) || (
+              <div className="text-white/80">
+                <p>No experience information available</p>
+              </div>
+            )}
           </div>
         );
       case "education":

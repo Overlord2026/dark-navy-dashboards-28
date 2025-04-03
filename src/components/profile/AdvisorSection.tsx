@@ -1,3 +1,4 @@
+
 import React from "react";
 import { ChevronRight, UserRoundIcon, MailIcon, LinkedinIcon, Calendar, ExternalLinkIcon, MapPinIcon } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -5,26 +6,17 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useTheme } from "@/context/ThemeContext";
 import { Link } from "react-router-dom";
-
-interface AdvisorInfo {
-  name: string;
-  title: string;
-  location: string;
-  email: string;
-  phone: string;
-  office: string;
-  bio: string;
-}
+import { useAdvisor } from "@/context/AdvisorContext";
 
 interface AdvisorSectionProps {
-  advisorInfo: AdvisorInfo;
   onViewProfile: (tabId: string) => void;
   onBookSession: () => void;
   collapsed?: boolean;
 }
 
-export const AdvisorSection = ({ advisorInfo, onViewProfile, onBookSession, collapsed = false }: AdvisorSectionProps) => {
+export const AdvisorSection = ({ onViewProfile, onBookSession, collapsed = false }: AdvisorSectionProps) => {
   const { theme } = useTheme();
+  const { advisorInfo } = useAdvisor();
   const isLightTheme = theme === "light";
   
   return (
@@ -66,7 +58,7 @@ export const AdvisorSection = ({ advisorInfo, onViewProfile, onBookSession, coll
                 <p className="text-sm text-gray-300 mb-3">{advisorInfo.title}</p>
                 <div className="flex items-center text-sm text-gray-300 mb-2">
                   <MapPinIcon className="h-4 w-4 mr-2 flex-shrink-0" />
-                  <span>Sarasota, FL</span>
+                  <span>{advisorInfo.location}</span>
                 </div>
                 <a href={`mailto:${advisorInfo.email}`} className="text-sm text-blue-400 hover:underline flex items-center">
                   <MailIcon className="h-4 w-4 mr-2 flex-shrink-0" />
