@@ -14,6 +14,7 @@ import { ChevronLeft, Download, Briefcase, BarChart3, PieChart, LineChart, Trend
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { ScheduleMeetingDialog } from "@/components/investments/ScheduleMeetingDialog";
+import { InterestedButton } from "@/components/investments/InterestedButton";
 
 interface PortfolioModel {
   id: string;
@@ -122,11 +123,6 @@ const PortfolioModelDetail = () => {
     );
   }
 
-  const handleInvest = () => {
-    toast.success(`Starting investment process for ${portfolioModel!.name}`);
-    // In a real implementation, this would navigate to an investment flow
-  };
-
   const handleDownloadFactsheet = () => {
     toast.success(`Downloading fact sheet for ${portfolioModel!.name}`);
     // In a real implementation, this would trigger a download
@@ -185,9 +181,12 @@ const PortfolioModelDetail = () => {
                 </div>
 
                 <div className="pt-2 space-y-3">
-                  <Button className="w-full" onClick={handleInvest}>
-                    Invest in this Model
-                  </Button>
+                  <div className="flex items-center gap-2">
+                    <InterestedButton assetName={portfolioModel!.name} />
+                    <Button className="flex-1" variant="outline">
+                      Let your advisor know you're interested
+                    </Button>
+                  </div>
                   <Button variant="outline" className="w-full" onClick={handleDownloadFactsheet}>
                     <Download className="h-4 w-4 mr-2" /> Download Fact Sheet
                   </Button>
