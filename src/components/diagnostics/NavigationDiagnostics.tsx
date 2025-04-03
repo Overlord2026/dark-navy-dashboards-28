@@ -8,11 +8,32 @@ import { getNavigationDiagnosticsSummary } from "@/services/diagnostics/navigati
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { toast } from "sonner";
+import { useUser } from "@/context/UserContext";
+import { useNavigate } from "react-router-dom";
 
 export function NavigationDiagnostics() {
   const [isLoading, setIsLoading] = useState(false);
   const [diagnosticsResults, setDiagnosticsResults] = useState<any>(null);
   const [activeTab, setActiveTab] = useState("all");
+  const { userProfile } = useUser();
+  const navigate = useNavigate();
+  
+  // Check if user is an admin
+  const userRole = userProfile?.role || "client";
+  const isAdmin = userRole === "admin" || userRole === "system_administrator";
+  
+  // If not admin, redirect to dashboard
+  useEffect(() => {
+    if (!isAdmin) {
+      navigate('/dashboard');
+      toast.error("You don't have permission to access diagnostics");
+    }
+  }, [isAdmin, navigate]);
+  
+  // If not admin, don't render anything
+  if (!isAdmin) {
+    return null;
+  }
   
   const runNavigationDiagnostics = async () => {
     setIsLoading(true);
@@ -42,9 +63,11 @@ export function NavigationDiagnostics() {
   };
   
   useEffect(() => {
-    // Run diagnostics when component mounts
-    runNavigationDiagnostics();
-  }, []);
+    // Run diagnostics when component mounts (for admin users only)
+    if (isAdmin) {
+      runNavigationDiagnostics();
+    }
+  }, [isAdmin]);
   
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -80,7 +103,7 @@ export function NavigationDiagnostics() {
               </div>
               <Badge variant={
                 test.status === "success" ? "success" : 
-                test.status === "warning" ? "warning" : "destructive"
+                test.status === "warning" ? "outline" : "destructive"
               }>
                 {test.status}
               </Badge>
@@ -98,7 +121,7 @@ export function NavigationDiagnostics() {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Navigation className="h-5 w-5" />
-            <CardTitle>Navigation Diagnostics</CardTitle>
+            <CardTitle>Admin Tools: Navigation Diagnostics</CardTitle>
           </div>
           <Button 
             variant="outline" 

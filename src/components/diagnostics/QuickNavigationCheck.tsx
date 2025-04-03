@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Navigation } from "lucide-react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import NavigationDiagnosticModule from "./NavigationDiagnosticModule";
+import { useUser } from "@/context/UserContext";
 
 interface QuickNavigationCheckProps {
   buttonText?: string;
@@ -17,6 +18,16 @@ export function QuickNavigationCheck({
   size = "sm"
 }: QuickNavigationCheckProps) {
   const [open, setOpen] = useState(false);
+  const { userProfile } = useUser();
+  
+  // Check if user is an admin
+  const userRole = userProfile?.role || "client";
+  const isAdmin = userRole === "admin" || userRole === "system_administrator";
+  
+  // Don't render anything for non-admin users
+  if (!isAdmin) {
+    return null;
+  }
   
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -28,7 +39,7 @@ export function QuickNavigationCheck({
       </DialogTrigger>
       <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Navigation Health Check</DialogTitle>
+          <DialogTitle>Admin Tools: Navigation Health Check</DialogTitle>
           <DialogDescription>
             Verify all navigation routes are working properly before making changes
           </DialogDescription>

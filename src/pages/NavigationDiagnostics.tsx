@@ -3,18 +3,34 @@ import React, { useEffect } from "react";
 import { DashboardHeader } from "@/components/ui/DashboardHeader";
 import NavigationDiagnosticModule from "@/components/diagnostics/NavigationDiagnosticModule";
 import { measureRouteLoad } from "@/utils/performance";
+import { useUser } from "@/context/UserContext";
+import { Navigate } from "react-router-dom";
+import { toast } from "sonner";
 
 const NavigationDiagnostics: React.FC = () => {
-  // Measure page load performance
+  // Check if user has admin permissions
+  const { userProfile } = useUser();
+  const userRole = userProfile?.role || "client";
+  const isAdmin = userRole === "admin" || userRole === "system_administrator";
+  
+  // Measure page load performance (for admins only)
   useEffect(() => {
-    const cleanup = measureRouteLoad('/navigation-diagnostics');
-    return cleanup;
-  }, []);
+    if (isAdmin) {
+      const cleanup = measureRouteLoad('/navigation-diagnostics');
+      return cleanup;
+    }
+  }, [isAdmin]);
+
+  // If not admin, redirect to dashboard with error message
+  if (!isAdmin) {
+    toast.error("You don't have permission to access Navigation Diagnostics");
+    return <Navigate to="/dashboard" replace />;
+  }
 
   return (
     <div className="container mx-auto py-6 space-y-8">
       <DashboardHeader 
-        heading="Navigation Diagnostics" 
+        heading="Admin Tools: Navigation Diagnostics" 
         text="Comprehensive health check of all navigation routes and components"
       />
       

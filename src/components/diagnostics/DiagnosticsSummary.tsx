@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -78,7 +79,7 @@ export function DiagnosticsSummary() {
       <SheetContent className="sm:max-w-md md:max-w-xl lg:max-w-2xl overflow-y-auto">
         <SheetHeader className="pb-4">
           <div className="flex items-center justify-between">
-            <SheetTitle>System Diagnostics</SheetTitle>
+            <SheetTitle>Admin Tools: System Diagnostics</SheetTitle>
             <Button variant="ghost" size="icon" onClick={toggleDiagnosticsMode}>
               <X className="h-4 w-4" />
             </Button>

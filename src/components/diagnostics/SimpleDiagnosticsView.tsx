@@ -34,6 +34,7 @@ const DiagnosticStats = ({ stats }: { stats: { total: number; success: number; w
 
 /**
  * SimpleDiagnosticsView - A developer-friendly component that shows basic diagnostics results
+ * Only visible to admin users
  */
 const SimpleDiagnosticsView: React.FC = () => {
   const [results, setResults] = useState<DiagnosticResult[]>([]);
@@ -165,7 +166,7 @@ const SimpleDiagnosticsView: React.FC = () => {
       <CardHeader className="pb-2">
         <div className="flex justify-between items-center">
           <CardTitle className="flex items-center">
-            <span>Navigation Diagnostics</span>
+            <span>Admin Tools: Navigation Diagnostics</span>
             {loading ? (
               <Loader2 className="h-4 w-4 animate-spin ml-2" />
             ) : null}

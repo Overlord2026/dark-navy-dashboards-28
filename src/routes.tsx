@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Index from "@/pages/Index";
@@ -128,7 +127,7 @@ const AppRoutes: React.FC = () => {
       <Route path="/marketplace/rfp/:rfpId" element={<MarketplaceRfpDetail />} />
       <Route path="/login" element={<Navigate to="/" />} />
       
-      {isAdmin && (
+      {isAdmin ? (
         <>
           <Route path="/admin/subscription" element={<AdminSubscription />} />
           <Route path="/admin/system-diagnostics" element={<SystemDiagnostics />} />
@@ -137,11 +136,23 @@ const AppRoutes: React.FC = () => {
           <Route path="/admin/ip-protection" element={<IPProtection />} />
           <Route path="/admin/system-health" element={<SystemHealthDashboard />} />
         </>
+      ) : (
+        <>
+          <Route path="/admin/*" element={
+            <Navigate to="/" replace />
+          } />
+        </>
       )}
       
-      {isDeveloper && (
+      {isDeveloper ? (
         <>
           <Route path="/dev/diagnostics" element={<NavigationDiagnostics />} />
+        </>
+      ) : (
+        <>
+          <Route path="/dev/*" element={
+            <Navigate to="/" replace />
+          } />
         </>
       )}
       

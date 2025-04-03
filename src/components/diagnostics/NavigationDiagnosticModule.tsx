@@ -12,6 +12,7 @@ import { getNavigationDiagnosticsSummary } from "@/services/diagnostics/navigati
 import { LoadingState } from "./LoadingState";
 import { useNavigationDiagnostics } from "@/hooks/useNavigationDiagnostics";
 import { runAllTabDiagnostics } from "@/services/diagnostics/tabDiagnostics";
+import { useUser } from "@/context/UserContext";
 
 const NavigationDiagnosticModule: React.FC = () => {
   const navigate = useNavigate();
@@ -20,6 +21,24 @@ const NavigationDiagnosticModule: React.FC = () => {
   const [results, setResults] = useState<Record<string, NavigationDiagnosticResult[]>>({});
   const [tabResults, setTabResults] = useState<Record<string, NavigationDiagnosticResult>>({});
   const [summary, setSummary] = useState<DiagnosticSummary | null>(null);
+  const { userProfile } = useUser();
+  
+  // Check if user is an admin
+  const userRole = userProfile?.role || "client";
+  const isAdmin = userRole === "admin" || userRole === "system_administrator";
+  
+  // If not admin, redirect to dashboard
+  useEffect(() => {
+    if (!isAdmin) {
+      navigate('/dashboard');
+      toast.error("You don't have permission to access diagnostics");
+    }
+  }, [isAdmin, navigate]);
+  
+  // If not admin, don't render anything
+  if (!isAdmin) {
+    return null;
+  }
 
   const runNavigationDiagnostics = async () => {
     setIsRunning(true);
@@ -57,9 +76,11 @@ const NavigationDiagnosticModule: React.FC = () => {
   };
   
   useEffect(() => {
-    // Run diagnostics when the component mounts
-    runNavigationDiagnostics();
-  }, []);
+    // Run diagnostics when the component mounts (only for admin users)
+    if (isAdmin) {
+      runNavigationDiagnostics();
+    }
+  }, [isAdmin]);
   
   // Flatten all test results for the "All Tests" view
   const allTests = Object.values(results).flat();
@@ -84,7 +105,7 @@ const NavigationDiagnosticModule: React.FC = () => {
           <div>
             <CardTitle>Navigation Health Check</CardTitle>
             <CardDescription>
-              Verify all navigation routes and components are working properly
+              Admin Tools: Verify all navigation routes and components are working properly
             </CardDescription>
           </div>
           <Button 

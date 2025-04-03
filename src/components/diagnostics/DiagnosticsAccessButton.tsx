@@ -5,6 +5,7 @@ import { Activity, Navigation } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "@/context/UserContext";
 import { QuickNavigationCheck } from "./QuickNavigationCheck";
+import { toast } from "sonner";
 
 export const DiagnosticsAccessButton = () => {
   const navigate = useNavigate();
@@ -13,7 +14,11 @@ export const DiagnosticsAccessButton = () => {
   const isAdmin = userRole === "admin" || userRole === "system_administrator";
 
   const handleOpenDiagnostics = () => {
-    navigate("/admin/system-diagnostics");
+    if (isAdmin) {
+      navigate("/admin/system-diagnostics");
+    } else {
+      toast.error("You don't have permission to access diagnostics");
+    }
   };
 
   if (!isAdmin) {
