@@ -1,4 +1,3 @@
-
 import { v4 as uuidv4 } from "uuid";
 import { toast } from "sonner";
 import { 
@@ -203,7 +202,6 @@ export class LocalFinancialPlanService implements FinancialPlanService {
     }
     
     this.savePlans();
-    toast.success("Plan deleted");
     
     return true;
   }

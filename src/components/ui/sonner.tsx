@@ -1,16 +1,12 @@
 
 import { Toaster as Sonner } from "sonner";
-import { useTheme } from "@/context/ThemeContext";
 
 type ToasterProps = React.ComponentProps<typeof Sonner>;
 
-const Toaster = ({ ...props }: ToasterProps) => {
-  const { theme } = useTheme();
-  const resolvedTheme = theme === "dark" ? "dark" : "light";
-
+export function Toaster({ ...props }: ToasterProps) {
   return (
     <Sonner
-      theme={resolvedTheme as ToasterProps["theme"]}
+      theme="dark"
       className="toaster group"
       toastOptions={{
         classNames: {
@@ -23,15 +19,20 @@ const Toaster = ({ ...props }: ToasterProps) => {
             "group-[.toast]:bg-muted group-[.toast]:text-muted-foreground",
         },
       }}
-      // Add filter function to prevent rendering any toast with "deleted" in the title or description
+      // Custom filter to prevent any "plan deleted" notification from showing
       filter={(toast) => {
-        const titleText = toast.title?.toString().toLowerCase() || '';
-        const descriptionText = toast.description?.toString().toLowerCase() || '';
+        if (!toast) return true;
         
-        // Filter out any toast that contains any variation of "plan deleted" or just "deleted"
+        // Convert toast content to lowercase strings for case-insensitive comparison
+        const titleText = (toast.title?.toString() || '').toLowerCase();
+        const descriptionText = (toast.description?.toString() || '').toLowerCase();
+        
+        // Filter out any toast that contains any variation of "plan deleted", "deleted plan", or just "deleted"
         return !(
           titleText.includes('plan deleted') || 
           descriptionText.includes('plan deleted') ||
+          titleText.includes('deleted plan') || 
+          descriptionText.includes('deleted plan') ||
           titleText.includes('deleted') || 
           descriptionText.includes('deleted')
         );
@@ -39,6 +40,4 @@ const Toaster = ({ ...props }: ToasterProps) => {
       {...props}
     />
   );
-};
-
-export { Toaster };
+}

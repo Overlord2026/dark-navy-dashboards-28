@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { format } from "date-fns";
 import { 
@@ -79,7 +78,7 @@ export function ManagePlansDialog({
     if (confirmDeleteId) {
       onDeletePlan(confirmDeleteId);
       setConfirmDeleteId(null);
-      toast.success("Plan deleted successfully");
+      toast.success("Operation completed successfully");
     }
   };
   

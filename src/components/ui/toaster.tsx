@@ -18,13 +18,15 @@ export function Toaster() {
         // Filter out ALL plan deleted notifications completely
         .filter(toast => {
           // Convert toast content to lowercase strings for case-insensitive comparison
-          const titleText = toast.title?.toString().toLowerCase() || '';
-          const descriptionText = toast.description?.toString().toLowerCase() || '';
+          const titleText = (toast.title?.toString() || '').toLowerCase();
+          const descriptionText = (toast.description?.toString() || '').toLowerCase();
           
-          // Filter out any toast that contains any variation of "plan deleted" or just "deleted"
+          // Filter out any toast that contains any variation of "plan deleted", "deleted plan", or just "deleted"
           return !(
             titleText.includes('plan deleted') || 
             descriptionText.includes('plan deleted') ||
+            titleText.includes('deleted plan') || 
+            descriptionText.includes('deleted plan') ||
             titleText.includes('deleted') || 
             descriptionText.includes('deleted')
           );
