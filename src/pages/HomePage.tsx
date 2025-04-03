@@ -110,14 +110,7 @@ export default function HomePage() {
 
       {/* Why Choose Us Section */}
       <section id="about" className="py-20 px-4 bg-[#1B1B32] text-white">
-        <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-16 items-center">
-          <div className="hidden md:block">
-            <img 
-              src="/lovable-uploads/4f186128-9b08-4965-a540-64cf9b0ec9ee.png" 
-              alt="Financial Advisors" 
-              className="w-full h-auto rounded-lg shadow-lg"
-            />
-          </div>
+        <div className="max-w-7xl mx-auto grid md:grid-cols-1 gap-16 items-center">
           <div>
             <h2 className="text-3xl md:text-4xl font-bold mb-6">Why Choose Boutique Family Office</h2>
             <div className="space-y-6">

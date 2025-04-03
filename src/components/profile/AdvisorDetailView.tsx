@@ -17,7 +17,7 @@ interface AdvisorDetailViewProps {
     serviceEmail?: string;
     location: string;
     hometown?: string;
-    education: string[];
+    education?: string[]; // Made education optional to match AdvisorInfo type
     bio: string;
     experience?: Experience[];
     certifications?: string[];
@@ -111,19 +111,21 @@ export const AdvisorDetailView = ({ advisorInfo }: AdvisorDetailViewProps) => {
           </div>
         )}
         
-        <div className="py-4">
-          <div className="flex items-center mb-4">
-            <GraduationCapIcon className="h-5 w-5 mr-4 text-white/70" />
-            <span className="text-lg text-white">Education</span>
+        {advisorInfo.education && advisorInfo.education.length > 0 && (
+          <div className="py-4">
+            <div className="flex items-center mb-4">
+              <GraduationCapIcon className="h-5 w-5 mr-4 text-white/70" />
+              <span className="text-lg text-white">Education</span>
+            </div>
+            <div className="pl-9">
+              {advisorInfo.education.map((edu, index) => (
+                <p key={index} className="text-lg text-white/70 mb-3">{edu}</p>
+              ))}
+            </div>
           </div>
-          <div className="pl-9">
-            {advisorInfo.education.map((edu, index) => (
-              <p key={index} className="text-lg text-white/70 mb-3">{edu}</p>
-            ))}
-          </div>
-        </div>
+        )}
         
-        {advisorInfo.certifications && (
+        {advisorInfo.certifications && advisorInfo.certifications.length > 0 && (
           <div className="py-4">
             <div className="flex items-center mb-4">
               <CheckCircleIcon className="h-5 w-5 mr-4 text-white/70" />
@@ -137,7 +139,7 @@ export const AdvisorDetailView = ({ advisorInfo }: AdvisorDetailViewProps) => {
           </div>
         )}
         
-        {advisorInfo.specialties && (
+        {advisorInfo.specialties && advisorInfo.specialties.length > 0 && (
           <div className="py-4">
             <div className="flex items-center mb-4">
               <UserIcon className="h-5 w-5 mr-4 text-white/70" />
