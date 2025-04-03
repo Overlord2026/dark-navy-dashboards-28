@@ -1,4 +1,3 @@
-
 import { Course } from '@/types/education';
 import { ApiResponse, UserToken } from '@/types/api';
 import { toast } from 'sonner';
@@ -165,6 +164,91 @@ export const fetchCourseDetailsById = async (
     return {
       success: false,
       error: 'Failed to retrieve course details. Please try again later.',
+    };
+  }
+};
+
+// Interface for course enrollment request
+export interface CourseEnrollmentRequest {
+  courseId: string | number;
+  userData?: {
+    name?: string;
+    email?: string;
+    preferences?: Record<string, any>;
+  };
+}
+
+// Interface for course enrollment response
+export interface CourseEnrollmentResponse {
+  enrollmentId?: string;
+  status: 'enrolled' | 'pending' | 'failed';
+  courseId: string | number;
+  enrollmentDate?: string;
+  accessUrl?: string;
+}
+
+// POST /api/courses/enroll endpoint handler
+export const enrollUserInCourse = async (
+  token: string,
+  enrollmentData: CourseEnrollmentRequest
+): Promise<ApiResponse<CourseEnrollmentResponse>> => {
+  try {
+    // Verify authentication token
+    const user = verifyToken(token);
+    
+    if (!user) {
+      return {
+        success: false,
+        error: 'Unauthorized access. Invalid or expired token.',
+      };
+    }
+    
+    const { courseId, userData } = enrollmentData;
+    
+    // Validate courseId
+    if (!courseId) {
+      return {
+        success: false,
+        error: 'Course ID is required',
+      };
+    }
+    
+    // Get course details to verify the course exists
+    const courses = getAllCourses();
+    const course = courses.find(c => c.id.toString() === courseId.toString());
+    
+    if (!course) {
+      return {
+        success: false,
+        error: 'Course not found',
+      };
+    }
+    
+    // In a real application, we would make an API call to GHL to enroll the user
+    // For demonstration, we'll simulate a successful enrollment
+    
+    // Simulate API call delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    // Mock enrollment response
+    const enrollmentResponse: CourseEnrollmentResponse = {
+      enrollmentId: `enroll-${Date.now()}-${user.id}`,
+      status: 'enrolled',
+      courseId,
+      enrollmentDate: new Date().toISOString(),
+      accessUrl: course.ghlUrl,
+    };
+    
+    return {
+      success: true,
+      data: enrollmentResponse,
+      message: `Successfully enrolled in ${course.title}`,
+    };
+  } catch (error) {
+    console.error('Error enrolling user in course:', error);
+    return {
+      success: false,
+      error: 'Failed to complete enrollment. Please try again later.',
     };
   }
 };

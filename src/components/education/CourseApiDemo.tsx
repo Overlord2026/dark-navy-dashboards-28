@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { CourseDetailsApi } from './CourseDetailsApi';
+import { CourseEnrollmentApi } from './CourseEnrollmentApi';
 
 export const CourseApiDemo = () => {
   const [apiTab, setApiTab] = useState('all-courses');
@@ -54,6 +55,7 @@ export const CourseApiDemo = () => {
         <TabsList className="w-full">
           <TabsTrigger value="all-courses" className="flex-1">GET /api/courses</TabsTrigger>
           <TabsTrigger value="course-details" className="flex-1">GET /api/courses/{'{id}'}</TabsTrigger>
+          <TabsTrigger value="course-enroll" className="flex-1">POST /api/courses/enroll</TabsTrigger>
         </TabsList>
         
         <TabsContent value="all-courses" className="mt-4">
@@ -125,6 +127,10 @@ export const CourseApiDemo = () => {
         
         <TabsContent value="course-details" className="mt-4">
           <CourseDetailsApi />
+        </TabsContent>
+
+        <TabsContent value="course-enroll" className="mt-4">
+          <CourseEnrollmentApi />
         </TabsContent>
       </Tabs>
     </div>
