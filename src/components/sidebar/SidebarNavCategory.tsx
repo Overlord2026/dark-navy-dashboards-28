@@ -1,10 +1,10 @@
-
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronUp, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { NavItem } from "@/types/navigation";
 import { TutorialButton } from "@/components/navigation/TutorialButton";
+import { useTutorials } from "@/hooks/useTutorials";
 
 interface SidebarNavCategoryProps {
   id: string;
@@ -94,8 +94,10 @@ export const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
   const isAnyChildActive = hasSubItems && item.submenu?.some(subItem => isActive(subItem.href));
   const shouldShowActive = isItemActive || isAnyChildActive;
   
-  // Extract tabId from href (e.g., "/investments" -> "investments")
   const tabId = item.href.split('/')[1] || item.href;
+  
+  const { isTutorialViewed } = useTutorials();
+  const tutorialNotViewed = !isTutorialViewed(tabId);
 
   return (
     <div className="mb-1">
@@ -116,14 +118,25 @@ export const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
             )}
             title={collapsed ? item.title : undefined}
           >
+            {tutorialNotViewed && !collapsed && (
+              <span className="absolute -left-1 top-1/2 transform -translate-y-1/2">
+                <Sparkles className="h-3 w-3 text-[#9b87f5]" />
+              </span>
+            )}
             <item.icon 
               className={cn(
                 "h-5 w-5 flex-shrink-0", 
-                !collapsed && "mr-3"
+                !collapsed && "mr-3",
+                tutorialNotViewed && "text-[#9b87f5]"
               )} 
             />
             {!collapsed && (
-              <span className="whitespace-nowrap overflow-hidden text-ellipsis flex-1">{item.title}</span>
+              <span className={cn(
+                "whitespace-nowrap overflow-hidden text-ellipsis flex-1",
+                tutorialNotViewed && "text-[#9b87f5] font-medium"
+              )}>
+                {item.title}
+              </span>
             )}
             {!collapsed && hasSubItems && (
               <button
@@ -140,6 +153,7 @@ export const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
               tabId={tabId} 
               className="ml-1 opacity-0 group-hover:opacity-100 transition-opacity"
               size="icon"
+              showNewBadge={tutorialNotViewed}
             />
           )}
         </div>
