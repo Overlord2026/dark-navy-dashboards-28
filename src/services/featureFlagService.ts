@@ -1,5 +1,6 @@
 
 import { FeatureFlag, FeatureFlagConfig, Environment } from '@/types/featureFlags';
+import { getConfigService } from './configService';
 
 // Default configuration for each environment
 const DEFAULT_CONFIGS: Record<Environment, FeatureFlagConfig> = {
@@ -34,17 +35,7 @@ const DEFAULT_CONFIGS: Record<Environment, FeatureFlagConfig> = {
 
 // Detection of current environment
 const getCurrentEnvironment = (): Environment => {
-  // In a real application, this would detect the actual environment
-  // from window.location.hostname or environment variables
-  const hostname = window.location.hostname;
-  
-  if (hostname.includes('localhost') || hostname.includes('127.0.0.1')) {
-    return 'development';
-  } else if (hostname.includes('staging') || hostname.includes('test')) {
-    return 'staging';
-  }
-  
-  return 'production';
+  return getConfigService().getEnvironment();
 };
 
 /**
@@ -56,8 +47,15 @@ export class FeatureFlagService {
   private environment: Environment;
   
   private constructor() {
-    this.environment = getCurrentEnvironment();
+    const configService = getConfigService();
+    this.environment = configService.getEnvironment();
+    
+    // Start with the default config for the current environment
     this.config = { ...DEFAULT_CONFIGS[this.environment] };
+    
+    // Override with any flags from the config service
+    const configFlags = configService.getFeatureFlags();
+    this.config = { ...this.config, ...configFlags };
     
     // Load any overrides from localStorage
     try {
