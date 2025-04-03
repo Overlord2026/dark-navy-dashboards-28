@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
@@ -158,6 +157,131 @@ const mockOfferings = {
         expectedReturn: "15-18% gross IRR",
         benchmarks: ["MSCI World Index + 700bps", "Cambridge Associates Global PE Index"]
       }
+    },
+    {
+      id: 21,
+      name: "Apollo Global Equity Partners",
+      description: "Control buyout fund focusing on companies undergoing transformational change.",
+      minimumInvestment: "$3,500,000",
+      performance: "+20.1% IRR",
+      lockupPeriod: "9-11 years",
+      lockUp: "9-11 years",
+      firm: "Apollo",
+      tags: ["Buyout", "Turnaround", "Value"],
+      investorQualification: "Qualified Purchaser",
+      liquidity: "Limited secondary market",
+      subscriptions: "Closed-end fund",
+      category: "private-equity",
+      strategy: {
+        overview: "The fund focuses on complex situations and companies requiring operational transformation.",
+        approach: "Value-oriented with hands-on operational improvement strategies.",
+        target: "Companies with enterprise values between $200M and $3B.",
+        stage: "Established businesses with transformation potential",
+        geography: "Global with focus on North America and Europe",
+        sectors: ["Industrials", "Business Services", "Consumer", "Healthcare"],
+        expectedReturn: "19-24% gross IRR",
+        benchmarks: ["Cambridge Associates Global PE Index", "S&P 500"]
+      }
+    },
+    {
+      id: 22,
+      name: "StepStone Capital Partners V",
+      description: "Diversified private equity fund investing across sectors and strategies.",
+      minimumInvestment: "$1,000,000",
+      performance: "+18.7% IRR",
+      lockupPeriod: "10-12 years",
+      lockUp: "10-12 years",
+      firm: "StepStone",
+      tags: ["Diversified", "Multi-strategy", "Global"],
+      investorQualification: "Qualified Purchaser",
+      liquidity: "Limited secondary market",
+      subscriptions: "Closed-end fund",
+      category: "private-equity",
+      strategy: {
+        overview: "The fund provides diversified exposure to private equity through primary fund investments, secondaries, and co-investments.",
+        approach: "Portfolio construction with strategic sector and geographic allocation.",
+        target: "Diversified exposure across the private equity landscape.",
+        stage: "Various stages from growth to buyout",
+        geography: "Global",
+        sectors: ["Diversified"],
+        expectedReturn: "17-21% gross IRR",
+        benchmarks: ["Cambridge Associates Global PE Index", "MSCI ACWI"]
+      }
+    },
+    {
+      id: 23,
+      name: "AMG Pantheon Private Equity Fund",
+      description: "Semi-liquid private equity solution for accredited investors.",
+      minimumInvestment: "$50,000",
+      performance: "+16.5% IRR",
+      lockupPeriod: "Quarterly liquidity with restrictions",
+      lockUp: "Initial 2-year lockup",
+      firm: "AMG Pantheon",
+      tags: ["Semi-liquid", "Diversified", "Lower Minimum"],
+      investorQualification: "Accredited Investor",
+      liquidity: "Quarterly redemptions subject to restrictions",
+      subscriptions: "Monthly",
+      category: "private-equity",
+      strategy: {
+        overview: "The fund provides individual investors with access to a diversified private equity portfolio.",
+        approach: "Multi-manager with diversification across vintage years, geographies, and strategies.",
+        target: "Broad private equity exposure.",
+        stage: "Various stages",
+        geography: "Global",
+        sectors: ["Diversified"],
+        expectedReturn: "15-18% net IRR",
+        benchmarks: ["MSCI World Index + 300bps", "Cambridge Associates Global PE Index"]
+      }
+    },
+    {
+      id: 24,
+      name: "Hamilton Lane Private Assets Fund",
+      description: "Evergreen private equity fund with enhanced liquidity features.",
+      minimumInvestment: "$100,000",
+      performance: "+15.9% IRR",
+      lockupPeriod: "Quarterly liquidity after 1-year",
+      lockUp: "1-year initial lockup",
+      firm: "Hamilton Lane",
+      tags: ["Evergreen", "Multi-strategy", "Enhanced Liquidity"],
+      investorQualification: "Qualified Client",
+      liquidity: "Quarterly liquidity with gates",
+      subscriptions: "Monthly",
+      category: "private-equity",
+      strategy: {
+        overview: "The fund provides access to private markets with enhanced liquidity compared to traditional private equity funds.",
+        approach: "Balanced portfolio across primaries, secondaries, and direct investments.",
+        target: "Broad private markets exposure with liquidity management.",
+        stage: "Various stages",
+        geography: "Global with focus on developed markets",
+        sectors: ["Diversified"],
+        expectedReturn: "14-17% net IRR",
+        benchmarks: ["MSCI World Index + 400bps"]
+      }
+    },
+    {
+      id: 25,
+      name: "Cliffwater Corporate Lending Fund",
+      description: "Direct lending strategy focusing on senior secured loans to middle-market companies.",
+      minimumInvestment: "$250,000",
+      performance: "+10.3% IRR",
+      lockupPeriod: "Quarterly liquidity after 1-year",
+      lockUp: "1-year initial lockup",
+      firm: "Cliffwater",
+      tags: ["Direct Lending", "Income", "Middle Market"],
+      investorQualification: "Accredited Investor",
+      liquidity: "Quarterly with restrictions",
+      subscriptions: "Monthly",
+      category: "private-equity",
+      strategy: {
+        overview: "The fund provides direct lending to U.S. middle-market companies with EBITDA of $25-100 million.",
+        approach: "Senior secured, floating-rate loans with strong covenants and structural protections.",
+        target: "Middle-market companies with stable cash flows.",
+        stage: "Established businesses",
+        geography: "United States",
+        sectors: ["Diversified"],
+        expectedReturn: "9-12% net IRR with significant income component",
+        benchmarks: ["S&P/LSTA Leveraged Loan Index + 200bps"]
+      }
     }
   ],
   "private-debt": [
@@ -259,6 +383,131 @@ const mockOfferings = {
         sectors: ["Real Estate", "Corporate Credit", "Consumer", "Specialty Finance"],
         expectedReturn: "10-13% net IRR",
         benchmarks: ["Bloomberg Barclays US Aggregate Bond Index + 400bps", "J.P. Morgan CLOIE Index"]
+      }
+    },
+    {
+      id: 26,
+      name: "Apollo Total Return Fund",
+      description: "Multi-strategy credit fund investing across the credit spectrum.",
+      minimumInvestment: "$500,000",
+      performance: "+10.8% IRR",
+      lockupPeriod: "Semi-annual liquidity after 1-year",
+      lockUp: "1-year initial lockup",
+      firm: "Apollo",
+      tags: ["Multi-strategy", "Flexible Credit", "Income"],
+      investorQualification: "Qualified Purchaser",
+      liquidity: "Semi-annual with gates",
+      subscriptions: "Monthly",
+      category: "private-debt",
+      strategy: {
+        overview: "The fund invests across the credit spectrum, from investment grade to distressed debt.",
+        approach: "Dynamic allocation across credit strategies based on market opportunities.",
+        target: "Various credit instruments across the risk/return spectrum.",
+        stage: "Various",
+        geography: "Global",
+        sectors: ["Diversified"],
+        expectedReturn: "9-12% net IRR",
+        benchmarks: ["Bloomberg Barclays US Aggregate Bond Index + 400bps"]
+      }
+    },
+    {
+      id: 27,
+      name: "Blackstone Secured Lending Fund",
+      description: "Senior secured direct lending to middle market companies.",
+      minimumInvestment: "$1,000,000",
+      performance: "+9.2% IRR",
+      lockupPeriod: "Quarterly liquidity after 2-years",
+      lockUp: "2-year initial lockup",
+      firm: "Blackstone",
+      tags: ["Direct Lending", "Senior Secured", "Income"],
+      investorQualification: "Qualified Purchaser",
+      liquidity: "Quarterly with gates",
+      subscriptions: "Monthly",
+      category: "private-debt",
+      strategy: {
+        overview: "The fund provides senior secured loans to middle market companies with EBITDA of $15-50 million.",
+        approach: "Focus on capital preservation with strong structural protections.",
+        target: "U.S. middle-market companies with stable cash flows.",
+        stage: "Established businesses",
+        geography: "United States",
+        sectors: ["Diversified"],
+        expectedReturn: "8-10% net IRR with significant income component",
+        benchmarks: ["S&P/LSTA Leveraged Loan Index + 150bps"]
+      }
+    },
+    {
+      id: 28,
+      name: "KKR Credit Opportunities Fund",
+      description: "Opportunistic credit fund investing across liquid and private credit markets.",
+      minimumInvestment: "$500,000",
+      performance: "+12.5% IRR",
+      lockupPeriod: "Quarterly liquidity after 1-year",
+      lockUp: "1-year initial lockup",
+      firm: "KKR",
+      tags: ["Opportunistic", "Flexible Credit", "Higher Return"],
+      investorQualification: "Qualified Purchaser",
+      liquidity: "Quarterly with gates",
+      subscriptions: "Monthly",
+      category: "private-debt",
+      strategy: {
+        overview: "The fund focuses on opportunistic credit investments across liquid and private markets.",
+        approach: "Flexible mandate with ability to pivot across credit sectors based on relative value.",
+        target: "Stressed and special situations across the credit spectrum.",
+        stage: "Various",
+        geography: "Global with focus on North America and Europe",
+        sectors: ["Diversified"],
+        expectedReturn: "11-14% net IRR",
+        benchmarks: ["ICE BofA US High Yield Index + 300bps"]
+      }
+    },
+    {
+      id: 29,
+      name: "Cliffwater Enhanced Lending Fund",
+      description: "Middle-market direct lending strategy with enhanced return potential.",
+      minimumInvestment: "$250,000",
+      performance: "+11.2% IRR",
+      lockupPeriod: "Quarterly liquidity after 1-year",
+      lockUp: "1-year initial lockup",
+      firm: "Cliffwater",
+      tags: ["Direct Lending", "Middle Market", "Enhanced Return"],
+      investorQualification: "Qualified Client",
+      liquidity: "Quarterly with restrictions",
+      subscriptions: "Monthly",
+      category: "private-debt",
+      strategy: {
+        overview: "The fund provides unitranche and stretch senior loans to middle-market companies.",
+        approach: "Deep credit underwriting with selective equity co-investments.",
+        target: "Middle-market companies with $10-30 million in EBITDA.",
+        stage: "Established businesses with growth potential",
+        geography: "United States",
+        sectors: ["Diversified"],
+        expectedReturn: "10-13% net IRR",
+        benchmarks: ["S&P/LSTA Leveraged Loan Index + 250bps"]
+      }
+    },
+    {
+      id: 30,
+      name: "StepStone Private Debt Fund IV",
+      description: "Multi-strategy private debt fund with global reach.",
+      minimumInvestment: "$1,000,000",
+      performance: "+10.7% IRR",
+      lockupPeriod: "Semi-annual liquidity after 2-years",
+      lockUp: "2-year initial lockup",
+      firm: "StepStone",
+      tags: ["Multi-strategy", "Global", "Income"],
+      investorQualification: "Qualified Purchaser",
+      liquidity: "Semi-annual with gates",
+      subscriptions: "Quarterly",
+      category: "private-debt",
+      strategy: {
+        overview: "The fund provides diversified exposure to private debt through primary fund investments, secondaries, and co-investments.",
+        approach: "Portfolio construction with strategic sector and geographic allocation.",
+        target: "Diversified exposure across the private debt landscape.",
+        stage: "Various",
+        geography: "Global",
+        sectors: ["Diversified"],
+        expectedReturn: "9-12% net IRR",
+        benchmarks: ["Bloomberg Barclays Global Aggregate Bond Index + 400bps"]
       }
     }
   ],
@@ -436,176 +685,4 @@ const mockOfferings = {
         stage: "Productive timberland",
         geography: "United States, Canada",
         sectors: ["Softwood", "Hardwood", "Carbon Credits"],
-        expectedReturn: "8-12% net IRR with 3-5% current income component",
-        benchmarks: ["NCREIF Timberland Index", "S&P Global Timber & Forestry Index"]
-      }
-    },
-    {
-      id: 18,
-      name: "Energy Capital Partners Fund V",
-      description: "Private equity investments in energy infrastructure and the energy transition.",
-      minimumInvestment: "$1,000,000",
-      performance: "+14.2% IRR",
-      lockupPeriod: "8-10 years",
-      lockUp: "8-10 years",
-      firm: "Energy Capital Partners",
-      tags: ["Energy", "Infrastructure", "Transition"],
-      investorQualification: "Qualified Purchaser",
-      liquidity: "Limited secondary market",
-      subscriptions: "Closed-end fund",
-      category: "real-assets",
-      strategy: {
-        overview: "The fund targets investments in energy infrastructure assets positioned for the energy transition.",
-        approach: "Operational improvements and strategic repositioning of energy assets.",
-        target: "Power generation, renewables, storage, and transmission assets.",
-        stage: "Operating assets with value-add potential",
-        geography: "North America, Europe",
-        sectors: ["Power Generation", "Renewables", "Storage", "Transmission"],
-        expectedReturn: "12-16% net IRR",
-        benchmarks: ["S&P Global Infrastructure Index", "S&P Global Clean Energy Index"]
-      }
-    },
-    {
-      id: 19,
-      name: "Prologis Logistics Property Fund",
-      description: "Core-plus logistics real estate portfolio in prime global markets.",
-      minimumInvestment: "$2,000,000",
-      performance: "+11.5% IRR",
-      lockupPeriod: "Open-ended with redemption restrictions",
-      lockUp: "Initial 2-year lockup",
-      firm: "Prologis",
-      tags: ["Logistics", "Industrial", "Core-Plus"],
-      investorQualification: "Qualified Purchaser",
-      liquidity: "Quarterly redemptions subject to fund limitations",
-      subscriptions: "Quarterly",
-      category: "real-assets",
-      strategy: {
-        overview: "The fund invests in high-quality logistics facilities in key global distribution markets.",
-        approach: "Combines core income with growth through development and repositioning.",
-        target: "Modern logistics facilities in strategic gateway markets and key distribution hubs.",
-        stage: "Core and core-plus logistics properties",
-        geography: "Global with focus on North America, Europe, and Asia",
-        sectors: ["Logistics", "Industrial", "Fulfillment Centers"],
-        expectedReturn: "9-13% net IRR with 4-5% current income component",
-        benchmarks: ["NCREIF ODCE Index", "FTSE NAREIT Industrial/Office Index"]
-      }
-    },
-    {
-      id: 20,
-      name: "Global Infrastructure Partners IV",
-      description: "Large-scale infrastructure assets with stable cash flows and value-add opportunities.",
-      minimumInvestment: "$3,000,000",
-      performance: "+13.8% IRR",
-      lockupPeriod: "10-12 years",
-      lockUp: "10-12 years",
-      firm: "Global Infrastructure Partners",
-      tags: ["Infrastructure", "Value-Add", "Global"],
-      investorQualification: "Qualified Purchaser",
-      liquidity: "Limited secondary market",
-      subscriptions: "Closed-end fund",
-      category: "real-assets",
-      strategy: {
-        overview: "The fund acquires large-scale infrastructure assets with strong cash flows and improvement potential.",
-        approach: "Operational improvements, strategic repositioning, and active asset management.",
-        target: "Airports, ports, energy infrastructure, and utilities.",
-        stage: "Established assets with improvement potential",
-        geography: "Global with focus on OECD countries",
-        sectors: ["Transportation", "Energy", "Utilities", "Waste Management"],
-        expectedReturn: "12-16% net IRR",
-        benchmarks: ["S&P Global Infrastructure Index", "MSCI World Index + 500bps"]
-      }
-    }
-  ]
-};
-
-const ViewAllOfferings = () => {
-  const { categoryId } = useParams();
-  const navigate = useNavigate();
-  const [offerings, setOfferings] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [categoryName, setCategoryName] = useState<string>("");
-
-  useEffect(() => {
-    setIsLoading(true);
-    
-    // Get offerings for the category
-    if (categoryId) {
-      if (categoryId === "all") {
-        // For "all" category, combine all offerings from all categories
-        const allOfferings: any[] = [];
-        Object.keys(mockOfferings).forEach(key => {
-          allOfferings.push(...mockOfferings[key as keyof typeof mockOfferings]);
-        });
-        setOfferings(allOfferings);
-        setCategoryName("All Alternative Investments");
-      } else if (mockOfferings[categoryId as keyof typeof mockOfferings]) {
-        // For specific category
-        setOfferings(mockOfferings[categoryId as keyof typeof mockOfferings]);
-        
-        // Set category name
-        switch(categoryId) {
-          case "private-equity":
-            setCategoryName("Private Equity");
-            break;
-          case "private-debt":
-            setCategoryName("Private Debt");
-            break;
-          case "digital-assets":
-            setCategoryName("Digital Assets");
-            break;
-          case "real-assets":
-            setCategoryName("Real Assets");
-            break;
-          default:
-            setCategoryName("Alternative Investments");
-        }
-      } else {
-        // Handle invalid category
-        setCategoryName("Alternative Investments");
-        setOfferings([]);
-      }
-    }
-    
-    setIsLoading(false);
-  }, [categoryId]);
-
-  const handleBack = () => {
-    if (categoryId === "all") {
-      navigate("/investments");
-    } else {
-      navigate(`/investments/alternative/${categoryId}`);
-    }
-  };
-
-  return (
-    <ThreeColumnLayout activeMainItem="investments" title={`${categoryName} - All Offerings`}>
-      <div className="mb-6">
-        <div className="flex items-center mb-6">
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            className="mr-2"
-            onClick={handleBack}
-          >
-            <ChevronLeft className="h-4 w-4 mr-1" />
-            Back to {categoryId === "all" ? "Investments" : categoryName}
-          </Button>
-        </div>
-
-        {isLoading ? (
-          <div className="flex justify-center items-center h-64">
-            <p>Loading offerings...</p>
-          </div>
-        ) : (
-          <OfferingsList 
-            offerings={offerings} 
-            categoryId={categoryId || ""} 
-            isFullView={true}
-          />
-        )}
-      </div>
-    </ThreeColumnLayout>
-  );
-};
-
-export default ViewAllOfferings;
+        expectedReturn: "8-12% net IRR with 3-5% current income
