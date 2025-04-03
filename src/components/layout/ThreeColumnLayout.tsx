@@ -62,9 +62,17 @@ export function ThreeColumnLayout({
   const isLightTheme = theme === "light";
   const isHomePage = location.pathname === "/";
 
+  // Improved function to get the current path and handle nested routes
   const getCurrentPath = () => {
-    const path = location.pathname.split('/')[1];
-    return path === '' ? 'home' : path;
+    const pathSegments = location.pathname.split('/').filter(Boolean);
+    if (pathSegments.length === 0) return 'home';
+    
+    // Special case for tax-planning which is under education
+    if (pathSegments.includes('tax-planning')) {
+      return 'tax-planning';
+    }
+    
+    return pathSegments[0];
   };
 
   const currentPath = getCurrentPath();

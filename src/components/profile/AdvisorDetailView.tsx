@@ -16,7 +16,7 @@ interface AdvisorDetailViewProps {
     email: string;
     serviceEmail?: string;
     location: string;
-    hometown?: string; // Made hometown optional here
+    hometown?: string;
     education: string[];
     bio: string;
     experience?: Experience[];
