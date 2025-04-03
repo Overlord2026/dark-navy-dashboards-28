@@ -12,7 +12,6 @@ import { DiagnosticsTrigger } from "./components/diagnostics/DiagnosticsTrigger"
 import { DiagnosticsSummary } from "./components/diagnostics/DiagnosticsSummary";
 import SimpleDiagnosticsView from "./components/diagnostics/SimpleDiagnosticsView";
 import { FinancialPlanProvider } from "./context/FinancialPlanContext";
-import { HelpAndSupport } from "./components/support/HelpAndSupport";
 
 function App() {
   return (
@@ -25,7 +24,6 @@ function App() {
                 <DiagnosticsProvider>
                   <FinancialPlanProvider>
                     <AppRoutes />
-                    <HelpAndSupport />
                     <Toaster position="top-right" />
                     <DiagnosticsTrigger />
                     <DiagnosticsSummary />
