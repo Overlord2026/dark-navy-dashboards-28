@@ -529,30 +529,53 @@ const ViewAllOfferings = () => {
     setIsLoading(true);
     
     // Get offerings for the category
-    if (categoryId && mockOfferings[categoryId as keyof typeof mockOfferings]) {
-      setOfferings(mockOfferings[categoryId as keyof typeof mockOfferings]);
-      
-      // Set category name
-      switch(categoryId) {
-        case "private-equity":
-          setCategoryName("Private Equity");
-          break;
-        case "private-debt":
-          setCategoryName("Private Debt");
-          break;
-        case "digital-assets":
-          setCategoryName("Digital Assets");
-          break;
-        case "real-assets":
-          setCategoryName("Real Assets");
-          break;
-        default:
-          setCategoryName("Alternative Investments");
+    if (categoryId) {
+      if (categoryId === "all") {
+        // For "all" category, combine all offerings from all categories
+        const allOfferings: any[] = [];
+        Object.keys(mockOfferings).forEach(key => {
+          allOfferings.push(...mockOfferings[key as keyof typeof mockOfferings]);
+        });
+        setOfferings(allOfferings);
+        setCategoryName("All Alternative Investments");
+      } else if (mockOfferings[categoryId as keyof typeof mockOfferings]) {
+        // For specific category
+        setOfferings(mockOfferings[categoryId as keyof typeof mockOfferings]);
+        
+        // Set category name
+        switch(categoryId) {
+          case "private-equity":
+            setCategoryName("Private Equity");
+            break;
+          case "private-debt":
+            setCategoryName("Private Debt");
+            break;
+          case "digital-assets":
+            setCategoryName("Digital Assets");
+            break;
+          case "real-assets":
+            setCategoryName("Real Assets");
+            break;
+          default:
+            setCategoryName("Alternative Investments");
+        }
+      } else {
+        // Handle invalid category
+        setCategoryName("Alternative Investments");
+        setOfferings([]);
       }
     }
     
     setIsLoading(false);
   }, [categoryId]);
+
+  const handleBack = () => {
+    if (categoryId === "all") {
+      navigate("/investments");
+    } else {
+      navigate(`/investments/alternative/${categoryId}`);
+    }
+  };
 
   return (
     <ThreeColumnLayout activeMainItem="investments" title={`${categoryName} - All Offerings`}>
@@ -562,10 +585,10 @@ const ViewAllOfferings = () => {
             variant="ghost" 
             size="sm" 
             className="mr-2"
-            onClick={() => navigate(`/investments/alternative/${categoryId}`)}
+            onClick={handleBack}
           >
             <ChevronLeft className="h-4 w-4 mr-1" />
-            Back to {categoryName}
+            Back to {categoryId === "all" ? "Investments" : categoryName}
           </Button>
         </div>
 
