@@ -4,14 +4,22 @@ import AppRoutes from "./routes";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { UserProvider } from "@/context/UserContext";
 import { NetWorthProvider } from "@/context/NetWorthContext";
-import { SubscriptionProvider } from "@/context/SubscriptionContext";
+import { SubscriptionProvider } from "@/context/SubscriptionProvider";
 import { Toaster } from "@/components/ui/sonner";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { DiagnosticsProvider } from "@/context/DiagnosticsContext";
 import { AdvisorProvider } from "@/context/AdvisorContext";
 import { AuthProvider } from "@/context/AuthContext";
 
-const queryClient = new QueryClient();
+// Create a Query Client
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      retry: 1,
+    },
+  },
+});
 
 function App() {
   return (
@@ -25,7 +33,7 @@ function App() {
                   <AdvisorProvider>
                     <AuthProvider>
                       <AppRoutes />
-                      <Toaster />
+                      <Toaster position="top-right" richColors closeButton />
                     </AuthProvider>
                   </AdvisorProvider>
                 </DiagnosticsProvider>

@@ -67,13 +67,22 @@ import TermsOfServicePage from "./pages/TermsOfServicePage";
 import DisclosuresPage from "./pages/DisclosuresPage";
 import AccessibilityPage from "./pages/AccessibilityPage";
 
+// Import mobile-optimized pages
+import MobileHome from "./pages/mobile/MobileHome";
+import MobileAccounts from "./pages/mobile/MobileAccounts";
+import MobileTransfers from "./pages/mobile/MobileTransfers";
+import MobileDocuments from "./pages/mobile/MobileDocuments";
+import MobileMore from "./pages/mobile/MobileMore";
+
 import { useUser } from "./context/UserContext";
 import { TutorialButton } from "./components/navigation/TutorialButton";
+import { useIsMobile } from "./hooks/use-mobile";
 
 const AppRoutes: React.FC = () => {
   const { isAuthenticated, userProfile } = useUser();
   const isAdmin = userProfile?.role === "admin" || userProfile?.role === "system_administrator";
   const isDeveloper = isAdmin || userProfile?.role === "developer";
+  const isMobile = useIsMobile();
 
   if (!isAuthenticated) {
     return (
@@ -97,6 +106,29 @@ const AppRoutes: React.FC = () => {
     );
   }
 
+  // Use mobile routes when on a mobile device
+  if (isMobile) {
+    return (
+      <Routes>
+        <Route path="/" element={<MobileHome />} />
+        <Route path="/home" element={<MobileHome />} />
+        <Route path="/accounts" element={<MobileAccounts />} />
+        <Route path="/transfers" element={<MobileTransfers />} />
+        <Route path="/documents" element={<MobileDocuments />} />
+        <Route path="/documents/:categoryId" element={<MobileDocuments />} />
+        <Route path="/more" element={<MobileMore />} />
+        <Route path="/profile" element={<CustomerProfile />} />
+        <Route path="/advisor-profile" element={<AdvisorProfile />} />
+        <Route path="/security-settings" element={<CustomerProfile />} />
+        <Route path="/all-assets" element={<AllAssets />} />
+        
+        {/* Fallback for any other routes */}
+        <Route path="*" element={<MobileHome />} />
+      </Routes>
+    );
+  }
+
+  // Desktop routes
   return (
     <Routes>
       <Route path="/" element={<Index />} />
