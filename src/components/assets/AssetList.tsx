@@ -14,7 +14,7 @@ import {
   Coins, 
   BarChart3, 
   Archive, 
-  ArtDashes, 
+  Palette, 
   Diamond, 
   Trophy, 
   Package 
@@ -58,7 +58,7 @@ export const AssetList: React.FC<AssetListProps> = ({ filter }) => {
       case 'retirement':
         return <Archive className="h-5 w-5 text-red-400" />;
       case 'art':
-        return <ArtDashes className="h-5 w-5 text-pink-400" />;
+        return <Palette className="h-5 w-5 text-pink-400" />;
       case 'antique':
         return <Trophy className="h-5 w-5 text-amber-400" />;
       case 'jewelry':

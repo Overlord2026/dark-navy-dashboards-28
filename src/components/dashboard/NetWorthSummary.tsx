@@ -1,7 +1,6 @@
-
 import React from "react";
 import { Progress } from "@/components/ui/progress";
-import { ArrowUpRight, Wallet, Maximize2, Home, User, Car, ArtDashes, Coins } from "lucide-react";
+import { ArrowUpRight, Wallet, Maximize2, Home, User, Car, Palette, Coins } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNetWorth } from "@/context/NetWorthContext";
 import { useNavigate } from "react-router-dom";
@@ -181,7 +180,7 @@ export const NetWorthSummary = () => {
                   value={formatCurrency(collectiblesValue)} 
                   percentage={collectiblesPercentage} 
                   color="bg-pink-500" 
-                  icon={<ArtDashes className="h-3 w-3 mr-1 text-pink-400" />}
+                  icon={<Palette className="h-3 w-3 mr-1 text-pink-400" />}
                 />
               )}
               

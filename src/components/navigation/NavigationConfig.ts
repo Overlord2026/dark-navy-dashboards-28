@@ -27,7 +27,7 @@ import {
   PieChart,
   Receipt,
   Car,
-  ArtDashes,
+  Palette,
   Diamond
 } from "lucide-react";
 
@@ -106,7 +106,7 @@ export const familyWealthNavItems: NavItem[] = [
   { 
     title: "Art & Valuables", 
     href: "/all-assets", 
-    icon: ArtDashes 
+    icon: Palette 
   },
   { 
     title: "Cash Management", 
