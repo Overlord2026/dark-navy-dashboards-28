@@ -70,7 +70,10 @@ export function ThreeColumnLayout({
   
   const menuItems = secondaryMenuItems || getSecondaryMenuItems(currentActiveMainItem);
   
-  const hasSecondaryMenu = menuItems.length > 0;
+  // Hide secondary menu for main investments page but show it for subcategories
+  const isMainInvestmentsPage = location.pathname === "/investments";
+  const hasSecondaryMenu = !isMainInvestmentsPage && menuItems.length > 0;
+  
   const isLightTheme = theme === "light";
   const isHomePage = location.pathname === "/";
 
@@ -146,15 +149,17 @@ export function ThreeColumnLayout({
           </div>
         </aside>
 
-        {/* Secondary Sidebar */}
-        <SecondaryNavigation 
-          hasSecondaryMenu={hasSecondaryMenu}
-          secondarySidebarCollapsed={secondarySidebarCollapsed}
-          isLightTheme={isLightTheme}
-          activeMainItem={currentActiveMainItem}
-          sectionId={sectionId}
-          menuItems={menuItems}
-        />
+        {/* Secondary Sidebar - Hidden for main investments page */}
+        {hasSecondaryMenu && (
+          <SecondaryNavigation 
+            hasSecondaryMenu={hasSecondaryMenu}
+            secondarySidebarCollapsed={secondarySidebarCollapsed}
+            isLightTheme={isLightTheme}
+            activeMainItem={currentActiveMainItem}
+            sectionId={sectionId}
+            menuItems={menuItems}
+          />
+        )}
 
         {/* Main Content */}
         <div className="flex-1 flex flex-col overflow-hidden">

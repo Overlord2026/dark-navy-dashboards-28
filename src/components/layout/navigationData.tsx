@@ -117,11 +117,6 @@ export const educationSubMenuItems: MenuItem[] = [
   { id: "premium", name: "Premium Courses" },
 ];
 
-// Removing the investment submenu items as they've been circled for deletion
-export const investmentSubMenuItems: MenuItem[] = [
-  { id: "portfolio", name: "My Portfolio" }
-];
-
 // Fund manager submenu for each category with focus on the companies requested
 export const privateEquityProviders: MenuItem[] = [
   { id: "all-pe", name: "All Private Equity", active: true },
@@ -193,8 +188,6 @@ export const getSecondaryMenuItems = (activeMainItem: string): MenuItem[] => {
       return sharingSubMenuItems;
     case "education":
       return educationSubMenuItems;
-    case "investments":
-      return investmentSubMenuItems;
     case "private-equity":
       return privateEquityProviders;
     case "private-debt":
