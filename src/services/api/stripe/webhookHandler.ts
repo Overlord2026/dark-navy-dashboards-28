@@ -7,6 +7,7 @@ import {
   processCheckoutSessionCompleted, 
   processPaymentIntentSucceeded 
 } from './eventHandlers';
+import { authenticateRequest } from '../auth/authUtils';
 
 /**
  * Handle incoming Stripe webhook events
@@ -95,7 +96,8 @@ export const handleStripeWebhook = async (
  */
 export const processStripeWebhook = async (
   rawBody: string,
-  stripeSignature: string
+  stripeSignature: string,
+  token?: string
 ): Promise<ApiResponse<WebhookResponse>> => {
   // No authentication check here because Stripe webhooks use signatures
   // instead of tokens for authentication
@@ -113,4 +115,30 @@ export const processStripeWebhook = async (
   }
   
   return handleStripeWebhook(rawBody, stripeSignature);
+};
+
+/**
+ * Generic API handler with authentication for non-webhook Stripe endpoints
+ * @param token JWT token
+ * @param handler The handler function to execute if authentication passes
+ */
+export const authenticatedStripeEndpoint = async <T, U>(
+  token: string,
+  handler: (userData: UserToken) => Promise<ApiResponse<T>>
+): Promise<ApiResponse<T>> => {
+  const { isAuthenticated, user, errorResponse } = authenticateRequest<T>(token);
+  
+  if (!isAuthenticated || !user) {
+    return errorResponse!;
+  }
+  
+  try {
+    return await handler(user);
+  } catch (error) {
+    console.error('Error in authenticated Stripe endpoint:', error);
+    return {
+      success: false,
+      error: 'An unexpected error occurred while processing your request',
+    };
+  }
 };

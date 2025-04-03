@@ -2,28 +2,7 @@ import { Course } from '@/types/education';
 import { ApiResponse, UserToken } from '@/types/api';
 import { toast } from 'sonner';
 import { getAllCourses } from '@/data/education/courseUtils';
-
-// Function to verify JWT token - shared with courseApi.ts
-export const verifyToken = (token: string): UserToken | null => {
-  try {
-    // In a real app, this would validate the JWT signature and decode it
-    // For demonstration, we'll do a simple check
-    if (!token || !token.startsWith('Bearer ')) {
-      return null;
-    }
-    
-    // Mock user data - in a real app, this would come from decoding the JWT
-    return {
-      id: 'user-123',
-      email: 'user@example.com',
-      role: 'user',
-      exp: Date.now() + 3600000 // 1 hour from now
-    };
-  } catch (error) {
-    console.error('Token verification error:', error);
-    return null;
-  }
-};
+import { verifyToken, authenticateRequest } from './auth/authUtils';
 
 // Interface for detailed course content
 export interface CourseContent {
@@ -64,14 +43,11 @@ export const fetchCourseDetailsById = async (
   courseId: string | number
 ): Promise<ApiResponse<DetailedCourse>> => {
   try {
-    // Verify authentication token
-    const user = verifyToken(token);
+    // Verify authentication token using our central utility
+    const { isAuthenticated, user, errorResponse } = authenticateRequest<DetailedCourse>(token);
     
-    if (!user) {
-      return {
-        success: false,
-        error: 'Unauthorized access. Invalid or expired token.',
-      };
+    if (!isAuthenticated || !user) {
+      return errorResponse!;
     }
     
     // Get all courses and find the specific one
@@ -193,14 +169,11 @@ export const enrollUserInCourse = async (
   enrollmentData: CourseEnrollmentRequest
 ): Promise<ApiResponse<CourseEnrollmentResponse>> => {
   try {
-    // Verify authentication token
-    const user = verifyToken(token);
+    // Verify authentication token using our central utility
+    const { isAuthenticated, user, errorResponse } = authenticateRequest<CourseEnrollmentResponse>(token);
     
-    if (!user) {
-      return {
-        success: false,
-        error: 'Unauthorized access. Invalid or expired token.',
-      };
+    if (!isAuthenticated || !user) {
+      return errorResponse!;
     }
     
     const { courseId, userData } = enrollmentData;

@@ -17,3 +17,10 @@ export interface WebhookResponse {
   eventType?: string;
   error?: string;
 }
+
+// Authentication error response
+export interface AuthErrorResponse {
+  status: 'error';
+  message: string;
+  code: 'unauthorized' | 'invalid_token' | 'expired_token';
+}

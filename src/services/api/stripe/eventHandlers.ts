@@ -21,8 +21,8 @@ export const processCheckoutSessionCompleted = async (
       return false;
     }
     
-    // Mock token for API calls
-    // In a real app, we would use a server-to-server authentication method
+    // Use server-side token for API calls
+    // In a real app, this would be a secure server-to-server authentication
     const apiToken = 'Bearer server_side_token';
     
     // Call GHL API to update the enrollment status
@@ -69,7 +69,7 @@ export const processPaymentIntentSucceeded = async (
     }
     
     // Similar logic to checkout.session.completed
-    // Mock token for API calls
+    // Use server-side token for API calls
     const apiToken = 'Bearer server_side_token';
     
     // Call GHL API to update the enrollment status
