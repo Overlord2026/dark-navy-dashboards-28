@@ -703,4 +703,42 @@ function getProviderOtherOfferings(provider: InsuranceProvider | null, type: Ins
       return type === "homeowners"
         ? "Travelers also offers auto, umbrella, boat, and jewelry insurance to provide comprehensive protection for all your assets."
         : type === "umbrella"
-        ? "Travelers offers homeowners, auto, boat,
+        ? "Travelers offers homeowners, auto, boat, and personal articles insurance in addition to umbrella coverage for complete protection."
+        : "Travelers offers a wide range of insurance products including homeowners, umbrella, boat, and jewelry insurance.";
+    case "metlife":
+      return "MetLife also provides life insurance, home insurance, auto insurance, and various employee benefits solutions.";
+    case "progressive":
+      return type === "automobile"
+        ? "Progressive also offers homeowners, renters, motorcycle, boat, and RV insurance with multi-policy discounts available."
+        : "Progressive provides a wide range of insurance products for vehicles, property, and personal needs.";
+    case "statefarm":
+      return "State Farm offers nearly 100 products and services in five different lines of business, including auto, home, life, health, and banking products.";
+    default:
+      return "";
+  }
+}
+
+function getProviderTopCarriers(provider: InsuranceProvider | null): string {
+  switch (provider) {
+    case "pinnacle":
+      return "Lincoln Financial, Prudential, John Hancock, Pacific Life, Nationwide";
+    case "dpl":
+      return "Security Benefit, Allianz, Great American, Nationwide, Lincoln Financial";
+    case "guardian":
+      return "Guardian Life Insurance Company of America, Berkshire, The Standard";
+    case "pacific":
+      return "Blue Shield, Kaiser Permanente, Anthem Blue Cross, UnitedHealthcare";
+    case "travelers":
+      return "Travelers Insurance Company, The Travelers Indemnity Company";
+    case "metlife":
+      return "Metropolitan Life Insurance Company, MetLife General Insurance Agency";
+    case "progressive":
+      return "Progressive Casualty Insurance Company, Progressive Direct Insurance Company";
+    case "statefarm":
+      return "State Farm Mutual Automobile Insurance Company, State Farm Fire and Casualty Company";
+    default:
+      return "";
+  }
+}
+
+export default Insurance;
