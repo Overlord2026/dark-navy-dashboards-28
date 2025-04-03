@@ -6,7 +6,6 @@ import { useTutorials } from "@/hooks/useTutorials";
 import { TutorialDialog } from "./TutorialDialog";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 interface TutorialButtonProps {
   tabId: string;
@@ -39,8 +38,8 @@ export function TutorialButton({
         variant={isNew ? "default" : variant}
         size={size}
         className={cn(
-          "relative transition-all", 
-          isNew && "bg-[#9b87f5] hover:bg-[#7E69AB]",
+          "relative transition-all flex overflow-hidden", 
+          isNew ? "bg-[#9b87f5] hover:bg-[#7E69AB]" : "",
           className
         )}
         onClick={() => openTutorial(tabId)}
@@ -54,12 +53,17 @@ export function TutorialButton({
           </span>
         )}
         
-        <Avatar className={cn("h-5 w-5 border", isNew && "border-white")}>
-          <AvatarFallback className="bg-[#9b87f5] text-white text-xs">😊</AvatarFallback>
-        </Avatar>
+        {/* Rectangular smiling face area that fills the left side */}
+        <div className={cn(
+          "flex items-center justify-center", 
+          size === "icon" ? "h-full w-full" : "h-full mr-2 px-2",
+          isNew ? "bg-[#9b87f5] text-white" : "bg-[#9b87f5] text-white"
+        )}>
+          <span className="text-base">😊</span>
+        </div>
         
         {size !== "icon" && (
-          <span className={cn("ml-2", isNew && "text-white")}>
+          <span className={cn("flex-grow text-center", isNew && "text-white")}>
             {isNew ? "New Tutorial" : "Tutorial"}
           </span>
         )}
