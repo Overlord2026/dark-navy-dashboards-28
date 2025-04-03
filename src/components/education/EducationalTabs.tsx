@@ -1,16 +1,7 @@
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CourseList } from "./CourseList";
-import { 
-  categoryCourses,
-  allCourses, 
-  popularCourses, 
-  taxCourses,
-  investingCourses,
-  retirementCourses,
-  estatePlanningCourses,
-  businessCourses
-} from "@/data/education";
+import { courseCategories, featuredCourses, popularCourses } from "@/data/education";
 import { ProfessionalsProvider } from "@/hooks/useProfessionals";
 import { ProfessionalsDirectory } from "@/components/professionals/ProfessionalsDirectory";
 
@@ -32,25 +23,14 @@ export function EducationalTabs({
   
   // Get the courses for the selected category
   const getCoursesByCategoryId = (categoryId: string) => {
+    // For now, we'll use popularCourses for all categories
+    // This can be expanded later with more specific course data
     switch(categoryId) {
-      case "all-courses":
-        return allCourses;
       case "popular":
         return popularCourses;
-      case "tax-planning":
-        return taxCourses;
-      case "investing":
-        return investingCourses;
-      case "retirement":
-        return retirementCourses;
-      case "estate-planning":
-        return estatePlanningCourses;
-      case "business":
-        return businessCourses;
       default:
-        // Try to get from the dynamic categories
-        const categoryData = categoryCourses[categoryId];
-        return categoryData?.courses || allCourses;
+        // Default to featured courses
+        return featuredCourses;
     }
   };
 
@@ -72,9 +52,9 @@ export function EducationalTabs({
       case "business":
         return "Business Courses";
       default:
-        // Try to get from the dynamic categories
-        const categoryData = categoryCourses[categoryId];
-        return categoryData?.title || "Courses";
+        // Find the category from the courseCategories array
+        const category = courseCategories.find(cat => cat.id === categoryId);
+        return category?.name || "Courses";
     }
   };
 
