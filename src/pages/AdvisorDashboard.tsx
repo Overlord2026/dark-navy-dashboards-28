@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -7,7 +6,7 @@ import { Header } from "@/components/ui/Header";
 import { useAuth } from "@/context/AuthContext";
 
 export default function AdvisorDashboard() {
-  const { logout } = useAuth();
+  const { isAuthenticated, logout } = useAuth();
   
   // Mock data for demonstration
   const notifications = [
@@ -30,6 +29,12 @@ export default function AdvisorDashboard() {
     { name: "Wilson Holdings", aum: "$15.2M", lastActivity: "Today" },
     { name: "Chen Investments", aum: "$12.8M", lastActivity: "Yesterday" }
   ];
+
+  const handleLogout = () => {
+    if (logout) {
+      logout();
+    }
+  };
 
   return (
     <div className="flex flex-col min-h-screen bg-[#F9F7E8]">
@@ -59,7 +64,7 @@ export default function AdvisorDashboard() {
               <BellIcon className="h-5 w-5" />
               <span className="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full"></span>
             </Button>
-            <Button onClick={logout} variant="outline" className="gap-2">
+            <Button onClick={handleLogout} variant="outline" className="gap-2">
               <LogOutIcon className="h-4 w-4" />
               Logout
             </Button>

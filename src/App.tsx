@@ -9,6 +9,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { DiagnosticsProvider } from "@/context/DiagnosticsContext";
 import { AdvisorProvider } from "@/context/AdvisorContext";
+import { AuthProvider } from "@/context/AuthContext";
 
 const queryClient = new QueryClient();
 
@@ -22,8 +23,10 @@ function App() {
               <NetWorthProvider>
                 <DiagnosticsProvider>
                   <AdvisorProvider>
-                    <AppRoutes />
-                    <Toaster />
+                    <AuthProvider>
+                      <AppRoutes />
+                      <Toaster />
+                    </AuthProvider>
                   </AdvisorProvider>
                 </DiagnosticsProvider>
               </NetWorthProvider>
