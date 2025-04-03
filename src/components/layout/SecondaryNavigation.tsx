@@ -29,6 +29,21 @@ export const SecondaryNavigation = ({
 }: SecondaryNavigationProps) => {
   if (!hasSecondaryMenu) return null;
   
+  // Build the link path based on the active main item
+  const getLinkPath = (item: MenuItem) => {
+    if (activeMainItem === "private-equity" || activeMainItem === "private-debt" || 
+        activeMainItem === "real-assets" || activeMainItem === "digital-assets") {
+      // For fund provider filters within asset categories
+      return `/investments/alternative/${activeMainItem}?provider=${item.id}`;
+    } else if (["investments", "education", "sharing"].includes(activeMainItem)) {
+      // For standard secondary navigation
+      return `/${activeMainItem}/${item.id}`;
+    } else {
+      // Default case for other items
+      return `/${activeMainItem}/${item.id}`;
+    }
+  };
+  
   return (
     <aside
       className={cn(
@@ -39,7 +54,12 @@ export const SecondaryNavigation = ({
     >
       <div className={`flex items-center h-[70px] px-6 border-b ${isLightTheme ? 'border-[#DCD8C0]' : 'border-sidebar-border'}`}>
         {!secondarySidebarCollapsed && (
-          <span className={`font-medium truncate ${isLightTheme ? 'text-[#222222]' : 'text-[#E2E2E2]'}`}>Sections</span>
+          <span className={`font-medium truncate ${isLightTheme ? 'text-[#222222]' : 'text-[#E2E2E2]'}`}>
+            {activeMainItem === "private-equity" || activeMainItem === "private-debt" || 
+             activeMainItem === "real-assets" || activeMainItem === "digital-assets" 
+              ? "Fund Managers" 
+              : "Sections"}
+          </span>
         )}
       </div>
 
@@ -49,7 +69,7 @@ export const SecondaryNavigation = ({
             {menuItems.map((item) => (
               <Link
                 key={item.id}
-                to={`/${activeMainItem}/${item.id}`}
+                to={getLinkPath(item)}
                 className={cn(
                   "group flex items-center py-2 px-3 rounded-md transition-colors text-[14px] border",
                   item.id === sectionId || item.active

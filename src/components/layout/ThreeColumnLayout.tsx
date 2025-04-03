@@ -56,7 +56,19 @@ export function ThreeColumnLayout({
   
   const sectionId = params.sectionId || activeSecondaryItem;
   
-  const menuItems = secondaryMenuItems || getSecondaryMenuItems(activeMainItem);
+  // Determine the active main item for investment subcategories
+  let currentActiveMainItem = activeMainItem;
+  const pathSegments = location.pathname.split('/').filter(Boolean);
+  
+  // Special handling for alternative investment subcategories
+  if (pathSegments.includes('alternative')) {
+    const categoryId = pathSegments[pathSegments.length - 1];
+    if (['private-equity', 'private-debt', 'real-assets', 'digital-assets'].includes(categoryId)) {
+      currentActiveMainItem = categoryId;
+    }
+  }
+  
+  const menuItems = secondaryMenuItems || getSecondaryMenuItems(currentActiveMainItem);
   
   const hasSecondaryMenu = menuItems.length > 0;
   const isLightTheme = theme === "light";
@@ -139,7 +151,7 @@ export function ThreeColumnLayout({
           hasSecondaryMenu={hasSecondaryMenu}
           secondarySidebarCollapsed={secondarySidebarCollapsed}
           isLightTheme={isLightTheme}
-          activeMainItem={activeMainItem}
+          activeMainItem={currentActiveMainItem}
           sectionId={sectionId}
           menuItems={menuItems}
         />
