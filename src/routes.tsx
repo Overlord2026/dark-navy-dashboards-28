@@ -54,6 +54,7 @@ import SystemHealthDashboard from "./pages/SystemHealthDashboard";
 import BankingTransfers from "./pages/BankingTransfers";
 import BillPay from "./pages/BillPay";
 import AllAssets from "./pages/AllAssets";
+import AdvisorDashboard from "./pages/AdvisorDashboard";
 
 // Import new pages
 import ServicesPage from "./pages/ServicesPage";
@@ -78,6 +79,8 @@ const AppRoutes: React.FC = () => {
     return (
       <Routes>
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/advisor/login" element={<LoginPage isAdvisor={true} />} />
+        <Route path="/advisor/dashboard" element={<AdvisorDashboard />} />
         <Route path="/home" element={<HomePage />} />
         <Route path="/services" element={<ServicesPage />} />
         <Route path="/about" element={<AboutUsPage />} />
@@ -149,6 +152,10 @@ const AppRoutes: React.FC = () => {
       <Route path="/marketplace/rfp" element={<MarketplaceRfp />} />
       <Route path="/marketplace/rfp/:rfpId" element={<MarketplaceRfpDetail />} />
       <Route path="/login" element={<Navigate to="/" />} />
+      
+      {/* Advisor Routes */}
+      <Route path="/advisor/dashboard" element={<AdvisorDashboard />} />
+      <Route path="/advisor/login" element={<LoginPage isAdvisor={true} />} />
       
       {isAdmin ? (
         <>

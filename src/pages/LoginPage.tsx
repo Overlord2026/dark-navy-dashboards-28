@@ -13,7 +13,7 @@ export default function LoginPage({ isAdvisor = false }) {
     e.preventDefault();
     // For now, just navigate to the dashboard
     if (isAdvisor) {
-      navigate("/advisor/onboarding");
+      navigate("/advisor/dashboard");
     } else {
       navigate("/");
     }
