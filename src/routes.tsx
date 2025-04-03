@@ -1,6 +1,7 @@
+import React, { lazy, Suspense } from 'react';
+import { Routes as RouterRoutes, Route, Navigate } from 'react-router-dom';
+import { useFeatureFlagContext } from './context/FeatureFlagContext';
 
-import React from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
 import Index from "@/pages/Index";
 import Dashboard from "@/pages/Dashboard";
 import NotFound from "./pages/NotFound";
@@ -55,6 +56,21 @@ import BankingTransfers from "./pages/BankingTransfers";
 import BillPay from "./pages/BillPay";
 
 import { useUser } from "./context/UserContext";
+
+const FeatureFlagManager = lazy(() => import('./pages/FeatureFlagManager'));
+
+const FeatureGatedRoute = ({ 
+  feature, 
+  element, 
+  fallback = <Navigate to="/" /> 
+}: { 
+  feature: FeatureFlag; 
+  element: React.ReactNode; 
+  fallback?: React.ReactNode 
+}) => {
+  const { isEnabled } = useFeatureFlagContext();
+  return isEnabled(feature) ? <>{element}</> : <>{fallback}</>;
+};
 
 const AppRoutes: React.FC = () => {
   const { isAuthenticated, userProfile } = useUser();
@@ -141,6 +157,18 @@ const AppRoutes: React.FC = () => {
           <Route path="/dev/diagnostics" element={<NavigationDiagnostics />} />
         </>
       )}
+      
+      <Route path="/admin/feature-flags" element={<FeatureFlagManager />} />
+      
+      <Route 
+        path="/advanced-analytics" 
+        element={
+          <FeatureGatedRoute 
+            feature="ENABLE_ADVANCED_ANALYTICS" 
+            element={<div>Advanced Analytics</div>} 
+          />
+        } 
+      />
       
       <Route path="*" element={<NotFound />} />
     </Routes>
