@@ -1,27 +1,43 @@
 
-import { BrowserRouter as Router } from 'react-router-dom';
-import { FeatureFlagProvider } from './context/FeatureFlagContext';
-import { ThemeProvider } from './components/ThemeProvider';
-import { Toaster } from './components/ui/sonner';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import './App.css';
-import Routes from './routes';
-
-// Create a client
-const queryClient = new QueryClient();
+import { BrowserRouter } from "react-router-dom";
+import { Toaster } from "sonner";
+import AppRoutes from "./routes";
+import { UserProvider } from "./context/UserContext";
+import { ThemeProvider as NextThemesProvider } from "./components/ui/ThemeProvider";
+import { ThemeProvider as CustomThemeProvider } from "./context/ThemeContext";
+import { NetWorthProvider } from "./context/NetWorthContext";
+import { SubscriptionProvider } from "./context/SubscriptionContext";
+import { DiagnosticsProvider } from "./context/DiagnosticsContext";
+import { DiagnosticsTrigger } from "./components/diagnostics/DiagnosticsTrigger";
+import { DiagnosticsSummary } from "./components/diagnostics/DiagnosticsSummary";
+import SimpleDiagnosticsView from "./components/diagnostics/SimpleDiagnosticsView";
+import { FinancialPlanProvider } from "./context/FinancialPlanContext";
+import { HelpAndSupport } from "./components/support/HelpAndSupport";
 
 function App() {
   return (
-    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-      <QueryClientProvider client={queryClient}>
-        <FeatureFlagProvider>
-          <Router>
-            <Routes />
-            <Toaster />
-          </Router>
-        </FeatureFlagProvider>
-      </QueryClientProvider>
-    </ThemeProvider>
+    <NextThemesProvider defaultTheme="system" storageKey="vite-ui-theme">
+      <CustomThemeProvider>
+        <UserProvider>
+          <NetWorthProvider>
+            <SubscriptionProvider>
+              <DiagnosticsProvider>
+                <FinancialPlanProvider>
+                  <BrowserRouter>
+                    <AppRoutes />
+                    <HelpAndSupport />
+                    <Toaster position="top-right" />
+                    <DiagnosticsTrigger />
+                    <DiagnosticsSummary />
+                    <SimpleDiagnosticsView />
+                  </BrowserRouter>
+                </FinancialPlanProvider>
+              </DiagnosticsProvider>
+            </SubscriptionProvider>
+          </NetWorthProvider>
+        </UserProvider>
+      </CustomThemeProvider>
+    </NextThemesProvider>
   );
 }
 
