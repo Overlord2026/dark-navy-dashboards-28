@@ -1,83 +1,166 @@
 
 import React from "react";
 import { MobileLayout } from "@/components/layout/MobileLayout";
-import { useNetWorth } from "@/context/NetWorthContext";
-import { ArrowUpRight, ChevronRight } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "react-router-dom";
-import { useUser } from "@/context/UserContext";
+import { 
+  ChevronRight, 
+  CreditCard, 
+  ArrowRightLeft, 
+  FileText, 
+  PieChart,
+  Wallet,
+  BarChart3,
+  ShieldIcon,
+  Building,
+  GraduationCap
+} from "lucide-react";
+import { useNetWorth } from "@/context/NetWorthContext";
 
 export default function MobileHome() {
-  const { assets, totalAssetValue, totalLiabilityValue } = useNetWorth();
-  const { userProfile } = useUser();
-  
+  const { totalAssetValue, totalLiabilityValue } = useNetWorth();
   const netWorth = totalAssetValue - totalLiabilityValue;
-  const formattedNetWorth = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    maximumFractionDigits: 0
-  }).format(netWorth);
-  
+
   return (
-    <MobileLayout title="Boutique Family Office">
-      <div className="flex flex-col space-y-6 p-4">
-        {/* Net Worth Summary Card */}
-        <div className="p-4 rounded-xl bg-[#1B1B32] border border-[#2A2A45]">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-lg font-semibold text-gray-200">Net Worth</h2>
-            <Link to="/all-assets" className="text-blue-400 text-sm flex items-center">
-              <span>All Assets</span>
-              <ChevronRight className="h-4 w-4 ml-1" />
-            </Link>
-          </div>
-          
-          <div className="text-3xl font-bold mb-2">{formattedNetWorth}</div>
-          
-          <div className="flex justify-between mt-4 border-t border-gray-800 pt-4">
-            <div>
-              <p className="text-gray-400 text-sm">Assets</p>
-              <p className="text-white font-medium">${totalAssetValue.toLocaleString()}</p>
+    <MobileLayout title="Family Office">
+      <div className="p-4 space-y-6">
+        {/* Net Worth Card */}
+        <Card className="bg-[#1B1B32] border border-[#2A2A45]">
+          <CardContent className="p-6">
+            <h3 className="text-gray-400 text-sm mb-1">Net Worth</h3>
+            <p className="text-2xl font-bold">${netWorth.toLocaleString()}</p>
+            <div className="flex justify-between mt-4 text-sm">
+              <div>
+                <p className="text-gray-400">Assets</p>
+                <p className="font-medium">${totalAssetValue.toLocaleString()}</p>
+              </div>
+              <div>
+                <p className="text-gray-400">Liabilities</p>
+                <p className="font-medium">${totalLiabilityValue.toLocaleString()}</p>
+              </div>
             </div>
-            <div>
-              <p className="text-gray-400 text-sm">Liabilities</p>
-              <p className="text-white font-medium">${totalLiabilityValue.toLocaleString()}</p>
-            </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
         
-        {/* Quick Actions Card */}
-        <div className="p-4 rounded-xl bg-[#1B1B32] border border-[#2A2A45]">
-          <h2 className="text-lg font-semibold text-gray-200 mb-4">Quick Actions</h2>
-          
+        {/* Quick Actions */}
+        <div>
+          <h2 className="text-lg font-semibold mb-3">Quick Actions</h2>
           <div className="grid grid-cols-2 gap-3">
-            <Link to="/transfers" className="flex flex-col items-center p-3 bg-[#2A2A45] rounded-lg">
-              <ArrowUpRight className="h-6 w-6 mb-2 text-blue-400" />
-              <span className="text-sm">Make Transfer</span>
+            <Link to="/accounts">
+              <Card className="bg-[#1B1B32] border border-[#2A2A45] h-full">
+                <CardContent className="p-4 flex flex-col items-center justify-center text-center h-full">
+                  <CreditCard className="h-6 w-6 mb-2 text-blue-400" />
+                  <span className="text-sm">Accounts</span>
+                </CardContent>
+              </Card>
             </Link>
             
-            <Link to="/documents" className="flex flex-col items-center p-3 bg-[#2A2A45] rounded-lg">
-              <ArrowUpRight className="h-6 w-6 mb-2 text-blue-400" />
-              <span className="text-sm">View Documents</span>
+            <Link to="/transfers">
+              <Card className="bg-[#1B1B32] border border-[#2A2A45] h-full">
+                <CardContent className="p-4 flex flex-col items-center justify-center text-center h-full">
+                  <ArrowRightLeft className="h-6 w-6 mb-2 text-green-400" />
+                  <span className="text-sm">Transfers</span>
+                </CardContent>
+              </Card>
             </Link>
             
-            <Link to="/advisor-profile" className="flex flex-col items-center p-3 bg-[#2A2A45] rounded-lg">
-              <ArrowUpRight className="h-6 w-6 mb-2 text-blue-400" />
-              <span className="text-sm">Contact Advisor</span>
+            <Link to="/documents">
+              <Card className="bg-[#1B1B32] border border-[#2A2A45] h-full">
+                <CardContent className="p-4 flex flex-col items-center justify-center text-center h-full">
+                  <FileText className="h-6 w-6 mb-2 text-purple-400" />
+                  <span className="text-sm">Documents</span>
+                </CardContent>
+              </Card>
             </Link>
             
-            <Link to="/all-assets" className="flex flex-col items-center p-3 bg-[#2A2A45] rounded-lg">
-              <ArrowUpRight className="h-6 w-6 mb-2 text-blue-400" />
-              <span className="text-sm">Add Asset</span>
+            <Link to="/tax-planning">
+              <Card className="bg-[#1B1B32] border border-[#2A2A45] h-full">
+                <CardContent className="p-4 flex flex-col items-center justify-center text-center h-full">
+                  <PieChart className="h-6 w-6 mb-2 text-orange-400" />
+                  <span className="text-sm">Tax Planning</span>
+                </CardContent>
+              </Card>
             </Link>
           </div>
         </div>
         
-        {/* Recent Activity Card */}
-        <div className="p-4 rounded-xl bg-[#1B1B32] border border-[#2A2A45]">
-          <h2 className="text-lg font-semibold text-gray-200 mb-4">Recent Activity</h2>
-          
-          {/* Placeholder for no activity */}
-          <div className="text-center py-6 text-gray-400">
-            <p>No recent activity to display</p>
+        {/* Wealth Management Section */}
+        <div>
+          <h2 className="text-lg font-semibold mb-3">Wealth Management</h2>
+          <div className="space-y-3">
+            <Link to="/accounts">
+              <Card className="bg-[#1B1B32] border border-[#2A2A45]">
+                <CardContent className="p-4">
+                  <div className="flex items-center">
+                    <div className="mr-4 p-2 bg-[#2A2A45] rounded-full">
+                      <Wallet className="h-5 w-5 text-blue-400" />
+                    </div>
+                    <div>
+                      <h3 className="font-medium">Accounts & Assets</h3>
+                      <p className="text-xs text-gray-400">View all your financial accounts</p>
+                    </div>
+                    <ChevronRight className="ml-auto h-5 w-5 text-gray-500" />
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
+            
+            <Link to="/investments">
+              <Card className="bg-[#1B1B32] border border-[#2A2A45]">
+                <CardContent className="p-4">
+                  <div className="flex items-center">
+                    <div className="mr-4 p-2 bg-[#2A2A45] rounded-full">
+                      <BarChart3 className="h-5 w-5 text-green-400" />
+                    </div>
+                    <div>
+                      <h3 className="font-medium">Investments</h3>
+                      <p className="text-xs text-gray-400">Manage your investment portfolio</p>
+                    </div>
+                    <ChevronRight className="ml-auto h-5 w-5 text-gray-500" />
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
+          </div>
+        </div>
+        
+        {/* Education & Planning Section */}
+        <div>
+          <h2 className="text-lg font-semibold mb-3">Education & Planning</h2>
+          <div className="space-y-3">
+            <Link to="/tax-planning">
+              <Card className="bg-[#1B1B32] border border-[#2A2A45]">
+                <CardContent className="p-4">
+                  <div className="flex items-center">
+                    <div className="mr-4 p-2 bg-[#2A2A45] rounded-full">
+                      <PieChart className="h-5 w-5 text-purple-400" />
+                    </div>
+                    <div>
+                      <h3 className="font-medium">Tax Planning</h3>
+                      <p className="text-xs text-gray-400">Optimize your tax strategy</p>
+                    </div>
+                    <ChevronRight className="ml-auto h-5 w-5 text-gray-500" />
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
+            
+            <Link to="/education">
+              <Card className="bg-[#1B1B32] border border-[#2A2A45]">
+                <CardContent className="p-4">
+                  <div className="flex items-center">
+                    <div className="mr-4 p-2 bg-[#2A2A45] rounded-full">
+                      <GraduationCap className="h-5 w-5 text-orange-400" />
+                    </div>
+                    <div>
+                      <h3 className="font-medium">Education Center</h3>
+                      <p className="text-xs text-gray-400">Learn financial concepts and strategies</p>
+                    </div>
+                    <ChevronRight className="ml-auto h-5 w-5 text-gray-500" />
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
           </div>
         </div>
       </div>

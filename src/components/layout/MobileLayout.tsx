@@ -118,7 +118,7 @@ export function MobileLayout({
             icon={<MoreHorizontal className="h-6 w-6" />} 
             label="More" 
             href="/more" 
-            isActive={isActive('/more')} 
+            isActive={isActive('/more') || isActive('/tax-planning')} 
           />
         </div>
       </nav>
