@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
@@ -685,4 +686,139 @@ const mockOfferings = {
         stage: "Productive timberland",
         geography: "United States, Canada",
         sectors: ["Softwood", "Hardwood", "Carbon Credits"],
-        expectedReturn: "8-12% net IRR with 3-5% current income
+        expectedReturn: "8-12% net IRR with 3-5% current income component",
+        benchmarks: ["NCREIF Timberland Index", "S&P Global Timber & Forestry Index"]
+      }
+    },
+    {
+      id: 18,
+      name: "Energy Capital Partners Fund V",
+      description: "Private equity investments in energy infrastructure and the energy transition.",
+      minimumInvestment: "$1,000,000",
+      performance: "+14.2% IRR",
+      lockupPeriod: "8-10 years",
+      lockUp: "8-10 years",
+      firm: "Energy Capital Partners",
+      tags: ["Energy", "Infrastructure", "Transition"],
+      investorQualification: "Qualified Purchaser",
+      liquidity: "Limited secondary market",
+      subscriptions: "Closed-end fund",
+      category: "real-assets",
+      strategy: {
+        overview: "The fund targets investments in energy infrastructure assets positioned for the energy transition.",
+        approach: "Operational improvements and strategic repositioning of energy assets.",
+        target: "Power generation, renewables, storage, and transmission assets.",
+        stage: "Operating assets with value-add potential",
+        geography: "North America, Europe",
+        sectors: ["Power Generation", "Renewables", "Storage", "Transmission"],
+        expectedReturn: "12-16% net IRR",
+        benchmarks: ["S&P Global Infrastructure Index", "S&P Global Clean Energy Index"]
+      }
+    },
+    {
+      id: 19,
+      name: "Prologis Logistics Property Fund",
+      description: "Core-plus logistics real estate portfolio in prime global markets.",
+      minimumInvestment: "$2,000,000",
+      performance: "+11.5% IRR",
+      lockupPeriod: "Open-ended with redemption restrictions",
+      lockUp: "Initial 2-year lockup",
+      firm: "Prologis",
+      tags: ["Logistics", "Industrial", "Core-Plus"],
+      investorQualification: "Qualified Purchaser",
+      liquidity: "Quarterly redemptions subject to fund limitations",
+      subscriptions: "Quarterly",
+      category: "real-assets",
+      strategy: {
+        overview: "The fund invests in high-quality logistics facilities in key global distribution markets.",
+        approach: "Combines core income with growth through development and repositioning.",
+        target: "Modern logistics facilities in strategic gateway markets and key distribution hubs.",
+        stage: "Core and core-plus logistics properties",
+        geography: "Global with focus on North America, Europe, and Asia",
+        sectors: ["Logistics", "Industrial", "Fulfillment Centers"],
+        expectedReturn: "9-13% net IRR with 4-5% current income component",
+        benchmarks: ["NCREIF ODCE Index", "FTSE NAREIT Industrial/Office Index"]
+      }
+    },
+    {
+      id: 20,
+      name: "Global Infrastructure Partners IV",
+      description: "Large-scale infrastructure assets with stable cash flows and value-add opportunities.",
+      minimumInvestment: "$3,000,000",
+      performance: "+13.8% IRR",
+      lockupPeriod: "10-12 years",
+      lockUp: "10-12 years",
+      firm: "Global Infrastructure Partners",
+      tags: ["Infrastructure", "Value-Add", "Global"],
+      investorQualification: "Qualified Purchaser",
+      liquidity: "Limited secondary market",
+      subscriptions: "Closed-end fund",
+      category: "real-assets",
+      strategy: {
+        overview: "The fund acquires large-scale infrastructure assets with strong cash flows and improvement potential.",
+        approach: "Operational improvements, strategic repositioning, and active asset management.",
+        target: "Airports, ports, energy infrastructure, and utilities.",
+        stage: "Established assets with improvement potential",
+        geography: "Global with focus on OECD countries",
+        sectors: ["Transportation", "Energy", "Utilities", "Waste Management"],
+        expectedReturn: "12-16% net IRR",
+        benchmarks: ["S&P Global Infrastructure Index", "MSCI World Index + 500bps"]
+      }
+    }
+  ]
+};
+
+const ViewAllOfferings = () => {
+  const navigate = useNavigate();
+  const { category } = useParams<{ category: string }>();
+  const [offerings, setOfferings] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const categoryTitles = {
+    "private-equity": "Private Equity Funds",
+    "private-debt": "Private Debt Funds",
+    "digital-assets": "Digital Assets Funds",
+    "real-assets": "Real Assets Funds"
+  };
+
+  useEffect(() => {
+    if (category && category in mockOfferings) {
+      setOfferings(mockOfferings[category as keyof typeof mockOfferings]);
+    }
+    setIsLoading(false);
+  }, [category]);
+
+  return (
+    <ThreeColumnLayout activeMainItem="investments" title={categoryTitles[category as keyof typeof categoryTitles] || "Alternative Investments"}>
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold">{categoryTitles[category as keyof typeof categoryTitles] || "Alternative Investments"}</h1>
+            <p className="text-muted-foreground">Explore available funds in this category</p>
+          </div>
+          <Button variant="outline" onClick={() => navigate("/investments/alternative")}>
+            <ChevronLeft className="h-4 w-4 mr-2" />
+            Back to Categories
+          </Button>
+        </div>
+
+        {isLoading ? (
+          <div className="flex items-center justify-center h-40">
+            <p>Loading investments...</p>
+          </div>
+        ) : offerings.length === 0 ? (
+          <div className="text-center p-12 border rounded-lg">
+            <h3 className="text-lg font-medium mb-2">No investments found</h3>
+            <p className="text-muted-foreground">
+              We couldn't find any investments in this category.
+            </p>
+          </div>
+        ) : (
+          <OfferingsList offerings={offerings} categoryId={category || ""} />
+        )}
+      </div>
+    </ThreeColumnLayout>
+  );
+};
+
+export default ViewAllOfferings;
