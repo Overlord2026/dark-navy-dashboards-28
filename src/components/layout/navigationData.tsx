@@ -139,6 +139,12 @@ export const privateEquityProviders: MenuItem[] = [
   { id: "hamilton-lane", name: "Hamilton Lane" },
   { id: "carlyle", name: "Carlyle Group" },
   { id: "tpg", name: "TPG" },
+  { id: "bain-capital", name: "Bain Capital" },
+  { id: "warburg-pincus", name: "Warburg Pincus" },
+  { id: "eqt", name: "EQT" },
+  { id: "cvc", name: "CVC Capital Partners" },
+  { id: "advent", name: "Advent International" },
+  { id: "thoma-bravo", name: "Thoma Bravo" },
 ];
 
 export const privateDebtProviders: MenuItem[] = [
@@ -150,6 +156,13 @@ export const privateDebtProviders: MenuItem[] = [
   { id: "stepstone-pd", name: "StepStone" },
   { id: "kkr-pd", name: "KKR" },
   { id: "oaktree-pd", name: "Oaktree" },
+  { id: "golub-pd", name: "Golub Capital" },
+  { id: "blue-owl-pd", name: "Blue Owl Capital" },
+  { id: "monroe-pd", name: "Monroe Capital" },
+  { id: "antares-pd", name: "Antares Capital" },
+  { id: "carlyle-pd", name: "Carlyle Global Credit" },
+  { id: "goldman-pd", name: "Goldman Sachs" },
+  { id: "sixth-street", name: "Sixth Street" },
 ];
 
 export const realAssetsProviders: MenuItem[] = [
@@ -160,6 +173,14 @@ export const realAssetsProviders: MenuItem[] = [
   { id: "gip-ra", name: "Global Infrastructure Partners" },
   { id: "apollo-ra", name: "Apollo Real Assets" },
   { id: "kkr-ra", name: "KKR Real Assets" },
+  { id: "starwood-ra", name: "Starwood Capital" },
+  { id: "carlyle-ra", name: "Carlyle Real Assets" },
+  { id: "hines-ra", name: "Hines" },
+  { id: "blackrock-ra", name: "BlackRock Real Assets" },
+  { id: "colony-ra", name: "DigitalBridge" },
+  { id: "pgim-ra", name: "PGIM Real Estate" },
+  { id: "cbre-ra", name: "CBRE Investment Management" },
+  { id: "nuveen-ra", name: "Nuveen Real Estate" },
 ];
 
 export const digitalAssetsProviders: MenuItem[] = [

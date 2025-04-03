@@ -44,6 +44,18 @@ export const SecondaryNavigation = ({
     }
   };
   
+  // Determine the sidebar header based on active item
+  const getSidebarHeader = () => {
+    if (activeMainItem === "private-equity" || activeMainItem === "private-debt" || 
+        activeMainItem === "real-assets" || activeMainItem === "digital-assets") {
+      return "Fund Managers";
+    } else if (activeMainItem === "investments") {
+      return "Investment Categories";
+    } else {
+      return "Sections";
+    }
+  };
+  
   return (
     <aside
       className={cn(
@@ -55,10 +67,7 @@ export const SecondaryNavigation = ({
       <div className={`flex items-center h-[70px] px-6 border-b ${isLightTheme ? 'border-[#DCD8C0]' : 'border-sidebar-border'}`}>
         {!secondarySidebarCollapsed && (
           <span className={`font-medium truncate ${isLightTheme ? 'text-[#222222]' : 'text-[#E2E2E2]'}`}>
-            {activeMainItem === "private-equity" || activeMainItem === "private-debt" || 
-             activeMainItem === "real-assets" || activeMainItem === "digital-assets" 
-              ? "Fund Managers" 
-              : "Sections"}
+            {getSidebarHeader()}
           </span>
         )}
       </div>
