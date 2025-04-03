@@ -117,15 +117,9 @@ export const educationSubMenuItems: MenuItem[] = [
   { id: "premium", name: "Premium Courses" },
 ];
 
-// Investment submenu items for alternative investments
+// Removing the investment submenu items as they've been circled for deletion
 export const investmentSubMenuItems: MenuItem[] = [
-  { id: "overview", name: "Overview", active: true },
-  { id: "alternative", name: "Alternative Investments" },
-  { id: "private-equity", name: "Private Equity" },
-  { id: "private-debt", name: "Private Debt" },
-  { id: "real-assets", name: "Real Assets" },
-  { id: "digital-assets", name: "Digital Assets" },
-  { id: "portfolio", name: "My Portfolio" },
+  { id: "portfolio", name: "My Portfolio" }
 ];
 
 // Fund manager submenu for each category with focus on the companies requested
