@@ -82,7 +82,8 @@ export const useFinancialPlans = () => {
       return updatedPlan;
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Unknown error updating plan';
-      toast.error(errorMessage);
+      // Disable toast for plan updates to prevent ghost toasts
+      // toast.error(errorMessage);
       throw err;
     }
   };
@@ -110,7 +111,8 @@ export const useFinancialPlans = () => {
       return savedDraft;
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Unknown error saving draft';
-      toast.error(errorMessage);
+      // Disable toast for drafts to prevent ghost toasts
+      // toast.error(errorMessage);
       throw err;
     }
   };
@@ -122,7 +124,8 @@ export const useFinancialPlans = () => {
       await loadPlans(); // Reload plans to ensure consistency
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Unknown error setting active plan';
-      toast.error(errorMessage);
+      // Disable toast for active plan changes to prevent ghost toasts
+      // toast.error(errorMessage);
       throw err;
     }
   };
@@ -154,7 +157,8 @@ export const useFinancialPlans = () => {
       );
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Unknown error toggling favorite';
-      toast.error(errorMessage);
+      // Disable toast for favorite toggling to prevent ghost toasts
+      // toast.error(errorMessage);
       throw err;
     }
   };
@@ -169,7 +173,8 @@ export const useFinancialPlans = () => {
       return duplicatedPlan;
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Unknown error duplicating plan';
-      toast.error(errorMessage);
+      // Disable toast for plan duplication to prevent ghost toasts
+      // toast.error(errorMessage);
       throw err;
     }
   };

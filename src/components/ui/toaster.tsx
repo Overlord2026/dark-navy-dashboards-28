@@ -36,7 +36,9 @@ export function Toaster() {
             // Additional checks for any toast that doesn't have visible content
             (titleText.trim() === '' && descriptionText.trim() === '') ||
             // Check for 'ghost' toasts with minimal content
-            (titleText === 'goal updated' && descriptionText === '')
+            (titleText === 'goal updated' && descriptionText === '') ||
+            // Even more aggressive filtering - remove very short toasts
+            (titleText.length < 5 && descriptionText.length < 5)
           );
         })
         .map(function ({ id, title, description, action, ...props }) {
