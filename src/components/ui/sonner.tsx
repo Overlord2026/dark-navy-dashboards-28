@@ -23,6 +23,19 @@ const Toaster = ({ ...props }: ToasterProps) => {
             "group-[.toast]:bg-muted group-[.toast]:text-muted-foreground",
         },
       }}
+      // Add filter function to prevent rendering any toast with "deleted" in the title or description
+      filter={(toast) => {
+        const titleText = toast.title?.toString().toLowerCase() || '';
+        const descriptionText = toast.description?.toString().toLowerCase() || '';
+        
+        // Filter out any toast that contains any variation of "plan deleted" or just "deleted"
+        return !(
+          titleText.includes('plan deleted') || 
+          descriptionText.includes('plan deleted') ||
+          titleText.includes('deleted') || 
+          descriptionText.includes('deleted')
+        );
+      }}
       {...props}
     />
   );
