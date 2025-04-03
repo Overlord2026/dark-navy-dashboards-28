@@ -16,28 +16,28 @@ import { HelpAndSupport } from "./components/support/HelpAndSupport";
 
 function App() {
   return (
-    <NextThemesProvider defaultTheme="system" storageKey="vite-ui-theme">
-      <CustomThemeProvider>
-        <UserProvider>
-          <NetWorthProvider>
-            <SubscriptionProvider>
-              <DiagnosticsProvider>
-                <FinancialPlanProvider>
-                  <BrowserRouter>
+    <BrowserRouter>
+      <NextThemesProvider defaultTheme="system" storageKey="vite-ui-theme">
+        <CustomThemeProvider>
+          <UserProvider>
+            <NetWorthProvider>
+              <SubscriptionProvider>
+                <DiagnosticsProvider>
+                  <FinancialPlanProvider>
                     <AppRoutes />
                     <HelpAndSupport />
                     <Toaster position="top-right" />
                     <DiagnosticsTrigger />
                     <DiagnosticsSummary />
                     <SimpleDiagnosticsView />
-                  </BrowserRouter>
-                </FinancialPlanProvider>
-              </DiagnosticsProvider>
-            </SubscriptionProvider>
-          </NetWorthProvider>
-        </UserProvider>
-      </CustomThemeProvider>
-    </NextThemesProvider>
+                  </FinancialPlanProvider>
+                </DiagnosticsProvider>
+              </SubscriptionProvider>
+            </NetWorthProvider>
+          </UserProvider>
+        </CustomThemeProvider>
+      </NextThemesProvider>
+    </BrowserRouter>
   );
 }
 
