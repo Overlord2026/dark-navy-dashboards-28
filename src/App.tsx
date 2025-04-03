@@ -12,6 +12,7 @@ import { DiagnosticsTrigger } from "./components/diagnostics/DiagnosticsTrigger"
 import { DiagnosticsSummary } from "./components/diagnostics/DiagnosticsSummary";
 import SimpleDiagnosticsView from "./components/diagnostics/SimpleDiagnosticsView";
 import { FinancialPlanProvider } from "./context/FinancialPlanContext";
+import { ProfessionalsProvider } from "./hooks/useProfessionals";
 
 function App() {
   return (
@@ -23,11 +24,13 @@ function App() {
               <SubscriptionProvider>
                 <DiagnosticsProvider>
                   <FinancialPlanProvider>
-                    <AppRoutes />
-                    <Toaster position="top-right" />
-                    <DiagnosticsTrigger />
-                    <DiagnosticsSummary />
-                    <SimpleDiagnosticsView />
+                    <ProfessionalsProvider>
+                      <AppRoutes />
+                      <Toaster position="top-right" />
+                      <DiagnosticsTrigger />
+                      <DiagnosticsSummary />
+                      <SimpleDiagnosticsView />
+                    </ProfessionalsProvider>
                   </FinancialPlanProvider>
                 </DiagnosticsProvider>
               </SubscriptionProvider>
