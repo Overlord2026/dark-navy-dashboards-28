@@ -28,14 +28,20 @@ export const SecondaryNavigation = ({
   menuItems
 }: SecondaryNavigationProps) => {
   if (!hasSecondaryMenu) return null;
+
+  // Skip rendering for alternative investment pages as we've moved these to the main content area
+  if (
+    activeMainItem === "private-equity" || 
+    activeMainItem === "private-debt" || 
+    activeMainItem === "real-assets" || 
+    activeMainItem === "digital-assets"
+  ) {
+    return null;
+  }
   
   // Build the link path based on the active main item
   const getLinkPath = (item: MenuItem) => {
-    if (activeMainItem === "private-equity" || activeMainItem === "private-debt" || 
-        activeMainItem === "real-assets" || activeMainItem === "digital-assets") {
-      // For fund provider filters within asset categories
-      return `/investments/alternative/${activeMainItem}?provider=${item.id}`;
-    } else if (["investments", "education", "sharing"].includes(activeMainItem)) {
+    if (["investments", "education", "sharing"].includes(activeMainItem)) {
       // For standard secondary navigation
       return `/${activeMainItem}/${item.id}`;
     } else {
@@ -46,10 +52,7 @@ export const SecondaryNavigation = ({
   
   // Determine the sidebar header based on active item
   const getSidebarHeader = () => {
-    if (activeMainItem === "private-equity" || activeMainItem === "private-debt" || 
-        activeMainItem === "real-assets" || activeMainItem === "digital-assets") {
-      return "Fund Managers";
-    } else if (activeMainItem === "investments") {
+    if (activeMainItem === "investments") {
       return "Investment Categories";
     } else {
       return "Sections";

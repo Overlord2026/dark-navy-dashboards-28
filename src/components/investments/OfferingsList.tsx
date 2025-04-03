@@ -53,6 +53,7 @@ export const OfferingsList: React.FC<OfferingsListProps> = ({
   const [filterType, setFilterType] = useState<string>("all");
   const [showFilters, setShowFilters] = useState(false);
   const [minimumFilter, setMinimumFilter] = useState<string>("all");
+  const [sortBy, setSortBy] = useState<string>("name-asc");
 
   const filteredOfferings = offerings.filter(offering => {
     const matchesSearch = searchTerm === "" || 
@@ -78,7 +79,26 @@ export const OfferingsList: React.FC<OfferingsListProps> = ({
     return matchesSearch && matchesType && matchesMinimum;
   });
 
-  const displayedOfferings = isFullView ? filteredOfferings : filteredOfferings.slice(0, 4);
+  // Sort filtered offerings
+  const sortedOfferings = [...filteredOfferings].sort((a, b) => {
+    if (sortBy === "name-asc") return a.name.localeCompare(b.name);
+    if (sortBy === "name-desc") return b.name.localeCompare(a.name);
+    if (sortBy === "min-asc") return parseInt(a.minimumInvestment.replace(/[^0-9]/g, '')) - parseInt(b.minimumInvestment.replace(/[^0-9]/g, ''));
+    if (sortBy === "min-desc") return parseInt(b.minimumInvestment.replace(/[^0-9]/g, '')) - parseInt(a.minimumInvestment.replace(/[^0-9]/g, ''));
+    if (sortBy === "perf-desc") {
+      const aPerf = parseFloat(a.performance.replace('%', '').replace(/[^0-9.-]/g, ''));
+      const bPerf = parseFloat(b.performance.replace('%', '').replace(/[^0-9.-]/g, ''));
+      return bPerf - aPerf;
+    }
+    if (sortBy === "perf-asc") {
+      const aPerf = parseFloat(a.performance.replace('%', '').replace(/[^0-9.-]/g, ''));
+      const bPerf = parseFloat(b.performance.replace('%', '').replace(/[^0-9.-]/g, ''));
+      return aPerf - bPerf;
+    }
+    return 0;
+  });
+
+  const displayedOfferings = isFullView ? sortedOfferings : sortedOfferings.slice(0, 4);
 
   return (
     <div className="space-y-6">
@@ -87,14 +107,29 @@ export const OfferingsList: React.FC<OfferingsListProps> = ({
           <h2 className="text-lg font-medium">Available Offerings</h2>
           <p className="text-sm text-muted-foreground">Current investment opportunities</p>
         </div>
-        <Button 
-          variant="outline" 
-          className="flex items-center gap-2"
-          onClick={() => setShowFilters(!showFilters)}
-        >
-          <Filter className="h-4 w-4" />
-          Filters {showFilters ? "▲" : "▼"}
-        </Button>
+        <div className="flex gap-2">
+          <Select value={sortBy} onValueChange={setSortBy}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Sort by" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="name-asc">Name (A-Z)</SelectItem>
+              <SelectItem value="name-desc">Name (Z-A)</SelectItem>
+              <SelectItem value="min-asc">Min Investment (Low-High)</SelectItem>
+              <SelectItem value="min-desc">Min Investment (High-Low)</SelectItem>
+              <SelectItem value="perf-desc">Performance (High-Low)</SelectItem>
+              <SelectItem value="perf-asc">Performance (Low-High)</SelectItem>
+            </SelectContent>
+          </Select>
+          <Button 
+            variant="outline" 
+            className="flex items-center gap-2"
+            onClick={() => setShowFilters(!showFilters)}
+          >
+            <Filter className="h-4 w-4" />
+            Filters {showFilters ? "▲" : "▼"}
+          </Button>
+        </div>
       </div>
       
       {showFilters && (

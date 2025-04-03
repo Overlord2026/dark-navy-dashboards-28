@@ -10,7 +10,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { toast } from "sonner";
 import { auditLog } from "@/services/auditLog/auditLogService";
 
-// Mock data - in a real application, this would come from an API
+// Mock data - expanded to include more offerings per category that were previously filtered by the sidebar
 const mockOfferings = {
   "private-equity": [
     {
@@ -65,27 +65,177 @@ const mockOfferings = {
     },
     {
       id: 3,
-      name: "Sequoia Capital Growth Fund IV",
-      description: "Growth equity investments in technology companies with proven business models.",
-      minimumInvestment: "$1,000,000",
-      performance: "+32.5% IRR",
-      lockupPeriod: "7-9 years",
-      lockUp: "7-9 years",
-      firm: "Sequoia Capital",
-      tags: ["Growth Equity", "Technology", "Expansion Capital"],
+      name: "Apollo Global Private Equity",
+      description: "Diverse private equity strategy focused on distressed investments and corporate carve-outs.",
+      minimumInvestment: "$3,500,000",
+      performance: "+21.4% IRR",
+      lockupPeriod: "10-12 years",
+      lockUp: "10-12 years",
+      firm: "Apollo",
+      tags: ["Distressed", "Value", "Corporate Carve-outs"],
       investorQualification: "Qualified Purchaser",
       liquidity: "Very limited secondary opportunities",
       subscriptions: "Closed-end fund",
       category: "private-equity",
       strategy: {
-        overview: "The fund provides growth capital to rapidly scaling technology companies with proven product-market fit.",
-        approach: "Minority growth investments with board representation and strategic guidance.",
-        target: "Companies with $50M+ revenue growing at 40%+ annually.",
-        stage: "Growth Stage",
+        overview: "The fund focuses on complex situations, distressed assets, and corporate carve-outs with value enhancement potential.",
+        approach: "Value-oriented investments with operational transformation.",
+        target: "Companies across multiple industries requiring financial or operational restructuring.",
+        stage: "Various stages with turnaround potential",
+        geography: "Global with focus on North America and Europe",
+        sectors: ["Industrial", "Consumer", "Business Services", "Natural Resources"],
+        expectedReturn: "20-24% gross IRR",
+        benchmarks: ["Cambridge Associates Global PE Index", "S&P 500"]
+      }
+    },
+    {
+      id: 4,
+      name: "StepStone Capital Partners V",
+      description: "Diversified private equity fund-of-funds with primary, secondary, and co-investment strategies.",
+      minimumInvestment: "$1,000,000",
+      performance: "+16.7% IRR",
+      lockupPeriod: "10-12 years",
+      lockUp: "10-12 years",
+      firm: "StepStone",
+      tags: ["Fund-of-Funds", "Diversified", "Multi-strategy"],
+      investorQualification: "Qualified Purchaser",
+      liquidity: "Limited secondary market opportunities",
+      subscriptions: "Semi-annual closings",
+      category: "private-equity",
+      strategy: {
+        overview: "The fund provides diversified exposure to private equity through a multi-manager approach.",
+        approach: "Combination of primary fund commitments, secondary purchases, and direct co-investments.",
+        target: "Diversified exposure across fund managers, sectors, and vintages.",
+        stage: "Multiple stages across the private equity spectrum",
+        geography: "Global with core focus on North America and Europe",
+        sectors: ["Diversified across sectors"],
+        expectedReturn: "15-18% net IRR",
+        benchmarks: ["Cambridge Associates Global PE Index", "MSCI World"]
+      }
+    },
+    {
+      id: 5,
+      name: "AMG Pantheon Private Equity Fund",
+      description: "Semi-liquid private equity solution with quarterly limited liquidity after initial lockup.",
+      minimumInvestment: "$50,000",
+      performance: "+14.8% IRR",
+      lockupPeriod: "2-year initial lockup",
+      lockUp: "2-year initial lockup",
+      firm: "AMG Pantheon",
+      tags: ["Semi-Liquid", "Fund-of-Funds", "Evergreen"],
+      investorQualification: "Accredited Investor",
+      liquidity: "Quarterly tender offers after 2-year lockup",
+      subscriptions: "Monthly",
+      category: "private-equity",
+      strategy: {
+        overview: "The fund offers diversified private equity exposure in a more accessible format with limited liquidity features.",
+        approach: "Diversified portfolio of primary and secondary fund investments plus co-investments.",
+        target: "Broad private equity exposure across stages, sectors, and geographies.",
+        stage: "Diversified across stages",
+        geography: "Global with focus on US and Europe",
+        sectors: ["Diversified across sectors"],
+        expectedReturn: "12-15% net IRR",
+        benchmarks: ["Cambridge Associates Global PE FOF Index", "MSCI ACWI"]
+      }
+    },
+    {
+      id: 6,
+      name: "Hamilton Lane Private Equity Access Fund",
+      description: "Evergreen private equity vehicle with quarterly subscription and limited liquidity.",
+      minimumInvestment: "$50,000",
+      performance: "+15.2% IRR",
+      lockupPeriod: "1-year initial lockup",
+      lockUp: "1-year initial lockup",
+      firm: "Hamilton Lane",
+      tags: ["Semi-Liquid", "Diversified", "Evergreen"],
+      investorQualification: "Accredited Investor",
+      liquidity: "Quarterly tender offers after 1-year lockup",
+      subscriptions: "Quarterly",
+      category: "private-equity",
+      strategy: {
+        overview: "The fund provides access to institutional-quality private equity investments with quarterly limited liquidity.",
+        approach: "Multi-strategy approach across direct investments, secondaries, and select primary commitments.",
+        target: "Diversified private equity exposure with focus on middle market opportunities.",
+        stage: "Various stages with emphasis on middle market",
+        geography: "Global with North American focus",
+        sectors: ["Diversified across sectors"],
+        expectedReturn: "13-16% net IRR",
+        benchmarks: ["Cambridge Associates Global PE FOF Index", "S&P 500"]
+      }
+    },
+    {
+      id: 7,
+      name: "Carlyle Global Partners",
+      description: "Long-duration private equity strategy with 20+ year investment horizon.",
+      minimumInvestment: "$10,000,000",
+      performance: "+17.1% IRR",
+      lockupPeriod: "20+ years",
+      lockUp: "20+ years",
+      firm: "Carlyle Group",
+      tags: ["Long-Duration", "Permanent Capital", "Global"],
+      investorQualification: "Qualified Purchaser",
+      liquidity: "Extremely limited secondary opportunities",
+      subscriptions: "Closed-end fund",
+      category: "private-equity",
+      strategy: {
+        overview: "The fund focuses on investments with multi-decade compounding potential and limited competition.",
+        approach: "Patient capital with very long investment horizons and minimal pressure to exit.",
+        target: "High-quality businesses with sustainable competitive advantages and long-term growth potential.",
+        stage: "Established businesses across various industries",
+        geography: "Global",
+        sectors: ["Technology", "Healthcare", "Consumer", "Industrials"],
+        expectedReturn: "15-18% gross IRR",
+        benchmarks: ["Cambridge Associates Global PE Index", "MSCI World"]
+      }
+    },
+    {
+      id: 8,
+      name: "TPG Growth Fund V",
+      description: "Growth equity strategy targeting middle-market and growth-stage companies.",
+      minimumInvestment: "$5,000,000",
+      performance: "+24.3% IRR",
+      lockupPeriod: "10-12 years",
+      lockUp: "10-12 years",
+      firm: "TPG",
+      tags: ["Growth Equity", "Middle Market", "Technology"],
+      investorQualification: "Qualified Purchaser",
+      liquidity: "Very limited secondary market",
+      subscriptions: "Closed-end fund",
+      category: "private-equity",
+      strategy: {
+        overview: "The fund targets growth-stage companies with proven business models and significant expansion opportunities.",
+        approach: "Growth equity investments with active operational involvement and strategic guidance.",
+        target: "Companies with $25M-$100M revenue growing at 20%+ annually.",
+        stage: "Growth / Expansion",
         geography: "Global with focus on North America and Asia",
-        sectors: ["Enterprise Software", "Fintech", "Consumer Internet", "Healthcare IT"],
-        expectedReturn: "25-35% gross IRR",
-        benchmarks: ["Cambridge Associates Growth Equity Index", "NASDAQ Composite"]
+        sectors: ["Technology", "Healthcare", "Consumer", "Business Services"],
+        expectedReturn: "20-25% gross IRR",
+        benchmarks: ["Cambridge Associates Growth Equity Index", "Russell 2500 Growth"]
+      }
+    },
+    {
+      id: 9,
+      name: "Bain Capital Fund XIII",
+      description: "Large-cap buyout fund focusing on operational transformation and value creation.",
+      minimumInvestment: "$5,000,000",
+      performance: "+20.6% IRR",
+      lockupPeriod: "10-12 years",
+      lockUp: "10-12 years",
+      firm: "Bain Capital",
+      tags: ["Buyout", "Operational Improvement", "Large Cap"],
+      investorQualification: "Qualified Purchaser",
+      liquidity: "Limited secondary market opportunities",
+      subscriptions: "Closed-end fund",
+      category: "private-equity",
+      strategy: {
+        overview: "The fund focuses on businesses with transformation potential through operational improvements and strategic initiatives.",
+        approach: "Deep operational involvement with proprietary value creation playbooks and specialized industry expertise.",
+        target: "Companies with enterprise values between $300M and $5B+.",
+        stage: "Established businesses",
+        geography: "Global with focus on North America and Europe",
+        sectors: ["Technology", "Healthcare", "Consumer", "Business Services", "Industrials"],
+        expectedReturn: "18-22% gross IRR",
+        benchmarks: ["Cambridge Associates Global Buyout Index", "S&P 500"]
       }
     }
   ],
@@ -117,27 +267,127 @@ const mockOfferings = {
     },
     {
       id: 8,
-      name: "GSO Capital Mezzanine Fund III",
-      description: "Subordinated debt with equity kickers targeting middle-market growth companies.",
-      minimumInvestment: "$500,000",
-      performance: "+12.7% IRR",
+      name: "Blackstone Credit Strategic Direct Lending Fund",
+      description: "Diversified private debt portfolio focused on middle-market direct lending.",
+      minimumInvestment: "$1,000,000",
+      performance: "+10.3% IRR",
       lockupPeriod: "6-8 years",
       lockUp: "6-8 years",
       firm: "Blackstone Credit",
-      tags: ["Mezzanine", "Subordinated Debt", "Equity Upside"],
+      tags: ["Direct Lending", "Private Credit", "Income"],
       investorQualification: "Qualified Purchaser",
-      liquidity: "Semi-annual liquidity windows after 2-year lockup",
+      liquidity: "Limited quarterly liquidity after 2-year lockup",
       subscriptions: "Quarterly",
       category: "private-debt",
       strategy: {
-        overview: "The fund provides subordinated debt with equity participation to growing mid-market companies.",
-        approach: "Combines current income with potential capital appreciation through equity participation rights.",
-        target: "Companies with $30M-$150M EBITDA seeking growth or acquisition capital.",
-        stage: "Growth stage companies",
-        geography: "North America",
-        sectors: ["Technology", "Consumer", "Healthcare", "Business Services"],
-        expectedReturn: "12-15% net IRR with 8-10% current income component",
-        benchmarks: ["Credit Suisse High Yield Index", "Alerian MLP Index"]
+        overview: "The fund provides senior secured and unitranche loans to middle-market companies.",
+        approach: "Rigorous credit underwriting leveraging Blackstone's vast information network.",
+        target: "Companies with $25M-$100M EBITDA seeking growth or acquisition capital.",
+        stage: "Established companies",
+        geography: "North America, Europe",
+        sectors: ["Technology", "Healthcare", "Business Services", "Consumer"],
+        expectedReturn: "9-11% net IRR with significant current income component",
+        benchmarks: ["Credit Suisse Leveraged Loan Index", "Bloomberg U.S. Aggregate Bond Index"]
+      }
+    },
+    {
+      id: 9,
+      name: "Apollo Hybrid Value Fund",
+      description: "Flexible capital solutions across the capital structure with both debt and equity components.",
+      minimumInvestment: "$5,000,000",
+      performance: "+13.7% IRR",
+      lockupPeriod: "7-9 years",
+      lockUp: "7-9 years",
+      firm: "Apollo",
+      tags: ["Hybrid", "Flexible Capital", "Value"],
+      investorQualification: "Qualified Purchaser",
+      liquidity: "Very limited secondary market",
+      subscriptions: "Closed-end fund",
+      category: "private-debt",
+      strategy: {
+        overview: "The fund provides flexible capital solutions in complex situations with both debt and equity characteristics.",
+        approach: "Opportunistic strategy targeting situational dislocations and complex capital structures.",
+        target: "Companies with complex capital needs or in transitional situations.",
+        stage: "Various stages",
+        geography: "Global with focus on North America and Europe",
+        sectors: ["Diversified across sectors"],
+        expectedReturn: "12-15% net IRR",
+        benchmarks: ["HFRI ED: Distressed/Restructuring Index", "Bloomberg High Yield Index"]
+      }
+    },
+    {
+      id: 10,
+      name: "Cliffwater Corporate Lending Fund",
+      description: "Semi-liquid direct lending vehicle focused on middle-market loans.",
+      minimumInvestment: "$25,000",
+      performance: "+8.8% IRR",
+      lockupPeriod: "Open-ended with quarterly liquidity",
+      lockUp: "Open-ended with quarterly liquidity",
+      firm: "Cliffwater",
+      tags: ["Direct Lending", "Semi-Liquid", "Income"],
+      investorQualification: "Accredited Investor",
+      liquidity: "Quarterly (subject to gates)",
+      subscriptions: "Monthly",
+      category: "private-debt",
+      strategy: {
+        overview: "The fund provides direct lending exposure to middle-market companies in a semi-liquid structure.",
+        approach: "Diversified portfolio of senior secured loans to non-cyclical businesses.",
+        target: "Companies with $10M-$50M EBITDA in defensive industries.",
+        stage: "Mature businesses",
+        geography: "United States",
+        sectors: ["Healthcare", "Business Services", "Software", "Defensive Manufacturing"],
+        expectedReturn: "7-9% net yield",
+        benchmarks: ["S&P/LSTA Leveraged Loan Index", "Bloomberg U.S. Aggregate Bond Index"]
+      }
+    },
+    {
+      id: 11,
+      name: "StepStone Private Debt Partners",
+      description: "Diversified private debt fund-of-funds with primary, secondary, and co-investment strategies.",
+      minimumInvestment: "$500,000",
+      performance: "+9.2% IRR",
+      lockupPeriod: "8-10 years",
+      lockUp: "8-10 years",
+      firm: "StepStone",
+      tags: ["Fund-of-Funds", "Diversified", "Multi-strategy"],
+      investorQualification: "Qualified Purchaser",
+      liquidity: "Limited secondary market",
+      subscriptions: "Closed-end fund",
+      category: "private-debt",
+      strategy: {
+        overview: "The fund provides diversified exposure to private debt through a multi-manager approach.",
+        approach: "Combination of primary fund commitments, secondary purchases, and direct co-investments.",
+        target: "Diversified exposure across debt strategies, sectors, and vintages.",
+        stage: "Multiple approaches across the private debt spectrum",
+        geography: "Global with core focus on North America and Europe",
+        sectors: ["Diversified across sectors"],
+        expectedReturn: "8-10% net IRR",
+        benchmarks: ["Credit Suisse Leveraged Loan Index", "ICE BofA US High Yield Index"]
+      }
+    },
+    {
+      id: 12,
+      name: "KKR Credit Opportunities Fund",
+      description: "Flexible strategy investing across liquid and illiquid credit opportunities.",
+      minimumInvestment: "$500,000",
+      performance: "+11.3% IRR",
+      lockupPeriod: "Semi-annual liquidity",
+      lockUp: "Semi-annual liquidity",
+      firm: "KKR",
+      tags: ["Opportunistic Credit", "Flexible", "Multi-strategy"],
+      investorQualification: "Qualified Purchaser",
+      liquidity: "Semi-annual (subject to gates)",
+      subscriptions: "Monthly",
+      category: "private-debt",
+      strategy: {
+        overview: "The fund targets opportunities across the credit spectrum, from traded credit to direct lending.",
+        approach: "Opportunistic approach leveraging KKR's global platform to identify dislocations.",
+        target: "Diversified credit exposure across markets, industries, and credit quality.",
+        stage: "Various credit strategies",
+        geography: "Global",
+        sectors: ["Diversified across sectors"],
+        expectedReturn: "9-12% net IRR",
+        benchmarks: ["ICE BofA US High Yield Index", "Credit Suisse Leveraged Loan Index"]
       }
     }
   ],
@@ -395,6 +645,7 @@ const AlternativeAssetCategory = () => {
               offerings={offerings} 
               categoryId={categoryId || ""} 
               onLike={(assetName) => handleUserAction("like", assetName)}
+              isFullView={true}
             />
           )}
         </div>
