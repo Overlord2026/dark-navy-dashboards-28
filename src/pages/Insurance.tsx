@@ -125,6 +125,14 @@ const Insurance = () => {
     }
   };
 
+  const handleScheduleAppointment = (e: React.MouseEvent, assetName: string) => {
+    e.stopPropagation();
+    window.open("https://calendly.com/tonygomes/60min", "_blank");
+    toast.success("Opening scheduling page", {
+      description: `Schedule a meeting to discuss ${assetName} with your advisor.`,
+    });
+  };
+
   // Render the main insurance overview
   if (!selectedType) {
     return (
@@ -695,40 +703,4 @@ function getProviderOtherOfferings(provider: InsuranceProvider | null, type: Ins
       return type === "homeowners"
         ? "Travelers also offers auto, umbrella, boat, and jewelry insurance to provide comprehensive protection for all your assets."
         : type === "umbrella"
-        ? "Travelers offers homeowners, auto, boat, and business insurance to complement your umbrella coverage for complete protection."
-        : "Travelers offers homeowners, umbrella, and business insurance products to complement your auto coverage.";
-    case "metlife":
-      return "MetLife provides a comprehensive range of products including dental, vision, disability, and critical illness insurance, as well as retirement planning solutions.";
-    case "progressive":
-      return "Progressive offers a wide range of other insurance including motorcycle, boat, RV, and commercial auto insurance, as well as home and renters insurance.";
-    case "statefarm":
-      return "State Farm provides nearly 100 products and services including banking, retirement planning, disability insurance, and small business insurance.";
-    default:
-      return "";
-  }
-}
-
-function getProviderTopCarriers(provider: InsuranceProvider | null): string {
-  switch (provider) {
-    case "pinnacle":
-      return "Pinnacle partners with top-rated insurers including Northwestern Mutual, New York Life, and Guardian.";
-    case "dpl":
-      return "DPL works with carriers like Lincoln Financial, AIG, and Pacific Life.";
-    case "guardian":
-      return "Guardian is itself a leading carrier with excellent financial strength ratings, including an A++ rating from AM Best.";
-    case "pacific":
-      return "Pacific Health works with major healthcare networks including Anthem, Blue Cross Blue Shield, and United Healthcare.";
-    case "travelers":
-      return "Travelers is itself one of the top insurance carriers in the United States with an A++ financial strength rating from AM Best.";
-    case "metlife":
-      return "MetLife is one of the world's largest insurance companies with an A+ rating from AM Best and extensive global coverage.";
-    case "progressive":
-      return "Progressive is one of the largest auto insurers in the United States, with an A+ rating from AM Best.";
-    case "statefarm":
-      return "State Farm is the largest property and casualty insurance provider in the US with an A++ financial strength rating from AM Best.";
-    default:
-      return "";
-  }
-}
-
-export default Insurance;
+        ? "Travelers offers homeowners, auto, boat,

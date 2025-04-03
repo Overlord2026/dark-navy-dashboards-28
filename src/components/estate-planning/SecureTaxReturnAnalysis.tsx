@@ -24,6 +24,7 @@ export function SecureTaxReturnAnalysis() {
   };
   
   const handleScheduleAppointment = () => {
+    window.open("https://calendly.com/tonygomes/60min", "_blank");
     toast({
       title: "Appointment Request Sent",
       description: "Your advisor will contact you to schedule an appointment."

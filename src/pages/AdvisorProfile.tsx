@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -372,7 +371,7 @@ const AdvisorProfile = () => {
             </div>
             
             <DrawerFooter>
-              <Button>Continue</Button>
+              <Button onClick={() => window.open("https://calendly.com/tonygomes/60min", "_blank")}>Continue</Button>
               <DrawerClose asChild>
                 <Button variant="outline">Cancel</Button>
               </DrawerClose>
