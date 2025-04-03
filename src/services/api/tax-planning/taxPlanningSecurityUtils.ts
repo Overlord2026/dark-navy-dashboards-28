@@ -133,8 +133,7 @@ export const createTaxPlanningErrorResponse = <T>(
   
   return {
     success: false,
-    error: message,
-    code: code // Changed from errorCode to code to match ApiResponse type
+    error: message
   };
 };
 
