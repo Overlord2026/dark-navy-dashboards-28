@@ -32,8 +32,8 @@ export class FinancialPlanServiceFactory {
 }
 
 /**
- * Helper function to get the financial plan service
- * This simplifies importing the service across the application
+ * Helper function to get the financial plan service instance
+ * This is the function that should be imported by other modules
  */
 export const getFinancialPlanService = (): FinancialPlanService => {
   return FinancialPlanServiceFactory.getService();
