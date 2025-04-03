@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Index from "@/pages/Index";
@@ -54,6 +55,14 @@ import BankingTransfers from "./pages/BankingTransfers";
 import BillPay from "./pages/BillPay";
 import AllAssets from "./pages/AllAssets";
 
+// Import new pages
+import ServicesPage from "./pages/ServicesPage";
+import AboutUsPage from "./pages/AboutUsPage";
+import ContactPage from "./pages/ContactPage";
+import TeamPage from "./pages/TeamPage";
+import CareersPage from "./pages/CareersPage";
+import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
+
 import { useUser } from "./context/UserContext";
 import { TutorialButton } from "./components/navigation/TutorialButton";
 
@@ -66,6 +75,17 @@ const AppRoutes: React.FC = () => {
     return (
       <Routes>
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/home" element={<HomePage />} />
+        <Route path="/services" element={<ServicesPage />} />
+        <Route path="/about" element={<AboutUsPage />} />
+        <Route path="/team" element={<TeamPage />} />
+        <Route path="/careers" element={<CareersPage />} />
+        <Route path="/contact" element={<ContactPage />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+        <Route path="/terms-of-service" element={<PrivacyPolicyPage />} />
+        <Route path="/disclosures" element={<PrivacyPolicyPage />} />
+        <Route path="/accessibility" element={<PrivacyPolicyPage />} />
+        <Route path="/" element={<Navigate to="/home" />} />
         <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
     );
@@ -155,6 +175,17 @@ const AppRoutes: React.FC = () => {
           } />
         </>
       )}
+      
+      {/* Public pages (accessible when logged in) */}
+      <Route path="/services" element={<ServicesPage />} />
+      <Route path="/about" element={<AboutUsPage />} />
+      <Route path="/team" element={<TeamPage />} />
+      <Route path="/careers" element={<CareersPage />} />
+      <Route path="/contact" element={<ContactPage />} />
+      <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+      <Route path="/terms-of-service" element={<PrivacyPolicyPage />} />
+      <Route path="/disclosures" element={<PrivacyPolicyPage />} />
+      <Route path="/accessibility" element={<PrivacyPolicyPage />} />
       
       <Route path="*" element={<NotFound />} />
     </Routes>
