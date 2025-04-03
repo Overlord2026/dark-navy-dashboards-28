@@ -1,9 +1,16 @@
 
-import React from "react";
+import React, { useEffect } from "react";
 import { DashboardHeader } from "@/components/ui/DashboardHeader";
 import NavigationDiagnosticModule from "@/components/diagnostics/NavigationDiagnosticModule";
+import { measureRouteLoad } from "@/utils/performance";
 
 const NavigationDiagnostics: React.FC = () => {
+  // Measure page load performance
+  useEffect(() => {
+    const cleanup = measureRouteLoad('/navigation-diagnostics');
+    return cleanup;
+  }, []);
+
   return (
     <div className="container mx-auto py-6 space-y-8">
       <DashboardHeader 

@@ -6,24 +6,33 @@ import { CheckCircle, AlertTriangle, XCircle, Loader2 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useDiagnosticsContext } from '@/context/DiagnosticsContext';
 import { RecommendationsList } from './RecommendationsList';
-import { Recommendation } from '@/types/diagnostics';
+import { Recommendation, DiagnosticResult } from '@/types/diagnostics';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { DiagnosticResultItem } from './DiagnosticResultItem';
 
-interface DiagnosticResult {
-  route: string;
-  status: 'success' | 'warning' | 'error';
-  message?: string;
-  recommendations?: Recommendation[];
-}
+// Separate component for stats display to reduce complexity
+const DiagnosticStats = ({ stats }: { stats: { total: number; success: number; warning: number; error: number } }) => (
+  <div className="flex gap-2 mt-2">
+    <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+      {stats.success} OK
+    </Badge>
+    {stats.warning > 0 && (
+      <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200">
+        {stats.warning} Warnings
+      </Badge>
+    )}
+    {stats.error > 0 && (
+      <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200">
+        {stats.error} Errors
+      </Badge>
+    )}
+  </div>
+);
 
 /**
  * SimpleDiagnosticsView - A developer-friendly component that shows basic diagnostics results
- * 
- * This is a simplified version of the full diagnostics system, designed for quick checks
- * during development. It runs navigation diagnostics and displays the results in a
- * clean, easy-to-understand format.
  */
 const SimpleDiagnosticsView: React.FC = () => {
   const [results, setResults] = useState<DiagnosticResult[]>([]);
@@ -168,26 +177,13 @@ const SimpleDiagnosticsView: React.FC = () => {
                 setLoading(false);
               });
             }}
+            aria-label="Refresh diagnostics"
           >
             Refresh
           </Button>
         </div>
         
-        <div className="flex gap-2 mt-2">
-          <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
-            {stats.success} OK
-          </Badge>
-          {stats.warning > 0 && (
-            <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200">
-              {stats.warning} Warnings
-            </Badge>
-          )}
-          {stats.error > 0 && (
-            <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200">
-              {stats.error} Errors
-            </Badge>
-          )}
-        </div>
+        <DiagnosticStats stats={stats} />
       </CardHeader>
       
       <CardContent>
@@ -197,7 +193,7 @@ const SimpleDiagnosticsView: React.FC = () => {
             <TabsTrigger value="recommendations">
               Recommendations
               {allRecommendations.length > 0 && (
-                <Badge className="ml-2 h-5 w-5 p-0 flex items-center justify-center">
+                <Badge className="ml-2 h-5 w-5 p-0 flex items-center justify-center" aria-label={`${allRecommendations.length} recommendations`}>
                   {allRecommendations.length}
                 </Badge>
               )}
@@ -206,36 +202,14 @@ const SimpleDiagnosticsView: React.FC = () => {
           
           <TabsContent value="results" className="mt-2">
             {loading && results.length === 0 ? (
-              <div className="flex flex-col items-center py-4">
+              <div className="flex flex-col items-center py-4" aria-live="polite" aria-busy="true">
                 <Loader2 className="h-8 w-8 animate-spin mb-2" />
                 <p className="text-sm text-muted-foreground">Running diagnostics...</p>
               </div>
             ) : (
-              <ul className="space-y-2">
+              <ul className="space-y-2" aria-label="Diagnostic results">
                 {results.map((result) => (
-                  <li 
-                    key={result.route} 
-                    className={`p-3 rounded-md flex items-start justify-between
-                      ${result.status === 'success' ? 'bg-green-50 dark:bg-green-900/20' : 
-                       result.status === 'warning' ? 'bg-yellow-50 dark:bg-yellow-900/20' : 
-                       'bg-red-50 dark:bg-red-900/20'}`}
-                  >
-                    <div>
-                      <div className="flex items-center gap-2">
-                        {result.status === 'success' ? (
-                          <CheckCircle className="h-4 w-4 text-green-500" />
-                        ) : result.status === 'warning' ? (
-                          <AlertTriangle className="h-4 w-4 text-yellow-500" />
-                        ) : (
-                          <XCircle className="h-4 w-4 text-red-500" />
-                        )}
-                        <span className="font-medium">{result.route}</span>
-                      </div>
-                      {result.message && (
-                        <p className="text-sm mt-1 ml-6">{result.message}</p>
-                      )}
-                    </div>
-                  </li>
+                  <DiagnosticResultItem key={result.route} result={result} />
                 ))}
               </ul>
             )}

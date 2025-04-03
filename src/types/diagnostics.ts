@@ -1,3 +1,4 @@
+
 export type LogLevel = "error" | "warning" | "info" | "debug" | "success";
 
 export interface LogEntry {
@@ -19,10 +20,14 @@ export interface LogEntry {
   recommendations?: string[] | Recommendation[];
 }
 
-export interface NavigationDiagnosticResult {
+export interface DiagnosticResult {
   route: string;
   status: "success" | "warning" | "error";
-  message: string;
+  message?: string;
+  recommendations?: Recommendation[];
+}
+
+export interface NavigationDiagnosticResult extends DiagnosticResult {
   componentStatus?: {
     rendered: boolean;
     loadTime?: number;
@@ -35,7 +40,6 @@ export interface NavigationDiagnosticResult {
     errorMessage?: string;
   }[];
   consoleErrors?: string[];
-  recommendations?: Recommendation[];
 }
 
 export interface ApiEndpointDiagnosticResult {
@@ -76,8 +80,10 @@ export interface QuickFix {
 export interface FixHistoryEntry {
   id: string;
   timestamp: string;
+  title: string;
   description: string;
   status: 'success' | 'failed' | 'pending';
+  severity: string;
 }
 
 export interface Recommendation {

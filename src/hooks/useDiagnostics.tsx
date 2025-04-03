@@ -1,30 +1,19 @@
-
 import { useState, useEffect } from "react";
 import { runDiagnostics } from "@/services/diagnostics";
 import { DiagnosticTestStatus } from "@/services/diagnostics/types";
 import { toast } from "sonner";
-import { QuickFix as DiagnosticsQuickFix, FixHistoryEntry as DiagnosticsFixHistory } from "@/types/diagnostics";
+import { 
+  QuickFix as DiagnosticsQuickFix, 
+  FixHistoryEntry as DiagnosticsFixHistoryEntry,
+  Recommendation 
+} from "@/types/diagnostics";
 
-export type QuickFixArea = 'system' | 'performance' | 'security' | 'config' | 'api';
-
-// Update the QuickFix interface to match the one in diagnostics.ts
-export interface QuickFix {
-  id: string;
-  title: string; // Changed from 'name' to 'title' to match diagnostics.ts
-  description: string;
-  area: QuickFixArea;
-  severity: 'critical' | 'high' | 'medium' | 'low';
+export interface QuickFix extends DiagnosticsQuickFix {
+  area: 'system' | 'performance' | 'security' | 'config' | 'api';
 }
 
-// Update the FixHistoryEntry interface to match the one in diagnostics.ts
-interface FixHistoryEntry {
-  id: string;
-  title: string; // Was 'name' before
-  timestamp: string;
-  area: QuickFixArea;
-  severity: string;
-  description: string; // Added to match diagnostics.ts
-  status: 'success' | 'failed' | 'pending'; // Added to match diagnostics.ts
+interface FixHistoryEntry extends DiagnosticsFixHistoryEntry {
+  area: 'system' | 'performance' | 'security' | 'config' | 'api';
 }
 
 export function useDiagnostics() {
@@ -34,52 +23,58 @@ export function useDiagnostics() {
   const [diagnosticResults, setDiagnosticResults] = useState<any>(null);
   const [lastRunTimestamp, setLastRunTimestamp] = useState<string | null>(null);
   const [fixInProgress, setFixInProgress] = useState<string | null>(null);
+  
   const [quickFixes, setQuickFixes] = useState<QuickFix[]>([
     {
       id: "fix-1",
-      title: "Optimize API response caching", // Changed from 'name' to 'title'
+      title: "Optimize API response caching",
       description: "Implement proper caching headers for REST API responses to improve performance",
       area: "performance",
-      severity: "medium"
+      severity: "medium",
+      category: "performance"
     },
     {
       id: "fix-2",
-      title: "Fix role permissions for advisors", // Changed from 'name' to 'title'
+      title: "Fix role permissions for advisors",
       description: "Advisors currently have access to admin subscription page",
       area: "security",
-      severity: "high"
+      severity: "high",
+      category: "security"
     },
     {
       id: "fix-3",
-      title: "Update authentication tokens", // Changed from 'name' to 'title'
+      title: "Update authentication tokens",
       description: "Tax Software Integration credentials are invalid or expired",
       area: "api",
-      severity: "high"
+      severity: "high",
+      category: "reliability"
     },
     {
       id: "fix-4",
-      title: "Fix calendar icon in mobile view", // Changed from 'name' to 'title'
+      title: "Fix calendar icon in mobile view",
       description: "Calendar icon is missing in mobile view for appointments",
       area: "config",
-      severity: "low"
+      severity: "low",
+      category: "usability"
     },
     {
       id: "fix-5",
-      title: "Fix form validation in Loan Application", // Changed from 'name' to 'title'
+      title: "Fix form validation in Loan Application",
       description: "Form submission fails with valid data - issue with select and date fields",
       area: "system",
-      severity: "medium"
+      severity: "medium",
+      category: "reliability"
     },
     {
       id: "fix-6",
-      title: "Resolve memory leak in Investment listings", // Changed from 'name' to 'title'
+      title: "Resolve memory leak in Investment listings",
       description: "Possible memory leak when loading large investment catalogs",
       area: "performance",
-      severity: "high"
+      severity: "high",
+      category: "performance"
     }
   ]);
 
-  // Load fix history from localStorage on mount
   const [fixHistory, setFixHistory] = useState<FixHistoryEntry[]>([]);
   useEffect(() => {
     const storedHistory = localStorage.getItem('diagnostics-fix-history');
@@ -126,22 +121,20 @@ export function useDiagnostics() {
     }
   };
 
-  // Save a fix to the history
   const addFixToHistory = (fix: QuickFix) => {
     const historyEntry: FixHistoryEntry = {
       id: fix.id,
-      title: fix.title, // Changed from 'name' to 'title'
+      title: fix.title,
       timestamp: new Date().toISOString(),
       area: fix.area,
       severity: fix.severity,
-      description: fix.description, // Added to match diagnostics.ts
-      status: 'success' // Added to match diagnostics.ts
+      description: fix.description,
+      status: 'success'
     };
     
-    const updatedHistory = [historyEntry, ...fixHistory].slice(0, 20); // Keep only the latest 20 entries
+    const updatedHistory = [historyEntry, ...fixHistory].slice(0, 20);
     setFixHistory(updatedHistory);
     
-    // Save to localStorage
     try {
       localStorage.setItem('diagnostics-fix-history', JSON.stringify(updatedHistory));
     } catch (e) {
@@ -153,22 +146,16 @@ export function useDiagnostics() {
     setQuickFixLoading(true);
     try {
       console.log(`Applying fix: ${fixId}`);
-      // Simulate fix application
       await new Promise(resolve => setTimeout(resolve, 1500));
       
-      // Find the fix that was applied
       const appliedFix = quickFixes.find(fix => fix.id === fixId);
       if (appliedFix) {
-        // Add to history
         addFixToHistory(appliedFix);
-        
-        // Show success message
-        toast.success(`Fixed: ${appliedFix.title}`, { // Changed from 'name' to 'title'
+        toast.success(`Fixed: ${appliedFix.title}`, {
           description: "Issue has been resolved successfully."
         });
       }
       
-      // Remove the fixed item from the list
       setQuickFixes(prevFixes => prevFixes.filter(fix => fix.id !== fixId));
       
       return true;
@@ -180,35 +167,26 @@ export function useDiagnostics() {
     }
   };
 
-  // New function to fix a specific diagnostic issue
   const applyDiagnosticFix = async (testId: string, category: string, name: string) => {
     setFixInProgress(testId);
     
     try {
       console.log(`Applying diagnostic fix for ${category} - ${name} (ID: ${testId})`);
       
-      // Simulate fix application with a delay
       await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Here we would actually implement the real fix logic
-      // For now we just simulate success
       
       toast.success(`Fix applied successfully for "${name}"`, {
         description: "The issue has been resolved.",
       });
       
-      // Add to fix history
       addFixToHistory({
         id: testId,
-        title: name, // Changed from 'name' to 'title'
+        title: name,
         description: `${category} issue fixed`,
-        area: category as QuickFixArea,
-        severity: "medium" // Default since we don't have this info
+        area: category as QuickFix['area'],
+        severity: "medium"
       });
       
-      // Update the diagnostics results to reflect the fix
-      // This is a simplified example - in a real implementation, we'd update
-      // the specific test that was fixed
       if (diagnosticResults && diagnosticResults[`${category}Tests`]) {
         const updatedTests = diagnosticResults[`${category}Tests`].map((test: any) => {
           if (test.name === name || test.endpoint === name || test.route === name) {
