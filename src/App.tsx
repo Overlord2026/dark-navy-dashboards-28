@@ -17,18 +17,18 @@ function App() {
   return (
     <NextThemesProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <ThemeProvider>
-        <QueryClientProvider client={queryClient}>
-          <ConfigProvider>
-            <FeatureFlagProvider>
-              <UserProvider>
+        <UserProvider>
+          <QueryClientProvider client={queryClient}>
+            <ConfigProvider>
+              <FeatureFlagProvider>
                 <Router>
                   <Routes />
                   <Toaster />
                 </Router>
-              </UserProvider>
-            </FeatureFlagProvider>
-          </ConfigProvider>
-        </QueryClientProvider>
+              </FeatureFlagProvider>
+            </ConfigProvider>
+          </QueryClientProvider>
+        </UserProvider>
       </ThemeProvider>
     </NextThemesProvider>
   );
