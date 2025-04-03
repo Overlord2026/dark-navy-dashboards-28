@@ -1,5 +1,6 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useUser } from "@/context/UserContext";
 
 type DiagnosticsContextType = {
   isDiagnosticsModeEnabled: boolean;
@@ -14,6 +15,11 @@ export function DiagnosticsProvider({ children }: { children: React.ReactNode })
   const [isDiagnosticsModeEnabled, setIsDiagnosticsModeEnabled] = useState(false);
   const [isDevelopmentMode, setIsDevelopmentMode] = useState(false);
   const [isCiMode, setIsCiMode] = useState(false);
+  const { userProfile } = useUser();
+  
+  // Only allow enabling diagnostics for administrators
+  const userRole = userProfile?.role || "client";
+  const isAdmin = userRole === "admin" || userRole === "system_administrator";
   
   useEffect(() => {
     // Check if in development mode
@@ -30,18 +36,18 @@ export function DiagnosticsProvider({ children }: { children: React.ReactNode })
     
     // Check if URL has a diagnostics parameter
     const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.has('diagnostics')) {
+    if (urlParams.has('diagnostics') && isAdmin) {
       setIsDiagnosticsModeEnabled(true);
     }
     
     // Enable diagnostics automatically in CI mode
-    if (isCI) {
+    if (isCI && isAdmin) {
       setIsDiagnosticsModeEnabled(true);
     }
     
     // Set up keyboard shortcut: Alt+Shift+D
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (isDev && e.altKey && e.shiftKey && e.key === 'D') {
+      if (isDev && e.altKey && e.shiftKey && e.key === 'D' && isAdmin) {
         setIsDiagnosticsModeEnabled(prev => !prev);
       }
     };
@@ -50,10 +56,12 @@ export function DiagnosticsProvider({ children }: { children: React.ReactNode })
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, []);
+  }, [isAdmin]);
   
   const toggleDiagnosticsMode = () => {
-    setIsDiagnosticsModeEnabled(prev => !prev);
+    if (isAdmin) {
+      setIsDiagnosticsModeEnabled(prev => !prev);
+    }
   };
   
   return (

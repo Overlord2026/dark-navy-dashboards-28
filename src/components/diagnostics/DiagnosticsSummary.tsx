@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -11,12 +10,17 @@ import { X, RefreshCw, Zap } from 'lucide-react';
 import { useDiagnosticsContext } from '@/context/DiagnosticsContext';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetFooter } from '@/components/ui/sheet';
 import { runDiagnostics } from '@/services/diagnostics';
+import { useUser } from "@/context/UserContext";
 
 export function DiagnosticsSummary() {
   const { isDiagnosticsModeEnabled, toggleDiagnosticsMode } = useDiagnosticsContext();
   const [isRunning, setIsRunning] = useState(false);
   const [diagnosticResults, setDiagnosticResults] = useState<any>(null);
   const [activeTab, setActiveTab] = useState('navigation');
+  const { userProfile } = useUser();
+  
+  const userRole = userProfile?.role || "client";
+  const isAdmin = userRole === "admin" || userRole === "system_administrator";
   
   const runAllDiagnostics = async () => {
     setIsRunning(true);
@@ -49,14 +53,13 @@ export function DiagnosticsSummary() {
   };
   
   useEffect(() => {
-    if (isDiagnosticsModeEnabled && !diagnosticResults) {
+    if (isDiagnosticsModeEnabled && !diagnosticResults && isAdmin) {
       runAllDiagnostics();
     }
-  }, [isDiagnosticsModeEnabled]);
+  }, [isDiagnosticsModeEnabled, isAdmin]);
   
-  if (!isDiagnosticsModeEnabled) return null;
+  if (!isAdmin || !isDiagnosticsModeEnabled) return null;
   
-  // Calculate summary counts
   const getTestSummary = (testArray: any[] = []) => {
     const total = testArray.length;
     const success = testArray.filter(t => t.status === 'success').length;
@@ -122,7 +125,6 @@ export function DiagnosticsSummary() {
             </div>
           ) : diagnosticResults ? (
             <div className="space-y-6">
-              {/* Overall summary */}
               <Card>
                 <CardHeader className="pb-2">
                   <CardTitle className="text-lg">Diagnostic Summary</CardTitle>
@@ -138,7 +140,6 @@ export function DiagnosticsSummary() {
                 </CardContent>
               </Card>
               
-              {/* Tabs for different diagnostic categories */}
               <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
                 <TabsList className="grid grid-cols-5">
                   <TabsTrigger value="navigation">Navigation</TabsTrigger>

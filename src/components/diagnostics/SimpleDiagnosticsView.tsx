@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { DiagnosticResultItem } from './DiagnosticResultItem';
+import { useUser } from "@/context/UserContext";
 
 // Separate component for stats display to reduce complexity
 const DiagnosticStats = ({ stats }: { stats: { total: number; success: number; warning: number; error: number } }) => (
@@ -39,9 +40,12 @@ const SimpleDiagnosticsView: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('results');
   const { isDevelopmentMode, isDiagnosticsModeEnabled } = useDiagnosticsContext();
+  const { userProfile } = useUser();
   
-  // Only show in development mode or when diagnostics are enabled
-  const isVisible = isDevelopmentMode || isDiagnosticsModeEnabled;
+  // Only show in development mode or when diagnostics are enabled AND user is admin
+  const userRole = userProfile?.role || "client";
+  const isAdmin = userRole === "admin" || userRole === "system_administrator";
+  const isVisible = (isDevelopmentMode || isDiagnosticsModeEnabled) && isAdmin;
 
   useEffect(() => {
     if (!isVisible) return;

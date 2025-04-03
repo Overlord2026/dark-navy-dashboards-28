@@ -1,37 +1,22 @@
 
 import React from 'react';
-import { Button } from '@/components/ui/button';
-import { Hammer, Bug } from 'lucide-react';
 import { useDiagnosticsContext } from '@/context/DiagnosticsContext';
-import { 
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
+import { useUser } from "@/context/UserContext";
 
 export function DiagnosticsTrigger() {
-  const { isDiagnosticsModeEnabled, toggleDiagnosticsMode, isDevelopmentMode } = useDiagnosticsContext();
+  const { isDiagnosticsModeEnabled } = useDiagnosticsContext();
+  const { userProfile } = useUser();
   
-  if (!isDevelopmentMode) return null;
+  // Only enable diagnostics for administrators
+  const userRole = userProfile?.role || "client";
+  const isAdmin = userRole === "admin" || userRole === "system_administrator";
   
-  return (
-    <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={toggleDiagnosticsMode}
-            className={`fixed bottom-4 right-4 z-50 ${isDiagnosticsModeEnabled ? 'bg-orange-500 text-white hover:bg-orange-600' : 'bg-muted'}`}
-          >
-            {isDiagnosticsModeEnabled ? <Hammer className="h-5 w-5" /> : <Bug className="h-5 w-5" />}
-          </Button>
-        </TooltipTrigger>
-        <TooltipContent side="left">
-          <p>{isDiagnosticsModeEnabled ? 'Disable' : 'Enable'} Diagnostics Mode (Alt+Shift+D)</p>
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
-  );
+  // If user is not admin, this component doesn't do anything
+  if (!isAdmin) {
+    return null;
+  }
+  
+  // For admins, the component will render nothing but still be functional
+  // for keyboard shortcuts and other diagnostics functionality
+  return null;
 }
