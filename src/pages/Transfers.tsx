@@ -1,8 +1,55 @@
-import React from "react";
+
+import React, { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
-import { Plus } from "lucide-react"; // Add the missing import
+import { Plus } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { toast } from "sonner";
 
 const Transfers = () => {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [fromAccount, setFromAccount] = useState("");
+  const [toAccount, setToAccount] = useState("");
+  const [amount, setAmount] = useState("");
+  const [transferDate, setTransferDate] = useState("");
+  const [transferType, setTransferType] = useState("one-time");
+  
+  const handleAddTransfer = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Validate form
+    if (!fromAccount || !toAccount || !amount || !transferDate) {
+      toast.error("Please fill in all required fields");
+      return;
+    }
+    
+    // In a real app, you would send this data to your backend
+    console.log("Transfer created:", { fromAccount, toAccount, amount, transferDate, transferType });
+    
+    // Show success message
+    toast.success("Transfer scheduled successfully");
+    
+    // Close dialog and reset form
+    setIsDialogOpen(false);
+    resetForm();
+  };
+  
+  const resetForm = () => {
+    setFromAccount("");
+    setToAccount("");
+    setAmount("");
+    setTransferDate("");
+    setTransferType("one-time");
+  };
+  
+  const handleCancel = () => {
+    setIsDialogOpen(false);
+    resetForm();
+  };
+  
   return (
     <ThreeColumnLayout title="Transfers">
       <div className="space-y-4 px-4 py-2 max-w-7xl mx-auto">
@@ -28,10 +75,104 @@ const Transfers = () => {
         </div>
         
         <div className="mt-8">
-          <button className="bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 rounded-md">
-            + Add New Transfer
-          </button>
+          <Button onClick={() => setIsDialogOpen(true)} className="bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 rounded-md flex items-center gap-2">
+            <Plus size={16} />
+            Add New Transfer
+          </Button>
         </div>
+        
+        {/* Add Transfer Dialog */}
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogContent className="sm:max-w-[500px]">
+            <DialogHeader>
+              <DialogTitle>Schedule a New Transfer</DialogTitle>
+              <DialogDescription>
+                Fill in the details below to schedule a new money transfer.
+              </DialogDescription>
+            </DialogHeader>
+            
+            <form onSubmit={handleAddTransfer} className="space-y-4 py-4">
+              <div className="space-y-2">
+                <Label htmlFor="fromAccount">From Account</Label>
+                <Select value={fromAccount} onValueChange={setFromAccount}>
+                  <SelectTrigger id="fromAccount">
+                    <SelectValue placeholder="Select source account" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="checking">Main Checking Account</SelectItem>
+                    <SelectItem value="savings">High-Yield Savings</SelectItem>
+                    <SelectItem value="investment">Investment Account</SelectItem>
+                    <SelectItem value="trust">Family Trust</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="toAccount">To Account</Label>
+                <Select value={toAccount} onValueChange={setToAccount}>
+                  <SelectTrigger id="toAccount">
+                    <SelectValue placeholder="Select destination account" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="checking">Main Checking Account</SelectItem>
+                    <SelectItem value="savings">High-Yield Savings</SelectItem>
+                    <SelectItem value="investment">Investment Account</SelectItem>
+                    <SelectItem value="trust">Family Trust</SelectItem>
+                    <SelectItem value="external">External Account</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="amount">Amount</Label>
+                <div className="relative">
+                  <span className="absolute left-3 top-2.5">$</span>
+                  <Input
+                    id="amount"
+                    type="text"
+                    value={amount}
+                    onChange={(e) => setAmount(e.target.value)}
+                    className="pl-7"
+                    placeholder="0.00"
+                  />
+                </div>
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="transferDate">Transfer Date</Label>
+                <Input
+                  id="transferDate"
+                  type="date"
+                  value={transferDate}
+                  onChange={(e) => setTransferDate(e.target.value)}
+                  min={new Date().toISOString().split('T')[0]}
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="transferType">Transfer Type</Label>
+                <Select value={transferType} onValueChange={setTransferType}>
+                  <SelectTrigger id="transferType">
+                    <SelectValue placeholder="Select transfer type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="one-time">One-time Transfer</SelectItem>
+                    <SelectItem value="recurring-weekly">Weekly Recurring</SelectItem>
+                    <SelectItem value="recurring-monthly">Monthly Recurring</SelectItem>
+                    <SelectItem value="recurring-quarterly">Quarterly Recurring</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <DialogFooter className="pt-4">
+                <Button type="button" variant="outline" onClick={handleCancel}>
+                  Cancel
+                </Button>
+                <Button type="submit">Schedule Transfer</Button>
+              </DialogFooter>
+            </form>
+          </DialogContent>
+        </Dialog>
       </div>
     </ThreeColumnLayout>
   );
