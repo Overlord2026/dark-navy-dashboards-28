@@ -7,28 +7,19 @@ import { ArrowLeft } from "lucide-react";
 export default function TeamPage() {
   const teamMembers = [
     {
-      name: "Sarah Johnson",
+      name: "Tony Gomes",
       title: "Chief Executive Officer",
-      image: "/lovable-uploads/b4df25d6-12d7-4c34-874e-804e72335904.png",
-      bio: "With over 20 years of experience in wealth management, Sarah leads our team with expertise in strategic financial planning for high-net-worth clients."
+      bio: "With over 20 years of experience in wealth management, Tony leads our team with expertise in strategic financial planning for high-net-worth clients."
     },
     {
-      name: "Michael Chen",
+      name: "Jami Gomes",
       title: "Chief Investment Officer",
-      image: "/lovable-uploads/b4df25d6-12d7-4c34-874e-804e72335904.png",
-      bio: "Michael brings 15 years of investment banking experience to develop sophisticated portfolio strategies that align with clients' long-term goals."
+      bio: "Jami brings 15 years of investment banking experience to develop sophisticated portfolio strategies that align with clients' long-term goals."
     },
     {
-      name: "James Wilson",
+      name: "Heather Imel",
       title: "Estate Planning Director",
-      image: "/lovable-uploads/b4df25d6-12d7-4c34-874e-804e72335904.png",
       bio: "Former trust attorney with expertise in complex estate structures and generational wealth transfer strategies."
-    },
-    {
-      name: "Rebecca Martinez",
-      title: "Tax Strategy Specialist",
-      image: "/lovable-uploads/b4df25d6-12d7-4c34-874e-804e72335904.png",
-      bio: "CPA with 12 years of experience in tax optimization strategies for high-net-worth individuals and family offices."
     }
   ];
 
@@ -80,12 +71,10 @@ export default function TeamPage() {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
             {teamMembers.map((member, index) => (
               <div key={index} className="bg-white p-6 rounded-lg shadow-sm border border-[#DCD8C0] flex flex-col">
-                <div className="mb-4">
-                  <img 
-                    src={member.image} 
-                    alt={member.name} 
-                    className="w-full h-64 object-cover rounded-md"
-                  />
+                <div className="mb-6 flex items-center justify-center">
+                  <div className="w-40 h-40 bg-gray-200 rounded-full flex items-center justify-center text-3xl font-semibold text-gray-600">
+                    {member.name.split(' ').map(name => name[0]).join('')}
+                  </div>
                 </div>
                 <h2 className="text-xl font-semibold text-[#222222]">{member.name}</h2>
                 <p className="text-primary font-medium mb-3">{member.title}</p>
