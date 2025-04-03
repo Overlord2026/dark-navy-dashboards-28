@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { Property } from '@/types/property';
 
@@ -5,12 +6,23 @@ import { Property } from '@/types/property';
 export interface Asset {
   id: string;
   name: string;
-  type: 'property' | 'investment' | 'cash' | 'retirement' | 'other';
+  type: 'property' | 'investment' | 'cash' | 'retirement' | 'vehicle' | 'boat' | 'collectible' | 'digital' | 'art' | 'antique' | 'jewelry' | 'other';
   value: number;
   owner: string;
   lastUpdated: string;
   sourceId?: string; // Reference to the source object (like property.id)
   source?: 'zillow' | 'manual' | 'other'; // Where the valuation came from
+  details?: {
+    year?: string;
+    make?: string;
+    model?: string;
+    description?: string;
+    location?: string;
+    insuredValue?: number;
+    purchaseDate?: string;
+    condition?: string;
+    imageUrl?: string;
+  };
 }
 
 interface NetWorthContextType {
@@ -22,6 +34,7 @@ interface NetWorthContextType {
   getTotalAssetsByType: (type: Asset['type']) => number;
   syncPropertiesToAssets: (properties: Property[]) => void;
   getAssetsByOwner: (owner: string) => Asset[];
+  getAssetsByCategory: (category: string) => Asset[];
 }
 
 // Create context
@@ -54,6 +67,57 @@ export const NetWorthProvider: React.FC<{ children: ReactNode }> = ({ children }
       value: 420000,
       owner: 'Tom Brady',
       lastUpdated: new Date().toISOString().split('T')[0]
+    },
+    {
+      id: 'vehicle1',
+      name: 'Tesla Model X',
+      type: 'vehicle',
+      value: 85000,
+      owner: 'Tom Brady',
+      lastUpdated: new Date().toISOString().split('T')[0],
+      details: {
+        year: '2023',
+        make: 'Tesla',
+        model: 'Model X',
+        condition: 'Excellent'
+      }
+    },
+    {
+      id: 'boat1',
+      name: 'Yacht',
+      type: 'boat',
+      value: 750000,
+      owner: 'Tom Brady',
+      lastUpdated: new Date().toISOString().split('T')[0],
+      details: {
+        year: '2021',
+        make: 'Sea Ray',
+        model: 'Sundancer 370',
+        location: 'Boston Harbor Marina'
+      }
+    },
+    {
+      id: 'art1',
+      name: 'Modern Art Collection',
+      type: 'art',
+      value: 120000,
+      owner: 'Tom Brady',
+      lastUpdated: new Date().toISOString().split('T')[0],
+      details: {
+        description: 'Collection of contemporary art pieces',
+        location: 'Primary Residence'
+      }
+    },
+    {
+      id: 'digital1',
+      name: 'Cryptocurrency Portfolio',
+      type: 'digital',
+      value: 85000,
+      owner: 'Tom Brady',
+      lastUpdated: new Date().toISOString().split('T')[0],
+      details: {
+        description: 'Bitcoin, Ethereum, and other cryptocurrencies'
+      }
     }
   ]);
 
@@ -92,6 +156,21 @@ export const NetWorthProvider: React.FC<{ children: ReactNode }> = ({ children }
   const getAssetsByOwner = (owner: string) => {
     return assets.filter(asset => asset.owner === owner);
   };
+  
+  // Get assets by category (could be a specific type or a group of types)
+  const getAssetsByCategory = (category: string) => {
+    if (category === 'vehicles') {
+      return assets.filter(asset => ['vehicle', 'boat'].includes(asset.type));
+    }
+    if (category === 'collectibles') {
+      return assets.filter(asset => ['art', 'antique', 'collectible', 'jewelry'].includes(asset.type));
+    }
+    if (category === 'digital') {
+      return assets.filter(asset => asset.type === 'digital');
+    }
+    // Default: return by exact type
+    return assets.filter(asset => asset.type === category);
+  };
 
   // Sync properties to assets list
   const syncPropertiesToAssets = (properties: Property[]) => {
@@ -122,7 +201,8 @@ export const NetWorthProvider: React.FC<{ children: ReactNode }> = ({ children }
     getTotalNetWorth, 
     getTotalAssetsByType,
     syncPropertiesToAssets,
-    getAssetsByOwner
+    getAssetsByOwner,
+    getAssetsByCategory
   };
 
   console.log('NetWorthProvider context created with assets:', assets.length);

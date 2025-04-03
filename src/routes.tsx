@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Index from "@/pages/Index";
@@ -52,6 +53,7 @@ import IPProtection from "./pages/IPProtection";
 import SystemHealthDashboard from "./pages/SystemHealthDashboard";
 import BankingTransfers from "./pages/BankingTransfers";
 import BillPay from "./pages/BillPay";
+import AllAssets from "./pages/AllAssets";
 
 import { useUser } from "./context/UserContext";
 import { TutorialButton } from "./components/navigation/TutorialButton";
@@ -78,6 +80,7 @@ const AppRoutes: React.FC = () => {
       <Route path="/documents/:sectionId" element={<Documents />} />
       <Route path="/home" element={<HomePage />} />
       <Route path="/accounts" element={<Accounts />} />
+      <Route path="/all-assets" element={<AllAssets />} />
       <Route path="/financial-plans" element={<FinancialPlans />} />
       <Route path="/investments" element={<Investments />} />
       <Route path="/investments/view-all-offerings" element={<ViewAllOfferings />} />

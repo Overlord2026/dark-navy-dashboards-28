@@ -25,7 +25,10 @@ import {
   ArrowRightLeft,
   Calculator,
   PieChart,
-  Receipt
+  Receipt,
+  Car,
+  ArtDashes,
+  Diamond
 } from "lucide-react";
 
 import { NavItem } from "@/types/navigation";
@@ -81,9 +84,29 @@ export const familyWealthNavItems: NavItem[] = [
     icon: LineChartIcon 
   },
   { 
+    title: "All Assets", 
+    href: "/all-assets", 
+    icon: Diamond 
+  },
+  { 
     title: "Accounts Overview", 
     href: "/accounts", 
     icon: WalletIcon 
+  },
+  { 
+    title: "Real Estate", 
+    href: "/properties", 
+    icon: BuildingIcon 
+  },
+  { 
+    title: "Vehicles & Collectibles", 
+    href: "/all-assets", 
+    icon: Car 
+  },
+  { 
+    title: "Art & Valuables", 
+    href: "/all-assets", 
+    icon: ArtDashes 
   },
   { 
     title: "Cash Management", 
@@ -109,11 +132,6 @@ export const familyWealthNavItems: NavItem[] = [
     title: "Social Security", 
     href: "/social-security", 
     icon: CircleDollarSignIcon 
-  },
-  { 
-    title: "Real Estate & Properties", 
-    href: "/properties", 
-    icon: BuildingIcon 
   },
   { 
     title: "Bill Pay", 
