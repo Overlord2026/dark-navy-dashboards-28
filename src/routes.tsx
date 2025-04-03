@@ -62,6 +62,9 @@ import ContactPage from "./pages/ContactPage";
 import TeamPage from "./pages/TeamPage";
 import CareersPage from "./pages/CareersPage";
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
+import TermsOfServicePage from "./pages/TermsOfServicePage";
+import DisclosuresPage from "./pages/DisclosuresPage";
+import AccessibilityPage from "./pages/AccessibilityPage";
 
 import { useUser } from "./context/UserContext";
 import { TutorialButton } from "./components/navigation/TutorialButton";
@@ -82,9 +85,9 @@ const AppRoutes: React.FC = () => {
         <Route path="/careers" element={<CareersPage />} />
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
-        <Route path="/terms-of-service" element={<PrivacyPolicyPage />} />
-        <Route path="/disclosures" element={<PrivacyPolicyPage />} />
-        <Route path="/accessibility" element={<PrivacyPolicyPage />} />
+        <Route path="/terms-of-service" element={<TermsOfServicePage />} />
+        <Route path="/disclosures" element={<DisclosuresPage />} />
+        <Route path="/accessibility" element={<AccessibilityPage />} />
         <Route path="/" element={<Navigate to="/home" />} />
         <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
@@ -183,9 +186,9 @@ const AppRoutes: React.FC = () => {
       <Route path="/careers" element={<CareersPage />} />
       <Route path="/contact" element={<ContactPage />} />
       <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
-      <Route path="/terms-of-service" element={<PrivacyPolicyPage />} />
-      <Route path="/disclosures" element={<PrivacyPolicyPage />} />
-      <Route path="/accessibility" element={<PrivacyPolicyPage />} />
+      <Route path="/terms-of-service" element={<TermsOfServicePage />} />
+      <Route path="/disclosures" element={<DisclosuresPage />} />
+      <Route path="/accessibility" element={<AccessibilityPage />} />
       
       <Route path="*" element={<NotFound />} />
     </Routes>

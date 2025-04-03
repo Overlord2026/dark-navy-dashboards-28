@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -17,9 +18,9 @@ export default function HomePage() {
             />
           </div>
           <div className="hidden md:flex gap-8 text-[#222222]">
-            <a href="#services" className="hover:text-primary font-medium">Services</a>
-            <a href="#about" className="hover:text-primary font-medium">About Us</a>
-            <a href="#contact" className="hover:text-primary font-medium">Contact</a>
+            <Link to="/services" className="hover:text-primary font-medium">Services</Link>
+            <Link to="/about" className="hover:text-primary font-medium">About Us</Link>
+            <Link to="/contact" className="hover:text-primary font-medium">Contact</Link>
           </div>
           <div className="flex gap-4">
             <Button variant="outline" asChild>
@@ -48,7 +49,7 @@ export default function HomePage() {
                 </Link>
               </Button>
               <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10" asChild>
-                <a href="#services">Explore Services</a>
+                <Link to="/services">Explore Services</Link>
               </Button>
             </div>
           </div>
@@ -156,8 +157,8 @@ export default function HomePage() {
             <Button size="lg" className="bg-black text-white hover:bg-black/80" asChild>
               <Link to="/login">Access Client Portal</Link>
             </Button>
-            <Button size="lg" variant="outline" className="border-black text-black hover:bg-black/10" asChild>
-              <a href="mailto:contact@boutiquefamilyoffice.com">Contact an Advisor</a>
+            <Button size="lg" className="bg-black text-white hover:bg-black/80" asChild>
+              <Link to="/contact">Contact an Advisor</Link>
             </Button>
           </div>
         </div>
@@ -180,28 +181,28 @@ export default function HomePage() {
             <div>
               <h3 className="text-lg font-semibold mb-4">Services</h3>
               <ul className="space-y-2 text-gray-300">
-                <li><a href="#" className="hover:text-primary">Wealth Management</a></li>
-                <li><a href="#" className="hover:text-primary">Estate Planning</a></li>
-                <li><a href="#" className="hover:text-primary">Tax Planning</a></li>
-                <li><a href="#" className="hover:text-primary">Risk Management</a></li>
+                <li><Link to="/services" className="hover:text-primary">Wealth Management</Link></li>
+                <li><Link to="/services" className="hover:text-primary">Estate Planning</Link></li>
+                <li><Link to="/services" className="hover:text-primary">Tax Planning</Link></li>
+                <li><Link to="/services" className="hover:text-primary">Risk Management</Link></li>
               </ul>
             </div>
             <div>
               <h3 className="text-lg font-semibold mb-4">Company</h3>
               <ul className="space-y-2 text-gray-300">
-                <li><a href="#" className="hover:text-primary">About Us</a></li>
-                <li><a href="#" className="hover:text-primary">Our Team</a></li>
-                <li><a href="#" className="hover:text-primary">Careers</a></li>
-                <li><a href="#" className="hover:text-primary">Contact</a></li>
+                <li><Link to="/about" className="hover:text-primary">About Us</Link></li>
+                <li><Link to="/team" className="hover:text-primary">Our Team</Link></li>
+                <li><Link to="/careers" className="hover:text-primary">Careers</Link></li>
+                <li><Link to="/contact" className="hover:text-primary">Contact</Link></li>
               </ul>
             </div>
             <div>
               <h3 className="text-lg font-semibold mb-4">Legal</h3>
               <ul className="space-y-2 text-gray-300">
-                <li><a href="#" className="hover:text-primary">Privacy Policy</a></li>
-                <li><a href="#" className="hover:text-primary">Terms of Service</a></li>
-                <li><a href="#" className="hover:text-primary">Disclosures</a></li>
-                <li><a href="#" className="hover:text-primary">Accessibility</a></li>
+                <li><Link to="/privacy-policy" className="hover:text-primary">Privacy Policy</Link></li>
+                <li><Link to="/terms-of-service" className="hover:text-primary">Terms of Service</Link></li>
+                <li><Link to="/disclosures" className="hover:text-primary">Disclosures</Link></li>
+                <li><Link to="/accessibility" className="hover:text-primary">Accessibility</Link></li>
               </ul>
             </div>
           </div>
