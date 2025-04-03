@@ -1,3 +1,4 @@
+
 import { FinancialPlanService } from './FinancialPlanService';
 import { LocalFinancialPlanService } from './LocalFinancialPlanService';
 import { ApiFinancialPlanService } from './ApiFinancialPlanService';
@@ -29,3 +30,11 @@ export class FinancialPlanServiceFactory {
     return new ApiFinancialPlanService();
   }
 }
+
+/**
+ * Helper function to get the financial plan service instance
+ * This is the function that is being imported by other modules
+ */
+export const getFinancialPlanService = (): FinancialPlanService => {
+  return FinancialPlanServiceFactory.getService();
+};
