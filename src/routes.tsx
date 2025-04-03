@@ -1,8 +1,6 @@
-
 import React, { lazy, Suspense } from 'react';
 import { Routes as RouterRoutes, Route, Navigate } from 'react-router-dom';
 import { useFeatureFlagContext } from './context/FeatureFlagContext';
-import { FeatureFlag } from './types/featureFlags';
 
 import Index from "@/pages/Index";
 import Dashboard from "@/pages/Dashboard";
@@ -81,15 +79,15 @@ const AppRoutes: React.FC = () => {
 
   if (!isAuthenticated) {
     return (
-      <RouterRoutes>
+      <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="*" element={<Navigate to="/login" />} />
-      </RouterRoutes>
+      </Routes>
     );
   }
 
   return (
-    <RouterRoutes>
+    <Routes>
       <Route path="/" element={<Index />} />
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/documents" element={<Documents />} />
@@ -173,7 +171,7 @@ const AppRoutes: React.FC = () => {
       />
       
       <Route path="*" element={<NotFound />} />
-    </RouterRoutes>
+    </Routes>
   );
 };
 
