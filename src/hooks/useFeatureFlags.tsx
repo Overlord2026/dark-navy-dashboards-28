@@ -1,8 +1,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { FeatureFlag, FeatureFlagConfig, Environment } from '@/types/featureFlags';
-import { getFeatureFlagService, FeatureFlagService } from '@/services/featureFlagService';
-import { useLocalStorage } from '@/hooks/useLocalStorage';
+import { getFeatureFlagService } from '@/services/featureFlagService';
 
 export function useFeatureFlags() {
   const service = getFeatureFlagService();
@@ -12,7 +11,7 @@ export function useFeatureFlags() {
   // Update state when flags change
   const refreshFlags = useCallback(() => {
     setFlags(service.getAllFlags());
-  }, []);
+  }, [service]);
   
   // Check if a feature is enabled
   const isEnabled = useCallback((flag: FeatureFlag): boolean => {

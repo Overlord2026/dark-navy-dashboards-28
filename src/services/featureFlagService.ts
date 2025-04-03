@@ -1,6 +1,5 @@
 
 import { FeatureFlag, FeatureFlagConfig, Environment } from '@/types/featureFlags';
-import { useLocalStorage } from '@/hooks/useLocalStorage';
 
 // Default configuration for each environment
 const DEFAULT_CONFIGS: Record<Environment, FeatureFlagConfig> = {
