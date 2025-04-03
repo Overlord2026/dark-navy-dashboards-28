@@ -9,15 +9,18 @@ import { handleCourseAccess } from "@/components/education/courseUtils";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+import { CourseApiDemo } from "@/components/education/CourseApiDemo";
 
 export default function Education() {
   const [searchParams] = useSearchParams();
   const [activeCategory, setActiveCategory] = useState("all-courses");
   const [activeSection, setActiveSection] = useState("courses");
+  const [showApiDemo, setShowApiDemo] = useState(false);
   
   useEffect(() => {
     const category = searchParams.get("category");
     const section = searchParams.get("section");
+    const apiDemo = searchParams.get("api") === "true";
     
     if (category) {
       setActiveCategory(category);
@@ -29,6 +32,8 @@ export default function Education() {
         setActiveSection(section);
       }
     }
+    
+    setShowApiDemo(apiDemo);
   }, [searchParams]);
 
   const handleCourseEnrollment = (courseId: string | number, title: string, isPaid: boolean, ghlUrl?: string) => {
@@ -62,6 +67,10 @@ export default function Education() {
     visible: { opacity: 1, y: 0 }
   };
 
+  const toggleApiDemo = () => {
+    setShowApiDemo(!showApiDemo);
+  };
+
   return (
     <ThreeColumnLayout 
       title="SWAG Education Center" 
@@ -81,13 +90,33 @@ export default function Education() {
             Explore our collection of financial education resources to help you build wealth and achieve your financial goals.
           </p>
           
-          <div className="mt-4 mb-6">
+          <div className="mt-4 mb-6 flex gap-2">
             <Link to="/education/tax-planning">
               <Button variant="outline" className="flex items-center gap-2">
                 Tax Planning <ArrowRight className="h-4 w-4" />
               </Button>
             </Link>
+            
+            <Button 
+              variant={showApiDemo ? "default" : "outline"} 
+              className="flex items-center gap-2"
+              onClick={toggleApiDemo}
+            >
+              {showApiDemo ? "Hide API Demo" : "Show API Demo"}
+            </Button>
           </div>
+          
+          {showApiDemo && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3 }}
+              className="mb-8"
+            >
+              <CourseApiDemo />
+            </motion.div>
+          )}
           
           <EducationalTabs 
             activeSection={activeSection}
