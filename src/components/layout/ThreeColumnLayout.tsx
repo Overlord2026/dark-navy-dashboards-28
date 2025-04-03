@@ -34,6 +34,7 @@ import { UserProfileSection } from "@/components/sidebar/UserProfileSection";
 import { Header } from "@/components/ui/Header";
 import { useTheme } from "@/context/ThemeContext";
 import { useUser } from "@/context/UserContext";
+import { TutorialButton } from "@/components/navigation/TutorialButton";
 import {
   Popover,
   PopoverContent,
