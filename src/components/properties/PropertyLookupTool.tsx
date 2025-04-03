@@ -30,12 +30,13 @@ export const PropertyLookupTool: React.FC<PropertyLookupToolProps> = ({ onAddPro
     setValuation(null);
 
     try {
+      toast.info("Connecting to Zillow API...");
       const result = await getPropertyValuation(address);
       setValuation(result);
-      toast.success("Property valuation found");
+      toast.success("Property valuation retrieved from Zillow");
     } catch (err) {
-      setError("Unable to fetch property valuation. Please try again.");
-      toast.error("Error fetching property valuation");
+      setError("Unable to fetch property valuation from Zillow. Please try again.");
+      toast.error("Error fetching property valuation from Zillow");
     } finally {
       setIsLoading(false);
     }
@@ -44,7 +45,7 @@ export const PropertyLookupTool: React.FC<PropertyLookupToolProps> = ({ onAddPro
   const handleAddToPortfolio = () => {
     if (valuation && onAddProperty) {
       onAddProperty(address, valuation);
-      toast.success("Address saved for new property");
+      toast.success("Address and Zillow valuation saved for new property");
       setAddress("");
       setValuation(null);
     }
@@ -60,10 +61,10 @@ export const PropertyLookupTool: React.FC<PropertyLookupToolProps> = ({ onAddPro
       <CardHeader>
         <CardTitle className="flex items-center">
           <MapPin className="mr-2 h-5 w-5 text-yellow-500" />
-          Property Lookup Tool
+          Zillow Property Valuation Tool
         </CardTitle>
         <CardDescription>
-          Look up property values by entering an address
+          Look up property values directly from Zillow by entering an address
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -86,11 +87,11 @@ export const PropertyLookupTool: React.FC<PropertyLookupToolProps> = ({ onAddPro
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
-                  Searching...
+                  Searching Zillow...
                 </div>
               ) : (
                 <>
-                  <Search className="mr-2 h-4 w-4" /> Search
+                  <Search className="mr-2 h-4 w-4" /> Get Zillow Estimate
                 </>
               )}
             </Button>
@@ -105,7 +106,7 @@ export const PropertyLookupTool: React.FC<PropertyLookupToolProps> = ({ onAddPro
 
           {valuation && (
             <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-              <h3 className="text-lg font-semibold mb-2">Estimated Property Value</h3>
+              <h3 className="text-lg font-semibold mb-2">Zillow Property Estimate</h3>
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <p className="text-sm text-gray-500">Estimated Value</p>
