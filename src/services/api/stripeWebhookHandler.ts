@@ -75,7 +75,7 @@ const processCheckoutSessionCompleted = async (
     const enrollmentData = {
       courseId,
       userData: {
-        id: userId || undefined,
+        name: userId || undefined,
         email: session.customer_email || undefined
       }
     };
@@ -122,7 +122,7 @@ const processPaymentIntentSucceeded = async (
     const enrollmentData = {
       courseId,
       userData: {
-        id: userId || undefined,
+        name: userId || undefined,
         // We might not have the email directly in the payment intent
         // In a real application, you would fetch this from your database
       }
