@@ -6,6 +6,9 @@ import { Button } from "@/components/ui/button";
 import { BarChart2, TrendingUp, Shield, ChevronRight, ExternalLink, Plus, Filter, Share } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { PortfolioFilterDialog } from "./PortfolioFilterDialog";
+import { GroupManagementDialog } from "./GroupManagementDialog";
+import { CreatePortfolioDialog } from "./CreatePortfolioDialog";
 
 interface PortfolioModel {
   id: string;
@@ -98,20 +101,21 @@ const portfolioModels: PortfolioModel[] = [
 export const IntelligentAllocationTab = () => {
   const [selectedModels, setSelectedModels] = useState<string[]>([]);
   const navigate = useNavigate();
+  
+  const [filterDialogOpen, setFilterDialogOpen] = useState(false);
+  const [groupsDialogOpen, setGroupsDialogOpen] = useState(false);
+  const [createDialogOpen, setCreateDialogOpen] = useState(false);
 
   const handleFindPortfolios = () => {
-    toast.success("Opening portfolio discovery tool");
-    // This would open a portfolio finder/filter dialog in a real implementation
+    setFilterDialogOpen(true);
   };
 
   const handleManageGroups = () => {
-    toast.success("Opening group management tool");
-    // This would open a group management dialog in a real implementation
+    setGroupsDialogOpen(true);
   };
 
   const handleCreatePortfolio = () => {
-    toast.success("Starting new portfolio creation");
-    // This would open the portfolio creation wizard in a real implementation
+    setCreateDialogOpen(true);
   };
 
   const handleCreateModelOfModels = () => {
@@ -120,7 +124,6 @@ export const IntelligentAllocationTab = () => {
   };
 
   const handleModelRowClick = (modelId: string) => {
-    // Toggle selection of a model
     if (selectedModels.includes(modelId)) {
       setSelectedModels(selectedModels.filter(id => id !== modelId));
       toast.info(`Deselected model: ${portfolioModels.find(m => m.id === modelId)?.name}`);
@@ -131,7 +134,7 @@ export const IntelligentAllocationTab = () => {
   };
 
   const handleViewPortfolioDetails = (modelId: string, e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent row click event
+    e.stopPropagation();
     navigate(`/investments/models/${modelId}`);
   };
 
@@ -321,6 +324,21 @@ export const IntelligentAllocationTab = () => {
           </div>
         </TabsContent>
       </Tabs>
+
+      <PortfolioFilterDialog 
+        open={filterDialogOpen} 
+        onOpenChange={setFilterDialogOpen} 
+      />
+      
+      <GroupManagementDialog 
+        open={groupsDialogOpen} 
+        onOpenChange={setGroupsDialogOpen} 
+      />
+      
+      <CreatePortfolioDialog 
+        open={createDialogOpen} 
+        onOpenChange={setCreateDialogOpen} 
+      />
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card>
