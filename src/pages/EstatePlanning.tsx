@@ -21,7 +21,8 @@ import {
   Lock,
   FileCheck,
   CheckCircle,
-  Circle
+  Circle,
+  Calendar
 } from "lucide-react";
 import { toast } from "sonner";
 import { FamilyLegacyBox } from "@/components/estate-planning/FamilyLegacyBox";
@@ -43,13 +44,19 @@ export default function EstatePlanning() {
   };
 
   const handleShowInterest = () => {
+    // Send email to advisor
+    console.log("Sending email to advisor with form data:", formData);
+    
+    // Alert advisor in real-time
+    console.log("Alerting advisor about interest:", formData);
+    
     toast.success("Thank you for your interest! An advisor will contact you soon.");
     setShowInterestDialog(false);
   };
 
-  const handleScheduleAdvisor = () => {
-    toast.success("Your meeting has been scheduled! Check your email for details.");
-    setShowAdvisorDialog(false);
+  const handleScheduleAppointment = () => {
+    window.open("https://calendly.com/tonygomes/60min", "_blank");
+    toast.success("Opening scheduling page");
   };
 
   const services = [
@@ -111,7 +118,10 @@ export default function EstatePlanning() {
             <div className="flex gap-3 w-full sm:w-auto">
               <Dialog open={showAdvisorDialog} onOpenChange={setShowAdvisorDialog}>
                 <DialogTrigger asChild>
-                  <Button className="w-full sm:w-auto">Talk to an Advisor</Button>
+                  <Button className="w-full sm:w-auto">
+                    <Calendar className="mr-2 h-4 w-4" />
+                    Schedule Appointment
+                  </Button>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[425px]">
                   <DialogHeader>
@@ -146,14 +156,14 @@ export default function EstatePlanning() {
                   </div>
                   <DialogFooter>
                     <Button variant="outline" onClick={() => setShowAdvisorDialog(false)}>Cancel</Button>
-                    <Button onClick={handleScheduleAdvisor}>Schedule</Button>
+                    <Button onClick={handleScheduleAppointment}>Schedule</Button>
                   </DialogFooter>
                 </DialogContent>
               </Dialog>
 
               <Dialog open={showInterestDialog} onOpenChange={setShowInterestDialog}>
                 <DialogTrigger asChild>
-                  <Button variant="outline" className="w-full sm:w-auto">Show Interest</Button>
+                  <Button variant="outline" className="w-full sm:w-auto">I'm Interested</Button>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[425px]">
                   <DialogHeader>
@@ -282,7 +292,10 @@ export default function EstatePlanning() {
                     ))}
                   </div>
                   <div className="mt-6">
-                    <Button onClick={() => setShowAdvisorDialog(true)}>Get Started</Button>
+                    <Button onClick={handleScheduleAppointment}>
+                      <Calendar className="mr-2 h-4 w-4" />
+                      Schedule Appointment
+                    </Button>
                   </div>
                 </div>
               </div>

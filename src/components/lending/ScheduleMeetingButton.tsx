@@ -11,7 +11,7 @@ interface ScheduleMeetingButtonProps {
 
 export const ScheduleMeetingButton: React.FC<ScheduleMeetingButtonProps> = ({ offeringName }) => {
   const handleScheduleMeeting = () => {
-    // Open Calendly or other scheduling tool
+    // Open Calendly with Tony Gomes's link
     window.open("https://calendly.com/tonygomes/60min", "_blank");
     
     toast.success("Opening scheduling page", {
@@ -22,7 +22,7 @@ export const ScheduleMeetingButton: React.FC<ScheduleMeetingButtonProps> = ({ of
   
   return (
     <Button onClick={handleScheduleMeeting}>
-      <Calendar className="mr-2 h-4 w-4" /> Schedule Consultation
+      <Calendar className="mr-2 h-4 w-4" /> Schedule Appointment
     </Button>
   );
 };
