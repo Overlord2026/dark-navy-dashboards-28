@@ -184,7 +184,8 @@ export function useDiagnostics() {
         title: name,
         description: `${category} issue fixed`,
         area: category as QuickFix['area'],
-        severity: "medium"
+        severity: "medium",
+        category: "reliability"
       });
       
       if (diagnosticResults && diagnosticResults[`${category}Tests`]) {
