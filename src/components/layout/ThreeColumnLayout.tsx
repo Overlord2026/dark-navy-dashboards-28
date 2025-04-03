@@ -7,7 +7,6 @@ import { UserProfileSection } from "@/components/sidebar/UserProfileSection";
 import { Header } from "@/components/ui/Header";
 import { useTheme } from "@/context/ThemeContext";
 import { useUser } from "@/context/UserContext";
-import { TutorialButton } from "@/components/navigation/TutorialButton";
 import { AdvisorSection } from "@/components/profile/AdvisorSection";
 import { NavigationCategory } from "./NavigationCategory";
 import { SecondaryNavigation } from "./SecondaryNavigation";
@@ -147,7 +146,7 @@ export function ThreeColumnLayout({
           <main className="flex-1 overflow-y-auto p-3 font-sans w-full">
             <div className="flex justify-between items-center mb-4">
               <h1 className="text-2xl font-bold">{title}</h1>
-              <TutorialButton tabId={currentPath} size="default" variant="default" />
+              {/* Tutorial button removed from here */}
             </div>
             {children}
           </main>
