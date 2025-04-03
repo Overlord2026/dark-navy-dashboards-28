@@ -228,7 +228,7 @@ const Lending = () => {
           <div>
             <h1 className="text-2xl font-semibold mb-1">
               {activeTab === "categories" 
-                ? "Lending Solutions" 
+                ? "" 
                 : loanCategories.find(cat => cat.id === selectedCategory)?.title}
             </h1>
             {activeTab === "lenders" && selectedCategory && !renderCategoryContent() && (
