@@ -37,7 +37,13 @@ export function Toaster({ ...props }: ToasterProps) {
           titleText.includes('deleted plan') || 
           descriptionText.includes('deleted plan') ||
           titleText.includes('deleted') || 
-          descriptionText.includes('deleted')
+          descriptionText.includes('deleted') ||
+          titleText.includes('goal updated') ||
+          descriptionText.includes('goal updated') ||
+          // Additional checks for any toast that doesn't have visible content
+          (titleText.trim() === '' && descriptionText.trim() === '') ||
+          // Check for 'ghost' toasts with minimal content
+          (titleText === 'goal updated' && descriptionText === '')
         );
       }}
       {...props}

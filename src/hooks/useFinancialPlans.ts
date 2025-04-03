@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useCallback } from 'react';
 import { FinancialPlan, FinancialGoal, FinancialPlansSummary } from '@/types/financial-plan';
 import { getFinancialPlanService } from '@/services/financial-plans/FinancialPlanServiceFactory';
@@ -96,8 +97,7 @@ export const useFinancialPlans = () => {
       return success;
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Unknown error deleting plan';
-      // Intentionally not showing toast error for deleted plans
-      // toast.error(errorMessage);
+      // Intentionally not showing toast for deleted plans
       throw err;
     }
   };
@@ -137,7 +137,8 @@ export const useFinancialPlans = () => {
       return success;
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Unknown error updating goal';
-      toast.error(errorMessage);
+      // Disable toast notifications for goals to prevent ghost toasts
+      // toast.error(errorMessage);
       throw err;
     }
   };
