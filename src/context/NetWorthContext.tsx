@@ -25,8 +25,21 @@ export interface Asset {
   };
 }
 
+// Define account structure for mobile accounts page
+export interface Account {
+  id: string;
+  name: string;
+  type: 'managed' | 'investment' | 'manual' | 'loan' | 'banking';
+  value: number;
+  institution?: string;
+  lastUpdated?: string;
+}
+
 interface NetWorthContextType {
   assets: Asset[];
+  accounts: Account[]; // Add accounts property
+  totalAssetValue: number; // Add totalAssetValue property
+  totalLiabilityValue: number; // Add totalLiabilityValue property
   addAsset: (asset: Asset) => void;
   updateAsset: (id: string, updates: Partial<Asset>) => void;
   removeAsset: (id: string) => void;
@@ -121,6 +134,35 @@ export const NetWorthProvider: React.FC<{ children: ReactNode }> = ({ children }
     }
   ]);
 
+  // Add sample accounts for mobile accounts page
+  const [accounts, setAccounts] = useState<Account[]>([
+    {
+      id: 'acc1',
+      name: 'Primary Checking',
+      type: 'banking',
+      value: 15000,
+      institution: 'Chase Bank'
+    },
+    {
+      id: 'acc2',
+      name: 'Investment Account',
+      type: 'investment',
+      value: 250000,
+      institution: 'Fidelity'
+    },
+    {
+      id: 'acc3',
+      name: 'Managed Portfolio',
+      type: 'managed',
+      value: 500000,
+      institution: 'Family Office'
+    }
+  ]);
+
+  // Calculate totals
+  const totalAssetValue = assets.reduce((total, asset) => total + asset.value, 0);
+  const totalLiabilityValue = 150000; // Sample fixed value for liabilities
+
   // Add an asset to the list
   const addAsset = (asset: Asset) => {
     setAssets(prevAssets => [...prevAssets, asset]);
@@ -195,6 +237,9 @@ export const NetWorthProvider: React.FC<{ children: ReactNode }> = ({ children }
 
   const contextValue = {
     assets, 
+    accounts, // Add accounts to context value
+    totalAssetValue, // Add totalAssetValue to context value
+    totalLiabilityValue, // Add totalLiabilityValue to context value
     addAsset, 
     updateAsset, 
     removeAsset, 
