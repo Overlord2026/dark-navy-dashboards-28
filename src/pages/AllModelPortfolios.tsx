@@ -270,8 +270,6 @@ const AllModelPortfolios = () => {
     navigate(`/investments/models/${model.id}`);
   };
 
-  // ... keep existing code (handlers for clearing filters)
-
   const handleClearFilters = () => {
     setSearchQuery("");
     setFilterProvider(null);

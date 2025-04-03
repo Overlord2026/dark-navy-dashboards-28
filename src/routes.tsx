@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Index from "@/pages/Index";
@@ -82,6 +83,7 @@ const AppRoutes: React.FC = () => {
       <Route path="/investments/view-all-offerings" element={<ViewAllOfferings />} />
       <Route path="/investments/all-models" element={<AllModelPortfolios />} />
       <Route path="/investments/model/:modelId" element={<PortfolioModelDetail />} />
+      <Route path="/investments/models/:modelId" element={<PortfolioModelDetail />} />
       <Route path="/investments/alternatives" element={<AllAlternativeInvestments />} />
       <Route path="/investments/alternative/:categoryId" element={<AlternativeAssetCategory />} />
       <Route path="/investments/alternative/:categoryId/view-all" element={<ViewAllOfferings />} />

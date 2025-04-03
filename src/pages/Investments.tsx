@@ -11,7 +11,6 @@ import { toast } from "sonner";
 import { ScheduleMeetingDialog } from "@/components/investments/ScheduleMeetingDialog";
 import { getAllInvestmentCategoryData } from "@/services/marketDataService";
 
-// Portfolio model type definition
 interface PortfolioModel {
   id: string;
   name: string;
@@ -32,7 +31,6 @@ const Investments = () => {
   const [alternativeData, setAlternativeData] = useState<any>({});
   const [isLoading, setIsLoading] = useState(true);
   
-  // Parse the URL query parameters to check for tab selection
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const tabParam = params.get("tab");
@@ -41,7 +39,6 @@ const Investments = () => {
     }
   }, [location.search]);
   
-  // Fetch market data for alternative investments
   useEffect(() => {
     const fetchMarketData = async () => {
       try {
@@ -50,7 +47,6 @@ const Investments = () => {
         setAlternativeData(data);
       } catch (error) {
         console.error("Error fetching market data:", error);
-        // Set fallback data
         setAlternativeData({
           'private-equity': { ytdPerformance: 12.4 },
           'private-debt': { ytdPerformance: 8.7 },
@@ -65,7 +61,6 @@ const Investments = () => {
     fetchMarketData();
   }, []);
   
-  // Portfolio models data definition
   const portfolioModels: PortfolioModel[] = [
     {
       id: "income-focus",
@@ -141,28 +136,23 @@ const Investments = () => {
     },
   ];
 
-  // Handler for portfolio model cards
   const handlePortfolioClick = (model: PortfolioModel) => {
     navigate(`/investments/models/${model.id}`);
   };
 
-  // Handler for the View All button
   const handleViewAllModels = () => {
     navigate("/investments/models/all");
   };
 
-  // Handler for the Start Building button
   const handleStartBuildingClick = () => {
     navigate("/investments/builder");
   };
 
-  // Handler for View Details buttons on portfolio cards
   const handleViewDetails = (e: React.MouseEvent, model: PortfolioModel) => {
     e.stopPropagation();
     navigate(`/investments/models/${model.id}`);
   };
 
-  // Handler for scheduling appointments
   const handleScheduleAppointment = (e: React.MouseEvent, assetName: string) => {
     e.stopPropagation();
     window.open("https://calendly.com/tonygomes/60min", "_blank");
@@ -171,7 +161,6 @@ const Investments = () => {
     });
   };
 
-  // Handler for tab changes to update URL
   const handleTabChange = (value: string) => {
     setSelectedTab(value);
     navigate(`/investments?tab=${value}`, { replace: true });
@@ -192,7 +181,6 @@ const Investments = () => {
           </TabsList>
           
           <TabsContent value="private-market" className="space-y-8">
-            {/* Private Market Alpha Section */}
             <div className="space-y-6">
               <div className="flex justify-between items-center">
                 <h2 className="text-2xl font-semibold">Private Market Alpha</h2>
@@ -343,7 +331,6 @@ const Investments = () => {
             </div>
           </TabsContent>
           
-          {/* Model Portfolios Tab */}
           <TabsContent value="model-portfolios" className="space-y-8">
             <div className="space-y-6">
               <div className="flex justify-between items-center">
@@ -464,7 +451,6 @@ const Investments = () => {
             <IntelligentAllocationTab />
           </TabsContent>
 
-          {/* Stock Screener Tab */}
           <TabsContent value="stock-screener">
             <StockScreener />
           </TabsContent>
