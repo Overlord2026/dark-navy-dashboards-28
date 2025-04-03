@@ -117,7 +117,7 @@ export const educationSubMenuItems: MenuItem[] = [
   { id: "premium", name: "Premium Courses" },
 ];
 
-// New investment submenu items for alternative investments
+// Investment submenu items for alternative investments
 export const investmentSubMenuItems: MenuItem[] = [
   { id: "overview", name: "Overview", active: true },
   { id: "alternative", name: "Alternative Investments" },
@@ -128,7 +128,7 @@ export const investmentSubMenuItems: MenuItem[] = [
   { id: "portfolio", name: "My Portfolio" },
 ];
 
-// Fund manager submenu for each category
+// Fund manager submenu for each category with focus on the companies requested
 export const privateEquityProviders: MenuItem[] = [
   { id: "all-pe", name: "All Private Equity", active: true },
   { id: "blackstone-pe", name: "Blackstone" },
@@ -137,6 +137,8 @@ export const privateEquityProviders: MenuItem[] = [
   { id: "stepstone-pe", name: "StepStone" },
   { id: "amg-pantheon", name: "AMG Pantheon" },
   { id: "hamilton-lane", name: "Hamilton Lane" },
+  { id: "carlyle", name: "Carlyle Group" },
+  { id: "tpg", name: "TPG" },
 ];
 
 export const privateDebtProviders: MenuItem[] = [
@@ -147,6 +149,7 @@ export const privateDebtProviders: MenuItem[] = [
   { id: "cliffwater-pd", name: "Cliffwater" },
   { id: "stepstone-pd", name: "StepStone" },
   { id: "kkr-pd", name: "KKR" },
+  { id: "oaktree-pd", name: "Oaktree" },
 ];
 
 export const realAssetsProviders: MenuItem[] = [
@@ -155,6 +158,16 @@ export const realAssetsProviders: MenuItem[] = [
   { id: "brookfield-ra", name: "Brookfield" },
   { id: "hancock-ra", name: "Hancock" },
   { id: "gip-ra", name: "Global Infrastructure Partners" },
+  { id: "apollo-ra", name: "Apollo Real Assets" },
+  { id: "kkr-ra", name: "KKR Real Assets" },
+];
+
+export const digitalAssetsProviders: MenuItem[] = [
+  { id: "all-da", name: "All Digital Assets", active: true },
+  { id: "pantera", name: "Pantera Capital" },
+  { id: "grayscale", name: "Grayscale" },
+  { id: "a16z", name: "Andreessen Horowitz" },
+  { id: "parafi", name: "ParaFi Capital" },
 ];
 
 export const getSecondaryMenuItems = (activeMainItem: string): MenuItem[] => {
@@ -173,6 +186,8 @@ export const getSecondaryMenuItems = (activeMainItem: string): MenuItem[] => {
       return privateDebtProviders;
     case "real-assets":
       return realAssetsProviders;
+    case "digital-assets":
+      return digitalAssetsProviders;
     default:
       return [];
   }
