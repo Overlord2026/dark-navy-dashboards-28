@@ -1,11 +1,12 @@
 
 import React, { useState, useEffect } from "react";
-import { Video, BookOpen, Sparkles } from "lucide-react";
+import { Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTutorials } from "@/hooks/useTutorials";
 import { TutorialDialog } from "./TutorialDialog";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 interface TutorialButtonProps {
   tabId: string;
@@ -52,7 +53,11 @@ export function TutorialButton({
             </Badge>
           </span>
         )}
-        <Video className={cn("h-4 w-4", isNew && "text-white")} />
+        
+        <Avatar className={cn("h-5 w-5 border", isNew && "border-white")}>
+          <AvatarFallback className="bg-[#9b87f5] text-white text-xs">😊</AvatarFallback>
+        </Avatar>
+        
         {size !== "icon" && (
           <span className={cn("ml-2", isNew && "text-white")}>
             {isNew ? "New Tutorial" : "Tutorial"}

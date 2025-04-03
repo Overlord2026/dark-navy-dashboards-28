@@ -8,11 +8,12 @@ import {
   DialogDescription,
   DialogFooter
 } from "@/components/ui/dialog";
-import { Video, BookOpen, Download, Check, Sparkles, List } from "lucide-react";
+import { BookOpen, Download, Check, Sparkles, List } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Progress } from "@/components/ui/progress";
 import { useTutorials } from "@/hooks/useTutorials";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 interface Resource {
   name: string;
@@ -75,7 +76,9 @@ export function TutorialDialog({
             <Sparkles className="h-4 w-4 text-white" />
           </div>
           <DialogTitle className="text-xl flex items-center text-[#6E59A5]">
-            <Video className="h-5 w-5 mr-2" />
+            <Avatar className="h-6 w-6 mr-2 border border-[#9b87f5]">
+              <AvatarFallback className="bg-[#9b87f5] text-white text-xs">😊</AvatarFallback>
+            </Avatar>
             {title}
           </DialogTitle>
           {description && (
