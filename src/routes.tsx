@@ -74,6 +74,7 @@ import MobileTransfers from "./pages/mobile/MobileTransfers";
 import MobileDocuments from "./pages/mobile/MobileDocuments";
 import MobileMore from "./pages/mobile/MobileMore";
 import MobileTaxPlanning from "./pages/mobile/MobileTaxPlanning";
+import MobileEducation from "./pages/mobile/MobileEducation";
 
 import { useUser } from "./context/UserContext";
 import { TutorialButton } from "./components/navigation/TutorialButton";
@@ -118,6 +119,7 @@ const AppRoutes: React.FC = () => {
         <Route path="/documents" element={<MobileDocuments />} />
         <Route path="/documents/:categoryId" element={<MobileDocuments />} />
         <Route path="/tax-planning" element={<MobileTaxPlanning />} />
+        <Route path="/education" element={<MobileEducation />} />
         <Route path="/more" element={<MobileMore />} />
         <Route path="/profile" element={<CustomerProfile />} />
         <Route path="/advisor-profile" element={<AdvisorProfile />} />

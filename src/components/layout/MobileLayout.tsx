@@ -48,6 +48,12 @@ export function MobileLayout({
       (path !== "/" && location.pathname.startsWith(path));
   };
 
+  // Check if current route is a route that should activate the "More" tab
+  const isMoreRoute = () => {
+    const moreRoutes = ['/more', '/tax-planning', '/education', '/profile', '/advisor-profile', '/security-settings'];
+    return moreRoutes.some(route => location.pathname.startsWith(route));
+  };
+
   return (
     <div className="flex flex-col h-screen bg-[#12121C] text-white overflow-hidden">
       {/* Mobile Status Bar */}
@@ -118,7 +124,7 @@ export function MobileLayout({
             icon={<MoreHorizontal className="h-6 w-6" />} 
             label="More" 
             href="/more" 
-            isActive={isActive('/more') || isActive('/tax-planning')} 
+            isActive={isMoreRoute()} 
           />
         </div>
       </nav>

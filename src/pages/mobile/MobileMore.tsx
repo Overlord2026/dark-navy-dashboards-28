@@ -56,6 +56,13 @@ export default function MobileMore() {
         <div>
           <h2 className="text-lg text-gray-400 mb-3">Education & Planning</h2>
           <div className="space-y-1">
+            <Link to="/education" className="flex items-center justify-between p-4 border-b border-gray-800">
+              <div className="flex items-center">
+                <GraduationCap className="h-5 w-5 mr-3 text-gray-300" />
+                <span className="font-medium">Education Center</span>
+              </div>
+            </Link>
+            
             <Link to="/tax-planning" className="flex items-center justify-between p-4 border-b border-gray-800">
               <div className="flex items-center">
                 <PieChart className="h-5 w-5 mr-3 text-gray-300" />
@@ -65,7 +72,7 @@ export default function MobileMore() {
             
             <Link to="/education" className="flex items-center justify-between p-4 border-b border-gray-800">
               <div className="flex items-center">
-                <GraduationCap className="h-5 w-5 mr-3 text-gray-300" />
+                <BookOpen className="h-5 w-5 mr-3 text-gray-300" />
                 <span className="font-medium">Education Center</span>
               </div>
             </Link>
