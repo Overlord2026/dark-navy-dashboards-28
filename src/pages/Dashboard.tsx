@@ -7,6 +7,7 @@ import { ExpenseOptimizationCard } from "@/components/dashboard/ExpenseOptimizat
 import { TaxPlanningSummary } from "@/components/dashboard/TaxPlanningSummary";
 import { RecentActivity } from "@/components/dashboard/RecentActivity";
 import { AdminActions } from "@/components/dashboard/AdminActions";
+import { ReportsGenerator } from "@/components/dashboard/ReportsGenerator";
 import { useUser } from "@/context/UserContext";
 import { useSubscription } from "@/context/SubscriptionContext";
 import { WelcomeTrialBanner } from "@/components/dashboard/WelcomeTrialBanner";
@@ -37,6 +38,10 @@ export default function Dashboard() {
         
         <div id="financial-overview-section">
           <FinancialOverview />
+        </div>
+        
+        <div id="reports-section">
+          <ReportsGenerator />
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
