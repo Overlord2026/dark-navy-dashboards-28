@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Progress } from "@/components/ui/progress";
 import { useTutorials } from "@/hooks/useTutorials";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 interface Resource {
   name: string;
@@ -76,8 +76,9 @@ export function TutorialDialog({
             <Sparkles className="h-4 w-4 text-white" />
           </div>
           <DialogTitle className="text-xl flex items-center text-[#6E59A5]">
-            <Avatar className="h-6 w-6 mr-2 border border-[#9b87f5]">
-              <AvatarFallback className="bg-[#9b87f5] text-white text-xs">😊</AvatarFallback>
+            <Avatar className="h-6 w-6 mr-2 border border-[#9b87f5] overflow-hidden">
+              <AvatarImage src="/placeholder.svg" alt="Tutorial guide" />
+              <AvatarFallback className="bg-[#9b87f5] text-white text-xs">?</AvatarFallback>
             </Avatar>
             {title}
           </DialogTitle>

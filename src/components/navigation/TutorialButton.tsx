@@ -6,6 +6,7 @@ import { useTutorials } from "@/hooks/useTutorials";
 import { TutorialDialog } from "./TutorialDialog";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 interface TutorialButtonProps {
   tabId: string;
@@ -53,13 +54,20 @@ export function TutorialButton({
           </span>
         )}
         
-        {/* Rectangular smiling face area that fills the left side */}
+        {/* Image of a woman that fills the left side */}
         <div className={cn(
-          "flex items-center justify-center", 
-          size === "icon" ? "h-full w-full" : "h-full mr-2 px-2",
-          isNew ? "bg-[#9b87f5] text-white" : "bg-[#9b87f5] text-white"
+          "flex items-center justify-center overflow-hidden", 
+          size === "icon" ? "h-full w-full" : "h-full mr-2",
+          isNew ? "bg-[#9b87f5]" : "bg-[#9b87f5]"
         )}>
-          <span className="text-base">😊</span>
+          <img 
+            src="/placeholder.svg" 
+            alt="Tutorial guide" 
+            className={cn(
+              "object-cover",
+              size === "icon" ? "h-full w-full" : "h-full aspect-square"
+            )} 
+          />
         </div>
         
         {size !== "icon" && (
