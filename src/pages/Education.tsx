@@ -28,7 +28,7 @@ export default function Education() {
       setActiveSection("courses");
     } else if (section) {
       // Make sure we validate that the section exists
-      const validSections = ["courses", "guides", "books", "whitepapers"];
+      const validSections = ["courses", "guides", "books", "whitepapers", "consultants"];
       if (validSections.includes(section)) {
         setActiveSection(section);
       }

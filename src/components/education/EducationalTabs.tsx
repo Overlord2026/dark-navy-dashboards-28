@@ -5,6 +5,13 @@ import { courseCategories, featuredCourses, popularCourses } from "@/data/educat
 import { allCourses } from "@/data/education/coursesByCategory";
 import { ProfessionalsProvider } from "@/hooks/useProfessionals";
 import { ProfessionalsDirectory } from "@/components/professionals/ProfessionalsDirectory";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { ArrowUpDown, Plus, Trash2 } from "lucide-react";
+import { GuidesList } from "./GuidesList";
+import { BooksList } from "./BooksList";
+import { WhitepapersList } from "./WhitepapersList";
+import { educationalResources } from "@/data/education/educationalResources";
 
 interface EducationalTabsProps {
   activeSection: string;
@@ -66,11 +73,31 @@ export function EducationalTabs({
 
   return (
     <Tabs defaultValue={activeSection} value={activeSection} onValueChange={setActiveSection} className="w-full">
-      <TabsList className="mb-4">
-        <TabsTrigger value="courses">Courses</TabsTrigger>
-        <TabsTrigger value="guides">Guides</TabsTrigger>
-        <TabsTrigger value="books">Books</TabsTrigger>
-        <TabsTrigger value="consultants">Consultants</TabsTrigger>
+      <TabsList className="mb-6 grid grid-cols-4 gap-2">
+        <TabsTrigger 
+          value="courses" 
+          className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-lg transition-all duration-200"
+        >
+          Courses
+        </TabsTrigger>
+        <TabsTrigger 
+          value="guides" 
+          className="data-[state=active]:bg-blue-500 data-[state=active]:text-white data-[state=active]:shadow-lg border-2 border-blue-200 transition-all duration-200"
+        >
+          Guides
+        </TabsTrigger>
+        <TabsTrigger 
+          value="books" 
+          className="data-[state=active]:bg-amber-500 data-[state=active]:text-white data-[state=active]:shadow-lg border-2 border-amber-200 transition-all duration-200"
+        >
+          Books
+        </TabsTrigger>
+        <TabsTrigger 
+          value="consultants" 
+          className="data-[state=active]:bg-purple-500 data-[state=active]:text-white data-[state=active]:shadow-lg border-2 border-purple-200 transition-all duration-200"
+        >
+          Consultants
+        </TabsTrigger>
       </TabsList>
       
       <TabsContent value="courses" className="pt-4">
@@ -84,21 +111,11 @@ export function EducationalTabs({
       </TabsContent>
       
       <TabsContent value="guides" className="pt-4">
-        <div className="text-center py-8">
-          <h3 className="text-xl font-semibold mb-2">Financial Guides Coming Soon</h3>
-          <p className="text-muted-foreground">
-            We're working on comprehensive guides to help you navigate various financial topics.
-          </p>
-        </div>
+        <GuidesList />
       </TabsContent>
       
       <TabsContent value="books" className="pt-4">
-        <div className="text-center py-8">
-          <h3 className="text-xl font-semibold mb-2">Recommended Books Coming Soon</h3>
-          <p className="text-muted-foreground">
-            We're curating a list of the best financial literature to support your learning journey.
-          </p>
-        </div>
+        <BooksList />
       </TabsContent>
       
       <TabsContent value="consultants" className="pt-4">

@@ -51,9 +51,19 @@ export const SwagEducationMenu = () => {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <Tabs defaultValue="featured" value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="w-full mb-4">
-            <TabsTrigger value="featured" className="flex-1">Featured Courses</TabsTrigger>
-            <TabsTrigger value="popular" className="flex-1">Popular Courses</TabsTrigger>
+          <TabsList className="w-full mb-4 grid grid-cols-2 gap-2">
+            <TabsTrigger 
+              value="featured" 
+              className="flex-1 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md"
+            >
+              Featured Courses
+            </TabsTrigger>
+            <TabsTrigger 
+              value="popular" 
+              className="flex-1 data-[state=active]:bg-blue-500 data-[state=active]:text-white data-[state=active]:shadow-md"
+            >
+              Popular Courses
+            </TabsTrigger>
           </TabsList>
           
           <div className={activeTab === "featured" ? "block" : "hidden"}>
