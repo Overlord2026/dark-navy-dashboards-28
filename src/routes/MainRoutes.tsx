@@ -1,32 +1,28 @@
-
 import React from "react";
 import { Route } from "react-router-dom";
-
-// Import pages
-import Index from "../pages/Index";
 import Dashboard from "../pages/Dashboard";
-import Documents from "../pages/Documents";
-import NotFound from "../pages/NotFound";
+import Notifications from "../pages/Notifications";
+import Settings from "../pages/Settings";
+import Help from "../pages/Help";
 import CustomerProfile from "../pages/CustomerProfile";
+import AdvisorProfile from "../pages/AdvisorProfile";
 import Education from "../pages/Education";
-import Professionals from "../pages/Professionals";
-import ProfessionalSignup from "../pages/ProfessionalSignup";
-import Sharing from "../pages/Sharing";
+import AllAssets from "../pages/AllAssets";
+import NotFound from "../pages/NotFound";
 
-const MainRoutes: React.FC = () => {
+const MainRoutes = () => {
   return (
     <>
-      <Route path="/" element={<Index />} />
+      <Route path="/" element={<Dashboard />} />
       <Route path="/dashboard" element={<Dashboard />} />
-      <Route path="/documents" element={<Documents />} />
-      <Route path="/documents/:sectionId" element={<Documents />} />
+      <Route path="/notifications" element={<Notifications />} />
+      <Route path="/settings" element={<Settings />} />
+      <Route path="/help" element={<Help />} />
       <Route path="/profile" element={<CustomerProfile />} />
+      <Route path="/advisor-profile" element={<AdvisorProfile />} />
       <Route path="/education" element={<Education />} />
-      <Route path="/education/:sectionId" element={<Education />} />
-      <Route path="/professionals" element={<Professionals />} />
-      <Route path="/professionals/signup" element={<ProfessionalSignup />} />
-      <Route path="/sharing" element={<Sharing />} />
-      <Route path="/sharing/:sectionId" element={<Sharing />} />
+      <Route path="/education/:categoryId" element={<Education />} />
+      <Route path="/all-assets" element={<AllAssets />} />
       <Route path="*" element={<NotFound />} />
     </>
   );

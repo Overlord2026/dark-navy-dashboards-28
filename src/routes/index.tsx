@@ -4,7 +4,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import { useUser } from "../context/UserContext";
 import { useIsMobile } from "../hooks/use-mobile";
 
-// Import route groups
+// Import components
 import PublicRoutes from "./PublicRoutes";
 import MobileRoutes from "./MobileRoutes";
 import MainRoutes from "./MainRoutes";

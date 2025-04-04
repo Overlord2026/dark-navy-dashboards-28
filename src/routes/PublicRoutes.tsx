@@ -13,8 +13,9 @@ import PrivacyPolicyPage from "../pages/PrivacyPolicyPage";
 import TermsOfServicePage from "../pages/TermsOfServicePage";
 import DisclosuresPage from "../pages/DisclosuresPage";
 import AccessibilityPage from "../pages/AccessibilityPage";
+import NotFound from "../pages/NotFound";
 
-const PublicRoutes: React.FC = () => {
+const PublicRoutes = () => {
   return (
     <>
       <Route path="/home" element={<HomePage />} />
@@ -28,6 +29,7 @@ const PublicRoutes: React.FC = () => {
       <Route path="/disclosures" element={<DisclosuresPage />} />
       <Route path="/accessibility" element={<AccessibilityPage />} />
       <Route path="/" element={<HomePage />} />
+      <Route path="*" element={<NotFound />} />
     </>
   );
 };

@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Route } from "react-router-dom";
 
@@ -29,7 +28,7 @@ import Marketplace from "../pages/Marketplace";
 import MarketplaceRfp from "../pages/MarketplaceRfp";
 import MarketplaceRfpDetail from "../pages/MarketplaceRfpDetail";
 
-const FinanceRoutes: React.FC = () => {
+const FinanceRoutes = () => {
   return (
     <>
       <Route path="/accounts" element={<Accounts />} />

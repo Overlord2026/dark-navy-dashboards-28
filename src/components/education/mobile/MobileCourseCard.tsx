@@ -1,11 +1,12 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Course } from "@/types/education";
 
 interface MobileCourseCardProps {
   title: string;
   description: string;
-  level: string;
+  level: "Beginner" | "Intermediate" | "Advanced" | "All Levels";
   duration: string;
   isPaid: boolean;
   onClick: () => void;

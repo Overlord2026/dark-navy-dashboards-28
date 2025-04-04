@@ -14,7 +14,7 @@ import CustomerProfile from "../pages/CustomerProfile";
 import AdvisorProfile from "../pages/AdvisorProfile";
 import AllAssets from "../pages/AllAssets";
 
-const MobileRoutes: React.FC = () => {
+const MobileRoutes = () => {
   return (
     <Routes>
       <Route path="/" element={<MobileHome />} />
