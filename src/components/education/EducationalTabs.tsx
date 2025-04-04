@@ -1,7 +1,8 @@
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CourseList } from "./CourseList";
-import { courseCategories, featuredCourses, popularCourses, allCourses } from "@/data/education";
+import { courseCategories, featuredCourses, popularCourses } from "@/data/education";
+import { allCourses } from "@/data/education/coursesByCategory";
 import { ProfessionalsProvider } from "@/hooks/useProfessionals";
 import { ProfessionalsDirectory } from "@/components/professionals/ProfessionalsDirectory";
 
