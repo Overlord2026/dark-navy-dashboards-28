@@ -21,7 +21,8 @@ export const ThreeColumnLayout: React.FC<ThreeColumnLayoutProps> = ({
   return (
     <div className="flex h-screen overflow-hidden bg-background">
       <NavBar />
-      <main className="flex-1 overflow-y-auto">
+      <main className="flex-1 overflow-y-auto p-4">
+        <h1 className="text-2xl font-bold mb-4">{title}</h1>
         {children}
       </main>
       <RightSidebar />
