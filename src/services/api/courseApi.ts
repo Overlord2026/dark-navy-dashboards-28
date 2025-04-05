@@ -1,90 +1,101 @@
 
-import { toast } from 'sonner';
-import { ApiResponse } from '@/types/api';
-import { Course } from '@/types/education';
-import { getAllCourses } from '@/data/education/courseUtils';
-import { logger } from '@/services/logging/loggingService';
+import { Course } from "@/types/education";
+import { logger } from "@/services/logging/loggingService";
+import { coursesByCategory, allCourses } from "@/data/education";
+
+// Interface for API responses
+interface ApiResponse<T> {
+  success: boolean;
+  data?: T;
+  error?: string;
+}
 
 /**
- * Mock API function for fetching all courses
- * In a real implementation, this would make an API call
+ * Mock function to fetch courses from the API
+ * In the future, this would make actual API calls
  */
 export const fetchCourses = async (token: string): Promise<ApiResponse<Course[]>> => {
   try {
-    logger.info('Fetching courses', {}, 'CourseAPI');
+    logger.info(`Fetching courses with token: ${token.substring(0, 15)}...`);
     
-    // Simulate API call delay
+    // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 1000));
     
-    // For demo purposes, we'll use the local course data
-    // In a real implementation, this would be an API call
-    const courses = getAllCourses();
-    
-    // Validate mock token
-    if (!token || !token.includes('mock-jwt-token')) {
-      logger.warning('Invalid token in fetchCourses', { tokenProvided: !!token }, 'CourseAPI');
-      return {
-        success: false,
-        error: 'Invalid authentication token',
-      };
-    }
-    
+    // This would be replaced with a real API call in the future
     return {
       success: true,
-      data: courses,
-      message: 'Courses fetched successfully',
+      data: Object.values(coursesByCategory).flat() as Course[]
     };
   } catch (error) {
-    logger.error('Error fetching courses:', error, 'CourseAPI');
+    logger.error("Error fetching courses:", error);
     return {
       success: false,
-      error: 'Failed to fetch courses. Please try again later.',
+      error: "Failed to fetch courses"
     };
   }
 };
 
 /**
- * Mock API function for fetching a course by ID
- * In a real implementation, this would make an API call
+ * Mock function to fetch a single course by ID
  */
-export const fetchCourseById = async (token: string, courseId: string | number): Promise<ApiResponse<Course>> => {
+export const fetchCourseById = async (courseId: string | number, token: string): Promise<ApiResponse<Course>> => {
   try {
-    logger.info(`Fetching course by ID: ${courseId}`, {}, 'CourseAPI');
+    logger.info(`Fetching course ${courseId} with token: ${token.substring(0, 15)}...`);
     
-    // Simulate API call delay
+    // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 800));
     
-    // Validate mock token
-    if (!token || !token.includes('mock-jwt-token')) {
-      logger.warning('Invalid token in fetchCourseById', { courseId, tokenProvided: !!token }, 'CourseAPI');
-      return {
-        success: false,
-        error: 'Invalid authentication token',
-      };
-    }
-    
-    // For demo purposes, we'll use the local course data
-    const courses = getAllCourses();
-    const course = courses.find(c => c.id.toString() === courseId.toString());
-    
+    // Find the course in the mock data
+    const course = Object.values(coursesByCategory)
+      .flat()
+      .find(course => course.id === courseId);
+      
     if (!course) {
-      logger.warning(`Course not found: ${courseId}`, {}, 'CourseAPI');
       return {
         success: false,
-        error: 'Course not found',
+        error: "Course not found"
       };
     }
     
     return {
       success: true,
-      data: course,
-      message: 'Course fetched successfully',
+      data: course as Course
     };
   } catch (error) {
-    logger.error('Error fetching course by ID:', error, 'CourseAPI');
+    logger.error(`Error fetching course ${courseId}:`, error);
     return {
       success: false,
-      error: 'Failed to fetch course. Please try again later.',
+      error: "Failed to fetch course details"
+    };
+  }
+};
+
+/**
+ * Mock function to enroll in a course
+ */
+export const enrollInCourse = async (
+  courseId: string | number, 
+  userId: string,
+  token: string
+): Promise<ApiResponse<{enrollmentId: string}>> => {
+  try {
+    logger.info(`Enrolling user ${userId} in course ${courseId}`);
+    
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    
+    // This would be replaced with a real API call in the future
+    return {
+      success: true,
+      data: {
+        enrollmentId: `enroll-${userId}-${courseId}-${Date.now()}`
+      }
+    };
+  } catch (error) {
+    logger.error(`Error enrolling in course ${courseId}:`, error);
+    return {
+      success: false,
+      error: "Failed to enroll in course"
     };
   }
 };
