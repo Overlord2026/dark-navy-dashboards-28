@@ -228,3 +228,62 @@ export const mockTaxTips: TaxTip[] = [
     category: 'Charitable Giving'
   }
 ];
+
+// Tax bracket data
+export const taxBracketData = {
+  currentBracket: "24% Bracket",
+  estimatedLiability: 42500,
+  potentialSavings: 7800,
+  yearOverYearChange: -2350
+};
+
+// Tax strategies
+export interface TaxStrategy {
+  id: string;
+  title: string;
+  description: string;
+  impact: number;
+  icon: string;
+  status: 'implemented' | 'pending' | 'recommended';
+}
+
+export const taxStrategies: TaxStrategy[] = [
+  {
+    id: 'strategy-1',
+    title: 'Max 401(k) Contributions',
+    description: 'Increase your tax-deferred retirement contributions to reduce taxable income.',
+    impact: 5680,
+    icon: 'landmark',
+    status: 'implemented'
+  },
+  {
+    id: 'strategy-2',
+    title: 'Tax Loss Harvesting',
+    description: 'Offset capital gains with strategic selling of investments that have experienced losses.',
+    impact: 3200,
+    icon: 'file',
+    status: 'pending'
+  },
+  {
+    id: 'strategy-3',
+    title: 'Charitable Giving',
+    description: 'Donate appreciated assets to charity to avoid capital gains tax.',
+    impact: 2100,
+    icon: 'check',
+    status: 'recommended'
+  },
+  {
+    id: 'strategy-4',
+    title: 'HSA Contributions',
+    description: 'Maximize Health Savings Account contributions for triple tax advantages.',
+    impact: 1850,
+    icon: 'landmark',
+    status: 'recommended'
+  }
+];
+
+// Tax deadlines (duplicating mockTaxDeadlines with a different export name for consistency)
+export const taxDeadlines = mockTaxDeadlines;
+
+// Deduction categories (duplicating mockDeductions with a different export name for consistency)
+export const deductionCategories = mockDeductions;
