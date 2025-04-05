@@ -14,6 +14,7 @@ import TermsOfServicePage from "../pages/TermsOfServicePage";
 import DisclosuresPage from "../pages/DisclosuresPage";
 import AccessibilityPage from "../pages/AccessibilityPage";
 import LoginPage from "../pages/LoginPage";
+import ClientPortal from "../pages/ClientPortal";
 import NotFound from "../pages/NotFound";
 
 const PublicRoutes = () => {
@@ -29,7 +30,8 @@ const PublicRoutes = () => {
       <Route path="/terms-of-service" element={<TermsOfServicePage />} />
       <Route path="/disclosures" element={<DisclosuresPage />} />
       <Route path="/accessibility" element={<AccessibilityPage />} />
-      <Route path="/login" element={<LoginPage />} /> {/* Add login route */}
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/client-portal" element={<ClientPortal />} />
       <Route path="/" element={<HomePage />} />
       <Route path="*" element={<NotFound />} />
     </Routes>

@@ -24,7 +24,7 @@ export const HeaderComponent: React.FC = () => {
             <Link to="/advisor/login">Advisor Login</Link>
           </Button>
           <Button className="bg-black text-white hover:bg-black/80" asChild>
-            <Link to="/login">Client Login</Link>
+            <Link to="/client-portal">Client Portal</Link>
           </Button>
         </div>
       </div>

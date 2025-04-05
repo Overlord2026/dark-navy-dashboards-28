@@ -11,6 +11,7 @@ import WealthRoutes from "./WealthRoutes";
 import AdvisorRoutes from "./AdvisorRoutes";
 import AdminRoutes from "./AdminRoutes";
 import LoginPage from "../pages/LoginPage";
+import ClientPortal from "../pages/ClientPortal";
 import NotFound from "../pages/NotFound";
 
 const AppRoutes: React.FC = () => {
@@ -23,6 +24,7 @@ const AppRoutes: React.FC = () => {
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/advisor/login" element={<LoginPage isAdvisor={true} />} />
+        <Route path="/client-portal" element={<ClientPortal />} />
         <Route path="/*" element={<PublicRoutes />} />
       </Routes>
     );
@@ -43,7 +45,8 @@ const AppRoutes: React.FC = () => {
         <Route path="dev/*" element={<Navigate to="/" replace />} />
       )}
       
-      <Route path="login" element={<LoginPage />} /> {/* Add direct login route */}
+      <Route path="login" element={<LoginPage />} />
+      <Route path="client-portal" element={<ClientPortal />} />
       <Route path="/*" element={<PublicRoutes />} />
     </Routes>
   );
