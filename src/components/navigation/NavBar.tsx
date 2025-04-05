@@ -1,100 +1,156 @@
-
-import React, { useState } from "react";
-import { useLocation } from "react-router-dom";
-import { cn } from "@/lib/utils";
-import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useTheme } from "@/context/ThemeContext";
-import { navigationCategories } from "@/navigation/navCategories";
-import { bottomNavItems } from "@/navigation/bottomNavigation";
-import { UserProfileSection } from "@/components/sidebar/UserProfileSection";
-import { AdvisorSection } from "@/components/profile/AdvisorSection";
-import { SidebarNavCategory } from "@/components/sidebar/SidebarNavCategory";
-import { SidebarBottomNav } from "@/components/sidebar/SidebarBottomNav";
+import React from "react";
+import {
+  Home,
+  FileText,
+  BarChart,
+  Users,
+  Settings,
+  CreditCard,
+} from "lucide-react";
+import { Sidebar } from "@/components/ui/Sidebar";
 import { useSidebarState } from "@/hooks/useSidebarState";
+import { navigationCategories } from "@/navigation/navCategories";
+import { useTheme } from "@/hooks/useTheme";
+import { Link, useLocation } from "react-router-dom";
+import { cn } from "@/lib/utils";
+import { BottomNavItem } from "@/types/navigation";
 
-export const NavBar: React.FC = () => {
-  const { theme } = useTheme();
-  const isLightTheme = theme === "light";
+export const NavBar = () => {
+  const { isDark, toggleTheme } = useTheme();
   const location = useLocation();
-  
+
   const {
     collapsed,
     expandedCategories,
     expandedSubmenus,
+    forceUpdate,
     toggleSidebar,
     toggleCategory,
     toggleSubmenu,
     isActive,
+    setCollapsed
   } = useSidebarState(navigationCategories);
 
-  const handleBookSession = () => {
-    console.log("Book session clicked");
-  };
-
-  const handleViewProfile = (tabId: string) => {
-    console.log("View profile tab:", tabId);
-  };
+  const bottomNavItems: BottomNavItem[] = [
+    {
+      id: "home", // Add missing id properties to each item
+      title: "Home",
+      icon: Home,
+      href: "/",
+    },
+    {
+      id: "accounts",
+      title: "Accounts",
+      icon: CreditCard,
+      href: "/accounts",
+    },
+    {
+      id: "investments",
+      title: "Investments",
+      icon: BarChart,
+      href: "/investments",
+    },
+    {
+      id: "profile",
+      title: "Profile",
+      icon: Users,
+      href: "/profile",
+    }
+  ];
 
   return (
-    <aside
-      className={cn(
-        "flex flex-col bg-sidebar border-r border-sidebar-border transition-all duration-300 ease-in-out z-50",
-        collapsed ? "w-[70px]" : "w-[240px]",
-        isLightTheme ? "bg-[#F9F7E8] border-[#DCD8C0]" : "bg-[#1B1B32] border-white/10"
-      )}
-    >
-      <div className="py-4 overflow-y-auto flex-1">
-        <div className={`px-4 ${isLightTheme ? 'border-[#DCD8C0]' : 'border-white/10'} mt-2 mb-4`}>
-          <UserProfileSection showLogo={false} />
-        </div>
-
-        {navigationCategories.map((category) => (
-          <SidebarNavCategory
-            key={category.id}
-            id={category.id}
-            label={category.label}
-            items={category.items}
-            isExpanded={expandedCategories[category.id]}
-            onToggle={toggleCategory}
-            collapsed={collapsed}
-            isActive={isActive}
-            isLightTheme={isLightTheme}
-            expandedSubmenus={expandedSubmenus}
-            toggleSubmenu={toggleSubmenu}
-          />
-        ))}
-      </div>
-
-      <div className="p-2 border-t mt-auto" style={{ borderColor: isLightTheme ? '#DCD8C0' : 'rgba(255,255,255,0.1)' }}>
-        <div className={`px-2 mb-3 ${isLightTheme ? 'border-[#DCD8C0]' : 'border-white/10'}`}>
-          <AdvisorSection 
-            onViewProfile={handleViewProfile} 
-            onBookSession={handleBookSession} 
-            collapsed={collapsed} 
-          />
-        </div>
-
-        <SidebarBottomNav 
-          items={bottomNavItems}
-          collapsed={collapsed}
-          isActive={isActive}
-          isLightTheme={isLightTheme}
-        />
-      </div>
-
-      <Button
-        variant="ghost"
-        size="icon"
-        className="absolute top-4 -right-4 h-8 w-8 rounded-full bg-background border border-gray-700 text-foreground hover:bg-accent hover:text-sidebar-primary-foreground"
-        onClick={toggleSidebar}
-      >
-        {collapsed ? (
-          <ChevronRightIcon className="h-4 w-4" />
-        ) : (
-          <ChevronLeftIcon className="h-4 w-4" />
+    <div className="flex h-full">
+      {/* Desktop Sidebar */}
+      <aside
+        className={cn(
+          "hidden md:flex flex-col w-[260px] bg-sidebar border-r border-r-border-muted transition-transform duration-300",
+          collapsed ? "-translate-x-full" : "translate-x-0"
         )}
-      </Button>
-    </aside>
+      >
+        <div className="flex items-center justify-between h-16 px-4 border-b border-b-border-muted">
+          <Link to="/" className="flex items-center text-lg font-semibold">
+            <img
+              src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png"
+              alt="Boutique Family Office Logo"
+              className="h-8 w-auto mr-2"
+            />
+            BFO
+          </Link>
+          <button
+            onClick={toggleSidebar}
+            className="p-2 rounded-md hover:bg-accent"
+          >
+            {collapsed ? "Open" : "Close"}
+          </button>
+        </div>
+
+        <nav className="flex-grow overflow-y-auto py-4">
+          {navigationCategories.map((category) => (
+            <div key={category.id} className="mb-2">
+              <div
+                className="flex items-center justify-between p-2 text-xs uppercase tracking-wider font-semibold text-muted-foreground cursor-pointer hover:bg-accent"
+                onClick={() => toggleCategory(category.id)}
+              >
+                <span>{category.label}</span>
+                <div>{expandedCategories[category.id] ? "▲" : "▼"}</div>
+              </div>
+              {expandedCategories[category.id] && (
+                <ul className="space-y-1.5">
+                  {category.items.map((item) => (
+                    <li key={item.id}>
+                      <Link
+                        to={item.href}
+                        className={cn(
+                          "group flex items-center py-2 px-3 rounded-md transition-colors text-[14px]",
+                          isActive(item.href)
+                            ? "bg-secondary text-secondary-foreground font-medium"
+                            : "text-muted-foreground",
+                          "hover:bg-accent"
+                        )}
+                      >
+                        {item.icon && (
+                          <item.icon className="h-4 w-4 mr-2 opacity-70" />
+                        )}
+                        <span>{item.title}</span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          ))}
+        </nav>
+
+        <div className="p-4 border-t border-t-border-muted">
+          <button
+            onClick={toggleTheme}
+            className="w-full py-2 px-3 rounded-md text-sm font-medium hover:bg-accent"
+          >
+            Toggle Theme ({isDark ? "Light" : "Dark"})
+          </button>
+        </div>
+      </aside>
+
+      {/* Mobile Bottom Navigation */}
+      <div className="md:hidden fixed bottom-0 left-0 w-full bg-sidebar border-t border-t-border-muted py-2">
+        <div className="flex justify-around items-center">
+          {bottomNavItems.map((item) => (
+            <Link
+              key={item.id}
+              to={item.href}
+              className={cn(
+                "flex flex-col items-center justify-center text-muted-foreground",
+                location.pathname === item.href
+                  ? "text-secondary-foreground"
+                  : ""
+              )}
+            >
+              <item.icon className="h-5 w-5 mb-1" />
+              <span className="text-xs">{item.title}</span>
+            </Link>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 };

@@ -50,6 +50,14 @@ export const StockScreener: React.FC = () => {
   const [historyTimeframe, setHistoryTimeframe] = useState<"1M" | "3M" | "6M" | "1Y">("1M");
   const [loadingHistory, setLoadingHistory] = useState(false);
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      // Trigger the search or submit action
+      // This is a placeholder implementation since we don't have the full context
+    }
+  };
+
   const fetchPriceHistory = async (stockSymbol: string, timeframe: "1M" | "3M" | "6M" | "1Y") => {
     if (!stockSymbol) return;
     
