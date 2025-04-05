@@ -1,4 +1,3 @@
-
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { toast } from "sonner";
 import { useSearchParams, Link } from "react-router-dom";
@@ -11,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { CourseApiDemo } from "@/components/education/CourseApiDemo";
 import { ProfessionalsProvider } from "@/hooks/useProfessionals";
+import { DiagnosticsButton } from "@/components/education/DiagnosticsButton";
 
 export default function Education() {
   const [searchParams] = useSearchParams();
@@ -27,7 +27,6 @@ export default function Education() {
       setActiveCategory(category);
       setActiveSection("courses");
     } else if (section) {
-      // Make sure we validate that the section exists
       const validSections = ["courses", "guides", "books", "whitepapers", "consultants"];
       if (validSections.includes(section)) {
         setActiveSection(section);
@@ -39,10 +38,8 @@ export default function Education() {
 
   const handleCourseEnrollment = (courseId: string | number, title: string, isPaid: boolean, ghlUrl?: string) => {
     if (ghlUrl) {
-      // Use the handleCourseAccess utility for proper course access flow
       handleCourseAccess(courseId, title, isPaid, ghlUrl);
     } else {
-      // Fallback for if we somehow get here without a URL
       if (isPaid) {
         toast.info(`Redirecting to payment page for ${title}`);
       } else {
@@ -87,7 +84,10 @@ export default function Education() {
           animate="visible"
         >
           <motion.div variants={itemVariants}>
-            <h2 className="text-2xl font-bold tracking-tight">Welcome to the SWAG Education Center</h2>
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-2xl font-bold tracking-tight">Welcome to the SWAG Education Center</h2>
+              <DiagnosticsButton />
+            </div>
             <p className="text-muted-foreground mt-2">
               Explore our collection of financial education resources to help you build wealth and achieve your financial goals.
             </p>

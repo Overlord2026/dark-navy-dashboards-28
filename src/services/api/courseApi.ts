@@ -1,113 +1,74 @@
 
-import { Course, CourseCategory } from '@/types/education';
-import { ApiResponse, CourseFilter, UserToken } from '@/types/api';
 import { toast } from 'sonner';
+import { ApiResponse } from '@/types/api';
+import { Course } from '@/types/education';
 import { getAllCourses } from '@/data/education/courseUtils';
+import { logger } from '@/services/logging/loggingService';
 
-// Mock function to verify JWT token
-const verifyToken = (token: string): UserToken | null => {
+/**
+ * Mock API function for fetching all courses
+ * In a real implementation, this would make an API call
+ */
+export const fetchCourses = async (token: string): Promise<ApiResponse<Course[]>> => {
   try {
-    // In a real app, this would validate the JWT signature and decode it
-    // For demonstration, we'll do a simple check
-    if (!token || !token.startsWith('Bearer ')) {
-      return null;
-    }
+    logger.info('Fetching courses', {}, 'CourseAPI');
     
-    // Mock user data - in a real app, this would come from decoding the JWT
-    return {
-      id: 'user-123',
-      email: 'user@example.com',
-      role: 'user',
-      exp: Date.now() + 3600000 // 1 hour from now
-    };
-  } catch (error) {
-    console.error('Token verification error:', error);
-    return null;
-  }
-};
-
-// Function to simulate the GET /api/courses endpoint
-export const fetchCourses = async (
-  token: string,
-  filters?: CourseFilter
-): Promise<ApiResponse<Course[]>> => {
-  try {
-    // Verify authentication token
-    const user = verifyToken(token);
+    // Simulate API call delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
     
-    if (!user) {
+    // For demo purposes, we'll use the local course data
+    // In a real implementation, this would be an API call
+    const courses = getAllCourses();
+    
+    // Validate mock token
+    if (!token || !token.includes('mock-jwt-token')) {
+      logger.warning('Invalid token in fetchCourses', { tokenProvided: !!token }, 'CourseAPI');
       return {
         success: false,
-        error: 'Unauthorized access. Invalid or expired token.',
+        error: 'Invalid authentication token',
       };
     }
     
-    // Get all courses from our data
-    let courses = getAllCourses();
-    
-    // Apply filters if provided
-    if (filters) {
-      if (filters.category) {
-        courses = courses.filter(course => 
-          course.categoryIds?.includes(filters.category!)
-        );
-      }
-      
-      if (filters.tag) {
-        // Assuming we have tags in the future, we would filter here
-        // For now, just a placeholder
-      }
-      
-      if (filters.level) {
-        courses = courses.filter(course => 
-          course.level === filters.level
-        );
-      }
-      
-      if (filters.isPaid !== undefined) {
-        courses = courses.filter(course => 
-          course.isPaid === filters.isPaid
-        );
-      }
-    }
-    
-    // In a real API, we'd probably want to paginate results
-    // For simplicity, we'll return all courses
     return {
       success: true,
       data: courses,
-      message: 'Courses retrieved successfully',
+      message: 'Courses fetched successfully',
     };
   } catch (error) {
-    console.error('Error fetching courses:', error);
+    logger.error('Error fetching courses:', error, 'CourseAPI');
     return {
       success: false,
-      error: 'Failed to retrieve courses. Please try again later.',
+      error: 'Failed to fetch courses. Please try again later.',
     };
   }
 };
 
-// Simulate a GET /api/courses/:id endpoint
-export const fetchCourseById = async (
-  token: string,
-  courseId: string | number
-): Promise<ApiResponse<Course>> => {
+/**
+ * Mock API function for fetching a course by ID
+ * In a real implementation, this would make an API call
+ */
+export const fetchCourseById = async (token: string, courseId: string | number): Promise<ApiResponse<Course>> => {
   try {
-    // Verify authentication token
-    const user = verifyToken(token);
+    logger.info(`Fetching course by ID: ${courseId}`, {}, 'CourseAPI');
     
-    if (!user) {
+    // Simulate API call delay
+    await new Promise(resolve => setTimeout(resolve, 800));
+    
+    // Validate mock token
+    if (!token || !token.includes('mock-jwt-token')) {
+      logger.warning('Invalid token in fetchCourseById', { courseId, tokenProvided: !!token }, 'CourseAPI');
       return {
         success: false,
-        error: 'Unauthorized access. Invalid or expired token.',
+        error: 'Invalid authentication token',
       };
     }
     
-    // Get all courses and find the specific one
+    // For demo purposes, we'll use the local course data
     const courses = getAllCourses();
     const course = courses.find(c => c.id.toString() === courseId.toString());
     
     if (!course) {
+      logger.warning(`Course not found: ${courseId}`, {}, 'CourseAPI');
       return {
         success: false,
         error: 'Course not found',
@@ -117,13 +78,13 @@ export const fetchCourseById = async (
     return {
       success: true,
       data: course,
-      message: 'Course retrieved successfully',
+      message: 'Course fetched successfully',
     };
   } catch (error) {
-    console.error('Error fetching course:', error);
+    logger.error('Error fetching course by ID:', error, 'CourseAPI');
     return {
       success: false,
-      error: 'Failed to retrieve course. Please try again later.',
+      error: 'Failed to fetch course. Please try again later.',
     };
   }
 };
