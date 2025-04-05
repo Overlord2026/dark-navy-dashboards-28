@@ -14,3 +14,10 @@ export interface NavigationProps {
   isMainNavItem: boolean;
   subItems?: SubNavigationItem[];
 }
+
+export interface NavCategory {
+  id: string;
+  label: string;
+  items: any[]; // This could be more specific if needed
+  defaultExpanded?: boolean;
+}

@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 import { NavigationProps } from "@/types/navigation";
 
+// Main navigation data
 const navigationData: NavigationProps[] = [
   {
     title: "Overview",
@@ -237,5 +238,42 @@ const navigationData: NavigationProps[] = [
     isMainNavItem: false,
   },
 ];
+
+// Add navigationCategories for sidebar structure
+export const navigationCategories = [
+  {
+    id: "main",
+    label: "Main",
+    items: navigationData.filter(item => item.isMainNavItem),
+    defaultExpanded: true
+  },
+  {
+    id: "secondary",
+    label: "Other",
+    items: navigationData.filter(item => !item.isMainNavItem),
+    defaultExpanded: false
+  }
+];
+
+// Function to get secondary menu items based on active item
+export function getSecondaryMenuItems(activeItem: string) {
+  // Find the navigation item that matches the active item
+  const navItem = navigationData.find(item => 
+    item.href.includes(activeItem) || activeItem.includes(item.title.toLowerCase())
+  );
+  
+  // If found and it has sub-items, return them with proper format
+  if (navItem && navItem.subItems) {
+    return navItem.subItems.map(subItem => ({
+      id: subItem.href.split('/').pop() || '',
+      label: subItem.title,
+      name: subItem.title,
+      active: false
+    }));
+  }
+  
+  // Default empty array if no matching item or no sub-items
+  return [];
+}
 
 export default navigationData;
