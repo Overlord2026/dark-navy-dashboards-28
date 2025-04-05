@@ -13,7 +13,7 @@ export const CallToActionSection: React.FC = () => {
         </p>
         <div className="flex flex-col sm:flex-row justify-center gap-4">
           <Button size="lg" className="bg-black text-white hover:bg-black/80" asChild>
-            <Link to="/login">Access Client Portal</Link>
+            <Link to="/client-portal">Access Client Portal</Link>
           </Button>
           <Button size="lg" className="bg-black text-white hover:bg-black/80" asChild>
             <Link to="/contact">Contact an Advisor</Link>
