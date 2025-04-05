@@ -1,4 +1,3 @@
-
 export interface UserProfile {
   id: string;
   firstName: string;
@@ -19,6 +18,10 @@ export interface UserProfile {
   createdAt: string;
   updatedAt: string;
   preferences: UserPreferences;
+  // Add missing fields
+  displayName?: string;
+  investorType?: string;
+  name?: string;
 }
 
 interface Address {
@@ -92,5 +95,8 @@ export const mockUserProfile: UserProfile = {
     },
     dashboardLayout: ["financialOverview", "netWorth", "recentActivity", "quickActions"],
     language: "en-US"
-  }
+  },
+  displayName: "Tom Brady",
+  investorType: "Growth Investor",
+  name: "Tom Brady"
 };

@@ -1,3 +1,4 @@
+
 import React from "react";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { NavigationItem } from "./NavigationItem";
@@ -52,7 +53,7 @@ export const NavigationCategory = ({
             {category.items.map((item) => (
               <NavigationItem
                 key={item.id}
-                item={item}
+                item={{...item, label: item.title}} // Use title as label
                 isActive={item.id === currentPath}
                 isCollapsed={false}
                 isLightTheme={isLightTheme}
@@ -67,7 +68,7 @@ export const NavigationCategory = ({
           {category.items.map((item) => (
             <NavigationItem
               key={item.id}
-              item={item}
+              item={{...item, label: item.title}} // Use title as label
               isActive={item.id === currentPath}
               isCollapsed={true}
               isLightTheme={isLightTheme}

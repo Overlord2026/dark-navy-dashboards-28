@@ -1,10 +1,10 @@
 
-import { NavItem, MainMenuItem, NavCategory } from "@/types/navigation";
+import { MainMenuItem, NavCategory, NavItem } from "@/types/navigation";
 
 export const adaptNavItemsToMainMenuItems = (navItems: NavItem[]): MainMenuItem[] => {
   return navItems.map(item => ({
     id: item.title.toLowerCase().replace(/\s+/g, '-'),
-    label: item.title,
+    title: item.title,
     href: item.href,
     icon: item.icon
   }));
@@ -13,6 +13,6 @@ export const adaptNavItemsToMainMenuItems = (navItems: NavItem[]): MainMenuItem[
 export const adaptNavCategoriesToMainMenu = (categories: NavCategory[]) => {
   return categories.map(category => ({
     ...category,
-    items: adaptNavItemsToMainMenuItems(category.items)
+    items: adaptNavItemsToMainMenuItems(category.items as unknown as NavItem[])
   }));
 };

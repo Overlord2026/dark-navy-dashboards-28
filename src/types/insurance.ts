@@ -1,4 +1,3 @@
-
 export interface InsurancePolicy {
   id: string;
   name: string;
@@ -12,6 +11,9 @@ export interface InsurancePolicy {
   endDate: string;
   renewalDate: string;
   documents?: string[];
+  frequency?: "monthly" | "quarterly" | "annually";
+  coverageAmount?: number;
+  beneficiaries?: string;
 }
 
 export interface HealthInsurancePolicy extends InsurancePolicy {

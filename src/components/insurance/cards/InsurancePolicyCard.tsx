@@ -54,11 +54,11 @@ export const InsurancePolicyCard: React.FC<InsurancePolicyCardProps> = ({
             </div>
             <div className="flex justify-between mb-1">
               <span className="text-sm text-muted-foreground">Coverage</span>
-              <span className="font-medium">{formatCurrency(policy.coverage)}</span>
+              <span className="font-medium">{formatCurrency(policy.coverage || (policy.coverageAmount || 0))}</span>
             </div>
             <div className="flex justify-between mb-1">
               <span className="text-sm text-muted-foreground">Premium</span>
-              <span className="font-medium">{formatCurrency(policy.premium)}/year</span>
+              <span className="font-medium">{formatCurrency(policy.premium)}/{policy.frequency || 'year'}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-sm text-muted-foreground">Renewal Date</span>

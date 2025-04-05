@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import { MainMenuItem } from "@/types/navigation";
 
 interface NavigationItemProps {
-  item: MainMenuItem;
+  item: MainMenuItem & { label?: string };
   isActive: boolean;
   isCollapsed: boolean;
   isLightTheme: boolean;
@@ -39,7 +39,7 @@ export const NavigationItem: React.FC<NavigationItemProps> = ({
           )}
         />
       )}
-      {!isCollapsed && <span>{item.title}</span>}
+      {!isCollapsed && <span>{item.title || item.label}</span>}
     </Link>
   );
 };

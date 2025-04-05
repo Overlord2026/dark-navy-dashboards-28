@@ -4,6 +4,7 @@ import { LucideIcon } from "lucide-react";
 export interface MainMenuItem {
   id: string;
   title: string;
+  label?: string; // Adding label for backward compatibility
   description?: string;
   icon?: LucideIcon;
   href: string;
@@ -29,4 +30,12 @@ export interface BottomNavItem {
   title: string;
   icon: LucideIcon;
   href: string;
+}
+
+// Add NavItem for backward compatibility
+export interface NavItem {
+  title: string;
+  href: string;
+  icon?: LucideIcon;
+  description?: string;
 }

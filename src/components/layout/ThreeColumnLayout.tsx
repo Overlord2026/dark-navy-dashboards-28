@@ -1,17 +1,30 @@
 
-import React from "react";
-import { Outlet } from "react-router-dom";
-import { Sidebar } from "@/components/sidebar/Sidebar";
-import { navigationCategories } from "@/navigation/navCategories";
-import { bottomNavItems } from "@/navigation/bottomNavigation";
+import React, { ReactNode } from "react";
+import { NavBar } from "@/components/navigation/NavBar";
+import { RightSidebar } from "@/components/layout/RightSidebar";
 
-export const ThreeColumnLayout: React.FC = () => {
+interface ThreeColumnLayoutProps {
+  children: ReactNode;
+  activeMainItem?: string;
+  title: string;
+  activeSecondaryItem?: string;
+  secondaryMenuItems?: any[];
+}
+
+export const ThreeColumnLayout: React.FC<ThreeColumnLayoutProps> = ({
+  children,
+  activeMainItem,
+  title,
+  activeSecondaryItem,
+  secondaryMenuItems
+}) => {
   return (
-    <div className="flex h-screen overflow-hidden">
-      <Sidebar />
+    <div className="flex h-screen overflow-hidden bg-background">
+      <NavBar />
       <main className="flex-1 overflow-y-auto">
-        <Outlet />
+        {children}
       </main>
+      <RightSidebar />
     </div>
   );
 };
