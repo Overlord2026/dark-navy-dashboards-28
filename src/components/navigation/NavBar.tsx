@@ -9,19 +9,52 @@ import {
   CreditCard,
 } from "lucide-react";
 import { useSidebarState } from "@/hooks/useSidebarState";
-import { navigationCategories } from "@/navigation/navCategories";
 import { useTheme } from "@/hooks/useTheme";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { BottomNavItem } from "@/types/navigation";
-import { NavigationCategory } from "@/components/layout/NavigationCategory";
 import { UserProfileSection } from "@/components/sidebar/UserProfileSection";
 import { useViewportOverride } from "@/hooks/useViewportOverride";
+import { 
+  homeNavItems, 
+  educationSolutionsNavItems, 
+  familyWealthNavItems, 
+  collaborationNavItems 
+} from '@/navigation';
+import { adaptNavItemsToMainMenuItems } from '@/utils/navigationUtils';
 
 export const NavBar = () => {
   const { isDark, setTheme } = useTheme();
   const location = useLocation();
   const { effectiveIsMobile } = useViewportOverride();
+
+  // Create navigation categories from modular structure
+  const navigationCategories = [
+    {
+      id: "home",
+      label: "Home",
+      defaultExpanded: true,
+      items: adaptNavItemsToMainMenuItems(homeNavItems),
+    },
+    {
+      id: "education-solutions",
+      label: "Education & Solutions",
+      defaultExpanded: true,
+      items: adaptNavItemsToMainMenuItems(educationSolutionsNavItems),
+    },
+    {
+      id: "family-wealth",
+      label: "Family Wealth",
+      defaultExpanded: true,
+      items: adaptNavItemsToMainMenuItems(familyWealthNavItems),
+    },
+    {
+      id: "collaboration",
+      label: "Collaboration & Sharing",
+      defaultExpanded: false,
+      items: adaptNavItemsToMainMenuItems(collaborationNavItems),
+    }
+  ];
 
   const {
     collapsed,
@@ -103,15 +136,91 @@ export const NavBar = () => {
         <div className="flex-grow overflow-y-auto custom-scrollbar">
           <nav className="py-4">
             {navigationCategories.map((category) => (
-              <NavigationCategory
-                key={category.id}
-                category={category}
-                isExpanded={expandedCategories[category.id]}
-                toggleCategory={() => toggleCategory(category.id)}
-                currentPath={location.pathname}
-                isCollapsed={collapsed}
-                isLightTheme={!isDark}
-              />
+              <div key={category.id} className="mb-2">
+                {!collapsed && (
+                  <div
+                    className={`flex items-center justify-between p-2 text-xs uppercase tracking-wider font-semibold ${isDark ? 'text-[#E2E2E2]/70' : 'text-[#222222]/70'} cursor-pointer`}
+                    onClick={() => toggleCategory(category.id)}
+                  >
+                    <span>{category.label}</span>
+                    <div>
+                      {expandedCategories[category.id] ? (
+                        <span className="h-4 w-4">▼</span>
+                      ) : (
+                        <span className="h-4 w-4">▶</span>
+                      )}
+                    </div>
+                  </div>
+                )}
+                
+                {(!collapsed && expandedCategories[category.id]) && (
+                  <div className="space-y-1.5">
+                    {category.items.map((item) => (
+                      <Link
+                        key={item.id}
+                        to={item.href}
+                        className={cn(
+                          "group flex items-center py-2 px-3 rounded-md transition-all duration-200 text-[14px] whitespace-nowrap border",
+                          isActive(item.href)
+                            ? isDark 
+                              ? "bg-black text-[#E2E2E2] font-medium border-primary" 
+                              : "bg-[#E9E7D8] text-[#222222] font-medium border-primary"
+                            : isDark ? "text-[#E2E2E2] border-transparent" : "text-[#222222] border-transparent",
+                          isDark 
+                            ? "hover:bg-sidebar-accent hover:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30" 
+                            : "hover:bg-[#E9E7D8] hover:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30",
+                        )}
+                      >
+                        {item.icon && (
+                          <item.icon
+                            className="h-5 w-5 mr-3"
+                            style={{ 
+                              backgroundColor: isDark ? '#000' : '#222222', 
+                              padding: '2px', 
+                              borderRadius: '2px' 
+                            }}
+                          />
+                        )}
+                        <span>{item.title}</span>
+                      </Link>
+                    ))}
+                  </div>
+                )}
+                
+                {collapsed && (
+                  <div>
+                    {category.items.map((item) => (
+                      <Link
+                        key={item.id}
+                        to={item.href}
+                        title={item.title}
+                        className={cn(
+                          "group flex items-center justify-center py-2 px-2 my-2 rounded-md transition-all duration-200 text-[14px] whitespace-nowrap border",
+                          isActive(item.href)
+                            ? isDark 
+                              ? "bg-black text-[#E2E2E2] font-medium border-primary" 
+                              : "bg-[#E9E7D8] text-[#222222] font-medium border-primary"
+                            : isDark ? "text-[#E2E2E2] border-transparent" : "text-[#222222] border-transparent",
+                          isDark 
+                            ? "hover:bg-sidebar-accent hover:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30" 
+                            : "hover:bg-[#E9E7D8] hover:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30",
+                        )}
+                      >
+                        {item.icon && (
+                          <item.icon
+                            className="h-5 w-5"
+                            style={{ 
+                              backgroundColor: isDark ? '#000' : '#222222', 
+                              padding: '2px', 
+                              borderRadius: '2px' 
+                            }}
+                          />
+                        )}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
             ))}
           </nav>
         </div>
