@@ -17,3 +17,11 @@ export interface NavCategory {
   items: NavItem[];
   defaultExpanded?: boolean;
 }
+
+// Common interface for main menu items used across components
+export interface MainMenuItem {
+  id: string;
+  label: string;
+  href: string;
+  icon: LucideIcon;
+}

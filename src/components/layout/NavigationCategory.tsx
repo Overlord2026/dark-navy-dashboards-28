@@ -7,13 +7,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-
-interface MainMenuItem {
-  id: string;
-  label: string;
-  icon: React.ElementType | React.FC;
-  href: string;
-}
+import { MainMenuItem } from "@/types/navigation";
 
 interface NavigationCategoryProps {
   category: {
