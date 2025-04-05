@@ -55,8 +55,7 @@ export const NavigationCategory = ({
                 key={item.id}
                 item={{
                   id: item.id,
-                  // Ensure both title and label are available
-                  title: item.title || item.label || "",
+                  // Convert MainMenuItem to NavigationItem expected properties
                   label: item.title || item.label || "",
                   icon: item.icon,
                   href: item.href
@@ -77,8 +76,7 @@ export const NavigationCategory = ({
               key={item.id}
               item={{
                 id: item.id,
-                // Ensure both title and label are available
-                title: item.title || item.label || "",
+                // Convert MainMenuItem to NavigationItem expected properties
                 label: item.title || item.label || "",
                 icon: item.icon,
                 href: item.href
