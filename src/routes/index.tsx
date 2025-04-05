@@ -47,7 +47,7 @@ const AppRoutes: React.FC = () => {
       
       <Route path="login" element={<LoginPage />} />
       <Route path="client-portal" element={<ClientPortal />} />
-      <Route path="/*" element={<PublicRoutes />} />
+      <Route path="/*" element={<NotFound />} />
     </Routes>
   );
 };
