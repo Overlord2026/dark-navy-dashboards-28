@@ -6,7 +6,7 @@ import { useLocation } from "react-router-dom";
 export const useSidebarState = (navigationCategories: NavCategory[]) => {
   const location = useLocation();
   
-  // Check for stored sidebar state in localStorage
+  // Check for stored sidebar state in localStorage - default to expanded on desktop
   const storedCollapsed = localStorage.getItem('sidebar-collapsed');
   const initialCollapsed = storedCollapsed ? storedCollapsed === 'true' : false;
   

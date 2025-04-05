@@ -14,7 +14,7 @@ import { useTheme } from "@/hooks/useTheme";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { BottomNavItem } from "@/types/navigation";
-import { NavigationCategory } from "@/components/navigation/NavigationCategory";
+import { NavigationCategory } from "@/components/layout/NavigationCategory";
 
 export const NavBar = () => {
   const { isDark, setTheme } = useTheme();
@@ -63,12 +63,15 @@ export const NavBar = () => {
     }
   ];
 
+  // Determine if we should show desktop or mobile view based on screen size
+  // This will be handled with CSS
+
   return (
     <div className="flex h-full">
       {/* Desktop Sidebar */}
       <aside
         className={cn(
-          "hidden md:flex flex-col h-screen w-[260px] bg-sidebar border-r border-r-border-muted transition-all duration-300 fixed left-0 top-0 z-30",
+          "hidden md:flex flex-col h-screen border-r border-r-border-muted transition-all duration-300 fixed left-0 top-0 z-30 bg-sidebar",
           collapsed ? "w-[60px]" : "w-[260px]"
         )}
       >
@@ -127,15 +130,7 @@ export const NavBar = () => {
         </div>
       </aside>
 
-      {/* Content area with correct margin when sidebar is expanded */}
-      <div className={cn(
-        "flex-1 transition-all duration-300",
-        collapsed ? "md:ml-[60px]" : "md:ml-[260px]"
-      )}>
-        {/* Content goes here */}
-      </div>
-
-      {/* Mobile Bottom Navigation */}
+      {/* Mobile Bottom Navigation - Only visible on mobile */}
       <div className="md:hidden fixed bottom-0 left-0 w-full bg-sidebar border-t border-t-border-muted py-2 z-30">
         <div className="flex justify-around items-center">
           {bottomNavItems.map((item) => (
