@@ -1,6 +1,5 @@
-
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 
 // Import components
 import PublicRoutes from "./PublicRoutes";
@@ -16,8 +15,10 @@ import NotFound from "../pages/NotFound";
 const AppRoutes: React.FC = () => {
   return (
     <Routes>
-      {/* Login routes */}
-      <Route path="/login" element={<LoginPage isAdvisor={false} />} />
+      {/* Redirect login routes directly to client portal */}
+      <Route path="/login" element={<Navigate to="/client-portal" replace />} />
+      
+      {/* Only keep the advisor login */}
       <Route path="/advisor/login" element={<LoginPage isAdvisor={true} />} />
       
       {/* Make Client Portal directly accessible without any redirects */}
@@ -31,6 +32,9 @@ const AppRoutes: React.FC = () => {
       <Route path="wealth/*" element={<WealthRoutes />} />
       <Route path="advisor/*" element={<AdvisorRoutes />} />
       <Route path="admin/*" element={<AdminRoutes />} />
+      
+      {/* Redirect root to client portal */}
+      <Route path="/" element={<Navigate to="/client-portal" replace />} />
       
       {/* Catch-all route */}
       <Route path="*" element={<NotFound />} />
