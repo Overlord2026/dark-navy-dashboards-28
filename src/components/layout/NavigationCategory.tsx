@@ -7,20 +7,10 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-
-interface MainMenuItem {
-  id: string;
-  label: string;
-  icon: React.ElementType | React.FC;
-  href: string;
-}
+import { NavItem, NavCategory } from "@/types/navigation";
 
 interface NavigationCategoryProps {
-  category: {
-    id: string;
-    label: string;
-    items: MainMenuItem[];
-  };
+  category: NavCategory;
   isExpanded: boolean;
   toggleCategory: (categoryId: string) => void;
   currentPath: string;
@@ -58,9 +48,14 @@ export const NavigationCategory = ({
           <CollapsibleContent className="space-y-1.5">
             {category.items.map((item) => (
               <NavigationItem
-                key={item.id}
-                item={item}
-                isActive={item.id === currentPath}
+                key={item.href}
+                item={{
+                  id: item.href.replace(/^\/+/, ''),
+                  label: item.title,
+                  icon: item.icon,
+                  href: item.href
+                }}
+                isActive={item.href.replace(/^\/+/, '') === currentPath}
                 isCollapsed={false}
                 isLightTheme={isLightTheme}
               />
@@ -73,9 +68,14 @@ export const NavigationCategory = ({
         <>
           {category.items.map((item) => (
             <NavigationItem
-              key={item.id}
-              item={item}
-              isActive={item.id === currentPath}
+              key={item.href}
+              item={{
+                id: item.href.replace(/^\/+/, ''),
+                label: item.title,
+                icon: item.icon,
+                href: item.href
+              }}
+              isActive={item.href.replace(/^\/+/, '') === currentPath}
               isCollapsed={true}
               isLightTheme={isLightTheme}
             />

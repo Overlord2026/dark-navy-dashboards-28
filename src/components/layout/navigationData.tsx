@@ -23,7 +23,7 @@ import {
   Plug,
   Inbox,
 } from "lucide-react";
-import { NavigationProps, NavItem, NavCategory } from "@/types/navigation";
+import { NavItem, NavCategory, NavigationProps, SubNavigationItem } from "@/types/navigation";
 
 // Main navigation data
 const navigationData: NavigationProps[] = [
@@ -246,7 +246,6 @@ export const navigationCategories: NavCategory[] = [
     items: navigationData
       .filter(item => item.isMainNavItem)
       .map(item => ({
-        id: item.href.replace('/', ''),
         title: item.title,
         href: item.href,
         icon: item.icon as any
@@ -259,7 +258,6 @@ export const navigationCategories: NavCategory[] = [
     items: navigationData
       .filter(item => !item.isMainNavItem)
       .map(item => ({
-        id: item.href.replace('/', ''),
         title: item.title,
         href: item.href,
         icon: item.icon as any
