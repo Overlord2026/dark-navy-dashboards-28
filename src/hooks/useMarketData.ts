@@ -2,6 +2,10 @@
 import { useState, useEffect } from 'react';
 import { getAllInvestmentCategoryData, MarketDataResponse } from '@/services/marketDataService';
 
+/**
+ * Custom hook to fetch market data from the service layer
+ * @returns Market data, loading state and error information
+ */
 export const useMarketData = () => {
   const [alternativeData, setAlternativeData] = useState<MarketDataResponse>({});
   const [isLoading, setIsLoading] = useState(true);

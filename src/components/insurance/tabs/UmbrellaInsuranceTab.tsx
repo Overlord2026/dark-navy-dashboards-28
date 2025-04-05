@@ -1,9 +1,10 @@
+
 import React from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Plus, Umbrella } from "lucide-react";
 import { useInsuranceStore } from "@/hooks/useInsuranceStore";
-import { InsurancePolicyCard } from "../cards/InsurancePolicyCard";
+import { InsurancePolicyCard } from "./InsurancePolicyCard";
 
 export const UmbrellaInsuranceTab = () => {
   const { policies, removePolicy } = useInsuranceStore();

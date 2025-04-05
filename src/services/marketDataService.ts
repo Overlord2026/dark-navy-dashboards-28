@@ -1,4 +1,3 @@
-
 // Mock service to fetch investment category data
 // This would be replaced with actual API calls in a production environment
 
