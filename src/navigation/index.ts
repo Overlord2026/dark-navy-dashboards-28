@@ -1,111 +1,142 @@
 
-import { homeNavItems } from './homeNavigation';
-import { bottomNavItems } from './bottomNavigation';
-import { investmentCategories } from './investmentNavigation';
+import { 
+  HomeIcon, 
+  GraduationCapIcon, 
+  BanknotesIcon, 
+  ShieldCheckIcon, 
+  BuildingLibraryIcon, 
+  DocumentTextIcon, 
+  UserGroupIcon, 
+  ScaleIcon, 
+  ShareIcon, 
+  UserIcon,
+  WalletIcon,
+  BriefcaseIcon,
+  DocumentDuplicateIcon,
+  KeyIcon,
+  BanknotesIcon as MoneyIcon
+} from "lucide-react";
+import { NavItem, BottomNavItem } from '@/types/navigation';
 
-// Export all navigation items for easy access
-export {
-  homeNavItems,
-  bottomNavItems,
-  investmentCategories
-};
+export const homeNavItems: NavItem[] = [
+  {
+    title: "Dashboard",
+    href: "/",
+    icon: HomeIcon,
+    description: "Main dashboard overview"
+  }
+];
 
-// Export education and family wealth navigation items
-export const educationSolutionsNavItems = [
-  { 
-    title: "Education Center", 
+export const educationSolutionsNavItems: NavItem[] = [
+  {
+    title: "Education Center",
     href: "/education",
-    icon: () => <img src="/lovable-uploads/e4ac2159-1b66-4f15-9257-68a0f00c8311.png" alt="Education" className="h-5 w-5" />
+    icon: GraduationCapIcon,
+    description: "Financial education resources"
   },
-  { 
-    title: "Investments", 
+  {
+    title: "Investments",
     href: "/investments",
-    icon: () => <img src="/lovable-uploads/e4ac2159-1b66-4f15-9257-68a0f00c8311.png" alt="Investments" className="h-5 w-5" />
+    icon: BanknotesIcon,
+    description: "Investment opportunities"
   },
-  { 
-    title: "Tax Planning", 
-    href: "/education/tax-planning",
-    icon: () => <img src="/lovable-uploads/e4ac2159-1b66-4f15-9257-68a0f00c8311.png" alt="Tax Planning" className="h-5 w-5" />
-  },
-  { 
-    title: "Insurance", 
+  {
+    title: "Insurance",
     href: "/insurance",
-    icon: () => <img src="/lovable-uploads/e4ac2159-1b66-4f15-9257-68a0f00c8311.png" alt="Insurance" className="h-5 w-5" />
+    icon: ShieldCheckIcon,
+    description: "Insurance solutions"
   },
-  { 
-    title: "Lending", 
+  {
+    title: "Lending",
     href: "/lending",
-    icon: () => <img src="/lovable-uploads/e4ac2159-1b66-4f15-9257-68a0f00c8311.png" alt="Lending" className="h-5 w-5" />
-  },
-  { 
-    title: "Estate Planning", 
+    icon: BuildingLibraryIcon,
+    description: "Lending solutions"
+  }
+];
+
+export const familyWealthNavItems: NavItem[] = [
+  {
+    title: "Estate Planning",
     href: "/estate-planning",
-    icon: () => <img src="/lovable-uploads/e4ac2159-1b66-4f15-9257-68a0f00c8311.png" alt="Estate Planning" className="h-5 w-5" />
-  }
-];
-
-export const familyWealthNavItems = [
-  { 
-    title: "Financial Plans", 
-    href: "/financial-plans",
-    icon: () => <img src="/lovable-uploads/e4ac2159-1b66-4f15-9257-68a0f00c8311.png" alt="Financial Plans" className="h-5 w-5" />
+    icon: ScaleIcon,
+    description: "Estate planning tools"
   },
-  { 
-    title: "Accounts Overview", 
-    href: "/accounts",
-    icon: () => <img src="/lovable-uploads/e4ac2159-1b66-4f15-9257-68a0f00c8311.png" alt="Accounts" className="h-5 w-5" />
-  },
-  { 
-    title: "Cash Management", 
-    href: "/cash-management",
-    icon: () => <img src="/lovable-uploads/e4ac2159-1b66-4f15-9257-68a0f00c8311.png" alt="Cash Management" className="h-5 w-5" />
-  },
-  { 
-    title: "Tax & Budgets", 
-    href: "/tax-budgets",
-    icon: () => <img src="/lovable-uploads/e4ac2159-1b66-4f15-9257-68a0f00c8311.png" alt="Tax & Budgets" className="h-5 w-5" />
-  },
-  { 
-    title: "Transfers", 
-    href: "/transfers",
-    icon: () => <img src="/lovable-uploads/e4ac2159-1b66-4f15-9257-68a0f00c8311.png" alt="Transfers" className="h-5 w-5" />
-  },
-  { 
-    title: "Secure Family Vault", 
-    href: "/legacy-vault",
-    icon: () => <img src="/lovable-uploads/e4ac2159-1b66-4f15-9257-68a0f00c8311.png" alt="Legacy Vault" className="h-5 w-5" />
-  },
-  { 
-    title: "Social Security", 
-    href: "/social-security",
-    icon: () => <img src="/lovable-uploads/e4ac2159-1b66-4f15-9257-68a0f00c8311.png" alt="Social Security" className="h-5 w-5" />
-  },
-  { 
-    title: "Real Estate & Properties", 
+  {
+    title: "Properties",
     href: "/properties",
-    icon: () => <img src="/lovable-uploads/e4ac2159-1b66-4f15-9257-68a0f00c8311.png" alt="Properties" className="h-5 w-5" />
+    icon: BuildingLibraryIcon,
+    description: "Property management"
   },
-  { 
-    title: "Bill Pay", 
-    href: "/billpay",
-    icon: () => <img src="/lovable-uploads/e4ac2159-1b66-4f15-9257-68a0f00c8311.png" alt="Bill Pay" className="h-5 w-5" />
+  {
+    title: "Documents",
+    href: "/documents",
+    icon: DocumentTextIcon,
+    description: "Document management"
+  },
+  {
+    title: "Accounts",
+    href: "/accounts",
+    icon: WalletIcon,
+    description: "Financial accounts"
+  },
+  {
+    title: "Professionals",
+    href: "/professionals",
+    icon: UserGroupIcon,
+    description: "Professional network"
+  },
+  {
+    title: "Secure Vault",
+    href: "/vault",
+    icon: KeyIcon,
+    description: "Secure document storage"
   }
 ];
 
-export const collaborationNavItems = [
-  { 
-    title: "Document Sharing", 
-    href: "/documents",
-    icon: () => <img src="/lovable-uploads/e4ac2159-1b66-4f15-9257-68a0f00c8311.png" alt="Documents" className="h-5 w-5" />
-  },
-  { 
-    title: "Professional Access", 
-    href: "/professionals",
-    icon: () => <img src="/lovable-uploads/e4ac2159-1b66-4f15-9257-68a0f00c8311.png" alt="Professionals" className="h-5 w-5" />
-  },
-  { 
-    title: "Family Member Access", 
+export const collaborationNavItems: NavItem[] = [
+  {
+    title: "Sharing Hub",
     href: "/sharing",
-    icon: () => <img src="/lovable-uploads/e4ac2159-1b66-4f15-9257-68a0f00c8311.png" alt="Sharing" className="h-5 w-5" />
+    icon: ShareIcon,
+    description: "Document sharing"
+  },
+  {
+    title: "Profile",
+    href: "/profile",
+    icon: UserIcon,
+    description: "User profile"
+  }
+];
+
+export const bottomNavItems: BottomNavItem[] = [
+  {
+    id: "home",
+    title: "Home",
+    icon: HomeIcon,
+    href: "/"
+  },
+  {
+    id: "investments",
+    title: "Invest",
+    icon: BriefcaseIcon,
+    href: "/investments"
+  },
+  {
+    id: "accounts",
+    title: "Accounts",
+    icon: WalletIcon,
+    href: "/accounts"
+  },
+  {
+    id: "documents",
+    title: "Documents",
+    icon: DocumentDuplicateIcon,
+    href: "/documents"
+  },
+  {
+    id: "more",
+    title: "More",
+    icon: UserIcon,
+    href: "/more"
   }
 ];
