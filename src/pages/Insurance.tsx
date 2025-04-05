@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
-import { ArrowLeft, ArrowRight, ChevronRight, X, ShieldCheck, Shield, ShieldAlert, Calendar } from "lucide-react";
+import { ArrowLeft, ArrowRight, ChevronRight, X, ShieldCheck, Shield, ShieldAlert, Calendar, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet";
@@ -10,7 +10,7 @@ import { toast } from "sonner";
 
 // Insurance type definitions
 type InsuranceType = "term-life" | "permanent-life" | "annuities" | "fiduciary-annuities" | "long-term-care" | "healthcare" | "homeowners" | "automobile" | "umbrella";
-type InsuranceProvider = "pinnacle" | "dpl" | "pacific" | "travelers" | "guardian" | "metlife" | "progressive" | "statefarm";
+type InsuranceProvider = "pinnacle" | "dpl" | "pacific" | "travelers" | "guardian" | "metlife" | "progressive" | "statefarm" | "paclife" | "lincoln";
 
 // Provider info type
 interface ProviderInfo {
@@ -20,6 +20,7 @@ interface ProviderInfo {
   workflow: string;
   otherOfferings: string;
   topCarriers: string;
+  website?: string;
 }
 
 // Insurance type info
@@ -60,7 +61,7 @@ const Insurance = () => {
     "term-life": { providers: ["pinnacle", "guardian", "metlife"] },
     "permanent-life": { providers: ["pinnacle", "guardian", "metlife"] },
     "annuities": { providers: ["dpl", "pinnacle", "metlife"] },
-    "fiduciary-annuities": { providers: ["dpl", "guardian", "pinnacle"] },
+    "fiduciary-annuities": { providers: ["dpl", "guardian", "pinnacle", "paclife", "lincoln"] },
     "long-term-care": { providers: ["pinnacle", "guardian", "metlife"] },
     "healthcare": { providers: ["pacific", "metlife"] },
     "homeowners": { providers: ["travelers", "statefarm", "progressive"] },
@@ -131,6 +132,16 @@ const Insurance = () => {
     toast.success("Opening scheduling page", {
       description: `Schedule a meeting to discuss ${assetName} with your advisor.`,
     });
+  };
+
+  const handleVisitProviderWebsite = (provider: InsuranceProvider) => {
+    const website = getProviderWebsite(provider);
+    if (website) {
+      window.open(website, "_blank");
+      toast.success("Opening provider website", {
+        description: `Visiting ${getProviderName(provider)}'s website in a new tab.`,
+      });
+    }
   };
 
   // Render the main insurance overview
@@ -383,6 +394,19 @@ const Insurance = () => {
                   ))}
                 </div>
               </div>
+              
+              {/* Visit Provider Website button - NEW */}
+              {getProviderWebsite(selectedProvider) && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="mt-2 flex items-center gap-1 border-gray-700 text-white hover:bg-[#1c2e4a]"
+                  onClick={() => handleVisitProviderWebsite(selectedProvider)}
+                >
+                  Visit {getProviderName(selectedProvider)} Website
+                  <ExternalLink className="h-3 w-3 ml-1" />
+                </Button>
+              )}
 
               <div className="flex justify-between items-center mt-8">
                 <div className="text-sm text-gray-400">
@@ -453,6 +477,18 @@ const Insurance = () => {
                     {getProviderDescription(selectedProvider, selectedType)}
                   </p>
                 </div>
+
+                {/* Visit Provider Website button in detail panel - NEW */}
+                {getProviderWebsite(selectedProvider) && (
+                  <Button
+                    variant="outline"
+                    className="w-full flex items-center justify-center gap-1 border-gray-700 text-white hover:bg-[#1c2e4a]"
+                    onClick={() => handleVisitProviderWebsite(selectedProvider)}
+                  >
+                    Visit {getProviderName(selectedProvider)} Website
+                    <ExternalLink className="h-4 w-4 ml-1" />
+                  </Button>
+                )}
 
                 <div>
                   <h3 className="text-lg font-medium text-gray-300 mb-2">
@@ -604,8 +640,29 @@ function getProviderName(provider: InsuranceProvider | null): string {
       return "Progressive";
     case "statefarm":
       return "State Farm";
+    case "paclife":
+      return "Pacific Life";
+    case "lincoln":
+      return "Lincoln Financial";
     default:
       return "Insurance Provider";
+  }
+}
+
+function getProviderWebsite(provider: InsuranceProvider | null): string | null {
+  switch (provider) {
+    case "paclife":
+      return "https://www.pacificlife.com";
+    case "lincoln":
+      return "https://www.lincolnfinancial.com";
+    case "dpl":
+      return "https://dplfp.com";
+    case "pinnacle":
+      return "https://www.pinnacleinsurance.com";
+    case "guardian":
+      return "https://www.guardianlife.com";
+    default:
+      return null;
   }
 }
 
@@ -645,6 +702,14 @@ function getProviderDescription(provider: InsuranceProvider | null, type: Insura
         : type === "automobile"
         ? "State Farm is the nation's largest auto insurer, known for personalized service through a network of local agents and competitive rates."
         : "State Farm offers a wide range of insurance and financial products with a focus on personalized service through a network of dedicated agents.";
+    case "paclife":
+      return type === "fiduciary-annuities"
+        ? "Pacific Life offers a suite of fiduciary-friendly annuity solutions designed to provide steady income in retirement with transparent fee structures. Known for financial strength and stability, Pacific Life has been serving clients for over 150 years."
+        : "Pacific Life is a leading insurance company offering life insurance, annuities, and investment products with a strong reputation for financial stability.";
+    case "lincoln":
+      return type === "fiduciary-annuities"
+        ? "Lincoln Financial provides commission-free, advisor-friendly annuity products specifically designed for RIAs and fee-only advisors. Their solutions focus on retirement income planning with clear fee disclosure and client-friendly features."
+        : "Lincoln Financial Group is a diversified financial services organization offering a wide range of retirement, insurance, and wealth management solutions.";
     default:
       return "";
   }
@@ -678,6 +743,14 @@ function getProviderWorkflow(provider: InsuranceProvider | null, type: Insurance
       return "Progressive offers quick online quotes that your advisor can help you navigate. For most auto policies, you can customize your coverage options and see price changes in real-time.";
     case "statefarm":
       return "Your State Farm agent will work directly with you to understand your needs and provide personalized recommendations. State Farm focuses on building long-term relationships through their agent network.";
+    case "paclife":
+      return type === "fiduciary-annuities"
+        ? "Your advisor will analyze your retirement needs and work directly with Pacific Life to structure an appropriate annuity solution. Pacific Life's annuity options are designed to be transparent, with clearly disclosed fees and benefits tailored to your specific situation."
+        : "Your advisor will work with Pacific Life to identify appropriate insurance and retirement solutions based on your financial goals and needs.";
+    case "lincoln":
+      return type === "fiduciary-annuities"
+        ? "Your advisor partners with Lincoln Financial to conduct a comprehensive retirement income analysis. Based on your needs, they'll recommend appropriate Lincoln annuity products with full disclosure of all fees, surrender periods, and income options."
+        : "Your advisor will collect your information and objectives to match you with appropriate Lincoln Financial products and solutions.";
     default:
       return "";
   }
@@ -713,6 +786,14 @@ function getProviderOtherOfferings(provider: InsuranceProvider | null, type: Ins
         : "Progressive provides a wide range of insurance products for vehicles, property, and personal needs.";
     case "statefarm":
       return "State Farm offers nearly 100 products and services in five different lines of business, including auto, home, life, health, and banking products.";
+    case "paclife":
+      return type === "fiduciary-annuities"
+        ? "Pacific Life offers variable annuities, fixed annuities, indexed annuities, and life insurance products designed for wealth accumulation and retirement income planning."
+        : "Pacific Life provides a comprehensive range of investment, insurance, and retirement solutions for individuals and businesses.";
+    case "lincoln":
+      return type === "fiduciary-annuities"
+        ? "Lincoln Financial offers variable annuities, fixed indexed annuities, life insurance, and retirement planning solutions that fit well within a fiduciary practice model."
+        : "Lincoln Financial Group provides a broad range of financial and wealth management products including retirement plans, life insurance, and group benefits.";
     default:
       return "";
   }
@@ -736,6 +817,10 @@ function getProviderTopCarriers(provider: InsuranceProvider | null): string {
       return "Progressive Casualty Insurance Company, Progressive Direct Insurance Company";
     case "statefarm":
       return "State Farm Mutual Automobile Insurance Company, State Farm Fire and Casualty Company";
+    case "paclife":
+      return "Pacific Life Insurance Company, Pacific Life & Annuity Company";
+    case "lincoln":
+      return "Lincoln National Life Insurance Company, Lincoln Life & Annuity Company of New York";
     default:
       return "";
   }
