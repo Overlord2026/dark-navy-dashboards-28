@@ -1,6 +1,6 @@
 
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { useTheme as useNextTheme } from "next-themes";
+import { ThemeProvider as NextThemeProvider } from "next-themes";
 
 type Theme = "dark" | "light";
 
@@ -12,22 +12,16 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const { theme: nextTheme, setTheme: setNextTheme } = useNextTheme();
-  
-  const [theme, setThemeState] = useState<Theme>(
-    () => (localStorage.getItem("theme") as Theme) || "dark"
-  );
-
-  // Sync with next-themes
-  useEffect(() => {
-    if (nextTheme === "dark" || nextTheme === "light") {
-      setThemeState(nextTheme);
-    }
-  }, [nextTheme]);
+  // Initialize with a default theme
+  const [theme, setThemeState] = useState<Theme>("dark");
 
   // Set theme in localStorage and update DOM
   useEffect(() => {
-    localStorage.setItem("theme", theme);
+    // Check if there's a saved theme in localStorage
+    const savedTheme = localStorage.getItem("theme") as Theme | null;
+    if (savedTheme === "dark" || savedTheme === "light") {
+      setThemeState(savedTheme);
+    }
     
     // Apply theme class to document
     const root = document.documentElement;
@@ -53,16 +47,18 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     }
   }, [theme]);
 
-  // Custom setTheme function that updates both states
+  // Custom setTheme function
   const setTheme = (newTheme: Theme) => {
     setThemeState(newTheme);
-    setNextTheme(newTheme);
+    localStorage.setItem("theme", newTheme);
   };
 
   return (
-    <ThemeContext.Provider value={{ theme, setTheme }}>
-      {children}
-    </ThemeContext.Provider>
+    <NextThemeProvider defaultTheme={theme}>
+      <ThemeContext.Provider value={{ theme, setTheme }}>
+        {children}
+      </ThemeContext.Provider>
+    </NextThemeProvider>
   );
 }
 

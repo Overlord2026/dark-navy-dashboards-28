@@ -1,9 +1,10 @@
+
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FileText, BarChart3, PieChart, Download, FileSpreadsheet, Clock, ListFilter } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "@/components/ui/use-toast";
 import { useNetWorth } from "@/context/NetWorthContext";
 import {
   Table,
@@ -34,7 +35,6 @@ export function ReportsGenerator() {
   const [timeframe, setTimeframe] = useState<string>("monthly");
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedReport, setGeneratedReport] = useState<boolean>(false);
-  const { toast } = useToast();
 
   // Available report configurations
   const reportConfigs: ReportConfig[] = [
@@ -117,6 +117,7 @@ export function ReportsGenerator() {
     return reportConfigs.find(report => report.type === selectedReportType) || reportConfigs[0];
   };
 
+  // Renders a placeholder report component based on the selected type
   const renderReportPreview = () => {
     switch(selectedReportType) {
       case 'assets':
@@ -294,6 +295,8 @@ export function ReportsGenerator() {
   );
 }
 
+// Individual report preview components
+
 interface AssetsReportPreviewProps {
   assets: any[];
   formatCurrency: (amount: number) => string;
@@ -350,6 +353,7 @@ interface LiabilitiesReportPreviewProps {
 }
 
 const LiabilitiesReportPreview: React.FC<LiabilitiesReportPreviewProps> = ({ formatCurrency }) => {
+  // Mock liabilities data
   const liabilities = [
     { id: 'liab1', name: 'Primary Mortgage', type: 'mortgage', balance: 685000, owner: 'Tom Brady', interestRate: 3.75 },
     { id: 'liab2', name: 'Auto Loan', type: 'auto', balance: 48210, owner: 'Tom Brady', interestRate: 4.25 },
@@ -416,7 +420,7 @@ const NetWorthReportPreview: React.FC<NetWorthReportPreviewProps> = ({
   formatCurrency 
 }) => {
   const totalAssets = getTotalNetWorth();
-  const totalLiabilities = 845210;
+  const totalLiabilities = 845210; // Mock value to match existing functionality
   const netWorth = totalAssets - totalLiabilities;
   
   const propertyValue = getTotalAssetsByType('property');
@@ -494,6 +498,7 @@ interface CashFlowReportPreviewProps {
 }
 
 const CashFlowReportPreview: React.FC<CashFlowReportPreviewProps> = ({ timeframe, formatCurrency }) => {
+  // Mock cash flow data
   const cashFlowData = {
     income: [
       { name: 'Primary Salary', amount: 25000 },

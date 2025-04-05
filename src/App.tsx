@@ -10,7 +10,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { DiagnosticsProvider } from "@/context/DiagnosticsContext";
 import { AdvisorProvider } from "@/context/AdvisorContext";
 import { AuthProvider } from "@/context/AuthContext";
-import { useViewportLogger } from "@/hooks/use-viewport-logger";
 
 // Create a Query Client
 const queryClient = new QueryClient({
@@ -21,12 +20,6 @@ const queryClient = new QueryClient({
     },
   },
 });
-
-// Component to wrap and use the viewport logger
-function ViewportLoggerWrapper() {
-  useViewportLogger();
-  return null;
-}
 
 function App() {
   return (
@@ -39,7 +32,6 @@ function App() {
                 <DiagnosticsProvider>
                   <AdvisorProvider>
                     <AuthProvider>
-                      <ViewportLoggerWrapper />
                       <AppRoutes />
                       <Toaster position="top-right" richColors closeButton />
                     </AuthProvider>

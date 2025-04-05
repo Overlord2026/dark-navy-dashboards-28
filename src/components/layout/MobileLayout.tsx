@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { 
   Home, 
@@ -36,33 +36,23 @@ export function MobileLayout({
   const location = useLocation();
   const { theme } = useTheme();
   const { userProfile } = useUser();
-  const { isMobile, forceDesktop } = useIsMobile();
-  
-  // Log when component renders and which view is being used
-  useEffect(() => {
-    const isLaptopWidth = window.innerWidth >= 1024;
-    console.log('[MobileLayout] Render check:');
-    console.log(`- Path: ${location.pathname}`);
-    console.log(`- isMobile: ${isMobile}`);
-    console.log(`- forceDesktop: ${forceDesktop}`);
-    console.log(`- isLaptopWidth: ${isLaptopWidth}`);
-    console.log(`- Rendering: ${!isMobile ? 'Desktop View (bypassing mobile layout)' : 'Mobile Layout'}`);
-  }, [isMobile, forceDesktop, location.pathname]);
+  const isMobile = useIsMobile();
   
   // If not on mobile, render the regular layout
   if (!isMobile) {
     return <>{children}</>;
   }
 
-  function isActive(path: string) {
+  const isActive = (path: string) => {
     return location.pathname === path || 
       (path !== "/" && location.pathname.startsWith(path));
-  }
+  };
 
-  function isMoreRoute() {
+  // Check if current route is a route that should activate the "More" tab
+  const isMoreRoute = () => {
     const moreRoutes = ['/more', '/tax-planning', '/education', '/profile', '/advisor-profile', '/security-settings'];
     return moreRoutes.some(route => location.pathname.startsWith(route));
-  }
+  };
 
   return (
     <div className="flex flex-col h-screen bg-[#12121C] text-white overflow-hidden">

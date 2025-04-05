@@ -4,11 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { TaxReturnUploadDialog } from "./DocumentDialogs";
 import { FileText, Calendar, Upload, Check } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "@/components/ui/use-toast";
 
 export function SecureTaxReturnAnalysis() {
   const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
-  const { toast } = useToast();
   
   const handleRequestAnalysis = () => {
     toast({

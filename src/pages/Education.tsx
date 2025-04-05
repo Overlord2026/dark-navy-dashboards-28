@@ -10,6 +10,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { CourseApiDemo } from "@/components/education/CourseApiDemo";
+import { ProfessionalsProvider } from "@/hooks/useProfessionals";
 
 export default function Education() {
   const [searchParams] = useSearchParams();
@@ -27,7 +28,7 @@ export default function Education() {
       setActiveSection("courses");
     } else if (section) {
       // Make sure we validate that the section exists
-      const validSections = ["courses", "guides", "books", "whitepapers"];
+      const validSections = ["courses", "guides", "books", "whitepapers", "consultants"];
       if (validSections.includes(section)) {
         setActiveSection(section);
       }
@@ -71,69 +72,64 @@ export default function Education() {
     setShowApiDemo(!showApiDemo);
   };
 
-  // Create a properly formatted secondaryMenuItems array for the ThreeColumnLayout
-  const formattedCourseCategories = courseCategories.map(category => ({
-    id: category.id,
-    name: category.name,
-    active: category.id === activeCategory
-  }));
-
   return (
-    <ThreeColumnLayout 
-      title="SWAG Education Center" 
-      activeMainItem="education"
-      activeSecondaryItem={activeCategory}
-      secondaryMenuItems={formattedCourseCategories}
-    >
-      <motion.div 
-        className="space-y-6 px-1"
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
+    <ProfessionalsProvider>
+      <ThreeColumnLayout 
+        title="SWAG Education Center" 
+        activeMainItem="education"
+        activeSecondaryItem={activeCategory}
+        secondaryMenuItems={courseCategories}
       >
-        <motion.div variants={itemVariants}>
-          <h2 className="text-2xl font-bold tracking-tight">Welcome to the SWAG Education Center</h2>
-          <p className="text-muted-foreground mt-2">
-            Explore our collection of financial education resources to help you build wealth and achieve your financial goals.
-          </p>
-          
-          <div className="mt-4 mb-6 flex gap-2">
-            <Link to="/education/tax-planning">
-              <Button variant="outline" className="flex items-center gap-2">
-                Tax Planning <ArrowRight className="h-4 w-4" />
-              </Button>
-            </Link>
+        <motion.div 
+          className="space-y-6 px-1"
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+        >
+          <motion.div variants={itemVariants}>
+            <h2 className="text-2xl font-bold tracking-tight">Welcome to the SWAG Education Center</h2>
+            <p className="text-muted-foreground mt-2">
+              Explore our collection of financial education resources to help you build wealth and achieve your financial goals.
+            </p>
             
-            <Button 
-              variant={showApiDemo ? "default" : "outline"} 
-              className="flex items-center gap-2"
-              onClick={toggleApiDemo}
-            >
-              {showApiDemo ? "Hide API Demo" : "Show API Demo"}
-            </Button>
-          </div>
-          
-          {showApiDemo && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.3 }}
-              className="mb-8"
-            >
-              <CourseApiDemo />
-            </motion.div>
-          )}
-          
-          <EducationalTabs 
-            activeSection={activeSection}
-            activeCategory={activeCategory}
-            setActiveSection={setActiveSection}
-            setActiveCategory={setActiveCategory}
-            handleCourseEnrollment={handleCourseEnrollment}
-          />
+            <div className="mt-4 mb-6 flex gap-2">
+              <Link to="/education/tax-planning">
+                <Button variant="outline" className="flex items-center gap-2">
+                  Tax Planning <ArrowRight className="h-4 w-4" />
+                </Button>
+              </Link>
+              
+              <Button 
+                variant={showApiDemo ? "default" : "outline"} 
+                className="flex items-center gap-2"
+                onClick={toggleApiDemo}
+              >
+                {showApiDemo ? "Hide API Demo" : "Show API Demo"}
+              </Button>
+            </div>
+            
+            {showApiDemo && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.3 }}
+                className="mb-8"
+              >
+                <CourseApiDemo />
+              </motion.div>
+            )}
+            
+            <EducationalTabs 
+              activeSection={activeSection}
+              activeCategory={activeCategory}
+              setActiveSection={setActiveSection}
+              setActiveCategory={setActiveCategory}
+              handleCourseEnrollment={handleCourseEnrollment}
+            />
+          </motion.div>
         </motion.div>
-      </motion.div>
-    </ThreeColumnLayout>
+      </ThreeColumnLayout>
+    </ProfessionalsProvider>
   );
 }

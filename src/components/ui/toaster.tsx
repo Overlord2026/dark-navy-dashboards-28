@@ -35,23 +35,19 @@ export function Toaster() {
             titleText.includes(pattern) || descriptionText.includes(pattern)
           );
         })
-        .map(function (toast) {
-          if (!toast) return null;
-          
-          const { action, ...props } = toast;
-          
+        .map(function ({ id, title, description, action, ...props }) {
           return (
-            <Toast key={toast.title} {...props}>
+            <Toast key={id} {...props}>
               <div className="grid gap-1">
-                {toast.title && <ToastTitle>{toast.title}</ToastTitle>}
-                {toast.description && (
-                  <ToastDescription>{toast.description}</ToastDescription>
+                {title && <ToastTitle>{title}</ToastTitle>}
+                {description && (
+                  <ToastDescription>{description}</ToastDescription>
                 )}
               </div>
               {action}
               <ToastClose />
             </Toast>
-          );
+          )
         })}
       <ToastViewport />
     </ToastProvider>

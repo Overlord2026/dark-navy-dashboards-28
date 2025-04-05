@@ -1,5 +1,3 @@
+import { useToast, toast } from "@/hooks/use-toast";
 
-// Re-export the hooks from our custom implementation
-import { useToast, toast, type ToastProps } from "@/hooks/use-toast";
-
-export { useToast, toast, type ToastProps };
+export { useToast, toast };

@@ -1,7 +1,7 @@
 
 import { CourseCategory } from "@/types/education";
 import { CourseCategoryCard } from "./CourseCategoryCard";
-import { coursesByCategory } from "@/data/education";
+import { coursesByCategory } from "@/data/education/coursesByCategory";
 
 interface FeaturedCategoriesProps {
   categories: CourseCategory[];
