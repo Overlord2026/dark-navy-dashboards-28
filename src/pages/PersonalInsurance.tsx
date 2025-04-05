@@ -5,11 +5,11 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PersonalInsuranceDashboard } from "@/components/insurance/PersonalInsuranceDashboard";
-import { LifeInsuranceTab } from "@/components/insurance/tabs/LifeInsuranceTab";
-import { AnnuitiesTab } from "@/components/insurance/tabs/AnnuitiesTab";
-import { HealthInsuranceTab } from "@/components/insurance/tabs/HealthInsuranceTab";
-import { PropertyInsuranceTab } from "@/components/insurance/tabs/PropertyInsuranceTab";
-import { UmbrellaInsuranceTab } from "@/components/insurance/tabs/UmbrellaInsuranceTab";
+import { LifeInsuranceTab } from "@/components/insurance/LifeInsuranceTab";
+import { AnnuitiesTab } from "@/components/insurance/AnnuitiesTab";
+import { HealthInsuranceTab } from "@/components/insurance/HealthInsuranceTab";
+import { PropertyInsuranceTab } from "@/components/insurance/PropertyInsuranceTab";
+import { UmbrellaInsuranceTab } from "@/components/insurance/UmbrellaInsuranceTab";
 import { toast } from "sonner";
 
 const PersonalInsurance = () => {
