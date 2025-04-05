@@ -1,5 +1,6 @@
 
 import { toast } from "sonner";
+import { initiateStripeGhlPayment, hasUserPurchasedCourse, getGhlAccessUrl } from "./stripeGhlIntegration";
 
 // Function to handle course enrollment and access
 export const handleCourseAccess = (
@@ -9,9 +10,33 @@ export const handleCourseAccess = (
   ghlUrl?: string,
   setIsProcessing?: (isProcessing: boolean) => void
 ) => {
+  // Check if course was already purchased
+  if (hasUserPurchasedCourse(courseId)) {
+    toast.success(`Accessing ${title}...`);
+    const accessUrl = getGhlAccessUrl(courseId) || ghlUrl;
+    
+    if (accessUrl) {
+      setTimeout(() => {
+        window.open(accessUrl, "_blank", "noopener,noreferrer");
+      }, 500);
+    } else {
+      toast.error("Course access link not found. Please contact support.");
+    }
+    return;
+  }
+
   if (isPaid) {
-    // For paid courses, initiate Stripe checkout
-    initiateStripeCheckout(courseId, title, ghlUrl, setIsProcessing);
+    // For paid courses, initiate Stripe checkout with GHL integration
+    initiateStripeGhlPayment({
+      courseId,
+      courseName: title,
+      priceInCents: 7900, // Default price can be customized per course
+      ghlUrl,
+      metadata: {
+        courseId: courseId.toString(),
+        courseType: "educational_content"
+      }
+    }, setIsProcessing);
   } else if (ghlUrl) {
     // For free courses, directly open the GHL URL
     toast.success(`Accessing ${title}...`);
@@ -21,51 +46,17 @@ export const handleCourseAccess = (
   }
 };
 
-// Function to handle Stripe checkout process
+// This function is kept for backward compatibility but now uses the new integration
 export const initiateStripeCheckout = (
   courseId: string | number,
   title: string,
   ghlUrl?: string,
   setIsProcessing?: (isProcessing: boolean) => void
 ) => {
-  if (setIsProcessing) {
-    setIsProcessing(true);
-  }
-  
-  // Simulate Stripe checkout process with a delay
-  toast.info("Preparing checkout page...");
-  
-  // This simulates a network request to create a Stripe Checkout session
-  setTimeout(() => {
-    toast.loading("Processing payment...", { duration: 2000 });
-    
-    // In a real implementation, we would redirect to Stripe Checkout here
-    // In this simulation, we'll use a setTimeout to simulate the payment process
-    setTimeout(() => {
-      // Simulate successful payment
-      toast.success("Payment processed successfully!");
-      
-      // After successful payment, simulate granting access to the course
-      setTimeout(() => {
-        if (setIsProcessing) {
-          setIsProcessing(false);
-        }
-        
-        // Grant access to the course by opening the GHL URL
-        if (ghlUrl) {
-          toast("You now have access to this course!", {
-            description: "Opening course in a new tab...",
-            action: {
-              label: "Open Course",
-              onClick: () => window.open(ghlUrl, "_blank", "noopener,noreferrer")
-            },
-          });
-          
-          setTimeout(() => {
-            window.open(ghlUrl, "_blank", "noopener,noreferrer");
-          }, 500);
-        }
-      }, 1000);
-    }, 2000);
-  }, 1500);
+  initiateStripeGhlPayment({
+    courseId,
+    courseName: title,
+    priceInCents: 7900,
+    ghlUrl
+  }, setIsProcessing);
 };
