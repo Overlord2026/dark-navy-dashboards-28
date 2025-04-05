@@ -1,6 +1,5 @@
-
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,14 +9,14 @@ import { toast } from "@/components/ui/use-toast";
 export default function LoginPage({ isAdvisor = false }) {
   const navigate = useNavigate();
   
+  // For advisor logins we'll keep the advisor login functionality
+  if (!isAdvisor) {
+    return <Navigate to="/client-portal" replace />;
+  }
+  
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    // For now, just navigate to the dashboard
-    if (isAdvisor) {
-      navigate("/advisor/dashboard");
-    } else {
-      navigate("/");
-    }
+    navigate("/advisor/dashboard");
   };
   
   const handleClientPortalAccess = () => {
@@ -48,7 +47,7 @@ export default function LoginPage({ isAdvisor = false }) {
               onClick={handleClientPortalAccess}
               className="bg-green-600 hover:bg-green-700"
             >
-              Skip to Client Portal
+              Access Client Portal
             </Button>
           </div>
         </div>
@@ -57,14 +56,8 @@ export default function LoginPage({ isAdvisor = false }) {
       <div className="flex-1 flex justify-center items-center p-4">
         <div className="bg-white p-8 rounded-lg shadow-md border border-[#DCD8C0] w-full max-w-md">
           <div className="text-center mb-6">
-            <h1 className="text-2xl font-bold text-[#222222]">
-              {isAdvisor ? "Advisor Login" : "Client Login"}
-            </h1>
-            <p className="text-gray-600 mt-2">
-              {isAdvisor 
-                ? "Access your advisor dashboard" 
-                : "Access your personalized financial dashboard"}
-            </p>
+            <h1 className="text-2xl font-bold text-[#222222]">Advisor Login</h1>
+            <p className="text-gray-600 mt-2">Access your advisor dashboard</p>
           </div>
           
           <form onSubmit={handleLogin} className="space-y-4">
@@ -110,25 +103,13 @@ export default function LoginPage({ isAdvisor = false }) {
             </Button>
           </form>
           
-          {!isAdvisor && (
-            <div className="mt-6 text-center text-sm text-gray-600">
-              <p>
-                Don't have an account?{" "}
-                <Link to="/contact" className="text-primary hover:underline">
-                  Contact us
-                </Link>{" "}
-                to get started.
-              </p>
-            </div>
-          )}
-
           <div className="mt-6 pt-4 border-t border-gray-200 text-center">
             <Button 
               variant="link" 
               onClick={handleClientPortalAccess}
               className="text-green-600 hover:text-green-700"
             >
-              Skip login and access Client Portal
+              Access Client Portal
             </Button>
           </div>
         </div>

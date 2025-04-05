@@ -21,23 +21,18 @@ const AppRoutes: React.FC = () => {
   const isAdmin = userProfile?.role === "admin" || userProfile?.role === "system_administrator";
   const isDeveloper = isAdmin || userProfile?.role === "developer";
   
-  // Make Client Portal accessible regardless of authentication state
-  if (!isAuthenticated) {
-    return (
-      <Routes>
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/advisor/login" element={<LoginPage isAdvisor={true} />} />
-        <Route path="/client-portal" element={<ClientPortal />} />
-        <Route path="/*" element={<PublicRoutes />} />
-      </Routes>
-    );
-  }
-
-  // Desktop routes only for authenticated users
+  // Always show routes regardless of authentication
   return (
     <Routes>
+      {/* Make Client Portal directly accessible */}
       <Route path="/client-portal" element={<ClientPortal />} />
-      <Route path="/*" element={<MainRoutes />} />
+      
+      {/* Public routes */}
+      <Route path="/login" element={<Navigate to="/client-portal" replace />} />
+      <Route path="/advisor/login" element={<LoginPage isAdvisor={true} />} />
+      <Route path="/*" element={<PublicRoutes />} />
+      
+      {/* Dashboard routes - these would normally require authentication */}
       <Route path="finance/*" element={<FinanceRoutes />} />
       <Route path="wealth/*" element={<WealthRoutes />} />
       <Route path="advisor/*" element={<AdvisorRoutes />} />
@@ -49,7 +44,6 @@ const AppRoutes: React.FC = () => {
         <Route path="dev/*" element={<Navigate to="/" replace />} />
       )}
       
-      <Route path="login" element={<Navigate to="/" replace />} /> 
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
