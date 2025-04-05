@@ -4,7 +4,7 @@ import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { PersonalInsuranceDashboard } from "@/components/insurance/PersonalInsuranceDashboard";
+import { PersonalInsuranceDashboard, TabContext } from "@/components/insurance/PersonalInsuranceDashboard";
 import { LifeInsuranceTab } from "@/components/insurance/LifeInsuranceTab";
 import { AnnuitiesTab } from "@/components/insurance/AnnuitiesTab";
 import { HealthInsuranceTab } from "@/components/insurance/HealthInsuranceTab";
@@ -50,7 +50,9 @@ const PersonalInsurance = () => {
             </TabsList>
             
             <TabsContent value="dashboard">
-              <PersonalInsuranceDashboard />
+              <TabContext.Provider value={setActiveTab}>
+                <PersonalInsuranceDashboard />
+              </TabContext.Provider>
             </TabsContent>
             
             <TabsContent value="life">

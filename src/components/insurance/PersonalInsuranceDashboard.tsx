@@ -6,6 +6,37 @@ import { Plus, Upload, FileText, Shield, Heart, Home, Car, Umbrella } from "luci
 import { useInsuranceStore } from "@/hooks/useInsuranceStore";
 import { UploadDocumentDialog } from "@/components/documents/UploadDocumentDialog";
 
+interface PolicyTypeCardProps {
+  title: string;
+  count: number;
+  icon: React.ReactNode;
+  tabValue: string;
+  onTabClick: (value: string) => void;
+}
+
+const PolicyTypeCard = ({ title, count, icon, tabValue, onTabClick }: PolicyTypeCardProps) => {
+  return (
+    <Card className="overflow-hidden">
+      <button 
+        className="block p-4 h-full w-full text-left" 
+        onClick={() => onTabClick(tabValue)}
+      >
+        <div className="flex items-center gap-4">
+          <div className="bg-background rounded-full p-3">
+            {icon}
+          </div>
+          <div>
+            <h4 className="font-medium">{title}</h4>
+            <p className="text-sm text-muted-foreground">
+              {count} {count === 1 ? 'policy' : 'policies'}
+            </p>
+          </div>
+        </div>
+      </button>
+    </Card>
+  );
+};
+
 export const PersonalInsuranceDashboard = () => {
   const { 
     policies, 
@@ -15,12 +46,21 @@ export const PersonalInsuranceDashboard = () => {
   } = useInsuranceStore();
   const [isUploadDialogOpen, setIsUploadDialogOpen] = React.useState(false);
   const [activeCategory, setActiveCategory] = React.useState<string | null>(null);
+  
+  // Get parent component's setActiveTab function
+  const setParentActiveTab = React.useContext(TabContext);
 
   // Group policies by type for the summary
   const policyCountByType = policies.reduce((acc, policy) => {
     acc[policy.type] = (acc[policy.type] || 0) + 1;
     return acc;
   }, {} as Record<string, number>);
+
+  const handleTabClick = (tabValue: string) => {
+    if (setParentActiveTab) {
+      setParentActiveTab(tabValue);
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -50,31 +90,36 @@ export const PersonalInsuranceDashboard = () => {
           title="Life Insurance" 
           count={policyCountByType['term-life'] || 0 + policyCountByType['permanent-life'] || 0} 
           icon={<Heart className="h-8 w-8 text-red-500" />} 
-          href="#life" 
+          tabValue="life"
+          onTabClick={handleTabClick}
         />
         <PolicyTypeCard 
           title="Annuities" 
           count={policyCountByType['annuity'] || 0} 
           icon={<FileText className="h-8 w-8 text-blue-500" />} 
-          href="#annuities" 
+          tabValue="annuities"
+          onTabClick={handleTabClick}
         />
         <PolicyTypeCard 
           title="Health Insurance" 
           count={policyCountByType['health'] || 0 + policyCountByType['long-term-care'] || 0} 
           icon={<Shield className="h-8 w-8 text-green-500" />} 
-          href="#health" 
+          tabValue="health"
+          onTabClick={handleTabClick}
         />
         <PolicyTypeCard 
           title="Property Insurance" 
           count={policyCountByType['homeowners'] || 0 + policyCountByType['auto'] || 0} 
           icon={<Home className="h-8 w-8 text-amber-500" />} 
-          href="#property" 
+          tabValue="property"
+          onTabClick={handleTabClick}
         />
         <PolicyTypeCard 
           title="Umbrella Policies" 
           count={policyCountByType['umbrella'] || 0} 
           icon={<Umbrella className="h-8 w-8 text-purple-500" />} 
-          href="#umbrella" 
+          tabValue="umbrella"
+          onTabClick={handleTabClick}
         />
         <Card className="p-4 flex items-center justify-center">
           <Button variant="outline" className="w-full h-full flex flex-col py-8 gap-4" onClick={() => setIsUploadDialogOpen(true)}>
@@ -95,29 +140,5 @@ export const PersonalInsuranceDashboard = () => {
   );
 };
 
-interface PolicyTypeCardProps {
-  title: string;
-  count: number;
-  icon: React.ReactNode;
-  href: string;
-}
-
-const PolicyTypeCard = ({ title, count, icon, href }: PolicyTypeCardProps) => {
-  return (
-    <Card className="overflow-hidden">
-      <a href={href} className="block p-4 h-full">
-        <div className="flex items-center gap-4">
-          <div className="bg-background rounded-full p-3">
-            {icon}
-          </div>
-          <div>
-            <h4 className="font-medium">{title}</h4>
-            <p className="text-sm text-muted-foreground">
-              {count} {count === 1 ? 'policy' : 'policies'}
-            </p>
-          </div>
-        </div>
-      </a>
-    </Card>
-  );
-};
+// Create a context to pass the setActiveTab function from parent to child
+export const TabContext = React.createContext<((value: string) => void) | null>(null);
