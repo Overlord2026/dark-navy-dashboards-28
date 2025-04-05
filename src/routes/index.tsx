@@ -2,6 +2,7 @@
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useUser } from "../context/UserContext";
+import { useAuth } from "../context/AuthContext";
 
 // Import components
 import PublicRoutes from "./PublicRoutes";
@@ -16,6 +17,7 @@ import NotFound from "../pages/NotFound";
 
 const AppRoutes: React.FC = () => {
   const { isAuthenticated, userProfile } = useUser();
+  const auth = useAuth();
   const isAdmin = userProfile?.role === "admin" || userProfile?.role === "system_administrator";
   const isDeveloper = isAdmin || userProfile?.role === "developer";
   
