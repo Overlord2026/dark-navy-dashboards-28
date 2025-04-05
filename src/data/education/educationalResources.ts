@@ -1,47 +1,54 @@
 
-import { EducationalResource, GuideResource, BookResource } from "@/types/education";
+import { EducationalResources } from "@/types/education";
 
-// Educational resources (guides, books, whitepapers)
-export const educationalResources = {
-  guides: [
+export const educationalResources: EducationalResources = {
+  "guides": [
     {
-      id: "retirement-guide",
-      title: "Complete Retirement Planning Guide",
-      description: "A comprehensive guide to planning for retirement at any age",
+      id: "guide-retirement",
+      title: "Comprehensive Retirement Planning Guide",
+      description: "Step-by-step guide to creating a robust retirement plan.",
       isPaid: false,
       level: "All Levels",
-      author: "SWAG Financial Advisors",
-      category: "retirement"
+      duration: "Self-paced",
+      ghlUrl: "https://ghl.example.com/guides/retirement-planning"
     },
     {
-      id: "tax-guide",
-      title: "Tax Optimization Strategies",
-      description: "Learn how to legally minimize your tax burden",
-      isPaid: true,
-      level: "Intermediate",
-      author: "SWAG Tax Planning Team",
-      category: "tax"
+      id: "guide-estate",
+      title: "Estate Planning Checklist",
+      description: "Essential estate planning documents and considerations.",
+      isPaid: false,
+      level: "All Levels",
+      duration: "Self-paced",
+      ghlUrl: "https://ghl.example.com/guides/estate-planning-checklist"
     }
-  ] as GuideResource[],
-  
-  books: [
+  ],
+  "books": [
     {
-      id: "financial-freedom",
-      title: "Path to Financial Freedom",
-      description: "Essential strategies for building wealth",
+      id: "book-wealth",
+      title: "The Intelligent Investor",
+      description: "Benjamin Graham's timeless advice on value investing.",
+      isPaid: false,
+      level: "Intermediate",
+      author: "Benjamin Graham",
+      ghlUrl: "https://ghl.example.com/books/intelligent-investor"
+    },
+    {
+      id: "book-retirement",
+      title: "The Power of Zero",
+      description: "How to get to the 0% tax bracket in retirement.",
       isPaid: false,
       level: "Beginner",
-      author: "Jane Smith",
-      publisher: "Finance Publications"
+      author: "David McKnight",
+      ghlUrl: "https://ghl.example.com/books/power-of-zero"
     },
     {
-      id: "estate-planning",
-      title: "Estate Planning Essentials",
-      description: "Protect your assets and legacy",
+      id: "book-wealth-mindset",
+      title: "The Psychology of Money",
+      description: "Timeless lessons on wealth, greed, and happiness.",
       isPaid: false,
-      level: "Intermediate",
-      author: "Robert Johnson",
-      publisher: "Legacy Press"
+      level: "All Levels",
+      author: "Morgan Housel",
+      ghlUrl: "https://ghl.example.com/books/psychology-of-money"
     }
-  ] as BookResource[]
+  ]
 };
