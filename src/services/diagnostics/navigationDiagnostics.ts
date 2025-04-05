@@ -1,3 +1,4 @@
+
 import { navigationCategories } from "@/navigation/navCategories";
 import { NavCategory, MainMenuItem } from "@/types/navigation";
 import { NavigationDiagnosticResult as TypedNavigationDiagnosticResult } from "@/types/diagnostics";
@@ -213,16 +214,17 @@ export const getNavigationStructure = () => {
   }));
 };
 
+// Fix 1: Add the exported function getNavigationDiagnosticsSummary
 export const getNavigationDiagnosticsSummary = async () => {
   const results = runNavigationDiagnostics();
   
+  // Fix 2: Ensure the correct properties are used in the converted result
   const convertToTypedResult = (result: NavigationDiagnosticResult): TypedNavigationDiagnosticResult => {
     return {
-      ...result,
       route: result.path || result.id,
-      id: result.id,
       status: result.status as "success" | "warning" | "error",
-      message: result.message
+      message: result.message,
+      // Note: We don't include 'id' as it's not part of TypedNavigationDiagnosticResult
     };
   };
   
@@ -256,15 +258,16 @@ export const getNavigationDiagnosticsSummary = async () => {
   };
 };
 
+// Fix 3: Add the exported function testAllNavigationRoutes
 export const testAllNavigationRoutes = async (): Promise<Record<string, TypedNavigationDiagnosticResult[]>> => {
   const results = runNavigationDiagnostics();
   
   const convertToTypedResult = (result: NavigationDiagnosticResult): TypedNavigationDiagnosticResult => {
     return {
-      ...result,
       route: result.path || result.id,
       status: result.status as "success" | "warning" | "error",
       message: result.message
+      // Note: We don't include 'id' as it's not part of TypedNavigationDiagnosticResult
     };
   };
   

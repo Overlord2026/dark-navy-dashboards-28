@@ -55,6 +55,9 @@ export const NavigationCategory = ({
                 key={item.id}
                 item={{
                   ...item,
+                  // Fix: Ensure title is always available
+                  title: item.title || "",
+                  // Fix: Ensure label is available based on title
                   label: item.title || item.label || ""
                 }}
                 isActive={item.id === currentPath}
@@ -73,6 +76,9 @@ export const NavigationCategory = ({
               key={item.id}
               item={{
                 ...item,
+                // Fix: Ensure title is always available
+                title: item.title || "",
+                // Fix: Ensure label is available based on title
                 label: item.title || item.label || ""
               }}
               isActive={item.id === currentPath}

@@ -5,6 +5,7 @@ import { useTheme } from "@/hooks/useTheme";
 export const ThemeExample = () => {
   const { theme, isDark, setTheme } = useTheme();
 
+  // Fix: Replace direct toggleTheme reference with a function that uses setTheme
   const toggleTheme = () => {
     setTheme(isDark ? 'light' : 'dark');
   };

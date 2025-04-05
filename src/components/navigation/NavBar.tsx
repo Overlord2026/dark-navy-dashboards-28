@@ -32,6 +32,7 @@ export const NavBar = () => {
     setCollapsed
   } = useSidebarState(navigationCategories);
 
+  // Fix: Replace toggleTheme with a proper implementation using setTheme
   const toggleTheme = () => {
     setTheme(isDark ? "light" : "dark");
   };
