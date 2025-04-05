@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -8,6 +7,17 @@ import { EducationalResource } from "@/types/education";
 
 // Initial books data
 const initialBooks: EducationalResource[] = [
+  {
+    id: "book-life-integrated",
+    title: "LIFE INTEGRATED FINANCIAL FREEDOM!",
+    description: "Advanced Holistic Retirement Planning",
+    isPaid: false,
+    level: "All Levels",
+    author: "Tony Gomes",
+    ghlUrl: "https://a.co/d/iy0feHs",
+    reviews: 4.9,
+    image: "/lovable-uploads/07bdac7d-9165-48f5-ab06-ade475828c83.png"
+  },
   {
     id: "book-intelligent-investor",
     title: "The Intelligent Investor",
