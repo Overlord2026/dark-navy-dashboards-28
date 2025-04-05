@@ -45,9 +45,9 @@ const AppRoutes: React.FC = () => {
         <Route path="dev/*" element={<Navigate to="/" replace />} />
       )}
       
-      <Route path="login" element={<LoginPage />} />
+      <Route path="login" element={<Navigate to="/" replace />} /> 
       <Route path="client-portal" element={<ClientPortal />} />
-      <Route path="/*" element={<NotFound />} />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 };
