@@ -1,5 +1,7 @@
+
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 // Import components
 import PublicRoutes from "./PublicRoutes";
@@ -12,6 +14,17 @@ import LoginPage from "../pages/LoginPage";
 import ClientPortal from "../pages/ClientPortal";
 import NotFound from "../pages/NotFound";
 
+// Protected route component
+const ProtectedClientPortal = () => {
+  const { isAuthenticated } = useAuth();
+  
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+  
+  return <ClientPortal />;
+};
+
 const AppRoutes: React.FC = () => {
   return (
     <Routes>
@@ -21,8 +34,8 @@ const AppRoutes: React.FC = () => {
       {/* Keep advisor login */}
       <Route path="/advisor/login" element={<LoginPage isAdvisor={true} />} />
       
-      {/* Make Client Portal directly accessible */}
-      <Route path="/client-portal" element={<ClientPortal />} />
+      {/* Protected Client Portal route */}
+      <Route path="/client-portal" element={<ProtectedClientPortal />} />
       
       {/* Public routes */}
       <Route path="/*" element={<PublicRoutes />} />
