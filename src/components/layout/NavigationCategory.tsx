@@ -1,7 +1,7 @@
 
 import React from "react";
 import { ChevronDown, ChevronRight } from "lucide-react";
-import { NavigationItem } from "@/components/navigation/NavigationItem";
+import { NavigationItem } from "./NavigationItem";
 import {
   Collapsible,
   CollapsibleContent,
@@ -54,10 +54,13 @@ export const NavigationCategory = ({
               <NavigationItem
                 key={item.id}
                 item={{
-                  ...item,
-                  title: item.title || item.label || "",
+                  id: item.id,
+                  // Convert MainMenuItem to NavigationItem expected properties
+                  label: item.title || item.label || "",
+                  icon: item.icon,
+                  href: item.href
                 }}
-                isActive={currentPath === item.href || (item.href !== "/" && currentPath.startsWith(item.href))}
+                isActive={item.id === currentPath}
                 isCollapsed={false}
                 isLightTheme={isLightTheme}
               />
@@ -72,10 +75,13 @@ export const NavigationCategory = ({
             <NavigationItem
               key={item.id}
               item={{
-                ...item,
-                title: item.title || item.label || "",
+                id: item.id,
+                // Convert MainMenuItem to NavigationItem expected properties
+                label: item.title || item.label || "",
+                icon: item.icon,
+                href: item.href
               }}
-              isActive={currentPath === item.href || (item.href !== "/" && currentPath.startsWith(item.href))}
+              isActive={item.id === currentPath}
               isCollapsed={true}
               isLightTheme={isLightTheme}
             />

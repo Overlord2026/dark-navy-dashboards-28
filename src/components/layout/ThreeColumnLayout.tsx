@@ -1,33 +1,31 @@
 
 import React, { ReactNode } from "react";
-import { Sidebar } from "@/components/sidebar/Sidebar";
-import { GlobalHeader } from "@/components/layout/GlobalHeader";
+import { NavBar } from "@/components/navigation/NavBar";
+import { RightSidebar } from "@/components/layout/RightSidebar";
 
 interface ThreeColumnLayoutProps {
   children: ReactNode;
-  title?: string;
   activeMainItem?: string;
+  title: string;
+  activeSecondaryItem?: string;
+  secondaryMenuItems?: any[];
 }
 
-export const ThreeColumnLayout: React.FC<ThreeColumnLayoutProps> = ({ 
+export const ThreeColumnLayout: React.FC<ThreeColumnLayoutProps> = ({
   children,
+  activeMainItem,
   title,
-  activeMainItem
+  activeSecondaryItem,
+  secondaryMenuItems
 }) => {
   return (
-    <div className="flex h-screen bg-[#0B1121] text-white">
-      {/* Left column - Navigation */}
-      <div className="h-screen overflow-y-auto border-r border-[#1E293B] w-64 fixed left-0 top-0">
-        <Sidebar />
-      </div>
-      
-      {/* Main content area */}
-      <div className="flex flex-col w-full ml-64">
-        <GlobalHeader />
-        <main className="flex-1 overflow-y-auto">
-          {children}
-        </main>
-      </div>
+    <div className="flex h-screen overflow-hidden bg-background">
+      <NavBar />
+      <main className="flex-1 overflow-y-auto p-4">
+        <h1 className="text-2xl font-bold mb-4">{title}</h1>
+        {children}
+      </main>
+      <RightSidebar />
     </div>
   );
 };

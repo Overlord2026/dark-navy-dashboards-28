@@ -1,35 +1,19 @@
 
 import {
-  Home,
-  CreditCard,
-  BarChart,
-  Users,
+  HeartHandshakeIcon,
+  UserIcon
 } from "lucide-react";
-import { BottomNavItem } from "@/types/navigation";
+import { NavItem } from "@/types/navigation";
 
-export const bottomNavItems: BottomNavItem[] = [
-  {
-    id: "home",
-    title: "Home",
-    icon: Home,
-    href: "/",
+export const bottomNavItems: NavItem[] = [
+  { 
+    title: "Help", 
+    href: "/help", 
+    icon: HeartHandshakeIcon 
   },
-  {
-    id: "accounts",
-    title: "Accounts",
-    icon: CreditCard,
-    href: "/accounts",
-  },
-  {
-    id: "investments",
-    title: "Investments",
-    icon: BarChart,
-    href: "/investments",
-  },
-  {
-    id: "profile",
-    title: "Profile",
-    icon: Users,
-    href: "/profile",
+  { 
+    title: "Settings", 
+    href: "/settings", 
+    icon: UserIcon 
   }
 ];

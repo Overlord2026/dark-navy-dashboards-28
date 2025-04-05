@@ -26,14 +26,11 @@ export const UserProfileSection = ({
 }: UserProfileSectionProps) => {
   const navigate = useNavigate();
   const { theme } = useTheme();
-  const { userProfile, logout } = useUser();
   const isLightTheme = theme === "light";
   
-  // Use the user profile name if available, otherwise fall back to Tom Brady
-  const firstName = userProfile?.firstName || "Tom";
-  const lastName = userProfile?.lastName || "Brady";
-  const avatarInitials = `${firstName.charAt(0)}${lastName.charAt(0)}`;
-  const userName = `${firstName} ${lastName}`;
+  // Hardcoded values for Tom Brady
+  const avatarInitials = "TB"; 
+  const userName = "Tom Brady"; // Always Tom Brady
   
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [isThemeDialogOpen, setIsThemeDialogOpen] = useState(false);
@@ -60,11 +57,8 @@ export const UserProfileSection = ({
       setIsThemeDialogOpen(true);
     } else if (itemId === "log-out") {
       // Handle log out action
-      if (logout) {
-        logout();
-      }
       toast.success("You have been successfully logged out");
-      navigate("/login");
+      navigate("/home");
       if (onMenuItemClick) {
         onMenuItemClick(itemId);
       }

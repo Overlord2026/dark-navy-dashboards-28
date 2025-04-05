@@ -2,7 +2,7 @@
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useUser } from "../context/UserContext";
-import { useViewportOverride } from "../hooks/useViewportOverride";
+import { useIsMobile } from "../hooks/use-mobile";
 
 // Import components
 import PublicRoutes from "./PublicRoutes";
@@ -19,8 +19,8 @@ const AppRoutes: React.FC = () => {
   const isAdmin = userProfile?.role === "admin" || userProfile?.role === "system_administrator";
   const isDeveloper = isAdmin || userProfile?.role === "developer";
   
-  // Use our viewport override hook instead of direct mobile check
-  const { effectiveIsMobile } = useViewportOverride();
+  // Use useIsMobile hook inside the component
+  const isMobile = useIsMobile();
 
   if (!isAuthenticated) {
     return (
@@ -32,8 +32,8 @@ const AppRoutes: React.FC = () => {
     );
   }
 
-  // Use mobile routes only when effectiveIsMobile is true
-  if (effectiveIsMobile) {
+  // Use mobile routes when on a mobile device
+  if (isMobile) {
     return <MobileRoutes />;
   }
 

@@ -1,4 +1,3 @@
-
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { toast } from "sonner";
 import { useSearchParams, Link } from "react-router-dom";
@@ -75,6 +74,8 @@ export default function Education() {
       <ThreeColumnLayout 
         title="SWAG Education Center" 
         activeMainItem="education"
+        activeSecondaryItem={activeCategory}
+        secondaryMenuItems={courseCategories}
       >
         <motion.div 
           className="space-y-6 px-1"

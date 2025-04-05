@@ -9,19 +9,24 @@ import { ResourcesCard } from "./ResourcesCard";
 import { UploadDocumentDialog, ShareDocumentDialog, TaxReturnUploadDialog } from "@/components/estate-planning/DocumentDialogs";
 import { CompletionProgress } from "./CompletionProgress";
 import { AdvancedTaxStrategies } from "./AdvancedTaxStrategies";
-import { useDocumentManagement } from "@/hooks/estate-planning/useDocumentManagement";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
 
 export const FamilyLegacyBox: React.FC = () => {
   const [activeTab, setActiveTab] = useState("overview");
-  const [taxReturnDialogOpen, setTaxReturnDialogOpen] = useState(false);
+  const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
+  const [shareDialogOpen, setShareDialogOpen] = useState(false);
+  const [viewDialogOpen, setViewDialogOpen] = useState(false);
+  const [selectedDocument, setSelectedDocument] = useState<string | null>(null);
+  const [selectedDocumentDetails, setSelectedDocumentDetails] = useState<any | null>(null);
   
-  // Sample initial documents data (this would typically come from an API)
-  const initialDocuments = [
+  // Sample documents data (this would typically come from an API)
+  const [documents, setDocuments] = useState<any[]>([
     {
       id: "will",
       name: "Last Will and Testament",
       description: "My last will and testament document",
-      status: "completed" as const,
+      status: "completed",
       url: "#",
       date: new Date("2023-05-15"),
       uploadedBy: "John Smith",
@@ -31,7 +36,7 @@ export const FamilyLegacyBox: React.FC = () => {
       id: "trust",
       name: "Trust Documents",
       description: "Family trust documentation",
-      status: "completed" as const,
+      status: "completed",
       url: "#",
       date: new Date("2023-04-10"),
       uploadedBy: "John Smith",
@@ -40,37 +45,103 @@ export const FamilyLegacyBox: React.FC = () => {
       id: "lifeInsurance",
       name: "Life Insurance Policy",
       description: "Term life insurance policy documents",
-      status: "completed" as const,
+      status: "completed",
       url: "#",
       date: new Date("2023-06-22"),
       uploadedBy: "John Smith",
       sharedWith: ["Sarah Johnson (Financial Advisor)"],
     },
-  ];
+  ]);
 
-  const {
-    documents,
-    sharedDocuments,
-    uploadDialogOpen,
-    shareDialogOpen,
-    viewDialogOpen,
-    completedDocuments,
-    totalDocuments,
-    selectedDocument,
-    handleUploadDocument,
-    handleShareDocument,
-    handleViewDocument,
-    handleDocumentUpload,
-    handleDocumentShare,
-    setUploadDialogOpen,
-    setShareDialogOpen,
-    setViewDialogOpen
-  } = useDocumentManagement(initialDocuments);
+  // Sample shared documents (filtered from the main documents array)
+  const sharedDocuments = documents.filter(doc => doc.sharedWith && doc.sharedWith.length > 0).map(doc => ({
+    id: doc.id,
+    name: doc.name,
+    sharedWith: doc.sharedWith || [],
+    date: doc.date,
+    status: "active" as const  // This ensures the type is specifically "active", not just any string
+  }));
 
-  const handleTaxReturnUpload = (files: File[]) => {
-    // Implementation would go here
-    console.log("Tax returns uploaded:", files);
+  const handleUploadDocument = (documentType: string) => {
+    setSelectedDocument(documentType);
+    setUploadDialogOpen(true);
   };
+
+  const handleShareDocument = (documentId: string) => {
+    setSelectedDocument(documentId);
+    const document = documents.find((doc) => doc.id === documentId);
+    setSelectedDocumentDetails(document);
+    setShareDialogOpen(true);
+  };
+
+  const handleViewDocument = (documentId: string) => {
+    const document = documents.find((doc) => doc.id === documentId);
+    setSelectedDocument(documentId);
+    setSelectedDocumentDetails(document);
+    setViewDialogOpen(true);
+  };
+
+  const handleDocumentUpload = (documentType: string, data: any) => {
+    // In a real app, this would send the data to an API
+    const newDocument = {
+      id: documentType,
+      name: data.documentName,
+      description: data.description,
+      status: "completed",
+      url: "#",
+      date: new Date(),
+      uploadedBy: "John Smith",
+    };
+
+    // Update documents list - either add new or replace existing
+    const existingIndex = documents.findIndex((doc) => doc.id === documentType);
+    
+    if (existingIndex >= 0) {
+      const updatedDocuments = [...documents];
+      updatedDocuments[existingIndex] = newDocument;
+      setDocuments(updatedDocuments);
+      toast.success("Document updated successfully");
+    } else {
+      setDocuments([...documents, newDocument]);
+      toast.success("Document uploaded successfully");
+    }
+  };
+
+  const handleDocumentShare = (documentId: string, sharedWith: string[]) => {
+    // In a real app, this would send the sharing info to an API
+    const updatedDocuments = documents.map((doc) => {
+      if (doc.id === documentId) {
+        // Convert IDs to names (simplified example)
+        const sharedWithNames = sharedWith.map((id) => {
+          // This is a simplified example - in a real app you would lookup the name from the ID
+          const lookup: Record<string, string> = {
+            "1": "James Wilson (Estate Attorney)",
+            "2": "Sarah Johnson (Financial Advisor)",
+            "3": "Michael Brown (CPA)",
+            "4": "Jennifer Davis (Insurance Agent)",
+            "101": "Robert Smith (Spouse)",
+            "102": "Emma Smith (Child)",
+            "103": "Daniel Smith (Child)",
+            "104": "Margaret Johnson (Parent)",
+          };
+          return lookup[id] || id;
+        });
+        
+        return {
+          ...doc,
+          sharedWith: sharedWithNames,
+        };
+      }
+      return doc;
+    });
+    
+    setDocuments(updatedDocuments);
+    toast.success("Document shared successfully");
+  };
+
+  // Calculate completion metrics
+  const totalDocuments = 9; // Total number of checklist items
+  const completedDocuments = documents.length;
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
@@ -109,7 +180,7 @@ export const FamilyLegacyBox: React.FC = () => {
           </CardContent>
         </Card>
         
-        {/* Advanced Tax Planning Strategies section */}
+        {/* Advanced Tax Planning Strategies section - now as a separate component */}
         <AdvancedTaxStrategies />
         
         <CompletionProgress completedItems={completedDocuments} totalItems={totalDocuments} />
@@ -120,22 +191,18 @@ export const FamilyLegacyBox: React.FC = () => {
       {/* Dialogs */}
       <UploadDocumentDialog 
         open={uploadDialogOpen} 
-        onClose={() => setUploadDialogOpen(false)}
-        onUpload={handleDocumentUpload}
-        documentId={selectedDocument?.id || ""}
+        onClose={() => setUploadDialogOpen(false)} 
       />
       
       <ShareDocumentDialog 
         open={shareDialogOpen} 
         onClose={() => setShareDialogOpen(false)} 
-        documentId={selectedDocument?.id || ""}
-        onShare={handleDocumentShare}
+        documentId={selectedDocument || ""} 
       />
       
       <TaxReturnUploadDialog 
-        open={taxReturnDialogOpen} 
-        onClose={() => setTaxReturnDialogOpen(false)}
-        onUpload={handleTaxReturnUpload}
+        open={false} 
+        onClose={() => {}} 
       />
     </div>
   );

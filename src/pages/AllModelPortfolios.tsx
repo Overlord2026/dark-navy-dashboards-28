@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
@@ -279,7 +278,7 @@ const AllModelPortfolios = () => {
   };
 
   return (
-    <ThreeColumnLayout title="All Model Portfolios">
+    <ThreeColumnLayout activeMainItem="investments" title="All Model Portfolios">
       <div className="space-y-8">
         <div className="flex items-center justify-between">
           <Button variant="outline" size="sm" onClick={() => navigate('/investments')} className="flex items-center gap-1">
