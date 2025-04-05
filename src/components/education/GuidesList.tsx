@@ -30,7 +30,7 @@ export function GuidesList() {
 
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 }
+    visible: { opacity: 1, y: 0, transition: { duration: 0.3 } }
   };
 
   return (
@@ -61,7 +61,7 @@ export function GuidesList() {
 
       {guides.length > 0 ? (
         <motion.div 
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
           variants={containerVariants}
           initial="hidden"
           animate="visible"
