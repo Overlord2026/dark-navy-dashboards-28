@@ -1,11 +1,10 @@
-
 import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { FileText, Plus, Trash2, ArrowUpDown } from "lucide-react";
+import { Plus } from "lucide-react";
 import { toast } from "sonner";
 import { EducationalResource } from "@/types/education";
-import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { GuideCard } from "./GuideCard";
+import { AddGuideForm } from "./AddGuideForm";
 
 // Initial guides data with image paths
 const initialGuides: EducationalResource[] = [
@@ -112,20 +111,13 @@ const initialGuides: EducationalResource[] = [
 
 export function GuidesList() {
   const [guides, setGuides] = useState<EducationalResource[]>(initialGuides);
-  const [newGuideTitle, setNewGuideTitle] = useState("");
-  const [newGuideDescription, setNewGuideDescription] = useState("");
   const [showAddForm, setShowAddForm] = useState(false);
 
-  const addGuide = () => {
-    if (!newGuideTitle.trim()) {
-      toast.error("Guide title is required");
-      return;
-    }
-
+  const addGuide = (title: string, description: string) => {
     const newGuide: EducationalResource = {
       id: `guide-${Date.now()}`,
-      title: newGuideTitle,
-      description: newGuideDescription || "No description provided",
+      title,
+      description: description || "No description provided",
       isPaid: false,
       level: "All Levels",
       duration: "Self-paced",
@@ -135,8 +127,6 @@ export function GuidesList() {
     };
 
     setGuides([...guides, newGuide]);
-    setNewGuideTitle("");
-    setNewGuideDescription("");
     setShowAddForm(false);
     toast.success("Guide added successfully");
   };
@@ -164,6 +154,10 @@ export function GuidesList() {
     setGuides(newGuides);
   };
 
+  const handleCancelAddForm = () => {
+    setShowAddForm(false);
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -179,112 +173,24 @@ export function GuidesList() {
       </div>
 
       {showAddForm && (
-        <Card className="bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800">
-          <CardHeader>
-            <CardTitle className="text-lg">Add New Guide</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium mb-1">Title</label>
-              <input
-                type="text"
-                value={newGuideTitle}
-                onChange={(e) => setNewGuideTitle(e.target.value)}
-                className="w-full p-2 rounded-md border border-blue-300 dark:border-blue-700 bg-background"
-                placeholder="Guide title"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Description</label>
-              <textarea
-                value={newGuideDescription}
-                onChange={(e) => setNewGuideDescription(e.target.value)}
-                className="w-full p-2 rounded-md border border-blue-300 dark:border-blue-700 bg-background"
-                rows={3}
-                placeholder="Guide description"
-              />
-            </div>
-          </CardContent>
-          <CardFooter>
-            <Button 
-              variant="default" 
-              className="bg-blue-500 hover:bg-blue-600"
-              onClick={addGuide}
-            >
-              Add Guide
-            </Button>
-          </CardFooter>
-        </Card>
+        <AddGuideForm 
+          onAddGuide={addGuide} 
+          onCancel={handleCancelAddForm} 
+        />
       )}
 
-      {/* Improved responsive grid layout */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-5">
         {guides.map((guide, index) => (
-          <Card 
-            key={guide.id} 
-            className="border-blue-200 dark:border-blue-800 hover:shadow-md transition-shadow flex flex-col overflow-hidden h-full"
-          >
-            <div className="relative">
-              <AspectRatio ratio={4/3} className="bg-muted">
-                <img 
-                  src={guide.image || "/placeholder.svg"} 
-                  alt={guide.title} 
-                  className="object-cover w-full h-full"
-                />
-              </AspectRatio>
-              <div className="absolute top-2 right-2 flex space-x-1">
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  onClick={() => moveGuideUp(index)}
-                  disabled={index === 0}
-                  className="h-8 w-8 p-0 bg-black/30 hover:bg-black/50 text-white rounded-full"
-                >
-                  <ArrowUpDown className="h-4 w-4 rotate-90" />
-                </Button>
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  onClick={() => moveGuideDown(index)}
-                  disabled={index === guides.length - 1}
-                  className="h-8 w-8 p-0 bg-black/30 hover:bg-black/50 text-white rounded-full"
-                >
-                  <ArrowUpDown className="h-4 w-4 -rotate-90" />
-                </Button>
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  onClick={() => deleteGuide(guide.id)}
-                  className="h-8 w-8 p-0 bg-black/30 hover:bg-black/50 text-white rounded-full"
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
-            <div className="flex flex-col flex-1">
-              <CardHeader className="pb-2 pt-3">
-                <CardTitle className="text-lg line-clamp-2">{guide.title}</CardTitle>
-                <CardDescription className="line-clamp-2">
-                  {guide.description}
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="pt-0 pb-3 flex-grow">
-                <div className="flex items-center text-sm text-muted-foreground">
-                  <FileText className="mr-2 h-4 w-4" />
-                  <span className="line-clamp-1">By {guide.author || "Unknown"} • {guide.level}</span>
-                </div>
-              </CardContent>
-              <CardFooter className="pt-0 mt-auto">
-                <Button 
-                  variant="outline" 
-                  className="w-full border-blue-300 dark:border-blue-700 hover:bg-blue-100 dark:hover:bg-blue-900/50"
-                  onClick={() => window.open(guide.ghlUrl, "_blank")}
-                >
-                  Read Guide
-                </Button>
-              </CardFooter>
-            </div>
-          </Card>
+          <GuideCard
+            key={guide.id}
+            guide={guide}
+            index={index}
+            onDelete={deleteGuide}
+            onMoveUp={moveGuideUp}
+            onMoveDown={moveGuideDown}
+            isFirst={index === 0}
+            isLast={index === guides.length - 1}
+          />
         ))}
       </div>
     </div>
