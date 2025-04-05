@@ -1,4 +1,5 @@
 
+
 /**
  * Represents the status of a diagnostic test
  * - success: Test passed successfully
@@ -53,7 +54,7 @@ export interface NavigationTestResult {
   route: string;
   status: DiagnosticTestStatus;
   message: string;
-  recommendations?: any[]; // Add this property to fix the error in SimpleDiagnosticsView
+  recommendations?: any[];
   componentStatus?: {
     rendered: boolean;
     loadTime?: number;
@@ -156,3 +157,4 @@ export interface ApiIntegrationTestResult {
   message: string;
   authStatus: "valid" | "invalid" | "expired" | "missing";
 }
+

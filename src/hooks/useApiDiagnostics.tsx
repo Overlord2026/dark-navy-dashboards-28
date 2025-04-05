@@ -1,6 +1,5 @@
-
 import { useState, useCallback } from 'react';
-import { ApiEndpointDiagnosticResult } from '@/types/diagnostics';
+import { ApiEndpointDiagnosticResult } from '@/services/diagnostics/types';
 import { testApiEndpoints } from '@/services/diagnostics/apiDiagnostics';
 import { toast } from 'sonner';
 
