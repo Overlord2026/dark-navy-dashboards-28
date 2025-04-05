@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
+import { toast } from "@/components/ui/use-toast";
 
 export default function LoginPage({ isAdvisor = false }) {
   const navigate = useNavigate();
@@ -19,6 +20,14 @@ export default function LoginPage({ isAdvisor = false }) {
     }
   };
   
+  const handleClientPortalAccess = () => {
+    navigate("/client-portal");
+    toast({
+      title: "Accessing Client Portal",
+      description: "No login required for now"
+    });
+  };
+  
   return (
     <div className="min-h-screen bg-[#F9F7E8] flex flex-col">
       <header className="w-full flex justify-center items-center py-4 border-b border-[#DCD8C0] bg-[#F9F7E8] sticky top-0 z-50">
@@ -30,9 +39,16 @@ export default function LoginPage({ isAdvisor = false }) {
               className="h-16 w-auto"
             />
           </Link>
-          <div>
+          <div className="flex gap-3">
             <Button variant="ghost" asChild>
               <Link to="/">Back to Home</Link>
+            </Button>
+            <Button 
+              variant="default" 
+              onClick={handleClientPortalAccess}
+              className="bg-green-600 hover:bg-green-700"
+            >
+              Skip to Client Portal
             </Button>
           </div>
         </div>
@@ -105,6 +121,16 @@ export default function LoginPage({ isAdvisor = false }) {
               </p>
             </div>
           )}
+
+          <div className="mt-6 pt-4 border-t border-gray-200 text-center">
+            <Button 
+              variant="link" 
+              onClick={handleClientPortalAccess}
+              className="text-green-600 hover:text-green-700"
+            >
+              Skip login and access Client Portal
+            </Button>
+          </div>
         </div>
       </div>
       

@@ -21,6 +21,7 @@ const AppRoutes: React.FC = () => {
   const isAdmin = userProfile?.role === "admin" || userProfile?.role === "system_administrator";
   const isDeveloper = isAdmin || userProfile?.role === "developer";
   
+  // Make Client Portal accessible regardless of authentication state
   if (!isAuthenticated) {
     return (
       <Routes>
