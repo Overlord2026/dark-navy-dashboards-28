@@ -1,3 +1,4 @@
+
 import { v4 as uuidv4 } from "uuid";
 import { toast } from "sonner";
 import { 
@@ -122,16 +123,22 @@ export class LocalFinancialPlanService implements FinancialPlanService {
   }
 
   async getPlans(): Promise<FinancialPlan[]> {
+    // TODO: Replace with real endpoint: GET /api/financial-plans
+    // This endpoint should return all financial plans for the authenticated user
     await this.initializeWithSampleData();
     return this.plans;
   }
 
   async getPlanById(id: string): Promise<FinancialPlan | null> {
+    // TODO: Replace with real endpoint: GET /api/financial-plans/:id
+    // This endpoint should return a specific financial plan by ID
     await this.initializeWithSampleData();
     return this.plans.find(plan => plan.id === id) || null;
   }
 
   async createPlan(planData: Partial<FinancialPlan>): Promise<FinancialPlan> {
+    // TODO: Replace with real endpoint: POST /api/financial-plans
+    // This endpoint should create a new financial plan with the provided data
     const now = new Date();
     const newPlan: FinancialPlan = {
       id: uuidv4(),
@@ -168,6 +175,8 @@ export class LocalFinancialPlanService implements FinancialPlanService {
   }
 
   async updatePlan(id: string, planData: Partial<FinancialPlan>): Promise<FinancialPlan | null> {
+    // TODO: Replace with real endpoint: PUT /api/financial-plans/:id
+    // This endpoint should update an existing financial plan with the provided data
     const planIndex = this.plans.findIndex(p => p.id === id);
     if (planIndex === -1) {
       toast.error("Plan not found");
@@ -188,6 +197,8 @@ export class LocalFinancialPlanService implements FinancialPlanService {
   }
 
   async deletePlan(id: string): Promise<boolean> {
+    // TODO: Replace with real endpoint: DELETE /api/financial-plans/:id
+    // This endpoint should delete a financial plan by ID
     const planIndex = this.plans.findIndex(p => p.id === id);
     if (planIndex === -1) {
       toast.error("Plan not found");
@@ -207,6 +218,8 @@ export class LocalFinancialPlanService implements FinancialPlanService {
   }
 
   async saveDraft(draftData: any): Promise<FinancialPlan> {
+    // TODO: Replace with real endpoint: POST /api/financial-plans/drafts
+    // This endpoint should save a draft financial plan
     // If updating an existing draft
     if (draftData.draftId) {
       const updatedPlan = await this.updatePlan(draftData.draftId, { 
@@ -238,6 +251,8 @@ export class LocalFinancialPlanService implements FinancialPlanService {
   }
 
   async getPlansSummary(): Promise<FinancialPlansSummary> {
+    // TODO: Replace with real endpoint: GET /api/financial-plans/summary
+    // This endpoint should return a summary of all financial plans for the authenticated user
     await this.initializeWithSampleData();
     
     return {
@@ -251,6 +266,8 @@ export class LocalFinancialPlanService implements FinancialPlanService {
   }
 
   async updateGoal(planId: string, goal: FinancialGoal): Promise<boolean> {
+    // TODO: Replace with real endpoint: PUT /api/financial-plans/:id/goals/:goalId
+    // This endpoint should update or create a financial goal for a specific plan
     const planIndex = this.plans.findIndex(p => p.id === planId);
     if (planIndex === -1) {
       toast.error("Plan not found");
@@ -283,6 +300,8 @@ export class LocalFinancialPlanService implements FinancialPlanService {
   }
 
   async setActivePlan(id: string): Promise<void> {
+    // TODO: Replace with real endpoint: PUT /api/financial-plans/:id/activate
+    // This endpoint should set a financial plan as active
     const plan = this.plans.find(p => p.id === id);
     if (!plan) {
       toast.error("Plan not found");
@@ -304,6 +323,8 @@ export class LocalFinancialPlanService implements FinancialPlanService {
   }
 
   async addExpense(planId: string, expense: Omit<Expense, "id">): Promise<Expense> {
+    // TODO: Replace with real endpoint: POST /api/financial-plans/:id/expenses
+    // This endpoint should add a new expense to a financial plan
     const plan = this.plans.find(p => p.id === planId);
     if (!plan) {
       toast.error("Plan not found");
@@ -393,6 +414,8 @@ export class LocalFinancialPlanService implements FinancialPlanService {
   }
 
   async duplicatePlan(id: string): Promise<FinancialPlan | null> {
+    // TODO: Replace with real endpoint: POST /api/financial-plans/:id/duplicate
+    // This endpoint should create a duplicate of an existing financial plan
     const planToDuplicate = this.plans.find(plan => plan.id === id);
     if (!planToDuplicate) {
       toast.error("Plan not found");

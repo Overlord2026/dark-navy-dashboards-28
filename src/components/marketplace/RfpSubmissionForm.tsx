@@ -87,6 +87,10 @@ export function RfpSubmissionForm() {
     ?.subcategories || [];
 
   function onSubmit(data: RfpFormValues) {
+    // TODO: Replace with real endpoint: POST /api/marketplace/rfps
+    // This endpoint should create a new Request for Proposal (RFP)
+    // Request body: full RFP data including service details, budget, timeline, etc.
+    // Response should include the newly created RFP ID and confirmation
     console.log("RFP Form Submission:", data);
     
     // In a real app, you would send this data to your backend

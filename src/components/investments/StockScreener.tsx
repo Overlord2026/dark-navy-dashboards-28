@@ -33,7 +33,6 @@ import {
 } from "recharts";
 import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
 
-// Interface for the price history data
 interface PriceHistoryDataPoint {
   date: string;
   price: number;
@@ -56,12 +55,10 @@ export const StockScreener: React.FC = () => {
     
     setLoadingHistory(true);
     try {
-      // Use the fetchStockPriceHistory function from the service
       const historyData = await fetchStockPriceHistory(stockSymbol, timeframe);
       setPriceHistory(historyData);
     } catch (err) {
       console.error("Error in fetchPriceHistory:", err);
-      // Generate mock data based on the current price as fallback
       const currentPrice = stockData?.price || 100;
       const daysToGenerate = calculateDaysFromTimeframe(timeframe);
       const mockHistory = generateMockPriceHistory(currentPrice, daysToGenerate);
@@ -92,12 +89,10 @@ export const StockScreener: React.FC = () => {
       const date = new Date(today);
       date.setDate(date.getDate() - i);
       
-      // More realistic price movement simulation
       const volatility = 0.01; // 1% daily volatility
       const change = (Math.random() - 0.45) * (price * volatility); // Slightly biased upward
       price += change;
       
-      // Ensure price doesn't go negative
       if (price <= 0) price = 0.01;
       
       data.push({
@@ -106,7 +101,6 @@ export const StockScreener: React.FC = () => {
       });
     }
     
-    // Ensure the last price matches the current price
     if (data.length > 0) {
       data[data.length - 1].price = currentPrice;
     }
@@ -140,7 +134,6 @@ export const StockScreener: React.FC = () => {
         
         toast.success(`Loaded data for ${data.companyName} (${data.symbol})`);
         
-        // Fetch price history after getting stock data
         await fetchPriceHistory(data.symbol, historyTimeframe);
       }
     } catch (err) {
@@ -177,10 +170,11 @@ export const StockScreener: React.FC = () => {
     }
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      handleSearch();
-    }
+  const handleScheduleAppointment = () => {
+    window.open("https://calendly.com/tonygomes/60min", "_blank");
+    toast.success("Opening scheduling page", {
+      description: `Schedule a meeting to discuss ${stockData?.symbol || "stock investments"} with your advisor.`,
+    });
   };
 
   const formatLargeNumber = (num: number | null) => {
@@ -195,13 +189,6 @@ export const StockScreener: React.FC = () => {
     } else {
       return `$${num.toLocaleString()}`;
     }
-  };
-
-  const handleScheduleAppointment = () => {
-    window.open("https://calendly.com/tonygomes/60min", "_blank");
-    toast.success("Opening scheduling page", {
-      description: `Schedule a meeting to discuss ${stockData?.symbol || "stock investments"} with your advisor.`,
-    });
   };
 
   const formatPercent = (num: number | null) => {

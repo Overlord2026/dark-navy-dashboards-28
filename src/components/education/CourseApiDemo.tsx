@@ -23,6 +23,9 @@ export const CourseApiDemo = () => {
     setResults(null);
     
     try {
+      // TODO: Replace with real endpoint: GET /api/courses
+      // This endpoint should return all available courses with optional filtering
+      // Authorization: Bearer token required
       const response = await fetchCourses(token);
       if (response.success) {
         setResults(response.data);

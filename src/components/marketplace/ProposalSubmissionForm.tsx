@@ -81,7 +81,10 @@ export function ProposalSubmissionForm({ rfpId }: ProposalSubmissionFormProps) {
   const onSubmit = (data: ProposalFormValues) => {
     setIsSubmitting(true);
     
-    // This would be an API call in a real application
+    // TODO: Replace with real endpoint: POST /api/marketplace/rfps/:rfpId/proposals
+    // This endpoint should submit a proposal for a specific RFP
+    // Request body: proposal data and supporting documents
+    // Supporting documents would require multipart/form-data encoding
     setTimeout(() => {
       console.log("Proposal data:", data);
       console.log("Supporting documents:", supportingDocs);
