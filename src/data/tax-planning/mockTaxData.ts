@@ -130,7 +130,7 @@ export const deductionCategories = [
 ];
 
 // Helper function to get icon component from string name
-export const getIconComponent = (iconName: string) => {
+export const getIconComponent = (iconName: string): React.ReactNode => {
   switch (iconName) {
     case "Save":
       return <Save className="h-5 w-5 text-green-400" />;
