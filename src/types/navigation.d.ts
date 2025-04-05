@@ -32,3 +32,16 @@ export interface NavCategory {
   items: NavItem[];
   defaultExpanded?: boolean;
 }
+
+export interface MainMenuItem {
+  id: string;
+  label: string;
+  href: string;
+  icon?: ReactNode;
+}
+
+export interface MainMenuCategory {
+  id: string;
+  label: string;
+  items: MainMenuItem[];
+}
