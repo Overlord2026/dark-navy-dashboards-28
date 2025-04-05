@@ -28,11 +28,7 @@ export function MobileCourseTabs({
         {featuredCourses.map((course) => (
           <MobileCourseCard 
             key={course.id}
-            title={course.title}
-            description={course.description}
-            level={course.level}
-            duration={course.duration}
-            isPaid={course.isPaid}
+            course={course}
             onClick={() => onCourseClick(course.id, course.title, course.isPaid, course.ghlUrl)}
           />
         ))}
@@ -42,11 +38,7 @@ export function MobileCourseTabs({
         {popularCourses.map((course) => (
           <MobileCourseCard 
             key={course.id}
-            title={course.title}
-            description={course.description}
-            level={course.level}
-            duration={course.duration}
-            isPaid={course.isPaid}
+            course={course}
             onClick={() => onCourseClick(course.id, course.title, course.isPaid, course.ghlUrl)}
           />
         ))}
@@ -54,3 +46,5 @@ export function MobileCourseTabs({
     </Tabs>
   );
 }
+
+export default MobileCourseTabs;

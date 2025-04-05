@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Course } from "@/types/education";
 import { coursesByCategory } from '@/data/education';
-import MobileCourseCard from '@/components/education/mobile/MobileCourseCard';
-import MobileCourseTabs from '@/components/education/mobile/MobileCourseTabs';
-import MobileCategoryGrid from '@/components/education/mobile/MobileCategoryGrid';
-import MobileResourceCards from '@/components/education/mobile/MobileResourceCards';
+import { MobileCourseCard } from '@/components/education/mobile/MobileCourseCard';
+import { MobileCourseTabs } from '@/components/education/mobile/MobileCourseTabs';
+import { MobileCategoryGrid } from '@/components/education/mobile/MobileCategoryGrid';
+import { MobileResourceCards } from '@/components/education/mobile/MobileResourceCards';
 
 // Ensure we strictly adhere to the Course type from the types/education file
 const filterCoursesToMatchType = (courses: any[]): Course[] => {
@@ -69,7 +69,10 @@ const MobileEducation = () => {
       {/* Content based on active tab */}
       <div className="px-4 py-3">
         {activeTab === 'categories' && (
-          <MobileCategoryGrid onSelectCategory={handleSelectCategory} />
+          <MobileCategoryGrid 
+            categories={[]} 
+            onSelectCategory={handleSelectCategory} 
+          />
         )}
         
         {activeTab === 'courses' && (

@@ -4,11 +4,15 @@ import { Course } from "@/types/education";
 
 interface MobileCourseCardProps {
   course: Course;
+  onClick?: () => void;
 }
 
-export const MobileCourseCard = ({ course }: MobileCourseCardProps) => {
+export const MobileCourseCard = ({ course, onClick }: MobileCourseCardProps) => {
   return (
-    <div className="bg-card rounded-lg overflow-hidden shadow-sm border border-border">
+    <div 
+      className="bg-card rounded-lg overflow-hidden shadow-sm border border-border"
+      onClick={onClick}
+    >
       <div 
         className="h-32 bg-cover bg-center" 
         style={{ backgroundImage: `url(${course.image})` }}

@@ -13,9 +13,10 @@ import { toast } from "sonner";
 
 interface MobileCategoryGridProps {
   categories: CourseCategory[];
+  onSelectCategory?: (categoryId: string) => void;
 }
 
-export function MobileCategoryGrid({ categories }: MobileCategoryGridProps) {
+export function MobileCategoryGrid({ categories, onSelectCategory }: MobileCategoryGridProps) {
   const getCategoryIcon = (categoryId: string) => {
     switch (categoryId) {
       case "retirement-income":
@@ -31,13 +32,25 @@ export function MobileCategoryGrid({ categories }: MobileCategoryGridProps) {
     }
   };
 
+  const handleCategoryClick = (categoryId: string) => {
+    if (onSelectCategory) {
+      onSelectCategory(categoryId);
+    } else {
+      toast.info("Category browsing coming soon");
+    }
+  };
+
   return (
     <div className="space-y-3">
       <h3 className="text-lg font-medium">Browse by Topic</h3>
       <div className="grid grid-cols-2 gap-3">
         {categories.slice(0, 6).map((category) => (
           category.id !== "all-courses" && (
-            <Card key={category.id} className="bg-[#1B1B32] border border-[#2A2A45]">
+            <Card 
+              key={category.id} 
+              className="bg-[#1B1B32] border border-[#2A2A45] cursor-pointer" 
+              onClick={() => handleCategoryClick(category.id)}
+            >
               <CardContent className="p-3">
                 <div className="flex flex-col items-center text-center">
                   <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mb-2">
@@ -56,3 +69,5 @@ export function MobileCategoryGrid({ categories }: MobileCategoryGridProps) {
     </div>
   );
 }
+
+export default MobileCategoryGrid;
