@@ -3,7 +3,7 @@ import React from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ChevronRight, ChevronLeft } from "lucide-react";
-import { Lender } from "@/data/lending/lenders";
+import { Lender } from "@/hooks/useLendingData";
 
 interface LendersListProps {
   paginatedLenders: Lender[];
