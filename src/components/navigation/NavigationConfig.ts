@@ -1,26 +1,33 @@
 
-// This file is now a re-export from our modularized navigation structure
 import { 
-  homeNavItems,
-  educationSolutionsNavItems,
-  familyWealthNavItems,
-  collaborationNavItems,
-  bottomNavItems,
-  investmentCategories
+  homeNavItems, 
+  educationSolutionsNavItems, 
+  familyWealthNavItems, 
+  collaborationNavItems 
 } from '@/navigation';
 
-// Re-export for backward compatibility
-export {
-  homeNavItems,
-  educationSolutionsNavItems,
-  familyWealthNavItems,
-  collaborationNavItems,
-  bottomNavItems,
+// You can define investmentCategories here instead of importing
+export const investmentCategories = [
+  {
+    id: "stocks",
+    name: "Stocks"
+  },
+  {
+    id: "bonds",
+    name: "Bonds"
+  },
+  {
+    id: "alternatives",
+    name: "Alternative Investments"
+  }
+];
+
+export const navigationConfig = {
+  mainNav: [
+    ...homeNavItems,
+    ...educationSolutionsNavItems,
+    ...familyWealthNavItems,
+    ...collaborationNavItems
+  ],
   investmentCategories
 };
-
-// Legacy exports (empty arrays to maintain backward compatibility)
-export const wealthManagementNavItems = [];
-export const bankingNavItems = [];
-export const securityNavItems = [];
-export const propertiesNavItems = [];

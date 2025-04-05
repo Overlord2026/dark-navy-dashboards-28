@@ -140,3 +140,6 @@ export const bottomNavItems: BottomNavItem[] = [
     href: "/more"
   }
 ];
+
+// Fix for investment categories export
+export const investmentCategories = [];
