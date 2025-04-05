@@ -5,7 +5,7 @@ import { Header } from "@/components/ui/Header";
 import { useTheme } from "@/context/ThemeContext";
 import { useUser } from "@/context/UserContext";
 import { SecondaryNavigation } from "./SecondaryNavigation";
-import { getSecondaryMenuItems } from "./navigationData";
+import { getSecondaryMenuItems } from "@/navigation/navigationData";
 import { NavBar } from "@/components/navigation/NavBar";
 
 export interface ThreeColumnLayoutProps {
