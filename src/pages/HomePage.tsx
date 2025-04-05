@@ -1,8 +1,8 @@
-
 import React from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ChevronRight, CheckCircle, Shield, Users, BarChart3, FileText, CreditCard } from "lucide-react";
+import { ForceDesktopToggle } from "@/components/ui/ForceDesktopToggle";
 
 export default function HomePage() {
   return (
@@ -21,6 +21,7 @@ export default function HomePage() {
             <Link to="/services" className="hover:text-primary font-medium">Services</Link>
             <Link to="/about" className="hover:text-primary font-medium">About Us</Link>
             <Link to="/contact" className="hover:text-primary font-medium">Contact</Link>
+            <ForceDesktopToggle />
           </div>
           <div className="flex gap-4">
             <Button variant="outline" asChild>

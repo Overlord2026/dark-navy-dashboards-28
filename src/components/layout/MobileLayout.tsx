@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { 
@@ -36,23 +35,22 @@ export function MobileLayout({
   const location = useLocation();
   const { theme } = useTheme();
   const { userProfile } = useUser();
-  const isMobile = useIsMobile();
+  const { isMobile } = useIsMobile();
   
   // If not on mobile, render the regular layout
   if (!isMobile) {
     return <>{children}</>;
   }
 
-  const isActive = (path: string) => {
+  function isActive(path: string) {
     return location.pathname === path || 
       (path !== "/" && location.pathname.startsWith(path));
-  };
+  }
 
-  // Check if current route is a route that should activate the "More" tab
-  const isMoreRoute = () => {
+  function isMoreRoute() {
     const moreRoutes = ['/more', '/tax-planning', '/education', '/profile', '/advisor-profile', '/security-settings'];
     return moreRoutes.some(route => location.pathname.startsWith(route));
-  };
+  }
 
   return (
     <div className="flex flex-col h-screen bg-[#12121C] text-white overflow-hidden">

@@ -17,6 +17,7 @@ import { AdvisorSection } from "@/components/profile/AdvisorSection";
 import { SidebarNavCategory } from "@/components/sidebar/SidebarNavCategory";
 import { SidebarBottomNav } from "@/components/sidebar/SidebarBottomNav";
 import { useSidebarState } from "@/hooks/useSidebarState";
+import { ForceDesktopToggle } from "@/components/ui/ForceDesktopToggle";
 
 export const Sidebar = () => {
   const { theme } = useTheme();
@@ -98,6 +99,9 @@ export const Sidebar = () => {
       </div>
 
       <div className="p-2 border-t mt-auto" style={{ borderColor: isLightTheme ? '#DCD8C0' : 'rgba(255,255,255,0.1)' }}>
+        {!collapsed && (
+          <ForceDesktopToggle className="mb-2" />
+        )}
         <div className={`px-2 mb-3 ${isLightTheme ? 'border-[#DCD8C0]' : 'border-white/10'}`}>
           <AdvisorSection 
             onViewProfile={handleViewProfile} 
