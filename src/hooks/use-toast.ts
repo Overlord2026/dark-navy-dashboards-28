@@ -1,19 +1,22 @@
 
-import { toast } from "sonner";
+import { toast as sonnerToast } from "sonner";
 
 type ToastProps = {
   title?: string;
   description?: string;
   action?: React.ReactElement;
   variant?: "default" | "destructive";
+  duration?: number;
 };
 
 const useToast = () => {
   const toasts: ToastProps[] = [];
 
   const showToast = (props: ToastProps) => {
-    toast(props.title, {
+    sonnerToast(props.title, {
       description: props.description,
+      action: props.action,
+      duration: props.duration,
     });
   };
 
@@ -23,4 +26,5 @@ const useToast = () => {
   };
 };
 
-export { useToast, toast };
+// Re-export sonner toast for direct usage
+export { useToast, sonnerToast as toast };
