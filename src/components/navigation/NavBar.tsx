@@ -15,6 +15,7 @@ import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { BottomNavItem } from "@/types/navigation";
 import { NavigationCategory } from "@/components/layout/NavigationCategory";
+import { UserProfileSection } from "@/components/sidebar/UserProfileSection";
 import { useViewportOverride } from "@/hooks/useViewportOverride";
 
 export const NavBar = () => {
@@ -70,24 +71,24 @@ export const NavBar = () => {
           collapsed ? "w-[60px]" : "w-[260px]"
         )}
       >
-        <div className="flex items-center justify-between h-16 px-4 border-b border-b-border-muted">
-          <Link to="/" className="flex items-center text-lg font-semibold">
-            {!collapsed && (
-              <>
-                <img
-                  src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png"
-                  alt="Boutique Family Office Logo"
-                  className="h-8 w-auto mr-2"
-                />
-                <span className="truncate">BFO</span>
-              </>
-            )}
-            {collapsed && (
+        {/* User Profile Section at the Top */}
+        {!collapsed && <UserProfileSection showLogo={true} />}
+        {collapsed && (
+          <div className="flex items-center justify-center h-16 px-4 border-b border-b-border-muted">
+            <Link to="/" className="flex items-center text-lg font-semibold">
               <img
                 src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png"
                 alt="Boutique Family Office Logo"
                 className="h-8 w-auto mx-auto"
               />
+            </Link>
+          </div>
+        )}
+
+        <div className="flex items-center justify-between h-16 px-4 border-b border-b-border-muted">
+          <Link to="/" className="flex items-center text-lg font-semibold">
+            {!collapsed && (
+              <span className="truncate">Navigation</span>
             )}
           </Link>
           <button
@@ -115,10 +116,26 @@ export const NavBar = () => {
           </nav>
         </div>
 
-        <div className="p-4 border-t border-t-border-muted">
+        {/* Advisor Profile Section at Bottom */}
+        <div className="p-4 mt-auto border-t border-t-border-muted">
+          <Link to="/advisor-profile">
+            <button
+              className="w-full py-2 px-3 rounded-md text-sm font-medium hover:bg-accent flex items-center"
+            >
+              {collapsed ? (
+                <Users className="h-5 w-5" />
+              ) : (
+                <>
+                  <Users className="h-5 w-5 mr-2" />
+                  <span>Advisor Profile</span>
+                </>
+              )}
+            </button>
+          </Link>
+          
           <button
             onClick={toggleTheme}
-            className="w-full py-2 px-3 rounded-md text-sm font-medium hover:bg-accent"
+            className="w-full py-2 px-3 mt-2 rounded-md text-sm font-medium hover:bg-accent"
           >
             {collapsed ? (isDark ? "☀️" : "🌙") : `Theme: ${isDark ? "Dark" : "Light"}`}
           </button>
