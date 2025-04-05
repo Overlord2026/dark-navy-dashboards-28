@@ -1,289 +1,199 @@
 
-import React from 'react';
-import { 
-  Landmark, 
-  BookOpen, 
-  FileText, 
-  Calendar,
-  CheckCircle
-} from 'lucide-react';
-
-export interface TaxDeduction {
-  id: string;
-  category: string;
-  amount: number;
-  percentage: number;
-  color: string;
-}
-
-export interface TaxDeadline {
-  id: string;
-  date: string;
-  title: string;
-  description: string;
-  daysLeft: number;
-}
-
-export interface TaxFiling {
-  id: string;
-  year: string;
-  status: 'Completed' | 'In Progress' | 'Not Started';
-  dueDate: string;
-  filedDate?: string;
-  refundAmount?: number;
-  taxPaid?: number;
-}
-
-export interface TaxCredit {
-  id: string;
-  name: string;
-  description: string;
-  estimatedValue: number;
-  icon: string;
-  eligibility: 'Eligible' | 'Potentially Eligible' | 'Not Eligible';
-  statusDescription: string;
-}
-
-export interface TaxTip {
-  id: string;
-  title: string;
-  description: string;
-  icon: string;
-  category: string;
-  readMoreUrl?: string;
-}
-
-export const mockDeductions: TaxDeduction[] = [
-  {
-    id: 'deduction-1',
-    category: 'Mortgage Interest',
-    amount: 12500,
-    percentage: 38,
-    color: 'blue'
-  },
-  {
-    id: 'deduction-2',
-    category: 'Charitable Donations',
-    amount: 5800,
-    percentage: 18,
-    color: 'green'
-  },
-  {
-    id: 'deduction-3',
-    category: 'Property Taxes',
-    amount: 7200,
-    percentage: 22,
-    color: 'violet'
-  },
-  {
-    id: 'deduction-4',
-    category: 'Medical Expenses',
-    amount: 3400,
-    percentage: 10,
-    color: 'red'
-  },
-  {
-    id: 'deduction-5',
-    category: 'State Income Taxes',
-    amount: 4100,
-    percentage: 12,
-    color: 'amber'
-  }
-];
-
-export const mockTaxDeadlines: TaxDeadline[] = [
-  {
-    id: 'deadline-1',
-    date: '2025-04-15',
-    title: 'Federal Income Tax Filing Deadline',
-    description: 'Last day to file your federal income tax return for the previous year or request an extension.',
-    daysLeft: 10
-  },
-  {
-    id: 'deadline-2',
-    date: '2025-06-15', 
-    title: 'Quarterly Estimated Taxes (Q2)',
-    description: 'Second quarter estimated tax payment due for the current tax year.',
-    daysLeft: 71
-  },
-  {
-    id: 'deadline-3',
-    date: '2025-09-15',
-    title: 'Quarterly Estimated Taxes (Q3)',
-    description: 'Third quarter estimated tax payment due for the current tax year.',
-    daysLeft: 163
-  },
-  {
-    id: 'deadline-4',
-    date: '2024-12-31',
-    title: 'Year-End Tax Planning Deadline',
-    description: 'Last day to make financial decisions that will impact your current tax year return.',
-    daysLeft: 270
-  }
-];
-
-export const mockTaxFilings: TaxFiling[] = [
-  {
-    id: 'filing-1',
-    year: '2024',
-    status: 'In Progress',
-    dueDate: '2025-04-15',
-    taxPaid: 0
-  },
-  {
-    id: 'filing-2',
-    year: '2023',
-    status: 'Completed',
-    dueDate: '2024-04-15',
-    filedDate: '2024-04-01',
-    refundAmount: 3250,
-    taxPaid: 28750
-  },
-  {
-    id: 'filing-3',
-    year: '2022',
-    status: 'Completed',
-    dueDate: '2023-04-15',
-    filedDate: '2023-04-10',
-    refundAmount: 1850,
-    taxPaid: 26400
-  }
-];
-
-export const mockTaxCredits: TaxCredit[] = [
-  {
-    id: 'credit-1',
-    name: 'Child Tax Credit',
-    description: 'Credit for qualifying children under 17',
-    estimatedValue: 2000,
-    icon: 'child',
-    eligibility: 'Eligible',
-    statusDescription: 'Based on reported dependents'
-  },
-  {
-    id: 'credit-2',
-    name: 'Retirement Savings Contribution Credit',
-    description: 'Credit for contributions to retirement accounts',
-    estimatedValue: 1000,
-    icon: 'piggy-bank',
-    eligibility: 'Potentially Eligible',
-    statusDescription: 'Based on retirement contributions'
-  },
-  {
-    id: 'credit-3',
-    name: 'Energy Efficiency Home Credit',
-    description: 'Credit for energy-efficient improvements',
-    estimatedValue: 500,
-    icon: 'zap',
-    eligibility: 'Not Eligible',
-    statusDescription: 'No qualifying improvements reported'
-  }
-];
-
-// Function to get icon component by name
-export const getIconComponent = (iconName: string): React.ReactNode => {
-  switch (iconName) {
-    case 'landmark':
-      return <Landmark size={20} />;
-    case 'book':
-      return <BookOpen size={20} />;
-    case 'file':
-      return <FileText size={20} />;
-    case 'calendar':
-      return <Calendar size={20} />;
-    case 'check':
-      return <CheckCircle size={20} />;
-    default:
-      return <FileText size={20} />;
-  }
-};
-
-export const mockTaxTips: TaxTip[] = [
-  {
-    id: 'tip-1',
-    title: 'Maximize Retirement Contributions',
-    description: 'Contributing to tax-advantaged retirement accounts like 401(k)s and IRAs can lower your taxable income.',
-    icon: 'landmark',
-    category: 'Retirement'
-  },
-  {
-    id: 'tip-2',
-    title: 'Harvest Tax Losses',
-    description: 'Consider selling investments that have lost value to offset capital gains and reduce your tax burden.',
-    icon: 'file',
-    category: 'Investments'
-  },
-  {
-    id: 'tip-3',
-    title: 'Bunch Itemized Deductions',
-    description: 'Consider "bunching" deductions by paying for two years of deductible expenses in one calendar year.',
-    icon: 'calendar',
-    category: 'Deductions'
-  },
-  {
-    id: 'tip-4',
-    title: 'Qualified Charitable Distributions',
-    description: 'If you're over 70½, consider making charitable donations directly from your IRA to satisfy RMDs tax-free.',
-    icon: 'check',
-    category: 'Charitable Giving'
-  }
-];
-
-// Tax bracket data
-export const taxBracketData = {
-  currentBracket: "24% Bracket",
-  estimatedLiability: 42500,
-  potentialSavings: 7800,
-  yearOverYearChange: -2350
-};
-
-// Tax strategies
-export interface TaxStrategy {
-  id: string;
-  title: string;
-  description: string;
-  impact: number;
-  icon: string;
-  status: 'implemented' | 'pending' | 'recommended';
-}
+// Mock data for tax planning
+import { TaxStrategy, TaxDeduction, TaxDeadline } from '../../types/taxTypes';
 
 export const taxStrategies: TaxStrategy[] = [
   {
-    id: 'strategy-1',
-    title: 'Max 401(k) Contributions',
-    description: 'Increase your tax-deferred retirement contributions to reduce taxable income.',
-    impact: 5680,
-    icon: 'landmark',
-    status: 'implemented'
+    id: '1',
+    title: 'Maximize Retirement Contributions',
+    description: 'Contribute the maximum allowed amount to your retirement accounts to reduce taxable income.',
+    potentialSavings: '5,000 - 10,000',
+    complexity: 'Low',
+    applicableFilingStatus: ['Single', 'Married Filing Jointly', 'Head of Household'],
+    incomeRange: { min: 50000, max: null }
   },
   {
-    id: 'strategy-2',
-    title: 'Tax Loss Harvesting',
-    description: 'Offset capital gains with strategic selling of investments that have experienced losses.',
-    impact: 3200,
-    icon: 'file',
-    status: 'pending'
+    id: '2',
+    title: 'Tax-Loss Harvesting',
+    description: 'Offset capital gains by selling investments at a loss to reduce tax liability.',
+    potentialSavings: '1,000 - 5,000',
+    complexity: 'Medium',
+    applicableFilingStatus: ['Single', 'Married Filing Jointly'],
+    incomeRange: { min: 100000, max: null }
   },
   {
-    id: 'strategy-3',
-    title: 'Charitable Giving',
-    description: 'Donate appreciated assets to charity to avoid capital gains tax.',
-    impact: 2100,
-    icon: 'check',
-    status: 'recommended'
+    id: '3',
+    title: 'Donor-Advised Fund',
+    description: 'Bundle multiple years of charitable contributions into a single year to exceed the standard deduction threshold.',
+    potentialSavings: '3,000 - 15,000',
+    complexity: 'Medium',
+    applicableFilingStatus: ['Married Filing Jointly'],
+    incomeRange: { min: 150000, max: null }
   },
   {
-    id: 'strategy-4',
-    title: 'HSA Contributions',
-    description: 'Maximize Health Savings Account contributions for triple tax advantages.',
-    impact: 1850,
-    icon: 'landmark',
-    status: 'recommended'
+    id: '4',
+    title: 'Qualified Business Income Deduction',
+    description: 'Take advantage of the 20% pass-through deduction for qualified business income.',
+    potentialSavings: '10,000 - 50,000',
+    complexity: 'High',
+    applicableFilingStatus: ['Single', 'Married Filing Jointly', 'Head of Household'],
+    incomeRange: { min: 75000, max: 426600 }
+  },
+  {
+    id: '5',
+    title: 'Tax-Advantaged Education Accounts',
+    description: 'Contribute to 529 plans or Coverdell ESAs to save for education expenses with tax advantages.',
+    potentialSavings: '1,000 - 5,000',
+    complexity: 'Low',
+    applicableFilingStatus: ['Single', 'Married Filing Jointly', 'Head of Household'],
+    incomeRange: { min: 50000, max: null }
   }
 ];
 
-// Tax deadlines (duplicating mockTaxDeadlines with a different export name for consistency)
-export const taxDeadlines = mockTaxDeadlines;
+export const taxDeductions: TaxDeduction[] = [
+  {
+    id: '1',
+    name: 'Mortgage Interest',
+    description: 'Deduct interest paid on home mortgages up to $750,000 of debt.',
+    maxDeduction: 'Interest on up to $750,000 of mortgage debt',
+    eligibility: 'Homeowners with a mortgage',
+    documentationNeeded: ['Mortgage interest statement (Form 1098)', 'Proof of payments']
+  },
+  {
+    id: '2',
+    name: 'Charitable Contributions',
+    description: 'Deduct donations to qualified charitable organizations.',
+    maxDeduction: 'Up to 60% of adjusted gross income',
+    eligibility: 'Must itemize deductions',
+    documentationNeeded: ['Receipts for donations', 'Acknowledgement letters for donations over $250']
+  },
+  {
+    id: '3',
+    name: 'State and Local Taxes (SALT)',
+    description: 'Deduct state and local income or sales taxes, and property taxes.',
+    maxDeduction: 'Limited to $10,000',
+    eligibility: 'Must itemize deductions',
+    documentationNeeded: ['Property tax statements', 'State tax returns', 'Sales tax receipts']
+  },
+  {
+    id: '4',
+    name: 'Medical Expenses',
+    description: 'Deduct qualifying medical expenses that exceed 7.5% of your adjusted gross income.',
+    maxDeduction: 'Expenses exceeding 7.5% of AGI',
+    eligibility: 'Must itemize deductions',
+    documentationNeeded: ['Medical bills', 'Insurance statements', 'Receipts for medical expenses']
+  },
+  {
+    id: '5',
+    name: 'Student Loan Interest',
+    description: 'Deduct interest paid on student loans up to $2,500.',
+    maxDeduction: 'Up to $2,500',
+    eligibility: 'Income must be below $85,000 (single) or $170,000 (joint)',
+    documentationNeeded: ['Form 1098-E from loan servicer']
+  },
+  {
+    id: '6',
+    name: 'Home Office Deduction',
+    description: 'Deduct expenses related to using part of your home exclusively for business.',
+    maxDeduction: 'Varies based on home size and expenses',
+    eligibility: 'Self-employed individuals who use part of their home exclusively for business',
+    documentationNeeded: ['Home expenses records', 'Measurements of office space vs. total home']
+  },
+  {
+    id: '7',
+    name: 'Health Savings Account (HSA) Contributions',
+    description: 'Deduct contributions to an HSA if you have a high-deductible health plan.',
+    maxDeduction: 'Up to $3,650 for individuals, $7,300 for families (2022)',
+    eligibility: 'Must have a high-deductible health plan',
+    documentationNeeded: ['HSA contribution statements', 'Form 5498-SA']
+  },
+  {
+    id: '8',
+    name: 'IRA Contributions',
+    description: 'Deduct contributions to a traditional IRA.',
+    maxDeduction: 'Up to $6,000 ($7,000 if 50 or older)',
+    eligibility: 'Income and retirement plan restrictions apply',
+    documentationNeeded: ['IRA contribution receipts', 'Form 5498']
+  }
+];
 
-// Deduction categories (duplicating mockDeductions with a different export name for consistency)
-export const deductionCategories = mockDeductions;
+export const taxDeadlines = [
+  {
+    id: '1',
+    title: 'Federal Tax Return Filing',
+    dueDate: '2023-04-18',
+    description: 'Deadline for filing individual federal tax returns for tax year 2022.',
+    lateFilingPenalty: '5% of unpaid taxes each month, up to 25%',
+    extensions: 'Form 4868 can extend deadline to October 16'
+  },
+  {
+    id: '2',
+    title: 'Q1 Estimated Tax Payment',
+    dueDate: '2023-04-18',
+    description: 'First quarter estimated tax payment for tax year 2023.',
+    lateFilingPenalty: 'Varies based on amount owed and timing',
+    extensions: 'No extensions available'
+  },
+  {
+    id: '3',
+    title: 'Q2 Estimated Tax Payment',
+    dueDate: '2023-06-15',
+    description: 'Second quarter estimated tax payment for tax year 2023.',
+    lateFilingPenalty: 'Varies based on amount owed and timing',
+    extensions: 'No extensions available'
+  },
+  {
+    id: '4',
+    title: 'Q3 Estimated Tax Payment',
+    dueDate: '2023-09-15',
+    description: 'Third quarter estimated tax payment for tax year 2023.',
+    lateFilingPenalty: 'Varies based on amount owed and timing',
+    extensions: 'No extensions available'
+  },
+  {
+    id: '5',
+    title: 'Extended Tax Return Filing',
+    dueDate: '2023-10-16',
+    description: 'Deadline for filing individual tax returns if an extension was requested.',
+    lateFilingPenalty: '5% of unpaid taxes each month, up to 25%',
+    extensions: 'No further extensions available'
+  },
+  {
+    id: '6',
+    title: 'Q4 Estimated Tax Payment',
+    dueDate: '2024-01-16',
+    description: 'Fourth quarter estimated tax payment for tax year 2023.',
+    lateFilingPenalty: 'Varies based on amount owed and timing',
+    extensions: 'No extensions available'
+  }
+];
+
+export const taxBrackets = {
+  single: [
+    { rate: 10, min: 0, max: 10275 },
+    { rate: 12, min: 10276, max: 41775 },
+    { rate: 22, min: 41776, max: 89075 },
+    { rate: 24, min: 89076, max: 170050 },
+    { rate: 32, min: 170051, max: 215950 },
+    { rate: 35, min: 215951, max: 539900 },
+    { rate: 37, min: 539901, max: null }
+  ],
+  marriedJoint: [
+    { rate: 10, min: 0, max: 20550 },
+    { rate: 12, min: 20551, max: 83550 },
+    { rate: 22, min: 83551, max: 178150 },
+    { rate: 24, min: 178151, max: 340100 },
+    { rate: 32, min: 340101, max: 431900 },
+    { rate: 35, min: 431901, max: 647850 },
+    { rate: 37, min: 647851, max: null }
+  ],
+  headOfHousehold: [
+    { rate: 10, min: 0, max: 14650 },
+    { rate: 12, min: 14651, max: 55900 },
+    { rate: 22, min: 55901, max: 89050 },
+    { rate: 24, min: 89051, max: 170050 },
+    { rate: 32, min: 170051, max: 215950 },
+    { rate: 35, min: 215951, max: 539900 },
+    { rate: 37, min: 539901, max: null }
+  ]
+};

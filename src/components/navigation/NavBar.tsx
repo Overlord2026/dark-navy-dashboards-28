@@ -23,13 +23,9 @@ export const NavBar = () => {
   const {
     collapsed,
     expandedCategories,
-    expandedSubmenus,
-    forceUpdate,
     toggleSidebar,
     toggleCategory,
-    toggleSubmenu,
     isActive,
-    setCollapsed
   } = useSidebarState(navigationCategories);
 
   const toggleTheme = () => {
@@ -62,9 +58,6 @@ export const NavBar = () => {
       href: "/profile",
     }
   ];
-
-  // Determine if we should show desktop or mobile view based on screen size
-  // This will be handled with CSS
 
   return (
     <div className="flex h-full">
