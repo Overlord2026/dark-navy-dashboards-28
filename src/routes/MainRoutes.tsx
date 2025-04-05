@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 import Dashboard from "../pages/Dashboard";
@@ -40,6 +39,9 @@ const MainRoutes = () => {
       <Route path="/help" element={<Help />} />
       <Route path="/profile" element={<CustomerProfile />} />
       <Route path="/advisor-profile" element={<AdvisorProfile />} />
+
+      {/* Financial Management */}
+      <Route path="/bill-pay" element={<BillPay />} />
       
       {/* Education & Solutions section */}
       <Route path="/education" element={<Education />} />
@@ -64,7 +66,6 @@ const MainRoutes = () => {
       <Route path="/legacy-vault" element={<LegacyVault />} />
       <Route path="/social-security" element={<SocialSecurity />} />
       <Route path="/properties" element={<Properties />} />
-      <Route path="/billpay" element={<BillPay />} />
       
       {/* Collaboration & Sharing section */}
       <Route path="/documents" element={<Documents />} />

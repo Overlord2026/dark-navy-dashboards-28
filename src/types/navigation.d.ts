@@ -19,7 +19,7 @@ export interface NavigationProps {
 export interface NavItem {
   title: string;
   href: string;
-  icon: LucideIcon;
+  icon: LucideIcon | ReactNode;
   badge?: string;
   disabled?: boolean;
   external?: boolean;

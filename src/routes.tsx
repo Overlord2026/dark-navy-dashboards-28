@@ -151,6 +151,16 @@ const AppRoutes: React.FC = () => {
           }
         />
 
+        {/* Bill Pay direct route */}
+        <Route
+          path="bill-pay"
+          element={
+            <Suspense fallback={<Fallback />}>
+              <BillPay />
+            </Suspense>
+          }
+        />
+        
         {/* Finance Routes */}
         <Route path="finance/*" element={<FinanceRoutes />} />
 

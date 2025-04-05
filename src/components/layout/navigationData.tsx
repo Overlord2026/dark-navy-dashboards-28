@@ -23,10 +23,23 @@ import {
   Plug,
   Inbox,
 } from "lucide-react";
-import { NavItem, NavCategory, NavigationProps, SubNavigationItem } from "@/types/navigation";
+import { NavItem, NavCategory } from "@/types/navigation";
+
+// Main navigation data structure
+interface NavigationItemProps {
+  title: string;
+  icon: React.ReactNode;
+  href: string;
+  isMainNavItem: boolean;
+  subItems?: Array<{
+    title: string;
+    href: string;
+    icon?: React.ReactNode;
+  }>;
+}
 
 // Main navigation data
-const navigationData: NavigationProps[] = [
+const navigationData: NavigationItemProps[] = [
   {
     title: "Overview",
     icon: <LayoutDashboard className="mr-2 h-4 w-4" />,
