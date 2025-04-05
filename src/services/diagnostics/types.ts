@@ -53,6 +53,7 @@ export interface NavigationTestResult {
   route: string;
   status: DiagnosticTestStatus;
   message: string;
+  recommendations?: any[]; // Add this property to fix the error in SimpleDiagnosticsView
   componentStatus?: {
     rendered: boolean;
     loadTime?: number;
