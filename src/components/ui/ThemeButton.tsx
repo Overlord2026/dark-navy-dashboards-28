@@ -1,6 +1,6 @@
 
 import React from 'react';
-import useTheme from '@/hooks/useTheme';
+import { useTheme } from '@/hooks/useTheme';
 import { Button } from '@/components/ui/button';
 import { Moon, Sun } from 'lucide-react';
 
@@ -17,6 +17,7 @@ export const ThemeButton = () => {
       size="icon"
       onClick={toggleTheme}
       aria-label={`Switch to ${isDark ? 'light' : 'dark'} theme`}
+      className="transition-colors duration-200"
     >
       {isDark ? (
         <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all" />

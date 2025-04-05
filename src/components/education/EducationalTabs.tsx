@@ -12,6 +12,7 @@ import { GuidesList } from "./GuidesList";
 import { BooksList } from "./BooksList";
 import { WhitepapersList } from "./WhitepapersList";
 import { educationalResources } from "@/data/education/educationalResources";
+import { useTheme } from "@/hooks/useTheme";
 
 interface EducationalTabsProps {
   activeSection: string;
@@ -28,6 +29,8 @@ export function EducationalTabs({
   setActiveCategory,
   handleCourseEnrollment
 }: EducationalTabsProps) {
+  
+  const { isDark } = useTheme();
   
   // Get the courses for the selected category
   const getCoursesByCategoryId = (categoryId: string) => {
@@ -76,25 +79,25 @@ export function EducationalTabs({
       <TabsList className="mb-6 grid grid-cols-4 gap-2">
         <TabsTrigger 
           value="courses" 
-          className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-lg transition-all duration-200"
+          className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md transition-all duration-200"
         >
           Courses
         </TabsTrigger>
         <TabsTrigger 
           value="guides" 
-          className="data-[state=active]:bg-blue-500 data-[state=active]:text-white data-[state=active]:shadow-lg border-2 border-blue-200 transition-all duration-200"
+          className={`data-[state=active]:bg-blue-500 data-[state=active]:text-white data-[state=active]:shadow-md border-2 ${isDark ? 'border-blue-800' : 'border-blue-200'} transition-all duration-200`}
         >
           Guides
         </TabsTrigger>
         <TabsTrigger 
           value="books" 
-          className="data-[state=active]:bg-amber-500 data-[state=active]:text-white data-[state=active]:shadow-lg border-2 border-amber-200 transition-all duration-200"
+          className={`data-[state=active]:bg-amber-500 data-[state=active]:text-white data-[state=active]:shadow-md border-2 ${isDark ? 'border-amber-800' : 'border-amber-200'} transition-all duration-200`}
         >
           Books
         </TabsTrigger>
         <TabsTrigger 
           value="consultants" 
-          className="data-[state=active]:bg-purple-500 data-[state=active]:text-white data-[state=active]:shadow-lg border-2 border-purple-200 transition-all duration-200"
+          className={`data-[state=active]:bg-purple-500 data-[state=active]:text-white data-[state=active]:shadow-md border-2 ${isDark ? 'border-purple-800' : 'border-purple-200'} transition-all duration-200`}
         >
           Consultants
         </TabsTrigger>

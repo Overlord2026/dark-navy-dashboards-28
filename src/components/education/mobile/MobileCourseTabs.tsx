@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Course } from "@/types/education";
 import { MobileCourseCard } from "./MobileCourseCard";
+import { useTheme } from "@/hooks/useTheme";
 
 interface MobileCourseTabsProps {
   featuredCourses: Course[];
@@ -24,6 +25,7 @@ export function MobileCourseTabs({
   onClearCategory
 }: MobileCourseTabsProps) {
   const [internalActiveTab, setInternalActiveTab] = useState<string>("featured");
+  const { isDark } = useTheme();
   
   // Use external state if provided, otherwise use internal state
   const activeTab = externalActiveTab || internalActiveTab;
@@ -38,17 +40,17 @@ export function MobileCourseTabs({
 
   return (
     <Tabs defaultValue="featured" value={activeTab} onValueChange={handleTabChange}>
-      <TabsList className="grid grid-cols-2 w-full bg-[#1B1B32] border border-[#2A2A45]">
+      <TabsList className="grid grid-cols-2 w-full bg-card border border-border">
         <TabsTrigger value="featured" className="text-sm">Featured</TabsTrigger>
         <TabsTrigger value="popular" className="text-sm">Popular</TabsTrigger>
       </TabsList>
       
       {selectedCategory && (
-        <div className="mt-3 flex items-center">
-          <span className="text-sm">Viewing: {selectedCategory}</span>
+        <div className="mt-3 flex items-center justify-between">
+          <span className="text-sm font-medium">Viewing: {selectedCategory}</span>
           {onClearCategory && (
             <button 
-              className="ml-2 text-xs text-blue-400 underline"
+              className="ml-2 text-xs text-primary underline"
               onClick={onClearCategory}
             >
               Clear

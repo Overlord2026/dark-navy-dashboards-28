@@ -6,6 +6,7 @@ import { CalendarClock, Download, File, Heart } from "lucide-react";
 import { toast } from "sonner";
 import { auditLog } from "@/services/auditLog/auditLogService";
 import { InvestmentOffering } from "@/data/mock/investments";
+import { useTheme } from "@/hooks/useTheme";
 
 interface OfferingDetailsTabsProps {
   offering: InvestmentOffering;
@@ -13,6 +14,7 @@ interface OfferingDetailsTabsProps {
 
 export const OfferingDetailsTabs: React.FC<OfferingDetailsTabsProps> = ({ offering }) => {
   const [isLiked, setIsLiked] = React.useState(false);
+  const { isDark } = useTheme();
   
   const handleDownloadPPM = () => {
     const userId = "current-user"; // In a real app, get from auth context
@@ -158,7 +160,7 @@ export const OfferingDetailsTabs: React.FC<OfferingDetailsTabsProps> = ({ offeri
       </TabsContent>
       
       <TabsContent value="terms" className="space-y-4">
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="bg-muted rounded-md p-3">
             <p className="text-sm font-medium">Minimum Investment</p>
             <p className="text-lg font-bold">{offering.minimumInvestment}</p>
@@ -180,7 +182,7 @@ export const OfferingDetailsTabs: React.FC<OfferingDetailsTabsProps> = ({ offeri
         <div className="space-y-2">
           <h3 className="text-lg font-medium">Fee Structure</h3>
           <div className="bg-muted rounded-md p-4">
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               <div>
                 <p className="text-sm font-medium">Management Fee</p>
                 <p className="text-sm">1.5-2.0% annually</p>
@@ -215,15 +217,15 @@ export const OfferingDetailsTabs: React.FC<OfferingDetailsTabsProps> = ({ offeri
       
       <TabsContent value="materials" className="space-y-4">
         <div className="space-y-4">
-          <div className="rounded-md border p-4 flex justify-between items-center">
+          <div className="rounded-md border p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
             <div className="flex items-center">
-              <File className="h-8 w-8 text-blue-500 mr-3" />
+              <File className="h-8 w-8 text-blue-500 mr-3 flex-shrink-0" />
               <div>
                 <p className="font-medium">Private Placement Memorandum</p>
                 <p className="text-sm text-muted-foreground">PDF, 2.8MB</p>
               </div>
             </div>
-            <Button variant="outline" size="sm" onClick={handleDownloadPPM}>
+            <Button variant="outline" size="sm" onClick={handleDownloadPPM} className="ml-0 sm:ml-auto">
               <Download className="h-4 w-4 mr-1" /> Download
             </Button>
           </div>
@@ -269,17 +271,19 @@ export const OfferingDetailsTabs: React.FC<OfferingDetailsTabsProps> = ({ offeri
         </div>
       </TabsContent>
       
-      <div className="flex justify-between mt-8">
+      <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mt-8">
         <Button 
           variant={isLiked ? "default" : "outline"} 
-          className={`gap-2 ${isLiked ? "bg-red-500 hover:bg-red-600" : ""}`}
+          className={`gap-2 w-full sm:w-auto ${isLiked ? "bg-red-500 hover:bg-red-600" : ""}`}
           onClick={handleLike}
         >
           <Heart className={`h-4 w-4 ${isLiked ? "fill-white" : ""}`} />
           {isLiked ? "Interested" : "Express Interest"}
         </Button>
         
-        <ScheduleMeetingDialog assetName={offering.name} />
+        <div className="w-full sm:w-auto">
+          <ScheduleMeetingDialog assetName={offering.name} />
+        </div>
       </div>
     </Tabs>
   );

@@ -3,6 +3,8 @@ import { useContext } from 'react';
 import { ThemeContext } from '@/context/ThemeContext';
 import theme from '@/styles/theme';
 
+type ThemeType = typeof theme;
+
 /**
  * Custom hook to access theme values and theme control functions
  * 
@@ -18,7 +20,7 @@ export function useTheme() {
   
   return {
     ...themeContext,
-    theme,
+    theme: theme as ThemeType,
   };
 }
 

@@ -31,7 +31,7 @@ export const ThemeExample = () => {
         <div className="p-4 border rounded-md">
           <h3 className="text-lg font-medium mb-2">Theme Colors</h3>
           <div className="flex flex-wrap gap-2">
-            {Object.entries(getThemeValue('colors.primary')).map(([key, color]) => (
+            {Object.entries(getThemeValue('colors.primary') || {}).map(([key, color]) => (
               <div key={key} className="flex flex-col items-center">
                 <div 
                   className="w-10 h-10 rounded-md"
@@ -47,11 +47,11 @@ export const ThemeExample = () => {
         <div className="p-4 border rounded-md">
           <h3 className="text-lg font-medium mb-2">Theme Typography</h3>
           <div className="space-y-2">
-            <p style={{ fontSize: getThemeValue('typography.fontSizes.xs') }}>Extra Small Text (xs)</p>
-            <p style={{ fontSize: getThemeValue('typography.fontSizes.sm') }}>Small Text (sm)</p>
-            <p style={{ fontSize: getThemeValue('typography.fontSizes.base') }}>Base Text (base)</p>
-            <p style={{ fontSize: getThemeValue('typography.fontSizes.lg') }}>Large Text (lg)</p>
-            <p style={{ fontSize: getThemeValue('typography.fontSizes.xl') }}>Extra Large Text (xl)</p>
+            <p style={{ fontSize: getThemeValue('typography.fontSizes.xs') as string }}>Extra Small Text (xs)</p>
+            <p style={{ fontSize: getThemeValue('typography.fontSizes.sm') as string }}>Small Text (sm)</p>
+            <p style={{ fontSize: getThemeValue('typography.fontSizes.base') as string }}>Base Text (base)</p>
+            <p style={{ fontSize: getThemeValue('typography.fontSizes.lg') as string }}>Large Text (lg)</p>
+            <p style={{ fontSize: getThemeValue('typography.fontSizes.xl') as string }}>Extra Large Text (xl)</p>
           </div>
         </div>
         
@@ -64,8 +64,8 @@ export const ThemeExample = () => {
                 <div 
                   className="bg-primary rounded-md"
                   style={{ 
-                    width: getThemeValue(`spacing.${size}`),
-                    height: getThemeValue(`spacing.${size}`)
+                    width: getThemeValue(`spacing.${size}`) as string,
+                    height: getThemeValue(`spacing.${size}`) as string
                   }}
                 />
                 <span className="text-xs mt-1">{size}</span>
@@ -82,7 +82,7 @@ export const ThemeExample = () => {
               <div 
                 key={shadow}
                 className="h-16 rounded-md bg-card"
-                style={{ boxShadow: getThemeValue(`shadows.${shadow}`) }}
+                style={{ boxShadow: getThemeValue(`shadows.${shadow}`) as string }}
               >
                 <div className="p-2 text-xs">{shadow}</div>
               </div>
