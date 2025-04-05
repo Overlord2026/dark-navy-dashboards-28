@@ -9,6 +9,7 @@ import CustomerProfile from "../pages/CustomerProfile";
 import AdvisorProfile from "../pages/AdvisorProfile";
 import Education from "../pages/Education";
 import AllAssets from "../pages/AllAssets";
+import Investments from "../pages/Investments";
 import NotFound from "../pages/NotFound";
 
 const MainRoutes = () => {
@@ -24,6 +25,9 @@ const MainRoutes = () => {
       <Route path="/education" element={<Education />} />
       <Route path="/education/:categoryId" element={<Education />} />
       <Route path="/all-assets" element={<AllAssets />} />
+      <Route path="/investments" element={<Investments />} /> {/* Added this line */}
+      <Route path="/investments/alternative/:category" element={<Investments />} /> {/* Added for alternative investments */}
+      <Route path="/investments/alternative/all" element={<Investments />} /> {/* For all alternative investments view */}
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
