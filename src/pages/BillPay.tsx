@@ -78,6 +78,7 @@ const BillPay = () => {
   const [showReminderDialog, setShowReminderDialog] = useState(false);
   const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>(DEFAULT_PAYMENT_METHODS);
   const [selectedBillForAction, setSelectedBillForAction] = useState<Bill | null>(null);
+  const [showPaymentMethodsDialog, setShowPaymentMethodsDialog] = useState(false);
 
   const billsSummary = useMemo(() => {
     const today = new Date();

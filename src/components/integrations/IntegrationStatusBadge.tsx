@@ -1,10 +1,10 @@
 
 import React from "react";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle, AlertTriangle, AlertCircle, Clock } from "lucide-react";
+import { CheckCircle, AlertTriangle, AlertCircle, Clock, HelpCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-type IntegrationStatus = "connected" | "disconnected" | "error" | "pending";
+type IntegrationStatus = "connected" | "disconnected" | "error" | "pending" | "low-confidence" | "medium-confidence" | "high-confidence";
 
 interface IntegrationStatusBadgeProps {
   status: IntegrationStatus;
@@ -37,6 +37,24 @@ export function IntegrationStatusBadge({ status, className }: IntegrationStatusB
           icon: Clock,
           label: "Pending",
           className: "bg-yellow-100 text-yellow-700 border-yellow-200"
+        };
+      case "low-confidence":
+        return {
+          icon: HelpCircle,
+          label: "Low Confidence",
+          className: "bg-red-100 text-red-700 border-red-200"
+        };
+      case "medium-confidence":
+        return {
+          icon: HelpCircle,
+          label: "Medium Confidence",
+          className: "bg-yellow-100 text-yellow-700 border-yellow-200"
+        };
+      case "high-confidence":
+        return {
+          icon: CheckCircle,
+          label: "High Confidence",
+          className: "bg-green-100 text-green-700 border-green-200"
         };
     }
   };

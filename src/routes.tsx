@@ -23,6 +23,9 @@ const BillPay = lazy(() => import("./pages/BillPay"));
 const Properties = lazy(() => import("./pages/Properties"));
 const IntegrationsManagement = lazy(() => import("./pages/IntegrationsManagement"));
 
+// New Bill Inbox Page
+const BillInbox = lazy(() => import("./pages/BillInbox"));
+
 // Public pages
 const AboutUsPage = lazy(() => import("./pages/AboutUsPage"));
 const ContactPage = lazy(() => import("./pages/ContactPage"));
@@ -155,6 +158,14 @@ const AppRoutes: React.FC = () => {
               element={
                 <Suspense fallback={<Fallback />}>
                   <BillPay />
+                </Suspense>
+              }
+            />
+            <Route
+              path="bill-inbox"
+              element={
+                <Suspense fallback={<Fallback />}>
+                  <BillInbox />
                 </Suspense>
               }
             />

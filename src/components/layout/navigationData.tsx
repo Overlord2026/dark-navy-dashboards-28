@@ -22,6 +22,7 @@ import {
   BadgeAlert,
   Bookmark,
   Plug,
+  Inbox,
 } from "lucide-react";
 import { NavigationProps } from "@/types/navigation";
 
@@ -42,6 +43,11 @@ const navigationData: NavigationProps[] = [
         title: "Bill Pay",
         icon: <Receipt className="mr-2 h-4 w-4" />,
         href: "/bill-pay",
+      },
+      {
+        title: "Bill Inbox",
+        icon: <Inbox className="mr-2 h-4 w-4" />,
+        href: "/bill-inbox",
       },
       {
         title: "Transfers",
