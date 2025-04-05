@@ -55,7 +55,8 @@ export const NavigationCategory = ({
                 key={item.id}
                 item={{
                   id: item.id,
-                  // Fix: Ensure label is required and derived from title if not present
+                  // Ensure both title and label are available
+                  title: item.title || item.label || "",
                   label: item.title || item.label || "",
                   icon: item.icon,
                   href: item.href
@@ -76,7 +77,8 @@ export const NavigationCategory = ({
               key={item.id}
               item={{
                 id: item.id,
-                // Fix: Ensure label is required and derived from title if not present
+                // Ensure both title and label are available
+                title: item.title || item.label || "",
                 label: item.title || item.label || "",
                 icon: item.icon,
                 href: item.href

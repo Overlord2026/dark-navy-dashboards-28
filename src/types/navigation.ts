@@ -3,8 +3,8 @@ import { LucideIcon } from "lucide-react";
 
 export interface MainMenuItem {
   id: string;
-  title: string;
-  label?: string; // Adding label for backward compatibility
+  title: string;  // Required property
+  label?: string; // Optional for backward compatibility
   description?: string;
   icon?: LucideIcon;
   href: string;
