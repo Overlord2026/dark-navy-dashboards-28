@@ -1,13 +1,14 @@
 
+import React from "react";
 import { toast as sonnerToast } from "sonner";
 
-type ToastProps = {
+export interface ToastProps {
   title?: string;
   description?: string;
   action?: React.ReactElement;
   variant?: "default" | "destructive";
   duration?: number;
-};
+}
 
 const useToast = () => {
   const toasts: ToastProps[] = [];

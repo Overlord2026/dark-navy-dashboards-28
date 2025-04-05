@@ -1,9 +1,8 @@
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { FileSpreadsheet, BarChart, CircleDollarSign, Wallet, RefreshCw, ArrowRight, CheckCircle } from "lucide-react";
-import { toast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import {
   Dialog,
   DialogContent,
@@ -30,6 +29,7 @@ export function AccountingSoftwareIntegration() {
   const [selectedSoftware, setSelectedSoftware] = useState<AccountingSoftware | null>(null);
   const [oauthUrl, setOauthUrl] = useState("");
   const [manualApiKey, setManualApiKey] = useState("");
+  const { toast } = useToast();
 
   const accountingSoftwareOptions: AccountingSoftware[] = [
     {
@@ -68,8 +68,6 @@ export function AccountingSoftwareIntegration() {
     setSelectedSoftware(software);
     setIsConnectDialogOpen(true);
     
-    // In a real implementation, you would set the OAuth URL for each provider
-    // This is a placeholder
     switch (software.id) {
       case "quickbooks":
         setOauthUrl("https://appcenter.intuit.com/connect/oauth2");
@@ -83,15 +81,12 @@ export function AccountingSoftwareIntegration() {
   };
 
   const handleConnect = () => {
-    // For OAuth-based services like QuickBooks or Xero
     if (oauthUrl && selectedSoftware) {
-      // In a real implementation, you would redirect to OAuth
       toast({
         title: "Connecting to " + selectedSoftware.name,
         description: "You'll be redirected to authorize this connection"
       });
       
-      // Simulating successful connection for demonstration
       setTimeout(() => {
         toast({
           title: selectedSoftware.name + " Connected",
@@ -99,7 +94,6 @@ export function AccountingSoftwareIntegration() {
         });
       }, 2000);
     } 
-    // For API key-based services
     else if (manualApiKey && selectedSoftware) {
       toast({
         title: selectedSoftware.name + " Connected",
@@ -117,7 +111,6 @@ export function AccountingSoftwareIntegration() {
       description: "Your financial data is being imported"
     });
     
-    // Simulate completed sync
     setTimeout(() => {
       toast({
         title: "Data sync complete",

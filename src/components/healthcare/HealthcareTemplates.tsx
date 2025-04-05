@@ -1,9 +1,8 @@
-
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { FileText, Download, Plus } from "lucide-react";
-import { toast } from "@/hooks/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { DocumentItem } from "@/types/document";
 import { auditLog } from "@/services/auditLog/auditLogService";
@@ -63,6 +62,7 @@ export const HealthcareTemplates: React.FC<HealthcareTemplatesProps> = ({
 }) => {
   const [selectedTemplate, setSelectedTemplate] = useState<typeof healthcareTemplates[0] | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const { toast } = useToast();
   
   const handleTemplateSelect = (template: typeof healthcareTemplates[0]) => {
     setSelectedTemplate(template);

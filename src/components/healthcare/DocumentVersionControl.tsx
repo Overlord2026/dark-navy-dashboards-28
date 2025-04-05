@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -7,7 +6,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { History, FileSymlink, RotateCcw, Eye } from "lucide-react";
 import { DocumentItem } from "@/types/document";
 import { format, parseISO } from "date-fns";
-import { toast } from "@/hooks/use-toast";
+import { useToast } from "@/hooks/use-toast";
 
 // Sample version history data structure
 export interface DocumentVersion {
@@ -35,6 +34,8 @@ export const DocumentVersionControl: React.FC<DocumentVersionControlProps> = ({
   documents,
   onViewDocument
 }) => {
+  const { toast } = useToast();
+
   // Get unique documents that have been modified
   const getDocumentsWithHistory = () => {
     // In a real implementation, this would query a version history database
