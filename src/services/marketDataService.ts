@@ -1,257 +1,60 @@
 
-// Service to fetch market data from free APIs
+// Mock service to fetch investment category data
+// This would be replaced with actual API calls in a production environment
 
-interface MarketData {
-  id: string;
-  name: string;
+export interface MarketData {
   ytdPerformance: number;
-  isLoading: boolean;
-  error?: string;
+  quarterlyPerformance?: number;
+  annualizedReturn?: number;
+  volatility?: number;
 }
 
-// Cache for market data to avoid excessive API calls
-const marketDataCache: Record<string, { data: MarketData, timestamp: number }> = {};
-const CACHE_DURATION = 15 * 60 * 1000; // 15 minutes in milliseconds
+export interface MarketDataResponse {
+  [key: string]: MarketData;
+}
 
-/**
- * Fetches data from Alpha Vantage API for a specific symbol
- * Using the free tier with demo API key for educational purposes
- */
-const fetchAlphaVantageData = async (symbol: string): Promise<number> => {
-  const response = await fetch(
-    `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=demo`
-  );
+// Simulated API call
+export const getAllInvestmentCategoryData = async (): Promise<MarketDataResponse> => {
+  // Simulate API latency
+  await new Promise(resolve => setTimeout(resolve, 800));
   
-  if (!response.ok) {
-    throw new Error(`Failed to fetch data for ${symbol}`);
-  }
-  
-  const data = await response.json();
-  
-  // Check if we have the expected data structure
-  if (!data['Global Quote'] || !data['Global Quote']['10. change percent']) {
-    throw new Error('Invalid API response format');
-  }
-  
-  // Extract the change percentage (format: "2.3200%")
-  const changePercentStr = data['Global Quote']['10. change percent'];
-  const changePercent = parseFloat(changePercentStr.replace('%', ''));
-  
-  return changePercent;
+  // Return mock data
+  return {
+    'private-equity': { 
+      ytdPerformance: 12.4,
+      quarterlyPerformance: 3.2,
+      annualizedReturn: 16.8,
+      volatility: 18.5
+    },
+    'private-debt': { 
+      ytdPerformance: 8.7,
+      quarterlyPerformance: 2.1,
+      annualizedReturn: 9.4,
+      volatility: 8.2
+    },
+    'digital-assets': { 
+      ytdPerformance: 15.8,
+      quarterlyPerformance: 7.5,
+      annualizedReturn: 22.3,
+      volatility: 35.8
+    },
+    'real-assets': { 
+      ytdPerformance: 9.1,
+      quarterlyPerformance: 2.8,
+      annualizedReturn: 11.3,
+      volatility: 12.4
+    }
+  };
 };
 
-/**
- * Get live performance data for private equity using SPY ETF as a proxy
- */
-export const getPrivateEquityData = async (): Promise<MarketData> => {
-  const cacheKey = 'private-equity';
+export const getPortfolioModelById = async (id: string) => {
+  // This would be an actual API call in production
+  await new Promise(resolve => setTimeout(resolve, 600));
   
-  // Check if we have fresh cached data
-  if (marketDataCache[cacheKey] && 
-      (Date.now() - marketDataCache[cacheKey].timestamp) < CACHE_DURATION) {
-    return marketDataCache[cacheKey].data;
-  }
-
-  try {
-    // For private equity, we'll use SPY (S&P 500 ETF) as a proxy
-    const changePercent = await fetchAlphaVantageData('SPY');
-    
-    const result: MarketData = {
-      id: 'private-equity',
-      name: 'Private Equity',
-      ytdPerformance: parseFloat(changePercent.toFixed(1)),
-      isLoading: false
-    };
-    
-    // Cache the result
-    marketDataCache[cacheKey] = {
-      data: result,
-      timestamp: Date.now()
-    };
-    
-    return result;
-  } catch (error) {
-    console.error('Error fetching private equity data:', error);
-    
-    // Return fallback data
-    return {
-      id: 'private-equity',
-      name: 'Private Equity',
-      ytdPerformance: 12.4, // Fallback value
-      isLoading: false,
-      error: error instanceof Error ? error.message : 'Unknown error'
-    };
-  }
-};
-
-/**
- * Get live performance data for private debt using LQD ETF as a proxy
- */
-export const getPrivateDebtData = async (): Promise<MarketData> => {
-  const cacheKey = 'private-debt';
-  
-  if (marketDataCache[cacheKey] && 
-      (Date.now() - marketDataCache[cacheKey].timestamp) < CACHE_DURATION) {
-    return marketDataCache[cacheKey].data;
-  }
-
-  try {
-    // For private debt, we'll use LQD (iShares iBoxx $ Investment Grade Corporate Bond ETF)
-    const changePercent = await fetchAlphaVantageData('LQD');
-    
-    const result: MarketData = {
-      id: 'private-debt',
-      name: 'Private Debt',
-      ytdPerformance: parseFloat(changePercent.toFixed(1)),
-      isLoading: false
-    };
-    
-    marketDataCache[cacheKey] = {
-      data: result,
-      timestamp: Date.now()
-    };
-    
-    return result;
-  } catch (error) {
-    console.error('Error fetching private debt data:', error);
-    return {
-      id: 'private-debt',
-      name: 'Private Debt',
-      ytdPerformance: 8.7, // Fallback value
-      isLoading: false,
-      error: error instanceof Error ? error.message : 'Unknown error'
-    };
-  }
-};
-
-/**
- * Get live performance data for digital assets using GBTC ETF as a proxy
- */
-export const getDigitalAssetsData = async (): Promise<MarketData> => {
-  const cacheKey = 'digital-assets';
-  
-  if (marketDataCache[cacheKey] && 
-      (Date.now() - marketDataCache[cacheKey].timestamp) < CACHE_DURATION) {
-    return marketDataCache[cacheKey].data;
-  }
-
-  try {
-    // For digital assets, use GBTC (Grayscale Bitcoin Trust)
-    const changePercent = await fetchAlphaVantageData('GBTC');
-    
-    const result: MarketData = {
-      id: 'digital-assets',
-      name: 'Digital Assets',
-      ytdPerformance: parseFloat(changePercent.toFixed(1)),
-      isLoading: false
-    };
-    
-    marketDataCache[cacheKey] = {
-      data: result,
-      timestamp: Date.now()
-    };
-    
-    return result;
-  } catch (error) {
-    console.error('Error fetching digital assets data:', error);
-    return {
-      id: 'digital-assets',
-      name: 'Digital Assets',
-      ytdPerformance: 15.8, // Fallback value
-      isLoading: false,
-      error: error instanceof Error ? error.message : 'Unknown error'
-    };
-  }
-};
-
-/**
- * Get live performance data for real assets using XLRE ETF as a proxy
- */
-export const getRealAssetsData = async (): Promise<MarketData> => {
-  const cacheKey = 'real-assets';
-  
-  if (marketDataCache[cacheKey] && 
-      (Date.now() - marketDataCache[cacheKey].timestamp) < CACHE_DURATION) {
-    return marketDataCache[cacheKey].data;
-  }
-
-  try {
-    // For real assets, use XLRE (Real Estate Select Sector SPDR Fund)
-    const changePercent = await fetchAlphaVantageData('XLRE');
-    
-    const result: MarketData = {
-      id: 'real-assets',
-      name: 'Real Assets',
-      ytdPerformance: parseFloat(changePercent.toFixed(1)),
-      isLoading: false
-    };
-    
-    marketDataCache[cacheKey] = {
-      data: result,
-      timestamp: Date.now()
-    };
-    
-    return result;
-  } catch (error) {
-    console.error('Error fetching real assets data:', error);
-    return {
-      id: 'real-assets',
-      name: 'Real Assets',
-      ytdPerformance: 9.1, // Fallback value
-      isLoading: false,
-      error: error instanceof Error ? error.message : 'Unknown error'
-    };
-  }
-};
-
-// Function to fetch all investment category data at once
-export const getAllInvestmentCategoryData = async (): Promise<Record<string, MarketData>> => {
-  try {
-    const [privateEquity, privateDebt, digitalAssets, realAssets] = await Promise.all([
-      getPrivateEquityData(),
-      getPrivateDebtData(),
-      getDigitalAssetsData(),
-      getRealAssetsData()
-    ]);
-    
-    return {
-      'private-equity': privateEquity,
-      'private-debt': privateDebt,
-      'digital-assets': digitalAssets,
-      'real-assets': realAssets
-    };
-  } catch (error) {
-    console.error('Error fetching all investment category data:', error);
-    // Return fallback data
-    return {
-      'private-equity': {
-        id: 'private-equity',
-        name: 'Private Equity',
-        ytdPerformance: 12.4,
-        isLoading: false,
-        error: 'Failed to fetch data'
-      },
-      'private-debt': {
-        id: 'private-debt',
-        name: 'Private Debt',
-        ytdPerformance: 8.7,
-        isLoading: false,
-        error: 'Failed to fetch data'
-      },
-      'digital-assets': {
-        id: 'digital-assets',
-        name: 'Digital Assets',
-        ytdPerformance: 15.8,
-        isLoading: false,
-        error: 'Failed to fetch data'
-      },
-      'real-assets': {
-        id: 'real-assets',
-        name: 'Real Assets',
-        ytdPerformance: 9.1,
-        isLoading: false,
-        error: 'Failed to fetch data'
-      }
-    };
-  }
+  // Return mock data based on id
+  // In a real implementation, this would fetch from an API
+  return {
+    id,
+    // Additional portfolio details would be fetched here
+  };
 };
