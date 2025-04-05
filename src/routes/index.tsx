@@ -2,11 +2,9 @@
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useUser } from "../context/UserContext";
-import { useIsMobile } from "../hooks/use-mobile";
 
 // Import components
 import PublicRoutes from "./PublicRoutes";
-import MobileRoutes from "./MobileRoutes";
 import MainRoutes from "./MainRoutes";
 import FinanceRoutes from "./FinanceRoutes";
 import WealthRoutes from "./WealthRoutes";
@@ -19,9 +17,6 @@ const AppRoutes: React.FC = () => {
   const isAdmin = userProfile?.role === "admin" || userProfile?.role === "system_administrator";
   const isDeveloper = isAdmin || userProfile?.role === "developer";
   
-  // Use useIsMobile hook inside the component
-  const isMobile = useIsMobile();
-
   if (!isAuthenticated) {
     return (
       <Routes>
@@ -32,12 +27,7 @@ const AppRoutes: React.FC = () => {
     );
   }
 
-  // Use mobile routes when on a mobile device
-  if (isMobile) {
-    return <MobileRoutes />;
-  }
-
-  // Desktop routes
+  // Desktop routes only
   return (
     <Routes>
       <Route path="/*" element={<MainRoutes />} />

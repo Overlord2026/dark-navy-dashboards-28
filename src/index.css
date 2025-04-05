@@ -1,3 +1,4 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
@@ -123,19 +124,19 @@
   }
 
   h1 {
-    @apply text-2xl sm:text-[24px];
+    @apply text-2xl;
   }
 
   h2 {
-    @apply text-xl sm:text-2xl;
+    @apply text-xl;
   }
 
   h3 {
-    @apply text-lg sm:text-xl;
+    @apply text-lg;
   }
 
   h4 {
-    @apply text-base sm:text-lg;
+    @apply text-base;
   }
 }
 
@@ -194,35 +195,5 @@
   
   .light-theme [data-sidebar="menu-button"][data-active="true"] {
     @apply bg-[#E9E7D8] text-[#222222];
-  }
-  
-  .animate-slide-in-right {
-    animation: slideInRight 0.3s ease-out forwards;
-  }
-  
-  .animate-slide-out-right {
-    animation: slideOutRight 0.3s ease-out forwards;
-  }
-  
-  @keyframes slideInRight {
-    from {
-      transform: translateX(100%);
-      opacity: 0;
-    }
-    to {
-      transform: translateX(0);
-      opacity: 1;
-    }
-  }
-  
-  @keyframes slideOutRight {
-    from {
-      transform: translateX(0);
-      opacity: 1;
-    }
-    to {
-      transform: translateX(100%);
-      opacity: 0;
-    }
   }
 }
