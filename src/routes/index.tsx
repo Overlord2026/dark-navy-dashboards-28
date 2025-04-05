@@ -32,9 +32,10 @@ const AppRoutes: React.FC = () => {
     );
   }
 
-  // Desktop routes only
+  // Desktop routes only for authenticated users
   return (
     <Routes>
+      <Route path="/client-portal" element={<ClientPortal />} />
       <Route path="/*" element={<MainRoutes />} />
       <Route path="finance/*" element={<FinanceRoutes />} />
       <Route path="wealth/*" element={<WealthRoutes />} />
@@ -48,7 +49,6 @@ const AppRoutes: React.FC = () => {
       )}
       
       <Route path="login" element={<Navigate to="/" replace />} /> 
-      <Route path="client-portal" element={<ClientPortal />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

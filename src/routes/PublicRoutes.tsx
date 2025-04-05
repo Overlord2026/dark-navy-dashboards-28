@@ -31,6 +31,7 @@ const PublicRoutes = () => {
       <Route path="/disclosures" element={<DisclosuresPage />} />
       <Route path="/accessibility" element={<AccessibilityPage />} />
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/client-portal" element={<ClientPortal />} />
       <Route path="/" element={<HomePage />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
