@@ -10,6 +10,7 @@ import AdvisorProfile from "../pages/AdvisorProfile";
 import Education from "../pages/Education";
 import AllAssets from "../pages/AllAssets";
 import Investments from "../pages/Investments";
+import PersonalInsurance from "../pages/PersonalInsurance";
 import NotFound from "../pages/NotFound";
 
 const MainRoutes = () => {
@@ -28,6 +29,7 @@ const MainRoutes = () => {
       <Route path="/investments" element={<Investments />} /> {/* Added this line */}
       <Route path="/investments/alternative/:category" element={<Investments />} /> {/* Added for alternative investments */}
       <Route path="/investments/alternative/all" element={<Investments />} /> {/* For all alternative investments view */}
+      <Route path="/insurance" element={<PersonalInsurance />} /> {/* Added insurance route */}
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
