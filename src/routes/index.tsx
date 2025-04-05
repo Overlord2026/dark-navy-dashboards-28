@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
@@ -14,14 +13,9 @@ import LoginPage from "../pages/LoginPage";
 import ClientPortal from "../pages/ClientPortal";
 import NotFound from "../pages/NotFound";
 
-// Protected route component
+// Protected route component - now directly renders children without auth check
 const ProtectedClientPortal = () => {
-  const { isAuthenticated } = useAuth();
-  
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  }
-  
+  // Authentication check removed as requested
   return <ClientPortal />;
 };
 
@@ -34,7 +28,7 @@ const AppRoutes: React.FC = () => {
       {/* Keep advisor login */}
       <Route path="/advisor/login" element={<LoginPage isAdvisor={true} />} />
       
-      {/* Protected Client Portal route */}
+      {/* Protected Client Portal route - now without authentication check */}
       <Route path="/client-portal" element={<ProtectedClientPortal />} />
       
       {/* Public routes */}
