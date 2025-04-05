@@ -1,10 +1,9 @@
 
 import React, { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { NavCategory, NavItem } from "@/types/navigation";
 import { useTheme } from "@/context/ThemeContext";
 import { navigationCategories } from "@/navigation/navCategories";
 import { bottomNavItems } from "@/navigation/bottomNavigation";
@@ -12,46 +11,22 @@ import { UserProfileSection } from "@/components/sidebar/UserProfileSection";
 import { AdvisorSection } from "@/components/profile/AdvisorSection";
 import { SidebarNavCategory } from "@/components/sidebar/SidebarNavCategory";
 import { SidebarBottomNav } from "@/components/sidebar/SidebarBottomNav";
+import { useSidebarState } from "@/hooks/useSidebarState";
 
 export const NavBar: React.FC = () => {
   const { theme } = useTheme();
   const isLightTheme = theme === "light";
   const location = useLocation();
   
-  // Sidebar state
-  const [collapsed, setCollapsed] = useState(false);
-  const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>(
-    navigationCategories.reduce((acc, category) => {
-      acc[category.id] = category.defaultExpanded ?? false;
-      return acc;
-    }, {} as Record<string, boolean>)
-  );
-  const [expandedSubmenus, setExpandedSubmenus] = useState<Record<string, boolean>>({});
-  
-  const toggleSidebar = () => {
-    setCollapsed(!collapsed);
-  };
-
-  const toggleCategory = (categoryId: string) => {
-    setExpandedCategories(prev => ({
-      ...prev,
-      [categoryId]: !prev[categoryId]
-    }));
-  };
-
-  const toggleSubmenu = (itemTitle: string, e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setExpandedSubmenus(prev => ({
-      ...prev,
-      [itemTitle]: !prev[itemTitle]
-    }));
-  };
-
-  const isActive = (href: string) => {
-    return location.pathname === href || 
-           (href !== "/" && location.pathname.startsWith(href));
-  };
+  const {
+    collapsed,
+    expandedCategories,
+    expandedSubmenus,
+    toggleSidebar,
+    toggleCategory,
+    toggleSubmenu,
+    isActive,
+  } = useSidebarState(navigationCategories);
 
   const handleBookSession = () => {
     console.log("Book session clicked");
