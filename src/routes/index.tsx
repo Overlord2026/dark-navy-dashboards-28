@@ -18,6 +18,8 @@ const AppRoutes: React.FC = () => {
   const { isAuthenticated, userProfile } = useUser();
   const isAdmin = userProfile?.role === "admin" || userProfile?.role === "system_administrator";
   const isDeveloper = isAdmin || userProfile?.role === "developer";
+  
+  // Use useIsMobile hook inside the component
   const isMobile = useIsMobile();
 
   if (!isAuthenticated) {
