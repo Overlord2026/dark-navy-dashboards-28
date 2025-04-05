@@ -15,7 +15,7 @@ export const mockLifePolicies: LifeInsurancePolicy[] = [
     endDate: "2043-01-15",
     renewalDate: "2024-01-15",
     documents: ["policy_document.pdf", "beneficiary_form.pdf"],
-    beneficiaries: ["Spouse (Primary)", "Children (Contingent)"],
+    beneficiaries: "Spouse (Primary), Children (Contingent)", // Changed from array to string
     deathBenefit: 500000,
     policyType: "term",
     termLength: 20
@@ -33,7 +33,7 @@ export const mockLifePolicies: LifeInsurancePolicy[] = [
     endDate: "",
     renewalDate: "2024-06-10",
     documents: ["policy_document.pdf", "cash_value_statement.pdf"],
-    beneficiaries: ["Spouse (50%)", "Trust (50%)"],
+    beneficiaries: "Spouse (50%), Trust (50%)", // Changed from array to string
     deathBenefit: 1000000,
     policyType: "whole",
     cashValue: 45000
@@ -129,9 +129,9 @@ export const mockUmbrellaPolicies: UmbrellaInsurancePolicy[] = [
 
 export const getAllMockInsurancePolicies = (): InsurancePolicy[] => {
   return [
-    ...mockLifePolicies,
+    ...mockLifePolicies as unknown as InsurancePolicy[],
     ...mockHealthPolicies,
-    ...mockPropertyPolicies,
+    ...mockPropertyPolicies as unknown as InsurancePolicy[],
     ...mockUmbrellaPolicies
   ];
 };

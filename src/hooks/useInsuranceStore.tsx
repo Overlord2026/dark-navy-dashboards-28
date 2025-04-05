@@ -3,6 +3,12 @@ import { create } from 'zustand';
 import { InsurancePolicy } from '@/types/insurance';
 import { getAllMockInsurancePolicies } from '@/data/mock/insurance';
 
+// Define the policy types for the dashboard
+export interface PolicyType {
+  id: string;
+  name: string;
+}
+
 // Define Document type for better type safety
 interface InsuranceDocument {
   id: string;
@@ -16,11 +22,15 @@ interface InsuranceStoreState {
   addPolicy: (policy: InsurancePolicy) => void;
   removePolicy: (id: string) => void;
   updatePolicy: (id: string, updates: Partial<InsurancePolicy>) => void;
-  addDocument: (policyId: string, document: string | InsuranceDocument) => void;
+  addDocument: (policyId: string, document: string) => void;
   removeDocument: (policyId: string, documentIndex: number) => void;
+  // Computed properties
+  policyTypes: PolicyType[];
+  totalPremium: number;
+  totalCoverage: number;
 }
 
-export const useInsuranceStore = create<InsuranceStoreState>((set) => ({
+export const useInsuranceStore = create<InsuranceStoreState>((set, get) => ({
   policies: getAllMockInsurancePolicies(),
   
   addPolicy: (policy) => set((state) => ({
@@ -71,5 +81,29 @@ export const useInsuranceStore = create<InsuranceStoreState>((set) => ({
           }
         : policy
     )
-  }))
+  })),
+
+  // Computed properties
+  get policyTypes() {
+    const types = new Set<string>();
+    get().policies.forEach(policy => types.add(policy.type));
+    
+    return Array.from(types).map(type => {
+      let name = type.charAt(0).toUpperCase() + type.slice(1);
+      if (type === "term-life" || type === "permanent-life") name = "Life";
+      if (type === "homeowners" || type === "auto") name = "Property";
+      return { id: type, name };
+    });
+  },
+  
+  get totalPremium() {
+    return get().policies.reduce((sum, policy) => sum + policy.premium, 0);
+  },
+  
+  get totalCoverage() {
+    return get().policies.reduce((sum, policy) => {
+      const coverage = policy.coverage || policy.coverageAmount || 0;
+      return sum + coverage;
+    }, 0);
+  }
 }));

@@ -1,3 +1,4 @@
+
 export interface InsurancePolicy {
   id: string;
   name: string;
@@ -51,7 +52,7 @@ export interface AutoInsurancePolicy extends InsurancePolicy {
 }
 
 export interface LifeInsurancePolicy extends InsurancePolicy {
-  beneficiaries: string[];
+  beneficiaries: string; // Changed from string[] to string to match base interface
   deathBenefit: number;
   policyType: "term" | "whole" | "universal" | "variable";
   termLength?: number; // Only for term policies

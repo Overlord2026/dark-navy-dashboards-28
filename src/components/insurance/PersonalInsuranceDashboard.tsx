@@ -7,12 +7,7 @@ import { useInsuranceStore } from "@/hooks/useInsuranceStore";
 import { UploadDocumentDialog } from "@/components/documents/UploadDocumentDialog";
 
 export const PersonalInsuranceDashboard = () => {
-  const { 
-    policies, 
-    policyTypes, 
-    totalPremium, 
-    totalCoverage 
-  } = useInsuranceStore();
+  const { policies, policyTypes, totalPremium, totalCoverage } = useInsuranceStore();
   const [isUploadDialogOpen, setIsUploadDialogOpen] = React.useState(false);
   const [activeCategory, setActiveCategory] = React.useState<string | null>(null);
 
@@ -48,7 +43,7 @@ export const PersonalInsuranceDashboard = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <PolicyTypeCard 
           title="Life Insurance" 
-          count={policyCountByType['term-life'] || 0 + policyCountByType['permanent-life'] || 0} 
+          count={(policyCountByType['term-life'] || 0) + (policyCountByType['permanent-life'] || 0)} 
           icon={<Heart className="h-8 w-8 text-red-500" />} 
           href="#life" 
         />
@@ -60,13 +55,13 @@ export const PersonalInsuranceDashboard = () => {
         />
         <PolicyTypeCard 
           title="Health Insurance" 
-          count={policyCountByType['health'] || 0 + policyCountByType['long-term-care'] || 0} 
+          count={(policyCountByType['health'] || 0) + (policyCountByType['long-term-care'] || 0)} 
           icon={<Shield className="h-8 w-8 text-green-500" />} 
           href="#health" 
         />
         <PolicyTypeCard 
           title="Property Insurance" 
-          count={policyCountByType['homeowners'] || 0 + policyCountByType['auto'] || 0} 
+          count={(policyCountByType['homeowners'] || 0) + (policyCountByType['auto'] || 0)} 
           icon={<Home className="h-8 w-8 text-amber-500" />} 
           href="#property" 
         />

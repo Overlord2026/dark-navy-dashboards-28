@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -62,11 +61,14 @@ export const LifeInsuranceTab = () => {
       provider: data.provider,
       premium: data.premium,
       frequency: data.frequency,
+      coverage: data.coverageAmount,
       coverageAmount: data.coverageAmount,
+      status: "active",
       startDate: data.startDate,
-      endDate: data.endDate,
-      beneficiaries: data.beneficiaries,
-      policyNumber: data.policyNumber,
+      endDate: data.endDate || "",
+      renewalDate: new Date(new Date(data.startDate).setFullYear(new Date(data.startDate).getFullYear() + 1)).toISOString().split('T')[0],
+      beneficiaries: data.beneficiaries || "",
+      policyNumber: data.policyNumber || "",
       documents: [],
     });
     
