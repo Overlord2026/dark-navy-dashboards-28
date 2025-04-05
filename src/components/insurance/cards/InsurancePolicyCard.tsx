@@ -3,18 +3,7 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Trash, UploadCloud, FileText, Clock, AlertTriangle } from "lucide-react";
-
-interface InsurancePolicy {
-  id: string;
-  type: string;
-  provider: string;
-  policyNumber: string;
-  coverageAmount: string;
-  premium: string;
-  renewalDate: string;
-  documents?: string[];
-  beneficiaries?: string[];
-}
+import { InsurancePolicy } from "@/types/insurance";
 
 interface InsurancePolicyCardProps {
   policy: InsurancePolicy;
@@ -32,6 +21,15 @@ export const InsurancePolicyCard: React.FC<InsurancePolicyCardProps> = ({
     const now = new Date();
     const diffDays = Math.ceil((renewalDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
     return diffDays <= 30;
+  };
+
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    }).format(amount);
   };
 
   return (
@@ -56,11 +54,11 @@ export const InsurancePolicyCard: React.FC<InsurancePolicyCardProps> = ({
             </div>
             <div className="flex justify-between mb-1">
               <span className="text-sm text-muted-foreground">Coverage</span>
-              <span className="font-medium">{policy.coverageAmount}</span>
+              <span className="font-medium">{formatCurrency(policy.coverage)}</span>
             </div>
             <div className="flex justify-between mb-1">
               <span className="text-sm text-muted-foreground">Premium</span>
-              <span className="font-medium">{policy.premium}</span>
+              <span className="font-medium">{formatCurrency(policy.premium)}/year</span>
             </div>
             <div className="flex justify-between">
               <span className="text-sm text-muted-foreground">Renewal Date</span>
@@ -78,7 +76,7 @@ export const InsurancePolicyCard: React.FC<InsurancePolicyCardProps> = ({
             </Button>
             <Button variant="outline" size="sm" className="flex-1">
               <FileText className="h-4 w-4 mr-2" />
-              Documents
+              {policy.documents?.length || 0} Documents
             </Button>
             <Button variant="outline" size="sm" onClick={onRemove} className="text-destructive hover:bg-destructive/10">
               <Trash className="h-4 w-4" />

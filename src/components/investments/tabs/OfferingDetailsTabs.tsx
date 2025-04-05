@@ -5,38 +5,10 @@ import { ScheduleMeetingDialog } from "../dialogs/ScheduleMeetingDialog";
 import { CalendarClock, Download, File, Heart } from "lucide-react";
 import { toast } from "sonner";
 import { auditLog } from "@/services/auditLog/auditLogService";
-
-interface Strategy {
-  overview: string;
-  approach: string;
-  target: string;
-  stage: string;
-  geography: string;
-  sectors: string[];
-  expectedReturn: string;
-  benchmarks: string[];
-}
-
-interface Offering {
-  id: number;
-  name: string;
-  description: string;
-  minimumInvestment: string;
-  performance: string;
-  lockupPeriod: string;
-  lockUp: string;
-  firm: string;
-  tags: string[];
-  strategy: Strategy;
-  platform?: string;
-  category?: string;
-  investorQualification?: string;
-  liquidity?: string;
-  subscriptions?: string;
-}
+import { InvestmentOffering } from "@/data/mock/investments";
 
 interface OfferingDetailsTabsProps {
-  offering: Offering;
+  offering: InvestmentOffering;
 }
 
 export const OfferingDetailsTabs: React.FC<OfferingDetailsTabsProps> = ({ offering }) => {
