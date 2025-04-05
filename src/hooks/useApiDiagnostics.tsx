@@ -1,3 +1,4 @@
+
 import { useState, useCallback } from 'react';
 import { ApiEndpointDiagnosticResult } from '@/types/diagnostics';
 import { testApiEndpoints } from '@/services/diagnostics/apiDiagnostics';
@@ -15,7 +16,13 @@ export function useApiDiagnostics() {
     
     try {
       const diagnosticResults = await testApiEndpoints();
-      setResults(diagnosticResults);
+      // Convert ApiEndpointTestResult[] to ApiEndpointDiagnosticResult[]
+      const convertedResults: ApiEndpointDiagnosticResult[] = diagnosticResults.map(result => ({
+        ...result,
+        expectedDataStructure: result.expectedDataStructure || "Unknown data structure",
+      }));
+      
+      setResults(convertedResults);
       setLastRun(new Date().toISOString());
       
       // Disable toast notifications for API diagnostics
@@ -36,7 +43,7 @@ export function useApiDiagnostics() {
       //   });
       // }
       
-      return diagnosticResults;
+      return convertedResults;
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "Unknown error";
       setError(err instanceof Error ? err : new Error(errorMessage));

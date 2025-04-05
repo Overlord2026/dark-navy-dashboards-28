@@ -1,28 +1,15 @@
 
 import { logger } from '../logging/loggingService';
-import { DiagnosticTestStatus } from './types';
-
-/**
- * Interface for API endpoint test result
- */
-interface ApiEndpointTestResult {
-  name: string;
-  url: string;
-  method: string;
-  status: DiagnosticTestStatus;
-  responseTime: number;
-  errorMessage?: string;
-  expectedDataStructure?: string;
-}
+import { DiagnosticTestStatus, ApiEndpointDiagnosticResult } from './types';
 
 /**
  * Tests API endpoints used in the Education Center
  * @returns Array of test results for API endpoints
  */
-export const testApiEndpoints = async (): Promise<ApiEndpointTestResult[]> => {
+export const testApiEndpoints = async (): Promise<ApiEndpointDiagnosticResult[]> => {
   logger.info("Testing API endpoints", {}, "DiagnosticService");
   
-  const results: ApiEndpointTestResult[] = [];
+  const results: ApiEndpointDiagnosticResult[] = [];
   
   try {
     // Test education center API endpoints
@@ -69,7 +56,7 @@ const testApiEndpoint = async (
   url: string,
   method: string,
   expectedDataStructure: string
-): Promise<ApiEndpointTestResult> => {
+): Promise<ApiEndpointDiagnosticResult> => {
   const startTime = Date.now();
   let status: DiagnosticTestStatus = "success";
   let errorMessage: string | undefined;
