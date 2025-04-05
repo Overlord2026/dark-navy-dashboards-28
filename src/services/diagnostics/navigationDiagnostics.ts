@@ -1,3 +1,4 @@
+
 import { navigationCategories } from "@/navigation/navCategories";
 import { NavCategory, MainMenuItem } from "@/types/navigation";
 
@@ -202,7 +203,7 @@ const getAllNavigationPaths = (categories: NavCategory[]): string[] => {
         results.push(item.href);
       }
 
-      // Check for items property instead of submenu
+      // Check for items instead of submenu
       if (item.items && item.items.length > 0) {
         results.push(...item.items.map(subItem => subItem.href));
       }
@@ -226,4 +227,53 @@ export const getNavigationStructure = () => {
       subItemCount: item.items?.length || 0,
     })),
   }));
+};
+
+// Add missing functions that are imported elsewhere
+export const getNavigationDiagnosticsSummary = async () => {
+  const results = runNavigationDiagnostics();
+  
+  // Group results by categories (this is a simplified example)
+  const categorizedResults = {
+    home: results.filter(r => r.id.includes('home')),
+    educationSolutions: results.filter(r => r.id.includes('education')),
+    familyWealth: results.filter(r => r.id.includes('wealth')),
+    collaboration: results.filter(r => r.id.includes('collab')),
+    investments: results.filter(r => r.id.includes('invest'))
+  };
+  
+  // Calculate statistics
+  const allResults = results;
+  const successCount = allResults.filter(r => r.status === 'success').length;
+  const warningCount = allResults.filter(r => r.status === 'warning').length;
+  const errorCount = allResults.filter(r => r.status === 'error').length;
+  
+  // Determine overall status
+  let overallStatus = 'success';
+  if (errorCount > 0) {
+    overallStatus = 'error';
+  } else if (warningCount > 0) {
+    overallStatus = 'warning';
+  }
+  
+  return {
+    results: categorizedResults,
+    totalRoutes: allResults.length,
+    successCount,
+    warningCount,
+    errorCount,
+    overallStatus
+  };
+};
+
+export const testAllNavigationRoutes = async () => {
+  // Simulated function that returns diagnostic results
+  const results = runNavigationDiagnostics();
+  
+  // Group results by route category
+  return {
+    main: results.filter(r => r.id.includes('main')),
+    dashboard: results.filter(r => r.id.includes('dashboard')),
+    settings: results.filter(r => r.id.includes('settings'))
+  };
 };

@@ -53,7 +53,12 @@ export const NavigationCategory = ({
             {category.items.map((item) => (
               <NavigationItem
                 key={item.id}
-                item={item}
+                item={{
+                  id: item.id,
+                  label: item.title || item.label || "",
+                  icon: item.icon,
+                  href: item.href
+                }}
                 isActive={item.id === currentPath}
                 isCollapsed={false}
                 isLightTheme={isLightTheme}
@@ -68,7 +73,12 @@ export const NavigationCategory = ({
           {category.items.map((item) => (
             <NavigationItem
               key={item.id}
-              item={item}
+              item={{
+                id: item.id,
+                label: item.title || item.label || "",
+                icon: item.icon,
+                href: item.href
+              }}
               isActive={item.id === currentPath}
               isCollapsed={true}
               isLightTheme={isLightTheme}

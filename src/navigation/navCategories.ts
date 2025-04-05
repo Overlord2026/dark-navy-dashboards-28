@@ -1,3 +1,4 @@
+
 import { Home, FileText, BarChart, Users, Settings, Shield, Briefcase } from "lucide-react";
 import { NavCategory, MainMenuItem, NavItem } from "@/types/navigation";
 

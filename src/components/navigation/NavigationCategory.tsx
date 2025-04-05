@@ -38,7 +38,7 @@ export const NavigationCategory = ({
           onOpenChange={() => toggleCategory(category.id)}
         >
           <CollapsibleTrigger asChild>
-            <div className={`flex items-center justify-between p-2 text-xs uppercase tracking-wider font-semibold ${isLightTheme ? 'text-[#222222]/70' : 'text-[#E2E2E2]/70'} cursor-pointer hover:bg-accent/10 focus:outline-none focus:ring-2 focus:ring-primary/30 rounded-md`}>
+            <div className={`flex items-center justify-between p-2 text-xs uppercase tracking-wider font-semibold ${isLightTheme ? 'text-[#222222]/70' : 'text-[#E2E2E2]/70'} cursor-pointer`}>
               <span>{category.label}</span>
               <div>
                 {isExpanded ? (
@@ -54,10 +54,8 @@ export const NavigationCategory = ({
               <NavigationItem
                 key={item.id}
                 item={{
-                  id: item.id,
-                  label: item.title || item.label || "",
-                  icon: item.icon,
-                  href: item.href
+                  ...item,
+                  label: item.title || item.label || ""
                 }}
                 isActive={item.id === currentPath}
                 isCollapsed={false}
@@ -74,10 +72,8 @@ export const NavigationCategory = ({
             <NavigationItem
               key={item.id}
               item={{
-                id: item.id,
-                label: item.title || item.label || "",
-                icon: item.icon,
-                href: item.href
+                ...item,
+                label: item.title || item.label || ""
               }}
               isActive={item.id === currentPath}
               isCollapsed={true}

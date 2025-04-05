@@ -3,7 +3,11 @@ import React from "react";
 import { useTheme } from "@/hooks/useTheme";
 
 export const ThemeExample = () => {
-  const { theme, toggleTheme } = useTheme();
+  const { theme, isDark, setTheme } = useTheme();
+
+  const toggleTheme = () => {
+    setTheme(isDark ? 'light' : 'dark');
+  };
 
   return (
     <div className="space-y-8">
@@ -24,7 +28,6 @@ export const ThemeExample = () => {
           <div>
             <h3 className="text-lg font-medium mb-2">Theme Colors</h3>
             <div className="space-y-2">
-              {/* Convert the theme object to a renderable React element */}
               <pre className="text-sm overflow-auto p-2 bg-muted rounded">
                 {JSON.stringify(theme, null, 2)}
               </pre>

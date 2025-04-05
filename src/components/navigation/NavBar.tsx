@@ -1,3 +1,4 @@
+
 import React from "react";
 import {
   Home,
@@ -16,7 +17,7 @@ import { cn } from "@/lib/utils";
 import { BottomNavItem } from "@/types/navigation";
 
 export const NavBar = () => {
-  const { isDark, toggleTheme } = useTheme();
+  const { isDark, setTheme } = useTheme();
   const location = useLocation();
 
   const {
@@ -30,6 +31,10 @@ export const NavBar = () => {
     isActive,
     setCollapsed
   } = useSidebarState(navigationCategories);
+
+  const toggleTheme = () => {
+    setTheme(isDark ? "light" : "dark");
+  };
 
   const bottomNavItems: BottomNavItem[] = [
     {
@@ -111,7 +116,7 @@ export const NavBar = () => {
                         {item.icon && (
                           <item.icon className="h-4 w-4 mr-2 opacity-70" />
                         )}
-                        <span>{item.title}</span>
+                        <span>{item.title || item.label}</span>
                       </Link>
                     </li>
                   ))}
