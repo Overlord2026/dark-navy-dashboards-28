@@ -13,6 +13,21 @@ import Investments from "../pages/Investments";
 import PersonalInsurance from "../pages/PersonalInsurance";
 import Insurance from "../pages/Insurance";
 import NotFound from "../pages/NotFound";
+import LendingPage from "../pages/Lending"; // Ensure import for Lending
+import CashManagement from "../pages/CashManagement";
+import Transfers from "../pages/Transfers";
+import FundingAccounts from "../pages/FundingAccounts";
+import EstatePlanning from "../pages/EstatePlanning";
+import LegacyVault from "../pages/LegacyVault";
+import SocialSecurity from "../pages/SocialSecurity";
+import TaxBudgets from "../pages/TaxBudgets";
+import BillPay from "../pages/BillPay";
+import Documents from "../pages/Documents";
+import Sharing from "../pages/Sharing";
+import Professionals from "../pages/Professionals";
+import FinancialPlans from "../pages/FinancialPlans";
+import TaxPlanning from "../pages/TaxPlanning";
+import Marketplace from "../pages/Marketplace";
 
 const MainRoutes = () => {
   return (
@@ -24,14 +39,37 @@ const MainRoutes = () => {
       <Route path="/help" element={<Help />} />
       <Route path="/profile" element={<CustomerProfile />} />
       <Route path="/advisor-profile" element={<AdvisorProfile />} />
+      
+      {/* Education & Solutions section */}
       <Route path="/education" element={<Education />} />
       <Route path="/education/:categoryId" element={<Education />} />
-      <Route path="/all-assets" element={<AllAssets />} />
+      <Route path="/education/tax-planning" element={<TaxPlanning />} />
       <Route path="/investments" element={<Investments />} /> 
       <Route path="/investments/alternative/:category" element={<Investments />} />
       <Route path="/investments/alternative/all" element={<Investments />} />
-      <Route path="/insurance" element={<Insurance />} /> {/* Insurance offerings under Resources & Solutions */}
-      <Route path="/personal-insurance" element={<PersonalInsurance />} /> {/* Personal Insurance tracking under Family Wealth */}
+      <Route path="/insurance" element={<Insurance />} /> 
+      <Route path="/lending" element={<LendingPage />} />
+      <Route path="/estate-planning" element={<EstatePlanning />} />
+      <Route path="/marketplace" element={<Marketplace />} />
+      
+      {/* Family Wealth section */}
+      <Route path="/financial-plans" element={<FinancialPlans />} />
+      <Route path="/all-assets" element={<AllAssets />} />
+      <Route path="/accounts" element={<FundingAccounts />} />
+      <Route path="/personal-insurance" element={<PersonalInsurance />} />
+      <Route path="/cash-management" element={<CashManagement />} />
+      <Route path="/tax-budgets" element={<TaxBudgets />} />
+      <Route path="/transfers" element={<Transfers />} />
+      <Route path="/legacy-vault" element={<LegacyVault />} />
+      <Route path="/social-security" element={<SocialSecurity />} />
+      <Route path="/properties" element={<AllAssets />} />
+      <Route path="/billpay" element={<BillPay />} />
+      
+      {/* Collaboration & Sharing section */}
+      <Route path="/documents" element={<Documents />} />
+      <Route path="/professionals" element={<Professionals />} />
+      <Route path="/sharing" element={<Sharing />} />
+      
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
