@@ -6,7 +6,18 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Calendar, Clock, CreditCard, Plus, Check, ArrowUp, Wallet, Receipt, Shield } from "lucide-react";
+import { 
+  Calendar, 
+  Clock, 
+  CreditCard, 
+  Plus, 
+  Check, 
+  ArrowUp, 
+  Wallet, 
+  Receipt, 
+  Shield,
+  CircleDollarSign 
+} from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 
 const BillPayStyleGuide = () => {
