@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -10,7 +10,16 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(true);
+  // Initialize auth state from localStorage if available
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    const storedAuth = localStorage.getItem('isAuthenticated');
+    return storedAuth === 'true';
+  });
+
+  // Update localStorage when auth state changes
+  useEffect(() => {
+    localStorage.setItem('isAuthenticated', isAuthenticated.toString());
+  }, [isAuthenticated]);
 
   const login = () => {
     setIsAuthenticated(true);

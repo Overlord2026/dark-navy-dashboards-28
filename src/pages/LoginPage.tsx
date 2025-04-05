@@ -1,14 +1,21 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "@/components/ui/use-toast";
+import { useAuth } from "@/context/AuthContext";
+import { useUser } from "@/context/UserContext";
 
 export default function LoginPage({ isAdvisor = false }) {
   const navigate = useNavigate();
+  const { login } = useAuth();
+  const { login: userLogin } = useUser();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   
   // For regular users, redirect immediately to client portal
   if (!isAdvisor) {
@@ -16,9 +23,30 @@ export default function LoginPage({ isAdvisor = false }) {
   }
   
   // Only advisor login functionality remains
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    navigate("/advisor/dashboard");
+    setIsLoading(true);
+    
+    try {
+      // Set authentication in both contexts to ensure consistent state
+      login();
+      await userLogin(email, password);
+      
+      toast({
+        title: "Login successful",
+        description: "Welcome to your advisor dashboard"
+      });
+      
+      navigate("/advisor/dashboard");
+    } catch (error) {
+      toast({
+        title: "Login failed",
+        description: "Please check your credentials and try again",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
   
   return (
@@ -63,6 +91,8 @@ export default function LoginPage({ isAdvisor = false }) {
                 placeholder="you@example.com" 
                 autoComplete="email" 
                 required 
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
             </div>
             
@@ -79,6 +109,8 @@ export default function LoginPage({ isAdvisor = false }) {
                 placeholder="••••••••" 
                 autoComplete="current-password" 
                 required 
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
               />
             </div>
             
@@ -92,8 +124,12 @@ export default function LoginPage({ isAdvisor = false }) {
               </label>
             </div>
             
-            <Button type="submit" className="w-full bg-black text-white hover:bg-black/80">
-              Sign In
+            <Button 
+              type="submit" 
+              className="w-full bg-black text-white hover:bg-black/80"
+              disabled={isLoading}
+            >
+              {isLoading ? "Signing in..." : "Sign In"}
             </Button>
           </form>
           
