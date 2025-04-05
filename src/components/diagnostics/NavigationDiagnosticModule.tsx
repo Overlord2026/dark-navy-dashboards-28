@@ -46,7 +46,9 @@ const NavigationDiagnosticModule: React.FC = () => {
     try {
       // Get detailed route diagnostics
       const diagnosticSummary = await getNavigationDiagnosticsSummary();
-      setResults(diagnosticSummary.results);
+      
+      // Ensure results are cast to the correct type
+      setResults(diagnosticSummary.results as Record<string, NavigationDiagnosticResult[]>);
       
       // Get tab-specific diagnostics
       const tabDiagnostics = await runAllTabDiagnostics();
@@ -54,7 +56,7 @@ const NavigationDiagnosticModule: React.FC = () => {
       
       // Set summary
       setSummary({
-        overall: diagnosticSummary.overallStatus,
+        overall: diagnosticSummary.overallStatus as "success" | "warning" | "error",
         total: diagnosticSummary.totalRoutes,
         success: diagnosticSummary.successCount,
         warnings: diagnosticSummary.warningCount,

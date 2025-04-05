@@ -38,7 +38,7 @@ export const NavBar = () => {
 
   const bottomNavItems: BottomNavItem[] = [
     {
-      id: "home", // Add missing id properties to each item
+      id: "home",
       title: "Home",
       icon: Home,
       href: "/",

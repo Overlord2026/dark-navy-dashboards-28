@@ -1,6 +1,6 @@
-
 import { navigationCategories } from "@/navigation/navCategories";
 import { NavCategory, MainMenuItem } from "@/types/navigation";
+import { NavigationDiagnosticResult as TypedNavigationDiagnosticResult } from "@/types/diagnostics";
 
 export interface NavigationDiagnosticResult {
   id: string;
@@ -9,32 +9,27 @@ export interface NavigationDiagnosticResult {
   message: string;
   details?: string;
   path?: string;
+  route?: string;
 }
 
 export const runNavigationDiagnostics = (): NavigationDiagnosticResult[] => {
   const results: NavigationDiagnosticResult[] = [];
 
-  // Check for duplicate IDs in navigation items
   const duplicateIdCheck = checkDuplicateIds(navigationCategories);
   results.push(duplicateIdCheck);
 
-  // Check for missing icons
   const missingIconsCheck = checkMissingIcons(navigationCategories);
   results.push(missingIconsCheck);
 
-  // Check for broken links
   const brokenLinksCheck = checkBrokenLinks(navigationCategories);
   results.push(brokenLinksCheck);
 
-  // Check for inconsistent naming
   const inconsistentNamingCheck = checkInconsistentNaming(navigationCategories);
   results.push(inconsistentNamingCheck);
 
-  // Check for deep nesting
   const deepNestingCheck = checkDeepNesting(navigationCategories);
   results.push(deepNestingCheck);
 
-  // Check for orphaned routes
   const orphanedRoutesCheck = checkOrphanedRoutes(navigationCategories);
   results.push(orphanedRoutesCheck);
 
@@ -45,7 +40,6 @@ const checkDuplicateIds = (categories: NavCategory[]): NavigationDiagnosticResul
   const ids = new Set<string>();
   const duplicates = new Set<string>();
 
-  // Check category IDs
   categories.forEach((category) => {
     if (ids.has(category.id)) {
       duplicates.add(category.id);
@@ -53,7 +47,6 @@ const checkDuplicateIds = (categories: NavCategory[]): NavigationDiagnosticResul
       ids.add(category.id);
     }
 
-    // Check item IDs
     category.items.forEach((item) => {
       if (ids.has(item.id)) {
         duplicates.add(item.id);
@@ -61,7 +54,6 @@ const checkDuplicateIds = (categories: NavCategory[]): NavigationDiagnosticResul
         ids.add(item.id);
       }
 
-      // Check subitem IDs if they exist
       if (item.items && item.items.length > 0) {
         item.items.forEach((subItem) => {
           if (ids.has(subItem.id)) {
@@ -111,12 +103,9 @@ const checkMissingIcons = (categories: NavCategory[]): NavigationDiagnosticResul
 const checkBrokenLinks = (categories: NavCategory[]): NavigationDiagnosticResult => {
   const suspiciousLinks: string[] = [];
 
-  // Collect all navigation paths
   const allPaths = getAllNavigationPaths(categories);
 
-  // Check for suspicious patterns in links
   allPaths.forEach((path) => {
-    // Check for double slashes (except http:// or https://)
     if (path.match(/(?<!:)\/\//) || path === "#" || path === "") {
       suspiciousLinks.push(path);
     }
@@ -139,7 +128,6 @@ const checkInconsistentNaming = (categories: NavCategory[]): NavigationDiagnosti
 
   categories.forEach((category) => {
     category.items.forEach((item) => {
-      // Check if title and label are inconsistent (if both exist)
       if (item.title && item.label && item.title !== item.label) {
         inconsistentItems.push(`${item.id} (title: "${item.title}", label: "${item.label}")`);
       }
@@ -163,7 +151,6 @@ const checkDeepNesting = (categories: NavCategory[]): NavigationDiagnosticResult
 
   categories.forEach((category) => {
     category.items.forEach((item) => {
-      // Check if items property exists and has items
       if (item.items && item.items.length > 0) {
         deeplyNestedItems.push(`${category.id}/${item.id} (${item.items.length} subitems)`);
       }
@@ -183,8 +170,6 @@ const checkDeepNesting = (categories: NavCategory[]): NavigationDiagnosticResult
 };
 
 const checkOrphanedRoutes = (categories: NavCategory[]): NavigationDiagnosticResult => {
-  // This is a placeholder for a more complex check that would require
-  // analyzing the router configuration to find routes that aren't in the navigation
   return {
     id: "orphaned-routes",
     title: "Orphaned Routes",
@@ -203,7 +188,6 @@ const getAllNavigationPaths = (categories: NavCategory[]): string[] => {
         results.push(item.href);
       }
 
-      // Check for items instead of submenu
       if (item.items && item.items.length > 0) {
         results.push(...item.items.map(subItem => subItem.href));
       }
@@ -229,27 +213,33 @@ export const getNavigationStructure = () => {
   }));
 };
 
-// Add missing functions that are imported elsewhere
 export const getNavigationDiagnosticsSummary = async () => {
   const results = runNavigationDiagnostics();
   
-  // Group results by categories (this is a simplified example)
-  const categorizedResults = {
-    home: results.filter(r => r.id.includes('home')),
-    educationSolutions: results.filter(r => r.id.includes('education')),
-    familyWealth: results.filter(r => r.id.includes('wealth')),
-    collaboration: results.filter(r => r.id.includes('collab')),
-    investments: results.filter(r => r.id.includes('invest'))
+  const convertToTypedResult = (result: NavigationDiagnosticResult): TypedNavigationDiagnosticResult => {
+    return {
+      ...result,
+      route: result.path || result.id,
+      id: result.id,
+      status: result.status as "success" | "warning" | "error",
+      message: result.message
+    };
   };
   
-  // Calculate statistics
+  const categorizedResults: Record<string, TypedNavigationDiagnosticResult[]> = {
+    home: results.filter(r => r.id.includes('home')).map(convertToTypedResult),
+    educationSolutions: results.filter(r => r.id.includes('education')).map(convertToTypedResult),
+    familyWealth: results.filter(r => r.id.includes('wealth')).map(convertToTypedResult),
+    collaboration: results.filter(r => r.id.includes('collab')).map(convertToTypedResult),
+    investments: results.filter(r => r.id.includes('invest')).map(convertToTypedResult)
+  };
+  
   const allResults = results;
   const successCount = allResults.filter(r => r.status === 'success').length;
   const warningCount = allResults.filter(r => r.status === 'warning').length;
   const errorCount = allResults.filter(r => r.status === 'error').length;
   
-  // Determine overall status
-  let overallStatus = 'success';
+  let overallStatus: "success" | "warning" | "error" = 'success';
   if (errorCount > 0) {
     overallStatus = 'error';
   } else if (warningCount > 0) {
@@ -266,14 +256,21 @@ export const getNavigationDiagnosticsSummary = async () => {
   };
 };
 
-export const testAllNavigationRoutes = async () => {
-  // Simulated function that returns diagnostic results
+export const testAllNavigationRoutes = async (): Promise<Record<string, TypedNavigationDiagnosticResult[]>> => {
   const results = runNavigationDiagnostics();
   
-  // Group results by route category
+  const convertToTypedResult = (result: NavigationDiagnosticResult): TypedNavigationDiagnosticResult => {
+    return {
+      ...result,
+      route: result.path || result.id,
+      status: result.status as "success" | "warning" | "error",
+      message: result.message
+    };
+  };
+  
   return {
-    main: results.filter(r => r.id.includes('main')),
-    dashboard: results.filter(r => r.id.includes('dashboard')),
-    settings: results.filter(r => r.id.includes('settings'))
+    main: results.filter(r => r.id.includes('main')).map(convertToTypedResult),
+    dashboard: results.filter(r => r.id.includes('dashboard')).map(convertToTypedResult),
+    settings: results.filter(r => r.id.includes('settings')).map(convertToTypedResult)
   };
 };
