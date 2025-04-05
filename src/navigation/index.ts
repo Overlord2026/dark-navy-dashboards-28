@@ -2,19 +2,19 @@
 import { 
   HomeIcon, 
   GraduationCapIcon, 
-  BanknotesIcon, 
+  BanknoteIcon, 
   ShieldCheckIcon, 
-  BuildingLibraryIcon, 
-  DocumentTextIcon, 
-  UserGroupIcon, 
+  Building2Icon, 
+  FileIcon, 
+  UsersIcon, 
   ScaleIcon, 
   ShareIcon, 
   UserIcon,
   WalletIcon,
   BriefcaseIcon,
-  DocumentDuplicateIcon,
+  FilesIcon,
   KeyIcon,
-  BanknotesIcon as MoneyIcon
+  CircleDollarSignIcon
 } from "lucide-react";
 import { NavItem, BottomNavItem } from '@/types/navigation';
 
@@ -37,7 +37,7 @@ export const educationSolutionsNavItems: NavItem[] = [
   {
     title: "Investments",
     href: "/investments",
-    icon: BanknotesIcon,
+    icon: BanknoteIcon,
     description: "Investment opportunities"
   },
   {
@@ -49,7 +49,7 @@ export const educationSolutionsNavItems: NavItem[] = [
   {
     title: "Lending",
     href: "/lending",
-    icon: BuildingLibraryIcon,
+    icon: Building2Icon,
     description: "Lending solutions"
   }
 ];
@@ -64,13 +64,13 @@ export const familyWealthNavItems: NavItem[] = [
   {
     title: "Properties",
     href: "/properties",
-    icon: BuildingLibraryIcon,
+    icon: Building2Icon,
     description: "Property management"
   },
   {
     title: "Documents",
     href: "/documents",
-    icon: DocumentTextIcon,
+    icon: FileIcon,
     description: "Document management"
   },
   {
@@ -82,7 +82,7 @@ export const familyWealthNavItems: NavItem[] = [
   {
     title: "Professionals",
     href: "/professionals",
-    icon: UserGroupIcon,
+    icon: UsersIcon,
     description: "Professional network"
   },
   {
@@ -130,7 +130,7 @@ export const bottomNavItems: BottomNavItem[] = [
   {
     id: "documents",
     title: "Documents",
-    icon: DocumentDuplicateIcon,
+    icon: FilesIcon,
     href: "/documents"
   },
   {

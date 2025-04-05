@@ -17,12 +17,14 @@ const Profile = () => {
             <h2 className="text-2xl font-semibold mb-4">Profile Information</h2>
             <div className="flex mb-6">
               <div className="h-20 w-20 rounded-full bg-primary/20 flex items-center justify-center text-2xl font-bold text-primary mr-4">
-                {userProfile?.name?.charAt(0) || "U"}
+                {userProfile?.firstName?.charAt(0) || "U"}
               </div>
               <div>
-                <h3 className="text-xl font-medium">{userProfile?.name || "User Name"}</h3>
+                <h3 className="text-xl font-medium">
+                  {userProfile?.firstName} {userProfile?.lastName}
+                </h3>
                 <p className="text-muted-foreground">{userProfile?.email || "user@example.com"}</p>
-                <p className="text-sm mt-1">Member since {userProfile?.memberSince || "January 2025"}</p>
+                <p className="text-sm mt-1">Member since January 2025</p>
               </div>
             </div>
 
@@ -31,7 +33,9 @@ const Profile = () => {
             <div className="grid gap-2">
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Full Name:</span>
-                <span className="font-medium">{userProfile?.name || "User Name"}</span>
+                <span className="font-medium">
+                  {userProfile?.firstName} {userProfile?.lastName}
+                </span>
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Email Address:</span>
@@ -43,11 +47,15 @@ const Profile = () => {
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Date of Birth:</span>
-                <span className="font-medium">{userProfile?.dateOfBirth || "January 1, 1980"}</span>
+                <span className="font-medium">
+                  {userProfile?.dateOfBirth ? userProfile.dateOfBirth.toString() : "January 1, 1980"}
+                </span>
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Address:</span>
-                <span className="font-medium text-right">{userProfile?.address || "123 Main Street, New York, NY 10001"}</span>
+                <span className="font-medium text-right">
+                  {userProfile?.addresses?.[0] || "123 Main Street, New York, NY 10001"}
+                </span>
               </div>
             </div>
           </Card>
