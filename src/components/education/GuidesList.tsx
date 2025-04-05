@@ -5,98 +5,108 @@ import { Button } from "@/components/ui/button";
 import { FileText, Plus, Trash2, ArrowUpDown } from "lucide-react";
 import { toast } from "sonner";
 import { EducationalResource } from "@/types/education";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 
-// Initial guides data
+// Initial guides data with image paths
 const initialGuides: EducationalResource[] = [
   {
     id: "guide-retirement",
-    title: "Comprehensive Retirement Planning Guide",
-    description: "Step-by-step guide to creating a robust retirement plan by Tony Gomes.",
+    title: "When to Retire",
+    description: "A Quick and Easy Planning Guide by Tony Gomes.",
     isPaid: false,
     level: "All Levels",
     duration: "Self-paced",
     ghlUrl: "https://ghl.example.com/guides/retirement-planning",
-    author: "Tony Gomes"
+    author: "Tony Gomes",
+    image: "/lovable-uploads/42b49110-eac9-42b1-a1eb-c0b403ab65be.png"
+  },
+  {
+    id: "guide-investment-blunders",
+    title: "13 Retirement Investment Blunders to Avoid",
+    description: "What Affluent Investors Need to Know by Tony Gomes.",
+    isPaid: false,
+    level: "Intermediate",
+    duration: "Self-paced",
+    ghlUrl: "https://ghl.example.com/guides/investment-blunders",
+    author: "Tony Gomes",
+    image: "/lovable-uploads/ce279ca6-478a-49a5-9749-1051bc26ce34.png"
+  },
+  {
+    id: "guide-retirement-risks",
+    title: "15 Risks That Can Derail Your Retirement",
+    description: "Important risks to be aware of during retirement planning.",
+    isPaid: false,
+    level: "All Levels",
+    duration: "Self-paced",
+    ghlUrl: "https://ghl.example.com/guides/retirement-risks",
+    author: "Tony Gomes",
+    image: "/lovable-uploads/23789bde-1725-406e-9009-32ed5719e159.png"
+  },
+  {
+    id: "guide-bitcoin",
+    title: "Bitcoin and Blockchain",
+    description: "A Retiree's Guide to Modern Wealth Management.",
+    isPaid: false,
+    level: "Beginner",
+    duration: "Self-paced",
+    ghlUrl: "https://ghl.example.com/guides/bitcoin-blockchain",
+    author: "Tony Gomes",
+    image: "/lovable-uploads/5db68bbf-23cc-4443-a9dc-fccbd6a26df4.png"
   },
   {
     id: "guide-estate",
-    title: "Estate Planning Checklist",
-    description: "Essential estate planning documents and considerations by Tony Gomes.",
+    title: "Estate Planning Simplified",
+    description: "A Step-by-Step Guide to creating a robust estate plan.",
     isPaid: false,
     level: "All Levels",
     duration: "Self-paced",
     ghlUrl: "https://ghl.example.com/guides/estate-planning-checklist",
-    author: "Tony Gomes"
+    author: "Tony Gomes",
+    image: "/lovable-uploads/f240868c-6994-44d9-9b69-42edbf1236ff.png"
   },
   {
-    id: "guide-tax-strategies",
-    title: "Advanced Tax Strategies for Retirement",
-    description: "How to minimize tax burden during retirement years by Tony Gomes.",
+    id: "guide-physician-retirement",
+    title: "Ultimate Retirement Guide for Physicians",
+    description: "Specialized retirement planning advice for medical professionals.",
     isPaid: false,
     level: "Advanced",
     duration: "Self-paced",
-    ghlUrl: "https://ghl.example.com/guides/tax-strategies",
-    author: "Tony Gomes"
+    ghlUrl: "https://ghl.example.com/guides/physician-retirement",
+    author: "Tony Gomes",
+    image: "/lovable-uploads/b6ac47ff-deed-42c5-9787-cd478b8ab5e8.png"
+  },
+  {
+    id: "guide-tax-secrets",
+    title: "GPS to Retirement Hidden Tax Secrets",
+    description: "Strategic tax planning for optimal retirement outcomes.",
+    isPaid: false,
+    level: "Intermediate",
+    duration: "Self-paced",
+    ghlUrl: "https://ghl.example.com/guides/tax-secrets",
+    author: "Tony Gomes",
+    image: "/lovable-uploads/8b82853e-39e1-4fce-a4dd-01ed42796884.png"
   },
   {
     id: "guide-social-security",
-    title: "Maximizing Social Security Benefits",
-    description: "Strategic planning for optimal Social Security claiming by Tony Gomes.",
-    isPaid: false,
-    level: "Intermediate",
-    duration: "Self-paced",
-    ghlUrl: "https://ghl.example.com/guides/social-security",
-    author: "Tony Gomes"
-  },
-  {
-    id: "guide-ira-strategies",
-    title: "IRA Conversion Strategies",
-    description: "Understanding Roth conversions and tax implications by Tony Gomes.",
-    isPaid: false,
-    level: "Intermediate",
-    duration: "Self-paced",
-    ghlUrl: "https://ghl.example.com/guides/ira-strategies",
-    author: "Tony Gomes"
-  },
-  {
-    id: "guide-medicare",
-    title: "Medicare Enrollment Guide",
-    description: "Complete guide to Medicare options and enrollment by Tony Gomes.",
+    title: "Optimizing Social Security Benefits",
+    description: "Maximizing your benefits through strategic planning.",
     isPaid: false,
     level: "Beginner",
     duration: "Self-paced",
-    ghlUrl: "https://ghl.example.com/guides/medicare",
-    author: "Tony Gomes"
+    ghlUrl: "https://ghl.example.com/guides/social-security",
+    author: "Tony Gomes",
+    image: "/lovable-uploads/6f747e03-4db6-4ece-80a5-d63e9ffcd303.png"
   },
   {
-    id: "guide-investment",
-    title: "Investment Portfolio Diversification",
-    description: "Strategies for building a diversified investment portfolio by Tony Gomes.",
-    isPaid: false,
-    level: "Intermediate",
-    duration: "Self-paced",
-    ghlUrl: "https://ghl.example.com/guides/investment",
-    author: "Tony Gomes"
-  },
-  {
-    id: "guide-healthcare",
-    title: "Healthcare Planning in Retirement",
-    description: "Planning for healthcare costs during retirement by Tony Gomes.",
+    id: "guide-florida-money",
+    title: "The Benefits of Moving Your Money to Florida",
+    description: "Financial advantages of relocating assets to Florida.",
     isPaid: false,
     level: "All Levels",
     duration: "Self-paced",
-    ghlUrl: "https://ghl.example.com/guides/healthcare",
-    author: "Tony Gomes"
-  },
-  {
-    id: "guide-legacy",
-    title: "Legacy Planning Beyond the Basics",
-    description: "Advanced strategies for legacy and estate planning by Tony Gomes.",
-    isPaid: false,
-    level: "Advanced",
-    duration: "Self-paced",
-    ghlUrl: "https://ghl.example.com/guides/legacy",
-    author: "Tony Gomes"
+    ghlUrl: "https://ghl.example.com/guides/florida-benefits",
+    author: "Tony Gomes",
+    image: "/lovable-uploads/ba8f1476-5044-45b0-9970-da3d55fb629a.png"
   }
 ];
 
@@ -120,7 +130,8 @@ export function GuidesList() {
       level: "All Levels",
       duration: "Self-paced",
       ghlUrl: "#",
-      author: "Tony Gomes"
+      author: "Tony Gomes",
+      image: "/placeholder.svg" // Default placeholder for new guides
     };
 
     setGuides([...guides, newGuide]);
@@ -208,45 +219,52 @@ export function GuidesList() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {guides.map((guide, index) => (
-          <Card key={guide.id} className="border-blue-200 dark:border-blue-800 hover:shadow-md transition-shadow">
-            <CardHeader className="bg-blue-100 dark:bg-blue-900/40 rounded-t-lg">
-              <div className="flex items-start justify-between">
-                <CardTitle className="text-lg">{guide.title}</CardTitle>
-                <div className="flex space-x-1">
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    onClick={() => moveGuideUp(index)}
-                    disabled={index === 0}
-                    className="h-8 w-8 p-0"
-                  >
-                    <ArrowUpDown className="h-4 w-4 rotate-90" />
-                  </Button>
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    onClick={() => moveGuideDown(index)}
-                    disabled={index === guides.length - 1}
-                    className="h-8 w-8 p-0"
-                  >
-                    <ArrowUpDown className="h-4 w-4 -rotate-90" />
-                  </Button>
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    onClick={() => deleteGuide(guide.id)}
-                    className="h-8 w-8 p-0 text-red-500 hover:text-red-700 hover:bg-red-100"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </div>
+          <Card key={guide.id} className="border-blue-200 dark:border-blue-800 hover:shadow-md transition-shadow overflow-hidden">
+            <div className="relative">
+              <AspectRatio ratio={4/3} className="bg-muted">
+                <img 
+                  src={guide.image || "/placeholder.svg"} 
+                  alt={guide.title} 
+                  className="object-cover w-full h-full"
+                />
+              </AspectRatio>
+              <div className="absolute top-2 right-2 flex space-x-1">
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={() => moveGuideUp(index)}
+                  disabled={index === 0}
+                  className="h-8 w-8 p-0 bg-black/30 hover:bg-black/50 text-white rounded-full"
+                >
+                  <ArrowUpDown className="h-4 w-4 rotate-90" />
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={() => moveGuideDown(index)}
+                  disabled={index === guides.length - 1}
+                  className="h-8 w-8 p-0 bg-black/30 hover:bg-black/50 text-white rounded-full"
+                >
+                  <ArrowUpDown className="h-4 w-4 -rotate-90" />
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={() => deleteGuide(guide.id)}
+                  className="h-8 w-8 p-0 bg-black/30 hover:bg-black/50 text-white rounded-full"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
               </div>
+            </div>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-lg">{guide.title}</CardTitle>
               <CardDescription className="line-clamp-2">
                 {guide.description}
               </CardDescription>
             </CardHeader>
-            <CardContent className="pt-4">
-              <div className="flex items-center text-sm text-muted-foreground mb-4">
+            <CardContent className="pt-2 pb-4">
+              <div className="flex items-center text-sm text-muted-foreground">
                 <FileText className="mr-2 h-4 w-4" />
                 <span>By {guide.author || "Unknown"} • {guide.level}</span>
               </div>

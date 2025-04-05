@@ -29,6 +29,7 @@ export interface EducationalResource {
   ghlUrl: string;
   publishDate?: string;
   reviews?: number;
+  image?: string;
 }
 
 export interface EducationalResources {
