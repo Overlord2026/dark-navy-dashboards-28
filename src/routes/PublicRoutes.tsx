@@ -13,7 +13,6 @@ import PrivacyPolicyPage from "../pages/PrivacyPolicyPage";
 import TermsOfServicePage from "../pages/TermsOfServicePage";
 import DisclosuresPage from "../pages/DisclosuresPage";
 import AccessibilityPage from "../pages/AccessibilityPage";
-import ClientPortal from "../pages/ClientPortal";
 import NotFound from "../pages/NotFound";
 
 const PublicRoutes = () => {
@@ -29,8 +28,9 @@ const PublicRoutes = () => {
       <Route path="/terms-of-service" element={<TermsOfServicePage />} />
       <Route path="/disclosures" element={<DisclosuresPage />} />
       <Route path="/accessibility" element={<AccessibilityPage />} />
-      <Route path="/login" element={<Navigate to="/client-portal" replace />} />
-      <Route path="/client-portal" element={<ClientPortal />} />
+      
+      {/* Remove login and client-portal routes from here */}
+      
       <Route path="/" element={<HomePage />} />
       <Route path="*" element={<NotFound />} />
     </Routes>

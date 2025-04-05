@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -9,22 +10,15 @@ import { toast } from "@/components/ui/use-toast";
 export default function LoginPage({ isAdvisor = false }) {
   const navigate = useNavigate();
   
-  // For advisor logins we'll keep the advisor login functionality
+  // For regular users, redirect immediately to client portal
   if (!isAdvisor) {
     return <Navigate to="/client-portal" replace />;
   }
   
+  // Only advisor login functionality remains
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     navigate("/advisor/dashboard");
-  };
-  
-  const handleClientPortalAccess = () => {
-    navigate("/client-portal");
-    toast({
-      title: "Accessing Client Portal",
-      description: "No login required for now"
-    });
   };
   
   return (
@@ -44,7 +38,7 @@ export default function LoginPage({ isAdvisor = false }) {
             </Button>
             <Button 
               variant="default" 
-              onClick={handleClientPortalAccess}
+              onClick={() => navigate('/client-portal')}
               className="bg-green-600 hover:bg-green-700"
             >
               Access Client Portal
@@ -106,7 +100,7 @@ export default function LoginPage({ isAdvisor = false }) {
           <div className="mt-6 pt-4 border-t border-gray-200 text-center">
             <Button 
               variant="link" 
-              onClick={handleClientPortalAccess}
+              onClick={() => navigate('/client-portal')}
               className="text-green-600 hover:text-green-700"
             >
               Access Client Portal

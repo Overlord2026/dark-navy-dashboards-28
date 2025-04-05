@@ -1,8 +1,6 @@
 
 import React from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
-import { useUser } from "../context/UserContext";
-import { useAuth } from "../context/AuthContext";
+import { Routes, Route } from "react-router-dom";
 
 // Import components
 import PublicRoutes from "./PublicRoutes";
@@ -16,34 +14,24 @@ import ClientPortal from "../pages/ClientPortal";
 import NotFound from "../pages/NotFound";
 
 const AppRoutes: React.FC = () => {
-  const { isAuthenticated, userProfile } = useUser();
-  const auth = useAuth();
-  const isAdmin = userProfile?.role === "admin" || userProfile?.role === "system_administrator";
-  const isDeveloper = isAdmin || userProfile?.role === "developer";
-  
-  // Always show routes regardless of authentication
   return (
     <Routes>
-      {/* Make Client Portal directly accessible */}
+      {/* Make Client Portal directly accessible without any redirects */}
       <Route path="/client-portal" element={<ClientPortal />} />
       
-      {/* Public routes */}
-      <Route path="/login" element={<Navigate to="/client-portal" replace />} />
+      {/* Advisor login route */}
       <Route path="/advisor/login" element={<LoginPage isAdvisor={true} />} />
+      
+      {/* Public routes */}
       <Route path="/*" element={<PublicRoutes />} />
       
-      {/* Dashboard routes - these would normally require authentication */}
+      {/* Feature routes - no authentication required for now */}
       <Route path="finance/*" element={<FinanceRoutes />} />
       <Route path="wealth/*" element={<WealthRoutes />} />
       <Route path="advisor/*" element={<AdvisorRoutes />} />
-      {isAdmin && <Route path="admin/*" element={<AdminRoutes />} />}
+      <Route path="admin/*" element={<AdminRoutes />} />
       
-      {isDeveloper ? (
-        <Route path="dev/diagnostics" element={<Navigate to="admin/navigation-diagnostics" />} />
-      ) : (
-        <Route path="dev/*" element={<Navigate to="/" replace />} />
-      )}
-      
+      {/* Catch-all route */}
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
