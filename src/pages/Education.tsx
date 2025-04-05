@@ -1,3 +1,4 @@
+
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { toast } from "sonner";
 import { useSearchParams, Link } from "react-router-dom";
@@ -70,12 +71,19 @@ export default function Education() {
     setShowApiDemo(!showApiDemo);
   };
 
+  // Create a properly formatted secondaryMenuItems array for the ThreeColumnLayout
+  const formattedCourseCategories = courseCategories.map(category => ({
+    id: category.id,
+    name: category.name,
+    active: category.id === activeCategory
+  }));
+
   return (
     <ThreeColumnLayout 
       title="SWAG Education Center" 
       activeMainItem="education"
       activeSecondaryItem={activeCategory}
-      secondaryMenuItems={courseCategories}
+      secondaryMenuItems={formattedCourseCategories}
     >
       <motion.div 
         className="space-y-6 px-1"

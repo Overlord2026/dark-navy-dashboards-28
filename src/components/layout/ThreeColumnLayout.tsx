@@ -68,7 +68,8 @@ export function ThreeColumnLayout({
     }
   }
   
-  const menuItems = secondaryMenuItems || getSecondaryMenuItems(currentActiveMainItem);
+  // Safely handle undefined secondaryMenuItems by providing default empty array
+  const menuItems = secondaryMenuItems || getSecondaryMenuItems(currentActiveMainItem) || [];
   
   // Hide secondary menu for main investments page but show it for subcategories
   const isMainInvestmentsPage = location.pathname === "/investments";
@@ -149,7 +150,7 @@ export function ThreeColumnLayout({
           </div>
         </aside>
 
-        {/* Secondary Sidebar - Hidden for main investments page */}
+        {/* Secondary Sidebar - Only render when it has menu items */}
         {hasSecondaryMenu && (
           <SecondaryNavigation 
             hasSecondaryMenu={hasSecondaryMenu}
@@ -171,7 +172,6 @@ export function ThreeColumnLayout({
           <main className="flex-1 overflow-y-auto p-3 font-sans w-full">
             <div className="flex justify-between items-center mb-4">
               <h1 className="text-2xl font-bold">{title}</h1>
-              {/* Tutorial button removed from here */}
             </div>
             {children}
           </main>

@@ -27,6 +27,7 @@ export interface EducationalResource {
   duration?: string;
   author?: string;
   ghlUrl: string;
+  publishDate?: string;  // Added publishDate field
 }
 
 export interface EducationalResources {
