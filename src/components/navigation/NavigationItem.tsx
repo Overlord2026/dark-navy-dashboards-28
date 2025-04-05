@@ -3,48 +3,55 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
-interface NavigationItemProps {
+export interface NavigationItemProps {
   item: {
     id: string;
     title: string;
     label?: string;
-    icon?: React.ElementType;
+    description?: string;
     href: string;
+    icon?: React.ElementType;
   };
   isActive: boolean;
   isCollapsed: boolean;
   isLightTheme: boolean;
 }
 
-export const NavigationItem = ({ 
-  item, 
-  isActive, 
-  isCollapsed, 
-  isLightTheme 
+export const NavigationItem = ({
+  item,
+  isActive,
+  isCollapsed,
+  isLightTheme
 }: NavigationItemProps) => {
-  const Icon = item.icon;
+  const Icon = item.icon || (() => null);
   
   return (
     <Link
       key={item.id}
       to={item.href}
       className={cn(
-        "flex items-center py-2 px-3 rounded-md transition-colors text-[14px] w-full whitespace-nowrap",
+        "group flex items-center py-2 px-3 rounded-md transition-all duration-200 text-[14px] whitespace-nowrap border",
         isActive
           ? isLightTheme 
-            ? "bg-[#DCD8C0]/70 text-[#222222]" 
-            : "bg-white/10 text-white"
-          : isLightTheme 
-            ? "text-[#222222]/90 hover:bg-[#DCD8C0]/40" 
-            : "text-[#E2E2E2]/90 hover:bg-white/5",
-        isCollapsed ? "justify-center px-2" : ""
+            ? "bg-[#E9E7D8] text-[#222222] font-medium border-primary" 
+            : "bg-black text-[#E2E2E2] font-medium border-primary"
+          : isLightTheme ? "text-[#222222] border-transparent" : "text-[#E2E2E2] border-transparent",
+        isLightTheme 
+          ? "hover:bg-[#E9E7D8] hover:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30" 
+          : "hover:bg-sidebar-accent hover:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30",
       )}
-      title={isCollapsed ? (item.title || item.label) : undefined}
     >
       {Icon && (
-        <Icon className={cn("h-4 w-4", !isCollapsed && "mr-2")} />
+        <Icon
+          className="h-5 w-5 mr-3"
+          style={{ 
+            backgroundColor: isLightTheme ? '#222222' : '#000', 
+            padding: '2px', 
+            borderRadius: '2px' 
+          }}
+        />
       )}
-      {!isCollapsed && <span className="truncate">{item.title || item.label}</span>}
+      {!isCollapsed && <span>{item.title}</span>}
     </Link>
   );
 };

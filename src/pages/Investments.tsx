@@ -8,7 +8,6 @@ import { IntelligentAllocationTab } from "@/components/investments/IntelligentAl
 import { StockScreener } from "@/components/investments/StockScreener";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { ScheduleMeetingDialog } from "@/components/investments/ScheduleMeetingDialog";
 import { getAllInvestmentCategoryData } from "@/services/marketDataService";
 
 interface PortfolioModel {
@@ -167,7 +166,7 @@ const Investments = () => {
   };
 
   return (
-    <ThreeColumnLayout activeMainItem="investments" title="Investments">
+    <ThreeColumnLayout title="Investments">
       <div className="space-y-8">
         <Tabs value={selectedTab} className="w-full" onValueChange={handleTabChange}>
           <TabsList className="w-full mb-6">

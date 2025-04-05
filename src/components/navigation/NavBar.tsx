@@ -19,7 +19,8 @@ import {
   homeNavItems, 
   educationSolutionsNavItems, 
   familyWealthNavItems, 
-  collaborationNavItems 
+  collaborationNavItems,
+  bottomNavItems 
 } from '@/navigation';
 import { adaptNavItemsToMainMenuItems } from '@/utils/navigationUtils';
 
@@ -67,33 +68,6 @@ export const NavBar = () => {
   const toggleTheme = () => {
     setTheme(isDark ? "light" : "dark");
   };
-
-  const bottomNavItems: BottomNavItem[] = [
-    {
-      id: "home",
-      title: "Home",
-      icon: Home,
-      href: "/",
-    },
-    {
-      id: "accounts",
-      title: "Accounts",
-      icon: CreditCard,
-      href: "/accounts",
-    },
-    {
-      id: "investments",
-      title: "Investments",
-      icon: BarChart,
-      href: "/investments",
-    },
-    {
-      id: "profile",
-      title: "Profile",
-      icon: Users,
-      href: "/profile",
-    }
-  ];
 
   return (
     <div className="flex h-full">

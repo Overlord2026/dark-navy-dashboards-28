@@ -1,59 +1,78 @@
-// Mock service to fetch investment category data
-// This would be replaced with actual API calls in a production environment
 
-export interface MarketData {
-  ytdPerformance: number;
-  quarterlyPerformance?: number;
-  annualizedReturn?: number;
-  volatility?: number;
-}
+import { toast } from "sonner";
 
 export interface MarketDataResponse {
-  [key: string]: MarketData;
+  'private-equity': { ytdPerformance: number };
+  'private-debt': { ytdPerformance: number };
+  'digital-assets': { ytdPerformance: number };
+  'real-assets': { ytdPerformance: number };
 }
 
-// Simulated API call
+/**
+ * Get all investment category performance data
+ * This is a mock service that would typically fetch data from an API
+ */
 export const getAllInvestmentCategoryData = async (): Promise<MarketDataResponse> => {
-  // Simulate API latency
-  await new Promise(resolve => setTimeout(resolve, 800));
+  // Simulate API call delay
+  await new Promise((resolve) => setTimeout(resolve, 1000));
   
-  // Return mock data
+  // In a real application, this would be an API call
+  // For now, we're returning mock data
   return {
-    'private-equity': { 
-      ytdPerformance: 12.4,
-      quarterlyPerformance: 3.2,
-      annualizedReturn: 16.8,
-      volatility: 18.5
-    },
-    'private-debt': { 
-      ytdPerformance: 8.7,
-      quarterlyPerformance: 2.1,
-      annualizedReturn: 9.4,
-      volatility: 8.2
-    },
-    'digital-assets': { 
-      ytdPerformance: 15.8,
-      quarterlyPerformance: 7.5,
-      annualizedReturn: 22.3,
-      volatility: 35.8
-    },
-    'real-assets': { 
-      ytdPerformance: 9.1,
-      quarterlyPerformance: 2.8,
-      annualizedReturn: 11.3,
-      volatility: 12.4
-    }
+    'private-equity': { ytdPerformance: 12.4 },
+    'private-debt': { ytdPerformance: 8.7 },
+    'digital-assets': { ytdPerformance: 15.8 },
+    'real-assets': { ytdPerformance: 9.1 }
   };
 };
 
-export const getPortfolioModelById = async (id: string) => {
-  // This would be an actual API call in production
-  await new Promise(resolve => setTimeout(resolve, 600));
+/**
+ * Get performance data for a specific investment category
+ */
+export const getCategoryPerformanceData = async (category: string): Promise<any> => {
+  // Simulate API call delay
+  await new Promise((resolve) => setTimeout(resolve, 1000));
   
-  // Return mock data based on id
-  // In a real implementation, this would fetch from an API
-  return {
-    id,
-    // Additional portfolio details would be fetched here
-  };
+  // Mock data based on category
+  switch (category) {
+    case 'private-equity':
+      return {
+        ytdPerformance: 12.4,
+        oneYearReturn: 15.2,
+        threeYearReturn: 42.3,
+        fiveYearReturn: 67.5,
+        volatility: 'Medium-High',
+        correlationToMarket: 0.68
+      };
+    case 'private-debt':
+      return {
+        ytdPerformance: 8.7,
+        oneYearReturn: 10.3,
+        threeYearReturn: 27.4,
+        fiveYearReturn: 42.1,
+        volatility: 'Medium',
+        correlationToMarket: 0.52
+      };
+    case 'digital-assets':
+      return {
+        ytdPerformance: 15.8,
+        oneYearReturn: 95.7,
+        threeYearReturn: 247.9,
+        fiveYearReturn: 533.6,
+        volatility: 'Very High',
+        correlationToMarket: 0.45
+      };
+    case 'real-assets':
+      return {
+        ytdPerformance: 9.1,
+        oneYearReturn: 11.2,
+        threeYearReturn: 32.5,
+        fiveYearReturn: 51.8,
+        volatility: 'Medium-Low',
+        correlationToMarket: 0.32
+      };
+    default:
+      toast.error(`Invalid category: ${category}`);
+      throw new Error(`Invalid category: ${category}`);
+  }
 };

@@ -1,536 +1,290 @@
+
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Skeleton } from "@/components/ui/skeleton";
-import { fetchStockData, fetchStockPriceHistory } from "@/services/stockScreenerService";
-import { generateStockAnalysis } from "@/services/aiAnalysisService";
-import { 
-  ArrowUpRight, 
-  ArrowDownRight, 
-  SearchIcon, 
-  TrendingUp, 
-  BarChart, 
-  DollarSign, 
-  Building, 
-  Briefcase,
-  CalendarClock,
-  CircleDollarSign,
-  Brain,
-  LineChart,
-  CandlestickChart
-} from "lucide-react";
-import { toast } from "sonner";
-import { 
-  LineChart as RechartsLineChart, 
-  Line, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
-  ResponsiveContainer,
-  Legend
-} from "recharts";
-import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Search, Filter, BarChart3, Download, RefreshCcw, Info } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
-interface PriceHistoryDataPoint {
-  date: string;
-  price: number;
-}
+export const StockScreener = () => {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedMarketCap, setSelectedMarketCap] = useState("");
+  const [selectedSector, setSelectedSector] = useState("");
+  const [selectedPERatio, setSelectedPERatio] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-export const StockScreener: React.FC = () => {
-  const [symbol, setSymbol] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [stockData, setStockData] = useState<any>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [recentSearches, setRecentSearches] = useState<string[]>([]);
-  const [aiAnalysis, setAiAnalysis] = useState<string | null>(null);
-  const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [priceHistory, setPriceHistory] = useState<PriceHistoryDataPoint[]>([]);
-  const [historyTimeframe, setHistoryTimeframe] = useState<"1M" | "3M" | "6M" | "1Y">("1M");
-  const [loadingHistory, setLoadingHistory] = useState(false);
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      // Trigger the search or submit action
-      // This is a placeholder implementation since we don't have the full context
-    }
+  const handleSearch = () => {
+    setIsLoading(true);
+    // Simulate API call
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
   };
 
-  const fetchPriceHistory = async (stockSymbol: string, timeframe: "1M" | "3M" | "6M" | "1Y") => {
-    if (!stockSymbol) return;
-    
-    setLoadingHistory(true);
-    try {
-      const historyData = await fetchStockPriceHistory(stockSymbol, timeframe);
-      setPriceHistory(historyData);
-    } catch (err) {
-      console.error("Error in fetchPriceHistory:", err);
-      const currentPrice = stockData?.price || 100;
-      const daysToGenerate = calculateDaysFromTimeframe(timeframe);
-      const mockHistory = generateMockPriceHistory(currentPrice, daysToGenerate);
-      setPriceHistory(mockHistory);
-      toast.error("Could not fetch real price history. Using estimated data.");
-    } finally {
-      setLoadingHistory(false);
-    }
+  const handleClearFilters = () => {
+    setSearchTerm("");
+    setSelectedMarketCap("");
+    setSelectedSector("");
+    setSelectedPERatio("");
   };
 
-  const calculateDaysFromTimeframe = (timeframe: "1M" | "3M" | "6M" | "1Y"): number => {
-    switch(timeframe) {
-      case "3M": return 90;
-      case "6M": return 180;
-      case "1Y": return 365;
-      default: return 30; // 1M is default
-    }
-  };
-
-  const generateMockPriceHistory = (currentPrice: number, days: number = 30): PriceHistoryDataPoint[] => {
-    if (!currentPrice) return [];
-    
-    const today = new Date();
-    const data: PriceHistoryDataPoint[] = [];
-    let price = currentPrice * 0.9; // Start ~10% lower than current
-    
-    for (let i = days; i >= 0; i--) {
-      const date = new Date(today);
-      date.setDate(date.getDate() - i);
-      
-      const volatility = 0.01; // 1% daily volatility
-      const change = (Math.random() - 0.45) * (price * volatility); // Slightly biased upward
-      price += change;
-      
-      if (price <= 0) price = 0.01;
-      
-      data.push({
-        date: date.toISOString().split('T')[0],
-        price: parseFloat(price.toFixed(2))
-      });
-    }
-    
-    if (data.length > 0) {
-      data[data.length - 1].price = currentPrice;
-    }
-    
-    return data;
-  };
-
-  const handleSearch = async () => {
-    if (!symbol.trim()) {
-      toast.error("Please enter a stock symbol");
-      return;
-    }
-    
-    setLoading(true);
-    setError(null);
-    setAiAnalysis(null);
-    setPriceHistory([]);
-    
-    try {
-      const data = await fetchStockData(symbol);
-      
-      if (data.error) {
-        setError(data.error);
-        toast.error(data.error);
-      } else {
-        setStockData(data);
-        
-        if (!recentSearches.includes(data.symbol)) {
-          setRecentSearches(prev => [data.symbol, ...prev].slice(0, 5));
-        }
-        
-        toast.success(`Loaded data for ${data.companyName} (${data.symbol})`);
-        
-        await fetchPriceHistory(data.symbol, historyTimeframe);
-      }
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "Failed to fetch stock data";
-      setError(errorMessage);
-      toast.error(errorMessage);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleChangeTimeframe = async (timeframe: "1M" | "3M" | "6M" | "1Y") => {
-    setHistoryTimeframe(timeframe);
-    if (stockData?.symbol) {
-      await fetchPriceHistory(stockData.symbol, timeframe);
-    }
-  };
-
-  const handleGetAIAnalysis = async () => {
-    if (!stockData) return;
-    
-    setIsAnalyzing(true);
-    toast.info(`Generating AI analysis for ${stockData.symbol}...`);
-    
-    try {
-      const analysis = await generateStockAnalysis(stockData);
-      setAiAnalysis(analysis);
-      toast.success("AI analysis complete");
-    } catch (error) {
-      console.error("Error getting AI analysis:", error);
-      toast.error("Failed to generate AI analysis");
-    } finally {
-      setIsAnalyzing(false);
-    }
-  };
-
-  const handleScheduleAppointment = () => {
-    window.open("https://calendly.com/tonygomes/60min", "_blank");
-    toast.success("Opening scheduling page", {
-      description: `Schedule a meeting to discuss ${stockData?.symbol || "stock investments"} with your advisor.`,
-    });
-  };
-
-  const formatLargeNumber = (num: number | null) => {
-    if (num === null) return 'N/A';
-    
-    if (num >= 1_000_000_000_000) {
-      return `$${(num / 1_000_000_000_000).toFixed(2)}T`;
-    } else if (num >= 1_000_000_000) {
-      return `$${(num / 1_000_000_000).toFixed(2)}B`;
-    } else if (num >= 1_000_000) {
-      return `$${(num / 1_000_000).toFixed(2)}M`;
-    } else {
-      return `$${num.toLocaleString()}`;
-    }
-  };
-
-  const formatPercent = (num: number | null) => {
-    if (num === null) return 'N/A';
-    return `${num.toFixed(2)}%`;
-  };
-
-  const getPriceChangeColor = (change: number) => {
-    return change >= 0 ? 'var(--color-emerald)' : 'var(--color-destructive)';
-  };
-
-  const chartConfig = {
-    price: {
-      label: "Price",
-      theme: {
-        light: "#0ea5e9",
-        dark: "#38bdf8",
-      },
+  // Mock search results
+  const searchResults = [
+    {
+      ticker: "AAPL",
+      name: "Apple Inc.",
+      price: 182.52,
+      change: 1.24,
+      changePercent: 0.68,
+      marketCap: "2.97T",
+      sector: "Technology",
+      peRatio: 31.2,
     },
-  };
+    {
+      ticker: "MSFT",
+      name: "Microsoft Corporation",
+      price: 407.75,
+      change: 3.58,
+      changePercent: 0.89,
+      marketCap: "3.03T",
+      sector: "Technology",
+      peRatio: 37.4,
+    },
+    {
+      ticker: "AMZN",
+      name: "Amazon.com Inc.",
+      price: 182.15,
+      change: -1.32,
+      changePercent: -0.72,
+      marketCap: "1.89T",
+      sector: "Consumer Cyclical",
+      peRatio: 65.8,
+    },
+    {
+      ticker: "NVDA",
+      name: "NVIDIA Corporation",
+      price: 942.89,
+      change: 15.78,
+      changePercent: 1.7,
+      marketCap: "2.32T",
+      sector: "Technology",
+      peRatio: 89.3,
+    },
+    {
+      ticker: "GOOGL",
+      name: "Alphabet Inc.",
+      price: 152.63,
+      change: 0.45,
+      changePercent: 0.30,
+      marketCap: "1.92T",
+      sector: "Communication Services",
+      peRatio: 28.7,
+    },
+  ];
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col md:flex-row gap-4 items-end">
-        <div className="flex-1">
-          <label htmlFor="stock-symbol" className="block text-sm font-medium mb-2">
-            Enter Stock Symbol
-          </label>
-          <div className="relative">
-            <Input
-              id="stock-symbol"
-              placeholder="e.g., AAPL, MSFT, GOOGL"
-              value={symbol}
-              onChange={(e) => setSymbol(e.target.value.toUpperCase())}
-              onKeyDown={handleKeyDown}
-              className="pr-10"
-            />
-            <SearchIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-          </div>
+      <div className="flex justify-between items-center">
+        <div>
+          <h2 className="text-2xl font-semibold">Stock Screener</h2>
+          <p className="text-muted-foreground">Find and analyze individual stocks</p>
         </div>
-        <Button onClick={handleSearch} disabled={loading} className="mb-0">
-          {loading ? "Searching..." : "Search"}
+        <Button variant="outline" className="flex items-center gap-1">
+          <Download className="h-4 w-4 mr-1" /> Export Data
         </Button>
       </div>
 
-      {recentSearches.length > 0 && (
-        <div className="flex flex-wrap gap-2">
-          <span className="text-sm text-muted-foreground">Recent:</span>
-          {recentSearches.map((sym) => (
+      <Card>
+        <CardHeader className="pb-3">
+          <CardTitle>Stock Filters</CardTitle>
+          <CardDescription>Set criteria to filter stocks</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+            <div className="md:col-span-2">
+              <Label htmlFor="search">Search by Ticker or Company Name</Label>
+              <div className="relative mt-1">
+                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                <Input
+                  id="search"
+                  placeholder="e.g. AAPL, Apple Inc."
+                  className="pl-8"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </div>
+            </div>
+            
+            <div>
+              <Label htmlFor="market-cap">Market Cap</Label>
+              <Select value={selectedMarketCap} onValueChange={setSelectedMarketCap}>
+                <SelectTrigger id="market-cap" className="mt-1">
+                  <SelectValue placeholder="Any" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="">Any</SelectItem>
+                  <SelectItem value="mega">Mega ($200B+)</SelectItem>
+                  <SelectItem value="large">Large ($10B-$200B)</SelectItem>
+                  <SelectItem value="mid">Mid ($2B-$10B)</SelectItem>
+                  <SelectItem value="small">Small ($300M-$2B)</SelectItem>
+                  <SelectItem value="micro">Micro (Under $300M)</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <div>
+              <Label htmlFor="sector">Sector</Label>
+              <Select value={selectedSector} onValueChange={setSelectedSector}>
+                <SelectTrigger id="sector" className="mt-1">
+                  <SelectValue placeholder="Any" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="">Any</SelectItem>
+                  <SelectItem value="technology">Technology</SelectItem>
+                  <SelectItem value="financial">Financial</SelectItem>
+                  <SelectItem value="healthcare">Healthcare</SelectItem>
+                  <SelectItem value="consumer">Consumer</SelectItem>
+                  <SelectItem value="industrial">Industrial</SelectItem>
+                  <SelectItem value="energy">Energy</SelectItem>
+                  <SelectItem value="utilities">Utilities</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <div>
+              <Label htmlFor="pe-ratio">P/E Ratio</Label>
+              <Select value={selectedPERatio} onValueChange={setSelectedPERatio}>
+                <SelectTrigger id="pe-ratio" className="mt-1">
+                  <SelectValue placeholder="Any" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="">Any</SelectItem>
+                  <SelectItem value="low">Low (< 15)</SelectItem>
+                  <SelectItem value="moderate">Moderate (15-30)</SelectItem>
+                  <SelectItem value="high">High (30-60)</SelectItem>
+                  <SelectItem value="very-high">Very High (60+)</SelectItem>
+                  <SelectItem value="negative">Negative</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          
+          <div className="flex gap-3 mt-6">
             <Button 
-              key={sym} 
-              variant="outline" 
-              size="sm"
-              onClick={() => {
-                setSymbol(sym);
-                setTimeout(handleSearch, 100);
-              }}
+              className="flex-1 md:flex-none" 
+              onClick={handleSearch}
+              disabled={isLoading}
             >
-              {sym}
+              {isLoading ? (
+                <>
+                  <RefreshCcw className="h-4 w-4 mr-2 animate-spin" /> Searching...
+                </>
+              ) : (
+                <>
+                  <Filter className="h-4 w-4 mr-2" /> Apply Filters
+                </>
+              )}
             </Button>
-          ))}
-        </div>
-      )}
-
-      {loading && (
-        <Card>
-          <CardHeader className="pb-2">
-            <Skeleton className="h-8 w-1/3 mb-2" />
-            <Skeleton className="h-4 w-1/2" />
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-              <Skeleton className="h-24" />
-              <Skeleton className="h-24" />
-              <Skeleton className="h-24" />
-            </div>
-            <Skeleton className="h-48" />
-          </CardContent>
-        </Card>
-      )}
-
-      {!loading && stockData && !error && (
-        <Card>
-          <CardHeader className="pb-2">
-            <div className="flex justify-between items-start">
-              <div>
-                <CardTitle className="text-2xl">{stockData.companyName} ({stockData.symbol})</CardTitle>
-                <CardDescription>
-                  <div className="flex items-center gap-2 mt-1">
-                    <Building className="h-4 w-4" />
-                    <span>{stockData.sector} • {stockData.industry}</span>
-                  </div>
-                </CardDescription>
-              </div>
-              <div className="text-right">
-                <div className="text-3xl font-bold">${stockData.price.toFixed(2)}</div>
-                <div className={`flex items-center justify-end ${stockData.change >= 0 ? 'text-emerald-500' : 'text-red-500'}`}>
-                  {stockData.change >= 0 ? (
-                    <ArrowUpRight className="h-4 w-4 mr-1" />
-                  ) : (
-                    <ArrowDownRight className="h-4 w-4 mr-1" />
-                  )}
-                  <span>
-                    {stockData.change.toFixed(2)} ({stockData.changePercent.toFixed(2)}%)
-                  </span>
-                </div>
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <Card className="mb-6 border border-muted">
-              <CardHeader className="pb-2">
-                <div className="flex items-center justify-between">
-                  <CardTitle className="text-lg flex items-center gap-2">
-                    <LineChart className="h-5 w-5" />
-                    Price History
-                  </CardTitle>
-                  <div className="flex gap-3">
-                    <Button 
-                      variant={historyTimeframe === "1M" ? "outline" : "ghost"} 
-                      size="sm"
-                      onClick={() => handleChangeTimeframe("1M")}
-                    >
-                      1M
-                    </Button>
-                    <Button 
-                      variant={historyTimeframe === "3M" ? "outline" : "ghost"} 
-                      size="sm"
-                      onClick={() => handleChangeTimeframe("3M")}
-                    >
-                      3M
-                    </Button>
-                    <Button 
-                      variant={historyTimeframe === "6M" ? "outline" : "ghost"} 
-                      size="sm"
-                      onClick={() => handleChangeTimeframe("6M")}
-                    >
-                      6M
-                    </Button>
-                    <Button 
-                      variant={historyTimeframe === "1Y" ? "outline" : "ghost"} 
-                      size="sm"
-                      onClick={() => handleChangeTimeframe("1Y")}
-                    >
-                      1Y
-                    </Button>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="h-[300px] mt-4">
-                  {loadingHistory ? (
-                    <div className="flex items-center justify-center h-full">
-                      <Skeleton className="h-full w-full" />
-                    </div>
-                  ) : priceHistory.length > 0 ? (
-                    <ChartContainer config={chartConfig}>
-                      <RechartsLineChart
-                        data={priceHistory}
-                        margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-                      >
-                        <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
-                        <XAxis 
-                          dataKey="date" 
-                          tickFormatter={(value) => {
-                            const date = new Date(value);
-                            return `${date.getMonth() + 1}/${date.getDate()}`;
-                          }}
-                          tick={{ fontSize: 12 }}
-                        />
-                        <YAxis 
-                          domain={['auto', 'auto']}
-                          tick={{ fontSize: 12 }}
-                          tickFormatter={(value) => `$${value}`}
-                          width={60}
-                        />
-                        <Tooltip content={<ChartTooltipContent />} />
-                        <Legend />
-                        <Line
-                          type="monotone"
-                          dataKey="price"
-                          name="Price"
-                          stroke={getPriceChangeColor(stockData.change)}
-                          strokeWidth={2}
-                          dot={false}
-                        />
-                      </RechartsLineChart>
-                    </ChartContainer>
-                  ) : (
-                    <div className="flex items-center justify-center h-full text-muted-foreground">
-                      No price history data available
-                    </div>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-              <div className="bg-card text-card-foreground rounded-lg border shadow-sm p-4 hover:shadow-md transition-shadow">
-                <div className="flex flex-col gap-1">
-                  <div className="text-muted-foreground text-sm flex items-center">
-                    <CircleDollarSign className="h-4 w-4 mr-1" /> Market Cap
-                  </div>
-                  <div className="text-xl font-bold">
-                    {formatLargeNumber(stockData.marketCap)}
-                  </div>
-                  <div className="text-xs text-muted-foreground mt-1">
-                    Total company value
-                  </div>
-                </div>
-              </div>
-              
-              <div className="bg-card text-card-foreground rounded-lg border shadow-sm p-4 hover:shadow-md transition-shadow">
-                <div className="flex flex-col gap-1">
-                  <div className="text-muted-foreground text-sm flex items-center">
-                    <BarChart className="h-4 w-4 mr-1" /> P/E Ratio
-                  </div>
-                  <div className="text-xl font-bold">
-                    {stockData.peRatio !== null ? stockData.peRatio.toFixed(2) : 'N/A'}
-                  </div>
-                  <div className="text-xs text-muted-foreground mt-1">
-                    Price to Earnings ratio
-                  </div>
-                </div>
-              </div>
-              
-              <div className="bg-card text-card-foreground rounded-lg border shadow-sm p-4 hover:shadow-md transition-shadow">
-                <div className="flex flex-col gap-1">
-                  <div className="text-muted-foreground text-sm flex items-center">
-                    <TrendingUp className="h-4 w-4 mr-1" /> Dividend Yield
-                  </div>
-                  <div className="text-xl font-bold">
-                    {formatPercent(stockData.dividendYield)}
-                  </div>
-                  <div className="text-xs text-muted-foreground mt-1">
-                    Annual dividend/stock price
-                  </div>
-                </div>
-              </div>
-            </div>
             
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-              <div>
-                <div className="text-muted-foreground text-sm">Volume</div>
-                <div className="font-medium">{stockData.volume.toLocaleString()}</div>
-              </div>
-              <div>
-                <div className="text-muted-foreground text-sm">Avg Volume</div>
-                <div className="font-medium">{stockData.avgVolume.toLocaleString()}</div>
-              </div>
-              <div>
-                <div className="text-muted-foreground text-sm">52W High</div>
-                <div className="font-medium">${stockData.week52High?.toFixed(2) || 'N/A'}</div>
-              </div>
-              <div>
-                <div className="text-muted-foreground text-sm">52W Low</div>
-                <div className="font-medium">${stockData.week52Low?.toFixed(2) || 'N/A'}</div>
-              </div>
+            <Button 
+              variant="outline" 
+              className="flex-1 md:flex-none"
+              onClick={handleClearFilters}
+            >
+              Clear Filters
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+      
+      <Tabs defaultValue="results" className="w-full">
+        <TabsList>
+          <TabsTrigger value="results">Results</TabsTrigger>
+          <TabsTrigger value="watchlist">Watchlist</TabsTrigger>
+          <TabsTrigger value="portfolios">In Portfolios</TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="results" className="mt-4">
+          <div className="rounded-md border overflow-hidden">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="bg-muted/50">
+                  <th className="text-left p-3 font-medium">Symbol</th>
+                  <th className="text-left p-3 font-medium hidden md:table-cell">Name</th>
+                  <th className="text-right p-3 font-medium">Price</th>
+                  <th className="text-right p-3 font-medium">Change</th>
+                  <th className="text-right p-3 font-medium hidden sm:table-cell">Market Cap</th>
+                  <th className="text-left p-3 font-medium hidden lg:table-cell">Sector</th>
+                  <th className="text-right p-3 font-medium hidden md:table-cell">P/E</th>
+                  <th className="text-right p-3 font-medium">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {searchResults.map((stock) => (
+                  <tr key={stock.ticker} className="border-t hover:bg-muted/20">
+                    <td className="p-3 font-medium">{stock.ticker}</td>
+                    <td className="p-3 hidden md:table-cell">{stock.name}</td>
+                    <td className="p-3 text-right">${stock.price.toFixed(2)}</td>
+                    <td className="p-3 text-right">
+                      <span className={stock.change >= 0 ? "text-emerald-500" : "text-red-500"}>
+                        {stock.change >= 0 ? "+" : ""}{stock.change.toFixed(2)} ({stock.change >= 0 ? "+" : ""}
+                        {stock.changePercent.toFixed(2)}%)
+                      </span>
+                    </td>
+                    <td className="p-3 text-right hidden sm:table-cell">${stock.marketCap}</td>
+                    <td className="p-3 hidden lg:table-cell">
+                      <Badge variant="outline" className="bg-primary/5">{stock.sector}</Badge>
+                    </td>
+                    <td className="p-3 text-right hidden md:table-cell">{stock.peRatio.toFixed(1)}</td>
+                    <td className="p-3 text-right">
+                      <div className="flex justify-end gap-2">
+                        <Button variant="outline" size="sm">
+                          <Info className="h-3.5 w-3.5" />
+                        </Button>
+                        <Button variant="outline" size="sm">
+                          <BarChart3 className="h-3.5 w-3.5" />
+                        </Button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          
+          <div className="mt-3 flex justify-between items-center text-sm text-muted-foreground">
+            <span>Showing 5 of 547 results</span>
+            <div className="flex items-center gap-1">
+              <Button variant="outline" size="sm" disabled>Previous</Button>
+              <Button variant="outline" size="sm">Next</Button>
             </div>
-
-            {!aiAnalysis && (
-              <div className="flex flex-col md:flex-row gap-4 mb-6">
-                <Button 
-                  onClick={handleGetAIAnalysis} 
-                  disabled={isAnalyzing} 
-                  className="flex items-center gap-2"
-                >
-                  <Brain className="h-4 w-4" /> 
-                  {isAnalyzing ? "Analyzing..." : "Get AI Analysis"}
-                </Button>
-                <Button 
-                  variant="outline" 
-                  className="flex items-center gap-2"
-                  onClick={handleScheduleAppointment}
-                >
-                  <CalendarClock className="h-4 w-4" /> Consult with Advisor
-                </Button>
-                <Button className="flex items-center gap-2">
-                  <Briefcase className="h-4 w-4" /> Add to Portfolio
-                </Button>
-              </div>
-            )}
-            
-            {aiAnalysis && (
-              <div className="space-y-6">
-                <Card className="bg-muted/20 border">
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-lg flex items-center gap-2">
-                      <Brain className="h-5 w-5" /> AI Investment Analysis
-                    </CardTitle>
-                    <CardDescription>
-                      AI-powered insights for {stockData.symbol}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-sm space-y-3 leading-relaxed">
-                      {aiAnalysis.split('\n\n').map((paragraph, i) => (
-                        <p key={i}>{paragraph}</p>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-                
-                <div className="flex flex-col md:flex-row gap-4">
-                  <Button 
-                    variant="outline" 
-                    className="flex items-center gap-2"
-                    onClick={handleScheduleAppointment}
-                  >
-                    <CalendarClock className="h-4 w-4" /> Consult with Advisor
-                  </Button>
-                  <Button className="flex items-center gap-2">
-                    <Briefcase className="h-4 w-4" /> Add to Portfolio
-                  </Button>
-                </div>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      )}
-
-      {!loading && error && (
-        <Card className="border-red-200 bg-red-50">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-red-700">Error</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-red-700">{error}</p>
-            <p className="text-sm text-muted-foreground mt-2">
-              Try another symbol or check if you entered a valid stock ticker.
-            </p>
-          </CardContent>
-        </Card>
-      )}
+          </div>
+        </TabsContent>
+        
+        <TabsContent value="watchlist" className="mt-4">
+          <div className="p-8 text-center border rounded-md">
+            <h3 className="font-medium text-lg">Your Watchlist is Empty</h3>
+            <p className="text-muted-foreground mt-2">Add stocks to your watchlist to track their performance</p>
+          </div>
+        </TabsContent>
+        
+        <TabsContent value="portfolios" className="mt-4">
+          <div className="p-8 text-center border rounded-md">
+            <h3 className="font-medium text-lg">Portfolio Holdings</h3>
+            <p className="text-muted-foreground mt-2">View stocks that are included in your investment portfolios</p>
+            <Button className="mt-4">View Portfolios</Button>
+          </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
