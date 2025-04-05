@@ -10,12 +10,12 @@ interface MobileCourseCardProps {
 export const MobileCourseCard = ({ course, onClick }: MobileCourseCardProps) => {
   return (
     <div 
-      className="bg-card rounded-lg overflow-hidden shadow-sm border border-border"
+      className="bg-card rounded-lg overflow-hidden shadow-sm border border-border cursor-pointer"
       onClick={onClick}
     >
       <div 
         className="h-32 bg-cover bg-center" 
-        style={{ backgroundImage: `url(${course.image})` }}
+        style={{ backgroundImage: `url(${course.image || "/placeholder.svg"})` }}
       ></div>
       <div className="p-3">
         <h3 className="text-base font-medium truncate">{course.title}</h3>
@@ -27,6 +27,11 @@ export const MobileCourseCard = ({ course, onClick }: MobileCourseCardProps) => 
         {course.isPaid && (
           <div className="mt-2">
             <span className="text-xs bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300 px-2 py-1 rounded-full">Premium</span>
+          </div>
+        )}
+        {course.ghlUrl && (
+          <div className="mt-2 opacity-75">
+            <span className="text-xs">Tap to access</span>
           </div>
         )}
       </div>
