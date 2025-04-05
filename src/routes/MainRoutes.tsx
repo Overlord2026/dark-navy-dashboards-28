@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Route } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import Dashboard from "../pages/Dashboard";
 import Notifications from "../pages/Notifications";
 import Settings from "../pages/Settings";
@@ -13,7 +13,7 @@ import NotFound from "../pages/NotFound";
 
 const MainRoutes = () => {
   return (
-    <>
+    <Routes>
       <Route path="/" element={<Dashboard />} />
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/notifications" element={<Notifications />} />
@@ -25,7 +25,7 @@ const MainRoutes = () => {
       <Route path="/education/:categoryId" element={<Education />} />
       <Route path="/all-assets" element={<AllAssets />} />
       <Route path="*" element={<NotFound />} />
-    </>
+    </Routes>
   );
 };
 

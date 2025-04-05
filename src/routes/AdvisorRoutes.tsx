@@ -1,11 +1,12 @@
+
 import React from "react";
-import { Route } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 
 const AdvisorRoutes = () => {
   return (
-    <>
+    <Routes>
       {/* Add your advisor routes here */}
-    </>
+    </Routes>
   );
 };
 

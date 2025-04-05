@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Route } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 
 // Import pages
 import HomePage from "../pages/HomePage";
@@ -17,7 +17,7 @@ import NotFound from "../pages/NotFound";
 
 const PublicRoutes = () => {
   return (
-    <>
+    <Routes>
       <Route path="/home" element={<HomePage />} />
       <Route path="/services" element={<ServicesPage />} />
       <Route path="/about" element={<AboutUsPage />} />
@@ -30,7 +30,7 @@ const PublicRoutes = () => {
       <Route path="/accessibility" element={<AccessibilityPage />} />
       <Route path="/" element={<HomePage />} />
       <Route path="*" element={<NotFound />} />
-    </>
+    </Routes>
   );
 };
 

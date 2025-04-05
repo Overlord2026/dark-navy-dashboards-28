@@ -1,52 +1,33 @@
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import React from "react";
 import { Course } from "@/types/education";
 
 interface MobileCourseCardProps {
-  title: string;
-  description: string;
-  level: "Beginner" | "Intermediate" | "Advanced" | "All Levels";
-  duration: string;
-  isPaid: boolean;
-  onClick: () => void;
+  course: Course;
 }
 
-export function MobileCourseCard({ 
-  title, 
-  description, 
-  level, 
-  duration, 
-  isPaid, 
-  onClick 
-}: MobileCourseCardProps) {
+export const MobileCourseCard = ({ course }: MobileCourseCardProps) => {
   return (
-    <Card className="bg-[#1B1B32] border border-[#2A2A45] overflow-hidden">
-      <CardHeader className="p-4 pb-2">
-        <div className="flex justify-between items-start">
-          <CardTitle className="text-base">{title}</CardTitle>
-          <div className={`text-xs px-2 py-1 rounded ${isPaid ? 'bg-[#3A3A60]' : 'bg-[#2A4A3A]'}`}>
-            {isPaid ? 'Paid' : 'Free'}
+    <div className="bg-card rounded-lg overflow-hidden shadow-sm border border-border">
+      <div 
+        className="h-32 bg-cover bg-center" 
+        style={{ backgroundImage: `url(${course.image})` }}
+      ></div>
+      <div className="p-3">
+        <h3 className="text-base font-medium truncate">{course.title}</h3>
+        <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{course.description}</p>
+        <div className="flex justify-between items-center mt-2">
+          <span className="text-xs bg-secondary px-2 py-1 rounded-full">{course.level}</span>
+          <span className="text-xs text-muted-foreground">{course.duration}</span>
+        </div>
+        {course.isPaid && (
+          <div className="mt-2">
+            <span className="text-xs bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300 px-2 py-1 rounded-full">Premium</span>
           </div>
-        </div>
-        <CardDescription className="text-sm line-clamp-2 mt-1">
-          {description}
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="p-4 pt-2">
-        <div className="flex items-center justify-between text-xs text-gray-400 mb-3">
-          <div>{level}</div>
-          <div>{duration}</div>
-        </div>
-        <Button 
-          variant={isPaid ? "default" : "outline"} 
-          size="sm" 
-          className="w-full"
-          onClick={onClick}
-        >
-          {isPaid ? 'Enroll Now' : 'Start Learning'}
-        </Button>
-      </CardContent>
-    </Card>
+        )}
+      </div>
+    </div>
   );
-}
+};
+
+export default MobileCourseCard;

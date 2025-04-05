@@ -25,7 +25,7 @@ const AppRoutes: React.FC = () => {
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/advisor/login" element={<LoginPage isAdvisor={true} />} />
-        <PublicRoutes />
+        <Route path="/*" element={<PublicRoutes />} />
       </Routes>
     );
   }
@@ -38,11 +38,11 @@ const AppRoutes: React.FC = () => {
   // Desktop routes
   return (
     <Routes>
-      <MainRoutes />
-      <FinanceRoutes />
-      <WealthRoutes />
-      <AdvisorRoutes />
-      {isAdmin && <AdminRoutes />}
+      <Route path="/*" element={<MainRoutes />} />
+      <Route path="/finance/*" element={<FinanceRoutes />} />
+      <Route path="/wealth/*" element={<WealthRoutes />} />
+      <Route path="/advisor/*" element={<AdvisorRoutes />} />
+      {isAdmin && <Route path="/admin/*" element={<AdminRoutes />} />}
       
       {isDeveloper ? (
         <Route path="/dev/diagnostics" element={<Navigate to="/admin/navigation-diagnostics" />} />
@@ -50,10 +50,7 @@ const AppRoutes: React.FC = () => {
         <Route path="/dev/*" element={<Navigate to="/" replace />} />
       )}
       
-      <PublicRoutes />
-      
-      <Route path="/login" element={<Navigate to="/" />} />
-      <Route path="*" element={<Navigate to="/" />} />
+      <Route path="/*" element={<PublicRoutes />} />
     </Routes>
   );
 };
