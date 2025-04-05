@@ -18,6 +18,6 @@ export interface NavigationProps {
 export interface NavCategory {
   id: string;
   label: string;
-  items: any[]; // This could be more specific if needed
+  items: NavigationProps[]; // Updated to use NavigationProps
   defaultExpanded?: boolean;
 }

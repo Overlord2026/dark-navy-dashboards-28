@@ -6,7 +6,7 @@ import {
   Calendar, Clock, CreditCard, Plus, ArrowUp, Wallet, Receipt, 
   FileText, Inbox, BanknoteIcon, ExternalLink, ActivityIcon, 
   Upload, BarChart3, AlertCircle, CheckCircle, Home, Shield,
-  Link, PieChart, CircleDollarSign, Bell
+  Link, PieChart, CircleDollarSign, Bell, MessageSquare
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
@@ -22,6 +22,7 @@ import { PayBillDialog } from "@/components/billpay/PayBillDialog";
 import { PaymentMethodsDialog, PaymentMethod, DEFAULT_PAYMENT_METHODS } from "@/components/billpay/PaymentMethodsDialog";
 import { SchedulePaymentDialog } from "@/components/billpay/SchedulePaymentDialog";
 import { ReminderSetupDialog } from "@/components/billpay/ReminderSetupDialog";
+import { InsightsPanel } from "@/components/billpay/InsightsPanel";
 
 interface Bill {
   id: number;
@@ -79,6 +80,8 @@ const BillPay = () => {
   const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>(DEFAULT_PAYMENT_METHODS);
   const [selectedBillForAction, setSelectedBillForAction] = useState<Bill | null>(null);
   const [showPaymentMethodsDialog, setShowPaymentMethodsDialog] = useState(false);
+  
+  const [showInsightsPanel, setShowInsightsPanel] = useState(false);
 
   const billsSummary = useMemo(() => {
     const today = new Date();
@@ -212,488 +215,507 @@ const BillPay = () => {
 
   return (
     <ThreeColumnLayout title="Bill Pay" activeMainItem="family-wealth">
-      <div className="space-y-6 px-4 py-6 max-w-7xl mx-auto">
-        <DashboardHeader 
-          heading="Bill Payment Center" 
-          text="Manage and schedule all your bill payments from one centralized location."
-        />
-        
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <Card className="bg-white hover:shadow-md transition-shadow">
-            <CardContent className="p-6">
-              <div className="flex items-start justify-between">
-                <div className="flex flex-col">
-                  <p className="text-sm text-muted-foreground">Total Unpaid</p>
-                  <p className="text-2xl font-semibold">${billsSummary.totalUnpaid.toFixed(2)}</p>
-                </div>
-                <div className="bg-primary/10 p-2 rounded-full">
-                  <CircleDollarSign className="h-6 w-6 text-primary" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-white hover:shadow-md transition-shadow">
-            <CardContent className="p-6">
-              <div className="flex items-start justify-between">
-                <div className="flex flex-col">
-                  <p className="text-sm text-muted-foreground">Due in 7 Days</p>
-                  <p className="text-2xl font-semibold">${billsSummary.dueThisWeek.toFixed(2)}</p>
-                </div>
-                <div className="bg-amber-100 p-2 rounded-full">
-                  <Clock className="h-6 w-6 text-amber-600" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-white hover:shadow-md transition-shadow">
-            <CardContent className="p-6">
-              <div className="flex items-start justify-between">
-                <div className="flex flex-col">
-                  <p className="text-sm text-muted-foreground">Overdue Bills</p>
-                  <p className="text-2xl font-semibold">{billsSummary.overdueBills}</p>
-                </div>
-                <div className="bg-red-100 p-2 rounded-full">
-                  <AlertCircle className="h-6 w-6 text-red-600" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-white hover:shadow-md transition-shadow">
-            <CardContent className="p-6">
-              <div className="flex items-start justify-between">
-                <div className="flex flex-col">
-                  <p className="text-sm text-muted-foreground">Due Soon</p>
-                  <p className="text-2xl font-semibold">{billsSummary.dueSoonBills}</p>
-                </div>
-                <div className="bg-blue-100 p-2 rounded-full">
-                  <BarChart3 className="h-6 w-6 text-blue-600" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-        
-        <div className="flex flex-wrap gap-4 mt-2">
-          <div className="relative group">
-            <Button 
-              variant="default" 
-              size="lg" 
-              className="gap-2" 
-              onClick={handleAddNewBill}
-            >
-              <Plus className="h-4 w-4" />
-              Add New Bill
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              className="absolute -top-3 -right-3 h-6 w-6 p-0 bg-amber-100 border-amber-300 text-amber-700 opacity-0 group-hover:opacity-100 transition-opacity"
-              onClick={() => runDiagnostics("Add New Bill")}
-            >
-              <ActivityIcon className="h-3 w-3" />
-            </Button>
-          </div>
-          
-          <div className="relative group">
-            <Button 
-              variant="default" 
-              size="lg" 
-              className="gap-2 bg-green-600 hover:bg-green-700" 
-              onClick={handleUploadBill}
-            >
-              <Upload className="h-4 w-4" />
-              Upload Bill
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              className="absolute -top-3 -right-3 h-6 w-6 p-0 bg-amber-100 border-amber-300 text-amber-700 opacity-0 group-hover:opacity-100 transition-opacity"
-              onClick={() => runDiagnostics("Upload Bill")}
-            >
-              <ActivityIcon className="h-3 w-3" />
-            </Button>
-          </div>
-          
-          <div className="relative group">
+      <div className="flex h-full">
+        <div className="flex-1 space-y-6 px-4 py-6 max-w-7xl mx-auto">
+          <div className="flex justify-between items-center">
+            <DashboardHeader 
+              heading="Bill Payment Center" 
+              text="Manage and schedule all your bill payments from one centralized location."
+            />
+            
             <Button 
               variant="outline" 
-              size="lg" 
-              className="gap-2" 
-              onClick={handleManagePaymentMethods}
+              onClick={() => setShowInsightsPanel(!showInsightsPanel)}
+              className="flex items-center gap-2"
             >
-              <CreditCard className="h-4 w-4" />
-              Payment Methods
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              className="absolute -top-3 -right-3 h-6 w-6 p-0 bg-amber-100 border-amber-300 text-amber-700 opacity-0 group-hover:opacity-100 transition-opacity"
-              onClick={() => runDiagnostics("Payment Methods")}
-            >
-              <ActivityIcon className="h-3 w-3" />
+              <MessageSquare className="h-4 w-4" />
+              <span>Insights</span>
+              <Badge variant="warning" className="ml-1">5</Badge>
             </Button>
           </div>
-
-          <div className="relative group">
-            <Button 
-              variant="outline" 
-              size="lg" 
-              className="gap-2 border-blue-300 text-blue-600 hover:bg-blue-50 hover:text-blue-700"
-              onClick={handleManageIntegrations}
-            >
-              <Link className="h-4 w-4" />
-              Manage Integrations
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              className="absolute -top-3 -right-3 h-6 w-6 p-0 bg-amber-100 border-amber-300 text-amber-700 opacity-0 group-hover:opacity-100 transition-opacity"
-              onClick={() => runDiagnostics("Integrations")}
-            >
-              <ActivityIcon className="h-3 w-3" />
-            </Button>
-          </div>
-        </div>
-        
-        <Tabs defaultValue="upcoming" className="w-full" onValueChange={setActiveTab}>
-          <TabsList className="grid grid-cols-3 mb-6">
-            <TabsTrigger value="upcoming" className="text-sm">
-              <Calendar className="h-4 w-4 mr-2" />
-              Upcoming Bills
-            </TabsTrigger>
-            <TabsTrigger value="quick" className="text-sm">
-              <ArrowUp className="h-4 w-4 mr-2" />
-              Quick Pay
-            </TabsTrigger>
-            <TabsTrigger value="inbox" className="text-sm">
-              <Inbox className="h-4 w-4 mr-2" />
-              Bill Inbox
-              {billsInbox.filter(bill => bill.new).length > 0 && (
-                <Badge variant="default" className="ml-2 bg-red-500">
-                  {billsInbox.filter(bill => bill.new).length}
-                </Badge>
-              )}
-            </TabsTrigger>
-          </TabsList>
           
-          <TabsContent value="upcoming" className="space-y-4">
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between">
-                <div>
-                  <CardTitle className="text-xl flex items-center gap-2">
-                    <Calendar className="h-5 w-5 text-primary" />
-                    Upcoming Bills
-                  </CardTitle>
-                  <CardDescription>
-                    Bills due in the next 30 days
-                  </CardDescription>
-                </div>
-              </CardHeader>
-              <CardContent>
-                {upcomingBills.length === 0 ? (
-                  <div className="text-center py-6">
-                    <p className="text-muted-foreground">No upcoming bills scheduled.</p>
-                    <Button variant="ghost" size="sm" className="mt-2" onClick={handleAddNewBill}>
-                      <Plus className="h-4 w-4 mr-2" />
-                      Add your first bill
-                    </Button>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <Card className="bg-white hover:shadow-md transition-shadow">
+              <CardContent className="p-6">
+                <div className="flex items-start justify-between">
+                  <div className="flex flex-col">
+                    <p className="text-sm text-muted-foreground">Total Unpaid</p>
+                    <p className="text-2xl font-semibold">${billsSummary.totalUnpaid.toFixed(2)}</p>
                   </div>
-                ) : (
-                  <div className="space-y-4">
-                    {upcomingBills
-                      .sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime())
-                      .map((bill) => (
-                        <div 
-                          key={bill.id} 
-                          className="flex items-center justify-between p-3 bg-background border rounded-lg hover:bg-muted/50 transition-colors"
-                        >
-                          <div className="flex items-center gap-3">
-                            <div className={`p-2 rounded-full 
-                              ${bill.category === 'Utilities' ? 'bg-blue-100' :
-                                bill.category === 'Credit Cards' ? 'bg-purple-100' :
-                                bill.category === 'Insurance' ? 'bg-green-100' :
-                                'bg-gray-100'}`}
-                            >
-                              {getCategoryIcon(bill.category)}
+                  <div className="bg-primary/10 p-2 rounded-full">
+                    <CircleDollarSign className="h-6 w-6 text-primary" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-white hover:shadow-md transition-shadow">
+              <CardContent className="p-6">
+                <div className="flex items-start justify-between">
+                  <div className="flex flex-col">
+                    <p className="text-sm text-muted-foreground">Due in 7 Days</p>
+                    <p className="text-2xl font-semibold">${billsSummary.dueThisWeek.toFixed(2)}</p>
+                  </div>
+                  <div className="bg-amber-100 p-2 rounded-full">
+                    <Clock className="h-6 w-6 text-amber-600" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-white hover:shadow-md transition-shadow">
+              <CardContent className="p-6">
+                <div className="flex items-start justify-between">
+                  <div className="flex flex-col">
+                    <p className="text-sm text-muted-foreground">Overdue Bills</p>
+                    <p className="text-2xl font-semibold">{billsSummary.overdueBills}</p>
+                  </div>
+                  <div className="bg-red-100 p-2 rounded-full">
+                    <AlertCircle className="h-6 w-6 text-red-600" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-white hover:shadow-md transition-shadow">
+              <CardContent className="p-6">
+                <div className="flex items-start justify-between">
+                  <div className="flex flex-col">
+                    <p className="text-sm text-muted-foreground">Due Soon</p>
+                    <p className="text-2xl font-semibold">{billsSummary.dueSoonBills}</p>
+                  </div>
+                  <div className="bg-blue-100 p-2 rounded-full">
+                    <BarChart3 className="h-6 w-6 text-blue-600" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+          
+          <div className="flex flex-wrap gap-4 mt-2">
+            <div className="relative group">
+              <Button 
+                variant="default" 
+                size="lg" 
+                className="gap-2" 
+                onClick={handleAddNewBill}
+              >
+                <Plus className="h-4 w-4" />
+                Add New Bill
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                className="absolute -top-3 -right-3 h-6 w-6 p-0 bg-amber-100 border-amber-300 text-amber-700 opacity-0 group-hover:opacity-100 transition-opacity"
+                onClick={() => runDiagnostics("Add New Bill")}
+              >
+                <ActivityIcon className="h-3 w-3" />
+              </Button>
+            </div>
+            
+            <div className="relative group">
+              <Button 
+                variant="default" 
+                size="lg" 
+                className="gap-2 bg-green-600 hover:bg-green-700" 
+                onClick={handleUploadBill}
+              >
+                <Upload className="h-4 w-4" />
+                Upload Bill
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                className="absolute -top-3 -right-3 h-6 w-6 p-0 bg-amber-100 border-amber-300 text-amber-700 opacity-0 group-hover:opacity-100 transition-opacity"
+                onClick={() => runDiagnostics("Upload Bill")}
+              >
+                <ActivityIcon className="h-3 w-3" />
+              </Button>
+            </div>
+            
+            <div className="relative group">
+              <Button 
+                variant="outline" 
+                size="lg" 
+                className="gap-2" 
+                onClick={handleManagePaymentMethods}
+              >
+                <CreditCard className="h-4 w-4" />
+                Payment Methods
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                className="absolute -top-3 -right-3 h-6 w-6 p-0 bg-amber-100 border-amber-300 text-amber-700 opacity-0 group-hover:opacity-100 transition-opacity"
+                onClick={() => runDiagnostics("Payment Methods")}
+              >
+                <ActivityIcon className="h-3 w-3" />
+              </Button>
+            </div>
+
+            <div className="relative group">
+              <Button 
+                variant="outline" 
+                size="lg" 
+                className="gap-2 border-blue-300 text-blue-600 hover:bg-blue-50 hover:text-blue-700"
+                onClick={handleManageIntegrations}
+              >
+                <Link className="h-4 w-4" />
+                Manage Integrations
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                className="absolute -top-3 -right-3 h-6 w-6 p-0 bg-amber-100 border-amber-300 text-amber-700 opacity-0 group-hover:opacity-100 transition-opacity"
+                onClick={() => runDiagnostics("Integrations")}
+              >
+                <ActivityIcon className="h-3 w-3" />
+              </Button>
+            </div>
+          </div>
+          
+          <Tabs defaultValue="upcoming" className="w-full" onValueChange={setActiveTab}>
+            <TabsList className="grid grid-cols-3 mb-6">
+              <TabsTrigger value="upcoming" className="text-sm">
+                <Calendar className="h-4 w-4 mr-2" />
+                Upcoming Bills
+              </TabsTrigger>
+              <TabsTrigger value="quick" className="text-sm">
+                <ArrowUp className="h-4 w-4 mr-2" />
+                Quick Pay
+              </TabsTrigger>
+              <TabsTrigger value="inbox" className="text-sm">
+                <Inbox className="h-4 w-4 mr-2" />
+                Bill Inbox
+                {billsInbox.filter(bill => bill.new).length > 0 && (
+                  <Badge variant="default" className="ml-2 bg-red-500">
+                    {billsInbox.filter(bill => bill.new).length}
+                  </Badge>
+                )}
+              </TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="upcoming" className="space-y-4">
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between">
+                  <div>
+                    <CardTitle className="text-xl flex items-center gap-2">
+                      <Calendar className="h-5 w-5 text-primary" />
+                      Upcoming Bills
+                    </CardTitle>
+                    <CardDescription>
+                      Bills due in the next 30 days
+                    </CardDescription>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  {upcomingBills.length === 0 ? (
+                    <div className="text-center py-6">
+                      <p className="text-muted-foreground">No upcoming bills scheduled.</p>
+                      <Button variant="ghost" size="sm" className="mt-2" onClick={handleAddNewBill}>
+                        <Plus className="h-4 w-4 mr-2" />
+                        Add your first bill
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {upcomingBills
+                        .sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime())
+                        .map((bill) => (
+                          <div 
+                            key={bill.id} 
+                            className="flex items-center justify-between p-3 bg-background border rounded-lg hover:bg-muted/50 transition-colors"
+                          >
+                            <div className="flex items-center gap-3">
+                              <div className={`p-2 rounded-full 
+                                ${bill.category === 'Utilities' ? 'bg-blue-100' :
+                                  bill.category === 'Credit Cards' ? 'bg-purple-100' :
+                                  bill.category === 'Insurance' ? 'bg-green-100' :
+                                  'bg-gray-100'}`}
+                              >
+                                {getCategoryIcon(bill.category)}
+                              </div>
+                              <div className="flex flex-col">
+                                <span className="font-medium">{bill.name}</span>
+                                <span className="text-sm text-muted-foreground">{bill.category}</span>
+                              </div>
                             </div>
-                            <div className="flex flex-col">
-                              <span className="font-medium">{bill.name}</span>
-                              <span className="text-sm text-muted-foreground">{bill.category}</span>
+                            <div className="flex items-center gap-4">
+                              <div className="flex flex-col items-end">
+                                <span className="font-semibold">${bill.amount.toFixed(2)}</span>
+                                <Badge variant={getBillBadgeVariant(bill.dueDate)}>
+                                  {getBillStatus(bill.dueDate)} • {format(new Date(bill.dueDate), "MMM d")}
+                                </Badge>
+                              </div>
+                              <div className="flex gap-2">
+                                <Button 
+                                  variant="outline" 
+                                  size="sm"
+                                  onClick={() => handleSetReminder(bill.id)}
+                                  className="h-9"
+                                >
+                                  <Bell className="h-4 w-4" />
+                                </Button>
+                                <Button 
+                                  variant="secondary" 
+                                  size="sm"
+                                  onClick={() => handleQuickPay(bill.id)}
+                                  className="whitespace-nowrap h-9"
+                                >
+                                  <CreditCard className="h-4 w-4 mr-2" />
+                                  Pay Now
+                                </Button>
+                              </div>
                             </div>
                           </div>
-                          <div className="flex items-center gap-4">
-                            <div className="flex flex-col items-end">
-                              <span className="font-semibold">${bill.amount.toFixed(2)}</span>
-                              <Badge variant={getBillBadgeVariant(bill.dueDate)}>
-                                {getBillStatus(bill.dueDate)} • {format(new Date(bill.dueDate), "MMM d")}
-                              </Badge>
+                        ))}
+                    </div>
+                  )}
+                </CardContent>
+                <CardFooter className="border-t pt-4 flex justify-center">
+                  <Button variant="ghost" size="sm" onClick={handleViewAllBills}>
+                    View All Bills
+                  </Button>
+                </CardFooter>
+              </Card>
+              
+              <Card className="mt-6">
+                <CardHeader>
+                  <CardTitle className="text-xl flex items-center gap-2">
+                    <Clock className="h-5 w-5 text-primary" />
+                    Recent Payments
+                  </CardTitle>
+                  <CardDescription>
+                    Your payment history from the last 30 days
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {recentPayments.length === 0 ? (
+                    <div className="text-center py-6">
+                      <p className="text-muted-foreground">Your payment history will appear here once you've made your first payment.</p>
+                    </div>
+                  ) : (
+                    <div className="border rounded-lg overflow-hidden">
+                      <table className="w-full">
+                        <thead className="bg-muted/50">
+                          <tr>
+                            <th className="text-left py-3 px-4 font-medium">Biller</th>
+                            <th className="text-left py-3 px-4 font-medium">Category</th>
+                            <th className="text-left py-3 px-4 font-medium">Date</th>
+                            <th className="text-right py-3 px-4 font-medium">Amount</th>
+                            <th className="text-right py-3 px-4 font-medium">Status</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y">
+                          {recentPayments.map((payment) => (
+                            <tr key={payment.id} className="hover:bg-muted/30">
+                              <td className="py-3 px-4">{payment.name}</td>
+                              <td className="py-3 px-4">{payment.category}</td>
+                              <td className="py-3 px-4">{new Date(payment.date).toLocaleDateString()}</td>
+                              <td className="py-3 px-4 text-right font-medium">${payment.amount.toFixed(2)}</td>
+                              <td className="py-3 px-4 text-right">
+                                <Badge variant="success" className="bg-green-100 text-green-800 hover:bg-green-200">
+                                  {payment.status}
+                                </Badge>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </TabsContent>
+            
+            <TabsContent value="quick">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-xl flex items-center gap-2">
+                    <ArrowUp className="h-5 w-5 text-primary" />
+                    Quick Pay
+                  </CardTitle>
+                  <CardDescription>
+                    Pay your frequent bills faster
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {frequentBills.map((bill) => (
+                    <div 
+                      key={bill.id} 
+                      className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className={`p-2 rounded-full 
+                          ${bill.category === 'Utilities' ? 'bg-blue-100' :
+                            bill.category === 'Credit Cards' ? 'bg-purple-100' :
+                            bill.category === 'Insurance' ? 'bg-green-100' :
+                            'bg-gray-100'}`}
+                        >
+                          <bill.icon className="h-4 w-4 text-muted-foreground" />
+                        </div>
+                        <div className="flex flex-col">
+                          <span className="font-medium">{bill.name}</span>
+                          <span className="text-sm text-muted-foreground">Acct: {bill.accountNumber}</span>
+                        </div>
+                      </div>
+                      <Button 
+                        variant="outline" 
+                        onClick={() => handleQuickPay(bill.id)}
+                        className="whitespace-nowrap"
+                      >
+                        <ArrowUp className="h-4 w-4 mr-2" />
+                        Pay ${bill.lastAmount.toFixed(2)}
+                      </Button>
+                    </div>
+                  ))}
+                </CardContent>
+                <CardFooter className="border-t pt-4 flex justify-center">
+                  <Button variant="ghost" onClick={handleAddNewBill}>
+                    <Plus className="h-4 w-4 mr-2" />
+                    Add Frequent Bill
+                  </Button>
+                </CardFooter>
+              </Card>
+            </TabsContent>
+            
+            <TabsContent value="inbox">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-xl flex items-center gap-2">
+                    <Inbox className="h-5 w-5 text-primary" />
+                    Bills Inbox
+                  </CardTitle>
+                  <CardDescription>
+                    Review and categorize your recently uploaded bills
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {billsInbox.length === 0 ? (
+                    <div className="text-center py-6">
+                      <p className="text-muted-foreground">Your bills inbox is empty.</p>
+                      <Button variant="ghost" size="sm" className="mt-2" onClick={handleUploadBill}>
+                        <Upload className="h-4 w-4 mr-2" />
+                        Upload your first bill
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {billsInbox.map((bill) => (
+                        <div 
+                          key={bill.id} 
+                          className={`flex items-center justify-between p-4 border rounded-lg transition-colors ${
+                            bill.new ? 'bg-blue-50 border-blue-200' : 'bg-background hover:bg-muted/50'
+                          }`}
+                        >
+                          <div className="flex items-center gap-3">
+                            <div className="bg-slate-100 p-2 rounded-full">
+                              <FileText className="h-4 w-4 text-slate-500" />
                             </div>
-                            <div className="flex gap-2">
-                              <Button 
-                                variant="outline" 
-                                size="sm"
-                                onClick={() => handleSetReminder(bill.id)}
-                                className="h-9"
-                              >
-                                <Bell className="h-4 w-4" />
-                              </Button>
-                              <Button 
-                                variant="secondary" 
-                                size="sm"
-                                onClick={() => handleQuickPay(bill.id)}
-                                className="whitespace-nowrap h-9"
-                              >
-                                <CreditCard className="h-4 w-4 mr-2" />
-                                Pay Now
-                              </Button>
+                            <div className="flex flex-col">
+                              <div className="flex items-center">
+                                <span className="font-medium">{bill.name}</span>
+                                {bill.new && (
+                                  <Badge variant="default" className="ml-2 bg-blue-500">New</Badge>
+                                )}
+                              </div>
+                              <span className="text-sm text-muted-foreground">
+                                Uploaded on {new Date(bill.date).toLocaleDateString()} • {bill.size}
+                              </span>
                             </div>
+                          </div>
+                          <div className="flex gap-2">
+                            <Button variant="outline" size="sm">
+                              View
+                            </Button>
+                            <Button variant="outline" size="sm">
+                              Process
+                            </Button>
                           </div>
                         </div>
                       ))}
-                  </div>
-                )}
-              </CardContent>
-              <CardFooter className="border-t pt-4 flex justify-center">
-                <Button variant="ghost" size="sm" onClick={handleViewAllBills}>
-                  View All Bills
-                </Button>
-              </CardFooter>
-            </Card>
-            
-            <Card className="mt-6">
-              <CardHeader>
-                <CardTitle className="text-xl flex items-center gap-2">
-                  <Clock className="h-5 w-5 text-primary" />
-                  Recent Payments
-                </CardTitle>
-                <CardDescription>
-                  Your payment history from the last 30 days
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                {recentPayments.length === 0 ? (
-                  <div className="text-center py-6">
-                    <p className="text-muted-foreground">Your payment history will appear here once you've made your first payment.</p>
-                  </div>
-                ) : (
-                  <div className="border rounded-lg overflow-hidden">
-                    <table className="w-full">
-                      <thead className="bg-muted/50">
-                        <tr>
-                          <th className="text-left py-3 px-4 font-medium">Biller</th>
-                          <th className="text-left py-3 px-4 font-medium">Category</th>
-                          <th className="text-left py-3 px-4 font-medium">Date</th>
-                          <th className="text-right py-3 px-4 font-medium">Amount</th>
-                          <th className="text-right py-3 px-4 font-medium">Status</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y">
-                        {recentPayments.map((payment) => (
-                          <tr key={payment.id} className="hover:bg-muted/30">
-                            <td className="py-3 px-4">{payment.name}</td>
-                            <td className="py-3 px-4">{payment.category}</td>
-                            <td className="py-3 px-4">{new Date(payment.date).toLocaleDateString()}</td>
-                            <td className="py-3 px-4 text-right font-medium">${payment.amount.toFixed(2)}</td>
-                            <td className="py-3 px-4 text-right">
-                              <Badge variant="success" className="bg-green-100 text-green-800 hover:bg-green-200">
-                                {payment.status}
-                              </Badge>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </TabsContent>
-          
-          <TabsContent value="quick">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-xl flex items-center gap-2">
-                  <ArrowUp className="h-5 w-5 text-primary" />
-                  Quick Pay
-                </CardTitle>
-                <CardDescription>
-                  Pay your frequent bills faster
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {frequentBills.map((bill) => (
-                  <div 
-                    key={bill.id} 
-                    className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className={`p-2 rounded-full 
-                        ${bill.category === 'Utilities' ? 'bg-blue-100' :
-                          bill.category === 'Credit Cards' ? 'bg-purple-100' :
-                          bill.category === 'Insurance' ? 'bg-green-100' :
-                          'bg-gray-100'}`}
-                      >
-                        <bill.icon className="h-4 w-4 text-muted-foreground" />
-                      </div>
-                      <div className="flex flex-col">
-                        <span className="font-medium">{bill.name}</span>
-                        <span className="text-sm text-muted-foreground">Acct: {bill.accountNumber}</span>
-                      </div>
                     </div>
-                    <Button 
-                      variant="outline" 
-                      onClick={() => handleQuickPay(bill.id)}
-                      className="whitespace-nowrap"
-                    >
-                      <ArrowUp className="h-4 w-4 mr-2" />
-                      Pay ${bill.lastAmount.toFixed(2)}
-                    </Button>
-                  </div>
-                ))}
-              </CardContent>
-              <CardFooter className="border-t pt-4 flex justify-center">
-                <Button variant="ghost" onClick={handleAddNewBill}>
-                  <Plus className="h-4 w-4 mr-2" />
-                  Add Frequent Bill
-                </Button>
-              </CardFooter>
-            </Card>
-          </TabsContent>
-          
-          <TabsContent value="inbox">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-xl flex items-center gap-2">
-                  <Inbox className="h-5 w-5 text-primary" />
-                  Bills Inbox
-                </CardTitle>
-                <CardDescription>
-                  Review and categorize your recently uploaded bills
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                {billsInbox.length === 0 ? (
-                  <div className="text-center py-6">
-                    <p className="text-muted-foreground">Your bills inbox is empty.</p>
-                    <Button variant="ghost" size="sm" className="mt-2" onClick={handleUploadBill}>
-                      <Upload className="h-4 w-4 mr-2" />
-                      Upload your first bill
-                    </Button>
-                  </div>
-                ) : (
-                  <div className="space-y-4">
-                    {billsInbox.map((bill) => (
-                      <div 
-                        key={bill.id} 
-                        className={`flex items-center justify-between p-4 border rounded-lg transition-colors ${
-                          bill.new ? 'bg-blue-50 border-blue-200' : 'bg-background hover:bg-muted/50'
-                        }`}
-                      >
-                        <div className="flex items-center gap-3">
-                          <div className="bg-slate-100 p-2 rounded-full">
-                            <FileText className="h-4 w-4 text-slate-500" />
-                          </div>
-                          <div className="flex flex-col">
-                            <div className="flex items-center">
-                              <span className="font-medium">{bill.name}</span>
-                              {bill.new && (
-                                <Badge variant="default" className="ml-2 bg-blue-500">New</Badge>
-                              )}
-                            </div>
-                            <span className="text-sm text-muted-foreground">
-                              Uploaded on {new Date(bill.date).toLocaleDateString()} • {bill.size}
-                            </span>
-                          </div>
-                        </div>
-                        <div className="flex gap-2">
-                          <Button variant="outline" size="sm">
-                            View
-                          </Button>
-                          <Button variant="outline" size="sm">
-                            Process
-                          </Button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </CardContent>
-              <CardFooter className="border-t pt-4 flex justify-between">
-                <Button variant="ghost" size="sm">
-                  View All Documents
-                </Button>
-                <Button variant="ghost" size="sm" onClick={handleUploadBill}>
-                  <Upload className="h-4 w-4 mr-2" />
-                  Upload Bill
-                </Button>
-              </CardFooter>
-            </Card>
-          </TabsContent>
-        </Tabs>
+                  )}
+                </CardContent>
+                <CardFooter className="border-t pt-4 flex justify-between">
+                  <Button variant="ghost" size="sm">
+                    View All Documents
+                  </Button>
+                  <Button variant="ghost" size="sm" onClick={handleUploadBill}>
+                    <Upload className="h-4 w-4 mr-2" />
+                    Upload Bill
+                  </Button>
+                </CardFooter>
+              </Card>
+            </TabsContent>
+          </Tabs>
 
-        <AddBillDialog 
-          isOpen={showAddBillDialog} 
-          onClose={() => setShowAddBillDialog(false)} 
-          onAddBill={handleAddBill}
-        />
+          <AddBillDialog 
+            isOpen={showAddBillDialog} 
+            onClose={() => setShowAddBillDialog(false)} 
+            onAddBill={handleAddBill}
+          />
 
-        <PayBillDialog
-          isOpen={showPayBillDialog}
-          onClose={() => {
-            setShowPayBillDialog(false);
-            setSelectedBillForAction(null);
-          }}
-          bill={selectedBillForAction}
-        />
+          <PayBillDialog
+            isOpen={showPayBillDialog}
+            onClose={() => {
+              setShowPayBillDialog(false);
+              setSelectedBillForAction(null);
+            }}
+            bill={selectedBillForAction}
+          />
 
-        <SchedulePaymentDialog
-          isOpen={showSchedulePaymentDialog}
-          onClose={() => {
-            setShowSchedulePaymentDialog(false);
-            setSelectedBillForAction(null);
-          }}
-          bill={selectedBillForAction}
-        />
+          <SchedulePaymentDialog
+            isOpen={showSchedulePaymentDialog}
+            onClose={() => {
+              setShowSchedulePaymentDialog(false);
+              setSelectedBillForAction(null);
+            }}
+            bill={selectedBillForAction}
+          />
 
-        <ReminderSetupDialog
-          isOpen={showReminderDialog}
-          onClose={() => {
-            setShowReminderDialog(false);
-            setSelectedBillForAction(null);
-          }}
-          bill={selectedBillForAction}
-        />
+          <ReminderSetupDialog
+            isOpen={showReminderDialog}
+            onClose={() => {
+              setShowReminderDialog(false);
+              setSelectedBillForAction(null);
+            }}
+            bill={selectedBillForAction}
+          />
 
-        <PaymentMethodsDialog
-          isOpen={showPaymentMethodsDialog}
-          onClose={() => setShowPaymentMethodsDialog(false)}
-          paymentMethods={paymentMethods}
-          onAddPaymentMethod={(method) => handlePaymentMethodChange([...paymentMethods, method])}
-          onSetDefault={(id) => {
-            const updated = paymentMethods.map(m => ({
-              ...m,
-              isDefault: m.id === id
-            }));
-            handlePaymentMethodChange(updated);
-          }}
-          onRemove={(id) => {
-            const updated = paymentMethods.filter(m => m.id !== id);
-            handlePaymentMethodChange(updated);
-          }}
-        />
+          <PaymentMethodsDialog
+            isOpen={showPaymentMethodsDialog}
+            onClose={() => setShowPaymentMethodsDialog(false)}
+            paymentMethods={paymentMethods}
+            onAddPaymentMethod={(method) => handlePaymentMethodChange([...paymentMethods, method])}
+            onSetDefault={(id) => {
+              const updated = paymentMethods.map(m => ({
+                ...m,
+                isDefault: m.id === id
+              }));
+              handlePaymentMethodChange(updated);
+            }}
+            onRemove={(id) => {
+              const updated = paymentMethods.filter(m => m.id !== id);
+              handlePaymentMethodChange(updated);
+            }}
+          />
 
-        <BillPayButtonDiagnostics 
-          isOpen={showDiagnosticsDialog}
-          onClose={() => setShowDiagnosticsDialog(false)}
-          selectedButton={diagnosticButtonName}
-        />
+          <BillPayButtonDiagnostics 
+            isOpen={showDiagnosticsDialog}
+            onClose={() => setShowDiagnosticsDialog(false)}
+            selectedButton={diagnosticButtonName}
+          />
 
-        <AdvancedBillPayingProvidersDialog 
-          isOpen={showAdvancedProvidersDialog}
-          onClose={() => setShowAdvancedProvidersDialog(false)}
+          <AdvancedBillPayingProvidersDialog 
+            isOpen={showAdvancedProvidersDialog}
+            onClose={() => setShowAdvancedProvidersDialog(false)}
+          />
+        </div>
+        
+        <InsightsPanel 
+          isExpanded={showInsightsPanel} 
+          onToggle={() => setShowInsightsPanel(!showInsightsPanel)} 
         />
       </div>
     </ThreeColumnLayout>
