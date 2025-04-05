@@ -8,13 +8,13 @@ import {
   Settings,
   CreditCard,
 } from "lucide-react";
-import { Sidebar } from "@/components/ui/Sidebar";
 import { useSidebarState } from "@/hooks/useSidebarState";
 import { navigationCategories } from "@/navigation/navCategories";
 import { useTheme } from "@/hooks/useTheme";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { BottomNavItem } from "@/types/navigation";
+import { NavigationCategory } from "@/components/navigation/NavigationCategory";
 
 export const NavBar = () => {
   const { isDark, setTheme } = useTheme();
@@ -32,7 +32,6 @@ export const NavBar = () => {
     setCollapsed
   } = useSidebarState(navigationCategories);
 
-  // Fix: Replace toggleTheme with a proper implementation using setTheme
   const toggleTheme = () => {
     setTheme(isDark ? "light" : "dark");
   };
@@ -69,76 +68,75 @@ export const NavBar = () => {
       {/* Desktop Sidebar */}
       <aside
         className={cn(
-          "hidden md:flex flex-col w-[260px] bg-sidebar border-r border-r-border-muted transition-transform duration-300",
-          collapsed ? "-translate-x-full" : "translate-x-0"
+          "hidden md:flex flex-col h-screen w-[260px] bg-sidebar border-r border-r-border-muted transition-all duration-300 fixed left-0 top-0 z-30",
+          collapsed ? "w-[60px]" : "w-[260px]"
         )}
       >
         <div className="flex items-center justify-between h-16 px-4 border-b border-b-border-muted">
           <Link to="/" className="flex items-center text-lg font-semibold">
-            <img
-              src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png"
-              alt="Boutique Family Office Logo"
-              className="h-8 w-auto mr-2"
-            />
-            BFO
+            {!collapsed && (
+              <>
+                <img
+                  src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png"
+                  alt="Boutique Family Office Logo"
+                  className="h-8 w-auto mr-2"
+                />
+                <span className="truncate">BFO</span>
+              </>
+            )}
+            {collapsed && (
+              <img
+                src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png"
+                alt="Boutique Family Office Logo"
+                className="h-8 w-auto mx-auto"
+              />
+            )}
           </Link>
           <button
             onClick={toggleSidebar}
             className="p-2 rounded-md hover:bg-accent"
+            aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
-            {collapsed ? "Open" : "Close"}
+            {collapsed ? "→" : "←"}
           </button>
         </div>
 
-        <nav className="flex-grow overflow-y-auto py-4">
-          {navigationCategories.map((category) => (
-            <div key={category.id} className="mb-2">
-              <div
-                className="flex items-center justify-between p-2 text-xs uppercase tracking-wider font-semibold text-muted-foreground cursor-pointer hover:bg-accent"
-                onClick={() => toggleCategory(category.id)}
-              >
-                <span>{category.label}</span>
-                <div>{expandedCategories[category.id] ? "▲" : "▼"}</div>
-              </div>
-              {expandedCategories[category.id] && (
-                <ul className="space-y-1.5">
-                  {category.items.map((item) => (
-                    <li key={item.id}>
-                      <Link
-                        to={item.href}
-                        className={cn(
-                          "group flex items-center py-2 px-3 rounded-md transition-colors text-[14px]",
-                          isActive(item.href)
-                            ? "bg-secondary text-secondary-foreground font-medium"
-                            : "text-muted-foreground",
-                          "hover:bg-accent"
-                        )}
-                      >
-                        {item.icon && (
-                          <item.icon className="h-4 w-4 mr-2 opacity-70" />
-                        )}
-                        <span>{item.title || item.label}</span>
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          ))}
-        </nav>
+        <div className="flex-grow overflow-y-auto custom-scrollbar">
+          <nav className="py-4">
+            {navigationCategories.map((category) => (
+              <NavigationCategory
+                key={category.id}
+                category={category}
+                isExpanded={expandedCategories[category.id]}
+                toggleCategory={() => toggleCategory(category.id)}
+                currentPath={location.pathname}
+                isCollapsed={collapsed}
+                isLightTheme={!isDark}
+              />
+            ))}
+          </nav>
+        </div>
 
         <div className="p-4 border-t border-t-border-muted">
           <button
             onClick={toggleTheme}
             className="w-full py-2 px-3 rounded-md text-sm font-medium hover:bg-accent"
           >
-            Toggle Theme ({isDark ? "Light" : "Dark"})
+            {collapsed ? (isDark ? "☀️" : "🌙") : `Theme: ${isDark ? "Dark" : "Light"}`}
           </button>
         </div>
       </aside>
 
+      {/* Content area with correct margin when sidebar is expanded */}
+      <div className={cn(
+        "flex-1 transition-all duration-300",
+        collapsed ? "md:ml-[60px]" : "md:ml-[260px]"
+      )}>
+        {/* Content goes here */}
+      </div>
+
       {/* Mobile Bottom Navigation */}
-      <div className="md:hidden fixed bottom-0 left-0 w-full bg-sidebar border-t border-t-border-muted py-2">
+      <div className="md:hidden fixed bottom-0 left-0 w-full bg-sidebar border-t border-t-border-muted py-2 z-30">
         <div className="flex justify-around items-center">
           {bottomNavItems.map((item) => (
             <Link

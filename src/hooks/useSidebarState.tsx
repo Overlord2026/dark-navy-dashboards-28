@@ -6,7 +6,11 @@ import { useLocation } from "react-router-dom";
 export const useSidebarState = (navigationCategories: NavCategory[]) => {
   const location = useLocation();
   
-  const [collapsed, setCollapsed] = useState(false);
+  // Check for stored sidebar state in localStorage
+  const storedCollapsed = localStorage.getItem('sidebar-collapsed');
+  const initialCollapsed = storedCollapsed ? storedCollapsed === 'true' : false;
+  
+  const [collapsed, setCollapsed] = useState(initialCollapsed);
   const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>(
     navigationCategories.reduce((acc, category) => {
       acc[category.id] = category.defaultExpanded ?? false;
@@ -19,6 +23,31 @@ export const useSidebarState = (navigationCategories: NavCategory[]) => {
   useEffect(() => {
     setForceUpdate(1);
   }, []);
+
+  // Update localStorage when sidebar state changes
+  useEffect(() => {
+    localStorage.setItem('sidebar-collapsed', collapsed.toString());
+  }, [collapsed]);
+
+  // Expand categories based on current location
+  useEffect(() => {
+    const currentPath = location.pathname;
+    
+    // Find categories with items matching the current path
+    navigationCategories.forEach(category => {
+      const hasMatchingItem = category.items.some(item => 
+        currentPath === item.href || 
+        (item.href !== "/" && currentPath.startsWith(item.href))
+      );
+      
+      if (hasMatchingItem) {
+        setExpandedCategories(prev => ({
+          ...prev,
+          [category.id]: true
+        }));
+      }
+    });
+  }, [location.pathname, navigationCategories]);
 
   const toggleSidebar = () => {
     setCollapsed(!collapsed);
