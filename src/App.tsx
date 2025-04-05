@@ -10,6 +10,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { DiagnosticsProvider } from "@/context/DiagnosticsContext";
 import { AdvisorProvider } from "@/context/AdvisorContext";
 import { AuthProvider } from "@/context/AuthContext";
+import { ViewportIndicator } from "@/components/ui/ViewportIndicator";
 
 // Create a Query Client
 const queryClient = new QueryClient({
@@ -34,6 +35,7 @@ function App() {
                     <AuthProvider>
                       <AppRoutes />
                       <Toaster position="top-right" richColors closeButton />
+                      <ViewportIndicator />
                     </AuthProvider>
                   </AdvisorProvider>
                 </DiagnosticsProvider>

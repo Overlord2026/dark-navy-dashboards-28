@@ -15,10 +15,12 @@ import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { BottomNavItem } from "@/types/navigation";
 import { NavigationCategory } from "@/components/layout/NavigationCategory";
+import { useViewportOverride } from "@/hooks/useViewportOverride";
 
 export const NavBar = () => {
   const { isDark, setTheme } = useTheme();
   const location = useLocation();
+  const { effectiveIsMobile } = useViewportOverride();
 
   const {
     collapsed,
@@ -123,26 +125,28 @@ export const NavBar = () => {
         </div>
       </aside>
 
-      {/* Mobile Bottom Navigation - Only visible on mobile */}
-      <div className="md:hidden fixed bottom-0 left-0 w-full bg-sidebar border-t border-t-border-muted py-2 z-30">
-        <div className="flex justify-around items-center">
-          {bottomNavItems.map((item) => (
-            <Link
-              key={item.id}
-              to={item.href}
-              className={cn(
-                "flex flex-col items-center justify-center text-muted-foreground",
-                location.pathname === item.href
-                  ? "text-secondary-foreground"
-                  : ""
-              )}
-            >
-              <item.icon className="h-5 w-5 mb-1" />
-              <span className="text-xs">{item.title}</span>
-            </Link>
-          ))}
+      {/* Mobile Bottom Navigation - Only visible on mobile AND when effectiveIsMobile is true */}
+      {effectiveIsMobile && (
+        <div className="md:hidden fixed bottom-0 left-0 w-full bg-sidebar border-t border-t-border-muted py-2 z-30">
+          <div className="flex justify-around items-center">
+            {bottomNavItems.map((item) => (
+              <Link
+                key={item.id}
+                to={item.href}
+                className={cn(
+                  "flex flex-col items-center justify-center text-muted-foreground",
+                  location.pathname === item.href
+                    ? "text-secondary-foreground"
+                    : ""
+                )}
+              >
+                <item.icon className="h-5 w-5 mb-1" />
+                <span className="text-xs">{item.title}</span>
+              </Link>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

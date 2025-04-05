@@ -1,4 +1,3 @@
-
 #root {
   width: 100%;
   margin: 0 auto;
@@ -86,8 +85,19 @@
   flex-direction: column;
 }
 
-/* Ensure desktop sidebar is always visible */
-@media (min-width: 768px) {
+/* Ensure desktop sidebar is always visible on laptops and above */
+@media (min-width: 1024px) {
+  .md\:flex {
+    display: flex !important;
+  }
+  
+  .md\:hidden {
+    display: none !important;
+  }
+}
+
+/* Standard media queries for tablet/desktop */
+@media (min-width: 768px) and (max-width: 1023px) {
   .md\:flex {
     display: flex !important;
   }
