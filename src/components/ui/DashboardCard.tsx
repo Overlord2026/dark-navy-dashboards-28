@@ -6,10 +6,11 @@ import { cn } from "@/lib/utils";
 interface DashboardCardProps extends React.HTMLAttributes<HTMLDivElement> {
   title: string;
   icon?: ReactNode;
+  footer?: ReactNode; // Add optional footer property
   children: ReactNode;
 }
 
-export function DashboardCard({ title, icon, children, className, ...props }: DashboardCardProps) {
+export function DashboardCard({ title, icon, children, footer, className, ...props }: DashboardCardProps) {
   return (
     <Card className={cn("hover:shadow-md transition-shadow", className)} {...props}>
       <CardContent className="p-6">
@@ -24,6 +25,7 @@ export function DashboardCard({ title, icon, children, className, ...props }: Da
             </div>
           )}
         </div>
+        {footer && <div className="mt-4 pt-3 border-t">{footer}</div>}
       </CardContent>
     </Card>
   );

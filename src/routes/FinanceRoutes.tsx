@@ -5,6 +5,7 @@ import BillInbox from "@/pages/BillInbox";
 import BillPay from "@/pages/BillPay";
 import BankingTransfers from "@/pages/BankingTransfers";
 import BillPayStyleGuide from "@/pages/BillPayStyleGuide";
+import NotFound from "@/pages/NotFound";
 
 const FinanceRoutes = () => {
   return (
@@ -13,6 +14,8 @@ const FinanceRoutes = () => {
       <Route path="bill-inbox" element={<BillInbox />} />
       <Route path="banking-transfers" element={<BankingTransfers />} />
       <Route path="bill-pay/style-guide" element={<BillPayStyleGuide />} />
+      {/* Add a catch-all route for unmatched paths */}
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 };

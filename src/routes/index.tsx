@@ -11,6 +11,7 @@ import WealthRoutes from "./WealthRoutes";
 import AdvisorRoutes from "./AdvisorRoutes";
 import AdminRoutes from "./AdminRoutes";
 import LoginPage from "../pages/LoginPage";
+import NotFound from "../pages/NotFound";
 
 const AppRoutes: React.FC = () => {
   const { isAuthenticated, userProfile } = useUser();
@@ -42,6 +43,7 @@ const AppRoutes: React.FC = () => {
         <Route path="dev/*" element={<Navigate to="/" replace />} />
       )}
       
+      <Route path="login" element={<LoginPage />} /> {/* Add direct login route */}
       <Route path="/*" element={<PublicRoutes />} />
     </Routes>
   );
