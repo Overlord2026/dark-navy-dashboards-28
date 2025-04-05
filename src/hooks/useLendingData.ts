@@ -1,75 +1,69 @@
 
-import { useState } from "react";
 import { loanCategories } from "@/data/lending/loanCategories";
 import { lenders } from "@/data/lending/lenders";
-import { 
-  filterLendersByCategory, 
-  getPaginatedLenders, 
-  calculateTotalPages 
-} from "@/utils/lendingUtils";
+import { filterLendersByCategory } from "@/utils/lendingUtils";
+import { useLendingNavigation } from "@/hooks/lending/useLendingNavigation";
+import { useLendingPagination } from "@/hooks/lending/useLendingPagination";
+import { useLenderSelection } from "@/hooks/lending/useLenderSelection";
 
 /**
- * Custom hook to manage lending data and state
- * @returns Loan categories, lenders, and state management functions
+ * Main hook that combines all lending data and functionality
+ * @returns All lending data and functions
  */
 export const useLendingData = () => {
-  // State management
-  const [activeTab, setActiveTab] = useState("categories");
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [selectedLender, setSelectedLender] = useState<string | null>(null);
-  const [isLenderDetailOpen, setIsLenderDetailOpen] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-
-  // Event handlers
-  const handleCategorySelect = (categoryId: string) => {
-    setSelectedCategory(categoryId);
-    setActiveTab("lenders");
-    setCurrentPage(1);
-  };
-
-  const handleLenderSelect = (lenderId: string) => {
-    setSelectedLender(lenderId);
-    setIsLenderDetailOpen(true);
-  };
-
-  const handleBack = () => {
-    if (activeTab === "lenders") {
-      setActiveTab("categories");
-      setSelectedCategory(null);
-    }
-  };
-
-  // Filter and paginate lenders
-  const filteredLenders = filterLendersByCategory(lenders, selectedCategory);
-  
-  const handlePageChange = (direction: 'next' | 'prev') => {
-    const totalPages = calculateTotalPages(filteredLenders.length);
-    
-    if (direction === 'next' && currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
-    } else if (direction === 'prev' && currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
-
-  const paginatedLenders = getPaginatedLenders(filteredLenders, currentPage);
-  const totalPages = calculateTotalPages(filteredLenders.length);
-
-  // Return all the data and functions needed
-  return {
-    loanCategories,
-    lenders,
+  // Use the smaller, more focused hooks
+  const {
     activeTab,
     selectedCategory,
-    selectedLender,
-    isLenderDetailOpen,
+    handleCategorySelect,
+    handleBack,
+    setActiveTab,
+    setSelectedCategory
+  } = useLendingNavigation();
+  
+  // Filter lenders based on selected category
+  const filteredLenders = filterLendersByCategory(lenders, selectedCategory);
+  
+  // Use the pagination hook with the filtered lenders
+  const {
     currentPage,
     paginatedLenders,
     totalPages,
-    handleCategorySelect,
-    handleLenderSelect,
-    handleBack,
     handlePageChange,
+    resetPagination
+  } = useLendingPagination(filteredLenders);
+  
+  // Use the lender selection hook
+  const {
+    selectedLender,
+    isLenderDetailOpen,
+    handleLenderSelect,
+    setSelectedLender,
+    setIsLenderDetailOpen
+  } = useLenderSelection();
+
+  // Return all the data and functions needed
+  return {
+    // Data
+    loanCategories,
+    lenders,
+    
+    // Navigation state and functions
+    activeTab,
+    selectedCategory,
+    handleCategorySelect,
+    handleBack,
+    
+    // Pagination state and functions
+    currentPage,
+    paginatedLenders,
+    totalPages,
+    handlePageChange,
+    
+    // Lender selection state and functions
+    selectedLender,
+    isLenderDetailOpen,
+    handleLenderSelect,
     setIsLenderDetailOpen
   };
 };
