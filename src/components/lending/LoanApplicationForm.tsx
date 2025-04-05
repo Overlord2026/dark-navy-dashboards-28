@@ -98,10 +98,6 @@ export function LoanApplicationForm({ loanType, onProgress, onComplete, onCancel
     } else {
       // Final submission
       form.handleSubmit((data) => {
-        // TODO: Replace with real endpoint: POST /api/loans/applications
-        // This endpoint should submit a loan application with all collected data
-        // Request body: full application data including personal info, financial info, loan details
-        // Response should include application ID and status
         onProgress(100);
         onComplete(data);
       })();

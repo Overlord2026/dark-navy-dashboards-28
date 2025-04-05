@@ -7,7 +7,13 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { MainMenuItem } from "@/types/navigation";
+
+interface MainMenuItem {
+  id: string;
+  label: string;
+  icon: React.ElementType | React.FC;
+  href: string;
+}
 
 interface NavigationCategoryProps {
   category: {
@@ -53,13 +59,7 @@ export const NavigationCategory = ({
             {category.items.map((item) => (
               <NavigationItem
                 key={item.id}
-                item={{
-                  id: item.id,
-                  // Convert MainMenuItem to NavigationItem expected properties
-                  label: item.title || item.label || "",
-                  icon: item.icon,
-                  href: item.href
-                }}
+                item={item}
                 isActive={item.id === currentPath}
                 isCollapsed={false}
                 isLightTheme={isLightTheme}
@@ -74,13 +74,7 @@ export const NavigationCategory = ({
           {category.items.map((item) => (
             <NavigationItem
               key={item.id}
-              item={{
-                id: item.id,
-                // Convert MainMenuItem to NavigationItem expected properties
-                label: item.title || item.label || "",
-                icon: item.icon,
-                href: item.href
-              }}
+              item={item}
               isActive={item.id === currentPath}
               isCollapsed={true}
               isLightTheme={isLightTheme}

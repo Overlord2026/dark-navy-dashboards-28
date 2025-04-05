@@ -32,11 +32,7 @@ export const generateStockAnalysis = async (stockData: any): Promise<string> => 
       Format the response in 3-4 short paragraphs without any preamble or introduction.
     `;
 
-    // TODO: Replace with secure API key handling
-    // Current setup uses hardcoded API key which is not secure for production
-
-    // TODO: Replace with real endpoint: POST https://api.openai.com/v1/chat/completions
-    // This endpoint is called to generate AI analysis based on stock data
+    // Using OpenAI API endpoint
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -105,9 +101,7 @@ export const generatePortfolioAnalysis = async (
       Format the response in 4-5 paragraphs without any preamble or introduction.
     `;
 
-    // TODO: Replace with real endpoint: POST https://api.openai.com/v1/chat/completions
-    // This endpoint is called to generate portfolio analysis from multiple stocks
-    // Currently using hardcoded API key which should be replaced with secure key management
+    // Using OpenAI API endpoint
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {

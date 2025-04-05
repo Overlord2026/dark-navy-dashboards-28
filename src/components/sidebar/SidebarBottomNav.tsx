@@ -2,10 +2,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { BottomNavItem } from "@/types/navigation";
+import { NavItem } from "@/types/navigation";
 
 interface SidebarBottomNavProps {
-  items: BottomNavItem[];
+  items: NavItem[];
   collapsed: boolean;
   isActive: (href: string) => boolean;
   isLightTheme: boolean;
@@ -18,33 +18,33 @@ export const SidebarBottomNav: React.FC<SidebarBottomNavProps> = ({
   isLightTheme
 }) => {
   return (
-    <div className="flex flex-col gap-1">
+    <nav className="space-y-1">
       {items.map((item) => (
         <Link
-          key={item.id}
+          key={item.title}
           to={item.href}
           className={cn(
-            "flex items-center py-2 px-3 rounded-lg transition-colors",
+            "group flex items-center py-2 px-3 rounded-md transition-colors border",
             isActive(item.href)
-              ? isLightTheme
-                ? "bg-[#DCD8C0]/70 text-[#222222]"
-                : "bg-white/10 text-white"
-              : isLightTheme
-                ? "hover:bg-[#DCD8C0]/40 text-[#222222]/90"
-                : "hover:bg-white/5 text-[#E2E2E2]/90"
+              ? isLightTheme 
+                ? "bg-[#E9E7D8] text-[#222222] font-medium border-primary" 
+                : "bg-black text-white border-primary" 
+              : isLightTheme ? "text-[#222222] border-transparent hover:bg-[#E9E7D8] hover:border-primary" 
+                : "text-sidebar-foreground border-transparent hover:bg-sidebar-accent",
           )}
+          title={collapsed ? item.title : undefined}
         >
-          {item.icon && (
-            <item.icon
-              className={cn(
-                "w-5 h-5",
-                collapsed ? "" : "mr-3"
-              )}
-            />
+          <item.icon 
+            className={cn(
+              "h-5 w-5 flex-shrink-0", 
+              !collapsed && "mr-3"
+            )} 
+          />
+          {!collapsed && (
+            <span className="whitespace-nowrap overflow-hidden text-ellipsis">{item.title}</span>
           )}
-          {!collapsed && <span>{item.title}</span>}
         </Link>
       ))}
-    </div>
+    </nav>
   );
 };

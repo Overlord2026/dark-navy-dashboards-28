@@ -13,7 +13,6 @@ export function useNavigationDiagnostics() {
     setError(null);
     
     try {
-      // Get diagnostic results with proper typing
       const diagnosticResults = await testAllNavigationRoutes();
       setResults(diagnosticResults);
       return diagnosticResults;

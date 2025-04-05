@@ -1,12 +1,11 @@
 
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Trophy, Clock, ExternalLink, Check } from "lucide-react";
+import { Trophy, Clock, ExternalLink } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { handleCourseAccess } from "./courseUtils";
-import { hasUserPurchasedCourse } from "./stripeGhlIntegration";
 
 export interface CourseCardProps {
   id: string | number;
@@ -18,6 +17,7 @@ export interface CourseCardProps {
   comingSoon?: boolean;
   ghlUrl?: string;
   onClick?: () => void;
+  // Note: image property removed or not used
 }
 
 export function CourseCard({
@@ -32,12 +32,6 @@ export function CourseCard({
   onClick,
 }: CourseCardProps) {
   const [isProcessing, setIsProcessing] = useState(false);
-  const [isPurchased, setIsPurchased] = useState(false);
-
-  // Check if this course was previously purchased
-  useEffect(() => {
-    setIsPurchased(hasUserPurchasedCourse(id));
-  }, [id]);
 
   const handleButtonClick = () => {
     if (comingSoon) {
@@ -65,9 +59,7 @@ export function CourseCard({
       <CardHeader className="pb-3">
         <div className="flex justify-between items-start">
           <CardTitle className="text-lg font-bold text-left">{title}</CardTitle>
-          {isPurchased ? (
-            <Badge variant="success" className="text-white">Purchased</Badge>
-          ) : !isPaid ? (
+          {!isPaid ? (
             <Badge variant="success" className="text-white">Free</Badge>
           ) : (
             <Badge variant="secondary" className="text-white">Paid</Badge>
@@ -89,10 +81,8 @@ export function CourseCard({
       </CardContent>
       <CardFooter>
         <Button 
-          variant={isPaid && !isPurchased ? "default" : "outline"} 
-          className={`w-full transition-colors flex items-center justify-center gap-2 ${
-            isPurchased ? "bg-green-100 text-green-800 hover:bg-green-200 dark:bg-green-900/30 dark:text-green-400 dark:hover:bg-green-900/50" : ""
-          }`}
+          variant={isPaid ? "default" : "outline"} 
+          className="w-full transition-colors flex items-center justify-center gap-2" 
           disabled={comingSoon || isProcessing}
           onClick={handleButtonClick}
         >
@@ -106,11 +96,6 @@ export function CourseCard({
             </div>
           ) : comingSoon ? (
             "Coming Soon"
-          ) : isPurchased ? (
-            <>
-              <Check className="h-4 w-4 mr-1" /> Access Course
-              <ExternalLink className="h-3 w-3 opacity-70" />
-            </>
           ) : isPaid ? (
             "Enroll Now"
           ) : (

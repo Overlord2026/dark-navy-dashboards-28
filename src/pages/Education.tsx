@@ -9,8 +9,6 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { CourseApiDemo } from "@/components/education/CourseApiDemo";
-import { ProfessionalsProvider } from "@/hooks/useProfessionals";
-import { DiagnosticsButton } from "@/components/education/DiagnosticsButton";
 
 export default function Education() {
   const [searchParams] = useSearchParams();
@@ -27,7 +25,8 @@ export default function Education() {
       setActiveCategory(category);
       setActiveSection("courses");
     } else if (section) {
-      const validSections = ["courses", "guides", "books", "whitepapers", "consultants"];
+      // Make sure we validate that the section exists
+      const validSections = ["courses", "guides", "books", "whitepapers"];
       if (validSections.includes(section)) {
         setActiveSection(section);
       }
@@ -38,8 +37,10 @@ export default function Education() {
 
   const handleCourseEnrollment = (courseId: string | number, title: string, isPaid: boolean, ghlUrl?: string) => {
     if (ghlUrl) {
+      // Use the handleCourseAccess utility for proper course access flow
       handleCourseAccess(courseId, title, isPaid, ghlUrl);
     } else {
+      // Fallback for if we somehow get here without a URL
       if (isPaid) {
         toast.info(`Redirecting to payment page for ${title}`);
       } else {
@@ -70,66 +71,61 @@ export default function Education() {
   };
 
   return (
-    <ProfessionalsProvider>
-      <ThreeColumnLayout 
-        title="SWAG Education Center" 
-        activeMainItem="education"
-        activeSecondaryItem={activeCategory}
-        secondaryMenuItems={courseCategories}
+    <ThreeColumnLayout 
+      title="SWAG Education Center" 
+      activeMainItem="education"
+      activeSecondaryItem={activeCategory}
+      secondaryMenuItems={courseCategories}
+    >
+      <motion.div 
+        className="space-y-6 px-1"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
       >
-        <motion.div 
-          className="space-y-6 px-1"
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-        >
-          <motion.div variants={itemVariants}>
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-2xl font-bold tracking-tight">Welcome to the SWAG Education Center</h2>
-              <DiagnosticsButton />
-            </div>
-            <p className="text-muted-foreground mt-2">
-              Explore our collection of financial education resources to help you build wealth and achieve your financial goals.
-            </p>
-            
-            <div className="mt-4 mb-6 flex gap-2">
-              <Link to="/education/tax-planning">
-                <Button variant="outline" className="flex items-center gap-2">
-                  Tax Planning <ArrowRight className="h-4 w-4" />
-                </Button>
-              </Link>
-              
-              <Button 
-                variant={showApiDemo ? "default" : "outline"} 
-                className="flex items-center gap-2"
-                onClick={toggleApiDemo}
-              >
-                {showApiDemo ? "Hide API Demo" : "Show API Demo"}
+        <motion.div variants={itemVariants}>
+          <h2 className="text-2xl font-bold tracking-tight">Welcome to the SWAG Education Center</h2>
+          <p className="text-muted-foreground mt-2">
+            Explore our collection of financial education resources to help you build wealth and achieve your financial goals.
+          </p>
+          
+          <div className="mt-4 mb-6 flex gap-2">
+            <Link to="/education/tax-planning">
+              <Button variant="outline" className="flex items-center gap-2">
+                Tax Planning <ArrowRight className="h-4 w-4" />
               </Button>
-            </div>
+            </Link>
             
-            {showApiDemo && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
-                exit={{ opacity: 0, height: 0 }}
-                transition={{ duration: 0.3 }}
-                className="mb-8"
-              >
-                <CourseApiDemo />
-              </motion.div>
-            )}
-            
-            <EducationalTabs 
-              activeSection={activeSection}
-              activeCategory={activeCategory}
-              setActiveSection={setActiveSection}
-              setActiveCategory={setActiveCategory}
-              handleCourseEnrollment={handleCourseEnrollment}
-            />
-          </motion.div>
+            <Button 
+              variant={showApiDemo ? "default" : "outline"} 
+              className="flex items-center gap-2"
+              onClick={toggleApiDemo}
+            >
+              {showApiDemo ? "Hide API Demo" : "Show API Demo"}
+            </Button>
+          </div>
+          
+          {showApiDemo && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3 }}
+              className="mb-8"
+            >
+              <CourseApiDemo />
+            </motion.div>
+          )}
+          
+          <EducationalTabs 
+            activeSection={activeSection}
+            activeCategory={activeCategory}
+            setActiveSection={setActiveSection}
+            setActiveCategory={setActiveCategory}
+            handleCourseEnrollment={handleCourseEnrollment}
+          />
         </motion.div>
-      </ThreeColumnLayout>
-    </ProfessionalsProvider>
+      </motion.div>
+    </ThreeColumnLayout>
   );
 }

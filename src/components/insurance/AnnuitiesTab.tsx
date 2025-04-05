@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -56,12 +57,9 @@ export const AnnuitiesTab = () => {
       premium: data.premium,
       frequency: data.frequency,
       coverageAmount: data.coverageAmount,
-      coverage: data.coverageAmount,
-      status: "active",
       startDate: data.startDate,
-      endDate: data.endDate || "",
-      renewalDate: new Date(new Date(data.startDate).setFullYear(new Date(data.startDate).getFullYear() + 1)).toISOString().split('T')[0],
-      policyNumber: data.policyNumber || "",
+      endDate: data.endDate,
+      policyNumber: data.policyNumber,
       documents: [],
     });
     

@@ -1,159 +1,288 @@
 
-import { Course } from "@/types/education";
-
-// Define courses by category
-export const coursesByCategory: Record<string, Course[]> = {
+export const coursesByCategory = {
   "retirement-income": [
     {
-      id: 101,
-      title: "Retirement Income Planning Fundamentals",
-      description: "Learn the basics of planning for sustainable income in retirement.",
+      id: "ri-101",
+      title: "Retirement Income Fundamentals",
+      description: "Learn the basic principles of creating sustainable retirement income.",
+      isPaid: false,
       level: "Beginner",
       duration: "2 hours",
-      image: "/placeholder.svg",
-      isPaid: false,
       ghlUrl: "https://ghl.example.com/courses/retirement-income-fundamentals"
     },
     {
-      id: 102,
-      title: "Advanced Retirement Income Strategies",
-      description: "Explore sophisticated approaches to maximize retirement income.",
-      level: "Advanced",
-      duration: "4 hours",
-      image: "/placeholder.svg",
+      id: "ri-102",
+      title: "Income Planning Strategies",
+      description: "Advanced techniques for optimizing your retirement income sources.",
       isPaid: true,
-      ghlUrl: "https://ghl.example.com/courses/advanced-retirement-income"
+      level: "Intermediate",
+      duration: "3 hours",
+      ghlUrl: "https://ghl.example.com/courses/income-planning-strategies"
     }
   ],
   "social-security": [
     {
-      id: 201,
+      id: "ss-101",
       title: "Social Security Basics",
-      description: "Understanding how Social Security works and your benefits.",
+      description: "Understanding how Social Security benefits work and when to claim.",
+      isPaid: false,
       level: "Beginner",
       duration: "1.5 hours",
-      image: "/placeholder.svg",
-      isPaid: false,
       ghlUrl: "https://ghl.example.com/courses/social-security-basics"
     },
     {
-      id: 202,
+      id: "ss-102",
       title: "Maximizing Social Security Benefits",
-      description: "Strategic claiming strategies to get the most from Social Security.",
+      description: "Strategies to optimize your Social Security claiming decision.",
+      isPaid: true,
       level: "Intermediate",
-      duration: "3 hours",
-      image: "/placeholder.svg",
-      isPaid: false,
+      duration: "2.5 hours",
       ghlUrl: "https://ghl.example.com/courses/maximizing-social-security"
     }
   ],
   "income-distribution": [
     {
-      id: 301,
-      title: "Tax-Efficient Withdrawal Strategies",
-      description: "Learn how to withdraw retirement funds in a tax-efficient manner.",
-      level: "Intermediate",
-      duration: "3 hours",
-      image: "/placeholder.svg",
+      id: "id-101",
+      title: "Distribution Planning 101",
+      description: "Learn how to structure withdrawals from your retirement accounts.",
       isPaid: false,
+      level: "Beginner",
+      duration: "2 hours",
+      ghlUrl: "https://ghl.example.com/courses/distribution-planning-101"
+    },
+    {
+      id: "id-102",
+      title: "Tax-Efficient Withdrawals",
+      description: "Advanced strategies for minimizing taxes during retirement.",
+      isPaid: true,
+      level: "Advanced",
+      duration: "3 hours",
       ghlUrl: "https://ghl.example.com/courses/tax-efficient-withdrawals"
     }
   ],
   "annuities": [
     {
-      id: 401,
-      title: "Annuities 101",
-      description: "Introduction to different types of annuities and their benefits.",
-      level: "Beginner",
-      duration: "2 hours",
-      image: "/placeholder.svg",
+      id: "an-101",
+      title: "Annuity Fundamentals",
+      description: "Understanding different types of annuities and their benefits.",
       isPaid: false,
-      ghlUrl: "https://ghl.example.com/courses/annuities-101"
+      level: "Beginner",
+      duration: "1.5 hours",
+      ghlUrl: "https://ghl.example.com/courses/annuity-fundamentals"
+    },
+    {
+      id: "an-102",
+      title: "Advanced Annuity Strategies",
+      description: "How to integrate annuities into your retirement portfolio.",
+      isPaid: true,
+      level: "Intermediate",
+      duration: "2.5 hours",
+      comingSoon: true,
+      ghlUrl: "https://ghl.example.com/courses/advanced-annuity-strategies"
     }
   ],
   "tax-planning": [
     {
-      id: 501,
-      title: "Tax Planning Fundamentals",
-      description: "Essential tax planning strategies for individuals.",
-      level: "Beginner",
-      duration: "2.5 hours",
-      image: "/placeholder.svg",
+      id: "tp-101",
+      title: "Tax Planning Essentials",
+      description: "Fundamental strategies to minimize your tax burden.",
       isPaid: false,
-      ghlUrl: "https://ghl.example.com/courses/tax-planning-fundamentals"
+      level: "Beginner",
+      duration: "2 hours",
+      ghlUrl: "https://ghl.example.com/courses/tax-planning-essentials"
     },
     {
-      id: 502,
-      title: "Tax-Loss Harvesting Strategies",
-      description: "Using investment losses to offset gains and reduce taxes.",
-      level: "Intermediate",
-      duration: "2 hours",
-      image: "/placeholder.svg",
-      isPaid: false,
-      ghlUrl: "https://ghl.example.com/courses/tax-loss-harvesting"
-    }
-  ],
-  "wealth-management": [
-    {
-      id: 601,
-      title: "Wealth Building Strategies",
-      description: "Comprehensive approach to building and preserving wealth.",
-      level: "Intermediate",
-      duration: "4 hours",
-      image: "/placeholder.svg",
+      id: "tp-102",
+      title: "Tax-Efficient Investing",
+      description: "How to structure investments to minimize taxes.",
       isPaid: true,
-      ghlUrl: "https://ghl.example.com/courses/wealth-building-strategies"
-    }
-  ],
-  "estate-planning": [
-    {
-      id: 701,
-      title: "Estate Planning Essentials",
-      description: "Key components of an effective estate plan.",
-      level: "Beginner",
-      duration: "3 hours",
-      image: "/placeholder.svg",
-      isPaid: false,
-      ghlUrl: "https://ghl.example.com/courses/estate-planning-essentials"
+      level: "Intermediate",
+      duration: "2.5 hours",
+      ghlUrl: "https://ghl.example.com/courses/tax-efficient-investing"
     }
   ],
   "advanced-tax": [
     {
-      id: 801,
+      id: "at-101",
       title: "Advanced Tax Strategies",
-      description: "Sophisticated tax planning techniques for high-net-worth individuals.",
-      level: "Advanced",
-      duration: "5 hours",
-      image: "/placeholder.svg",
+      description: "Complex tax planning techniques for high-net-worth individuals.",
       isPaid: true,
+      level: "Advanced",
+      duration: "3 hours",
       ghlUrl: "https://ghl.example.com/courses/advanced-tax-strategies"
+    },
+    {
+      id: "at-102",
+      title: "Estate Tax Planning",
+      description: "Strategies to minimize estate taxes for your heirs.",
+      isPaid: true,
+      level: "Advanced",
+      duration: "3.5 hours",
+      comingSoon: true,
+      ghlUrl: "https://ghl.example.com/courses/estate-tax-planning"
+    }
+  ],
+  "wealth-management": [
+    {
+      id: "wm-101",
+      title: "Wealth Building Principles",
+      description: "Core concepts for building and preserving wealth.",
+      isPaid: false,
+      level: "Beginner",
+      duration: "2 hours",
+      ghlUrl: "https://ghl.example.com/courses/wealth-building-principles"
+    },
+    {
+      id: "wm-102",
+      title: "Advanced Portfolio Management",
+      description: "Sophisticated investment strategies for wealth preservation.",
+      isPaid: true,
+      level: "Advanced",
+      duration: "4 hours",
+      comingSoon: true,
+      ghlUrl: "https://ghl.example.com/courses/advanced-portfolio-management"
+    }
+  ],
+  "estate-planning": [
+    {
+      id: "ep-101",
+      title: "Estate Planning Basics",
+      description: "Essential elements of creating an estate plan.",
+      isPaid: false,
+      level: "Beginner",
+      duration: "2 hours",
+      ghlUrl: "https://ghl.example.com/courses/estate-planning-basics"
+    },
+    {
+      id: "ep-102",
+      title: "Trust Strategies",
+      description: "How to use different types of trusts in estate planning.",
+      isPaid: true,
+      level: "Intermediate",
+      duration: "3 hours",
+      ghlUrl: "https://ghl.example.com/courses/trust-strategies"
+    }
+  ],
+  "advanced-estate-planning": [
+    {
+      id: "aep-101",
+      title: "Advanced Estate Planning Strategies",
+      description: "Learn sophisticated estate planning techniques for high-net-worth individuals.",
+      isPaid: true,
+      level: "Advanced",
+      duration: "4 hours",
+      ghlUrl: "https://ghl.example.com/courses/advanced-estate-planning-strategies"
+    },
+    {
+      id: "aep-102",
+      title: "Dynasty Trusts and Family Limited Partnerships",
+      description: "Advanced structures for multi-generational wealth transfer.",
+      isPaid: true,
+      level: "Advanced",
+      duration: "3.5 hours",
+      ghlUrl: "https://ghl.example.com/courses/dynasty-trusts"
+    }
+  ],
+  "investment-management": [
+    {
+      id: "im-101",
+      title: "Investment Management Fundamentals",
+      description: "Core principles of investment management and portfolio construction.",
+      isPaid: false,
+      level: "Beginner",
+      duration: "2.5 hours",
+      ghlUrl: "https://ghl.example.com/courses/investment-management-fundamentals"
+    },
+    {
+      id: "im-102",
+      title: "Portfolio Optimization Techniques",
+      description: "Advanced methods for optimizing investment portfolios.",
+      isPaid: true,
+      level: "Intermediate",
+      duration: "3 hours",
+      ghlUrl: "https://ghl.example.com/courses/portfolio-optimization"
+    }
+  ],
+  "alternative-investments": [
+    {
+      id: "ai-101",
+      title: "Introduction to Alternative Investments",
+      description: "Overview of private equity, hedge funds, and other alternative asset classes.",
+      isPaid: false,
+      level: "Beginner",
+      duration: "2 hours",
+      ghlUrl: "https://ghl.example.com/courses/intro-alternative-investments"
+    },
+    {
+      id: "ai-102",
+      title: "Private Market Alpha",
+      description: "Understanding sources of alpha in private markets and illiquid investments.",
+      isPaid: true,
+      level: "Intermediate",
+      duration: "3 hours",
+      ghlUrl: "https://ghl.example.com/courses/private-market-alpha"
+    }
+  ],
+  "intelligent-allocation": [
+    {
+      id: "ia-101",
+      title: "Intelligent Allocation Models: An Overview",
+      description: "Introduction to our proprietary allocation models and their benefits.",
+      isPaid: false,
+      level: "Beginner",
+      duration: "1.5 hours",
+      ghlUrl: "https://ghl.example.com/courses/intelligent-allocation-overview"
+    },
+    {
+      id: "ia-102",
+      title: "Advanced Allocation Strategies",
+      description: "Deep dive into optimizing asset allocation for various market conditions.",
+      isPaid: true,
+      level: "Advanced",
+      duration: "3 hours",
+      ghlUrl: "https://ghl.example.com/courses/advanced-allocation-strategies"
     }
   ],
   "florida-residency": [
     {
-      id: 901,
-      title: "Florida Residency Benefits",
-      description: "Financial advantages of Florida residency and how to establish it.",
+      id: "fl-101",
+      title: "Florida Residency Advantages",
+      description: "Tax and financial benefits of Florida residency.",
+      isPaid: false,
+      level: "Beginner",
+      duration: "1.5 hours",
+      ghlUrl: "https://ghl.example.com/courses/florida-residency-advantages"
+    },
+    {
+      id: "fl-102",
+      title: "Florida Estate Planning",
+      description: "Special considerations for Florida residents.",
+      isPaid: true,
       level: "Intermediate",
       duration: "2 hours",
-      image: "/placeholder.svg",
-      isPaid: false,
-      ghlUrl: "https://ghl.example.com/courses/florida-residency-benefits"
+      comingSoon: true,
+      ghlUrl: "https://ghl.example.com/courses/florida-estate-planning"
     }
   ],
   "texas-residency": [
     {
-      id: 1001,
-      title: "Texas Residency Planning",
-      description: "Tax benefits and financial considerations for Texas residents.",
+      id: "tx-101",
+      title: "Texas Residency Benefits",
+      description: "Tax and financial advantages of Texas residency.",
+      isPaid: false,
+      level: "Beginner",
+      duration: "1.5 hours",
+      ghlUrl: "https://ghl.example.com/courses/texas-residency-benefits"
+    },
+    {
+      id: "tx-102",
+      title: "Texas Estate Planning",
+      description: "Special considerations for Texas residents.",
+      isPaid: true,
       level: "Intermediate",
       duration: "2 hours",
-      image: "/placeholder.svg",
-      isPaid: false,
-      ghlUrl: "https://ghl.example.com/courses/texas-residency-planning"
+      comingSoon: true,
+      ghlUrl: "https://ghl.example.com/courses/texas-estate-planning"
     }
   ]
 };
-
-// Create a flat array of all courses
-export const allCourses: Course[] = Object.values(coursesByCategory).flat();

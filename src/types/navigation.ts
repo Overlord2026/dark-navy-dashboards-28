@@ -1,41 +1,19 @@
 
 import { LucideIcon } from "lucide-react";
 
-export interface MainMenuItem {
-  id: string;
-  title: string;  // Required property
-  label?: string; // Optional for backward compatibility
-  description?: string;
-  icon?: LucideIcon;
-  href: string;
-  items?: SubMenuItem[];
-}
-
-export interface SubMenuItem {
-  id: string;
+export interface NavItem {
   title: string;
-  description?: string;
   href: string;
+  icon: LucideIcon;
+  badge?: string;
+  disabled?: boolean;
+  external?: boolean;
+  submenu?: NavItem[];
 }
 
 export interface NavCategory {
   id: string;
   label: string;
-  items: MainMenuItem[];
+  items: NavItem[];
   defaultExpanded?: boolean;
-}
-
-export interface BottomNavItem {
-  id: string;
-  title: string;
-  icon: LucideIcon;
-  href: string;
-}
-
-// Add NavItem for backward compatibility
-export interface NavItem {
-  title: string;
-  href: string;
-  icon?: LucideIcon;
-  description?: string;
 }
