@@ -28,17 +28,17 @@ export function GuideCard({
   return (
     <Card className="border-blue-200 dark:border-blue-800 hover:shadow-md transition-shadow flex flex-col h-full group">
       <div className="relative">
-        <AspectRatio ratio={16/9} className="bg-muted overflow-hidden rounded-t-lg">
+        <div className="h-44 w-full overflow-hidden rounded-t-lg bg-muted">
           <img 
             src={guide.image || "/placeholder.svg"} 
             alt={guide.title} 
-            className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
+            className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
             onError={(e) => {
               const target = e.target as HTMLImageElement;
               target.src = "/placeholder.svg";
             }}
           />
-        </AspectRatio>
+        </div>
         <div className="absolute top-2 right-2 flex space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
           <TooltipProvider>
             <Tooltip>
