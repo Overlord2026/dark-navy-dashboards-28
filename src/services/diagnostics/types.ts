@@ -1,5 +1,4 @@
 
-
 /**
  * Represents the status of a diagnostic test
  * - success: Test passed successfully
@@ -45,6 +44,24 @@ export interface ApiEndpointDiagnosticResult {
   structureMatch?: boolean;
   authStatus?: "valid" | "invalid" | "expired" | "missing";
   recommendations?: any[];
+}
+
+/**
+ * Interface for API endpoint test result (internal use)
+ */
+export interface ApiEndpointTestResult {
+  name: string;
+  url: string;
+  method: string;
+  status: DiagnosticTestStatus;
+  responseTime: number;
+  responseStatus?: number;
+  responseSize?: number;
+  errorMessage?: string;
+  expectedDataStructure?: string; // Optional in test result but required in diagnostic result
+  actualDataStructure?: string;
+  structureMatch?: boolean;
+  authStatus?: "valid" | "invalid" | "expired" | "missing";
 }
 
 /**
@@ -150,11 +167,14 @@ export interface RoleSimulationTestResult {
  * Interface for API integration test result
  */
 export interface ApiIntegrationTestResult {
+  id?: string; // Add ID field for easier reference
   service: string;
   endpoint: string;
   responseTime: number;
   status: DiagnosticTestStatus;
   message: string;
   authStatus: "valid" | "invalid" | "expired" | "missing";
+  url?: string; // Added for consistency with ApiEndpointDiagnosticResult
+  method?: string; // Added for consistency
+  warningMessage?: string; // Added for better error handling
 }
-
