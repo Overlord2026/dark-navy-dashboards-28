@@ -29,6 +29,16 @@ interface Bill {
   };
 }
 
+// Add interface for parsed data from FileUploadProcessor
+interface ParsedBillData {
+  fileName?: string;
+  vendorName: { value: string; confidence: number };
+  amount: { value: number; confidence: number };
+  dueDate: { value: string; confidence: number };
+  category: { value: string; confidence: number };
+  billImage?: string;
+}
+
 export function BillInboxPage() {
   const { toast } = useToast();
   const [bills, setBills] = useState<Bill[]>([
@@ -101,7 +111,7 @@ export function BillInboxPage() {
     });
   };
   
-  const handleUploadComplete = (parsedData: any) => {
+  const handleUploadComplete = (parsedData: ParsedBillData) => {
     const newBill: Bill = {
       id: `bill-${Date.now()}`,
       fileName: parsedData.fileName || "Uploaded Bill",
@@ -169,7 +179,7 @@ export function BillInboxPage() {
                   amount: formData.amount,
                   dueDate: formData.dueDate,
                   category: formData.category,
-                  status: "processed"
+                  status: "processed" as "reviewing" | "processed" | "needs_review"
                 };
                 handleUpdateBill(updatedBill);
               }}

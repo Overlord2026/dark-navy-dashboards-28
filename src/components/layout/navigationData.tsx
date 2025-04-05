@@ -1,4 +1,3 @@
-
 import React from "react";
 import {
   LayoutDashboard,
@@ -24,7 +23,7 @@ import {
   Plug,
   Inbox,
 } from "lucide-react";
-import { NavigationProps } from "@/types/navigation";
+import { NavigationProps, NavItem, NavCategory } from "@/types/navigation";
 
 // Main navigation data
 const navigationData: NavigationProps[] = [
@@ -240,17 +239,31 @@ const navigationData: NavigationProps[] = [
 ];
 
 // Add navigationCategories for sidebar structure
-export const navigationCategories = [
+export const navigationCategories: NavCategory[] = [
   {
     id: "main",
     label: "Main",
-    items: navigationData.filter(item => item.isMainNavItem),
+    items: navigationData
+      .filter(item => item.isMainNavItem)
+      .map(item => ({
+        id: item.href.replace('/', ''),
+        title: item.title,
+        href: item.href,
+        icon: item.icon as any
+      })) as NavItem[],
     defaultExpanded: true
   },
   {
     id: "secondary",
     label: "Other",
-    items: navigationData.filter(item => !item.isMainNavItem),
+    items: navigationData
+      .filter(item => !item.isMainNavItem)
+      .map(item => ({
+        id: item.href.replace('/', ''),
+        title: item.title,
+        href: item.href,
+        icon: item.icon as any
+      })) as NavItem[],
     defaultExpanded: false
   }
 ];

@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { FileUpload } from "@/components/ui/file-upload";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -7,19 +6,21 @@ import { Progress } from "@/components/ui/progress";
 import { ArrowRight, FilePlus, Upload, Check, AlertTriangle } from "lucide-react";
 import { IntegrationStatusBadge } from "@/components/integrations/IntegrationStatusBadge";
 
-interface FileUploadProcessorProps {
-  onProcessComplete: (parsedData: ParsedBillData) => void;
-}
-
 export interface ParsedBillData {
+  fileName?: string;
   vendorName: { value: string; confidence: number };
   amount: { value: number; confidence: number };
   dueDate: { value: string; confidence: number };
   category: { value: string; confidence: number };
-  billImage: string;
+  billImage?: string;
 }
 
-export function FileUploadProcessor({ onProcessComplete }: FileUploadProcessorProps) {
+interface FileUploadProcessorProps {
+  onProcessComplete?: (parsedData: ParsedBillData) => void;
+  onUploadComplete: (parsedData: ParsedBillData) => void;
+}
+
+export function FileUploadProcessor({ onProcessComplete, onUploadComplete }: FileUploadProcessorProps) {
   const [file, setFile] = useState<File | null>(null);
   const [processing, setProcessing] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -72,6 +73,7 @@ export function FileUploadProcessor({ onProcessComplete }: FileUploadProcessorPr
 
     // Mock data that would come from AI processing
     const mockParsedData: ParsedBillData = {
+      fileName: file?.name || "Uploaded Bill",
       vendorName: { value: "City Power & Light", confidence: 92 },
       amount: { value: 124.56, confidence: 96 },
       dueDate: { value: "2025-04-25", confidence: 88 },
@@ -79,8 +81,11 @@ export function FileUploadProcessor({ onProcessComplete }: FileUploadProcessorPr
       billImage: file ? URL.createObjectURL(file) : "",
     };
 
-    // Notify parent component
-    onProcessComplete(mockParsedData);
+    // Notify parent component using the appropriate callback
+    if (onProcessComplete) {
+      onProcessComplete(mockParsedData);
+    }
+    onUploadComplete(mockParsedData);
   };
 
   const handleStartProcess = () => {

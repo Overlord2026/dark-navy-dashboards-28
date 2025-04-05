@@ -1,7 +1,9 @@
+
 import React, { lazy, Suspense } from "react";
 import {
   Navigate,
   Route,
+  Routes,
   createBrowserRouter,
   createRoutesFromElements,
 } from "react-router-dom";
@@ -44,132 +46,128 @@ const Fallback = () => (
 );
 
 const AppRoutes: React.FC = () => {
-  const router = createBrowserRouter(
-    createRoutesFromElements(
-      <Route path="/">
-        {/* Public Routes */}
-        <Route element={<PublicRoutes />}>
-          <Route
-            index
-            element={
-              <Suspense fallback={<Fallback />}>
-                <HomePage />
-              </Suspense>
-            }
-          />
-          <Route
-            path="about"
-            element={
-              <Suspense fallback={<Fallback />}>
-                <AboutUsPage />
-              </Suspense>
-            }
-          />
-          <Route
-            path="contact"
-            element={
-              <Suspense fallback={<Fallback />}>
-                <ContactPage />
-              </Suspense>
-            }
-          />
-          <Route
-            path="services"
-            element={
-              <Suspense fallback={<Fallback />}>
-                <ServicesPage />
-              </Suspense>
-            }
-          />
-          <Route
-            path="team"
-            element={
-              <Suspense fallback={<Fallback />}>
-                <TeamPage />
-              </Suspense>
-            }
-          />
-          <Route
-            path="careers"
-            element={
-              <Suspense fallback={<Fallback />}>
-                <CareersPage />
-              </Suspense>
-            }
-          />
-          <Route
-            path="privacy"
-            element={
-              <Suspense fallback={<Fallback />}>
-                <PrivacyPolicyPage />
-              </Suspense>
-            }
-          />
-          <Route
-            path="terms"
-            element={
-              <Suspense fallback={<Fallback />}>
-                <TermsOfServicePage />
-              </Suspense>
-            }
-          />
-          <Route
-            path="disclosures"
-            element={
-              <Suspense fallback={<Fallback />}>
-                <DisclosuresPage />
-              </Suspense>
-            }
-          />
-          <Route
-            path="accessibility"
-            element={
-              <Suspense fallback={<Fallback />}>
-                <AccessibilityPage />
-              </Suspense>
-            }
-          />
-          <Route
-            path="login"
-            element={
-              <Suspense fallback={<Fallback />}>
-                <LoginPage />
-              </Suspense>
-            }
-          />
-        </Route>
-
-        {/* Main Routes */}
-        <Route element={<MainRoutes />}>
-          <Route
-            path="dashboard"
-            element={
-              <Suspense fallback={<Fallback />}>
-                <Dashboard />
-              </Suspense>
-            }
-          />
-
-          {/* Finance Routes */}
-          <Route path="finance/*" element={<FinanceRoutes />} />
-
-          {/* Wealth Routes */}
-          <Route path="wealth/*" element={<WealthRoutes />} />
-
-          {/* Advisor Routes */}
-          <Route path="advisor/*" element={<AdvisorRoutes />} />
-
-          {/* Admin Routes */}
-          <Route path="admin/*" element={<AdminRoutes />} />
-        </Route>
-
-        {/* 404 - Not Found */}
-        <Route path="*" element={<Navigate to="/" />} />
+  return (
+    <Routes>
+      {/* Public Routes */}
+      <Route path="/" element={<PublicRoutes />}>
+        <Route
+          index
+          element={
+            <Suspense fallback={<Fallback />}>
+              <HomePage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="about"
+          element={
+            <Suspense fallback={<Fallback />}>
+              <AboutUsPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="contact"
+          element={
+            <Suspense fallback={<Fallback />}>
+              <ContactPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="services"
+          element={
+            <Suspense fallback={<Fallback />}>
+              <ServicesPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="team"
+          element={
+            <Suspense fallback={<Fallback />}>
+              <TeamPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="careers"
+          element={
+            <Suspense fallback={<Fallback />}>
+              <CareersPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="privacy"
+          element={
+            <Suspense fallback={<Fallback />}>
+              <PrivacyPolicyPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="terms"
+          element={
+            <Suspense fallback={<Fallback />}>
+              <TermsOfServicePage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="disclosures"
+          element={
+            <Suspense fallback={<Fallback />}>
+              <DisclosuresPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="accessibility"
+          element={
+            <Suspense fallback={<Fallback />}>
+              <AccessibilityPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="login"
+          element={
+            <Suspense fallback={<Fallback />}>
+              <LoginPage />
+            </Suspense>
+          }
+        />
       </Route>
-    )
-  );
 
-  return <>{router.routes}</>;
+      {/* Main Routes */}
+      <Route path="/" element={<MainRoutes />}>
+        <Route
+          path="dashboard"
+          element={
+            <Suspense fallback={<Fallback />}>
+              <Dashboard />
+            </Suspense>
+          }
+        />
+
+        {/* Finance Routes */}
+        <Route path="finance/*" element={<FinanceRoutes />} />
+
+        {/* Wealth Routes */}
+        <Route path="wealth/*" element={<WealthRoutes />} />
+
+        {/* Advisor Routes */}
+        <Route path="advisor/*" element={<AdvisorRoutes />} />
+
+        {/* Admin Routes */}
+        <Route path="admin/*" element={<AdminRoutes />} />
+      </Route>
+
+      {/* 404 - Not Found */}
+      <Route path="*" element={<Navigate to="/" />} />
+    </Routes>
+  );
 };
 
 export default AppRoutes;
