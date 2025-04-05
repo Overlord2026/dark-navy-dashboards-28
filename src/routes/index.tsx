@@ -15,13 +15,13 @@ import NotFound from "../pages/NotFound";
 const AppRoutes: React.FC = () => {
   return (
     <Routes>
-      {/* Redirect login routes directly to client portal */}
-      <Route path="/login" element={<Navigate to="/client-portal" replace />} />
+      {/* Direct route to login page */}
+      <Route path="/login" element={<LoginPage />} />
       
-      {/* Only keep the advisor login */}
+      {/* Keep advisor login */}
       <Route path="/advisor/login" element={<LoginPage isAdvisor={true} />} />
       
-      {/* Make Client Portal directly accessible without any redirects */}
+      {/* Make Client Portal directly accessible */}
       <Route path="/client-portal" element={<ClientPortal />} />
       
       {/* Public routes */}
