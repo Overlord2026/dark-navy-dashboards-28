@@ -1,4 +1,3 @@
-
 import React, { lazy, Suspense } from "react";
 import {
   Navigate,
@@ -152,50 +151,16 @@ const AppRoutes: React.FC = () => {
           />
 
           {/* Finance Routes */}
-          <Route element={<FinanceRoutes />}>
-            <Route
-              path="bill-pay"
-              element={
-                <Suspense fallback={<Fallback />}>
-                  <BillPay />
-                </Suspense>
-              }
-            />
-            <Route
-              path="bill-inbox"
-              element={
-                <Suspense fallback={<Fallback />}>
-                  <BillInbox />
-                </Suspense>
-              }
-            />
-            <Route
-              path="integrations"
-              element={
-                <Suspense fallback={<Fallback />}>
-                  <IntegrationsManagement />
-                </Suspense>
-              }
-            />
-          </Route>
+          <Route path="finance/*" element={<FinanceRoutes />} />
 
           {/* Wealth Routes */}
-          <Route element={<WealthRoutes />}>
-            <Route
-              path="properties"
-              element={
-                <Suspense fallback={<Fallback />}>
-                  <Properties />
-                </Suspense>
-              }
-            />
-          </Route>
+          <Route path="wealth/*" element={<WealthRoutes />} />
 
           {/* Advisor Routes */}
-          <Route element={<AdvisorRoutes />}></Route>
+          <Route path="advisor/*" element={<AdvisorRoutes />} />
 
           {/* Admin Routes */}
-          <Route element={<AdminRoutes />}></Route>
+          <Route path="admin/*" element={<AdminRoutes />} />
         </Route>
 
         {/* 404 - Not Found */}

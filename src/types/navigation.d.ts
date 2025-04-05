@@ -15,9 +15,19 @@ export interface NavigationProps {
   subItems?: SubNavigationItem[];
 }
 
+export interface NavItem {
+  title: string;
+  href: string;
+  icon: LucideIcon;
+  badge?: string;
+  disabled?: boolean;
+  external?: boolean;
+  submenu?: NavItem[];
+}
+
 export interface NavCategory {
   id: string;
   label: string;
-  items: NavigationProps[]; // Updated to use NavigationProps
+  items: NavItem[];
   defaultExpanded?: boolean;
 }

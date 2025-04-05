@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DashboardCard } from "@/components/ui/DashboardCard";
 import { FileUploadProcessor } from "./FileUploadProcessor";
-import { BillReviewForm } from "./BillReviewForm";
+import { BillReviewForm, BillFormData } from "./BillReviewForm";
 import { AIConfidenceIndicator } from "./AIConfidenceIndicator";
 import { TabsList, TabsTrigger, Tabs, TabsContent } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
@@ -101,7 +101,24 @@ export function BillInboxPage() {
     });
   };
   
-  const handleUploadComplete = (newBill: Bill) => {
+  const handleUploadComplete = (parsedData: any) => {
+    const newBill: Bill = {
+      id: `bill-${Date.now()}`,
+      fileName: parsedData.fileName || "Uploaded Bill",
+      uploadDate: new Date().toISOString().split('T')[0],
+      vendor: parsedData.vendorName.value,
+      amount: parsedData.amount.value,
+      dueDate: parsedData.dueDate.value,
+      category: parsedData.category.value,
+      status: "needs_review",
+      confidenceScores: {
+        vendor: parsedData.vendorName.confidence,
+        amount: parsedData.amount.confidence,
+        dueDate: parsedData.dueDate.confidence,
+        category: parsedData.category.confidence
+      }
+    };
+    
     setBills(prev => [...prev, newBill]);
     toast({
       title: "Bill uploaded",
@@ -138,8 +155,24 @@ export function BillInboxPage() {
           </CardHeader>
           <CardContent>
             <BillReviewForm 
-              bill={selectedBill} 
-              onSave={handleUpdateBill}
+              parsedData={{
+                vendorName: { value: selectedBill.vendor, confidence: selectedBill.confidenceScores.vendor },
+                amount: { value: selectedBill.amount, confidence: selectedBill.confidenceScores.amount },
+                dueDate: { value: selectedBill.dueDate, confidence: selectedBill.confidenceScores.dueDate },
+                category: { value: selectedBill.category, confidence: selectedBill.confidenceScores.category },
+                billImage: undefined
+              }}
+              onConfirm={(formData) => {
+                const updatedBill = {
+                  ...selectedBill,
+                  vendor: formData.vendorName,
+                  amount: formData.amount,
+                  dueDate: formData.dueDate,
+                  category: formData.category,
+                  status: "processed"
+                };
+                handleUpdateBill(updatedBill);
+              }}
               onCancel={() => setIsReviewing(false)}
             />
           </CardContent>

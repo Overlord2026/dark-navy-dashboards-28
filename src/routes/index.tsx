@@ -31,15 +31,15 @@ const AppRoutes: React.FC = () => {
   return (
     <Routes>
       <Route path="/*" element={<MainRoutes />} />
-      <Route path="/finance/*" element={<FinanceRoutes />} />
-      <Route path="/wealth/*" element={<WealthRoutes />} />
-      <Route path="/advisor/*" element={<AdvisorRoutes />} />
-      {isAdmin && <Route path="/admin/*" element={<AdminRoutes />} />}
+      <Route path="finance/*" element={<FinanceRoutes />} />
+      <Route path="wealth/*" element={<WealthRoutes />} />
+      <Route path="advisor/*" element={<AdvisorRoutes />} />
+      {isAdmin && <Route path="admin/*" element={<AdminRoutes />} />}
       
       {isDeveloper ? (
-        <Route path="/dev/diagnostics" element={<Navigate to="/admin/navigation-diagnostics" />} />
+        <Route path="dev/diagnostics" element={<Navigate to="admin/navigation-diagnostics" />} />
       ) : (
-        <Route path="/dev/*" element={<Navigate to="/" replace />} />
+        <Route path="dev/*" element={<Navigate to="/" replace />} />
       )}
       
       <Route path="/*" element={<PublicRoutes />} />
