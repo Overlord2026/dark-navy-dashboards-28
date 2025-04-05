@@ -26,13 +26,13 @@ export function GuideCard({
   isLast
 }: GuideCardProps) {
   return (
-    <Card className="border-blue-200 dark:border-blue-800 hover:shadow-md transition-shadow flex flex-col overflow-hidden h-full group">
+    <Card className="border-blue-200 dark:border-blue-800 hover:shadow-md transition-shadow flex flex-col h-full group">
       <div className="relative">
-        <AspectRatio ratio={4/3} className="bg-muted">
+        <AspectRatio ratio={4/3} className="bg-muted overflow-hidden">
           <img 
             src={guide.image || "/placeholder.svg"} 
             alt={guide.title} 
-            className="object-cover w-full h-full"
+            className="object-cover w-full h-full transition-transform duration-200 group-hover:scale-105"
           />
         </AspectRatio>
         <div className="absolute top-2 right-2 flex space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -87,30 +87,31 @@ export function GuideCard({
           </TooltipProvider>
         </div>
       </div>
-      <div className="flex flex-col flex-1">
-        <CardHeader className="pb-2 pt-3">
-          <CardTitle className="text-lg line-clamp-2">{guide.title}</CardTitle>
-          <CardDescription className="line-clamp-2 mt-1">
-            {guide.description}
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="pt-0 pb-3 flex-grow">
-          <div className="flex items-center text-sm text-muted-foreground">
-            <FileText className="mr-2 h-4 w-4" />
-            <span className="line-clamp-1">By {guide.author || "Unknown"} • {guide.level}</span>
-          </div>
-        </CardContent>
-        <CardFooter className="pt-0 mt-auto">
-          <Button 
-            variant="outline" 
-            className="w-full border-blue-300 dark:border-blue-700 hover:bg-blue-100 dark:hover:bg-blue-900/50 flex items-center gap-2 transition-colors"
-            onClick={() => window.open(guide.ghlUrl, "_blank")}
-          >
-            Read Guide
-            <ExternalLink className="h-3 w-3 opacity-70" />
-          </Button>
-        </CardFooter>
-      </div>
+      
+      <CardHeader className="pb-2 pt-3">
+        <CardTitle className="text-lg line-clamp-2">{guide.title}</CardTitle>
+        <CardDescription className="line-clamp-2 mt-1">
+          {guide.description}
+        </CardDescription>
+      </CardHeader>
+      
+      <CardContent className="pt-0 pb-3 flex-grow">
+        <div className="flex items-center text-sm text-muted-foreground">
+          <FileText className="mr-2 h-4 w-4" />
+          <span className="line-clamp-1">By {guide.author || "Unknown"} • {guide.level}</span>
+        </div>
+      </CardContent>
+      
+      <CardFooter className="pt-0 mt-auto">
+        <Button 
+          variant="outline" 
+          className="w-full border-blue-300 dark:border-blue-700 hover:bg-blue-100 dark:hover:bg-blue-900/50 flex items-center gap-2 transition-colors"
+          onClick={() => window.open(guide.ghlUrl, "_blank")}
+        >
+          Read Guide
+          <ExternalLink className="h-3 w-3 opacity-70" />
+        </Button>
+      </CardFooter>
     </Card>
   );
 }
