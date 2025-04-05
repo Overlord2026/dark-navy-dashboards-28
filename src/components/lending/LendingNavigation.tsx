@@ -2,7 +2,7 @@
 import React from "react";
 import { ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { LoanCategory } from "@/hooks/useLendingData";
+import { LoanCategory } from "@/data/lending/loanCategories";
 
 interface LendingNavigationProps {
   activeTab: string;

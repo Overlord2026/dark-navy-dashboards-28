@@ -7,7 +7,7 @@ import { SpecialtyLoansContent } from "@/components/lending/SpecialtyLoansConten
 import { PersonalLoansContent } from "@/components/lending/PersonalLoansContent";
 import { SecuritiesBasedLoansContent } from "@/components/lending/SecuritiesBasedLoansContent";
 import { LendersList } from "@/components/lending/LendersList";
-import { LoanCategory } from "@/hooks/useLendingData";
+import { LoanCategory } from "@/data/lending/loanCategories";
 
 interface LendingContentProps {
   activeTab: string;

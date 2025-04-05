@@ -1,22 +1,10 @@
-
 import React from "react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetClose } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Calendar, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { InterestedButton } from "@/components/investments/InterestedButton";
-
-interface Lender {
-  id: string;
-  name: string;
-  category: string;
-  offering: string;
-  description: string;
-  about: string;
-  howItWorks: string;
-  otherOfferings: string[];
-  topUnderwriters: string[];
-}
+import { Lender } from "@/data/lending/lenders";
 
 interface LenderDetailProps {
   isOpen: boolean;
