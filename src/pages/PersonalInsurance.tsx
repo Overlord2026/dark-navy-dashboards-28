@@ -22,11 +22,11 @@ const PersonalInsurance = () => {
   };
 
   return (
-    <ThreeColumnLayout activeMainItem="family-wealth" title="Insurance & Annuities">
+    <ThreeColumnLayout activeMainItem="family-wealth" title="Personal Insurance">
       <div className="mx-auto w-full max-w-6xl space-y-4 animate-fade-in p-3">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
           <div>
-            <h1 className="text-[24px] font-semibold mb-1">Insurance & Annuities</h1>
+            <h1 className="text-[24px] font-semibold mb-1">Personal Insurance</h1>
             <p className="text-muted-foreground">
               Track and manage your personal insurance policies and annuities
             </p>

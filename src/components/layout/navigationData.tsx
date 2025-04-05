@@ -18,7 +18,8 @@ import {
   PieChart,
   ArrowRightLeft,
   Calculator,
-  Receipt
+  Receipt,
+  ShieldCheck
 } from "lucide-react";
 
 type MainMenuItem = {
@@ -74,6 +75,7 @@ export const navigationCategories: NavCategory[] = [
     items: [
       { id: "financial-plans", label: "Financial Plans", icon: LineChartIcon, href: "/financial-plans" },
       { id: "accounts", label: "Accounts Overview", icon: WalletIcon, href: "/accounts" },
+      { id: "personal-insurance", label: "Personal Insurance", icon: ShieldCheck, href: "/personal-insurance" },
       { id: "cash-management", label: "Cash Management", icon: BanknoteIcon, href: "/cash-management" },
       { id: "tax-budgets", label: "Tax & Budgets", icon: Calculator, href: "/tax-budgets" },
       { id: "transfers", label: "Transfers", icon: ArrowRightLeft, href: "/transfers" },

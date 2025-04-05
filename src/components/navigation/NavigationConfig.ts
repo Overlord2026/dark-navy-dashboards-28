@@ -28,7 +28,8 @@ import {
   Receipt,
   Car,
   Palette,
-  Diamond
+  Diamond,
+  ShieldCheck
 } from "lucide-react";
 
 import { NavItem } from "@/types/navigation";
@@ -92,6 +93,11 @@ export const familyWealthNavItems: NavItem[] = [
     title: "Accounts Overview", 
     href: "/accounts", 
     icon: WalletIcon 
+  },
+  { 
+    title: "Personal Insurance", 
+    href: "/personal-insurance", 
+    icon: ShieldCheck
   },
   { 
     title: "Real Estate", 

@@ -11,6 +11,7 @@ import Education from "../pages/Education";
 import AllAssets from "../pages/AllAssets";
 import Investments from "../pages/Investments";
 import PersonalInsurance from "../pages/PersonalInsurance";
+import Insurance from "../pages/Insurance";
 import NotFound from "../pages/NotFound";
 
 const MainRoutes = () => {
@@ -26,10 +27,11 @@ const MainRoutes = () => {
       <Route path="/education" element={<Education />} />
       <Route path="/education/:categoryId" element={<Education />} />
       <Route path="/all-assets" element={<AllAssets />} />
-      <Route path="/investments" element={<Investments />} /> {/* Added this line */}
-      <Route path="/investments/alternative/:category" element={<Investments />} /> {/* Added for alternative investments */}
-      <Route path="/investments/alternative/all" element={<Investments />} /> {/* For all alternative investments view */}
-      <Route path="/insurance" element={<PersonalInsurance />} /> {/* Added insurance route */}
+      <Route path="/investments" element={<Investments />} /> 
+      <Route path="/investments/alternative/:category" element={<Investments />} />
+      <Route path="/investments/alternative/all" element={<Investments />} />
+      <Route path="/insurance" element={<Insurance />} /> {/* Insurance offerings under Resources & Solutions */}
+      <Route path="/personal-insurance" element={<PersonalInsurance />} /> {/* Personal Insurance tracking under Family Wealth */}
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
