@@ -1,4 +1,3 @@
-
 import React from "react";
 import { cn } from "@/lib/utils";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
@@ -9,7 +8,7 @@ import {
   familyWealthNavItems,
   collaborationNavItems,
   bottomNavItems 
-} from "@/components/navigation/NavigationConfig.ts"; // Using the TS file
+} from "@/components/navigation/NavigationConfig"; 
 import { NavCategory } from "@/types/navigation";
 import { useTheme } from "@/context/ThemeContext";
 import { UserProfileSection } from "@/components/sidebar/UserProfileSection";

@@ -106,12 +106,12 @@ export const familyWealthNavItems: NavItem[] = [
   },
   { 
     title: "Vehicles & Collectibles", 
-    href: "/all-assets", 
+    href: "/all-assets?filter=vehicles", 
     icon: Car 
   },
   { 
     title: "Art & Valuables", 
-    href: "/all-assets", 
+    href: "/all-assets?filter=collectibles", 
     icon: Palette 
   },
   { 
