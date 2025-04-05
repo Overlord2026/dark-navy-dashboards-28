@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+
+import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { 
   Home, 
@@ -35,7 +36,18 @@ export function MobileLayout({
   const location = useLocation();
   const { theme } = useTheme();
   const { userProfile } = useUser();
-  const { isMobile } = useIsMobile();
+  const { isMobile, forceDesktop } = useIsMobile();
+  
+  // Log when component renders and which view is being used
+  useEffect(() => {
+    const isLaptopWidth = window.innerWidth >= 1024;
+    console.log('[MobileLayout] Render check:');
+    console.log(`- Path: ${location.pathname}`);
+    console.log(`- isMobile: ${isMobile}`);
+    console.log(`- forceDesktop: ${forceDesktop}`);
+    console.log(`- isLaptopWidth: ${isLaptopWidth}`);
+    console.log(`- Rendering: ${!isMobile ? 'Desktop View (bypassing mobile layout)' : 'Mobile Layout'}`);
+  }, [isMobile, forceDesktop, location.pathname]);
   
   // If not on mobile, render the regular layout
   if (!isMobile) {

@@ -1,3 +1,4 @@
+
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { VariantProps, cva } from "class-variance-authority"
@@ -65,7 +66,7 @@ const SidebarProvider = React.forwardRef<
     },
     ref
   ) => {
-    const isMobile = useIsMobile()
+    const { isMobile, forceDesktop } = useIsMobile()
     const [openMobile, setOpenMobile] = React.useState(false)
 
     // This is the internal state of the sidebar.
@@ -119,12 +120,12 @@ const SidebarProvider = React.forwardRef<
         state,
         open,
         setOpen,
-        isMobile,
+        isMobile: isMobile && !forceDesktop, // Take into account forceDesktop setting
         openMobile,
         setOpenMobile,
         toggleSidebar,
       }),
-      [state, open, setOpen, isMobile, openMobile, setOpenMobile, toggleSidebar]
+      [state, open, setOpen, isMobile, forceDesktop, openMobile, setOpenMobile, toggleSidebar]
     )
 
     return (
