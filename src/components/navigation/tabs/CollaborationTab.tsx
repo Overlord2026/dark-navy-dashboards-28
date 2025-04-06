@@ -7,6 +7,7 @@ import { ProfessionalType } from "@/types/professional";
 import { useProfessionals } from "@/hooks/useProfessionals";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { DocumentType } from "@/types/document";
+import { Link } from "react-router-dom";
 
 export const collaborationNavItems: NavItem[] = [
   { 
@@ -146,9 +147,9 @@ const CollaborationTab = () => {
             <div className="grid gap-3">
               {relevantCategories.length > 0 ? (
                 relevantCategories.map(category => (
-                  <a 
+                  <Link 
                     key={category.id}
-                    href={`/documents/${category.id}`} 
+                    to={`/documents?category=${category.id}`} 
                     className="flex items-center gap-2 p-3 bg-muted/50 rounded-md hover:bg-muted transition-colors"
                   >
                     <category.icon className="h-5 w-5 flex-shrink-0" />
@@ -156,7 +157,7 @@ const CollaborationTab = () => {
                       <h4 className="font-medium">{category.name}</h4>
                       <p className="text-sm text-muted-foreground">{category.description}</p>
                     </div>
-                  </a>
+                  </Link>
                 ))
               ) : (
                 <div className="text-center p-4 border border-dashed rounded-md border-muted">
@@ -165,13 +166,13 @@ const CollaborationTab = () => {
               )}
               
               {/* Professional access management always visible */}
-              <a href="/professionals" className="flex items-center gap-2 p-3 bg-muted/50 rounded-md hover:bg-muted transition-colors">
+              <Link to="/professionals" className="flex items-center gap-2 p-3 bg-muted/50 rounded-md hover:bg-muted transition-colors">
                 <KeyIcon className="h-5 w-5 flex-shrink-0" />
                 <div>
                   <h4 className="font-medium">Professional Access Management</h4>
                   <p className="text-sm text-muted-foreground">Control which professionals can access your documents</p>
                 </div>
-              </a>
+              </Link>
             </div>
           </div>
         </TabsContent>
@@ -184,21 +185,21 @@ const CollaborationTab = () => {
             </p>
             
             <div className="grid gap-3">
-              <a href="/sharing" className="flex items-center gap-2 p-3 bg-muted/50 rounded-md hover:bg-muted transition-colors">
+              <Link to="/sharing" className="flex items-center gap-2 p-3 bg-muted/50 rounded-md hover:bg-muted transition-colors">
                 <ShareIcon className="h-5 w-5 flex-shrink-0" />
                 <div>
                   <h4 className="font-medium">Family Member Access</h4>
                   <p className="text-sm text-muted-foreground">Manage family member permissions</p>
                 </div>
-              </a>
+              </Link>
               
-              <a href="/documents" className="flex items-center gap-2 p-3 bg-muted/50 rounded-md hover:bg-muted transition-colors">
+              <Link to="/documents" className="flex items-center gap-2 p-3 bg-muted/50 rounded-md hover:bg-muted transition-colors">
                 <FileTextIcon className="h-5 w-5 flex-shrink-0" />
                 <div>
                   <h4 className="font-medium">Shared Family Documents</h4>
                   <p className="text-sm text-muted-foreground">View and manage family-shared documents</p>
                 </div>
-              </a>
+              </Link>
             </div>
           </div>
         </TabsContent>
