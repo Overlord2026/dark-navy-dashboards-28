@@ -43,7 +43,9 @@ export const SecondaryNavigation: React.FC<SecondaryNavigationProps> = ({
   const handleItemClick = (e: React.MouseEvent<HTMLAnchorElement>, path: string) => {
     e.preventDefault();
     console.log(`Secondary navigation to: ${path}`);
-    navigate(path);
+    
+    // Direct navigation
+    window.location.href = path;
   };
 
   return (

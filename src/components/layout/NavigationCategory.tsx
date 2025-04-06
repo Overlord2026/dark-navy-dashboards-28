@@ -37,10 +37,18 @@ export const NavigationCategory = ({
   isLightTheme
 }: NavigationCategoryProps) => {
   const isItemActive = (itemId: string) => {
-    // Update this to handle special cases like tax-planning
-    if (itemId === 'tax-planning' && currentPath === 'tax-planning') {
+    // Special case handling for specific routes
+    if (itemId === 'tax-planning' && (currentPath === 'tax-planning' || currentPath.includes('tax-planning'))) {
       return true;
     }
+    if (itemId === 'education' && currentPath === 'education') {
+      return true;
+    }
+    if (itemId === 'investments' && currentPath === 'investments') {
+      return true;
+    }
+    
+    // Default case
     return itemId === currentPath;
   };
 
