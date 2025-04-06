@@ -14,7 +14,7 @@ interface SecondaryNavigationProps {
     name?: string;
     active?: boolean;
   }[];
-  sectionId?: string; // Making sectionId optional
+  sectionId?: string;
 }
 
 export const SecondaryNavigation: React.FC<SecondaryNavigationProps> = ({
@@ -27,15 +27,17 @@ export const SecondaryNavigation: React.FC<SecondaryNavigationProps> = ({
 }) => {
   if (!hasSecondaryMenu) return null;
 
-  // Build the link path based on the active main item
+  // Enhanced path builder with better handling of edge cases
   const getLinkPath = (item: { id: string }) => {
+    if (activeMainItem === "education" && item.id === "tax-planning") {
+      return "/education/tax-planning";
+    }
+    
     if (["investments", "education", "sharing"].includes(activeMainItem)) {
-      // For standard secondary navigation
-      return `/${activeMainItem}/${item.id}`;
-    } else {
-      // Default case for other items
       return `/${activeMainItem}/${item.id}`;
     }
+    
+    return `/${activeMainItem}/${item.id}`;
   };
 
   return (

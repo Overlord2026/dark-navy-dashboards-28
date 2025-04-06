@@ -70,7 +70,7 @@ const MainRoutes = () => {
       <Route path="/cash-management" element={<CashManagement />} />
       <Route path="/social-security" element={<SocialSecurity />} />
       <Route path="/estate-planning" element={<EstatePlanning />} />
-      <Route path="/legacy-vault" element={<LegacyVault />} /> {/* Added the legacy-vault route */}
+      <Route path="/legacy-vault" element={<LegacyVault />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

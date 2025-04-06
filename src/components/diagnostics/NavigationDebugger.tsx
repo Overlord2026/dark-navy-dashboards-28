@@ -16,7 +16,7 @@ export const NavigationDebugger: React.FC<NavigationDebuggerProps> = ({ show = f
     navigate(path);
   };
   
-  // Debugging function to check if a route exists
+  // Enhanced debugging function to check if a route exists
   const routeExists = (path: string) => {
     // This is a simple check - in a real app you'd need to match against your route configuration
     const routePatterns = [
@@ -34,10 +34,11 @@ export const NavigationDebugger: React.FC<NavigationDebuggerProps> = ({ show = f
       '/cash-management',
       '/tax-budgets',
       '/transfers',
-      '/legacy-vault',
       '/social-security',
       '/properties',
-      '/billpay'
+      '/billpay',
+      '/help',
+      '/settings'
     ];
     
     return routePatterns.some(pattern => {
@@ -82,6 +83,12 @@ export const NavigationDebugger: React.FC<NavigationDebuggerProps> = ({ show = f
             className="px-2 py-1 bg-blue-600 text-white rounded text-xs"
           >
             Legacy Vault
+          </button>
+          <button 
+            onClick={() => handleTestNavigation('/billpay')}
+            className="px-2 py-1 bg-green-600 text-white rounded text-xs"
+          >
+            Bill Pay
           </button>
         </div>
       </div>

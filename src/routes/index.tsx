@@ -44,11 +44,11 @@ const AppRoutes: React.FC = () => {
       <Route path="/disclosures/*" element={<PublicRoutes />} />
       <Route path="/accessibility/*" element={<PublicRoutes />} />
 
+      {/* Specific legacy-vault route */}
+      <Route path="/legacy-vault" element={<LegacyVault />} />
+
       {/* Tax Planning specific route */}
       <Route path="/education/tax-planning" element={<TaxPlanning />} />
-      
-      {/* Legacy Vault specific route */}
-      <Route path="/legacy-vault" element={<LegacyVault />} />
 
       {/* Direct routes */}
       <Route path="/dashboard/*" element={<MainRoutes />} />

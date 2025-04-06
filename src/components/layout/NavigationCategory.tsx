@@ -36,53 +36,50 @@ export const NavigationCategory = ({
   isCollapsed,
   isLightTheme
 }: NavigationCategoryProps) => {
-  // Improved active item detection
+  // Enhanced active item detection with better path normalization
   const isItemActive = (item: MainMenuItem): boolean => {
     // Remove trailing slashes from paths for comparison
     const normalizedCurrentPath = currentPath.replace(/\/+$/, '');
-    const normalizedItemId = item.id.replace(/\/+$/, '');
-    const normalizedHref = item.href.replace(/^\/+/, '').replace(/\/+$/, '');
+    const normalizedItemHref = item.href.replace(/^\/+/, '').replace(/\/+$/, '');
     
-    // Direct match with item href
-    if (normalizedCurrentPath === normalizedHref) {
+    // Direct match with item href (without leading slash)
+    if (normalizedCurrentPath === normalizedItemHref.replace(/^\//, '')) {
       return true;
     }
     
     // Direct match with item ID
-    if (normalizedCurrentPath === normalizedItemId) {
+    if (normalizedCurrentPath === item.id) {
       return true;
     }
     
-    // Special case for legacy-vault
-    if (normalizedItemId === 'legacy-vault' && normalizedCurrentPath.includes('legacy-vault')) {
+    // Special cases for specific routes
+    if (item.id === 'legacy-vault' && normalizedCurrentPath.includes('legacy-vault')) {
       return true;
     }
     
-    // Special case handling for specific routes
-    if (normalizedItemId === 'tax-planning' && normalizedCurrentPath.includes('tax-planning')) {
+    if (item.id === 'tax-planning' && normalizedCurrentPath.includes('tax-planning')) {
       return true;
     }
     
-    if (normalizedItemId === 'education' && normalizedCurrentPath.startsWith('education')) {
+    if (item.id === 'education' && normalizedCurrentPath.startsWith('education')) {
       return true;
     }
     
-    if (normalizedItemId === 'investments' && normalizedCurrentPath.startsWith('investments')) {
+    if (item.id === 'investments' && normalizedCurrentPath.startsWith('investments')) {
       return true;
     }
     
-    if (normalizedItemId === 'insurance' && 
+    if (item.id === 'insurance' && 
         (normalizedCurrentPath === 'insurance' || normalizedCurrentPath === 'personal-insurance')) {
       return true;
     }
     
-    // Check if the current path starts with the item id (for nested routes)
-    if (normalizedCurrentPath.startsWith(`${normalizedItemId}/`)) {
+    // Check if the current path starts with the item id or href (for nested routes)
+    if (normalizedCurrentPath.startsWith(`${item.id}/`)) {
       return true;
     }
-
-    // Check if the current path starts with the item href
-    if (normalizedItemId && normalizedCurrentPath.startsWith(`${normalizedItemId}`)) {
+    
+    if (normalizedItemHref && normalizedCurrentPath.startsWith(`${normalizedItemHref.replace(/^\//, '')}/`)) {
       return true;
     }
     

@@ -39,7 +39,11 @@ export const NavigationItem = ({
       )}
     >
       {typeof Icon === 'function' ? (
-        <div className={`flex items-center justify-center rounded-sm p-0.5 ${isLightTheme ? 'bg-[#222222]' : 'bg-black'} ${!isCollapsed && "mr-3"}`}>
+        <div className={cn(
+          "flex items-center justify-center rounded-sm p-0.5",
+          isLightTheme ? 'bg-[#222222]' : 'bg-black',
+          !isCollapsed && "mr-3"
+        )}>
           <Icon />
         </div>
       ) : (
