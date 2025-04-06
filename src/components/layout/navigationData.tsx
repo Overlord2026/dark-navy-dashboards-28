@@ -118,7 +118,7 @@ export const educationSubMenuItems: MenuItem[] = [
   { id: "premium", name: "Premium Courses" },
 ];
 
-// Fund manager submenu for each category with focus on the companies requested
+// Fund manager submenu items
 export const privateEquityProviders: MenuItem[] = [
   { id: "all-pe", name: "All Private Equity", active: true },
   { id: "blackstone-pe", name: "Blackstone" },
@@ -189,14 +189,20 @@ export const getSecondaryMenuItems = (activeMainItem: string): MenuItem[] => {
       return sharingSubMenuItems;
     case "education":
       return educationSubMenuItems;
+    case "tax-budgets":
+      return [];
+    case "transfers":
+      return [];
+    case "cash-management":
+      return [];
     case "private-equity":
-      return []; // No longer shown in the sidebar
+      return [];
     case "private-debt":
-      return []; // No longer shown in the sidebar
+      return [];
     case "real-assets":
-      return []; // No longer shown in the sidebar
+      return [];
     case "digital-assets":
-      return []; // No longer shown in the sidebar
+      return [];
     default:
       return [];
   }

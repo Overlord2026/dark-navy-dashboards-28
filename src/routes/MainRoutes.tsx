@@ -20,6 +20,11 @@ import Lending from "../pages/Lending";
 import LoginPage from "../pages/LoginPage";
 import Index from "../pages/Index";
 import Accounts from "../pages/Accounts";
+import TaxBudgets from "../pages/TaxBudgets";
+import Transfers from "../pages/Transfers";
+import CashManagement from "../pages/CashManagement";
+import SocialSecurity from "../pages/SocialSecurity";
+import EstatePlanning from "../pages/EstatePlanning";
 
 const MainRoutes = () => {
   const { isAuthenticated } = useAuth();
@@ -55,6 +60,11 @@ const MainRoutes = () => {
       <Route path="/billpay" element={<BillPay />} />
       <Route path="/accounts" element={<Accounts />} />
       <Route path="/lending" element={<Lending />} />
+      <Route path="/tax-budgets" element={<TaxBudgets />} />
+      <Route path="/transfers" element={<Transfers />} />
+      <Route path="/cash-management" element={<CashManagement />} />
+      <Route path="/social-security" element={<SocialSecurity />} />
+      <Route path="/estate-planning" element={<EstatePlanning />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

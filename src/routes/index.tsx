@@ -57,6 +57,11 @@ const AppRoutes: React.FC = () => {
       <Route path="/personal-insurance" element={<MainRoutes />} />
       <Route path="/properties" element={<MainRoutes />} />
       <Route path="/lending" element={<MainRoutes />} />
+      <Route path="/tax-budgets" element={<MainRoutes />} />
+      <Route path="/transfers" element={<MainRoutes />} />
+      <Route path="/cash-management" element={<MainRoutes />} />
+      <Route path="/social-security" element={<MainRoutes />} />
+      <Route path="/estate-planning" element={<MainRoutes />} />
       
       {/* Nested routes */}
       <Route path="/finance/*" element={<FinanceRoutes />} />

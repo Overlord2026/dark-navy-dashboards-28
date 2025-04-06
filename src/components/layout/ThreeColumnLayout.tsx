@@ -54,20 +54,25 @@ export function ThreeColumnLayout({
   const params = useParams();
   const location = useLocation();
   
-  const sectionId = params.sectionId || activeSecondaryItem;
-  
-  // Determine the active main item based on current path
-  let currentActiveMainItem = activeMainItem;
   const pathSegments = location.pathname.split('/').filter(Boolean);
   
   // Get the first segment as the current path
   const currentPath = pathSegments[0] || 'dashboard';
+  
+  // Determine the active main item based on current path
+  let currentActiveMainItem = activeMainItem;
   
   // Special handling for specific paths
   if (location.pathname === "/billpay") {
     currentActiveMainItem = "billpay";
   } else if (location.pathname === "/accounts") {
     currentActiveMainItem = "accounts";
+  } else if (location.pathname === "/tax-budgets") {
+    currentActiveMainItem = "tax-budgets";
+  } else if (location.pathname === "/transfers") {
+    currentActiveMainItem = "transfers";
+  } else if (location.pathname === "/cash-management") {
+    currentActiveMainItem = "cash-management";
   } else if (pathSegments.includes('alternative')) {
     // Special handling for alternative investment subcategories
     const categoryId = pathSegments[pathSegments.length - 1];
@@ -98,6 +103,9 @@ export function ThreeColumnLayout({
     // Special paths mapping
     if (location.pathname === "/billpay") return 'billpay';
     if (location.pathname === "/accounts") return 'accounts';
+    if (location.pathname === "/tax-budgets") return 'tax-budgets';
+    if (location.pathname === "/transfers") return 'transfers';
+    if (location.pathname === "/cash-management") return 'cash-management';
     
     return pathSegments[0];
   };
