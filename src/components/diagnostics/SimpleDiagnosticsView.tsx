@@ -121,9 +121,11 @@ const SimpleDiagnosticsView: React.FC = () => {
       // Update the results to reflect the fix
       setResults(prevResults => 
         prevResults.map(result => {
-          if (result.recommendations?.some(r => r.id === recommendation.id)) {
+          if (result.recommendations && result.recommendations.some(r => 
+            typeof r === 'object' && r.id === recommendation.id
+          )) {
             const updatedRecommendations = result.recommendations.filter(
-              r => r.id !== recommendation.id
+              r => typeof r === 'string' || r.id !== recommendation.id
             );
             return {
               ...result,
@@ -152,11 +154,13 @@ const SimpleDiagnosticsView: React.FC = () => {
   // Get all recommendations
   const allRecommendations = results
     .flatMap(result => result.recommendations || [])
+    .filter(rec => typeof rec === 'object') // Filter out string recommendations
     .sort((a, b) => {
-      const priorityOrder = { 'critical': 0, 'high': 1, 'medium': 2, 'low': 3 };
-      return (priorityOrder[a.priority as keyof typeof priorityOrder] || 4) - 
-             (priorityOrder[b.priority as keyof typeof priorityOrder] || 4);
-    });
+      if (typeof a === 'string' || typeof b === 'string') return 0;
+      const priorityOrder = { 'high': 0, 'medium': 1, 'low': 2 };
+      return (priorityOrder[a.priority as keyof typeof priorityOrder] || 3) - 
+             (priorityOrder[b.priority as keyof typeof priorityOrder] || 3);
+    }) as Recommendation[];
 
   return null; // Always return null to never show this component
 };

@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Recommendation } from '@/types/diagnostics';
@@ -87,7 +88,7 @@ export function RecommendationItem({
         
         {expanded && (
           <div className="space-y-2">
-            <p className="text-sm text-muted-foreground">{recommendation.description}</p>
+            <p className="text-sm text-muted-foreground">{recommendation.description || recommendation.text}</p>
             <div className="flex justify-between items-center">
               <div className="text-sm text-muted-foreground">
                 Effort: {recommendation.effort || 'Medium'} | Impact: {recommendation.impact || 'Moderate'}

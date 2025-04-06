@@ -1,4 +1,3 @@
-
 import React from "react";
 import { useLocation } from "react-router-dom";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -7,9 +6,20 @@ import { Link } from "react-router-dom";
 import { Home, Plus, Settings } from "lucide-react";
 import SidebarNavCategory from "@/components/sidebar/SidebarNavCategory";
 
-interface SidebarNavItem {
+export interface SidebarNavItem {
   title: string;
   href?: string;
+  disabled?: boolean;
+  external?: boolean;
+  icon?: React.ReactNode;
+  label?: string;
+  items?: SidebarNavItem[];
+}
+
+// Define NavItem to match what SidebarNavCategory expects
+export interface NavItem {
+  title: string;
+  href: string; // Required in NavItem
   disabled?: boolean;
   external?: boolean;
   icon?: React.ReactNode;
@@ -30,7 +40,8 @@ interface SidebarProps {
   onCollapse: () => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({
+// Make sure we export Sidebar as both default and named export
+export const Sidebar: React.FC<SidebarProps> = ({
   isLightTheme,
   collapsed,
   navItems,
@@ -70,7 +81,7 @@ const Sidebar: React.FC<SidebarProps> = ({
               key={key}
               id={key}
               label={key}
-              items={items}
+              items={items as NavItem[]} // Cast to NavItem to satisfy TypeScript
               isExpanded={!!expandedSubmenus[key]}
               onToggle={toggleCategory}
               collapsed={collapsed}

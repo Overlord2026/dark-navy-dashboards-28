@@ -58,8 +58,7 @@ export const RecommendationsList = ({
               <RecommendationItem 
                 key={recommendation.id || index}
                 recommendation={recommendation}
-                index={index}
-                onActionClick={onActionClick}
+                onRecommendationAction={onActionClick}
               />
             ))}
           </ul>

@@ -1,4 +1,3 @@
-
 export interface NavigationTestResult {
   id: string;
   route: string;
@@ -195,4 +194,5 @@ export interface Recommendation {
   action?: string | { label: string; }; // Support both string and object with label
   effort?: string; // Added for compatibility
   impact?: string; // Added for compatibility
+  description?: string; // Added for compatibility with RecommendationItem
 }
