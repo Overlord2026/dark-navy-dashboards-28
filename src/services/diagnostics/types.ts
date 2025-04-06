@@ -68,6 +68,7 @@ export interface FormTestResult {
 
 export interface FormValidationTestResult extends FormTestResult {
   id: string;
+  name: string; // Added this field to match what components expect
   status: DiagnosticTestStatus;
 }
 

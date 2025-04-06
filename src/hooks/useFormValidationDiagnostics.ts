@@ -11,9 +11,11 @@ interface UseFormValidationDiagnosticsProps {
 const mockFormValidationTests: FormValidationTestResult[] = [
   {
     id: "test-1",
+    formId: "register-form",
     name: 'Register Form Email Validation',
     formName: 'register-form',
     location: '/auth/register',
+    success: true,
     status: 'success',
     message: 'Email validation working correctly',
     timestamp: Date.now() - 300000,
@@ -30,9 +32,11 @@ const mockFormValidationTests: FormValidationTestResult[] = [
   },
   {
     id: "test-2",
+    formId: "register-form",
     name: 'Register Form Password Validation',
     formName: 'register-form',
     location: '/auth/register',
+    success: false,
     status: 'warning',
     message: 'Password strength indicator showing warnings inconsistently',
     timestamp: Date.now() - 200000,
@@ -49,8 +53,10 @@ const mockFormValidationTests: FormValidationTestResult[] = [
   },
   {
     id: "test-3",
+    formId: "login-form",
     name: 'Login Form Email Validation',
     formName: 'login-form',
+    success: false,
     location: '/auth/login',
     status: 'error',
     message: 'Email validation not triggering on blur',
@@ -68,8 +74,10 @@ const mockFormValidationTests: FormValidationTestResult[] = [
   },
   {
     id: "test-4",
+    formId: "contact-form",
     name: 'Contact Form Message Validation',
     formName: 'contact-form',
+    success: true,
     location: '/contact',
     status: 'success',
     message: 'Message length validation working correctly',
@@ -194,7 +202,7 @@ export const useFormValidationDiagnostics = (props?: UseFormValidationDiagnostic
 
   const getFieldStatus = useCallback((fieldName: string): 'success' | 'warning' | 'error' | 'idle' => {
     for (const result of results) {
-      const field = result.fields.find(f => f.name === fieldName);
+      const field = result.fields?.find(f => f.name === fieldName);
       if (field) {
         if (!field.valid) return 'error';
         return field.errors && field.errors.length > 0 ? 'warning' : 'success';
@@ -205,7 +213,7 @@ export const useFormValidationDiagnostics = (props?: UseFormValidationDiagnostic
 
   const getFieldMessage = useCallback((fieldName: string): string | null => {
     for (const result of results) {
-      const field = result.fields.find(f => f.name === fieldName);
+      const field = result.fields?.find(f => f.name === fieldName);
       if (field && field.errors && field.errors.length > 0) return field.errors[0];
     }
     return null;
