@@ -1,5 +1,5 @@
 
-import { FormValidationTestResult } from '../types';
+import { FormValidationTestResult } from './types';
 import { testFormValidation } from './formValidationTests';
 import { v4 as uuidv4 } from 'uuid';
 

@@ -2,6 +2,7 @@
 import { PerformanceTestResult } from './types';
 import { v4 as uuidv4 } from 'uuid';
 
+// Export the original function for backward compatibility
 export const testPerformance = (): PerformanceTestResult[] => {
   // Sample performance tests
   return [
@@ -56,4 +57,10 @@ export const testPerformance = (): PerformanceTestResult[] => {
       concurrentUsers: 30 // Added for backward compatibility
     }
   ];
+};
+
+// Add the new runPerformanceTests function that's being imported elsewhere
+export const runPerformanceTests = async (): Promise<PerformanceTestResult[]> => {
+  // Simply wrap testPerformance in a Promise to make it async
+  return Promise.resolve(testPerformance());
 };

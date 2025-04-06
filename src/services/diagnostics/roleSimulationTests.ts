@@ -1,8 +1,8 @@
-
 import { RoleSimulationTestResult } from './types';
 import { v4 as uuidv4 } from 'uuid';
 
-export const testRoleSimulation = (): RoleSimulationTestResult[] => {
+// Change function name to match import in index.ts
+export const testRoleSimulations = (): RoleSimulationTestResult[] => {
   // Sample role simulation tests
   return [
     {
@@ -165,3 +165,6 @@ export const testRoleSimulation = (): RoleSimulationTestResult[] => {
     }
   ];
 };
+
+// Keep the original name for backward compatibility
+export const testRoleSimulation = testRoleSimulations;
