@@ -1,8 +1,11 @@
+
 // Diagnostics types
+export type DiagnosticTestStatus = "success" | "warning" | "error";
+
 export interface DiagnosticResult {
   name: string;
   description: string;
-  status: "success" | "warning" | "error";
+  status: DiagnosticTestStatus;
   message?: string;
   details?: any;
 }
@@ -63,6 +66,10 @@ export interface FormTestResult {
   };
 }
 
+export interface FormValidationTestResult extends FormTestResult {
+  status: DiagnosticTestStatus;
+}
+
 export interface FormField {
   name: string;
   type: string;
@@ -77,7 +84,7 @@ export interface FormField {
 export interface ApiPerformanceResult {
   endpoint: string;
   responseTime: number;
-  status: "success" | "warning" | "error";
+  status: DiagnosticTestStatus;
   timestamp: number;
   details?: any;
 }
@@ -87,5 +94,80 @@ export interface NavigationHealthResult {
   link: string;
   status: "ok" | "broken" | "warning";
   message?: string;
+  details?: any;
+}
+
+// Test Result interfaces for different test types
+export interface NavigationTestResult {
+  id: string;
+  route: string;
+  status: DiagnosticTestStatus;
+  message?: string;
+  timestamp: number;
+  details?: any;
+}
+
+export interface PermissionTestResult {
+  id: string;
+  role: string;
+  permission: string;
+  status: DiagnosticTestStatus;
+  message?: string;
+  details?: any;
+}
+
+export interface RoleSimulationTestResult {
+  id: string;
+  role: string;
+  action: string;
+  status: DiagnosticTestStatus;
+  message?: string;
+  details?: any;
+}
+
+export interface SecurityTestResult {
+  id: string;
+  name: string;
+  status: DiagnosticTestStatus;
+  severity: "critical" | "high" | "medium" | "low";
+  message?: string;
+  remediation?: string;
+  details?: any;
+}
+
+export interface PerformanceTestResult {
+  id: string;
+  name: string;
+  status: DiagnosticTestStatus;
+  responseTime: number;
+  cpuUsage?: number;
+  memoryUsage?: number;
+  message?: string;
+  details?: any;
+}
+
+export interface IconTestResult {
+  id: string;
+  iconName: string;
+  status: DiagnosticTestStatus;
+  message?: string;
+  details?: any;
+  renderTime?: number;
+}
+
+export interface ApiIntegrationTestResult {
+  id: string;
+  service: string;
+  endpoint: string;
+  url?: string;
+  method?: string;
+  status: DiagnosticTestStatus;
+  responseTime?: number;
+  responseStatus?: number;
+  message?: string;
+  errorMessage?: string;
+  warningMessage?: string;
+  authStatus?: string;
+  expectedDataStructure?: string;
   details?: any;
 }

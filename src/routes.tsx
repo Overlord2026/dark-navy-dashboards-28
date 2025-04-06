@@ -1,6 +1,5 @@
-
-import React from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import React, { lazy, Suspense } from 'react';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import Index from "@/pages/Index";
 import Dashboard from "@/pages/Dashboard";
 import NotFound from "./pages/NotFound";
@@ -55,8 +54,6 @@ import BankingTransfers from "./pages/BankingTransfers";
 import BillPay from "./pages/BillPay";
 import AllAssets from "./pages/AllAssets";
 import AdvisorDashboard from "./pages/AdvisorDashboard";
-
-// Import new pages
 import ServicesPage from "./pages/ServicesPage";
 import AboutUsPage from "./pages/AboutUsPage";
 import ContactPage from "./pages/ContactPage";
@@ -66,8 +63,6 @@ import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
 import TermsOfServicePage from "./pages/TermsOfServicePage";
 import DisclosuresPage from "./pages/DisclosuresPage";
 import AccessibilityPage from "./pages/AccessibilityPage";
-
-// Import mobile-optimized pages
 import MobileHome from "./pages/mobile/MobileHome";
 import MobileAccounts from "./pages/mobile/MobileAccounts";
 import MobileTransfers from "./pages/mobile/MobileTransfers";
@@ -75,10 +70,13 @@ import MobileDocuments from "./pages/mobile/MobileDocuments";
 import MobileMore from "./pages/mobile/MobileMore";
 import MobileTaxPlanning from "./pages/mobile/MobileTaxPlanning";
 import MobileEducation from "./pages/mobile/MobileEducation";
-
 import { useUser } from "./context/UserContext";
 import { TutorialButton } from "./components/navigation/TutorialButton";
 import { useIsMobile } from "./hooks/use-mobile";
+
+const SystemDiagnostics = lazy(() => import('@/pages/SystemDiagnostics'));
+const FormValidationTests = lazy(() => import('@/pages/FormValidationTests'));
+const ErrorSimulation = lazy(() => import('@/pages/ErrorSimulation'));
 
 const AppRoutes: React.FC = () => {
   const { isAuthenticated, userProfile } = useUser();
@@ -108,7 +106,6 @@ const AppRoutes: React.FC = () => {
     );
   }
 
-  // Use mobile routes when on a mobile device
   if (isMobile) {
     return (
       <Routes>
@@ -126,115 +123,117 @@ const AppRoutes: React.FC = () => {
         <Route path="/security-settings" element={<CustomerProfile />} />
         <Route path="/all-assets" element={<AllAssets />} />
         
-        {/* Fallback for any other routes */}
         <Route path="*" element={<MobileHome />} />
       </Routes>
     );
   }
 
-  // Desktop routes
   return (
-    <Routes>
-      <Route path="/" element={<Index />} />
-      <Route path="/dashboard" element={<Dashboard />} />
-      <Route path="/documents" element={<Documents />} />
-      <Route path="/documents/:sectionId" element={<Documents />} />
-      <Route path="/home" element={<HomePage />} />
-      <Route path="/accounts" element={<Accounts />} />
-      <Route path="/all-assets" element={<AllAssets />} />
-      <Route path="/financial-plans" element={<FinancialPlans />} />
-      <Route path="/investments" element={<Investments />} />
-      <Route path="/investments/view-all-offerings" element={<ViewAllOfferings />} />
-      <Route path="/investments/all-models" element={<AllModelPortfolios />} />
-      <Route path="/investments/model/:modelId" element={<PortfolioModelDetail />} />
-      <Route path="/investments/models/:modelId" element={<PortfolioModelDetail />} />
-      <Route path="/investments/alternatives" element={<AllAlternativeInvestments />} />
-      <Route path="/investments/alternative/:categoryId" element={<AlternativeAssetCategory />} />
-      <Route path="/investments/alternative/:categoryId/view-all" element={<ViewAllOfferings />} />
-      <Route path="/investments/portfolio-builder" element={<PortfolioBuilder />} />
-      <Route path="/investments/investment-builder" element={<InvestmentBuilder />} />
-      <Route path="/investments/performance" element={<InvestmentPerformance />} />
-      <Route path="/investments/risk" element={<InvestmentRisk />} />
-      <Route path="/insurance" element={<Insurance />} />
-      <Route path="/personal-insurance" element={<PersonalInsurance />} />
-      <Route path="/lending" element={<Lending />} />
-      <Route path="/estate-planning" element={<EstatePlanning />} />
-      <Route path="/billpay" element={<BillPay />} />
-      <Route path="/properties" element={<Properties />} />
-      <Route path="/social-security" element={<SocialSecurity />} />
-      
-      <Route path="/cash-management" element={<CashManagement />} />
-      
-      <Route path="/transfers" element={<Transfers />} />
-      <Route path="/banking-transfers" element={<BankingTransfers />} />
-      <Route path="/funding-accounts" element={<FundingAccounts />} />
-      
-      <Route path="/legacy-vault" element={<LegacyVault />} />
-      <Route path="/sharing" element={<Sharing />} />
-      <Route path="/sharing/:sectionId" element={<Sharing />} />
-      <Route path="/education" element={<Education />} />
-      <Route path="/education/:sectionId" element={<Education />} />
-      <Route path="/education/tax-planning" element={<TaxPlanning />} />
-      <Route path="/tax-budgets" element={<TaxBudgets />} />
-      <Route path="/professionals" element={<Professionals />} />
-      <Route path="/professionals/signup" element={<ProfessionalSignup />} />
-      <Route path="/profile" element={<CustomerProfile />} />
-      <Route path="/advisor-profile" element={<AdvisorProfile />} />
-      <Route path="/advisor-onboarding" element={<AdvisorOnboarding />} />
-      <Route path="/advisor-feedback" element={<AdvisorFeedback />} />
-      <Route path="/advisor-marketplace" element={<AdvisorModuleMarketplace />} />
-      <Route path="/subscription" element={<Subscription />} />
-      <Route path="/marketplace" element={<Marketplace />} />
-      <Route path="/marketplace/rfp" element={<MarketplaceRfp />} />
-      <Route path="/marketplace/rfp/:rfpId" element={<MarketplaceRfpDetail />} />
-      <Route path="/login" element={<Navigate to="/" />} />
-      
-      {/* Advisor Routes */}
-      <Route path="/advisor/dashboard" element={<AdvisorDashboard />} />
-      <Route path="/advisor/login" element={<LoginPage isAdvisor={true} />} />
-      
-      {isAdmin ? (
-        <>
-          <Route path="/admin/subscription" element={<AdminSubscription />} />
-          <Route path="/admin/system-diagnostics" element={<SystemDiagnostics />} />
-          <Route path="/admin/navigation-diagnostics" element={<NavigationDiagnostics />} />
-          <Route path="/admin/developer-access" element={<DeveloperAccessControl />} />
-          <Route path="/admin/ip-protection" element={<IPProtection />} />
-          <Route path="/admin/system-health" element={<SystemHealthDashboard />} />
-        </>
-      ) : (
-        <>
-          <Route path="/admin/*" element={
-            <Navigate to="/" replace />
-          } />
-        </>
-      )}
-      
-      {isDeveloper ? (
-        <>
-          <Route path="/dev/diagnostics" element={<NavigationDiagnostics />} />
-        </>
-      ) : (
-        <>
-          <Route path="/dev/*" element={
-            <Navigate to="/" replace />
-          } />
-        </>
-      )}
-      
-      {/* Public pages (accessible when logged in) */}
-      <Route path="/services" element={<ServicesPage />} />
-      <Route path="/about" element={<AboutUsPage />} />
-      <Route path="/team" element={<TeamPage />} />
-      <Route path="/careers" element={<CareersPage />} />
-      <Route path="/contact" element={<ContactPage />} />
-      <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
-      <Route path="/terms-of-service" element={<TermsOfServicePage />} />
-      <Route path="/disclosures" element={<DisclosuresPage />} />
-      <Route path="/accessibility" element={<AccessibilityPage />} />
-      
-      <Route path="*" element={<NotFound />} />
-    </Routes>
+    <Suspense fallback={<div>Loading...</div>}>
+      <Routes>
+        <Route path="/" element={<Index />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/documents" element={<Documents />} />
+        <Route path="/documents/:sectionId" element={<Documents />} />
+        <Route path="/home" element={<HomePage />} />
+        <Route path="/accounts" element={<Accounts />} />
+        <Route path="/all-assets" element={<AllAssets />} />
+        <Route path="/financial-plans" element={<FinancialPlans />} />
+        <Route path="/investments" element={<Investments />} />
+        <Route path="/investments/view-all-offerings" element={<ViewAllOfferings />} />
+        <Route path="/investments/all-models" element={<AllModelPortfolios />} />
+        <Route path="/investments/model/:modelId" element={<PortfolioModelDetail />} />
+        <Route path="/investments/models/:modelId" element={<PortfolioModelDetail />} />
+        <Route path="/investments/alternatives" element={<AllAlternativeInvestments />} />
+        <Route path="/investments/alternative/:categoryId" element={<AlternativeAssetCategory />} />
+        <Route path="/investments/alternative/:categoryId/view-all" element={<ViewAllOfferings />} />
+        <Route path="/investments/portfolio-builder" element={<PortfolioBuilder />} />
+        <Route path="/investments/investment-builder" element={<InvestmentBuilder />} />
+        <Route path="/investments/performance" element={<InvestmentPerformance />} />
+        <Route path="/investments/risk" element={<InvestmentRisk />} />
+        <Route path="/insurance" element={<Insurance />} />
+        <Route path="/personal-insurance" element={<PersonalInsurance />} />
+        <Route path="/lending" element={<Lending />} />
+        <Route path="/estate-planning" element={<EstatePlanning />} />
+        <Route path="/billpay" element={<BillPay />} />
+        <Route path="/properties" element={<Properties />} />
+        <Route path="/social-security" element={<SocialSecurity />} />
+        
+        <Route path="/cash-management" element={<CashManagement />} />
+        
+        <Route path="/transfers" element={<Transfers />} />
+        <Route path="/banking-transfers" element={<BankingTransfers />} />
+        <Route path="/funding-accounts" element={<FundingAccounts />} />
+        
+        <Route path="/legacy-vault" element={<LegacyVault />} />
+        <Route path="/sharing" element={<Sharing />} />
+        <Route path="/sharing/:sectionId" element={<Sharing />} />
+        <Route path="/education" element={<Education />} />
+        <Route path="/education/:sectionId" element={<Education />} />
+        <Route path="/education/tax-planning" element={<TaxPlanning />} />
+        <Route path="/tax-budgets" element={<TaxBudgets />} />
+        <Route path="/professionals" element={<Professionals />} />
+        <Route path="/professionals/signup" element={<ProfessionalSignup />} />
+        <Route path="/profile" element={<CustomerProfile />} />
+        <Route path="/advisor-profile" element={<AdvisorProfile />} />
+        <Route path="/advisor-onboarding" element={<AdvisorOnboarding />} />
+        <Route path="/advisor-feedback" element={<AdvisorFeedback />} />
+        <Route path="/advisor-marketplace" element={<AdvisorModuleMarketplace />} />
+        <Route path="/subscription" element={<Subscription />} />
+        <Route path="/marketplace" element={<Marketplace />} />
+        <Route path="/marketplace/rfp" element={<MarketplaceRfp />} />
+        <Route path="/marketplace/rfp/:rfpId" element={<MarketplaceRfpDetail />} />
+        <Route path="/login" element={<Navigate to="/" />} />
+        
+        <Route path="/advisor/dashboard" element={<AdvisorDashboard />} />
+        <Route path="/advisor/login" element={<LoginPage isAdvisor={true} />} />
+        
+        {isAdmin ? (
+          <>
+            <Route path="/admin/subscription" element={<AdminSubscription />} />
+            <Route path="/admin/system-diagnostics" element={<SystemDiagnostics />} />
+            <Route path="/admin/navigation-diagnostics" element={<NavigationDiagnostics />} />
+            <Route path="/admin/developer-access" element={<DeveloperAccessControl />} />
+            <Route path="/admin/ip-protection" element={<IPProtection />} />
+            <Route path="/admin/system-health" element={<SystemHealthDashboard />} />
+          </>
+        ) : (
+          <>
+            <Route path="/admin/*" element={
+              <Navigate to="/" replace />
+            } />
+          </>
+        )}
+        
+        {isDeveloper ? (
+          <>
+            <Route path="/dev/diagnostics" element={<NavigationDiagnostics />} />
+          </>
+        ) : (
+          <>
+            <Route path="/dev/*" element={
+              <Navigate to="/" replace />
+            } />
+          </>
+        )}
+        
+        <Route path="/diagnostics" element={<SystemDiagnostics />} />
+        <Route path="/diagnostics/form-validation-tests" element={<FormValidationTests />} />
+        <Route path="/diagnostics/error-simulation" element={<ErrorSimulation />} />
+        
+        <Route path="/services" element={<ServicesPage />} />
+        <Route path="/about" element={<AboutUsPage />} />
+        <Route path="/team" element={<TeamPage />} />
+        <Route path="/careers" element={<CareersPage />} />
+        <Route path="/contact" element={<ContactPage />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+        <Route path="/terms-of-service" element={<TermsOfServicePage />} />
+        <Route path="/disclosures" element={<DisclosuresPage />} />
+        <Route path="/accessibility" element={<AccessibilityPage />} />
+        
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </Suspense>
   );
 };
 
