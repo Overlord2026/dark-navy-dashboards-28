@@ -1,18 +1,8 @@
+
 import React, { useState } from "react";
 import { useDocumentManagement } from "@/hooks/useDocumentManagement";
 import { useProfessionals } from "@/hooks/useProfessionals";
-import { 
-  FileText, 
-  Download, 
-  Eye, 
-  Trash2, 
-  ShieldCheck, 
-  User, 
-  FileIcon,
-  File,
-  FileSpreadsheet,
-  FileImage
-} from "lucide-react";
+import { User } from "lucide-react";
 import { 
   Table, 
   TableBody, 
@@ -21,17 +11,12 @@ import {
   TableHeader, 
   TableRow 
 } from "@/components/ui/table";
-import { 
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger
-} from "@/components/ui/tooltip";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { DocumentItem, DocumentPermission } from "@/types/document";
-import { Professional } from "@/types/professional";
+import { DocumentItem } from "@/types/document";
 import { toast } from "sonner";
+import { DocumentIcon } from "./DocumentIcon";
+import { PermissionBadge } from "./PermissionBadge";
+import { DocumentActions } from "./DocumentActions";
+import { EmptySharedDocuments } from "./EmptySharedDocuments";
 
 export function SharedDocumentsList() {
   const { professionals } = useProfessionals();
@@ -51,43 +36,8 @@ export function SharedDocumentsList() {
     toast.success(`Document ${document.name} has been removed from sharing`);
   };
 
-  const getDocumentIcon = (type: string) => {
-    switch (type) {
-      case "pdf":
-        return <FileText className="h-5 w-5 text-red-500" />;
-      case "image":
-        return <FileImage className="h-5 w-5 text-blue-500" />;
-      case "spreadsheet":
-        return <FileSpreadsheet className="h-5 w-5 text-green-500" />;
-      default:
-        return <FileText className="h-5 w-5 text-gray-500" />;
-    }
-  };
-
-  const getPermissionBadge = (permission: string) => {
-    switch (permission) {
-      case "view":
-        return <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">View Only</Badge>;
-      case "download":
-        return <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">Download</Badge>;
-      case "edit":
-        return <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200">Edit</Badge>;
-      default:
-        return <Badge variant="outline">Unknown</Badge>;
-    }
-  };
-
   if (documents.length === 0) {
-    return (
-      <div className="p-8 border border-dashed border-border rounded-lg flex flex-col items-center justify-center">
-        <FileText size={48} className="text-muted-foreground mb-4" />
-        <p className="text-center mb-2">No documents shared yet</p>
-        <p className="text-sm text-muted-foreground text-center max-w-md mb-4">
-          Share documents with your service professionals to collaborate securely.
-          You can control who can view, download, or edit your documents.
-        </p>
-      </div>
-    );
+    return <EmptySharedDocuments />;
   }
 
   return (
@@ -112,7 +62,7 @@ export function SharedDocumentsList() {
               <TableRow key={doc.id}>
                 <TableCell>
                   <div className="flex items-center gap-2">
-                    {getDocumentIcon(doc.type)}
+                    <DocumentIcon type={doc.type} />
                     <span className="font-medium">{doc.name}</span>
                   </div>
                 </TableCell>
@@ -130,49 +80,14 @@ export function SharedDocumentsList() {
                   {doc.created || new Date().toLocaleDateString()}
                 </TableCell>
                 <TableCell>
-                  {getPermissionBadge(doc.permissions?.[0]?.accessLevel || "view")}
+                  <PermissionBadge permission={doc.permissions?.[0]?.accessLevel || "view"} />
                 </TableCell>
                 <TableCell className="text-right">
-                  <div className="flex justify-end gap-1">
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button variant="ghost" size="icon" onClick={() => handleDownload(doc)}>
-                            <Download className="h-4 w-4 text-muted-foreground" />
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>Download</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button variant="ghost" size="icon">
-                            <ShieldCheck className="h-4 w-4 text-muted-foreground" />
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>Manage Permissions</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button variant="ghost" size="icon" onClick={() => handleDelete(doc)}>
-                            <Trash2 className="h-4 w-4 text-red-500" />
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>Remove Sharing</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  </div>
+                  <DocumentActions 
+                    document={doc}
+                    onDelete={handleDelete}
+                    onDownload={handleDownload}
+                  />
                 </TableCell>
               </TableRow>
             );
