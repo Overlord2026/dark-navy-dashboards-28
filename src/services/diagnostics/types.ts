@@ -1,4 +1,3 @@
-
 // Diagnostics types
 export type DiagnosticTestStatus = "success" | "warning" | "error";
 
@@ -54,7 +53,7 @@ export interface FormTestResult {
   formId: string;
   formName: string;
   success: boolean;
-  location: string;
+  location?: string;
   timestamp: number;
   message?: string;
   fields?: FormField[];
@@ -71,7 +70,7 @@ export interface FormValidationTestResult extends FormTestResult {
   name: string;
   status: DiagnosticTestStatus;
   form?: string; // Added for backward compatibility with existing components
-  location?: string; // Added for backward compatibility
+  location?: string; // Already optional for consistency
 }
 
 export interface FormField {

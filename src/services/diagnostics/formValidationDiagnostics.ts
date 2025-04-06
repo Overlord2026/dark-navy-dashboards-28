@@ -15,6 +15,7 @@ export const runFormValidationDiagnostics = async (): Promise<FormValidationTest
       status: "success",
       message: "All validation rules working correctly",
       timestamp: Date.now(),
+      success: true, // Added for consistency
       fields: [
         {
           id: "email-field",
@@ -52,6 +53,8 @@ export const validateFormSubmission = (formName: string, formData: Record<string
     status: "success",
     message: "Form submission validated successfully",
     timestamp: Date.now(),
+    success: true, // Added for consistency
+    formId: formName, // Added for consistency
     fields: Object.entries(formData).map(([key, value]) => ({
       id: `${key}-field`,
       name: key,
@@ -77,6 +80,9 @@ export const runSingleFormValidationTest = async (formId: string, testIndex?: nu
     status: "error",
     message: "Form test not found",
     timestamp: Date.now(),
+    formId: formId, // Added for consistency
+    formName: "Unknown", // Added for consistency
+    success: false, // Added for consistency
     fields: []
   };
 };
