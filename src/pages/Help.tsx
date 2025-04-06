@@ -1,77 +1,107 @@
 
 import React from "react";
-import { HelpAndTutorialsDialog } from "@/components/support/HelpAndTutorialsDialog";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
+import { Card } from "@/components/ui/card";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Button } from "@/components/ui/button";
+import { BookOpen, Mail, MessageSquare, Phone, Video } from "lucide-react";
 
-const Help = () => {
+export default function Help() {
   return (
-    <div className="container mx-auto py-8">
-      <h1 className="text-3xl font-bold mb-8">Help Center</h1>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Frequently Asked Questions</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="mb-4">Find answers to the most common questions about our platform and services.</p>
-            <ul className="space-y-2">
-              <li>
-                <strong>How do I connect my accounts?</strong>
-                <p className="text-muted-foreground text-sm">
-                  Visit the Accounts page and select "Add New Account" to connect your financial accounts securely.
-                </p>
-              </li>
-              <li>
-                <strong>How secure is my data?</strong>
-                <p className="text-muted-foreground text-sm">
-                  We use enterprise-grade encryption and security practices to protect your information.
-                </p>
-              </li>
-              <li>
-                <strong>Can I share documents with my advisors?</strong>
-                <p className="text-muted-foreground text-sm">
-                  Yes, use the sharing features in the Documents section to share securely with professionals.
-                </p>
-              </li>
-            </ul>
-          </CardContent>
+    <ThreeColumnLayout activeMainItem="help" title="Help & Support">
+      <div className="space-y-6">
+        <div>
+          <h1 className="text-2xl font-bold">Help & Support</h1>
+          <p className="text-muted-foreground mt-1">
+            Get answers to common questions and contact support
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <Card className="p-6 flex flex-col items-center text-center">
+            <BookOpen className="h-12 w-12 mb-4 text-primary" />
+            <h3 className="text-lg font-medium mb-2">Knowledge Base</h3>
+            <p className="text-muted-foreground mb-4">
+              Browse our comprehensive guides and tutorials
+            </p>
+            <Button variant="outline" className="mt-auto">View Articles</Button>
+          </Card>
+          
+          <Card className="p-6 flex flex-col items-center text-center">
+            <MessageSquare className="h-12 w-12 mb-4 text-primary" />
+            <h3 className="text-lg font-medium mb-2">Live Chat</h3>
+            <p className="text-muted-foreground mb-4">
+              Chat with our support team in real-time
+            </p>
+            <Button variant="outline" className="mt-auto">Start Chat</Button>
+          </Card>
+          
+          <Card className="p-6 flex flex-col items-center text-center">
+            <Video className="h-12 w-12 mb-4 text-primary" />
+            <h3 className="text-lg font-medium mb-2">Video Tutorials</h3>
+            <p className="text-muted-foreground mb-4">
+              Watch step-by-step guides for using the platform
+            </p>
+            <Button variant="outline" className="mt-auto">Watch Videos</Button>
+          </Card>
+        </div>
+
+        <Card className="p-6">
+          <h2 className="text-xl font-medium mb-4">Frequently Asked Questions</h2>
+          <Accordion type="single" collapsible className="w-full">
+            <AccordionItem value="item-1">
+              <AccordionTrigger>How do I share documents with professionals?</AccordionTrigger>
+              <AccordionContent>
+                Navigate to the Service Professionals tab, select the professional you want to share with, 
+                then click on "Share Documents" to select which files you want to share.
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-2">
+              <AccordionTrigger>Can I revoke access to shared documents?</AccordionTrigger>
+              <AccordionContent>
+                Yes, you can revoke access at any time. Go to the Service Professionals or Family Members 
+                tab, find the shared document, and click on "Manage Access" to change permissions or revoke access.
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-3">
+              <AccordionTrigger>How do I add family members to my account?</AccordionTrigger>
+              <AccordionContent>
+                Go to the Family Members tab and click on "Add Family Member." Enter their email address 
+                and set their access level, then send the invitation. They'll receive an email with instructions 
+                to create their account.
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-4">
+              <AccordionTrigger>What's the difference between Service Pros and Family Members?</AccordionTrigger>
+              <AccordionContent>
+                Service Professionals are external advisors like accountants, attorneys, or financial planners 
+                who need access to specific documents or information. Family Members are people in your household 
+                or trusted relatives who you want to share broader access with for collaborative planning.
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
         </Card>
-        
-        <Card>
-          <CardHeader>
-            <CardTitle>Video Tutorials</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="mb-4">Watch step-by-step guides on how to use platform features.</p>
-            <ul className="space-y-3">
-              <li className="flex items-start space-x-3">
-                <span className="bg-primary/10 text-primary rounded-full p-1.5">▶</span>
-                <div>
-                  <p className="font-medium">Getting Started Guide</p>
-                  <p className="text-sm text-muted-foreground">3:45 • Learn the basics of navigating the platform</p>
-                </div>
-              </li>
-              <li className="flex items-start space-x-3">
-                <span className="bg-primary/10 text-primary rounded-full p-1.5">▶</span>
-                <div>
-                  <p className="font-medium">Financial Planning Tools</p>
-                  <p className="text-sm text-muted-foreground">5:12 • How to create and monitor financial goals</p>
-                </div>
-              </li>
-              <li className="flex items-start space-x-3">
-                <span className="bg-primary/10 text-primary rounded-full p-1.5">▶</span>
-                <div>
-                  <p className="font-medium">Document Management</p>
-                  <p className="text-sm text-muted-foreground">4:30 • Organize and share important documents</p>
-                </div>
-              </li>
-            </ul>
-          </CardContent>
+
+        <Card className="p-6">
+          <h2 className="text-xl font-medium mb-4">Contact Support</h2>
+          <div className="space-y-4">
+            <div className="flex items-center gap-3">
+              <Phone className="text-primary h-5 w-5" />
+              <div>
+                <p className="font-medium">Phone Support</p>
+                <p className="text-muted-foreground">(555) 123-4567</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <Mail className="text-primary h-5 w-5" />
+              <div>
+                <p className="font-medium">Email Support</p>
+                <p className="text-muted-foreground">support@example.com</p>
+              </div>
+            </div>
+          </div>
         </Card>
       </div>
-    </div>
+    </ThreeColumnLayout>
   );
-};
-
-export default Help;
+}

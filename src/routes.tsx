@@ -1,3 +1,4 @@
+
 import React from "react";
 import { createBrowserRouter } from "react-router-dom";
 import Dashboard from "@/pages/Dashboard";
@@ -19,6 +20,7 @@ import Properties from "@/pages/Properties";
 import BillPay from "@/pages/BillPay";
 import Documents from "@/pages/Documents";
 import Professionals from "@/pages/Professionals";
+import ProfessionalSignup from "@/pages/ProfessionalSignup";
 import Sharing from "@/pages/Sharing";
 import Help from "@/pages/Help";
 import Settings from "@/pages/Settings";
@@ -28,6 +30,8 @@ import DigitalAssets from "@/pages/investments/DigitalAssets";
 import RealAssets from "@/pages/investments/RealAssets";
 import ModelPortfolios from "@/pages/investments/ModelPortfolios";
 import StockScreener from "@/pages/investments/StockScreener";
+import IPProtection from "@/pages/IPProtection";
+import AdvisorFeedback from "@/pages/AdvisorFeedback";
 import NotFound from "@/pages/NotFound";
 
 const routes = createBrowserRouter([
@@ -108,6 +112,10 @@ const routes = createBrowserRouter([
     element: <Professionals />
   },
   {
+    path: "/professional-signup",
+    element: <ProfessionalSignup />
+  },
+  {
     path: "/sharing",
     element: <Sharing />
   },
@@ -118,6 +126,14 @@ const routes = createBrowserRouter([
   {
     path: "/settings",
     element: <Settings />
+  },
+  {
+    path: "/ip-protection",
+    element: <IPProtection />
+  },
+  {
+    path: "/advisor-feedback",
+    element: <AdvisorFeedback />
   },
   {
     path: "/investments/alternative/private-equity",

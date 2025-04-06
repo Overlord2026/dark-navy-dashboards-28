@@ -1,192 +1,121 @@
 
-import { useState, useCallback, useEffect } from 'react';
-import { 
-  runFormValidationDiagnostics,
-  runSingleFormValidationTest,
-  getAvailableFormTests
-} from '@/services/diagnostics/formValidationDiagnostics';
+import { useState, useEffect } from 'react';
 import { FormValidationTestResult } from '@/services/diagnostics/types';
-import { toast } from 'sonner';
-import { logger } from '@/services/logging/loggingService';
 
-export function useFormValidationDiagnostics() {
-  const [results, setResults] = useState<any[]>([]);
-  const [isRunning, setIsRunning] = useState(false);
-  const [lastRun, setLastRun] = useState<string | null>(null);
+interface UseFormValidationDiagnosticsProps {
+  formId: string;
+  enabled?: boolean;
+}
+
+const mockFormValidationTests: FormValidationTestResult[] = [
+  {
+    id: 'form-1',
+    formId: 'register-form',
+    field: 'email',
+    status: 'success',
+    message: 'Email validation working correctly',
+    timestamp: Date.now() - 300000
+  },
+  {
+    id: 'form-2',
+    formId: 'register-form',
+    field: 'password',
+    status: 'warning',
+    message: 'Password strength indicator showing warnings inconsistently',
+    timestamp: Date.now() - 200000
+  },
+  {
+    id: 'form-3',
+    formId: 'login-form',
+    field: 'email',
+    status: 'error',
+    message: 'Email validation not triggering on blur',
+    timestamp: Date.now() - 100000
+  },
+  {
+    id: 'form-4',
+    formId: 'contact-form',
+    field: 'message',
+    status: 'success',
+    message: 'Message length validation working correctly',
+    timestamp: Date.now() - 50000
+  }
+];
+
+export const useFormValidationDiagnostics = ({ 
+  formId, 
+  enabled = true 
+}: UseFormValidationDiagnosticsProps) => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [results, setResults] = useState<FormValidationTestResult[]>([]);
   const [error, setError] = useState<Error | null>(null);
-  const [availableForms, setAvailableForms] = useState<any[]>([]);
 
-  const loadAvailableForms = useCallback(async () => {
-    try {
-      const forms = await getAvailableFormTests();
-      setAvailableForms(forms);
-      logger.info(`Loaded ${forms.length} available form tests`, { 
-        formCount: forms.length
-      }, 'FormValidationDiagnostics');
-      return forms;
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "Unknown error";
-      logger.error("Failed to load available form tests", err, 'FormValidationDiagnostics');
-      toast.error("Failed to load form tests", {
-        description: errorMessage
-      });
-      return [];
-    }
-  }, []);
-
-  const runAllFormTests = useCallback(async () => {
-    setIsRunning(true);
+  const runFormValidation = async () => {
+    setIsLoading(true);
     setError(null);
     
     try {
-      logger.info("Running all form validation tests", {}, 'FormValidationDiagnostics');
-      toast.info("Running form validation tests", {
-        description: "Testing all forms with valid and invalid data..."
-      });
+      // In a real implementation, this would call the API
+      // For now, we'll simulate an API call with a timeout
+      await new Promise(resolve => setTimeout(resolve, 500));
       
-      const diagnosticResults = await runFormValidationDiagnostics();
-      setResults(diagnosticResults);
-      setLastRun(new Date().toISOString());
-      
-      // Log test results
-      const passedTests = diagnosticResults.filter((result: any) => 
-        result.lastTestResult?.success).length;
-      const failedTests = diagnosticResults.length - passedTests;
-      
-      logger.info("Form validation tests completed", { 
-        total: diagnosticResults.length,
-        passed: passedTests,
-        failed: failedTests
-      }, 'FormValidationDiagnostics');
-      
-      if (failedTests > 0) {
-        toast.warning(`Form validation tests completed with ${failedTests} issues`, {
-          description: `${passedTests} passed, ${failedTests} failed. Check the results for details.`
-        });
-      } else {
-        toast.success("All form validation tests passed", {
-          description: `${passedTests} forms tested successfully`
-        });
-      }
-      
-      return diagnosticResults;
+      // Filter mock results for the specified form
+      const formResults = mockFormValidationTests.filter(test => test.formId === formId);
+      setResults(formResults);
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "Unknown error";
-      setError(err instanceof Error ? err : new Error(errorMessage));
-      
-      logger.error("Error running form validation tests", err, 'FormValidationDiagnostics');
-      toast.error("Failed to run form validation tests", {
-        description: errorMessage
-      });
-      
-      return [];
+      setError(err instanceof Error ? err : new Error('An unknown error occurred'));
     } finally {
-      setIsRunning(false);
+      setIsLoading(false);
     }
-  }, []);
+  };
 
-  const runFormTest = useCallback(async (formId: string, testCaseIndex?: number) => {
-    setIsRunning(true);
-    setError(null);
-    
-    try {
-      logger.info(`Running validation test for form: ${formId}`, {
-        formId,
-        testCaseIndex
-      }, 'FormValidationDiagnostics');
-      
-      const testResult = await runSingleFormValidationTest(formId, testCaseIndex);
-      setLastRun(new Date().toISOString());
-      
-      // Add the new result to the existing results
-      if (testResult) {
-        setResults(prev => {
-          // Find if we already have results for this form
-          const existingIndex = prev.findIndex(r => r.form === formId);
-          
-          // Determine status based on test result
-          let status: "success" | "warning" | "error" = "success";
-          let message = "Form validation passed all tests";
-          
-          if (!testResult.success) {
-            status = "error";
-            message = `Form validation failed for ${formId}`;
-          }
-          
-          // Add status and message to test result
-          const enhancedResult = {
-            ...testResult,
-            status,
-            message
-          };
-          
-          if (existingIndex >= 0) {
-            // Update existing entry
-            const updated = [...prev];
-            updated[existingIndex] = {
-              ...updated[existingIndex],
-              lastTestResult: enhancedResult
-            };
-            return updated;
-          } else {
-            // Add new entry
-            return [...prev, {
-              form: formId,
-              formName: `${formId.charAt(0).toUpperCase() + formId.slice(1)} Form`,
-              lastTestResult: enhancedResult
-            }];
-          }
-        });
-        
-        // Log test result
-        if (!testResult.success) {
-          logger.warning(`Form validation test failed for ${formId}`, {
-            formId
-          }, 'FormValidationDiagnostics');
-          
-          toast.warning(`Validation issues in ${formId}`, {
-            description: `Form validation failed for ${formId}`
-          });
-        } else {
-          logger.info(`Form validation test passed for ${formId}`, {
-            formId
-          }, 'FormValidationDiagnostics');
-          
-          toast.success(`Validation passed for ${formId}`, {
-            description: "All form fields validated correctly"
-          });
-        }
-      }
-      
-      return testResult;
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "Unknown error";
-      setError(err instanceof Error ? err : new Error(errorMessage));
-      
-      logger.error(`Error testing form ${formId}`, err, 'FormValidationDiagnostics');
-      toast.error(`Failed to test form ${formId}`, {
-        description: errorMessage
-      });
-      
-      return { success: false, message: errorMessage } as FormValidationTestResult;
-    } finally {
-      setIsRunning(false);
-    }
-  }, []);
-
-  // Initialize available forms on mount
   useEffect(() => {
-    loadAvailableForms();
-  }, [loadAvailableForms]);
+    if (enabled) {
+      runFormValidation();
+    }
+  }, [formId, enabled]);
+
+  const getFieldStatus = (fieldName: string): 'success' | 'warning' | 'error' | 'idle' => {
+    const fieldTest = results.find(test => test.field === fieldName);
+    return fieldTest ? fieldTest.status : 'idle';
+  };
+
+  const getFieldMessage = (fieldName: string): string | null => {
+    const fieldTest = results.find(test => test.field === fieldName);
+    return fieldTest ? fieldTest.message : null;
+  };
+
+  const hasErrors = (): boolean => {
+    return results.some(result => result.status === 'error');
+  };
+
+  const hasWarnings = (): boolean => {
+    return results.some(result => result.status === 'warning');
+  };
+
+  const getErrorCount = (): number => {
+    return results.filter(result => result.status === 'error').length;
+  };
+
+  const getWarningCount = (): number => {
+    return results.filter(result => result.status === 'warning').length;
+  };
+
+  const getSuccessCount = (): number => {
+    return results.filter(result => result.status === 'success').length;
+  };
 
   return {
+    isLoading,
     results,
-    isRunning,
-    lastRun,
     error,
-    availableForms,
-    runAllFormTests,
-    runFormTest,
-    loadAvailableForms
+    runFormValidation,
+    getFieldStatus,
+    getFieldMessage,
+    hasErrors,
+    hasWarnings,
+    getErrorCount,
+    getWarningCount,
+    getSuccessCount
   };
-}
+};
