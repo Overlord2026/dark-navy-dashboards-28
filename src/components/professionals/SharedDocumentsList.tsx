@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useDocumentManagement } from "@/hooks/useDocumentManagement";
 import { useProfessionals } from "@/hooks/useProfessionals";
@@ -12,8 +11,7 @@ import {
   FileIcon,
   File,
   FileSpreadsheet,
-  FileImage,
-  FilePdf
+  FileImage
 } from "lucide-react";
 import { 
   Table, 
@@ -56,7 +54,7 @@ export function SharedDocumentsList() {
   const getDocumentIcon = (type: string) => {
     switch (type) {
       case "pdf":
-        return <FilePdf className="h-5 w-5 text-red-500" />;
+        return <FileText className="h-5 w-5 text-red-500" />;
       case "image":
         return <FileImage className="h-5 w-5 text-blue-500" />;
       case "spreadsheet":
@@ -185,7 +183,6 @@ export function SharedDocumentsList() {
   );
 }
 
-// Sample documents for demonstration
 function getSampleDocuments(): DocumentItem[] {
   return [
     {
