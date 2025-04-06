@@ -1,10 +1,10 @@
 
 import { useState } from "react";
-import { NavigationDiagnosticResult } from "@/types/diagnostics";
+import { NavigationTestResult } from "@/types/diagnostics";
 import { testAllNavigationRoutes } from "@/services/diagnostics/navigationDiagnostics";
 
 export function useNavigationDiagnostics() {
-  const [results, setResults] = useState<Record<string, NavigationDiagnosticResult[]>>({});
+  const [results, setResults] = useState<Record<string, NavigationTestResult[]>>({});
   const [isRunning, setIsRunning] = useState(false);
   const [error, setError] = useState<string | null>(null);
 

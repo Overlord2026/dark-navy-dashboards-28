@@ -10,6 +10,7 @@ export async function runPerformanceTests(): Promise<PerformanceTestResult[]> {
   
   // Test 1: API response time
   performanceResults.push({
+    id: "perf-001",
     name: "API Response Time",
     status: "success",
     message: "API average response time within acceptable limits",
@@ -22,6 +23,7 @@ export async function runPerformanceTests(): Promise<PerformanceTestResult[]> {
   
   // Test 2: Dashboard loading performance
   performanceResults.push({
+    id: "perf-002",
     name: "Dashboard Loading Time",
     status: "success",
     message: "Dashboard loads within acceptable time frame",
@@ -34,6 +36,7 @@ export async function runPerformanceTests(): Promise<PerformanceTestResult[]> {
   
   // Test 3: Profile page performance
   performanceResults.push({
+    id: "perf-003",
     name: "Profile Page Performance",
     status: "warning",
     message: "Profile page loading time slightly above threshold",
@@ -46,6 +49,7 @@ export async function runPerformanceTests(): Promise<PerformanceTestResult[]> {
   
   // Test 4: Search functionality
   performanceResults.push({
+    id: "perf-004",
     name: "Search Performance",
     status: "error",
     message: "Search response time exceeds acceptable threshold",
@@ -58,6 +62,7 @@ export async function runPerformanceTests(): Promise<PerformanceTestResult[]> {
   
   // Test 5: Document upload
   performanceResults.push({
+    id: "perf-005",
     name: "Document Upload",
     status: "success",
     message: "Document upload processing within acceptable time",

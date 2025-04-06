@@ -1,155 +1,58 @@
 
-import { NavItem } from "@/types/navigation";
-import { NavigationDiagnosticResult } from '@/types/diagnostics';
-import { 
-  homeNavItems,
-  educationSolutionsNavItems,
-  familyWealthNavItems,
-  collaborationNavItems,
-  investmentCategories
-} from "@/components/navigation/NavigationConfig";
-import { 
-  runAllTabDiagnostics,
-  diagnoseDashboardTab, 
-  diagnoseCashManagementTab,
-  diagnoseTransfersTab,
-  diagnoseFundingAccountsTab,
-  diagnoseInvestmentsTab
-} from "./tabDiagnostics";
+import { NavigationTestResult } from "./types";
+import { v4 as uuidv4 } from "uuid";
+import { testNavigation } from "./navigationTests";
+import { runAllTabDiagnostics } from "./tabDiagnostics";
 
 /**
- * Tests whether a specific route is accessible
+ * Test all navigation routes and return a comprehensive summary
  */
-export const testRoute = async (route: string): Promise<NavigationDiagnosticResult> => {
-  try {
-    // In a real implementation, this would attempt to navigate to the route
-    // and check for errors. For now, we'll simulate a successful test.
-    console.log(`Testing route: ${route}`);
-    
-    // For specific routes, use the dedicated diagnostic functions
-    if (route === "/") {
-      return await diagnoseDashboardTab();
-    }
-    
-    if (route === "/cash-management") {
-      return await diagnoseCashManagementTab();
-    }
-    
-    if (route === "/transfers") {
-      return await diagnoseTransfersTab();
-    }
-    
-    if (route === "/funding-accounts") {
-      return await diagnoseFundingAccountsTab();
-    }
-    
-    if (route === "/investments") {
-      return await diagnoseInvestmentsTab();
-    }
-    
-    // Simulate some routes having issues
-    if (route.includes('investment-builder')) {
-      return {
-        route,
-        status: "warning",
-        message: "Investment builder loads with warnings - some functions may be limited"
-      };
-    }
-    
-    if (route.includes('nonexistent-route')) {
-      return {
-        route,
-        status: "error",
-        message: "Route does not exist or is not accessible"
-      };
-    }
-    
-    return {
-      route,
-      status: "success",
-      message: `Route ${route} is accessible`
-    };
-  } catch (error) {
-    return {
-      route,
-      status: "error",
-      message: error instanceof Error ? error.message : "Unknown error testing route"
-    };
-  }
-};
-
-/**
- * Tests all routes from a navigation item array
- */
-export const testNavItemRoutes = async (navItems: NavItem[]): Promise<NavigationDiagnosticResult[]> => {
-  const results: NavigationDiagnosticResult[] = [];
+export async function testAllNavigationRoutes(): Promise<Record<string, NavigationTestResult[]>> {
+  // Run navigation tests for all available routes
+  const navigationResults = await testNavigation();
   
-  for (const item of navItems) {
-    // Test the main item
-    results.push(await testRoute(item.href));
-    
-    // Test any submenu items
-    if (item.submenu && item.submenu.length > 0) {
-      for (const subItem of item.submenu) {
-        results.push(await testRoute(subItem.href));
-      }
-    }
-  }
-  
-  return results;
-};
-
-/**
- * Tests all navigation categories from the NavigationConfig
- */
-export const testAllNavigationRoutes = async (): Promise<Record<string, NavigationDiagnosticResult[]>> => {
-  // Get tab-specific diagnostics
-  const tabResults = await runAllTabDiagnostics();
-  
-  // Get route-based diagnostics
-  const routeResults = {
-    home: await testNavItemRoutes(homeNavItems),
-    educationSolutions: await testNavItemRoutes(educationSolutionsNavItems),
-    familyWealth: await testNavItemRoutes(familyWealthNavItems),
-    collaboration: await testNavItemRoutes(collaborationNavItems),
-    investments: await testNavItemRoutes(investmentCategories)
+  // Organize results by category
+  const results: Record<string, NavigationTestResult[]> = {
+    home: navigationResults.filter(r => r.route.startsWith("/")),
+    educationSolutions: navigationResults.filter(r => 
+      r.route.startsWith("/education") || 
+      r.route.startsWith("/investments") || 
+      r.route.includes("tax-planning") ||
+      r.route.includes("insurance") ||
+      r.route.includes("lending") ||
+      r.route.includes("estate-planning")
+    ),
+    familyWealth: navigationResults.filter(r => 
+      r.route.includes("financial-plans") || 
+      r.route.includes("cash-management") || 
+      r.route.includes("transfers") || 
+      r.route.includes("vault") ||
+      r.route.includes("properties") ||
+      r.route.includes("billpay") ||
+      r.route.includes("social-security")
+    ),
+    collaboration: navigationResults.filter(r => 
+      r.route.includes("documents") || 
+      r.route.includes("professionals") || 
+      r.route.includes("sharing")
+    ),
+    investments: navigationResults.filter(r => r.route.includes("investments"))
   };
   
-  // Combine the results
-  // For any routes tested in both systems, prefer the tab-specific results
-  Object.entries(tabResults).forEach(([tabName, result]) => {
-    // Find which category contains this tab's route
-    for (const [category, routes] of Object.entries(routeResults)) {
-      const updatedRoutes = routes.map(route => {
-        if (route.route === result.route) {
-          return result;
-        }
-        return route;
-      });
-      routeResults[category as keyof typeof routeResults] = updatedRoutes;
-    }
-  });
-  
-  return routeResults;
-};
+  return results;
+}
 
 /**
- * Get a summary of all navigation tests
+ * Generate a summary of navigation diagnostics results
  */
-export const getNavigationDiagnosticsSummary = async (): Promise<{
-  overallStatus: "success" | "warning" | "error";
-  totalRoutes: number;
-  successCount: number;
-  warningCount: number;
-  errorCount: number;
-  results: Record<string, NavigationDiagnosticResult[]>;
-}> => {
+export async function getNavigationDiagnosticsSummary() {
+  // Run the tests
   const results = await testAllNavigationRoutes();
+  const tabDiagnostics = await runAllTabDiagnostics();
   
-  // Flatten all test results
+  // Calculate statistics
   const allResults = Object.values(results).flat();
-  
-  // Count statuses
+  const totalRoutes = allResults.length;
   const successCount = allResults.filter(r => r.status === "success").length;
   const warningCount = allResults.filter(r => r.status === "warning").length;
   const errorCount = allResults.filter(r => r.status === "error").length;
@@ -163,11 +66,25 @@ export const getNavigationDiagnosticsSummary = async (): Promise<{
   }
   
   return {
-    overallStatus,
-    totalRoutes: allResults.length,
+    results,
+    tabDiagnostics,
+    totalRoutes,
     successCount,
     warningCount,
     errorCount,
-    results
+    overallStatus,
+    timestamp: new Date().toISOString()
   };
-};
+}
+
+// Update the types in the diagnostics.ts file to match what we have here
+export interface NavigationDiagnosticSummary {
+  results: Record<string, NavigationTestResult[]>;
+  tabDiagnostics: Record<string, NavigationTestResult>;
+  totalRoutes: number;
+  successCount: number;
+  warningCount: number;
+  errorCount: number;
+  overallStatus: "success" | "warning" | "error";
+  timestamp: string;
+}

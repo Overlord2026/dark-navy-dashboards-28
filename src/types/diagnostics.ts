@@ -129,7 +129,7 @@ export interface FormField {
 }
 
 export interface FormValidationTestResult {
-  id: string;
+  id?: string;
   formName: string;
   formComponent?: string;
   location: string;
@@ -142,7 +142,7 @@ export interface FormValidationTestResult {
 }
 
 export interface PerformanceTestResult {
-  id: string;
+  id?: string;
   name: string;
   status: "success" | "warning" | "error";
   responseTime: number;
@@ -152,10 +152,11 @@ export interface PerformanceTestResult {
   details?: any;
   // Added for backward compatibility
   concurrentUsers?: number;
+  endpoint?: string;
 }
 
 export interface SecurityTestResult {
-  id: string;
+  id?: string;
   name: string;
   status: "success" | "warning" | "error";
   severity: "critical" | "high" | "medium" | "low";
@@ -167,7 +168,7 @@ export interface SecurityTestResult {
 }
 
 export interface IconTestResult {
-  id: string;
+  id?: string;
   icon: string;
   location: string;
   status: "success" | "warning" | "error";
@@ -180,7 +181,7 @@ export interface IconTestResult {
 }
 
 export interface PermissionTestResult {
-  id: string;
+  id?: string;
   role: string;
   permission: string;
   status: "success" | "warning" | "error";
@@ -191,7 +192,7 @@ export interface PermissionTestResult {
 }
 
 export interface RoleSimulationTestResult {
-  id: string;
+  id?: string;
   role: string;
   action: string;
   status: "success" | "warning" | "error";
@@ -204,7 +205,7 @@ export interface RoleSimulationTestResult {
 }
 
 export interface ApiIntegrationTestResult {
-  id: string;
+  id?: string;
   service: string;
   endpoint: string;
   url?: string;
