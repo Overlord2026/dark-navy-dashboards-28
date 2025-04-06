@@ -43,13 +43,18 @@ export const NavigationCategory = ({
     const normalizedItemId = item.id.replace(/\/+$/, '');
     const normalizedHref = item.href.replace(/^\/+/, '').replace(/\/+$/, '');
     
+    // Direct match with item href
+    if (normalizedCurrentPath === normalizedHref) {
+      return true;
+    }
+    
     // Direct match with item ID
     if (normalizedCurrentPath === normalizedItemId) {
       return true;
     }
     
-    // Match with href path
-    if (normalizedCurrentPath === normalizedHref) {
+    // Special case for legacy-vault
+    if (normalizedItemId === 'legacy-vault' && normalizedCurrentPath.includes('legacy-vault')) {
       return true;
     }
     
@@ -72,7 +77,16 @@ export const NavigationCategory = ({
     }
     
     // Check if the current path starts with the item id (for nested routes)
-    return normalizedCurrentPath.startsWith(`${normalizedItemId}/`);
+    if (normalizedCurrentPath.startsWith(`${normalizedItemId}/`)) {
+      return true;
+    }
+
+    // Check if the current path starts with the item href
+    if (normalizedItemId && normalizedCurrentPath.startsWith(`${normalizedItemId}`)) {
+      return true;
+    }
+    
+    return false;
   };
 
   return (

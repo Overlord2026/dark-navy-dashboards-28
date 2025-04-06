@@ -15,6 +15,7 @@ import LoginPage from "../pages/LoginPage";
 import HomePage from "../pages/HomePage";
 import AdvisorDashboard from "../pages/AdvisorDashboard";
 import TaxPlanning from "../pages/TaxPlanning";
+import LegacyVault from "../pages/LegacyVault";
 
 const AppRoutes: React.FC = () => {
   const { userProfile } = useUser();
@@ -45,6 +46,9 @@ const AppRoutes: React.FC = () => {
 
       {/* Tax Planning specific route */}
       <Route path="/education/tax-planning" element={<TaxPlanning />} />
+      
+      {/* Legacy Vault specific route */}
+      <Route path="/legacy-vault" element={<LegacyVault />} />
 
       {/* Direct routes */}
       <Route path="/dashboard/*" element={<MainRoutes />} />

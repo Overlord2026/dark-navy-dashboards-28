@@ -27,6 +27,7 @@ import EstatePlanning from "../pages/EstatePlanning";
 import FinancialPlans from "../pages/FinancialPlans";
 import HomePage from "../pages/HomePage";
 import TaxPlanning from "../pages/TaxPlanning";
+import LegacyVault from "../pages/LegacyVault";
 
 const MainRoutes = () => {
   const { isAuthenticated } = useAuth();
@@ -69,6 +70,7 @@ const MainRoutes = () => {
       <Route path="/cash-management" element={<CashManagement />} />
       <Route path="/social-security" element={<SocialSecurity />} />
       <Route path="/estate-planning" element={<EstatePlanning />} />
+      <Route path="/legacy-vault" element={<LegacyVault />} /> {/* Added the legacy-vault route */}
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
