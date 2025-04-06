@@ -25,7 +25,7 @@ import {
 export const homeNavItems = [
   {
     title: "Home",
-    href: "/dashboard",
+    href: "/",
     icon: HomeIcon,
   }
 ];
@@ -155,4 +155,3 @@ export const bottomNavItems = [
     ),
   }
 ];
-
