@@ -1,6 +1,5 @@
-
 import React, { useState } from "react";
-import { FileTextIcon, Users2, ShareIcon, BriefcaseIcon, UsersIcon, KeyIcon } from "lucide-react";
+import { FileTextIcon, Users2, ShareIcon, BriefcaseIcon, UsersIcon, KeyIcon, InfoIcon } from "lucide-react";
 import { NavItem } from "@/types/navigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ProfessionalType } from "@/types/professional";
@@ -8,6 +7,10 @@ import { useProfessionals } from "@/hooks/useProfessionals";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { DocumentType } from "@/types/document";
 import { Link } from "react-router-dom";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { toast } from "sonner";
 
 export const collaborationNavItems: NavItem[] = [
   { 
@@ -27,7 +30,6 @@ export const collaborationNavItems: NavItem[] = [
   }
 ];
 
-// Define document categories and their associated professional roles
 interface DocumentCategory {
   id: string;
   name: string;
@@ -80,11 +82,52 @@ const documentCategories: DocumentCategory[] = [
   }
 ];
 
+interface AccessControlProps {
+  id: string;
+  label: string;
+  defaultValue?: boolean;
+  tooltipText: string;
+  onChange?: (value: boolean) => void;
+}
+
+const AccessControl: React.FC<AccessControlProps> = ({ id, label, defaultValue = false, tooltipText, onChange }) => {
+  const [isFullAccess, setIsFullAccess] = useState(defaultValue);
+  
+  const handleToggle = (checked: boolean) => {
+    setIsFullAccess(checked);
+    if (onChange) {
+      onChange(checked);
+    }
+    
+    toast.success(`Access level updated to ${checked ? "Full Access" : "Limited Access"}`);
+  };
+  
+  return (
+    <div className="flex items-center space-x-2 my-1">
+      <Switch 
+        id={id} 
+        checked={isFullAccess} 
+        onCheckedChange={handleToggle} 
+      />
+      <Label htmlFor={id} className="font-medium text-sm">{label}</Label>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <InfoIcon className="h-4 w-4 text-muted-foreground cursor-help" />
+          </TooltipTrigger>
+          <TooltipContent className="max-w-xs">
+            <p className="text-xs">{tooltipText}</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    </div>
+  );
+};
+
 const CollaborationTab = () => {
   const [selectedRole, setSelectedRole] = useState<ProfessionalType | "all">("all");
   const { professionals } = useProfessionals();
 
-  // Filter document categories based on selected professional role
   const getRelevantCategories = () => {
     if (selectedRole === "all") {
       return documentCategories;
@@ -119,7 +162,6 @@ const CollaborationTab = () => {
               Share documents and collaborate with your tax, legal, and financial professionals.
             </p>
             
-            {/* Role selector */}
             <div className="mb-4">
               <label className="text-sm text-muted-foreground mb-2 block">
                 Filter documents by professional type:
@@ -143,21 +185,38 @@ const CollaborationTab = () => {
               </Select>
             </div>
             
-            {/* Document categories filtered by role */}
+            <div className="mb-4 p-3 bg-muted/30 rounded-md">
+              <h4 className="font-medium mb-2">Default Access Controls</h4>
+              <AccessControl 
+                id="professional-default-access" 
+                label="Grant Full Access by default" 
+                tooltipText="Full Access allows professionals to view, edit and share documents. Limited Access restricts them to viewing documents only."
+              />
+            </div>
+            
             <div className="grid gap-3">
               {relevantCategories.length > 0 ? (
                 relevantCategories.map(category => (
-                  <Link 
-                    key={category.id}
-                    to={`/documents?category=${category.id}`} 
-                    className="flex items-center gap-2 p-3 bg-muted/50 rounded-md hover:bg-muted transition-colors"
-                  >
-                    <category.icon className="h-5 w-5 flex-shrink-0" />
-                    <div>
-                      <h4 className="font-medium">{category.name}</h4>
-                      <p className="text-sm text-muted-foreground">{category.description}</p>
+                  <div key={category.id} className="border border-muted rounded-md p-3">
+                    <Link 
+                      to={`/documents?category=${category.id}`} 
+                      className="flex items-center gap-2 hover:text-primary transition-colors"
+                    >
+                      <category.icon className="h-5 w-5 flex-shrink-0" />
+                      <div>
+                        <h4 className="font-medium">{category.name}</h4>
+                        <p className="text-sm text-muted-foreground">{category.description}</p>
+                      </div>
+                    </Link>
+                    
+                    <div className="mt-3 pt-3 border-t border-dashed border-muted">
+                      <AccessControl 
+                        id={`category-access-${category.id}`} 
+                        label={`${category.name} Access Level`}
+                        tooltipText={`Control access permissions for ${category.name}. Full Access allows professionals to view, edit, and collaborate on these documents. Limited Access restricts them to viewing only.`}
+                      />
                     </div>
-                  </Link>
+                  </div>
                 ))
               ) : (
                 <div className="text-center p-4 border border-dashed rounded-md border-muted">
@@ -165,7 +224,6 @@ const CollaborationTab = () => {
                 </div>
               )}
               
-              {/* Professional access management always visible */}
               <Link to="/professionals" className="flex items-center gap-2 p-3 bg-muted/50 rounded-md hover:bg-muted transition-colors">
                 <KeyIcon className="h-5 w-5 flex-shrink-0" />
                 <div>
@@ -184,22 +242,58 @@ const CollaborationTab = () => {
               Share information and collaborate with family members securely.
             </p>
             
-            <div className="grid gap-3">
-              <Link to="/sharing" className="flex items-center gap-2 p-3 bg-muted/50 rounded-md hover:bg-muted transition-colors">
-                <ShareIcon className="h-5 w-5 flex-shrink-0" />
-                <div>
-                  <h4 className="font-medium">Family Member Access</h4>
-                  <p className="text-sm text-muted-foreground">Manage family member permissions</p>
-                </div>
-              </Link>
+            <div className="mb-4 p-3 bg-muted/30 rounded-md">
+              <h4 className="font-medium mb-2">Family Access Controls</h4>
+              <AccessControl 
+                id="family-default-access" 
+                label="Grant Full Access to family members" 
+                tooltipText="Full Access allows family members to view, edit and share documents. Limited Access restricts them to viewing documents only."
+              />
               
-              <Link to="/documents" className="flex items-center gap-2 p-3 bg-muted/50 rounded-md hover:bg-muted transition-colors">
-                <FileTextIcon className="h-5 w-5 flex-shrink-0" />
-                <div>
-                  <h4 className="font-medium">Shared Family Documents</h4>
-                  <p className="text-sm text-muted-foreground">View and manage family-shared documents</p>
+              <AccessControl 
+                id="family-notifications" 
+                label="Send notifications when documents are shared" 
+                defaultValue={true}
+                tooltipText="When enabled, family members will receive notifications when documents are shared with them."
+              />
+            </div>
+            
+            <div className="grid gap-3">
+              <div className="border border-muted rounded-md p-3">
+                <Link to="/sharing" className="flex items-center gap-2 hover:text-primary transition-colors">
+                  <ShareIcon className="h-5 w-5 flex-shrink-0" />
+                  <div>
+                    <h4 className="font-medium">Family Member Access</h4>
+                    <p className="text-sm text-muted-foreground">Manage family member permissions</p>
+                  </div>
+                </Link>
+                
+                <div className="mt-3 pt-3 border-t border-dashed border-muted">
+                  <AccessControl 
+                    id="family-access-level" 
+                    label="Family Access Level"
+                    tooltipText="Control access permissions for family members. Full Access allows them to view, edit, and collaborate on documents. Limited Access restricts them to viewing only."
+                  />
                 </div>
-              </Link>
+              </div>
+              
+              <div className="border border-muted rounded-md p-3">
+                <Link to="/documents" className="flex items-center gap-2 hover:text-primary transition-colors">
+                  <FileTextIcon className="h-5 w-5 flex-shrink-0" />
+                  <div>
+                    <h4 className="font-medium">Shared Family Documents</h4>
+                    <p className="text-sm text-muted-foreground">View and manage family-shared documents</p>
+                  </div>
+                </Link>
+                
+                <div className="mt-3 pt-3 border-t border-dashed border-muted">
+                  <AccessControl 
+                    id="family-documents-access-level" 
+                    label="Document Access Level"
+                    tooltipText="Control access permissions for shared family documents. Full Access allows family members to view, edit, and share these documents. Limited Access restricts them to viewing only."
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </TabsContent>
