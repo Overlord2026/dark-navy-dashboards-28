@@ -1,4 +1,3 @@
-
 import { createBrowserRouter } from 'react-router-dom';
 import Index from '@/pages/Index';
 import Dashboard from '@/pages/Dashboard';
@@ -53,6 +52,7 @@ import MarketplaceRfpDetail from '@/pages/MarketplaceRfpDetail';
 import SystemDiagnosticsPage from '@/pages/SystemDiagnostics';
 import Lending from '@/pages/Lending';
 import NavigationDiagnostics from '@/pages/NavigationDiagnostics';
+import PerformanceDiagnostics from '@/pages/PerformanceDiagnostics';
 
 // Mobile
 import MobileHome from '@/pages/mobile/MobileHome';
@@ -293,76 +293,6 @@ const routes = createBrowserRouter([
     path: '/navigation-diagnostics',
     element: <NavigationDiagnostics />
   },
-  
-  // Mobile routes
-  {
-    path: '/m',
-    element: <MobileHome />
-  },
-  {
-    path: '/m/accounts',
-    element: <MobileAccounts />
-  },
-  {
-    path: '/m/documents',
-    element: <MobileDocuments />
-  },
-  {
-    path: '/m/education',
-    element: <MobileEducation />
-  },
-  {
-    path: '/m/more',
-    element: <MobileMore />
-  },
-  {
-    path: '/m/transfers',
-    element: <MobileTransfers />
-  },
-  {
-    path: '/m/tax-planning',
-    element: <MobileTaxPlanning />
-  },
-  
-  // Marketing pages
-  {
-    path: '/about',
-    element: <AboutUsPage />
-  },
-  {
-    path: '/services',
-    element: <ServicesPage />
-  },
-  {
-    path: '/contact',
-    element: <ContactPage />
-  },
-  {
-    path: '/privacy-policy',
-    element: <PrivacyPolicyPage />
-  },
-  {
-    path: '/terms-of-service',
-    element: <TermsOfServicePage />
-  },
-  {
-    path: '/disclosures',
-    element: <DisclosuresPage />
-  },
-  {
-    path: '/accessibility',
-    element: <AccessibilityPage />
-  },
-  {
-    path: '/careers',
-    element: <CareersPage />
-  },
-  {
-    path: '/team',
-    element: <TeamPage />
-  },
-  
-  // Diagnostics routes
   {
     path: '/diagnostics/error-simulation',
     element: <ErrorSimulation />
@@ -375,8 +305,10 @@ const routes = createBrowserRouter([
     path: '/diagnostics/accessibility-audit',
     element: <AccessibilityAudit />
   },
-  
-  // Fallback route
+  {
+    path: '/diagnostics/performance',
+    element: <PerformanceDiagnostics />
+  },
   {
     path: '*',
     element: <NotFound />
