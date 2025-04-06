@@ -1,10 +1,19 @@
 
 import { useState } from "react";
-import { DocumentItem, DocumentType } from "@/types/document";
+import { DocumentItem, DocumentType, DocumentPermission } from "@/types/document";
 import { useToast } from "@/hooks/use-toast";
+
+interface ShareDocumentOptions {
+  documentId: string;
+  professionalId: string;
+  professionalName: string;
+  professionalRole: string;
+  permission: string;
+}
 
 export const useDocumentManagement = () => {
   const [documents, setDocuments] = useState<DocumentItem[]>([]);
+  const [sharedDocuments, setSharedDocuments] = useState<DocumentItem[]>([]);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
   const { toast } = useToast();
@@ -24,7 +33,7 @@ export const useDocumentManagement = () => {
     });
   };
 
-  const handleFileUpload = (file: File, customName: string) => {
+  const handleFileUpload = (file: File, customName: string, category: string = "documents") => {
     // Determine file type based on mime type
     let documentType: DocumentType = "document";
     if (file.type.includes("pdf")) {
@@ -35,8 +44,10 @@ export const useDocumentManagement = () => {
       documentType = "spreadsheet";
     }
     
-    // Make sure we have an active category before uploading
-    if (!activeCategory) {
+    // Make sure we have an active category or use the provided one
+    const documentCategory = activeCategory || category;
+    
+    if (!documentCategory) {
       toast({
         title: "Please select a category",
         variant: "destructive"
@@ -50,26 +61,128 @@ export const useDocumentManagement = () => {
       created: new Date().toLocaleDateString(),
       type: documentType,
       size: `${(file.size / (1024 * 1024)).toFixed(2)} MB`,
-      category: activeCategory
+      category: documentCategory
     };
     
-    setDocuments([...documents, newDocument]);
+    setDocuments(prevDocs => [...prevDocs, newDocument]);
     setIsUploadDialogOpen(false);
     
     toast({
       title: "File uploaded",
       description: `${newDocument.name} has been uploaded successfully to BFO Legacy Vault`
     });
+
+    // Return the newly created document
+    return newDocument;
+  };
+
+  const shareDocument = (options: ShareDocumentOptions) => {
+    const { documentId, professionalId, professionalName, professionalRole, permission } = options;
+    
+    // Find the document to share
+    const documentToShare = [...documents, ...getSampleDocuments()].find(doc => doc.id === documentId);
+    
+    if (!documentToShare) {
+      toast({
+        title: "Document not found",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    // Create a shared version of the document
+    const newPermission: DocumentPermission = {
+      userId: professionalId,
+      userName: professionalName,
+      userRole: professionalRole,
+      accessLevel: permission as any,
+      grantedBy: "Owner",
+      grantedAt: new Date().toISOString()
+    };
+    
+    const sharedDocument: DocumentItem = {
+      ...documentToShare,
+      sharedWith: [...(documentToShare.sharedWith || []), professionalId],
+      permissions: [...(documentToShare.permissions || []), newPermission]
+    };
+    
+    // Update shared documents list
+    setSharedDocuments(prevSharedDocs => {
+      const existingDocIndex = prevSharedDocs.findIndex(doc => doc.id === documentId);
+      
+      if (existingDocIndex >= 0) {
+        // Update existing shared document
+        const updatedDocs = [...prevSharedDocs];
+        updatedDocs[existingDocIndex] = sharedDocument;
+        return updatedDocs;
+      } else {
+        // Add new shared document
+        return [...prevSharedDocs, sharedDocument];
+      }
+    });
+    
+    toast({
+      title: "Document shared",
+      description: `${documentToShare.name} has been shared with ${professionalName}`
+    });
+  };
+
+  const deleteSharedDocument = (documentId: string) => {
+    setSharedDocuments(prevDocs => prevDocs.filter(doc => doc.id !== documentId));
+  };
+
+  const updateDocumentPermissions = (documentId: string, permissions: DocumentPermission[]) => {
+    setSharedDocuments(prevDocs => 
+      prevDocs.map(doc => 
+        doc.id === documentId 
+          ? { ...doc, permissions } 
+          : doc
+      )
+    );
   };
 
   return {
     documents,
+    sharedDocuments,
     activeCategory,
     isUploadDialogOpen,
     setActiveCategory,
     setIsUploadDialogOpen,
     handleCreateFolder,
     handleFileUpload,
+    shareDocument,
+    deleteSharedDocument,
+    updateDocumentPermissions,
     filteredDocuments: documents.filter(doc => doc.category === activeCategory)
   };
 };
+
+// Sample documents for the hook to use when documents array is empty
+function getSampleDocuments(): DocumentItem[] {
+  return [
+    {
+      id: "doc-1",
+      name: "Tax Return 2024.pdf",
+      type: "pdf",
+      created: "04/02/2025",
+      category: "professional-documents",
+      size: "2.4 MB"
+    },
+    {
+      id: "doc-2",
+      name: "Estate Plan Draft.docx",
+      type: "document",
+      created: "03/28/2025",
+      category: "professional-documents",
+      size: "1.2 MB"
+    },
+    {
+      id: "doc-3",
+      name: "Investment Portfolio Analysis.xlsx",
+      type: "spreadsheet",
+      created: "03/15/2025",
+      category: "professional-documents",
+      size: "3.7 MB"
+    }
+  ];
+}

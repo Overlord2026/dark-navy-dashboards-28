@@ -7,13 +7,27 @@ import { AddProfessionalDialog } from "@/components/professionals/AddProfessiona
 import { ConsultationsPrompt } from "@/components/professionals/ConsultationsPrompt";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { UserPlus, ExternalLink, MessageSquare, FileText, ShieldCheck, Users2 } from "lucide-react";
+import { 
+  UserPlus, 
+  ExternalLink, 
+  MessageSquare, 
+  FileText, 
+  ShieldCheck, 
+  Users2, 
+  Upload, 
+  Share2
+} from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ProfessionalType } from "@/types/professional";
 import { ProfessionalsProvider } from "@/context/ProfessionalsContext";
+import { ShareDocumentWithProfessionalsDialog } from "@/components/professionals/ShareDocumentWithProfessionalsDialog";
+import { UploadDocumentDialog } from "@/components/documents/UploadDocumentDialog";
+import { SharedDocumentsList } from "@/components/professionals/SharedDocumentsList";
 
 export default function Professionals() {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [isShareDialogOpen, setIsShareDialogOpen] = useState(false);
+  const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
   const [professionalType, setProfessionalType] = useState<ProfessionalType>("Tax Professional / Accountant");
   const [activeTab, setActiveTab] = useState("professionals");
   const navigate = useNavigate();
@@ -119,15 +133,33 @@ export default function Professionals() {
             
             <TabsContent value="documents">
               <div className="bg-card p-6 rounded-lg border border-border space-y-4">
-                <h2 className="text-xl font-medium">Shared Documents</h2>
-                <p className="text-muted-foreground">
-                  Manage documents shared with your service professionals. Control access and track document viewing.
-                </p>
-                <div className="p-8 border border-dashed border-border rounded-lg flex flex-col items-center justify-center">
-                  <FileText size={48} className="text-muted-foreground mb-4" />
-                  <p className="text-center mb-2">No documents shared yet</p>
-                  <Button variant="outline">Share Documents</Button>
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <h2 className="text-xl font-medium">Shared Documents</h2>
+                    <p className="text-muted-foreground">
+                      Manage documents shared with your service professionals. Control access and track document viewing.
+                    </p>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button 
+                      variant="outline" 
+                      onClick={() => setIsUploadDialogOpen(true)}
+                      className="flex items-center gap-2"
+                    >
+                      <Upload size={16} />
+                      Upload New
+                    </Button>
+                    <Button 
+                      onClick={() => setIsShareDialogOpen(true)}
+                      className="flex items-center gap-2"
+                    >
+                      <Share2 size={16} />
+                      Share Document
+                    </Button>
+                  </div>
                 </div>
+                
+                <SharedDocumentsList />
               </div>
             </TabsContent>
             
@@ -149,6 +181,17 @@ export default function Professionals() {
           <AddProfessionalDialog 
             isOpen={isAddDialogOpen}
             onOpenChange={setIsAddDialogOpen}
+          />
+
+          <ShareDocumentWithProfessionalsDialog
+            open={isShareDialogOpen}
+            onOpenChange={setIsShareDialogOpen}
+          />
+
+          <UploadDocumentDialog
+            open={isUploadDialogOpen}
+            onClose={() => setIsUploadDialogOpen(false)}
+            category="professional-documents"
           />
         </div>
       </ProfessionalsProvider>
