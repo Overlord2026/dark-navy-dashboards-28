@@ -9,7 +9,7 @@ import {
   familyWealthNavItems,
   collaborationNavItems,
   bottomNavItems 
-} from "@/components/navigation/NavigationConfig"; // No need to specify .tsx extension in imports
+} from "@/components/navigation/NavigationConfig.ts"; // Using the TS file
 import { NavCategory } from "@/types/navigation";
 import { useTheme } from "@/context/ThemeContext";
 import { UserProfileSection } from "@/components/sidebar/UserProfileSection";

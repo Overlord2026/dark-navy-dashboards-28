@@ -17,7 +17,6 @@ export interface CourseCardProps {
   comingSoon?: boolean;
   ghlUrl?: string;
   onClick?: () => void;
-  // Note: image property removed or not used
 }
 
 export function CourseCard({

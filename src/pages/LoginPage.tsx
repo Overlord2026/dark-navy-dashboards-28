@@ -1,111 +1,116 @@
 
-import React, { useState, useEffect } from "react";
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useNavigate } from "react-router-dom";
-import { useUser } from "@/context/UserContext";
-import { useAuth } from "@/context/AuthContext";
-import { toast } from "sonner";
+import { Checkbox } from "@/components/ui/checkbox";
 
-const LoginPage = ({ isAdvisor = false }: { isAdvisor?: boolean }) => {
+export default function LoginPage({ isAdvisor = false }) {
   const navigate = useNavigate();
-  const { login: userLogin, isAuthenticated: userAuthenticated } = useUser();
-  const { isAuthenticated: authAuthenticated, login: authLogin } = useAuth();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [isLoggingIn, setIsLoggingIn] = useState(false);
-
-  // Check if already authenticated and redirect if needed
-  useEffect(() => {
-    if (authAuthenticated) {
-      if (isAdvisor) {
-        navigate("/advisor/dashboard");
-      } else {
-        navigate("/dashboard");
-      }
-    }
-  }, [authAuthenticated, isAdvisor, navigate]);
-
-  const handleLogin = async (e: React.FormEvent) => {
+  
+  const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoggingIn(true);
-    
-    try {
-      // For development: automatically succeed login
-      authLogin();
-      
-      // Also call userLogin for consistency
-      await userLogin(email || "demo@example.com", password || "password");
-      
-      toast.success("Login successful!");
-      
-      if (isAdvisor) {
-        navigate("/advisor/dashboard");
-      } else {
-        navigate("/dashboard");
-      }
-    } catch (error) {
-      toast.error("An error occurred during login");
-      console.error("Login error:", error);
-    } finally {
-      setIsLoggingIn(false);
+    // For now, just navigate to the dashboard
+    if (isAdvisor) {
+      navigate("/advisor/dashboard");
+    } else {
+      navigate("/");
     }
   };
-
+  
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle>{isAdvisor ? "Advisor Login" : "Client Login"}</CardTitle>
-          <CardDescription>
-            Enter your credentials to access your account
-          </CardDescription>
-        </CardHeader>
-        <form onSubmit={handleLogin}>
-          <CardContent className="space-y-4">
+    <div className="min-h-screen bg-[#F9F7E8] flex flex-col">
+      <header className="w-full flex justify-center items-center py-4 border-b border-[#DCD8C0] bg-[#F9F7E8] sticky top-0 z-50">
+        <div className="container flex justify-between items-center max-w-7xl px-4">
+          <Link to="/" className="flex items-center">
+            <img 
+              src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" 
+              alt="Boutique Family Office Logo" 
+              className="h-16 w-auto"
+            />
+          </Link>
+          <div>
+            <Button variant="ghost" asChild>
+              <Link to="/">Back to Home</Link>
+            </Button>
+          </div>
+        </div>
+      </header>
+      
+      <div className="flex-1 flex justify-center items-center p-4">
+        <div className="bg-white p-8 rounded-lg shadow-md border border-[#DCD8C0] w-full max-w-md">
+          <div className="text-center mb-6">
+            <h1 className="text-2xl font-bold text-[#222222]">
+              {isAdvisor ? "Advisor Login" : "Client Login"}
+            </h1>
+            <p className="text-gray-600 mt-2">
+              {isAdvisor 
+                ? "Access your advisor dashboard" 
+                : "Access your personalized financial dashboard"}
+            </p>
+          </div>
+          
+          <form onSubmit={handleLogin} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input 
                 id="email" 
                 type="email" 
-                placeholder="your@email.com" 
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                placeholder="you@example.com" 
+                autoComplete="email" 
+                required 
               />
             </div>
+            
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <div className="flex justify-between items-center">
+                <Label htmlFor="password">Password</Label>
+                <Link to="/forgot-password" className="text-sm text-primary hover:underline">
+                  Forgot password?
+                </Link>
+              </div>
               <Input 
                 id="password" 
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)} 
+                type="password" 
+                placeholder="••••••••" 
+                autoComplete="current-password" 
+                required 
               />
             </div>
-            <div className="text-xs text-amber-600 mt-2">
-              <p>Development mode: Login enabled without credentials</p>
+            
+            <div className="flex items-center space-x-2">
+              <Checkbox id="remember" />
+              <label
+                htmlFor="remember"
+                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-gray-600"
+              >
+                Remember me
+              </label>
             </div>
-          </CardContent>
-          <CardFooter className="flex flex-col gap-3">
-            <Button 
-              type="submit" 
-              className="w-full"
-              disabled={isLoggingIn}
-            >
-              {isLoggingIn ? "Logging in..." : "Login"}
+            
+            <Button type="submit" className="w-full bg-black text-white hover:bg-black/80">
+              Sign In
             </Button>
-            <div className="text-sm text-muted-foreground text-center">
-              <a href="#" className="text-primary hover:underline">
-                Forgot your password?
-              </a>
+          </form>
+          
+          {!isAdvisor && (
+            <div className="mt-6 text-center text-sm text-gray-600">
+              <p>
+                Don't have an account?{" "}
+                <Link to="/contact" className="text-primary hover:underline">
+                  Contact us
+                </Link>{" "}
+                to get started.
+              </p>
             </div>
-          </CardFooter>
-        </form>
-      </Card>
+          )}
+        </div>
+      </div>
+      
+      <footer className="py-6 px-4 bg-[#1B1B32] text-white text-center">
+        <p>&copy; {new Date().getFullYear()} Boutique Family Office. All rights reserved.</p>
+      </footer>
     </div>
   );
-};
-
-export default LoginPage;
+}

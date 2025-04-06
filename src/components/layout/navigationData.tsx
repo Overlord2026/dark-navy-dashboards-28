@@ -1,3 +1,4 @@
+
 import React from "react";
 import {
   HomeIcon,
@@ -17,8 +18,7 @@ import {
   PieChart,
   ArrowRightLeft,
   Calculator,
-  Receipt,
-  ShieldCheck
+  Receipt
 } from "lucide-react";
 
 type MainMenuItem = {
@@ -74,7 +74,6 @@ export const navigationCategories: NavCategory[] = [
     items: [
       { id: "financial-plans", label: "Financial Plans", icon: LineChartIcon, href: "/financial-plans" },
       { id: "accounts", label: "Accounts Overview", icon: WalletIcon, href: "/accounts" },
-      { id: "personal-insurance", label: "Personal Insurance", icon: ShieldCheck, href: "/personal-insurance" },
       { id: "cash-management", label: "Cash Management", icon: BanknoteIcon, href: "/cash-management" },
       { id: "tax-budgets", label: "Tax & Budgets", icon: Calculator, href: "/tax-budgets" },
       { id: "transfers", label: "Transfers", icon: ArrowRightLeft, href: "/transfers" },
@@ -118,7 +117,7 @@ export const educationSubMenuItems: MenuItem[] = [
   { id: "premium", name: "Premium Courses" },
 ];
 
-// Fund manager submenu items
+// Fund manager submenu for each category with focus on the companies requested
 export const privateEquityProviders: MenuItem[] = [
   { id: "all-pe", name: "All Private Equity", active: true },
   { id: "blackstone-pe", name: "Blackstone" },
@@ -189,20 +188,14 @@ export const getSecondaryMenuItems = (activeMainItem: string): MenuItem[] => {
       return sharingSubMenuItems;
     case "education":
       return educationSubMenuItems;
-    case "tax-budgets":
-      return [];
-    case "transfers":
-      return [];
-    case "cash-management":
-      return [];
     case "private-equity":
-      return [];
+      return []; // No longer shown in the sidebar
     case "private-debt":
-      return [];
+      return []; // No longer shown in the sidebar
     case "real-assets":
-      return [];
+      return []; // No longer shown in the sidebar
     case "digital-assets":
-      return [];
+      return []; // No longer shown in the sidebar
     default:
       return [];
   }

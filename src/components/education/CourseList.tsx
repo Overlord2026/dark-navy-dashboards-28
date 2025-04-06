@@ -11,7 +11,6 @@ interface CourseProps {
   comingSoon?: boolean;
   ghlUrl?: string;
   author?: string;
-  image?: string; // Keep the image property for potential future use
 }
 
 interface CourseListProps {

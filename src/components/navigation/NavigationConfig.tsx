@@ -1,172 +1,167 @@
-
 import {
   HomeIcon,
+  LayoutDashboardIcon,
+  UserIcon,
+  HeartPulseIcon,
+  KeyIcon,
+  BookIcon,
   BarChart3Icon,
-  ShieldIcon,
-  BanknoteIcon,
-  WalletIcon,
-  FileTextIcon,
-  ShareIcon,
   GraduationCapIcon,
+  FileTextIcon,
+  BriefcaseIcon,
+  HomeIcon as PropertyIcon,
+  ShoppingBagIcon,
+  UsersIcon,
   BuildingIcon,
-  Users2Icon,
-  VaultIcon,
-  LineChartIcon,
-  CircleDollarSignIcon,
-  ArchiveIcon,
-  PieChart,
-  ArrowRightLeft,
-  Calculator,
-  Receipt,
-  ShieldCheck,
-  Settings,
-  HelpCircle
+  LandmarkIcon,
+  ShieldCheckIcon,
+  ArrowRightLeftIcon,
+  CreditCardIcon,
+  ScrollTextIcon,
+  BanknoteIcon,
+  Settings2Icon,
+  HelpCircleIcon,
+  LifeBuoyIcon,
+  Wallet,
+  ExternalLink,
 } from "lucide-react";
 
-// Navigation item types
+// Home Section
 export const homeNavItems = [
   {
-    title: "Home",
-    href: "/dashboard",
-    icon: HomeIcon,
-    id: "home"
-  }
-];
-
-export const educationSolutionsNavItems = [
-  {
-    title: "Education Center",
-    href: "/education",
-    icon: GraduationCapIcon,
-    id: "education"
+    title: "Dashboard",
+    href: "/",
+    icon: LayoutDashboardIcon
   },
   {
-    title: "Investments",
-    href: "/investments",
-    icon: BarChart3Icon,
-    id: "investments"
-  },
-  {
-    title: "Tax Planning",
-    href: "/education/tax-planning",
-    icon: PieChart,
-    id: "tax-planning"
-  },
-  {
-    title: "Insurance",
-    href: "/insurance",
-    icon: ShieldIcon,
-    id: "insurance"
-  },
-  {
-    title: "Lending",
-    href: "/lending",
-    icon: BanknoteIcon,
-    id: "lending"
-  },
-  {
-    title: "Estate Planning",
-    href: "/estate-planning",
-    icon: ArchiveIcon,
-    id: "estate-planning"
-  }
-];
-
-export const familyWealthNavItems = [
-  {
-    title: "Financial Plans",
-    href: "/financial-plans",
-    icon: LineChartIcon,
-    id: "financial-plans"
-  },
-  {
-    title: "Accounts Overview",
-    href: "/accounts",
-    icon: WalletIcon,
-    id: "accounts"
-  },
-  {
-    title: "Personal Insurance",
-    href: "/personal-insurance",
-    icon: ShieldCheck,
-    id: "personal-insurance"
+    title: "Customer Profile",
+    href: "/customer-profile",
+    icon: UserIcon
   },
   {
     title: "Cash Management",
     href: "/cash-management",
-    icon: BanknoteIcon,
-    id: "cash-management"
-  },
-  {
-    title: "Tax & Budgets",
-    href: "/tax-budgets",
-    icon: Calculator,
-    id: "tax-budgets"
+    icon: BanknoteIcon
   },
   {
     title: "Transfers",
     href: "/transfers",
-    icon: ArrowRightLeft,
-    id: "transfers"
+    icon: ArrowRightLeftIcon
+  },
+  {
+    title: "Funding Accounts",
+    href: "/funding-accounts",
+    icon: Wallet
+  },
+  {
+    title: "Accounts",
+    href: "/accounts",
+    icon: LandmarkIcon
+  },
+  {
+    title: "Properties",
+    href: "/properties",
+    icon: PropertyIcon
+  }
+];
+
+// Education & Solutions Section
+export const educationSolutionsNavItems = [
+  {
+    title: "Education Center",
+    href: "/education",
+    icon: GraduationCapIcon
+  },
+  {
+    title: "Financial Plans",
+    href: "/financial-plans",
+    icon: FileTextIcon
+  },
+  {
+    title: "Investments",
+    href: "/investments",
+    icon: BarChart3Icon
+  },
+  {
+    title: "Marketplace",
+    href: "/marketplace",
+    icon: ShoppingBagIcon
+  },
+  {
+    title: "Lending",
+    href: "/lending",
+    icon: BuildingIcon
+  },
+  {
+    title: "Insurance",
+    href: "/insurance",
+    icon: ShieldCheckIcon
+  }
+];
+
+// Family Wealth Section
+export const familyWealthNavItems = [
+  {
+    title: "Estate Planning",
+    href: "/estate-planning",
+    icon: ScrollTextIcon
   },
   {
     title: "Secure Family Vault",
     href: "/legacy-vault",
-    icon: VaultIcon,
-    id: "legacy-vault"
+    icon: KeyIcon
   },
   {
     title: "Social Security",
     href: "/social-security",
-    icon: CircleDollarSignIcon,
-    id: "social-security"
+    icon: HeartPulseIcon
   },
   {
-    title: "Real Estate & Properties",
-    href: "/properties",
-    icon: BuildingIcon,
-    id: "properties"
-  },
-  {
-    title: "Bill Pay",
-    href: "/billpay",
-    icon: Receipt,
-    id: "billpay"
+    title: "Tax & Budgets",
+    href: "/tax-budgets",
+    icon: BriefcaseIcon
   }
 ];
 
+// Collaboration Section
 export const collaborationNavItems = [
   {
-    title: "Document Sharing",
+    title: "Documents",
     href: "/documents",
-    icon: FileTextIcon,
-    id: "documents"
+    icon: BookIcon
   },
   {
-    title: "Professional Access",
-    href: "/professionals",
-    icon: Users2Icon,
-    id: "professionals"
-  },
-  {
-    title: "Family Member Access",
+    title: "Sharing",
     href: "/sharing",
-    icon: ShareIcon,
-    id: "sharing"
+    icon: UsersIcon
+  },
+  {
+    title: "Professionals",
+    href: "/professionals",
+    icon: HeartPulseIcon
+  },
+  {
+    title: "Bills Management",
+    href: "/bills-management",
+    icon: CreditCardIcon
   }
 ];
 
+// Bottom Nav Items
 export const bottomNavItems = [
+  {
+    title: "Support",
+    href: "/support",
+    icon: LifeBuoyIcon
+  },
   {
     title: "Settings",
     href: "/settings",
-    icon: Settings,
-    id: "settings"
+    icon: Settings2Icon
   },
   {
     title: "Help",
     href: "/help",
-    icon: HelpCircle,
-    id: "help"
+    icon: HelpCircleIcon
   }
 ];

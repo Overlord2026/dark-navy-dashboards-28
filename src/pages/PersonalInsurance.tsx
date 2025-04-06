@@ -4,7 +4,7 @@ import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { PersonalInsuranceDashboard, TabContext } from "@/components/insurance/PersonalInsuranceDashboard";
+import { PersonalInsuranceDashboard } from "@/components/insurance/PersonalInsuranceDashboard";
 import { LifeInsuranceTab } from "@/components/insurance/LifeInsuranceTab";
 import { AnnuitiesTab } from "@/components/insurance/AnnuitiesTab";
 import { HealthInsuranceTab } from "@/components/insurance/HealthInsuranceTab";
@@ -22,11 +22,11 @@ const PersonalInsurance = () => {
   };
 
   return (
-    <ThreeColumnLayout activeMainItem="family-wealth" title="Personal Insurance">
+    <ThreeColumnLayout activeMainItem="family-wealth" title="Insurance & Annuities">
       <div className="mx-auto w-full max-w-6xl space-y-4 animate-fade-in p-3">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
           <div>
-            <h1 className="text-[24px] font-semibold mb-1">Personal Insurance</h1>
+            <h1 className="text-[24px] font-semibold mb-1">Insurance & Annuities</h1>
             <p className="text-muted-foreground">
               Track and manage your personal insurance policies and annuities
             </p>
@@ -50,9 +50,7 @@ const PersonalInsurance = () => {
             </TabsList>
             
             <TabsContent value="dashboard">
-              <TabContext.Provider value={setActiveTab}>
-                <PersonalInsuranceDashboard />
-              </TabContext.Provider>
+              <PersonalInsuranceDashboard />
             </TabsContent>
             
             <TabsContent value="life">

@@ -124,23 +124,22 @@ const BillPay = () => {
 
   return (
     <ThreeColumnLayout title="Bill Pay">
-      <div className="space-y-6 px-2 sm:px-4 py-4 sm:py-6 max-w-7xl mx-auto">
+      <div className="space-y-6 px-4 py-6 max-w-7xl mx-auto">
         <DashboardHeader 
           heading="Bill Payment Center" 
           text="Manage and schedule all your bill payments from one centralized location."
         />
         
-        <div className="flex flex-wrap gap-2 sm:gap-4 mt-2">
+        <div className="flex flex-wrap gap-4 mt-2">
           <div className="relative group">
             <Button 
               variant="default" 
-              size="sm"
-              className="gap-2 text-xs sm:text-sm sm:size-lg" 
+              size="lg" 
+              className="gap-2" 
               onClick={handleAddNewBill}
             >
-              <Plus className="h-3 w-3 sm:h-4 sm:w-4" />
-              <span className="hidden sm:inline">Create New Bill</span>
-              <span className="inline sm:hidden">New Bill</span>
+              <Plus className="h-4 w-4" />
+              Create New Bill
             </Button>
             <Button
               variant="outline"
@@ -155,13 +154,12 @@ const BillPay = () => {
           <div className="relative group">
             <Button 
               variant="outline" 
-              size="sm"
-              className="gap-2 text-xs sm:text-sm sm:size-lg" 
+              size="lg" 
+              className="gap-2" 
               onClick={handleViewAllBills}
             >
-              <FileText className="h-3 w-3 sm:h-4 sm:w-4" />
-              <span className="hidden sm:inline">View All Bills</span>
-              <span className="inline sm:hidden">All Bills</span>
+              <FileText className="h-4 w-4" />
+              View All Bills
             </Button>
             <Button
               variant="outline"
@@ -176,13 +174,12 @@ const BillPay = () => {
           <div className="relative group">
             <Button 
               variant="outline" 
-              size="sm"
-              className="gap-2 text-xs sm:text-sm sm:size-lg" 
+              size="lg" 
+              className="gap-2" 
               onClick={handleManagePaymentMethods}
             >
-              <CreditCardIcon className="h-3 w-3 sm:h-4 sm:w-4" />
-              <span className="hidden sm:inline">Manage Payment Methods</span>
-              <span className="inline sm:hidden">Payment Methods</span>
+              <CreditCardIcon className="h-4 w-4" />
+              Manage Payment Methods
             </Button>
             <Button
               variant="outline"
@@ -197,13 +194,12 @@ const BillPay = () => {
           <div className="relative group">
             <Button 
               variant="outline" 
-              size="sm"
-              className="gap-2 border-blue-300 text-blue-600 hover:bg-blue-50 hover:text-blue-700 text-xs sm:text-sm sm:size-lg"
+              size="lg" 
+              className="gap-2 border-blue-300 text-blue-600 hover:bg-blue-50 hover:text-blue-700"
               onClick={() => setShowAdvancedProvidersDialog(true)}
             >
-              <ExternalLink className="h-3 w-3 sm:h-4 sm:w-4" />
-              <span className="hidden sm:inline">Advanced Bill Paying Providers</span>
-              <span className="inline sm:hidden">Advanced</span>
+              <ExternalLink className="h-4 w-4" />
+              Advanced Bill Paying Providers
             </Button>
             <Button
               variant="outline"
@@ -216,12 +212,12 @@ const BillPay = () => {
           </div>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mt-4 sm:mt-6">
-          <Card className="md:col-span-2">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
+          <Card className="lg:col-span-2">
             <CardHeader className="flex flex-row items-center justify-between">
               <div>
-                <CardTitle className="text-lg sm:text-xl flex items-center gap-2">
-                  <Calendar className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+                <CardTitle className="text-xl flex items-center gap-2">
+                  <Calendar className="h-5 w-5 text-primary" />
                   Upcoming Bills
                 </CardTitle>
                 <CardDescription>
@@ -229,8 +225,8 @@ const BillPay = () => {
                 </CardDescription>
               </div>
               <div className="relative group">
-                <Button variant="outline" size="sm" onClick={handleAddNewBill} className="text-xs">
-                  <Plus className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+                <Button variant="outline" size="sm" onClick={handleAddNewBill}>
+                  <Plus className="h-4 w-4 mr-2" />
                   Add Bill
                 </Button>
                 <Button
@@ -253,28 +249,28 @@ const BillPay = () => {
                   </Button>
                 </div>
               ) : (
-                <div className="space-y-3 sm:space-y-4">
+                <div className="space-y-4">
                   {upcomingBills.map((bill) => (
-                    <div key={bill.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-2 sm:p-3 bg-background border rounded-lg hover:bg-muted/50 transition-colors">
-                      <div className="flex flex-col mb-2 sm:mb-0">
+                    <div key={bill.id} className="flex items-center justify-between p-3 bg-background border rounded-lg hover:bg-muted/50 transition-colors">
+                      <div className="flex flex-col">
                         <span className="font-medium">{bill.name}</span>
-                        <span className="text-xs sm:text-sm text-muted-foreground">{bill.category}</span>
+                        <span className="text-sm text-muted-foreground">{bill.category}</span>
                       </div>
-                      <div className="flex items-center justify-between sm:justify-normal sm:gap-4">
-                        <div className="flex flex-col items-start sm:items-end">
+                      <div className="flex items-center gap-4">
+                        <div className="flex flex-col items-end">
                           <span className="font-semibold">${bill.amount.toFixed(2)}</span>
-                          <Badge variant={getDueBadgeVariant(bill.dueDate)} className="text-xs">
+                          <Badge variant={getDueBadgeVariant(bill.dueDate)}>
                             Due in {getDaysUntilDue(bill.dueDate)} days
                           </Badge>
                         </div>
-                        <div className="relative group ml-4 sm:ml-0">
+                        <div className="relative group">
                           <Button 
                             variant="secondary" 
                             size="sm"
                             onClick={() => handleQuickPay(bill.id)}
-                            className="whitespace-nowrap text-xs"
+                            className="whitespace-nowrap"
                           >
-                            <CreditCard className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+                            <CreditCard className="h-4 w-4 mr-2" />
                             Pay Now
                           </Button>
                           <Button
@@ -293,103 +289,101 @@ const BillPay = () => {
               )}
             </CardContent>
             <CardFooter className="border-t pt-4 flex justify-center">
-              <Button variant="ghost" size="sm" onClick={handleViewAllBills} className="text-xs sm:text-sm">
+              <Button variant="ghost" size="sm" onClick={handleViewAllBills}>
                 View All Bills
               </Button>
             </CardFooter>
           </Card>
 
-          <Card className="h-fit">
+          <Card>
             <CardHeader>
-              <CardTitle className="text-lg sm:text-xl flex items-center gap-2">
-                <Wallet className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+              <CardTitle className="text-xl flex items-center gap-2">
+                <Wallet className="h-5 w-5 text-primary" />
                 Quick Pay
               </CardTitle>
               <CardDescription>
                 Pay your frequent bills faster
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-3 sm:space-y-4">
+            <CardContent className="space-y-4">
               {frequentBills.map((bill) => (
                 <div 
                   key={bill.id} 
-                  className={`flex items-center justify-between p-2 sm:p-3 border rounded-lg hover:bg-muted/50 transition-colors ${selectedBill === bill.id ? 'border-primary bg-primary/5' : 'bg-card'}`}
+                  className={`flex items-center justify-between p-3 border rounded-lg hover:bg-muted/50 transition-colors ${selectedBill === bill.id ? 'border-primary bg-primary/5' : 'bg-card'}`}
                 >
                   <div className="flex flex-col">
-                    <span className="font-medium text-sm sm:text-base">{bill.name}</span>
-                    <span className="text-xs text-muted-foreground">Acct: {bill.accountNumber}</span>
+                    <span className="font-medium">{bill.name}</span>
+                    <span className="text-sm text-muted-foreground">Acct: {bill.accountNumber}</span>
                   </div>
                   <Button 
                     variant="outline" 
                     size="sm" 
                     onClick={() => handleQuickPay(bill.id)}
-                    className="whitespace-nowrap text-xs"
+                    className="whitespace-nowrap"
                   >
-                    <ArrowUp className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+                    <ArrowUp className="h-4 w-4 mr-2" />
                     ${bill.lastAmount.toFixed(2)}
                   </Button>
                 </div>
               ))}
-              <Button variant="ghost" size="sm" className="w-full text-xs sm:text-sm" onClick={handleAddNewBill}>
-                <Plus className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+              <Button variant="ghost" size="sm" className="w-full" onClick={handleAddNewBill}>
+                <Plus className="h-4 w-4 mr-2" />
                 Add Frequent Bill
               </Button>
             </CardContent>
           </Card>
           
-          <Card className="md:col-span-2 lg:col-span-3">
+          <Card className="lg:col-span-3">
             <CardHeader>
-              <CardTitle className="text-lg sm:text-xl flex items-center gap-2">
-                <Clock className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+              <CardTitle className="text-xl flex items-center gap-2">
+                <Clock className="h-5 w-5 text-primary" />
                 Recent Payments
               </CardTitle>
               <CardDescription>
                 Your payment history from the last 30 days
               </CardDescription>
             </CardHeader>
-            <CardContent className="overflow-x-auto">
+            <CardContent>
               {recentPayments.length === 0 ? (
                 <div className="text-center py-6">
                   <p className="text-muted-foreground">Your payment history will appear here once you've made your first payment.</p>
                 </div>
               ) : (
                 <div className="border rounded-lg overflow-hidden">
-                  <div className="min-w-max">
-                    <table className="w-full">
-                      <thead className="bg-muted/50">
-                        <tr>
-                          <th className="text-left py-2 sm:py-3 px-2 sm:px-4 font-medium text-xs sm:text-sm">Biller</th>
-                          <th className="text-left py-2 sm:py-3 px-2 sm:px-4 font-medium text-xs sm:text-sm">Category</th>
-                          <th className="text-left py-2 sm:py-3 px-2 sm:px-4 font-medium text-xs sm:text-sm">Date</th>
-                          <th className="text-right py-2 sm:py-3 px-2 sm:px-4 font-medium text-xs sm:text-sm">Amount</th>
-                          <th className="text-right py-2 sm:py-3 px-2 sm:px-4 font-medium text-xs sm:text-sm">Status</th>
+                  <table className="w-full">
+                    <thead className="bg-muted/50">
+                      <tr>
+                        <th className="text-left py-3 px-4 font-medium">Biller</th>
+                        <th className="text-left py-3 px-4 font-medium">Category</th>
+                        <th className="text-left py-3 px-4 font-medium">Date</th>
+                        <th className="text-right py-3 px-4 font-medium">Amount</th>
+                        <th className="text-right py-3 px-4 font-medium">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y">
+                      {recentPayments.map((payment) => (
+                        <tr key={payment.id} className="hover:bg-muted/30">
+                          <td className="py-3 px-4">{payment.name}</td>
+                          <td className="py-3 px-4">{payment.category}</td>
+                          <td className="py-3 px-4">{new Date(payment.date).toLocaleDateString()}</td>
+                          <td className="py-3 px-4 text-right font-medium">${payment.amount.toFixed(2)}</td>
+                          <td className="py-3 px-4 text-right">
+                            <Badge variant="success" className="bg-green-100 text-green-800 hover:bg-green-200">
+                              {payment.status}
+                            </Badge>
+                          </td>
                         </tr>
-                      </thead>
-                      <tbody className="divide-y">
-                        {recentPayments.map((payment) => (
-                          <tr key={payment.id} className="hover:bg-muted/30">
-                            <td className="py-2 sm:py-3 px-2 sm:px-4 text-xs sm:text-sm">{payment.name}</td>
-                            <td className="py-2 sm:py-3 px-2 sm:px-4 text-xs sm:text-sm">{payment.category}</td>
-                            <td className="py-2 sm:py-3 px-2 sm:px-4 text-xs sm:text-sm">{new Date(payment.date).toLocaleDateString()}</td>
-                            <td className="py-2 sm:py-3 px-2 sm:px-4 text-right font-medium text-xs sm:text-sm">${payment.amount.toFixed(2)}</td>
-                            <td className="py-2 sm:py-3 px-2 sm:px-4 text-right">
-                              <Badge variant="success" className="bg-green-100 text-green-800 hover:bg-green-200 text-xs">
-                                {payment.status}
-                              </Badge>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
               )}
             </CardContent>
-            <CardFooter className="border-t pt-4 flex flex-col sm:flex-row justify-between gap-2">
-              <Button variant="ghost" size="sm" className="text-xs sm:text-sm w-full sm:w-auto">
+            <CardFooter className="border-t pt-4 flex justify-between">
+              <Button variant="ghost" size="sm">
                 Download Statement
               </Button>
-              <Button variant="ghost" size="sm" onClick={handleViewAllBills} className="text-xs sm:text-sm w-full sm:w-auto">
+              <Button variant="ghost" size="sm" onClick={handleViewAllBills}>
                 View All Transactions
               </Button>
             </CardFooter>

@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
 interface NavigationItemProps {
@@ -37,13 +37,10 @@ export const NavigationItem = ({
         isLightTheme ? "hover:bg-[#E9E7D8] hover:border-primary" : "hover:bg-sidebar-accent hover:border-primary",
         isCollapsed ? "justify-center px-2 my-2" : ""
       )}
+      title={isCollapsed ? item.label : undefined}
     >
       {typeof Icon === 'function' ? (
-        <div className={cn(
-          "flex items-center justify-center rounded-sm p-0.5",
-          isLightTheme ? 'bg-[#222222]' : 'bg-black',
-          !isCollapsed && "mr-3"
-        )}>
+        <div className={`flex items-center justify-center rounded-sm p-0.5 ${isLightTheme ? 'bg-[#222222]' : 'bg-black'} ${!isCollapsed && "mr-3"}`}>
           <Icon />
         </div>
       ) : (

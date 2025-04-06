@@ -1,6 +1,6 @@
 
 import { ReactNode } from "react";
-import { PieChart, BanknoteIcon, ArrowRightLeft, Receipt, Wallet, Calculator } from "lucide-react";
+import { PieChart, BanknoteIcon, ArrowRightLeft } from "lucide-react";
 import { LucideIcon } from "lucide-react";
 
 interface NavigationItem {
@@ -14,7 +14,6 @@ export const navigation: NavigationItem[] = [
   {
     label: "Education & Solutions",
     children: [
-      { label: "Home", href: "/home" },
       { label: "Education Center", href: "/education" },
       { label: "Investments", href: "/investments" },
       { label: "Tax Planning", href: "/education/tax-planning", icon: PieChart },
@@ -32,11 +31,10 @@ export const navigation: NavigationItem[] = [
         icon: BanknoteIcon,
         children: [
           { label: "Transfers", href: "/transfers", icon: ArrowRightLeft },
-          { label: "Bill Pay", href: "/billpay", icon: Receipt }
         ]
       },
-      { label: "Accounts Overview", href: "/accounts", icon: Wallet },
-      { label: "Tax & Budgets", href: "/tax-budgets", icon: Calculator },
+      // Add other financial management items here if needed
     ]
   }
+  // You can add other sections here as needed
 ];

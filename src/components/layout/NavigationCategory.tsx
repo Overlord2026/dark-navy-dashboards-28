@@ -36,56 +36,6 @@ export const NavigationCategory = ({
   isCollapsed,
   isLightTheme
 }: NavigationCategoryProps) => {
-  // Enhanced active item detection with better path normalization
-  const isItemActive = (item: MainMenuItem): boolean => {
-    // Remove trailing slashes from paths for comparison
-    const normalizedCurrentPath = currentPath.replace(/\/+$/, '');
-    const normalizedItemHref = item.href.replace(/^\/+/, '').replace(/\/+$/, '');
-    
-    // Direct match with item href (without leading slash)
-    if (normalizedCurrentPath === normalizedItemHref.replace(/^\//, '')) {
-      return true;
-    }
-    
-    // Direct match with item ID
-    if (normalizedCurrentPath === item.id) {
-      return true;
-    }
-    
-    // Special cases for specific routes
-    if (item.id === 'legacy-vault' && normalizedCurrentPath.includes('legacy-vault')) {
-      return true;
-    }
-    
-    if (item.id === 'tax-planning' && normalizedCurrentPath.includes('tax-planning')) {
-      return true;
-    }
-    
-    if (item.id === 'education' && normalizedCurrentPath.startsWith('education')) {
-      return true;
-    }
-    
-    if (item.id === 'investments' && normalizedCurrentPath.startsWith('investments')) {
-      return true;
-    }
-    
-    if (item.id === 'insurance' && 
-        (normalizedCurrentPath === 'insurance' || normalizedCurrentPath === 'personal-insurance')) {
-      return true;
-    }
-    
-    // Check if the current path starts with the item id or href (for nested routes)
-    if (normalizedCurrentPath.startsWith(`${item.id}/`)) {
-      return true;
-    }
-    
-    if (normalizedItemHref && normalizedCurrentPath.startsWith(`${normalizedItemHref.replace(/^\//, '')}/`)) {
-      return true;
-    }
-    
-    return false;
-  };
-
   return (
     <div key={category.id} className="mb-2">
       {!isCollapsed && (
@@ -110,7 +60,7 @@ export const NavigationCategory = ({
               <NavigationItem
                 key={item.id}
                 item={item}
-                isActive={isItemActive(item)}
+                isActive={item.id === currentPath}
                 isCollapsed={false}
                 isLightTheme={isLightTheme}
               />
@@ -125,7 +75,7 @@ export const NavigationCategory = ({
             <NavigationItem
               key={item.id}
               item={item}
-              isActive={isItemActive(item)}
+              isActive={item.id === currentPath}
               isCollapsed={true}
               isLightTheme={isLightTheme}
             />

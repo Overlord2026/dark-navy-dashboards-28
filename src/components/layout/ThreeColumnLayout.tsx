@@ -1,4 +1,5 @@
-import { ReactNode, useState, useEffect } from "react";
+
+import { ReactNode, useState } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -10,7 +11,6 @@ import { AdvisorSection } from "@/components/profile/AdvisorSection";
 import { NavigationCategory } from "./NavigationCategory";
 import { SecondaryNavigation } from "./SecondaryNavigation";
 import { navigationCategories, getSecondaryMenuItems } from "./navigationData";
-import { NavigationDebugger } from "@/components/diagnostics/NavigationDebugger";
 
 interface ThreeColumnLayoutProps {
   children: ReactNode;
@@ -54,77 +54,43 @@ export function ThreeColumnLayout({
   const params = useParams();
   const location = useLocation();
   
+  const sectionId = params.sectionId || activeSecondaryItem;
+  
+  // Determine the active main item for investment subcategories
+  let currentActiveMainItem = activeMainItem;
   const pathSegments = location.pathname.split('/').filter(Boolean);
   
-  const currentPath = pathSegments[0] || 'dashboard';
-  
-  let currentActiveMainItem = currentPath;
-  
-  if (location.pathname === "/billpay") {
-    currentActiveMainItem = "billpay";
-  } else if (location.pathname === "/accounts") {
-    currentActiveMainItem = "accounts";
-  } else if (location.pathname === "/financial-plans") {
-    currentActiveMainItem = "financial-plans";
-  } else if (location.pathname === "/tax-budgets") {
-    currentActiveMainItem = "tax-budgets";
-  } else if (location.pathname === "/transfers") {
-    currentActiveMainItem = "transfers";
-  } else if (location.pathname === "/cash-management") {
-    currentActiveMainItem = "cash-management";
-  } else if (location.pathname.includes('/education/tax-planning')) {
-    currentActiveMainItem = "tax-planning";
-  } else if (pathSegments.includes('alternative')) {
+  // Special handling for alternative investment subcategories
+  if (pathSegments.includes('alternative')) {
     const categoryId = pathSegments[pathSegments.length - 1];
     if (['private-equity', 'private-debt', 'real-assets', 'digital-assets'].includes(categoryId)) {
       currentActiveMainItem = categoryId;
     }
   }
   
-  console.log("Current location:", location.pathname);
-  console.log("Detected active item:", currentActiveMainItem);
-  
-  useEffect(() => {
-    const activeCategoryId = navigationCategories.find(cat => 
-      cat.items.some(item => item.id === currentActiveMainItem)
-    )?.id;
-    
-    if (activeCategoryId) {
-      setExpandedCategories(prev => ({
-        ...prev,
-        [activeCategoryId]: true
-      }));
-    }
-  }, [currentActiveMainItem]);
-
   const menuItems = secondaryMenuItems || getSecondaryMenuItems(currentActiveMainItem);
   
+  // Hide secondary menu for main investments page but show it for subcategories
   const isMainInvestmentsPage = location.pathname === "/investments";
   const hasSecondaryMenu = !isMainInvestmentsPage && menuItems.length > 0;
   
   const isLightTheme = theme === "light";
   const isHomePage = location.pathname === "/";
 
+  // Improved function to get the current path and handle nested routes
   const getCurrentPath = () => {
     const pathSegments = location.pathname.split('/').filter(Boolean);
-    if (pathSegments.length === 0) return 'dashboard';
+    if (pathSegments.length === 0) return 'home';
     
+    // Special case for tax-planning which is under education
     if (pathSegments.includes('tax-planning')) {
       return 'tax-planning';
     }
     
-    if (location.pathname === "/billpay") return 'billpay';
-    if (location.pathname === "/accounts") return 'accounts';
-    if (location.pathname === "/financial-plans") return 'financial-plans';
-    if (location.pathname === "/tax-budgets") return 'tax-budgets';
-    if (location.pathname === "/transfers") return 'transfers';
-    if (location.pathname === "/cash-management") return 'cash-management';
-    if (location.pathname === "/home") return 'home';
-    
     return pathSegments[0];
   };
 
-  const currentPagePath = getCurrentPath();
+  const currentPath = getCurrentPath();
 
   const toggleCategory = (categoryId: string) => {
     setExpandedCategories(prev => ({
@@ -144,6 +110,7 @@ export function ThreeColumnLayout({
       </div>
       
       <div className="flex flex-1 overflow-hidden">
+        {/* Main Sidebar */}
         <aside
           className={cn(
             "flex flex-col transition-all duration-300 ease-in-out z-30",
@@ -164,7 +131,7 @@ export function ThreeColumnLayout({
                     category={category}
                     isExpanded={expandedCategories[category.id]}
                     toggleCategory={toggleCategory}
-                    currentPath={currentPagePath}
+                    currentPath={currentPath}
                     isCollapsed={mainSidebarCollapsed}
                     isLightTheme={isLightTheme}
                   />
@@ -182,16 +149,19 @@ export function ThreeColumnLayout({
           </div>
         </aside>
 
+        {/* Secondary Sidebar - Hidden for main investments page */}
         {hasSecondaryMenu && (
           <SecondaryNavigation 
             hasSecondaryMenu={hasSecondaryMenu}
             secondarySidebarCollapsed={secondarySidebarCollapsed}
             isLightTheme={isLightTheme}
             activeMainItem={currentActiveMainItem}
+            sectionId={sectionId}
             menuItems={menuItems}
           />
         )}
 
+        {/* Main Content */}
         <div className="flex-1 flex flex-col overflow-hidden">
           {isHomePage ? (
             <div className="flex flex-col items-center w-full">
@@ -201,11 +171,10 @@ export function ThreeColumnLayout({
           <main className="flex-1 overflow-y-auto p-3 font-sans w-full">
             <div className="flex justify-between items-center mb-4">
               <h1 className="text-2xl font-bold">{title}</h1>
+              {/* Tutorial button removed from here */}
             </div>
             {children}
           </main>
-          
-          <NavigationDebugger show={true} />
         </div>
       </div>
     </div>
