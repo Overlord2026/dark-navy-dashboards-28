@@ -1,4 +1,3 @@
-
 // Diagnostics types
 export type DiagnosticTestStatus = "success" | "warning" | "error";
 
@@ -146,11 +145,12 @@ export interface PerformanceTestResult {
   name: string;
   status: DiagnosticTestStatus;
   responseTime: number;
-  threshold: number;  // Added this property
+  threshold: number;
   cpuUsage?: number;
   memoryUsage?: number;
   message?: string;
   details?: any;
+  timestamp?: number;
 }
 
 export interface IconTestResult {

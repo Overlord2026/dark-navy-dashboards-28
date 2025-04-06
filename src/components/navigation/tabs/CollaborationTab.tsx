@@ -1,6 +1,6 @@
 
 import React from "react";
-import { FileTextIcon, Users2, ShareIcon, HeartHandshakeIcon } from "lucide-react";
+import { FileTextIcon, Users2, ShareIcon } from "lucide-react";
 import { NavItem } from "@/types/navigation";
 
 export const collaborationNavItems: NavItem[] = [
@@ -10,12 +10,12 @@ export const collaborationNavItems: NavItem[] = [
     icon: FileTextIcon 
   },
   { 
-    title: "Service Professionals", 
+    title: "Professional Access", 
     href: "/professionals", 
     icon: Users2 
   },
   { 
-    title: "Family Members", 
+    title: "Family Member Access", 
     href: "/sharing", 
     icon: ShareIcon 
   }

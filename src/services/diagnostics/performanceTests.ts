@@ -49,8 +49,7 @@ export const runPerformanceTests = async (): Promise<PerformanceTestResult[]> =>
       responseTime: 320,
       threshold: 1000,
       cpuUsage: 12,
-      memoryUsage: 54,
-      timestamp: Date.now()
+      memoryUsage: 54
     },
     {
       id: uuidv4(),
@@ -60,8 +59,7 @@ export const runPerformanceTests = async (): Promise<PerformanceTestResult[]> =>
       responseTime: 950,
       threshold: 1000,
       cpuUsage: 25,
-      memoryUsage: 78,
-      timestamp: Date.now()
+      memoryUsage: 78
     },
     {
       id: uuidv4(),
@@ -71,8 +69,7 @@ export const runPerformanceTests = async (): Promise<PerformanceTestResult[]> =>
       responseTime: 210,
       threshold: 1000,
       cpuUsage: 8,
-      memoryUsage: 42,
-      timestamp: Date.now()
+      memoryUsage: 42
     },
     {
       id: uuidv4(),
@@ -82,8 +79,7 @@ export const runPerformanceTests = async (): Promise<PerformanceTestResult[]> =>
       responseTime: 3200,
       threshold: 1500,
       cpuUsage: 85,
-      memoryUsage: 92,
-      timestamp: Date.now()
+      memoryUsage: 92
     },
     {
       id: uuidv4(),
@@ -93,8 +89,7 @@ export const runPerformanceTests = async (): Promise<PerformanceTestResult[]> =>
       responseTime: 210,
       threshold: 500,
       cpuUsage: 15,
-      memoryUsage: 35,
-      timestamp: Date.now()
+      memoryUsage: 35
     }
   ];
 };
