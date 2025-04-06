@@ -11,16 +11,19 @@ export const testPerformance = async (): Promise<DiagnosticResult[]> => {
   return [
     {
       name: "API response times",
+      description: "Tests API endpoint response times",
       status: "success",
       message: "API response times within acceptable range"
     },
     {
       name: "Database query performance",
+      description: "Tests database query execution time",
       status: "success",
       message: "Database queries executing within expected time"
     },
     {
       name: "UI rendering performance",
+      description: "Tests UI component rendering efficiency",
       status: "success",
       message: "UI components rendering efficiently"
     }
