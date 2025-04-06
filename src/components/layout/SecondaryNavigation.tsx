@@ -1,103 +1,63 @@
 
 import React from "react";
-import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
-
-type MenuItem = {
-  id: string;
-  label?: string;
-  name?: string;
-  active?: boolean;
-};
 
 interface SecondaryNavigationProps {
   hasSecondaryMenu: boolean;
   secondarySidebarCollapsed: boolean;
   isLightTheme: boolean;
   activeMainItem: string;
-  sectionId: string;
-  menuItems: MenuItem[];
+  menuItems: {
+    id: string;
+    label?: string;
+    name?: string;
+    active?: boolean;
+  }[];
+  sectionId?: string; // Making sectionId optional
 }
 
-export const SecondaryNavigation = ({
+export const SecondaryNavigation: React.FC<SecondaryNavigationProps> = ({
   hasSecondaryMenu,
   secondarySidebarCollapsed,
   isLightTheme,
   activeMainItem,
-  sectionId,
-  menuItems
-}: SecondaryNavigationProps) => {
+  menuItems,
+  sectionId
+}) => {
   if (!hasSecondaryMenu) return null;
 
-  // Skip rendering for alternative investment pages as we've moved these to the main content area
-  if (
-    activeMainItem === "private-equity" || 
-    activeMainItem === "private-debt" || 
-    activeMainItem === "real-assets" || 
-    activeMainItem === "digital-assets"
-  ) {
-    return null;
-  }
-  
-  // Build the link path based on the active main item
-  const getLinkPath = (item: MenuItem) => {
-    if (["investments", "education", "sharing"].includes(activeMainItem)) {
-      // For standard secondary navigation
-      return `/${activeMainItem}/${item.id}`;
-    } else {
-      // Default case for other items
-      return `/${activeMainItem}/${item.id}`;
-    }
-  };
-  
-  // Determine the sidebar header based on active item
-  const getSidebarHeader = () => {
-    if (activeMainItem === "investments") {
-      return "Investment Categories";
-    } else {
-      return "Sections";
-    }
-  };
-  
   return (
     <aside
       className={cn(
-        "flex flex-col transition-all duration-300 ease-in-out z-20",
-        secondarySidebarCollapsed ? "w-[0px]" : "w-[200px]",
-        isLightTheme ? "bg-[#F9F7E8] border-r border-[#DCD8C0]" : "bg-[#1B1B32] border-r border-sidebar-border"
+        "flex flex-col transition-all duration-300 ease-in-out border-r",
+        secondarySidebarCollapsed ? "w-[80px]" : "w-[220px]",
+        isLightTheme ? "bg-[#F9F7E8] border-[#DCD8C0]" : "bg-[#1B1B32] border-white/10"
       )}
     >
-      <div className={`flex items-center h-[70px] px-6 border-b ${isLightTheme ? 'border-[#DCD8C0]' : 'border-sidebar-border'}`}>
-        {!secondarySidebarCollapsed && (
-          <span className={`font-medium truncate ${isLightTheme ? 'text-[#222222]' : 'text-[#E2E2E2]'}`}>
-            {getSidebarHeader()}
-          </span>
-        )}
+      <div className="overflow-y-auto flex-1 p-2">
+        <h3 className="text-sm font-semibold px-3 py-2 mb-2" style={{ color: isLightTheme ? '#222222' : '#E2E2E2' }}>
+          {activeMainItem?.toUpperCase()} {sectionId ? `- ${sectionId}` : ''}
+        </h3>
+        <nav className="space-y-1">
+          {menuItems.map((item) => (
+            <div
+              key={item.id}
+              className={cn(
+                "flex items-center px-3 py-2 text-sm rounded-md cursor-pointer",
+                item.active
+                  ? isLightTheme
+                    ? "bg-[#E9E7D8] text-[#222222] font-medium"
+                    : "bg-black text-white"
+                  : isLightTheme
+                    ? "text-[#222222] hover:bg-[#E9E7D8]"
+                    : "text-sidebar-foreground hover:bg-sidebar-accent"
+              )}
+            >
+              <span>{item.name || item.label}</span>
+            </div>
+          ))}
+        </nav>
       </div>
-
-      {!secondarySidebarCollapsed && (
-        <div className="flex-1 py-6 overflow-y-auto">
-          <nav className="px-4 space-y-2">
-            {menuItems.map((item) => (
-              <Link
-                key={item.id}
-                to={getLinkPath(item)}
-                className={cn(
-                  "group flex items-center py-2 px-3 rounded-md transition-colors text-[14px] border",
-                  item.id === sectionId || item.active
-                    ? isLightTheme 
-                      ? "bg-[#E9E7D8] text-[#222222] font-medium border-primary" 
-                      : "bg-sidebar-accent text-accent border-primary"
-                    : isLightTheme ? "text-[#222222] border-transparent" : "text-[#E2E2E2] border-transparent",
-                  isLightTheme ? "hover:bg-[#E9E7D8] hover:border-primary" : "hover:bg-sidebar-accent hover:border-primary"
-                )}
-              >
-                <span>{item.name || item.label}</span>
-              </Link>
-            ))}
-          </nav>
-        </div>
-      )}
     </aside>
   );
 };
