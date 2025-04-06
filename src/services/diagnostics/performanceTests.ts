@@ -1,96 +1,59 @@
 
-import { logger } from "../logging/loggingService";
-import { PerformanceTestResult, DiagnosticTestStatus } from "./types";
+import { PerformanceTestResult } from './types';
+import { v4 as uuidv4 } from 'uuid';
 
-export async function runPerformanceTests(): Promise<PerformanceTestResult[]> {
-  logger.info("Running performance tests...", undefined, "PerformanceTests");
-  
-  // Simulate performance tests
-  const performanceResults: PerformanceTestResult[] = [];
-  
-  // Test 1: API response time
-  performanceResults.push({
-    name: "API Response Time",
-    status: "success",
-    message: "API average response time within acceptable limits",
-    responseTime: 120,
-    memoryUsage: 42.5,
-    cpuUsage: 15,
-    concurrentUsers: 100,
-    endpoint: "/api/data"
-  });
-  
-  // Test 2: Dashboard loading performance
-  performanceResults.push({
-    name: "Dashboard Loading Time",
-    status: "success",
-    message: "Dashboard loads within acceptable time frame",
-    responseTime: 350,
-    memoryUsage: 68.2,
-    cpuUsage: 22,
-    concurrentUsers: 50,
-    endpoint: "/dashboard"
-  });
-  
-  // Test 3: Profile page performance
-  performanceResults.push({
-    name: "Profile Page Performance",
-    status: "warning",
-    message: "Profile page loading time slightly above threshold",
-    responseTime: 780,
-    memoryUsage: 72.1,
-    cpuUsage: 35,
-    concurrentUsers: 25,
-    endpoint: "/profile"
-  });
-  
-  // Test 4: Search functionality
-  performanceResults.push({
-    name: "Search Performance",
-    status: "error",
-    message: "Search response time exceeds acceptable threshold",
-    responseTime: 2200,
-    memoryUsage: 128.5,
-    cpuUsage: 65,
-    concurrentUsers: 10,
-    endpoint: "/api/search"
-  });
-  
-  // Test 5: Document upload
-  performanceResults.push({
-    name: "Document Upload",
-    status: "success",
-    message: "Document upload processing within acceptable time",
-    responseTime: 450,
-    memoryUsage: 90.3,
-    cpuUsage: 40,
-    concurrentUsers: 5,
-    endpoint: "/api/documents/upload"
-  });
-  
-  // Simulate an async operation
-  await new Promise(resolve => setTimeout(resolve, 1500));
-  
-  logger.info("Performance tests completed", {
-    testCount: performanceResults.length,
-    averageResponseTime: performanceResults.reduce((acc, curr) => acc + curr.responseTime, 0) / performanceResults.length
-  }, "PerformanceTests");
-  
-  return performanceResults;
-}
-
-export function getPerformanceRating(responseTime: number, endpoint: string): DiagnosticTestStatus {
-  // Different thresholds based on endpoint type
-  if (endpoint.includes('/api/')) {
-    if (responseTime < 200) return "success";
-    if (responseTime < 500) return "success";
-    if (responseTime < 1000) return "warning";
-    return "error";
-  } else {
-    // Frontend routes
-    if (responseTime < 500) return "success";
-    if (responseTime < 1000) return "success";
-    if (responseTime < 2000) return "warning";
-    return "error";
-  }
-}
+export const testPerformance = (): PerformanceTestResult[] => {
+  // Sample performance tests
+  return [
+    {
+      id: uuidv4(),
+      name: "Homepage Load",
+      status: "success",
+      responseTime: 245,
+      cpuUsage: 12,
+      memoryUsage: 45.2,
+      message: "Homepage loads within acceptable time",
+      concurrentUsers: 10 // Added for backward compatibility
+    },
+    {
+      id: uuidv4(),
+      name: "Dashboard Load",
+      status: "warning",
+      responseTime: 890,
+      cpuUsage: 45,
+      memoryUsage: 120.5,
+      message: "Dashboard load time approaching threshold",
+      concurrentUsers: 25 // Added for backward compatibility
+    },
+    {
+      id: uuidv4(),
+      name: "Account Details API",
+      status: "error",
+      responseTime: 2450,
+      cpuUsage: 78,
+      memoryUsage: 210.8,
+      message: "Account details API response time exceeds threshold",
+      concurrentUsers: 50 // Added for backward compatibility
+    },
+    {
+      id: uuidv4(),
+      name: "PDF Generation",
+      status: "success",
+      responseTime: 1200,
+      cpuUsage: 65,
+      memoryUsage: 180.3,
+      message: "PDF generation performance within acceptable limits",
+      concurrentUsers: 5 // Added for backward compatibility
+    },
+    {
+      id: uuidv4(),
+      name: "Search Operation",
+      status: "warning",
+      responseTime: 750,
+      cpuUsage: 35,
+      memoryUsage: 90.4,
+      message: "Search performance degrades with large result sets",
+      concurrentUsers: 30 // Added for backward compatibility
+    }
+  ];
+};

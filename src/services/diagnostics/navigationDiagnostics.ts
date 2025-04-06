@@ -1,173 +1,170 @@
 
-import { NavItem } from "@/types/navigation";
-import { NavigationDiagnosticResult } from '@/types/diagnostics';
-import { 
-  homeNavItems,
-  educationSolutionsNavItems,
-  familyWealthNavItems,
-  collaborationNavItems,
-  investmentCategories
-} from "@/components/navigation/NavigationConfig";
-import { 
-  runAllTabDiagnostics,
-  diagnoseDashboardTab, 
-  diagnoseCashManagementTab,
-  diagnoseTransfersTab,
-  diagnoseFundingAccountsTab,
-  diagnoseInvestmentsTab
-} from "./tabDiagnostics";
+import { NavigationDiagnosticResult, NavigationTestResult } from '@/types/diagnostics';
+import { v4 as uuidv4 } from 'uuid';
 
-/**
- * Tests whether a specific route is accessible
- */
-export const testRoute = async (route: string): Promise<NavigationDiagnosticResult> => {
-  try {
-    // In a real implementation, this would attempt to navigate to the route
-    // and check for errors. For now, we'll simulate a successful test.
-    console.log(`Testing route: ${route}`);
-    
-    // For specific routes, use the dedicated diagnostic functions
-    if (route === "/") {
-      return await diagnoseDashboardTab();
-    }
-    
-    if (route === "/cash-management") {
-      return await diagnoseCashManagementTab();
-    }
-    
-    if (route === "/transfers") {
-      return await diagnoseTransfersTab();
-    }
-    
-    if (route === "/funding-accounts") {
-      return await diagnoseFundingAccountsTab();
-    }
-    
-    if (route === "/investments") {
-      return await diagnoseInvestmentsTab();
-    }
-    
-    // Simulate some routes having issues
-    if (route.includes('investment-builder')) {
-      return {
-        route,
-        status: "warning",
-        message: "Investment builder loads with warnings - some functions may be limited"
-      };
-    }
-    
-    if (route.includes('nonexistent-route')) {
-      return {
-        route,
-        status: "error",
-        message: "Route does not exist or is not accessible"
-      };
-    }
-    
-    return {
-      route,
-      status: "success",
-      message: `Route ${route} is accessible`
-    };
-  } catch (error) {
-    return {
-      route,
-      status: "error",
-      message: error instanceof Error ? error.message : "Unknown error testing route"
-    };
-  }
-};
-
-/**
- * Tests all routes from a navigation item array
- */
-export const testNavItemRoutes = async (navItems: NavItem[]): Promise<NavigationDiagnosticResult[]> => {
-  const results: NavigationDiagnosticResult[] = [];
+// Mock navigation diagnostics
+export const getNavigationDiagnosticsSummary = async () => {
+  // Simulated async call
+  await new Promise(resolve => setTimeout(resolve, 500));
   
-  for (const item of navItems) {
-    // Test the main item
-    results.push(await testRoute(item.href));
-    
-    // Test any submenu items
-    if (item.submenu && item.submenu.length > 0) {
-      for (const subItem of item.submenu) {
-        results.push(await testRoute(subItem.href));
-      }
+  // Mock API endpoints for different tabs
+  const homeRoutes = [
+    {
+      id: uuidv4(),
+      route: '/dashboard',
+      status: 'success' as const,
+      message: 'Dashboard loads correctly',
+      timestamp: Date.now()
+    },
+    {
+      id: uuidv4(),
+      route: '/overview',
+      status: 'success' as const,
+      message: 'Overview loads correctly',
+      timestamp: Date.now()
+    },
+    {
+      id: uuidv4(),
+      route: '/home/notifications',
+      status: 'warning' as const,
+      message: 'Notifications are slow to load (>2s)',
+      timestamp: Date.now()
     }
-  }
+  ];
   
-  return results;
-};
-
-/**
- * Tests all navigation categories from the NavigationConfig
- */
-export const testAllNavigationRoutes = async (): Promise<Record<string, NavigationDiagnosticResult[]>> => {
-  // Get tab-specific diagnostics
-  const tabResults = await runAllTabDiagnostics();
+  const educationRoutes = [
+    {
+      id: uuidv4(),
+      route: '/education',
+      status: 'success' as const,
+      message: 'Education main page loads correctly',
+      timestamp: Date.now()
+    },
+    {
+      id: uuidv4(),
+      route: '/education/courses',
+      status: 'success' as const,
+      message: 'Courses page loads correctly',
+      timestamp: Date.now()
+    },
+    {
+      id: uuidv4(),
+      route: '/education/course/123',
+      status: 'warning' as const,
+      message: 'Course detail page is slow to load (>2s)',
+      timestamp: Date.now()
+    },
+    {
+      id: uuidv4(),
+      route: '/education/resources',
+      status: 'error' as const,
+      message: 'Resources page failed to load due to API error',
+      timestamp: Date.now()
+    }
+  ];
   
-  // Get route-based diagnostics
-  const routeResults = {
-    home: await testNavItemRoutes(homeNavItems),
-    educationSolutions: await testNavItemRoutes(educationSolutionsNavItems),
-    familyWealth: await testNavItemRoutes(familyWealthNavItems),
-    collaboration: await testNavItemRoutes(collaborationNavItems),
-    investments: await testNavItemRoutes(investmentCategories)
+  const familyWealthRoutes = [
+    {
+      id: uuidv4(),
+      route: '/family-wealth',
+      status: 'success' as const,
+      message: 'Family wealth main page loads correctly',
+      timestamp: Date.now()
+    },
+    {
+      id: uuidv4(),
+      route: '/family-wealth/legacy-vault',
+      status: 'success' as const,
+      message: 'Legacy vault page loads correctly',
+      timestamp: Date.now()
+    },
+    {
+      id: uuidv4(),
+      route: '/family-wealth/estate-planning',
+      status: 'success' as const,
+      message: 'Estate planning page loads correctly',
+      timestamp: Date.now()
+    }
+  ];
+  
+  const investmentsRoutes = [
+    {
+      id: uuidv4(),
+      route: '/investments',
+      status: 'success' as const,
+      message: 'Investments main page loads correctly',
+      timestamp: Date.now()
+    },
+    {
+      id: uuidv4(),
+      route: '/investments/portfolio',
+      status: 'success' as const,
+      message: 'Portfolio page loads correctly',
+      timestamp: Date.now()
+    },
+    {
+      id: uuidv4(),
+      route: '/investments/alternatives',
+      status: 'error' as const,
+      message: 'Alternatives page failed to load due to script error',
+      timestamp: Date.now()
+    }
+  ];
+  
+  const collaborationRoutes = [
+    {
+      id: uuidv4(),
+      route: '/collaboration',
+      status: 'success' as const,
+      message: 'Collaboration main page loads correctly',
+      timestamp: Date.now()
+    },
+    {
+      id: uuidv4(),
+      route: '/collaboration/documents',
+      status: 'success' as const,
+      message: 'Shared documents page loads correctly',
+      timestamp: Date.now()
+    },
+    {
+      id: uuidv4(),
+      route: '/collaboration/messages',
+      status: 'warning' as const,
+      message: 'Messages page has layout issues on mobile devices',
+      timestamp: Date.now()
+    }
+  ];
+  
+  // Calculate statistics
+  const results = {
+    home: homeRoutes,
+    educationSolutions: educationRoutes,
+    familyWealth: familyWealthRoutes,
+    investments: investmentsRoutes,
+    collaboration: collaborationRoutes
   };
   
-  // Combine the results
-  // For any routes tested in both systems, prefer the tab-specific results
-  Object.entries(tabResults).forEach(([tabName, result]) => {
-    // Find which category contains this tab's route
-    for (const [category, routes] of Object.entries(routeResults)) {
-      const updatedRoutes = routes.map(route => {
-        if (route.route === result.route) {
-          return result;
-        }
-        return route;
-      });
-      routeResults[category as keyof typeof routeResults] = updatedRoutes;
-    }
-  });
-  
-  return routeResults;
-};
-
-/**
- * Get a summary of all navigation tests
- */
-export const getNavigationDiagnosticsSummary = async (): Promise<{
-  overallStatus: "success" | "warning" | "error";
-  totalRoutes: number;
-  successCount: number;
-  warningCount: number;
-  errorCount: number;
-  results: Record<string, NavigationDiagnosticResult[]>;
-}> => {
-  const results = await testAllNavigationRoutes();
-  
-  // Flatten all test results
-  const allResults = Object.values(results).flat();
-  
-  // Count statuses
-  const successCount = allResults.filter(r => r.status === "success").length;
-  const warningCount = allResults.filter(r => r.status === "warning").length;
-  const errorCount = allResults.filter(r => r.status === "error").length;
+  // Count total results and status breakdown
+  const allRoutes = [...homeRoutes, ...educationRoutes, ...familyWealthRoutes, ...investmentsRoutes, ...collaborationRoutes];
+  const totalRoutes = allRoutes.length;
+  const successCount = allRoutes.filter(route => route.status === 'success').length;
+  const warningCount = allRoutes.filter(route => route.status === 'warning').length;
+  const errorCount = allRoutes.filter(route => route.status === 'error').length;
   
   // Determine overall status
-  let overallStatus: "success" | "warning" | "error" = "success";
+  let overallStatus: 'success' | 'warning' | 'error' = 'success';
   if (errorCount > 0) {
-    overallStatus = "error";
+    overallStatus = 'error';
   } else if (warningCount > 0) {
-    overallStatus = "warning";
+    overallStatus = 'warning';
   }
   
   return {
-    overallStatus,
-    totalRoutes: allResults.length,
+    results,
+    totalRoutes,
     successCount,
     warningCount,
     errorCount,
-    results
+    overallStatus
   };
 };

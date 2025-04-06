@@ -1,331 +1,91 @@
 
-import { FormValidationTestResult } from '@/services/diagnostics/types';
-import { testFormValidation } from '@/services/diagnostics/formValidationTests';
-import { logger } from '../logging/loggingService';
+import { FormValidationTestResult } from '../types';
+import { testFormValidation } from './formValidationTests';
+import { v4 as uuidv4 } from 'uuid';
 
-// Define form test data structures
-interface FormField {
-  name: string;
-  value: any;
-  isValid: boolean;
-  expectedErrorMessage?: string;
-}
-
-interface FormTestCase {
-  formId: string;
-  description: string;
-  fields: FormField[];
-  shouldSubmitSuccessfully: boolean;
-}
-
-// Form test data - these are sample test cases for common forms in the app
-const formTestCases: Record<string, FormTestCase[]> = {
-  "login": [
-    {
-      formId: "login",
-      description: "Valid login credentials",
-      fields: [
-        { name: "email", value: "user@example.com", isValid: true },
-        { name: "password", value: "Password123!", isValid: true }
-      ],
-      shouldSubmitSuccessfully: true
+export const getFormValidationDiagnostics = async () => {
+  const results = testFormValidation();
+  
+  // Calculate statistics
+  const total = results.length;
+  const success = results.filter(r => r.status === 'success').length;
+  const warnings = results.filter(r => r.status === 'warning').length;
+  const errors = results.filter(r => r.status === 'error').length;
+  
+  // Generate recommendations for issues
+  const recommendations = results
+    .filter(r => r.status !== 'success')
+    .map(r => ({
+      formName: r.formName,
+      formId: r.id,
+      recommendations: generateRecommendationsForForm(r)
+    }));
+  
+  // Return summary
+  return {
+    results,
+    statistics: {
+      total,
+      success,
+      warnings,
+      errors,
+      passRate: total > 0 ? Math.round((success / total) * 100) : 100
     },
-    {
-      formId: "login",
-      description: "Invalid email format",
-      fields: [
-        { name: "email", value: "userexample.com", isValid: false, expectedErrorMessage: "Invalid email format" },
-        { name: "password", value: "Password123!", isValid: true }
-      ],
-      shouldSubmitSuccessfully: false
-    },
-    {
-      formId: "login",
-      description: "Empty password",
-      fields: [
-        { name: "email", value: "user@example.com", isValid: true },
-        { name: "password", value: "", isValid: false, expectedErrorMessage: "Password is required" }
-      ],
-      shouldSubmitSuccessfully: false
-    }
-  ],
-  "registration": [
-    {
-      formId: "registration",
-      description: "Valid registration details",
-      fields: [
-        { name: "email", value: "newuser@example.com", isValid: true },
-        { name: "password", value: "StrongPass123!", isValid: true },
-        { name: "confirmPassword", value: "StrongPass123!", isValid: true }
-      ],
-      shouldSubmitSuccessfully: true
-    },
-    {
-      formId: "registration",
-      description: "Password mismatch",
-      fields: [
-        { name: "email", value: "newuser@example.com", isValid: true },
-        { name: "password", value: "StrongPass123!", isValid: true },
-        { name: "confirmPassword", value: "DifferentPass123!", isValid: false, expectedErrorMessage: "Passwords do not match" }
-      ],
-      shouldSubmitSuccessfully: false
-    }
-  ],
-  "profile": [
-    {
-      formId: "profile",
-      description: "Valid profile update",
-      fields: [
-        { name: "firstName", value: "Tom", isValid: true },
-        { name: "lastName", value: "Brady", isValid: true },
-        { name: "dateOfBirth", value: new Date("1985-05-03"), isValid: true }
-      ],
-      shouldSubmitSuccessfully: true
-    },
-    {
-      formId: "profile",
-      description: "Missing required field",
-      fields: [
-        { name: "firstName", value: "", isValid: false, expectedErrorMessage: "First name must be at least 2 characters." },
-        { name: "lastName", value: "Brady", isValid: true },
-        { name: "dateOfBirth", value: new Date("1985-05-03"), isValid: true }
-      ],
-      shouldSubmitSuccessfully: false
-    }
-  ],
-  "contact": [
-    {
-      formId: "contact",
-      description: "Valid contact information",
-      fields: [
-        { name: "phone", value: "555-123-4567", isValid: true },
-        { name: "address", value: "123 Main St", isValid: true },
-        { name: "city", value: "Boston", isValid: true },
-        { name: "state", value: "MA", isValid: true },
-        { name: "zipCode", value: "02108", isValid: true }
-      ],
-      shouldSubmitSuccessfully: true
-    },
-    {
-      formId: "contact",
-      description: "Invalid phone format",
-      fields: [
-        { name: "phone", value: "abc-def-ghij", isValid: false, expectedErrorMessage: "Invalid phone number format" },
-        { name: "address", value: "123 Main St", isValid: true },
-        { name: "city", value: "Boston", isValid: true },
-        { name: "state", value: "MA", isValid: true },
-        { name: "zipCode", value: "02108", isValid: true }
-      ],
-      shouldSubmitSuccessfully: false
-    }
-  ],
-  "payment": [
-    {
-      formId: "payment",
-      description: "Valid payment information",
-      fields: [
-        { name: "cardNumber", value: "4111111111111111", isValid: true },
-        { name: "expiryDate", value: "12/25", isValid: true },
-        { name: "cvv", value: "123", isValid: true }
-      ],
-      shouldSubmitSuccessfully: true
-    },
-    {
-      formId: "payment",
-      description: "Invalid card number",
-      fields: [
-        { name: "cardNumber", value: "1234123412341234", isValid: false, expectedErrorMessage: "Invalid card number" },
-        { name: "expiryDate", value: "12/25", isValid: true },
-        { name: "cvv", value: "123", isValid: true }
-      ],
-      shouldSubmitSuccessfully: false
-    },
-    {
-      formId: "payment",
-      description: "Expired card",
-      fields: [
-        { name: "cardNumber", value: "4111111111111111", isValid: true },
-        { name: "expiryDate", value: "12/20", isValid: false, expectedErrorMessage: "Card has expired" },
-        { name: "cvv", value: "123", isValid: true }
-      ],
-      shouldSubmitSuccessfully: false
-    }
-  ],
-  "beneficiaries": [
-    {
-      formId: "beneficiaries",
-      description: "Valid beneficiary information",
-      fields: [
-        { name: "firstName", value: "Jane", isValid: true },
-        { name: "lastName", value: "Doe", isValid: true },
-        { name: "relationship", value: "Spouse", isValid: true },
-        { name: "dateOfBirth", value: new Date("1990-01-01"), isValid: true },
-        { name: "ssn", value: "123-45-6789", isValid: true }
-      ],
-      shouldSubmitSuccessfully: true
-    },
-    {
-      formId: "beneficiaries",
-      description: "Invalid SSN format",
-      fields: [
-        { name: "firstName", value: "Jane", isValid: true },
-        { name: "lastName", value: "Doe", isValid: true },
-        { name: "relationship", value: "Spouse", isValid: true },
-        { name: "dateOfBirth", value: new Date("1990-01-01"), isValid: true },
-        { name: "ssn", value: "123456789", isValid: false, expectedErrorMessage: "Invalid SSN format" }
-      ],
-      shouldSubmitSuccessfully: false
-    }
-  ],
-  "affiliations": [
-    {
-      formId: "affiliations",
-      description: "Valid affiliations information",
-      fields: [
-        { name: "stockExchangeOrFinra", value: "No", isValid: true },
-        { name: "publicCompany", value: "No", isValid: true },
-        { name: "usPoliticallyExposed", value: "No", isValid: true }
-      ],
-      shouldSubmitSuccessfully: true
-    }
-  ]
+    recommendations,
+    timestamp: Date.now()
+  };
 };
 
-/**
- * Run validation tests on application forms
- * Tests both valid and invalid data scenarios
- * 
- * @returns Results of form validation tests
- */
-export const runFormValidationDiagnostics = async (): Promise<FormValidationTestResult[]> => {
-  logger.info('Starting form validation diagnostics', {}, 'FormValidator');
+// Generate recommendations for form issues
+const generateRecommendationsForForm = (formResult: FormValidationTestResult) => {
+  const recommendations = [];
   
-  try {
-    // Get basic form validation test results
-    const baseResults = testFormValidation();
-    
-    // Enhance with detailed test cases
-    const enhancedResults = baseResults.map(formResult => {
-      const testCases = formTestCases[formResult.form] || [];
-      
-      // Count validation issues
-      const failedValidations = testCases.filter(test => !test.shouldSubmitSuccessfully).length;
-      const passedValidations = testCases.filter(test => test.shouldSubmitSuccessfully).length;
-      
-      // Count field validations
-      const fieldTests = testCases.flatMap(test => test.fields);
-      const failedFieldValidations = fieldTests.filter(field => !field.isValid).length;
-      
-      return {
-        ...formResult,
-        testCases: testCases,
-        validationStats: {
-          total: testCases.length,
-          passed: passedValidations,
-          failed: failedValidations,
-          fieldValidations: fieldTests.length,
-          failedFieldValidations
-        }
-      };
+  // Form level recommendations
+  if (formResult.status === 'warning') {
+    recommendations.push({
+      id: uuidv4(),
+      text: `Review form validation in ${formResult.formName} for potential UX improvements`,
+      priority: 'medium',
+      type: 'form'
     });
-    
-    logger.info(`Completed form validation diagnostics for ${enhancedResults.length} forms`, {
-      formsWithIssues: enhancedResults.filter(r => r.status !== 'success').length
-    }, 'FormValidator');
-    
-    return enhancedResults;
-  } catch (error) {
-    logger.error('Error running form validation diagnostics', { error }, 'FormValidator');
-    throw error;
-  }
-};
-
-/**
- * Run a single form validation test
- * 
- * @param formId The ID of the form to test
- * @param testCaseIndex The index of the test case to run (optional)
- * @returns Results of the form validation test
- */
-export const runSingleFormValidationTest = async (formId: string, testCaseIndex?: number): Promise<any> => {
-  const testCases = formTestCases[formId];
-  
-  if (!testCases || testCases.length === 0) {
-    logger.warning(`No test cases found for form: ${formId}`, {}, 'FormValidator');
-    return { success: false, message: `No test cases found for form: ${formId}` };
+  } else if (formResult.status === 'error') {
+    recommendations.push({
+      id: uuidv4(),
+      text: `Fix critical form validation issues in ${formResult.formName}`,
+      priority: 'high',
+      type: 'form'
+    });
   }
   
-  try {
-    if (testCaseIndex !== undefined && testCaseIndex >= 0 && testCaseIndex < testCases.length) {
-      // Run specific test case
-      const testCase = testCases[testCaseIndex];
-      logger.info(`Running single test case for form: ${formId}`, { 
-        testCase: testCase.description 
-      }, 'FormValidator');
-      
-      // Here we would simulate the actual form submission logic
-      // This is simplified for demonstration purposes
-      
-      return {
-        success: true,
-        formId,
-        testCase,
-        result: {
-          submitted: testCase.shouldSubmitSuccessfully,
-          fieldValidations: testCase.fields.map(field => ({
-            field: field.name,
-            value: field.value,
-            valid: field.isValid,
-            errorMessage: field.isValid ? null : field.expectedErrorMessage
-          }))
-        }
-      };
-    } else {
-      // Run all test cases for the form
-      logger.info(`Running all test cases for form: ${formId}`, { 
-        testCaseCount: testCases.length 
-      }, 'FormValidator');
-      
-      const results = testCases.map(testCase => {
-        // Here we would simulate the actual form submission logic
-        // This is simplified for demonstration purposes
-        
-        return {
-          description: testCase.description,
-          submitted: testCase.shouldSubmitSuccessfully,
-          fieldValidations: testCase.fields.map(field => ({
-            field: field.name,
-            value: field.value,
-            valid: field.isValid,
-            errorMessage: field.isValid ? null : field.expectedErrorMessage
-          }))
-        };
-      });
-      
-      return {
-        success: true,
-        formId,
-        results
-      };
-    }
-  } catch (error) {
-    logger.error(`Error running validation test for form: ${formId}`, { error }, 'FormValidator');
-    return { 
-      success: false, 
-      message: `Error running validation test: ${error instanceof Error ? error.message : String(error)}` 
-    };
+  // Field level recommendations
+  if (formResult.fields) {
+    formResult.fields.forEach(field => {
+      if (field.status === 'warning') {
+        recommendations.push({
+          id: uuidv4(),
+          text: `Improve validation for ${field.name || field.fieldName} field in ${formResult.formName}`,
+          priority: 'medium',
+          type: 'field',
+          field: field.name || field.fieldName
+        });
+      } else if (field.status === 'error') {
+        recommendations.push({
+          id: uuidv4(),
+          text: `Fix critical validation for ${field.name || field.fieldName} field in ${formResult.formName}`,
+          priority: 'high',
+          type: 'field',
+          field: field.name || field.fieldName
+        });
+      }
+    });
   }
+  
+  return recommendations;
 };
 
-/**
- * Get a list of all available forms that can be tested
- * 
- * @returns Array of form IDs and descriptions
- */
-export const getAvailableFormTests = (): { formId: string, description: string, testCaseCount: number }[] => {
-  return Object.entries(formTestCases).map(([formId, testCases]) => ({
-    formId,
-    description: `${formId.charAt(0).toUpperCase() + formId.slice(1)} Form`,
-    testCaseCount: testCases.length
-  }));
+// Get a specific form validation test
+export const getFormValidationTest = (formId: string): FormValidationTestResult | null => {
+  const allTests = testFormValidation();
+  // We use either the form property or id for backwards compatibility
+  return allTests.find(t => t.form === formId || t.id === formId) || null;
 };

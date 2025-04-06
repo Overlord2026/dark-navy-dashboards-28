@@ -219,3 +219,25 @@ export interface ApiIntegrationTestResult {
   expectedDataStructure?: string;
   details?: any;
 }
+
+// Add audit event type for accessibility audits
+export type AuditEventType = "user_action" | "system_event" | "security_event" | "accessibility_audit";
+
+// Update AccessibilityAuditResult interface to make element optional
+export interface AccessibilityAuditResult {
+  id: string;
+  url: string;
+  element: string | null;
+  rule: string;
+  message: string;
+  impact: 'critical' | 'serious' | 'moderate' | 'minor';
+  status: 'failed' | 'passed' | 'incomplete';
+  category: string;
+  wcagLevel: 'A' | 'AA' | 'AAA';
+  wcagCriteria: string;
+  helpUrl: string;
+  timestamp: number;
+  code?: string;
+  selector?: string;
+  recommendation?: string;
+}
