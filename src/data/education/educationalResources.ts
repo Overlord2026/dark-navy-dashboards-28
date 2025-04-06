@@ -22,33 +22,5 @@ export const educationalResources: EducationalResources = {
       ghlUrl: "https://ghl.example.com/guides/estate-planning-checklist"
     }
   ],
-  "books": [
-    {
-      id: "book-wealth",
-      title: "The Intelligent Investor",
-      description: "Benjamin Graham's timeless advice on value investing.",
-      isPaid: false,
-      level: "Intermediate",
-      author: "Benjamin Graham",
-      ghlUrl: "https://ghl.example.com/books/intelligent-investor"
-    },
-    {
-      id: "book-retirement",
-      title: "The Power of Zero",
-      description: "How to get to the 0% tax bracket in retirement.",
-      isPaid: false,
-      level: "Beginner",
-      author: "David McKnight",
-      ghlUrl: "https://ghl.example.com/books/power-of-zero"
-    },
-    {
-      id: "book-wealth-mindset",
-      title: "The Psychology of Money",
-      description: "Timeless lessons on wealth, greed, and happiness.",
-      isPaid: false,
-      level: "All Levels",
-      author: "Morgan Housel",
-      ghlUrl: "https://ghl.example.com/books/psychology-of-money"
-    }
-  ]
+  "books": []
 };
