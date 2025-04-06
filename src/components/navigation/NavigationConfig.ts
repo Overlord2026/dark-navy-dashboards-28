@@ -56,7 +56,7 @@ export const educationSolutionsNavItems: NavItem[] = [
   },
   { 
     title: "Tax Planning", 
-    href: "/education/tax-planning", 
+    href: "/tax-planning", 
     icon: PieChart 
   },
   { 
@@ -110,7 +110,7 @@ export const familyWealthNavItems: NavItem[] = [
   },
   { 
     title: "Cash Management", 
-    href: "/banking/cash-management", 
+    href: "/cash-management", 
     icon: BanknoteIcon
   },
   { 

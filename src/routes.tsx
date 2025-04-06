@@ -53,6 +53,7 @@ import SystemDiagnosticsPage from '@/pages/SystemDiagnostics';
 import Lending from '@/pages/Lending';
 import NavigationDiagnostics from '@/pages/NavigationDiagnostics';
 import PerformanceDiagnostics from '@/pages/PerformanceDiagnostics';
+import SystemHealthDashboard from '@/pages/SystemHealthDashboard';
 
 // Mobile
 import MobileHome from '@/pages/mobile/MobileHome';
@@ -62,7 +63,6 @@ import MobileEducation from '@/pages/mobile/MobileEducation';
 import MobileMore from '@/pages/mobile/MobileMore';
 import MobileTransfers from '@/pages/mobile/MobileTransfers';
 import MobileTaxPlanning from '@/pages/mobile/MobileTaxPlanning';
-import SystemHealthDashboard from '@/pages/SystemHealthDashboard';
 
 // Marketing site pages
 import AboutUsPage from '@/pages/AboutUsPage';
@@ -238,6 +238,10 @@ const routes = createBrowserRouter([
   {
     path: '/banking/transfers',
     element: <BankingTransfers />
+  },
+  {
+    path: '/cash-management',
+    element: <CashManagement />
   },
   {
     path: '/banking/cash-management',

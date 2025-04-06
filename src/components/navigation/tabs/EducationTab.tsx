@@ -16,7 +16,7 @@ export const educationNavItems: NavItem[] = [
   },
   { 
     title: "Tax Planning", 
-    href: "/education/tax-planning", 
+    href: "/tax-planning", 
     icon: PieChart 
   },
   { 
@@ -39,7 +39,19 @@ export const educationNavItems: NavItem[] = [
 const EducationTab = () => {
   return (
     <div className="education-tab">
-      {/* Additional education tab specific UI can be added here */}
+      <h2 className="text-xl font-semibold mb-4">Education & Solutions</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {educationNavItems.map((item) => (
+          <a 
+            key={item.href} 
+            href={item.href}
+            className="p-4 border rounded-lg hover:bg-muted/50 transition-colors flex items-center gap-3"
+          >
+            {item.icon && <item.icon className="h-5 w-5 text-primary" />}
+            <span>{item.title}</span>
+          </a>
+        ))}
+      </div>
     </div>
   );
 };
