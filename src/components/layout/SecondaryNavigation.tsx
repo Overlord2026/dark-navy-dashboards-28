@@ -1,5 +1,6 @@
 
 import React from "react";
+import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
 interface SecondaryNavigationProps {
@@ -26,6 +27,17 @@ export const SecondaryNavigation: React.FC<SecondaryNavigationProps> = ({
 }) => {
   if (!hasSecondaryMenu) return null;
 
+  // Build the link path based on the active main item
+  const getLinkPath = (item: { id: string }) => {
+    if (["investments", "education", "sharing"].includes(activeMainItem)) {
+      // For standard secondary navigation
+      return `/${activeMainItem}/${item.id}`;
+    } else {
+      // Default case for other items
+      return `/${activeMainItem}/${item.id}`;
+    }
+  };
+
   return (
     <aside
       className={cn(
@@ -40,8 +52,9 @@ export const SecondaryNavigation: React.FC<SecondaryNavigationProps> = ({
         </h3>
         <nav className="space-y-1">
           {menuItems.map((item) => (
-            <div
+            <Link
               key={item.id}
+              to={getLinkPath(item)}
               className={cn(
                 "flex items-center px-3 py-2 text-sm rounded-md cursor-pointer",
                 item.active
@@ -54,7 +67,7 @@ export const SecondaryNavigation: React.FC<SecondaryNavigationProps> = ({
               )}
             >
               <span>{item.name || item.label}</span>
-            </div>
+            </Link>
           ))}
         </nav>
       </div>

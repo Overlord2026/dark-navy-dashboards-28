@@ -26,7 +26,7 @@ const AppRoutes: React.FC = () => {
     <Routes>
       {/* Public routes that don't require auth */}
       <Route path="/" element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <HomePage />} />
-      <Route path="/home" element={<MainRoutes />} />
+      <Route path="/home" element={<HomePage />} />
       <Route path="/login" element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <LoginPage />} />
       <Route path="/advisor/login" element={isAuthenticated ? <Navigate to="/advisor/dashboard" replace /> : <LoginPage isAdvisor={true} />} />
       <Route path="/advisor/dashboard" element={<AdvisorDashboard />} />
@@ -43,25 +43,25 @@ const AppRoutes: React.FC = () => {
       <Route path="/accessibility/*" element={<PublicRoutes />} />
 
       {/* Direct routes */}
-      <Route path="/dashboard" element={<MainRoutes />} />
-      <Route path="/billpay" element={<MainRoutes />} />
-      <Route path="/accounts" element={<MainRoutes />} />
-      <Route path="/profile" element={<MainRoutes />} />
-      <Route path="/advisor-profile" element={<MainRoutes />} />
-      <Route path="/notifications" element={<MainRoutes />} />
-      <Route path="/settings" element={<MainRoutes />} />
-      <Route path="/help" element={<MainRoutes />} />
+      <Route path="/dashboard/*" element={<MainRoutes />} />
+      <Route path="/billpay/*" element={<MainRoutes />} />
+      <Route path="/accounts/*" element={<MainRoutes />} />
+      <Route path="/profile/*" element={<MainRoutes />} />
+      <Route path="/advisor-profile/*" element={<MainRoutes />} />
+      <Route path="/notifications/*" element={<MainRoutes />} />
+      <Route path="/settings/*" element={<MainRoutes />} />
+      <Route path="/help/*" element={<MainRoutes />} />
       <Route path="/education/*" element={<MainRoutes />} />
       <Route path="/investments/*" element={<MainRoutes />} />
-      <Route path="/insurance" element={<MainRoutes />} />
-      <Route path="/personal-insurance" element={<MainRoutes />} />
-      <Route path="/properties" element={<MainRoutes />} />
-      <Route path="/lending" element={<MainRoutes />} />
-      <Route path="/tax-budgets" element={<MainRoutes />} />
-      <Route path="/transfers" element={<MainRoutes />} />
-      <Route path="/cash-management" element={<MainRoutes />} />
-      <Route path="/social-security" element={<MainRoutes />} />
-      <Route path="/estate-planning" element={<MainRoutes />} />
+      <Route path="/insurance/*" element={<MainRoutes />} />
+      <Route path="/personal-insurance/*" element={<MainRoutes />} />
+      <Route path="/properties/*" element={<MainRoutes />} />
+      <Route path="/lending/*" element={<MainRoutes />} />
+      <Route path="/tax-budgets/*" element={<MainRoutes />} />
+      <Route path="/transfers/*" element={<MainRoutes />} />
+      <Route path="/cash-management/*" element={<MainRoutes />} />
+      <Route path="/social-security/*" element={<MainRoutes />} />
+      <Route path="/estate-planning/*" element={<MainRoutes />} />
       
       {/* Nested routes */}
       <Route path="/finance/*" element={<FinanceRoutes />} />
