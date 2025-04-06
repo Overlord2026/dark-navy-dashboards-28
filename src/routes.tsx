@@ -1,5 +1,4 @@
-
-import { Navigate, createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter } from 'react-router-dom';
 import Index from '@/pages/Index';
 import Dashboard from '@/pages/Dashboard';
 import Accounts from '@/pages/Accounts';
@@ -50,7 +49,7 @@ import SocialSecurity from '@/pages/SocialSecurity';
 import Marketplace from '@/pages/Marketplace';
 import MarketplaceRfp from '@/pages/MarketplaceRfp';
 import MarketplaceRfpDetail from '@/pages/MarketplaceRfpDetail';
-import SystemDiagnostics from '@/pages/SystemDiagnostics';
+import SystemDiagnosticsPage from '@/pages/SystemDiagnostics';
 import Lending from '@/pages/Lending';
 import NavigationDiagnostics from '@/pages/NavigationDiagnostics';
 
@@ -279,7 +278,7 @@ const routes = createBrowserRouter([
   },
   {
     path: '/admin/system-diagnostics',
-    element: <SystemDiagnostics />
+    element: <SystemDiagnosticsPage />
   },
   {
     path: '/admin/system-health',

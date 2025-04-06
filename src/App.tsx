@@ -1,6 +1,6 @@
 
-import { BrowserRouter } from "react-router-dom";
-import AppRoutes from "./routes";
+import { RouterProvider } from "react-router-dom";
+import routes from "./routes";
 import { ThemeProvider } from "@/context/ThemeContext"; // Import from our custom ThemeContext
 import { UserProvider } from "@/context/UserContext";
 import { NetWorthProvider } from "@/context/NetWorthContext";
@@ -23,26 +23,24 @@ const queryClient = new QueryClient({
 
 function App() {
   return (
-    <BrowserRouter>
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider>
-          <UserProvider>
-            <SubscriptionProvider>
-              <NetWorthProvider>
-                <DiagnosticsProvider>
-                  <AdvisorProvider>
-                    <AuthProvider>
-                      <AppRoutes />
-                      <Toaster position="top-right" richColors closeButton />
-                    </AuthProvider>
-                  </AdvisorProvider>
-                </DiagnosticsProvider>
-              </NetWorthProvider>
-            </SubscriptionProvider>
-          </UserProvider>
-        </ThemeProvider>
-      </QueryClientProvider>
-    </BrowserRouter>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider>
+        <UserProvider>
+          <SubscriptionProvider>
+            <NetWorthProvider>
+              <DiagnosticsProvider>
+                <AdvisorProvider>
+                  <AuthProvider>
+                    <RouterProvider router={routes} />
+                    <Toaster position="top-right" richColors closeButton />
+                  </AuthProvider>
+                </AdvisorProvider>
+              </DiagnosticsProvider>
+            </NetWorthProvider>
+          </SubscriptionProvider>
+        </UserProvider>
+      </ThemeProvider>
+    </QueryClientProvider>
   );
 }
 
