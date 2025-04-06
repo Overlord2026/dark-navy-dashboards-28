@@ -1,100 +1,86 @@
-
 import React from "react";
+import { usePathname } from "next/navigation";
+import { SidebarNavItem } from "@/types/navigation";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { cn } from "@/lib/utils";
-import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { 
-  navigationCategories, 
-  bottomNavItems 
-} from "@/components/navigation/NavigationRegistry"; // Using our new registry
-import { UserProfileSection } from "@/components/sidebar/UserProfileSection";
-import { AdvisorSection } from "@/components/profile/AdvisorSection";
-import { SidebarNavCategory } from "@/components/sidebar/SidebarNavCategory";
-import { SidebarBottomNav } from "@/components/sidebar/SidebarBottomNav";
-import { useSidebarState } from "@/hooks/useSidebarState";
-import { useTheme } from "@/context/ThemeContext";
+import { Link } from "react-router-dom";
+import { Home, Plus, Settings } from "lucide-react";
+import SidebarNavCategory from "@/components/sidebar/SidebarNavCategory";
 
-export const Sidebar = () => {
-  const { theme } = useTheme();
-  const isLightTheme = theme === "light";
-  
-  const { 
-    collapsed, 
-    expandedCategories, 
-    expandedSubmenus,
-    toggleSidebar, 
-    toggleCategory, 
-    toggleSubmenu, 
-    isActive 
-  } = useSidebarState(navigationCategories);
+interface SidebarProps {
+  isLightTheme: boolean;
+  collapsed: boolean;
+  navItems: {
+    [key: string]: SidebarNavItem[];
+  };
+  expandedSubmenus: Record<string, boolean>;
+  toggleSubmenu: (id: string) => void;
+  toggleTheme: () => void;
+  onExpand: () => void;
+  onCollapse: () => void;
+}
 
-  const handleBookSession = () => {
-    console.log("Book session clicked");
+const Sidebar: React.FC<SidebarProps> = ({
+  isLightTheme,
+  collapsed,
+  navItems,
+  expandedSubmenus,
+  toggleSubmenu,
+  toggleTheme,
+  onExpand,
+  onCollapse
+}) => {
+  const pathname = usePathname();
+
+  const isActive = (href: string) => {
+    return pathname === href;
   };
 
-  const handleViewProfile = (tabId: string) => {
-    console.log("View profile tab:", tabId);
+  const toggleCategory = (id: string) => {
+    toggleSubmenu(id);
   };
 
   return (
-    <aside
+    <div
       className={cn(
-        "flex flex-col bg-sidebar border-r border-sidebar-border transition-all duration-300 ease-in-out z-50",
-        collapsed ? "w-[70px]" : "w-[240px]",
-        isLightTheme ? "bg-[#F9F7E8] border-[#DCD8C0]" : "bg-[#1B1B32] border-white/10"
+        "flex flex-col w-full bg-sidebar border-r h-full",
+        isLightTheme ? "bg-[#F6F6F6] border-[#E2E2E2]" : "bg-sidebar border-sidebar-border"
       )}
     >
-      <div className="py-4 overflow-y-auto flex-1">
-        <div className={`px-4 ${isLightTheme ? 'border-[#DCD8C0]' : 'border-white/10'} mt-2 mb-4`}>
-          <UserProfileSection showLogo={false} />
+      <div className="flex-1 flex flex-col gap-y-2 py-4">
+        <div className="px-3 py-2 text-center">
+          <Link to="/dashboard">
+            <h1 className="font-bold text-2xl">LOV</h1>
+          </Link>
         </div>
-
-        {navigationCategories.map((category) => (
-          <SidebarNavCategory
-            key={category.id}
-            id={category.id}
-            label={category.label}
-            items={category.items}
-            isExpanded={expandedCategories[category.id]}
-            onToggle={toggleCategory}
-            collapsed={collapsed}
-            isActive={isActive}
-            isLightTheme={isLightTheme}
-            expandedSubmenus={expandedSubmenus}
-            toggleSubmenu={toggleSubmenu}
-          />
-        ))}
-      </div>
-
-      <div className="p-2 border-t mt-auto" style={{ borderColor: isLightTheme ? '#DCD8C0' : 'rgba(255,255,255,0.1)' }}>
-        <div className={`px-2 mb-3 ${isLightTheme ? 'border-[#DCD8C0]' : 'border-white/10'}`}>
-          <AdvisorSection 
-            onViewProfile={handleViewProfile} 
-            onBookSession={handleBookSession} 
-            collapsed={collapsed} 
-          />
+        <div className="space-y-1">
+          {Object.entries(navItems).map(([key, items]) => (
+            <SidebarNavCategory
+              key={key}
+              id={key}
+              label={key}
+              items={items}
+              isExpanded={!!expandedSubmenus[key]}
+              onToggle={toggleCategory}
+              collapsed={collapsed}
+              isActive={isActive}
+              isLightTheme={isLightTheme}
+              expandedSubmenus={expandedSubmenus}
+              toggleSubmenu={toggleSubmenu}
+            />
+          ))}
         </div>
-
-        <SidebarBottomNav 
-          items={bottomNavItems}
-          collapsed={collapsed}
-          isActive={isActive}
-          isLightTheme={isLightTheme}
-        />
       </div>
-
-      <Button
-        variant="ghost"
-        size="icon"
-        className="absolute top-4 -right-4 h-8 w-8 rounded-full bg-background border border-gray-700 text-foreground hover:bg-accent hover:text-sidebar-primary-foreground"
-        onClick={toggleSidebar}
-      >
-        {collapsed ? (
-          <ChevronRightIcon className="h-4 w-4" />
-        ) : (
-          <ChevronLeftIcon className="h-4 w-4" />
-        )}
-      </Button>
-    </aside>
+      <div className="p-3 flex items-center justify-between">
+        <button onClick={toggleTheme} className="text-sm">
+          Toggle Theme
+        </button>
+        <button onClick={collapsed ? onExpand : onCollapse} className="text-sm">
+          {collapsed ? "Expand" : "Collapse"}
+        </button>
+      </div>
+    </div>
   );
 };
+
+export default Sidebar;

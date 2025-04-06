@@ -1,6 +1,6 @@
 
 import { useState, useCallback } from "react";
-import { AccessibilityAuditResult } from "@/types/accessibility";
+import { AccessibilityAuditResult } from "@/types/diagnostics";
 
 /**
  * Hook for running accessibility audits on the current page
@@ -9,6 +9,16 @@ export const useAccessibilityAudit = () => {
   const [auditResults, setAuditResults] = useState<AccessibilityAuditResult[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isRunning, setIsRunning] = useState(false);
+
+  // Calculate audit summary
+  const auditSummary = {
+    critical: auditResults.filter(r => r.impact === "critical").length,
+    serious: auditResults.filter(r => r.impact === "serious").length,
+    moderate: auditResults.filter(r => r.impact === "moderate").length,
+    minor: auditResults.filter(r => r.impact === "minor").length,
+    total: auditResults.length
+  };
 
   /**
    * Run an accessibility audit on the specified selector or the entire page
@@ -16,6 +26,7 @@ export const useAccessibilityAudit = () => {
    */
   const runAudit = useCallback(async (selector = 'body') => {
     setIsLoading(true);
+    setIsRunning(true);
     setError(null);
     
     try {
@@ -27,23 +38,26 @@ export const useAccessibilityAudit = () => {
         {
           id: "1",
           impact: "critical",
-          description: "Images must have alternate text",
           elements: ["img.hero-image", "img.product-thumbnail"],
           helpUrl: "https://dequeuniversity.com/rules/axe/4.4/image-alt",
+          rule: "Images must have alternate text",
+          message: "Images must have alternate text"
         },
         {
           id: "2",
           impact: "serious",
-          description: "Buttons must have discernible text",
           elements: [".action-button", "#submit-form"],
           helpUrl: "https://dequeuniversity.com/rules/axe/4.4/button-name",
+          rule: "Buttons must have discernible text",
+          message: "Buttons must have discernible text"
         },
         {
           id: "3",
           impact: "moderate",
-          description: "Color contrast must be at least 4.5:1",
           elements: [".subtitle", ".footer-text"],
           helpUrl: "https://dequeuniversity.com/rules/axe/4.4/color-contrast",
+          rule: "Color contrast must be at least 4.5:1",
+          message: "Color contrast must be at least 4.5:1"
         }
       ];
       
@@ -53,14 +67,17 @@ export const useAccessibilityAudit = () => {
       console.error('Accessibility audit failed:', err);
     } finally {
       setIsLoading(false);
+      setIsRunning(false);
     }
   }, []);
 
   return {
     auditResults,
     isLoading,
+    isRunning,
     error,
-    runAudit
+    runAudit,
+    auditSummary
   };
 };
 

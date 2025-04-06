@@ -7,7 +7,11 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertTriangle } from "lucide-react";
 
 export default function AccessibilityAudit() {
-  const { auditResults, isRunning, runAudit, auditSummary } = useAccessibilityAudit();
+  const { auditResults, isLoading, runAudit, auditSummary, isRunning } = useAccessibilityAudit();
+
+  const handleRunAudit = () => {
+    runAudit();
+  };
 
   return (
     <ThreeColumnLayout 
@@ -24,7 +28,7 @@ export default function AccessibilityAudit() {
 
         <div className="mb-6">
           <Button 
-            onClick={runAudit} 
+            onClick={handleRunAudit} 
             disabled={isRunning}
             className="mb-4"
           >
@@ -93,7 +97,7 @@ export default function AccessibilityAudit() {
                     </div>
                     <p className="text-muted-foreground mt-2">{issue.message}</p>
                     <div className="mt-2 text-sm">
-                      <span className="text-muted-foreground">Element:</span> {issue.element}
+                      <span className="text-muted-foreground">Element:</span> {issue.element || issue.elements.join(', ')}
                     </div>
                     {issue.recommendation && (
                       <div className="mt-2 p-2 bg-gray-50 dark:bg-gray-900 rounded border border-gray-100 dark:border-gray-800">
