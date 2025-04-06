@@ -12,6 +12,11 @@ export interface NavItem {
   items?: NavItem[];
 }
 
+export interface NavCategory {
+  title: string;
+  items: NavItem[];
+}
+
 export interface SidebarProps {
   isLightTheme: boolean;
   collapsed: boolean;

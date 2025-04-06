@@ -60,3 +60,25 @@ export const validateFormSubmission = (formName: string, formData: Record<string
     }))
   };
 };
+
+// Add the missing exports
+export const runSingleFormValidationTest = async (formId: string, testIndex?: number): Promise<FormValidationTestResult> => {
+  const results = await runFormValidationDiagnostics();
+  if (testIndex !== undefined && testIndex >= 0 && testIndex < results.length) {
+    return results[testIndex];
+  }
+  const foundResult = results.find(result => result.id === formId);
+  return foundResult || {
+    id: formId,
+    name: "Unknown Form",
+    status: "error",
+    message: "Form test not found",
+    timestamp: Date.now(),
+    fields: []
+  };
+};
+
+export const getAvailableFormTests = async (): Promise<string[]> => {
+  const results = await runFormValidationDiagnostics();
+  return results.map(result => result.id);
+};
