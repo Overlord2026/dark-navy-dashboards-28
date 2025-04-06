@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from "react";
-import { NavCategory } from "@/types/navigation";
+import { NavCategory, NavItem } from "@/types/navigation";
 import { useLocation } from "react-router-dom";
 
 export const useSidebarState = (navigationCategories: NavCategory[]) => {
@@ -10,7 +10,7 @@ export const useSidebarState = (navigationCategories: NavCategory[]) => {
   const [collapsed, setCollapsed] = useState(false);
   const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>(
     navigationCategories.reduce((acc, category) => {
-      acc[category.id] = true; // Always default to true for better visibility
+      acc[category.id] = category.defaultExpanded ?? true; // Always default to true for better visibility
       return acc;
     }, {} as Record<string, boolean>)
   );
@@ -32,8 +32,8 @@ export const useSidebarState = (navigationCategories: NavCategory[]) => {
         shouldExpandCategory = category.id;
         
         // If the item has submenus, expand the relevant submenu too
-        if (matchingItem.submenu?.length) {
-          const matchingSubmenu = matchingItem.submenu.find(subItem => 
+        if (matchingItem.items?.length) {
+          const matchingSubmenu = matchingItem.items.find(subItem => 
             path === subItem.href || path.startsWith(`${subItem.href}/`)
           );
           
@@ -70,9 +70,11 @@ export const useSidebarState = (navigationCategories: NavCategory[]) => {
     }));
   };
 
-  const toggleSubmenu = (itemTitle: string, e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
+  const toggleSubmenu = (itemTitle: string, e?: React.MouseEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     setExpandedSubmenus(prev => ({
       ...prev,
       [itemTitle]: !prev[itemTitle]

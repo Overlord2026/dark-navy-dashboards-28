@@ -10,11 +10,15 @@ export interface NavItem {
   icon?: LucideIcon;
   label?: string;
   items?: NavItem[];
+  submenu?: NavItem[]; // Adding this for compatibility with existing code
 }
 
 export interface NavCategory {
+  id: string; // Adding the id property
   title: string;
+  label?: string; // Adding optional label for compatibility
   items: NavItem[];
+  defaultExpanded?: boolean; // Adding this for compatibility
 }
 
 export interface SidebarProps {

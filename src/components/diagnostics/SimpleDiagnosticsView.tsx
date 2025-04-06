@@ -2,13 +2,13 @@
 import React, { useState, useEffect } from "react";
 import { DiagnosticResultItem } from "@/components/diagnostics/DiagnosticResultItem";
 import { Button } from "@/components/ui/button";
-import { DiagnosticTestResult } from "@/types/diagnostics";
+import { DiagnosticResult } from "@/types/diagnostics";
 import { RefreshCw } from "lucide-react";
 
 interface SimpleDiagnosticsViewProps {
   title: string;
   description?: string;
-  results: DiagnosticTestResult[];
+  results: DiagnosticResult[];
   onRunDiagnostics?: () => Promise<void>;
   loading?: boolean;
   showRefreshButton?: boolean;

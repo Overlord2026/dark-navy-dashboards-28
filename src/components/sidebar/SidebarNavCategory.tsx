@@ -1,3 +1,4 @@
+
 import React from "react";
 import { cn } from "@/lib/utils";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -56,7 +57,7 @@ const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
         {item.icon && (
           <item.icon className="mr-2 h-4 w-4" />
         )}
-        <span>{item.title}</span>
+        <span className="whitespace-nowrap overflow-hidden text-ellipsis">{item.title}</span>
         {item.label && (
           <span className="ml-auto rounded-sm bg-secondary px-2 text-xs font-semibold text-secondary-foreground">
             {item.label}
@@ -82,7 +83,7 @@ const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
                 : "hover:bg-accent hover:text-accent-foreground"
             )}
           >
-            {!collapsed && (
+            {!collapsed ? (
               <>
                 <span>{label}</span>
                 <div className="ml-auto">
@@ -93,6 +94,12 @@ const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
                   )}
                 </div>
               </>
+            ) : (
+              // When collapsed, still show a minimal indicator
+              <div className="flex justify-center w-full">
+                <span className="sr-only">{label}</span>
+                <ChevronRight className="h-4 w-4" />
+              </div>
             )}
           </button>
         </CollapsibleTrigger>

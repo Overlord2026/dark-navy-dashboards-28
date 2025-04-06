@@ -4,7 +4,6 @@ import { useLocation } from "react-router-dom";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { cn } from "@/lib/utils";
 import { Link } from "react-router-dom";
-import { Home, Plus, Settings } from "lucide-react";
 import SidebarNavCategory from "@/components/sidebar/SidebarNavCategory";
 import { NavItem, SidebarProps } from "@/types/navigation";
 
@@ -62,11 +61,19 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
       </div>
       <div className="p-3 flex items-center justify-between">
-        <button onClick={toggleTheme} className="text-sm">
-          Toggle Theme
+        <button 
+          onClick={toggleTheme} 
+          className={cn("text-sm", isLightTheme ? "text-[#222222]" : "text-[#E2E2E2]")}
+        >
+          {!collapsed && "Toggle Theme"}
+          {collapsed && <span className="sr-only">Toggle Theme</span>}
         </button>
-        <button onClick={collapsed ? onExpand : onCollapse} className="text-sm">
-          {collapsed ? "Expand" : "Collapse"}
+        <button 
+          onClick={collapsed ? onExpand : onCollapse} 
+          className={cn("text-sm", isLightTheme ? "text-[#222222]" : "text-[#E2E2E2]")}
+        >
+          {!collapsed && (collapsed ? "Expand" : "Collapse")}
+          {collapsed && <span className="sr-only">{collapsed ? "Expand" : "Collapse"}</span>}
         </button>
       </div>
     </div>

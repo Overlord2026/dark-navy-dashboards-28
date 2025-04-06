@@ -47,9 +47,13 @@ export const NavigationItem = ({
         )}
       </div>
       
-      {!isCollapsed && (
-        <span className="whitespace-nowrap overflow-hidden text-ellipsis">{item.label}</span>
-      )}
+      {/* Always render the text label, but use CSS to hide it when collapsed */}
+      <span className={cn(
+        "whitespace-nowrap overflow-hidden text-ellipsis",
+        isCollapsed ? "sr-only md:not-sr-only md:hidden" : ""
+      )}>
+        {item.label}
+      </span>
     </Link>
   );
 };

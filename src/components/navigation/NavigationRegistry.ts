@@ -12,24 +12,28 @@ import { NavCategory } from "@/types/navigation";
 export const navigationCategories: NavCategory[] = [
   {
     id: "home",
+    title: "HOME",
     label: "HOME",
     items: homeNavItems,
     defaultExpanded: true
   },
   {
     id: "education-solutions",
+    title: "EDUCATION & SOLUTIONS",
     label: "EDUCATION & SOLUTIONS",
     items: educationNavItems,
     defaultExpanded: true
   },
   {
     id: "family-wealth",
+    title: "FAMILY WEALTH",
     label: "FAMILY WEALTH",
     items: familyWealthNavItems,
     defaultExpanded: true
   },
   {
     id: "collaboration",
+    title: "COLLABORATION & SHARING",
     label: "COLLABORATION & SHARING",
     items: collaborationNavItems,
     defaultExpanded: true

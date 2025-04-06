@@ -34,14 +34,19 @@ export const SidebarBottomNav: React.FC<SidebarBottomNavProps> = ({
           )}
           title={collapsed ? item.title : undefined}
         >
-          <item.icon 
-            className={cn(
-              "h-5 w-5 flex-shrink-0", 
-              !collapsed && "mr-3"
-            )} 
-          />
+          {item.icon && (
+            <item.icon 
+              className={cn(
+                "h-5 w-5 flex-shrink-0", 
+                !collapsed && "mr-3"
+              )} 
+            />
+          )}
           {!collapsed && (
             <span className="whitespace-nowrap overflow-hidden text-ellipsis">{item.title}</span>
+          )}
+          {collapsed && (
+            <span className="sr-only">{item.title}</span>
           )}
         </Link>
       ))}
