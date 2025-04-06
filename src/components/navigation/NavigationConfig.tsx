@@ -132,14 +132,14 @@ export const familyWealthNavItems = [
 // Collaboration Section
 export const collaborationNavItems = [
   {
-    title: "Sharing",
+    title: "Family Members",
     href: "/sharing",
     icon: UsersIcon
   },
   {
-    title: "Professionals",
+    title: "Service Professionals",
     href: "/professionals",
-    icon: HeartPulseIcon
+    icon: BriefcaseIcon
   },
   {
     title: "Bills Management",

@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from "react";
-import { InfoIcon, CheckCircle } from "lucide-react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { InfoIcon } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -10,8 +10,6 @@ import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
-import { ProfessionalType } from "@/types/professional";
 
 type AddCollaboratorDialogProps = {
   onAddCollaborator: (collaborator: {
@@ -132,7 +130,7 @@ export function AddCollaboratorDialog({
 
   return (
     <Dialog open={dialogOpen} onOpenChange={handleDialogOpenChange}>
-      {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
+      {trigger && <div>{trigger}</div>}
       
       <DialogContent className="sm:max-w-md bg-[#030a1c] text-white border-gray-800">
         {!showSuccess ? (
@@ -258,35 +256,30 @@ export function AddCollaboratorDialog({
                                 <SelectContent className="bg-[#030a1c] border-gray-700 text-white">
                                   <SelectGroup>
                                     <SelectLabel>Family Member</SelectLabel>
-                                    <SelectItem value="aunt">Aunt</SelectItem>
-                                    <SelectItem value="brother">Brother</SelectItem>
+                                    <SelectItem value="spouse">Spouse</SelectItem>
+                                    <SelectItem value="son">Son</SelectItem>
                                     <SelectItem value="daughter">Daughter</SelectItem>
-                                    <SelectItem value="domestic_partner">Domestic Partner</SelectItem>
                                     <SelectItem value="father">Father</SelectItem>
-                                    <SelectItem value="father_in_law">Father-in-law</SelectItem>
+                                    <SelectItem value="mother">Mother</SelectItem>
+                                    <SelectItem value="brother">Brother</SelectItem>
+                                    <SelectItem value="sister">Sister</SelectItem>
                                     <SelectItem value="grandfather">Grandfather</SelectItem>
                                     <SelectItem value="grandmother">Grandmother</SelectItem>
-                                    <SelectItem value="granddaughter">Granddaughter</SelectItem>
-                                    <SelectItem value="grandson">Grandson</SelectItem>
-                                    <SelectItem value="mother">Mother</SelectItem>
-                                    <SelectItem value="mother_in_law">Mother-in-law</SelectItem>
-                                    <SelectItem value="nephew">Nephew</SelectItem>
-                                    <SelectItem value="niece">Niece</SelectItem>
-                                    <SelectItem value="other_individual">Other Individual</SelectItem>
-                                    <SelectItem value="sister">Sister</SelectItem>
-                                    <SelectItem value="son">Son</SelectItem>
-                                    <SelectItem value="spouse">Spouse</SelectItem>
+                                    <SelectItem value="aunt">Aunt</SelectItem>
                                     <SelectItem value="uncle">Uncle</SelectItem>
+                                    <SelectItem value="cousin">Cousin</SelectItem>
+                                    <SelectItem value="other_family">Other Family Member</SelectItem>
                                   </SelectGroup>
                                   <SelectGroup>
                                     <SelectLabel>Service Professional</SelectLabel>
                                     <SelectItem value="accountant">Accountant</SelectItem>
-                                    <SelectItem value="estate_lawyer">Estate Lawyer</SelectItem>
+                                    <SelectItem value="attorney">Attorney</SelectItem>
                                     <SelectItem value="financial_advisor">Financial Advisor</SelectItem>
+                                    <SelectItem value="insurance_agent">Insurance Agent</SelectItem>
+                                    <SelectItem value="tax_professional">Tax Professional</SelectItem>
                                     <SelectItem value="property_manager">Property Manager</SelectItem>
-                                    <SelectItem value="insurance_broker">Insurance Broker</SelectItem>
-                                    <SelectItem value="realtor">Realtor</SelectItem>
-                                    <SelectItem value="banker">Banker</SelectItem>
+                                    <SelectItem value="estate_planner">Estate Planner</SelectItem>
+                                    <SelectItem value="other_professional">Other Professional</SelectItem>
                                   </SelectGroup>
                                 </SelectContent>
                               </Select>
