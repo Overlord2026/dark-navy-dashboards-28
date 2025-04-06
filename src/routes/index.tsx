@@ -2,6 +2,7 @@
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useUser } from "../context/UserContext";
+import { useAuth } from "../context/AuthContext";
 
 // Import components
 import PublicRoutes from "./PublicRoutes";
@@ -12,9 +13,12 @@ import AdvisorRoutes from "./AdvisorRoutes";
 import AdminRoutes from "./AdminRoutes";
 import LoginPage from "../pages/LoginPage";
 import HomePage from "../pages/HomePage";
+import AdvisorDashboard from "../pages/AdvisorDashboard";
 
 const AppRoutes: React.FC = () => {
-  const { isAuthenticated, userProfile } = useUser();
+  const { userProfile } = useUser();
+  const { isAuthenticated } = useAuth();
+  
   const isAdmin = userProfile?.role === "admin" || userProfile?.role === "system_administrator";
   const isDeveloper = isAdmin || userProfile?.role === "developer";
   
@@ -23,8 +27,9 @@ const AppRoutes: React.FC = () => {
       {/* Public routes that don't require auth */}
       <Route path="/" element={<HomePage />} />
       <Route path="/home" element={<HomePage />} />
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/advisor/login" element={<LoginPage isAdvisor={true} />} />
+      <Route path="/login" element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <LoginPage />} />
+      <Route path="/advisor/login" element={isAuthenticated ? <Navigate to="/advisor/dashboard" replace /> : <LoginPage isAdvisor={true} />} />
+      <Route path="/advisor/dashboard" element={<AdvisorDashboard />} />
 
       {/* Public content routes */}
       <Route path="/services/*" element={<PublicRoutes />} />

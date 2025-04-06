@@ -1,6 +1,7 @@
 
 import React from "react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, Navigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import Dashboard from "../pages/Dashboard";
 import Notifications from "../pages/Notifications";
 import Settings from "../pages/Settings";
@@ -16,11 +17,21 @@ import NotFound from "../pages/NotFound";
 import Properties from "../pages/Properties";
 import BillPay from "../pages/BillPay";
 import Lending from "../pages/Lending";
+import LoginPage from "../pages/LoginPage";
+import Index from "../pages/Index";
 
 const MainRoutes = () => {
+  const { isAuthenticated } = useAuth();
+
+  // If not authenticated, redirect to login
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+
   return (
     <Routes>
-      <Route path="/" element={<Dashboard />} />
+      <Route path="/" element={<Index />} />
+      <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/notifications" element={<Notifications />} />
       <Route path="/settings" element={<Settings />} />
       <Route path="/help" element={<Help />} />
