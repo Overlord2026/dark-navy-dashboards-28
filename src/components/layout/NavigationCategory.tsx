@@ -8,6 +8,7 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { NavItem } from "@/types/navigation";
+import { cn } from "@/lib/utils";
 
 interface MainMenuItem {
   id: string;

@@ -6,7 +6,7 @@ import { useLocation } from "react-router-dom";
 export const useSidebarState = (navigationCategories: NavCategory[]) => {
   const location = useLocation();
   
-  // Initialize with all categories expanded by default
+  // Initialize with all categories expanded by default and not collapsed
   const [collapsed, setCollapsed] = useState(false);
   const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>(
     navigationCategories.reduce((acc, category) => {

@@ -125,13 +125,14 @@ export const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
                 <Sparkles className="h-3 w-3 text-[#9b87f5]" />
               </span>
             )}
-            <item.icon 
-              className={cn(
-                "h-5 w-5 flex-shrink-0", 
-                !collapsed && "mr-3",
-                tutorialNotViewed && "text-[#9b87f5]"
-              )} 
-            />
+            <span className={cn("flex-shrink-0", !collapsed && "mr-3")}>
+              <item.icon 
+                className={cn(
+                  "h-5 w-5", 
+                  tutorialNotViewed && "text-[#9b87f5]"
+                )} 
+              />
+            </span>
             {!collapsed && (
               <span className={cn(
                 "whitespace-nowrap overflow-hidden text-ellipsis flex-1",
