@@ -63,8 +63,13 @@ export function ThreeColumnLayout({
   // Get the first segment as the current path
   const currentPath = pathSegments[0] || 'dashboard';
   
-  // Special handling for alternative investment subcategories
-  if (pathSegments.includes('alternative')) {
+  // Special handling for specific paths
+  if (location.pathname === "/billpay") {
+    currentActiveMainItem = "billpay";
+  } else if (location.pathname === "/accounts") {
+    currentActiveMainItem = "accounts";
+  } else if (pathSegments.includes('alternative')) {
+    // Special handling for alternative investment subcategories
     const categoryId = pathSegments[pathSegments.length - 1];
     if (['private-equity', 'private-debt', 'real-assets', 'digital-assets'].includes(categoryId)) {
       currentActiveMainItem = categoryId;
@@ -89,6 +94,10 @@ export function ThreeColumnLayout({
     if (pathSegments.includes('tax-planning')) {
       return 'tax-planning';
     }
+    
+    // Special paths mapping
+    if (location.pathname === "/billpay") return 'billpay';
+    if (location.pathname === "/accounts") return 'accounts';
     
     return pathSegments[0];
   };

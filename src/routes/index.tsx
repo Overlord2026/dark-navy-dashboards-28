@@ -42,10 +42,23 @@ const AppRoutes: React.FC = () => {
       <Route path="/disclosures/*" element={<PublicRoutes />} />
       <Route path="/accessibility/*" element={<PublicRoutes />} />
 
-      {/* Client portal routes - these were causing the issue */}
-      <Route path="/*" element={<MainRoutes />} />
-      <Route path="/dashboard/*" element={<MainRoutes />} />
-      <Route path="/billpay/*" element={<MainRoutes />} />
+      {/* Direct routes */}
+      <Route path="/dashboard" element={<MainRoutes />} />
+      <Route path="/billpay" element={<MainRoutes />} />
+      <Route path="/accounts" element={<MainRoutes />} />
+      <Route path="/profile" element={<MainRoutes />} />
+      <Route path="/advisor-profile" element={<MainRoutes />} />
+      <Route path="/notifications" element={<MainRoutes />} />
+      <Route path="/settings" element={<MainRoutes />} />
+      <Route path="/help" element={<MainRoutes />} />
+      <Route path="/education/*" element={<MainRoutes />} />
+      <Route path="/investments/*" element={<MainRoutes />} />
+      <Route path="/insurance" element={<MainRoutes />} />
+      <Route path="/personal-insurance" element={<MainRoutes />} />
+      <Route path="/properties" element={<MainRoutes />} />
+      <Route path="/lending" element={<MainRoutes />} />
+      
+      {/* Nested routes */}
       <Route path="/finance/*" element={<FinanceRoutes />} />
       <Route path="/wealth/*" element={<WealthRoutes />} />
       <Route path="/advisor/*" element={<AdvisorRoutes />} />
@@ -59,8 +72,8 @@ const AppRoutes: React.FC = () => {
         <Route path="/dev/*" element={<Navigate to="/" replace />} />
       )}
 
-      {/* Catch all route */}
-      <Route path="*" element={<Navigate to="/" replace />} />
+      {/* Catch all route - must be last */}
+      <Route path="*" element={<MainRoutes />} />
     </Routes>
   );
 };

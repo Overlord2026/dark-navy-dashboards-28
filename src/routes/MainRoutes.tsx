@@ -19,6 +19,7 @@ import BillPay from "../pages/BillPay";
 import Lending from "../pages/Lending";
 import LoginPage from "../pages/LoginPage";
 import Index from "../pages/Index";
+import Accounts from "../pages/Accounts";
 
 const MainRoutes = () => {
   const { isAuthenticated } = useAuth();
@@ -52,6 +53,7 @@ const MainRoutes = () => {
       <Route path="/personal-insurance" element={<PersonalInsurance />} />
       <Route path="/properties" element={<Properties />} />
       <Route path="/billpay" element={<BillPay />} />
+      <Route path="/accounts" element={<Accounts />} />
       <Route path="/lending" element={<Lending />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
