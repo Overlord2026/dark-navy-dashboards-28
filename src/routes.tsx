@@ -90,9 +90,7 @@ import {
   SettingsPage 
 } from '@/pages/TabPages';
 
-// Import page components directly
-import TaxPlanning from '@/pages/TaxPlanning';
-import CashManagement from '@/pages/CashManagement';
+// Removed duplicate imports that were causing the error
 
 const routes = createBrowserRouter([
   {
@@ -380,15 +378,7 @@ const routes = createBrowserRouter([
     element: <SettingsPage />
   },
   
-  // Add direct routes for Tax Planning and Cash Management
-  {
-    path: '/tax-planning',
-    element: <TaxPlanning />
-  },
-  {
-    path: '/banking/cash-management',
-    element: <CashManagement />
-  },
+  // Education tax planning route (using the already imported TaxPlanning component)
   {
     path: '/education/tax-planning',
     element: <TaxPlanning />

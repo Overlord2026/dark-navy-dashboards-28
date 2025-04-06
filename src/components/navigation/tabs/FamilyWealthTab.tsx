@@ -1,31 +1,55 @@
 
 import React from "react";
 import { 
-  WalletIcon, 
-  BuildingIcon, 
+  LineChartIcon, 
   BanknoteIcon, 
-  ArrowRightLeft,
+  ArrowRightLeft, 
+  BuildingIcon, 
+  VaultIcon,
   CircleDollarSignIcon,
   Receipt,
-  Calculator
+  Calculator,
+  Diamond,
+  Car,
+  Palette
 } from "lucide-react";
 import { NavItem } from "@/types/navigation";
 
 export const familyWealthNavItems: NavItem[] = [
   { 
-    title: "Accounts Overview", 
-    href: "/accounts", 
-    icon: WalletIcon 
+    title: "Financial Plans", 
+    href: "/financial-plans", 
+    icon: LineChartIcon 
   },
   { 
-    title: "Real Estate", 
+    title: "All Assets", 
+    href: "/all-assets", 
+    icon: Diamond 
+  },
+  { 
+    title: "Cash Management", 
+    href: "/banking/cash-management", 
+    icon: BanknoteIcon
+  },
+  { 
+    title: "Transfers", 
+    href: "/transfers", 
+    icon: ArrowRightLeft 
+  },
+  { 
+    title: "Properties", 
     href: "/properties", 
     icon: BuildingIcon 
   },
   { 
-    title: "Cash Management", 
-    href: "/cash-management", 
-    icon: BanknoteIcon
+    title: "Vehicles & Collectibles", 
+    href: "/all-assets", 
+    icon: Car 
+  },
+  { 
+    title: "Art & Valuables", 
+    href: "/all-assets", 
+    icon: Palette 
   },
   { 
     title: "Tax & Budgets", 
@@ -33,9 +57,9 @@ export const familyWealthNavItems: NavItem[] = [
     icon: Calculator 
   },
   { 
-    title: "Transfers", 
-    href: "/transfers", 
-    icon: ArrowRightLeft 
+    title: "Secure Family Vault", 
+    href: "/legacy-vault", 
+    icon: VaultIcon 
   },
   { 
     title: "Social Security", 
@@ -52,7 +76,19 @@ export const familyWealthNavItems: NavItem[] = [
 const FamilyWealthTab = () => {
   return (
     <div className="family-wealth-tab">
-      {/* Additional family wealth tab specific UI can be added here */}
+      {/* Family wealth tab specific UI content */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {familyWealthNavItems.map((item) => (
+          <a 
+            key={item.href} 
+            href={item.href}
+            className="p-4 border rounded-lg hover:bg-muted/50 transition-colors flex items-center gap-3"
+          >
+            {item.icon && <item.icon className="h-5 w-5 text-primary" />}
+            <span>{item.title}</span>
+          </a>
+        ))}
+      </div>
     </div>
   );
 };
