@@ -85,34 +85,43 @@ export default function Sharing() {
         </div>
         
         <Tabs defaultValue="members" className="w-full">
-          <TabsList className="mb-4">
-            <TabsTrigger value="members" className="flex gap-2 items-center">
-              <Users size={16} />
-              <span>Family Members</span>
+          <TabsList className="mb-6 p-1.5 bg-muted/50 rounded-lg">
+            <TabsTrigger 
+              value="members" 
+              className="flex gap-3 items-center px-5 py-2.5 text-base rounded-md"
+            >
+              <Users size={18} className="text-blue-600" />
+              <span className="font-medium">Family Members</span>
             </TabsTrigger>
-            <TabsTrigger value="shared-content" className="flex gap-2 items-center">
-              <FileText size={16} />
-              <span>Shared Content</span>
+            <TabsTrigger 
+              value="shared-content" 
+              className="flex gap-3 items-center px-5 py-2.5 text-base rounded-md"
+            >
+              <FileText size={18} className="text-green-600" />
+              <span className="font-medium">Shared Content</span>
             </TabsTrigger>
-            <TabsTrigger value="access-settings" className="flex gap-2 items-center">
-              <ShieldCheck size={16} />
-              <span>Access Settings</span>
+            <TabsTrigger 
+              value="access-settings" 
+              className="flex gap-3 items-center px-5 py-2.5 text-base rounded-md"
+            >
+              <ShieldCheck size={18} className="text-amber-600" />
+              <span className="font-medium">Access Settings</span>
             </TabsTrigger>
           </TabsList>
           
           <TabsContent value="members" className="space-y-4">
-            <Card className="border border-border/30 p-6">
+            <Card className="border border-border/30 p-6 rounded-xl shadow-sm">
               {collaborators.length > 0 ? (
                 <div className="space-y-4">
                   <table className="w-full">
                     <thead>
                       <tr className="border-b">
-                        <th className="text-left p-2">Name</th>
-                        <th className="text-left p-2">Email</th>
-                        <th className="text-left p-2">Role</th>
-                        <th className="text-left p-2">Access Level</th>
-                        <th className="text-left p-2">Date Added</th>
-                        <th className="text-right p-2">Actions</th>
+                        <th className="text-left p-2 font-medium text-muted-foreground">Name</th>
+                        <th className="text-left p-2 font-medium text-muted-foreground">Email</th>
+                        <th className="text-left p-2 font-medium text-muted-foreground">Role</th>
+                        <th className="text-left p-2 font-medium text-muted-foreground">Access Level</th>
+                        <th className="text-left p-2 font-medium text-muted-foreground">Date Added</th>
+                        <th className="text-right p-2 font-medium text-muted-foreground">Actions</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -143,12 +152,12 @@ export default function Sharing() {
                 </div>
               ) : (
                 <div className="text-center py-10">
-                  <Users size={48} className="mx-auto text-muted-foreground mb-4" />
-                  <h3 className="text-lg font-medium mb-2">No Family Members Added</h3>
-                  <p className="text-muted-foreground text-sm max-w-md mx-auto mb-4">
+                  <Users size={60} className="mx-auto text-blue-600/60 mb-4" />
+                  <h3 className="text-xl font-medium mb-3">No Family Members Added</h3>
+                  <p className="text-muted-foreground text-base max-w-md mx-auto mb-6">
                     Share access with your family members by inviting them to collaborate on financial planning, document access, and more.
                   </p>
-                  <Button onClick={handleGetStarted}>
+                  <Button onClick={handleGetStarted} size="lg" className="px-6">
                     Add Family Member
                   </Button>
                 </div>
@@ -157,26 +166,26 @@ export default function Sharing() {
           </TabsContent>
           
           <TabsContent value="shared-content">
-            <Card className="border border-border/30 p-6">
+            <Card className="border border-border/30 p-6 rounded-xl shadow-sm">
               <h2 className="text-xl font-medium mb-4">Shared Content</h2>
-              <div className="p-8 border border-dashed border-border rounded-lg flex flex-col items-center justify-center">
-                <Share2 size={48} className="text-muted-foreground mb-4" />
-                <p className="text-center mb-2">No content shared with family members yet</p>
-                <Button variant="outline">Share Content</Button>
+              <div className="p-10 border border-dashed border-border rounded-lg flex flex-col items-center justify-center">
+                <Share2 size={60} className="text-green-600/60 mb-4" />
+                <p className="text-center text-lg mb-4">No content shared with family members yet</p>
+                <Button variant="outline" size="lg" className="px-6">Share Content</Button>
               </div>
             </Card>
           </TabsContent>
           
           <TabsContent value="access-settings">
-            <Card className="border border-border/30 p-6">
+            <Card className="border border-border/30 p-6 rounded-xl shadow-sm">
               <h2 className="text-xl font-medium mb-4">Access Settings</h2>
-              <p className="text-muted-foreground mb-4">
+              <p className="text-muted-foreground mb-6 text-base">
                 Control what information each family member can view and edit.
               </p>
-              <div className="p-8 border border-dashed border-border rounded-lg flex flex-col items-center justify-center">
-                <ShieldCheck size={48} className="text-muted-foreground mb-4" />
-                <p className="text-center mb-2">No custom access settings configured</p>
-                <Button variant="outline">Configure Access Settings</Button>
+              <div className="p-10 border border-dashed border-border rounded-lg flex flex-col items-center justify-center">
+                <ShieldCheck size={60} className="text-amber-600/60 mb-4" />
+                <p className="text-center text-lg mb-4">No custom access settings configured</p>
+                <Button variant="outline" size="lg" className="px-6">Configure Access Settings</Button>
               </div>
             </Card>
           </TabsContent>

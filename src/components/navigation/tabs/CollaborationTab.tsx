@@ -104,7 +104,7 @@ const AccessControl: React.FC<AccessControlProps> = ({ id, label, defaultValue =
   };
   
   return (
-    <div className="flex items-center space-x-2 my-1">
+    <div className="flex items-center space-x-2 my-2">
       <Switch 
         id={id} 
         checked={isFullAccess} 
@@ -116,8 +116,8 @@ const AccessControl: React.FC<AccessControlProps> = ({ id, label, defaultValue =
           <TooltipTrigger asChild>
             <InfoIcon className="h-4 w-4 text-muted-foreground cursor-help" />
           </TooltipTrigger>
-          <TooltipContent className="max-w-xs">
-            <p className="text-xs">{tooltipText}</p>
+          <TooltipContent className="max-w-xs bg-white/95 shadow-lg p-3 rounded-lg border">
+            <p className="text-sm">{tooltipText}</p>
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
@@ -142,28 +142,34 @@ const CollaborationTab = () => {
 
   return (
     <div className="collaboration-tab p-4">
-      <h2 className="text-xl font-semibold mb-4">Collaboration & Sharing</h2>
+      <h2 className="text-2xl font-semibold mb-4">Collaboration & Sharing</h2>
       
       <Tabs defaultValue="service-pros" className="w-full">
-        <TabsList className="mb-4 w-full flex">
-          <TabsTrigger value="service-pros" className="flex items-center gap-2 flex-1 justify-center">
-            <BriefcaseIcon className="h-4 w-4 flex-shrink-0" />
-            <span className="whitespace-nowrap overflow-hidden text-ellipsis">Service Professionals</span>
+        <TabsList className="mb-6 p-1.5 bg-muted/50 rounded-lg w-full flex">
+          <TabsTrigger 
+            value="service-pros" 
+            className="flex items-center gap-3 px-5 py-2.5 text-base flex-1 justify-center rounded-md"
+          >
+            <BriefcaseIcon className="h-5 w-5 flex-shrink-0 text-blue-600" />
+            <span className="font-medium whitespace-nowrap">Service Professionals</span>
           </TabsTrigger>
-          <TabsTrigger value="family-members" className="flex items-center gap-2 flex-1 justify-center">
-            <UsersIcon className="h-4 w-4 flex-shrink-0" />
-            <span className="whitespace-nowrap overflow-hidden text-ellipsis">Family Members</span>
+          <TabsTrigger 
+            value="family-members" 
+            className="flex items-center gap-3 px-5 py-2.5 text-base flex-1 justify-center rounded-md"
+          >
+            <UsersIcon className="h-5 w-5 flex-shrink-0 text-green-600" />
+            <span className="font-medium whitespace-nowrap">Family Members</span>
           </TabsTrigger>
         </TabsList>
         
         <TabsContent value="service-pros" className="space-y-4">
-          <div className="bg-card rounded-lg p-4 shadow-sm">
-            <h3 className="text-lg font-medium mb-3">Professional Document Sharing</h3>
-            <p className="text-muted-foreground mb-4">
+          <div className="bg-card rounded-xl p-6 shadow-sm border border-border/30">
+            <h3 className="text-xl font-medium mb-3">Professional Document Sharing</h3>
+            <p className="text-muted-foreground mb-5 text-base">
               Share documents and collaborate with your tax, legal, and financial professionals.
             </p>
             
-            <div className="mb-4">
+            <div className="mb-5">
               <label className="text-sm text-muted-foreground mb-2 block">
                 Filter documents by professional type:
               </label>
@@ -186,8 +192,8 @@ const CollaborationTab = () => {
               </Select>
             </div>
             
-            <div className="mb-4 p-3 bg-muted/30 rounded-md">
-              <h4 className="font-medium mb-2">Default Access Controls</h4>
+            <div className="mb-5 p-4 bg-muted/30 rounded-lg">
+              <h4 className="font-medium mb-3">Default Access Controls</h4>
               <AccessControl 
                 id="professional-default-access" 
                 label="Grant Full Access by default" 
@@ -198,19 +204,19 @@ const CollaborationTab = () => {
             <div className="grid gap-3">
               {relevantCategories.length > 0 ? (
                 relevantCategories.map(category => (
-                  <div key={category.id} className="border border-muted rounded-md p-3">
+                  <div key={category.id} className="border border-muted rounded-lg p-4 hover:border-primary/50 hover:bg-muted/20 transition-colors">
                     <Link 
                       to={`/documents?category=${category.id}`} 
-                      className="flex items-center gap-2 hover:text-primary transition-colors"
+                      className="flex items-center gap-3 hover:text-primary transition-colors"
                     >
-                      <category.icon className="h-5 w-5 flex-shrink-0" />
+                      <category.icon className="h-6 w-6 flex-shrink-0 text-blue-600" />
                       <div>
-                        <h4 className="font-medium">{category.name}</h4>
+                        <h4 className="font-medium text-lg">{category.name}</h4>
                         <p className="text-sm text-muted-foreground">{category.description}</p>
                       </div>
                     </Link>
                     
-                    <div className="mt-3 pt-3 border-t border-dashed border-muted">
+                    <div className="mt-4 pt-3 border-t border-dashed border-muted">
                       <AccessControl 
                         id={`category-access-${category.id}`} 
                         label={`${category.name} Access Level`}
@@ -220,15 +226,18 @@ const CollaborationTab = () => {
                   </div>
                 ))
               ) : (
-                <div className="text-center p-4 border border-dashed rounded-md border-muted">
+                <div className="text-center p-6 border border-dashed rounded-lg border-muted">
                   <p className="text-muted-foreground">No relevant documents for this professional type.</p>
                 </div>
               )}
               
-              <Link to="/professionals" className="flex items-center gap-2 p-3 bg-muted/50 rounded-md hover:bg-muted transition-colors">
-                <KeyIcon className="h-5 w-5 flex-shrink-0" />
+              <Link 
+                to="/professionals" 
+                className="flex items-center gap-3 p-4 bg-blue-50/50 rounded-lg hover:bg-blue-50/80 transition-colors border border-blue-100"
+              >
+                <KeyIcon className="h-6 w-6 flex-shrink-0 text-blue-600" />
                 <div>
-                  <h4 className="font-medium">Professional Access Management</h4>
+                  <h4 className="font-medium text-lg">Professional Access Management</h4>
                   <p className="text-sm text-muted-foreground">Control which professionals can access your documents</p>
                 </div>
               </Link>
@@ -237,14 +246,14 @@ const CollaborationTab = () => {
         </TabsContent>
         
         <TabsContent value="family-members" className="space-y-4">
-          <div className="bg-card rounded-lg p-4 shadow-sm">
-            <h3 className="text-lg font-medium mb-3">Family Collaboration</h3>
-            <p className="text-muted-foreground mb-4">
+          <div className="bg-card rounded-xl p-6 shadow-sm border border-border/30">
+            <h3 className="text-xl font-medium mb-3">Family Collaboration</h3>
+            <p className="text-muted-foreground mb-5 text-base">
               Share information and collaborate with family members securely.
             </p>
             
-            <div className="mb-4 p-3 bg-muted/30 rounded-md">
-              <h4 className="font-medium mb-2">Family Access Controls</h4>
+            <div className="mb-5 p-4 bg-muted/30 rounded-lg">
+              <h4 className="font-medium mb-3">Family Access Controls</h4>
               <AccessControl 
                 id="family-default-access" 
                 label="Grant Full Access to family members" 
@@ -259,17 +268,17 @@ const CollaborationTab = () => {
               />
             </div>
             
-            <div className="grid gap-3">
-              <div className="border border-muted rounded-md p-3">
-                <Link to="/sharing" className="flex items-center gap-2 hover:text-primary transition-colors">
-                  <ShareIcon className="h-5 w-5 flex-shrink-0" />
+            <div className="grid gap-4">
+              <div className="border border-muted rounded-lg p-4 hover:border-primary/50 hover:bg-muted/20 transition-colors">
+                <Link to="/sharing" className="flex items-center gap-3 hover:text-primary transition-colors">
+                  <ShareIcon className="h-6 w-6 flex-shrink-0 text-green-600" />
                   <div>
-                    <h4 className="font-medium">Family Member Access</h4>
+                    <h4 className="font-medium text-lg">Family Member Access</h4>
                     <p className="text-sm text-muted-foreground">Manage family member permissions</p>
                   </div>
                 </Link>
                 
-                <div className="mt-3 pt-3 border-t border-dashed border-muted">
+                <div className="mt-4 pt-3 border-t border-dashed border-muted">
                   <AccessControl 
                     id="family-access-level" 
                     label="Family Access Level"
@@ -278,16 +287,16 @@ const CollaborationTab = () => {
                 </div>
               </div>
               
-              <div className="border border-muted rounded-md p-3">
-                <Link to="/documents" className="flex items-center gap-2 hover:text-primary transition-colors">
-                  <FileTextIcon className="h-5 w-5 flex-shrink-0" />
+              <div className="border border-muted rounded-lg p-4 hover:border-primary/50 hover:bg-muted/20 transition-colors">
+                <Link to="/documents" className="flex items-center gap-3 hover:text-primary transition-colors">
+                  <FileTextIcon className="h-6 w-6 flex-shrink-0 text-green-600" />
                   <div>
-                    <h4 className="font-medium">Shared Family Documents</h4>
+                    <h4 className="font-medium text-lg">Shared Family Documents</h4>
                     <p className="text-sm text-muted-foreground">View and manage family-shared documents</p>
                   </div>
                 </Link>
                 
-                <div className="mt-3 pt-3 border-t border-dashed border-muted">
+                <div className="mt-4 pt-3 border-t border-dashed border-muted">
                   <AccessControl 
                     id="family-documents-access-level" 
                     label="Document Access Level"
