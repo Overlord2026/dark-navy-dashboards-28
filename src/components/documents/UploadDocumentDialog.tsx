@@ -2,26 +2,13 @@
 import React, { useState } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { FileUpload } from "@/components/ui/file-upload";
 import { toast } from "sonner";
-import { Cloud, File } from "lucide-react";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Cloud } from "lucide-react";
 import { useDocumentManagement } from "@/hooks/useDocumentManagement";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useProfessionals } from "@/hooks/useProfessionals";
-
-export interface DocumentDialogProps {
-  open: boolean;
-  onClose: () => void;
-  onOpenChange?: (open: boolean) => void;
-  category?: string;
-  activeCategory?: string;
-  documentCategories?: any;
-  onFileUpload?: (file: File, customName: string, category?: string) => any;
-}
+import { DocumentDialogProps, FileInfo } from "./types/documentDialog";
+import { DocumentUploadForm } from "./DocumentUploadForm";
+import { DocumentSharingOptions } from "./DocumentSharingOptions";
 
 export function UploadDocumentDialog({ 
   open, 
@@ -32,23 +19,13 @@ export function UploadDocumentDialog({
   documentCategories,
   onFileUpload: externalFileUpload
 }: DocumentDialogProps) {
-  const [documentName, setDocumentName] = useState("");
-  const [description, setDescription] = useState("");
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [fileInfo, setFileInfo] = useState<FileInfo | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [shareAfterUpload, setShareAfterUpload] = useState(false);
   const [selectedProfessionalId, setSelectedProfessionalId] = useState<string>("");
   
   const { handleFileUpload } = useDocumentManagement();
   const { professionals } = useProfessionals();
-  
-  const handleFileChange = (file: File) => {
-    setSelectedFile(file);
-    if (!documentName) {
-      // Set a default document name based on the file name
-      setDocumentName(file.name.split('.')[0]);
-    }
-  };
   
   const handleDialogClose = () => {
     if (onOpenChange) {
@@ -58,12 +35,12 @@ export function UploadDocumentDialog({
   };
   
   const handleSubmit = () => {
-    if (!selectedFile) {
+    if (!fileInfo?.file) {
       toast.error("Please select a file to upload");
       return;
     }
     
-    if (!documentName.trim()) {
+    if (!fileInfo.name.trim()) {
       toast.error("Please provide a document name");
       return;
     }
@@ -73,11 +50,11 @@ export function UploadDocumentDialog({
     setTimeout(() => {
       // Upload the document
       const uploadedDoc = externalFileUpload 
-        ? externalFileUpload(selectedFile, documentName, category)
-        : handleFileUpload(selectedFile, documentName, category);
+        ? externalFileUpload(fileInfo.file, fileInfo.name, category)
+        : handleFileUpload(fileInfo.file, fileInfo.name, category);
       
       toast.success("Document uploaded successfully", {
-        description: `"${documentName}" has been added to your documents.`
+        description: `"${fileInfo.name}" has been added to your documents.`
       });
       
       // Handle sharing if needed
@@ -87,16 +64,14 @@ export function UploadDocumentDialog({
         if (professional) {
           // In a real app, this would call the shareDocument function
           toast.success(`Document shared with ${professional.name}`, {
-            description: `They now have view access to ${documentName}`
+            description: `They now have view access to ${fileInfo.name}`
           });
         }
       }
       
       setIsUploading(false);
       // Reset form
-      setDocumentName("");
-      setDescription("");
-      setSelectedFile(null);
+      setFileInfo(null);
       setShareAfterUpload(false);
       setSelectedProfessionalId("");
       handleDialogClose();
@@ -116,92 +91,18 @@ export function UploadDocumentDialog({
         </DialogHeader>
         
         <div className="grid gap-4 py-4">
-          <div className="space-y-2">
-            <Label htmlFor="document-name">Document Name</Label>
-            <Input
-              id="document-name"
-              value={documentName}
-              onChange={(e) => setDocumentName(e.target.value)}
-              placeholder="e.g., Tax Return 2024"
-            />
-          </div>
+          <DocumentUploadForm 
+            fileInfo={fileInfo} 
+            onFileChange={setFileInfo}
+          />
           
-          <div className="space-y-2">
-            <Label htmlFor="description">Description (Optional)</Label>
-            <Textarea
-              id="description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="Add a brief description of this document"
-              rows={3}
-            />
-          </div>
-          
-          <div className="space-y-2">
-            <Label>Upload File</Label>
-            <FileUpload 
-              onFileChange={handleFileChange}
-              accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png"
-              maxSize={20 * 1024 * 1024} // 20MB limit
-            />
-            
-            {selectedFile && (
-              <div className="mt-2 flex items-center justify-between bg-secondary/20 p-2 rounded-md">
-                <div className="flex items-center gap-2">
-                  <File className="h-4 w-4" />
-                  <span className="text-sm truncate max-w-[200px]">{selectedFile.name}</span>
-                  <span className="text-xs text-muted-foreground">
-                    ({(selectedFile.size / (1024 * 1024)).toFixed(2)} MB)
-                  </span>
-                </div>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setSelectedFile(null)}
-                  className="h-8 w-8 p-0"
-                >
-                  &times;
-                </Button>
-              </div>
-            )}
-          </div>
-          
-          {category === "professional-documents" && (
-            <div className="space-y-4 border-t pt-4">
-              <div className="flex items-center space-x-2">
-                <Checkbox 
-                  id="share-after-upload"
-                  checked={shareAfterUpload}
-                  onCheckedChange={(checked) => setShareAfterUpload(checked === true)}
-                />
-                <Label htmlFor="share-after-upload" className="cursor-pointer">
-                  Share with professional immediately after upload
-                </Label>
-              </div>
-              
-              {shareAfterUpload && (
-                <div className="space-y-2">
-                  <Label htmlFor="select-professional">Select Professional</Label>
-                  <Select
-                    value={selectedProfessionalId}
-                    onValueChange={setSelectedProfessionalId}
-                  >
-                    <SelectTrigger id="select-professional">
-                      <SelectValue placeholder="Choose a professional" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {professionals.map(pro => (
-                        <SelectItem key={pro.id} value={pro.id}>
-                          {pro.name} - {pro.type}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              )}
-            </div>
-          )}
+          <DocumentSharingOptions
+            category={category}
+            shareAfterUpload={shareAfterUpload}
+            selectedProfessionalId={selectedProfessionalId}
+            onShareChange={setShareAfterUpload}
+            onProfessionalSelect={setSelectedProfessionalId}
+          />
         </div>
         
         <DialogFooter className="sm:justify-between">
@@ -215,7 +116,7 @@ export function UploadDocumentDialog({
             </Button>
             <Button 
               onClick={handleSubmit} 
-              disabled={isUploading || !selectedFile || !documentName.trim()}
+              disabled={isUploading || !fileInfo?.file || !fileInfo?.name.trim()}
             >
               {isUploading ? "Uploading..." : "Upload"}
             </Button>

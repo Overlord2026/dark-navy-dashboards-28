@@ -215,7 +215,7 @@ function getSampleDocuments(): DocumentItem[] {
           userId: "pro-3",
           userName: "Jennifer Williams",
           userRole: "Estate Planning Attorney",
-          accessLevel: "download"
+          accessLevel: "view"
         }
       ]
     },
