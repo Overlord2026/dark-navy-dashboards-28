@@ -14,13 +14,11 @@ import PersonalInsurance from "../pages/PersonalInsurance";
 import Insurance from "../pages/Insurance";
 import NotFound from "../pages/NotFound";
 import Properties from "../pages/Properties";
-import LoginPage from "../pages/LoginPage";
 
 const MainRoutes = () => {
   return (
     <Routes>
       <Route path="/" element={<Dashboard />} />
-      <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/notifications" element={<Notifications />} />
       <Route path="/settings" element={<Settings />} />
       <Route path="/help" element={<Help />} />
@@ -32,10 +30,9 @@ const MainRoutes = () => {
       <Route path="/investments" element={<Investments />} /> 
       <Route path="/investments/alternative/:category" element={<Investments />} />
       <Route path="/investments/alternative/all" element={<Investments />} />
-      <Route path="/insurance" element={<Insurance />} /> {/* Insurance offerings under Resources & Solutions */}
-      <Route path="/personal-insurance" element={<PersonalInsurance />} /> {/* Personal Insurance tracking under Family Wealth */}
-      <Route path="/properties" element={<Properties />} /> {/* Real Estate Properties */}
-      <Route path="/login" element={<LoginPage />} /> {/* Added Login page route */}
+      <Route path="/insurance" element={<Insurance />} />
+      <Route path="/personal-insurance" element={<PersonalInsurance />} />
+      <Route path="/properties" element={<Properties />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

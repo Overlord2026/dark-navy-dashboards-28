@@ -8,11 +8,13 @@ export const HeaderComponent: React.FC = () => {
     <header className="w-full flex justify-center items-center py-4 border-b border-[#DCD8C0] bg-[#F9F7E8] sticky top-0 z-50">
       <div className="container flex justify-between items-center max-w-7xl px-4">
         <div className="flex items-center">
-          <img 
-            src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" 
-            alt="Boutique Family Office Logo" 
-            className="h-16 w-auto"
-          />
+          <Link to="/">
+            <img 
+              src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" 
+              alt="Boutique Family Office Logo" 
+              className="h-16 w-auto"
+            />
+          </Link>
         </div>
         <div className="hidden md:flex gap-8 text-[#222222]">
           <Link to="/services" className="hover:text-primary font-medium">Services</Link>

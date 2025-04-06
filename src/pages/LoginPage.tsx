@@ -1,19 +1,38 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "@/context/UserContext";
+import { toast } from "sonner";
 
 const LoginPage = ({ isAdvisor = false }: { isAdvisor?: boolean }) => {
   const navigate = useNavigate();
+  const { login, isAuthenticated } = useUser();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real implementation, this would validate credentials
-    // For now, just navigate to the dashboard
-    navigate("/");
+    setIsLoggingIn(true);
+    
+    try {
+      const success = await login(email, password);
+      if (success) {
+        toast.success("Login successful!");
+        navigate("/dashboard");
+      } else {
+        toast.error("Invalid credentials. Please try again.");
+      }
+    } catch (error) {
+      toast.error("An error occurred during login");
+      console.error("Login error:", error);
+    } finally {
+      setIsLoggingIn(false);
+    }
   };
 
   return (
@@ -29,15 +48,34 @@ const LoginPage = ({ isAdvisor = false }: { isAdvisor?: boolean }) => {
           <CardContent className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" placeholder="your@email.com" required />
+              <Input 
+                id="email" 
+                type="email" 
+                placeholder="your@email.com" 
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required 
+              />
             </div>
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
-              <Input id="password" type="password" required />
+              <Input 
+                id="password" 
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)} 
+                required 
+              />
             </div>
           </CardContent>
           <CardFooter className="flex flex-col gap-3">
-            <Button type="submit" className="w-full">Login</Button>
+            <Button 
+              type="submit" 
+              className="w-full"
+              disabled={isLoggingIn}
+            >
+              {isLoggingIn ? "Logging in..." : "Login"}
+            </Button>
             <div className="text-sm text-muted-foreground text-center">
               <a href="#" className="text-primary hover:underline">
                 Forgot your password?
