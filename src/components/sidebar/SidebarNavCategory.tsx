@@ -51,7 +51,7 @@ export const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
       )}
       
       {(collapsed || isExpanded) && (
-        <nav className="px-2 space-y-1 mt-1">
+        <nav className={cn("px-2 space-y-1 mt-1", collapsed && "flex flex-col items-center")}>
           {items.map((item) => (
             <SidebarNavItem 
               key={item.title}
@@ -115,7 +115,8 @@ export const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
                   : "bg-black text-white border-primary" 
                 : isLightTheme ? "text-[#222222] border-transparent hover:bg-[#E9E7D8] hover:border-primary" 
                   : "text-sidebar-foreground border-transparent hover:bg-sidebar-accent",
-              hasSubmenu && "ml-4"
+              hasSubmenu && "ml-4",
+              collapsed ? "justify-center" : "justify-start"
             )}
             title={collapsed ? item.title : undefined}
           >

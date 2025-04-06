@@ -35,25 +35,21 @@ export const NavigationItem = ({
             : "bg-black text-[#E2E2E2] font-medium border-primary"
           : isLightTheme ? "text-[#222222] border-transparent" : "text-[#E2E2E2] border-transparent",
         isLightTheme ? "hover:bg-[#E9E7D8] hover:border-primary" : "hover:bg-sidebar-accent hover:border-primary",
-        isCollapsed ? "justify-center px-2 my-2" : ""
+        isCollapsed ? "justify-center px-2 my-2" : "justify-start"
       )}
       title={isCollapsed ? item.label : undefined}
     >
-      {typeof Icon === 'function' ? (
-        <div className={`flex items-center justify-center rounded-sm p-0.5 ${isLightTheme ? 'bg-[#222222]' : 'bg-black'} ${!isCollapsed && "mr-3"}`}>
+      <div className={cn("flex-shrink-0", !isCollapsed && "mr-3")}>
+        {typeof Icon === 'function' ? (
           <Icon />
-        </div>
-      ) : (
-        <Icon 
-          className={cn("h-5 w-5", !isCollapsed && "mr-3")} 
-          style={{ 
-            backgroundColor: isLightTheme ? '#222222' : '#000', 
-            padding: '2px', 
-            borderRadius: '2px' 
-          }} 
-        />
+        ) : (
+          <Icon className="h-5 w-5" />
+        )}
+      </div>
+      
+      {!isCollapsed && (
+        <span className="whitespace-nowrap overflow-hidden text-ellipsis">{item.label}</span>
       )}
-      {!isCollapsed && <span className="whitespace-nowrap overflow-hidden text-ellipsis">{item.label}</span>}
     </Link>
   );
 };

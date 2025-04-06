@@ -76,7 +76,7 @@ export const NavigationCategory = ({
       )}
       
       {isCollapsed && (
-        <>
+        <div className="flex flex-col items-center space-y-1">
           {category.items.map((item: any) => (
             <NavigationItem
               key={item.id || item.href}
@@ -91,7 +91,7 @@ export const NavigationCategory = ({
               isLightTheme={isLightTheme}
             />
           ))}
-        </>
+        </div>
       )}
     </div>
   );

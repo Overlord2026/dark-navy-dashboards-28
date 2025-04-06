@@ -10,7 +10,7 @@ export const useSidebarState = (navigationCategories: NavCategory[]) => {
   const [collapsed, setCollapsed] = useState(false);
   const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>(
     navigationCategories.reduce((acc, category) => {
-      acc[category.id] = category.defaultExpanded ?? true; // Default to true for better visibility
+      acc[category.id] = true; // Always default to true for better visibility
       return acc;
     }, {} as Record<string, boolean>)
   );
