@@ -1,4 +1,3 @@
-
 export type LogLevel = "error" | "warning" | "info" | "debug" | "success";
 
 export interface LogEntry {
@@ -45,17 +44,19 @@ export interface NavigationDiagnosticResult extends DiagnosticResult {
 export interface ApiEndpointDiagnosticResult {
   name: string;
   url: string;
-  method: string;
+  method: "GET" | "POST" | "PUT" | "DELETE";
   status: "success" | "warning" | "error";
   responseTime: number;
   responseStatus?: number;
-  responseSize?: number;
   errorMessage?: string;
-  expectedDataStructure: string;
-  actualDataStructure?: string;
-  structureMatch?: boolean;
-  authStatus?: "valid" | "invalid" | "expired" | "missing";
-  recommendations?: Recommendation[];
+  warningMessage?: string;
+  expectedDataStructure?: string;
+  schemaValidation?: {
+    expected: any;
+    actual: any;
+    valid: boolean;
+    errors?: string[];
+  };
 }
 
 export interface DiagnosticSummary {

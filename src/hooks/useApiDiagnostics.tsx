@@ -1,3 +1,4 @@
+
 import { useState, useCallback } from 'react';
 import { ApiEndpointDiagnosticResult } from '@/types/diagnostics';
 import { testApiEndpoints } from '@/services/diagnostics/apiDiagnostics';
@@ -17,6 +18,24 @@ export function useApiDiagnostics() {
       const diagnosticResults = await testApiEndpoints();
       setResults(diagnosticResults);
       setLastRun(new Date().toISOString());
+      
+      // Log schema validation issues for debugging
+      const validationIssues = diagnosticResults.filter(r => 
+        r.schemaValidation && !r.schemaValidation.valid && 
+        r.schemaValidation.errors && r.schemaValidation.errors.length > 0
+      );
+      
+      if (validationIssues.length > 0) {
+        console.group("API Schema Validation Issues:");
+        validationIssues.forEach(issue => {
+          console.log(`Endpoint: ${issue.name} (${issue.url})`, {
+            errors: issue.schemaValidation?.errors,
+            expected: issue.schemaValidation?.expected,
+            actual: issue.schemaValidation?.actual
+          });
+        });
+        console.groupEnd();
+      }
       
       // Disable toast notifications for API diagnostics
       // const errorCount = diagnosticResults.filter(r => r.status === 'error').length;
@@ -60,6 +79,11 @@ export function useApiDiagnostics() {
     const warningCount = results.filter(r => r.status === 'warning').length;
     const errorCount = results.filter(r => r.status === 'error').length;
     
+    // Count schema validation issues
+    const schemaIssues = results.filter(r => 
+      r.schemaValidation && !r.schemaValidation.valid
+    ).length;
+    
     let overall: "success" | "warning" | "error" = "success";
     if (errorCount > 0) {
       overall = "error";
@@ -73,6 +97,7 @@ export function useApiDiagnostics() {
       success: successCount,
       warnings: warningCount,
       errors: errorCount,
+      schemaIssues,
       timestamp: lastRun || new Date().toISOString()
     };
   }, [results, lastRun]);
@@ -86,3 +111,4 @@ export function useApiDiagnostics() {
     getApiDiagnosticsSummary
   };
 }
+
