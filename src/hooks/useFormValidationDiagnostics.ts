@@ -1,5 +1,5 @@
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { 
   runFormValidationDiagnostics,
   runSingleFormValidationTest,
@@ -104,26 +104,17 @@ export function useFormValidationDiagnostics() {
           // Find if we already have results for this form
           const existingIndex = prev.findIndex(r => r.form === formId);
           
-          // Determine status based on validation details
+          // Determine status based on test result
           let status: "success" | "warning" | "error" = "success";
           let message = "Form validation passed all tests";
           
-          if (testResult.validationDetails) {
-            const hasErrors = testResult.validationDetails.invalidFields?.length > 0 || 
-                              testResult.validationDetails.unexpectedErrors?.length > 0;
-            const hasWarnings = testResult.validationDetails.missingErrors?.length > 0;
-            
-            if (hasErrors) {
-              status = "error";
-              message = `Form validation failed with ${testResult.validationDetails.invalidFields?.length || 0} invalid fields`;
-            } else if (hasWarnings) {
-              status = "warning";
-              message = `Form validation passed with ${testResult.validationDetails.missingErrors?.length} warnings`;
-            }
+          if (!testResult.success) {
+            status = "error";
+            message = `Form validation failed for ${formId}`;
           }
           
           // Add status and message to test result
-          const enhancedResult: FormValidationTestResult = {
+          const enhancedResult = {
             ...testResult,
             status,
             message
@@ -150,12 +141,11 @@ export function useFormValidationDiagnostics() {
         // Log test result
         if (!testResult.success) {
           logger.warning(`Form validation test failed for ${formId}`, {
-            formId,
-            fields: testResult.validationDetails?.invalidFields
+            formId
           }, 'FormValidationDiagnostics');
           
           toast.warning(`Validation issues in ${formId}`, {
-            description: `Form has ${testResult.validationDetails?.invalidFields?.length || 0} invalid fields`
+            description: `Form validation failed for ${formId}`
           });
         } else {
           logger.info(`Form validation test passed for ${formId}`, {
@@ -185,9 +175,9 @@ export function useFormValidationDiagnostics() {
   }, []);
 
   // Initialize available forms on mount
-  useState(() => {
+  useEffect(() => {
     loadAvailableForms();
-  });
+  }, [loadAvailableForms]);
 
   return {
     results,
