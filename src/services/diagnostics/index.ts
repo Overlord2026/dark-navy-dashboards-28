@@ -1,4 +1,3 @@
-
 import { testAccounts, testTransactions } from './accountTests';
 import { testNavigation } from './navigationTests';
 import { testPerformance } from './performanceTests';

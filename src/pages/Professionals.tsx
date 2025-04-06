@@ -7,7 +7,7 @@ import { AddProfessionalDialog } from "@/components/professionals/AddProfessiona
 import { ConsultationsPrompt } from "@/components/professionals/ConsultationsPrompt";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { UserPlus, ExternalLink, MessageSquare, FileText, ShieldCheck } from "lucide-react";
+import { UserPlus, ExternalLink, MessageSquare, FileText, ShieldCheck, Users2 } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ProfessionalType } from "@/types/professional";
 import { ProfessionalsProvider } from "@/context/ProfessionalsContext";
@@ -49,7 +49,7 @@ export default function Professionals() {
           <Tabs defaultValue="professionals" onValueChange={setActiveTab} className="w-full">
             <TabsList className="mb-4">
               <TabsTrigger value="professionals" className="flex gap-2 items-center">
-                <Users2Icon size={16} />
+                <Users2 size={16} />
                 <span>Professionals</span>
               </TabsTrigger>
               <TabsTrigger value="documents" className="flex gap-2 items-center">
