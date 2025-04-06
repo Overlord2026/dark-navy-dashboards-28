@@ -48,6 +48,7 @@ export interface NavigationTestResult extends DiagnosticResult {
   id: string;
   route: string;
   timestamp: number;
+  recommendations?: Recommendation[];
 }
 
 export interface ApiEndpointDiagnosticResult {
@@ -120,22 +121,24 @@ export interface FormField {
   value?: any;
   errors?: string[];
   valid?: boolean;
-  fieldName?: string; // Added for backward compatibility
-  fieldType?: string; // Added for backward compatibility
-  status?: string;    // Added for backward compatibility
-  message?: string;   // Added for backward compatibility
+  // Added for backward compatibility
+  fieldName?: string;
+  fieldType?: string;
+  status?: string;
+  message?: string;
 }
 
 export interface FormValidationTestResult {
   id: string;
   formName: string;
-  form?: string;      // Added for backward compatibility
   formComponent?: string;
   location: string;
   status: "success" | "warning" | "error";
   message?: string;
   timestamp: number;
   fields?: FormField[];
+  // Added for backward compatibility
+  form?: string;
 }
 
 export interface PerformanceTestResult {
@@ -147,7 +150,8 @@ export interface PerformanceTestResult {
   memoryUsage?: number;
   message?: string;
   details?: any;
-  concurrentUsers?: number; // Added for backward compatibility
+  // Added for backward compatibility
+  concurrentUsers?: number;
 }
 
 export interface SecurityTestResult {
@@ -158,38 +162,60 @@ export interface SecurityTestResult {
   message?: string;
   remediation?: string;
   details?: any;
-  category?: string;  // Added for backward compatibility
+  // Added for backward compatibility
+  category?: string;
 }
 
 export interface IconTestResult {
   id: string;
   icon: string;
-  name?: string;      // Added for backward compatibility
   location: string;
   status: "success" | "warning" | "error";
   message?: string;
   details?: any;
   renderTime?: number;
+  // Added for backward compatibility
+  name?: string;
+  iconName?: string;
 }
 
 export interface PermissionTestResult {
   id: string;
   role: string;
   permission: string;
-  name?: string;      // Added for backward compatibility
   status: "success" | "warning" | "error";
   message?: string;
   details?: any;
+  // Added for backward compatibility
+  name?: string;
 }
 
 export interface RoleSimulationTestResult {
   id: string;
   role: string;
   action: string;
-  module?: string;    // Added for backward compatibility
-  accessStatus?: string; // Added for backward compatibility
-  expectedAccess?: boolean; // Added for backward compatibility
   status: "success" | "warning" | "error";
   message?: string;
+  details?: any;
+  // Added for backward compatibility
+  module?: string;
+  accessStatus?: string;
+  expectedAccess?: boolean;
+}
+
+export interface ApiIntegrationTestResult {
+  id: string;
+  service: string;
+  endpoint: string;
+  url?: string;
+  method?: string;
+  status: "success" | "warning" | "error";
+  responseTime?: number;
+  responseStatus?: number;
+  message?: string;
+  errorMessage?: string;
+  warningMessage?: string;
+  authStatus?: string;
+  expectedDataStructure?: string;
   details?: any;
 }

@@ -57,7 +57,7 @@ const SimpleDiagnosticsView: React.FC = () => {
         
         // Add some sample recommendations if they don't exist
         const resultsWithRecommendations = navResults.map(result => {
-          if (result.status !== 'success' && (!result.recommendations)) {
+          if (result.status !== 'success' && (!result.recommendations || result.recommendations.length === 0)) {
             return {
               ...result,
               recommendations: generateRecommendations(result)
@@ -148,8 +148,6 @@ const SimpleDiagnosticsView: React.FC = () => {
     
     return { total, success, warning, error };
   };
-  
-  const stats = getStats();
   
   // Get all recommendations
   const allRecommendations = results
