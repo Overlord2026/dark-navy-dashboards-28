@@ -80,6 +80,16 @@ import ErrorSimulation from '@/pages/ErrorSimulation';
 import VisualTesting from '@/pages/VisualTesting';
 import AccessibilityAudit from '@/pages/AccessibilityAudit';
 
+// Import TabPages
+import { 
+  HomePage as TabHomePage, 
+  AccountsPage, 
+  EducationPage, 
+  FamilyWealthPage, 
+  CollaborationPage, 
+  SettingsPage 
+} from '@/pages/TabPages';
+
 const routes = createBrowserRouter([
   {
     path: '/',
@@ -309,6 +319,102 @@ const routes = createBrowserRouter([
     path: '/diagnostics/performance',
     element: <PerformanceDiagnostics />
   },
+  
+  // Mobile routes
+  {
+    path: '/mobile/home',
+    element: <MobileHome />
+  },
+  {
+    path: '/mobile/accounts',
+    element: <MobileAccounts />
+  },
+  {
+    path: '/mobile/documents',
+    element: <MobileDocuments />
+  },
+  {
+    path: '/mobile/education',
+    element: <MobileEducation />
+  },
+  {
+    path: '/mobile/more',
+    element: <MobileMore />
+  },
+  {
+    path: '/mobile/transfers',
+    element: <MobileTransfers />
+  },
+  {
+    path: '/mobile/tax-planning',
+    element: <MobileTaxPlanning />
+  },
+  
+  // Tab page routes (added from routes-addition.tsx)
+  {
+    path: '/home-tab',
+    element: <TabHomePage />
+  },
+  {
+    path: '/accounts-tab',
+    element: <AccountsPage />
+  },
+  {
+    path: '/education-tab',
+    element: <EducationPage />
+  },
+  {
+    path: '/family-wealth-tab',
+    element: <FamilyWealthPage />
+  },
+  {
+    path: '/collaboration-tab',
+    element: <CollaborationPage />
+  },
+  {
+    path: '/settings-tab',
+    element: <SettingsPage />
+  },
+  
+  // Add routes for marketing pages
+  {
+    path: '/about-us',
+    element: <AboutUsPage />
+  },
+  {
+    path: '/services',
+    element: <ServicesPage />
+  },
+  {
+    path: '/contact',
+    element: <ContactPage />
+  },
+  {
+    path: '/privacy-policy',
+    element: <PrivacyPolicyPage />
+  },
+  {
+    path: '/terms-of-service',
+    element: <TermsOfServicePage />
+  },
+  {
+    path: '/disclosures',
+    element: <DisclosuresPage />
+  },
+  {
+    path: '/accessibility',
+    element: <AccessibilityPage />
+  },
+  {
+    path: '/careers',
+    element: <CareersPage />
+  },
+  {
+    path: '/team',
+    element: <TeamPage />
+  },
+  
+  // Always keep the 404 route as the last route
   {
     path: '*',
     element: <NotFound />
