@@ -39,7 +39,7 @@ export const AccountsPage = () => {
 
 export const EducationPage = () => {
   return (
-    <ThreeColumnLayout title="Education & Solutions" activeMainItem="education">
+    <ThreeColumnLayout title="Education & Solutions" activeMainItem="education-solutions">
       <div className="container p-6">
         <h1 className="text-2xl font-bold mb-6">Education Center</h1>
         <Card>
