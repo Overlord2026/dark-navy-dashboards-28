@@ -26,6 +26,8 @@ export const NavigationItem = ({
   
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
+    // Log navigation attempt for debugging
+    console.log(`Navigating to: ${item.href}`);
     navigate(item.href);
   };
   

@@ -14,6 +14,7 @@ import AdminRoutes from "./AdminRoutes";
 import LoginPage from "../pages/LoginPage";
 import HomePage from "../pages/HomePage";
 import AdvisorDashboard from "../pages/AdvisorDashboard";
+import TaxPlanning from "../pages/TaxPlanning";
 
 const AppRoutes: React.FC = () => {
   const { userProfile } = useUser();
@@ -41,6 +42,9 @@ const AppRoutes: React.FC = () => {
       <Route path="/terms-of-service/*" element={<PublicRoutes />} />
       <Route path="/disclosures/*" element={<PublicRoutes />} />
       <Route path="/accessibility/*" element={<PublicRoutes />} />
+
+      {/* Tax Planning specific route */}
+      <Route path="/education/tax-planning" element={<TaxPlanning />} />
 
       {/* Direct routes */}
       <Route path="/dashboard/*" element={<MainRoutes />} />

@@ -26,6 +26,7 @@ import SocialSecurity from "../pages/SocialSecurity";
 import EstatePlanning from "../pages/EstatePlanning";
 import FinancialPlans from "../pages/FinancialPlans";
 import HomePage from "../pages/HomePage";
+import TaxPlanning from "../pages/TaxPlanning";
 
 const MainRoutes = () => {
   const { isAuthenticated } = useAuth();
@@ -51,6 +52,7 @@ const MainRoutes = () => {
       <Route path="/advisor-profile" element={<AdvisorProfile />} />
       <Route path="/education" element={<Education />} />
       <Route path="/education/:categoryId" element={<Education />} />
+      <Route path="/education/tax-planning" element={<TaxPlanning />} />
       <Route path="/all-assets" element={<AllAssets />} />
       <Route path="/investments" element={<Investments />} /> 
       <Route path="/investments/alternative/:category" element={<Investments />} />

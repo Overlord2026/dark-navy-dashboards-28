@@ -37,6 +37,10 @@ export const NavigationCategory = ({
   isLightTheme
 }: NavigationCategoryProps) => {
   const isItemActive = (itemId: string) => {
+    // Update this to handle special cases like tax-planning
+    if (itemId === 'tax-planning' && currentPath === 'tax-planning') {
+      return true;
+    }
     return itemId === currentPath;
   };
 

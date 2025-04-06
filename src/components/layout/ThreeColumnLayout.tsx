@@ -1,4 +1,3 @@
-
 import { ReactNode, useState, useEffect } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
@@ -75,6 +74,9 @@ export function ThreeColumnLayout({
     currentActiveMainItem = "transfers";
   } else if (location.pathname === "/cash-management") {
     currentActiveMainItem = "cash-management";
+  } else if (location.pathname.includes('/education/tax-planning')) {
+    // Special handling for tax planning
+    currentActiveMainItem = "tax-planning";
   } else if (pathSegments.includes('alternative')) {
     // Special handling for alternative investment subcategories
     const categoryId = pathSegments[pathSegments.length - 1];
@@ -82,6 +84,10 @@ export function ThreeColumnLayout({
       currentActiveMainItem = categoryId;
     }
   }
+  
+  // Debug current path detection
+  console.log("Current location:", location.pathname);
+  console.log("Detected active item:", currentActiveMainItem);
   
   useEffect(() => {
     // Ensure categories are expanded for the current path
