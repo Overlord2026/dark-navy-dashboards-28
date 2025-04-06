@@ -6,16 +6,33 @@ import { useLocation } from "react-router-dom";
 export const useSidebarState = (navigationCategories: NavCategory[]) => {
   const location = useLocation();
   
-  // Initialize with all categories expanded by default and not collapsed
+  // Initialize with collapsed set to false for desktop view
   const [collapsed, setCollapsed] = useState(false);
+  
+  // Initialize with all categories expanded by default
   const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>(
     navigationCategories.reduce((acc, category) => {
       acc[category.id] = category.defaultExpanded ?? true; // Always default to true for better visibility
       return acc;
     }, {} as Record<string, boolean>)
   );
+  
   const [expandedSubmenus, setExpandedSubmenus] = useState<Record<string, boolean>>({});
   const [forceUpdate, setForceUpdate] = useState(0);
+  
+  // Check window width on mount and resize to set collapsed state
+  useEffect(() => {
+    const handleResize = () => {
+      // Only collapse automatically on mobile screens (under 768px)
+      setCollapsed(window.innerWidth < 768);
+    };
+    
+    // Initial check
+    handleResize();
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
   
   useEffect(() => {
     // Expand relevant category based on current route

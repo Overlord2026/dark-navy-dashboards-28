@@ -22,7 +22,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const pathname = location.pathname;
 
   const isActive = (href: string) => {
-    return pathname === href;
+    return pathname === href || (href !== "/" && pathname.startsWith(href));
   };
 
   const toggleCategory = (id: string) => {
@@ -32,17 +32,18 @@ export const Sidebar: React.FC<SidebarProps> = ({
   return (
     <div
       className={cn(
-        "flex flex-col w-full bg-sidebar border-r h-full",
+        "flex flex-col w-full bg-sidebar border-r h-full transition-all duration-300",
+        collapsed ? "w-[70px]" : "w-[240px]",
         isLightTheme ? "bg-[#F6F6F6] border-[#E2E2E2]" : "bg-sidebar border-sidebar-border"
       )}
     >
       <div className="flex-1 flex flex-col gap-y-2 py-4">
         <div className="px-3 py-2 text-center">
           <Link to="/dashboard">
-            <h1 className="font-bold text-2xl">LOV</h1>
+            <h1 className={cn("font-bold transition-all", collapsed ? "text-xl" : "text-2xl")}>LOV</h1>
           </Link>
         </div>
-        <div className="space-y-1">
+        <div className="space-y-1 overflow-y-auto">
           {Object.entries(navItems).map(([key, items]) => (
             <SidebarNavCategory
               key={key}
@@ -63,14 +64,22 @@ export const Sidebar: React.FC<SidebarProps> = ({
       <div className="p-3 flex items-center justify-between">
         <button 
           onClick={toggleTheme} 
-          className={cn("text-sm", isLightTheme ? "text-[#222222]" : "text-[#E2E2E2]")}
+          className={cn(
+            "text-sm transition-colors",
+            isLightTheme ? "text-[#222222]" : "text-[#E2E2E2]"
+          )}
+          aria-label="Toggle theme"
         >
-          {!collapsed && "Toggle Theme"}
+          {!collapsed && "Theme"}
           {collapsed && <span className="sr-only">Toggle Theme</span>}
         </button>
         <button 
           onClick={collapsed ? onExpand : onCollapse} 
-          className={cn("text-sm", isLightTheme ? "text-[#222222]" : "text-[#E2E2E2]")}
+          className={cn(
+            "text-sm transition-colors",
+            isLightTheme ? "text-[#222222]" : "text-[#E2E2E2]"
+          )}
+          aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
         >
           {!collapsed && (collapsed ? "Expand" : "Collapse")}
           {collapsed && <span className="sr-only">{collapsed ? "Expand" : "Collapse"}</span>}

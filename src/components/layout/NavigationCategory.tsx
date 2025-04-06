@@ -7,7 +7,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { NavItem } from "@/types/navigation";
+import { NavItem, NavCategory } from "@/types/navigation";
 import { cn } from "@/lib/utils";
 
 interface MainMenuItem {
@@ -18,7 +18,7 @@ interface MainMenuItem {
 }
 
 interface NavigationCategoryProps {
-  category: {
+  category: NavCategory | {
     id: string;
     label: string;
     items: MainMenuItem[] | NavItem[];

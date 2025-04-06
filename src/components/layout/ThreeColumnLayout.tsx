@@ -1,3 +1,4 @@
+
 import { ReactNode, useState } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
@@ -11,6 +12,7 @@ import { NavigationCategory } from "./NavigationCategory";
 import { SecondaryNavigation } from "./SecondaryNavigation";
 import { navigationCategories } from "@/components/navigation/NavigationRegistry";
 import { getSecondaryMenuItems } from "./navigationData";
+import { NavCategory } from "@/types/navigation";
 
 interface ThreeColumnLayoutProps {
   children: ReactNode;
@@ -33,7 +35,7 @@ export function ThreeColumnLayout({
   const [secondarySidebarCollapsed, setSecondarySidebarCollapsed] = useState(false);
   const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>(
     navigationCategories.reduce((acc, category) => {
-      acc[category.id] = category.defaultExpanded ?? false;
+      acc[category.id] = category.defaultExpanded ?? true; // Always default to true
       return acc;
     }, {} as Record<string, boolean>)
   );

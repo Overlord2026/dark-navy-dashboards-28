@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
@@ -47,13 +46,14 @@ export const NavigationItem = ({
         )}
       </div>
       
-      {/* Always render the text label, but use CSS to hide it when collapsed */}
+      {/* Only visually hide the label when collapsed, keep it in the DOM for accessibility */}
       <span className={cn(
         "whitespace-nowrap overflow-hidden text-ellipsis",
-        isCollapsed ? "sr-only md:not-sr-only md:hidden" : ""
+        isCollapsed ? "hidden md:hidden" : ""
       )}>
         {item.label}
       </span>
+      {isCollapsed && <span className="sr-only">{item.label}</span>}
     </Link>
   );
 };

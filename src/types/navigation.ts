@@ -16,7 +16,7 @@ export interface NavItem {
 export interface NavCategory {
   id: string; // Adding the id property
   title: string;
-  label?: string; // Adding optional label for compatibility
+  label: string; // Changing from optional to required
   items: NavItem[];
   defaultExpanded?: boolean; // Adding this for compatibility
 }
