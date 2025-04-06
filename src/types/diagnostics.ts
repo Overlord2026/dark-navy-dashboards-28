@@ -1,4 +1,3 @@
-
 export interface NavigationTestResult {
   id: string;
   route: string;
@@ -10,13 +9,13 @@ export interface NavigationTestResult {
 }
 
 export interface FormField {
-  id: string;
+  id?: string;
   name: string;
   fieldName?: string; // Added for compatibility with existing components
   type: "text" | "email" | "password" | "number" | "date" | "select" | "checkbox" | "radio";
-  validations: string[];
-  value: string;
-  status: "success" | "warning" | "error";
+  validations?: string[];
+  value?: string;
+  status?: "success" | "warning" | "error";
   message?: string;
   fieldType?: string; // For compatibility with existing components
   errors?: string[];
@@ -27,12 +26,14 @@ export interface FormValidationTestResult {
   id: string;
   name: string;
   form?: string; // Added for compatibility with existing components
+  formId?: string; // Added for compatibility
   formName?: string; // For compatibility
   location?: string; // For compatibility
   status: "success" | "warning" | "error";
   fields: FormField[];
   message?: string;
   timestamp: number;
+  success?: boolean; // Added for compatibility with mock data
 }
 
 export interface IconTestResult {
@@ -120,7 +121,6 @@ export interface ApiEndpointDiagnosticResult {
   };
 }
 
-// Additional types needed
 export type DiagnosticTestStatus = "success" | "warning" | "error";
 
 export interface DiagnosticResult {
@@ -135,7 +135,6 @@ export interface DiagnosticResult {
   recommendations?: (string | Recommendation)[];
 }
 
-// Add NavigationDiagnosticResult as an alias to NavigationTestResult
 export type NavigationDiagnosticResult = NavigationTestResult;
 
 export interface DiagnosticSummary {
@@ -147,7 +146,6 @@ export interface DiagnosticSummary {
   timestamp: string;
 }
 
-// Types for accessibility audit
 export interface AccessibilityAuditResult {
   id: string;
   impact: "critical" | "serious" | "moderate" | "minor";
@@ -161,7 +159,6 @@ export interface AccessibilityAuditResult {
   url?: string; // Added for compatibility with components
 }
 
-// Log entries
 export type LogLevel = "info" | "warning" | "error" | "debug" | "success";
 
 export interface LogEntry {
@@ -173,7 +170,6 @@ export interface LogEntry {
   details?: string;
 }
 
-// Quick fix and recommendations
 export interface QuickFix {
   id: string;
   title: string;

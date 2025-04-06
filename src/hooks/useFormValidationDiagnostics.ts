@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { FormValidationTestResult } from '@/services/diagnostics/types';
+import { FormValidationTestResult } from '@/types/diagnostics';
 
 interface UseFormValidationDiagnosticsProps {
   formId?: string;
@@ -10,6 +10,7 @@ interface UseFormValidationDiagnosticsProps {
 const mockFormValidationTests: FormValidationTestResult[] = [
   {
     id: "test-1",
+    form: "register-form",
     formId: "register-form",
     name: 'Register Form Email Validation',
     formName: 'register-form',
@@ -20,6 +21,7 @@ const mockFormValidationTests: FormValidationTestResult[] = [
     timestamp: Date.now() - 300000,
     fields: [
       {
+        id: "email-field",
         name: 'email',
         type: 'email',
         validations: ['required', 'email'],
@@ -31,6 +33,7 @@ const mockFormValidationTests: FormValidationTestResult[] = [
   },
   {
     id: "test-2",
+    form: "register-form",
     formId: "register-form",
     name: 'Register Form Password Validation',
     formName: 'register-form',
@@ -41,6 +44,7 @@ const mockFormValidationTests: FormValidationTestResult[] = [
     timestamp: Date.now() - 200000,
     fields: [
       {
+        id: "password-field",
         name: 'password',
         type: 'password',
         validations: ['required', 'minLength:8'],
@@ -52,6 +56,7 @@ const mockFormValidationTests: FormValidationTestResult[] = [
   },
   {
     id: "test-3",
+    form: "login-form",
     formId: "login-form",
     name: 'Login Form Email Validation',
     formName: 'login-form',
@@ -62,6 +67,7 @@ const mockFormValidationTests: FormValidationTestResult[] = [
     timestamp: Date.now() - 100000,
     fields: [
       {
+        id: "email-field",
         name: 'email',
         type: 'email',
         validations: ['required', 'email'],
@@ -73,6 +79,7 @@ const mockFormValidationTests: FormValidationTestResult[] = [
   },
   {
     id: "test-4",
+    form: "contact-form",
     formId: "contact-form",
     name: 'Contact Form Message Validation',
     formName: 'contact-form',
@@ -83,6 +90,7 @@ const mockFormValidationTests: FormValidationTestResult[] = [
     timestamp: Date.now() - 50000,
     fields: [
       {
+        id: "message-field",
         name: 'message',
         type: 'text',
         validations: ['required', 'minLength:10'],
@@ -139,7 +147,9 @@ export const useFormValidationDiagnostics = (props?: UseFormValidationDiagnostic
       await new Promise(resolve => setTimeout(resolve, 500));
       
       // Filter mock results for the specified form
-      const formResults = mockFormValidationTests.filter(test => test.formName === formId);
+      const formResults = mockFormValidationTests.filter(test => 
+        test.formId === formId || test.form === formId || test.formName === formId
+      );
       setResults(formResults);
     } catch (err) {
       setError(err instanceof Error ? err : new Error('An unknown error occurred'));
@@ -157,7 +167,9 @@ export const useFormValidationDiagnostics = (props?: UseFormValidationDiagnostic
       await new Promise(resolve => setTimeout(resolve, 700));
       
       // Filter mock results for the specified form
-      const formResults = mockFormValidationTests.filter(test => test.formName === formId);
+      const formResults = mockFormValidationTests.filter(test => 
+        test.formId === formId || test.form === formId || test.formName === formId
+      );
       
       if (testIndex !== undefined && formResults[testIndex]) {
         setResults([formResults[testIndex]]);
@@ -199,6 +211,7 @@ export const useFormValidationDiagnostics = (props?: UseFormValidationDiagnostic
     for (const result of results) {
       const field = result.fields?.find(f => f.name === fieldName);
       if (field) {
+        if (field.status) return field.status;
         if (!field.valid) return 'error';
         return field.errors && field.errors.length > 0 ? 'warning' : 'success';
       }
@@ -209,7 +222,10 @@ export const useFormValidationDiagnostics = (props?: UseFormValidationDiagnostic
   const getFieldMessage = useCallback((fieldName: string): string | null => {
     for (const result of results) {
       const field = result.fields?.find(f => f.name === fieldName);
-      if (field && field.errors && field.errors.length > 0) return field.errors[0];
+      if (field) {
+        if (field.message) return field.message;
+        if (field.errors && field.errors.length > 0) return field.errors[0];
+      }
     }
     return null;
   }, [results]);

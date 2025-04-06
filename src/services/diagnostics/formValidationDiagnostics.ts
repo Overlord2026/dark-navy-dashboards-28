@@ -10,6 +10,8 @@ export const runFormValidationDiagnostics = async (): Promise<FormValidationTest
     {
       id: "login-form-test",
       name: "Login Form",
+      formId: "login-form",
+      formName: "login-form",
       status: "success",
       message: "All validation rules working correctly",
       timestamp: Date.now(),
@@ -46,13 +48,14 @@ export const validateFormSubmission = (formName: string, formData: Record<string
   return {
     id: `${formName}-submission`,
     name: formName,
+    formName: formName,
     status: "success",
     message: "Form submission validated successfully",
     timestamp: Date.now(),
     fields: Object.entries(formData).map(([key, value]) => ({
       id: `${key}-field`,
       name: key,
-      type: typeof value === "string" ? "text" : "checkbox",
+      type: typeof value === "string" ? "text" : "checkbox" as any,
       validations: ["required"],
       value: String(value),
       status: "success",
