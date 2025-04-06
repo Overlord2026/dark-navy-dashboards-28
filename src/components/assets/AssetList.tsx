@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useNetWorth, Asset } from "@/context/NetWorthContext";
 import { Card, CardContent } from "@/components/ui/card";
@@ -6,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { 
   Edit, 
   Trash2, 
-  ExternalLink, 
   Home, 
   Car, 
   Sailboat, 

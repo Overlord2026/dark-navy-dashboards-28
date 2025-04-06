@@ -42,13 +42,14 @@ export default function AllAssets() {
         <ComprehensiveAssetsSummary />
         
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid grid-cols-8 w-full mb-6">
+          <TabsList className="grid grid-cols-1 md:grid-cols-8 w-full mb-6 overflow-auto">
             <TabsTrigger value="all">All</TabsTrigger>
             <TabsTrigger value="property">Real Estate</TabsTrigger>
             <TabsTrigger value="vehicles">Vehicles</TabsTrigger>
             <TabsTrigger value="cash">Cash</TabsTrigger>
             <TabsTrigger value="investment">Investments</TabsTrigger>
             <TabsTrigger value="collectibles">Collectibles</TabsTrigger>
+            <TabsTrigger value="art">Art</TabsTrigger>
             <TabsTrigger value="digital">Digital</TabsTrigger>
             <TabsTrigger value="other">Other</TabsTrigger>
           </TabsList>
@@ -75,6 +76,10 @@ export default function AllAssets() {
           
           <TabsContent value="collectibles">
             <AssetList filter="collectibles" />
+          </TabsContent>
+          
+          <TabsContent value="art">
+            <AssetList filter="art" />
           </TabsContent>
           
           <TabsContent value="digital">

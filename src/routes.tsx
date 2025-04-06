@@ -1,4 +1,3 @@
-
 import React from "react";
 import { createBrowserRouter } from "react-router-dom";
 import Dashboard from "@/pages/Dashboard";
@@ -159,7 +158,6 @@ const routes = createBrowserRouter([
     path: "/investments/stock-screener",
     element: <StockScreener />
   },
-  // Add routes for vehicles, collectibles, and art
   {
     path: '/vehicles-collectibles',
     element: <AllAssets />

@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { Property } from '@/types/property';
 
@@ -205,7 +204,10 @@ export const NetWorthProvider: React.FC<{ children: ReactNode }> = ({ children }
       return assets.filter(asset => ['vehicle', 'boat'].includes(asset.type));
     }
     if (category === 'collectibles') {
-      return assets.filter(asset => ['art', 'antique', 'collectible', 'jewelry'].includes(asset.type));
+      return assets.filter(asset => ['antique', 'collectible', 'jewelry'].includes(asset.type));
+    }
+    if (category === 'art') {
+      return assets.filter(asset => asset.type === 'art');
     }
     if (category === 'digital') {
       return assets.filter(asset => asset.type === 'digital');
