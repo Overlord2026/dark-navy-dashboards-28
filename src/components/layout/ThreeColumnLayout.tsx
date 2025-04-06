@@ -56,9 +56,12 @@ export function ThreeColumnLayout({
   
   const sectionId = params.sectionId || activeSecondaryItem;
   
-  // Determine the active main item for investment subcategories
+  // Determine the active main item based on current path
   let currentActiveMainItem = activeMainItem;
   const pathSegments = location.pathname.split('/').filter(Boolean);
+  
+  // Get the first segment as the current path
+  const currentPath = pathSegments[0] || 'dashboard';
   
   // Special handling for alternative investment subcategories
   if (pathSegments.includes('alternative')) {
@@ -80,7 +83,7 @@ export function ThreeColumnLayout({
   // Improved function to get the current path and handle nested routes
   const getCurrentPath = () => {
     const pathSegments = location.pathname.split('/').filter(Boolean);
-    if (pathSegments.length === 0) return 'home';
+    if (pathSegments.length === 0) return 'dashboard';
     
     // Special case for tax-planning which is under education
     if (pathSegments.includes('tax-planning')) {
@@ -90,7 +93,7 @@ export function ThreeColumnLayout({
     return pathSegments[0];
   };
 
-  const currentPath = getCurrentPath();
+  const currentPagePath = getCurrentPath();
 
   const toggleCategory = (categoryId: string) => {
     setExpandedCategories(prev => ({
@@ -131,7 +134,7 @@ export function ThreeColumnLayout({
                     category={category}
                     isExpanded={expandedCategories[category.id]}
                     toggleCategory={toggleCategory}
-                    currentPath={currentPath}
+                    currentPath={currentPagePath}
                     isCollapsed={mainSidebarCollapsed}
                     isLightTheme={isLightTheme}
                   />

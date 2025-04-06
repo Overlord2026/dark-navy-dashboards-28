@@ -27,7 +27,7 @@ import {
 export const homeNavItems = [
   {
     title: "Home",
-    href: "/",
+    href: "/dashboard",
     icon: HomeIcon,
   }
 ];

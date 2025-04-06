@@ -42,9 +42,10 @@ const AppRoutes: React.FC = () => {
       <Route path="/disclosures/*" element={<PublicRoutes />} />
       <Route path="/accessibility/*" element={<PublicRoutes />} />
 
-      {/* Client portal routes */}
+      {/* Client portal routes - these were causing the issue */}
+      <Route path="/*" element={<MainRoutes />} />
       <Route path="/dashboard/*" element={<MainRoutes />} />
-      <Route path="/billpay" element={<MainRoutes />} />
+      <Route path="/billpay/*" element={<MainRoutes />} />
       <Route path="/finance/*" element={<FinanceRoutes />} />
       <Route path="/wealth/*" element={<WealthRoutes />} />
       <Route path="/advisor/*" element={<AdvisorRoutes />} />
