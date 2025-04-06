@@ -1,5 +1,5 @@
 
-import { runDiagnostics } from './diagnostics';
+import { runDiagnostics } from './diagnostics/index';
 
 // Re-export the diagnostics function 
 export { runDiagnostics };

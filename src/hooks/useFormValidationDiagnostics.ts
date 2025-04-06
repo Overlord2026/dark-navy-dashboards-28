@@ -1,115 +1,236 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { FormValidationTestResult } from '@/services/diagnostics/types';
 
 interface UseFormValidationDiagnosticsProps {
-  formId: string;
+  formId?: string;
   enabled?: boolean;
 }
 
+// Mock data structure to match the updated FormValidationTestResult type
 const mockFormValidationTests: FormValidationTestResult[] = [
   {
-    id: 'form-1',
-    formId: 'register-form',
-    field: 'email',
+    name: 'Register Form Email Validation',
+    formName: 'register-form',
+    location: '/auth/register',
     status: 'success',
     message: 'Email validation working correctly',
-    timestamp: Date.now() - 300000
+    timestamp: Date.now() - 300000,
+    fields: [
+      {
+        name: 'email',
+        type: 'email',
+        validations: ['required', 'email'],
+        value: 'test@example.com',
+        status: 'success'
+      }
+    ]
   },
   {
-    id: 'form-2',
-    formId: 'register-form',
-    field: 'password',
+    name: 'Register Form Password Validation',
+    formName: 'register-form',
+    location: '/auth/register',
     status: 'warning',
     message: 'Password strength indicator showing warnings inconsistently',
-    timestamp: Date.now() - 200000
+    timestamp: Date.now() - 200000,
+    fields: [
+      {
+        name: 'password',
+        type: 'password',
+        validations: ['required', 'minLength:8'],
+        value: 'Password123',
+        status: 'warning'
+      }
+    ]
   },
   {
-    id: 'form-3',
-    formId: 'login-form',
-    field: 'email',
+    name: 'Login Form Email Validation',
+    formName: 'login-form',
+    location: '/auth/login',
     status: 'error',
     message: 'Email validation not triggering on blur',
-    timestamp: Date.now() - 100000
+    timestamp: Date.now() - 100000,
+    fields: [
+      {
+        name: 'email',
+        type: 'email',
+        validations: ['required', 'email'],
+        value: 'invalid-email',
+        status: 'error'
+      }
+    ]
   },
   {
-    id: 'form-4',
-    formId: 'contact-form',
-    field: 'message',
+    name: 'Contact Form Message Validation',
+    formName: 'contact-form',
+    location: '/contact',
     status: 'success',
     message: 'Message length validation working correctly',
-    timestamp: Date.now() - 50000
+    timestamp: Date.now() - 50000,
+    fields: [
+      {
+        name: 'message',
+        type: 'text',
+        validations: ['required', 'minLength:10'],
+        value: 'This is a test message with proper length',
+        status: 'success'
+      }
+    ]
   }
 ];
 
-export const useFormValidationDiagnostics = ({ 
-  formId, 
-  enabled = true 
-}: UseFormValidationDiagnosticsProps) => {
+// Mock available forms
+const availableFormsList = [
+  { id: 'register-form', name: 'User Registration', location: '/auth/register' },
+  { id: 'login-form', name: 'User Login', location: '/auth/login' },
+  { id: 'contact-form', name: 'Contact Form', location: '/contact' },
+  { id: 'profile-form', name: 'Profile Update', location: '/profile' },
+];
+
+export const useFormValidationDiagnostics = (props?: UseFormValidationDiagnosticsProps) => {
+  const formId = props?.formId;
+  const enabled = props?.enabled ?? true;
+  
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isRunning, setIsRunning] = useState<boolean>(false);
+  const [lastRun, setLastRun] = useState<number | null>(null);
   const [results, setResults] = useState<FormValidationTestResult[]>([]);
+  const [availableForms, setAvailableForms] = useState<any[]>([]);
   const [error, setError] = useState<Error | null>(null);
 
-  const runFormValidation = async () => {
+  // Load available forms
+  const loadAvailableForms = useCallback(async () => {
     setIsLoading(true);
     setError(null);
     
     try {
       // In a real implementation, this would call the API
-      // For now, we'll simulate an API call with a timeout
+      await new Promise(resolve => setTimeout(resolve, 300));
+      setAvailableForms(availableFormsList);
+    } catch (err) {
+      setError(err instanceof Error ? err : new Error('An unknown error occurred'));
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  // Run validation for a specific form
+  const runFormValidation = useCallback(async () => {
+    if (!formId) return;
+    
+    setIsLoading(true);
+    setError(null);
+    
+    try {
+      // In a real implementation, this would call the API
       await new Promise(resolve => setTimeout(resolve, 500));
       
       // Filter mock results for the specified form
-      const formResults = mockFormValidationTests.filter(test => test.formId === formId);
+      const formResults = mockFormValidationTests.filter(test => test.formName === formId);
       setResults(formResults);
     } catch (err) {
       setError(err instanceof Error ? err : new Error('An unknown error occurred'));
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [formId]);
+
+  // Run validation for a single form by ID
+  const runFormTest = useCallback(async (formId: string, testIndex?: number) => {
+    setIsRunning(true);
+    setError(null);
+    
+    try {
+      // In a real implementation, this would call the API
+      await new Promise(resolve => setTimeout(resolve, 700));
+      
+      // Filter mock results for the specified form
+      const formResults = mockFormValidationTests.filter(test => test.formName === formId);
+      
+      if (testIndex !== undefined && formResults[testIndex]) {
+        setResults([formResults[testIndex]]);
+      } else {
+        setResults(formResults);
+      }
+      
+      setLastRun(Date.now());
+    } catch (err) {
+      setError(err instanceof Error ? err : new Error('An unknown error occurred'));
+    } finally {
+      setIsRunning(false);
+    }
+  }, []);
+
+  // Run all form tests
+  const runAllFormTests = useCallback(async () => {
+    setIsRunning(true);
+    setError(null);
+    
+    try {
+      // In a real implementation, this would call the API
+      await new Promise(resolve => setTimeout(resolve, 1200));
+      setResults(mockFormValidationTests);
+      setLastRun(Date.now());
+    } catch (err) {
+      setError(err instanceof Error ? err : new Error('An unknown error occurred'));
+    } finally {
+      setIsRunning(false);
+    }
+  }, []);
 
   useEffect(() => {
-    if (enabled) {
+    if (enabled && formId) {
       runFormValidation();
     }
-  }, [formId, enabled]);
+  }, [formId, enabled, runFormValidation]);
 
-  const getFieldStatus = (fieldName: string): 'success' | 'warning' | 'error' | 'idle' => {
-    const fieldTest = results.find(test => test.field === fieldName);
-    return fieldTest ? fieldTest.status : 'idle';
-  };
+  const getFieldStatus = useCallback((fieldName: string): 'success' | 'warning' | 'error' | 'idle' => {
+    for (const result of results) {
+      const field = result.fields.find(f => f.name === fieldName);
+      if (field) return field.status;
+    }
+    return 'idle';
+  }, [results]);
 
-  const getFieldMessage = (fieldName: string): string | null => {
-    const fieldTest = results.find(test => test.field === fieldName);
-    return fieldTest ? fieldTest.message : null;
-  };
+  const getFieldMessage = useCallback((fieldName: string): string | null => {
+    for (const result of results) {
+      const field = result.fields.find(f => f.name === fieldName);
+      if (field && field.message) return field.message;
+    }
+    return null;
+  }, [results]);
 
-  const hasErrors = (): boolean => {
+  const hasErrors = useCallback((): boolean => {
     return results.some(result => result.status === 'error');
-  };
+  }, [results]);
 
-  const hasWarnings = (): boolean => {
+  const hasWarnings = useCallback((): boolean => {
     return results.some(result => result.status === 'warning');
-  };
+  }, [results]);
 
-  const getErrorCount = (): number => {
+  const getErrorCount = useCallback((): number => {
     return results.filter(result => result.status === 'error').length;
-  };
+  }, [results]);
 
-  const getWarningCount = (): number => {
+  const getWarningCount = useCallback((): number => {
     return results.filter(result => result.status === 'warning').length;
-  };
+  }, [results]);
 
-  const getSuccessCount = (): number => {
+  const getSuccessCount = useCallback((): number => {
     return results.filter(result => result.status === 'success').length;
-  };
+  }, [results]);
 
   return {
     isLoading,
+    isRunning,
+    lastRun,
     results,
     error,
+    availableForms,
     runFormValidation,
+    runFormTest,
+    runAllFormTests,
+    loadAvailableForms,
     getFieldStatus,
     getFieldMessage,
     hasErrors,
