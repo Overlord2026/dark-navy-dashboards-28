@@ -1,0 +1,53 @@
+
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { ExternalLink } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ProfessionalType } from "@/types/professional";
+
+interface ProfessionalSignupPromptProps {
+  professionalType: ProfessionalType;
+  setProfessionalType: (type: ProfessionalType) => void;
+}
+
+export function ProfessionalSignupPrompt({ professionalType, setProfessionalType }: ProfessionalSignupPromptProps) {
+  const navigate = useNavigate();
+
+  const handleProfessionalSignup = () => {
+    navigate("/professional-signup", { state: { professionalType } });
+  };
+
+  return (
+    <div className="bg-card p-4 rounded-lg border border-border">
+      <h2 className="text-lg font-medium mb-3">Are you a Professional?</h2>
+      <p className="text-muted-foreground mb-4">
+        Join our marketplace to connect with clients and collaborate with other professionals.
+      </p>
+      <div className="flex flex-col sm:flex-row gap-3">
+        <Select 
+          value={professionalType} 
+          onValueChange={(value) => setProfessionalType(value as ProfessionalType)}
+        >
+          <SelectTrigger className="w-full sm:w-[250px]">
+            <SelectValue placeholder="Select professional type" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="Tax Professional / Accountant">Tax Professional / Accountant</SelectItem>
+            <SelectItem value="Estate Planning Attorney">Estate Planning Attorney</SelectItem>
+            <SelectItem value="Financial Advisor">Financial Advisor</SelectItem>
+            <SelectItem value="Real Estate Agent / Property Manager">Real Estate Agent / Property Manager</SelectItem>
+            <SelectItem value="Insurance / LTC Specialist">Insurance / LTC Specialist</SelectItem>
+            <SelectItem value="Mortgage Broker">Mortgage Broker</SelectItem>
+            <SelectItem value="Auto Insurance Provider">Auto Insurance Provider</SelectItem>
+            <SelectItem value="Other">Other Professional</SelectItem>
+          </SelectContent>
+        </Select>
+        <Button onClick={handleProfessionalSignup} className="flex items-center gap-2">
+          <ExternalLink size={16} />
+          Sign Up as Professional
+        </Button>
+      </div>
+    </div>
+  );
+}

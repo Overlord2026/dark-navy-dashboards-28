@@ -1,28 +1,17 @@
 
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
-import { ProfessionalsDirectory } from "@/components/professionals/ProfessionalsDirectory";
-import { AddProfessionalDialog } from "@/components/professionals/AddProfessionalDialog";
-import { ConsultationsPrompt } from "@/components/professionals/ConsultationsPrompt";
-import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { 
-  UserPlus, 
-  ExternalLink, 
-  MessageSquare, 
-  FileText, 
-  ShieldCheck, 
-  Users2, 
-  Upload, 
-  Share2
-} from "lucide-react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { FileText, ShieldCheck, Users2 } from "lucide-react";
 import { ProfessionalType } from "@/types/professional";
 import { ProfessionalsProvider } from "@/context/ProfessionalsContext";
+import { AddProfessionalDialog } from "@/components/professionals/AddProfessionalDialog";
 import { ShareDocumentWithProfessionalsDialog } from "@/components/professionals/ShareDocumentWithProfessionalsDialog";
 import { UploadDocumentDialog } from "@/components/documents/UploadDocumentDialog";
-import { SharedDocumentsList } from "@/components/professionals/SharedDocumentsList";
+import { ProfessionalsHeader } from "@/components/professionals/ProfessionalsHeader";
+import { ProfessionalsTabContent } from "@/components/professionals/tabs/ProfessionalsTabContent";
+import { DocumentsTabContent } from "@/components/professionals/tabs/DocumentsTabContent";
+import { PermissionsTabContent } from "@/components/professionals/tabs/PermissionsTabContent";
 
 export default function Professionals() {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
@@ -30,35 +19,12 @@ export default function Professionals() {
   const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
   const [professionalType, setProfessionalType] = useState<ProfessionalType>("Tax Professional / Accountant");
   const [activeTab, setActiveTab] = useState("professionals");
-  const navigate = useNavigate();
-
-  const handleProfessionalSignup = () => {
-    navigate("/professional-signup", { state: { professionalType } });
-  };
-
-  const handleNavigateToFeedback = () => {
-    navigate("/advisor-feedback");
-  };
 
   return (
     <ThreeColumnLayout activeMainItem="professionals" title="Service Professionals">
       <ProfessionalsProvider>
         <div className="space-y-6 animate-fade-in">
-          <div className="flex justify-between items-center">
-            <div>
-              <h1 className="text-2xl font-bold">Service Professionals</h1>
-              <p className="text-muted-foreground mt-1">
-                Manage your professional service providers and share documents securely
-              </p>
-            </div>
-            <Button 
-              onClick={() => setIsAddDialogOpen(true)}
-              className="flex items-center gap-2"
-            >
-              <UserPlus size={16} />
-              Add Professional
-            </Button>
-          </div>
+          <ProfessionalsHeader onAddProfessional={() => setIsAddDialogOpen(true)} />
 
           <Tabs defaultValue="professionals" onValueChange={setActiveTab} className="w-full">
             <TabsList className="mb-4">
@@ -76,105 +42,24 @@ export default function Professionals() {
               </TabsTrigger>
             </TabsList>
             
-            <TabsContent value="professionals" className="space-y-6">
-              <ConsultationsPrompt />
-
+            <TabsContent value="professionals">
               {activeTab === "professionals" && (
-                <div className="bg-card p-4 rounded-lg border border-border">
-                  <h2 className="text-lg font-medium mb-3">Are you a Professional?</h2>
-                  <p className="text-muted-foreground mb-4">
-                    Join our marketplace to connect with clients and collaborate with other professionals.
-                  </p>
-                  <div className="flex flex-col sm:flex-row gap-3">
-                    <Select 
-                      value={professionalType} 
-                      onValueChange={(value) => setProfessionalType(value as ProfessionalType)}
-                    >
-                      <SelectTrigger className="w-full sm:w-[250px]">
-                        <SelectValue placeholder="Select professional type" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="Tax Professional / Accountant">Tax Professional / Accountant</SelectItem>
-                        <SelectItem value="Estate Planning Attorney">Estate Planning Attorney</SelectItem>
-                        <SelectItem value="Financial Advisor">Financial Advisor</SelectItem>
-                        <SelectItem value="Real Estate Agent / Property Manager">Real Estate Agent / Property Manager</SelectItem>
-                        <SelectItem value="Insurance / LTC Specialist">Insurance / LTC Specialist</SelectItem>
-                        <SelectItem value="Mortgage Broker">Mortgage Broker</SelectItem>
-                        <SelectItem value="Auto Insurance Provider">Auto Insurance Provider</SelectItem>
-                        <SelectItem value="Other">Other Professional</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <Button onClick={handleProfessionalSignup} className="flex items-center gap-2">
-                      <ExternalLink size={16} />
-                      Sign Up as Professional
-                    </Button>
-                  </div>
-                </div>
+                <ProfessionalsTabContent 
+                  professionalType={professionalType}
+                  setProfessionalType={setProfessionalType}
+                />
               )}
-
-              {/* New advisor feedback prompt */}
-              <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/40 dark:to-indigo-950/30 p-4 rounded-lg border border-blue-200 dark:border-blue-800">
-                <h2 className="text-lg font-medium mb-2">Already a Professional on our Platform?</h2>
-                <p className="text-muted-foreground mb-4">
-                  Share your experience with our practice management tools, marketing features, and marketplace visibility.
-                </p>
-                <Button 
-                  variant="outline" 
-                  onClick={handleNavigateToFeedback}
-                  className="flex items-center gap-2"
-                >
-                  <MessageSquare size={16} />
-                  Provide Advisor Feedback
-                </Button>
-              </div>
-
-              <ProfessionalsDirectory />
             </TabsContent>
             
             <TabsContent value="documents">
-              <div className="bg-card p-6 rounded-lg border border-border space-y-4">
-                <div className="flex items-center justify-between mb-4">
-                  <div>
-                    <h2 className="text-xl font-medium">Shared Documents</h2>
-                    <p className="text-muted-foreground">
-                      Manage documents shared with your service professionals. Control access and track document viewing.
-                    </p>
-                  </div>
-                  <div className="flex gap-2">
-                    <Button 
-                      variant="outline" 
-                      onClick={() => setIsUploadDialogOpen(true)}
-                      className="flex items-center gap-2"
-                    >
-                      <Upload size={16} />
-                      Upload New
-                    </Button>
-                    <Button 
-                      onClick={() => setIsShareDialogOpen(true)}
-                      className="flex items-center gap-2"
-                    >
-                      <Share2 size={16} />
-                      Share Document
-                    </Button>
-                  </div>
-                </div>
-                
-                <SharedDocumentsList />
-              </div>
+              <DocumentsTabContent 
+                onUpload={() => setIsUploadDialogOpen(true)}
+                onShare={() => setIsShareDialogOpen(true)}
+              />
             </TabsContent>
             
             <TabsContent value="permissions">
-              <div className="bg-card p-6 rounded-lg border border-border space-y-4">
-                <h2 className="text-xl font-medium">Professional Access Permissions</h2>
-                <p className="text-muted-foreground">
-                  Manage what information each professional can view and edit.
-                </p>
-                <div className="p-8 border border-dashed border-border rounded-lg flex flex-col items-center justify-center">
-                  <ShieldCheck size={48} className="text-muted-foreground mb-4" />
-                  <p className="text-center mb-2">No custom permissions configured</p>
-                  <Button variant="outline">Configure Permissions</Button>
-                </div>
-              </div>
+              <PermissionsTabContent />
             </TabsContent>
           </Tabs>
 
