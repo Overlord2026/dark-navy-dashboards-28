@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Route, Routes, Navigate } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 
 // Import pages
 import HomePage from "../pages/HomePage";
@@ -28,9 +28,6 @@ const PublicRoutes = () => {
       <Route path="/terms-of-service" element={<TermsOfServicePage />} />
       <Route path="/disclosures" element={<DisclosuresPage />} />
       <Route path="/accessibility" element={<AccessibilityPage />} />
-      
-      {/* Remove login and client-portal routes from here */}
-      
       <Route path="/" element={<HomePage />} />
       <Route path="*" element={<NotFound />} />
     </Routes>

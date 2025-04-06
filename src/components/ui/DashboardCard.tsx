@@ -1,32 +1,29 @@
 
-import React, { ReactNode } from "react";
-import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
-interface DashboardCardProps extends React.HTMLAttributes<HTMLDivElement> {
+interface DashboardCardProps {
   title: string;
-  icon?: ReactNode;
-  footer?: ReactNode; // Add optional footer property
-  children: ReactNode;
+  icon?: React.ReactNode;
+  children: React.ReactNode;
+  className?: string;
+  footer?: React.ReactNode;
 }
 
-export function DashboardCard({ title, icon, children, footer, className, ...props }: DashboardCardProps) {
+export const DashboardCard = ({
+  title,
+  icon,
+  children,
+  className,
+  footer,
+}: DashboardCardProps) => {
   return (
-    <Card className={cn("hover:shadow-md transition-shadow", className)} {...props}>
-      <CardContent className="p-6">
-        <div className="flex items-start justify-between">
-          <div className="flex flex-col">
-            <p className="text-sm text-muted-foreground">{title}</p>
-            <div className="mt-1">{children}</div>
-          </div>
-          {icon && (
-            <div className="bg-primary/10 p-2 rounded-full">
-              {icon}
-            </div>
-          )}
-        </div>
-        {footer && <div className="mt-4 pt-3 border-t">{footer}</div>}
-      </CardContent>
-    </Card>
+    <div className={cn("dashboard-card animate-fade-in", className)}>
+      <div className="dashboard-card-header">
+        <h3 className="dashboard-card-title">{title}</h3>
+        {icon && <div className="text-accent">{icon}</div>}
+      </div>
+      <div className="mb-4">{children}</div>
+      {footer && <div className="mt-auto pt-2 border-t border-border/30">{footer}</div>}
+    </div>
   );
-}
+};

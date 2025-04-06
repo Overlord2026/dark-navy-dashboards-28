@@ -1,6 +1,7 @@
+
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useUser } from "../context/UserContext";
 
 // Import components
 import PublicRoutes from "./PublicRoutes";
@@ -10,41 +11,38 @@ import WealthRoutes from "./WealthRoutes";
 import AdvisorRoutes from "./AdvisorRoutes";
 import AdminRoutes from "./AdminRoutes";
 import LoginPage from "../pages/LoginPage";
-import ClientPortal from "../pages/ClientPortal";
-import NotFound from "../pages/NotFound";
-
-// Protected route component - now directly renders children without auth check
-const ProtectedClientPortal = () => {
-  // Authentication check removed as requested
-  return <ClientPortal />;
-};
 
 const AppRoutes: React.FC = () => {
+  const { isAuthenticated, userProfile } = useUser();
+  const isAdmin = userProfile?.role === "admin" || userProfile?.role === "system_administrator";
+  const isDeveloper = isAdmin || userProfile?.role === "developer";
+  
+  if (!isAuthenticated) {
+    return (
+      <Routes>
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/advisor/login" element={<LoginPage isAdvisor={true} />} />
+        <Route path="/*" element={<PublicRoutes />} />
+      </Routes>
+    );
+  }
+
+  // Desktop routes only
   return (
     <Routes>
-      {/* Direct route to login page */}
-      <Route path="/login" element={<LoginPage />} />
+      <Route path="/*" element={<MainRoutes />} />
+      <Route path="/finance/*" element={<FinanceRoutes />} />
+      <Route path="/wealth/*" element={<WealthRoutes />} />
+      <Route path="/advisor/*" element={<AdvisorRoutes />} />
+      {isAdmin && <Route path="/admin/*" element={<AdminRoutes />} />}
       
-      {/* Keep advisor login */}
-      <Route path="/advisor/login" element={<LoginPage isAdvisor={true} />} />
+      {isDeveloper ? (
+        <Route path="/dev/diagnostics" element={<Navigate to="/admin/navigation-diagnostics" />} />
+      ) : (
+        <Route path="/dev/*" element={<Navigate to="/" replace />} />
+      )}
       
-      {/* Protected Client Portal route - now without authentication check */}
-      <Route path="/client-portal" element={<ProtectedClientPortal />} />
-      
-      {/* Public routes */}
       <Route path="/*" element={<PublicRoutes />} />
-      
-      {/* Feature routes - no authentication required for now */}
-      <Route path="finance/*" element={<FinanceRoutes />} />
-      <Route path="wealth/*" element={<WealthRoutes />} />
-      <Route path="advisor/*" element={<AdvisorRoutes />} />
-      <Route path="admin/*" element={<AdminRoutes />} />
-      
-      {/* Redirect root to client portal */}
-      <Route path="/" element={<Navigate to="/client-portal" replace />} />
-      
-      {/* Catch-all route */}
-      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 };

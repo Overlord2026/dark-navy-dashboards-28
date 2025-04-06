@@ -2,13 +2,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { LucideIcon } from "lucide-react";
 
 interface NavigationItemProps {
   item: {
     id: string;
     label: string;
-    icon: React.ElementType | React.FC | LucideIcon;
+    icon: React.ElementType | React.FC;
     href: string;
   };
   isActive: boolean;

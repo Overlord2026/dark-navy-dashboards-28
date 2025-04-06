@@ -1,50 +1,21 @@
-import React, { useState } from "react";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { toast } from "@/components/ui/use-toast";
-import { useAuth } from "@/context/AuthContext";
-import { useUser } from "@/context/UserContext";
 
 export default function LoginPage({ isAdvisor = false }) {
   const navigate = useNavigate();
-  const { login } = useAuth();
-  const { login: userLogin } = useUser();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   
-  // For regular users, redirect immediately to client portal
-  if (!isAdvisor) {
-    return <Navigate to="/client-portal" replace />;
-  }
-  
-  // Only advisor login functionality remains
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-    
-    try {
-      // Set authentication in both contexts to ensure consistent state
-      login();
-      await userLogin(email, password);
-      
-      toast({
-        title: "Login successful",
-        description: "Welcome to your advisor dashboard"
-      });
-      
+    // For now, just navigate to the dashboard
+    if (isAdvisor) {
       navigate("/advisor/dashboard");
-    } catch (error) {
-      toast({
-        title: "Login failed",
-        description: "Please check your credentials and try again",
-        variant: "destructive"
-      });
-    } finally {
-      setIsLoading(false);
+    } else {
+      navigate("/");
     }
   };
   
@@ -59,16 +30,9 @@ export default function LoginPage({ isAdvisor = false }) {
               className="h-16 w-auto"
             />
           </Link>
-          <div className="flex gap-3">
+          <div>
             <Button variant="ghost" asChild>
               <Link to="/">Back to Home</Link>
-            </Button>
-            <Button 
-              variant="default" 
-              onClick={() => navigate('/client-portal')}
-              className="bg-green-600 hover:bg-green-700"
-            >
-              Access Client Portal
             </Button>
           </div>
         </div>
@@ -77,8 +41,14 @@ export default function LoginPage({ isAdvisor = false }) {
       <div className="flex-1 flex justify-center items-center p-4">
         <div className="bg-white p-8 rounded-lg shadow-md border border-[#DCD8C0] w-full max-w-md">
           <div className="text-center mb-6">
-            <h1 className="text-2xl font-bold text-[#222222]">Advisor Login</h1>
-            <p className="text-gray-600 mt-2">Access your advisor dashboard</p>
+            <h1 className="text-2xl font-bold text-[#222222]">
+              {isAdvisor ? "Advisor Login" : "Client Login"}
+            </h1>
+            <p className="text-gray-600 mt-2">
+              {isAdvisor 
+                ? "Access your advisor dashboard" 
+                : "Access your personalized financial dashboard"}
+            </p>
           </div>
           
           <form onSubmit={handleLogin} className="space-y-4">
@@ -90,8 +60,6 @@ export default function LoginPage({ isAdvisor = false }) {
                 placeholder="you@example.com" 
                 autoComplete="email" 
                 required 
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
               />
             </div>
             
@@ -108,8 +76,6 @@ export default function LoginPage({ isAdvisor = false }) {
                 placeholder="••••••••" 
                 autoComplete="current-password" 
                 required 
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
               />
             </div>
             
@@ -123,24 +89,22 @@ export default function LoginPage({ isAdvisor = false }) {
               </label>
             </div>
             
-            <Button 
-              type="submit" 
-              className="w-full bg-black text-white hover:bg-black/80"
-              disabled={isLoading}
-            >
-              {isLoading ? "Signing in..." : "Sign In"}
+            <Button type="submit" className="w-full bg-black text-white hover:bg-black/80">
+              Sign In
             </Button>
           </form>
           
-          <div className="mt-6 pt-4 border-t border-gray-200 text-center">
-            <Button 
-              variant="link" 
-              onClick={() => navigate('/client-portal')}
-              className="text-green-600 hover:text-green-700"
-            >
-              Access Client Portal
-            </Button>
-          </div>
+          {!isAdvisor && (
+            <div className="mt-6 text-center text-sm text-gray-600">
+              <p>
+                Don't have an account?{" "}
+                <Link to="/contact" className="text-primary hover:underline">
+                  Contact us
+                </Link>{" "}
+                to get started.
+              </p>
+            </div>
+          )}
         </div>
       </div>
       

@@ -1,3 +1,4 @@
+
 import { ReactNode, useState } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
@@ -9,7 +10,7 @@ import { useUser } from "@/context/UserContext";
 import { AdvisorSection } from "@/components/profile/AdvisorSection";
 import { NavigationCategory } from "./NavigationCategory";
 import { SecondaryNavigation } from "./SecondaryNavigation";
-import navigationData, { navigationCategories, getSecondaryMenuItems } from "./navigationData";
+import { navigationCategories, getSecondaryMenuItems } from "./navigationData";
 
 interface ThreeColumnLayoutProps {
   children: ReactNode;
