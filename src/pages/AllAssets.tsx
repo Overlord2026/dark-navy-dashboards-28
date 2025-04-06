@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
 import { AssetList } from "@/components/assets/AssetList";
 import { AddAssetDialog } from "@/components/assets/AddAssetDialog";
-import { AssetsSummary } from "@/components/assets/AssetsSummary";
+import { ComprehensiveAssetsSummary } from "@/components/assets/ComprehensiveAssetsSummary";
 
 export default function AllAssets() {
   const { assets, getTotalNetWorth } = useNetWorth();
@@ -27,7 +27,7 @@ export default function AllAssets() {
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
           <div>
             <h1 className="text-2xl font-bold mb-1">Family Assets</h1>
-            <p className="text-muted-foreground">Manage all your family's assets in one place</p>
+            <p className="text-muted-foreground">Comprehensive view of all your family's assets</p>
           </div>
 
           <Button
@@ -39,7 +39,7 @@ export default function AllAssets() {
           </Button>
         </div>
         
-        <AssetsSummary />
+        <ComprehensiveAssetsSummary />
         
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid grid-cols-8 w-full mb-6">

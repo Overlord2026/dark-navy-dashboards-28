@@ -125,6 +125,8 @@ export const useDocumentManagement = () => {
       title: "Document shared",
       description: `${documentToShare.name} has been shared with ${professionalName}`
     });
+    
+    return sharedDocument;
   };
 
   const deleteSharedDocument = (documentId: string) => {
@@ -140,9 +142,17 @@ export const useDocumentManagement = () => {
       )
     );
   };
+  
+  // Get all documents including sample ones when real documents array is empty
+  const getAllDocuments = () => {
+    if (documents.length === 0) {
+      return getSampleDocuments();
+    }
+    return [...documents, ...getSampleDocuments()];
+  };
 
   return {
-    documents,
+    documents: getAllDocuments(),
     sharedDocuments,
     activeCategory,
     isUploadDialogOpen,
@@ -153,7 +163,7 @@ export const useDocumentManagement = () => {
     shareDocument,
     deleteSharedDocument,
     updateDocumentPermissions,
-    filteredDocuments: documents.filter(doc => doc.category === activeCategory)
+    filteredDocuments: getAllDocuments().filter(doc => !activeCategory || doc.category === activeCategory)
   };
 };
 

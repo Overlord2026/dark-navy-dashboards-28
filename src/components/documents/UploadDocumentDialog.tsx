@@ -16,10 +16,22 @@ import { useProfessionals } from "@/hooks/useProfessionals";
 export interface DocumentDialogProps {
   open: boolean;
   onClose: () => void;
+  onOpenChange?: (open: boolean) => void; // Added this prop for compatibility
   category?: string;
+  activeCategory?: string; // Added for compatibility
+  documentCategories?: any; // Added for compatibility
+  onFileUpload?: (file: File, customName: string, category?: string) => any; // Added for compatibility
 }
 
-export function UploadDocumentDialog({ open, onClose, category = "documents" }: DocumentDialogProps) {
+export function UploadDocumentDialog({ 
+  open, 
+  onClose, 
+  onOpenChange,
+  category = "documents",
+  activeCategory,
+  documentCategories,
+  onFileUpload: externalFileUpload
+}: DocumentDialogProps) {
   const [documentName, setDocumentName] = useState("");
   const [description, setDescription] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -38,6 +50,13 @@ export function UploadDocumentDialog({ open, onClose, category = "documents" }: 
     }
   };
   
+  const handleDialogClose = () => {
+    if (onOpenChange) {
+      onOpenChange(false);
+    }
+    onClose();
+  };
+  
   const handleSubmit = () => {
     if (!selectedFile) {
       toast.error("Please select a file to upload");
@@ -53,7 +72,9 @@ export function UploadDocumentDialog({ open, onClose, category = "documents" }: 
     
     setTimeout(() => {
       // Upload the document
-      const uploadedDoc = handleFileUpload(selectedFile, documentName, category);
+      const uploadedDoc = externalFileUpload 
+        ? externalFileUpload(selectedFile, documentName, category)
+        : handleFileUpload(selectedFile, documentName, category);
       
       toast.success("Document uploaded successfully", {
         description: `"${documentName}" has been added to your documents.`
@@ -78,12 +99,12 @@ export function UploadDocumentDialog({ open, onClose, category = "documents" }: 
       setSelectedFile(null);
       setShareAfterUpload(false);
       setSelectedProfessionalId("");
-      onClose();
+      handleDialogClose();
     }, 1500);
   };
   
   return (
-    <Dialog open={open} onOpenChange={(open) => !open && onClose()}>
+    <Dialog open={open} onOpenChange={(open) => !open && handleDialogClose()}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Upload Document</DialogTitle>
@@ -189,7 +210,7 @@ export function UploadDocumentDialog({ open, onClose, category = "documents" }: 
             <span>Files are encrypted and secure</span>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline" onClick={onClose}>
+            <Button variant="outline" onClick={handleDialogClose}>
               Cancel
             </Button>
             <Button 
