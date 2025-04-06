@@ -10,6 +10,7 @@ import { AdvisorSection } from "@/components/profile/AdvisorSection";
 import { NavigationCategory } from "./NavigationCategory";
 import { SecondaryNavigation } from "./SecondaryNavigation";
 import { navigationCategories, getSecondaryMenuItems } from "./navigationData";
+import { NavigationDebugger } from "@/components/diagnostics/NavigationDebugger";
 
 interface ThreeColumnLayoutProps {
   children: ReactNode;
@@ -55,13 +56,10 @@ export function ThreeColumnLayout({
   
   const pathSegments = location.pathname.split('/').filter(Boolean);
   
-  // Get the first segment as the current path
   const currentPath = pathSegments[0] || 'dashboard';
   
-  // Determine the active main item based on current path
   let currentActiveMainItem = currentPath;
   
-  // Special handling for specific paths
   if (location.pathname === "/billpay") {
     currentActiveMainItem = "billpay";
   } else if (location.pathname === "/accounts") {
@@ -75,22 +73,18 @@ export function ThreeColumnLayout({
   } else if (location.pathname === "/cash-management") {
     currentActiveMainItem = "cash-management";
   } else if (location.pathname.includes('/education/tax-planning')) {
-    // Special handling for tax planning
     currentActiveMainItem = "tax-planning";
   } else if (pathSegments.includes('alternative')) {
-    // Special handling for alternative investment subcategories
     const categoryId = pathSegments[pathSegments.length - 1];
     if (['private-equity', 'private-debt', 'real-assets', 'digital-assets'].includes(categoryId)) {
       currentActiveMainItem = categoryId;
     }
   }
   
-  // Debug current path detection
   console.log("Current location:", location.pathname);
   console.log("Detected active item:", currentActiveMainItem);
   
   useEffect(() => {
-    // Ensure categories are expanded for the current path
     const activeCategoryId = navigationCategories.find(cat => 
       cat.items.some(item => item.id === currentActiveMainItem)
     )?.id;
@@ -105,24 +99,20 @@ export function ThreeColumnLayout({
 
   const menuItems = secondaryMenuItems || getSecondaryMenuItems(currentActiveMainItem);
   
-  // Hide secondary menu for main investments page but show it for subcategories
   const isMainInvestmentsPage = location.pathname === "/investments";
   const hasSecondaryMenu = !isMainInvestmentsPage && menuItems.length > 0;
   
   const isLightTheme = theme === "light";
   const isHomePage = location.pathname === "/";
 
-  // Improved function to get the current path and handle nested routes
   const getCurrentPath = () => {
     const pathSegments = location.pathname.split('/').filter(Boolean);
     if (pathSegments.length === 0) return 'dashboard';
     
-    // Special case for tax-planning which is under education
     if (pathSegments.includes('tax-planning')) {
       return 'tax-planning';
     }
     
-    // Special paths mapping
     if (location.pathname === "/billpay") return 'billpay';
     if (location.pathname === "/accounts") return 'accounts';
     if (location.pathname === "/financial-plans") return 'financial-plans';
@@ -154,7 +144,6 @@ export function ThreeColumnLayout({
       </div>
       
       <div className="flex flex-1 overflow-hidden">
-        {/* Main Sidebar */}
         <aside
           className={cn(
             "flex flex-col transition-all duration-300 ease-in-out z-30",
@@ -193,7 +182,6 @@ export function ThreeColumnLayout({
           </div>
         </aside>
 
-        {/* Secondary Sidebar - Hidden for main investments page */}
         {hasSecondaryMenu && (
           <SecondaryNavigation 
             hasSecondaryMenu={hasSecondaryMenu}
@@ -204,7 +192,6 @@ export function ThreeColumnLayout({
           />
         )}
 
-        {/* Main Content */}
         <div className="flex-1 flex flex-col overflow-hidden">
           {isHomePage ? (
             <div className="flex flex-col items-center w-full">
@@ -214,10 +201,11 @@ export function ThreeColumnLayout({
           <main className="flex-1 overflow-y-auto p-3 font-sans w-full">
             <div className="flex justify-between items-center mb-4">
               <h1 className="text-2xl font-bold">{title}</h1>
-              {/* Tutorial button removed from here */}
             </div>
             {children}
           </main>
+          
+          <NavigationDebugger show={false} />
         </div>
       </div>
     </div>

@@ -40,14 +40,31 @@ export const NavigationCategory = ({
     // Log the current path and item id for debugging
     console.log(`Checking if ${itemId} is active against path: ${currentPath}`);
     
+    // Handle exact matches
+    if (currentPath === itemId) {
+      return true;
+    }
+    
     // Special case handling for specific routes
     if (itemId === 'tax-planning' && currentPath.includes('tax-planning')) {
       return true;
     }
     
+    if (itemId === 'education' && currentPath.startsWith('education')) {
+      return true;
+    }
+    
+    if (itemId === 'investments' && currentPath.startsWith('investments')) {
+      return true;
+    }
+    
+    if (itemId === 'insurance' && (currentPath === 'insurance' || currentPath === 'personal-insurance')) {
+      return true;
+    }
+    
     // For other routes, check if the current path starts with the item id
     // This handles both exact matches and sub-paths
-    return currentPath === itemId || currentPath.startsWith(`${itemId}/`);
+    return currentPath.startsWith(`${itemId}/`);
   };
 
   return (

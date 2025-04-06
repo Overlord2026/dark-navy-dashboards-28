@@ -28,8 +28,11 @@ export const NavigationItem = ({
     e.preventDefault();
     console.log(`Navigating to: ${item.href}`);
     
-    // Use React Router's navigation instead of direct URL manipulation
-    navigate(item.href);
+    // Remove any trailing slashes for consistency
+    const normalizedPath = item.href.replace(/\/+$/, '');
+    
+    // Use React Router's navigation
+    navigate(normalizedPath);
   };
   
   return (

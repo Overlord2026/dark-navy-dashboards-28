@@ -44,8 +44,11 @@ export const SecondaryNavigation: React.FC<SecondaryNavigationProps> = ({
     e.preventDefault();
     console.log(`Secondary navigation to: ${path}`);
     
-    // Use React Router's navigate instead of direct URL manipulation
-    navigate(path);
+    // Remove any trailing slashes for consistency
+    const normalizedPath = path.replace(/\/+$/, '');
+    
+    // Use React Router's navigate with replace: false to ensure history is updated
+    navigate(normalizedPath, { replace: false });
   };
 
   return (
