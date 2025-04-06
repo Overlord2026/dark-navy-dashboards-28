@@ -177,7 +177,7 @@ export const ComprehensiveAssetsSummary: React.FC = () => {
                           value={category.percentage} 
                           className={`h-2`} 
                           style={{backgroundColor: `${category.color}20`}}
-                          indicatorStyle={{backgroundColor: category.color}}
+                          indicatorClassName={`bg-${category.color}`}
                         />
                       </div>
                     ))}
@@ -234,7 +234,7 @@ export const ComprehensiveAssetsSummary: React.FC = () => {
                           value={category.value / totalAssetValue * 100} 
                           className={`h-2`}
                           style={{backgroundColor: `${category.color}20`}}
-                          indicatorStyle={{backgroundColor: category.color}}
+                          indicatorClassName="bg-blue-500"
                         />
                       </div>
                     ))}
