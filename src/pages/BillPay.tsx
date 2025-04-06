@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
@@ -6,7 +7,7 @@ import {
   Calendar, Clock, CreditCard, Plus, ArrowUp, Wallet, Receipt, 
   FileText, Inbox, BanknoteIcon, ExternalLink, ActivityIcon, 
   Upload, BarChart3, AlertCircle, CheckCircle, Home, Shield,
-  Link, PieChart, CircleDollarSign, Bell
+  Link, PieChart, CircleDollarSign 
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
@@ -15,14 +16,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { format, addDays, isAfter, isBefore } from "date-fns";
 import { Separator } from "@/components/ui/separator";
 
+// All existing dialog imports 
 import { AdvancedBillPayingProvidersDialog } from "@/components/billpay/AdvancedBillPayingProvidersDialog";
 import { BillPayButtonDiagnostics } from "@/components/billpay/BillPayButtonDiagnostics";
 import { AddBillDialog } from "@/components/billpay/AddBillDialog";
 import { PayBillDialog } from "@/components/billpay/PayBillDialog";
 import { PaymentMethodsDialog, PaymentMethod, DEFAULT_PAYMENT_METHODS } from "@/components/billpay/PaymentMethodsDialog";
-import { SchedulePaymentDialog } from "@/components/billpay/SchedulePaymentDialog";
-import { ReminderSetupDialog } from "@/components/billpay/ReminderSetupDialog";
 
+// Define bill type for TypeScript
 interface Bill {
   id: number;
   name: string;
@@ -31,16 +32,16 @@ interface Bill {
   category: string;
   status?: string;
   new?: boolean;
-  lateFee?: number;
 }
 
+// Sample data
 const initialUpcomingBills: Bill[] = [
-  { id: 1, name: "Electricity Bill", amount: 85.75, dueDate: "2025-04-15", category: "Utilities", lateFee: 15 },
+  { id: 1, name: "Electricity Bill", amount: 85.75, dueDate: "2025-04-15", category: "Utilities" },
   { id: 2, name: "Internet Service", amount: 69.99, dueDate: "2025-04-18", category: "Utilities" },
-  { id: 3, name: "Water Bill", amount: 42.50, dueDate: "2025-04-25", category: "Utilities", lateFee: 10 },
+  { id: 3, name: "Water Bill", amount: 42.50, dueDate: "2025-04-25", category: "Utilities" },
   { id: 4, name: "Netflix Subscription", amount: 15.99, dueDate: "2025-05-01", category: "Entertainment" },
-  { id: 5, name: "Car Insurance", amount: 112.40, dueDate: "2025-04-10", category: "Insurance", lateFee: 25 },
-  { id: 6, name: "Visa Credit Card", amount: 287.65, dueDate: "2025-04-08", category: "Credit Cards", lateFee: 35 }
+  { id: 5, name: "Car Insurance", amount: 112.40, dueDate: "2025-04-10", category: "Insurance" },
+  { id: 6, name: "Visa Credit Card", amount: 287.65, dueDate: "2025-04-08", category: "Credit Cards" }
 ];
 
 const recentPayments = [
@@ -72,13 +73,14 @@ const BillPay = () => {
   const [showDiagnosticsDialog, setShowDiagnosticsDialog] = useState(false);
   const [diagnosticButtonName, setDiagnosticButtonName] = useState<string | undefined>(undefined);
   
+  // State for dialogs
   const [showAddBillDialog, setShowAddBillDialog] = useState(false);
   const [showPayBillDialog, setShowPayBillDialog] = useState(false);
-  const [showSchedulePaymentDialog, setShowSchedulePaymentDialog] = useState(false);
-  const [showReminderDialog, setShowReminderDialog] = useState(false);
+  const [showPaymentMethodsDialog, setShowPaymentMethodsDialog] = useState(false);
+  const [billToPay, setBillToPay] = useState<Bill | null>(null);
   const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>(DEFAULT_PAYMENT_METHODS);
-  const [selectedBillForAction, setSelectedBillForAction] = useState<Bill | null>(null);
 
+  // Computed statistics for the summary widget
   const billsSummary = useMemo(() => {
     const today = new Date();
     const nextWeek = addDays(today, 7);
@@ -109,16 +111,8 @@ const BillPay = () => {
     const bill = upcomingBills.find(b => b.id === billId) || 
                  frequentBills.find(b => b.id === billId);
     if (bill) {
-      setSelectedBillForAction(bill as Bill);
-      setShowSchedulePaymentDialog(true);
-    }
-  };
-
-  const handleSetReminder = (billId: number) => {
-    const bill = upcomingBills.find(b => b.id === billId);
-    if (bill) {
-      setSelectedBillForAction(bill);
-      setShowReminderDialog(true);
+      setBillToPay(bill as Bill);
+      setShowPayBillDialog(true);
     }
   };
 
@@ -217,6 +211,7 @@ const BillPay = () => {
           text="Manage and schedule all your bill payments from one centralized location."
         />
         
+        {/* Summary Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <Card className="bg-white hover:shadow-md transition-shadow">
             <CardContent className="p-6">
@@ -275,6 +270,7 @@ const BillPay = () => {
           </Card>
         </div>
         
+        {/* Action Buttons */}
         <div className="flex flex-wrap gap-4 mt-2">
           <div className="relative group">
             <Button 
@@ -357,6 +353,7 @@ const BillPay = () => {
           </div>
         </div>
         
+        {/* Main Content Tabs */}
         <Tabs defaultValue="upcoming" className="w-full" onValueChange={setActiveTab}>
           <TabsList className="grid grid-cols-3 mb-6">
             <TabsTrigger value="upcoming" className="text-sm">
@@ -430,20 +427,12 @@ const BillPay = () => {
                                 {getBillStatus(bill.dueDate)} • {format(new Date(bill.dueDate), "MMM d")}
                               </Badge>
                             </div>
-                            <div className="flex gap-2">
-                              <Button 
-                                variant="outline" 
-                                size="sm"
-                                onClick={() => handleSetReminder(bill.id)}
-                                className="h-9"
-                              >
-                                <Bell className="h-4 w-4" />
-                              </Button>
+                            <div className="relative group">
                               <Button 
                                 variant="secondary" 
                                 size="sm"
                                 onClick={() => handleQuickPay(bill.id)}
-                                className="whitespace-nowrap h-9"
+                                className="whitespace-nowrap"
                               >
                                 <CreditCard className="h-4 w-4 mr-2" />
                                 Pay Now
@@ -633,6 +622,7 @@ const BillPay = () => {
           </TabsContent>
         </Tabs>
 
+        {/* Dialogs */}
         <AddBillDialog 
           isOpen={showAddBillDialog} 
           onClose={() => setShowAddBillDialog(false)} 
@@ -643,27 +633,9 @@ const BillPay = () => {
           isOpen={showPayBillDialog}
           onClose={() => {
             setShowPayBillDialog(false);
-            setSelectedBillForAction(null);
+            setBillToPay(null);
           }}
-          bill={selectedBillForAction}
-        />
-
-        <SchedulePaymentDialog
-          isOpen={showSchedulePaymentDialog}
-          onClose={() => {
-            setShowSchedulePaymentDialog(false);
-            setSelectedBillForAction(null);
-          }}
-          bill={selectedBillForAction}
-        />
-
-        <ReminderSetupDialog
-          isOpen={showReminderDialog}
-          onClose={() => {
-            setShowReminderDialog(false);
-            setSelectedBillForAction(null);
-          }}
-          bill={selectedBillForAction}
+          bill={billToPay}
         />
 
         <PaymentMethodsDialog
