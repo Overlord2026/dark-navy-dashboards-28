@@ -22,5 +22,15 @@ export const educationalResources: EducationalResources = {
       ghlUrl: "https://ghl.example.com/guides/estate-planning-checklist"
     }
   ],
-  "books": []
+  "books": [
+    {
+      id: "book-life-integrated",
+      title: "Life Integrated Financial Freedom",
+      description: "An Advanced Holistic Plan For Retirement",
+      isPaid: false,
+      level: "All Levels",
+      author: "Tony Gomes",
+      ghlUrl: "https://www.amazon.com/Life-Integrated-Financial-Freedom-Advanced/dp/B0BVRGDMQJ/"
+    }
+  ]
 };
