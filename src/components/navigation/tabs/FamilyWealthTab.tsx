@@ -12,7 +12,8 @@ import {
   Diamond,
   Car,
   Palette,
-  BookIcon
+  BookIcon,
+  WalletIcon
 } from "lucide-react";
 import { NavItem } from "@/types/navigation";
 
@@ -21,6 +22,11 @@ export const familyWealthNavItems: NavItem[] = [
     title: "Financial Plans", 
     href: "/financial-plans", 
     icon: LineChartIcon 
+  },
+  { 
+    title: "Accounts Overview", 
+    href: "/accounts", 
+    icon: WalletIcon 
   },
   { 
     title: "All Assets", 

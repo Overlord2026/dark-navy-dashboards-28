@@ -25,6 +25,7 @@ import {
   LifeBuoyIcon,
   Wallet,
   ExternalLink,
+  WalletIcon,
 } from "lucide-react";
 
 // Home Section
@@ -107,6 +108,16 @@ export const educationSolutionsNavItems = [
 
 // Family Wealth Section
 export const familyWealthNavItems = [
+  {
+    title: "Financial Plans",
+    href: "/financial-plans",
+    icon: FileTextIcon
+  },
+  {
+    title: "Accounts Overview",
+    href: "/accounts",
+    icon: WalletIcon
+  },
   {
     title: "Estate Planning",
     href: "/estate-planning",

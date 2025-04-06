@@ -89,14 +89,14 @@ export const familyWealthNavItems: NavItem[] = [
     icon: LineChartIcon 
   },
   { 
-    title: "All Assets", 
-    href: "/all-assets", 
-    icon: Diamond 
-  },
-  { 
     title: "Accounts Overview", 
     href: "/accounts", 
     icon: WalletIcon 
+  },
+  { 
+    title: "All Assets", 
+    href: "/all-assets", 
+    icon: Diamond 
   },
   { 
     title: "Real Estate", 
