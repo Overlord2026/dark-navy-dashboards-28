@@ -28,14 +28,14 @@ const CollaborationTab = () => {
       <h2 className="text-xl font-semibold mb-4">Collaboration & Sharing</h2>
       
       <Tabs defaultValue="service-pros" className="w-full">
-        <TabsList className="mb-4">
-          <TabsTrigger value="service-pros" className="flex items-center gap-2">
-            <BriefcaseIcon className="h-4 w-4" />
-            Service Pros
+        <TabsList className="mb-4 w-full flex">
+          <TabsTrigger value="service-pros" className="flex items-center gap-2 flex-1 justify-center">
+            <BriefcaseIcon className="h-4 w-4 flex-shrink-0" />
+            <span className="whitespace-nowrap overflow-hidden text-ellipsis">Service Pros</span>
           </TabsTrigger>
-          <TabsTrigger value="family-members" className="flex items-center gap-2">
-            <UsersIcon className="h-4 w-4" />
-            Family Members
+          <TabsTrigger value="family-members" className="flex items-center gap-2 flex-1 justify-center">
+            <UsersIcon className="h-4 w-4 flex-shrink-0" />
+            <span className="whitespace-nowrap overflow-hidden text-ellipsis">Family Members</span>
           </TabsTrigger>
         </TabsList>
         
@@ -48,7 +48,7 @@ const CollaborationTab = () => {
             
             <div className="grid gap-3">
               <a href="/documents" className="flex items-center gap-2 p-3 bg-muted/50 rounded-md hover:bg-muted transition-colors">
-                <FileTextIcon className="h-5 w-5" />
+                <FileTextIcon className="h-5 w-5 flex-shrink-0" />
                 <div>
                   <h4 className="font-medium">Document Sharing</h4>
                   <p className="text-sm text-muted-foreground">Share documents with professionals</p>
@@ -56,7 +56,7 @@ const CollaborationTab = () => {
               </a>
               
               <a href="/professionals" className="flex items-center gap-2 p-3 bg-muted/50 rounded-md hover:bg-muted transition-colors">
-                <Users2 className="h-5 w-5" />
+                <Users2 className="h-5 w-5 flex-shrink-0" />
                 <div>
                   <h4 className="font-medium">Professional Access</h4>
                   <p className="text-sm text-muted-foreground">Manage professional access permissions</p>
@@ -75,7 +75,7 @@ const CollaborationTab = () => {
             
             <div className="grid gap-3">
               <a href="/sharing" className="flex items-center gap-2 p-3 bg-muted/50 rounded-md hover:bg-muted transition-colors">
-                <ShareIcon className="h-5 w-5" />
+                <ShareIcon className="h-5 w-5 flex-shrink-0" />
                 <div>
                   <h4 className="font-medium">Family Member Access</h4>
                   <p className="text-sm text-muted-foreground">Manage family member permissions</p>
@@ -83,7 +83,7 @@ const CollaborationTab = () => {
               </a>
               
               <a href="/documents" className="flex items-center gap-2 p-3 bg-muted/50 rounded-md hover:bg-muted transition-colors">
-                <FileTextIcon className="h-5 w-5" />
+                <FileTextIcon className="h-5 w-5 flex-shrink-0" />
                 <div>
                   <h4 className="font-medium">Shared Family Documents</h4>
                   <p className="text-sm text-muted-foreground">View and manage family-shared documents</p>
