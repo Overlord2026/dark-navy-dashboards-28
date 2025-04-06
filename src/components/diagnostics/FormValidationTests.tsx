@@ -49,7 +49,7 @@ export const FormValidationTests = ({ tests, isLoading = false }: FormValidation
                     <div className="space-y-2">
                       <h4 className="text-sm font-medium">Field Tests:</h4>
                       {test.fields.map((field, fieldIndex) => (
-                        <div key={fieldIndex} className={`p-2 rounded-md border ${getStatusColor(field.status || 'idle')}`}>
+                        <div key={fieldIndex} className={`p-2 rounded-md border ${getStatusColor(field.status || (field.valid ? 'success' : 'error'))}`}>
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
                               <StatusIcon status={field.status || (field.valid ? 'success' : 'error')} size={4} />

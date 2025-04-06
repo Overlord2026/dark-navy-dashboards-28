@@ -1,7 +1,37 @@
 
-import { PerformanceTestResult } from '@/types/diagnostics';
+import { DiagnosticResult, PerformanceTestResult } from './types';
 import { v4 as uuidv4 } from 'uuid';
 
+/**
+ * Test performance metrics
+ * @returns An array of diagnostic results for performance checks
+ */
+export const testPerformance = async (): Promise<DiagnosticResult[]> => {
+  // Mock implementation for performance tests
+  return [
+    {
+      name: "API response times",
+      status: "success",
+      message: "API response times within acceptable range"
+    },
+    {
+      name: "Database query performance",
+      status: "success",
+      message: "Database queries executing within expected time"
+    },
+    {
+      name: "UI rendering performance",
+      status: "success",
+      message: "UI components rendering efficiently"
+    }
+  ];
+};
+
+/**
+ * Run comprehensive performance tests
+ * This function provides more detailed performance metrics
+ * @returns Array of performance test results
+ */
 export const runPerformanceTests = async (): Promise<PerformanceTestResult[]> => {
   // Simulate performance testing
   await new Promise(resolve => setTimeout(resolve, 500));
