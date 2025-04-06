@@ -10,6 +10,7 @@ interface UseFormValidationDiagnosticsProps {
 // Mock data structure to match the updated FormValidationTestResult type
 const mockFormValidationTests: FormValidationTestResult[] = [
   {
+    id: "test-1",
     name: 'Register Form Email Validation',
     formName: 'register-form',
     location: '/auth/register',
@@ -22,11 +23,13 @@ const mockFormValidationTests: FormValidationTestResult[] = [
         type: 'email',
         validations: ['required', 'email'],
         value: 'test@example.com',
-        status: 'success'
+        valid: true,
+        errors: []
       }
     ]
   },
   {
+    id: "test-2",
     name: 'Register Form Password Validation',
     formName: 'register-form',
     location: '/auth/register',
@@ -39,11 +42,13 @@ const mockFormValidationTests: FormValidationTestResult[] = [
         type: 'password',
         validations: ['required', 'minLength:8'],
         value: 'Password123',
-        status: 'warning'
+        valid: false,
+        errors: ['Password not strong enough']
       }
     ]
   },
   {
+    id: "test-3",
     name: 'Login Form Email Validation',
     formName: 'login-form',
     location: '/auth/login',
@@ -56,11 +61,13 @@ const mockFormValidationTests: FormValidationTestResult[] = [
         type: 'email',
         validations: ['required', 'email'],
         value: 'invalid-email',
-        status: 'error'
+        valid: false,
+        errors: ['Invalid email format']
       }
     ]
   },
   {
+    id: "test-4",
     name: 'Contact Form Message Validation',
     formName: 'contact-form',
     location: '/contact',
@@ -73,7 +80,8 @@ const mockFormValidationTests: FormValidationTestResult[] = [
         type: 'text',
         validations: ['required', 'minLength:10'],
         value: 'This is a test message with proper length',
-        status: 'success'
+        valid: true,
+        errors: []
       }
     ]
   }
@@ -187,7 +195,10 @@ export const useFormValidationDiagnostics = (props?: UseFormValidationDiagnostic
   const getFieldStatus = useCallback((fieldName: string): 'success' | 'warning' | 'error' | 'idle' => {
     for (const result of results) {
       const field = result.fields.find(f => f.name === fieldName);
-      if (field) return field.status;
+      if (field) {
+        if (!field.valid) return 'error';
+        return field.errors && field.errors.length > 0 ? 'warning' : 'success';
+      }
     }
     return 'idle';
   }, [results]);
@@ -195,7 +206,7 @@ export const useFormValidationDiagnostics = (props?: UseFormValidationDiagnostic
   const getFieldMessage = useCallback((fieldName: string): string | null => {
     for (const result of results) {
       const field = result.fields.find(f => f.name === fieldName);
-      if (field && field.message) return field.message;
+      if (field && field.errors && field.errors.length > 0) return field.errors[0];
     }
     return null;
   }, [results]);

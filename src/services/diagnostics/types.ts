@@ -67,6 +67,7 @@ export interface FormTestResult {
 }
 
 export interface FormValidationTestResult extends FormTestResult {
+  id: string;
   status: DiagnosticTestStatus;
 }
 
