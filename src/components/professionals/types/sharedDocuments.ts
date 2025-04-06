@@ -1,5 +1,5 @@
 
-import { DocumentItem, DocumentPermission } from "@/types/document";
+import { DocumentItem, DocumentPermission, HealthcareAccessLevel } from "@/types/document";
 import { Professional } from "@/types/professional";
 
 export interface DocumentIconProps {

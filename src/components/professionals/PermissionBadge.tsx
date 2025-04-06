@@ -2,9 +2,13 @@
 import React from "react";
 import { Badge } from "@/components/ui/badge";
 import { PermissionBadgeProps } from "./types/sharedDocuments";
+import { HealthcareAccessLevel } from "@/types/document";
 
 export function PermissionBadge({ permission }: PermissionBadgeProps) {
-  switch (permission) {
+  // Cast the permission to HealthcareAccessLevel or default to "view" if invalid
+  const accessLevel = isValidAccessLevel(permission) ? permission as HealthcareAccessLevel : "view";
+  
+  switch (accessLevel) {
     case "view":
       return <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">View Only</Badge>;
     case "edit":
@@ -16,4 +20,9 @@ export function PermissionBadge({ permission }: PermissionBadgeProps) {
     default:
       return <Badge variant="outline">Unknown</Badge>;
   }
+}
+
+// Helper function to validate permission values
+function isValidAccessLevel(permission: string): boolean {
+  return ["none", "view", "edit", "full"].includes(permission);
 }
