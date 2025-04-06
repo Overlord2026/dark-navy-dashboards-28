@@ -1,3 +1,4 @@
+
 import React, { lazy, Suspense } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import Index from "@/pages/Index";
@@ -22,7 +23,6 @@ import Transfers from "./pages/Transfers";
 import FundingAccounts from "./pages/FundingAccounts";
 import LegacyVault from "./pages/LegacyVault";
 import TaxPlanning from "./pages/TaxPlanning";
-import SystemDiagnostics from "./pages/SystemDiagnostics";
 import NavigationDiagnostics from "./pages/NavigationDiagnostics";
 import CustomerProfile from "./pages/CustomerProfile";
 import AdvisorProfile from "./pages/AdvisorProfile";
@@ -74,9 +74,11 @@ import { useUser } from "./context/UserContext";
 import { TutorialButton } from "./components/navigation/TutorialButton";
 import { useIsMobile } from "./hooks/use-mobile";
 
-const SystemDiagnostics = lazy(() => import('@/pages/SystemDiagnostics'));
+// Lazy-loaded diagnostic pages
+const SystemDiagnosticsPage = lazy(() => import('@/pages/SystemDiagnostics'));
 const FormValidationTests = lazy(() => import('@/pages/FormValidationTests'));
 const ErrorSimulation = lazy(() => import('@/pages/ErrorSimulation'));
+const VisualTesting = lazy(() => import('@/pages/VisualTesting'));
 
 const AppRoutes: React.FC = () => {
   const { isAuthenticated, userProfile } = useUser();
@@ -191,7 +193,7 @@ const AppRoutes: React.FC = () => {
         {isAdmin ? (
           <>
             <Route path="/admin/subscription" element={<AdminSubscription />} />
-            <Route path="/admin/system-diagnostics" element={<SystemDiagnostics />} />
+            <Route path="/admin/system-diagnostics" element={<SystemDiagnosticsPage />} />
             <Route path="/admin/navigation-diagnostics" element={<NavigationDiagnostics />} />
             <Route path="/admin/developer-access" element={<DeveloperAccessControl />} />
             <Route path="/admin/ip-protection" element={<IPProtection />} />
@@ -217,9 +219,10 @@ const AppRoutes: React.FC = () => {
           </>
         )}
         
-        <Route path="/diagnostics" element={<SystemDiagnostics />} />
+        <Route path="/diagnostics" element={<SystemDiagnosticsPage />} />
         <Route path="/diagnostics/form-validation-tests" element={<FormValidationTests />} />
         <Route path="/diagnostics/error-simulation" element={<ErrorSimulation />} />
+        <Route path="/diagnostics/visual-testing" element={<VisualTesting />} />
         
         <Route path="/services" element={<ServicesPage />} />
         <Route path="/about" element={<AboutUsPage />} />

@@ -8,7 +8,11 @@ import { LogViewer } from "@/components/diagnostics/LogViewer";
 
 export default function ErrorSimulation() {
   return (
-    <ThreeColumnLayout activeMainItem="diagnostics" title="Error Simulation">
+    <ThreeColumnLayout 
+      activeMainItem="diagnostics" 
+      title="Error Simulation" 
+      secondaryHeaderTitle="Error Simulation"
+    >
       <div className="space-y-6 p-4 animate-fade-in">
         <div>
           <h1 className="text-2xl font-bold">Error Simulation</h1>
