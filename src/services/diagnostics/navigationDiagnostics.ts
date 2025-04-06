@@ -1,3 +1,4 @@
+
 import { homeNavItems, educationSolutionsNavItems, familyWealthNavItems, collaborationNavItems, bottomNavItems } from "@/components/navigation/NavigationConfig";
 import { NavigationDiagnosticResult } from "@/types/diagnostics";
 
@@ -60,4 +61,41 @@ export function testAllNavigationRoutes() {
         return acc;
       }, {});
     });
+}
+
+// Add the missing function that's being imported by multiple components
+export async function getNavigationDiagnosticsSummary() {
+  try {
+    // Get all navigation route test results
+    const resultsMap = await testAllNavigationRoutes();
+    
+    // Flatten the results for summary calculations
+    const allResults = Object.values(resultsMap).flat();
+    
+    // Calculate stats
+    const totalRoutes = allResults.length;
+    const successCount = allResults.filter(r => r.status === "success").length;
+    const warningCount = allResults.filter(r => r.status === "warning").length;
+    const errorCount = allResults.filter(r => r.status === "error").length;
+    
+    // Determine overall status
+    let overallStatus = "success";
+    if (errorCount > 0) {
+      overallStatus = "error";
+    } else if (warningCount > 0) {
+      overallStatus = "warning";
+    }
+    
+    return {
+      results: resultsMap,
+      totalRoutes,
+      successCount,
+      warningCount,
+      errorCount,
+      overallStatus
+    };
+  } catch (error) {
+    console.error("Error generating navigation diagnostics summary:", error);
+    throw error;
+  }
 }
