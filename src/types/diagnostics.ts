@@ -139,6 +139,12 @@ export interface FormValidationTestResult {
   fields?: FormField[];
   // Added for backward compatibility
   form?: string;
+  success?: boolean;
+  validationDetails?: {
+    invalidFields?: string[];
+    missingErrors?: string[];
+    unexpectedErrors?: string[];
+  };
 }
 
 export interface PerformanceTestResult {

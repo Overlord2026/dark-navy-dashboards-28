@@ -3,6 +3,53 @@ import { FormValidationTestResult } from './types';
 import { testFormValidation } from './formValidationTests';
 import { v4 as uuidv4 } from 'uuid';
 
+// Add the missing export for getAvailableFormTests
+export const getAvailableFormTests = () => {
+  const allFormTests = testFormValidation();
+  return allFormTests.map(test => ({
+    id: test.id || uuidv4(),
+    form: test.form || test.id,
+    formName: test.formName,
+    location: test.location,
+    status: test.status
+  }));
+};
+
+// Add exports for the functions required by useFormValidationDiagnostics
+export const runFormValidationDiagnostics = async () => {
+  const results = testFormValidation();
+  
+  // Add IDs to form tests if not present
+  const enhancedResults = results.map(test => ({
+    ...test,
+    id: test.id || uuidv4()
+  }));
+
+  return enhancedResults;
+};
+
+export const runSingleFormValidationTest = async (formId: string, testIndex?: number) => {
+  const allTests = testFormValidation();
+  // Find the appropriate test by form ID
+  const test = allTests.find(t => t.form === formId || t.id === formId);
+  
+  if (!test) {
+    return null;
+  }
+  
+  // Return a copy of the test with additional details
+  return {
+    ...test,
+    id: test.id || uuidv4(),
+    success: test.status === 'success',
+    validationDetails: {
+      invalidFields: test.fields?.filter(f => f.status === 'error').map(f => f.name || f.fieldName!) || [],
+      missingErrors: test.fields?.filter(f => f.status === 'warning').map(f => f.name || f.fieldName!) || [],
+      unexpectedErrors: []
+    }
+  };
+};
+
 export const getFormValidationDiagnostics = async () => {
   const results = testFormValidation();
   
@@ -17,7 +64,7 @@ export const getFormValidationDiagnostics = async () => {
     .filter(r => r.status !== 'success')
     .map(r => ({
       formName: r.formName,
-      formId: r.id,
+      formId: r.id || r.form,
       recommendations: generateRecommendationsForForm(r)
     }));
   
@@ -63,18 +110,18 @@ const generateRecommendationsForForm = (formResult: FormValidationTestResult) =>
       if (field.status === 'warning') {
         recommendations.push({
           id: uuidv4(),
-          text: `Improve validation for ${field.name || field.fieldName} field in ${formResult.formName}`,
+          text: `Improve validation for ${field.name || field.fieldName!} field in ${formResult.formName}`,
           priority: 'medium',
           type: 'field',
-          field: field.name || field.fieldName
+          field: field.name || field.fieldName!
         });
       } else if (field.status === 'error') {
         recommendations.push({
           id: uuidv4(),
-          text: `Fix critical validation for ${field.name || field.fieldName} field in ${formResult.formName}`,
+          text: `Fix critical validation for ${field.name || field.fieldName!} field in ${formResult.formName}`,
           priority: 'high',
           type: 'field',
-          field: field.name || field.fieldName
+          field: field.name || field.fieldName!
         });
       }
     });
