@@ -121,7 +121,7 @@ export interface FormField {
   value?: any;
   errors?: string[];
   valid?: boolean;
-  // For backward compatibility
+  // Added for backward compatibility
   fieldName?: string;
   fieldType?: string;
   status?: string;
@@ -137,15 +137,8 @@ export interface FormValidationTestResult {
   message?: string;
   timestamp: number;
   fields?: FormField[];
-  // For backward compatibility
+  // Added for backward compatibility
   form?: string;
-  success?: boolean;
-  validationDetails?: {
-    valid?: boolean;
-    invalidFields?: string[];
-    missingErrors?: string[];
-    unexpectedErrors?: string[];
-  };
 }
 
 export interface PerformanceTestResult {
@@ -157,7 +150,7 @@ export interface PerformanceTestResult {
   memoryUsage?: number;
   message?: string;
   details?: any;
-  // For backward compatibility
+  // Added for backward compatibility
   concurrentUsers?: number;
 }
 
@@ -169,7 +162,7 @@ export interface SecurityTestResult {
   message?: string;
   remediation?: string;
   details?: any;
-  // For backward compatibility
+  // Added for backward compatibility
   category?: string;
 }
 
@@ -181,7 +174,7 @@ export interface IconTestResult {
   message?: string;
   details?: any;
   renderTime?: number;
-  // For backward compatibility
+  // Added for backward compatibility
   name?: string;
   iconName?: string;
 }
@@ -193,7 +186,7 @@ export interface PermissionTestResult {
   status: "success" | "warning" | "error";
   message?: string;
   details?: any;
-  // For backward compatibility
+  // Added for backward compatibility
   name?: string;
 }
 
@@ -204,7 +197,7 @@ export interface RoleSimulationTestResult {
   status: "success" | "warning" | "error";
   message?: string;
   details?: any;
-  // For backward compatibility
+  // Added for backward compatibility
   module?: string;
   accessStatus?: string;
   expectedAccess?: boolean;
@@ -225,26 +218,4 @@ export interface ApiIntegrationTestResult {
   authStatus?: string;
   expectedDataStructure?: string;
   details?: any;
-}
-
-// Add audit event type for accessibility audits
-export type AuditEventType = "user_action" | "system_event" | "security_event" | "accessibility_audit";
-
-// Update AccessibilityAuditResult interface
-export interface AccessibilityAuditResult {
-  id: string;
-  url: string;
-  element: string | null;
-  rule: string;
-  message: string;
-  impact: 'critical' | 'serious' | 'moderate' | 'minor';
-  status: 'failed' | 'passed' | 'incomplete';
-  category: string;
-  wcagLevel: 'A' | 'AA' | 'AAA';
-  wcagCriteria: string;
-  helpUrl: string;
-  timestamp: number;
-  code?: string;
-  selector?: string;
-  recommendation?: string;
 }

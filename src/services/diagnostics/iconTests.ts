@@ -1,69 +1,54 @@
 
 import { IconTestResult } from './types';
-import { v4 as uuidv4 } from 'uuid';
 
 export const testIcons = (): IconTestResult[] => {
   // Sample icon tests for different parts of the application
   return [
     {
-      id: uuidv4(),
-      name: "HomeIcon", 
+      name: "HomeIcon", // Added the required name property
       icon: "HomeIcon",
-      iconName: "HomeIcon",
       location: "Navigation Menu",
       status: "success",
       message: "Icon renders correctly in all themes"
     },
     {
-      id: uuidv4(),
-      name: "SettingsIcon",
+      name: "SettingsIcon", // Added the required name property
       icon: "SettingsIcon",
-      iconName: "SettingsIcon",
       location: "Profile Dropdown",
       status: "success",
       message: "Icon renders correctly in all themes"
     },
     {
-      id: uuidv4(),
-      name: "NotificationIcon",
+      name: "NotificationIcon", // Added the required name property
       icon: "BellIcon",
-      iconName: "BellIcon",
       location: "Header",
       status: "success",
       message: "Icon renders correctly in all themes"
     },
     {
-      id: uuidv4(),
-      name: "SearchIcon",
+      name: "SearchIcon", // Added the required name property
       icon: "SearchIcon",
-      iconName: "SearchIcon",
       location: "Global Search",
       status: "success",
       message: "Icon renders correctly in all themes"
     },
     {
-      id: uuidv4(),
-      name: "AlertIcon",
+      name: "AlertIcon", // Added the required name property
       icon: "AlertTriangleIcon",
-      iconName: "AlertTriangleIcon",
       location: "Error Messages",
       status: "warning",
       message: "Icon may not be visible in high contrast mode"
     },
     {
-      id: uuidv4(),
-      name: "UserIcon",
+      name: "UserIcon", // Added the required name property
       icon: "UserIcon",
-      iconName: "UserIcon",
       location: "Profile Section",
       status: "success",
       message: "Icon renders correctly in all themes"
     },
     {
-      id: uuidv4(),
-      name: "DocsIcon",
+      name: "DocsIcon", // Added the required name property
       icon: "FileTextIcon",
-      iconName: "FileTextIcon", 
       location: "Documentation Links",
       status: "error",
       message: "Icon fails to render in Safari browser"

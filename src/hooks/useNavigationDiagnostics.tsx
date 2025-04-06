@@ -1,10 +1,10 @@
 
 import { useState } from "react";
-import { NavigationTestResult } from "@/types/diagnostics";
+import { NavigationDiagnosticResult } from "@/types/diagnostics";
 import { testAllNavigationRoutes } from "@/services/diagnostics/navigationDiagnostics";
 
 export function useNavigationDiagnostics() {
-  const [results, setResults] = useState<NavigationTestResult[]>([]);
+  const [results, setResults] = useState<Record<string, NavigationDiagnosticResult[]>>({});
   const [isRunning, setIsRunning] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -26,10 +26,11 @@ export function useNavigationDiagnostics() {
   };
 
   const getDiagnosticSummary = () => {
-    const totalRoutes = results.length;
-    const successCount = results.filter(r => r.status === "success").length;
-    const warningCount = results.filter(r => r.status === "warning").length;
-    const errorCount = results.filter(r => r.status === "error").length;
+    const allResults = Object.values(results).flat();
+    const totalRoutes = allResults.length;
+    const successCount = allResults.filter(r => r.status === "success").length;
+    const warningCount = allResults.filter(r => r.status === "warning").length;
+    const errorCount = allResults.filter(r => r.status === "error").length;
     
     let overall: "success" | "warning" | "error" = "success";
     if (errorCount > 0) {

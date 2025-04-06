@@ -1,170 +1,175 @@
-import { RoleSimulationTestResult } from './types';
-import { v4 as uuidv4 } from 'uuid';
 
-// Change function name to match import in index.ts
+import { RoleSimulationTestResult } from './types';
+
 export const testRoleSimulations = (): RoleSimulationTestResult[] => {
-  // Sample role simulation tests
+  // In a real app, this would actually test user role access with real authentication and authorization
   return [
+    // Client/Consumer role tests
     {
-      id: uuidv4(),
-      role: "admin",
-      action: "view:users",
-      module: "users", // Added for backward compatibility
+      role: "client",
+      module: "dashboard",
+      accessStatus: "granted",
       status: "success",
-      message: "Admin can view users list as expected"
+      message: "Clients can access dashboard",
+      expectedAccess: true
     },
     {
-      id: uuidv4(),
-      role: "admin",
-      action: "delete:user",
-      module: "users", // Added for backward compatibility
+      role: "client",
+      module: "documents",
+      accessStatus: "granted",
       status: "success",
-      message: "Admin can delete users as expected"
+      message: "Clients can access documents",
+      expectedAccess: true
     },
     {
-      id: uuidv4(),
-      role: "manager",
-      action: "view:users",
-      module: "users", // Added for backward compatibility
+      role: "client",
+      module: "investments",
+      accessStatus: "granted",
+      status: "success", 
+      message: "Clients can access investments",
+      expectedAccess: true
+    },
+    {
+      role: "client",
+      module: "advisor-module-marketplace",
+      accessStatus: "denied",
       status: "success",
-      message: "Manager can view users list as expected"
+      message: "Clients correctly blocked from advisor module marketplace",
+      expectedAccess: false
     },
     {
-      id: uuidv4(),
-      role: "manager",
-      action: "delete:user",
-      module: "users", // Added for backward compatibility
-      status: "error",
-      message: "Manager should not be able to delete users but was able to"
-    },
-    {
-      id: uuidv4(),
-      role: "user",
-      action: "view:users",
-      module: "users", // Added for backward compatibility
-      status: "error",
-      message: "Regular user should not be able to view all users but was able to"
+      role: "client",
+      module: "admin-subscription",
+      accessStatus: "denied",
+      status: "success",
+      message: "Clients correctly blocked from admin subscription page",
+      expectedAccess: false
     },
     
-    // Reports module tests
+    // Advisor role tests
     {
-      id: uuidv4(),
+      role: "advisor",
+      module: "dashboard",
+      accessStatus: "granted",
+      status: "success",
+      message: "Advisors can access dashboard",
+      expectedAccess: true
+    },
+    {
+      role: "advisor",
+      module: "advisor-module-marketplace",
+      accessStatus: "granted",
+      status: "success",
+      message: "Advisors can access module marketplace",
+      expectedAccess: true
+    },
+    {
+      role: "advisor",
+      module: "client-profiles",
+      accessStatus: "granted",
+      status: "success",
+      message: "Advisors can access client profiles",
+      expectedAccess: true
+    },
+    {
+      role: "advisor",
+      module: "admin-subscription",
+      accessStatus: "granted", 
+      status: "error",
+      message: "Advisors have incorrect access to admin subscription page",
+      expectedAccess: false
+    },
+    
+    // Admin role tests
+    {
       role: "admin",
-      action: "export:reports",
-      module: "reports", // Added for backward compatibility
+      module: "dashboard",
+      accessStatus: "granted",
       status: "success",
-      message: "Admin can export reports as expected"
+      message: "Admins can access dashboard",
+      expectedAccess: true
     },
     {
-      id: uuidv4(),
-      role: "manager",
-      action: "export:reports",
-      module: "reports", // Added for backward compatibility
+      role: "admin",
+      module: "advisor-module-marketplace",
+      accessStatus: "granted",
       status: "success",
-      message: "Manager can export reports as expected"
+      message: "Admins can access module marketplace",
+      expectedAccess: true
     },
     {
-      id: uuidv4(),
-      role: "user",
-      action: "export:reports",
-      module: "reports", // Added for backward compatibility
+      role: "admin",
+      module: "admin-subscription",
+      accessStatus: "granted",
+      status: "success",
+      message: "Admins can access subscription management",
+      expectedAccess: true
+    },
+    {
+      role: "admin",
+      module: "system-diagnostics",
+      accessStatus: "granted",
+      status: "success",
+      message: "Admins can access system diagnostics",
+      expectedAccess: true
+    },
+    {
+      role: "admin",
+      module: "audit-logs",
+      accessStatus: "denied",
+      status: "error",
+      message: "Admins cannot access audit logs despite having proper permissions",
+      expectedAccess: true
+    },
+    
+    // Professional role tests
+    {
+      role: "accountant",
+      module: "tax-budgets",
+      accessStatus: "granted",
+      status: "success",
+      message: "Accountants can access tax budgets",
+      expectedAccess: true
+    },
+    {
+      role: "accountant",
+      module: "client-finances",
+      accessStatus: "granted",
+      status: "success",
+      message: "Accountants can access client finances",
+      expectedAccess: true
+    },
+    {
+      role: "accountant",
+      module: "investments",
+      accessStatus: "granted",
       status: "warning",
-      message: "User can export some reports but should be limited to personal reports only"
+      message: "Accountants have too broad access to investments module",
+      expectedAccess: false
     },
     {
-      id: uuidv4(),
-      role: "guest",
-      action: "export:reports",
-      module: "reports", // Added for backward compatibility
+      role: "attorney",
+      module: "legal-documents",
+      accessStatus: "granted",
       status: "success",
-      message: "Guest correctly denied access to export reports"
+      message: "Attorneys can access legal documents",
+      expectedAccess: true
     },
-    
-    // Settings module tests
     {
-      id: uuidv4(),
-      role: "admin",
-      action: "modify:system_settings",
-      module: "settings", // Added for backward compatibility
+      role: "attorney",
+      module: "legacy-vault",
+      accessStatus: "granted",
       status: "success",
-      message: "Admin can modify system settings as expected"
+      message: "Attorneys can access legacy vault",
+      expectedAccess: true
     },
     {
-      id: uuidv4(),
-      role: "manager",
-      action: "modify:system_settings",
-      module: "settings", // Added for backward compatibility
-      status: "error",
-      message: "Manager should not be able to modify system settings but was able to"
-    },
-    {
-      id: uuidv4(),
-      role: "user",
-      action: "modify:system_settings",
-      module: "settings", // Added for backward compatibility
-      status: "success",
-      message: "User correctly denied access to modify system settings"
-    },
-    {
-      id: uuidv4(),
-      role: "admin",
-      action: "modify:personal_settings",
-      module: "settings", // Added for backward compatibility
-      status: "success",
-      message: "Admin can modify personal settings as expected"
-    },
-    {
-      id: uuidv4(),
-      role: "user",
-      action: "modify:personal_settings",
-      module: "settings", // Added for backward compatibility
-      status: "success",
-      message: "User can modify personal settings as expected"
-    },
-    
-    // Billing module tests
-    {
-      id: uuidv4(),
-      role: "admin",
-      action: "view:all_billing",
-      module: "billing", // Added for backward compatibility
-      status: "success",
-      message: "Admin can view all billing information as expected"
-    },
-    {
-      id: uuidv4(),
-      role: "manager",
-      action: "view:all_billing",
-      module: "billing", // Added for backward compatibility
-      status: "success",
-      message: "Manager can view all billing information as expected"
-    },
-    {
-      id: uuidv4(),
-      role: "user",
-      action: "view:all_billing",
-      module: "billing", // Added for backward compatibility
-      status: "error",
-      message: "User should not be able to view all billing information but was able to"
-    },
-    {
-      id: uuidv4(),
-      role: "user",
-      action: "view:personal_billing",
-      module: "billing", // Added for backward compatibility
-      status: "success",
-      message: "User can view personal billing information as expected"
-    },
-    {
-      id: uuidv4(),
-      role: "guest",
-      action: "view:personal_billing",
-      module: "billing", // Added for backward compatibility
-      status: "success",
-      message: "Guest correctly denied access to billing information"
+      role: "attorney",
+      module: "client-finances",
+      accessStatus: "denied",
+      status: "error", 
+      message: "Attorneys need access to client finances for certain document preparation",
+      expectedAccess: true
     }
   ];
 };
-
-// Keep the original name for backward compatibility
-export const testRoleSimulation = testRoleSimulations;

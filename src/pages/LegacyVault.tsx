@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { CategoryList } from "@/components/documents/CategoryList";
@@ -10,7 +9,7 @@ import { ShareDocumentDialog } from "@/components/documents/ShareDocumentDialog"
 import { DeleteDocumentDialog } from "@/components/documents/DeleteDocumentDialog";
 import { NewFolderDialog } from "@/components/documents/NewFolderDialog";
 import { Button } from "@/components/ui/button";
-import { FolderPlus, Upload, VaultIcon, ArchiveIcon, HeartPulseIcon } from "lucide-react";
+import { FolderPlus, Upload, ExternalLink, VaultIcon, ArchiveIcon, HeartPulseIcon } from "lucide-react";
 import { documentCategories, healthcareCategories } from "@/data/documentCategories";
 import { toast } from "sonner";
 import { DocumentType, DocumentItem, DocumentCategory } from "@/types/document";
@@ -181,6 +180,15 @@ export default function LegacyVault() {
             <h1 className="text-2xl font-bold mb-1">Secure Family Vault</h1>
             <p className="text-muted-foreground">Store and organize your important documents securely</p>
           </div>
+
+          <Button
+            onClick={() => window.open('https://trustandwill.com', '_blank')}
+            variant="outline"
+            className="flex items-center mt-4 md:mt-0 bg-white border-primary text-primary hover:bg-primary hover:text-white transition-colors"
+          >
+            <ExternalLink className="mr-2 h-4 w-4" />
+            DIY with Trust & Will
+          </Button>
         </div>
         
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">

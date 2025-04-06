@@ -2,7 +2,7 @@
 export interface AccessibilityAuditResult {
   id: string;
   url: string;
-  element: string | null; // Changed to allow null
+  element: string;
   rule: string;
   message: string;
   impact: 'critical' | 'serious' | 'moderate' | 'minor';
@@ -64,6 +64,3 @@ export interface PageAccessibilitySummary {
   passingRules: number;
   failingRules: number;
 }
-
-// Add audit event type for accessibility audits
-export type AuditEventType = 'user_action' | 'system_event' | 'security_event' | 'accessibility_audit';
