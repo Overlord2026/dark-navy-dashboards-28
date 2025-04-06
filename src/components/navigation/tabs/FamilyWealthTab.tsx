@@ -1,4 +1,3 @@
-
 import React from "react";
 import { 
   LineChartIcon, 
@@ -10,8 +9,6 @@ import {
   Receipt,
   Calculator,
   Diamond,
-  Car,
-  Palette,
   BookIcon,
   WalletIcon
 } from "lucide-react";
@@ -52,16 +49,6 @@ export const familyWealthNavItems: NavItem[] = [
     title: "Properties", 
     href: "/properties", 
     icon: BuildingIcon 
-  },
-  { 
-    title: "Vehicles & Collectibles", 
-    href: "/vehicles-collectibles", 
-    icon: Car 
-  },
-  { 
-    title: "Art & Valuables", 
-    href: "/art-valuables", 
-    icon: Palette 
   },
   { 
     title: "Tax & Budgets", 
