@@ -1,12 +1,15 @@
 
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-// Import your components for AdminRoutes here
+import AdminDiagnostics from "../pages/AdminDiagnostics";
+import NotFound from "../pages/NotFound";
 
 const AdminRoutes = () => {
   return (
     <Routes>
-      {/* Add your admin routes here */}
+      <Route path="/" element={<AdminDiagnostics />} />
+      <Route path="/navigation-diagnostics" element={<AdminDiagnostics />} />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 };

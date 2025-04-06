@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { useUser } from "../context/UserContext";
 
 // Import components
@@ -17,19 +17,13 @@ const AppRoutes: React.FC = () => {
   const isAdmin = userProfile?.role === "admin" || userProfile?.role === "system_administrator";
   const isDeveloper = isAdmin || userProfile?.role === "developer";
   
-  if (!isAuthenticated) {
-    return (
-      <Routes>
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/advisor/login" element={<LoginPage isAdvisor={true} />} />
-        <Route path="/*" element={<PublicRoutes />} />
-      </Routes>
-    );
-  }
-
-  // Desktop routes only
+  // We no longer redirect to login automatically
+  // Instead we show the login page for the /login route and serve other routes normally
   return (
     <Routes>
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/advisor/login" element={<LoginPage isAdvisor={true} />} />
+      <Route path="/*" element={<PublicRoutes />} />
       <Route path="/*" element={<MainRoutes />} />
       <Route path="/finance/*" element={<FinanceRoutes />} />
       <Route path="/wealth/*" element={<WealthRoutes />} />
@@ -37,14 +31,15 @@ const AppRoutes: React.FC = () => {
       {isAdmin && <Route path="/admin/*" element={<AdminRoutes />} />}
       
       {isDeveloper ? (
-        <Route path="/dev/diagnostics" element={<Navigate to="/admin/navigation-diagnostics" />} />
+        <Route path="/dev/diagnostics" element={<Navigate to="/admin/navigation-diagnostics" replace />} />
       ) : (
         <Route path="/dev/*" element={<Navigate to="/" replace />} />
       )}
-      
-      <Route path="/*" element={<PublicRoutes />} />
     </Routes>
   );
 };
+
+// Fix the missing NavigateComponent import
+import { Navigate } from "react-router-dom";
 
 export default AppRoutes;
