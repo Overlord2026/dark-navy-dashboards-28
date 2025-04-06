@@ -20,6 +20,11 @@ export const useSidebarState = (navigationCategories: NavCategory[]) => {
   const [expandedSubmenus, setExpandedSubmenus] = useState<Record<string, boolean>>({});
   const [forceUpdate, setForceUpdate] = useState(0);
   
+  // Helper function to normalize paths
+  const normalizePath = (path: string): string => {
+    return path.startsWith("/") ? path : `/${path}`;
+  };
+  
   // Check window width on mount and resize to set collapsed state
   useEffect(() => {
     const handleResize = () => {
@@ -41,18 +46,20 @@ export const useSidebarState = (navigationCategories: NavCategory[]) => {
     
     // Find which category contains the current path
     navigationCategories.forEach(category => {
-      const matchingItem = category.items.find(item => 
-        path === item.href || path.startsWith(`${item.href}/`)
-      );
+      const matchingItem = category.items.find(item => {
+        const itemPath = normalizePath(item.href);
+        return path === itemPath || path.startsWith(`${itemPath}/`);
+      });
       
       if (matchingItem) {
         shouldExpandCategory = category.id;
         
         // If the item has submenus, expand the relevant submenu too
         if (matchingItem.items?.length) {
-          const matchingSubmenu = matchingItem.items.find(subItem => 
-            path === subItem.href || path.startsWith(`${subItem.href}/`)
-          );
+          const matchingSubmenu = matchingItem.items.find(subItem => {
+            const subItemPath = normalizePath(subItem.href);
+            return path === subItemPath || path.startsWith(`${subItemPath}/`);
+          });
           
           if (matchingSubmenu) {
             setExpandedSubmenus(prev => ({
@@ -99,8 +106,11 @@ export const useSidebarState = (navigationCategories: NavCategory[]) => {
   };
 
   const isActive = (href: string) => {
-    return location.pathname === href || 
-           (href !== "/" && location.pathname.startsWith(href));
+    const normalizedHref = normalizePath(href);
+    const normalizedPathname = normalizePath(location.pathname);
+    
+    return normalizedPathname === normalizedHref || 
+           (normalizedHref !== "/" && normalizedPathname.startsWith(normalizedHref));
   };
 
   return {

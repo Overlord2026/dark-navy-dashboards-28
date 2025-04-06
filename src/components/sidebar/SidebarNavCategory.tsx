@@ -30,11 +30,18 @@ const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
   expandedSubmenus,
   toggleSubmenu
 }) => {
+  // Helper to ensure consistent path handling
+  const normalizePath = (path: string): string => {
+    return path.startsWith("/") ? path : `/${path}`;
+  };
+
   const renderNavItem = (item: NavItem) => {
-    const isItemActive = isActive(item.href);
+    const normalizedHref = normalizePath(item.href);
+    const isItemActive = isActive(normalizedHref);
+    
     return (
       <a
-        href={item.href}
+        href={normalizedHref}
         target={item.external ? "_blank" : undefined}
         rel={item.external ? "noreferrer" : undefined}
         className={cn(
@@ -48,8 +55,9 @@ const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
               : "bg-secondary text-secondary-foreground font-medium"),
           item.disabled && "cursor-not-allowed opacity-50"
         )}
-        onClick={() => {
+        onClick={(e) => {
           if (item.items && item.items.length > 0) {
+            e.preventDefault();
             toggleSubmenu(item.title);
           }
         }}

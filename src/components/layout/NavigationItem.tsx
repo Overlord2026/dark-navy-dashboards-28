@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
@@ -22,10 +23,13 @@ export const NavigationItem = ({
 }: NavigationItemProps) => {
   const Icon = item.icon;
   
+  // Normalize href to ensure it starts with a forward slash
+  const normalizedHref = item.href.startsWith("/") ? item.href : `/${item.href}`;
+  
   return (
     <Link
       key={item.id}
-      to={item.href}
+      to={normalizedHref}
       className={cn(
         "group flex items-center py-2 px-3 rounded-md transition-colors text-[14px] whitespace-nowrap border",
         isActive

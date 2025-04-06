@@ -38,6 +38,15 @@ export const NavigationCategory = ({
   isCollapsed,
   isLightTheme
 }: NavigationCategoryProps) => {
+  // Helper function to check if a path is active
+  const isActivePath = (path: string): boolean => {
+    // Normalize both paths for comparison
+    const normalizedPath = path.startsWith("/") ? path : `/${path}`;
+    const normalizedCurrentPath = currentPath.startsWith("/") ? currentPath : `/${currentPath}`;
+    
+    return normalizedPath === normalizedCurrentPath;
+  };
+
   return (
     <div key={category.id} className="mb-2">
       {!isCollapsed && (
@@ -67,7 +76,7 @@ export const NavigationCategory = ({
                   icon: item.icon,
                   href: item.href
                 }}
-                isActive={currentPath === (item.href.replace('/', ''))}
+                isActive={isActivePath(item.href)}
                 isCollapsed={false}
                 isLightTheme={isLightTheme}
               />
@@ -87,7 +96,7 @@ export const NavigationCategory = ({
                 icon: item.icon,
                 href: item.href
               }}
-              isActive={currentPath === (item.href.replace('/', ''))}
+              isActive={isActivePath(item.href)}
               isCollapsed={true}
               isLightTheme={isLightTheme}
             />
