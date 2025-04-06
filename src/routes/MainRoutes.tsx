@@ -14,6 +14,8 @@ import PersonalInsurance from "../pages/PersonalInsurance";
 import Insurance from "../pages/Insurance";
 import NotFound from "../pages/NotFound";
 import Properties from "../pages/Properties";
+import BillPay from "../pages/BillPay";
+import Lending from "../pages/Lending";
 
 const MainRoutes = () => {
   return (
@@ -33,6 +35,8 @@ const MainRoutes = () => {
       <Route path="/insurance" element={<Insurance />} />
       <Route path="/personal-insurance" element={<PersonalInsurance />} />
       <Route path="/properties" element={<Properties />} />
+      <Route path="/billpay" element={<BillPay />} />
+      <Route path="/lending" element={<Lending />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
