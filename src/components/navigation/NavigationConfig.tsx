@@ -1,3 +1,4 @@
+
 import {
   HomeIcon,
   LayoutDashboardIcon,
@@ -57,6 +58,11 @@ export const homeNavItems = [
     title: "Accounts",
     href: "/accounts",
     icon: LandmarkIcon
+  },
+  {
+    title: "Documents",
+    href: "/documents",
+    icon: BookIcon
   },
   {
     title: "Properties",
@@ -125,11 +131,6 @@ export const familyWealthNavItems = [
 
 // Collaboration Section
 export const collaborationNavItems = [
-  {
-    title: "Documents",
-    href: "/documents",
-    icon: BookIcon
-  },
   {
     title: "Sharing",
     href: "/sharing",

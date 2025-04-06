@@ -1,12 +1,10 @@
-
 import React, { useState } from "react";
-import { FileTextIcon, Users2, ShareIcon, BriefcaseIcon, UsersIcon, KeyIcon, InfoIcon } from "lucide-react";
+import { BriefcaseIcon, Users2, UsersIcon, InfoIcon } from "lucide-react";
 import { NavItem } from "@/types/navigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ProfessionalType } from "@/types/professional";
 import { useProfessionals } from "@/hooks/useProfessionals";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { DocumentType } from "@/types/document";
 import { Link } from "react-router-dom";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
@@ -15,11 +13,6 @@ import { toast } from "sonner";
 
 export const collaborationNavItems: NavItem[] = [
   { 
-    title: "Document Sharing", 
-    href: "/documents", 
-    icon: FileTextIcon 
-  },
-  { 
     title: "Service Professionals", 
     href: "/professionals", 
     icon: Users2 
@@ -27,7 +20,7 @@ export const collaborationNavItems: NavItem[] = [
   { 
     title: "Family Members", 
     href: "/sharing", 
-    icon: ShareIcon 
+    icon: UsersIcon 
   }
 ];
 
@@ -40,11 +33,13 @@ interface DocumentCategory {
   documentTypes: DocumentType[];
 }
 
+type DocumentType = "legal" | "document" | "image" | "spreadsheet" | "pdf";
+
 const documentCategories: DocumentCategory[] = [
   {
     id: "legal",
     name: "Legal Documents",
-    icon: FileTextIcon,
+    icon: InfoIcon,
     relevantProfessionals: ["Estate Planning Attorney", "Tax Professional / Accountant"],
     description: "Legal agreements, contracts, and estate planning documents",
     documentTypes: ["legal", "document"]
@@ -52,7 +47,7 @@ const documentCategories: DocumentCategory[] = [
   {
     id: "property",
     name: "Property Records",
-    icon: FileTextIcon,
+    icon: InfoIcon,
     relevantProfessionals: ["Real Estate Agent / Property Manager"],
     description: "Property deeds, inspection reports, and rental agreements",
     documentTypes: ["property", "document", "image"]
@@ -60,7 +55,7 @@ const documentCategories: DocumentCategory[] = [
   {
     id: "financial",
     name: "Financial Documents",
-    icon: FileTextIcon,
+    icon: InfoIcon,
     relevantProfessionals: ["Financial Advisor", "Tax Professional / Accountant"],
     description: "Tax returns, financial statements, and investment documents",
     documentTypes: ["financial", "spreadsheet"]
@@ -68,7 +63,7 @@ const documentCategories: DocumentCategory[] = [
   {
     id: "insurance",
     name: "Insurance Policies",
-    icon: FileTextIcon,
+    icon: InfoIcon,
     relevantProfessionals: ["Insurance / LTC Specialist"],
     description: "Insurance policies and claims documentation",
     documentTypes: ["insurance", "document", "pdf"]
@@ -76,7 +71,7 @@ const documentCategories: DocumentCategory[] = [
   {
     id: "mortgage",
     name: "Mortgage Documents",
-    icon: FileTextIcon,
+    icon: InfoIcon,
     relevantProfessionals: ["Mortgage Broker", "Real Estate Agent / Property Manager"],
     description: "Mortgage agreements, refinancing documents, and loan applications",
     documentTypes: ["financial", "document"]
@@ -235,7 +230,7 @@ const CollaborationTab = () => {
                 to="/professionals" 
                 className="flex items-center gap-3 p-4 bg-blue-50/50 rounded-lg hover:bg-blue-50/80 transition-colors border border-blue-100"
               >
-                <KeyIcon className="h-6 w-6 flex-shrink-0 text-blue-600" />
+                <InfoIcon className="h-6 w-6 flex-shrink-0 text-blue-600" />
                 <div>
                   <h4 className="font-medium text-lg">Professional Access Management</h4>
                   <p className="text-sm text-muted-foreground">Control which professionals can access your documents</p>
@@ -271,7 +266,7 @@ const CollaborationTab = () => {
             <div className="grid gap-4">
               <div className="border border-muted rounded-lg p-4 hover:border-primary/50 hover:bg-muted/20 transition-colors">
                 <Link to="/sharing" className="flex items-center gap-3 hover:text-primary transition-colors">
-                  <ShareIcon className="h-6 w-6 flex-shrink-0 text-green-600" />
+                  <UsersIcon className="h-6 w-6 flex-shrink-0 text-green-600" />
                   <div>
                     <h4 className="font-medium text-lg">Family Member Access</h4>
                     <p className="text-sm text-muted-foreground">Manage family member permissions</p>
@@ -289,7 +284,7 @@ const CollaborationTab = () => {
               
               <div className="border border-muted rounded-lg p-4 hover:border-primary/50 hover:bg-muted/20 transition-colors">
                 <Link to="/documents" className="flex items-center gap-3 hover:text-primary transition-colors">
-                  <FileTextIcon className="h-6 w-6 flex-shrink-0 text-green-600" />
+                  <InfoIcon className="h-6 w-6 flex-shrink-0 text-green-600" />
                   <div>
                     <h4 className="font-medium text-lg">Shared Family Documents</h4>
                     <p className="text-sm text-muted-foreground">View and manage family-shared documents</p>

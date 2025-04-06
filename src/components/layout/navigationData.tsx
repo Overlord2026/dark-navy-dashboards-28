@@ -1,4 +1,3 @@
-
 import React from "react";
 import {
   HomeIcon,
@@ -18,7 +17,8 @@ import {
   PieChart,
   ArrowRightLeft,
   Calculator,
-  Receipt
+  Receipt,
+  BookIcon
 } from "lucide-react";
 
 type MainMenuItem = {
@@ -52,6 +52,7 @@ export const navigationCategories: NavCategory[] = [
     defaultExpanded: true,
     items: [
       { id: "home", label: "Home", icon: CustomHomeIcon, href: "/" },
+      { id: "documents", label: "Documents", icon: BookIcon, href: "/documents" },
     ]
   },
   {
@@ -87,7 +88,6 @@ export const navigationCategories: NavCategory[] = [
     id: "collaboration",
     label: "Collaboration & Sharing",
     items: [
-      { id: "documents", label: "Document Sharing", icon: FileTextIcon, href: "/documents" },
       { id: "professionals", label: "Professional Access", icon: Users2Icon, href: "/professionals" },
       { id: "sharing", label: "Family Member Access", icon: ShareIcon, href: "/sharing" },
     ]

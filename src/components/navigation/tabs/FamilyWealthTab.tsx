@@ -11,7 +11,8 @@ import {
   Calculator,
   Diamond,
   Car,
-  Palette
+  Palette,
+  BookIcon
 } from "lucide-react";
 import { NavItem } from "@/types/navigation";
 
@@ -25,6 +26,11 @@ export const familyWealthNavItems: NavItem[] = [
     title: "All Assets", 
     href: "/all-assets", 
     icon: Diamond 
+  },
+  { 
+    title: "Documents", 
+    href: "/documents", 
+    icon: BookIcon 
   },
   { 
     title: "Cash Management", 

@@ -39,6 +39,11 @@ export const homeNavItems: NavItem[] = [
     title: "Home", 
     href: "/", 
     icon: HomeIcon 
+  },
+  { 
+    title: "Documents", 
+    href: "/documents", 
+    icon: BookIcon 
   }
 ];
 
@@ -100,12 +105,12 @@ export const familyWealthNavItems: NavItem[] = [
   },
   { 
     title: "Vehicles & Collectibles", 
-    href: "/all-assets", 
+    href: "/vehicles-collectibles", 
     icon: Car 
   },
   { 
     title: "Art & Valuables", 
-    href: "/all-assets", 
+    href: "/art-valuables", 
     icon: Palette 
   },
   { 
@@ -142,11 +147,6 @@ export const familyWealthNavItems: NavItem[] = [
 
 // COLLABORATION & SHARING category
 export const collaborationNavItems: NavItem[] = [
-  { 
-    title: "Document Sharing", 
-    href: "/documents", 
-    icon: FileTextIcon 
-  },
   { 
     title: "Service Professionals", 
     href: "/professionals", 
