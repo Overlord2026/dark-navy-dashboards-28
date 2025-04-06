@@ -7,7 +7,19 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertTriangle } from "lucide-react";
 
 export default function AccessibilityAudit() {
-  const { auditResults, isLoading, runAudit, auditSummary, isRunning } = useAccessibilityAudit();
+  const { auditResults, isLoading, runAudit } = useAccessibilityAudit();
+  
+  // Derive isRunning from isLoading for compatibility
+  const isRunning = isLoading;
+  
+  // Calculate audit summary from results
+  const auditSummary = {
+    critical: auditResults.filter(r => r.impact === "critical").length,
+    serious: auditResults.filter(r => r.impact === "serious").length,
+    moderate: auditResults.filter(r => r.impact === "moderate").length,
+    minor: auditResults.filter(r => r.impact === "minor").length,
+    total: auditResults.length
+  };
 
   const handleRunAudit = () => {
     runAudit();

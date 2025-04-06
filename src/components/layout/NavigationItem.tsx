@@ -40,7 +40,11 @@ export const NavigationItem = ({
       title={isCollapsed ? item.label : undefined}
     >
       <div className={cn("flex-shrink-0", !isCollapsed && "mr-3")}>
-        {React.isValidElement(Icon) ? Icon : <Icon className="h-5 w-5" />}
+        {React.isValidElement(Icon) ? (
+          Icon
+        ) : (
+          <Icon className="h-5 w-5" />
+        )}
       </div>
       
       {!isCollapsed && (

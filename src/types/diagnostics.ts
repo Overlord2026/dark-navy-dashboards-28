@@ -3,9 +3,9 @@ export interface NavigationTestResult {
   id: string;
   route: string;
   status: "success" | "warning" | "error";
-  message: string; // Now required to match usage
+  message?: string; // Make optional to match actual usage
   timestamp: number;
-  recommendations?: string[] | Recommendation[]; // Add support for complex recommendations
+  recommendations?: (string | Recommendation)[]; // Support both string and object recommendations
   details?: any;
 }
 
@@ -95,7 +95,7 @@ export interface RoleSimulationTestResult {
 }
 
 export interface ApiEndpointDiagnosticResult {
-  id: string; 
+  id?: string; // Make optional to match implementation
   name: string;
   url: string;
   method: "GET" | "POST" | "PUT" | "DELETE";

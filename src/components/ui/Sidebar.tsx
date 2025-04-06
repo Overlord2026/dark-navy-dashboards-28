@@ -1,11 +1,21 @@
+
 import React from "react";
-import { usePathname } from "next/navigation";
-import { SidebarNavItem } from "@/types/navigation";
+import { useLocation } from "react-router-dom";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { cn } from "@/lib/utils";
 import { Link } from "react-router-dom";
 import { Home, Plus, Settings } from "lucide-react";
 import SidebarNavCategory from "@/components/sidebar/SidebarNavCategory";
+
+interface SidebarNavItem {
+  title: string;
+  href?: string;
+  disabled?: boolean;
+  external?: boolean;
+  icon?: React.ReactNode;
+  label?: string;
+  items?: SidebarNavItem[];
+}
 
 interface SidebarProps {
   isLightTheme: boolean;
@@ -30,7 +40,8 @@ const Sidebar: React.FC<SidebarProps> = ({
   onExpand,
   onCollapse
 }) => {
-  const pathname = usePathname();
+  const location = useLocation();
+  const pathname = location.pathname;
 
   const isActive = (href: string) => {
     return pathname === href;
