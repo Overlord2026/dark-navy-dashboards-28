@@ -1,57 +1,69 @@
 
-import { PermissionTestResult } from './types';
+import { PermissionTestResult } from '@/types/diagnostics';
 import { v4 as uuidv4 } from 'uuid';
 
 export const testPermissions = (): PermissionTestResult[] => {
-  // Sample permission tests for different roles and resources
+  // Sample permission tests
   return [
     {
       id: uuidv4(),
-      name: "Admin View Dashboard",
+      permission: "settings:read",
+      status: "success",
+      message: "Admin can read settings",
       role: "admin",
-      permission: "view:dashboard",
-      status: "success",
-      message: "Admin can access dashboard as expected"
+      expected: true,
+      actual: true,
+      timestamp: Date.now()
     },
     {
       id: uuidv4(),
-      name: "Admin Manage Users",
+      permission: "settings:write",
+      status: "success",
+      message: "Admin can write settings",
       role: "admin",
-      permission: "manage:users",
-      status: "success",
-      message: "Admin can manage users as expected"
+      expected: true,
+      actual: true,
+      timestamp: Date.now()
     },
     {
       id: uuidv4(),
-      name: "Editor Edit Content",
-      role: "editor",
-      permission: "edit:content",
+      permission: "users:read",
       status: "success",
-      message: "Editor can edit content as expected"
+      message: "Manager can read users",
+      role: "manager",
+      expected: true,
+      actual: true,
+      timestamp: Date.now()
     },
     {
       id: uuidv4(),
-      name: "Viewer Edit Content",
-      role: "viewer",
-      permission: "edit:content",
+      permission: "users:write",
       status: "error",
-      message: "Viewer should not be able to edit content but permissions allow it"
+      message: "Manager cannot write users but should be able to",
+      role: "manager",
+      expected: true,
+      actual: false,
+      timestamp: Date.now()
     },
     {
       id: uuidv4(),
-      name: "Admin Access Analytics",
-      role: "admin",
-      permission: "access:analytics",
-      status: "success",
-      message: "Admin can access analytics as expected"
-    },
-    {
-      id: uuidv4(),
-      name: "Editor Publish Content",
-      role: "editor",
-      permission: "publish:content",
+      permission: "api:access",
       status: "warning",
-      message: "Editor can publish content but approval workflow is not enforced"
+      message: "Client has API access but it should be limited",
+      role: "client",
+      expected: false,
+      actual: true,
+      timestamp: Date.now()
+    },
+    {
+      id: uuidv4(),
+      permission: "reports:delete",
+      status: "success",
+      message: "Client cannot delete reports",
+      role: "client",
+      expected: false,
+      actual: false,
+      timestamp: Date.now()
     }
   ];
 };

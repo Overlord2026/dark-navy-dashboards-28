@@ -1,54 +1,62 @@
 
-import { SecurityTestResult } from "./types";
+import { SecurityTestResult } from '@/types/diagnostics';
+import { v4 as uuidv4 } from 'uuid';
 
-export async function runSecurityTests(): Promise<SecurityTestResult[]> {
-  // This would typically connect to a security scanning service
-  // For now, we'll return mock data
+export const runSecurityTests = async (): Promise<SecurityTestResult[]> => {
+  // Simulate security test running
+  await new Promise(resolve => setTimeout(resolve, 800));
   
-  // Simulate a delay for the tests to run
-  await new Promise(resolve => setTimeout(resolve, 2000));
-  
+  // Sample security test results
   return [
     {
-      id: "sec-001",
-      name: "Cross-site Scripting (XSS) Protection",
+      id: uuidv4(),
+      name: "Authentication Tokens",
       status: "success",
-      severity: "critical",
-      message: "No XSS vulnerabilities detected",
-      category: "web-security"
+      message: "Token validation is correctly implemented",
+      details: "JWT tokens are correctly validated with proper expiry checks",
+      severity: "high",
+      remediation: "No action needed",
+      timestamp: Date.now()
     },
     {
-      id: "sec-002",
-      name: "Content Security Policy",
+      id: uuidv4(),
+      name: "SQL Injection Prevention",
+      status: "success",
+      message: "Parameterized queries are used throughout the application",
+      details: "All database interactions use prepared statements",
+      severity: "critical",
+      remediation: "No action needed",
+      timestamp: Date.now()
+    },
+    {
+      id: uuidv4(),
+      name: "XSS Prevention",
       status: "warning",
-      severity: "high",
-      message: "CSP header is present but missing some directives",
-      remediation: "Add missing CSP directives for media-src and object-src",
-      category: "web-security"
-    },
-    {
-      id: "sec-003",
-      name: "Secure Cookie Configuration",
-      status: "success",
+      message: "Some user inputs are not properly sanitized",
+      details: "The comment field in the feedback form may be vulnerable",
       severity: "medium",
-      message: "All cookies are using secure configuration",
-      category: "data-security"
+      remediation: "Add content sanitization to the feedback form",
+      timestamp: Date.now()
     },
     {
-      id: "sec-004",
-      name: "HTTPS Implementation",
+      id: uuidv4(),
+      name: "CSRF Protection",
       status: "success",
-      severity: "critical",
-      message: "HTTPS is properly configured with modern protocols",
-      category: "infrastructure-security"
-    },
-    {
-      id: "sec-005",
-      name: "Authentication Controls",
-      status: "success",
+      message: "CSRF tokens are properly implemented",
+      details: "All forms include CSRF tokens that are validated server-side",
       severity: "high",
-      message: "Authentication mechanisms are secure",
-      category: "access-control"
+      remediation: "No action needed",
+      timestamp: Date.now()
+    },
+    {
+      id: uuidv4(),
+      name: "File Upload Validation",
+      status: "error",
+      message: "File upload validation is incomplete",
+      details: "File type validation can be bypassed with certain file extensions",
+      severity: "high",
+      remediation: "Implement content-type validation in addition to extension checks",
+      timestamp: Date.now()
     }
   ];
-}
+};

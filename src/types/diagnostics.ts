@@ -1,3 +1,4 @@
+
 export interface NavigationTestResult {
   id: string;
   route: string;
@@ -17,12 +18,17 @@ export interface FormField {
   value: string;
   status: "success" | "warning" | "error";
   message?: string;
+  fieldType?: string; // For compatibility with existing components
+  errors?: string[];
+  valid?: boolean;
 }
 
 export interface FormValidationTestResult {
   id: string;
   name: string;
   form?: string; // Added for compatibility with existing components
+  formName?: string; // For compatibility
+  location?: string; // For compatibility
   status: "success" | "warning" | "error";
   fields: FormField[];
   message?: string;
@@ -32,6 +38,8 @@ export interface FormValidationTestResult {
 export interface IconTestResult {
   id: string;
   name?: string; // Added for compatibility with existing components
+  icon?: string; // For compatibility
+  location?: string; // For compatibility 
   iconName?: string;
   status: "success" | "warning" | "error";
   message: string;
@@ -124,6 +132,7 @@ export interface DiagnosticResult {
   details?: any;
   timestamp?: number;
   route?: string;
+  recommendations?: (string | Recommendation)[];
 }
 
 // Add NavigationDiagnosticResult as an alias to NavigationTestResult

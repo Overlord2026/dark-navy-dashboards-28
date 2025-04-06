@@ -1,155 +1,142 @@
 
-import React, { useEffect, useState } from 'react';
-import { testNavigation } from '@/services/diagnostics/navigationTests';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { CheckCircle, AlertTriangle, XCircle, Loader2 } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
-import { useDiagnosticsContext } from '@/context/DiagnosticsContext';
-import { RecommendationsList } from './RecommendationsList';
-import { Recommendation, NavigationTestResult } from '@/types/diagnostics';
-import { Button } from '@/components/ui/button';
-import { toast } from 'sonner';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { DiagnosticResultItem } from './DiagnosticResultItem';
-import { useUser } from "@/context/UserContext";
-import { v4 as uuidv4 } from 'uuid';
+import React, { useState, useEffect } from "react";
+import { NavigationTestResult, Recommendation } from "@/types/diagnostics";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+import { RecommendationsList } from "./RecommendationsList";
 
-// Separate component for stats display to reduce complexity
-const DiagnosticStats = ({ stats }: { stats: { total: number; success: number; warning: number; error: number } }) => (
-  <div className="flex gap-2 mt-2">
-    <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
-      {stats.success} OK
-    </Badge>
-    {stats.warning > 0 && (
-      <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200">
-        {stats.warning} Warnings
-      </Badge>
-    )}
-    {stats.error > 0 && (
-      <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200">
-        {stats.error} Errors
-      </Badge>
-    )}
-  </div>
-);
+interface SimpleDiagnosticsViewProps {
+  results: NavigationTestResult[];
+  isLoading: boolean;
+  onFixClick?: (recommendation: Recommendation) => void;
+  onRefresh?: () => void;
+}
 
 /**
- * SimpleDiagnosticsView - A developer-friendly component that shows basic diagnostics results
- * Only visible to admin users
+ * A simple view for displaying diagnostic results
+ * This component is meant to be hidden from the user interface
+ * but used for testing the functionality of the diagnostics system
  */
-const SimpleDiagnosticsView: React.FC = () => {
-  const [results, setResults] = useState<NavigationTestResult[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState('results');
-  const { isDevelopmentMode, isDiagnosticsModeEnabled } = useDiagnosticsContext();
-  const { userProfile } = useUser();
+export const SimpleDiagnosticsView: React.FC<SimpleDiagnosticsViewProps> = ({
+  results,
+  isLoading,
+  onFixClick,
+  onRefresh,
+}) => {
+  const [activeTab, setActiveTab] = useState<string>("errors");
+  const [fixedRecommendations, setFixedRecommendations] = useState<string[]>([]);
   
-  // DISABLED: Never show this component on the main dashboard
-  const isVisible = false; // Always hide this component
-
-  useEffect(() => {
-    if (!isVisible) return;
-
-    const runDiagnostics = async () => {
-      try {
-        setLoading(true);
-        const navResults = await testNavigation();
-        
-        // Add some sample recommendations if they don't exist
-        const resultsWithRecommendations = navResults.map(result => {
-          if (result.status !== 'success' && (!result.recommendations || result.recommendations.length === 0)) {
-            return {
-              ...result,
-              recommendations: generateRecommendations(result)
-            };
-          }
-          return result;
-        });
-        
-        setResults(resultsWithRecommendations);
-      } catch (error) {
-        console.error('Error running diagnostics:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    runDiagnostics();
+  // Filter results by status
+  const errorResults = results.filter(result => result.status === "error");
+  const warningResults = results.filter(result => result.status === "warning");
+  const successResults = results.filter(result => result.status === "success");
+  
+  const handleFixRecommendation = async (recommendation: Recommendation) => {
+    if (!onFixClick) return;
     
-    // Refresh diagnostics every 2 minutes
-    const intervalId = setInterval(runDiagnostics, 120000);
-    return () => clearInterval(intervalId);
-  }, [isVisible]);
-  
-  const generateRecommendations = (result: NavigationTestResult): Recommendation[] => {
-    if (result.status === 'warning') {
-      return [{
-        id: uuidv4(),
-        text: `Check response times for ${result.route}`,
-        priority: 'medium',
-        category: 'performance',
-        actionable: true,
-        action: {
-          label: 'Optimize'
-        },
-        effort: 'medium',
-        impact: 'Improves page load times by 15-20%'
-      }];
-    } else if (result.status === 'error') {
-      return [{
-        id: uuidv4(),
-        text: `Fix routing error on ${result.route}`,
-        priority: 'high',
-        category: 'reliability',
-        actionable: true,
-        action: {
-          label: 'Fix Now'
-        },
-        effort: 'medium',
-        impact: 'Resolves critical navigation failure'
-      }];
+    try {
+      // Show a toast notification that we're fixing the issue
+      toast.loading(`Fixing: ${recommendation.text}`, {
+        id: `fix-${recommendation.id}`,
+      });
+      
+      // Call the fix handler
+      await onFixClick(recommendation);
+      
+      // Update our local state to track fixed recommendations
+      setFixedRecommendations(prev => [...prev, recommendation.id]);
+      
+      // Show success toast
+      toast.success(`Fixed: ${recommendation.text}`, {
+        id: `fix-${recommendation.id}`,
+      });
+    } catch (error) {
+      // Show error toast
+      toast.error(`Failed to fix: ${recommendation.text}`, {
+        id: `fix-${recommendation.id}`,
+        description: error instanceof Error ? error.message : "Unknown error",
+      });
     }
-    return [];
   };
-
-  // Handle recommendation actions
-  const handleRecommendationAction = (recommendation: Recommendation) => {
-    toast.info(`Applying recommendation: ${recommendation.text}`);
-    // In a real implementation, this would trigger the actual fix
-    setTimeout(() => {
-      toast.success("Recommendation applied successfully");
-      // Update the results to reflect the fix
-      setResults(prevResults => 
-        prevResults.map(result => {
-          if (result.recommendations && result.recommendations.some(r => 
-            typeof r === 'object' && r.id === recommendation.id
-          )) {
-            const updatedRecommendations = result.recommendations.filter(
-              r => typeof r === 'string' || r.id !== recommendation.id
-            );
-            return {
-              ...result,
-              status: updatedRecommendations.length === 0 ? 'success' : result.status,
-              recommendations: updatedRecommendations
-            };
-          }
-          return result;
-        })
-      );
-    }, 1500);
-  };
-
-  if (!isVisible) return null;
   
-  // Calculate summary counts
-  const getStats = () => {
-    const total = results.length;
-    const success = results.filter(r => r.status === 'success').length;
-    const warning = results.filter(r => r.status === 'warning').length;
-    const error = results.filter(r => r.status === 'error').length;
+  // Get recommendations for a specific result, ensuring we filter out any that have been fixed
+  const getRecommendationsForResult = (result: NavigationTestResult): Recommendation[] => {
+    if (!result.recommendations) return [];
     
-    return { total, success, warning, error };
+    return result.recommendations
+      .filter(rec => {
+        // If it's a string recommendation, always include it
+        if (typeof rec === 'string') return true;
+        // If it's an object recommendation, check if it's been fixed
+        return !fixedRecommendations.includes(rec.id);
+      })
+      .map(rec => {
+        // Convert string recommendations to Recommendation objects
+        if (typeof rec === 'string') {
+          return {
+            id: `simple-${Math.random().toString(36).substring(2, 9)}`,
+            text: rec,
+            priority: 'medium',
+            category: 'reliability',
+            actionable: false
+          };
+        }
+        return rec;
+      }) as Recommendation[];
   };
+  
+  // Handle refreshing the diagnostics
+  const handleRefresh = () => {
+    if (onRefresh) {
+      onRefresh();
+      toast.info("Refreshing diagnostics...");
+    }
+  };
+  
+  // Update a specific recommendation as fixed
+  const handleRecommendationAction = (recommendation: Recommendation) => {
+    if (!recommendation.actionable) return;
+    
+    handleFixRecommendation(recommendation);
+    
+    // Update the results to reflect the fix
+    setResults(prevResults => 
+      prevResults.map(result => {
+        if (result.recommendations && result.recommendations.some(r => 
+          typeof r === 'object' && r.id === recommendation.id
+        )) {
+          const updatedRecommendations = result.recommendations.filter(
+            r => typeof r === 'string' || r.id !== recommendation.id
+          );
+          return {
+            ...result,
+            recommendations: updatedRecommendations
+          };
+        }
+        return result;
+      })
+    );
+  };
+  
+  // If this is just a test component that's not meant to be displayed,
+  // return null or an empty fragment
+  if (import.meta.env.PROD) {
+    return null;
+  }
+  
+  // Count recommendations
+  const recommendationsCount = results.reduce((count, result) => {
+    if (!result.recommendations) return count;
+    return count + result.recommendations.length;
+  }, 0);
+  
+  // Get total counts by status
+  const totalErrors = errorResults.length;
+  const totalWarnings = warningResults.length;
+  const totalSuccesses = successResults.length;
   
   // Get all recommendations
   const allRecommendations = results
@@ -164,5 +151,3 @@ const SimpleDiagnosticsView: React.FC = () => {
 
   return null; // Always return null to never show this component
 };
-
-export default SimpleDiagnosticsView;

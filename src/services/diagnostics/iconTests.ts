@@ -1,57 +1,71 @@
 
-import { IconTestResult } from './types';
+import { IconTestResult } from '@/types/diagnostics';
 
 export const testIcons = (): IconTestResult[] => {
   // Sample icon tests for different parts of the application
   return [
     {
-      name: "HomeIcon", // Added the required name property
-      icon: "HomeIcon",
-      location: "Navigation Menu",
+      id: "home-icon-test",
+      iconName: "HomeIcon",
+      iconType: "lucide",
       status: "success",
-      message: "Icon renders correctly in all themes"
+      message: "Icon renders correctly in all themes",
+      renderTime: 5,
+      timestamp: Date.now()
     },
     {
-      name: "SettingsIcon", // Added the required name property
-      icon: "SettingsIcon",
-      location: "Profile Dropdown",
+      id: "settings-icon-test",
+      iconName: "SettingsIcon",
+      iconType: "lucide",
       status: "success",
-      message: "Icon renders correctly in all themes"
+      message: "Icon renders correctly in all themes",
+      renderTime: 6,
+      timestamp: Date.now()
     },
     {
-      name: "NotificationIcon", // Added the required name property
-      icon: "BellIcon",
-      location: "Header",
+      id: "notification-icon-test",
+      iconName: "BellIcon",
+      iconType: "lucide",
       status: "success",
-      message: "Icon renders correctly in all themes"
+      message: "Icon renders correctly in all themes",
+      renderTime: 4,
+      timestamp: Date.now()
     },
     {
-      name: "SearchIcon", // Added the required name property
-      icon: "SearchIcon",
-      location: "Global Search",
+      id: "search-icon-test",
+      iconName: "SearchIcon",
+      iconType: "lucide",
       status: "success",
-      message: "Icon renders correctly in all themes"
+      message: "Icon renders correctly in all themes",
+      renderTime: 5,
+      timestamp: Date.now()
     },
     {
-      name: "AlertIcon", // Added the required name property
-      icon: "AlertTriangleIcon",
-      location: "Error Messages",
+      id: "alert-icon-test",
+      iconName: "AlertTriangleIcon",
+      iconType: "lucide",
       status: "warning",
-      message: "Icon may not be visible in high contrast mode"
+      message: "Icon may not be visible in high contrast mode",
+      renderTime: 7,
+      timestamp: Date.now()
     },
     {
-      name: "UserIcon", // Added the required name property
-      icon: "UserIcon",
-      location: "Profile Section",
+      id: "user-icon-test",
+      iconName: "UserIcon",
+      iconType: "lucide",
       status: "success",
-      message: "Icon renders correctly in all themes"
+      message: "Icon renders correctly in all themes",
+      renderTime: 5,
+      timestamp: Date.now()
     },
     {
-      name: "DocsIcon", // Added the required name property
-      icon: "FileTextIcon",
-      location: "Documentation Links",
+      id: "docs-icon-test",
+      iconName: "FileTextIcon",
+      iconType: "lucide",
       status: "error",
-      message: "Icon fails to render in Safari browser"
+      message: "Icon fails to render in Safari browser",
+      renderTime: 12,
+      timestamp: Date.now()
     }
   ];
 };

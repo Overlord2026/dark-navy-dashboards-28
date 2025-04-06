@@ -1,107 +1,143 @@
 
-import { FormValidationTestResult } from './types';
+import { FormValidationTestResult } from '../types/diagnostics';
 
 export const testFormValidation = (): FormValidationTestResult[] => {
   // Sample validation tests for different forms
   return [
     {
-      form: "login", // Added the required form property
+      id: "login-form-test",
+      name: "Login Form",
       formName: "Login Form",
       location: "/login",
       status: "warning",
       message: "Form validation has minor issues with error display",
       fields: [
         {
-          fieldName: "email",
-          fieldType: "email",
+          id: "email-field",
+          name: "email",
+          type: "email",
+          validations: ["required", "email"],
+          value: "",
           status: "success",
           message: "Email validation works correctly"
         },
         {
-          fieldName: "password",
-          fieldType: "password",
+          id: "password-field",
+          name: "password",
+          type: "password",
+          validations: ["required", "minLength:8"],
+          value: "",
           status: "warning",
           message: "Password strength indicator not showing for some password patterns"
         }
       ]
     },
     {
-      form: "registration", // Added the required form property
+      id: "registration-form-test",
+      name: "Registration Form",
       formName: "Registration Form",
       location: "/register",
       status: "success",
       message: "All validation rules work as expected",
       fields: [
         {
-          fieldName: "email",
-          fieldType: "email",
+          id: "email-field",
+          name: "email",
+          type: "email",
+          validations: ["required", "email"],
+          value: "",
           status: "success",
           message: "Email validation works correctly"
         },
         {
-          fieldName: "password",
-          fieldType: "password",
+          id: "password-field",
+          name: "password",
+          type: "password",
+          validations: ["required", "minLength:8", "hasNumber", "hasSpecial"],
+          value: "",
           status: "success",
           message: "Password validation works correctly"
         },
         {
-          fieldName: "confirmPassword",
-          fieldType: "password",
+          id: "confirm-password-field",
+          name: "confirmPassword",
+          type: "password",
+          validations: ["required", "matches:password"],
+          value: "",
           status: "success",
           message: "Password matching validation works correctly"
         }
       ]
     },
     {
-      form: "contact", // Added the required form property
+      id: "contact-form-test",
+      name: "Contact Form",
       formName: "Contact Form",
       location: "/contact",
       status: "success",
-      message: "All validation rules work as expected"
+      message: "All validation rules work as expected",
+      fields: []
     },
     {
-      form: "payment", // Added the required form property
+      id: "payment-form-test",
+      name: "Payment Form",
       formName: "Payment Form",
       location: "/checkout/payment",
       status: "error",
       message: "Critical validation issues found",
       fields: [
         {
-          fieldName: "cardNumber",
-          fieldType: "number",
+          id: "card-number-field",
+          name: "cardNumber",
+          type: "text",
+          validations: ["required", "creditCard"],
+          value: "",
           status: "error",
           message: "Card number validation fails to detect invalid card numbers"
         },
         {
-          fieldName: "cvv",
-          fieldType: "number",
+          id: "cvv-field",
+          name: "cvv",
+          type: "text",
+          validations: ["required", "length:3,4"],
+          value: "",
           status: "success",
           message: "CVV validation works correctly"
         },
         {
-          fieldName: "expiryDate",
-          fieldType: "date",
+          id: "expiry-date-field",
+          name: "expiryDate",
+          type: "date",
+          validations: ["required", "future"],
+          value: "",
           status: "error",
           message: "Allows selection of past dates"
         }
       ]
     },
     {
-      form: "profile", // Added the required form property
+      id: "profile-form-test",
+      name: "Profile Update Form",
       formName: "Profile Update Form",
       location: "/profile",
       status: "warning",
       message: "Form has some validation inconsistencies",
       fields: [
         {
-          fieldName: "phoneNumber",
-          fieldType: "tel",
+          id: "phone-field",
+          name: "phoneNumber",
+          type: "text",
+          validations: ["required", "phone"],
+          value: "",
           status: "warning",
           message: "Phone number validation accepts some invalid formats"
         },
         {
-          fieldName: "address",
-          fieldType: "text",
+          id: "address-field",
+          name: "address",
+          type: "text",
+          validations: ["required"],
+          value: "",
           status: "success",
           message: "Address validation works correctly"
         }

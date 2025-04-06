@@ -1,175 +1,155 @@
 
-import { RoleSimulationTestResult } from './types';
+import { RoleSimulationTestResult } from '@/types/diagnostics';
+import { v4 as uuidv4 } from 'uuid';
 
-export const testRoleSimulations = (): RoleSimulationTestResult[] => {
-  // In a real app, this would actually test user role access with real authentication and authorization
+export const testRoleSimulations = async (): Promise<RoleSimulationTestResult[]> => {
+  // Simulate response delay
+  await new Promise(resolve => setTimeout(resolve, 500));
+  
+  // Sample role simulation tests
   return [
-    // Client/Consumer role tests
     {
-      role: "client",
-      module: "dashboard",
-      accessStatus: "granted",
+      id: uuidv4(),
+      role: "admin",
+      action: "view_dashboard",
       status: "success",
-      message: "Clients can access dashboard",
-      expectedAccess: true
+      message: "Admin can view dashboard",
+      expected: true,
+      actual: true,
+      timestamp: Date.now()
     },
     {
-      role: "client",
-      module: "documents",
-      accessStatus: "granted",
+      id: uuidv4(),
+      role: "admin",
+      action: "manage_users",
       status: "success",
-      message: "Clients can access documents",
-      expectedAccess: true
+      message: "Admin can manage users",
+      expected: true,
+      actual: true,
+      timestamp: Date.now()
     },
     {
-      role: "client",
-      module: "investments",
-      accessStatus: "granted",
-      status: "success", 
-      message: "Clients can access investments",
-      expectedAccess: true
-    },
-    {
-      role: "client",
-      module: "advisor-module-marketplace",
-      accessStatus: "denied",
+      id: uuidv4(),
+      role: "admin",
+      action: "access_settings",
       status: "success",
-      message: "Clients correctly blocked from advisor module marketplace",
-      expectedAccess: false
+      message: "Admin can access settings",
+      expected: true,
+      actual: true,
+      timestamp: Date.now()
     },
     {
-      role: "client",
-      module: "admin-subscription",
-      accessStatus: "denied",
+      id: uuidv4(),
+      role: "manager",
+      action: "view_dashboard",
       status: "success",
-      message: "Clients correctly blocked from admin subscription page",
-      expectedAccess: false
+      message: "Manager can view dashboard",
+      expected: true,
+      actual: true,
+      timestamp: Date.now()
     },
-    
-    // Advisor role tests
     {
-      role: "advisor",
-      module: "dashboard",
-      accessStatus: "granted",
+      id: uuidv4(),
+      role: "manager",
+      action: "manage_team",
       status: "success",
-      message: "Advisors can access dashboard",
-      expectedAccess: true
+      message: "Manager can manage team",
+      expected: true,
+      actual: true,
+      timestamp: Date.now()
     },
     {
-      role: "advisor",
-      module: "advisor-module-marketplace",
-      accessStatus: "granted",
-      status: "success",
-      message: "Advisors can access module marketplace",
-      expectedAccess: true
-    },
-    {
-      role: "advisor",
-      module: "client-profiles",
-      accessStatus: "granted",
-      status: "success",
-      message: "Advisors can access client profiles",
-      expectedAccess: true
-    },
-    {
-      role: "advisor",
-      module: "admin-subscription",
-      accessStatus: "granted", 
+      id: uuidv4(),
+      role: "manager",
+      action: "access_settings",
       status: "error",
-      message: "Advisors have incorrect access to admin subscription page",
-      expectedAccess: false
+      message: "Manager cannot access settings but should be able to",
+      expected: true,
+      actual: false,
+      timestamp: Date.now()
     },
-    
-    // Admin role tests
     {
-      role: "admin",
-      module: "dashboard",
-      accessStatus: "granted",
+      id: uuidv4(),
+      role: "client",
+      action: "view_dashboard",
       status: "success",
-      message: "Admins can access dashboard",
-      expectedAccess: true
+      message: "Client can view dashboard",
+      expected: true,
+      actual: true,
+      timestamp: Date.now()
     },
     {
-      role: "admin",
-      module: "advisor-module-marketplace",
-      accessStatus: "granted",
+      id: uuidv4(),
+      role: "client",
+      action: "manage_profile",
       status: "success",
-      message: "Admins can access module marketplace",
-      expectedAccess: true
+      message: "Client can manage profile",
+      expected: true,
+      actual: true,
+      timestamp: Date.now()
     },
     {
-      role: "admin",
-      module: "admin-subscription",
-      accessStatus: "granted",
+      id: uuidv4(),
+      role: "client",
+      action: "access_settings",
       status: "success",
-      message: "Admins can access subscription management",
-      expectedAccess: true
+      message: "Client cannot access settings",
+      expected: false,
+      actual: false,
+      timestamp: Date.now()
     },
     {
-      role: "admin",
-      module: "system-diagnostics",
-      accessStatus: "granted",
+      id: uuidv4(),
+      role: "advisor",
+      action: "view_dashboard",
       status: "success",
-      message: "Admins can access system diagnostics",
-      expectedAccess: true
+      message: "Advisor can view dashboard",
+      expected: true,
+      actual: true,
+      timestamp: Date.now()
     },
     {
-      role: "admin",
-      module: "audit-logs",
-      accessStatus: "denied",
-      status: "error",
-      message: "Admins cannot access audit logs despite having proper permissions",
-      expectedAccess: true
-    },
-    
-    // Professional role tests
-    {
-      role: "accountant",
-      module: "tax-budgets",
-      accessStatus: "granted",
+      id: uuidv4(),
+      role: "advisor",
+      action: "manage_clients",
       status: "success",
-      message: "Accountants can access tax budgets",
-      expectedAccess: true
+      message: "Advisor can manage clients",
+      expected: true,
+      actual: true,
+      timestamp: Date.now()
     },
     {
-      role: "accountant",
-      module: "client-finances",
-      accessStatus: "granted",
-      status: "success",
-      message: "Accountants can access client finances",
-      expectedAccess: true
-    },
-    {
-      role: "accountant",
-      module: "investments",
-      accessStatus: "granted",
+      id: uuidv4(),
+      role: "advisor",
+      action: "view_reports",
       status: "warning",
-      message: "Accountants have too broad access to investments module",
-      expectedAccess: false
+      message: "Advisor can view reports but with limited data",
+      expected: true,
+      actual: true,
+      timestamp: Date.now(),
+      details: {
+        limitations: "Can only see reports for assigned clients"
+      }
     },
     {
-      role: "attorney",
-      module: "legal-documents",
-      accessStatus: "granted",
+      id: uuidv4(),
+      role: "guest",
+      action: "view_dashboard",
       status: "success",
-      message: "Attorneys can access legal documents",
-      expectedAccess: true
+      message: "Guest cannot view dashboard",
+      expected: false,
+      actual: false,
+      timestamp: Date.now()
     },
     {
-      role: "attorney",
-      module: "legacy-vault",
-      accessStatus: "granted",
+      id: uuidv4(),
+      role: "guest",
+      action: "view_public_content",
       status: "success",
-      message: "Attorneys can access legacy vault",
-      expectedAccess: true
-    },
-    {
-      role: "attorney",
-      module: "client-finances",
-      accessStatus: "denied",
-      status: "error", 
-      message: "Attorneys need access to client finances for certain document preparation",
-      expectedAccess: true
+      message: "Guest can view public content",
+      expected: true,
+      actual: true,
+      timestamp: Date.now()
     }
   ];
 };
