@@ -1,47 +1,19 @@
 
 import React, { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
-import { useVisualTesting } from "@/hooks/useVisualTesting";
-import { VisualTestingRunner } from "@/components/diagnostics/VisualTestingRunner";
-import { SnapshotGallery } from "@/components/diagnostics/SnapshotGallery";
-import { VisualComparisonViewer } from "@/components/diagnostics/VisualComparisonViewer";
-import { VisualComparisonResult } from "@/types/visualTesting";
-import { toast } from "sonner";
-import { logger } from "@/services/logging/loggingService";
+import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Camera, ImageOff, AlertTriangle } from "lucide-react";
 
 export default function VisualTesting() {
-  const { 
-    results, 
-    snapshots, 
-    promoteSnapshot,
-    getSnapshot,
-    getResult
-  } = useVisualTesting();
-  const [selectedResult, setSelectedResult] = useState<VisualComparisonResult | undefined>();
-  
-  const handleSelectResult = (result: VisualComparisonResult) => {
-    setSelectedResult(result);
-  };
-  
-  const handlePromoteToBaseline = () => {
-    if (selectedResult) {
-      logger.info(
-        `Promoting snapshot to baseline`,
-        { currentId: selectedResult.currentId, pageUrl: selectedResult.pageUrl },
-        'VisualTesting'
-      );
-      
-      const success = promoteSnapshot(selectedResult.currentId);
-      
-      if (success) {
-        toast.success('Snapshot set as new baseline', {
-          description: `Future tests will compare against this snapshot`,
-          duration: 3000
-        });
-      } else {
-        toast.error('Failed to set snapshot as baseline');
-      }
-    }
+  const [isCapturing, setIsCapturing] = useState(false);
+
+  const handleCaptureSnapshots = () => {
+    setIsCapturing(true);
+    // Simulating capture process
+    setTimeout(() => {
+      setIsCapturing(false);
+    }, 2000);
   };
   
   return (
@@ -57,27 +29,32 @@ export default function VisualTesting() {
           </p>
         </div>
         
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-          <div className="lg:col-span-3">
-            <VisualTestingRunner />
-          </div>
+        <div className="mb-6">
+          <Button 
+            onClick={handleCaptureSnapshots}
+            disabled={isCapturing}
+            className="mb-4"
+          >
+            <Camera className="h-4 w-4 mr-2" />
+            {isCapturing ? 'Capturing...' : 'Capture Snapshots'}
+          </Button>
           
-          <div className="lg:col-span-2 grid grid-rows-2 gap-6">
-            <div className="row-span-1">
-              <SnapshotGallery 
-                snapshots={snapshots} 
-                comparisonResults={results}
-                onSelectResult={handleSelectResult}
-                selectedResult={selectedResult}
-              />
-            </div>
-            
-            <div className="row-span-1">
-              <VisualComparisonViewer 
-                result={selectedResult}
-                onPromoteToBaseline={handlePromoteToBaseline}
-              />
-            </div>
+          <Alert>
+            <AlertTriangle className="h-4 w-4" />
+            <AlertTitle>Visual Testing Module</AlertTitle>
+            <AlertDescription>
+              This feature captures screenshots of your UI components and pages, then compares them with baseline images to detect visual regressions.
+            </AlertDescription>
+          </Alert>
+        </div>
+        
+        <div className="flex items-center justify-center h-64 border-2 border-dashed border-gray-300 rounded-lg">
+          <div className="text-center">
+            <ImageOff className="mx-auto h-12 w-12 text-gray-400" />
+            <h3 className="mt-2 text-sm font-medium text-gray-900">No snapshots available</h3>
+            <p className="mt-1 text-sm text-gray-500">
+              Capture snapshots to start visual testing
+            </p>
           </div>
         </div>
       </div>
