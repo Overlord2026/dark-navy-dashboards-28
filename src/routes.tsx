@@ -1,432 +1,159 @@
-import { createBrowserRouter } from 'react-router-dom';
-import Index from '@/pages/Index';
-import Dashboard from '@/pages/Dashboard';
-import Accounts from '@/pages/Accounts';
-import TaxPlanning from '@/pages/TaxPlanning';
-import TaxBudgets from '@/pages/TaxBudgets';
-import Documents from '@/pages/Documents';
-import Investments from '@/pages/Investments';
-import InvestmentPerformance from '@/pages/InvestmentPerformance';
-import InvestmentRisk from '@/pages/InvestmentRisk';
-import InvestmentBuilder from '@/pages/InvestmentBuilder';
-import NotFound from '@/pages/NotFound';
-import HomePage from '@/pages/HomePage';
-import CustomerProfile from '@/pages/CustomerProfile';
-import AllAssets from '@/pages/AllAssets';
-import Professionals from '@/pages/Professionals';
-import ProfessionalSignup from '@/pages/ProfessionalSignup';
-import DeveloperAccessControl from '@/pages/DeveloperAccessControl';
-import IPProtection from '@/pages/IPProtection';
-import LoginPage from '@/pages/LoginPage';
-import AdvisorDashboard from '@/pages/AdvisorDashboard';
-import AdvisorProfile from '@/pages/AdvisorProfile';
-import AdvisorModuleMarketplace from '@/pages/AdvisorModuleMarketplace';
-import AdvisorFeedback from '@/pages/AdvisorFeedback';
-import AdvisorOnboarding from '@/pages/AdvisorOnboarding';
-import AdminSubscription from '@/pages/AdminSubscription';
-import BillPay from '@/pages/BillPay';
-import PersonalInsurance from '@/pages/PersonalInsurance';
-import Insurance from '@/pages/Insurance';
-import Properties from '@/pages/Properties';
-import LegacyVault from '@/pages/LegacyVault';
-import AllModelPortfolios from '@/pages/AllModelPortfolios';
-import PortfolioModelDetail from '@/pages/PortfolioModelDetail';
-import FundingAccounts from '@/pages/FundingAccounts';
-import PortfolioBuilder from '@/pages/PortfolioBuilder';
-import Transfers from '@/pages/Transfers';
-import ViewAllOfferings from '@/pages/ViewAllOfferings';
-import AllAlternativeInvestments from '@/pages/AllAlternativeInvestments';
-import BankingTransfers from '@/pages/BankingTransfers';
-import CashManagement from '@/pages/CashManagement';
-import EstatePlanning from '@/pages/EstatePlanning';
-import FinancialPlans from '@/pages/FinancialPlans';
-import FormValidationTests from '@/pages/FormValidationTests';
-import AlternativeAssetCategory from '@/pages/AlternativeAssetCategory';
-import Education from '@/pages/Education';
-import Subscription from '@/pages/Subscription';
-import Sharing from '@/pages/Sharing';
-import SocialSecurity from '@/pages/SocialSecurity';
-import Marketplace from '@/pages/Marketplace';
-import MarketplaceRfp from '@/pages/MarketplaceRfp';
-import MarketplaceRfpDetail from '@/pages/MarketplaceRfpDetail';
-import SystemDiagnosticsPage from '@/pages/SystemDiagnostics';
-import Lending from '@/pages/Lending';
-import NavigationDiagnostics from '@/pages/NavigationDiagnostics';
-import PerformanceDiagnostics from '@/pages/PerformanceDiagnostics';
-import SystemHealthDashboard from '@/pages/SystemHealthDashboard';
-
-// Mobile
-import MobileHome from '@/pages/mobile/MobileHome';
-import MobileAccounts from '@/pages/mobile/MobileAccounts';
-import MobileDocuments from '@/pages/mobile/MobileDocuments';
-import MobileEducation from '@/pages/mobile/MobileEducation';
-import MobileMore from '@/pages/mobile/MobileMore';
-import MobileTransfers from '@/pages/mobile/MobileTransfers';
-import MobileTaxPlanning from '@/pages/mobile/MobileTaxPlanning';
-
-// Marketing site pages
-import AboutUsPage from '@/pages/AboutUsPage';
-import ServicesPage from '@/pages/ServicesPage';
-import ContactPage from '@/pages/ContactPage';
-import PrivacyPolicyPage from '@/pages/PrivacyPolicyPage';
-import TermsOfServicePage from '@/pages/TermsOfServicePage';
-import DisclosuresPage from '@/pages/DisclosuresPage';
-import AccessibilityPage from '@/pages/AccessibilityPage';
-import CareersPage from '@/pages/CareersPage';
-import TeamPage from '@/pages/TeamPage';
-
-// Diagnostics pages
-import ErrorSimulation from '@/pages/ErrorSimulation';
-import VisualTesting from '@/pages/VisualTesting';
-import AccessibilityAudit from '@/pages/AccessibilityAudit';
-
-// Import TabPages
-import { 
-  HomePage as TabHomePage, 
-  AccountsPage, 
-  EducationPage, 
-  FamilyWealthPage, 
-  CollaborationPage, 
-  SettingsPage 
-} from '@/pages/TabPages';
+import React from "react";
+import { createBrowserRouter } from "react-router-dom";
+import Dashboard from "@/pages/Dashboard";
+import Accounts from "@/pages/Accounts";
+import Education from "@/pages/Education";
+import Investments from "@/pages/Investments";
+import TaxPlanning from "@/pages/TaxPlanning";
+import Insurance from "@/pages/Insurance";
+import Lending from "@/pages/Lending";
+import EstatePlanning from "@/pages/EstatePlanning";
+import FinancialPlans from "@/pages/FinancialPlans";
+import AllAssets from "@/pages/AllAssets";
+import CashManagement from "@/pages/CashManagement";
+import TaxBudgets from "@/pages/TaxBudgets";
+import Transfers from "@/pages/Transfers";
+import LegacyVault from "@/pages/LegacyVault";
+import SocialSecurity from "@/pages/SocialSecurity";
+import Properties from "@/pages/Properties";
+import BillPay from "@/pages/BillPay";
+import Documents from "@/pages/Documents";
+import Professionals from "@/pages/Professionals";
+import Sharing from "@/pages/Sharing";
+import Help from "@/pages/Help";
+import Settings from "@/pages/Settings";
+import PrivateEquity from "@/pages/investments/PrivateEquity";
+import PrivateDebt from "@/pages/investments/PrivateDebt";
+import DigitalAssets from "@/pages/investments/DigitalAssets";
+import RealAssets from "@/pages/investments/RealAssets";
+import ModelPortfolios from "@/pages/investments/ModelPortfolios";
+import StockScreener from "@/pages/investments/StockScreener";
+import NotFound from "@/pages/NotFound";
 
 const routes = createBrowserRouter([
   {
-    path: '/',
-    element: <Index />
-  },
-  {
-    path: '/dashboard',
+    path: "/",
     element: <Dashboard />
   },
   {
-    path: '/accounts',
+    path: "/accounts",
     element: <Accounts />
   },
   {
-    path: '/tax-planning',
-    element: <TaxPlanning />
-  },
-  {
-    path: '/tax-budgets',
-    element: <TaxBudgets />
-  },
-  {
-    path: '/documents',
-    element: <Documents />
-  },
-  {
-    path: '/investments',
-    element: <Investments />
-  },
-  {
-    path: '/investments/performance',
-    element: <InvestmentPerformance />
-  },
-  {
-    path: '/investments/risk',
-    element: <InvestmentRisk />
-  },
-  {
-    path: '/investments/builder',
-    element: <InvestmentBuilder />
-  },
-  {
-    path: '/investments/all-assets',
-    element: <AllAssets />
-  },
-  {
-    path: '/home',
-    element: <HomePage />
-  },
-  {
-    path: '/profile',
-    element: <CustomerProfile />
-  },
-  {
-    path: '/professionals',
-    element: <Professionals />
-  },
-  {
-    path: '/professional-signup',
-    element: <ProfessionalSignup />
-  },
-  {
-    path: '/developer-access-control',
-    element: <DeveloperAccessControl />
-  },
-  {
-    path: '/ip-protection',
-    element: <IPProtection />
-  },
-  {
-    path: '/login',
-    element: <LoginPage />
-  },
-  {
-    path: '/advisor/dashboard',
-    element: <AdvisorDashboard />
-  },
-  {
-    path: '/advisor/profile',
-    element: <AdvisorProfile />
-  },
-  {
-    path: '/advisor/modules',
-    element: <AdvisorModuleMarketplace />
-  },
-  {
-    path: '/advisor/feedback',
-    element: <AdvisorFeedback />
-  },
-  {
-    path: '/advisor/onboarding',
-    element: <AdvisorOnboarding />
-  },
-  {
-    path: '/admin/subscription',
-    element: <AdminSubscription />
-  },
-  {
-    path: '/billpay',
-    element: <BillPay />
-  },
-  {
-    path: '/insurance/personal',
-    element: <PersonalInsurance />
-  },
-  {
-    path: '/insurance',
-    element: <Insurance />
-  },
-  {
-    path: '/properties',
-    element: <Properties />
-  },
-  {
-    path: '/legacy-vault',
-    element: <LegacyVault />
-  },
-  {
-    path: '/investments/model-portfolios',
-    element: <AllModelPortfolios />
-  },
-  {
-    path: '/investments/model-portfolios/:id',
-    element: <PortfolioModelDetail />
-  },
-  {
-    path: '/funding-accounts',
-    element: <FundingAccounts />
-  },
-  {
-    path: '/portfolio-builder',
-    element: <PortfolioBuilder />
-  },
-  {
-    path: '/transfers',
-    element: <Transfers />
-  },
-  {
-    path: '/investments/offerings',
-    element: <ViewAllOfferings />
-  },
-  {
-    path: '/investments/alternative',
-    element: <AllAlternativeInvestments />
-  },
-  {
-    path: '/banking/transfers',
-    element: <BankingTransfers />
-  },
-  {
-    path: '/cash-management',
-    element: <CashManagement />
-  },
-  {
-    path: '/banking/cash-management',
-    element: <CashManagement />
-  },
-  {
-    path: '/estate-planning',
-    element: <EstatePlanning />
-  },
-  {
-    path: '/financial-plans',
-    element: <FinancialPlans />
-  },
-  {
-    path: '/form-validation-tests',
-    element: <FormValidationTests />
-  },
-  {
-    path: '/investments/alternative/:categoryId',
-    element: <AlternativeAssetCategory />
-  },
-  {
-    path: '/education',
+    path: "/education",
     element: <Education />
   },
   {
-    path: '/subscription',
-    element: <Subscription />
+    path: "/investments",
+    element: <Investments />
   },
   {
-    path: '/sharing',
-    element: <Sharing />
+    path: "/tax-planning",
+    element: <TaxPlanning />
   },
   {
-    path: '/social-security',
-    element: <SocialSecurity />
+    path: "/insurance",
+    element: <Insurance />
   },
   {
-    path: '/marketplace',
-    element: <Marketplace />
-  },
-  {
-    path: '/marketplace/rfp',
-    element: <MarketplaceRfp />
-  },
-  {
-    path: '/marketplace/rfp/:id',
-    element: <MarketplaceRfpDetail />
-  },
-  {
-    path: '/admin/system-diagnostics',
-    element: <SystemDiagnosticsPage />
-  },
-  {
-    path: '/admin/system-health',
-    element: <SystemHealthDashboard />
-  },
-  {
-    path: '/lending',
+    path: "/lending",
     element: <Lending />
   },
   {
-    path: '/navigation-diagnostics',
-    element: <NavigationDiagnostics />
+    path: "/estate-planning",
+    element: <EstatePlanning />
   },
   {
-    path: '/diagnostics/error-simulation',
-    element: <ErrorSimulation />
+    path: "/financial-plans",
+    element: <FinancialPlans />
   },
   {
-    path: '/diagnostics/visual-testing',
-    element: <VisualTesting />
+    path: "/all-assets",
+    element: <AllAssets />
   },
   {
-    path: '/diagnostics/accessibility-audit',
-    element: <AccessibilityAudit />
+    path: "/cash-management",
+    element: <CashManagement />
   },
   {
-    path: '/diagnostics/performance',
-    element: <PerformanceDiagnostics />
-  },
-  
-  // Mobile routes
-  {
-    path: '/mobile/home',
-    element: <MobileHome />
+    path: "/tax-budgets",
+    element: <TaxBudgets />
   },
   {
-    path: '/mobile/accounts',
-    element: <MobileAccounts />
+    path: "/transfers",
+    element: <Transfers />
   },
   {
-    path: '/mobile/documents',
-    element: <MobileDocuments />
+    path: "/legacy-vault",
+    element: <LegacyVault />
   },
   {
-    path: '/mobile/education',
-    element: <MobileEducation />
+    path: "/social-security",
+    element: <SocialSecurity />
   },
   {
-    path: '/mobile/more',
-    element: <MobileMore />
+    path: "/properties",
+    element: <Properties />
   },
   {
-    path: '/mobile/transfers',
-    element: <MobileTransfers />
+    path: "/billpay",
+    element: <BillPay />
   },
   {
-    path: '/mobile/tax-planning',
-    element: <MobileTaxPlanning />
-  },
-  
-  // Tab page routes 
-  {
-    path: '/home-tab',
-    element: <TabHomePage />
+    path: "/documents",
+    element: <Documents />
   },
   {
-    path: '/accounts-tab',
-    element: <AccountsPage />
+    path: "/professionals",
+    element: <Professionals />
   },
   {
-    path: '/education-tab',
-    element: <EducationPage />
+    path: "/sharing",
+    element: <Sharing />
   },
   {
-    path: '/family-wealth-tab',
-    element: <FamilyWealthPage />
+    path: "/help",
+    element: <Help />
   },
   {
-    path: '/collaboration-tab',
-    element: <CollaborationPage />
+    path: "/settings",
+    element: <Settings />
   },
   {
-    path: '/settings-tab',
-    element: <SettingsPage />
-  },
-  
-  // Education tax planning route
-  {
-    path: '/education/tax-planning',
-    element: <TaxPlanning />
-  },
-  
-  // Add routes for marketing pages
-  {
-    path: '/about-us',
-    element: <AboutUsPage />
+    path: "/investments/alternative/private-equity",
+    element: <PrivateEquity />
   },
   {
-    path: '/services',
-    element: <ServicesPage />
+    path: "/investments/alternative/private-debt",
+    element: <PrivateDebt />
   },
   {
-    path: '/contact',
-    element: <ContactPage />
+    path: "/investments/alternative/digital-assets",
+    element: <DigitalAssets />
   },
   {
-    path: '/privacy-policy',
-    element: <PrivacyPolicyPage />
+    path: "/investments/alternative/real-assets",
+    element: <RealAssets />
   },
   {
-    path: '/terms-of-service',
-    element: <TermsOfServicePage />
+    path: "/investments/model-portfolios",
+    element: <ModelPortfolios />
   },
   {
-    path: '/disclosures',
-    element: <DisclosuresPage />
+    path: "/investments/stock-screener",
+    element: <StockScreener />
+  },
+  // Add routes for vehicles, collectibles, and art
+  {
+    path: '/vehicles-collectibles',
+    element: <AllAssets />
   },
   {
-    path: '/accessibility',
-    element: <AccessibilityPage />
+    path: '/art-valuables',
+    element: <AllAssets />
   },
   {
-    path: '/careers',
-    element: <CareersPage />
-  },
-  {
-    path: '/team',
-    element: <TeamPage />
-  },
-  
-  // Always keep the 404 route as the last route
-  {
-    path: '*',
+    path: "*",
     element: <NotFound />
   }
 ]);

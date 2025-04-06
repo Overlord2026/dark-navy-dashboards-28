@@ -7,6 +7,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import { NavItem } from "@/types/navigation";
 
 interface MainMenuItem {
   id: string;
@@ -19,7 +20,7 @@ interface NavigationCategoryProps {
   category: {
     id: string;
     label: string;
-    items: MainMenuItem[];
+    items: MainMenuItem[] | NavItem[];
   };
   isExpanded: boolean;
   toggleCategory: (categoryId: string) => void;
@@ -56,11 +57,16 @@ export const NavigationCategory = ({
             </div>
           </CollapsibleTrigger>
           <CollapsibleContent className="space-y-1.5">
-            {category.items.map((item) => (
+            {category.items.map((item: any) => (
               <NavigationItem
-                key={item.id}
-                item={item}
-                isActive={item.id === currentPath}
+                key={item.id || item.href}
+                item={{
+                  id: item.id || item.href.replace('/', ''),
+                  label: item.label || item.title,
+                  icon: item.icon,
+                  href: item.href
+                }}
+                isActive={currentPath === (item.id || item.href.replace('/', ''))}
                 isCollapsed={false}
                 isLightTheme={isLightTheme}
               />
@@ -71,11 +77,16 @@ export const NavigationCategory = ({
       
       {isCollapsed && (
         <>
-          {category.items.map((item) => (
+          {category.items.map((item: any) => (
             <NavigationItem
-              key={item.id}
-              item={item}
-              isActive={item.id === currentPath}
+              key={item.id || item.href}
+              item={{
+                id: item.id || item.href.replace('/', ''),
+                label: item.label || item.title,
+                icon: item.icon,
+                href: item.href
+              }}
+              isActive={currentPath === (item.id || item.href.replace('/', ''))}
               isCollapsed={true}
               isLightTheme={isLightTheme}
             />
