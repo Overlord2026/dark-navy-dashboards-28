@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
 interface NavigationItemProps {
@@ -22,11 +22,18 @@ export const NavigationItem = ({
   isLightTheme 
 }: NavigationItemProps) => {
   const Icon = item.icon;
+  const navigate = useNavigate();
+  
+  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    navigate(item.href);
+  };
   
   return (
     <Link
       key={item.id}
       to={item.href}
+      onClick={handleClick}
       className={cn(
         "group flex items-center py-2 px-3 rounded-md transition-colors text-[14px] whitespace-nowrap border",
         isActive

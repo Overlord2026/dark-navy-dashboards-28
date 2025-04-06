@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
 interface SecondaryNavigationProps {
@@ -25,6 +25,8 @@ export const SecondaryNavigation: React.FC<SecondaryNavigationProps> = ({
   menuItems,
   sectionId
 }) => {
+  const navigate = useNavigate();
+  
   if (!hasSecondaryMenu) return null;
 
   // Build the link path based on the active main item
@@ -36,6 +38,11 @@ export const SecondaryNavigation: React.FC<SecondaryNavigationProps> = ({
       // Default case for other items
       return `/${activeMainItem}/${item.id}`;
     }
+  };
+  
+  const handleItemClick = (e: React.MouseEvent<HTMLAnchorElement>, path: string) => {
+    e.preventDefault();
+    navigate(path);
   };
 
   return (
@@ -55,6 +62,7 @@ export const SecondaryNavigation: React.FC<SecondaryNavigationProps> = ({
             <Link
               key={item.id}
               to={getLinkPath(item)}
+              onClick={(e) => handleItemClick(e, getLinkPath(item))}
               className={cn(
                 "flex items-center px-3 py-2 text-sm rounded-md cursor-pointer",
                 item.active

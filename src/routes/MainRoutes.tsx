@@ -18,13 +18,13 @@ import Properties from "../pages/Properties";
 import BillPay from "../pages/BillPay";
 import Lending from "../pages/Lending";
 import LoginPage from "../pages/LoginPage";
-import Index from "../pages/Index";
 import Accounts from "../pages/Accounts";
 import TaxBudgets from "../pages/TaxBudgets";
 import Transfers from "../pages/Transfers";
 import CashManagement from "../pages/CashManagement";
 import SocialSecurity from "../pages/SocialSecurity";
 import EstatePlanning from "../pages/EstatePlanning";
+import FinancialPlans from "../pages/FinancialPlans";
 import HomePage from "../pages/HomePage";
 
 const MainRoutes = () => {
@@ -43,7 +43,6 @@ const MainRoutes = () => {
   return (
     <Routes>
       <Route path="/" element={<Dashboard />} />
-      <Route path="/home" element={<HomePage />} />
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/notifications" element={<Notifications />} />
       <Route path="/settings" element={<Settings />} />
@@ -61,6 +60,7 @@ const MainRoutes = () => {
       <Route path="/properties" element={<Properties />} />
       <Route path="/billpay" element={<BillPay />} />
       <Route path="/accounts" element={<Accounts />} />
+      <Route path="/financial-plans" element={<FinancialPlans />} />
       <Route path="/lending" element={<Lending />} />
       <Route path="/tax-budgets" element={<TaxBudgets />} />
       <Route path="/transfers" element={<Transfers />} />

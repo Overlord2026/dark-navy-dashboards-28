@@ -1,5 +1,5 @@
 
-import { ReactNode, useState } from "react";
+import { ReactNode, useState, useEffect } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -60,13 +60,15 @@ export function ThreeColumnLayout({
   const currentPath = pathSegments[0] || 'dashboard';
   
   // Determine the active main item based on current path
-  let currentActiveMainItem = activeMainItem;
+  let currentActiveMainItem = currentPath;
   
   // Special handling for specific paths
   if (location.pathname === "/billpay") {
     currentActiveMainItem = "billpay";
   } else if (location.pathname === "/accounts") {
     currentActiveMainItem = "accounts";
+  } else if (location.pathname === "/financial-plans") {
+    currentActiveMainItem = "financial-plans";
   } else if (location.pathname === "/tax-budgets") {
     currentActiveMainItem = "tax-budgets";
   } else if (location.pathname === "/transfers") {
@@ -81,6 +83,20 @@ export function ThreeColumnLayout({
     }
   }
   
+  useEffect(() => {
+    // Ensure categories are expanded for the current path
+    const activeCategoryId = navigationCategories.find(cat => 
+      cat.items.some(item => item.id === currentActiveMainItem)
+    )?.id;
+    
+    if (activeCategoryId) {
+      setExpandedCategories(prev => ({
+        ...prev,
+        [activeCategoryId]: true
+      }));
+    }
+  }, [currentActiveMainItem]);
+
   const menuItems = secondaryMenuItems || getSecondaryMenuItems(currentActiveMainItem);
   
   // Hide secondary menu for main investments page but show it for subcategories
@@ -103,6 +119,7 @@ export function ThreeColumnLayout({
     // Special paths mapping
     if (location.pathname === "/billpay") return 'billpay';
     if (location.pathname === "/accounts") return 'accounts';
+    if (location.pathname === "/financial-plans") return 'financial-plans';
     if (location.pathname === "/tax-budgets") return 'tax-budgets';
     if (location.pathname === "/transfers") return 'transfers';
     if (location.pathname === "/cash-management") return 'cash-management';

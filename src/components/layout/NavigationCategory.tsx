@@ -36,6 +36,10 @@ export const NavigationCategory = ({
   isCollapsed,
   isLightTheme
 }: NavigationCategoryProps) => {
+  const isItemActive = (itemId: string) => {
+    return itemId === currentPath;
+  };
+
   return (
     <div key={category.id} className="mb-2">
       {!isCollapsed && (
@@ -60,7 +64,7 @@ export const NavigationCategory = ({
               <NavigationItem
                 key={item.id}
                 item={item}
-                isActive={item.id === currentPath}
+                isActive={isItemActive(item.id)}
                 isCollapsed={false}
                 isLightTheme={isLightTheme}
               />
@@ -75,7 +79,7 @@ export const NavigationCategory = ({
             <NavigationItem
               key={item.id}
               item={item}
-              isActive={item.id === currentPath}
+              isActive={isItemActive(item.id)}
               isCollapsed={true}
               isLightTheme={isLightTheme}
             />
