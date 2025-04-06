@@ -16,9 +16,9 @@ export function useFormValidationDiagnostics() {
   const [error, setError] = useState<Error | null>(null);
   const [availableForms, setAvailableForms] = useState<any[]>([]);
 
-  const loadAvailableForms = useCallback(() => {
+  const loadAvailableForms = useCallback(async () => {
     try {
-      const forms = getAvailableFormTests();
+      const forms = await getAvailableFormTests();
       setAvailableForms(forms);
       logger.info(`Loaded ${forms.length} available form tests`, { 
         formCount: forms.length
