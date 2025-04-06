@@ -148,12 +148,12 @@ export const collaborationNavItems: NavItem[] = [
     icon: FileTextIcon 
   },
   { 
-    title: "Professional Access", 
+    title: "Service Professionals", 
     href: "/professionals", 
     icon: Users2Icon 
   },
   { 
-    title: "Family Member Access", 
+    title: "Family Members", 
     href: "/sharing", 
     icon: ShareIcon 
   }

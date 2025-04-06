@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { FileTextIcon, Users2, ShareIcon, BriefcaseIcon, UsersIcon, KeyIcon, InfoIcon } from "lucide-react";
 import { NavItem } from "@/types/navigation";
@@ -19,12 +20,12 @@ export const collaborationNavItems: NavItem[] = [
     icon: FileTextIcon 
   },
   { 
-    title: "Professional Access", 
+    title: "Service Professionals", 
     href: "/professionals", 
     icon: Users2 
   },
   { 
-    title: "Family Member Access", 
+    title: "Family Members", 
     href: "/sharing", 
     icon: ShareIcon 
   }
@@ -147,7 +148,7 @@ const CollaborationTab = () => {
         <TabsList className="mb-4 w-full flex">
           <TabsTrigger value="service-pros" className="flex items-center gap-2 flex-1 justify-center">
             <BriefcaseIcon className="h-4 w-4 flex-shrink-0" />
-            <span className="whitespace-nowrap overflow-hidden text-ellipsis">Service Pros</span>
+            <span className="whitespace-nowrap overflow-hidden text-ellipsis">Service Professionals</span>
           </TabsTrigger>
           <TabsTrigger value="family-members" className="flex items-center gap-2 flex-1 justify-center">
             <UsersIcon className="h-4 w-4 flex-shrink-0" />
