@@ -1,4 +1,3 @@
-
 import { NavigationDiagnosticResult, LogLevel } from "@/types/diagnostics";
 
 /**
@@ -288,3 +287,27 @@ export interface DiagnosticResult {
  * Alias for PermissionTestResult for backward compatibility.
  */
 export type PermissionsTestResult = PermissionTestResult;
+
+export interface FormField {
+  fieldName: string;
+  fieldType: string;
+  status: "success" | "warning" | "error";
+  message?: string;
+}
+
+export interface FormValidationTestResult {
+  form: string;
+  formName: string;
+  location: string;
+  status: "success" | "warning" | "error";
+  message?: string;
+  fields?: FormField[];
+  testCases?: any[];
+  validationStats?: {
+    total: number;
+    passed: number;
+    failed: number;
+    fieldValidations: number;
+    failedFieldValidations: number;
+  };
+}

@@ -8,7 +8,7 @@ export interface SchemaDefinition {
   type: 'object' | 'array' | 'string' | 'number' | 'boolean' | 'null';
   properties?: Record<string, SchemaDefinition>;
   items?: SchemaDefinition;
-  required?: string[];
+  required?: string[] | readonly string[];
 }
 
 export interface ValidationResult {
@@ -43,9 +43,10 @@ export function validateSchema(data: any, schema: SchemaDefinition): ValidationR
       return result;
     }
     
-    // Check required properties
+    // Check required properties - handle both readonly and mutable arrays
     if (schema.required) {
-      for (const prop of schema.required) {
+      const requiredProps = Array.isArray(schema.required) ? Array.from(schema.required) : schema.required;
+      for (const prop of requiredProps) {
         if (data[prop] === undefined) {
           result.isValid = false;
           result.missingProps?.push(prop);
@@ -139,3 +140,44 @@ export function generateSampleFromSchema(schema: SchemaDefinition): any {
   return null;
 }
 
+/**
+ * Utility function to ensure schema definitions have mutable arrays
+ * This helps prevent TypeScript errors when working with readonly arrays in schema definitions
+ * 
+ * @param schema The schema definition that may have readonly arrays
+ * @returns A new schema definition with mutable arrays
+ */
+export function ensureMutableSchema(schema: any): SchemaDefinition {
+  if (typeof schema !== 'object' || schema === null) {
+    return schema as SchemaDefinition;
+  }
+  
+  // Create a new object to avoid mutating the original
+  const result: Record<string, any> = {};
+  
+  // Copy all properties
+  for (const [key, value] of Object.entries(schema)) {
+    if (key === 'required' && Array.isArray(value)) {
+      // Convert readonly arrays to mutable arrays
+      result[key] = Array.from(value);
+    } 
+    else if (key === 'properties' && typeof value === 'object' && value !== null) {
+      // Recursively process property schemas
+      const mutableProperties: Record<string, SchemaDefinition> = {};
+      for (const [propKey, propValue] of Object.entries(value)) {
+        mutableProperties[propKey] = ensureMutableSchema(propValue);
+      }
+      result[key] = mutableProperties;
+    }
+    else if (key === 'items' && typeof value === 'object' && value !== null) {
+      // Recursively process items schema for arrays
+      result[key] = ensureMutableSchema(value);
+    }
+    else {
+      // Copy other properties as is
+      result[key] = value;
+    }
+  }
+  
+  return result as SchemaDefinition;
+}
