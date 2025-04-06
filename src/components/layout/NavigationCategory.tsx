@@ -37,19 +37,17 @@ export const NavigationCategory = ({
   isLightTheme
 }: NavigationCategoryProps) => {
   const isItemActive = (itemId: string) => {
+    // Log the current path and item id for debugging
+    console.log(`Checking if ${itemId} is active against path: ${currentPath}`);
+    
     // Special case handling for specific routes
-    if (itemId === 'tax-planning' && (currentPath === 'tax-planning' || currentPath.includes('tax-planning'))) {
-      return true;
-    }
-    if (itemId === 'education' && currentPath === 'education') {
-      return true;
-    }
-    if (itemId === 'investments' && currentPath === 'investments') {
+    if (itemId === 'tax-planning' && currentPath.includes('tax-planning')) {
       return true;
     }
     
-    // Default case
-    return itemId === currentPath;
+    // For other routes, check if the current path starts with the item id
+    // This handles both exact matches and sub-paths
+    return currentPath === itemId || currentPath.startsWith(`${itemId}/`);
   };
 
   return (

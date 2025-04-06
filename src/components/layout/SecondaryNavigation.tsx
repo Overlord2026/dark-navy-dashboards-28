@@ -44,8 +44,8 @@ export const SecondaryNavigation: React.FC<SecondaryNavigationProps> = ({
     e.preventDefault();
     console.log(`Secondary navigation to: ${path}`);
     
-    // Direct navigation
-    window.location.href = path;
+    // Use React Router's navigate instead of direct URL manipulation
+    navigate(path);
   };
 
   return (

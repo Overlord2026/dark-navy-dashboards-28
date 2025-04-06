@@ -28,8 +28,8 @@ export const NavigationItem = ({
     e.preventDefault();
     console.log(`Navigating to: ${item.href}`);
     
-    // Direct navigation instead of using state management
-    window.location.href = item.href;
+    // Use React Router's navigation instead of direct URL manipulation
+    navigate(item.href);
   };
   
   return (
