@@ -3,16 +3,16 @@ export interface NavigationTestResult {
   id: string;
   route: string;
   status: "success" | "warning" | "error";
-  message: string;
+  message: string; // Now required to match usage
   timestamp: number;
-  recommendations?: string[];
+  recommendations?: string[] | Recommendation[]; // Add support for complex recommendations
   details?: any;
 }
 
 export interface FormField {
   id: string;
   name: string;
-  fieldName?: string; // Added for compatibility
+  fieldName?: string; // Added for compatibility with existing components
   type: "text" | "email" | "password" | "number" | "date" | "select" | "checkbox" | "radio";
   validations: string[];
   value: string;
@@ -23,7 +23,7 @@ export interface FormField {
 export interface FormValidationTestResult {
   id: string;
   name: string;
-  form?: string; // Added for compatibility
+  form?: string; // Added for compatibility with existing components
   status: "success" | "warning" | "error";
   fields: FormField[];
   message?: string;
@@ -32,7 +32,7 @@ export interface FormValidationTestResult {
 
 export interface IconTestResult {
   id: string;
-  name?: string; // Added for compatibility
+  name?: string; // Added for compatibility with existing components
   iconName?: string;
   status: "success" | "warning" | "error";
   message: string;
@@ -49,7 +49,7 @@ export interface PerformanceTestResult {
   message: string;
   responseTime: number;
   threshold: number;
-  concurrentUsers?: number; // Added for compatibility
+  concurrentUsers?: number; // Added for compatibility with existing components
   cpuUsage?: number;
   memoryUsage?: number;
   timestamp: number;
@@ -59,7 +59,7 @@ export interface PerformanceTestResult {
 export interface SecurityTestResult {
   id: string;
   name: string;
-  category?: string; // Added for compatibility
+  category?: string; // Added for compatibility with existing components
   status: "success" | "warning" | "error";
   message: string;
   details?: string;
@@ -70,7 +70,7 @@ export interface SecurityTestResult {
 
 export interface PermissionTestResult {
   id: string;
-  name?: string; // Added for compatibility
+  name?: string; // Added for compatibility with existing components
   status: "success" | "warning" | "error";
   message: string;
   permission: string;
@@ -84,7 +84,7 @@ export interface PermissionTestResult {
 export interface RoleSimulationTestResult {
   id: string;
   role: string;
-  module?: string; // Added for compatibility
+  module?: string; // Added for compatibility with existing components
   status: "success" | "warning" | "error";
   action: string;
   expected: boolean;
@@ -103,7 +103,7 @@ export interface ApiEndpointDiagnosticResult {
   responseTime: number;
   responseStatus?: number;
   errorMessage?: string;
-  warningMessage?: string; // Added for compatibility
+  warningMessage?: string; // Added for compatibility with existing components
   expectedDataStructure: string;
   schemaValidation: {
     valid: boolean;
@@ -127,6 +127,9 @@ export interface DiagnosticResult {
   route?: string;
 }
 
+// Add NavigationDiagnosticResult as an alias to NavigationTestResult
+export type NavigationDiagnosticResult = NavigationTestResult;
+
 export interface DiagnosticSummary {
   overall: DiagnosticTestStatus;
   total: number;
@@ -147,6 +150,7 @@ export interface AccessibilityAuditResult {
   message?: string;
   element?: string;
   recommendation?: string;
+  url?: string; // Added for compatibility with components
 }
 
 // Log entries
@@ -188,5 +192,7 @@ export interface Recommendation {
   priority: 'high' | 'medium' | 'low';
   category: 'security' | 'performance' | 'reliability' | 'usability';
   actionable: boolean;
-  action?: string;
+  action?: string | { label: string; }; // Support both string and object with label
+  effort?: string; // Added for compatibility
+  impact?: string; // Added for compatibility
 }
