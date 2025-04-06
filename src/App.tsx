@@ -1,7 +1,7 @@
 
 import { BrowserRouter } from "react-router-dom";
 import AppRoutes from "./routes";
-import { ThemeProvider } from "@/context/ThemeContext";
+import { ThemeProvider } from "@/context/ThemeContext"; // Import from our custom ThemeContext
 import { UserProvider } from "@/context/UserContext";
 import { NetWorthProvider } from "@/context/NetWorthContext";
 import { SubscriptionProvider } from "@/context/SubscriptionContext";
