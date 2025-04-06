@@ -25,8 +25,8 @@ const AppRoutes: React.FC = () => {
   return (
     <Routes>
       {/* Public routes that don't require auth */}
-      <Route path="/" element={<HomePage />} />
-      <Route path="/home" element={<HomePage />} />
+      <Route path="/" element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <HomePage />} />
+      <Route path="/home" element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <HomePage />} />
       <Route path="/login" element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <LoginPage />} />
       <Route path="/advisor/login" element={isAuthenticated ? <Navigate to="/advisor/dashboard" replace /> : <LoginPage isAdvisor={true} />} />
       <Route path="/advisor/dashboard" element={<AdvisorDashboard />} />
@@ -44,6 +44,7 @@ const AppRoutes: React.FC = () => {
 
       {/* Client portal routes */}
       <Route path="/dashboard/*" element={<MainRoutes />} />
+      <Route path="/billpay" element={<MainRoutes />} />
       <Route path="/finance/*" element={<FinanceRoutes />} />
       <Route path="/wealth/*" element={<WealthRoutes />} />
       <Route path="/advisor/*" element={<AdvisorRoutes />} />
