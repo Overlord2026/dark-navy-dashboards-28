@@ -36,35 +36,43 @@ export const NavigationCategory = ({
   isCollapsed,
   isLightTheme
 }: NavigationCategoryProps) => {
-  const isItemActive = (itemId: string) => {
-    // Log the current path and item id for debugging
-    console.log(`Checking if ${itemId} is active against path: ${currentPath}`);
+  // Improved active item detection
+  const isItemActive = (item: MainMenuItem): boolean => {
+    // Remove trailing slashes from paths for comparison
+    const normalizedCurrentPath = currentPath.replace(/\/+$/, '');
+    const normalizedItemId = item.id.replace(/\/+$/, '');
+    const normalizedHref = item.href.replace(/^\/+/, '').replace(/\/+$/, '');
     
-    // Handle exact matches
-    if (currentPath === itemId) {
+    // Direct match with item ID
+    if (normalizedCurrentPath === normalizedItemId) {
+      return true;
+    }
+    
+    // Match with href path
+    if (normalizedCurrentPath === normalizedHref) {
       return true;
     }
     
     // Special case handling for specific routes
-    if (itemId === 'tax-planning' && currentPath.includes('tax-planning')) {
+    if (normalizedItemId === 'tax-planning' && normalizedCurrentPath.includes('tax-planning')) {
       return true;
     }
     
-    if (itemId === 'education' && currentPath.startsWith('education')) {
+    if (normalizedItemId === 'education' && normalizedCurrentPath.startsWith('education')) {
       return true;
     }
     
-    if (itemId === 'investments' && currentPath.startsWith('investments')) {
+    if (normalizedItemId === 'investments' && normalizedCurrentPath.startsWith('investments')) {
       return true;
     }
     
-    if (itemId === 'insurance' && (currentPath === 'insurance' || currentPath === 'personal-insurance')) {
+    if (normalizedItemId === 'insurance' && 
+        (normalizedCurrentPath === 'insurance' || normalizedCurrentPath === 'personal-insurance')) {
       return true;
     }
     
-    // For other routes, check if the current path starts with the item id
-    // This handles both exact matches and sub-paths
-    return currentPath.startsWith(`${itemId}/`);
+    // Check if the current path starts with the item id (for nested routes)
+    return normalizedCurrentPath.startsWith(`${normalizedItemId}/`);
   };
 
   return (
@@ -91,7 +99,7 @@ export const NavigationCategory = ({
               <NavigationItem
                 key={item.id}
                 item={item}
-                isActive={isItemActive(item.id)}
+                isActive={isItemActive(item)}
                 isCollapsed={false}
                 isLightTheme={isLightTheme}
               />
@@ -106,7 +114,7 @@ export const NavigationCategory = ({
             <NavigationItem
               key={item.id}
               item={item}
-              isActive={isItemActive(item.id)}
+              isActive={isItemActive(item)}
               isCollapsed={true}
               isLightTheme={isLightTheme}
             />

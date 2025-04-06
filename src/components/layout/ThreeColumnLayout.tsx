@@ -205,7 +205,7 @@ export function ThreeColumnLayout({
             {children}
           </main>
           
-          <NavigationDebugger show={false} />
+          <NavigationDebugger show={true} />
         </div>
       </div>
     </div>
