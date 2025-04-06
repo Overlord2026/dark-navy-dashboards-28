@@ -90,8 +90,6 @@ import {
   SettingsPage 
 } from '@/pages/TabPages';
 
-// Removed duplicate imports that were causing the error
-
 const routes = createBrowserRouter([
   {
     path: '/',
@@ -378,7 +376,7 @@ const routes = createBrowserRouter([
     element: <SettingsPage />
   },
   
-  // Education tax planning route (using the already imported TaxPlanning component)
+  // Education tax planning route
   {
     path: '/education/tax-planning',
     element: <TaxPlanning />
