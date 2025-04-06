@@ -6,6 +6,7 @@ import AccountsTab from "@/components/navigation/tabs/AccountsTab";
 import EducationTab from "@/components/navigation/tabs/EducationTab";
 import CollaborationTab from "@/components/navigation/tabs/CollaborationTab";
 import SettingsTab from "@/components/navigation/tabs/SettingsTab";
+import FamilyWealthTab from "@/components/navigation/tabs/FamilyWealthTab";
 import { Card, CardContent } from "@/components/ui/card";
 
 // This file implements the tab page components referenced in routes-addition.tsx
@@ -58,7 +59,7 @@ export const FamilyWealthPage = () => {
         <h1 className="text-2xl font-bold mb-6">Family Wealth Management</h1>
         <Card>
           <CardContent className="p-6">
-            <p>Family wealth planning and management tools will be displayed here.</p>
+            <FamilyWealthTab />
           </CardContent>
         </Card>
       </div>
@@ -95,47 +96,3 @@ export const SettingsPage = () => {
     </ThreeColumnLayout>
   );
 };
-
-// Add a missing FamilyWealthTab.tsx file since it's referenced in NavigationRegistry.ts
-<lov-write file_path="src/components/navigation/tabs/FamilyWealthTab.tsx">
-import React from "react";
-import { HomeIcon, PiggyBankIcon, ArrowRightLeft, Building, Receipt } from "lucide-react";
-import { NavItem } from "@/types/navigation";
-
-export const familyWealthNavItems: NavItem[] = [
-  { 
-    title: "Financial Plans", 
-    href: "/financial-plans", 
-    icon: HomeIcon 
-  },
-  { 
-    title: "Cash Management", 
-    href: "/banking/cash-management", 
-    icon: PiggyBankIcon
-  },
-  { 
-    title: "Transfers", 
-    href: "/transfers", 
-    icon: ArrowRightLeft 
-  },
-  { 
-    title: "Properties", 
-    href: "/properties", 
-    icon: Building 
-  },
-  { 
-    title: "Bill Pay", 
-    href: "/billpay", 
-    icon: Receipt 
-  }
-];
-
-const FamilyWealthTab = () => {
-  return (
-    <div className="family-wealth-tab">
-      {/* Additional family wealth tab specific UI can be added here */}
-    </div>
-  );
-};
-
-export default FamilyWealthTab;

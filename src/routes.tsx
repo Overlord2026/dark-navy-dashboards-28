@@ -90,6 +90,10 @@ import {
   SettingsPage 
 } from '@/pages/TabPages';
 
+// Import page components directly
+import TaxPlanning from '@/pages/TaxPlanning';
+import CashManagement from '@/pages/CashManagement';
+
 const routes = createBrowserRouter([
   {
     path: '/',
@@ -350,7 +354,7 @@ const routes = createBrowserRouter([
     element: <MobileTaxPlanning />
   },
   
-  // Tab page routes (added from routes-addition.tsx)
+  // Tab page routes 
   {
     path: '/home-tab',
     element: <TabHomePage />
@@ -374,6 +378,20 @@ const routes = createBrowserRouter([
   {
     path: '/settings-tab',
     element: <SettingsPage />
+  },
+  
+  // Add direct routes for Tax Planning and Cash Management
+  {
+    path: '/tax-planning',
+    element: <TaxPlanning />
+  },
+  {
+    path: '/banking/cash-management',
+    element: <CashManagement />
+  },
+  {
+    path: '/education/tax-planning',
+    element: <TaxPlanning />
   },
   
   // Add routes for marketing pages
