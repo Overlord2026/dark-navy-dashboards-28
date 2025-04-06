@@ -121,7 +121,7 @@ export interface FormField {
   value?: any;
   errors?: string[];
   valid?: boolean;
-  // Added for backward compatibility
+  // For backward compatibility
   fieldName?: string;
   fieldType?: string;
   status?: string;
@@ -137,10 +137,11 @@ export interface FormValidationTestResult {
   message?: string;
   timestamp: number;
   fields?: FormField[];
-  // Added for backward compatibility
+  // For backward compatibility
   form?: string;
   success?: boolean;
   validationDetails?: {
+    valid?: boolean;
     invalidFields?: string[];
     missingErrors?: string[];
     unexpectedErrors?: string[];
@@ -156,7 +157,7 @@ export interface PerformanceTestResult {
   memoryUsage?: number;
   message?: string;
   details?: any;
-  // Added for backward compatibility
+  // For backward compatibility
   concurrentUsers?: number;
 }
 
@@ -168,7 +169,7 @@ export interface SecurityTestResult {
   message?: string;
   remediation?: string;
   details?: any;
-  // Added for backward compatibility
+  // For backward compatibility
   category?: string;
 }
 
@@ -180,7 +181,7 @@ export interface IconTestResult {
   message?: string;
   details?: any;
   renderTime?: number;
-  // Added for backward compatibility
+  // For backward compatibility
   name?: string;
   iconName?: string;
 }
@@ -192,7 +193,7 @@ export interface PermissionTestResult {
   status: "success" | "warning" | "error";
   message?: string;
   details?: any;
-  // Added for backward compatibility
+  // For backward compatibility
   name?: string;
 }
 
@@ -203,7 +204,7 @@ export interface RoleSimulationTestResult {
   status: "success" | "warning" | "error";
   message?: string;
   details?: any;
-  // Added for backward compatibility
+  // For backward compatibility
   module?: string;
   accessStatus?: string;
   expectedAccess?: boolean;
@@ -229,7 +230,7 @@ export interface ApiIntegrationTestResult {
 // Add audit event type for accessibility audits
 export type AuditEventType = "user_action" | "system_event" | "security_event" | "accessibility_audit";
 
-// Update AccessibilityAuditResult interface to make element optional
+// Update AccessibilityAuditResult interface
 export interface AccessibilityAuditResult {
   id: string;
   url: string;

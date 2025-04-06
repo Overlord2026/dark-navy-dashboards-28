@@ -43,6 +43,7 @@ export const runSingleFormValidationTest = async (formId: string, testIndex?: nu
     id: test.id || uuidv4(),
     success: test.status === 'success',
     validationDetails: {
+      valid: true, // Add valid property
       invalidFields: test.fields?.filter(f => f.status === 'error').map(f => f.name || f.fieldName!) || [],
       missingErrors: test.fields?.filter(f => f.status === 'warning').map(f => f.name || f.fieldName!) || [],
       unexpectedErrors: []
