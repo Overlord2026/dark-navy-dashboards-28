@@ -2,18 +2,25 @@ import { useState, useEffect } from "react";
 import { runDiagnostics } from "@/services/diagnostics";
 import { DiagnosticTestStatus } from "@/services/diagnostics/types";
 import { toast } from "sonner";
-import { 
-  QuickFix as DiagnosticsQuickFix, 
-  FixHistoryEntry as DiagnosticsFixHistoryEntry,
-  Recommendation 
-} from "@/types/diagnostics";
 
-export interface QuickFix extends DiagnosticsQuickFix {
+export interface QuickFix {
+  id: string;
+  title: string;
+  description: string;
   area: 'system' | 'performance' | 'security' | 'config' | 'api';
+  severity: "critical" | "high" | "medium" | "low";
+  category: "reliability" | "security" | "performance" | "usability";
+  actionable?: boolean;
 }
 
-interface FixHistoryEntry extends DiagnosticsFixHistoryEntry {
+interface FixHistoryEntry {
+  id: string;
+  title: string;
+  timestamp: string;
   area: 'system' | 'performance' | 'security' | 'config' | 'api';
+  severity: string;
+  description: string;
+  status: 'success' | 'failed' | 'pending';
 }
 
 export function useDiagnostics() {

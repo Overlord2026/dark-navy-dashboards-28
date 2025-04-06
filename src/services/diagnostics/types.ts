@@ -1,4 +1,3 @@
-
 // Diagnostics types
 export type DiagnosticTestStatus = "success" | "warning" | "error";
 
@@ -80,6 +79,10 @@ export interface FormField {
   value?: any;
   errors?: string[];
   valid?: boolean;
+  fieldName?: string;
+  fieldType?: string;
+  status?: DiagnosticTestStatus;
+  message?: string;
 }
 
 // API performance monitoring types

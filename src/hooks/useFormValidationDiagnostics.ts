@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback } from 'react';
 import { FormValidationTestResult } from '@/services/diagnostics/types';
 
@@ -114,7 +113,6 @@ export const useFormValidationDiagnostics = (props?: UseFormValidationDiagnostic
   const [availableForms, setAvailableForms] = useState<any[]>([]);
   const [error, setError] = useState<Error | null>(null);
 
-  // Load available forms
   const loadAvailableForms = useCallback(async () => {
     setIsLoading(true);
     setError(null);
@@ -130,7 +128,6 @@ export const useFormValidationDiagnostics = (props?: UseFormValidationDiagnostic
     }
   }, []);
 
-  // Run validation for a specific form
   const runFormValidation = useCallback(async () => {
     if (!formId) return;
     
@@ -151,7 +148,6 @@ export const useFormValidationDiagnostics = (props?: UseFormValidationDiagnostic
     }
   }, [formId]);
 
-  // Run validation for a single form by ID
   const runFormTest = useCallback(async (formId: string, testIndex?: number) => {
     setIsRunning(true);
     setError(null);
@@ -177,7 +173,6 @@ export const useFormValidationDiagnostics = (props?: UseFormValidationDiagnostic
     }
   }, []);
 
-  // Run all form tests
   const runAllFormTests = useCallback(async () => {
     setIsRunning(true);
     setError(null);

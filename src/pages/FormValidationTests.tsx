@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useFormValidationDiagnostics } from "@/hooks/useFormValidationDiagnostics";
 import { FormValidationTestResults } from "@/components/diagnostics/FormValidationTestResults";
 import { PlayCircle, RefreshCw } from "lucide-react";
+import { FormValidationTestResult } from "@/services/diagnostics/types";
 
 export default function FormValidationTests() {
   const {

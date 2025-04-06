@@ -4,9 +4,10 @@ import { FileText, ChevronDown } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { StatusIcon, getStatusColor } from "./StatusIcon";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { FormValidationTestResult } from "@/services/diagnostics/types";
 
 interface FormValidationTestsProps {
-  tests: any[];
+  tests: FormValidationTestResult[];
   isLoading?: boolean;
 }
 
@@ -47,18 +48,18 @@ export const FormValidationTests = ({ tests, isLoading = false }: FormValidation
                   {test.fields && test.fields.length > 0 && (
                     <div className="space-y-2">
                       <h4 className="text-sm font-medium">Field Tests:</h4>
-                      {test.fields.map((field: any, fieldIndex: number) => (
-                        <div key={fieldIndex} className={`p-2 rounded-md border ${getStatusColor(field.status)}`}>
+                      {test.fields.map((field, fieldIndex) => (
+                        <div key={fieldIndex} className={`p-2 rounded-md border ${getStatusColor(field.status || 'idle')}`}>
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
-                              <StatusIcon status={field.status} size={4} />
+                              <StatusIcon status={field.status || (field.valid ? 'success' : 'error')} size={4} />
                               <div>
-                                <span className="font-medium">{field.fieldName}</span>
-                                <p className="text-xs text-muted-foreground">Type: {field.fieldType}</p>
+                                <span className="font-medium">{field.fieldName || field.name}</span>
+                                <p className="text-xs text-muted-foreground">Type: {field.fieldType || field.type}</p>
                               </div>
                             </div>
                           </div>
-                          <p className="text-xs mt-1">{field.message}</p>
+                          <p className="text-xs mt-1">{field.message || (field.errors && field.errors.length > 0 ? field.errors[0] : '')}</p>
                         </div>
                       ))}
                     </div>
@@ -73,8 +74,7 @@ export const FormValidationTests = ({ tests, isLoading = false }: FormValidation
                           <p>Form: {test.formName}</p>
                           <p>Location: {test.location}</p>
                           <p>Status: {test.status}</p>
-                          {test.component && <p>Component: {test.component}</p>}
-                          {test.errorCount && <p>Error Count: {test.errorCount}</p>}
+                          {test.validationDetails && <p>Error Count: {test.validationDetails.invalidFields.length}</p>}
                         </div>
                       </div>
                       
@@ -82,11 +82,8 @@ export const FormValidationTests = ({ tests, isLoading = false }: FormValidation
                         <h4 className="text-sm font-medium mb-1">Recommended Steps:</h4>
                         <ul className="list-disc list-inside text-sm space-y-1">
                           <li>Review form validation logic in the component</li>
-                          {test.fields?.some((f: any) => f.status !== "success") && (
+                          {test.fields?.some((f) => !f.valid) && (
                             <li>Fix field validation issues highlighted above</li>
-                          )}
-                          {test.component && (
-                            <li>Check the {test.component} component for proper validation handling</li>
                           )}
                           <li>Ensure form submission handlers properly validate input</li>
                           {test.status === "error" && (
@@ -96,15 +93,6 @@ export const FormValidationTests = ({ tests, isLoading = false }: FormValidation
                           )}
                         </ul>
                       </div>
-                      
-                      {test.codeSnippet && (
-                        <div className="mt-3">
-                          <h4 className="text-sm font-medium mb-1">Code Snippet:</h4>
-                          <pre className="bg-muted p-2 rounded text-xs overflow-x-auto">
-                            {test.codeSnippet}
-                          </pre>
-                        </div>
-                      )}
                     </>
                   )}
                 </div>
