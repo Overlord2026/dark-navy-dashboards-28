@@ -36,7 +36,7 @@ export function usePagePerformance(route: string, options: {
       // Stop measuring when component unmounts
       const loadTime = stopMeasuring();
       
-      if (logToConsole) {
+      if (logToConsole && typeof loadTime === 'number') {
         console.info(`Page ${route} load time:`, loadTime.toFixed(2), 'ms');
         
         if (logMemory) {

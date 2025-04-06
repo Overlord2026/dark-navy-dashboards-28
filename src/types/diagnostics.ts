@@ -1,3 +1,4 @@
+
 export type LogLevel = "error" | "warning" | "info" | "debug" | "success";
 
 export interface LogEntry {
@@ -20,10 +21,12 @@ export interface LogEntry {
 }
 
 export interface DiagnosticResult {
+  id: string;
   route: string;
   status: "success" | "warning" | "error";
   message?: string;
   recommendations?: Recommendation[];
+  timestamp?: number;
 }
 
 export interface NavigationDiagnosticResult extends DiagnosticResult {
@@ -41,7 +44,14 @@ export interface NavigationDiagnosticResult extends DiagnosticResult {
   consoleErrors?: string[];
 }
 
+export interface NavigationTestResult extends DiagnosticResult {
+  id: string;
+  route: string;
+  timestamp: number;
+}
+
 export interface ApiEndpointDiagnosticResult {
+  id: string;
   name: string;
   url: string;
   method: "GET" | "POST" | "PUT" | "DELETE";
@@ -100,4 +110,86 @@ export interface Recommendation {
   relatedTest?: string;
   impact?: string;
   effort?: 'easy' | 'medium' | 'hard';
+}
+
+export interface FormField {
+  name: string;
+  type: string;
+  required?: boolean;
+  validations?: string[];
+  value?: any;
+  errors?: string[];
+  valid?: boolean;
+  fieldName?: string; // Added for backward compatibility
+  fieldType?: string; // Added for backward compatibility
+  status?: string;    // Added for backward compatibility
+  message?: string;   // Added for backward compatibility
+}
+
+export interface FormValidationTestResult {
+  id: string;
+  formName: string;
+  form?: string;      // Added for backward compatibility
+  formComponent?: string;
+  location: string;
+  status: "success" | "warning" | "error";
+  message?: string;
+  timestamp: number;
+  fields?: FormField[];
+}
+
+export interface PerformanceTestResult {
+  id: string;
+  name: string;
+  status: "success" | "warning" | "error";
+  responseTime: number;
+  cpuUsage?: number;
+  memoryUsage?: number;
+  message?: string;
+  details?: any;
+  concurrentUsers?: number; // Added for backward compatibility
+}
+
+export interface SecurityTestResult {
+  id: string;
+  name: string;
+  status: "success" | "warning" | "error";
+  severity: "critical" | "high" | "medium" | "low";
+  message?: string;
+  remediation?: string;
+  details?: any;
+  category?: string;  // Added for backward compatibility
+}
+
+export interface IconTestResult {
+  id: string;
+  icon: string;
+  name?: string;      // Added for backward compatibility
+  location: string;
+  status: "success" | "warning" | "error";
+  message?: string;
+  details?: any;
+  renderTime?: number;
+}
+
+export interface PermissionTestResult {
+  id: string;
+  role: string;
+  permission: string;
+  name?: string;      // Added for backward compatibility
+  status: "success" | "warning" | "error";
+  message?: string;
+  details?: any;
+}
+
+export interface RoleSimulationTestResult {
+  id: string;
+  role: string;
+  action: string;
+  module?: string;    // Added for backward compatibility
+  accessStatus?: string; // Added for backward compatibility
+  expectedAccess?: boolean; // Added for backward compatibility
+  status: "success" | "warning" | "error";
+  message?: string;
+  details?: any;
 }

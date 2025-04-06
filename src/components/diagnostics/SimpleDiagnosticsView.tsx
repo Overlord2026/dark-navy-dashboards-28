@@ -6,12 +6,13 @@ import { CheckCircle, AlertTriangle, XCircle, Loader2 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useDiagnosticsContext } from '@/context/DiagnosticsContext';
 import { RecommendationsList } from './RecommendationsList';
-import { Recommendation, DiagnosticResult } from '@/types/diagnostics';
+import { Recommendation, NavigationTestResult } from '@/types/diagnostics';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { DiagnosticResultItem } from './DiagnosticResultItem';
 import { useUser } from "@/context/UserContext";
+import { v4 as uuidv4 } from 'uuid';
 
 // Separate component for stats display to reduce complexity
 const DiagnosticStats = ({ stats }: { stats: { total: number; success: number; warning: number; error: number } }) => (
@@ -37,7 +38,7 @@ const DiagnosticStats = ({ stats }: { stats: { total: number; success: number; w
  * Only visible to admin users
  */
 const SimpleDiagnosticsView: React.FC = () => {
-  const [results, setResults] = useState<DiagnosticResult[]>([]);
+  const [results, setResults] = useState<NavigationTestResult[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('results');
   const { isDevelopmentMode, isDiagnosticsModeEnabled } = useDiagnosticsContext();
@@ -56,7 +57,7 @@ const SimpleDiagnosticsView: React.FC = () => {
         
         // Add some sample recommendations if they don't exist
         const resultsWithRecommendations = navResults.map(result => {
-          if (result.status !== 'success' && (!result.recommendations || result.recommendations.length === 0)) {
+          if (result.status !== 'success' && (!result.recommendations)) {
             return {
               ...result,
               recommendations: generateRecommendations(result)
@@ -80,10 +81,10 @@ const SimpleDiagnosticsView: React.FC = () => {
     return () => clearInterval(intervalId);
   }, [isVisible]);
   
-  const generateRecommendations = (result: DiagnosticResult): Recommendation[] => {
+  const generateRecommendations = (result: NavigationTestResult): Recommendation[] => {
     if (result.status === 'warning') {
       return [{
-        id: `rec-${result.route}-1`,
+        id: uuidv4(),
         text: `Check response times for ${result.route}`,
         priority: 'medium',
         category: 'performance',
@@ -96,7 +97,7 @@ const SimpleDiagnosticsView: React.FC = () => {
       }];
     } else if (result.status === 'error') {
       return [{
-        id: `rec-${result.route}-1`,
+        id: uuidv4(),
         text: `Fix routing error on ${result.route}`,
         priority: 'high',
         category: 'reliability',

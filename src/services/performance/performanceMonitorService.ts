@@ -45,7 +45,7 @@ let activeMeasurements: Record<string, number> = {};
  * @param name Identifier for what's being measured
  * @returns Stop function to call when measurement should end
  */
-export const startMeasurement = (type: 'route' | 'api' | 'component', name: string): () => void => {
+export const startMeasurement = (type: 'route' | 'api' | 'component', name: string): () => number => {
   const key = `${type}:${name}`;
   activeMeasurements[key] = performance.now();
   
@@ -83,7 +83,7 @@ export const startMeasurement = (type: 'route' | 'api' | 'component', name: stri
  * @param route Route path
  * @returns Cleanup function to call when component unmounts
  */
-export const measureRoutePerformance = (route: string): (() => void) => {
+export const measureRoutePerformance = (route: string): (() => number) => {
   return startMeasurement('route', route);
 };
 
@@ -92,7 +92,7 @@ export const measureRoutePerformance = (route: string): (() => void) => {
  * @param componentName Name of the component
  * @returns Cleanup function to call when component unmounts
  */
-export const measureComponentPerformance = (componentName: string): (() => void) => {
+export const measureComponentPerformance = (componentName: string): (() => number) => {
   return startMeasurement('component', componentName);
 };
 

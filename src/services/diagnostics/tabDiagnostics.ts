@@ -1,6 +1,8 @@
+
 import { logger } from '../logging/loggingService';
-import { NavigationTestResult } from './types';
+import { NavigationTestResult } from '../diagnostics/types';
 import { testFinancialPlanOperations } from './financialPlanTests';
+import { v4 as uuidv4 } from 'uuid';
 
 export const diagnoseDashboardTab = async (): Promise<NavigationTestResult> => {
   try {
@@ -8,15 +10,19 @@ export const diagnoseDashboardTab = async (): Promise<NavigationTestResult> => {
     // Simulate diagnostics running
     await new Promise(resolve => setTimeout(resolve, 300));
     return {
+      id: uuidv4(),
       route: '/dashboard',
       status: 'success',
-      message: 'Dashboard tab loaded successfully'
+      message: 'Dashboard tab loaded successfully',
+      timestamp: Date.now()
     };
   } catch (error) {
     return {
+      id: uuidv4(),
       route: '/dashboard',
       status: 'error',
-      message: `Error testing dashboard tab: ${error instanceof Error ? error.message : 'Unknown error'}`
+      message: `Error testing dashboard tab: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      timestamp: Date.now()
     };
   }
 };
@@ -27,15 +33,19 @@ export const diagnoseCashManagementTab = async (): Promise<NavigationTestResult>
     // Simulate diagnostics running
     await new Promise(resolve => setTimeout(resolve, 300));
     return {
+      id: uuidv4(),
       route: '/cash-management',
       status: 'success',
-      message: 'Cash Management tab loaded successfully'
+      message: 'Cash Management tab loaded successfully',
+      timestamp: Date.now()
     };
   } catch (error) {
     return {
+      id: uuidv4(),
       route: '/cash-management',
       status: 'error',
-      message: `Error testing cash management tab: ${error instanceof Error ? error.message : 'Unknown error'}`
+      message: `Error testing cash management tab: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      timestamp: Date.now()
     };
   }
 };
@@ -62,15 +72,19 @@ export const diagnoseFinancialPlansTab = async (): Promise<NavigationTestResult>
         : 'Financial Plans operations completed successfully';
     
     return {
+      id: uuidv4(),
       route: '/financial-plans',
       status,
-      message
+      message,
+      timestamp: Date.now()
     };
   } catch (error) {
     return {
+      id: uuidv4(),
       route: '/financial-plans',
       status: 'error',
-      message: `Error testing financial plans tab: ${error instanceof Error ? error.message : 'Unknown error'}`
+      message: `Error testing financial plans tab: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      timestamp: Date.now()
     };
   }
 };
@@ -81,15 +95,19 @@ export const diagnoseTransfersTab = async (): Promise<NavigationTestResult> => {
     // Simulate diagnostics running
     await new Promise(resolve => setTimeout(resolve, 300));
     return {
+      id: uuidv4(),
       route: '/transfers',
       status: 'success',
-      message: 'Transfers tab loaded successfully'
+      message: 'Transfers tab loaded successfully',
+      timestamp: Date.now()
     };
   } catch (error) {
     return {
+      id: uuidv4(),
       route: '/transfers',
       status: 'error',
-      message: `Error testing transfers tab: ${error instanceof Error ? error.message : 'Unknown error'}`
+      message: `Error testing transfers tab: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      timestamp: Date.now()
     };
   }
 };
@@ -100,15 +118,19 @@ export const diagnoseFundingAccountsTab = async (): Promise<NavigationTestResult
     // Simulate diagnostics running
     await new Promise(resolve => setTimeout(resolve, 300));
     return {
+      id: uuidv4(),
       route: '/funding-accounts',
       status: 'success',
-      message: 'Funding Accounts tab loaded successfully'
+      message: 'Funding Accounts tab loaded successfully',
+      timestamp: Date.now()
     };
   } catch (error) {
     return {
+      id: uuidv4(),
       route: '/funding-accounts',
       status: 'error',
-      message: `Error testing funding accounts tab: ${error instanceof Error ? error.message : 'Unknown error'}`
+      message: `Error testing funding accounts tab: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      timestamp: Date.now()
     };
   }
 };
@@ -119,15 +141,19 @@ export const diagnoseInvestmentsTab = async (): Promise<NavigationTestResult> =>
     // Simulate diagnostics running
     await new Promise(resolve => setTimeout(resolve, 300));
     return {
+      id: uuidv4(),
       route: '/investments',
       status: 'success',
-      message: 'Investments tab loaded successfully'
+      message: 'Investments tab loaded successfully',
+      timestamp: Date.now()
     };
   } catch (error) {
     return {
+      id: uuidv4(),
       route: '/investments',
       status: 'error',
-      message: `Error testing investments tab: ${error instanceof Error ? error.message : 'Unknown error'}`
+      message: `Error testing investments tab: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      timestamp: Date.now()
     };
   }
 };
