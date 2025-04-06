@@ -25,6 +25,7 @@ import Transfers from "../pages/Transfers";
 import CashManagement from "../pages/CashManagement";
 import SocialSecurity from "../pages/SocialSecurity";
 import EstatePlanning from "../pages/EstatePlanning";
+import HomePage from "../pages/HomePage";
 
 const MainRoutes = () => {
   const { isAuthenticated } = useAuth();
@@ -42,6 +43,7 @@ const MainRoutes = () => {
   return (
     <Routes>
       <Route path="/" element={<Dashboard />} />
+      <Route path="/home" element={<HomePage />} />
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/notifications" element={<Notifications />} />
       <Route path="/settings" element={<Settings />} />

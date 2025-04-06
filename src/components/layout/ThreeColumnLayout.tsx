@@ -106,6 +106,7 @@ export function ThreeColumnLayout({
     if (location.pathname === "/tax-budgets") return 'tax-budgets';
     if (location.pathname === "/transfers") return 'transfers';
     if (location.pathname === "/cash-management") return 'cash-management';
+    if (location.pathname === "/home") return 'home';
     
     return pathSegments[0];
   };
@@ -176,7 +177,6 @@ export function ThreeColumnLayout({
             secondarySidebarCollapsed={secondarySidebarCollapsed}
             isLightTheme={isLightTheme}
             activeMainItem={currentActiveMainItem}
-            sectionId={sectionId}
             menuItems={menuItems}
           />
         )}

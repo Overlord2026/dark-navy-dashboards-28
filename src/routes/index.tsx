@@ -26,7 +26,7 @@ const AppRoutes: React.FC = () => {
     <Routes>
       {/* Public routes that don't require auth */}
       <Route path="/" element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <HomePage />} />
-      <Route path="/home" element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <HomePage />} />
+      <Route path="/home" element={<MainRoutes />} />
       <Route path="/login" element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <LoginPage />} />
       <Route path="/advisor/login" element={isAuthenticated ? <Navigate to="/advisor/dashboard" replace /> : <LoginPage isAdvisor={true} />} />
       <Route path="/advisor/dashboard" element={<AdvisorDashboard />} />

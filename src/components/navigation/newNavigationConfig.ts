@@ -14,6 +14,7 @@ export const navigation: NavigationItem[] = [
   {
     label: "Education & Solutions",
     children: [
+      { label: "Home", href: "/home" },
       { label: "Education Center", href: "/education" },
       { label: "Investments", href: "/investments" },
       { label: "Tax Planning", href: "/education/tax-planning", icon: PieChart },
