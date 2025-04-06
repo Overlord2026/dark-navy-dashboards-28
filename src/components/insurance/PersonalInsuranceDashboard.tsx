@@ -87,6 +87,7 @@ export const PersonalInsuranceDashboard = () => {
       <UploadDocumentDialog
         open={isUploadDialogOpen}
         onOpenChange={setIsUploadDialogOpen}
+        onClose={() => setIsUploadDialogOpen(false)}
         onFileUpload={() => {}}
         activeCategory={activeCategory}
         documentCategories={policyTypes.map(type => ({ id: type.id, name: type.name }))}

@@ -278,7 +278,8 @@ export default function LegacyVault() {
       
       <UploadDocumentDialog 
         open={isUploadDialogOpen}
-        onOpenChange={setIsUploadDialogOpen} 
+        onOpenChange={setIsUploadDialogOpen}
+        onClose={() => setIsUploadDialogOpen(false)}
         onFileUpload={handleUploadDocument}
         activeCategory={activeCategory}
         documentCategories={documentCategories as any}

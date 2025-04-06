@@ -911,6 +911,7 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
       <UploadDocumentDialog
         open={isUploadDialogOpen}
         onOpenChange={setIsUploadDialogOpen}
+        onClose={() => setIsUploadDialogOpen(false)}
         onFileUpload={handleUploadDocument}
         activeCategory={activeSubcategory}
         documentCategories={healthcareCategories}

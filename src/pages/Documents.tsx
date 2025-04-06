@@ -1,4 +1,3 @@
-
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { CategoryList } from "@/components/documents/CategoryList";
 import { DocumentsTable } from "@/components/documents/DocumentsTable";
@@ -78,6 +77,7 @@ const Documents = () => {
       <UploadDocumentDialog 
         open={isUploadDialogOpen}
         onOpenChange={setIsUploadDialogOpen}
+        onClose={() => setIsUploadDialogOpen(false)}
         onFileUpload={handleFileUpload}
         activeCategory={activeCategory}
         documentCategories={documentCategories}

@@ -16,11 +16,11 @@ import { useProfessionals } from "@/hooks/useProfessionals";
 export interface DocumentDialogProps {
   open: boolean;
   onClose: () => void;
-  onOpenChange?: (open: boolean) => void; // Added this prop for compatibility
+  onOpenChange?: (open: boolean) => void;
   category?: string;
-  activeCategory?: string; // Added for compatibility
-  documentCategories?: any; // Added for compatibility
-  onFileUpload?: (file: File, customName: string, category?: string) => any; // Added for compatibility
+  activeCategory?: string;
+  documentCategories?: any;
+  onFileUpload?: (file: File, customName: string, category?: string) => any;
 }
 
 export function UploadDocumentDialog({ 
