@@ -5,7 +5,6 @@ import { GuideCard } from "./GuideCard";
 import { AddGuideForm } from "./AddGuideForm";
 import { useGuides } from "@/hooks/useGuides";
 import { Card } from "@/components/ui/card";
-import { motion } from "framer-motion";
 
 export function GuidesList() {
   const {
@@ -17,21 +16,6 @@ export function GuidesList() {
     moveGuideDown,
     toggleAddForm
   } = useGuides();
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: { 
-      opacity: 1,
-      transition: { 
-        staggerChildren: 0.05 
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.3 } }
-  };
 
   return (
     <div className="space-y-6">
@@ -60,26 +44,20 @@ export function GuidesList() {
       )}
 
       {guides.length > 0 ? (
-        <motion.div 
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-        >
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-5">
           {guides.map((guide, index) => (
-            <motion.div key={guide.id} variants={itemVariants}>
-              <GuideCard
-                guide={guide}
-                index={index}
-                onDelete={deleteGuide}
-                onMoveUp={moveGuideUp}
-                onMoveDown={moveGuideDown}
-                isFirst={index === 0}
-                isLast={index === guides.length - 1}
-              />
-            </motion.div>
+            <GuideCard
+              key={guide.id}
+              guide={guide}
+              index={index}
+              onDelete={deleteGuide}
+              onMoveUp={moveGuideUp}
+              onMoveDown={moveGuideDown}
+              isFirst={index === 0}
+              isLast={index === guides.length - 1}
+            />
           ))}
-        </motion.div>
+        </div>
       ) : !showAddForm && (
         <Card className="p-8 text-center border-dashed border-2 bg-muted/20">
           <h4 className="font-medium text-lg mb-2">No Guides Available</h4>
