@@ -67,7 +67,7 @@ export const NavigationCategory = ({
                   icon: item.icon,
                   href: item.href
                 }}
-                isActive={currentPath === (item.id || item.href.replace('/', ''))}
+                isActive={currentPath === (item.href.replace('/', ''))}
                 isCollapsed={false}
                 isLightTheme={isLightTheme}
               />
@@ -87,7 +87,7 @@ export const NavigationCategory = ({
                 icon: item.icon,
                 href: item.href
               }}
-              isActive={currentPath === (item.id || item.href.replace('/', ''))}
+              isActive={currentPath === (item.href.replace('/', ''))}
               isCollapsed={true}
               isLightTheme={isLightTheme}
             />

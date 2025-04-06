@@ -1,58 +1,90 @@
-
-export type LogLevel = "error" | "warning" | "info" | "debug" | "success";
-
-export interface LogEntry {
-  id: string;
-  timestamp: string;
-  level: LogLevel;
-  message: string;
-  source: string;
-  details?: string;
-  related?: {
-    component?: string;
-    file?: string;
-    line?: number;
-    stackTrace?: string;
-    route?: string;
-    navigationTab?: string;
-    apiEndpoint?: string;
-  };
-  recommendations?: string[] | Recommendation[];
-}
-
-export interface DiagnosticResult {
+export interface NavigationTestResult {
   id: string;
   route: string;
   status: "success" | "warning" | "error";
-  message?: string;
-  recommendations?: Recommendation[];
-  timestamp?: number;
-}
-
-export interface NavigationDiagnosticResult extends DiagnosticResult {
-  componentStatus?: {
-    rendered: boolean;
-    loadTime?: number;
-    errors?: string[];
-  };
-  apiStatus?: {
-    endpoint: string;
-    status: "success" | "warning" | "error";
-    responseTime?: number;
-    errorMessage?: string;
-  }[];
-  consoleErrors?: string[];
-}
-
-export interface NavigationTestResult extends DiagnosticResult {
-  id: string;
-  route: string;
+  message: string;
   timestamp: number;
-  recommendations?: Recommendation[];
+  recommendations?: string[];
+}
+
+export interface FormField {
+  id: string;
+  name: string;
+  fieldName?: string; // Added for compatibility
+  type: "text" | "email" | "password" | "number" | "date" | "select" | "checkbox" | "radio";
+  validations: string[];
+  value: string;
+  status: "success" | "warning" | "error";
+  message?: string;
+}
+
+export interface FormValidationTestResult {
+  id: string;
+  name: string;
+  form?: string; // Added for compatibility
+  status: "success" | "warning" | "error";
+  fields: FormField[];
+  message?: string;
+  timestamp: number;
+}
+
+export interface IconTestResult {
+  id: string;
+  name?: string; // Added for compatibility
+  status: "success" | "warning" | "error";
+  message: string;
+  iconType: string;
+  renderOutput?: string;
+  timestamp: number;
+}
+
+export interface PerformanceTestResult {
+  id: string;
+  name: string;
+  status: "success" | "warning" | "error";
+  message: string;
+  responseTime: number;
+  threshold: number;
+  concurrentUsers?: number; // Added for compatibility
+  timestamp: number;
+}
+
+export interface SecurityTestResult {
+  id: string;
+  name: string;
+  category?: string; // Added for compatibility
+  status: "success" | "warning" | "error";
+  message: string;
+  details?: string;
+  severity: "low" | "medium" | "high" | "critical";
+  timestamp: number;
+}
+
+export interface PermissionTestResult {
+  id: string;
+  name?: string; // Added for compatibility
+  status: "success" | "warning" | "error";
+  message: string;
+  permission: string;
+  expected: boolean;
+  actual: boolean;
+  timestamp: number;
+}
+
+export interface RoleSimulationTestResult {
+  id: string;
+  role: string;
+  module?: string; // Added for compatibility
+  status: "success" | "warning" | "error";
+  action: string;
+  expected: boolean;
+  actual: boolean;
+  message: string;
+  timestamp: number;
 }
 
 export interface ApiEndpointDiagnosticResult {
-  id: string;
+  id: string; // Added for compatibility
   name: string;
   url: string;
   method: "GET" | "POST" | "PUT" | "DELETE";
@@ -60,163 +92,11 @@ export interface ApiEndpointDiagnosticResult {
   responseTime: number;
   responseStatus?: number;
   errorMessage?: string;
-  warningMessage?: string;
-  expectedDataStructure?: string;
-  schemaValidation?: {
+  expectedDataStructure: string;
+  schemaValidation: {
+    valid: boolean;
     expected: any;
     actual: any;
-    valid: boolean;
-    errors?: string[];
+    errors: string[];
   };
-}
-
-export interface DiagnosticSummary {
-  overall: "success" | "warning" | "error";
-  total: number;
-  success: number;
-  warnings: number;
-  errors: number;
-  timestamp: string;
-  recommendations?: Recommendation[];
-}
-
-export interface QuickFix {
-  id: string;
-  title: string;
-  description: string;
-  severity: 'critical' | 'high' | 'medium' | 'low';
-  category: 'performance' | 'security' | 'accessibility' | 'reliability' | 'usability';
-  fixFunction?: () => void;
-}
-
-export interface FixHistoryEntry {
-  id: string;
-  timestamp: string;
-  title: string;
-  description: string;
-  status: 'success' | 'failed' | 'pending';
-  severity: string;
-}
-
-export interface Recommendation {
-  id: string;
-  text: string;
-  priority: 'critical' | 'high' | 'medium' | 'low';
-  category: 'performance' | 'security' | 'accessibility' | 'reliability' | 'usability';
-  actionable: boolean;
-  action?: {
-    label: string;
-    handler?: string;
-  };
-  relatedTest?: string;
-  impact?: string;
-  effort?: 'easy' | 'medium' | 'hard';
-}
-
-export interface FormField {
-  name: string;
-  type: string;
-  required?: boolean;
-  validations?: string[];
-  value?: any;
-  errors?: string[];
-  valid?: boolean;
-  // Added for backward compatibility
-  fieldName?: string;
-  fieldType?: string;
-  status?: string;
-  message?: string;
-}
-
-export interface FormValidationTestResult {
-  id?: string;
-  formName: string;
-  formComponent?: string;
-  location: string;
-  status: "success" | "warning" | "error";
-  message?: string;
-  timestamp: number;
-  fields?: FormField[];
-  // Added for backward compatibility
-  form?: string;
-}
-
-export interface PerformanceTestResult {
-  id?: string;
-  name: string;
-  status: "success" | "warning" | "error";
-  responseTime: number;
-  cpuUsage?: number;
-  memoryUsage?: number;
-  message?: string;
-  details?: any;
-  // Added for backward compatibility
-  concurrentUsers?: number;
-  endpoint?: string;
-}
-
-export interface SecurityTestResult {
-  id?: string;
-  name: string;
-  status: "success" | "warning" | "error";
-  severity: "critical" | "high" | "medium" | "low";
-  message?: string;
-  remediation?: string;
-  details?: any;
-  // Added for backward compatibility
-  category?: string;
-}
-
-export interface IconTestResult {
-  id?: string;
-  icon: string;
-  location: string;
-  status: "success" | "warning" | "error";
-  message?: string;
-  details?: any;
-  renderTime?: number;
-  // Added for backward compatibility
-  name?: string;
-  iconName?: string;
-}
-
-export interface PermissionTestResult {
-  id?: string;
-  role: string;
-  permission: string;
-  status: "success" | "warning" | "error";
-  message?: string;
-  details?: any;
-  // Added for backward compatibility
-  name?: string;
-}
-
-export interface RoleSimulationTestResult {
-  id?: string;
-  role: string;
-  action: string;
-  status: "success" | "warning" | "error";
-  message?: string;
-  details?: any;
-  // Added for backward compatibility
-  module?: string;
-  accessStatus?: string;
-  expectedAccess?: boolean;
-}
-
-export interface ApiIntegrationTestResult {
-  id?: string;
-  service: string;
-  endpoint: string;
-  url?: string;
-  method?: string;
-  status: "success" | "warning" | "error";
-  responseTime?: number;
-  responseStatus?: number;
-  message?: string;
-  errorMessage?: string;
-  warningMessage?: string;
-  authStatus?: string;
-  expectedDataStructure?: string;
-  details?: any;
 }

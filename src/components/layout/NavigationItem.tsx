@@ -41,7 +41,7 @@ export const NavigationItem = ({
     >
       <div className={cn("flex-shrink-0", !isCollapsed && "mr-3")}>
         {typeof Icon === 'function' ? (
-          <Icon />
+          <Icon className="h-5 w-5" />
         ) : (
           <Icon className="h-5 w-5" />
         )}

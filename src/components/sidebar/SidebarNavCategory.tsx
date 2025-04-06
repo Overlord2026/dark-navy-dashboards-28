@@ -1,11 +1,8 @@
 
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { ChevronDown, ChevronUp, Sparkles } from "lucide-react";
-import { cn } from "@/lib/utils";
+import React from "react";
 import { NavItem } from "@/types/navigation";
-import { TutorialButton } from "@/components/navigation/TutorialButton";
-import { useTutorials } from "@/hooks/useTutorials";
+import { ChevronDown, ChevronRight } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface SidebarNavCategoryProps {
   id: string;
@@ -14,13 +11,13 @@ interface SidebarNavCategoryProps {
   isExpanded: boolean;
   onToggle: (id: string) => void;
   collapsed: boolean;
-  isActive: (href: string) => boolean;
+  isActive: (path: string) => boolean;
   isLightTheme: boolean;
   expandedSubmenus: Record<string, boolean>;
-  toggleSubmenu: (itemTitle: string, e: React.MouseEvent) => void;
+  toggleSubmenu: (id: string) => void;
 }
 
-export const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
+const SidebarNavCategory = ({
   id,
   label,
   items,
@@ -31,153 +28,80 @@ export const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
   isLightTheme,
   expandedSubmenus,
   toggleSubmenu
-}) => {
-  return (
-    <div key={id} className="mb-3">
-      {!collapsed && (
-        <div 
-          className={`flex items-center justify-between px-4 py-2 text-xs uppercase font-semibold tracking-wider ${
-            isLightTheme ? 'text-[#222222]/70' : 'text-[#E2E2E2]/70'
-          }`}
-          onClick={() => onToggle(id)}
-          style={{ cursor: 'pointer' }}
-        >
-          <span>{label}</span>
-          {isExpanded ? 
-            <ChevronUp className="h-4 w-4" /> : 
-            <ChevronDown className="h-4 w-4" />
-          }
-        </div>
-      )}
+}: SidebarNavCategoryProps) => {
+  // Skip rendering empty categories
+  if (items.length === 0) return null;
+
+  const renderItems = () => {
+    return items.map((item) => {
+      const Icon = item.icon;
+      const active = isActive(item.href);
       
-      {(collapsed || isExpanded) && (
-        <nav className={cn("px-2 space-y-1 mt-1", collapsed && "flex flex-col items-center")}>
-          {items.map((item) => (
-            <SidebarNavItem 
-              key={item.title}
-              item={item}
-              collapsed={collapsed}
-              isActive={isActive}
-              isLightTheme={isLightTheme}
-              expandedSubmenus={expandedSubmenus}
-              toggleSubmenu={toggleSubmenu}
-            />
-          ))}
-        </nav>
-      )}
-    </div>
-  );
-};
-
-interface SidebarNavItemProps {
-  item: NavItem;
-  hasSubmenu?: boolean;
-  collapsed: boolean;
-  isActive: (href: string) => boolean;
-  isLightTheme: boolean;
-  expandedSubmenus: Record<string, boolean>;
-  toggleSubmenu: (itemTitle: string, e: React.MouseEvent) => void;
-}
-
-export const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
-  item,
-  hasSubmenu = false,
-  collapsed,
-  isActive,
-  isLightTheme,
-  expandedSubmenus,
-  toggleSubmenu
-}) => {
-  const hasSubItems = item.submenu && item.submenu.length > 0;
-  const isSubmenuExpanded = expandedSubmenus[item.title] || false;
-  
-  const isItemActive = isActive(item.href);
-  const isAnyChildActive = hasSubItems && item.submenu?.some(subItem => isActive(subItem.href));
-  const shouldShowActive = isItemActive || isAnyChildActive;
-  
-  const tabId = item.href.split('/')[1] || item.href;
-  
-  const { isTutorialViewed } = useTutorials();
-  const tutorialNotViewed = !isTutorialViewed(tabId);
-
-  return (
-    <div className="mb-1">
-      <div className="flex flex-col">
-        <div className="flex items-center justify-between group">
-          <Link
-            to={hasSubItems ? "#" : item.href}
-            onClick={(e) => hasSubItems ? toggleSubmenu(item.title, e) : undefined}
+      return (
+        <div key={item.href || item.title}>
+          <a
+            href={item.href}
             className={cn(
-              "group flex items-center py-2 px-3 rounded-md transition-colors border flex-1",
-              shouldShowActive
+              "flex items-center py-2 px-3 rounded-md transition-colors text-[14px] whitespace-nowrap border",
+              active
                 ? isLightTheme 
                   ? "bg-[#E9E7D8] text-[#222222] font-medium border-primary" 
-                  : "bg-black text-white border-primary" 
-                : isLightTheme ? "text-[#222222] border-transparent hover:bg-[#E9E7D8] hover:border-primary" 
-                  : "text-sidebar-foreground border-transparent hover:bg-sidebar-accent",
-              hasSubmenu && "ml-4",
-              collapsed ? "justify-center" : "justify-start"
+                  : "bg-black text-[#E2E2E2] font-medium border-primary"
+                : isLightTheme ? "text-[#222222] border-transparent" : "text-[#E2E2E2] border-transparent",
+              isLightTheme ? "hover:bg-[#E9E7D8] hover:border-primary" : "hover:bg-sidebar-accent hover:border-primary",
+              collapsed ? "justify-center px-2 my-2" : "justify-start"
             )}
-            title={collapsed ? item.title : undefined}
           >
-            {tutorialNotViewed && !collapsed && (
-              <span className="absolute -left-1 top-1/2 transform -translate-y-1/2">
-                <Sparkles className="h-3 w-3 text-[#9b87f5]" />
-              </span>
+            {Icon && (
+              <div className={cn("flex-shrink-0", !collapsed && "mr-3")}>
+                <Icon className="h-5 w-5" />
+              </div>
             )}
-            <span className={cn("flex-shrink-0", !collapsed && "mr-3")}>
-              <item.icon 
-                className={cn(
-                  "h-5 w-5", 
-                  tutorialNotViewed && "text-[#9b87f5]"
-                )} 
-              />
-            </span>
+            
             {!collapsed && (
-              <span className={cn(
-                "whitespace-nowrap overflow-hidden text-ellipsis flex-1",
-                tutorialNotViewed && "text-[#9b87f5] font-medium"
-              )}>
+              <span className="whitespace-nowrap overflow-hidden text-ellipsis">
                 {item.title}
               </span>
             )}
-            {!collapsed && hasSubItems && (
-              <button
-                className="h-5 w-5 p-0 flex items-center justify-center"
-                onClick={(e) => toggleSubmenu(item.title, e)}
-              >
-                {isSubmenuExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-              </button>
-            )}
-          </Link>
-          
-          {!collapsed && shouldShowActive && (
-            <TutorialButton 
-              tabId={tabId} 
-              className="ml-1 opacity-0 group-hover:opacity-100 transition-opacity"
-              size="icon"
-              showNewBadge={tutorialNotViewed}
-            />
-          )}
+          </a>
         </div>
-        
-        {!collapsed && hasSubItems && isSubmenuExpanded && (
-          <div className="pl-4 mt-1">
-            {item.submenu!.map((subItem) => (
-              <SidebarNavItem 
-                key={subItem.title}
-                item={subItem}
-                hasSubmenu={true}
-                collapsed={collapsed}
-                isActive={isActive}
-                isLightTheme={isLightTheme}
-                expandedSubmenus={expandedSubmenus}
-                toggleSubmenu={toggleSubmenu}
-              />
-            ))}
-          </div>
+      );
+    });
+  };
+
+  if (collapsed) {
+    return (
+      <div className="mb-4">
+        <div className="flex flex-col items-center space-y-1">
+          {renderItems()}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="mb-4">
+      <div
+        className={`flex items-center justify-between p-2 text-xs uppercase tracking-wider font-semibold cursor-pointer ${
+          isLightTheme ? 'text-[#222222]/70' : 'text-[#E2E2E2]/70'
+        }`}
+        onClick={() => onToggle(id)}
+      >
+        <span>{label}</span>
+        {isExpanded ? (
+          <ChevronDown className="h-4 w-4" />
+        ) : (
+          <ChevronRight className="h-4 w-4" />
         )}
       </div>
+      
+      {isExpanded && (
+        <div className="pl-2 space-y-1">
+          {renderItems()}
+        </div>
+      )}
     </div>
   );
 };
+
+export default SidebarNavCategory;
