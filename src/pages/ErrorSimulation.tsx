@@ -10,8 +10,7 @@ export default function ErrorSimulation() {
   return (
     <ThreeColumnLayout 
       activeMainItem="diagnostics" 
-      title="Error Simulation" 
-      secondaryHeaderTitle="Error Simulation"
+      title="Error Simulation"
     >
       <div className="space-y-6 p-4 animate-fade-in">
         <div>

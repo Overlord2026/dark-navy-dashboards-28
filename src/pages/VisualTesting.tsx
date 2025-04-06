@@ -47,8 +47,7 @@ export default function VisualTesting() {
   return (
     <ThreeColumnLayout 
       activeMainItem="diagnostics" 
-      title="Visual Testing" 
-      secondaryHeaderTitle="Visual Testing"
+      title="Visual Testing"
     >
       <div className="space-y-6 p-4 animate-fade-in">
         <div>
