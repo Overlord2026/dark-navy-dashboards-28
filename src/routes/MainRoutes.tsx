@@ -28,7 +28,6 @@ import Professionals from "../pages/Professionals";
 import FinancialPlans from "../pages/FinancialPlans";
 import TaxPlanning from "../pages/TaxPlanning";
 import Marketplace from "../pages/Marketplace";
-import Properties from "../pages/Properties";
 
 const MainRoutes = () => {
   return (
@@ -63,7 +62,7 @@ const MainRoutes = () => {
       <Route path="/transfers" element={<Transfers />} />
       <Route path="/legacy-vault" element={<LegacyVault />} />
       <Route path="/social-security" element={<SocialSecurity />} />
-      <Route path="/properties" element={<Properties />} />
+      <Route path="/properties" element={<AllAssets />} />
       <Route path="/billpay" element={<BillPay />} />
       
       {/* Collaboration & Sharing section */}
