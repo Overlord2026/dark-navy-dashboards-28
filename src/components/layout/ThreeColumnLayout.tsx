@@ -1,4 +1,3 @@
-
 import { ReactNode, useState } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
@@ -10,7 +9,8 @@ import { useUser } from "@/context/UserContext";
 import { AdvisorSection } from "@/components/profile/AdvisorSection";
 import { NavigationCategory } from "./NavigationCategory";
 import { SecondaryNavigation } from "./SecondaryNavigation";
-import { navigationCategories, getSecondaryMenuItems } from "./navigationData";
+import { navigationCategories } from "@/components/navigation/NavigationRegistry";
+import { getSecondaryMenuItems } from "./navigationData";
 
 interface ThreeColumnLayoutProps {
   children: ReactNode;
@@ -56,11 +56,9 @@ export function ThreeColumnLayout({
   
   const sectionId = params.sectionId || activeSecondaryItem;
   
-  // Determine the active main item for investment subcategories
   let currentActiveMainItem = activeMainItem;
   const pathSegments = location.pathname.split('/').filter(Boolean);
   
-  // Special handling for alternative investment subcategories
   if (pathSegments.includes('alternative')) {
     const categoryId = pathSegments[pathSegments.length - 1];
     if (['private-equity', 'private-debt', 'real-assets', 'digital-assets'].includes(categoryId)) {
@@ -70,19 +68,16 @@ export function ThreeColumnLayout({
   
   const menuItems = secondaryMenuItems || getSecondaryMenuItems(currentActiveMainItem);
   
-  // Hide secondary menu for main investments page but show it for subcategories
   const isMainInvestmentsPage = location.pathname === "/investments";
   const hasSecondaryMenu = !isMainInvestmentsPage && menuItems.length > 0;
   
   const isLightTheme = theme === "light";
   const isHomePage = location.pathname === "/";
 
-  // Improved function to get the current path and handle nested routes
   const getCurrentPath = () => {
     const pathSegments = location.pathname.split('/').filter(Boolean);
     if (pathSegments.length === 0) return 'home';
     
-    // Special case for tax-planning which is under education
     if (pathSegments.includes('tax-planning')) {
       return 'tax-planning';
     }
@@ -110,7 +105,6 @@ export function ThreeColumnLayout({
       </div>
       
       <div className="flex flex-1 overflow-hidden">
-        {/* Main Sidebar */}
         <aside
           className={cn(
             "flex flex-col transition-all duration-300 ease-in-out z-30",
@@ -149,7 +143,6 @@ export function ThreeColumnLayout({
           </div>
         </aside>
 
-        {/* Secondary Sidebar - Hidden for main investments page */}
         {hasSecondaryMenu && (
           <SecondaryNavigation 
             hasSecondaryMenu={hasSecondaryMenu}
@@ -161,7 +154,6 @@ export function ThreeColumnLayout({
           />
         )}
 
-        {/* Main Content */}
         <div className="flex-1 flex flex-col overflow-hidden">
           {isHomePage ? (
             <div className="flex flex-col items-center w-full">
@@ -171,7 +163,6 @@ export function ThreeColumnLayout({
           <main className="flex-1 overflow-y-auto p-3 font-sans w-full">
             <div className="flex justify-between items-center mb-4">
               <h1 className="text-2xl font-bold">{title}</h1>
-              {/* Tutorial button removed from here */}
             </div>
             {children}
           </main>

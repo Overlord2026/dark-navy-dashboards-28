@@ -4,51 +4,20 @@ import { cn } from "@/lib/utils";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { 
-  homeNavItems,
-  educationSolutionsNavItems,
-  familyWealthNavItems,
-  collaborationNavItems,
+  navigationCategories, 
   bottomNavItems 
-} from "@/components/navigation/NavigationConfig.ts"; // Using the TS file
-import { NavCategory } from "@/types/navigation";
-import { useTheme } from "@/context/ThemeContext";
+} from "@/components/navigation/NavigationRegistry"; // Using our new registry
 import { UserProfileSection } from "@/components/sidebar/UserProfileSection";
 import { AdvisorSection } from "@/components/profile/AdvisorSection";
 import { SidebarNavCategory } from "@/components/sidebar/SidebarNavCategory";
 import { SidebarBottomNav } from "@/components/sidebar/SidebarBottomNav";
 import { useSidebarState } from "@/hooks/useSidebarState";
+import { useTheme } from "@/context/ThemeContext";
 
 export const Sidebar = () => {
   const { theme } = useTheme();
   const isLightTheme = theme === "light";
   
-  const navigationCategories: NavCategory[] = [
-    {
-      id: "home",
-      label: "HOME",
-      items: homeNavItems,
-      defaultExpanded: true
-    },
-    {
-      id: "education-solutions",
-      label: "EDUCATION & SOLUTIONS",
-      items: educationSolutionsNavItems,
-      defaultExpanded: true
-    },
-    {
-      id: "family-wealth",
-      label: "FAMILY WEALTH",
-      items: familyWealthNavItems,
-      defaultExpanded: true
-    },
-    {
-      id: "collaboration",
-      label: "COLLABORATION & SHARING",
-      items: collaborationNavItems,
-      defaultExpanded: true
-    }
-  ];
-
   const { 
     collapsed, 
     expandedCategories, 
