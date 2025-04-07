@@ -1,7 +1,7 @@
 
 import React, { useState } from "react";
 import { useDocumentManagement } from "@/hooks/useDocumentManagement";
-import { useProfessionals } from "@/hooks/useProfessionals";
+import { useProfessionals } from "@/context/ProfessionalsContext";
 import { User } from "lucide-react";
 import { 
   Table, 
