@@ -13,9 +13,14 @@ import { MidTrialBanner } from "@/components/dashboard/MidTrialBanner";
 import { useSubscription } from "@/context/SubscriptionContext";
 import { QuickActionsMenu } from "@/components/dashboard/QuickActionsMenu";
 import { useUser } from "@/context/UserContext";
+import { measureRouteLoad } from "@/utils/performance";
+import { usePagePerformance } from "@/hooks/usePagePerformance";
 
 export default function Index() {
   console.log('Index page rendering');
+  
+  // Use the performance hook
+  usePagePerformance('/');
   
   try {
     // Access context hooks
@@ -34,6 +39,17 @@ export default function Index() {
 
     useEffect(() => {
       setDashboardKey(Date.now());
+      
+      // Log dashboard rendering time
+      const cleanup = measureRouteLoad('/');
+      
+      // Console log for debugging
+      console.log(`Dashboard component rendered: ${new Date().toISOString()}`);
+      
+      return () => {
+        cleanup();
+        console.log(`Dashboard component unmounted: ${new Date().toISOString()}`);
+      };
     }, [userProfile]);
 
     const renderTrialBanner = () => {

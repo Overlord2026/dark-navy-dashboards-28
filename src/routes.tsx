@@ -1,3 +1,4 @@
+
 import React from "react";
 import { createBrowserRouter } from "react-router-dom";
 import Dashboard from "@/pages/Dashboard";
@@ -33,6 +34,7 @@ import IPProtection from "@/pages/IPProtection";
 import AdvisorFeedback from "@/pages/AdvisorFeedback";
 import NotFound from "@/pages/NotFound";
 import TaxPlanningEducation from "@/pages/TaxPlanningEducation";
+import NavigationDiagnostics from "@/pages/NavigationDiagnostics";
 
 const routes = createBrowserRouter([
   {
@@ -170,6 +172,10 @@ const routes = createBrowserRouter([
   {
     path: "/education/tax-planning",
     element: <TaxPlanningEducation />
+  },
+  {
+    path: "/navigation-diagnostics",
+    element: <NavigationDiagnostics />
   },
   {
     path: "*",

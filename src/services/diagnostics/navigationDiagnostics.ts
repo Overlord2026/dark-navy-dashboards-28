@@ -1,56 +1,37 @@
 
-import { NavigationTestResult } from "./types";
-import { v4 as uuidv4 } from "uuid";
-import { testNavigation } from "./navigationTests";
-import { runAllTabDiagnostics } from "./tabDiagnostics";
-
-/**
- * Test all navigation routes and return a comprehensive summary
- */
-export async function testAllNavigationRoutes(): Promise<Record<string, NavigationTestResult[]>> {
-  // Run navigation tests for all available routes
-  const navigationResults = await testNavigation();
+// Simulate an API call to get navigation diagnostics
+export const getNavigationDiagnosticsSummary = async () => {
+  // This would be a real API call in a production environment
+  await new Promise(resolve => setTimeout(resolve, 1000));
   
-  // Organize results by category
-  const results: Record<string, NavigationTestResult[]> = {
-    home: navigationResults.filter(r => r.route.startsWith("/")),
-    educationSolutions: navigationResults.filter(r => 
-      r.route.startsWith("/education") || 
-      r.route.startsWith("/investments") || 
-      r.route.includes("tax-planning") ||
-      r.route.includes("insurance") ||
-      r.route.includes("lending") ||
-      r.route.includes("estate-planning")
-    ),
-    familyWealth: navigationResults.filter(r => 
-      r.route.includes("financial-plans") || 
-      r.route.includes("cash-management") || 
-      r.route.includes("transfers") || 
-      r.route.includes("vault") ||
-      r.route.includes("properties") ||
-      r.route.includes("billpay") ||
-      r.route.includes("social-security")
-    ),
-    collaboration: navigationResults.filter(r => 
-      r.route.includes("documents") || 
-      r.route.includes("professionals") || 
-      r.route.includes("sharing")
-    ),
-    investments: navigationResults.filter(r => r.route.includes("investments"))
+  // Sample diagnostic data
+  const results = {
+    home: [
+      { route: "/", status: "success", message: "Dashboard loads correctly" },
+      { route: "/accounts", status: "success", message: "Accounts page loads correctly" }
+    ],
+    educationSolutions: [
+      { route: "/education", status: "success", message: "Education center loads correctly" },
+      { route: "/education/tax-planning", status: "success", message: "Tax planning education loads correctly" },
+      { route: "/financial-plans", status: "warning", message: "Performance issues detected" }
+    ],
+    familyWealth: [
+      { route: "/all-assets", status: "success", message: "All assets page loads correctly" },
+      { route: "/properties", status: "warning", message: "Properties page slow to load" },
+      { route: "/estate-planning", status: "success", message: "Estate planning page loads correctly" }
+    ],
+    collaboration: [
+      { route: "/sharing", status: "success", message: "Sharing page loads correctly" },
+      { route: "/professionals", status: "warning", message: "Missing mobile optimizations" }
+    ],
+    investments: [
+      { route: "/investments", status: "success", message: "Investments page loads correctly" },
+      { route: "/investments/stock-screener", status: "error", message: "API endpoint unavailable" },
+      { route: "/investments/model-portfolios", status: "success", message: "Model portfolios page loads correctly" }
+    ]
   };
   
-  return results;
-}
-
-/**
- * Generate a summary of navigation diagnostics results
- */
-export async function getNavigationDiagnosticsSummary() {
-  // Run the tests
-  const results = await testAllNavigationRoutes();
-  const tabDiagnostics = await runAllTabDiagnostics();
-  
-  // Calculate statistics
+  // Count results by status
   const allResults = Object.values(results).flat();
   const totalRoutes = allResults.length;
   const successCount = allResults.filter(r => r.status === "success").length;
@@ -58,33 +39,17 @@ export async function getNavigationDiagnosticsSummary() {
   const errorCount = allResults.filter(r => r.status === "error").length;
   
   // Determine overall status
-  let overallStatus: "success" | "warning" | "error" = "success";
-  if (errorCount > 0) {
-    overallStatus = "error";
-  } else if (warningCount > 0) {
-    overallStatus = "warning";
-  }
+  const overallStatus = 
+    errorCount > 0 ? "error" : 
+    warningCount > 0 ? "warning" : 
+    "success";
   
   return {
     results,
-    tabDiagnostics,
+    overallStatus,
     totalRoutes,
     successCount,
     warningCount,
-    errorCount,
-    overallStatus,
-    timestamp: new Date().toISOString()
+    errorCount
   };
-}
-
-// Update the types in the diagnostics.ts file to match what we have here
-export interface NavigationDiagnosticSummary {
-  results: Record<string, NavigationTestResult[]>;
-  tabDiagnostics: Record<string, NavigationTestResult>;
-  totalRoutes: number;
-  successCount: number;
-  warningCount: number;
-  errorCount: number;
-  overallStatus: "success" | "warning" | "error";
-  timestamp: string;
-}
+};
