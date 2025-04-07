@@ -15,7 +15,6 @@ interface PortfolioModel {
   name: string;
   provider: string;
   description: string;
-  returnRate: string;
   riskLevel: string;
   badge: {
     text: string;
@@ -206,7 +205,6 @@ const Investments = () => {
       name: "Income Focus",
       provider: "Dimensional Fund Advisors",
       description: "Prioritizes stable income with lower volatility",
-      returnRate: "+5.8%",
       riskLevel: "Low",
       badge: {
         text: "Conservative",
@@ -218,7 +216,6 @@ const Investments = () => {
       name: "Growth & Income",
       provider: "BlackRock",
       description: "Balance between growth and stable income",
-      returnRate: "+8.2%",
       riskLevel: "Medium",
       badge: {
         text: "Balanced",
@@ -230,7 +227,6 @@ const Investments = () => {
       name: "Maximum Growth",
       provider: "Vanguard",
       description: "Focus on long-term capital appreciation",
-      returnRate: "+12.5%",
       riskLevel: "High",
       badge: {
         text: "Aggressive",
@@ -242,7 +238,6 @@ const Investments = () => {
       name: "Sustainable Future",
       provider: "Alpha Architect",
       description: "ESG-focused investments with positive impact",
-      returnRate: "+9.6%",
       riskLevel: "Medium",
       badge: {
         text: "ESG",
@@ -254,7 +249,6 @@ const Investments = () => {
       name: "Dynamic Allocation",
       provider: "Boutique Family Office",
       description: "Active management with tactical shifts",
-      returnRate: "+10.3%",
       riskLevel: "Medium-High",
       badge: {
         text: "Tactical",
@@ -266,7 +260,6 @@ const Investments = () => {
       name: "International Focus",
       provider: "BlackRock",
       description: "Diversified exposure to global markets",
-      returnRate: "+7.8%",
       riskLevel: "Medium",
       badge: {
         text: "Global",
@@ -430,32 +423,6 @@ const Investments = () => {
                 </Button>
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="bg-card text-card-foreground rounded-lg border shadow-sm p-6">
-                  <div className="flex flex-col gap-2">
-                    <div className="text-muted-foreground text-sm">Portfolios Available</div>
-                    <div className="text-3xl font-bold">12</div>
-                    <div className="text-muted-foreground text-sm">Strategically designed allocations</div>
-                  </div>
-                </div>
-                
-                <div className="bg-card text-card-foreground rounded-lg border shadow-sm p-6">
-                  <div className="flex flex-col gap-2">
-                    <div className="text-muted-foreground text-sm">Historical Performance</div>
-                    <div className="text-3xl font-bold text-emerald-500">+8.7%</div>
-                    <div className="text-muted-foreground text-sm">Average 5-year return</div>
-                  </div>
-                </div>
-                
-                <div className="bg-card text-card-foreground rounded-lg border shadow-sm p-6">
-                  <div className="flex flex-col gap-2">
-                    <div className="text-muted-foreground text-sm">Customization Options</div>
-                    <div className="text-3xl font-bold">6</div>
-                    <div className="text-muted-foreground text-sm">Risk profiles to choose from</div>
-                  </div>
-                </div>
-              </div>
-              
               <div className="space-y-4">
                 <h3 className="text-xl font-medium">Featured Model Portfolios</h3>
                 
@@ -480,11 +447,7 @@ const Investments = () => {
                           <p className="text-muted-foreground text-sm mt-1">{model.description}</p>
                           <p className="text-xs text-blue-600 mt-1">Provider: {model.provider}</p>
                         </div>
-                        <div className="grid grid-cols-2 gap-2 text-sm mt-2">
-                          <div>
-                            <p className="text-muted-foreground">Return (5Y)</p>
-                            <p className="font-medium text-emerald-500">{model.returnRate}</p>
-                          </div>
+                        <div className="grid grid-cols-1 gap-2 text-sm mt-2">
                           <div>
                             <p className="text-muted-foreground">Risk Level</p>
                             <p className="font-medium">{model.riskLevel}</p>

@@ -26,7 +26,6 @@ interface Offering {
   name: string;
   description: string;
   minimumInvestment: string;
-  performance?: string;
   lockupPeriod: string;
   lockUp: string;
   firm: string;

@@ -9,7 +9,7 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
   LineChart, Line, AreaChart, Area
 } from "recharts";
-import { ArrowUpRight, ArrowDownRight, BarChart2, RefreshCcw, Brain } from "lucide-react";
+import { ArrowUpRight, ArrowDownRight, RefreshCcw, Brain } from "lucide-react";
 import { toast } from "sonner";
 
 // Sample performance data

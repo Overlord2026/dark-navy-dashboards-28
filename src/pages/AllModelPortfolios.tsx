@@ -21,13 +21,12 @@ import {
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { ChevronLeft, Search, SlidersHorizontal, Briefcase, ArrowUpDown } from "lucide-react";
 
-// Portfolio model type definition
+// Portfolio model type definition - removed returnRate
 interface PortfolioModel {
   id: string;
   name: string;
   provider: string;
   description: string;
-  returnRate: string;
   riskLevel: string;
   badge: {
     text: string;
@@ -38,14 +37,13 @@ interface PortfolioModel {
   fees?: string;
 }
 
-// Sample portfolio models data with extended properties
+// Sample portfolio models data - removed returnRate
 const portfolioModels: PortfolioModel[] = [
   {
     id: "income-focus",
     name: "Income Focus",
     provider: "Dimensional Fund Advisors",
     description: "Prioritizes stable income with lower volatility",
-    returnRate: "+5.8%",
     riskLevel: "Low",
     badge: {
       text: "Conservative",
@@ -60,7 +58,6 @@ const portfolioModels: PortfolioModel[] = [
     name: "Growth & Income",
     provider: "BlackRock",
     description: "Balance between growth and stable income",
-    returnRate: "+8.2%",
     riskLevel: "Medium",
     badge: {
       text: "Balanced",
@@ -75,7 +72,6 @@ const portfolioModels: PortfolioModel[] = [
     name: "Maximum Growth",
     provider: "Vanguard",
     description: "Focus on long-term capital appreciation",
-    returnRate: "+12.5%",
     riskLevel: "High",
     badge: {
       text: "Aggressive",
@@ -90,7 +86,6 @@ const portfolioModels: PortfolioModel[] = [
     name: "Sustainable Future",
     provider: "Alpha Architect",
     description: "ESG-focused investments with positive impact",
-    returnRate: "+9.6%",
     riskLevel: "Medium",
     badge: {
       text: "ESG",
@@ -105,7 +100,6 @@ const portfolioModels: PortfolioModel[] = [
     name: "Dynamic Allocation",
     provider: "Boutique Family Office",
     description: "Active management with tactical shifts",
-    returnRate: "+10.3%",
     riskLevel: "Medium-High",
     badge: {
       text: "Tactical",
@@ -120,7 +114,6 @@ const portfolioModels: PortfolioModel[] = [
     name: "International Focus",
     provider: "BlackRock",
     description: "Diversified exposure to global markets",
-    returnRate: "+7.8%",
     riskLevel: "Medium",
     badge: {
       text: "Global",
@@ -135,7 +128,6 @@ const portfolioModels: PortfolioModel[] = [
     name: "Emerging Markets",
     provider: "Dimensional Fund Advisors",
     description: "Focused exposure to emerging market equities",
-    returnRate: "+11.2%",
     riskLevel: "High",
     badge: {
       text: "Specialized",
@@ -150,7 +142,6 @@ const portfolioModels: PortfolioModel[] = [
     name: "Technology Sector",
     provider: "Vanguard",
     description: "Concentrated portfolio of technology companies",
-    returnRate: "+15.7%",
     riskLevel: "High",
     badge: {
       text: "Sector",
@@ -165,7 +156,6 @@ const portfolioModels: PortfolioModel[] = [
     name: "Bond Aggregate",
     provider: "BlackRock",
     description: "Diversified fixed income exposure across sectors",
-    returnRate: "+3.9%",
     riskLevel: "Low",
     badge: {
       text: "Conservative",
@@ -180,7 +170,6 @@ const portfolioModels: PortfolioModel[] = [
     name: "High Yield Credit",
     provider: "Alpha Architect",
     description: "Higher income potential with credit risk",
-    returnRate: "+7.2%",
     riskLevel: "Medium-High",
     badge: {
       text: "Income",
@@ -195,7 +184,6 @@ const portfolioModels: PortfolioModel[] = [
     name: "Global Allocation",
     provider: "Boutique Family Office",
     description: "Globally diversified multi-asset portfolio",
-    returnRate: "+9.1%",
     riskLevel: "Medium",
     badge: {
       text: "Global",
@@ -210,7 +198,6 @@ const portfolioModels: PortfolioModel[] = [
     name: "Tax-Efficient Growth",
     provider: "Vanguard",
     description: "Tax-optimized portfolio for taxable accounts",
-    returnRate: "+8.6%",
     riskLevel: "Medium",
     badge: {
       text: "Tax-Efficient",
@@ -239,7 +226,7 @@ const AllModelPortfolios = () => {
   // Get unique strategies for filter
   const strategies = Array.from(new Set(portfolioModels.map(model => model.strategy).filter(Boolean)));
 
-  // Filter and sort portfolios
+  // Filter and sort portfolios - removed sorting by return
   const filteredPortfolios = portfolioModels.filter(model => {
     const matchesSearch = model.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
                          model.provider.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -253,9 +240,6 @@ const AllModelPortfolios = () => {
   }).sort((a, b) => {
     if (sortBy === "name") {
       return a.name.localeCompare(b.name);
-    } else if (sortBy === "return") {
-      return parseFloat(b.returnRate.replace('+', '').replace('%', '')) - 
-             parseFloat(a.returnRate.replace('+', '').replace('%', ''));
     } else if (sortBy === "risk") {
       const riskOrder = { "Low": 1, "Medium-Low": 2, "Medium": 3, "Medium-High": 4, "High": 5 };
       return (riskOrder[a.riskLevel as keyof typeof riskOrder] || 0) - 
@@ -384,7 +368,6 @@ const AllModelPortfolios = () => {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="name">Name (A-Z)</SelectItem>
-                        <SelectItem value="return">Highest Return</SelectItem>
                         <SelectItem value="risk">Risk Level (Low-High)</SelectItem>
                         <SelectItem value="provider">Provider (A-Z)</SelectItem>
                       </SelectContent>
@@ -427,12 +410,12 @@ const AllModelPortfolios = () => {
                         </div>
                         <div className="grid grid-cols-2 gap-2 text-sm mt-2">
                           <div>
-                            <p className="text-muted-foreground">Return (5Y)</p>
-                            <p className="font-medium text-emerald-500">{model.returnRate}</p>
-                          </div>
-                          <div>
                             <p className="text-muted-foreground">Risk Level</p>
                             <p className="font-medium">{model.riskLevel}</p>
+                          </div>
+                          <div>
+                            <p className="text-muted-foreground">Fees</p>
+                            <p className="font-medium">{model.fees}</p>
                           </div>
                         </div>
                         <Button 
@@ -484,12 +467,6 @@ const AllModelPortfolios = () => {
                             {sortBy === "risk" && <ArrowUpDown className="h-3 w-3" />}
                           </button>
                         </th>
-                        <th className="text-center p-3 font-medium">
-                          <button className="flex items-center gap-1" onClick={() => setSortBy("return")}>
-                            5Y Return
-                            {sortBy === "return" && <ArrowUpDown className="h-3 w-3" />}
-                          </button>
-                        </th>
                         <th className="text-center p-3 font-medium">Strategy</th>
                         <th className="text-center p-3 font-medium">Fees</th>
                         <th className="text-right p-3 font-medium">Actions</th>
@@ -503,7 +480,6 @@ const AllModelPortfolios = () => {
                           </td>
                           <td className="p-3">{model.provider}</td>
                           <td className="p-3 text-center">{model.riskLevel}</td>
-                          <td className="p-3 text-center text-emerald-500 font-medium">{model.returnRate}</td>
                           <td className="p-3 text-center">{model.strategy}</td>
                           <td className="p-3 text-center">{model.fees}</td>
                           <td className="p-3 text-right">
