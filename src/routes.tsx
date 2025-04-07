@@ -32,6 +32,7 @@ import StockScreener from "@/pages/investments/StockScreener";
 import IPProtection from "@/pages/IPProtection";
 import AdvisorFeedback from "@/pages/AdvisorFeedback";
 import NotFound from "@/pages/NotFound";
+import TaxPlanningEducation from "@/pages/TaxPlanningEducation";
 
 const routes = createBrowserRouter([
   {
@@ -165,6 +166,10 @@ const routes = createBrowserRouter([
   {
     path: '/art-valuables',
     element: <AllAssets />
+  },
+  {
+    path: "/education/tax-planning",
+    element: <TaxPlanningEducation />
   },
   {
     path: "*",
