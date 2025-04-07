@@ -49,22 +49,33 @@ export const measureRoutePerformance = (routePath: string) => {
 // Alias for backward compatibility
 export const measureRouteLoad = measureRoutePerformance;
 
+// Add type definition for performance.memory
+interface MemoryInfo {
+  jsHeapSizeLimit: number;
+  totalJSHeapSize: number;
+  usedJSHeapSize: number;
+}
+
+interface PerformanceWithMemory extends Performance {
+  memory?: MemoryInfo;
+}
+
 // Get memory usage information
 export const getMemoryUsage = () => {
-  if (window.performance) {
-    // Check if memory property exists
-    const memoryInfo = (window.performance as any).memory;
-    if (memoryInfo) {
-      return {
-        jsHeapSizeLimit: Math.round(memoryInfo.jsHeapSizeLimit / 1048576),
-        totalJSHeapSize: Math.round(memoryInfo.totalJSHeapSize / 1048576),
-        usedJSHeapSize: Math.round(memoryInfo.usedJSHeapSize / 1048576),
-        usagePercentage: Math.round((memoryInfo.usedJSHeapSize / memoryInfo.jsHeapSizeLimit) * 100)
-      };
-    }
+  // Cast performance to our extended interface
+  const perf = window.performance as PerformanceWithMemory;
+  
+  if (perf && perf.memory) {
+    // Memory API is available
+    return {
+      jsHeapSizeLimit: Math.round(perf.memory.jsHeapSizeLimit / 1048576),
+      totalJSHeapSize: Math.round(perf.memory.totalJSHeapSize / 1048576),
+      usedJSHeapSize: Math.round(perf.memory.usedJSHeapSize / 1048576),
+      usagePercentage: Math.round((perf.memory.usedJSHeapSize / perf.memory.jsHeapSizeLimit) * 100)
+    };
   }
   
-  // Return null if memory stats aren't available
+  // Return default values if memory stats aren't available
   return {
     usagePercentage: 0,
     totalJSHeapSize: 0,
