@@ -6,19 +6,19 @@ interface UseFormValidationDiagnosticsProps {
   enabled?: boolean;
 }
 
-// Mock data structure to match the updated FormValidationTestResult type
+// Updated mock data structure to match the FormValidationTestResult type
 const mockFormValidationTests: FormValidationTestResult[] = [
   {
     id: "test-1",
+    name: 'Register Form Email Validation',
     form: "register-form",
     formId: "register-form",
-    name: 'Register Form Email Validation',
-    formName: 'register-form',
+    formName: "register-form",
     location: '/auth/register',
-    success: true,
     status: 'success',
     message: 'Email validation working correctly',
     timestamp: Date.now() - 300000,
+    success: true,
     fields: [
       {
         id: "email-field",
@@ -33,15 +33,15 @@ const mockFormValidationTests: FormValidationTestResult[] = [
   },
   {
     id: "test-2",
+    name: 'Register Form Password Validation',
     form: "register-form",
     formId: "register-form",
-    name: 'Register Form Password Validation',
-    formName: 'register-form',
+    formName: "register-form",
     location: '/auth/register',
-    success: false,
     status: 'warning',
     message: 'Password strength indicator showing warnings inconsistently',
     timestamp: Date.now() - 200000,
+    success: false,
     fields: [
       {
         id: "password-field",
@@ -56,15 +56,15 @@ const mockFormValidationTests: FormValidationTestResult[] = [
   },
   {
     id: "test-3",
+    name: 'Login Form Email Validation',
     form: "login-form",
     formId: "login-form",
-    name: 'Login Form Email Validation',
-    formName: 'login-form',
-    success: false,
+    formName: "login-form",
     location: '/auth/login',
     status: 'error',
     message: 'Email validation not triggering on blur',
     timestamp: Date.now() - 100000,
+    success: false,
     fields: [
       {
         id: "email-field",
@@ -79,15 +79,15 @@ const mockFormValidationTests: FormValidationTestResult[] = [
   },
   {
     id: "test-4",
+    name: 'Contact Form Message Validation',
     form: "contact-form",
     formId: "contact-form",
-    name: 'Contact Form Message Validation',
-    formName: 'contact-form',
-    success: true,
+    formName: "contact-form",
     location: '/contact',
     status: 'success',
     message: 'Message length validation working correctly',
     timestamp: Date.now() - 50000,
+    success: true,
     fields: [
       {
         id: "message-field",
