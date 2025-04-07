@@ -5,10 +5,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ExternalLink, DollarSign, Heart } from "lucide-react";
+import { ChevronLeft, ExternalLink, DollarSign, Heart, FileText, Download } from "lucide-react";
 import { InterestedButton } from "./InterestedButton";
 import { ScheduleMeetingDialog } from "./ScheduleMeetingDialog";
 import { OfferingDetailsTabs } from "./OfferingDetailsTabs";
+import { toast } from "sonner";
 
 interface Strategy {
   overview: string;
@@ -26,7 +27,7 @@ interface Offering {
   name: string;
   description: string;
   minimumInvestment: string;
-  performance: string;
+  performance?: string; // Made optional since we won't show it
   lockupPeriod: string;
   lockUp: string;
   firm: string;
@@ -47,12 +48,20 @@ interface OfferingCardProps {
 
 export const OfferingCard: React.FC<OfferingCardProps> = ({ offering, categoryId, onLike }) => {
   const [isLiked, setIsLiked] = React.useState(false);
+  const [isDialogOpen, setIsDialogOpen] = React.useState(false);
   
   const handleLike = () => {
     setIsLiked(!isLiked);
     if (!isLiked && onLike) {
       onLike(offering.name);
     }
+  };
+
+  const handleDownloadFactSheet = () => {
+    toast.success(`Downloading fact sheet for ${offering.name}`, {
+      description: "Your download will begin shortly."
+    });
+    // In a real app this would trigger an actual download
   };
 
   return (
@@ -91,10 +100,6 @@ export const OfferingCard: React.FC<OfferingCardProps> = ({ offering, categoryId
         
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <p className="text-sm text-muted-foreground">Performance</p>
-            <p className="font-medium text-green-500">{offering.performance}</p>
-          </div>
-          <div>
             <p className="text-sm text-muted-foreground">Lock-up Period</p>
             <p className="font-medium">{offering.lockupPeriod}</p>
           </div>
@@ -122,10 +127,20 @@ export const OfferingCard: React.FC<OfferingCardProps> = ({ offering, categoryId
           )}
         </div>
 
-        <div className="flex gap-3 pt-3">
+        <div className="flex gap-2 pt-3">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="flex-1 gap-1"
+            onClick={handleDownloadFactSheet}
+          >
+            <FileText className="h-4 w-4" />
+            Fact Sheet
+          </Button>
+          
           <Sheet>
             <SheetTrigger asChild>
-              <Button variant="outline" className="flex-1">View Details</Button>
+              <Button variant="outline" size="sm" className="flex-1">View Details</Button>
             </SheetTrigger>
             <SheetContent className="w-full sm:max-w-xl overflow-y-auto">
               <SheetHeader className="mb-6">
@@ -143,14 +158,47 @@ export const OfferingCard: React.FC<OfferingCardProps> = ({ offering, categoryId
               </SheetHeader>
               
               <OfferingDetailsTabs offering={offering} />
+              
+              <div className="mt-6 flex gap-2">
+                <Button 
+                  onClick={() => setIsDialogOpen(true)} 
+                  className="flex-1"
+                >
+                  Schedule Meeting
+                </Button>
+                <InterestedButton assetName={offering.name} onInterested={() => {
+                  if (onLike) onLike(offering.name);
+                }} />
+              </div>
             </SheetContent>
           </Sheet>
-          <ScheduleMeetingDialog assetName={offering.name} />
-          <InterestedButton assetName={offering.name} onInterested={() => {
-            if (onLike) onLike(offering.name);
-          }} />
+        </div>
+        
+        <div className="flex gap-2">
+          <Button 
+            onClick={() => setIsDialogOpen(true)} 
+            variant="default" 
+            size="sm" 
+            className="flex-1"
+          >
+            Schedule Meeting
+          </Button>
+          <InterestedButton 
+            assetName={offering.name} 
+            onInterested={() => {
+              if (onLike) onLike(offering.name);
+            }}
+            className="flex-1"
+          />
         </div>
       </CardContent>
+      
+      {/* Use Dialog component for scheduling meetings */}
+      <ScheduleMeetingDialog
+        open={isDialogOpen}
+        onOpenChange={setIsDialogOpen}
+        assetName={offering.name}
+      />
     </Card>
   );
 };

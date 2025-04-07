@@ -1,16 +1,14 @@
-
 import React, { useState, useEffect } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { ChevronRight, Briefcase, BarChart3, ArrowUpRight, ShieldCheck, CalendarClock, SearchIcon } from "lucide-react";
+import { ChevronRight, Briefcase, SearchIcon, CalendarClock, FileText, Download } from "lucide-react";
 import { IntelligentAllocationTab } from "@/components/investments/IntelligentAllocationTab";
 import { StockScreener } from "@/components/investments/StockScreener";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { ScheduleMeetingDialog } from "@/components/investments/ScheduleMeetingDialog";
-import { getAllInvestmentCategoryData } from "@/services/marketDataService";
 
 interface PortfolioModel {
   id: string;
@@ -37,8 +35,6 @@ const Investments = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [selectedTab, setSelectedTab] = useState("private-market");
-  const [alternativeData, setAlternativeData] = useState<any>({});
-  const [isLoading, setIsLoading] = useState(true);
   const [scheduleMeetingOpen, setScheduleMeetingOpen] = useState(false);
   const [selectedAsset, setSelectedAsset] = useState("");
   
@@ -49,28 +45,6 @@ const Investments = () => {
       setSelectedTab(tabParam);
     }
   }, [location.search]);
-  
-  useEffect(() => {
-    const fetchMarketData = async () => {
-      try {
-        setIsLoading(true);
-        const data = await getAllInvestmentCategoryData();
-        setAlternativeData(data);
-      } catch (error) {
-        console.error("Error fetching market data:", error);
-        setAlternativeData({
-          'private-equity': { ytdPerformance: 12.4 },
-          'private-debt': { ytdPerformance: 8.7 },
-          'digital-assets': { ytdPerformance: 15.8 },
-          'real-assets': { ytdPerformance: 9.1 }
-        });
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    
-    fetchMarketData();
-  }, []);
 
   // Define asset categories for the Private Market Alpha section
   const coreAssetCategories: AssetCategory[] = [
@@ -225,6 +199,7 @@ const Investments = () => {
   // Combine all categories
   const allCategories = [...coreAssetCategories, ...additionalCategories];
   
+  // Portfolio models data for the Model Portfolios tab
   const portfolioModels: PortfolioModel[] = [
     {
       id: "income-focus",
@@ -332,6 +307,13 @@ const Investments = () => {
     navigate(path);
   };
 
+  const handleDownloadFactSheet = (categoryName: string) => {
+    toast.success(`Downloading fact sheet for ${categoryName}`, {
+      description: "Your download will begin shortly.",
+    });
+    // In a real app this would trigger an actual download
+  };
+
   // Chunk the categories for responsive grid
   const chunkArray = <T,>(array: T[], size: number): T[][] => {
     return Array.from({ length: Math.ceil(array.length / size) }, (_, i) =>
@@ -382,14 +364,6 @@ const Investments = () => {
                       <div className="flex flex-col gap-4">
                         <div className="flex justify-between items-center">
                           {category.icon}
-                          {alternativeData[category.id]?.ytdPerformance !== undefined && (
-                            <span className={alternativeData[category.id]?.ytdPerformance < 0 ? "text-red-500" : "text-emerald-500"}>
-                              {isLoading 
-                                ? "Loading..." 
-                                : `${alternativeData[category.id]?.ytdPerformance < 0 ? "" : "+"}${alternativeData[category.id]?.ytdPerformance?.toFixed(1) || '9.5'}% YTD`
-                              }
-                            </span>
-                          )}
                         </div>
                         <div>
                           <h4 className="text-lg font-medium">{category.name}</h4>
@@ -423,7 +397,19 @@ const Investments = () => {
                             <h4 className="text-lg font-medium">{category.name}</h4>
                             <p className="text-muted-foreground text-sm mt-1">{category.description}</p>
                           </div>
-                          <div className="flex justify-end">
+                          <div className="flex justify-between items-center">
+                            <Button
+                              variant="ghost" 
+                              size="sm" 
+                              className="text-blue-600 hover:text-blue-800 p-0"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDownloadFactSheet(category.name);
+                              }}
+                            >
+                              <FileText className="h-4 w-4 mr-1" />
+                              Fact Sheet
+                            </Button>
                             <ChevronRight className="h-5 w-5 text-muted-foreground" />
                           </div>
                         </div>

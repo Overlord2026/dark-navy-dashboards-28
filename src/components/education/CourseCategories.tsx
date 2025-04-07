@@ -14,7 +14,8 @@ export interface CourseCategoryProps {
 export const CourseCategories: React.FC<CourseCategoryProps> = ({ 
   categories, 
   onCategoryClick,
-  activeCategory 
+  activeCategory,
+  setActiveCategory 
 }) => {
   return (
     <div className="flex flex-wrap gap-2 mb-6">
@@ -23,7 +24,12 @@ export const CourseCategories: React.FC<CourseCategoryProps> = ({
           key={category.id}
           variant="outline"
           size="sm"
-          onClick={() => onCategoryClick(category.id)}
+          onClick={() => {
+            onCategoryClick(category.id);
+            if (setActiveCategory) {
+              setActiveCategory(category.id);
+            }
+          }}
           className={cn(
             "rounded-full",
             activeCategory === category.id || category.active 

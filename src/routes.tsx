@@ -1,3 +1,4 @@
+
 import React from "react";
 import { createBrowserRouter } from "react-router-dom";
 import Dashboard from "@/pages/Dashboard";
@@ -34,7 +35,62 @@ import AdvisorFeedback from "@/pages/AdvisorFeedback";
 import NotFound from "@/pages/NotFound";
 import TaxPlanningEducation from "@/pages/TaxPlanningEducation";
 import NavigationDiagnostics from "@/pages/NavigationDiagnostics";
+import InvestmentPerformance from "@/pages/InvestmentPerformance";
 import { ProfessionalsRouteWrapper } from "@/components/providers/ProfessionalsRouteWrapper";
+import AlternativeAssetCategory from "@/pages/AlternativeAssetCategory";
+
+// Create a route layout helper to avoid repetition
+const createInvestmentProviderRoutes = () => {
+  const providers = [
+    'bfo-asset-management', 'bfo-model-marketplace', 'adelante', 'alpha-quant', 
+    'ativo', 'avantis', 'blackrock', 'brown-advisory', 'camelot-portfolios', 
+    'capital-group', 'churchill', 'dearborn', 'dundas', 'easterly', 
+    'franklin-templeton', 'gwk', 'goldman-sachs', 'jpmorgan', 'nuveen', 
+    'polen', 'saratoga', 'sawgrass', 'schafer-cullen', 'state-street', 
+    'suncoast', 'trowe-price', 'victory-capital', 'washington-crossing', 
+    'zacks', 'custom-portfolios', 'shared-by-advisor', 'custom'
+  ];
+  
+  return providers.map(provider => ({
+    path: `/investments/${provider}`,
+    element: <NotFound /> // These could be replaced with proper components later
+  }));
+};
+
+const alternativeAssetRoutes = [
+  {
+    path: "/investments/alternative/private-equity",
+    element: <AlternativeAssetCategory />
+  },
+  {
+    path: "/investments/alternative/private-debt",
+    element: <AlternativeAssetCategory />
+  },
+  {
+    path: "/investments/alternative/hedge-fund",
+    element: <AlternativeAssetCategory />
+  },
+  {
+    path: "/investments/alternative/venture-capital",
+    element: <AlternativeAssetCategory />
+  },
+  {
+    path: "/investments/alternative/collectibles",
+    element: <AlternativeAssetCategory />
+  },
+  {
+    path: "/investments/alternative/digital-assets",
+    element: <AlternativeAssetCategory />
+  },
+  {
+    path: "/investments/alternative/real-assets",
+    element: <AlternativeAssetCategory />
+  },
+  {
+    path: "/investments/alternative/structured-investments",
+    element: <AlternativeAssetCategory />
+  },
+];
 
 const routes = createBrowserRouter([
   {
@@ -52,6 +108,10 @@ const routes = createBrowserRouter([
   {
     path: "/investments",
     element: <Investments />
+  },
+  {
+    path: "/investment-performance",
+    element: <InvestmentPerformance />
   },
   {
     path: "/tax-planning",
@@ -138,22 +198,6 @@ const routes = createBrowserRouter([
     element: <AdvisorFeedback />
   },
   {
-    path: "/investments/alternative/private-equity",
-    element: <PrivateEquity />
-  },
-  {
-    path: "/investments/alternative/private-debt",
-    element: <PrivateDebt />
-  },
-  {
-    path: "/investments/alternative/digital-assets",
-    element: <DigitalAssets />
-  },
-  {
-    path: "/investments/alternative/real-assets",
-    element: <RealAssets />
-  },
-  {
     path: "/investments/model-portfolios",
     element: <ModelPortfolios />
   },
@@ -161,150 +205,8 @@ const routes = createBrowserRouter([
     path: "/investments/stock-screener",
     element: <StockScreener />
   },
-  {
-    path: "/investments/alternative/hedge-fund",
-    element: <NotFound />
-  },
-  {
-    path: "/investments/alternative/venture-capital",
-    element: <NotFound />
-  },
-  {
-    path: "/investments/alternative/collectibles",
-    element: <NotFound />
-  },
-  {
-    path: "/investments/alternative/structured-investments",
-    element: <NotFound />
-  },
-  {
-    path: "/investments/bfo-asset-management",
-    element: <NotFound />
-  },
-  {
-    path: "/investments/bfo-model-marketplace",
-    element: <NotFound />
-  },
-  {
-    path: "/investments/adelante",
-    element: <NotFound />
-  },
-  {
-    path: "/investments/alpha-quant",
-    element: <NotFound />
-  },
-  {
-    path: "/investments/ativo",
-    element: <NotFound />
-  },
-  {
-    path: "/investments/avantis",
-    element: <NotFound />
-  },
-  {
-    path: "/investments/blackrock",
-    element: <NotFound />
-  },
-  {
-    path: "/investments/brown-advisory",
-    element: <NotFound />
-  },
-  {
-    path: "/investments/camelot-portfolios",
-    element: <NotFound />
-  },
-  {
-    path: "/investments/capital-group",
-    element: <NotFound />
-  },
-  {
-    path: "/investments/churchill",
-    element: <NotFound />
-  },
-  {
-    path: "/investments/dearborn",
-    element: <NotFound />
-  },
-  {
-    path: "/investments/dundas",
-    element: <NotFound />
-  },
-  {
-    path: "/investments/easterly",
-    element: <NotFound />
-  },
-  {
-    path: "/investments/franklin-templeton",
-    element: <NotFound />
-  },
-  {
-    path: "/investments/gwk",
-    element: <NotFound />
-  },
-  {
-    path: "/investments/goldman-sachs",
-    element: <NotFound />
-  },
-  {
-    path: "/investments/jpmorgan",
-    element: <NotFound />
-  },
-  {
-    path: "/investments/nuveen",
-    element: <NotFound />
-  },
-  {
-    path: "/investments/polen",
-    element: <NotFound />
-  },
-  {
-    path: "/investments/saratoga",
-    element: <NotFound />
-  },
-  {
-    path: "/investments/sawgrass",
-    element: <NotFound />
-  },
-  {
-    path: "/investments/schafer-cullen",
-    element: <NotFound />
-  },
-  {
-    path: "/investments/state-street",
-    element: <NotFound />
-  },
-  {
-    path: "/investments/suncoast",
-    element: <NotFound />
-  },
-  {
-    path: "/investments/trowe-price",
-    element: <NotFound />
-  },
-  {
-    path: "/investments/victory-capital",
-    element: <NotFound />
-  },
-  {
-    path: "/investments/washington-crossing",
-    element: <NotFound />
-  },
-  {
-    path: "/investments/zacks",
-    element: <NotFound />
-  },
-  {
-    path: "/investments/custom-portfolios",
-    element: <NotFound />
-  },
-  {
-    path: "/investments/shared-by-advisor",
-    element: <NotFound />
-  },
-  {
-    path: "/investments/custom",
-    element: <NotFound />
-  },
+  ...alternativeAssetRoutes,
+  ...createInvestmentProviderRoutes(),
   {
     path: '/vehicles-collectibles',
     element: <AllAssets />
