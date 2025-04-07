@@ -1,24 +1,8 @@
 
-export interface QuickFix {
-  id: string;
-  title: string;
-  description: string;
-  area: 'system' | 'performance' | 'security' | 'config' | 'api';
-  severity: "critical" | "high" | "medium" | "low";
-  category: "reliability" | "security" | "performance" | "usability";
-  actionable?: boolean;
-}
+// Import the types we need from common
+import { DiagnosticTestStatus } from './common';
 
-export interface FixHistoryEntry {
-  id: string;
-  title: string;
-  timestamp: string;
-  area: 'system' | 'performance' | 'security' | 'config' | 'api';
-  severity: string;
-  description: string;
-  status: 'success' | 'failed' | 'pending';
-}
-
+// Define the Recommendation interface (moved from common.ts to avoid circular dependencies)
 export interface Recommendation {
   id: string;
   text: string;
@@ -29,4 +13,17 @@ export interface Recommendation {
   effort?: string;
   impact?: string;
   description?: string;
+}
+
+// Add any additional recommendation-specific types here
+export interface RecommendationList {
+  items: Recommendation[];
+  count: number;
+  lastUpdated: string;
+}
+
+export interface DiagnosticRecommendation extends Recommendation {
+  source: string;
+  testId?: string;
+  status: DiagnosticTestStatus;
 }

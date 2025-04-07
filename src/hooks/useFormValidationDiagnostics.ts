@@ -11,14 +11,12 @@ const mockFormValidationTests: FormValidationTestResult[] = [
   {
     id: "test-1",
     name: 'Register Form Email Validation',
-    form: "register-form",
     formId: "register-form",
     formName: "register-form",
     location: '/auth/register',
     status: 'success',
     message: 'Email validation working correctly',
     timestamp: Date.now() - 300000,
-    success: true,
     fields: [
       {
         id: "email-field",
@@ -26,7 +24,7 @@ const mockFormValidationTests: FormValidationTestResult[] = [
         type: 'email',
         validations: ['required', 'email'],
         value: 'test@example.com',
-        valid: true,
+        status: 'success',
         errors: []
       }
     ]
@@ -34,14 +32,12 @@ const mockFormValidationTests: FormValidationTestResult[] = [
   {
     id: "test-2",
     name: 'Register Form Password Validation',
-    form: "register-form",
     formId: "register-form",
     formName: "register-form",
     location: '/auth/register',
     status: 'warning',
     message: 'Password strength indicator showing warnings inconsistently',
     timestamp: Date.now() - 200000,
-    success: false,
     fields: [
       {
         id: "password-field",
@@ -49,7 +45,7 @@ const mockFormValidationTests: FormValidationTestResult[] = [
         type: 'password',
         validations: ['required', 'minLength:8'],
         value: 'Password123',
-        valid: false,
+        status: 'warning',
         errors: ['Password not strong enough']
       }
     ]
@@ -57,14 +53,12 @@ const mockFormValidationTests: FormValidationTestResult[] = [
   {
     id: "test-3",
     name: 'Login Form Email Validation',
-    form: "login-form",
     formId: "login-form",
     formName: "login-form",
     location: '/auth/login',
     status: 'error',
     message: 'Email validation not triggering on blur',
     timestamp: Date.now() - 100000,
-    success: false,
     fields: [
       {
         id: "email-field",
@@ -72,7 +66,7 @@ const mockFormValidationTests: FormValidationTestResult[] = [
         type: 'email',
         validations: ['required', 'email'],
         value: 'invalid-email',
-        valid: false,
+        status: 'error',
         errors: ['Invalid email format']
       }
     ]
@@ -80,14 +74,12 @@ const mockFormValidationTests: FormValidationTestResult[] = [
   {
     id: "test-4",
     name: 'Contact Form Message Validation',
-    form: "contact-form",
     formId: "contact-form",
     formName: "contact-form",
     location: '/contact',
     status: 'success',
     message: 'Message length validation working correctly',
     timestamp: Date.now() - 50000,
-    success: true,
     fields: [
       {
         id: "message-field",
@@ -95,7 +87,7 @@ const mockFormValidationTests: FormValidationTestResult[] = [
         type: 'text',
         validations: ['required', 'minLength:10'],
         value: 'This is a test message with proper length',
-        valid: true,
+        status: 'success',
         errors: []
       }
     ]

@@ -67,6 +67,9 @@ export function NavigationDiagnostics() {
     if (isAdmin) {
       runNavigationDiagnostics();
     }
+    
+    // No cleanup needed for this effect
+    return undefined;
   }, [isAdmin]);
   
   const getStatusIcon = (status: string) => {

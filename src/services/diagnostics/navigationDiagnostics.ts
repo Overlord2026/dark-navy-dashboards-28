@@ -1,33 +1,36 @@
 
+import { v4 as uuidv4 } from 'uuid';
+import { NavigationTestResult } from '@/types/diagnostics';
+
 // Simulate an API call to get navigation diagnostics
 export const getNavigationDiagnosticsSummary = async () => {
   // This would be a real API call in a production environment
   await new Promise(resolve => setTimeout(resolve, 1000));
   
-  // Sample diagnostic data
-  const results = {
+  // Sample diagnostic data with corrected properties
+  const results: Record<string, NavigationTestResult[]> = {
     home: [
-      { route: "/", status: "success", message: "Dashboard loads correctly" },
-      { route: "/accounts", status: "success", message: "Accounts page loads correctly" }
+      { id: uuidv4(), route: "/", status: "success", message: "Dashboard loads correctly", timestamp: Date.now() },
+      { id: uuidv4(), route: "/accounts", status: "success", message: "Accounts page loads correctly", timestamp: Date.now() }
     ],
     educationSolutions: [
-      { route: "/education", status: "success", message: "Education center loads correctly" },
-      { route: "/education/tax-planning", status: "success", message: "Tax planning education loads correctly" },
-      { route: "/financial-plans", status: "warning", message: "Performance issues detected" }
+      { id: uuidv4(), route: "/education", status: "success", message: "Education center loads correctly", timestamp: Date.now() },
+      { id: uuidv4(), route: "/education/tax-planning", status: "success", message: "Tax planning education loads correctly", timestamp: Date.now() },
+      { id: uuidv4(), route: "/financial-plans", status: "warning", message: "Performance issues detected", timestamp: Date.now() }
     ],
     familyWealth: [
-      { route: "/all-assets", status: "success", message: "All assets page loads correctly" },
-      { route: "/properties", status: "warning", message: "Properties page slow to load" },
-      { route: "/estate-planning", status: "success", message: "Estate planning page loads correctly" }
+      { id: uuidv4(), route: "/all-assets", status: "success", message: "All assets page loads correctly", timestamp: Date.now() },
+      { id: uuidv4(), route: "/properties", status: "warning", message: "Properties page slow to load", timestamp: Date.now() },
+      { id: uuidv4(), route: "/estate-planning", status: "success", message: "Estate planning page loads correctly", timestamp: Date.now() }
     ],
     collaboration: [
-      { route: "/sharing", status: "success", message: "Sharing page loads correctly" },
-      { route: "/professionals", status: "warning", message: "Missing mobile optimizations" }
+      { id: uuidv4(), route: "/sharing", status: "success", message: "Sharing page loads correctly", timestamp: Date.now() },
+      { id: uuidv4(), route: "/professionals", status: "warning", message: "Missing mobile optimizations", timestamp: Date.now() }
     ],
     investments: [
-      { route: "/investments", status: "success", message: "Investments page loads correctly" },
-      { route: "/investments/stock-screener", status: "error", message: "API endpoint unavailable" },
-      { route: "/investments/model-portfolios", status: "success", message: "Model portfolios page loads correctly" }
+      { id: uuidv4(), route: "/investments", status: "success", message: "Investments page loads correctly", timestamp: Date.now() },
+      { id: uuidv4(), route: "/investments/stock-screener", status: "error", message: "API endpoint unavailable", timestamp: Date.now() },
+      { id: uuidv4(), route: "/investments/model-portfolios", status: "success", message: "Model portfolios page loads correctly", timestamp: Date.now() }
     ]
   };
   
@@ -52,4 +55,10 @@ export const getNavigationDiagnosticsSummary = async () => {
     warningCount,
     errorCount
   };
+};
+
+// Add function to test all navigation routes
+export const testAllNavigationRoutes = async (): Promise<Record<string, NavigationTestResult[]>> => {
+  const summary = await getNavigationDiagnosticsSummary();
+  return summary.results;
 };
