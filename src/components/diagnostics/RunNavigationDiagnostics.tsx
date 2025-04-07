@@ -1,9 +1,10 @@
+
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { useNavigationDiagnostics } from "@/hooks/useNavigationDiagnostics";
-import { NavigationTestResult } from "@/types/diagnostics";
+import { NavigationTestResult, DiagnosticTestStatus } from "@/types/diagnostics";
 
 interface DiagnosticsResultData {
   errorCount?: number;
