@@ -21,6 +21,8 @@ interface NetWorthContextType {
 // Create context
 const NetWorthContext = createContext<NetWorthContextType | undefined>(undefined);
 
+export { type Asset }; // Export Asset type to be used by components
+
 export const NetWorthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   console.log('NetWorthProvider rendering');
   

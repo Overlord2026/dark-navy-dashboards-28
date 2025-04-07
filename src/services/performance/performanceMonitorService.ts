@@ -3,6 +3,33 @@
  * Service for measuring and monitoring application performance
  */
 
+// Performance thresholds for different metrics
+export const PERFORMANCE_THRESHOLDS = {
+  route: {
+    acceptable: 300, // ms
+    warning: 600,    // ms
+    critical: 1000   // ms
+  },
+  component: {
+    acceptable: 50,  // ms
+    warning: 100,    // ms
+    critical: 200    // ms
+  }
+};
+
+// Key routes to monitor
+export const KEY_ROUTES = [
+  '/',
+  '/dashboard',
+  '/accounts',
+  '/all-assets',
+  '/education',
+  '/financial-plans',
+  '/properties',
+  '/investments',
+  '/sharing'
+];
+
 // Measure route loading performance
 export const measureRoutePerformance = (routePath: string) => {
   const startTime = performance.now();
@@ -21,18 +48,25 @@ export const measureRoutePerformance = (routePath: string) => {
 
 // Get memory usage information
 export const getMemoryUsage = () => {
-  if (window.performance && window.performance.memory) {
-    // @ts-ignore - memory is a non-standard property not in TypeScript definitions
-    const memory = window.performance.memory;
-    return {
-      jsHeapSizeLimit: Math.round(memory.jsHeapSizeLimit / 1048576),
-      totalJSHeapSize: Math.round(memory.totalJSHeapSize / 1048576),
-      usedJSHeapSize: Math.round(memory.usedJSHeapSize / 1048576)
-    };
+  if (window.performance) {
+    // Check if memory property exists
+    const memoryInfo = (window.performance as any).memory;
+    if (memoryInfo) {
+      return {
+        jsHeapSizeLimit: Math.round(memoryInfo.jsHeapSizeLimit / 1048576),
+        totalJSHeapSize: Math.round(memoryInfo.totalJSHeapSize / 1048576),
+        usedJSHeapSize: Math.round(memoryInfo.usedJSHeapSize / 1048576),
+        usagePercentage: Math.round((memoryInfo.usedJSHeapSize / memoryInfo.jsHeapSizeLimit) * 100)
+      };
+    }
   }
   
   // Return null if memory stats aren't available
-  return null;
+  return {
+    usagePercentage: 0,
+    totalJSHeapSize: 0,
+    usedJSHeapSize: 0
+  };
 };
 
 // Track component render time
@@ -46,7 +80,7 @@ export const trackComponentRender = (componentName: string) => {
   };
 };
 
-// Log navigation performance
+// Log navigation timing
 export const logNavigationTiming = () => {
   if (window.performance && window.performance.timing) {
     const timing = window.performance.timing;
@@ -67,4 +101,16 @@ export const logNavigationTiming = () => {
   }
   
   return null;
+};
+
+// Create log performance report function
+export const logPerformanceReport = async () => {
+  const metrics = {
+    navigationTiming: logNavigationTiming(),
+    memory: getMemoryUsage(),
+    timestamp: new Date().toISOString()
+  };
+  
+  console.info('Performance report generated:', metrics);
+  return metrics;
 };

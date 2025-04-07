@@ -17,7 +17,7 @@ export const RunNavigationDiagnostics: React.FC = () => {
         setShowResults(true);
         
         // Get all results flattened
-        const allResults = Object.values(data).flat();
+        const allResults = Object.values(data.results).flat();
         const errorCount = allResults.filter(r => r.status === "error").length;
         const warningCount = allResults.filter(r => r.status === "warning").length;
         

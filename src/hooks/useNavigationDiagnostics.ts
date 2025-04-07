@@ -1,16 +1,10 @@
 
 import { useState } from "react";
 import { toast } from "sonner";
-
-interface NavigationDiagnosticResult {
-  route: string;
-  status: "success" | "warning" | "error";
-  message: string;
-  details?: string;
-}
+import { NavigationTestResult, DiagnosticTestStatus } from "@/types/diagnostics";
 
 interface DiagnosticSummary {
-  overallStatus: "success" | "warning" | "error";
+  overallStatus: DiagnosticTestStatus;
   totalRoutes: number;
   successCount: number;
   warningCount: number;
@@ -19,7 +13,7 @@ interface DiagnosticSummary {
 
 export function useNavigationDiagnostics() {
   const [isRunning, setIsRunning] = useState(false);
-  const [results, setResults] = useState<Record<string, NavigationDiagnosticResult[]>>({});
+  const [results, setResults] = useState<Record<string, NavigationTestResult[]>>({});
   const [summary, setSummary] = useState<DiagnosticSummary | null>(null);
 
   const runDiagnostics = async () => {
@@ -29,23 +23,24 @@ export function useNavigationDiagnostics() {
       // This would normally call an API, but for now we'll simulate it
       await new Promise(resolve => setTimeout(resolve, 1500));
       
-      // Simulated results
-      const diagnosticResults = {
+      // Simulated results - now properly typed
+      const timestamp = Date.now();
+      const diagnosticResults: Record<string, NavigationTestResult[]> = {
         home: [
-          { route: "/", status: "success", message: "Dashboard loads correctly" },
-          { route: "/accounts", status: "success", message: "Accounts page loads correctly" }
+          { id: "home-1", route: "/", status: "success", message: "Dashboard loads correctly", timestamp },
+          { id: "home-2", route: "/accounts", status: "success", message: "Accounts page loads correctly", timestamp }
         ],
         educationSolutions: [
-          { route: "/education", status: "success", message: "Education center loads correctly" },
-          { route: "/education/tax-planning", status: "success", message: "Tax planning education loads correctly" }
+          { id: "edu-1", route: "/education", status: "success", message: "Education center loads correctly", timestamp },
+          { id: "edu-2", route: "/education/tax-planning", status: "success", message: "Tax planning education loads correctly", timestamp }
         ],
         familyWealth: [
-          { route: "/all-assets", status: "success", message: "All assets page loads correctly" },
-          { route: "/properties", status: "warning", message: "Properties page slow to load" }
+          { id: "wealth-1", route: "/all-assets", status: "success", message: "All assets page loads correctly", timestamp },
+          { id: "wealth-2", route: "/properties", status: "warning", message: "Properties page slow to load", timestamp }
         ],
         investments: [
-          { route: "/investments", status: "success", message: "Investments page loads correctly" },
-          { route: "/investments/stock-screener", status: "error", message: "API endpoint unavailable" }
+          { id: "invest-1", route: "/investments", status: "success", message: "Investments page loads correctly", timestamp },
+          { id: "invest-2", route: "/investments/stock-screener", status: "error", message: "API endpoint unavailable", timestamp }
         ]
       };
       
@@ -58,7 +53,10 @@ export function useNavigationDiagnostics() {
       const warningCount = allResults.filter(r => r.status === "warning").length;
       const errorCount = allResults.filter(r => r.status === "error").length;
       
-      const overallStatus = errorCount > 0 ? "error" : warningCount > 0 ? "warning" : "success";
+      const overallStatus: DiagnosticTestStatus = 
+        errorCount > 0 ? "error" : 
+        warningCount > 0 ? "warning" : 
+        "success";
       
       setSummary({
         overallStatus,

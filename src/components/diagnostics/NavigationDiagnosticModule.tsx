@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,7 +6,7 @@ import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { NavigationTests } from "./NavigationTests";
 import { StatusBadges } from "./StatusBadges";
-import { NavigationDiagnosticResult, DiagnosticSummary } from "@/types/diagnostics";
+import { NavigationTestResult, DiagnosticTestStatus, DiagnosticSummary } from "@/types/diagnostics";
 import { getNavigationDiagnosticsSummary } from "@/services/diagnostics/navigationDiagnostics";
 import { LoadingState } from "./LoadingState";
 import { useNavigationDiagnostics } from "@/hooks/useNavigationDiagnostics";
@@ -18,8 +17,8 @@ const NavigationDiagnosticModule: React.FC = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("all");
   const [isRunning, setIsRunning] = useState(false);
-  const [results, setResults] = useState<Record<string, NavigationDiagnosticResult[]>>({});
-  const [tabResults, setTabResults] = useState<Record<string, NavigationDiagnosticResult>>({});
+  const [results, setResults] = useState<Record<string, NavigationTestResult[]>>({});
+  const [tabResults, setTabResults] = useState<Record<string, NavigationTestResult>>({});
   const [summary, setSummary] = useState<DiagnosticSummary | null>(null);
   const { userProfile } = useUser();
   
@@ -46,7 +45,22 @@ const NavigationDiagnosticModule: React.FC = () => {
     try {
       // Get detailed route diagnostics
       const diagnosticSummary = await getNavigationDiagnosticsSummary();
-      setResults(diagnosticSummary.results);
+      
+      // Convert the results to match NavigationTestResult type
+      const typedResults: Record<string, NavigationTestResult[]> = {};
+      
+      // Process each category of results
+      Object.entries(diagnosticSummary.results).forEach(([category, tests]) => {
+        typedResults[category] = tests.map((test) => ({
+          id: `test-${test.route.replace(/\//g, '-')}`,
+          route: test.route,
+          status: test.status as DiagnosticTestStatus,
+          message: test.message,
+          timestamp: Date.now()
+        }));
+      });
+      
+      setResults(typedResults);
       
       // Get tab-specific diagnostics
       const tabDiagnostics = await runAllTabDiagnostics();
@@ -54,7 +68,7 @@ const NavigationDiagnosticModule: React.FC = () => {
       
       // Set summary
       setSummary({
-        overall: diagnosticSummary.overallStatus,
+        overall: diagnosticSummary.overallStatus as DiagnosticTestStatus,
         total: diagnosticSummary.totalRoutes,
         success: diagnosticSummary.successCount,
         warnings: diagnosticSummary.warningCount,
@@ -145,7 +159,7 @@ const NavigationDiagnosticModule: React.FC = () => {
                 </TabsContent>
                 
                 <TabsContent value="tabs">
-                  <NavigationTests tests={tabOnlyTests} />
+                  <NavigationTests tests={tabOnlyTests as NavigationTestResult[]} />
                 </TabsContent>
                 
                 <TabsContent value="success">

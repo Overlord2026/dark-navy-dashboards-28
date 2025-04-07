@@ -17,7 +17,9 @@ const NavigationDiagnostics: React.FC = () => {
   useEffect(() => {
     if (isAdmin) {
       const cleanup = measureRouteLoad('/navigation-diagnostics');
-      return cleanup;
+      return () => {
+        cleanup(); // Just call the function without assigning the return value
+      };
     }
   }, [isAdmin]);
 

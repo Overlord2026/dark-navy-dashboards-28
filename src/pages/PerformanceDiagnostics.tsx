@@ -1,4 +1,3 @@
-
 import React, { useEffect } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { PerformanceMetrics } from "@/components/diagnostics/PerformanceMetrics";
