@@ -30,7 +30,8 @@ export const educationalResources: EducationalResources = {
       isPaid: false,
       level: "All Levels",
       author: "Tony Gomes",
-      ghlUrl: "https://www.amazon.com/Life-Integrated-Financial-Freedom-Advanced/dp/B0BVRGDMQJ/"
+      coverImage: "https://m.media-amazon.com/images/I/61k1ea7TrwL._SY466_.jpg",
+      ghlUrl: "https://www.amazon.com/Life-Integrated-Financial-Freedom-Retirement/dp/B0BVSXBBXW"
     }
   ]
 };

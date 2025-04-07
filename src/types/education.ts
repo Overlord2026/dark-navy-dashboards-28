@@ -26,6 +26,7 @@ export interface EducationalResource {
   level: string;
   duration?: string;
   author?: string;
+  coverImage?: string;
   ghlUrl: string;
 }
 
