@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
@@ -22,6 +23,14 @@ interface PortfolioModel {
     text: string;
     color: string;
   };
+}
+
+interface AssetCategory {
+  id: string;
+  name: string;
+  description: string;
+  icon: React.ReactNode;
+  route: string;
 }
 
 const Investments = () => {
@@ -62,6 +71,159 @@ const Investments = () => {
     
     fetchMarketData();
   }, []);
+
+  // Define asset categories for the Private Market Alpha section
+  const coreAssetCategories: AssetCategory[] = [
+    {
+      id: 'private-equity',
+      name: 'Private Equity',
+      description: 'Investments in non-public companies, buyouts, growth',
+      icon: (
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-purple-500">
+          <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" strokeWidth="2" />
+          <path d="M12 3V21" stroke="currentColor" strokeWidth="2" />
+          <path d="M3 12H21" stroke="currentColor" strokeWidth="2" />
+        </svg>
+      ),
+      route: "/investments/alternative/private-equity"
+    },
+    {
+      id: 'private-debt',
+      name: 'Private Debt',
+      description: 'Direct lending, mezzanine financing, distressed debt',
+      icon: (
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-blue-500">
+          <rect x="3" y="6" width="18" height="15" rx="2" stroke="currentColor" strokeWidth="2" />
+          <path d="M7 6V3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+          <path d="M17 6V3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+          <path d="M7 11H17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+          <path d="M7 16H14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+        </svg>
+      ),
+      route: "/investments/alternative/private-debt"
+    },
+    {
+      id: 'hedge-fund',
+      name: 'Hedge Fund',
+      description: 'Alternative investment strategies with active management',
+      icon: (
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-green-500">
+          <path d="M3 4L7 8L11 4L15 8L19 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M3 12L7 16L11 12L15 16L19 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M3 20L7 16L11 20L15 16L19 20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      ),
+      route: "/investments/alternative/hedge-fund"
+    },
+    {
+      id: 'venture-capital',
+      name: 'Venture Capital',
+      description: 'Funding for early-stage, high-potential startups',
+      icon: (
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-amber-500">
+          <path d="M12 3V21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+          <path d="M5 8L19 8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+          <path d="M5 16L19 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+          <path d="M19 8L12 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+          <path d="M12 16L5 8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+        </svg>
+      ),
+      route: "/investments/alternative/venture-capital"
+    },
+    {
+      id: 'collectibles',
+      name: 'Collectibles',
+      description: 'Art, rare items, trading cards, and memorabilia',
+      icon: (
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-rose-500">
+          <path d="M21 6L15.7074 12.3839C15.4019 12.7431 14.8603 12.7583 14.5364 12.4155L12.4636 10.1345C12.1397 9.79175 11.5981 9.80693 11.2926 10.1661L3 20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          <circle cx="9" cy="7" r="3" stroke="currentColor" strokeWidth="2" />
+        </svg>
+      ),
+      route: "/investments/alternative/collectibles"
+    },
+    {
+      id: 'digital-assets',
+      name: 'Digital Assets',
+      description: 'Cryptocurrencies, NFTs, blockchain investments',
+      icon: (
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-orange-500">
+          <path d="M9 12H15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+          <path d="M12 9V15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+          <path d="M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21Z" stroke="currentColor" strokeWidth="2" />
+        </svg>
+      ),
+      route: "/investments/alternative/digital-assets"
+    },
+    {
+      id: 'real-assets',
+      name: 'Real Assets',
+      description: 'Real estate, infrastructure, commodities',
+      icon: (
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-indigo-500">
+          <path d="M3 21H21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+          <path d="M5 21V7L13 3V21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M19 21V10L13 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M9 9V9.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M9 12V12.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M9 15V15.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M9 18V18.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      ),
+      route: "/investments/alternative/real-assets"
+    },
+    {
+      id: 'structured-investments',
+      name: 'Structured Investments',
+      description: 'Custom financial products with defined outcomes',
+      icon: (
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-cyan-500">
+          <path d="M8 13V17M12 9V17M16 5V17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M3 19H21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+        </svg>
+      ),
+      route: "/investments/alternative/structured-investments"
+    }
+  ];
+
+  // Additional categories as requested
+  const additionalCategories: AssetCategory[] = [
+    { id: 'bfo-asset-management', name: 'BFO Asset Management', description: 'Explore BFO Asset Management solutions', icon: <Briefcase className="h-10 w-10 text-teal-500" />, route: "/investments/bfo-asset-management" },
+    { id: 'bfo-model-marketplace', name: 'BFO Model Marketplace', description: 'Discover models on the BFO marketplace', icon: <Briefcase className="h-10 w-10 text-emerald-500" />, route: "/investments/bfo-model-marketplace" },
+    { id: 'adelante', name: 'Adelante', description: 'Explore solutions offered by Adelante', icon: <Briefcase className="h-10 w-10 text-blue-500" />, route: "/investments/adelante" },
+    { id: 'alpha-quant', name: 'Alpha Quant', description: 'Quantitative investment strategies by Alpha Quant', icon: <Briefcase className="h-10 w-10 text-purple-500" />, route: "/investments/alpha-quant" },
+    { id: 'ativo', name: 'Ativo', description: 'Investment solutions from Ativo', icon: <Briefcase className="h-10 w-10 text-indigo-500" />, route: "/investments/ativo" },
+    { id: 'avantis', name: 'Avantis', description: 'Avantis investment opportunities', icon: <Briefcase className="h-10 w-10 text-blue-500" />, route: "/investments/avantis" },
+    { id: 'blackrock', name: 'BlackRock', description: 'BlackRock investment strategies and funds', icon: <Briefcase className="h-10 w-10 text-gray-700" />, route: "/investments/blackrock" },
+    { id: 'brown-advisory', name: 'Brown Advisory', description: 'Brown Advisory investment solutions', icon: <Briefcase className="h-10 w-10 text-amber-800" />, route: "/investments/brown-advisory" },
+    { id: 'camelot-portfolios', name: 'Camelot Portfolios', description: 'Strategic investment portfolios by Camelot', icon: <Briefcase className="h-10 w-10 text-blue-600" />, route: "/investments/camelot-portfolios" },
+    { id: 'capital-group', name: 'Capital Group', description: 'Investment solutions from Capital Group', icon: <Briefcase className="h-10 w-10 text-red-600" />, route: "/investments/capital-group" },
+    { id: 'churchill', name: 'Churchill', description: 'Churchill investment strategies', icon: <Briefcase className="h-10 w-10 text-blue-800" />, route: "/investments/churchill" },
+    { id: 'dearborn', name: 'Dearborn', description: 'Dearborn investment opportunities', icon: <Briefcase className="h-10 w-10 text-green-700" />, route: "/investments/dearborn" },
+    { id: 'dundas', name: 'Dundas', description: 'Dundas global investment solutions', icon: <Briefcase className="h-10 w-10 text-blue-500" />, route: "/investments/dundas" },
+    { id: 'easterly', name: 'Easterly Investment Partners', description: 'Investment solutions from Easterly', icon: <Briefcase className="h-10 w-10 text-sky-600" />, route: "/investments/easterly" },
+    { id: 'franklin-templeton', name: 'Franklin Templeton', description: 'Franklin Templeton investment strategies', icon: <Briefcase className="h-10 w-10 text-green-600" />, route: "/investments/franklin-templeton" },
+    { id: 'gwk', name: 'GW&K', description: 'GW&K investment opportunities', icon: <Briefcase className="h-10 w-10 text-blue-700" />, route: "/investments/gwk" },
+    { id: 'goldman-sachs', name: 'Goldman Sachs', description: 'Goldman Sachs investment solutions', icon: <Briefcase className="h-10 w-10 text-blue-900" />, route: "/investments/goldman-sachs" },
+    { id: 'jpmorgan', name: 'JPMorgan', description: 'JPMorgan investment strategies and funds', icon: <Briefcase className="h-10 w-10 text-blue-800" />, route: "/investments/jpmorgan" },
+    { id: 'nuveen', name: 'Nuveen', description: 'Nuveen investment opportunities', icon: <Briefcase className="h-10 w-10 text-teal-700" />, route: "/investments/nuveen" },
+    { id: 'polen', name: 'Polen', description: 'Polen investment solutions', icon: <Briefcase className="h-10 w-10 text-indigo-600" />, route: "/investments/polen" },
+    { id: 'saratoga', name: 'Saratoga', description: 'Saratoga investment strategies', icon: <Briefcase className="h-10 w-10 text-red-700" />, route: "/investments/saratoga" },
+    { id: 'sawgrass', name: 'Sawgrass', description: 'Sawgrass investment opportunities', icon: <Briefcase className="h-10 w-10 text-green-800" />, route: "/investments/sawgrass" },
+    { id: 'schafer-cullen', name: 'Schafer Cullen', description: 'Schafer Cullen investment solutions', icon: <Briefcase className="h-10 w-10 text-purple-700" />, route: "/investments/schafer-cullen" },
+    { id: 'state-street', name: 'State Street', description: 'State Street investment strategies', icon: <Briefcase className="h-10 w-10 text-blue-600" />, route: "/investments/state-street" },
+    { id: 'suncoast', name: 'Suncoast', description: 'Suncoast investment opportunities', icon: <Briefcase className="h-10 w-10 text-yellow-600" />, route: "/investments/suncoast" },
+    { id: 'trowe-price', name: 'T. Rowe Price', description: 'T. Rowe Price investment solutions', icon: <Briefcase className="h-10 w-10 text-blue-700" />, route: "/investments/trowe-price" },
+    { id: 'victory-capital', name: 'Victory Capital', description: 'Victory Capital investment strategies', icon: <Briefcase className="h-10 w-10 text-red-600" />, route: "/investments/victory-capital" },
+    { id: 'washington-crossing', name: 'Washington Crossing', description: 'Washington Crossing investment opportunities', icon: <Briefcase className="h-10 w-10 text-indigo-700" />, route: "/investments/washington-crossing" },
+    { id: 'zacks', name: 'Zacks', description: 'Zacks investment solutions', icon: <Briefcase className="h-10 w-10 text-green-600" />, route: "/investments/zacks" },
+    { id: 'custom-portfolios', name: 'Custom Portfolios', description: 'Personalized investment portfolios', icon: <Briefcase className="h-10 w-10 text-purple-600" />, route: "/investments/custom-portfolios" },
+    { id: 'shared-by-advisor', name: 'Shared by your advisor', description: 'View portfolios shared by your advisor', icon: <Briefcase className="h-10 w-10 text-blue-500" />, route: "/investments/shared-by-advisor" },
+    { id: 'custom', name: 'Custom', description: 'Create your own custom investment strategy', icon: <Briefcase className="h-10 w-10 text-gray-600" />, route: "/investments/custom" }
+  ];
+
+  // Combine all categories
+  const allCategories = [...coreAssetCategories, ...additionalCategories];
   
   const portfolioModels: PortfolioModel[] = [
     {
@@ -170,6 +332,15 @@ const Investments = () => {
     navigate(path);
   };
 
+  // Chunk the categories for responsive grid
+  const chunkArray = <T,>(array: T[], size: number): T[][] => {
+    return Array.from({ length: Math.ceil(array.length / size) }, (_, i) =>
+      array.slice(i * size, i * size + size)
+    );
+  };
+  
+  const chunkedAdditionalCategories = chunkArray(additionalCategories, 3);
+
   return (
     <ThreeColumnLayout activeMainItem="investments" title="Investments">
       <div className="space-y-8">
@@ -187,7 +358,10 @@ const Investments = () => {
           <TabsContent value="private-market" className="space-y-8">
             <div className="space-y-6">
               <div className="flex justify-between items-center">
-                <h2 className="text-2xl font-semibold">Private Market Alpha</h2>
+                <div>
+                  <h2 className="text-2xl font-semibold">Private Market Alpha</h2>
+                  <p className="text-sm text-muted-foreground">Alternative investment opportunities for qualified investors</p>
+                </div>
                 <Button variant="outline" asChild className="flex items-center gap-1">
                   <Link to="/investments/alternative/all">
                     View All <ChevronRight className="h-4 w-4" />
@@ -195,154 +369,68 @@ const Investments = () => {
                 </Button>
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="bg-card text-card-foreground rounded-lg border shadow-sm p-6">
-                  <div className="flex flex-col gap-2">
-                    <div className="text-muted-foreground text-sm">Total Private Market Value</div>
-                    <div className="text-3xl font-bold">$580,000</div>
-                    <div className="text-emerald-500 text-sm">↑ 12.7% from last year</div>
-                  </div>
-                </div>
+              <div className="space-y-6">
+                <h3 className="text-xl font-medium">Alternative Asset Categories</h3>
                 
-                <div className="bg-card text-card-foreground rounded-lg border shadow-sm p-6">
-                  <div className="flex flex-col gap-2">
-                    <div className="text-muted-foreground text-sm">Average Performance</div>
-                    <div className="text-3xl font-bold text-emerald-500">+10.9%</div>
-                    <div className="text-muted-foreground text-sm">Annualized returns</div>
-                  </div>
-                </div>
-                
-                <div className="bg-card text-card-foreground rounded-lg border shadow-sm p-6">
-                  <div className="flex flex-col gap-2">
-                    <div className="text-muted-foreground text-sm">Risk Assessment</div>
-                    <div className="text-3xl font-bold">Medium-High</div>
-                    <div className="text-muted-foreground text-sm">Overall portfolio risk level</div>
-                  </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                  {coreAssetCategories.map((category) => (
+                    <div 
+                      key={category.id}
+                      onClick={() => handleAssetClick(category.route)} 
+                      className="bg-card hover:bg-accent text-card-foreground rounded-lg border shadow-sm p-6 block cursor-pointer"
+                    >
+                      <div className="flex flex-col gap-4">
+                        <div className="flex justify-between items-center">
+                          {category.icon}
+                          {alternativeData[category.id]?.ytdPerformance !== undefined && (
+                            <span className={alternativeData[category.id]?.ytdPerformance < 0 ? "text-red-500" : "text-emerald-500"}>
+                              {isLoading 
+                                ? "Loading..." 
+                                : `${alternativeData[category.id]?.ytdPerformance < 0 ? "" : "+"}${alternativeData[category.id]?.ytdPerformance?.toFixed(1) || '9.5'}% YTD`
+                              }
+                            </span>
+                          )}
+                        </div>
+                        <div>
+                          <h4 className="text-lg font-medium">{category.name}</h4>
+                          <p className="text-muted-foreground text-sm mt-1">{category.description}</p>
+                        </div>
+                        <div className="flex justify-end">
+                          <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
               
-              <div className="space-y-4">
-                <h3 className="text-xl font-medium">Private Market Categories</h3>
+              <div className="space-y-6">
+                <h3 className="text-xl font-medium">Investment Managers & Solutions</h3>
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                  <div 
-                    onClick={() => handleAssetClick("/investments/alternative/private-equity")} 
-                    className="bg-card hover:bg-accent text-card-foreground rounded-lg border shadow-sm p-6 block cursor-pointer"
-                  >
-                    <div className="flex flex-col gap-4">
-                      <div className="flex justify-between items-center">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-purple-500">
-                          <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" strokeWidth="2" />
-                          <path d="M12 3V21" stroke="currentColor" strokeWidth="2" />
-                          <path d="M3 12H21" stroke="currentColor" strokeWidth="2" />
-                        </svg>
-                        <span className="text-emerald-500">
-                          {isLoading 
-                            ? "Loading..." 
-                            : `+${alternativeData['private-equity']?.ytdPerformance?.toFixed(1) || '12.4'}% YTD`
-                          }
-                        </span>
+                {chunkedAdditionalCategories.map((chunk, index) => (
+                  <div key={index} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {chunk.map((category) => (
+                      <div 
+                        key={category.id}
+                        onClick={() => handleAssetClick(category.route)} 
+                        className="bg-card hover:bg-accent text-card-foreground rounded-lg border shadow-sm p-4 block cursor-pointer"
+                      >
+                        <div className="flex flex-col gap-3">
+                          <div className="flex justify-between items-center">
+                            {category.icon}
+                          </div>
+                          <div>
+                            <h4 className="text-lg font-medium">{category.name}</h4>
+                            <p className="text-muted-foreground text-sm mt-1">{category.description}</p>
+                          </div>
+                          <div className="flex justify-end">
+                            <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                          </div>
+                        </div>
                       </div>
-                      <div>
-                        <h4 className="text-lg font-medium">Private Equity</h4>
-                        <p className="text-muted-foreground text-sm mt-1">Investments in non-public companies, buyouts, growth</p>
-                      </div>
-                      <div className="flex justify-end">
-                        <ChevronRight className="h-5 w-5 text-muted-foreground" />
-                      </div>
-                    </div>
+                    ))}
                   </div>
-                  
-                  <div 
-                    onClick={() => handleAssetClick("/investments/alternative/private-debt")} 
-                    className="bg-card hover:bg-accent text-card-foreground rounded-lg border shadow-sm p-6 block cursor-pointer"
-                  >
-                    <div className="flex flex-col gap-4">
-                      <div className="flex justify-between items-center">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-blue-500">
-                          <rect x="3" y="6" width="18" height="15" rx="2" stroke="currentColor" strokeWidth="2" />
-                          <path d="M7 6V3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                          <path d="M17 6V3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                          <path d="M7 11H17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                          <path d="M7 16H14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                        </svg>
-                        <span className="text-emerald-500">
-                          {isLoading 
-                            ? "Loading..." 
-                            : `+${alternativeData['private-debt']?.ytdPerformance?.toFixed(1) || '8.7'}% YTD`
-                          }
-                        </span>
-                      </div>
-                      <div>
-                        <h4 className="text-lg font-medium">Private Debt</h4>
-                        <p className="text-muted-foreground text-sm mt-1">Direct lending, mezzanine financing, distressed debt</p>
-                      </div>
-                      <div className="flex justify-end">
-                        <ChevronRight className="h-5 w-5 text-muted-foreground" />
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div 
-                    onClick={() => handleAssetClick("/investments/alternative/digital-assets")} 
-                    className="bg-card hover:bg-accent text-card-foreground rounded-lg border shadow-sm p-6 block cursor-pointer"
-                  >
-                    <div className="flex flex-col gap-4">
-                      <div className="flex justify-between items-center">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-orange-500">
-                          <path d="M9 12H15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                          <path d="M12 9V15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                          <path d="M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21Z" stroke="currentColor" strokeWidth="2" />
-                        </svg>
-                        <span className={alternativeData['digital-assets']?.ytdPerformance < 0 ? "text-red-500" : "text-emerald-500"}>
-                          {isLoading 
-                            ? "Loading..." 
-                            : `${alternativeData['digital-assets']?.ytdPerformance < 0 ? "" : "+"}${alternativeData['digital-assets']?.ytdPerformance?.toFixed(1) || '15.8'}% YTD`
-                          }
-                        </span>
-                      </div>
-                      <div>
-                        <h4 className="text-lg font-medium">Digital Assets</h4>
-                        <p className="text-muted-foreground text-sm mt-1">Cryptocurrencies, NFTs, blockchain investments</p>
-                      </div>
-                      <div className="flex justify-end">
-                        <ChevronRight className="h-5 w-5 text-muted-foreground" />
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div 
-                    onClick={() => handleAssetClick("/investments/alternative/real-assets")} 
-                    className="bg-card hover:bg-accent text-card-foreground rounded-lg border shadow-sm p-6 block cursor-pointer"
-                  >
-                    <div className="flex flex-col gap-4">
-                      <div className="flex justify-between items-center">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-indigo-500">
-                          <path d="M3 21H21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                          <path d="M5 21V7L13 3V21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                          <path d="M19 21V10L13 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                          <path d="M9 9V9.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                          <path d="M9 12V12.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                          <path d="M9 15V15.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                          <path d="M9 18V18.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                        <span className="text-emerald-500">
-                          {isLoading 
-                            ? "Loading..." 
-                            : `+${alternativeData['real-assets']?.ytdPerformance?.toFixed(1) || '9.1'}% YTD`
-                          }
-                        </span>
-                      </div>
-                      <div>
-                        <h4 className="text-lg font-medium">Real Assets</h4>
-                        <p className="text-muted-foreground text-sm mt-1">Real estate, infrastructure, commodities</p>
-                      </div>
-                      <div className="flex justify-end">
-                        <ChevronRight className="h-5 w-5 text-muted-foreground" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
           </TabsContent>

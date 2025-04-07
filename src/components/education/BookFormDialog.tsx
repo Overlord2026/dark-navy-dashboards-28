@@ -1,196 +1,150 @@
 
-import React from 'react';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter
-} from '@/components/ui/dialog';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
-import { EducationalResource } from '@/types/education';
+import React, { useState } from "react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
+import { EducationalResource } from "@/types/education";
 
 interface BookFormDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onSave: (book: EducationalResource) => void;
   book?: EducationalResource;
-  onSave: (book: Omit<EducationalResource, 'id'> & { id?: string }) => void;
+  isEdit?: boolean;
 }
-
-const bookFormSchema = z.object({
-  title: z.string().min(2, 'Title must be at least 2 characters'),
-  description: z.string().min(10, 'Description must be at least 10 characters'),
-  author: z.string().min(2, 'Author must be at least 2 characters'),
-  coverImage: z.string().url('Must be a valid URL').optional().or(z.literal('')),
-  ghlUrl: z.string().url('Must be a valid URL'),
-  level: z.string(),
-  isPaid: z.boolean()
-});
-
-type BookFormValues = z.infer<typeof bookFormSchema>;
 
 export const BookFormDialog: React.FC<BookFormDialogProps> = ({
   open,
   onOpenChange,
+  onSave,
   book,
-  onSave
+  isEdit = false
 }) => {
-  const isEditing = !!book;
-  
-  const form = useForm<BookFormValues>({
-    resolver: zodResolver(bookFormSchema),
-    defaultValues: book ? {
-      ...book,
-      coverImage: book.coverImage || ''
-    } : {
-      title: '',
-      description: '',
-      author: '',
-      coverImage: '',
-      ghlUrl: '',
-      level: 'All Levels',
-      isPaid: false
-    }
-  });
-  
-  function onSubmit(values: BookFormValues) {
-    const bookData = {
-      ...values,
-      id: book?.id
+  const [title, setTitle] = useState(book?.title || "");
+  const [author, setAuthor] = useState(book?.author || "");
+  const [description, setDescription] = useState(book?.description || "");
+  const [coverImage, setCoverImage] = useState(book?.coverImage || "");
+  const [ghlUrl, setGhlUrl] = useState(book?.ghlUrl || "");
+  const [isPaid, setIsPaid] = useState(book?.isPaid || false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const validateForm = (): boolean => {
+    const newErrors: Record<string, string> = {};
+    
+    if (!title.trim()) newErrors.title = "Title is required";
+    if (!ghlUrl.trim()) newErrors.ghlUrl = "URL is required";
+    if (!description.trim()) newErrors.description = "Description is required";
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!validateForm()) return;
+
+    const bookData: EducationalResource = {
+      id: book?.id || `book-${Date.now()}`,
+      title,
+      author,
+      description,
+      coverImage,
+      ghlUrl,
+      isPaid,
+      level: "All Levels" // Default level
     };
     
-    if (!bookData.coverImage) {
-      delete bookData.coverImage;
-    }
-    
     onSave(bookData);
-  }
-  
+    onOpenChange(false);
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[525px]">
+      <DialogContent className="sm:max-w-[550px]">
         <DialogHeader>
-          <DialogTitle>{isEditing ? 'Edit Book' : 'Add New Book'}</DialogTitle>
+          <DialogTitle>{isEdit ? "Edit Book" : "Add New Book"}</DialogTitle>
         </DialogHeader>
         
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4">
-            <FormField
-              control={form.control}
-              name="title"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Title</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Enter book title" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+        <form onSubmit={handleSubmit} className="space-y-4 py-4">
+          <div className="grid gap-4">
+            <div className="grid gap-2">
+              <Label htmlFor="title">Title <span className="text-red-500">*</span></Label>
+              <Input 
+                id="title" 
+                value={title} 
+                onChange={(e) => setTitle(e.target.value)} 
+                placeholder="Enter book title"
+                className={errors.title ? "border-red-500" : ""}
+              />
+              {errors.title && <p className="text-red-500 text-xs">{errors.title}</p>}
+            </div>
             
-            <FormField
-              control={form.control}
-              name="author"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Author</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Enter author name" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div className="grid gap-2">
+              <Label htmlFor="author">Author</Label>
+              <Input 
+                id="author" 
+                value={author} 
+                onChange={(e) => setAuthor(e.target.value)} 
+                placeholder="Enter author name"
+              />
+            </div>
             
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Description</FormLabel>
-                  <FormControl>
-                    <Textarea 
-                      placeholder="Enter book description" 
-                      className="h-20"
-                      {...field} 
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div className="grid gap-2">
+              <Label htmlFor="description">Description <span className="text-red-500">*</span></Label>
+              <Textarea 
+                id="description" 
+                value={description} 
+                onChange={(e) => setDescription(e.target.value)} 
+                placeholder="Enter book description"
+                className={errors.description ? "border-red-500" : ""}
+              />
+              {errors.description && <p className="text-red-500 text-xs">{errors.description}</p>}
+            </div>
             
-            <FormField
-              control={form.control}
-              name="coverImage"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Cover Image URL</FormLabel>
-                  <FormControl>
-                    <Input 
-                      placeholder="https://example.com/book-cover.jpg" 
-                      {...field} 
-                      value={field.value || ''}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div className="grid gap-2">
+              <Label htmlFor="coverImage">Cover Image URL</Label>
+              <Input 
+                id="coverImage" 
+                value={coverImage} 
+                onChange={(e) => setCoverImage(e.target.value)} 
+                placeholder="Enter URL for book cover image"
+              />
+            </div>
             
-            <FormField
-              control={form.control}
-              name="ghlUrl"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Book URL (Amazon or other)</FormLabel>
-                  <FormControl>
-                    <Input 
-                      placeholder="https://www.amazon.com/book-title/dp/XXXX" 
-                      {...field} 
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div className="grid gap-2">
+              <Label htmlFor="ghlUrl">Book URL <span className="text-red-500">*</span></Label>
+              <Input 
+                id="ghlUrl" 
+                value={ghlUrl} 
+                onChange={(e) => setGhlUrl(e.target.value)} 
+                placeholder="Enter purchase or details URL"
+                className={errors.ghlUrl ? "border-red-500" : ""}
+              />
+              {errors.ghlUrl && <p className="text-red-500 text-xs">{errors.ghlUrl}</p>}
+            </div>
             
-            <FormField
-              control={form.control}
-              name="level"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Reading Level</FormLabel>
-                  <FormControl>
-                    <Input 
-                      placeholder="E.g., All Levels, Advanced, etc." 
-                      {...field} 
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            
-            <DialogFooter>
-              <Button type="submit">{isEditing ? 'Update' : 'Add'} Book</Button>
-            </DialogFooter>
-          </form>
-        </Form>
+            <div className="flex items-center gap-2">
+              <Switch 
+                id="isPaid" 
+                checked={isPaid} 
+                onCheckedChange={setIsPaid} 
+              />
+              <Label htmlFor="isPaid">Paid Resource</Label>
+            </div>
+          </div>
+          
+          <div className="flex justify-end gap-3">
+            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+              Cancel
+            </Button>
+            <Button type="submit">
+              {isEdit ? "Update Book" : "Add Book"}
+            </Button>
+          </div>
+        </form>
       </DialogContent>
     </Dialog>
   );

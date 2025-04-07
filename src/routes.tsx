@@ -1,4 +1,3 @@
-
 import React from "react";
 import { createBrowserRouter } from "react-router-dom";
 import Dashboard from "@/pages/Dashboard";
@@ -161,6 +160,150 @@ const routes = createBrowserRouter([
   {
     path: "/investments/stock-screener",
     element: <StockScreener />
+  },
+  {
+    path: "/investments/alternative/hedge-fund",
+    element: <NotFound />
+  },
+  {
+    path: "/investments/alternative/venture-capital",
+    element: <NotFound />
+  },
+  {
+    path: "/investments/alternative/collectibles",
+    element: <NotFound />
+  },
+  {
+    path: "/investments/alternative/structured-investments",
+    element: <NotFound />
+  },
+  {
+    path: "/investments/bfo-asset-management",
+    element: <NotFound />
+  },
+  {
+    path: "/investments/bfo-model-marketplace",
+    element: <NotFound />
+  },
+  {
+    path: "/investments/adelante",
+    element: <NotFound />
+  },
+  {
+    path: "/investments/alpha-quant",
+    element: <NotFound />
+  },
+  {
+    path: "/investments/ativo",
+    element: <NotFound />
+  },
+  {
+    path: "/investments/avantis",
+    element: <NotFound />
+  },
+  {
+    path: "/investments/blackrock",
+    element: <NotFound />
+  },
+  {
+    path: "/investments/brown-advisory",
+    element: <NotFound />
+  },
+  {
+    path: "/investments/camelot-portfolios",
+    element: <NotFound />
+  },
+  {
+    path: "/investments/capital-group",
+    element: <NotFound />
+  },
+  {
+    path: "/investments/churchill",
+    element: <NotFound />
+  },
+  {
+    path: "/investments/dearborn",
+    element: <NotFound />
+  },
+  {
+    path: "/investments/dundas",
+    element: <NotFound />
+  },
+  {
+    path: "/investments/easterly",
+    element: <NotFound />
+  },
+  {
+    path: "/investments/franklin-templeton",
+    element: <NotFound />
+  },
+  {
+    path: "/investments/gwk",
+    element: <NotFound />
+  },
+  {
+    path: "/investments/goldman-sachs",
+    element: <NotFound />
+  },
+  {
+    path: "/investments/jpmorgan",
+    element: <NotFound />
+  },
+  {
+    path: "/investments/nuveen",
+    element: <NotFound />
+  },
+  {
+    path: "/investments/polen",
+    element: <NotFound />
+  },
+  {
+    path: "/investments/saratoga",
+    element: <NotFound />
+  },
+  {
+    path: "/investments/sawgrass",
+    element: <NotFound />
+  },
+  {
+    path: "/investments/schafer-cullen",
+    element: <NotFound />
+  },
+  {
+    path: "/investments/state-street",
+    element: <NotFound />
+  },
+  {
+    path: "/investments/suncoast",
+    element: <NotFound />
+  },
+  {
+    path: "/investments/trowe-price",
+    element: <NotFound />
+  },
+  {
+    path: "/investments/victory-capital",
+    element: <NotFound />
+  },
+  {
+    path: "/investments/washington-crossing",
+    element: <NotFound />
+  },
+  {
+    path: "/investments/zacks",
+    element: <NotFound />
+  },
+  {
+    path: "/investments/custom-portfolios",
+    element: <NotFound />
+  },
+  {
+    path: "/investments/shared-by-advisor",
+    element: <NotFound />
+  },
+  {
+    path: "/investments/custom",
+    element: <NotFound />
   },
   {
     path: '/vehicles-collectibles',

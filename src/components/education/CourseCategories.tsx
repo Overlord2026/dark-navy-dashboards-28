@@ -1,56 +1,41 @@
 
-import { motion } from "framer-motion";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import React from 'react';
 import { Button } from "@/components/ui/button";
+import { CourseCategory } from "@/types/education";
+import { cn } from "@/lib/utils";
 
-interface CourseCategoryProps {
-  categories: Array<{ id: string, name: string, active?: boolean }>;
-  onSelectCategory: (categoryId: string) => void;
+export interface CourseCategoryProps {
+  categories: CourseCategory[];
+  onCategoryClick: (categoryId: string) => void;
+  activeCategory?: string;
+  setActiveCategory?: (category: string) => void;
 }
 
-export function CourseCategories({ categories, onSelectCategory }: CourseCategoryProps) {
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: { 
-      opacity: 1,
-      transition: { 
-        staggerChildren: 0.1 
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 }
-  };
-
+export const CourseCategories: React.FC<CourseCategoryProps> = ({ 
+  categories, 
+  onCategoryClick,
+  activeCategory 
+}) => {
   return (
-    <motion.div 
-      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-    >
-      {categories.map((category) => (
-        category.id !== "all-courses" && (
-          <motion.div key={category.id} variants={itemVariants}>
-            <Card className="h-full hover:border-primary hover:shadow-md transition-all duration-300">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-lg">{category.name}</CardTitle>
-              </CardHeader>
-              <CardContent className="flex items-end pb-6">
-                <Button 
-                  variant="outline" 
-                  className="w-full hover:bg-primary hover:text-primary-foreground transition-colors duration-300"
-                  onClick={() => onSelectCategory(category.id)}
-                >
-                  Explore Courses
-                </Button>
-              </CardContent>
-            </Card>
-          </motion.div>
-        )
+    <div className="flex flex-wrap gap-2 mb-6">
+      {categories.map(category => (
+        <Button
+          key={category.id}
+          variant="outline"
+          size="sm"
+          onClick={() => onCategoryClick(category.id)}
+          className={cn(
+            "rounded-full",
+            activeCategory === category.id || category.active 
+              ? "bg-primary text-primary-foreground hover:bg-primary/90 border-primary"
+              : ""
+          )}
+        >
+          {category.name}
+        </Button>
       ))}
-    </motion.div>
+    </div>
   );
-}
+};
+
+export default CourseCategories;
