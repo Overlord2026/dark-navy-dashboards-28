@@ -1,10 +1,8 @@
-
 import React from "react";
 import { createBrowserRouter } from "react-router-dom";
 import Dashboard from "@/pages/Dashboard";
 import Accounts from "@/pages/Accounts";
 import Education from "@/pages/Education";
-import EducationAdmin from "@/pages/EducationAdmin";
 import Investments from "@/pages/Investments";
 import TaxPlanning from "@/pages/TaxPlanning";
 import Insurance from "@/pages/Insurance";
@@ -47,10 +45,6 @@ const routes = createBrowserRouter([
   {
     path: "/education",
     element: <Education />
-  },
-  {
-    path: "/education-admin",
-    element: <EducationAdmin />
   },
   {
     path: "/investments",
