@@ -10,7 +10,7 @@ export const educationalResources: EducationalResources = {
       isPaid: false,
       level: "All Levels",
       duration: "Self-paced",
-      ghlUrl: "https://ghl.example.com/guides/retirement-planning"
+      ghlUrl: "https://ghl.example.com/guides/estate-planning-checklist"
     },
     {
       id: "guide-estate",
