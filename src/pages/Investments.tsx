@@ -30,6 +30,8 @@ const Investments = () => {
   const [selectedTab, setSelectedTab] = useState("private-market");
   const [alternativeData, setAlternativeData] = useState<any>({});
   const [isLoading, setIsLoading] = useState(true);
+  const [scheduleMeetingOpen, setScheduleMeetingOpen] = useState(false);
+  const [selectedAsset, setSelectedAsset] = useState("");
   
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -155,15 +157,17 @@ const Investments = () => {
 
   const handleScheduleAppointment = (e: React.MouseEvent, assetName: string) => {
     e.stopPropagation();
-    window.open("https://calendly.com/tonygomes/60min", "_blank");
-    toast.success("Opening scheduling page", {
-      description: `Schedule a meeting to discuss ${assetName} with your advisor.`,
-    });
+    setSelectedAsset(assetName);
+    setScheduleMeetingOpen(true);
   };
 
   const handleTabChange = (value: string) => {
     setSelectedTab(value);
     navigate(`/investments?tab=${value}`, { replace: true });
+  };
+
+  const handleAssetClick = (path: string) => {
+    navigate(path);
   };
 
   return (
@@ -221,7 +225,10 @@ const Investments = () => {
                 <h3 className="text-xl font-medium">Private Market Categories</h3>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                  <Link to="/investments/alternative/private-equity" className="bg-card hover:bg-accent text-card-foreground rounded-lg border shadow-sm p-6 block">
+                  <div 
+                    onClick={() => handleAssetClick("/investments/alternative/private-equity")} 
+                    className="bg-card hover:bg-accent text-card-foreground rounded-lg border shadow-sm p-6 block cursor-pointer"
+                  >
                     <div className="flex flex-col gap-4">
                       <div className="flex justify-between items-center">
                         <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-purple-500">
@@ -244,9 +251,12 @@ const Investments = () => {
                         <ChevronRight className="h-5 w-5 text-muted-foreground" />
                       </div>
                     </div>
-                  </Link>
+                  </div>
                   
-                  <Link to="/investments/alternative/private-debt" className="bg-card hover:bg-accent text-card-foreground rounded-lg border shadow-sm p-6 block">
+                  <div 
+                    onClick={() => handleAssetClick("/investments/alternative/private-debt")} 
+                    className="bg-card hover:bg-accent text-card-foreground rounded-lg border shadow-sm p-6 block cursor-pointer"
+                  >
                     <div className="flex flex-col gap-4">
                       <div className="flex justify-between items-center">
                         <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-blue-500">
@@ -271,9 +281,12 @@ const Investments = () => {
                         <ChevronRight className="h-5 w-5 text-muted-foreground" />
                       </div>
                     </div>
-                  </Link>
+                  </div>
                   
-                  <Link to="/investments/alternative/digital-assets" className="bg-card hover:bg-accent text-card-foreground rounded-lg border shadow-sm p-6 block">
+                  <div 
+                    onClick={() => handleAssetClick("/investments/alternative/digital-assets")} 
+                    className="bg-card hover:bg-accent text-card-foreground rounded-lg border shadow-sm p-6 block cursor-pointer"
+                  >
                     <div className="flex flex-col gap-4">
                       <div className="flex justify-between items-center">
                         <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-orange-500">
@@ -296,9 +309,12 @@ const Investments = () => {
                         <ChevronRight className="h-5 w-5 text-muted-foreground" />
                       </div>
                     </div>
-                  </Link>
+                  </div>
                   
-                  <Link to="/investments/alternative/real-assets" className="bg-card hover:bg-accent text-card-foreground rounded-lg border shadow-sm p-6 block">
+                  <div 
+                    onClick={() => handleAssetClick("/investments/alternative/real-assets")} 
+                    className="bg-card hover:bg-accent text-card-foreground rounded-lg border shadow-sm p-6 block cursor-pointer"
+                  >
                     <div className="flex flex-col gap-4">
                       <div className="flex justify-between items-center">
                         <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-indigo-500">
@@ -325,7 +341,7 @@ const Investments = () => {
                         <ChevronRight className="h-5 w-5 text-muted-foreground" />
                       </div>
                     </div>
-                  </Link>
+                  </div>
                 </div>
               </div>
             </div>
@@ -455,6 +471,12 @@ const Investments = () => {
             <StockScreener />
           </TabsContent>
         </Tabs>
+        
+        <ScheduleMeetingDialog 
+          open={scheduleMeetingOpen} 
+          onOpenChange={setScheduleMeetingOpen}
+          assetName={selectedAsset}
+        />
       </div>
     </ThreeColumnLayout>
   );

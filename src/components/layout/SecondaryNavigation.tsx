@@ -29,15 +29,16 @@ export const SecondaryNavigation = ({
 }: SecondaryNavigationProps) => {
   if (!hasSecondaryMenu) return null;
 
-  // Skip rendering for alternative investment pages as we've moved these to the main content area
-  if (
-    activeMainItem === "private-equity" || 
-    activeMainItem === "private-debt" || 
-    activeMainItem === "real-assets" || 
-    activeMainItem === "digital-assets"
-  ) {
-    return null;
-  }
+  // We'll update this condition to make sure the secondary nav still appears for other investment pages
+  // but skips only for the specific alternative investment routes
+  const skipRendering = [
+    "private-equity",
+    "private-debt",
+    "real-assets",
+    "digital-assets"
+  ].includes(sectionId) && activeMainItem === "investments";
+  
+  if (skipRendering) return null;
   
   // Build the link path based on the active main item
   const getLinkPath = (item: MenuItem) => {

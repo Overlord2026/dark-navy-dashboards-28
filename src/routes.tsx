@@ -35,6 +35,7 @@ import AdvisorFeedback from "@/pages/AdvisorFeedback";
 import NotFound from "@/pages/NotFound";
 import TaxPlanningEducation from "@/pages/TaxPlanningEducation";
 import NavigationDiagnostics from "@/pages/NavigationDiagnostics";
+import { ProfessionalsRouteWrapper } from "@/components/providers/ProfessionalsRouteWrapper";
 
 const routes = createBrowserRouter([
   {
@@ -107,11 +108,11 @@ const routes = createBrowserRouter([
   },
   {
     path: "/documents",
-    element: <Documents />
+    element: <ProfessionalsRouteWrapper><Documents /></ProfessionalsRouteWrapper>
   },
   {
     path: "/professionals",
-    element: <Professionals />
+    element: <ProfessionalsRouteWrapper><Professionals /></ProfessionalsRouteWrapper>
   },
   {
     path: "/professional-signup",

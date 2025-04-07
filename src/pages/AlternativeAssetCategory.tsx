@@ -538,6 +538,9 @@ const AlternativeAssetCategory = () => {
     // Get offerings for the category
     if (categoryId && mockOfferings[categoryId as keyof typeof mockOfferings]) {
       setOfferings(mockOfferings[categoryId as keyof typeof mockOfferings]);
+    } else {
+      // Handle case where category doesn't exist
+      setOfferings([]);
     }
     
     // Fetch real-time market data
@@ -599,6 +602,14 @@ const AlternativeAssetCategory = () => {
     }
   };
 
+  // If no category found, redirect to investments page
+  useEffect(() => {
+    if (!isLoading && categoryId && !mockOfferings[categoryId as keyof typeof mockOfferings]) {
+      navigate("/investments");
+      toast.error("Investment category not found");
+    }
+  }, [categoryId, isLoading, navigate]);
+
   return (
     <ThreeColumnLayout activeMainItem="investments" title={categoryName}>
       <div className="space-y-8">
@@ -607,7 +618,7 @@ const AlternativeAssetCategory = () => {
             variant="ghost" 
             size="sm" 
             className="mr-2"
-            onClick={() => navigate("/investments")}
+            onClick={() => navigate("/investments?tab=private-market")}
           >
             <ChevronLeft className="h-4 w-4 mr-1" />
             Back to Investments
