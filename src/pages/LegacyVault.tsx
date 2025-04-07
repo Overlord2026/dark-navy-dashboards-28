@@ -16,6 +16,7 @@ import { DocumentType, DocumentItem, DocumentCategory } from "@/types/document";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { FamilyLegacyBox } from "@/components/estate-planning/FamilyLegacyBox";
 import { HealthcareFolder } from "@/components/healthcare/HealthcareFolder";
+import { ProfessionalsProvider } from "@/context/ProfessionalsContext";
 import { 
   Card, 
   CardContent, 
@@ -174,142 +175,144 @@ export default function LegacyVault() {
 
   return (
     <ThreeColumnLayout activeMainItem="legacy-vault" title="Secure Family Vault">
-      <div className="container mx-auto p-4 space-y-6">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
-          <div>
-            <h1 className="text-2xl font-bold mb-1">Secure Family Vault</h1>
-            <p className="text-muted-foreground">Store and organize your important documents securely</p>
-          </div>
+      <ProfessionalsProvider>
+        <div className="container mx-auto p-4 space-y-6">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
+            <div>
+              <h1 className="text-2xl font-bold mb-1">Secure Family Vault</h1>
+              <p className="text-muted-foreground">Store and organize your important documents securely</p>
+            </div>
 
-          <Button
-            onClick={() => window.open('https://trustandwill.com', '_blank')}
-            variant="outline"
-            className="flex items-center mt-4 md:mt-0 bg-white border-primary text-primary hover:bg-primary hover:text-white transition-colors"
-          >
-            <ExternalLink className="mr-2 h-4 w-4" />
-            DIY with Trust & Will
-          </Button>
+            <Button
+              onClick={() => window.open('https://trustandwill.com', '_blank')}
+              variant="outline"
+              className="flex items-center mt-4 md:mt-0 bg-white border-primary text-primary hover:bg-primary hover:text-white transition-colors"
+            >
+              <ExternalLink className="mr-2 h-4 w-4" />
+              DIY with Trust & Will
+            </Button>
+          </div>
+          
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <TabsList className="grid w-full grid-cols-3 mb-6">
+              <TabsTrigger value="documents" className="flex items-center gap-2">
+                <VaultIcon className="h-4 w-4" />
+                Important Documents
+              </TabsTrigger>
+              <TabsTrigger value="legacy-box" className="flex items-center gap-2">
+                <ArchiveIcon className="h-4 w-4" />
+                Family Legacy Box
+              </TabsTrigger>
+              <TabsTrigger value="healthcare" className="flex items-center gap-2">
+                <HeartPulseIcon className="h-4 w-4" />
+                Healthcare
+              </TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="documents" className="space-y-4">
+              <div className="flex justify-end space-x-4">
+                <Button 
+                  onClick={() => setIsNewFolderDialogOpen(true)}
+                  variant="outline"
+                  className="flex items-center"
+                >
+                  <FolderPlus className="mr-2 h-4 w-4" />
+                  New Folder
+                </Button>
+                
+                <Button 
+                  onClick={() => setIsUploadDialogOpen(true)} 
+                  className="flex items-center"
+                >
+                  <Upload className="mr-2 h-4 w-4" />
+                  Upload
+                </Button>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <div className="md:col-span-1">
+                  <CategoryList 
+                    categories={importantDocumentCategories as DocumentCategory[]} 
+                    activeCategory={activeCategory} 
+                    onCategorySelect={setActiveCategory} 
+                  />
+                </div>
+                
+                <div className="md:col-span-3">
+                  {isLoading ? (
+                    <div className="flex justify-center items-center h-64">
+                      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+                    </div>
+                  ) : filteredDocuments.length > 0 ? (
+                    <DocumentsTable 
+                      documents={filteredDocuments}
+                      onEditDocument={handleEditDocument}
+                      onShareDocument={handleShareDocument}
+                      onDeleteDocument={handleDeleteDialog}
+                    />
+                  ) : (
+                    activeCategory === "all" ? (
+                      <NoCategorySelectedState />
+                    ) : (
+                      <NoDocumentsState 
+                        onUploadClick={() => setIsUploadDialogOpen(true)}
+                        categoryName={documentCategories.find(cat => cat.id === activeCategory)?.name || activeCategory}
+                      />
+                    )
+                  )}
+                </div>
+              </div>
+            </TabsContent>
+            
+            <TabsContent value="legacy-box">
+              <FamilyLegacyBox />
+            </TabsContent>
+
+            <TabsContent value="healthcare">
+              <HealthcareFolder 
+                documents={documents} 
+                onAddDocument={handleAddDocument}
+                onCreateFolder={handleCreateFolder}
+              />
+            </TabsContent>
+          </Tabs>
         </div>
         
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-3 mb-6">
-            <TabsTrigger value="documents" className="flex items-center gap-2">
-              <VaultIcon className="h-4 w-4" />
-              Important Documents
-            </TabsTrigger>
-            <TabsTrigger value="legacy-box" className="flex items-center gap-2">
-              <ArchiveIcon className="h-4 w-4" />
-              Family Legacy Box
-            </TabsTrigger>
-            <TabsTrigger value="healthcare" className="flex items-center gap-2">
-              <HeartPulseIcon className="h-4 w-4" />
-              Healthcare
-            </TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="documents" className="space-y-4">
-            <div className="flex justify-end space-x-4">
-              <Button 
-                onClick={() => setIsNewFolderDialogOpen(true)}
-                variant="outline"
-                className="flex items-center"
-              >
-                <FolderPlus className="mr-2 h-4 w-4" />
-                New Folder
-              </Button>
-              
-              <Button 
-                onClick={() => setIsUploadDialogOpen(true)} 
-                className="flex items-center"
-              >
-                <Upload className="mr-2 h-4 w-4" />
-                Upload
-              </Button>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-              <div className="md:col-span-1">
-                <CategoryList 
-                  categories={importantDocumentCategories as DocumentCategory[]} 
-                  activeCategory={activeCategory} 
-                  onCategorySelect={setActiveCategory} 
-                />
-              </div>
-              
-              <div className="md:col-span-3">
-                {isLoading ? (
-                  <div className="flex justify-center items-center h-64">
-                    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
-                  </div>
-                ) : filteredDocuments.length > 0 ? (
-                  <DocumentsTable 
-                    documents={filteredDocuments}
-                    onEditDocument={handleEditDocument}
-                    onShareDocument={handleShareDocument}
-                    onDeleteDocument={handleDeleteDialog}
-                  />
-                ) : (
-                  activeCategory === "all" ? (
-                    <NoCategorySelectedState />
-                  ) : (
-                    <NoDocumentsState 
-                      onUploadClick={() => setIsUploadDialogOpen(true)}
-                      categoryName={documentCategories.find(cat => cat.id === activeCategory)?.name || activeCategory}
-                    />
-                  )
-                )}
-              </div>
-            </div>
-          </TabsContent>
-          
-          <TabsContent value="legacy-box">
-            <FamilyLegacyBox />
-          </TabsContent>
+        <UploadDocumentDialog 
+          open={isUploadDialogOpen}
+          onOpenChange={setIsUploadDialogOpen}
+          onClose={() => setIsUploadDialogOpen(false)}
+          onFileUpload={handleUploadDocument}
+          activeCategory={activeCategory}
+          documentCategories={documentCategories as any}
+        />
+        
+        <NewFolderDialog 
+          open={isNewFolderDialogOpen}
+          onOpenChange={setIsNewFolderDialogOpen}
+          onCreateFolder={handleCreateFolder}
+        />
 
-          <TabsContent value="healthcare">
-            <HealthcareFolder 
-              documents={documents} 
-              onAddDocument={handleAddDocument}
-              onCreateFolder={handleCreateFolder}
-            />
-          </TabsContent>
-        </Tabs>
-      </div>
-      
-      <UploadDocumentDialog 
-        open={isUploadDialogOpen}
-        onOpenChange={setIsUploadDialogOpen}
-        onClose={() => setIsUploadDialogOpen(false)}
-        onFileUpload={handleUploadDocument}
-        activeCategory={activeCategory}
-        documentCategories={documentCategories as any}
-      />
-      
-      <NewFolderDialog 
-        open={isNewFolderDialogOpen}
-        onOpenChange={setIsNewFolderDialogOpen}
-        onCreateFolder={handleCreateFolder}
-      />
+        <EditDocumentDialog
+          open={isEditDialogOpen}
+          onOpenChange={setIsEditDialogOpen}
+          document={selectedDocument}
+          onSave={handleSaveDocument}
+        />
 
-      <EditDocumentDialog
-        open={isEditDialogOpen}
-        onOpenChange={setIsEditDialogOpen}
-        document={selectedDocument}
-        onSave={handleSaveDocument}
-      />
+        <ShareDocumentDialog
+          open={isShareDialogOpen}
+          onOpenChange={setIsShareDialogOpen}
+          document={selectedDocument}
+        />
 
-      <ShareDocumentDialog
-        open={isShareDialogOpen}
-        onOpenChange={setIsShareDialogOpen}
-        document={selectedDocument}
-      />
-
-      <DeleteDocumentDialog
-        open={isDeleteDialogOpen}
-        onOpenChange={setIsDeleteDialogOpen}
-        document={selectedDocument}
-        onConfirm={handleDeleteDocument}
-      />
+        <DeleteDocumentDialog
+          open={isDeleteDialogOpen}
+          onOpenChange={setIsDeleteDialogOpen}
+          document={selectedDocument}
+          onConfirm={handleDeleteDocument}
+        />
+      </ProfessionalsProvider>
     </ThreeColumnLayout>
   );
 }
