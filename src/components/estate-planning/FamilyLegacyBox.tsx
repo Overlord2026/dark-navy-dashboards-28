@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -11,6 +10,7 @@ import { CompletionProgress } from "./CompletionProgress";
 import { AdvancedTaxStrategies } from "./AdvancedTaxStrategies";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+// No useProfessionals import here, so this component is fine
 
 export const FamilyLegacyBox: React.FC = () => {
   const [activeTab, setActiveTab] = useState("overview");
