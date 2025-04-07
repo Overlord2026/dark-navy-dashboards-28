@@ -1,38 +1,46 @@
 
-import React from "react";
+import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Heart } from "lucide-react";
 import { toast } from "sonner";
 
-interface InterestedButtonProps {
+export interface InterestedButtonProps {
   assetName: string;
   onInterested?: () => void;
+  className?: string;
+  size?: "default" | "sm" | "lg";
+  variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link";
 }
 
-export const InterestedButton: React.FC<InterestedButtonProps> = ({ assetName, onInterested }) => {
-  const [isInterested, setIsInterested] = React.useState(false);
+export const InterestedButton: React.FC<InterestedButtonProps> = ({
+  assetName,
+  onInterested,
+  className = "",
+  size = "sm",
+  variant = "outline"
+}) => {
+  const [isInterested, setIsInterested] = useState(false);
   
   const handleInterested = () => {
     setIsInterested(true);
-    
-    toast.success(`You've expressed interest in ${assetName}`, {
-      description: "Your advisor will be notified about your interest.",
+    toast.success(`We've noted your interest in ${assetName}`, {
+      description: "An advisor will contact you with more information."
     });
-    
     if (onInterested) {
       onInterested();
     }
   };
   
   return (
-    <Button 
-      variant={isInterested ? "default" : "outline"} 
-      size="icon"
-      disabled={isInterested}
+    <Button
+      variant={variant}
+      size={size}
+      className={`gap-1 ${className} ${isInterested ? 'bg-red-50 text-red-500 border-red-200' : ''}`}
       onClick={handleInterested}
-      className={isInterested ? "bg-red-500 hover:bg-red-600 border-red-500" : ""}
+      disabled={isInterested}
     >
-      <Heart className={`h-4 w-4 ${isInterested ? "fill-white" : ""}`} />
+      <Heart className={`h-4 w-4 ${isInterested ? 'fill-red-500' : ''}`} />
+      {isInterested ? "Interested" : "I'm Interested"}
     </Button>
   );
 };

@@ -5,10 +5,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ExternalLink, DollarSign, Heart, FileText, Download } from "lucide-react";
+import { ChevronLeft, FileText, Heart, Download } from "lucide-react";
 import { InterestedButton } from "./InterestedButton";
 import { ScheduleMeetingDialog } from "./ScheduleMeetingDialog";
-import { OfferingDetailsTabs } from "./OfferingDetailsTabs";
 import { toast } from "sonner";
 
 interface Strategy {
@@ -27,7 +26,7 @@ interface Offering {
   name: string;
   description: string;
   minimumInvestment: string;
-  performance?: string; // Made optional since we won't show it
+  performance?: string;
   lockupPeriod: string;
   lockUp: string;
   firm: string;
@@ -39,6 +38,40 @@ interface Offering {
   liquidity?: string;
   subscriptions?: string;
 }
+
+// This component would typically be in a separate file
+const OfferingDetailsTabs = ({ offering }: { offering: Offering }) => {
+  return (
+    <div className="mt-6">
+      <h3 className="font-semibold mb-4">Investment Strategy</h3>
+      <div className="space-y-4">
+        <div>
+          <h4 className="text-sm font-medium text-muted-foreground">Overview</h4>
+          <p className="mt-1">{offering.strategy.overview || "Strategy details will be shared by your advisor."}</p>
+        </div>
+        <div>
+          <h4 className="text-sm font-medium text-muted-foreground">Approach</h4>
+          <p className="mt-1">{offering.strategy.approach || "Approach details will be shared by your advisor."}</p>
+        </div>
+        <div>
+          <h4 className="text-sm font-medium text-muted-foreground">Target Sectors</h4>
+          <div className="flex flex-wrap gap-1 mt-1">
+            {(offering.strategy.sectors && offering.strategy.sectors.length > 0) ? 
+              offering.strategy.sectors.map((sector, i) => (
+                <Badge key={i} variant="outline" className="text-xs">{sector}</Badge>
+              )) : 
+              <p className="text-sm">Sector details will be shared by your advisor.</p>
+            }
+          </div>
+        </div>
+        <div>
+          <h4 className="text-sm font-medium text-muted-foreground">Expected Return Profile</h4>
+          <p className="mt-1">{offering.strategy.expectedReturn || "Expected returns will be discussed during your consultation."}</p>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 interface OfferingCardProps {
   offering: Offering;
@@ -91,7 +124,6 @@ export const OfferingCard: React.FC<OfferingCardProps> = ({ offering, categoryId
         </div>
         
         <div className="bg-blue-50 p-3 rounded-md flex items-center">
-          <DollarSign className="h-5 w-5 text-blue-500 mr-2" />
           <div>
             <p className="text-sm font-semibold text-blue-700">Minimum Investment</p>
             <p className="font-bold text-blue-900">{offering.minimumInvestment}</p>
@@ -166,9 +198,13 @@ export const OfferingCard: React.FC<OfferingCardProps> = ({ offering, categoryId
                 >
                   Schedule Meeting
                 </Button>
-                <InterestedButton assetName={offering.name} onInterested={() => {
-                  if (onLike) onLike(offering.name);
-                }} />
+                <InterestedButton 
+                  assetName={offering.name} 
+                  onInterested={() => {
+                    if (onLike) onLike(offering.name);
+                  }} 
+                  className="flex-1"
+                />
               </div>
             </SheetContent>
           </Sheet>

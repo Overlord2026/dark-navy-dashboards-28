@@ -10,7 +10,7 @@ import { BookList } from './BookList';
 import { BookManagement } from './BookManagement';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
-import { EducationalResource } from "@/types/education";
+import { EducationalResource, CourseCategory } from "@/types/education";
 import { toast } from 'sonner';
 
 interface EducationalTabsProps {
@@ -33,6 +33,15 @@ export const EducationalTabs: React.FC<EducationalTabsProps> = ({
   const [isAdmin, setIsAdmin] = useState(false);
   const [books, setBooks] = useState<EducationalResource[]>(educationalResources.books);
 
+  // Create mock categories for course categories
+  const categories: CourseCategory[] = [
+    { id: "all-courses", name: "All Courses", active: activeCategory === "all-courses" },
+    { id: "financial-basics", name: "Financial Basics", active: activeCategory === "financial-basics" },
+    { id: "investing", name: "Investing", active: activeCategory === "investing" },
+    { id: "retirement", name: "Retirement", active: activeCategory === "retirement" },
+    { id: "premium", name: "Premium Courses", active: activeCategory === "premium" }
+  ];
+
   // Effect to update URL when active section changes
   useEffect(() => {
     const newParams = new URLSearchParams(searchParams);
@@ -53,6 +62,10 @@ export const EducationalTabs: React.FC<EducationalTabsProps> = ({
     setBooks(updatedBooks);
     // In a real app, you would save to an API or local storage here
     toast.success("Books list updated");
+  };
+
+  const handleCategoryClick = (categoryId: string) => {
+    setActiveCategory(categoryId);
   };
 
   return (
@@ -81,6 +94,8 @@ export const EducationalTabs: React.FC<EducationalTabsProps> = ({
         <div className="grid grid-cols-12 gap-6">
           <div className="col-span-12 md:col-span-3">
             <CourseCategories 
+              categories={categories}
+              onCategoryClick={handleCategoryClick}
               activeCategory={activeCategory}
               setActiveCategory={setActiveCategory}
             />

@@ -7,18 +7,215 @@ import { OfferingsList } from "@/components/investments/OfferingsList";
 import { toast } from "sonner";
 import { auditLog } from "@/services/auditLog/auditLogService";
 
+// mockOfferings remains the same with the basic structure
 const mockOfferings = {
   "private-equity": [
-    // ... keep existing mockOfferings data
+    {
+      id: 1,
+      name: "Acme Growth Fund",
+      description: "Invests in high-growth tech startups",
+      minimumInvestment: "$25,000",
+      lockupPeriod: "5 years",
+      lockUp: "5 years",
+      firm: "Acme Ventures",
+      tags: ["Tech", "Growth"],
+      strategy: {
+        overview: "Invest in early-stage tech companies",
+        approach: "Hands-on support for portfolio companies",
+        target: "20% IRR",
+        stage: "Early Stage",
+        geography: "North America",
+        sectors: ["Software", "AI"],
+        expectedReturn: "20% annually",
+        benchmarks: ["S&P 500", "Nasdaq"]
+      },
+      platform: "OurPlatform",
+      category: "private-equity",
+      investorQualification: "Accredited Investors",
+      liquidity: "Illiquid",
+      subscriptions: "Monthly"
+    },
+    {
+      id: 2,
+      name: "Beta Innovation Fund",
+      description: "Focuses on innovative healthcare solutions",
+      minimumInvestment: "$50,000",
+      lockupPeriod: "7 years",
+      lockUp: "7 years",
+      firm: "Beta Capital",
+      tags: ["Healthcare", "Innovation"],
+      strategy: {
+        overview: "Invest in cutting-edge healthcare technologies",
+        approach: "Partner with leading research institutions",
+        target: "25% IRR",
+        stage: "Seed",
+        geography: "Global",
+        sectors: ["Biotech", "Medical Devices"],
+        expectedReturn: "22% annually",
+        benchmarks: ["S&P 500", "MSCI World"]
+      },
+      platform: "BetaPlatform",
+      category: "private-equity",
+      investorQualification: "Qualified Purchasers",
+      liquidity: "Illiquid",
+      subscriptions: "Quarterly"
+    }
   ],
   "private-debt": [
-    // ... keep existing mockOfferings data
+    {
+      id: 3,
+      name: "Omega Credit Fund",
+      description: "Provides direct loans to mid-sized companies",
+      minimumInvestment: "$100,000",
+      lockupPeriod: "3 years",
+      lockUp: "3 years",
+      firm: "Omega Investments",
+      tags: ["Debt", "Mid-Sized"],
+      strategy: {
+        overview: "Offer flexible financing solutions to growing businesses",
+        approach: "Focus on companies with strong cash flow",
+        target: "10% yield",
+        stage: "Growth",
+        geography: "United States",
+        sectors: ["Manufacturing", "Services"],
+        expectedReturn: "10% annually",
+        benchmarks: ["Bloomberg Barclays Aggregate Bond Index"]
+      },
+      platform: "OmegaPlatform",
+      category: "private-debt",
+      investorQualification: "Accredited Investors",
+      liquidity: "Illiquid",
+      subscriptions: "Monthly"
+    },
+    {
+      id: 4,
+      name: "Delta Income Fund",
+      description: "Specializes in distressed debt opportunities",
+      minimumInvestment: "$75,000",
+      lockupPeriod: "4 years",
+      lockUp: "4 years",
+      firm: "Delta Partners",
+      tags: ["Distressed", "Income"],
+      strategy: {
+        overview: "Acquire undervalued debt of struggling companies",
+        approach: "Restructure debt to maximize recovery",
+        target: "15% IRR",
+        stage: "Turnaround",
+        geography: "Europe",
+        sectors: ["Retail", "Energy"],
+        expectedReturn: "14% annually",
+        benchmarks: ["Credit Suisse Leveraged Loan Index"]
+      },
+      platform: "DeltaPlatform",
+      category: "private-debt",
+      investorQualification: "Qualified Clients",
+      liquidity: "Illiquid",
+      subscriptions: "Quarterly"
+    }
   ],
   "digital-assets": [
-    // ... keep existing mockOfferings data
+    {
+      id: 5,
+      name: "Crypto Alpha Fund",
+      description: "Invests in a diversified portfolio of cryptocurrencies",
+      minimumInvestment: "$25,000",
+      lockupPeriod: "1 year",
+      lockUp: "1 year",
+      firm: "Crypto Investments",
+      tags: ["Crypto", "Diversified"],
+      strategy: {
+        overview: "Capitalize on the growth of digital currencies",
+        approach: "Active trading and staking strategies",
+        target: "30% return",
+        stage: "All Stages",
+        geography: "Global",
+        sectors: ["Blockchain", "DeFi"],
+        expectedReturn: "28% annually",
+        benchmarks: ["Bitcoin", "Ethereum"]
+      },
+      platform: "CryptoPlatform",
+      category: "digital-assets",
+      investorQualification: "Accredited Investors",
+      liquidity: "Limited",
+      subscriptions: "Weekly"
+    },
+    {
+      id: 6,
+      name: "NFT Innovation Fund",
+      description: "Focuses on high-value non-fungible tokens",
+      minimumInvestment: "$50,000",
+      lockupPeriod: "2 years",
+      lockUp: "2 years",
+      firm: "NFT Capital",
+      tags: ["NFT", "Innovation"],
+      strategy: {
+        overview: "Invest in unique digital assets with high growth potential",
+        approach: "Curate and manage a portfolio of rare NFTs",
+        target: "40% return",
+        stage: "Early Stage",
+        geography: "Global",
+        sectors: ["Art", "Collectibles"],
+        expectedReturn: "35% annually",
+        benchmarks: ["NFT Market Index"]
+      },
+      platform: "NFTPlatform",
+      category: "digital-assets",
+      investorQualification: "Qualified Purchasers",
+      liquidity: "Illiquid",
+      subscriptions: "Monthly"
+    }
   ],
   "real-assets": [
-    // ... keep existing mockOfferings data
+    {
+      id: 7,
+      name: "Green Infrastructure Fund",
+      description: "Invests in sustainable infrastructure projects",
+      minimumInvestment: "$100,000",
+      lockupPeriod: "10 years",
+      lockUp: "10 years",
+      firm: "Eco Investments",
+      tags: ["Infrastructure", "Sustainable"],
+      strategy: {
+        overview: "Develop and manage eco-friendly infrastructure",
+        approach: "Partner with governments and private entities",
+        target: "8% yield",
+        stage: "Development",
+        geography: "Emerging Markets",
+        sectors: ["Renewable Energy", "Water Treatment"],
+        expectedReturn: "7% annually",
+        benchmarks: ["Infrastructure Index"]
+      },
+      platform: "EcoPlatform",
+      category: "real-assets",
+      investorQualification: "Accredited Investors",
+      liquidity: "Illiquid",
+      subscriptions: "Annually"
+    },
+    {
+      id: 8,
+      name: "Urban Real Estate Fund",
+      description: "Focuses on prime real estate in urban centers",
+      minimumInvestment: "$75,000",
+      lockupPeriod: "8 years",
+      lockUp: "8 years",
+      firm: "City Properties",
+      tags: ["Real Estate", "Urban"],
+      strategy: {
+        overview: "Acquire and develop high-value properties in key cities",
+        approach: "Focus on properties with strong rental income",
+        target: "12% return",
+        stage: "Acquisition",
+        geography: "North America",
+        sectors: ["Commercial", "Residential"],
+        expectedReturn: "11% annually",
+        benchmarks: ["Real Estate Index"]
+      },
+      platform: "CityPlatform",
+      category: "real-assets",
+      investorQualification: "Qualified Clients",
+      liquidity: "Illiquid",
+      subscriptions: "Quarterly"
+    }
   ]
 };
 
@@ -50,6 +247,22 @@ const AlternativeAssetCategory = () => {
         case "real-assets":
           setCategoryName("Real Assets");
           setCategoryDescription("Real estate, infrastructure, natural resources, and tangible assets with intrinsic value.");
+          break;
+        case "hedge-fund":
+          setCategoryName("Hedge Fund");
+          setCategoryDescription("Alternative investment strategies with active management and flexible investment approaches.");
+          break;
+        case "venture-capital":
+          setCategoryName("Venture Capital");
+          setCategoryDescription("Funding for early-stage, high-potential startups and emerging companies.");
+          break;
+        case "collectibles":
+          setCategoryName("Collectibles");
+          setCategoryDescription("Art, rare items, trading cards, and memorabilia with potential investment value.");
+          break;
+        case "structured-investments":
+          setCategoryName("Structured Investments");
+          setCategoryDescription("Custom financial products with defined outcomes and specific risk-return profiles.");
           break;
         default:
           setCategoryName("Alternative Investments");
