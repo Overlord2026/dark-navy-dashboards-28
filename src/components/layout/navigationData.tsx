@@ -188,14 +188,16 @@ export const getSecondaryMenuItems = (activeMainItem: string): MenuItem[] => {
       return sharingSubMenuItems;
     case "education":
       return educationSubMenuItems;
+    case "investments":
+      return [];
     case "private-equity":
-      return []; // No longer shown in the sidebar
+      return privateEquityProviders;
     case "private-debt":
-      return []; // No longer shown in the sidebar
+      return privateDebtProviders;
     case "real-assets":
-      return []; // No longer shown in the sidebar
+      return realAssetsProviders;
     case "digital-assets":
-      return []; // No longer shown in the sidebar
+      return digitalAssetsProviders;
     default:
       return [];
   }
