@@ -27,10 +27,10 @@ export const RunNavigationDiagnostics: React.FC = () => {
           }
         } 
         // Otherwise process the results object
-        else if ('results' in data) {
-          const allResults = Object.values(data.results).flat();
-          const errorCount = allResults.filter(r => r.status === "error").length;
-          const warningCount = allResults.filter(r => r.status === "warning").length;
+        else if ('results' in data && data.results) {
+          const allResults = Object.values(data.results as Record<string, NavigationTestResult[]>).flat();
+          const errorCount = allResults.filter((r: NavigationTestResult) => r.status === "error").length;
+          const warningCount = allResults.filter((r: NavigationTestResult) => r.status === "warning").length;
           
           if (errorCount > 0) {
             toast.error(`Found ${errorCount} navigation errors`);
