@@ -18,7 +18,7 @@ const NavigationDiagnostics: React.FC = () => {
     if (isAdmin) {
       const stopMeasuring = measureRoutePerformance('/navigation-diagnostics');
       return () => {
-        stopMeasuring(); // Just call the function without using the return value
+        stopMeasuring(); // Call the function without using the return value
       };
     }
   }, [isAdmin]);
