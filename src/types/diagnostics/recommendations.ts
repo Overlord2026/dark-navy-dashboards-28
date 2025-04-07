@@ -27,3 +27,24 @@ export interface DiagnosticRecommendation extends Recommendation {
   testId?: string;
   status: DiagnosticTestStatus;
 }
+
+// Add missing types that were causing errors
+export interface QuickFix {
+  id: string;
+  title: string;
+  description: string;
+  area: 'system' | 'performance' | 'security' | 'config' | 'api';
+  severity: "critical" | "high" | "medium" | "low";
+  category: "reliability" | "security" | "performance" | "usability";
+  actionable?: boolean;
+}
+
+export interface FixHistoryEntry {
+  id: string;
+  title: string;
+  timestamp: string;
+  area: 'system' | 'performance' | 'security' | 'config' | 'api';
+  severity: string;
+  description: string;
+  status: 'success' | 'failed' | 'pending';
+}

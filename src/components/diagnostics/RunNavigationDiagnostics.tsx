@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -15,17 +16,29 @@ export const RunNavigationDiagnostics: React.FC = () => {
       if (data) {
         setShowResults(true);
         
-        // Get all results flattened
-        const allResults = Object.values(data).flat();
-        const errorCount = allResults.filter(r => r.status === "error").length;
-        const warningCount = allResults.filter(r => r.status === "warning").length;
-        
-        if (errorCount > 0) {
-          toast.error(`Found ${errorCount} navigation errors`);
-        } else if (warningCount > 0) {
-          toast.warning(`Found ${warningCount} navigation warnings`);
+        // Only process results if they're in the expected format (Record<string, NavigationTestResult[]>)
+        if (data.results) {
+          // Get all results flattened
+          const allResults = Object.values(data.results).flat();
+          const errorCount = allResults.filter(r => r.status === "error").length;
+          const warningCount = allResults.filter(r => r.status === "warning").length;
+          
+          if (errorCount > 0) {
+            toast.error(`Found ${errorCount} navigation errors`);
+          } else if (warningCount > 0) {
+            toast.warning(`Found ${warningCount} navigation warnings`);
+          } else {
+            toast.success("All navigation routes are working properly");
+          }
         } else {
-          toast.success("All navigation routes are working properly");
+          // If data has overallStatus, use it directly
+          if (data.errorCount > 0) {
+            toast.error(`Found ${data.errorCount} navigation errors`);
+          } else if (data.warningCount > 0) {
+            toast.warning(`Found ${data.warningCount} navigation warnings`);
+          } else {
+            toast.success("All navigation routes are working properly");
+          }
         }
       }
     } catch (error) {
@@ -80,7 +93,7 @@ export const RunNavigationDiagnostics: React.FC = () => {
             {Object.entries(results).map(([category, tests]) => (
               <div key={category} className="mb-4">
                 <h4 className="font-medium mb-2 capitalize">{category.replace(/([A-Z])/g, ' $1').trim()}</h4>
-                {tests.length > 0 ? renderTestResults(tests) : (
+                {Array.isArray(tests) && tests.length > 0 ? renderTestResults(tests) : (
                   <p className="text-sm text-muted-foreground">No tests for this category</p>
                 )}
               </div>
