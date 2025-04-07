@@ -1,143 +1,206 @@
 
-import React, { useState } from "react";
-import { v4 as uuidv4 } from 'uuid';
+import React from "react";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { EducationalResource } from "@/types/education";
 import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+import { v4 as uuid } from "uuid";
 
-interface ResourceFormProps {
+const resourceFormSchema = z.object({
+  title: z.string().min(3, "Title must be at least 3 characters"),
+  description: z.string().min(10, "Description must be at least 10 characters"),
+  level: z.string().min(1, "Level is required"),
+  duration: z.string().optional(),
+  author: z.string().optional(),
+  isPaid: z.boolean().default(false),
+  ghlUrl: z.string().url("Must be a valid URL").or(z.literal(""))
+});
+
+type ResourceFormProps = {
   resource?: EducationalResource;
   resourceType: "guide" | "book" | "whitepaper";
   onSubmit: (resource: EducationalResource) => void;
   onCancel: () => void;
-}
+};
 
-export const ResourceForm: React.FC<ResourceFormProps> = ({ resource, resourceType, onSubmit, onCancel }) => {
-  const [title, setTitle] = useState(resource?.title || "");
-  const [description, setDescription] = useState(resource?.description || "");
-  const [level, setLevel] = useState(resource?.level || "All Levels");
-  const [duration, setDuration] = useState(resource?.duration || "");
-  const [isPaid, setIsPaid] = useState(resource?.isPaid || false);
-  const [ghlUrl, setGhlUrl] = useState(resource?.ghlUrl || "");
-  const [author, setAuthor] = useState(resource?.author || "");
+export const ResourceForm: React.FC<ResourceFormProps> = ({
+  resource,
+  resourceType,
+  onSubmit,
+  onCancel
+}) => {
+  const form = useForm<z.infer<typeof resourceFormSchema>>({
+    resolver: zodResolver(resourceFormSchema),
+    defaultValues: resource ? {
+      title: resource.title,
+      description: resource.description,
+      level: resource.level,
+      duration: resource.duration || "",
+      author: resource.author || "",
+      isPaid: resource.isPaid,
+      ghlUrl: resource.ghlUrl || ""
+    } : {
+      title: "",
+      description: "",
+      level: resourceType === "whitepaper" ? "Advanced" : "All Levels",
+      duration: resourceType === "guide" ? "Self-paced" : "",
+      author: "",
+      isPaid: false,
+      ghlUrl: ""
+    }
+  });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    const updatedResource: EducationalResource = {
-      id: resource?.id || uuidv4(),
-      title,
-      description,
-      level,
-      isPaid,
-      ghlUrl,
-      ...(resourceType === "guide" && { duration }),
-      ...(resourceType === "book" && { author })
+  const handleSubmit = (values: z.infer<typeof resourceFormSchema>) => {
+    const newResource: EducationalResource = {
+      ...values,
+      id: resource?.id || `${resourceType}-${uuid()}`
     };
-    
-    onSubmit(updatedResource);
+    onSubmit(newResource);
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="space-y-2">
-        <Label htmlFor="title">Title</Label>
-        <Input
-          id="title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          required
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+        <FormField
+          control={form.control}
+          name="title"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Title</FormLabel>
+              <FormControl>
+                <Input placeholder={`${resourceType.charAt(0).toUpperCase() + resourceType.slice(1)} title`} {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </div>
-      
-      <div className="space-y-2">
-        <Label htmlFor="description">Description</Label>
-        <Textarea
-          id="description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          required
-          rows={3}
+
+        <FormField
+          control={form.control}
+          name="description"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Description</FormLabel>
+              <FormControl>
+                <Textarea placeholder="Description" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </div>
-      
-      <div className="grid grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label htmlFor="level">Level</Label>
-          <Select 
-            value={level} 
-            onValueChange={setLevel}
-          >
-            <SelectTrigger id="level">
-              <SelectValue placeholder="Select level" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="Beginner">Beginner</SelectItem>
-              <SelectItem value="Intermediate">Intermediate</SelectItem>
-              <SelectItem value="Advanced">Advanced</SelectItem>
-              <SelectItem value="All Levels">All Levels</SelectItem>
-            </SelectContent>
-          </Select>
+
+        <div className="grid grid-cols-2 gap-4">
+          <FormField
+            control={form.control}
+            name="level"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Level</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select level" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="Beginner">Beginner</SelectItem>
+                    <SelectItem value="Intermediate">Intermediate</SelectItem>
+                    <SelectItem value="Advanced">Advanced</SelectItem>
+                    <SelectItem value="All Levels">All Levels</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {resourceType !== "whitepaper" && (
+            <FormField
+              control={form.control}
+              name="duration"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Duration</FormLabel>
+                  <FormControl>
+                    <Input placeholder="e.g., Self-paced" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
         </div>
-        
-        {resourceType === "guide" && (
-          <div className="space-y-2">
-            <Label htmlFor="duration">Duration</Label>
-            <Input
-              id="duration"
-              value={duration}
-              onChange={(e) => setDuration(e.target.value)}
-              required={resourceType === "guide"}
-              placeholder="e.g. Self-paced"
-            />
-          </div>
-        )}
-        
+
         {resourceType === "book" && (
-          <div className="space-y-2">
-            <Label htmlFor="author">Author</Label>
-            <Input
-              id="author"
-              value={author}
-              onChange={(e) => setAuthor(e.target.value)}
-              placeholder="Author name"
-            />
-          </div>
+          <FormField
+            control={form.control}
+            name="author"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Author</FormLabel>
+                <FormControl>
+                  <Input placeholder="Author name" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         )}
-      </div>
-      
-      <div className="space-y-2">
-        <Label htmlFor="ghlUrl">Resource URL</Label>
-        <Input
-          id="ghlUrl"
-          value={ghlUrl}
-          onChange={(e) => setGhlUrl(e.target.value)}
-          required
-          placeholder="https://..."
+
+        <FormField
+          control={form.control}
+          name="ghlUrl"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>URL</FormLabel>
+              <FormControl>
+                <Input placeholder="https://..." {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </div>
-      
-      <div className="flex items-center space-x-2">
-        <Checkbox 
-          id="isPaid" 
-          checked={isPaid}
-          onCheckedChange={(checked) => setIsPaid(checked as boolean)}
+
+        <FormField
+          control={form.control}
+          name="isPaid"
+          render={({ field }) => (
+            <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3">
+              <div className="space-y-0.5">
+                <FormLabel>Paid Resource</FormLabel>
+              </div>
+              <FormControl>
+                <Switch
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </FormControl>
+            </FormItem>
+          )}
         />
-        <Label htmlFor="isPaid">Paid Resource</Label>
-      </div>
-      
-      <div className="flex justify-end space-x-2 pt-4">
-        <Button type="button" variant="outline" onClick={onCancel}>
-          Cancel
-        </Button>
-        <Button type="submit">
-          {resource ? 'Update' : 'Add'} {resourceType.charAt(0).toUpperCase() + resourceType.slice(1)}
-        </Button>
-      </div>
-    </form>
+
+        <div className="flex justify-end space-x-2 pt-4">
+          <Button variant="outline" type="button" onClick={onCancel}>
+            Cancel
+          </Button>
+          <Button type="submit">
+            {resource ? `Update ${resourceType}` : `Add ${resourceType}`}
+          </Button>
+        </div>
+      </form>
+    </Form>
   );
 };

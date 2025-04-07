@@ -46,17 +46,7 @@ export const EducationContentProvider: React.FC<{ children: ReactNode }> = ({ ch
   const [featuredCoursesList, setFeaturedCoursesList] = useState<Course[]>(featuredCourses);
   const [popularCoursesList, setPopularCoursesList] = useState<Course[]>(popularCourses);
   const [guidesList, setGuidesList] = useState<EducationalResource[]>(educationalResources.guides);
-  const [booksList, setBooksList] = useState<EducationalResource[]>([
-    {
-      id: "book-life-integrated",
-      title: "Life Integrated Financial Freedom",
-      description: "An Advanced Holistic Plan For Retirement",
-      isPaid: false,
-      level: "All Levels",
-      author: "Tony Gomes",
-      ghlUrl: "https://www.amazon.com/Life-Integrated-Financial-Freedom-Advanced/dp/B0BVRGDMQJ/"
-    }
-  ]);
+  const [booksList, setBooksList] = useState<EducationalResource[]>(educationalResources.books);
   const [whitepapersList, setWhitepapersList] = useState<EducationalResource[]>([
     {
       id: "wp-1",
