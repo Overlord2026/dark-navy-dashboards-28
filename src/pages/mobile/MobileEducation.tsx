@@ -12,13 +12,15 @@ import {
   FileText,
   Info,
   BookOpen,
-  Search
+  Search,
+  Settings
 } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { featuredCourses, popularCourses } from "@/data/education";
 import { toast } from "sonner";
 import { courseCategories } from "@/data/education";
 import { handleCourseAccess } from "@/components/education/courseUtils";
+import { Link } from "react-router-dom";
 
 export default function MobileEducation() {
   const [activeTab, setActiveTab] = useState<string>("featured");
@@ -33,11 +35,19 @@ export default function MobileEducation() {
     <MobileLayout title="Education Center" showAddButton={false}>
       <div className="p-4 space-y-6 pb-20">
         {/* Welcome Section */}
-        <div>
-          <h2 className="text-xl font-bold mb-2">Financial Education Center</h2>
-          <p className="text-gray-400 text-sm">
-            Build wealth and achieve your financial goals with our educational resources.
-          </p>
+        <div className="flex justify-between items-center">
+          <div>
+            <h2 className="text-xl font-bold mb-2">Financial Education Center</h2>
+            <p className="text-gray-400 text-sm">
+              Build wealth and achieve your financial goals with our educational resources.
+            </p>
+          </div>
+          
+          <Link to="/education-admin">
+            <Button variant="outline" size="icon">
+              <Settings className="h-4 w-4" />
+            </Button>
+          </Link>
         </div>
 
         {/* Search Bar */}

@@ -8,7 +8,7 @@ import { courseCategories } from "@/data/education";
 import { handleCourseAccess } from "@/components/education/courseUtils";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Settings } from "lucide-react";
 import { CourseApiDemo } from "@/components/education/CourseApiDemo";
 
 export default function Education() {
@@ -85,7 +85,17 @@ export default function Education() {
         animate="visible"
       >
         <motion.div variants={itemVariants}>
-          <h2 className="text-2xl font-bold tracking-tight">Welcome to the SWAG Education Center</h2>
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4">
+            <h2 className="text-2xl font-bold tracking-tight">Welcome to the SWAG Education Center</h2>
+            
+            <Link to="/education-admin">
+              <Button variant="outline" size="sm" className="flex items-center gap-2 mt-2 md:mt-0">
+                <Settings className="h-4 w-4" />
+                Manage Content
+              </Button>
+            </Link>
+          </div>
+          
           <p className="text-muted-foreground mt-2">
             Explore our collection of financial education resources to help you build wealth and achieve your financial goals.
           </p>
