@@ -5,6 +5,15 @@ import { toast } from "sonner";
 import { useNavigationDiagnostics } from "@/hooks/useNavigationDiagnostics";
 import { NavigationTestResult } from "@/types/diagnostics";
 
+interface DiagnosticsResultData {
+  errorCount?: number;
+  warningCount?: number;
+  successCount?: number;
+  results?: Record<string, NavigationTestResult[]>;
+  overallStatus?: string;
+  totalRoutes?: number;
+}
+
 export const RunNavigationDiagnostics: React.FC = () => {
   const { runDiagnostics, isRunning, results } = useNavigationDiagnostics();
   const [showResults, setShowResults] = useState(false);
@@ -15,23 +24,28 @@ export const RunNavigationDiagnostics: React.FC = () => {
       if (data) {
         setShowResults(true);
         
+        // Type guard to check if the data object is in the expected format
+        const diagnosticsData = data as DiagnosticsResultData;
+        
         // Check if data contains direct errorCount/warningCount/successCount properties
-        if ('errorCount' in data && 'warningCount' in data && 'successCount' in data) {
+        if (diagnosticsData.errorCount !== undefined && 
+            diagnosticsData.warningCount !== undefined && 
+            diagnosticsData.successCount !== undefined) {
           // This is the summary object directly
-          if (data.errorCount > 0) {
-            toast.error(`Found ${data.errorCount} navigation errors`);
-          } else if (data.warningCount > 0) {
-            toast.warning(`Found ${data.warningCount} navigation warnings`);
+          if (diagnosticsData.errorCount > 0) {
+            toast.error(`Found ${diagnosticsData.errorCount} navigation errors`);
+          } else if (diagnosticsData.warningCount > 0) {
+            toast.warning(`Found ${diagnosticsData.warningCount} navigation warnings`);
           } else {
             toast.success("All navigation routes are working properly");
           }
         } 
         // Otherwise process the results object
-        else if (data && typeof data === 'object' && 'results' in data && data.results) {
-          const resultsData = data.results as Record<string, NavigationTestResult[]>;
+        else if (diagnosticsData.results && typeof diagnosticsData.results === 'object') {
+          const resultsData = diagnosticsData.results;
           const allResults = Object.values(resultsData).flat();
-          const errorCount = allResults.filter((r: NavigationTestResult) => r.status === "error").length;
-          const warningCount = allResults.filter((r: NavigationTestResult) => r.status === "warning").length;
+          const errorCount = allResults.filter((r) => r.status === "error").length;
+          const warningCount = allResults.filter((r) => r.status === "warning").length;
           
           if (errorCount > 0) {
             toast.error(`Found ${errorCount} navigation errors`);
@@ -48,7 +62,7 @@ export const RunNavigationDiagnostics: React.FC = () => {
     }
   };
   
-  const getStatusColor = (status: NavigationTestResult['status']) => {
+  const getStatusColor = (status: string): string => {
     switch (status) {
       case "success": return "bg-green-100 border-green-200 text-green-800";
       case "warning": return "bg-yellow-100 border-yellow-200 text-yellow-800";
