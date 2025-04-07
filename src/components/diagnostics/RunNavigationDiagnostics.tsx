@@ -16,7 +16,7 @@ export const RunNavigationDiagnostics: React.FC = () => {
         setShowResults(true);
         
         // Check if data contains direct errorCount/warningCount/successCount properties
-        if ('errorCount' in data && 'warningCount' in data) {
+        if ('errorCount' in data && 'warningCount' in data && 'successCount' in data) {
           // This is the summary object directly
           if (data.errorCount > 0) {
             toast.error(`Found ${data.errorCount} navigation errors`);
@@ -27,10 +27,11 @@ export const RunNavigationDiagnostics: React.FC = () => {
           }
         } 
         // Otherwise process the results object
-        else if ('results' in data && data.results) {
-          const allResults = Object.values(data.results as Record<string, NavigationTestResult[]>).flat();
-          const errorCount = allResults.filter((r: NavigationTestResult) => r.status === "error").length;
-          const warningCount = allResults.filter((r: NavigationTestResult) => r.status === "warning").length;
+        else if (data && 'results' in data && data.results) {
+          const resultsData = data.results;
+          const allResults = Object.values(resultsData).flat();
+          const errorCount = allResults.filter((r) => r.status === "error").length;
+          const warningCount = allResults.filter((r) => r.status === "warning").length;
           
           if (errorCount > 0) {
             toast.error(`Found ${errorCount} navigation errors`);
