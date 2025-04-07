@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -16,9 +15,19 @@ export const RunNavigationDiagnostics: React.FC = () => {
       if (data) {
         setShowResults(true);
         
-        // Only process results if they're in the expected format (Record<string, NavigationTestResult[]>)
-        if (data.results) {
-          // Get all results flattened
+        // Check if data contains direct errorCount/warningCount/successCount properties
+        if ('errorCount' in data && 'warningCount' in data) {
+          // This is the summary object directly
+          if (data.errorCount > 0) {
+            toast.error(`Found ${data.errorCount} navigation errors`);
+          } else if (data.warningCount > 0) {
+            toast.warning(`Found ${data.warningCount} navigation warnings`);
+          } else {
+            toast.success("All navigation routes are working properly");
+          }
+        } 
+        // Otherwise process the results object
+        else if ('results' in data) {
           const allResults = Object.values(data.results).flat();
           const errorCount = allResults.filter(r => r.status === "error").length;
           const warningCount = allResults.filter(r => r.status === "warning").length;
@@ -27,15 +36,6 @@ export const RunNavigationDiagnostics: React.FC = () => {
             toast.error(`Found ${errorCount} navigation errors`);
           } else if (warningCount > 0) {
             toast.warning(`Found ${warningCount} navigation warnings`);
-          } else {
-            toast.success("All navigation routes are working properly");
-          }
-        } else {
-          // If data has overallStatus, use it directly
-          if (data.errorCount > 0) {
-            toast.error(`Found ${data.errorCount} navigation errors`);
-          } else if (data.warningCount > 0) {
-            toast.warning(`Found ${data.warningCount} navigation warnings`);
           } else {
             toast.success("All navigation routes are working properly");
           }

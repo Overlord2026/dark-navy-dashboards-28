@@ -28,7 +28,7 @@ export interface DiagnosticRecommendation extends Recommendation {
   status: DiagnosticTestStatus;
 }
 
-// Add missing types that were causing errors
+// QuickFix type definition
 export interface QuickFix {
   id: string;
   title: string;
@@ -39,6 +39,7 @@ export interface QuickFix {
   actionable?: boolean;
 }
 
+// FixHistoryEntry type definition
 export interface FixHistoryEntry {
   id: string;
   title: string;
