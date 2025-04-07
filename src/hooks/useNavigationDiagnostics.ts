@@ -23,7 +23,7 @@ export function useNavigationDiagnostics() {
       // This would normally call an API, but for now we'll simulate it
       await new Promise(resolve => setTimeout(resolve, 1500));
       
-      // Simulated results - now properly typed
+      // Simulated results - now properly typed with all required properties
       const timestamp = Date.now();
       const diagnosticResults: Record<string, NavigationTestResult[]> = {
         home: [

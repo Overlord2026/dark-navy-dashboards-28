@@ -46,6 +46,9 @@ export const measureRoutePerformance = (routePath: string) => {
   };
 };
 
+// Alias for backward compatibility
+export const measureRouteLoad = measureRoutePerformance;
+
 // Get memory usage information
 export const getMemoryUsage = () => {
   if (window.performance) {

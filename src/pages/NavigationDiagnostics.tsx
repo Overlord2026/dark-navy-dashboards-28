@@ -2,7 +2,7 @@
 import React, { useEffect } from "react";
 import { DashboardHeader } from "@/components/ui/DashboardHeader";
 import NavigationDiagnosticModule from "@/components/diagnostics/NavigationDiagnosticModule";
-import { measureRouteLoad } from "@/utils/performance";
+import { measureRoutePerformance } from "@/services/performance/performanceMonitorService";
 import { useUser } from "@/context/UserContext";
 import { Navigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -16,9 +16,9 @@ const NavigationDiagnostics: React.FC = () => {
   // Measure page load performance (for admins only)
   useEffect(() => {
     if (isAdmin) {
-      const cleanup = measureRouteLoad('/navigation-diagnostics');
+      const stopMeasuring = measureRoutePerformance('/navigation-diagnostics');
       return () => {
-        cleanup(); // Just call the function without assigning the return value
+        stopMeasuring(); // Just call the function without using the return value
       };
     }
   }, [isAdmin]);

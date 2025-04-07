@@ -35,7 +35,7 @@ export const RunNavigationDiagnostics: React.FC = () => {
     }
   };
   
-  const getStatusColor = (status: string) => {
+  const getStatusColor = (status: NavigationTestResult['status']) => {
     switch (status) {
       case "success": return "bg-green-100 border-green-200 text-green-800";
       case "warning": return "bg-yellow-100 border-yellow-200 text-yellow-800";

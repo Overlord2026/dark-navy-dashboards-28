@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -12,6 +13,7 @@ import { LoadingState } from "./LoadingState";
 import { useNavigationDiagnostics } from "@/hooks/useNavigationDiagnostics";
 import { runAllTabDiagnostics } from "@/services/diagnostics/tabDiagnostics";
 import { useUser } from "@/context/UserContext";
+import { v4 as uuidv4 } from 'uuid';
 
 const NavigationDiagnosticModule: React.FC = () => {
   const navigate = useNavigate();
@@ -45,6 +47,7 @@ const NavigationDiagnosticModule: React.FC = () => {
     try {
       // Get detailed route diagnostics
       const diagnosticSummary = await getNavigationDiagnosticsSummary();
+      const timestamp = Date.now();
       
       // Convert the results to match NavigationTestResult type
       const typedResults: Record<string, NavigationTestResult[]> = {};
@@ -56,15 +59,28 @@ const NavigationDiagnosticModule: React.FC = () => {
           route: test.route,
           status: test.status as DiagnosticTestStatus,
           message: test.message,
-          timestamp: Date.now()
+          timestamp: timestamp
         }));
       });
       
       setResults(typedResults);
       
       // Get tab-specific diagnostics
-      const tabDiagnostics = await runAllTabDiagnostics();
-      setTabResults(tabDiagnostics);
+      const rawTabDiagnostics = await runAllTabDiagnostics();
+      // Convert tab diagnostics to the correct type
+      const typedTabResults: Record<string, NavigationTestResult> = {};
+      
+      Object.entries(rawTabDiagnostics).forEach(([key, value]) => {
+        typedTabResults[key] = {
+          id: uuidv4(),
+          route: value.route,
+          status: value.status as DiagnosticTestStatus,
+          message: value.message || '',
+          timestamp: timestamp
+        };
+      });
+      
+      setTabResults(typedTabResults);
       
       // Set summary
       setSummary({
@@ -159,7 +175,7 @@ const NavigationDiagnosticModule: React.FC = () => {
                 </TabsContent>
                 
                 <TabsContent value="tabs">
-                  <NavigationTests tests={tabOnlyTests as NavigationTestResult[]} />
+                  <NavigationTests tests={tabOnlyTests} />
                 </TabsContent>
                 
                 <TabsContent value="success">
