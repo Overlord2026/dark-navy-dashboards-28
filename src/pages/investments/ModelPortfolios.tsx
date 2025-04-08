@@ -77,7 +77,10 @@ const ModelPortfolios = () => {
     <div className="container mx-auto py-8">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold">Model Portfolios</h1>
-        <Button onClick={() => navigate('/investments/models/all')}>View All Portfolios</Button>
+        <div className="flex gap-2">
+          <Button onClick={() => navigate('/investments/models/all')}>View All Portfolios</Button>
+          <Button variant="outline" onClick={() => navigate('/model-portfolio-list')}>Portfolio Manager</Button>
+        </div>
       </div>
       
       <div className="grid grid-cols-1 gap-6">
@@ -93,8 +96,8 @@ const ModelPortfolios = () => {
               <Button onClick={() => navigate('/investments/models/all')} className="flex-1">
                 Browse Portfolios
               </Button>
-              <Button variant="outline" onClick={() => navigate('/investments/builder')} className="flex-1">
-                Create Custom Portfolio
+              <Button variant="outline" onClick={() => navigate('/model-portfolio-manager')} className="flex-1">
+                Create & Manage Portfolios
               </Button>
             </div>
           </CardContent>

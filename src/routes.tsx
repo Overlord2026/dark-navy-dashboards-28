@@ -39,6 +39,8 @@ import NavigationDiagnostics from "@/pages/NavigationDiagnostics";
 import InvestmentPerformance from "@/pages/InvestmentPerformance";
 import { ProfessionalsRouteWrapper } from "@/components/providers/ProfessionalsRouteWrapper";
 import AlternativeAssetCategory from "@/pages/AlternativeAssetCategory";
+import ModelPortfolioManager from "@/pages/ModelPortfolioManager";
+import ModelPortfolioList from "@/pages/ModelPortfolioList";
 
 // Create a route layout helper to avoid repetition
 const createInvestmentProviderRoutes = () => {
@@ -90,6 +92,22 @@ const alternativeAssetRoutes = [
   {
     path: "/investments/alternative/structured-investments",
     element: <AlternativeAssetCategory />
+  },
+];
+
+// Model Portfolio routes
+const modelPortfolioRoutes = [
+  {
+    path: "/model-portfolio-list",
+    element: <ModelPortfolioList />
+  },
+  {
+    path: "/model-portfolio-manager",
+    element: <ModelPortfolioManager />
+  },
+  {
+    path: "/model-portfolio-manager/:portfolioId",
+    element: <ModelPortfolioManager />
   },
 ];
 
@@ -212,6 +230,7 @@ const routes = createBrowserRouter([
   },
   ...alternativeAssetRoutes,
   ...createInvestmentProviderRoutes(),
+  ...modelPortfolioRoutes,
   {
     path: '/vehicles-collectibles',
     element: <AllAssets />

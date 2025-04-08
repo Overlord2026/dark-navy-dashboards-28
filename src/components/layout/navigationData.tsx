@@ -19,7 +19,8 @@ import {
   ArrowRightLeft,
   Calculator,
   Receipt,
-  BookIcon
+  BookIcon,
+  BarChart2Icon
 } from "lucide-react";
 
 type MainMenuItem = {
@@ -63,6 +64,7 @@ export const navigationCategories: NavCategory[] = [
     items: [
       { id: "education", label: "Education Center", icon: GraduationCapIcon, href: "/education" },
       { id: "investments", label: "Investments", icon: BarChart3Icon, href: "/investments" },
+      { id: "model-portfolios", label: "Model Portfolio Manager", icon: PieChart, href: "/model-portfolio-list" },
       { id: "tax-planning", label: "Tax Planning", icon: PieChart, href: "/tax-planning" },
       { id: "insurance", label: "Insurance", icon: ShieldIcon, href: "/insurance" },
       { id: "lending", label: "Lending", icon: BanknoteIcon, href: "/lending" },
@@ -123,6 +125,7 @@ export const investmentSubMenuItems: MenuItem[] = [
   { id: "overview", name: "Overview", active: true },
   { id: "private-market", name: "Private Market Alpha" },
   { id: "model-portfolios", name: "Model Portfolios" },
+  { id: "model-portfolio-manager", name: "Portfolio Manager" },
   { id: "intelligent", name: "Intelligent Allocation" },
   { id: "stock-screener", name: "Stock Screener" },
 ];
@@ -206,6 +209,16 @@ export const modelPortfolioProviders: MenuItem[] = [
   { id: "dearborn", name: "Dearborn" },
 ];
 
+// Model portfolio manager menu items
+export const modelPortfolioManagerItems: MenuItem[] = [
+  { id: "portfolio-list", name: "Portfolio List", active: true },
+  { id: "portfolio-manager", name: "Portfolio Manager" },
+  { id: "adelante-us-real-estate", name: "Adelante US Real Estate" },
+  { id: "alpha-quant-mid-cap", name: "Alpha Quant Mid Cap" },
+  { id: "blackrock-60-40", name: "BlackRock 60/40 Portfolio" },
+  { id: "create-new", name: "Create New Portfolio" },
+];
+
 export const getSecondaryMenuItems = (activeMainItem: string): MenuItem[] => {
   switch (activeMainItem) {
     case "accounts":
@@ -226,6 +239,8 @@ export const getSecondaryMenuItems = (activeMainItem: string): MenuItem[] => {
       return digitalAssetsProviders;
     case "model-portfolios":
       return modelPortfolioProviders;
+    case "model-portfolio-manager":
+      return modelPortfolioManagerItems;
     default:
       return [];
   }

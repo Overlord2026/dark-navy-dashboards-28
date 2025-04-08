@@ -243,7 +243,7 @@ const Investments = () => {
   };
 
   const handleStartBuildingClick = () => {
-    navigate("/investments/builder");
+    navigate("/model-portfolio-manager");
   };
 
   const handleViewDetails = (e: React.MouseEvent, model: PortfolioModel) => {
@@ -327,9 +327,14 @@ const Investments = () => {
             <div className="space-y-6">
               <div className="flex justify-between items-center">
                 <h2 className="text-2xl font-semibold">Model Portfolios</h2>
-                <Button variant="outline" onClick={handleViewAllModels} className="flex items-center gap-1">
-                  View All <ChevronRight className="h-4 w-4" />
-                </Button>
+                <div className="flex gap-2">
+                  <Button variant="outline" onClick={handleViewAllModels} className="flex items-center gap-1">
+                    View All <ChevronRight className="h-4 w-4" />
+                  </Button>
+                  <Button onClick={() => navigate('/model-portfolio-list')}>
+                    Portfolio Manager
+                  </Button>
+                </div>
               </div>
               
               <div className="space-y-4">
