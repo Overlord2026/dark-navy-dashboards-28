@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft } from "lucide-react";
@@ -532,7 +533,44 @@ const offeringsByCategory: Record<string, any[]> = {
       description: "Customized structured products with defined risk/return profiles based on underlying assets.",
       firm: "Goldman Sachs",
       minimumInvestment: "$10,000",
-      tags: ["Structured Notes", "Tailored", "Defined Outcome"]
+      tags: ["Structured Notes", "Tailored", "Defined Outcome"],
+      featured: true
+    },
+    {
+      id: "si-2",
+      name: "JPMorgan Principal Protected Notes",
+      description: "Principal-protected structured notes that provide downside protection while participating in market upside. These investments combine the security of principal protection with exposure to various market indices.",
+      firm: "JPMorgan Chase",
+      minimumInvestment: "$25,000",
+      tags: ["Principal Protection", "Market-Linked", "Downside Buffer"],
+      featured: true
+    },
+    {
+      id: "si-3",
+      name: "Morgan Stanley Buffered PLUS",
+      description: "Buffered Performance Leveraged Upside Securities (PLUS) offering enhanced returns on the upside with limited downside risk through a buffer zone that protects against moderate market declines.",
+      firm: "Morgan Stanley",
+      minimumInvestment: "$15,000",
+      tags: ["Buffered", "Enhanced Upside", "Market-Linked"],
+      featured: false
+    },
+    {
+      id: "si-4",
+      name: "Barclays Autocallable Notes",
+      description: "Structured investments that automatically call (redeem) if the underlying asset reaches a predetermined level on specified observation dates, potentially providing above-market returns for sideways or slightly bullish markets.",
+      firm: "Barclays",
+      minimumInvestment: "$10,000",
+      tags: ["Autocallable", "Early Redemption", "Enhanced Yield"],
+      featured: false
+    },
+    {
+      id: "si-5",
+      name: "Citigroup Callable Yield Notes",
+      description: "Income-focused structured products that offer above-market coupon rates with issuer call features, providing investors with enhanced yield potential in exchange for giving the issuer redemption flexibility.",
+      firm: "Citigroup",
+      minimumInvestment: "$10,000",
+      tags: ["Income", "Callable", "Enhanced Yield"],
+      featured: true
     }
   ]
 };
