@@ -1,106 +1,94 @@
-
+// Import statements
 import React from "react";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetClose } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { Calendar, X } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
-import { InterestedButton } from "@/components/investments/InterestedButton";
-
-interface Lender {
-  id: string;
-  name: string;
-  category: string;
-  offering: string;
-  description: string;
-  about: string;
-  howItWorks: string;
-  otherOfferings: string[];
-  topUnderwriters: string[];
-}
+import { Card } from "@/components/ui/card";
+import { Calendar, Info, CheckCircle, ChevronRight } from "lucide-react";
+import { InterestedButton } from "@/components/common/InterestedButton";
+import { toast } from "sonner";
 
 interface LenderDetailProps {
-  isOpen: boolean;
-  onClose: () => void;
-  lender: Lender;
+  lenderName: string;
+  description: string;
+  interestRate: number;
+  approvalRate: number;
+  fundingTime: string;
+  features: string[];
 }
 
-export const LenderDetail: React.FC<LenderDetailProps> = ({ isOpen, onClose, lender }) => {
-  const { toast } = useToast();
-
-  const handleScheduleMeeting = () => {
-    toast({
-      title: "Meeting Requested",
-      description: `Your advisor has been notified about your interest in scheduling a meeting about ${lender.name} ${lender.offering}.`,
+const LenderDetail: React.FC<LenderDetailProps> = ({
+  lenderName,
+  description,
+  interestRate,
+  approvalRate,
+  fundingTime,
+  features,
+}) => {
+  const handleInterested = () => {
+    toast.success("Your interest has been registered!", {
+      description: "Your advisor has been notified about your interest",
       duration: 5000,
     });
   };
 
   return (
-    <Sheet open={isOpen} onOpenChange={onClose}>
-      <SheetContent className="w-full sm:max-w-md overflow-y-auto">
-        <SheetHeader className="flex flex-row items-start justify-between mb-5">
-          <SheetTitle className="text-xl font-semibold">{lender.name}</SheetTitle>
-          <SheetClose asChild>
-            <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full">
-              <X className="h-4 w-4" />
+    <Card className="bg-[#0f1628] border border-gray-800">
+      <div className="p-6">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-semibold">{lenderName}</h2>
+          <ChevronRight className="h-5 w-5 opacity-70" />
+        </div>
+
+        <div className="mt-8">
+          <h3 className="text-2xl font-semibold text-gray-300 mb-4">
+            {lenderName}
+          </h3>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div>
+              <h4 className="text-sm text-gray-400 mb-2">About</h4>
+              <p className="text-gray-300">
+                {description}
+              </p>
+            </div>
+
+            <div>
+              <h4 className="text-sm text-gray-400 mb-2">Key Metrics</h4>
+              <ul className="space-y-2">
+                <li className="flex items-center gap-2">
+                  <Info className="h-4 w-4 text-blue-500" />
+                  <span className="text-gray-300">Interest Rate: {interestRate}%</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle className="h-4 w-4 text-green-500" />
+                  <span className="text-gray-300">Approval Rate: {approvalRate}%</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <Calendar className="h-4 w-4 text-yellow-500" />
+                  <span className="text-gray-300">Funding Time: {fundingTime}</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="mt-6">
+            <h4 className="text-sm text-gray-400 mb-2">Key Features</h4>
+            <ul className="list-disc list-inside text-gray-300">
+              {features.map((feature, index) => (
+                <li key={index}>{feature}</li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="flex justify-between items-center mt-8">
+            <InterestedButton onInterest={handleInterested} />
+            <Button variant="outline" className="border-gray-700 text-white hover:bg-[#1c2e4a]">
+              Learn More
             </Button>
-          </SheetClose>
-        </SheetHeader>
-        
-        <div className="space-y-6">
-          <div>
-            <h3 className="font-medium text-base">{lender.offering}</h3>
-            <p className="text-sm text-muted-foreground">{lender.description}</p>
-          </div>
-          
-          <div>
-            <h3 className="font-medium text-base mb-2">About {lender.name}</h3>
-            <p className="text-sm text-muted-foreground">{lender.about}</p>
-          </div>
-          
-          <div>
-            <h3 className="font-medium text-base mb-2">How It Works</h3>
-            <p className="text-sm text-muted-foreground">{lender.howItWorks}</p>
-          </div>
-          
-          <div>
-            <h3 className="font-medium text-base mb-2">Get Started</h3>
-            <p className="text-sm text-muted-foreground mb-4">
-              To get started, schedule a meeting with your advisor or tell them you're interested in this offering.
-            </p>
-            <div className="flex gap-3">
-              <InterestedButton assetName={`${lender.name} ${lender.offering}`} />
-              <Button variant="outline" onClick={handleScheduleMeeting}>
-                <Calendar className="h-4 w-4 mr-2" /> Schedule a Meeting
-              </Button>
-            </div>
-          </div>
-          
-          <div>
-            <h3 className="font-medium text-base mb-2">Details</h3>
-            
-            <div className="space-y-4">
-              <div className="border rounded-md p-4">
-                <h4 className="text-sm font-medium mb-2">Other Offerings</h4>
-                <ul className="text-sm text-muted-foreground space-y-1">
-                  {lender.otherOfferings.map((offering, index) => (
-                    <li key={index}>{offering}</li>
-                  ))}
-                </ul>
-              </div>
-              
-              <div className="border rounded-md p-4">
-                <h4 className="text-sm font-medium mb-2">Top Underwriters</h4>
-                <ul className="text-sm text-muted-foreground space-y-1">
-                  {lender.topUnderwriters.map((underwriter, index) => (
-                    <li key={index}>{underwriter}</li>
-                  ))}
-                </ul>
-              </div>
-            </div>
           </div>
         </div>
-      </SheetContent>
-    </Sheet>
+      </div>
+    </Card>
   );
 };
+
+export default LenderDetail;

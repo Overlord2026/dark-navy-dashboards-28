@@ -1,5 +1,4 @@
-
-import React from "react";
+import React, { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -17,8 +16,8 @@ import {
   UserSquare
 } from "lucide-react";
 import { motion } from "framer-motion";
-import { InterestedButton } from "@/components/investments/InterestedButton";
-import { ScheduleMeetingDialog } from "@/components/investments/ScheduleMeetingDialog";
+import { InterestedButton } from "@/components/common/InterestedButton";
+import { ScheduleMeetingDialog } from "@/components/common/ScheduleMeetingDialog";
 import { Link } from "react-router-dom";
 import { SecureTaxReturnAnalysis } from "@/components/estate-planning/SecureTaxReturnAnalysis";
 import { AccountingSoftwareIntegration } from "@/components/tax-planning/AccountingSoftwareIntegration";

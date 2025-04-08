@@ -63,7 +63,6 @@ export const navigationCategories: NavCategory[] = [
     defaultExpanded: true,
     items: [
       { id: "education", label: "Education Center", icon: GraduationCapIcon, href: "/education" },
-      // Removed investments items
       { id: "tax-planning", label: "Tax Planning", icon: PieChart, href: "/tax-planning" },
       { id: "insurance", label: "Insurance", icon: ShieldIcon, href: "/insurance" },
       { id: "lending", label: "Lending", icon: BanknoteIcon, href: "/lending" },
@@ -119,8 +118,6 @@ export const educationSubMenuItems: MenuItem[] = [
   { id: "premium", name: "Premium Courses" },
 ];
 
-// Removed all investment-related sub-menu items
-
 export const getSecondaryMenuItems = (activeMainItem: string): MenuItem[] => {
   switch (activeMainItem) {
     case "accounts":
@@ -129,7 +126,6 @@ export const getSecondaryMenuItems = (activeMainItem: string): MenuItem[] => {
       return sharingSubMenuItems;
     case "education":
       return educationSubMenuItems;
-    // Removed all investment-related cases
     default:
       return [];
   }

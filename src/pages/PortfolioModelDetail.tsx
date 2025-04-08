@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
@@ -13,8 +13,8 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { ChevronLeft, Download, Briefcase, BarChart3, PieChart, LineChart, TrendingUp, AlertCircle, CalendarClock } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { ScheduleMeetingDialog } from "@/components/investments/ScheduleMeetingDialog";
-import { InterestedButton } from "@/components/investments/InterestedButton";
+import { ScheduleMeetingDialog } from "@/components/common/ScheduleMeetingDialog";
+import { InterestedButton } from "@/components/common/InterestedButton";
 
 interface PortfolioModel {
   id: string;

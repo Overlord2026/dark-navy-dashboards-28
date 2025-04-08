@@ -143,6 +143,11 @@ const routes = createBrowserRouter([
     path: "/navigation-diagnostics",
     element: <NavigationDiagnostics />
   },
+  // Add a catch-all route for any investments paths that might still be accessed
+  {
+    path: "/investments/*",
+    element: <NotFound />
+  },
   {
     path: "*",
     element: <NotFound />
