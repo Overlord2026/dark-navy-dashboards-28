@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -6,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
-import { ChevronRight, Search, Plus, ArrowUpDown, Filter } from "lucide-react";
+import { ChevronRight, Search, Plus, ArrowUpDown, Filter, PieChart } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 
@@ -138,7 +137,7 @@ const ModelPortfolioList: React.FC = () => {
   const uniqueTaxStatuses = Array.from(new Set(portfolios.map(p => p.taxStatus)));
 
   const handlePortfolioClick = (portfolioId: string) => {
-    navigate(`/model-portfolio-manager/${portfolioId}`);
+    navigate(`/model-portfolio/${portfolioId}`);
   };
 
   const handleCreateNew = () => {
@@ -153,13 +152,18 @@ const ModelPortfolioList: React.FC = () => {
   };
 
   return (
-    <ThreeColumnLayout activeMainItem="investments" title="Model Portfolios">
+    <ThreeColumnLayout activeMainItem="model-portfolios" title="Model Portfolios">
       <div className="space-y-6">
         <div className="flex justify-between items-center">
           <h1 className="text-2xl font-bold">Model Portfolios</h1>
-          <Button onClick={handleCreateNew} className="flex items-center gap-1">
-            <Plus className="h-4 w-4" /> Create New
-          </Button>
+          <div className="flex gap-2">
+            <Button onClick={() => navigate('/investments/model-portfolios')} variant="outline" className="flex items-center gap-1">
+              <PieChart className="h-4 w-4" /> Browse Models
+            </Button>
+            <Button onClick={handleCreateNew} className="flex items-center gap-1">
+              <Plus className="h-4 w-4" /> Create New
+            </Button>
+          </div>
         </div>
         
         <Card>

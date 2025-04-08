@@ -1,4 +1,3 @@
-
 import React from "react";
 import { createBrowserRouter } from "react-router-dom";
 import Dashboard from "@/pages/Dashboard";
@@ -41,8 +40,8 @@ import { ProfessionalsRouteWrapper } from "@/components/providers/ProfessionalsR
 import AlternativeAssetCategory from "@/pages/AlternativeAssetCategory";
 import ModelPortfolioManager from "@/pages/ModelPortfolioManager";
 import ModelPortfolioList from "@/pages/ModelPortfolioList";
+import ModelPortfolioViewer from "@/pages/ModelPortfolioViewer";
 
-// Create a route layout helper to avoid repetition
 const createInvestmentProviderRoutes = () => {
   const providers = [
     'bfo-asset-management', 'bfo-model-marketplace', 'adelante', 'alpha-quant', 
@@ -95,7 +94,6 @@ const alternativeAssetRoutes = [
   },
 ];
 
-// Model Portfolio routes
 const modelPortfolioRoutes = [
   {
     path: "/model-portfolio-list",
@@ -108,6 +106,10 @@ const modelPortfolioRoutes = [
   {
     path: "/model-portfolio-manager/:portfolioId",
     element: <ModelPortfolioManager />
+  },
+  {
+    path: "/model-portfolio/:portfolioId",
+    element: <ModelPortfolioViewer />
   },
 ];
 

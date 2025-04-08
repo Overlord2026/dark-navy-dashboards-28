@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
@@ -24,7 +23,6 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { ChevronLeft, Plus, X, ArrowUpDown, Info, PieChart } from "lucide-react";
 
-// Types for our model portfolio system
 interface ModelHolding {
   id: string;
   ticker: string;
@@ -48,7 +46,6 @@ interface AssetClass {
   color: string;
 }
 
-// Sample data for asset management firms and their portfolio series
 const assetManagementFirms = [
   { id: 'adelante', name: 'Adelante' },
   { id: 'alpha-quant', name: 'Alpha Quant' },
@@ -82,38 +79,30 @@ const getPortfolioSeriesByFirm = (firm: string) => {
   }
 };
 
-// Sample allocation options
 const allocationOptions = ['100/0', '90/10', '80/20', '70/30', '60/40', '50/50', '40/60', '30/70', '20/80', '10/90', '0/100'];
 
-// Tax status options
 const taxStatusOptions = ['Any', 'Taxable', 'Tax-Exempt', 'Tax-Deferred'];
 
 const ModelPortfolioManager: React.FC = () => {
   const navigate = useNavigate();
   const { portfolioId } = useParams<{ portfolioId: string }>();
   
-  // State for portfolio selector dialog
   const [isPickDialogOpen, setIsPickDialogOpen] = useState(false);
   const [selectedFirm, setSelectedFirm] = useState<string>("");
   const [selectedSeries, setSelectedSeries] = useState<string>("");
   const [selectedAllocation, setSelectedAllocation] = useState<string>("100/0");
   const [selectedTaxStatus, setSelectedTaxStatus] = useState<string>("Any");
   
-  // State for currently viewing portfolio
   const [currentPortfolio, setCurrentPortfolio] = useState<ModelPortfolio | null>(null);
 
-  // State for add/edit holding dialog
   const [isHoldingDialogOpen, setIsHoldingDialogOpen] = useState(false);
   const [editingHolding, setEditingHolding] = useState<ModelHolding | null>(null);
   const [newTickerInput, setNewTickerInput] = useState("");
   const [newNameInput, setNewNameInput] = useState("");
   const [newWeightInput, setNewWeightInput] = useState("");
 
-  // Load portfolio data (in a real app, this would fetch from an API)
   useEffect(() => {
-    // Simulate loading data based on portfolioId
     if (portfolioId) {
-      // This is mock data - in a real app this would be an API call
       if (portfolioId === "adelante-us-real-estate") {
         setCurrentPortfolio({
           id: "adelante-us-real-estate",
@@ -174,7 +163,6 @@ const ModelPortfolioManager: React.FC = () => {
           ]
         });
       } else {
-        // Default empty portfolio
         setCurrentPortfolio({
           id: portfolioId,
           name: "New Model Portfolio",
@@ -186,16 +174,11 @@ const ModelPortfolioManager: React.FC = () => {
         });
       }
     } else {
-      // No portfolio selected, could redirect to list view or show empty state
       setCurrentPortfolio(null);
     }
   }, [portfolioId]);
 
-  // Calculate asset classes for the pie chart
   const calculateAssetClasses = (holdings: ModelHolding[]): AssetClass[] => {
-    // In a real app, you would categorize holdings into asset classes
-    // This is a simplified example that just assumes all holdings are equity except for cash
-    
     const cashHoldings = holdings.filter(h => h.ticker === "US DOLLAR" || h.name.includes("CASH"));
     const cashWeight = cashHoldings.reduce((sum, h) => sum + h.weight, 0);
     
@@ -204,8 +187,8 @@ const ModelPortfolioManager: React.FC = () => {
       .reduce((sum, h) => sum + h.weight, 0);
     
     return [
-      { name: "Equity", weight: equityWeight, color: "#22c55e" }, // Green color
-      { name: "Cash", weight: cashWeight, color: "#3b82f6" }      // Blue color
+      { name: "Equity", weight: equityWeight, color: "#22c55e" },
+      { name: "Cash", weight: cashWeight, color: "#3b82f6" }
     ];
   };
 
@@ -215,17 +198,14 @@ const ModelPortfolioManager: React.FC = () => {
       return;
     }
     
-    // In a real app, you would navigate to the selected portfolio or load its data
     toast.success(`Selected ${selectedSeries}`);
     setIsPickDialogOpen(false);
     
-    // For demo purposes, navigate to one of our sample portfolios
     if (selectedFirm === 'adelante' && selectedSeries.includes('real-estate')) {
       navigate('/model-portfolio-manager/adelante-us-real-estate');
     } else if (selectedFirm === 'alpha-quant' && selectedSeries.includes('mid-cap')) {
       navigate('/model-portfolio-manager/alpha-quant-mid-cap-quality');
     } else {
-      // Default to a new empty portfolio
       navigate('/model-portfolio-manager/new');
     }
   };
@@ -262,7 +242,6 @@ const ModelPortfolioManager: React.FC = () => {
       const updatedHoldings = [...currentPortfolio.holdings];
       
       if (editingHolding) {
-        // Update existing holding
         const index = updatedHoldings.findIndex(h => h.id === editingHolding.id);
         if (index !== -1) {
           updatedHoldings[index] = {
@@ -273,7 +252,6 @@ const ModelPortfolioManager: React.FC = () => {
           };
         }
       } else {
-        // Add new holding
         const newId = newTickerInput.toLowerCase();
         updatedHoldings.push({
           id: newId,
@@ -283,7 +261,6 @@ const ModelPortfolioManager: React.FC = () => {
         });
       }
       
-      // Update portfolio with new holdings
       setCurrentPortfolio({
         ...currentPortfolio,
         holdings: updatedHoldings
@@ -310,8 +287,14 @@ const ModelPortfolioManager: React.FC = () => {
   const totalWeight = currentPortfolio?.holdings.reduce((sum, holding) => sum + holding.weight, 0) || 0;
   const assetClasses = currentPortfolio ? calculateAssetClasses(currentPortfolio.holdings) : [];
 
+  const handleViewPortfolio = () => {
+    if (currentPortfolio) {
+      navigate(`/model-portfolio/${currentPortfolio.id}`);
+    }
+  };
+
   return (
-    <ThreeColumnLayout activeMainItem="investments" title="Model Portfolio Manager">
+    <ThreeColumnLayout activeMainItem="model-portfolios" title="Model Portfolio Manager">
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           {currentPortfolio ? (
@@ -320,16 +303,21 @@ const ModelPortfolioManager: React.FC = () => {
                 <Button 
                   variant="outline" 
                   size="sm" 
-                  onClick={() => navigate('/investments/model-portfolios')} 
+                  onClick={() => navigate('/model-portfolio-list')} 
                   className="flex items-center gap-1"
                 >
                   <ChevronLeft className="h-4 w-4" /> Back
                 </Button>
                 <h1 className="text-2xl font-bold">{currentPortfolio.name}</h1>
               </div>
-              <Button onClick={() => setIsPickDialogOpen(true)}>
-                Pick Different Portfolio
-              </Button>
+              <div className="flex gap-2">
+                <Button variant="outline" onClick={handleViewPortfolio}>
+                  View Portfolio
+                </Button>
+                <Button onClick={() => setIsPickDialogOpen(true)}>
+                  Pick Different Portfolio
+                </Button>
+              </div>
             </>
           ) : (
             <>
@@ -458,7 +446,6 @@ const ModelPortfolioManager: React.FC = () => {
                     <div>
                       <h4 className="text-sm font-medium mb-2">Allocation by Asset Class</h4>
                       <div className="relative h-[200px] w-[200px] mx-auto">
-                        {/* This is a simplified pie chart visualization */}
                         <div className="absolute inset-0 flex items-center justify-center">
                           <PieChart className="h-8 w-8 text-muted-foreground" />
                         </div>
@@ -498,7 +485,6 @@ const ModelPortfolioManager: React.FC = () => {
         )}
       </div>
       
-      {/* Portfolio Picker Dialog */}
       <Dialog open={isPickDialogOpen} onOpenChange={setIsPickDialogOpen}>
         <DialogContent className="sm:max-w-md bg-[#060f1e] border-gray-800">
           <DialogHeader>
@@ -590,7 +576,6 @@ const ModelPortfolioManager: React.FC = () => {
         </DialogContent>
       </Dialog>
       
-      {/* Add/Edit Holding Dialog */}
       <Dialog open={isHoldingDialogOpen} onOpenChange={setIsHoldingDialogOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>

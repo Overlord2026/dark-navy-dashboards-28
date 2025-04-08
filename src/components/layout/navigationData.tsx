@@ -1,4 +1,3 @@
-
 import React from "react";
 import {
   HomeIcon,
@@ -213,9 +212,10 @@ export const modelPortfolioProviders: MenuItem[] = [
 export const modelPortfolioManagerItems: MenuItem[] = [
   { id: "portfolio-list", name: "Portfolio List", active: true },
   { id: "portfolio-manager", name: "Portfolio Manager" },
-  { id: "adelante-us-real-estate", name: "Adelante US Real Estate" },
-  { id: "alpha-quant-mid-cap", name: "Alpha Quant Mid Cap" },
-  { id: "blackrock-60-40", name: "BlackRock 60/40 Portfolio" },
+  { id: "balanced-growth", name: "Balanced Growth Portfolio" },
+  { id: "income-focus", name: "Income Focus Portfolio" },
+  { id: "growth-aggressive", name: "Aggressive Growth Portfolio" },
+  { id: "esg-portfolio", name: "ESG Focus Portfolio" },
   { id: "create-new", name: "Create New Portfolio" },
 ];
 
