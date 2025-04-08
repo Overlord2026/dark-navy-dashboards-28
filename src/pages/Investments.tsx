@@ -29,21 +29,21 @@ const Investments: React.FC = () => {
             <TabsList className="w-full grid grid-cols-3 mb-8 bg-[#1a283e] rounded-md overflow-hidden">
               <TabsTrigger 
                 value="model-portfolios"
-                className="py-4 px-3 text-center border-r border-[#2a3854] data-[state=active]:bg-black data-[state=active]:text-white transition-colors focus:outline-none text-xs sm:text-sm"
+                className="py-3 px-2 text-center border-r border-[#2a3854] data-[state=active]:bg-black data-[state=active]:text-white transition-colors focus:outline-none text-xs"
               >
-                BFO Model Portfolios
+                BFO Models
               </TabsTrigger>
               <TabsTrigger 
                 value="intelligent-allocation"
-                className="py-4 px-3 text-center border-r border-[#2a3854] data-[state=active]:bg-black data-[state=active]:text-white transition-colors focus:outline-none text-xs sm:text-sm"
+                className="py-3 px-2 text-center border-r border-[#2a3854] data-[state=active]:bg-black data-[state=active]:text-white transition-colors focus:outline-none text-xs"
               >
-                Intelligent Allocation
+                Intelligent Alloc.
               </TabsTrigger>
               <TabsTrigger 
                 value="alternative-assets"
-                className="py-4 px-3 text-center data-[state=active]:bg-black data-[state=active]:text-white transition-colors focus:outline-none text-xs sm:text-sm"
+                className="py-3 px-2 text-center data-[state=active]:bg-black data-[state=active]:text-white transition-colors focus:outline-none text-xs"
               >
-                Private Market Alpha
+                Private Markets
               </TabsTrigger>
             </TabsList>
             
