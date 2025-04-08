@@ -29,6 +29,7 @@ import PrivateDebt from "@/pages/investments/PrivateDebt";
 import DigitalAssets from "@/pages/investments/DigitalAssets";
 import RealAssets from "@/pages/investments/RealAssets";
 import ModelPortfolios from "@/pages/investments/ModelPortfolios";
+import AllModelPortfolios from "@/pages/AllModelPortfolios";
 import StockScreener from "@/pages/investments/StockScreener";
 import IPProtection from "@/pages/IPProtection";
 import AdvisorFeedback from "@/pages/AdvisorFeedback";
@@ -200,6 +201,10 @@ const routes = createBrowserRouter([
   {
     path: "/investments/model-portfolios",
     element: <ModelPortfolios />
+  },
+  {
+    path: "/investments/models/all",
+    element: <AllModelPortfolios />
   },
   {
     path: "/investments/stock-screener",

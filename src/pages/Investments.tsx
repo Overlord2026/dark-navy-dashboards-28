@@ -1,9 +1,10 @@
+
 import React, { useState, useEffect } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { ChevronRight, Briefcase, SearchIcon, CalendarClock, FileText, Download } from "lucide-react";
+import { ChevronRight, Briefcase, SearchIcon, CalendarClock, FileText } from "lucide-react";
 import { IntelligentAllocationTab } from "@/components/investments/IntelligentAllocationTab";
 import { StockScreener } from "@/components/investments/StockScreener";
 import { Badge } from "@/components/ui/badge";
@@ -159,45 +160,6 @@ const Investments = () => {
     }
   ];
 
-  // Additional categories as requested
-  const additionalCategories: AssetCategory[] = [
-    { id: 'bfo-asset-management', name: 'BFO Asset Management', description: 'Explore BFO Asset Management solutions', icon: <Briefcase className="h-10 w-10 text-teal-500" />, route: "/investments/bfo-asset-management" },
-    { id: 'bfo-model-marketplace', name: 'BFO Model Marketplace', description: 'Discover models on the BFO marketplace', icon: <Briefcase className="h-10 w-10 text-emerald-500" />, route: "/investments/bfo-model-marketplace" },
-    { id: 'adelante', name: 'Adelante', description: 'Explore solutions offered by Adelante', icon: <Briefcase className="h-10 w-10 text-blue-500" />, route: "/investments/adelante" },
-    { id: 'alpha-quant', name: 'Alpha Quant', description: 'Quantitative investment strategies by Alpha Quant', icon: <Briefcase className="h-10 w-10 text-purple-500" />, route: "/investments/alpha-quant" },
-    { id: 'ativo', name: 'Ativo', description: 'Investment solutions from Ativo', icon: <Briefcase className="h-10 w-10 text-indigo-500" />, route: "/investments/ativo" },
-    { id: 'avantis', name: 'Avantis', description: 'Avantis investment opportunities', icon: <Briefcase className="h-10 w-10 text-blue-500" />, route: "/investments/avantis" },
-    { id: 'blackrock', name: 'BlackRock', description: 'BlackRock investment strategies and funds', icon: <Briefcase className="h-10 w-10 text-gray-700" />, route: "/investments/blackrock" },
-    { id: 'brown-advisory', name: 'Brown Advisory', description: 'Brown Advisory investment solutions', icon: <Briefcase className="h-10 w-10 text-amber-800" />, route: "/investments/brown-advisory" },
-    { id: 'camelot-portfolios', name: 'Camelot Portfolios', description: 'Strategic investment portfolios by Camelot', icon: <Briefcase className="h-10 w-10 text-blue-600" />, route: "/investments/camelot-portfolios" },
-    { id: 'capital-group', name: 'Capital Group', description: 'Investment solutions from Capital Group', icon: <Briefcase className="h-10 w-10 text-red-600" />, route: "/investments/capital-group" },
-    { id: 'churchill', name: 'Churchill', description: 'Churchill investment strategies', icon: <Briefcase className="h-10 w-10 text-blue-800" />, route: "/investments/churchill" },
-    { id: 'dearborn', name: 'Dearborn', description: 'Dearborn investment opportunities', icon: <Briefcase className="h-10 w-10 text-green-700" />, route: "/investments/dearborn" },
-    { id: 'dundas', name: 'Dundas', description: 'Dundas global investment solutions', icon: <Briefcase className="h-10 w-10 text-blue-500" />, route: "/investments/dundas" },
-    { id: 'easterly', name: 'Easterly Investment Partners', description: 'Investment solutions from Easterly', icon: <Briefcase className="h-10 w-10 text-sky-600" />, route: "/investments/easterly" },
-    { id: 'franklin-templeton', name: 'Franklin Templeton', description: 'Franklin Templeton investment strategies', icon: <Briefcase className="h-10 w-10 text-green-600" />, route: "/investments/franklin-templeton" },
-    { id: 'gwk', name: 'GW&K', description: 'GW&K investment opportunities', icon: <Briefcase className="h-10 w-10 text-blue-700" />, route: "/investments/gwk" },
-    { id: 'goldman-sachs', name: 'Goldman Sachs', description: 'Goldman Sachs investment solutions', icon: <Briefcase className="h-10 w-10 text-blue-900" />, route: "/investments/goldman-sachs" },
-    { id: 'jpmorgan', name: 'JPMorgan', description: 'JPMorgan investment strategies and funds', icon: <Briefcase className="h-10 w-10 text-blue-800" />, route: "/investments/jpmorgan" },
-    { id: 'nuveen', name: 'Nuveen', description: 'Nuveen investment opportunities', icon: <Briefcase className="h-10 w-10 text-teal-700" />, route: "/investments/nuveen" },
-    { id: 'polen', name: 'Polen', description: 'Polen investment solutions', icon: <Briefcase className="h-10 w-10 text-indigo-600" />, route: "/investments/polen" },
-    { id: 'saratoga', name: 'Saratoga', description: 'Saratoga investment strategies', icon: <Briefcase className="h-10 w-10 text-red-700" />, route: "/investments/saratoga" },
-    { id: 'sawgrass', name: 'Sawgrass', description: 'Sawgrass investment opportunities', icon: <Briefcase className="h-10 w-10 text-green-800" />, route: "/investments/sawgrass" },
-    { id: 'schafer-cullen', name: 'Schafer Cullen', description: 'Schafer Cullen investment solutions', icon: <Briefcase className="h-10 w-10 text-purple-700" />, route: "/investments/schafer-cullen" },
-    { id: 'state-street', name: 'State Street', description: 'State Street investment strategies', icon: <Briefcase className="h-10 w-10 text-blue-600" />, route: "/investments/state-street" },
-    { id: 'suncoast', name: 'Suncoast', description: 'Suncoast investment opportunities', icon: <Briefcase className="h-10 w-10 text-yellow-600" />, route: "/investments/suncoast" },
-    { id: 'trowe-price', name: 'T. Rowe Price', description: 'T. Rowe Price investment solutions', icon: <Briefcase className="h-10 w-10 text-blue-700" />, route: "/investments/trowe-price" },
-    { id: 'victory-capital', name: 'Victory Capital', description: 'Victory Capital investment strategies', icon: <Briefcase className="h-10 w-10 text-red-600" />, route: "/investments/victory-capital" },
-    { id: 'washington-crossing', name: 'Washington Crossing', description: 'Washington Crossing investment opportunities', icon: <Briefcase className="h-10 w-10 text-indigo-700" />, route: "/investments/washington-crossing" },
-    { id: 'zacks', name: 'Zacks', description: 'Zacks investment solutions', icon: <Briefcase className="h-10 w-10 text-green-600" />, route: "/investments/zacks" },
-    { id: 'custom-portfolios', name: 'Custom Portfolios', description: 'Personalized investment portfolios', icon: <Briefcase className="h-10 w-10 text-purple-600" />, route: "/investments/custom-portfolios" },
-    { id: 'shared-by-advisor', name: 'Shared by your advisor', description: 'View portfolios shared by your advisor', icon: <Briefcase className="h-10 w-10 text-blue-500" />, route: "/investments/shared-by-advisor" },
-    { id: 'custom', name: 'Custom', description: 'Create your own custom investment strategy', icon: <Briefcase className="h-10 w-10 text-gray-600" />, route: "/investments/custom" }
-  ];
-
-  // Combine all categories
-  const allCategories = [...coreAssetCategories, ...additionalCategories];
-  
   // Portfolio models data for the Model Portfolios tab
   const portfolioModels: PortfolioModel[] = [
     {
@@ -276,6 +238,10 @@ const Investments = () => {
     navigate("/investments/models/all");
   };
 
+  const handleViewModelManagers = () => {
+    navigate("/investments/model-portfolios");
+  };
+
   const handleStartBuildingClick = () => {
     navigate("/investments/builder");
   };
@@ -299,22 +265,6 @@ const Investments = () => {
   const handleAssetClick = (path: string) => {
     navigate(path);
   };
-
-  const handleDownloadFactSheet = (categoryName: string) => {
-    toast.success(`Downloading fact sheet for ${categoryName}`, {
-      description: "Your download will begin shortly.",
-    });
-    // In a real app this would trigger an actual download
-  };
-
-  // Chunk the categories for responsive grid
-  const chunkArray = <T,>(array: T[], size: number): T[][] => {
-    return Array.from({ length: Math.ceil(array.length / size) }, (_, i) =>
-      array.slice(i * size, i * size + size)
-    );
-  };
-  
-  const chunkedAdditionalCategories = chunkArray(additionalCategories, 3);
 
   return (
     <ThreeColumnLayout activeMainItem="investments" title="Investments">
@@ -369,47 +319,6 @@ const Investments = () => {
                     </div>
                   ))}
                 </div>
-              </div>
-              
-              <div className="space-y-6">
-                <h3 className="text-xl font-medium">Investment Managers & Solutions</h3>
-                
-                {chunkedAdditionalCategories.map((chunk, index) => (
-                  <div key={index} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {chunk.map((category) => (
-                      <div 
-                        key={category.id}
-                        onClick={() => handleAssetClick(category.route)} 
-                        className="bg-card hover:bg-accent text-card-foreground rounded-lg border shadow-sm p-4 block cursor-pointer"
-                      >
-                        <div className="flex flex-col gap-3">
-                          <div className="flex justify-between items-center">
-                            {category.icon}
-                          </div>
-                          <div>
-                            <h4 className="text-lg font-medium">{category.name}</h4>
-                            <p className="text-muted-foreground text-sm mt-1">{category.description}</p>
-                          </div>
-                          <div className="flex justify-between items-center">
-                            <Button
-                              variant="ghost" 
-                              size="sm" 
-                              className="text-blue-600 hover:text-blue-800 p-0"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleDownloadFactSheet(category.name);
-                              }}
-                            >
-                              <FileText className="h-4 w-4 mr-1" />
-                              Fact Sheet
-                            </Button>
-                            <ChevronRight className="h-5 w-5 text-muted-foreground" />
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                ))}
               </div>
             </div>
           </TabsContent>
@@ -473,6 +382,28 @@ const Investments = () => {
                       </div>
                     </div>
                   ))}
+                </div>
+              </div>
+              
+              <div className="mt-8">
+                <h3 className="text-xl font-medium mb-4">Investment Manager Portfolios</h3>
+                <div className="bg-card border rounded-lg p-6">
+                  <p className="text-muted-foreground mb-4">Explore a wide range of model portfolios from top investment managers</p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <Button className="w-full" onClick={handleViewModelManagers}>View All Managers</Button>
+                    <Button 
+                      variant="outline" 
+                      className="w-full flex items-center justify-center gap-2"
+                      onClick={(e) => {
+                        window.open("https://calendly.com/tonygomes/60min", "_blank");
+                        toast.success("Opening scheduling page", {
+                          description: "Schedule a consultation with an advisor to discuss portfolio options.",
+                        });
+                      }}
+                    >
+                      <CalendarClock className="h-4 w-4" /> Schedule Consultation
+                    </Button>
+                  </div>
                 </div>
               </div>
               

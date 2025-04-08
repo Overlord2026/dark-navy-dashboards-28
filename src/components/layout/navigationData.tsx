@@ -1,3 +1,4 @@
+
 import React from "react";
 import {
   HomeIcon,
@@ -117,6 +118,15 @@ export const educationSubMenuItems: MenuItem[] = [
   { id: "premium", name: "Premium Courses" },
 ];
 
+// Investment submenu items
+export const investmentSubMenuItems: MenuItem[] = [
+  { id: "overview", name: "Overview", active: true },
+  { id: "private-market", name: "Private Market Alpha" },
+  { id: "model-portfolios", name: "Model Portfolios" },
+  { id: "intelligent", name: "Intelligent Allocation" },
+  { id: "stock-screener", name: "Stock Screener" },
+];
+
 // Fund manager submenu for each category with focus on the companies requested
 export const privateEquityProviders: MenuItem[] = [
   { id: "all-pe", name: "All Private Equity", active: true },
@@ -180,6 +190,22 @@ export const digitalAssetsProviders: MenuItem[] = [
   { id: "parafi", name: "ParaFi Capital" },
 ];
 
+export const modelPortfolioProviders: MenuItem[] = [
+  { id: "all-models", name: "All Model Portfolios", active: true },
+  { id: "bfo-asset-management", name: "BFO Asset Management" },
+  { id: "bfo-model-marketplace", name: "BFO Model Marketplace" },
+  { id: "adelante", name: "Adelante" },
+  { id: "alpha-quant", name: "Alpha Quant" },
+  { id: "ativo", name: "Ativo" },
+  { id: "avantis", name: "Avantis" },
+  { id: "blackrock", name: "BlackRock" },
+  { id: "brown-advisory", name: "Brown Advisory" },
+  { id: "camelot-portfolios", name: "Camelot Portfolios" },
+  { id: "capital-group", name: "Capital Group" },
+  { id: "churchill", name: "Churchill" },
+  { id: "dearborn", name: "Dearborn" },
+];
+
 export const getSecondaryMenuItems = (activeMainItem: string): MenuItem[] => {
   switch (activeMainItem) {
     case "accounts":
@@ -189,7 +215,7 @@ export const getSecondaryMenuItems = (activeMainItem: string): MenuItem[] => {
     case "education":
       return educationSubMenuItems;
     case "investments":
-      return [];
+      return investmentSubMenuItems;
     case "private-equity":
       return privateEquityProviders;
     case "private-debt":
@@ -198,6 +224,8 @@ export const getSecondaryMenuItems = (activeMainItem: string): MenuItem[] => {
       return realAssetsProviders;
     case "digital-assets":
       return digitalAssetsProviders;
+    case "model-portfolios":
+      return modelPortfolioProviders;
     default:
       return [];
   }
