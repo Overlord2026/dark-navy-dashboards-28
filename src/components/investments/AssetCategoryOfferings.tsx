@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft } from "lucide-react";
@@ -201,16 +200,77 @@ const offeringsByCategory: Record<string, any[]> = {
       tags: ["Direct Lending", "Middle Market", "Income"]
     }
   ],
+  
   "hedge-fund": [
     {
       id: "hf-1",
-      name: "BlackRock Alternative Capital Fund",
-      description: "Multi-strategy hedge fund solution providing diversified exposure to various alternative strategies.",
-      firm: "BlackRock",
+      name: "Brevan Howard PT Fund LP",
+      description: "BHMF is Brevan Howard's flagship fund, launched in April 2003. It pursues a multi-trader model combining macro directional and macro relative value strategies, aiming to deliver compelling, asymmetric returns.",
+      firm: "Brevan Howard",
+      minimumInvestment: "$5,000,000",
+      tags: ["Multi-Trader", "Macro Directional", "Macro Relative Value"],
+      featured: true
+    },
+    {
+      id: "hf-2",
+      name: "CAIS Monroe PCF V (Onshore), L.P.",
+      description: "CAIS Monroe PCF V (Onshore), L.P. will invest nearly all of its assets into Monroe Capital Private Credit Fund V, focusing on senior secured loans, unitranche, and opportunistic investments in lower middle market companies in North America.",
+      firm: "Monroe Capital",
       minimumInvestment: "$100,000",
-      tags: ["Multi-Strategy", "Liquid Alternatives"]
+      tags: ["Senior Secured", "Unitranche", "North America"],
+      featured: true
+    },
+    {
+      id: "hf-3",
+      name: "KKR FS Income Trust (\"K-FIT\")",
+      description: "K-FIT is a privately offered business development company that grants direct access to KKR's comprehensive Private Credit Platform, targeting allocations in corporate direct lending and asset-based finance.",
+      firm: "KKR",
+      minimumInvestment: "$50,000",
+      tags: ["BDC", "Direct Lending", "Asset-Based Finance"],
+      featured: true
+    },
+    {
+      id: "hf-4",
+      name: "ACRE Credit II Offshore LP",
+      description: "ACRE Credit Offshore II is an offshore investment fund in the Cayman Islands that focuses on providing innovative credit solutions through its diversified investment approach.",
+      firm: "Asia Capital Real Estate",
+      minimumInvestment: "$250,000",
+      tags: ["Offshore", "Cayman Islands", "Credit Solutions"]
+    },
+    {
+      id: "hf-5",
+      name: "ACRE Credit Partners II LP",
+      description: "ACRE Credit Partners II is a real estate debt fund managed by Asia Capital Real Estate, dedicated to delivering credit solutions in the real estate sector.",
+      firm: "Asia Capital Real Estate",
+      minimumInvestment: "$250,000",
+      tags: ["Real Estate Debt", "Credit Solutions"]
+    },
+    {
+      id: "hf-6",
+      name: "AG Twin Brook Capital Income Fund (\"TCAP\")",
+      description: "TCAP aims to generate attractive, consistent total returns by targeting private debt opportunities with favorable risk-adjusted returns, predominantly through current income.",
+      firm: "Angelo Gordon",
+      minimumInvestment: "$100,000",
+      tags: ["Current Income", "Consistent Returns", "Private Debt"]
+    },
+    {
+      id: "hf-7",
+      name: "Apollo Asset Backed Credit Company LLC",
+      description: "Apollo Asset Backed Credit Company is a semi-liquid turnkey solution providing investors access to high-quality, asset-backed instruments across diverse sectors.",
+      firm: "Apollo Global Management",
+      minimumInvestment: "$100,000",
+      tags: ["Asset-Backed", "High Yield", "Diverse Sectors"]
+    },
+    {
+      id: "hf-8",
+      name: "Apollo Debt Solutions BDC",
+      description: "Apollo Debt Solutions BDC is a registered, non-listed business development company that offers individual investors exclusive access to private debt investments, focusing on senior secured loans and broadly syndicated deals.",
+      firm: "Apollo Global Management",
+      minimumInvestment: "$50,000",
+      tags: ["BDC", "Senior Secured", "Broadly Syndicated"]
     }
   ],
+  
   "venture-capital": [
     {
       id: "vc-1",
@@ -221,6 +281,7 @@ const offeringsByCategory: Record<string, any[]> = {
       tags: ["Late-Stage Venture", "Pre-IPO", "Growth"]
     }
   ],
+  
   "digital-assets": [
     {
       id: "da-1",
@@ -231,6 +292,7 @@ const offeringsByCategory: Record<string, any[]> = {
       tags: ["Digital Assets", "Diversified", "Large Cap"]
     }
   ],
+  
   "real-assets": [
     {
       id: "ra-1",
@@ -241,6 +303,7 @@ const offeringsByCategory: Record<string, any[]> = {
       tags: ["Real Estate", "Income", "Commercial"]
     }
   ],
+  
   "collectibles": [
     {
       id: "co-1",
@@ -251,6 +314,7 @@ const offeringsByCategory: Record<string, any[]> = {
       tags: ["Art", "Fractional Ownership", "Blue Chip"]
     }
   ],
+  
   "structured-investments": [
     {
       id: "si-1",
