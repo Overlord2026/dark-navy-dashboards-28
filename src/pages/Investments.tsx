@@ -31,7 +31,7 @@ const Investments: React.FC = () => {
                 value="model-portfolios"
                 className="py-3 data-[state=active]:bg-primary"
               >
-                Model Portfolios
+                BFO Model Portfolios
               </TabsTrigger>
               <TabsTrigger 
                 value="intelligent-allocation"
@@ -43,7 +43,7 @@ const Investments: React.FC = () => {
                 value="alternative-assets"
                 className="py-3 data-[state=active]:bg-primary"
               >
-                Alternative Assets
+                Private Market Alpha
               </TabsTrigger>
             </TabsList>
             

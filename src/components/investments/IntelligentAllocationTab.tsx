@@ -205,14 +205,14 @@ const IntelligentAllocationTab: React.FC = () => {
           <Button 
             onClick={() => setIsFilterDialogOpen(true)} 
             variant="outline" 
-            className="border-gray-700 text-white hover:bg-[#1c2e4a]"
+            className="border-gray-700 text-white hover:bg-[#0f172a]"
           >
             Filter Models
           </Button>
           <Button 
             onClick={() => setIsGroupDialogOpen(true)} 
             variant="outline" 
-            className="border-gray-700 text-white hover:bg-[#1c2e4a]"
+            className="border-gray-700 text-white hover:bg-[#0f172a]"
           >
             Manage Groups
           </Button>
@@ -222,7 +222,7 @@ const IntelligentAllocationTab: React.FC = () => {
       <div className="relative">
         <Input
           placeholder="Search models by name or tags..."
-          className="bg-[#1a283e] border-gray-700 mb-4 pl-4"
+          className="bg-[#0f172a] border-gray-700 mb-4 pl-4"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
@@ -230,7 +230,7 @@ const IntelligentAllocationTab: React.FC = () => {
 
       <div className="rounded-md border border-gray-800 overflow-auto">
         <Table className="min-w-full">
-          <TableHeader className="bg-[#1a283e]">
+          <TableHeader className="bg-[#0f172a]">
             <TableRow>
               <TableHead className="text-white whitespace-nowrap w-1/4">Name</TableHead>
               <TableHead className="text-white whitespace-nowrap">Type</TableHead>
@@ -243,7 +243,7 @@ const IntelligentAllocationTab: React.FC = () => {
           </TableHeader>
           <TableBody>
             {filteredModels.map((model) => (
-              <TableRow key={model.id} className="hover:bg-[#1a283e]/50 border-t border-gray-800">
+              <TableRow key={model.id} className="hover:bg-[#0f172a]/50 border-t border-gray-800">
                 <TableCell className="font-medium text-white">{model.name}</TableCell>
                 <TableCell className="text-gray-300">{model.type}</TableCell>
                 <TableCell className="text-gray-300">{model.targets}</TableCell>
@@ -268,6 +268,7 @@ const IntelligentAllocationTab: React.FC = () => {
                     <Button 
                       variant="interested" 
                       size="sm" 
+                      className="bg-yellow-600 hover:bg-yellow-700 text-black font-medium"
                       onClick={() => handleInterested(model.id)}
                     >
                       I'm Interested
@@ -275,7 +276,7 @@ const IntelligentAllocationTab: React.FC = () => {
                     <ScheduleMeetingDialog 
                       assetName={model.name} 
                       variant="outline" 
-                      className="text-xs py-1 h-auto" 
+                      className="text-xs py-1 h-auto border-gray-600 hover:bg-[#0f172a]" 
                     />
                   </div>
                 </TableCell>
@@ -286,14 +287,14 @@ const IntelligentAllocationTab: React.FC = () => {
       </div>
 
       {filteredModels.length === 0 && (
-        <div className="text-center py-8 bg-[#1a283e]/30 rounded-md border border-gray-800 mt-4">
+        <div className="text-center py-8 bg-[#0f172a]/30 rounded-md border border-gray-800 mt-4">
           <p className="text-gray-400">No models found matching your search criteria.</p>
         </div>
       )}
 
       <div className="mt-6 flex justify-center">
         <Button 
-          className="bg-blue-600 hover:bg-blue-700"
+          className="bg-blue-800 hover:bg-blue-900 text-white"
           onClick={() => window.open("https://calendly.com/tonygomes/60min", "_blank")}
         >
           <Calendar className="mr-2 h-4 w-4" />
