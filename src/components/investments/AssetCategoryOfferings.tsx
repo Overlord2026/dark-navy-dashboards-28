@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft } from "lucide-react";
@@ -274,11 +275,93 @@ const offeringsByCategory: Record<string, any[]> = {
   "venture-capital": [
     {
       id: "vc-1",
-      name: "Forge Global Private Market Fund",
-      description: "Access to late-stage venture-backed companies before they go public.",
-      firm: "Forge Global",
+      name: "116 Street Ventures",
+      description: "Columbia alumni provide a full-time investment team to manage a diversified portfolio by sector, stage, geography, and lead investor. They also provide access to deal syndications and engagement opportunities with other alums.",
+      firm: "Columbia Alumni Network",
       minimumInvestment: "$100,000",
-      tags: ["Late-Stage Venture", "Pre-IPO", "Growth"]
+      tags: ["Alumni Network", "Diversified", "Multi-Stage"],
+      featured: true
+    },
+    {
+      id: "vc-2",
+      name: "ASAPP",
+      description: "ASAPP is an artificial intelligence software company that helps call center agents work more efficiently by analyzing top-performing agents' calls and offering real-time suggestions for customer responses, as well as providing multiple potential responses for web chats.",
+      firm: "ASAPP Inc.",
+      minimumInvestment: "$250,000",
+      tags: ["Artificial Intelligence", "Enterprise Software", "Customer Service"],
+      featured: true
+    },
+    {
+      id: "vc-3",
+      name: "Acorns",
+      description: "Acorns facilitates micro-investing by enabling users to invest aggregated sub-dollar amounts through rounding up credit and debit card purchases. It automatically invests spare change into a diversified portfolio of index funds provided by BlackRock, Vanguard, and PIMCO.",
+      firm: "Acorns Grow, Inc.",
+      minimumInvestment: "$150,000",
+      tags: ["FinTech", "Micro-Investing", "Consumer Finance"],
+      featured: false
+    },
+    {
+      id: "vc-4",
+      name: "Addepar",
+      description: "Addepar offers a software and data platform that manages complex investment portfolios, providing clear insights and data integration for wealth management.",
+      firm: "Addepar, Inc.",
+      minimumInvestment: "$250,000",
+      tags: ["WealthTech", "Portfolio Management", "Data Analytics"],
+      featured: true
+    },
+    {
+      id: "vc-5",
+      name: "Airspace Technologies",
+      description: "Airspace Technologies provides time-definite logistics solutions for critical shipments, ensuring fast and reliable delivery with advanced tracking.",
+      firm: "Airspace Technologies, Inc.",
+      minimumInvestment: "$200,000",
+      tags: ["Logistics", "Supply Chain", "Delivery"],
+      featured: false
+    },
+    {
+      id: "vc-6",
+      name: "Alchemy",
+      description: "Alchemy offers a leading blockchain development platform powering millions of users across 197 countries, providing developers with robust tools to build scalable crypto applications.",
+      firm: "Alchemy Insights, Inc.",
+      minimumInvestment: "$300,000",
+      tags: ["Blockchain", "Developer Tools", "Crypto"],
+      featured: true
+    },
+    {
+      id: "vc-7",
+      name: "Algolia",
+      description: "Algolia offers a SaaS search API that enables the creation of fast and relevant search experiences, critical for improving website or app search functionality.",
+      firm: "Algolia, Inc.",
+      minimumInvestment: "$250,000",
+      tags: ["Search Technology", "SaaS", "Developer Tools"],
+      featured: false
+    },
+    {
+      id: "vc-8",
+      name: "Allen Street Ventures",
+      description: "Penn State alumni manage Allen Street Ventures with a full-time team to oversee a diversified portfolio by sector, stage, and geography, providing access to deal syndications and investor engagement opportunities.",
+      firm: "Penn State Alumni Network",
+      minimumInvestment: "$100,000",
+      tags: ["Alumni Network", "Multi-Stage", "Diversified"],
+      featured: false
+    },
+    {
+      id: "vc-9",
+      name: "Allocate Premier Access II",
+      description: "This portfolio, comprised of 10-15 top-tier managers, targets underlying funds with commitments of $5-8MM and offers the potential to invest in co-investments alongside prominent firms within the Allocate network.",
+      firm: "Allocate",
+      minimumInvestment: "$500,000",
+      tags: ["Fund of Funds", "Premier Access", "Co-Investment"],
+      featured: true
+    },
+    {
+      id: "vc-10",
+      name: "Alloy",
+      description: "Alloy acts as the command center for identity management, helping banks and fintech companies streamline compliance and fraud prevention by consolidating customer information, credit data, and alternative data through a unified integration.",
+      firm: "Alloy Labs",
+      minimumInvestment: "$200,000",
+      tags: ["FinTech", "Identity Management", "Compliance"],
+      featured: false
     }
   ],
   
