@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
@@ -320,7 +319,7 @@ const AlternativeAssetCategory = () => {
     
     auditLog.log(
       userId,
-      "user_action", // Changed from "investment_category_interest" to "user_action" which is an allowed value
+      "investment_category_interest",
       "success",
       {
         resourceType: "investment_category",
