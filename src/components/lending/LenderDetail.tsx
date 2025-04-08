@@ -1,3 +1,4 @@
+
 // Import statements
 import React from "react";
 import { Button } from "@/components/ui/button";
@@ -5,6 +6,19 @@ import { Card } from "@/components/ui/card";
 import { Calendar, Info, CheckCircle, ChevronRight } from "lucide-react";
 import { InterestedButton } from "@/components/common/InterestedButton";
 import { toast } from "sonner";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetClose } from "@/components/ui/sheet";
+
+interface Lender {
+  id: string;
+  name: string;
+  category: string;
+  offering: string;
+  description: string;
+  about: string;
+  howItWorks: string;
+  otherOfferings: string[];
+  topUnderwriters: string[];
+}
 
 interface LenderDetailProps {
   lenderName: string;
@@ -15,7 +29,15 @@ interface LenderDetailProps {
   features: string[];
 }
 
-const LenderDetail: React.FC<LenderDetailProps> = ({
+// This is our updated component that will be used directly in the page
+interface LenderDetailSheetProps {
+  isOpen: boolean;
+  onClose: () => void;
+  lender: Lender;
+}
+
+// This is the original LenderDetail component that displays the content
+const LenderDetailContent: React.FC<LenderDetailProps> = ({
   lenderName,
   description,
   interestRate,
@@ -88,6 +110,38 @@ const LenderDetail: React.FC<LenderDetailProps> = ({
         </div>
       </div>
     </Card>
+  );
+};
+
+// This is the new wrapper component that includes the Sheet (modal)
+const LenderDetail: React.FC<LenderDetailSheetProps> = ({ isOpen, onClose, lender }) => {
+  // Convert lender object to props needed by LenderDetailContent
+  const features = lender.otherOfferings.map(offering => `Offers ${offering}`);
+  
+  // Mock data for the missing fields
+  const interestRate = 4.5;  // Mock interest rate
+  const approvalRate = 85;   // Mock approval rate
+  const fundingTime = "2-3 Business Days"; // Mock funding time
+  
+  return (
+    <Sheet open={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <SheetContent className="w-full sm:max-w-md md:max-w-lg overflow-y-auto">
+        <SheetHeader>
+          <SheetTitle>{lender.name}</SheetTitle>
+          <SheetClose onClick={onClose} />
+        </SheetHeader>
+        <div className="mt-6">
+          <LenderDetailContent
+            lenderName={lender.name}
+            description={lender.about}
+            interestRate={interestRate}
+            approvalRate={approvalRate}
+            fundingTime={fundingTime}
+            features={features}
+          />
+        </div>
+      </SheetContent>
+    </Sheet>
   );
 };
 
