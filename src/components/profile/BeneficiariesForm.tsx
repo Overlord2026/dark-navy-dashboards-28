@@ -33,7 +33,6 @@ export function BeneficiariesForm({ onSave }: { onSave: () => void }) {
 
   function onSubmit(values: Beneficiary) {
     if (currentBeneficiary) {
-      // Update existing beneficiary
       setBeneficiaries(prev => 
         prev.map(b => 
           b === currentBeneficiary ? values : b
@@ -41,7 +40,6 @@ export function BeneficiariesForm({ onSave }: { onSave: () => void }) {
       );
       setCurrentBeneficiary(null);
     } else {
-      // Add new beneficiary
       setBeneficiaries(prev => [...prev, values]);
     }
     
