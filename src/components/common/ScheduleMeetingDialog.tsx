@@ -8,15 +8,17 @@ interface ScheduleMeetingDialogProps {
   assetName?: string;
   variant?: "default" | "outline";
   className?: string;
+  onClick?: (e: React.MouseEvent) => void;
 }
 
 export const ScheduleMeetingDialog = ({ 
   assetName = "this offering", 
   variant = "default", 
-  className = "" 
+  className = "",
+  onClick
 }: ScheduleMeetingDialogProps) => {
   const handleScheduleAppointment = (e: React.MouseEvent) => {
-    e.stopPropagation();
+    if (onClick) onClick(e);
     window.open("https://calendly.com/tonygomes/60min", "_blank");
     toast.success("Opening scheduling page", {
       description: `Schedule a meeting to discuss ${assetName} with your advisor.`,

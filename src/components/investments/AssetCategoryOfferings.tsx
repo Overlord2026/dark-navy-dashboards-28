@@ -1,11 +1,12 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import InterestedButton from "@/components/common/InterestedButton";
 import ScheduleMeetingDialog from "@/components/common/ScheduleMeetingDialog";
+import FundDetailPanel from "./FundDetailPanel";
 
 interface AssetCategoryOfferingsProps {
   category: {
@@ -265,9 +266,18 @@ const offeringsByCategory: Record<string, any[]> = {
 const AssetCategoryOfferings: React.FC<AssetCategoryOfferingsProps> = ({ category, onBack }) => {
   // Get offerings for the selected category
   const offerings = offeringsByCategory[category.id] || [];
+  const [selectedOffering, setSelectedOffering] = useState<any | null>(null);
   
+  const handleCardClick = (offering: any) => {
+    setSelectedOffering(offering);
+  };
+  
+  const closeDetailPanel = () => {
+    setSelectedOffering(null);
+  };
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 relative">
       <div className="flex items-center gap-2 mb-4">
         <Button 
           variant="outline" 
@@ -295,7 +305,8 @@ const AssetCategoryOfferings: React.FC<AssetCategoryOfferingsProps> = ({ categor
           {offerings.map((offering) => (
             <Card 
               key={offering.id}
-              className="border rounded-lg p-6 bg-[#0f1628] border-gray-800"
+              className="border rounded-lg p-6 bg-[#0f1628] border-gray-800 hover:border-gray-600 transition-colors cursor-pointer"
+              onClick={() => handleCardClick(offering)}
             >
               <div className="flex flex-col md:flex-row justify-between gap-4">
                 <div className="flex-1">
@@ -334,16 +345,25 @@ const AssetCategoryOfferings: React.FC<AssetCategoryOfferingsProps> = ({ categor
                     assetName={offering.name} 
                     variant="outline"
                     className="w-full md:w-auto border-gray-700 text-white hover:bg-[#1c2e4a]"
+                    onClick={(e) => e.stopPropagation()}
                   />
                   <ScheduleMeetingDialog 
                     assetName={offering.name}
                     variant="outline"
+                    onClick={(e) => e.stopPropagation()}
                   />
                 </div>
               </div>
             </Card>
           ))}
         </div>
+      )}
+
+      {selectedOffering && (
+        <FundDetailPanel 
+          offering={selectedOffering} 
+          onClose={closeDetailPanel}
+        />
       )}
     </div>
   );

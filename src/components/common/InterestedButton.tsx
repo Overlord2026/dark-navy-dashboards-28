@@ -8,16 +8,18 @@ interface InterestedButtonProps {
   variant?: "default" | "outline" | "secondary";
   className?: string;
   onInterest?: () => void;
+  onClick?: (e: React.MouseEvent) => void;
 }
 
 export const InterestedButton = ({ 
   assetName = "this offering", 
   variant = "outline", 
   className = "",
-  onInterest
+  onInterest,
+  onClick
 }: InterestedButtonProps) => {
   const handleInterested = (e: React.MouseEvent) => {
-    e.stopPropagation();
+    if (onClick) onClick(e);
     
     toast.success("Your interest has been registered!", {
       description: "Your advisor has been notified about your interest",
