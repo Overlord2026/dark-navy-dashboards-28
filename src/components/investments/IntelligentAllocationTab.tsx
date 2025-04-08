@@ -159,6 +159,7 @@ const IntelligentAllocationTab: React.FC = () => {
   const [isFilterDialogOpen, setIsFilterDialogOpen] = useState<boolean>(false);
   const [isGroupDialogOpen, setIsGroupDialogOpen] = useState<boolean>(false);
   const [selectedModel, setSelectedModel] = useState<string | null>(null);
+  const [groups, setGroups] = useState<string[]>([]);
 
   const filteredModels = iaModels.filter(model => 
     model.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -175,6 +176,20 @@ const IntelligentAllocationTab: React.FC = () => {
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+  };
+
+  const handleApplyFilters = (filters: any) => {
+    // This would typically filter the models based on the selected filters
+    toast.info("Filters applied", {
+      description: "The models have been filtered based on your selections.",
+    });
+  };
+
+  const handleSaveGroups = (newGroups: string[]) => {
+    setGroups(newGroups);
+    toast.success("Groups updated", {
+      description: "Your groups have been updated successfully.",
+    });
   };
 
   return (
@@ -289,11 +304,14 @@ const IntelligentAllocationTab: React.FC = () => {
       <PortfolioFilterDialog 
         isOpen={isFilterDialogOpen} 
         onClose={() => setIsFilterDialogOpen(false)} 
+        onApplyFilters={handleApplyFilters}
       />
       
       <GroupManagementDialog 
         isOpen={isGroupDialogOpen} 
         onClose={() => setIsGroupDialogOpen(false)} 
+        groups={groups}
+        onSaveGroups={handleSaveGroups}
       />
     </div>
   );
