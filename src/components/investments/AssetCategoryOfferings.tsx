@@ -6,7 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import InterestedButton from "@/components/common/InterestedButton";
 import ScheduleMeetingDialog from "@/components/common/ScheduleMeetingDialog";
-import FundDetailPanel from "./FundDetailPanel";
+import FundSummaryDialog from "./FundSummaryDialog";
 
 interface AssetCategoryOfferingsProps {
   category: {
@@ -390,11 +390,21 @@ const offeringsByCategory: Record<string, any[]> = {
   "collectibles": [
     {
       id: "co-1",
-      name: "Masterworks Art Investment Platform",
-      description: "Fractional ownership in blue-chip art masterpieces with historical appreciation.",
+      name: "Masterworks",
+      description: "Masterworks is the first and only platform providing investment products to gain exposure to Contemporary art. Headquartered in New York City, the firm employs over 180 individuals to research, source, and manage a portfolio of blue-chip art. Masterworks has reviewed more than $20 billion of art for its investment vehicles.",
       firm: "Masterworks",
       minimumInvestment: "$15,000",
-      tags: ["Art", "Fractional Ownership", "Blue Chip"]
+      tags: ["Art", "Contemporary Art", "Blue Chip"],
+      featured: true
+    },
+    {
+      id: "co-2",
+      name: "Wine and Spirits Arbitrage Fund \"Vint Diversified Offering II\"",
+      description: "Vint runs a tax-advantaged wine and spirits fund, sourcing investment-grade bottles from Europe at a 20-40% discount to US market value, importing them into the US, and selling them in the US market. The fund has historically generated around 24% net returns for investors and is expected to qualify under IRS code section 1202 (QSBS) for a federal income tax exemption on returns after 5 years.",
+      firm: "Vint",
+      minimumInvestment: "$25,000",
+      tags: ["Wine", "Spirits", "Tax-Advantaged", "Arbitrage"],
+      featured: true
     }
   ],
   
@@ -436,6 +446,11 @@ const AssetCategoryOfferings: React.FC<AssetCategoryOfferingsProps> = ({ categor
           Back to Categories
         </Button>
         <h3 className="text-lg font-medium">{category.name}</h3>
+        {offerings.length > 0 && (
+          <span className="text-sm text-gray-400">
+            Assets ({offerings.length})
+          </span>
+        )}
       </div>
       
       <p className="text-gray-400 mb-6">{category.description}</p>
