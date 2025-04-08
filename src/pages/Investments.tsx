@@ -5,6 +5,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import OfferingsList from "@/components/investments/OfferingsList";
 import ModelPortfoliosTab from "@/components/investments/ModelPortfoliosTab";
 import AlternativeAssetsTab from "@/components/investments/AlternativeAssetsTab";
+import IntelligentAllocationTab from "@/components/investments/IntelligentAllocationTab";
 
 const Investments: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>("model-portfolios");
@@ -25,12 +26,18 @@ const Investments: React.FC = () => {
             onValueChange={setActiveTab}
             className="w-full"
           >
-            <TabsList className="w-full grid grid-cols-2 mb-8 bg-[#1a283e]">
+            <TabsList className="w-full grid grid-cols-3 mb-8 bg-[#1a283e]">
               <TabsTrigger 
                 value="model-portfolios"
                 className="py-3 data-[state=active]:bg-primary"
               >
                 Model Portfolios
+              </TabsTrigger>
+              <TabsTrigger 
+                value="intelligent-allocation"
+                className="py-3 data-[state=active]:bg-primary"
+              >
+                Intelligent Allocation
               </TabsTrigger>
               <TabsTrigger 
                 value="alternative-assets"
@@ -42,6 +49,10 @@ const Investments: React.FC = () => {
             
             <TabsContent value="model-portfolios">
               <ModelPortfoliosTab />
+            </TabsContent>
+            
+            <TabsContent value="intelligent-allocation">
+              <IntelligentAllocationTab />
             </TabsContent>
             
             <TabsContent value="alternative-assets">
