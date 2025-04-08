@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { 
@@ -18,7 +19,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetClose } from "@/comp
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { LenderDetail } from "@/components/lending/LenderDetail";
+import LenderDetail from "@/components/lending/LenderDetail";
 import { LoanCategoryCard } from "@/components/lending/LoanCategoryCard";
 import { SecuritiesBasedLoansContent } from "@/components/lending/SecuritiesBasedLoansContent";
 import { HomeLoansContent } from "@/components/lending/HomeLoansContent";
