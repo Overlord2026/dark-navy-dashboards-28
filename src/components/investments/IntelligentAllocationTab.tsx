@@ -160,6 +160,7 @@ const IntelligentAllocationTab: React.FC = () => {
   const [isGroupDialogOpen, setIsGroupDialogOpen] = useState<boolean>(false);
   const [selectedModel, setSelectedModel] = useState<string | null>(null);
   const [groups, setGroups] = useState<string[]>([]);
+  const [filters, setFilters] = useState<any>({});
 
   const filteredModels = iaModels.filter(model => 
     model.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -180,6 +181,7 @@ const IntelligentAllocationTab: React.FC = () => {
 
   const handleApplyFilters = (filters: any) => {
     // This would typically filter the models based on the selected filters
+    setFilters(filters);
     toast.info("Filters applied", {
       description: "The models have been filtered based on your selections.",
     });
