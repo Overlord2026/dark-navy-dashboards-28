@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft } from "lucide-react";
@@ -415,11 +414,93 @@ const offeringsByCategory: Record<string, any[]> = {
   "real-assets": [
     {
       id: "ra-1",
-      name: "Starwood Real Estate Income Trust",
-      description: "Income-focused commercial real estate portfolio across multiple property sectors and geographies.",
-      firm: "Starwood Capital",
-      minimumInvestment: "$5,000",
-      tags: ["Real Estate", "Income", "Commercial"]
+      name: "Blue Owl Real Estate Net Lease Trust",
+      description: "Blue Owl Real Estate Net Lease Trust (ORENT) aims to deliver a resilient real estate strategy by acquiring and managing a diversified portfolio of single-tenant commercial properties that are net leased on long-term contracts to creditworthy tenants. The structure provides tax-advantaged, predictable income distributions.",
+      firm: "Blue Owl",
+      minimumInvestment: "$50,000",
+      tags: ["Real Estate", "Net Lease", "Income"],
+      featured: true
+    },
+    {
+      id: "ra-2",
+      name: "CIM Opportunity Zone Fund, L.P.",
+      description: "CIM Opportunity Zone Fund is a low-leverage, open-ended 'develop-to-core' vehicle designed for infrastructure and real estate investments in designated Opportunity Zones. The fund leverages CIM's twenty-year experience in Opportunity Zones and focuses on investments in urban areas.",
+      firm: "CIM Group",
+      minimumInvestment: "$100,000",
+      tags: ["Opportunity Zones", "Urban Development", "Tax-Advantaged"],
+      featured: true
+    },
+    {
+      id: "ra-3",
+      name: "Clarion Ventures Qualified Opportunity Zone Partners",
+      description: "Clarion Ventures Qualified Opportunity Zone Partners focuses on real estate investments through a 'Create-to-Core' strategy in designated Qualified Opportunity Zones, leveraging Clarion's expertise in value-add and opportunistic investments.",
+      firm: "Clarion Partners",
+      minimumInvestment: "$250,000",
+      tags: ["Opportunity Zones", "Create-to-Core", "Value-Add"],
+      featured: false
+    },
+    {
+      id: "ra-4",
+      name: "KKR Infrastructure Conglomerate LLC ('K-INFRA')",
+      description: "K-INFRA offers investors exposure to private infrastructure opportunities alongside an institutional manager, with a diversified strategy spanning different sectors, geographies, and asset allocations.",
+      firm: "KKR",
+      minimumInvestment: "$500,000",
+      tags: ["Infrastructure", "Diversified", "Global"],
+      featured: true
+    },
+    {
+      id: "ra-5",
+      name: "iCapital Infrastructure Investments Access Fund, L.P.",
+      description: "iCapital Infrastructure Investments Access Fund is a diversified portfolio focused on essential services, holding private companies and assets across multiple sectors, providing robust and stable returns.",
+      firm: "iCapital",
+      minimumInvestment: "$100,000",
+      tags: ["Infrastructure", "Essential Services", "Stable Returns"],
+      featured: false
+    },
+    {
+      id: "ra-6",
+      name: "1031 Exchange DSTs",
+      description: "1031 Exchange DSTs allow investors who have appreciated real estate to defer taxes by exchanging into like-kind properties, offering a streamlined mechanism to access high-quality commercial real estate investments.",
+      firm: "Various Sponsors",
+      minimumInvestment: "$25,000",
+      tags: ["1031 Exchange", "Tax Deferral", "Commercial Real Estate"],
+      featured: true
+    },
+    {
+      id: "ra-7",
+      name: "Apollo Realty Income Solutions, Inc.",
+      description: "Apollo Realty Income Solutions is Apollo's flagship direct real estate income product, designed as a perpetually-offered, non-traded REIT that provides individual investors access to a diversified, income-generating portfolio of commercial properties.",
+      firm: "Apollo Global Management",
+      minimumInvestment: "$50,000",
+      tags: ["REIT", "Commercial Real Estate", "Income"],
+      featured: true
+    },
+    {
+      id: "ra-8",
+      name: "Ares Diversified Real Estate Exchange - Diversified V DST",
+      description: "Ares Diversified Real Estate Exchange is a 1031 exchange program enabling investors to transition appreciated real estate into a diversified portfolio of high-quality commercial properties.",
+      firm: "Ares Management",
+      minimumInvestment: "$100,000",
+      tags: ["1031 Exchange", "Diversified Portfolio", "Commercial Real Estate"],
+      featured: false
+    },
+    {
+      id: "ra-9",
+      name: "Ares Industrial Real Estate Exchange - Portfolio 7 DST",
+      description: "Ares Industrial Real Estate Exchange is a 1031 exchange option focused on providing investors with access to high-quality industrial properties through a diversified portfolio structure.",
+      firm: "Ares Management",
+      minimumInvestment: "$100,000",
+      tags: ["1031 Exchange", "Industrial Real Estate", "Portfolio"],
+      featured: false
+    },
+    {
+      id: "ra-10",
+      name: "Ares Industrial Real Estate Income Trust Inc.",
+      description: "Ares Industrial Real Estate Income Trust is a non-exchange traded REIT offering investors exposure to industrial real estate, focusing on well-leased distribution warehouses and aiming to deliver consistent monthly income distributions.",
+      firm: "Ares Management",
+      minimumInvestment: "$50,000",
+      tags: ["REIT", "Industrial Real Estate", "Monthly Income"],
+      featured: true
     }
   ],
   
