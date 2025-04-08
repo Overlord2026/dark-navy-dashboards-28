@@ -22,18 +22,87 @@ const offeringsByCategory: Record<string, any[]> = {
     {
       id: "pe-1",
       name: "AMG Pantheon Fund, LLC",
-      description: "A diversified private equity solution providing access to a global portfolio of private equity investments across multiple sectors, geographies, and strategies.",
+      description: "AMG Pantheon Fund, LLC provides Accredited Investors unique exposure to a diversified private equity portfolio sourced by Pantheon's Global Investment Team. The Fund offers diversification by manager, stage, vintage year, and industry through a single allocation.",
       firm: "Pantheon Ventures",
       minimumInvestment: "$50,000",
-      tags: ["Private Equity", "Global", "Diversified"]
+      tags: ["Private Equity", "Global", "Diversified"],
+      featured: true
     },
     {
       id: "pe-2",
-      name: "Hamilton Lane Private Assets Fund",
-      description: "Provides exposure to a diversified portfolio of private equity and private credit investments through a single allocation.",
-      firm: "Hamilton Lane",
+      name: "Ares Private Markets Fund",
+      description: "Ares Private Markets Fund ('The Fund') seeks to build a diversified private equity investment solution that aims to deliver attractive, long-term capital appreciation. It features dynamic allocation, which aims to reduce the J-curve and vintage risk, and offers enhanced diversification across managers and investments.",
+      firm: "Ares Management",
+      minimumInvestment: "$100,000",
+      tags: ["Private Equity", "Diversified", "Dynamic Allocation"],
+      featured: true
+    },
+    {
+      id: "pe-3",
+      name: "Blackstone Private Equity Strategies Fund, (TE) L.P. ('BXPE Tax-Exempt')",
+      description: "BXPE seeks to provide qualified individual investors broad exposure to Blackstone's private equity platform and its 15+ strategies through a single fund. Blackstone is the world's largest alternatives asset manager, and BXPE leverages its immense scale and expertise.",
+      firm: "Blackstone",
+      minimumInvestment: "$250,000",
+      tags: ["Private Equity", "Multi-Strategy", "Tax-Exempt"],
+      featured: true
+    },
+    {
+      id: "pe-4",
+      name: "CAIS Vista Foundation Fund V, L.P.",
+      description: "Vista Foundation Fund V, L.P. ('VFF V') was formed by Vista Equity Partners Management, LLC to acquire controlling interests in middle-market and 'Mid Cap' enterprise software, data, and technology-enabled solutions companies. It targets companies with enterprise values between $250 million and $750 million+.",
+      firm: "Vista Equity Partners",
+      minimumInvestment: "$500,000",
+      tags: ["Private Equity", "Technology", "Middle Market"],
+      featured: true
+    },
+    {
+      id: "pe-5",
+      name: "JP Morgan Private Markets Fund",
+      description: "JP Morgan Private Markets Fund has a small mid-market private equity focus, offering multi-manager exposure with simplified structure and terms, backed by the extensive resources of one of the largest financial institutions in the world.",
+      firm: "JP Morgan",
+      minimumInvestment: "$250,000",
+      tags: ["Private Equity", "Mid Market", "Multi-Manager"],
+      featured: true
+    },
+    {
+      id: "pe-6",
+      name: "AMG Pantheon Fund, LLC (Class 1)",
+      description: "AMG Pantheon Fund, LLC (Class 1) seeks to provide Accredited Investors exposure to a diversified private equity portfolio with diversification by manager, stage, vintage year, and industry. It features a lower investment minimum, a perpetual 'evergreen' strategy, and enhanced potential liquidity.",
+      firm: "Pantheon Ventures",
       minimumInvestment: "$25,000",
-      tags: ["Private Equity", "Private Credit", "Semi-Liquid"]
+      tags: ["Private Equity", "Global", "Evergreen"]
+    },
+    {
+      id: "pe-7",
+      name: "Ares Private Markets Fund iCapital Offshore Access Fund SP 1",
+      description: "Ares Private Markets Fund (APMF) is a diversified private equity investment solution, anchored in secondary investments, designed to deliver attractive long-term capital appreciation through market cycles.",
+      firm: "Ares Management",
+      minimumInvestment: "$100,000",
+      tags: ["Private Equity", "Secondaries", "Offshore"]
+    },
+    {
+      id: "pe-8",
+      name: "BlackRock Private Investment Fund",
+      description: "BlackRock Private Investments Fund ('BPIF') provides access to private equity investments, especially during periods when public market returns are muted, and aims to amplify investor returns through continuous offering.",
+      firm: "BlackRock",
+      minimumInvestment: "$50,000",
+      tags: ["Private Equity", "Continuous Offering"]
+    },
+    {
+      id: "pe-9",
+      name: "BlackRock Private Investments Fund iCapital Offshore Access Fund, L.P.",
+      description: "BlackRock Private Investments Fund offers access to institutional-quality private equity investments through a continuously offered fund structure, providing a robust private markets solution.",
+      firm: "BlackRock",
+      minimumInvestment: "$100,000",
+      tags: ["Private Equity", "Institutional", "Offshore"]
+    },
+    {
+      id: "pe-10",
+      name: "Bonaccord Capital Partners Fund III",
+      description: "Bonaccord Capital Partners Fund III is a middle-market GP stakes fund focusing on growth capital investments in mid-market private sponsors across private equity, private credit, real estate, and real assets. It aims to deliver attractive risk-adjusted returns driven by both elevated yields and capital appreciation.",
+      firm: "Aberdeen Standard Investments",
+      minimumInvestment: "$500,000",
+      tags: ["Private Equity", "GP Stakes", "Middle Market"]
     }
   ],
   "private-debt": [
@@ -145,7 +214,14 @@ const AssetCategoryOfferings: React.FC<AssetCategoryOfferingsProps> = ({ categor
             >
               <div className="flex flex-col md:flex-row justify-between gap-4">
                 <div className="flex-1">
-                  <h4 className="text-xl font-medium text-white mb-2">{offering.name}</h4>
+                  <div className="flex items-center gap-2 mb-2">
+                    <h4 className="text-xl font-medium text-white">{offering.name}</h4>
+                    {offering.featured && (
+                      <Badge className="bg-primary text-white">
+                        Featured
+                      </Badge>
+                    )}
+                  </div>
                   <p className="text-gray-300 mb-4">{offering.description}</p>
                   
                   <div className="flex gap-2 flex-wrap mb-4">
