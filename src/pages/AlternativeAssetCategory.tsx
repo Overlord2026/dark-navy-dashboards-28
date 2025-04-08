@@ -2,12 +2,14 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, FileText, Download } from "lucide-react";
+import { ChevronLeft, FileText, Download, CalendarClock } from "lucide-react";
 import { OfferingsList } from "@/components/investments/OfferingsList";
 import { toast } from "sonner";
 import { auditLog } from "@/services/auditLog/auditLogService";
+import { InterestedButton } from "@/components/investments/InterestedButton";
+import { CategoryOverview } from "@/components/investments/CategoryOverview";
+import ScheduleMeetingDialog from "@/components/investments/ScheduleMeetingDialog";
 
-// mockOfferings remains the same with the basic structure
 const mockOfferings = {
   "private-equity": [
     {
@@ -226,6 +228,7 @@ const AlternativeAssetCategory = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [categoryName, setCategoryName] = useState<string>("");
   const [categoryDescription, setCategoryDescription] = useState<string>("");
+  const [scheduleMeetingOpen, setScheduleMeetingOpen] = useState(false);
 
   useEffect(() => {
     setIsLoading(true);
@@ -310,6 +313,24 @@ const AlternativeAssetCategory = () => {
       description: "Your download will begin shortly.",
     });
   };
+  
+  const handleCategoryInterest = () => {
+    const userId = "current-user";
+    
+    auditLog.log(
+      userId,
+      "investment_category_interest",
+      "success",
+      {
+        resourceType: "investment_category",
+        resourceId: categoryId,
+        details: {
+          action: "expressed_interest",
+          category: categoryId
+        }
+      }
+    );
+  };
 
   useEffect(() => {
     if (!isLoading && categoryId && !mockOfferings[categoryId as keyof typeof mockOfferings]) {
@@ -333,7 +354,7 @@ const AlternativeAssetCategory = () => {
           </Button>
         </div>
         
-        <div className="space-y-4">
+        <div className="space-y-6">
           <div className="flex justify-between items-center">
             <div>
               <h1 className="text-2xl font-bold">{categoryName}</h1>
@@ -350,20 +371,58 @@ const AlternativeAssetCategory = () => {
             </Button>
           </div>
           
-          {isLoading ? (
-            <div className="flex justify-center items-center h-64">
-              <p>Loading offerings...</p>
-            </div>
-          ) : (
-            <OfferingsList 
-              offerings={offerings} 
-              categoryId={categoryId || ""} 
-              onLike={(assetName) => handleUserAction("like", assetName)}
-              isFullView={true}
+          {!isLoading && (
+            <CategoryOverview 
+              name={categoryName}
+              description={categoryDescription}
             />
           )}
+          
+          {!isLoading && (
+            <div className="flex flex-col sm:flex-row gap-4">
+              <InterestedButton 
+                assetName={categoryName}
+                onInterested={handleCategoryInterest}
+                variant="default"
+                size="default"
+                className="flex-1"
+              />
+              
+              <Button 
+                variant="outline" 
+                size="default"
+                className="flex items-center justify-center gap-2 flex-1"
+                onClick={() => setScheduleMeetingOpen(true)}
+              >
+                <CalendarClock className="h-4 w-4" />
+                Schedule a Meeting
+              </Button>
+            </div>
+          )}
+          
+          <div className="mt-8">
+            <h2 className="text-xl font-semibold mb-4">Available Offerings</h2>
+            {isLoading ? (
+              <div className="flex justify-center items-center h-64">
+                <p>Loading offerings...</p>
+              </div>
+            ) : (
+              <OfferingsList 
+                offerings={offerings} 
+                categoryId={categoryId || ""} 
+                onLike={(assetName) => handleUserAction("like", assetName)}
+                isFullView={true}
+              />
+            )}
+          </div>
         </div>
       </div>
+      
+      <ScheduleMeetingDialog 
+        open={scheduleMeetingOpen}
+        onOpenChange={setScheduleMeetingOpen}
+        assetName={categoryName}
+      />
     </ThreeColumnLayout>
   );
 };

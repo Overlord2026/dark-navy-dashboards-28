@@ -1,12 +1,18 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, CalendarClock } from "lucide-react";
+import { CategoryOverview } from "@/components/investments/CategoryOverview";
+import { InterestedButton } from "@/components/investments/InterestedButton";
+import ScheduleMeetingDialog from "@/components/investments/ScheduleMeetingDialog";
 
 const PrivateDebt = () => {
   const navigate = useNavigate();
+  const [scheduleMeetingOpen, setScheduleMeetingOpen] = useState(false);
+  const categoryName = "Private Debt";
+  const categoryDescription = "Direct lending, mezzanine financing, and distressed debt investments across sectors.";
   
   return (
     <div className="container mx-auto py-8">
@@ -20,9 +26,34 @@ const PrivateDebt = () => {
         </Button>
       </div>
       
-      <h1 className="text-3xl font-bold mb-8">Private Debt Investments</h1>
+      <h1 className="text-3xl font-bold mb-6">{categoryName}</h1>
+      <p className="text-muted-foreground mb-8">{categoryDescription}</p>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <CategoryOverview
+        name={categoryName}
+        description={categoryDescription}
+      />
+      
+      <div className="flex flex-col sm:flex-row gap-4 mt-8">
+        <InterestedButton 
+          assetName={categoryName}
+          variant="default"
+          size="default"
+          className="flex-1"
+        />
+        
+        <Button 
+          variant="outline" 
+          size="default"
+          className="flex items-center justify-center gap-2 flex-1"
+          onClick={() => setScheduleMeetingOpen(true)}
+        >
+          <CalendarClock className="h-4 w-4" />
+          Schedule a Meeting
+        </Button>
+      </div>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
         <Card>
           <CardHeader>
             <CardTitle>Private Debt Opportunities</CardTitle>
@@ -36,8 +67,8 @@ const PrivateDebt = () => {
               compared to traditional equity investments.
             </p>
             
-            <Button onClick={() => navigate("/investments?tab=private-market")}>
-              View All Private Market Offerings
+            <Button onClick={() => navigate("/investments/alternative/private-debt")}>
+              View All Private Debt Offerings
             </Button>
           </CardContent>
         </Card>
@@ -55,12 +86,18 @@ const PrivateDebt = () => {
               <li>Typical credit quality: Senior secured</li>
               <li>Average duration: 3-5 years</li>
             </ul>
-            <Button variant="outline" onClick={() => navigate("/investments")}>
+            <Button variant="outline" onClick={() => navigate("/investments?tab=private-market")}>
               Explore Investment Options
             </Button>
           </CardContent>
         </Card>
       </div>
+      
+      <ScheduleMeetingDialog
+        open={scheduleMeetingOpen}
+        onOpenChange={setScheduleMeetingOpen}
+        assetName={categoryName}
+      />
     </div>
   );
 };
