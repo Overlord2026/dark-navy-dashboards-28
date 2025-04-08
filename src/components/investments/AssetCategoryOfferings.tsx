@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft } from "lucide-react";
@@ -17,7 +16,6 @@ interface AssetCategoryOfferingsProps {
   onBack: () => void;
 }
 
-// Sample offerings data by category
 const offeringsByCategory: Record<string, any[]> = {
   "private-equity": [
     {
@@ -421,7 +419,6 @@ const offeringsByCategory: Record<string, any[]> = {
 };
 
 const AssetCategoryOfferings: React.FC<AssetCategoryOfferingsProps> = ({ category, onBack }) => {
-  // Get offerings for the selected category
   const offerings = offeringsByCategory[category.id] || [];
   const [selectedOffering, setSelectedOffering] = useState<any | null>(null);
   
@@ -522,7 +519,8 @@ const AssetCategoryOfferings: React.FC<AssetCategoryOfferingsProps> = ({ categor
       )}
 
       {selectedOffering && (
-        <FundDetailPanel 
+        <FundSummaryDialog
+          isOpen={!!selectedOffering} 
           offering={selectedOffering} 
           onClose={closeDetailPanel}
         />
