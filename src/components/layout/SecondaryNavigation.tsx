@@ -28,21 +28,10 @@ export const SecondaryNavigation = ({
   menuItems
 }: SecondaryNavigationProps) => {
   if (!hasSecondaryMenu) return null;
-
-  // We'll update this condition to make sure the secondary nav still appears for other investment pages
-  // but skips only for the specific alternative investment routes
-  const skipRendering = [
-    "private-equity",
-    "private-debt",
-    "real-assets",
-    "digital-assets"
-  ].includes(sectionId) && activeMainItem === "investments";
-  
-  if (skipRendering) return null;
   
   // Build the link path based on the active main item
   const getLinkPath = (item: MenuItem) => {
-    if (["investments", "education", "sharing"].includes(activeMainItem)) {
+    if (["education", "sharing"].includes(activeMainItem)) {
       // For standard secondary navigation
       return `/${activeMainItem}/${item.id}`;
     } else {
@@ -53,11 +42,7 @@ export const SecondaryNavigation = ({
   
   // Determine the sidebar header based on active item
   const getSidebarHeader = () => {
-    if (activeMainItem === "investments") {
-      return "Investment Categories";
-    } else {
-      return "Sections";
-    }
+    return "Sections";
   };
   
   return (

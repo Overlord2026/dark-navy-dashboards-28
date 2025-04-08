@@ -1,3 +1,4 @@
+
 import React from "react";
 import {
   HomeIcon,
@@ -62,8 +63,7 @@ export const navigationCategories: NavCategory[] = [
     defaultExpanded: true,
     items: [
       { id: "education", label: "Education Center", icon: GraduationCapIcon, href: "/education" },
-      { id: "investments", label: "Investments", icon: BarChart3Icon, href: "/investments" },
-      { id: "model-portfolios", label: "Model Portfolio Manager", icon: PieChart, href: "/model-portfolio-list" },
+      // Removed investments items
       { id: "tax-planning", label: "Tax Planning", icon: PieChart, href: "/tax-planning" },
       { id: "insurance", label: "Insurance", icon: ShieldIcon, href: "/insurance" },
       { id: "lending", label: "Lending", icon: BanknoteIcon, href: "/lending" },
@@ -119,105 +119,7 @@ export const educationSubMenuItems: MenuItem[] = [
   { id: "premium", name: "Premium Courses" },
 ];
 
-// Investment submenu items
-export const investmentSubMenuItems: MenuItem[] = [
-  { id: "overview", name: "Overview", active: true },
-  { id: "private-market", name: "Private Market Alpha" },
-  { id: "model-portfolios", name: "Model Portfolios" },
-  { id: "model-portfolio-manager", name: "Portfolio Manager" },
-  { id: "intelligent", name: "Intelligent Allocation" },
-  { id: "stock-screener", name: "Stock Screener" },
-];
-
-// Fund manager submenu for each category with focus on the companies requested
-export const privateEquityProviders: MenuItem[] = [
-  { id: "all-pe", name: "All Private Equity", active: true },
-  { id: "blackstone-pe", name: "Blackstone" },
-  { id: "apollo-pe", name: "Apollo" },
-  { id: "kkr-pe", name: "KKR" },
-  { id: "stepstone-pe", name: "StepStone" },
-  { id: "amg-pantheon", name: "AMG Pantheon" },
-  { id: "hamilton-lane", name: "Hamilton Lane" },
-  { id: "carlyle", name: "Carlyle Group" },
-  { id: "tpg", name: "TPG" },
-  { id: "bain-capital", name: "Bain Capital" },
-  { id: "warburg-pincus", name: "Warburg Pincus" },
-  { id: "eqt", name: "EQT" },
-  { id: "cvc", name: "CVC Capital Partners" },
-  { id: "advent", name: "Advent International" },
-  { id: "thoma-bravo", name: "Thoma Bravo" },
-];
-
-export const privateDebtProviders: MenuItem[] = [
-  { id: "all-pd", name: "All Private Debt", active: true },
-  { id: "ares-pd", name: "Ares" },
-  { id: "blackstone-pd", name: "Blackstone Credit" },
-  { id: "apollo-pd", name: "Apollo" },
-  { id: "cliffwater-pd", name: "Cliffwater" },
-  { id: "stepstone-pd", name: "StepStone" },
-  { id: "kkr-pd", name: "KKR" },
-  { id: "oaktree-pd", name: "Oaktree" },
-  { id: "golub-pd", name: "Golub Capital" },
-  { id: "blue-owl-pd", name: "Blue Owl Capital" },
-  { id: "monroe-pd", name: "Monroe Capital" },
-  { id: "antares-pd", name: "Antares Capital" },
-  { id: "carlyle-pd", name: "Carlyle Global Credit" },
-  { id: "goldman-pd", name: "Goldman Sachs" },
-  { id: "sixth-street", name: "Sixth Street" },
-];
-
-export const realAssetsProviders: MenuItem[] = [
-  { id: "all-ra", name: "All Real Assets", active: true },
-  { id: "blackstone-ra", name: "Blackstone Real Estate" },
-  { id: "brookfield-ra", name: "Brookfield" },
-  { id: "hancock-ra", name: "Hancock" },
-  { id: "gip-ra", name: "Global Infrastructure Partners" },
-  { id: "apollo-ra", name: "Apollo Real Assets" },
-  { id: "kkr-ra", name: "KKR Real Assets" },
-  { id: "starwood-ra", name: "Starwood Capital" },
-  { id: "carlyle-ra", name: "Carlyle Real Assets" },
-  { id: "hines-ra", name: "Hines" },
-  { id: "blackrock-ra", name: "BlackRock Real Assets" },
-  { id: "colony-ra", name: "DigitalBridge" },
-  { id: "pgim-ra", name: "PGIM Real Estate" },
-  { id: "cbre-ra", name: "CBRE Investment Management" },
-  { id: "nuveen-ra", name: "Nuveen Real Estate" },
-];
-
-export const digitalAssetsProviders: MenuItem[] = [
-  { id: "all-da", name: "All Digital Assets", active: true },
-  { id: "pantera", name: "Pantera Capital" },
-  { id: "grayscale", name: "Grayscale" },
-  { id: "a16z", name: "Andreessen Horowitz" },
-  { id: "parafi", name: "ParaFi Capital" },
-];
-
-export const modelPortfolioProviders: MenuItem[] = [
-  { id: "all-models", name: "All Model Portfolios", active: true },
-  { id: "bfo-asset-management", name: "BFO Asset Management" },
-  { id: "bfo-model-marketplace", name: "BFO Model Marketplace" },
-  { id: "adelante", name: "Adelante" },
-  { id: "alpha-quant", name: "Alpha Quant" },
-  { id: "ativo", name: "Ativo" },
-  { id: "avantis", name: "Avantis" },
-  { id: "blackrock", name: "BlackRock" },
-  { id: "brown-advisory", name: "Brown Advisory" },
-  { id: "camelot-portfolios", name: "Camelot Portfolios" },
-  { id: "capital-group", name: "Capital Group" },
-  { id: "churchill", name: "Churchill" },
-  { id: "dearborn", name: "Dearborn" },
-];
-
-// Model portfolio manager menu items
-export const modelPortfolioManagerItems: MenuItem[] = [
-  { id: "portfolio-list", name: "Portfolio List", active: true },
-  { id: "portfolio-manager", name: "Portfolio Manager" },
-  { id: "balanced-growth", name: "Balanced Growth Portfolio" },
-  { id: "income-focus", name: "Income Focus Portfolio" },
-  { id: "growth-aggressive", name: "Aggressive Growth Portfolio" },
-  { id: "esg-portfolio", name: "ESG Focus Portfolio" },
-  { id: "create-new", name: "Create New Portfolio" },
-];
+// Removed all investment-related sub-menu items
 
 export const getSecondaryMenuItems = (activeMainItem: string): MenuItem[] => {
   switch (activeMainItem) {
@@ -227,20 +129,7 @@ export const getSecondaryMenuItems = (activeMainItem: string): MenuItem[] => {
       return sharingSubMenuItems;
     case "education":
       return educationSubMenuItems;
-    case "investments":
-      return investmentSubMenuItems;
-    case "private-equity":
-      return privateEquityProviders;
-    case "private-debt":
-      return privateDebtProviders;
-    case "real-assets":
-      return realAssetsProviders;
-    case "digital-assets":
-      return digitalAssetsProviders;
-    case "model-portfolios":
-      return modelPortfolioProviders;
-    case "model-portfolio-manager":
-      return modelPortfolioManagerItems;
+    // Removed all investment-related cases
     default:
       return [];
   }
