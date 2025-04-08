@@ -29,6 +29,7 @@ import NotFound from "@/pages/NotFound";
 import TaxPlanningEducation from "@/pages/TaxPlanningEducation";
 import NavigationDiagnostics from "@/pages/NavigationDiagnostics";
 import { ProfessionalsRouteWrapper } from "@/components/providers/ProfessionalsRouteWrapper";
+import Investments from "@/pages/Investments";
 
 const routes = createBrowserRouter([
   {
@@ -143,10 +144,13 @@ const routes = createBrowserRouter([
     path: "/navigation-diagnostics",
     element: <NavigationDiagnostics />
   },
-  // Add a catch-all route for any investments paths that might still be accessed
+  {
+    path: "/investments",
+    element: <Investments />
+  },
   {
     path: "/investments/*",
-    element: <NotFound />
+    element: <Investments />
   },
   {
     path: "*",
