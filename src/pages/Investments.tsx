@@ -29,19 +29,19 @@ const Investments: React.FC = () => {
             <TabsList className="w-full grid grid-cols-3 mb-8 bg-[#1a283e]">
               <TabsTrigger 
                 value="model-portfolios"
-                className="py-3 data-[state=active]:bg-primary"
+                className="py-3 data-[state=active]:bg-[#876518] data-[state=active]:text-white transition-colors"
               >
                 BFO Model Portfolios
               </TabsTrigger>
               <TabsTrigger 
                 value="intelligent-allocation"
-                className="py-3 data-[state=active]:bg-primary"
+                className="py-3 data-[state=active]:bg-[#876518] data-[state=active]:text-white transition-colors"
               >
                 Intelligent Allocation
               </TabsTrigger>
               <TabsTrigger 
                 value="alternative-assets"
-                className="py-3 data-[state=active]:bg-primary"
+                className="py-3 data-[state=active]:bg-[#876518] data-[state=active]:text-white transition-colors"
               >
                 Private Market Alpha
               </TabsTrigger>
