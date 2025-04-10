@@ -1,9 +1,11 @@
 
+import { LucideIcon } from "lucide-react";
+
 export interface LoanCategory {
   id: string;
   title: string;
   description: string;
-  icon: React.ElementType;
+  icon: LucideIcon;
   href: string;
 }
 
