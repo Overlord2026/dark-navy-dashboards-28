@@ -1,5 +1,9 @@
 
-import { LucideIcon } from "lucide-react";
+import React from "react";
+
+export type LucideIcon = React.ForwardRefExoticComponent<
+  React.SVGProps<SVGSVGElement> & React.RefAttributes<SVGSVGElement>
+>;
 
 export interface LoanCategory {
   id: string;

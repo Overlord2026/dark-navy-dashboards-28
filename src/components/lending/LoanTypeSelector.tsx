@@ -1,6 +1,6 @@
 
 import { Button } from "@/components/ui/button";
-import { LucideIcon } from "lucide-react";
+import { LucideIcon } from "./types";
 
 interface LoanType {
   id: string;
