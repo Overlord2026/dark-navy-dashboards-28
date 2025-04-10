@@ -29,19 +29,20 @@ const Investments: React.FC = () => {
             <TabsList className="w-full grid grid-cols-3 mb-8 bg-[#1a283e] rounded-md overflow-hidden">
               <TabsTrigger 
                 value="model-portfolios"
-                className="py-4 px-2 h-12 flex items-center justify-center text-center border-r border-[#2a3854] data-[state=active]:bg-black data-[state=active]:text-white transition-colors focus:outline-none text-xs"
+                className="min-h-10 px-2 py-2 flex items-center justify-center text-center border-r border-[#2a3854] data-[state=active]:bg-black data-[state=active]:text-white transition-colors focus:outline-none text-xs sm:text-sm"
               >
                 BFO Models
               </TabsTrigger>
               <TabsTrigger 
                 value="intelligent-allocation"
-                className="py-4 px-2 h-12 flex items-center justify-center text-center border-r border-[#2a3854] data-[state=active]:bg-black data-[state=active]:text-white transition-colors focus:outline-none text-xs"
+                className="min-h-10 px-2 py-2 flex items-center justify-center text-center border-r border-[#2a3854] data-[state=active]:bg-black data-[state=active]:text-white transition-colors focus:outline-none text-xs sm:text-sm"
               >
-                Intelligent Alloc.
+                <span className="sm:hidden">Intel. Alloc.</span>
+                <span className="hidden sm:inline">Intelligent Alloc.</span>
               </TabsTrigger>
               <TabsTrigger 
                 value="alternative-assets"
-                className="py-4 px-2 h-12 flex items-center justify-center text-center data-[state=active]:bg-black data-[state=active]:text-white transition-colors focus:outline-none text-xs"
+                className="min-h-10 px-2 py-2 flex items-center justify-center text-center data-[state=active]:bg-black data-[state=active]:text-white transition-colors focus:outline-none text-xs sm:text-sm"
               >
                 Private Markets
               </TabsTrigger>
