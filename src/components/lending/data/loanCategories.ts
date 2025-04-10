@@ -4,7 +4,8 @@ import {
   Building, 
   CreditCard, 
   Briefcase, 
-  BarChart 
+  BarChart,
+  DollarSign // Added DollarSign import
 } from "lucide-react";
 import { LoanCategory } from "../types";
 
@@ -44,5 +45,12 @@ export const loanCategories: LoanCategory[] = [
     description: "Unsecured loans for personal expenses.",
     icon: CreditCard,
     href: "/lending/personal-loans"
+  },
+  {
+    id: "mortgage",
+    title: "Mortgage",
+    description: "Home loans",
+    icon: DollarSign,
+    href: "/mortgage"
   }
 ];
