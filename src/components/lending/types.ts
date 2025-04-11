@@ -24,3 +24,11 @@ export interface Lender {
   otherOfferings: string[];
   topUnderwriters: string[];
 }
+
+// Add the LoanType interface that matches what's expected by LoanTypeSelector
+export interface LoanType {
+  id: string;
+  name: string;
+  description: string;
+  icon: LucideIcon;
+}
