@@ -131,56 +131,21 @@ const CollaborationTab = () => {
           Share access with family members and service professionals (e.g., your accountant) by giving them full or partial access.
         </p>
         
-        <Tabs defaultValue="family-members" className="w-full">
-          <TabsList className="mb-6 p-1 bg-[#0a1a36] rounded-lg w-full flex">
-            <TabsTrigger 
-              value="family-members" 
-              className="flex items-center gap-2 px-4 py-2 text-base flex-1 justify-center rounded-md data-[state=active]:bg-blue-600 data-[state=active]:text-white text-gray-300"
+        <div className="space-y-4">
+          <div className="text-center py-10 bg-[#071429] rounded-lg border border-gray-800">
+            <UsersIcon size={60} className="mx-auto text-blue-500/60 mb-4" />
+            <h3 className="text-xl font-medium mb-3 text-white">No Family Members Added</h3>
+            <p className="text-gray-400 text-base max-w-md mx-auto mb-6">
+              Share access with your family members by inviting them to collaborate on financial planning, document access, and more.
+            </p>
+            <Link 
+              to="/sharing?add=family"
+              className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg inline-flex"
             >
-              <UsersIcon className="h-5 w-5 flex-shrink-0" />
-              <span className="font-medium">Family Members</span>
-            </TabsTrigger>
-            <TabsTrigger 
-              value="service-pros" 
-              className="flex items-center gap-2 px-4 py-2 text-base flex-1 justify-center rounded-md data-[state=active]:bg-blue-600 data-[state=active]:text-white text-gray-300"
-            >
-              <BriefcaseIcon className="h-5 w-5 flex-shrink-0" />
-              <span className="font-medium">Service Professionals</span>
-            </TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="family-members" className="space-y-4">
-            <div className="text-center py-10 bg-[#071429] rounded-lg border border-gray-800">
-              <UsersIcon size={60} className="mx-auto text-blue-500/60 mb-4" />
-              <h3 className="text-xl font-medium mb-3 text-white">No Family Members Added</h3>
-              <p className="text-gray-400 text-base max-w-md mx-auto mb-6">
-                Share access with your family members by inviting them to collaborate on financial planning, document access, and more.
-              </p>
-              <Link 
-                to="/sharing?add=family"
-                className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg inline-flex"
-              >
-                Get Started
-              </Link>
-            </div>
-          </TabsContent>
-          
-          <TabsContent value="service-pros" className="space-y-4">
-            <div className="text-center py-10 bg-[#071429] rounded-lg border border-gray-800">
-              <BriefcaseIcon size={60} className="mx-auto text-blue-500/60 mb-4" />
-              <h3 className="text-xl font-medium mb-3 text-white">No Service Professionals Added</h3>
-              <p className="text-gray-400 text-base max-w-md mx-auto mb-6">
-                Connect with your financial advisors, tax professionals, attorneys, and other service providers for seamless collaboration.
-              </p>
-              <Link 
-                to="/sharing?add=professional"
-                className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg inline-flex"
-              >
-                Get Started
-              </Link>
-            </div>
-          </TabsContent>
-        </Tabs>
+              Get Started
+            </Link>
+          </div>
+        </div>
       </div>
     </div>
   );
