@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -17,6 +16,7 @@ import {
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { AssetsReportPreview } from "@/components/reports/AssetsReportPreview";
 
 // Report types
 type ReportType = 'assets' | 'liabilities' | 'cashflow' | 'networth' | 'custom';
@@ -121,23 +121,23 @@ export function ReportsGenerator() {
   const renderReportPreview = () => {
     switch(selectedReportType) {
       case 'assets':
-        return <AssetsReportPreview assets={assets} formatCurrency={formatCurrency} />;
-      case 'liabilities':
+        return <AssetsReportPreview formatCurrency={formatCurrency} />;
+    case 'liabilities':
         return <LiabilitiesReportPreview formatCurrency={formatCurrency} />;
-      case 'networth':
+    case 'networth':
         return <NetWorthReportPreview 
           getTotalNetWorth={getTotalNetWorth} 
           getTotalAssetsByType={getTotalAssetsByType}
           formatCurrency={formatCurrency}
         />;
-      case 'cashflow':
+    case 'cashflow':
         return <CashFlowReportPreview timeframe={timeframe} formatCurrency={formatCurrency} />;
-      case 'custom':
+    case 'custom':
         return <CustomReportPreview />;
       default:
         return <div>Select a report type to preview</div>;
-    }
-  };
+  }
+};
 
   return (
     <Card className="mb-6 shadow-sm">
@@ -294,59 +294,6 @@ export function ReportsGenerator() {
     </Card>
   );
 }
-
-// Individual report preview components
-
-interface AssetsReportPreviewProps {
-  assets: any[];
-  formatCurrency: (amount: number) => string;
-}
-
-const AssetsReportPreview: React.FC<AssetsReportPreviewProps> = ({ assets, formatCurrency }) => {
-  const totalValue = assets.reduce((sum, asset) => sum + asset.value, 0);
-  
-  return (
-    <div className="space-y-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="p-4 bg-blue-500/10 rounded-md">
-          <div className="text-sm text-blue-700 dark:text-blue-400">Total Assets</div>
-          <div className="text-2xl font-bold">{formatCurrency(totalValue)}</div>
-        </div>
-        <div className="p-4 bg-green-500/10 rounded-md">
-          <div className="text-sm text-green-700 dark:text-green-400">Asset Count</div>
-          <div className="text-2xl font-bold">{assets.length}</div>
-        </div>
-      </div>
-      
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Asset Name</TableHead>
-              <TableHead>Type</TableHead>
-              <TableHead>Owner</TableHead>
-              <TableHead className="text-right">Value</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {assets.map((asset) => (
-              <TableRow key={asset.id}>
-                <TableCell className="font-medium">{asset.name}</TableCell>
-                <TableCell>
-                  <Badge variant="outline" className="capitalize">
-                    {asset.type}
-                  </Badge>
-                </TableCell>
-                <TableCell>{asset.owner}</TableCell>
-                <TableCell className="text-right">{formatCurrency(asset.value)}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
-    </div>
-  );
-};
 
 interface LiabilitiesReportPreviewProps {
   formatCurrency: (amount: number) => string;
