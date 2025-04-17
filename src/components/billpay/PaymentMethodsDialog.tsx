@@ -18,12 +18,37 @@ export interface PaymentMethod {
   isDefault: boolean;
 }
 
+export const DEFAULT_PAYMENT_METHODS: PaymentMethod[] = [
+  {
+    id: "card-1",
+    name: "Personal Visa",
+    type: "card",
+    lastFour: "4242",
+    expiry: "12/25",
+    isDefault: true
+  },
+  {
+    id: "bank-1",
+    name: "Chase Checking",
+    type: "bank",
+    lastFour: "7890",
+    isDefault: false
+  }
+];
+
 interface PaymentMethodsDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSelectPaymentMethod?: (id: string) => void;
   selectionMode?: boolean;
   selectedMethod?: string | null;
+  // For compatibility with PayBillDialog
+  isOpen?: boolean;
+  onClose?: () => void;
+  paymentMethods?: PaymentMethod[];
+  onAddPaymentMethod?: (method: PaymentMethod) => void;
+  onSetDefault?: (id: string) => void;
+  onRemove?: (id: string) => void;
 }
 
 export const PaymentMethodsDialog: React.FC<PaymentMethodsDialogProps> = ({
@@ -31,37 +56,46 @@ export const PaymentMethodsDialog: React.FC<PaymentMethodsDialogProps> = ({
   onOpenChange,
   onSelectPaymentMethod,
   selectionMode = false,
-  selectedMethod = null
+  selectedMethod = null,
+  // For compatibility with PayBillDialog
+  isOpen,
+  onClose,
+  paymentMethods: externalPaymentMethods,
+  onAddPaymentMethod: externalAddMethod,
+  onSetDefault: externalSetDefault,
+  onRemove: externalRemove
 }) => {
+  // Use props provided by either interface
+  const isDialogOpen = open || isOpen || false;
+  const handleOpenChange = (newOpen: boolean) => {
+    if (onOpenChange) onOpenChange(newOpen);
+    if (!newOpen && onClose) onClose();
+  };
+
   const [activeTab, setActiveTab] = useState<string>("view");
   const [paymentType, setPaymentType] = useState<"card" | "bank">("card");
-  const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([
-    {
-      id: "card-1",
-      name: "Personal Visa",
-      type: "card",
-      lastFour: "4242",
-      expiry: "12/25",
-      isDefault: true
-    },
-    {
-      id: "bank-1",
-      name: "Chase Checking",
-      type: "bank",
-      lastFour: "7890",
-      isDefault: false
-    }
-  ]);
+  const [internalPaymentMethods, setInternalPaymentMethods] = useState<PaymentMethod[]>(DEFAULT_PAYMENT_METHODS);
+  
+  // Use either external or internal payment methods
+  const methods = externalPaymentMethods || internalPaymentMethods;
 
   const handleSetDefault = (id: string) => {
-    setPaymentMethods(paymentMethods.map(method => ({
-      ...method,
-      isDefault: method.id === id
-    })));
+    if (externalSetDefault) {
+      externalSetDefault(id);
+    } else {
+      setInternalPaymentMethods(internalPaymentMethods.map(method => ({
+        ...method,
+        isDefault: method.id === id
+      })));
+    }
   };
 
   const handleRemove = (id: string) => {
-    setPaymentMethods(paymentMethods.filter(method => method.id !== id));
+    if (externalRemove) {
+      externalRemove(id);
+    } else {
+      setInternalPaymentMethods(internalPaymentMethods.filter(method => method.id !== id));
+    }
   };
 
   const handleAddNew = () => {
@@ -71,28 +105,64 @@ export const PaymentMethodsDialog: React.FC<PaymentMethodsDialogProps> = ({
   const handleSelectMethod = (id: string) => {
     if (onSelectPaymentMethod) {
       onSelectPaymentMethod(id);
-      onOpenChange(false);
+      handleOpenChange(false);
+    }
+  };
+
+  // Create a new payment method from form values
+  const createPaymentMethod = (formValues: any, type: "card" | "bank"): Omit<PaymentMethod, "id" | "isDefault"> => {
+    if (type === "card") {
+      const { nickname, cardNumber, expiryMonth, expiryYear } = formValues;
+      return {
+        name: nickname || "Credit Card",
+        type: "card",
+        lastFour: cardNumber ? cardNumber.slice(-4) : "0000",
+        expiry: `${expiryMonth || "MM"}/${expiryYear || "YY"}`,
+      };
+    } else {
+      const { nickname, bankName, accountNumber } = formValues;
+      return {
+        name: nickname || bankName || "Bank Account",
+        type: "bank",
+        lastFour: accountNumber ? accountNumber.slice(-4) : "0000",
+      };
     }
   };
 
   const handleAddPaymentMethod = (newMethod: Omit<PaymentMethod, "id" | "isDefault">) => {
-    const isFirstMethod = paymentMethods.length === 0;
+    const isFirstMethod = methods.length === 0;
     const id = `${newMethod.type}-${Date.now()}`;
     
-    setPaymentMethods([
-      ...paymentMethods,
-      {
-        ...newMethod,
-        id,
-        isDefault: isFirstMethod
-      }
-    ]);
+    const completeMethod: PaymentMethod = {
+      ...newMethod,
+      id,
+      isDefault: isFirstMethod
+    };
+    
+    if (externalAddMethod) {
+      externalAddMethod(completeMethod);
+    } else {
+      setInternalPaymentMethods([
+        ...internalPaymentMethods,
+        completeMethod
+      ]);
+    }
     
     setActiveTab("view");
   };
 
+  const handleCardFormSubmit = (values: any) => {
+    const newMethod = createPaymentMethod(values, "card");
+    handleAddPaymentMethod(newMethod);
+  };
+
+  const handleBankFormSubmit = (values: any) => {
+    const newMethod = createPaymentMethod(values, "bank");
+    handleAddPaymentMethod(newMethod);
+  };
+
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={isDialogOpen} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle>{selectionMode ? "Select Payment Method" : "Payment Methods"}</DialogTitle>
@@ -106,7 +176,7 @@ export const PaymentMethodsDialog: React.FC<PaymentMethodsDialogProps> = ({
 
           <TabsContent value="view" className="space-y-4 mt-4">
             <PaymentMethodsList
-              paymentMethods={paymentMethods}
+              paymentMethods={methods}
               selectedMethod={selectedMethod}
               selectionMode={selectionMode}
               onSelect={handleSelectMethod}
@@ -117,7 +187,7 @@ export const PaymentMethodsDialog: React.FC<PaymentMethodsDialogProps> = ({
             
             {selectionMode && (
               <div className="flex justify-end mt-4">
-                <Button variant="outline" onClick={() => onOpenChange(false)}>
+                <Button variant="outline" onClick={() => handleOpenChange(false)}>
                   Cancel
                 </Button>
               </div>
@@ -131,9 +201,9 @@ export const PaymentMethodsDialog: React.FC<PaymentMethodsDialogProps> = ({
             />
 
             {paymentType === "card" ? (
-              <CardForm onSubmit={handleAddPaymentMethod} />
+              <CardForm onSubmit={handleCardFormSubmit} />
             ) : (
-              <BankAccountForm onSubmit={handleAddPaymentMethod} />
+              <BankAccountForm onSubmit={handleBankFormSubmit} />
             )}
 
             <div className="rounded-md bg-blue-50 p-4 mt-6">
