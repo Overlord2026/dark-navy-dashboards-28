@@ -11,8 +11,9 @@ import { BillPayButtonDiagnostics } from "@/components/billpay/BillPayButtonDiag
 import { AddBillDialog } from "@/components/billpay/AddBillDialog";
 import { PayBillDialog } from "@/components/billpay/PayBillDialog";
 import { PaymentMethodsDialog, PaymentMethod, DEFAULT_PAYMENT_METHODS } from "@/components/billpay/PaymentMethodsDialog";
+import { Bill as TypedBill, BillFrequency } from "@/types/bill";
+import { useBills } from "@/hooks/useBills";
 
-// Define types
 export interface Bill {
   id: number;
   name: string;
@@ -32,6 +33,8 @@ export interface FrequentBill {
 
 const BillPay = () => {
   const { toast } = useToast();
+  const { bills: typedBills, addBill: addTypedBill } = useBills();
+  
   const [upcomingBills, setUpcomingBills] = useState<Bill[]>(() => {
     const saved = localStorage.getItem('upcoming-bills');
     return saved ? JSON.parse(saved) : [];
@@ -87,11 +90,23 @@ const BillPay = () => {
     setShowPaymentMethodsDialog(true);
   };
 
-  const handleAddBill = (newBill: Bill) => {
+  const handleAddBill = (newBillData: Omit<TypedBill, "id" | "createdAt">) => {
+    addTypedBill(newBillData);
+    
+    const isRecurring = newBillData.frequency !== 'once';
+    const newBill: Bill = {
+      id: Date.now(),
+      name: newBillData.name,
+      amount: newBillData.amount,
+      dueDate: newBillData.dueDate,
+      category: newBillData.category,
+      accountNumber: newBillData.accountNumber,
+      isRecurring
+    };
+    
     setUpcomingBills(prev => [...prev, newBill]);
     
-    // If it's a recurring bill, add to frequent bills
-    if (newBill.isRecurring) {
+    if (isRecurring) {
       const frequentBill: FrequentBill = {
         id: newBill.id,
         name: newBill.name,
@@ -147,9 +162,7 @@ const BillPay = () => {
           text="Manage and schedule all your bill payments from one centralized location."
         />
         
-        {/* Action Buttons */}
         <div className="flex flex-wrap gap-4 mt-2">
-          {/* Create New Bill Button */}
           <div className="relative group">
             <Button 
               variant="default" 
@@ -170,7 +183,6 @@ const BillPay = () => {
             </Button>
           </div>
           
-          {/* View All Bills Button */}
           <div className="relative group">
             <Button 
               variant="outline" 
@@ -191,7 +203,6 @@ const BillPay = () => {
             </Button>
           </div>
           
-          {/* Manage Payment Methods Button */}
           <div className="relative group">
             <Button 
               variant="outline" 
@@ -212,7 +223,6 @@ const BillPay = () => {
             </Button>
           </div>
 
-          {/* Advanced Bill Paying Providers Button */}
           <div className="relative group">
             <Button 
               variant="outline" 
@@ -234,9 +244,7 @@ const BillPay = () => {
           </div>
         </div>
         
-        {/* Main Content Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
-          {/* Upcoming Bills Card */}
           <Card className="lg:col-span-2">
             <CardHeader className="flex flex-row items-center justify-between">
               <div>
@@ -322,7 +330,6 @@ const BillPay = () => {
             </CardFooter>
           </Card>
 
-          {/* Quick Pay Card */}
           <Card>
             <CardHeader>
               <CardTitle className="text-xl flex items-center gap-2">
@@ -372,7 +379,6 @@ const BillPay = () => {
           </Card>
         </div>
 
-        {/* Dialogs */}
         <AddBillDialog 
           isOpen={showAddBillDialog} 
           onClose={() => setShowAddBillDialog(false)} 
