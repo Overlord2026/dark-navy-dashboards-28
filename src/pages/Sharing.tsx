@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useParams, useSearchParams, useNavigate } from "react-router-dom";
 import { UserRoundPlusIcon, Users, BriefcaseIcon, ChevronLeft, InfoIcon } from "lucide-react";
@@ -206,19 +207,6 @@ export default function Sharing() {
                                 <DropdownMenuItem>Brother</DropdownMenuItem>
                                 <DropdownMenuItem>Sister</DropdownMenuItem>
                                 <DropdownMenuItem>Other Family Member</DropdownMenuItem>
-                              </>
-                            ) : null}
-                            
-                            {addType === "professional" || addType === null ? (
-                              <>
-                                <div className="px-2 py-1.5 text-sm font-medium text-gray-400">Service Professional</div>
-                                <DropdownMenuItem>Accountant</DropdownMenuItem>
-                                <DropdownMenuItem>Financial Advisor</DropdownMenuItem>
-                                <DropdownMenuItem>Estate Lawyer</DropdownMenuItem>
-                                <DropdownMenuItem>Insurance Agent</DropdownMenuItem>
-                                <DropdownMenuItem>Tax Professional</DropdownMenuItem>
-                                <DropdownMenuItem>Property Manager</DropdownMenuItem>
-                                <DropdownMenuItem>Other Professional</DropdownMenuItem>
                               </>
                             ) : null}
                           </DropdownMenuContent>
