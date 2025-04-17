@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -8,6 +7,7 @@ import { BankAccountForm } from "./payment-methods/BankAccountForm";
 import { PaymentTypeSelector } from "./payment-methods/PaymentTypeSelector";
 import { PaymentMethodsList } from "./payment-methods/PaymentMethodsList";
 import { AlertCircle } from "lucide-react";
+import { DEFAULT_PAYMENT_METHODS } from "@/data/payment/defaultPaymentMethods";
 
 export interface PaymentMethod {
   id: string;
@@ -17,24 +17,6 @@ export interface PaymentMethod {
   expiry?: string;
   isDefault: boolean;
 }
-
-export const DEFAULT_PAYMENT_METHODS: PaymentMethod[] = [
-  {
-    id: "card-1",
-    name: "Personal Visa",
-    type: "card",
-    lastFour: "4242",
-    expiry: "12/25",
-    isDefault: true
-  },
-  {
-    id: "bank-1",
-    name: "Chase Checking",
-    type: "bank",
-    lastFour: "7890",
-    isDefault: false
-  }
-];
 
 interface PaymentMethodsDialogProps {
   open: boolean;
@@ -65,7 +47,6 @@ export const PaymentMethodsDialog: React.FC<PaymentMethodsDialogProps> = ({
   onSetDefault: externalSetDefault,
   onRemove: externalRemove
 }) => {
-  // Use props provided by either interface
   const isDialogOpen = open || isOpen || false;
   const handleOpenChange = (newOpen: boolean) => {
     if (onOpenChange) onOpenChange(newOpen);
@@ -76,7 +57,6 @@ export const PaymentMethodsDialog: React.FC<PaymentMethodsDialogProps> = ({
   const [paymentType, setPaymentType] = useState<"card" | "bank">("card");
   const [internalPaymentMethods, setInternalPaymentMethods] = useState<PaymentMethod[]>(DEFAULT_PAYMENT_METHODS);
   
-  // Use either external or internal payment methods
   const methods = externalPaymentMethods || internalPaymentMethods;
 
   const handleSetDefault = (id: string) => {
@@ -109,7 +89,6 @@ export const PaymentMethodsDialog: React.FC<PaymentMethodsDialogProps> = ({
     }
   };
 
-  // Create a new payment method from form values
   const createPaymentMethod = (formValues: any, type: "card" | "bank"): Omit<PaymentMethod, "id" | "isDefault"> => {
     if (type === "card") {
       const { nickname, cardNumber, expiryMonth, expiryYear } = formValues;
