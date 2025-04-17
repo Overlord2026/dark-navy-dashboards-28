@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
@@ -44,12 +43,8 @@ export default function EstatePlanning() {
   };
 
   const handleShowInterest = () => {
-    // Send email to advisor
     console.log("Sending email to advisor with form data:", formData);
-    
-    // Alert advisor in real-time
     console.log("Alerting advisor about interest:", formData);
-    
     toast.success("Thank you for your interest! An advisor will contact you soon.");
     setShowInterestDialog(false);
   };
@@ -214,9 +209,6 @@ export default function EstatePlanning() {
             </TabsList>
 
             <TabsContent value="services" className="space-y-6">
-              {/* Add the Secure Tax Return Analysis component at the top of the Services tab */}
-              <SecureTaxReturnAnalysis />
-              
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {services.map((service) => (
                   <Card key={service.title} className="h-full">

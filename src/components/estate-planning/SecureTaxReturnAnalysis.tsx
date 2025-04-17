@@ -10,16 +10,24 @@ export function SecureTaxReturnAnalysis() {
   const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
   
   const handleRequestAnalysis = () => {
+    // Simulate notifying the advisor
+    console.log("Notifying advisor about tax return analysis request");
+    
     toast({
       title: "Analysis Requested",
-      description: "Your advisor will review your tax returns and provide an analysis shortly."
+      description: "Your advisor has been notified and will review your tax returns shortly.",
+      duration: 5000,
     });
   };
   
   const handleShowInterest = () => {
+    // Simulate notifying the advisor
+    console.log("Notifying advisor about interest in tax return analysis");
+    
     toast({
       title: "Interest Noted",
-      description: "Your interest in tax return analysis has been noted. An advisor will contact you."
+      description: "Your advisor has been notified about your interest in tax return analysis and will contact you soon.",
+      duration: 5000,
     });
   };
   
@@ -27,7 +35,7 @@ export function SecureTaxReturnAnalysis() {
     window.open("https://calendly.com/tonygomes/60min", "_blank");
     toast({
       title: "Opening Scheduling Page",
-      description: "Schedule a meeting to discuss tax return analysis with your advisor."
+      description: "Schedule a meeting to discuss tax return analysis with your advisor.",
     });
   };
 
