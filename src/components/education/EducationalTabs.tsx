@@ -1,154 +1,116 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CourseList } from "./CourseList";
+import { BookOpen, GraduationCap, FileText, Newspaper } from "lucide-react";
 import { CourseCategories } from "./CourseCategories";
-import { coursesByCategory } from "@/data/education/coursesByCategory";
+import { BookList } from "./BookList";
+import { coursesByCategory, featuredCourses } from "@/data/education";
 import { educationalResources } from "@/data/education/educationalResources";
-import { useNavigate, useSearchParams } from "react-router-dom";
-import { BookList } from './BookList';
-import { BookManagement } from './BookManagement';
-import { Switch } from '@/components/ui/switch';
-import { Label } from '@/components/ui/label';
-import { EducationalResource, CourseCategory } from "@/types/education";
-import { toast } from 'sonner';
-import { courseCategories } from "@/data/education/categories";
+import { memo } from "react";
 
 interface EducationalTabsProps {
   activeSection: string;
   activeCategory: string;
   setActiveSection: (section: string) => void;
   setActiveCategory: (category: string) => void;
-  handleCourseEnrollment: (id: string | number, title: string, isPaid: boolean, ghlUrl?: string) => void;
+  handleCourseEnrollment: (courseId: string | number, title: string, isPaid: boolean, ghlUrl?: string) => void;
 }
 
-export const EducationalTabs: React.FC<EducationalTabsProps> = ({ 
-  activeSection, 
-  activeCategory, 
-  setActiveSection, 
+// Memoize the BookList component to prevent unnecessary re-renders
+const MemoizedBookList = memo(BookList);
+
+export const EducationalTabs: React.FC<EducationalTabsProps> = ({
+  activeSection,
+  activeCategory,
+  setActiveSection,
   setActiveCategory,
-  handleCourseEnrollment
+  handleCourseEnrollment,
 }) => {
-  const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [books, setBooks] = useState<EducationalResource[]>(educationalResources.books);
-
-  // Use the imported courseCategories instead of creating mock ones
-  const categoriesWithActiveState = courseCategories.map(category => ({
-    ...category,
-    active: category.id === activeCategory
-  }));
-
-  // Effect to update URL when active section changes
+  // Use state to store filtered books to avoid recalculating on every render
+  const [filteredBooks, setFilteredBooks] = useState(educationalResources.books);
+  
+  // Only update filtered books when activeCategory changes
   useEffect(() => {
-    const newParams = new URLSearchParams(searchParams);
-    newParams.set('section', activeSection);
-    if (activeSection === 'courses') {
-      newParams.set('category', activeCategory);
-    } else {
-      newParams.delete('category');
-    }
-    setSearchParams(newParams);
-  }, [activeSection, activeCategory, setSearchParams]);
-
-  const handleTabChange = (value: string) => {
-    setActiveSection(value);
-  };
-
-  const handleUpdateBooks = (updatedBooks: EducationalResource[]) => {
-    setBooks(updatedBooks);
-    // In a real app, you would save to an API or local storage here
-    toast.success("Books list updated");
-  };
-
-  const handleCategoryClick = (categoryId: string) => {
-    setActiveCategory(categoryId);
-  };
+    // For now, we're not filtering books by category, but if needed in the future:
+    setFilteredBooks(educationalResources.books);
+  }, [activeCategory]);
+  
+  // Get courses for the active category
+  const activeCategoryCourses = 
+    activeCategory === "all-courses" 
+      ? featuredCourses 
+      : coursesByCategory[activeCategory] || [];
 
   return (
-    <Tabs value={activeSection} onValueChange={handleTabChange} className="w-full mt-6">
-      <div className="flex justify-between items-center mb-4">
-        <TabsList>
-          <TabsTrigger value="courses">Courses</TabsTrigger>
-          <TabsTrigger value="guides">Guides</TabsTrigger>
-          <TabsTrigger value="books">Books</TabsTrigger>
-          <TabsTrigger value="whitepapers">Whitepapers</TabsTrigger>
-        </TabsList>
-        
-        {activeSection === 'books' && (
-          <div className="flex items-center space-x-2">
-            <Switch 
-              id="admin-mode"
-              checked={isAdmin} 
-              onCheckedChange={setIsAdmin}
-            />
-            <Label htmlFor="admin-mode">Admin Mode</Label>
-          </div>
-        )}
-      </div>
+    <Tabs value={activeSection} onValueChange={setActiveSection} className="w-full">
+      <TabsList className="grid w-full grid-cols-4">
+        <TabsTrigger value="courses" className="flex items-center gap-2">
+          <GraduationCap className="h-4 w-4" />
+          Courses
+        </TabsTrigger>
+        <TabsTrigger value="guides" className="flex items-center gap-2">
+          <FileText className="h-4 w-4" />
+          Guides
+        </TabsTrigger>
+        <TabsTrigger value="books" className="flex items-center gap-2">
+          <BookOpen className="h-4 w-4" />
+          Books
+        </TabsTrigger>
+        <TabsTrigger value="whitepapers" className="flex items-center gap-2">
+          <Newspaper className="h-4 w-4" />
+          Whitepapers
+        </TabsTrigger>
+      </TabsList>
       
-      <TabsContent value="courses" className="py-4">
-        <div className="grid grid-cols-12 gap-6">
-          <div className="col-span-12 md:col-span-3">
-            <CourseCategories 
-              categories={categoriesWithActiveState}
-              onCategoryClick={handleCategoryClick}
-              activeCategory={activeCategory}
-              setActiveCategory={setActiveCategory}
-            />
-          </div>
-          <div className="col-span-12 md:col-span-9">
-            <CourseList
-              title={activeCategory === "all-courses" ? "All Courses" : "Category Courses"}
-              courses={
-                activeCategory === "all-courses"
-                  ? Object.values(coursesByCategory).flat()
-                  : coursesByCategory[activeCategory] || []
-              }
-              onCourseEnrollment={handleCourseEnrollment}
-            />
-          </div>
-        </div>
+      <TabsContent value="courses" className="mt-6">
+        <CourseCategories 
+          activeCategory={activeCategory}
+          onCategorySelect={setActiveCategory}
+          courses={activeCategoryCourses}
+          onCourseEnrollment={handleCourseEnrollment}
+        />
       </TabsContent>
       
-      <TabsContent value="guides" className="py-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {educationalResources.guides.map(guide => (
-            <div
-              key={guide.id}
-              className="border rounded-lg p-6 hover:shadow-md transition-shadow"
-            >
-              <h3 className="font-semibold text-lg mb-2">{guide.title}</h3>
-              <p className="text-sm text-muted-foreground mb-4">
-                {guide.description}
-              </p>
-              <div className="flex justify-between items-center text-xs text-muted-foreground mt-2 mb-4">
-                <span>{guide.level}</span>
-                <span>{guide.duration}</span>
-              </div>
-              <button
-                onClick={() => handleCourseEnrollment(guide.id, guide.title, guide.isPaid ?? false, guide.ghlUrl)}
-                className="w-full py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
-              >
-                View Guide
-              </button>
-            </div>
-          ))}
-        </div>
-      </TabsContent>
-      
-      <TabsContent value="books" className="py-4">
-        {isAdmin ? (
-          <BookManagement books={books} onUpdateBooks={handleUpdateBooks} />
-        ) : (
-          <BookList books={books} />
-        )}
-      </TabsContent>
-      
-      <TabsContent value="whitepapers" className="py-4">
+      <TabsContent value="guides" className="mt-6">
         <div className="text-center py-8">
-          <p className="text-muted-foreground">Whitepapers coming soon.</p>
+          <h3 className="text-xl font-semibold mb-2">Financial Guides</h3>
+          <p className="text-muted-foreground">
+            Our comprehensive guides help you navigate complex financial topics with ease.
+          </p>
+          <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+            {educationalResources.guides.map(guide => (
+              <div key={guide.id} className="border rounded-lg p-6 text-left">
+                <h4 className="font-semibold">{guide.title}</h4>
+                <p className="text-sm text-muted-foreground mt-2">{guide.description}</p>
+                <div className="mt-4">
+                  <button 
+                    onClick={() => handleCourseEnrollment(guide.id, guide.title, guide.isPaid || false, guide.ghlUrl)}
+                    className="text-primary hover:underline flex items-center"
+                  >
+                    Download Guide <FileText className="ml-2 h-4 w-4" />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </TabsContent>
+      
+      <TabsContent value="books" className="mt-6">
+        <h3 className="text-xl font-semibold mb-4">Recommended Reading</h3>
+        <p className="text-muted-foreground mb-6">
+          Explore our curated collection of essential financial literature to deepen your knowledge.
+        </p>
+        <MemoizedBookList books={filteredBooks} />
+      </TabsContent>
+      
+      <TabsContent value="whitepapers" className="mt-6">
+        <div className="text-center py-8">
+          <h3 className="text-xl font-semibold">Whitepapers Coming Soon</h3>
+          <p className="text-muted-foreground mt-2">
+            Our team is working on creating insightful whitepapers on various financial topics.
+            Check back soon for updates!
+          </p>
         </div>
       </TabsContent>
     </Tabs>

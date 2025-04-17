@@ -35,7 +35,7 @@ export const BookList: React.FC<BookListProps> = ({
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {books.map((book, index) => (
-        <Card key={book.id} className="flex flex-col h-full bg-card hover:shadow-lg transition-shadow duration-200">
+        <Card key={book.id} className="flex flex-col h-full bg-card">
           <CardHeader>
             <CardTitle className="line-clamp-2 text-lg">{book.title}</CardTitle>
             {book.author && (
