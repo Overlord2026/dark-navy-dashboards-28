@@ -1,12 +1,9 @@
-
 import { useState, useEffect } from "react";
 import { useParams, useSearchParams, useNavigate } from "react-router-dom";
 import { UserRoundPlusIcon, Users, BriefcaseIcon, ChevronLeft, InfoIcon } from "lucide-react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { 
   DropdownMenu,
   DropdownMenuContent,
@@ -38,15 +35,13 @@ export default function Sharing() {
   const [collaborators, setCollaborators] = useState<Collaborator[]>([]);
   const [showAddCollaborator, setShowAddCollaborator] = useState(false);
   const [addStep, setAddStep] = useState<"info" | "access">("info");
-  const [addType, setAddType] = useState<"family" | "professional" | null>(null);
+  const [addType, setAddType] = useState<"family" | null>("family");
   
-  // Check for "add" parameter in the URL
   useEffect(() => {
     const addParam = searchParams.get('add');
-    if (addParam === 'family' || addParam === 'professional') {
-      setAddType(addParam);
+    if (addParam === 'family') {
+      setAddType("family");
       setShowAddCollaborator(true);
-      // Remove the parameter from URL after processing
       searchParams.delete('add');
       setSearchParams(searchParams);
     }
@@ -311,19 +306,8 @@ export default function Sharing() {
               <div className="bg-[#061527] border border-gray-800 rounded-lg p-6">
                 <h2 className="text-xl font-medium mb-3">Your Collaborators</h2>
                 <p className="text-gray-400 mb-6">
-                  Share access with family members and service professionals (e.g., your accountant) by giving them full or partial access.
+                  Share access with family members by inviting them to collaborate on financial planning, document access, and more.
                 </p>
-                
-                <div className="tabs flex border-b border-gray-700 mb-6">
-                  <button className="px-6 py-3 font-medium text-blue-400 border-b-2 border-blue-400 -mb-px flex items-center gap-2">
-                    <Users size={18} />
-                    Family Members
-                  </button>
-                  <button className="px-6 py-3 font-medium text-gray-400 hover:text-gray-300 flex items-center gap-2">
-                    <BriefcaseIcon size={18} />
-                    Service Professionals
-                  </button>
-                </div>
                 
                 {collaborators.length > 0 ? (
                   <div className="rounded-lg overflow-hidden">
