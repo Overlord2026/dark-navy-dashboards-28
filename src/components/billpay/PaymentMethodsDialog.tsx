@@ -1,191 +1,160 @@
 
 import React, { useState } from "react";
-import { DialogFooter } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { 
-  Dialog, 
-  DialogContent, 
-  DialogHeader, 
-  DialogTitle,
-  DialogDescription,
-  DialogClose
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { PaymentMethodsList } from "./payment-methods/PaymentMethodsList";
+import { Button } from "@/components/ui/button";
+import { CardForm } from "./payment-methods/CardForm";
+import { BankAccountForm } from "./payment-methods/BankAccountForm";
 import { PaymentTypeSelector } from "./payment-methods/PaymentTypeSelector";
-import { CardForm, CardFormValues } from "./payment-methods/CardForm";
-import { BankAccountForm, BankAccountFormValues } from "./payment-methods/BankAccountForm";
-import { useToast } from "@/hooks/use-toast";
+import { PaymentMethodsList } from "./payment-methods/PaymentMethodsList";
+import { AlertCircle } from "lucide-react";
 
-// Sample payment methods - in a real app, fetch from API/database
 export interface PaymentMethod {
   id: string;
   name: string;
   type: "card" | "bank" | "wallet";
-  lastFour?: string;
+  lastFour: string;
   expiry?: string;
-  isDefault?: boolean;
+  isDefault: boolean;
 }
-
-// Default payment methods
-export const DEFAULT_PAYMENT_METHODS: PaymentMethod[] = [
-  { id: "card1", name: "Chase Sapphire", type: "card", lastFour: "4123", expiry: "05/27", isDefault: true },
-  { id: "bank1", name: "Wells Fargo Checking", type: "bank", lastFour: "6789" },
-  { id: "wallet1", name: "PayPal", type: "wallet" }
-];
 
 interface PaymentMethodsDialogProps {
-  isOpen: boolean;
-  onClose: () => void;
-  paymentMethods?: PaymentMethod[];
-  onAddPaymentMethod?: (method: PaymentMethod) => void;
-  onSelectPaymentMethod?: (methodId: string) => void;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onSelectPaymentMethod?: (id: string) => void;
   selectionMode?: boolean;
-  onSetDefault?: (methodId: string) => void;
-  onRemove?: (methodId: string) => void;
+  selectedMethod?: string | null;
 }
 
-export function PaymentMethodsDialog({ 
-  isOpen, 
-  onClose, 
-  paymentMethods = DEFAULT_PAYMENT_METHODS,
-  onAddPaymentMethod,
+export const PaymentMethodsDialog: React.FC<PaymentMethodsDialogProps> = ({
+  open,
+  onOpenChange,
   onSelectPaymentMethod,
   selectionMode = false,
-  onSetDefault,
-  onRemove
-}: PaymentMethodsDialogProps) {
-  const { toast } = useToast();
-  const [activeTab, setActiveTab] = useState("manage");
+  selectedMethod = null
+}) => {
+  const [activeTab, setActiveTab] = useState<string>("view");
   const [paymentType, setPaymentType] = useState<"card" | "bank">("card");
-  const [selectedMethod, setSelectedMethod] = useState<string | null>(null);
-
-  const handleCardSubmit = (values: CardFormValues) => {
-    const newMethod: PaymentMethod = {
-      id: `card${Date.now()}`,
+  const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([
+    {
+      id: "card-1",
+      name: "Personal Visa",
       type: "card",
-      name: values.nickname || `${values.cardName}'s Card`,
-      lastFour: values.cardNumber.slice(-4),
-      expiry: `${values.expiryMonth}/${values.expiryYear}`,
-      isDefault: paymentMethods.length === 0,
-    };
-
-    onAddPaymentMethod?.(newMethod);
-    
-    toast({
-      title: "Payment method added",
-      description: `Your new card has been added successfully.`,
-    });
-    
-    setActiveTab("manage");
-  };
-
-  const handleBankSubmit = (values: BankAccountFormValues) => {
-    const newMethod: PaymentMethod = {
-      id: `bank${Date.now()}`,
+      lastFour: "4242",
+      expiry: "12/25",
+      isDefault: true
+    },
+    {
+      id: "bank-1",
+      name: "Chase Checking",
       type: "bank",
-      name: values.nickname || `${values.bankName} ${values.accountType}`,
-      lastFour: values.accountNumber.slice(-4),
-      isDefault: paymentMethods.length === 0,
-    };
+      lastFour: "7890",
+      isDefault: false
+    }
+  ]);
 
-    onAddPaymentMethod?.(newMethod);
-    
-    toast({
-      title: "Payment method added",
-      description: `Your bank account has been added successfully.`,
-    });
-    
-    setActiveTab("manage");
+  const handleSetDefault = (id: string) => {
+    setPaymentMethods(paymentMethods.map(method => ({
+      ...method,
+      isDefault: method.id === id
+    })));
   };
 
-  const handleSetAsDefault = (id: string) => {
-    onSetDefault?.(id);
-    toast({
-      title: "Default payment method set",
-      description: "Your default payment method has been updated.",
-    });
+  const handleRemove = (id: string) => {
+    setPaymentMethods(paymentMethods.filter(method => method.id !== id));
   };
 
-  const handleRemovePaymentMethod = (id: string) => {
-    onRemove?.(id);
-    toast({
-      title: "Payment method removed",
-      description: "Your payment method has been removed successfully.",
-    });
+  const handleAddNew = () => {
+    setActiveTab("add");
   };
 
-  const handleSelect = (id: string) => {
-    setSelectedMethod(id);
-    if (selectionMode) {
-      onSelectPaymentMethod?.(id);
-      onClose();
+  const handleSelectMethod = (id: string) => {
+    if (onSelectPaymentMethod) {
+      onSelectPaymentMethod(id);
+      onOpenChange(false);
     }
   };
 
+  const handleAddPaymentMethod = (newMethod: Omit<PaymentMethod, "id" | "isDefault">) => {
+    const isFirstMethod = paymentMethods.length === 0;
+    const id = `${newMethod.type}-${Date.now()}`;
+    
+    setPaymentMethods([
+      ...paymentMethods,
+      {
+        ...newMethod,
+        id,
+        isDefault: isFirstMethod
+      }
+    ]);
+    
+    setActiveTab("view");
+  };
+
   return (
-    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>{selectionMode ? "Select Payment Method" : "Manage Payment Methods"}</DialogTitle>
-          <DialogDescription>
-            {selectionMode ? 
-              "Select a payment method for this transaction." : 
-              "Add, edit, or remove payment methods for your account."}
-          </DialogDescription>
+          <DialogTitle>{selectionMode ? "Select Payment Method" : "Payment Methods"}</DialogTitle>
         </DialogHeader>
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="manage">Payment Methods</TabsTrigger>
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <TabsList className="grid grid-cols-2">
+            <TabsTrigger value="view">My Payment Methods</TabsTrigger>
             <TabsTrigger value="add">Add New</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="manage" className="py-4">
-            <PaymentMethodsList 
+          <TabsContent value="view" className="space-y-4 mt-4">
+            <PaymentMethodsList
               paymentMethods={paymentMethods}
               selectedMethod={selectedMethod}
               selectionMode={selectionMode}
-              onSelect={handleSelect}
-              onSetDefault={onSetDefault ? handleSetAsDefault : undefined}
-              onRemove={onRemove ? handleRemovePaymentMethod : undefined}
-              onAddNew={() => setActiveTab("add")}
+              onSelect={handleSelectMethod}
+              onSetDefault={handleSetDefault}
+              onRemove={handleRemove}
+              onAddNew={handleAddNew}
             />
+            
+            {selectionMode && (
+              <div className="flex justify-end mt-4">
+                <Button variant="outline" onClick={() => onOpenChange(false)}>
+                  Cancel
+                </Button>
+              </div>
+            )}
           </TabsContent>
 
-          <TabsContent value="add" className="py-4">
-            <PaymentTypeSelector 
-              paymentType={paymentType} 
-              onSelect={setPaymentType} 
+          <TabsContent value="add" className="space-y-4 mt-4">
+            <PaymentTypeSelector
+              paymentType={paymentType}
+              onSelect={setPaymentType}
             />
 
             {paymentType === "card" ? (
-              <CardForm onSubmit={handleCardSubmit} />
+              <CardForm onSubmit={handleAddPaymentMethod} />
             ) : (
-              <BankAccountForm onSubmit={handleBankSubmit} />
+              <BankAccountForm onSubmit={handleAddPaymentMethod} />
             )}
 
-            <DialogFooter className="pt-4">
-              <Button 
-                variant="outline" 
-                type="button" 
-                onClick={() => setActiveTab("manage")}
-              >
-                Cancel
-              </Button>
-              <Button 
-                type="submit"
-                onClick={() => {
-                  const form = document.querySelector('form');
-                  if (form) form.requestSubmit();
-                }}
-              >
-                Save Payment Method
-              </Button>
-            </DialogFooter>
+            <div className="rounded-md bg-blue-50 p-4 mt-6">
+              <div className="flex items-start">
+                <div className="flex-shrink-0">
+                  <AlertCircle className="h-5 w-5 text-blue-400" />
+                </div>
+                <div className="ml-3">
+                  <h3 className="text-sm font-medium text-blue-800">Secure payments</h3>
+                  <div className="mt-2 text-sm text-blue-700">
+                    <p>
+                      All payment information is encrypted and securely stored. 
+                      We do not store your full card details on our servers.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </TabsContent>
         </Tabs>
       </DialogContent>
     </Dialog>
   );
-}
+};
