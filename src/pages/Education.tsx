@@ -124,6 +124,7 @@ export default function Education() {
             setActiveSection={setActiveSection}
             setActiveCategory={setActiveCategory}
             handleCourseEnrollment={handleCourseEnrollment}
+            isAdmin={true} // Enable admin features for testing
           />
         </motion.div>
       </motion.div>
