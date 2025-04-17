@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
 import { Button } from '../ui/button';
@@ -27,11 +28,14 @@ export const DEFAULT_PAYMENT_METHODS: PaymentMethod[] = [
   }
 ];
 
-interface PaymentMethodsDialogProps {
+export interface PaymentMethodsDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   paymentMethods: PaymentMethod[];
   onPaymentMethodsChange: (paymentMethods: PaymentMethod[]) => void;
+  onAddPaymentMethod?: (method: PaymentMethod) => void;
+  onSetDefault?: (id: string) => void;
+  onRemove?: (id: string) => void;
 }
 
 export const PaymentMethodsDialog: React.FC<PaymentMethodsDialogProps> = ({
@@ -39,6 +43,9 @@ export const PaymentMethodsDialog: React.FC<PaymentMethodsDialogProps> = ({
   onOpenChange,
   paymentMethods,
   onPaymentMethodsChange,
+  onAddPaymentMethod,
+  onSetDefault,
+  onRemove,
 }) => {
   const [newPaymentMethod, setNewPaymentMethod] = useState<Omit<PaymentMethod, 'id'>>({
     name: '',
@@ -59,7 +66,13 @@ export const PaymentMethodsDialog: React.FC<PaymentMethodsDialogProps> = ({
       id: `pm-${Date.now()}`,
       ...newPaymentMethod,
     };
-    onPaymentMethodsChange([...paymentMethods, newMethod]);
+    
+    if (onAddPaymentMethod) {
+      onAddPaymentMethod(newMethod);
+    } else {
+      onPaymentMethodsChange([...paymentMethods, newMethod]);
+    }
+    
     setNewPaymentMethod({
       name: '',
       type: 'bank_account',
