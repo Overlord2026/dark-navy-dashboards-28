@@ -53,17 +53,18 @@ export const maskCardNumber = (cardNumber: string): string => {
   return `•••• •••• •••• ${last4}`;
 };
 
+// Updated to make all parameters optional with default values
 export const validateCard = (values: {
-  cardNumber: string;
-  cardName: string;
-  expiryMonth: string;
-  expiryYear: string;
-  cvv: string;
-}) => {
+  cardNumber?: string;
+  cardName?: string;
+  expiryMonth?: string;
+  expiryYear?: string;
+  cvv?: string;
+} = {}) => {
   const errors: Record<string, string> = {};
   
   // Card number validation
-  if (!validateLuhn(values.cardNumber)) {
+  if (values.cardNumber && !validateLuhn(values.cardNumber)) {
     errors.cardNumber = "Invalid card number";
   }
 
@@ -73,20 +74,24 @@ export const validateCard = (values: {
   }
 
   // Expiry date validation
-  const today = new Date();
-  const expiry = new Date(
-    parseInt(`20${values.expiryYear}`), 
-    parseInt(values.expiryMonth) - 1
-  );
-  
-  if (expiry < today) {
-    errors.expiryYear = "Expiry date must be in the future";
+  if (values.expiryMonth && values.expiryYear) {
+    const today = new Date();
+    const expiry = new Date(
+      parseInt(`20${values.expiryYear}`), 
+      parseInt(values.expiryMonth) - 1
+    );
+    
+    if (expiry < today) {
+      errors.expiryYear = "Expiry date must be in the future";
+    }
   }
 
   // CVV validation
-  const cvvLength = getCardType(values.cardNumber) === 'American Express' ? 4 : 3;
-  if (!values.cvv || values.cvv.length !== cvvLength) {
-    errors.cvv = `CVV must be ${cvvLength} digits`;
+  if (values.cardNumber && values.cvv) {
+    const cvvLength = getCardType(values.cardNumber) === 'American Express' ? 4 : 3;
+    if (!values.cvv || values.cvv.length !== cvvLength) {
+      errors.cvv = `CVV must be ${cvvLength} digits`;
+    }
   }
 
   return errors;
