@@ -32,7 +32,7 @@ export interface Course {
   title: string;
   description: string;
   categoryId: string;
-  instructor?: string; // Made optional
+  instructor?: string; // Made optional with documentation
   duration: string;
   level: string;
   price: number | string;
