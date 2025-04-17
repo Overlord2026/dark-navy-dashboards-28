@@ -1,3 +1,4 @@
+
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { toast } from "sonner";
 import { useSearchParams, Link, useLocation } from "react-router-dom";
@@ -65,6 +66,10 @@ export default function Education() {
   const toggleAdminMode = () => {
     setIsAdmin(!isAdmin);
     toast.success(isAdmin ? "Exited admin mode" : "Entered admin mode");
+  };
+
+  const toggleApiDemo = () => {
+    setShowApiDemo(!showApiDemo);
   };
 
   const handleTabsUpdate = (newTabs: Array<{ id: string; label: string; value: string; }>) => {

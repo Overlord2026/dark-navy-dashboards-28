@@ -8,11 +8,13 @@ import { courseCategories } from "@/data/education";
 import { handleCourseAccess } from "@/components/education/courseUtils";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
+import { useAdmin } from "@/context/AdminContext";
 
 export default function TaxPlanningEducation() {
   const [activeCategory] = useState("tax-planning");
   const [activeSection, setActiveSection] = useState("courses");
   const navigate = useNavigate();
+  const { isAdmin } = useAdmin();
   
   const handleCourseEnrollment = (courseId: string | number, title: string, isPaid: boolean, ghlUrl?: string) => {
     if (ghlUrl) {
@@ -80,6 +82,7 @@ export default function TaxPlanningEducation() {
               setActiveSection={setActiveSection}
               setActiveCategory={setActiveCategory}
               handleCourseEnrollment={handleCourseEnrollment}
+              isAdmin={isAdmin}
             />
           </div>
         </motion.div>

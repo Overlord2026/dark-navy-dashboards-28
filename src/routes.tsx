@@ -1,4 +1,3 @@
-
 import React from "react";
 import { createBrowserRouter } from "react-router-dom";
 import Dashboard from "@/pages/Dashboard";
@@ -46,6 +45,38 @@ const routes = createBrowserRouter([
   },
   {
     path: "/education/all-courses",
+    element: <Education />
+  },
+  {
+    path: "/education/financial-basics",
+    element: <Education />
+  },
+  {
+    path: "/education/investing",
+    element: <Education />
+  },
+  {
+    path: "/education/retirement-planning",
+    element: <Education />
+  },
+  {
+    path: "/education/tax-planning",
+    element: <TaxPlanningEducation />
+  },
+  {
+    path: "/education/estate-planning",
+    element: <Education />
+  },
+  {
+    path: "/education/debt-management",
+    element: <Education />
+  },
+  {
+    path: "/education/insurance",
+    element: <Education />
+  },
+  {
+    path: "/education/business-education",
     element: <Education />
   },
   {
@@ -139,10 +170,6 @@ const routes = createBrowserRouter([
   {
     path: '/art-valuables',
     element: <AllAssets />
-  },
-  {
-    path: "/education/tax-planning",
-    element: <TaxPlanningEducation />
   },
   {
     path: "/navigation-diagnostics",

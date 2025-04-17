@@ -4,7 +4,7 @@ import { CourseCategory } from "@/types/education";
 import { cn } from "@/lib/utils";
 import { Card } from '@/components/ui/card';
 import { courseCategories } from '@/data/education';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 export interface CourseCategoryProps {
   activeCategory: string;
@@ -22,14 +22,19 @@ export const CourseCategories: React.FC<CourseCategoryProps> = ({
   // Use the imported courseCategories if not explicitly provided
   const categories = courseCategories;
   const navigate = useNavigate();
+  const location = useLocation();
   
   const handleCategoryClick = (categoryId: string) => {
     // Update the category in the parent component
     onCategorySelect(categoryId);
     
-    // Keep the user on the main education page with the right category parameter
-    if (window.location.pathname.includes('/education/all-courses')) {
+    // Handle navigation based on current location
+    if (location.pathname.includes('/education/')) {
+      // If we're on a specific education page (like tax-planning), go back to main education
       navigate('/education', { state: { category: categoryId } });
+    } else {
+      // Otherwise, just update the URL with the new category parameter
+      navigate(`/education?category=${categoryId}`, { replace: true });
     }
   };
   
