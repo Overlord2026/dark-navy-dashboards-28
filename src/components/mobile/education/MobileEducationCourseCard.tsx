@@ -1,0 +1,52 @@
+
+import React from 'react';
+import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+
+interface CourseCardProps {
+  title: string;
+  description: string;
+  level: string;
+  duration: string;
+  isPaid: boolean;
+  onClick: () => void;
+}
+
+export const MobileEducationCourseCard = ({ 
+  title, 
+  description, 
+  level, 
+  duration, 
+  isPaid, 
+  onClick 
+}: CourseCardProps) => {
+  return (
+    <Card className="bg-[#1B1B32] border border-[#2A2A45] overflow-hidden">
+      <CardHeader className="p-4 pb-2">
+        <div className="flex justify-between items-start">
+          <CardTitle className="text-base">{title}</CardTitle>
+          <div className={`text-xs px-2 py-1 rounded ${isPaid ? 'bg-[#3A3A60]' : 'bg-[#2A4A3A]'}`}>
+            {isPaid ? 'Paid' : 'Free'}
+          </div>
+        </div>
+        <CardDescription className="text-sm line-clamp-2 mt-1">
+          {description}
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="p-4 pt-2">
+        <div className="flex items-center justify-between text-xs text-gray-400 mb-3">
+          <div>{level}</div>
+          <div>{duration}</div>
+        </div>
+        <Button 
+          variant={isPaid ? "default" : "outline"} 
+          size="sm" 
+          className="w-full"
+          onClick={onClick}
+        >
+          {isPaid ? 'Enroll Now' : 'Start Learning'}
+        </Button>
+      </CardContent>
+    </Card>
+  );
+};
