@@ -27,8 +27,8 @@ export const ScheduleMeetingDialog = ({
 
   return (
     <Button 
-      variant={variant} 
-      className={`flex items-center justify-center w-full ${className}`}
+      variant={variant === "marketplace" ? "marketplace" : variant} 
+      className={`flex items-center justify-center w-full font-medium shadow-sm ${className}`}
       onClick={handleScheduleAppointment}
     >
       <CalendarClock className="mr-2 h-4 w-4" />

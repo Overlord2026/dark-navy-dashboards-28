@@ -25,12 +25,12 @@ const FundSummaryDialog: React.FC<FundSummaryDialogProps> = ({
   
   return (
     <div 
-      className="fixed inset-0 z-50 bg-black/50 flex justify-center items-center"
+      className="fixed inset-0 z-50 bg-black/70 flex justify-center items-center"
       onClick={handleBackdropClick}
     >
       <div className="relative w-full max-w-3xl max-h-[90vh] overflow-auto">
         <Button 
-          className="absolute top-2 right-2 z-10 rounded-full bg-gray-800 hover:bg-gray-700 p-1"
+          className="absolute top-2 right-2 z-10 rounded-full bg-gray-800 hover:bg-gray-700 p-1 text-white"
           size="sm"
           variant="ghost"
           onClick={onClose}
