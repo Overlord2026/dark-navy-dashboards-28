@@ -2,14 +2,14 @@
 import React, { useEffect, useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Card, CardContent } from "@/components/ui/card";
-import { runSystemHealthCheck, SystemHealthSummary } from "@/services/diagnostics/systemHealthService";
-import { SystemHealthSummary as HealthSummaryComponent } from "@/components/diagnostics/SystemHealthSummary";
+import { runSystemHealthCheck, SystemHealthSummary as HealthSummaryType } from "@/services/diagnostics/systemHealthService";
+import { SystemHealthSummary } from "@/components/diagnostics/SystemHealthSummary";
 import { useAdmin } from "@/contexts/AdminContext";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 export default function SystemDiagnosticsPage() {
-  const [summary, setSummary] = useState<SystemHealthSummary | null>(null);
+  const [summary, setSummary] = useState<HealthSummaryType | null>(null);
   const [loading, setLoading] = useState(false);
   const { isAdmin } = useAdmin();
   const navigate = useNavigate();
@@ -49,7 +49,7 @@ export default function SystemDiagnosticsPage() {
         <Card>
           <CardContent className="p-6">
             {summary && (
-              <HealthSummaryComponent 
+              <SystemHealthSummary 
                 summary={summary}
                 onRefresh={runDiagnostics}
                 loading={loading}

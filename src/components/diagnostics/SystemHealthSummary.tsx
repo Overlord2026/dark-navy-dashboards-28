@@ -1,12 +1,12 @@
 
 import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { SystemHealthSummary } from "@/services/diagnostics/systemHealthService";
+import { SystemHealthSummary as HealthSummaryType } from "@/services/diagnostics/systemHealthService";
 import { DiagnosticsSummaryCards } from "./navigation/DiagnosticsSummaryCards";
 import { SimpleDiagnosticsView } from "./SimpleDiagnosticsView";
 
 interface SystemHealthSummaryProps {
-  summary: SystemHealthSummary;
+  summary: HealthSummaryType;
   onRefresh: () => Promise<void>;
   loading?: boolean;
 }
