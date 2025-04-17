@@ -1,4 +1,3 @@
-
 export interface EducationalResource {
   id: string;
   title: string;
@@ -24,6 +23,7 @@ export interface CourseCategory {
   count?: number;
   featured?: boolean;
   imageUrl?: string;
+  active?: boolean;
 }
 
 export interface Course {
