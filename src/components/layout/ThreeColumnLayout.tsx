@@ -1,4 +1,3 @@
-
 import { ReactNode, useState } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
@@ -71,7 +70,8 @@ export function ThreeColumnLayout({
   const menuItems = secondaryMenuItems || getSecondaryMenuItems(currentActiveMainItem);
   
   const isMainInvestmentsPage = location.pathname === "/investments";
-  const hasSecondaryMenu = !isMainInvestmentsPage && menuItems.length > 0;
+  const isEducationPage = location.pathname === "/education";
+  const hasSecondaryMenu = !isMainInvestmentsPage && !isEducationPage && menuItems.length > 0;
   
   const isLightTheme = theme === "light";
   const isHomePage = location.pathname === "/";

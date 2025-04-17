@@ -19,27 +19,22 @@ export const CourseCategories: React.FC<CourseCategoryProps> = ({
   courses,
   onCourseEnrollment 
 }) => {
-  // Use the imported courseCategories if not explicitly provided
   const categories = courseCategories;
   const navigate = useNavigate();
   const location = useLocation();
   
   const handleCategoryClick = (categoryId: string) => {
-    // Update the category in the parent component
     onCategorySelect(categoryId);
     
-    // Handle navigation based on current location
     if (location.pathname.includes('/education/')) {
-      // If we're on a specific education page (like tax-planning), go back to main education
       navigate('/education', { state: { category: categoryId } });
     } else {
-      // Otherwise, just update the URL with the new category parameter
       navigate(`/education?category=${categoryId}`, { replace: true });
     }
   };
   
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 w-full">
       <div className="flex flex-wrap gap-2 mb-6">
         {categories.map(category => (
           <Button

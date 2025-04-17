@@ -1,4 +1,3 @@
-
 export interface EducationalResource {
   id: string;
   title: string;
@@ -6,9 +5,10 @@ export interface EducationalResource {
   isPaid?: boolean;
   level?: string;
   duration?: string;
+  category?: string;
+  ghlUrl?: string;
   author?: string;
   coverImage?: string;
-  ghlUrl: string;
 }
 
 export interface EducationalResources {

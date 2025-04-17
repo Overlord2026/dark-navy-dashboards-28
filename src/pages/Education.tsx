@@ -1,4 +1,3 @@
-
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { toast } from "sonner";
 import { useSearchParams, Link, useLocation } from "react-router-dom";
@@ -97,8 +96,6 @@ export default function Education() {
     <ThreeColumnLayout 
       title={isAdmin ? "Education Management" : "SWAG Education Center"}
       activeMainItem="education"
-      activeSecondaryItem={activeCategory}
-      secondaryMenuItems={courseCategories}
     >
       <motion.div 
         className="space-y-6 px-1"
@@ -138,42 +135,44 @@ export default function Education() {
                 Explore our collection of financial education resources to help you build wealth and achieve your financial goals.
               </p>
               
-              <div className="mt-4 mb-6 flex gap-2">
-                <Link to="/education/tax-planning">
-                  <Button variant="outline" className="flex items-center gap-2">
-                    Tax Planning <ArrowRight className="h-4 w-4" />
+              <div className="flex flex-col space-y-6">
+                <div className="flex flex-wrap gap-2">
+                  <Link to="/education/tax-planning">
+                    <Button variant="outline" className="flex items-center gap-2">
+                      Tax Planning <ArrowRight className="h-4 w-4" />
+                    </Button>
+                  </Link>
+                  
+                  <Button 
+                    variant={showApiDemo ? "default" : "outline"} 
+                    className="flex items-center gap-2"
+                    onClick={toggleApiDemo}
+                  >
+                    {showApiDemo ? "Hide API Demo" : "Show API Demo"}
                   </Button>
-                </Link>
+                </div>
                 
-                <Button 
-                  variant={showApiDemo ? "default" : "outline"} 
-                  className="flex items-center gap-2"
-                  onClick={toggleApiDemo}
-                >
-                  {showApiDemo ? "Hide API Demo" : "Show API Demo"}
-                </Button>
+                {showApiDemo && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="mb-8"
+                  >
+                    <CourseApiDemo />
+                  </motion.div>
+                )}
+                
+                <EducationalTabs 
+                  activeSection={activeSection}
+                  activeCategory={activeCategory}
+                  setActiveSection={setActiveSection}
+                  setActiveCategory={setActiveCategory}
+                  handleCourseEnrollment={handleCourseEnrollment}
+                  isAdmin={false}
+                />
               </div>
-              
-              {showApiDemo && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="mb-8"
-                >
-                  <CourseApiDemo />
-                </motion.div>
-              )}
-              
-              <EducationalTabs 
-                activeSection={activeSection}
-                activeCategory={activeCategory}
-                setActiveSection={setActiveSection}
-                setActiveCategory={setActiveCategory}
-                handleCourseEnrollment={handleCourseEnrollment}
-                isAdmin={false}
-              />
             </>
           )}
         </motion.div>
