@@ -1,8 +1,13 @@
-
 import React, { useState } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  validateCard,
+  formatCardNumber,
+  maskCardNumber,
+  getCardType
+} from "@/utils/cardValidation";
 import { 
   Dialog, 
   DialogContent, 
@@ -46,29 +51,32 @@ export const DEFAULT_PAYMENT_METHODS: PaymentMethod[] = [
   { id: "wallet1", name: "PayPal", type: "wallet" }
 ];
 
+// Update the schema with stricter validation
 const paymentMethodSchema = z.object({
   cardNumber: z.string()
     .min(15, "Card number must be at least 15 digits")
     .max(19, "Card number cannot exceed 19 digits")
-    .refine(value => /^[0-9]+$/.test(value), {
+    .refine(value => /^[0-9\s]+$/.test(value.replace(/\s/g, '')), {
       message: "Card number must contain only digits"
-    })
-    .optional(),
-  cardName: z.string().min(2, "Name must be at least 2 characters").optional(),
-  expiryMonth: z.string().optional(),
-  expiryYear: z.string().optional(),
+    }),
+  cardName: z.string()
+    .min(2, "Name must be at least 2 characters")
+    .refine(value => !/\d/.test(value), {
+      message: "Name cannot contain numbers"
+    }),
+  expiryMonth: z.string(),
+  expiryYear: z.string(),
   cvv: z.string()
     .min(3, "CVV must be at least 3 digits")
     .max(4, "CVV cannot exceed 4 digits")
     .refine(value => /^[0-9]+$/.test(value), {
       message: "CVV must contain only digits"
-    })
-    .optional(),
+    }),
+  nickname: z.string().min(1, "Please provide a name for this payment method"),
   accountNumber: z.string().min(4, "Account number must be at least 4 digits").optional(),
   routingNumber: z.string().min(9, "Routing number must be 9 digits").max(9).optional(),
   accountType: z.string().min(1, "Account type is required").optional(),
   bankName: z.string().min(2, "Bank name is required").optional(),
-  nickname: z.string().min(1, "Please provide a name for this payment method").optional(),
 });
 
 interface PaymentMethodsDialogProps {
@@ -97,6 +105,9 @@ export function PaymentMethodsDialog({
   const [paymentType, setPaymentType] = useState<"card" | "bank">("card");
   const [selectedMethod, setSelectedMethod] = useState<string | null>(null);
   
+  const [cardType, setCardType] = useState<string>("");
+  const [formattedCardNumber, setFormattedCardNumber] = useState<string>("");
+
   const form = useForm<z.infer<typeof paymentMethodSchema>>({
     resolver: zodResolver(paymentMethodSchema),
     defaultValues: {
@@ -113,19 +124,29 @@ export function PaymentMethodsDialog({
     },
   });
 
+  const handleCardNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formatted = formatCardNumber(e.target.value);
+    setFormattedCardNumber(formatted);
+    setCardType(getCardType(formatted));
+    form.setValue('cardNumber', formatted);
+  };
+
   const handleSubmit = (values: z.infer<typeof paymentMethodSchema>) => {
+    const validationErrors = validateCard(values);
+    
+    if (Object.keys(validationErrors).length > 0) {
+      Object.entries(validationErrors).forEach(([key, value]) => {
+        form.setError(key as any, { message: value });
+      });
+      return;
+    }
+
     const newMethod: PaymentMethod = {
-      id: `${paymentType}${Date.now()}`,
-      type: paymentType,
-      name: paymentType === "card" 
-        ? values.nickname || `${values.cardName}'s Card` 
-        : values.nickname || `${values.bankName} Account`,
-      lastFour: paymentType === "card" 
-        ? values.cardNumber?.slice(-4) 
-        : values.accountNumber?.slice(-4),
-      expiry: paymentType === "card" 
-        ? `${values.expiryMonth}/${values.expiryYear}` 
-        : undefined,
+      id: `card${Date.now()}`,
+      type: "card",
+      name: values.nickname || `${values.cardName}'s Card`,
+      lastFour: values.cardNumber.slice(-4),
+      expiry: `${values.expiryMonth}/${values.expiryYear}`,
       isDefault: paymentMethods.length === 0,
     };
 
@@ -133,11 +154,13 @@ export function PaymentMethodsDialog({
     
     toast({
       title: "Payment method added",
-      description: `Your new ${paymentType === "card" ? "card" : "bank account"} has been added successfully.`,
+      description: `Your new card has been added successfully.`,
     });
     
     form.reset();
     setActiveTab("manage");
+    setCardType("");
+    setFormattedCardNumber("");
   };
 
   const handleSetAsDefault = (id: string) => {
@@ -345,9 +368,23 @@ export function PaymentMethodsDialog({
                       name="cardNumber"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Card Number</FormLabel>
+                          <FormLabel>
+                            Card Number {cardType && `(${cardType})`}
+                          </FormLabel>
                           <FormControl>
-                            <Input placeholder="1234 5678 9012 3456" {...field} />
+                            <Input
+                              placeholder="1234 5678 9012 3456"
+                              value={formattedCardNumber}
+                              onChange={handleCardNumberChange}
+                              onBlur={() => {
+                                if (formattedCardNumber) {
+                                  setFormattedCardNumber(maskCardNumber(formattedCardNumber));
+                                }
+                              }}
+                              onFocus={() => {
+                                setFormattedCardNumber(field.value);
+                              }}
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
