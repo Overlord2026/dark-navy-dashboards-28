@@ -1,3 +1,4 @@
+
 export interface EducationalResource {
   id: string;
   title: string;
@@ -27,7 +28,7 @@ export interface CourseCategory {
 }
 
 export interface Course {
-  id: string;
+  id: string | number;
   title: string;
   description: string;
   categoryId: string;
@@ -42,6 +43,12 @@ export interface Course {
   new?: boolean;
   popular?: boolean;
   status?: "published" | "draft" | "archived";
+  isPaid?: boolean;
+  ghlUrl?: string;
+  comingSoon?: boolean;
+  image?: string;
+  author?: string;
+  categoryIds?: string[];
 }
 
 export interface DetailedCourse extends Course {

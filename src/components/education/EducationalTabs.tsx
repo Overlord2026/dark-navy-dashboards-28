@@ -12,6 +12,7 @@ import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { EducationalResource, CourseCategory } from "@/types/education";
 import { toast } from 'sonner';
+import { courseCategories } from "@/data/education/categories";
 
 interface EducationalTabsProps {
   activeSection: string;
@@ -33,14 +34,11 @@ export const EducationalTabs: React.FC<EducationalTabsProps> = ({
   const [isAdmin, setIsAdmin] = useState(false);
   const [books, setBooks] = useState<EducationalResource[]>(educationalResources.books);
 
-  // Create mock categories for course categories
-  const categories: CourseCategory[] = [
-    { id: "all-courses", name: "All Courses", active: activeCategory === "all-courses" },
-    { id: "financial-basics", name: "Financial Basics", active: activeCategory === "financial-basics" },
-    { id: "investing", name: "Investing", active: activeCategory === "investing" },
-    { id: "retirement", name: "Retirement", active: activeCategory === "retirement" },
-    { id: "premium", name: "Premium Courses", active: activeCategory === "premium" }
-  ];
+  // Use the imported courseCategories instead of creating mock ones
+  const categoriesWithActiveState = courseCategories.map(category => ({
+    ...category,
+    active: category.id === activeCategory
+  }));
 
   // Effect to update URL when active section changes
   useEffect(() => {
@@ -94,7 +92,7 @@ export const EducationalTabs: React.FC<EducationalTabsProps> = ({
         <div className="grid grid-cols-12 gap-6">
           <div className="col-span-12 md:col-span-3">
             <CourseCategories 
-              categories={categories}
+              categories={categoriesWithActiveState}
               onCategoryClick={handleCategoryClick}
               activeCategory={activeCategory}
               setActiveCategory={setActiveCategory}
@@ -130,7 +128,7 @@ export const EducationalTabs: React.FC<EducationalTabsProps> = ({
                 <span>{guide.duration}</span>
               </div>
               <button
-                onClick={() => handleCourseEnrollment(guide.id, guide.title, guide.isPaid, guide.ghlUrl)}
+                onClick={() => handleCourseEnrollment(guide.id, guide.title, guide.isPaid ?? false, guide.ghlUrl)}
                 className="w-full py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
               >
                 View Guide

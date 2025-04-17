@@ -19,6 +19,7 @@ import { featuredCourses, popularCourses } from "@/data/education";
 import { toast } from "sonner";
 import { courseCategories } from "@/data/education";
 import { handleCourseAccess } from "@/components/education/courseUtils";
+import { Course } from "@/types/education";
 
 export default function MobileEducation() {
   const [activeTab, setActiveTab] = useState<string>("featured");
@@ -69,8 +70,8 @@ export default function MobileEducation() {
                 description={course.description}
                 level={course.level}
                 duration={course.duration}
-                isPaid={course.isPaid}
-                onClick={() => handleCourseEnrollment(course.id, course.title, course.isPaid, course.ghlUrl)}
+                isPaid={course.isPaid || false}
+                onClick={() => handleCourseEnrollment(course.id, course.title, course.isPaid || false, course.ghlUrl)}
               />
             ))}
           </TabsContent>
@@ -83,8 +84,8 @@ export default function MobileEducation() {
                 description={course.description}
                 level={course.level}
                 duration={course.duration}
-                isPaid={course.isPaid}
-                onClick={() => handleCourseEnrollment(course.id, course.title, course.isPaid, course.ghlUrl)}
+                isPaid={course.isPaid || false}
+                onClick={() => handleCourseEnrollment(course.id, course.title, course.isPaid || false, course.ghlUrl)}
               />
             ))}
           </TabsContent>
