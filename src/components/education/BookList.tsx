@@ -35,9 +35,9 @@ export const BookList: React.FC<BookListProps> = ({
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {books.map((book, index) => (
-        <Card key={book.id} className="flex flex-col h-full">
+        <Card key={book.id} className="flex flex-col h-full bg-card hover:shadow-lg transition-shadow duration-200">
           <CardHeader>
-            <CardTitle className="line-clamp-2">{book.title}</CardTitle>
+            <CardTitle className="line-clamp-2 text-lg">{book.title}</CardTitle>
             {book.author && (
               <p className="text-sm text-muted-foreground">By {book.author}</p>
             )}
@@ -48,15 +48,16 @@ export const BookList: React.FC<BookListProps> = ({
                 <img 
                   src={book.coverImage} 
                   alt={`Cover of ${book.title}`}
-                  className="h-48 object-contain rounded-md shadow-sm"
+                  className="h-64 w-auto object-contain rounded-md shadow-sm"
+                  loading="lazy"
                 />
               ) : (
-                <div className="h-48 w-32 bg-muted flex items-center justify-center rounded-md">
+                <div className="h-64 w-48 bg-muted flex items-center justify-center rounded-md">
                   <span className="text-muted-foreground">No cover available</span>
                 </div>
               )}
             </div>
-            <p className="text-sm">{book.description}</p>
+            <p className="text-sm text-muted-foreground">{book.description}</p>
           </CardContent>
           <CardFooter className={`flex ${isAdmin ? 'flex-col gap-2' : 'justify-between'}`}>
             <Button 
