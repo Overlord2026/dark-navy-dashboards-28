@@ -1,5 +1,7 @@
+import { API_ENDPOINTS, API_KEYS, CACHE_DURATIONS } from '@/config';
 
-// Service to fetch market data from free APIs
+// Cache for market data to avoid excessive API calls
+const marketDataCache: Record<string, { data: MarketData, timestamp: number }> = {};
 
 interface MarketData {
   id: string;
@@ -9,17 +11,9 @@ interface MarketData {
   error?: string;
 }
 
-// Cache for market data to avoid excessive API calls
-const marketDataCache: Record<string, { data: MarketData, timestamp: number }> = {};
-const CACHE_DURATION = 15 * 60 * 1000; // 15 minutes in milliseconds
-
-/**
- * Fetches data from Alpha Vantage API for a specific symbol
- * Using the free tier with demo API key for educational purposes
- */
 const fetchAlphaVantageData = async (symbol: string): Promise<number> => {
   const response = await fetch(
-    `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=demo`
+    `${API_ENDPOINTS.ALPHA_VANTAGE}?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${API_KEYS.ALPHA_VANTAGE}`
   );
   
   if (!response.ok) {
@@ -46,9 +40,8 @@ const fetchAlphaVantageData = async (symbol: string): Promise<number> => {
 export const getPrivateEquityData = async (): Promise<MarketData> => {
   const cacheKey = 'private-equity';
   
-  // Check if we have fresh cached data
   if (marketDataCache[cacheKey] && 
-      (Date.now() - marketDataCache[cacheKey].timestamp) < CACHE_DURATION) {
+      (Date.now() - marketDataCache[cacheKey].timestamp) < CACHE_DURATIONS.MARKET_DATA) {
     return marketDataCache[cacheKey].data;
   }
 
@@ -91,7 +84,7 @@ export const getPrivateDebtData = async (): Promise<MarketData> => {
   const cacheKey = 'private-debt';
   
   if (marketDataCache[cacheKey] && 
-      (Date.now() - marketDataCache[cacheKey].timestamp) < CACHE_DURATION) {
+      (Date.now() - marketDataCache[cacheKey].timestamp) < CACHE_DURATIONS.MARKET_DATA) {
     return marketDataCache[cacheKey].data;
   }
 
@@ -131,7 +124,7 @@ export const getDigitalAssetsData = async (): Promise<MarketData> => {
   const cacheKey = 'digital-assets';
   
   if (marketDataCache[cacheKey] && 
-      (Date.now() - marketDataCache[cacheKey].timestamp) < CACHE_DURATION) {
+      (Date.now() - marketDataCache[cacheKey].timestamp) < CACHE_DURATIONS.MARKET_DATA) {
     return marketDataCache[cacheKey].data;
   }
 
@@ -171,7 +164,7 @@ export const getRealAssetsData = async (): Promise<MarketData> => {
   const cacheKey = 'real-assets';
   
   if (marketDataCache[cacheKey] && 
-      (Date.now() - marketDataCache[cacheKey].timestamp) < CACHE_DURATION) {
+      (Date.now() - marketDataCache[cacheKey].timestamp) < CACHE_DURATIONS.MARKET_DATA) {
     return marketDataCache[cacheKey].data;
   }
 
