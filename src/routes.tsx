@@ -29,6 +29,7 @@ import TaxPlanningEducation from "@/pages/TaxPlanningEducation";
 import NavigationDiagnostics from "@/pages/NavigationDiagnostics";
 import { ProfessionalsRouteWrapper } from "@/components/providers/ProfessionalsRouteWrapper";
 import Investments from "@/pages/Investments";
+import SystemDiagnosticsPage from "@/pages/SystemDiagnostics";
 
 const routes = createBrowserRouter([
   {
@@ -182,6 +183,10 @@ const routes = createBrowserRouter([
   {
     path: "/investments/*",
     element: <Investments />
+  },
+  {
+    path: "/diagnostics",
+    element: <SystemDiagnosticsPage />
   },
   {
     path: "*",
