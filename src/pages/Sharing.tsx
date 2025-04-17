@@ -1,32 +1,27 @@
 
 import { useState, useEffect } from "react";
 import { useParams, useSearchParams, useNavigate } from "react-router-dom";
-import { UserRoundPlusIcon, Users, BriefcaseIcon, ChevronLeft, InfoIcon } from "lucide-react";
+import { UserRoundPlusIcon, ChevronLeft } from "lucide-react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { 
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { 
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { AddCollaboratorDialog } from "@/components/sharing/AddCollaboratorDialog";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { CollaboratorInfoStep } from "@/components/sharing/CollaboratorInfoStep";
+import { CollaboratorAccessStep } from "@/components/sharing/CollaboratorAccessStep";
+import { CollaboratorsTable } from "@/components/sharing/CollaboratorsTable";
+import { EmptyCollaborators } from "@/components/sharing/EmptyCollaborators";
+import { Collaborator, CollaboratorFormData } from "@/components/sharing/types";
 
-type Collaborator = {
-  id: string;
-  name: string;
-  email: string;
-  role: string;
-  accessLevel: "full" | "limited";
-  dateAdded: Date;
-};
+const formSchema = z.object({
+  firstName: z.string().min(1, "First name is required"),
+  lastName: z.string().min(1, "Last name is required"),
+  email: z.string().email("Invalid email address"),
+  role: z.string().min(1, "Role is required"),
+  collaboratorType: z.string().min(1, "Collaborator type is required"),
+  accessLevel: z.enum(["full", "limited"]),
+});
 
 export default function Sharing() {
   const { toast } = useToast();
@@ -38,6 +33,18 @@ export default function Sharing() {
   const [addStep, setAddStep] = useState<"info" | "access">("info");
   const [addType, setAddType] = useState<"family" | null>("family");
   
+  const form = useForm<CollaboratorFormData>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      firstName: "",
+      lastName: "",
+      email: "",
+      role: "",
+      collaboratorType: "",
+      accessLevel: "limited",
+    },
+  });
+
   useEffect(() => {
     const addParam = searchParams.get('add');
     if (addParam === 'family') {
@@ -48,18 +55,13 @@ export default function Sharing() {
     }
   }, [searchParams, setSearchParams]);
 
-  const handleAddCollaborator = (collaborator: {
-    name: string;
-    email: string;
-    role: string;
-    accessLevel: "full" | "limited";
-  }) => {
+  const handleAddCollaborator = (data: CollaboratorFormData) => {
     const newCollaborator: Collaborator = {
       id: `collab-${Math.random().toString(36).substring(2, 9)}`,
-      name: collaborator.name,
-      email: collaborator.email,
-      role: collaborator.role,
-      accessLevel: collaborator.accessLevel,
+      name: `${data.firstName} ${data.lastName}`,
+      email: data.email,
+      role: data.collaboratorType,
+      accessLevel: data.accessLevel,
       dateAdded: new Date(),
     };
     
@@ -67,8 +69,12 @@ export default function Sharing() {
     
     toast({
       title: "Invitation sent",
-      description: `An invitation has been sent to ${collaborator.email}`,
+      description: `An invitation has been sent to ${data.email}`,
     });
+    
+    form.reset();
+    setShowAddCollaborator(false);
+    setAddStep("info");
   };
 
   const handleRemoveCollaborator = (id: string) => {
@@ -77,6 +83,14 @@ export default function Sharing() {
       title: "Collaborator removed",
       description: "The collaborator has been removed successfully.",
     });
+  };
+
+  const onSubmit = (data: CollaboratorFormData) => {
+    if (addStep === "info") {
+      setAddStep("access");
+      return;
+    }
+    handleAddCollaborator(data);
   };
 
   return (
@@ -124,158 +138,48 @@ export default function Sharing() {
                   </div>
                 </div>
                 
-                {addStep === "info" ? (
-                  <div>
-                    <h2 className="text-xl font-medium mb-4">Add Collaborator</h2>
-                    <p className="text-gray-400 mb-6">Tell us who you want to collaborate with.</p>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                  {addStep === "info" ? (
+                    <CollaboratorInfoStep form={form} />
+                  ) : (
+                    <CollaboratorAccessStep form={form} />
+                  )}
+                  
+                  <div className="flex justify-between pt-4">
+                    <Button 
+                      type="button" 
+                      variant="outline" 
+                      onClick={() => {
+                        setShowAddCollaborator(false);
+                        setAddStep("info");
+                        form.reset();
+                      }}
+                      className="border border-white/20 bg-transparent text-white hover:bg-gray-800"
+                    >
+                      Cancel
+                    </Button>
                     
-                    <div className="space-y-6">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                          <label className="block text-gray-400 text-sm mb-1">First Name</label>
-                          <input 
-                            type="text" 
-                            className="w-full p-2 bg-transparent border border-gray-700 rounded-md text-white focus:border-gray-500 focus:outline-none"
-                            placeholder="First Name" 
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-gray-400 text-sm mb-1">Last Name</label>
-                          <input 
-                            type="text" 
-                            className="w-full p-2 bg-transparent border border-gray-700 rounded-md text-white focus:border-gray-500 focus:outline-none"
-                            placeholder="Last Name"
-                          />
-                        </div>
-                      </div>
-                      
-                      <div>
-                        <label className="block text-gray-400 text-sm mb-1">Email</label>
-                        <input 
-                          type="email" 
-                          className="w-full p-2 bg-transparent border border-gray-700 rounded-md text-white focus:border-gray-500 focus:outline-none"
-                          placeholder="Email"
-                        />
-                      </div>
-                    </div>
-                    
-                    <div className="flex justify-between mt-8">
-                      <Button 
-                        variant="ghost" 
-                        className="border border-white/20 hover:bg-gray-800 text-white"
-                        onClick={() => setShowAddCollaborator(false)}
-                      >
-                        Cancel
-                      </Button>
-                      
-                      <Button 
-                        className="bg-blue-600 hover:bg-blue-700 text-white"
-                        onClick={() => setAddStep("access")}
-                      >
-                        Next
-                      </Button>
-                    </div>
-                  </div>
-                ) : (
-                  <div>
-                    <h2 className="text-xl font-medium mb-4">Add Type and Access</h2>
-                    <p className="text-gray-400 mb-6">
-                      Choose the collaborator's type and access level. You can always change this later.
-                    </p>
-                    
-                    <div className="bg-[#0c1428] p-6 rounded-md space-y-6">
-                      <div>
-                        <label className="block text-sm font-medium text-white mb-2">
-                          Collaborator Type
-                        </label>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="outline" className="w-full justify-between bg-transparent border-gray-700 text-white">
-                              Select collaborator type
-                              <ChevronLeft className="h-4 w-4 rotate-90" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent className="w-full min-w-[240px]">
-                            {addType === "family" || addType === null ? (
-                              <>
-                                <div className="px-2 py-1.5 text-sm font-medium text-gray-400">Family Member</div>
-                                <DropdownMenuItem>Spouse</DropdownMenuItem>
-                                <DropdownMenuItem>Son</DropdownMenuItem>
-                                <DropdownMenuItem>Daughter</DropdownMenuItem>
-                                <DropdownMenuItem>Father</DropdownMenuItem>
-                                <DropdownMenuItem>Mother</DropdownMenuItem>
-                                <DropdownMenuItem>Brother</DropdownMenuItem>
-                                <DropdownMenuItem>Sister</DropdownMenuItem>
-                                <DropdownMenuItem>Other Family Member</DropdownMenuItem>
-                              </>
-                            ) : null}
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </div>
-                      
-                      <div>
-                        <label className="flex items-center gap-1 text-sm font-medium text-white mb-2">
-                          Access
-                          <TooltipProvider>
-                            <Tooltip>
-                              <TooltipTrigger>
-                                <InfoIcon className="w-4 h-4 text-gray-400" />
-                              </TooltipTrigger>
-                              <TooltipContent>
-                                <p className="max-w-xs">Full access allows viewing and editing. Limited access allows viewing only.</p>
-                              </TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
-                        </label>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="outline" className="w-full justify-between bg-transparent border-gray-700 text-white">
-                              Select access level
-                              <ChevronLeft className="h-4 w-4 rotate-90" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent>
-                            <DropdownMenuItem>Full Access</DropdownMenuItem>
-                            <DropdownMenuItem>Limited Access</DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </div>
-                    </div>
-                    
-                    <div className="flex justify-between mt-8">
-                      <Button 
-                        variant="ghost"
-                        className="border border-white/20 hover:bg-gray-800 text-white"
-                        onClick={() => setShowAddCollaborator(false)}
-                      >
-                        Cancel
-                      </Button>
-                      
-                      <div className="flex gap-2">
+                    <div className="flex gap-2">
+                      {addStep === "access" && (
                         <Button
+                          type="button"
                           variant="outline"
-                          className="border border-white/20 hover:bg-gray-800 text-white"
                           onClick={() => setAddStep("info")}
+                          className="border border-white/20 bg-transparent text-white hover:bg-gray-800"
                         >
                           Back
                         </Button>
-                        <Button 
-                          className="bg-blue-600 hover:bg-blue-700 text-white"
-                          onClick={() => {
-                            toast({
-                              title: "Invitation sent",
-                              description: "Your collaborator will receive an email with instructions to access your shared information."
-                            });
-                            setShowAddCollaborator(false);
-                            setAddStep("info");
-                          }}
-                        >
-                          Send Invitation
-                        </Button>
-                      </div>
+                      )}
+                      
+                      <Button 
+                        type="submit"
+                        className="bg-blue-600 hover:bg-blue-700 text-white"
+                      >
+                        {addStep === "info" ? "Next" : "Send Invitation"}
+                      </Button>
                     </div>
                   </div>
-                )}
+                </form>
               </div>
             </div>
           ) : (
@@ -298,62 +202,12 @@ export default function Sharing() {
                 </p>
                 
                 {collaborators.length > 0 ? (
-                  <div className="rounded-lg overflow-hidden">
-                    <table className="w-full">
-                      <thead className="bg-gray-900/40">
-                        <tr>
-                          <th className="text-left p-3 text-sm font-medium text-gray-400">Name</th>
-                          <th className="text-left p-3 text-sm font-medium text-gray-400">Email</th>
-                          <th className="text-left p-3 text-sm font-medium text-gray-400">Role</th>
-                          <th className="text-left p-3 text-sm font-medium text-gray-400">Access Level</th>
-                          <th className="text-left p-3 text-sm font-medium text-gray-400">Date Added</th>
-                          <th className="text-right p-3 text-sm font-medium text-gray-400">Actions</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-gray-800">
-                        {collaborators.map((collaborator) => (
-                          <tr key={collaborator.id} className="hover:bg-gray-900/30">
-                            <td className="p-3">{collaborator.name}</td>
-                            <td className="p-3">{collaborator.email}</td>
-                            <td className="p-3">{collaborator.role}</td>
-                            <td className="p-3 capitalize">{collaborator.accessLevel}</td>
-                            <td className="p-3">
-                              {collaborator.dateAdded.toLocaleDateString()}
-                            </td>
-                            <td className="p-3 text-right">
-                              <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white">Edit</Button>
-                              <Button 
-                                variant="ghost" 
-                                size="sm" 
-                                className="text-red-400 hover:text-red-300"
-                                onClick={() => handleRemoveCollaborator(collaborator.id)}
-                              >
-                                Remove
-                              </Button>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
+                  <CollaboratorsTable 
+                    collaborators={collaborators} 
+                    onRemove={handleRemoveCollaborator} 
+                  />
                 ) : (
-                  <div className="text-center py-10 bg-[#071429] rounded-lg border border-gray-800">
-                    <Users size={60} className="mx-auto text-blue-500/60 mb-4" />
-                    <h3 className="text-xl font-medium mb-3">No Family Members Added</h3>
-                    <p className="text-gray-400 text-base max-w-md mx-auto mb-6">
-                      Share access with your family members by inviting them to collaborate on financial planning, document access, and more.
-                    </p>
-                    <Button 
-                      onClick={() => {
-                        setAddType("family");
-                        setShowAddCollaborator(true);
-                      }}
-                      size="lg" 
-                      className="px-6 bg-blue-600 hover:bg-blue-700 text-white"
-                    >
-                      Get Started
-                    </Button>
-                  </div>
+                  <EmptyCollaborators />
                 )}
               </div>
             </div>
