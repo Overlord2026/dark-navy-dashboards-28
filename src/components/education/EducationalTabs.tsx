@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BookOpen, GraduationCap, FileText, Newspaper } from "lucide-react";
@@ -7,6 +8,7 @@ import { coursesByCategory, featuredCourses } from "@/data/education";
 import { educationalResources } from "@/data/education/educationalResources";
 import { memo } from "react";
 import { EducationTabsManager } from "./EducationTabsManager";
+import { useNavigate, useLocation } from "react-router-dom";
 
 interface EducationalTabsProps {
   activeSection: string;
@@ -35,9 +37,23 @@ export const EducationalTabs: React.FC<EducationalTabsProps> = ({
     { id: 'whitepapers', label: 'Whitepapers', value: 'whitepapers' }
   ]);
   
+  const navigate = useNavigate();
+  const location = useLocation();
+  
   useEffect(() => {
     setFilteredBooks(educationalResources.books);
   }, [activeCategory]);
+  
+  // Handler for category selection that checks if we're on a specific topic page
+  const handleCategorySelect = (category: string) => {
+    // If we're on a specific topic page like tax-planning, redirect to main education page
+    if (location.pathname.includes('/education/') && location.pathname !== '/education') {
+      navigate('/education', { state: { category } });
+    }
+    
+    // Update the category in the parent component
+    setActiveCategory(category);
+  };
   
   const activeCategoryCourses = 
     activeCategory === "all-courses" 
@@ -76,7 +92,7 @@ export const EducationalTabs: React.FC<EducationalTabsProps> = ({
         <TabsContent value="courses" className="mt-6">
           <CourseCategories 
             activeCategory={activeCategory}
-            onCategorySelect={setActiveCategory}
+            onCategorySelect={handleCategorySelect}
             courses={activeCategoryCourses}
             onCourseEnrollment={handleCourseEnrollment}
           />

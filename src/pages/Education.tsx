@@ -1,7 +1,6 @@
-
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { toast } from "sonner";
-import { useSearchParams, Link } from "react-router-dom";
+import { useSearchParams, Link, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { EducationalTabs } from "@/components/education/EducationalTabs";
 import { courseCategories } from "@/data/education";
@@ -17,16 +16,22 @@ export default function Education() {
   const [activeSection, setActiveSection] = useState("courses");
   const [showApiDemo, setShowApiDemo] = useState(false);
   
+  const location = useLocation();
+  
   useEffect(() => {
     const category = searchParams.get("category");
     const section = searchParams.get("section");
     const apiDemo = searchParams.get("api") === "true";
     
-    if (category) {
+    const stateCategory = location.state?.category;
+    
+    if (stateCategory) {
+      setActiveCategory(stateCategory);
+      setActiveSection("courses");
+    } else if (category) {
       setActiveCategory(category);
       setActiveSection("courses");
     } else if (section) {
-      // Make sure we validate that the section exists
       const validSections = ["courses", "guides", "books", "whitepapers"];
       if (validSections.includes(section)) {
         setActiveSection(section);
@@ -34,14 +39,12 @@ export default function Education() {
     }
     
     setShowApiDemo(apiDemo);
-  }, [searchParams]);
+  }, [searchParams, location.state]);
 
   const handleCourseEnrollment = (courseId: string | number, title: string, isPaid: boolean, ghlUrl?: string) => {
     if (ghlUrl) {
-      // Use the handleCourseAccess utility for proper course access flow
       handleCourseAccess(courseId, title, isPaid, ghlUrl);
     } else {
-      // Fallback for if we somehow get here without a URL
       if (isPaid) {
         toast.info(`Redirecting to payment page for ${title}`);
       } else {
