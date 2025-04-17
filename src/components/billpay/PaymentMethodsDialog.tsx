@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -11,7 +10,7 @@ import { Plus, CreditCard, Building, Wallet, Trash2, Check } from "lucide-react"
 import { toast } from "sonner";
 import { PaymentMethod } from "@/types/payment";
 
-export { PaymentMethod };
+export type { PaymentMethod };
 
 // Default payment methods for testing
 export const DEFAULT_PAYMENT_METHODS: PaymentMethod[] = [

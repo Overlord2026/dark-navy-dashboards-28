@@ -1,3 +1,3 @@
 
-// Re-export from context file
-export { useProfessionals, ProfessionalsProvider } from "@/context/ProfessionalsContext";
+// Fix the import path
+export { useProfessionals, ProfessionalsProvider } from "@/contexts/ProfessionalsContext";
