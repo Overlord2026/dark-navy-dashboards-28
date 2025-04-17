@@ -1,6 +1,6 @@
 
 import { useState, useEffect, useCallback } from 'react';
-import { getAllInvestmentCategoryData } from '@/services/marketDataService';
+import { getAllInvestmentCategoryData, MarketData } from '@/services/market-data';
 import { toast } from 'sonner';
 
 interface MarketData {
