@@ -1,8 +1,8 @@
 
 export type ProfessionalType = 
-  | "Tax Professional / Accountant"
-  | "Estate Planning Attorney"
-  | "Financial Advisor"
+  | "Tax Professional / Accountant" 
+  | "Estate Planning Attorney" 
+  | "Financial Advisor" 
   | "Real Estate Agent / Property Manager"
   | "Insurance / LTC Specialist"
   | "Mortgage Broker"
@@ -24,7 +24,16 @@ export interface Professional {
   website?: string;
   address?: string;
   notes?: string;
-  rating?: number;
   specialties?: string[];
   certifications?: string[];
+}
+
+export interface ProfessionalPermission {
+  id: string;
+  professionalId: string;
+  resourceId: string;
+  resourceType: string;
+  permissionType: "view" | "edit" | "admin";
+  createdAt: string;
+  expiresAt?: string;
 }

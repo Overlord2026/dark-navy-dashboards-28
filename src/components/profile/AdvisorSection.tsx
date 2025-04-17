@@ -1,12 +1,11 @@
-
 import React from "react";
 import { ChevronRight, UserRoundIcon, MailIcon, LinkedinIcon, Calendar, ExternalLinkIcon, MapPinIcon } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { useTheme } from "@/context/ThemeContext";
+import { useTheme } from "@/contexts/ThemeContext";
 import { Link } from "react-router-dom";
-import { useAdvisor } from "@/context/AdvisorContext";
+import { useAdvisor } from "@/contexts/AdvisorContext";
 
 interface AdvisorSectionProps {
   onViewProfile: (tabId: string) => void;
