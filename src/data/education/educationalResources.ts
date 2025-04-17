@@ -1,24 +1,77 @@
+
 import { EducationalResources } from "@/types/education";
 
 export const educationalResources: EducationalResources = {
   "guides": [
     {
-      id: "guide-retirement",
-      title: "Comprehensive Retirement Planning Guide",
-      description: "Step-by-step guide to creating a robust retirement plan.",
+      id: "designrr-1",
+      title: "Financial Planning Essentials",
+      description: "Comprehensive guide to understanding financial planning fundamentals",
       isPaid: false,
       level: "All Levels",
       duration: "Self-paced",
-      ghlUrl: "https://ghl.example.com/guides/retirement-planning"
+      category: "Financial Planning",
+      ghlUrl: "https://designrr.page/?id=421221&token=3489244185&type=FP&h=7325"
     },
     {
-      id: "guide-estate",
-      title: "Estate Planning Checklist",
-      description: "Essential estate planning documents and considerations.",
+      id: "designrr-2",
+      title: "Retirement Strategy Guide",
+      description: "Expert insights on planning for a secure retirement",
       isPaid: false,
       level: "All Levels",
       duration: "Self-paced",
-      ghlUrl: "https://ghl.example.com/guides/estate-planning-checklist"
+      category: "Retirement",
+      ghlUrl: "https://designrr.page/?id=421232&token=2644925433&type=FP&h=5341"
+    },
+    {
+      id: "designrr-3",
+      title: "Tax Planning Strategies",
+      description: "Advanced tax planning techniques for optimal financial outcomes",
+      isPaid: false,
+      level: "All Levels",
+      duration: "Self-paced",
+      category: "Tax Planning",
+      ghlUrl: "https://designrr.page/?id=421496&token=3223578452&type=FP&h=3153"
+    },
+    {
+      id: "designrr-4",
+      title: "Estate Planning Essentials",
+      description: "Comprehensive guide to estate planning and wealth preservation",
+      isPaid: false,
+      level: "All Levels",
+      duration: "Self-paced",
+      category: "Estate Planning",
+      ghlUrl: "https://designrr.page/?id=421495&token=2446712157&type=FP&h=5015"
+    },
+    {
+      id: "designrr-5",
+      title: "Investment Planning Guide",
+      description: "Strategic approaches to investment planning and portfolio management",
+      isPaid: false,
+      level: "All Levels",
+      duration: "Self-paced",
+      category: "Investments",
+      ghlUrl: "https://designrr.page/?id=421497&token=1423331746&type=FP&h=4447"
+    },
+    {
+      id: "designrr-6",
+      title: "Risk Management Strategies",
+      description: "Understanding and implementing effective risk management in financial planning",
+      isPaid: false,
+      level: "All Levels",
+      duration: "Self-paced",
+      category: "Risk Management",
+      ghlUrl: "https://designrr.page/?id=422894&token=840011724&type=FP&h=2693"
+    },
+    {
+      id: "designrr-7",
+      title: "Wealth Building Fundamentals",
+      description: "Core principles for building and maintaining long-term wealth",
+      isPaid: false,
+      level: "All Levels",
+      duration: "Self-paced",
+      category: "Wealth Building",
+      ghlUrl: "https://designrr.page/?id=422905&token=1112294897&type=FP&h=9731"
     }
   ],
   "books": [
@@ -90,3 +143,4 @@ export const educationalResources: EducationalResources = {
     }
   ]
 };
+
