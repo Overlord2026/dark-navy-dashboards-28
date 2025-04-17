@@ -1,4 +1,6 @@
 
+import { EducationalResources } from "@/types/education";
+
 export const educationalResources: EducationalResources = {
   "guides": [
     {
