@@ -1,4 +1,3 @@
-
 export type ProfessionalType = 
   | "Tax Professional / Accountant" 
   | "Estate Planning Attorney" 
@@ -26,6 +25,7 @@ export interface Professional {
   notes?: string;
   specialties?: string[];
   certifications?: string[];
+  rating?: number; // Added for ProfessionalDetailsSheet
 }
 
 export interface ProfessionalPermission {

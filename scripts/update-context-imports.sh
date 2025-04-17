@@ -3,7 +3,7 @@
 
 echo "Starting context import path updates..."
 
-# Find all TypeScript/JavaScript files
+# Find all TypeScript/JavaScript/TSX/JSX files
 find src -type f \( -name "*.tsx" -o -name "*.ts" -o -name "*.jsx" -o -name "*.js" \) | while read -r file; do
     # Replace @/context/ with @/contexts/ (absolute imports)
     sed -i 's|@/context/|@/contexts/|g' "$file"
@@ -15,7 +15,7 @@ find src -type f \( -name "*.tsx" -o -name "*.ts" -o -name "*.jsx" -o -name "*.j
     # Replace "./context/" with "./contexts/" (relative imports)
     sed -i 's|"./context/|"./contexts/|g' "$file"
     sed -i "s|'./context/|'./contexts/|g" "$file"
-end
+done
 
 echo "Context import paths updated successfully!"
-echo "Please run 'npm run dev' to verify the changes"
+
