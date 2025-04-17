@@ -1,19 +1,19 @@
 
 import React from "react";
-import { Calendar } from "lucide-react";
+import { CalendarClock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
 interface ScheduleMeetingDialogProps {
   assetName?: string;
-  variant?: "default" | "outline";
+  variant?: "default" | "outline" | "marketplace";
   className?: string;
   onClick?: (e: React.MouseEvent) => void;
 }
 
 export const ScheduleMeetingDialog = ({ 
   assetName = "this offering", 
-  variant = "default", 
+  variant = "marketplace", 
   className = "",
   onClick
 }: ScheduleMeetingDialogProps) => {
@@ -28,10 +28,10 @@ export const ScheduleMeetingDialog = ({
   return (
     <Button 
       variant={variant} 
-      className={`${className} ${variant === "default" ? "bg-blue-600 hover:bg-blue-700 w-1/2" : "border-gray-700 text-white hover:bg-[#1c2e4a] w-1/2"}`}
+      className={`flex items-center justify-center w-full ${className}`}
       onClick={handleScheduleAppointment}
     >
-      <Calendar className="mr-2 h-4 w-4" />
+      <CalendarClock className="mr-2 h-4 w-4" />
       Schedule Meeting
     </Button>
   );
