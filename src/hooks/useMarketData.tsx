@@ -1,9 +1,10 @@
 
 import { useState, useEffect, useCallback } from 'react';
-import { getAllInvestmentCategoryData, MarketData } from '@/services/market-data';
+import { getAllInvestmentCategoryData } from '@/services/market-data';
+import { MarketData as MarketDataType } from '@/services/market-data/types';
 import { toast } from 'sonner';
 
-interface MarketData {
+interface MarketDataHook {
   id: string;
   name: string;
   ytdPerformance: number;
@@ -12,7 +13,7 @@ interface MarketData {
 }
 
 export const useMarketData = () => {
-  const [marketData, setMarketData] = useState<Record<string, MarketData>>({});
+  const [marketData, setMarketData] = useState<Record<string, MarketDataHook>>({});
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);

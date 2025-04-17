@@ -1,208 +1,148 @@
-import React, { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
-import { CardForm } from "./payment-methods/CardForm";
-import { BankAccountForm } from "./payment-methods/BankAccountForm";
-import { PaymentTypeSelector } from "./payment-methods/PaymentTypeSelector";
-import { PaymentMethodsList } from "./payment-methods/PaymentMethodsList";
-import { AlertCircle } from "lucide-react";
-import { DEFAULT_PAYMENT_METHODS } from "@/data/payment/defaultPaymentMethods";
+import React, { useState } from 'react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
+import { Label } from '../ui/label';
+import { PaymentMethod } from '@/types/payment';
 
-export interface PaymentMethod {
-  id: string;
-  name: string;
-  type: "card" | "bank" | "wallet";
-  lastFour: string;
-  expiry?: string;
-  isDefault: boolean;
-}
+// Export this constant so it can be imported in other files
+export const DEFAULT_PAYMENT_METHODS: PaymentMethod[] = [
+  {
+    id: 'pm-1',
+    name: 'Primary Checking',
+    type: 'bank_account',
+    accountNumber: '****6789',
+    routingNumber: '123456789',
+    bankName: 'Chase Bank',
+    isDefault: true
+  },
+  {
+    id: 'pm-2',
+    name: 'Personal Credit Card',
+    type: 'credit_card',
+    cardNumber: '****4321',
+    expiryDate: '05/25',
+    cardholderName: 'Thomas Brady',
+    isDefault: false
+  }
+];
 
 interface PaymentMethodsDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSelectPaymentMethod?: (id: string) => void;
-  selectionMode?: boolean;
-  selectedMethod?: string | null;
-  // For compatibility with PayBillDialog
-  isOpen?: boolean;
-  onClose?: () => void;
-  paymentMethods?: PaymentMethod[];
-  onAddPaymentMethod?: (method: PaymentMethod) => void;
-  onSetDefault?: (id: string) => void;
-  onRemove?: (id: string) => void;
+  paymentMethods: PaymentMethod[];
+  onPaymentMethodsChange: (paymentMethods: PaymentMethod[]) => void;
 }
 
 export const PaymentMethodsDialog: React.FC<PaymentMethodsDialogProps> = ({
   open,
   onOpenChange,
-  onSelectPaymentMethod,
-  selectionMode = false,
-  selectedMethod = null,
-  // For compatibility with PayBillDialog
-  isOpen,
-  onClose,
-  paymentMethods: externalPaymentMethods,
-  onAddPaymentMethod: externalAddMethod,
-  onSetDefault: externalSetDefault,
-  onRemove: externalRemove
+  paymentMethods,
+  onPaymentMethodsChange,
 }) => {
-  const isDialogOpen = open || isOpen || false;
-  const handleOpenChange = (newOpen: boolean) => {
-    if (onOpenChange) onOpenChange(newOpen);
-    if (!newOpen && onClose) onClose();
+  const [newPaymentMethod, setNewPaymentMethod] = useState<Omit<PaymentMethod, 'id'>>({
+    name: '',
+    type: 'bank_account',
+    accountNumber: '',
+    routingNumber: '',
+    bankName: '',
+    isDefault: false,
+  });
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setNewPaymentMethod(prev => ({ ...prev, [name]: value }));
   };
 
-  const [activeTab, setActiveTab] = useState<string>("view");
-  const [paymentType, setPaymentType] = useState<"card" | "bank">("card");
-  const [internalPaymentMethods, setInternalPaymentMethods] = useState<PaymentMethod[]>(DEFAULT_PAYMENT_METHODS);
-  
-  const methods = externalPaymentMethods || internalPaymentMethods;
-
-  const handleSetDefault = (id: string) => {
-    if (externalSetDefault) {
-      externalSetDefault(id);
-    } else {
-      setInternalPaymentMethods(internalPaymentMethods.map(method => ({
-        ...method,
-        isDefault: method.id === id
-      })));
-    }
-  };
-
-  const handleRemove = (id: string) => {
-    if (externalRemove) {
-      externalRemove(id);
-    } else {
-      setInternalPaymentMethods(internalPaymentMethods.filter(method => method.id !== id));
-    }
-  };
-
-  const handleAddNew = () => {
-    setActiveTab("add");
-  };
-
-  const handleSelectMethod = (id: string) => {
-    if (onSelectPaymentMethod) {
-      onSelectPaymentMethod(id);
-      handleOpenChange(false);
-    }
-  };
-
-  const createPaymentMethod = (formValues: any, type: "card" | "bank"): Omit<PaymentMethod, "id" | "isDefault"> => {
-    if (type === "card") {
-      const { nickname, cardNumber, expiryMonth, expiryYear } = formValues;
-      return {
-        name: nickname || "Credit Card",
-        type: "card",
-        lastFour: cardNumber ? cardNumber.slice(-4) : "0000",
-        expiry: `${expiryMonth || "MM"}/${expiryYear || "YY"}`,
-      };
-    } else {
-      const { nickname, bankName, accountNumber } = formValues;
-      return {
-        name: nickname || bankName || "Bank Account",
-        type: "bank",
-        lastFour: accountNumber ? accountNumber.slice(-4) : "0000",
-      };
-    }
-  };
-
-  const handleAddPaymentMethod = (newMethod: Omit<PaymentMethod, "id" | "isDefault">) => {
-    const isFirstMethod = methods.length === 0;
-    const id = `${newMethod.type}-${Date.now()}`;
-    
-    const completeMethod: PaymentMethod = {
-      ...newMethod,
-      id,
-      isDefault: isFirstMethod
+  const handleAddPaymentMethod = () => {
+    const newMethod: PaymentMethod = {
+      id: `pm-${Date.now()}`,
+      ...newPaymentMethod,
     };
-    
-    if (externalAddMethod) {
-      externalAddMethod(completeMethod);
-    } else {
-      setInternalPaymentMethods([
-        ...internalPaymentMethods,
-        completeMethod
-      ]);
-    }
-    
-    setActiveTab("view");
-  };
-
-  const handleCardFormSubmit = (values: any) => {
-    const newMethod = createPaymentMethod(values, "card");
-    handleAddPaymentMethod(newMethod);
-  };
-
-  const handleBankFormSubmit = (values: any) => {
-    const newMethod = createPaymentMethod(values, "bank");
-    handleAddPaymentMethod(newMethod);
+    onPaymentMethodsChange([...paymentMethods, newMethod]);
+    setNewPaymentMethod({
+      name: '',
+      type: 'bank_account',
+      accountNumber: '',
+      routingNumber: '',
+      bankName: '',
+      isDefault: false,
+    });
+    onOpenChange(false);
   };
 
   return (
-    <Dialog open={isDialogOpen} onOpenChange={handleOpenChange}>
-      <DialogContent className="sm:max-w-[500px]">
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>{selectionMode ? "Select Payment Method" : "Payment Methods"}</DialogTitle>
+          <DialogTitle>Add Payment Method</DialogTitle>
         </DialogHeader>
-
-        <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid grid-cols-2">
-            <TabsTrigger value="view">My Payment Methods</TabsTrigger>
-            <TabsTrigger value="add">Add New</TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="view" className="space-y-4 mt-4">
-            <PaymentMethodsList
-              paymentMethods={methods}
-              selectedMethod={selectedMethod}
-              selectionMode={selectionMode}
-              onSelect={handleSelectMethod}
-              onSetDefault={handleSetDefault}
-              onRemove={handleRemove}
-              onAddNew={handleAddNew}
+        <div className="grid gap-4 py-4">
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="name" className="text-right">
+              Name
+            </Label>
+            <Input
+              id="name"
+              name="name"
+              value={newPaymentMethod.name}
+              onChange={handleInputChange}
+              className="col-span-3"
             />
-            
-            {selectionMode && (
-              <div className="flex justify-end mt-4">
-                <Button variant="outline" onClick={() => handleOpenChange(false)}>
-                  Cancel
-                </Button>
-              </div>
-            )}
-          </TabsContent>
-
-          <TabsContent value="add" className="space-y-4 mt-4">
-            <PaymentTypeSelector
-              paymentType={paymentType}
-              onSelect={setPaymentType}
+          </div>
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="type" className="text-right">
+              Type
+            </Label>
+            <select
+              id="type"
+              name="type"
+              value={newPaymentMethod.type}
+              onChange={(e) => handleInputChange(e)}
+              className="col-span-3 bg-background border rounded px-3 py-2"
+            >
+              <option value="bank_account">Bank Account</option>
+              <option value="credit_card">Credit Card</option>
+            </select>
+          </div>
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="accountNumber" className="text-right">
+              Account Number
+            </Label>
+            <Input
+              id="accountNumber"
+              name="accountNumber"
+              value={newPaymentMethod.accountNumber}
+              onChange={handleInputChange}
+              className="col-span-3"
             />
-
-            {paymentType === "card" ? (
-              <CardForm onSubmit={handleCardFormSubmit} />
-            ) : (
-              <BankAccountForm onSubmit={handleBankFormSubmit} />
-            )}
-
-            <div className="rounded-md bg-blue-50 p-4 mt-6">
-              <div className="flex items-start">
-                <div className="flex-shrink-0">
-                  <AlertCircle className="h-5 w-5 text-blue-400" />
-                </div>
-                <div className="ml-3">
-                  <h3 className="text-sm font-medium text-blue-800">Secure payments</h3>
-                  <div className="mt-2 text-sm text-blue-700">
-                    <p>
-                      All payment information is encrypted and securely stored. 
-                      We do not store your full card details on our servers.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </TabsContent>
-        </Tabs>
+          </div>
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="routingNumber" className="text-right">
+              Routing Number
+            </Label>
+            <Input
+              id="routingNumber"
+              name="routingNumber"
+              value={newPaymentMethod.routingNumber}
+              onChange={handleInputChange}
+              className="col-span-3"
+            />
+          </div>
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="bankName" className="text-right">
+              Bank Name
+            </Label>
+            <Input
+              id="bankName"
+              name="bankName"
+              value={newPaymentMethod.bankName}
+              onChange={handleInputChange}
+              className="col-span-3"
+            />
+          </div>
+        </div>
+        <Button type="submit" onClick={handleAddPaymentMethod}>Add Payment Method</Button>
       </DialogContent>
     </Dialog>
   );
