@@ -1,10 +1,10 @@
+
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FileText, BarChart3, PieChart, Download, FileSpreadsheet, Clock, ListFilter } from "lucide-react";
-import { toast } from "@/components/ui/use-toast";
-import { useNetWorth } from "@/context/NetWorthContext";
+import { toast } from "sonner";
 import {
   Table,
   TableBody,
@@ -13,10 +13,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { AssetsReportPreview } from "@/components/reports/AssetsReportPreview";
+import { LiabilitiesReportPreview } from "@/components/reports/LiabilitiesReportPreview";
+import { NetWorthReportPreview } from "@/components/reports/NetWorthReportPreview";
+import { CashFlowReportPreview } from "@/components/reports/CashFlowReportPreview";
+import { CustomReportPreview } from "@/components/reports/CustomReportPreview";
 
 // Report types
 type ReportType = 'assets' | 'liabilities' | 'cashflow' | 'networth' | 'custom';
@@ -30,7 +33,6 @@ interface ReportConfig {
 }
 
 export function ReportsGenerator() {
-  const { assets, getTotalNetWorth, getTotalAssetsByType } = useNetWorth();
   const [selectedReportType, setSelectedReportType] = useState<ReportType>('assets');
   const [timeframe, setTimeframe] = useState<string>("monthly");
   const [isGenerating, setIsGenerating] = useState(false);
@@ -122,22 +124,18 @@ export function ReportsGenerator() {
     switch(selectedReportType) {
       case 'assets':
         return <AssetsReportPreview formatCurrency={formatCurrency} />;
-    case 'liabilities':
+      case 'liabilities':
         return <LiabilitiesReportPreview formatCurrency={formatCurrency} />;
-    case 'networth':
-        return <NetWorthReportPreview 
-          getTotalNetWorth={getTotalNetWorth} 
-          getTotalAssetsByType={getTotalAssetsByType}
-          formatCurrency={formatCurrency}
-        />;
-    case 'cashflow':
-        return <CashFlowReportPreview timeframe={timeframe} formatCurrency={formatCurrency} />;
-    case 'custom':
-        return <CustomReportPreview />;
+      case 'networth':
+        return <NetWorthReportPreview formatCurrency={formatCurrency} />;
+      case 'cashflow':
+        return <CashFlowReportPreview formatCurrency={formatCurrency} />;
+      case 'custom':
+        return <CustomReportPreview formatCurrency={formatCurrency} />;
       default:
         return <div>Select a report type to preview</div>;
-  }
-};
+    }
+  };
 
   return (
     <Card className="mb-6 shadow-sm">
@@ -186,23 +184,6 @@ export function ReportsGenerator() {
                     ))}
                   </div>
                 </div>
-                
-                {selectedReportType === 'cashflow' && (
-                  <div className="space-y-2">
-                    <h3 className="text-sm font-medium">Report Timeframe</h3>
-                    <Select value={timeframe} onValueChange={setTimeframe}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select timeframe" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="monthly">Monthly</SelectItem>
-                        <SelectItem value="quarterly">Quarterly</SelectItem>
-                        <SelectItem value="annual">Annual</SelectItem>
-                        <SelectItem value="ytd">Year to Date</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                )}
                 
                 <div className="pt-2">
                   <Button 
@@ -294,255 +275,3 @@ export function ReportsGenerator() {
     </Card>
   );
 }
-
-interface LiabilitiesReportPreviewProps {
-  formatCurrency: (amount: number) => string;
-}
-
-const LiabilitiesReportPreview: React.FC<LiabilitiesReportPreviewProps> = ({ formatCurrency }) => {
-  // Mock liabilities data
-  const liabilities = [
-    { id: 'liab1', name: 'Primary Mortgage', type: 'mortgage', balance: 685000, owner: 'Tom Brady', interestRate: 3.75 },
-    { id: 'liab2', name: 'Auto Loan', type: 'auto', balance: 48210, owner: 'Tom Brady', interestRate: 4.25 },
-    { id: 'liab3', name: 'Student Loan', type: 'education', balance: 72000, owner: 'Tom Brady', interestRate: 5.5 },
-    { id: 'liab4', name: 'Credit Card', type: 'revolving', balance: 40000, owner: 'Tom Brady', interestRate: 18.99 }
-  ];
-  
-  const totalLiabilities = liabilities.reduce((sum, liability) => sum + liability.balance, 0);
-  
-  return (
-    <div className="space-y-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="p-4 bg-red-500/10 rounded-md">
-          <div className="text-sm text-red-700 dark:text-red-400">Total Liabilities</div>
-          <div className="text-2xl font-bold">{formatCurrency(totalLiabilities)}</div>
-        </div>
-        <div className="p-4 bg-orange-500/10 rounded-md">
-          <div className="text-sm text-orange-700 dark:text-orange-400">Average Interest Rate</div>
-          <div className="text-2xl font-bold">
-            {(liabilities.reduce((sum, liability) => sum + liability.interestRate, 0) / liabilities.length).toFixed(2)}%
-          </div>
-        </div>
-      </div>
-      
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Liability</TableHead>
-              <TableHead>Type</TableHead>
-              <TableHead>Interest Rate</TableHead>
-              <TableHead className="text-right">Balance</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {liabilities.map((liability) => (
-              <TableRow key={liability.id}>
-                <TableCell className="font-medium">{liability.name}</TableCell>
-                <TableCell>
-                  <Badge variant="outline" className="capitalize">
-                    {liability.type}
-                  </Badge>
-                </TableCell>
-                <TableCell>{liability.interestRate}%</TableCell>
-                <TableCell className="text-right">{formatCurrency(liability.balance)}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
-    </div>
-  );
-};
-
-interface NetWorthReportPreviewProps {
-  getTotalNetWorth: () => number;
-  getTotalAssetsByType: (type: string) => number;
-  formatCurrency: (amount: number) => string;
-}
-
-const NetWorthReportPreview: React.FC<NetWorthReportPreviewProps> = ({ 
-  getTotalNetWorth, 
-  getTotalAssetsByType,
-  formatCurrency 
-}) => {
-  const totalAssets = getTotalNetWorth();
-  const totalLiabilities = 845210; // Mock value to match existing functionality
-  const netWorth = totalAssets - totalLiabilities;
-  
-  const propertyValue = getTotalAssetsByType('property');
-  const investmentsValue = getTotalAssetsByType('investment');
-  const cashValue = getTotalAssetsByType('cash');
-  const retirementValue = getTotalAssetsByType('retirement');
-  const otherValue = getTotalAssetsByType('other');
-  
-  return (
-    <div className="space-y-4">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="p-4 bg-blue-500/10 rounded-md">
-          <div className="text-sm text-blue-700 dark:text-blue-400">Total Assets</div>
-          <div className="text-2xl font-bold">{formatCurrency(totalAssets)}</div>
-        </div>
-        <div className="p-4 bg-red-500/10 rounded-md">
-          <div className="text-sm text-red-700 dark:text-red-400">Total Liabilities</div>
-          <div className="text-2xl font-bold">{formatCurrency(totalLiabilities)}</div>
-        </div>
-        <div className="p-4 bg-purple-500/10 rounded-md">
-          <div className="text-sm text-purple-700 dark:text-purple-400">Net Worth</div>
-          <div className="text-2xl font-bold">{formatCurrency(netWorth)}</div>
-        </div>
-      </div>
-      
-      <div>
-        <h4 className="text-md font-medium mb-2">Asset Allocation</h4>
-        <div className="space-y-3">
-          <div>
-            <div className="flex justify-between items-center mb-1">
-              <span>Real Estate</span>
-              <span>{formatCurrency(propertyValue)}</span>
-            </div>
-            <Progress value={(propertyValue / totalAssets) * 100} className="h-2" />
-          </div>
-          <div>
-            <div className="flex justify-between items-center mb-1">
-              <span>Investments</span>
-              <span>{formatCurrency(investmentsValue)}</span>
-            </div>
-            <Progress value={(investmentsValue / totalAssets) * 100} className="h-2" />
-          </div>
-          <div>
-            <div className="flex justify-between items-center mb-1">
-              <span>Cash & Equivalents</span>
-              <span>{formatCurrency(cashValue)}</span>
-            </div>
-            <Progress value={(cashValue / totalAssets) * 100} className="h-2" />
-          </div>
-          <div>
-            <div className="flex justify-between items-center mb-1">
-              <span>Retirement Accounts</span>
-              <span>{formatCurrency(retirementValue)}</span>
-            </div>
-            <Progress value={(retirementValue / totalAssets) * 100} className="h-2" />
-          </div>
-          {otherValue > 0 && (
-            <div>
-              <div className="flex justify-between items-center mb-1">
-                <span>Other Assets</span>
-                <span>{formatCurrency(otherValue)}</span>
-              </div>
-              <Progress value={(otherValue / totalAssets) * 100} className="h-2" />
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-};
-
-interface CashFlowReportPreviewProps {
-  timeframe: string;
-  formatCurrency: (amount: number) => string;
-}
-
-const CashFlowReportPreview: React.FC<CashFlowReportPreviewProps> = ({ timeframe, formatCurrency }) => {
-  // Mock cash flow data
-  const cashFlowData = {
-    income: [
-      { name: 'Primary Salary', amount: 25000 },
-      { name: 'Secondary Income', amount: 5000 },
-      { name: 'Investment Income', amount: 3500 },
-      { name: 'Rental Income', amount: 4200 }
-    ],
-    expenses: [
-      { name: 'Housing', amount: 8500 },
-      { name: 'Transportation', amount: 1200 },
-      { name: 'Food & Dining', amount: 2000 },
-      { name: 'Utilities', amount: 850 },
-      { name: 'Healthcare', amount: 1500 },
-      { name: 'Education', amount: 750 },
-      { name: 'Entertainment', amount: 1000 },
-      { name: 'Travel', amount: 1200 }
-    ]
-  };
-  
-  const totalIncome = cashFlowData.income.reduce((sum, item) => sum + item.amount, 0);
-  const totalExpenses = cashFlowData.expenses.reduce((sum, item) => sum + item.amount, 0);
-  const netCashFlow = totalIncome - totalExpenses;
-  
-  const timeframeMultiplier = timeframe === 'monthly' ? 1 : 
-                              timeframe === 'quarterly' ? 3 : 
-                              timeframe === 'annual' ? 12 : 
-                              timeframe === 'ytd' ? 4 : 1;
-  
-  return (
-    <div className="space-y-4">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="p-4 bg-green-500/10 rounded-md">
-          <div className="text-sm text-green-700 dark:text-green-400">Total Income</div>
-          <div className="text-2xl font-bold">{formatCurrency(totalIncome * timeframeMultiplier)}</div>
-        </div>
-        <div className="p-4 bg-red-500/10 rounded-md">
-          <div className="text-sm text-red-700 dark:text-red-400">Total Expenses</div>
-          <div className="text-2xl font-bold">{formatCurrency(totalExpenses * timeframeMultiplier)}</div>
-        </div>
-        <div className="p-4 bg-blue-500/10 rounded-md">
-          <div className="text-sm text-blue-700 dark:text-blue-400">Net Cash Flow</div>
-          <div className="text-2xl font-bold">{formatCurrency(netCashFlow * timeframeMultiplier)}</div>
-        </div>
-      </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-          <h4 className="text-md font-medium mb-2">Income Sources</h4>
-          <div className="space-y-3">
-            {cashFlowData.income.map((item, index) => (
-              <div key={index}>
-                <div className="flex justify-between items-center mb-1">
-                  <span>{item.name}</span>
-                  <span>{formatCurrency(item.amount * timeframeMultiplier)}</span>
-                </div>
-                <Progress 
-                  value={(item.amount / totalIncome) * 100} 
-                  className="h-2 bg-green-100 dark:bg-green-950" 
-                  indicatorClassName="bg-green-500"
-                />
-              </div>
-            ))}
-          </div>
-        </div>
-        
-        <div>
-          <h4 className="text-md font-medium mb-2">Expense Categories</h4>
-          <div className="space-y-3">
-            {cashFlowData.expenses.map((item, index) => (
-              <div key={index}>
-                <div className="flex justify-between items-center mb-1">
-                  <span>{item.name}</span>
-                  <span>{formatCurrency(item.amount * timeframeMultiplier)}</span>
-                </div>
-                <Progress 
-                  value={(item.amount / totalExpenses) * 100} 
-                  className="h-2 bg-red-100 dark:bg-red-950" 
-                  indicatorClassName="bg-red-500"
-                />
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const CustomReportPreview: React.FC = () => {
-  return (
-    <div className="flex flex-col items-center justify-center p-8 text-center border-2 border-dashed rounded-md h-[300px]">
-      <ListFilter className="h-10 w-10 text-muted-foreground mb-4" />
-      <h3 className="text-lg font-medium mb-2">Custom Report Configuration</h3>
-      <p className="text-muted-foreground mb-4">
-        Select the data points and components you'd like to include in your custom report.
-      </p>
-      <Button variant="outline">Configure Custom Report</Button>
-    </div>
-  );
-};

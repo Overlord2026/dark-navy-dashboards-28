@@ -39,11 +39,18 @@ export function useAssetReport() {
     return assets.reduce((sum, asset) => sum + (asset.value || 0), 0);
   };
 
+  const getTotalByType = (type: AssetEntry['type']) => {
+    return assets
+      .filter(asset => asset.type === type)
+      .reduce((sum, asset) => sum + (asset.value || 0), 0);
+  };
+
   return {
     assets,
     addAsset,
     updateAsset,
     deleteAsset,
-    getTotalValue
+    getTotalValue,
+    getTotalByType
   };
 }

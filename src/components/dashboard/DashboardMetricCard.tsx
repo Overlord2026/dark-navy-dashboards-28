@@ -1,17 +1,12 @@
 
-import { useState } from "react";
+import React, { useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { ArrowUpIcon, ArrowDownIcon, PencilIcon } from "lucide-react";
+import { Progress } from "@/components/ui/progress";
 import { DashboardMetric } from "@/types/dashboard";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Pencil, TrendingUp, TrendingDown } from "lucide-react";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { Progress } from "@/components/ui/progress";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface DashboardMetricCardProps {
   metric: DashboardMetric;
@@ -19,134 +14,217 @@ interface DashboardMetricCardProps {
   onTargetUpdate: (target: number) => void;
 }
 
-const tooltipContent = {
-  income: "Your total monthly income from all sources",
-  expenses: "Your total monthly expenses across all categories",
-  cashflow: "The difference between your income and expenses",
-  savings: "Percentage of income saved monthly"
-};
+export const DashboardMetricCard = ({ 
+  metric, 
+  onUpdate, 
+  onTargetUpdate 
+}: DashboardMetricCardProps) => {
+  const [editing, setEditing] = useState(false);
+  const [editingTarget, setEditingTarget] = useState(false);
+  const [inputValue, setInputValue] = useState(metric.value !== null ? String(metric.value) : '');
+  const [targetValue, setTargetValue] = useState(String(metric.target));
 
-export function DashboardMetricCard({ metric, onUpdate, onTargetUpdate }: DashboardMetricCardProps) {
-  const [isEditing, setIsEditing] = useState(false);
-  const [isEditingTarget, setIsEditingTarget] = useState(false);
-  const [inputValue, setInputValue] = useState(metric.value?.toString() || "");
-  const [targetValue, setTargetValue] = useState(metric.target?.toString() || "");
-
-  const handleValueSubmit = () => {
-    const newValue = parseFloat(inputValue);
-    if (!isNaN(newValue)) {
-      onUpdate(newValue);
+  // Format the value as currency unless it's savings rate (percentage)
+  const formatValue = (value: number | null) => {
+    if (value === null) return "Not set";
+    
+    if (metric.type === 'savings') {
+      return `${value}%`;
     }
-    setIsEditing(false);
+    
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      maximumFractionDigits: 0
+    }).format(value);
   };
 
-  const handleTargetSubmit = () => {
-    const newTarget = parseFloat(targetValue);
-    if (!isNaN(newTarget)) {
-      onTargetUpdate(newTarget);
+  // Calculate the percentage of target achieved, ensuring we don't divide by zero
+  const getPercentageOfTarget = () => {
+    if (metric.value === null || metric.target === 0) return 0;
+    return Math.min(100, (metric.value / metric.target) * 100);
+  };
+
+  // Calculate the change percentage if previous value exists
+  const getChangePercentage = () => {
+    if (metric.value === null || metric.previousValue === null || metric.previousValue === 0) return null;
+    return ((metric.value - metric.previousValue) / Math.abs(metric.previousValue)) * 100;
+  };
+
+  const changePercentage = getChangePercentage();
+  const percentOfTarget = getPercentageOfTarget();
+
+  // Get background color based on metric type
+  const getBgColor = () => {
+    switch (metric.type) {
+      case 'income':
+        return 'bg-blue-500/10';
+      case 'expenses':
+        return 'bg-red-500/10';
+      case 'cashflow':
+        return 'bg-green-500/10';
+      case 'savings':
+        return 'bg-purple-500/10';
+      default:
+        return 'bg-gray-500/10';
     }
-    setIsEditingTarget(false);
   };
 
-  const getPercentageChange = () => {
-    if (!metric.value || !metric.previousValue) return null;
-    return ((metric.value - metric.previousValue) / metric.previousValue) * 100;
+  // Get text color based on metric type
+  const getTextColor = () => {
+    switch (metric.type) {
+      case 'income':
+        return 'text-blue-500';
+      case 'expenses':
+        return 'text-red-500';
+      case 'cashflow':
+        return 'text-green-500';
+      case 'savings':
+        return 'text-purple-500';
+      default:
+        return 'text-gray-500';
+    }
   };
 
-  const percentChange = getPercentageChange();
-  const progressValue = metric.value && metric.target ? (metric.value / metric.target) * 100 : 0;
+  // Handle saving the edited value
+  const handleSaveValue = () => {
+    const parsedValue = parseFloat(inputValue);
+    if (!isNaN(parsedValue)) {
+      onUpdate(parsedValue);
+    }
+    setEditing(false);
+  };
+
+  // Handle saving the edited target
+  const handleSaveTarget = () => {
+    const parsedTarget = parseFloat(targetValue);
+    if (!isNaN(parsedTarget)) {
+      onTargetUpdate(parsedTarget);
+    }
+    setEditingTarget(false);
+  };
+
+  // Handle key press events for inputs
+  const handleKeyPress = (e: React.KeyboardEvent, saveFunction: () => void) => {
+    if (e.key === 'Enter') {
+      saveFunction();
+    } else if (e.key === 'Escape') {
+      setEditing(false);
+      setEditingTarget(false);
+      setInputValue(metric.value !== null ? String(metric.value) : '');
+      setTargetValue(String(metric.target));
+    }
+  };
 
   return (
-    <Card>
-      <CardHeader className="pb-2">
-        <div className="flex justify-between items-center">
-          <CardTitle className="text-md font-medium">
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger>
-                  {metric.label}
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p className="text-sm">{tooltipContent[metric.type]}</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </CardTitle>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="h-8 w-8 p-0"
-            onClick={() => setIsEditing(!isEditing)}
-          >
-            <Pencil className="h-4 w-4" />
-          </Button>
-        </div>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-2">
-          {isEditing ? (
-            <div className="flex gap-2">
-              <Input
-                type="number"
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                className="bg-background/50"
-                placeholder={`Enter ${metric.label.toLowerCase()}`}
-              />
-              <Button size="sm" onClick={handleValueSubmit}>Save</Button>
-            </div>
-          ) : (
-            <div className="text-2xl font-semibold">
-              {metric.type === 'savings' ? 
-                `${metric.value?.toFixed(1)}%` :
-                metric.value ? 
-                  `$${metric.value.toLocaleString()}` : 
-                  'Not set'
-              }
-            </div>
-          )}
-
-          {percentChange !== null && (
-            <div className="flex items-center text-sm">
-              {percentChange > 0 ? (
-                <TrendingUp className="h-4 w-4 text-green-500 mr-1" />
+    <Card className={`${getBgColor()} border-none hover:shadow-md transition-shadow`}>
+      <CardContent className="p-6">
+        <div className="flex justify-between items-start mb-3">
+          <div className="space-y-1">
+            <h3 className={`text-sm font-medium ${getTextColor()}`}>{metric.label}</h3>
+            <div className="flex items-center">
+              {editing ? (
+                <div className="flex items-center gap-2">
+                  <Input
+                    type="number"
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
+                    onKeyDown={(e) => handleKeyPress(e, handleSaveValue)}
+                    autoFocus
+                    className="w-[120px] h-8 text-lg font-bold"
+                    step={metric.type === 'savings' ? "0.1" : "100"}
+                  />
+                  <Button size="sm" onClick={handleSaveValue} variant="secondary">
+                    Save
+                  </Button>
+                </div>
               ) : (
-                <TrendingDown className="h-4 w-4 text-red-500 mr-1" />
+                <div 
+                  className="flex items-center cursor-pointer" 
+                  onClick={() => {
+                    setEditing(true);
+                    setInputValue(metric.value !== null ? String(metric.value) : '');
+                  }}
+                >
+                  <span className="text-2xl font-bold">{formatValue(metric.value)}</span>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="ghost" size="icon" className="h-6 w-6 ml-1">
+                        <PencilIcon className="h-3 w-3" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Edit value</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </div>
               )}
-              <span className={percentChange > 0 ? "text-green-500" : "text-red-500"}>
-                {Math.abs(percentChange).toFixed(1)}%
-              </span>
-              <span className="text-muted-foreground ml-1">vs last month</span>
+            </div>
+          </div>
+          
+          {/* Show change indicator if previous value exists and we're not editing */}
+          {changePercentage !== null && !editing && (
+            <div 
+              className={`flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                changePercentage > 0 
+                  ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' 
+                  : 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
+              }`}
+            >
+              {changePercentage > 0 ? (
+                <ArrowUpIcon className="h-3 w-3 mr-1" />
+              ) : (
+                <ArrowDownIcon className="h-3 w-3 mr-1" />
+              )}
+              {Math.abs(changePercentage).toFixed(1)}%
             </div>
           )}
-
-          <div className="mt-4">
-            {isEditingTarget ? (
-              <div className="flex gap-2">
-                <Input
-                  type="number"
-                  value={targetValue}
-                  onChange={(e) => setTargetValue(e.target.value)}
-                  className="bg-background/50"
-                  placeholder="Set target"
-                />
-                <Button size="sm" onClick={handleTargetSubmit}>Save</Button>
-              </div>
-            ) : (
-              <div className="flex items-center justify-between text-sm mb-1" onClick={() => setIsEditingTarget(true)}>
-                <span>Target</span>
-                <span className="font-medium">
-                  {metric.type === 'savings' ? 
-                    `${metric.target}%` :
-                    `$${metric.target.toLocaleString()}`
-                  }
-                </span>
-              </div>
-            )}
-            <Progress value={progressValue} className="h-2" />
+        </div>
+        
+        <div className="space-y-2">
+          <div className="flex justify-between items-center text-xs text-gray-500 dark:text-gray-400">
+            <span>Progress</span>
+            <div className="flex items-center">
+              {editingTarget ? (
+                <div className="flex items-center gap-1">
+                  <span className="text-xs mr-1">Target:</span>
+                  <Input
+                    type="number"
+                    value={targetValue}
+                    onChange={(e) => setTargetValue(e.target.value)}
+                    onKeyDown={(e) => handleKeyPress(e, handleSaveTarget)}
+                    autoFocus
+                    className="w-[80px] h-6 text-xs"
+                    step={metric.type === 'savings' ? "0.1" : "100"}
+                  />
+                  <Button size="sm" onClick={handleSaveTarget} variant="secondary" className="h-6 text-xs">
+                    Set
+                  </Button>
+                </div>
+              ) : (
+                <div 
+                  className="flex items-center cursor-pointer" 
+                  onClick={() => {
+                    setEditingTarget(true);
+                    setTargetValue(String(metric.target));
+                  }}
+                >
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <span>Target: {metric.type === 'savings' ? `${metric.target}%` : formatValue(metric.target)}</span>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Edit target</p>
+                    </TooltipContent>
+                  </Tooltip>
+                  <PencilIcon className="h-3 w-3 ml-1" />
+                </div>
+              )}
+            </div>
           </div>
+          <Progress value={percentOfTarget} className="h-2" />
         </div>
       </CardContent>
     </Card>
   );
-}
+};
