@@ -46,13 +46,14 @@ export const EducationalTabs: React.FC<EducationalTabsProps> = ({
   
   // Handler for category selection that checks if we're on a specific topic page
   const handleCategorySelect = (category: string) => {
-    // If we're on a specific topic page like tax-planning, redirect to main education page
-    if (location.pathname.includes('/education/') && location.pathname !== '/education') {
+    // If we're on a specific topic page like tax-planning or all-courses, redirect to main education page
+    if ((location.pathname.includes('/education/') && location.pathname !== '/education') || 
+        location.pathname.includes('/education/all-courses')) {
       navigate('/education', { state: { category } });
+    } else {
+      // Update the category in the parent component
+      setActiveCategory(category);
     }
-    
-    // Update the category in the parent component
-    setActiveCategory(category);
   };
   
   const activeCategoryCourses = 

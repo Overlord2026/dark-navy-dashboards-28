@@ -45,6 +45,10 @@ const routes = createBrowserRouter([
     element: <Education />
   },
   {
+    path: "/education/all-courses",
+    element: <Education />
+  },
+  {
     path: "/tax-planning",
     element: <TaxPlanning />
   },

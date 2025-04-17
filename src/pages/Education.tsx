@@ -1,3 +1,4 @@
+
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { toast } from "sonner";
 import { useSearchParams, Link, useLocation } from "react-router-dom";
@@ -25,6 +26,7 @@ export default function Education() {
     
     const stateCategory = location.state?.category;
     
+    // Ensure proper category is set, with priority to state from navigation
     if (stateCategory) {
       setActiveCategory(stateCategory);
       setActiveSection("courses");
@@ -38,8 +40,14 @@ export default function Education() {
       }
     }
     
+    // Handle "all-courses" in URL path
+    if (location.pathname.includes('/education/all-courses')) {
+      setActiveCategory("all-courses");
+      setActiveSection("courses");
+    }
+    
     setShowApiDemo(apiDemo);
-  }, [searchParams, location.state]);
+  }, [searchParams, location.state, location.pathname]);
 
   const handleCourseEnrollment = (courseId: string | number, title: string, isPaid: boolean, ghlUrl?: string) => {
     if (ghlUrl) {

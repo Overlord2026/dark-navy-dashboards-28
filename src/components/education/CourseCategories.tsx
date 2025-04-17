@@ -1,10 +1,10 @@
-
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { CourseCategory } from "@/types/education";
 import { cn } from "@/lib/utils";
 import { Card } from '@/components/ui/card';
 import { courseCategories } from '@/data/education';
+import { useNavigate } from 'react-router-dom';
 
 export interface CourseCategoryProps {
   activeCategory: string;
@@ -21,6 +21,17 @@ export const CourseCategories: React.FC<CourseCategoryProps> = ({
 }) => {
   // Use the imported courseCategories if not explicitly provided
   const categories = courseCategories;
+  const navigate = useNavigate();
+  
+  const handleCategoryClick = (categoryId: string) => {
+    // Update the category in the parent component
+    onCategorySelect(categoryId);
+    
+    // Keep the user on the main education page with the right category parameter
+    if (window.location.pathname.includes('/education/all-courses')) {
+      navigate('/education', { state: { category: categoryId } });
+    }
+  };
   
   return (
     <div className="space-y-6">
@@ -30,7 +41,7 @@ export const CourseCategories: React.FC<CourseCategoryProps> = ({
             key={category.id}
             variant="outline"
             size="sm"
-            onClick={() => onCategorySelect(category.id)}
+            onClick={() => handleCategoryClick(category.id)}
             className={cn(
               "rounded-full",
               activeCategory === category.id 
