@@ -5,23 +5,12 @@ import { UserRoundPlusIcon, ChevronLeft } from "lucide-react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { CollaboratorInfoStep } from "@/components/sharing/CollaboratorInfoStep";
 import { CollaboratorAccessStep } from "@/components/sharing/CollaboratorAccessStep";
 import { CollaboratorsTable } from "@/components/sharing/CollaboratorsTable";
 import { EmptyCollaborators } from "@/components/sharing/EmptyCollaborators";
-import { Collaborator, CollaboratorFormData } from "@/components/sharing/types";
-
-const formSchema = z.object({
-  firstName: z.string().min(1, "First name is required"),
-  lastName: z.string().min(1, "Last name is required"),
-  email: z.string().email("Invalid email address"),
-  role: z.string().min(1, "Role is required"),
-  collaboratorType: z.string().min(1, "Collaborator type is required"),
-  accessLevel: z.enum(["full", "limited"]),
-});
+import { Collaborator } from "@/components/sharing/types";
+import { useCollaboratorForm } from "@/hooks/useCollaboratorForm";
 
 export default function Sharing() {
   const { toast } = useToast();
@@ -30,20 +19,14 @@ export default function Sharing() {
   const navigate = useNavigate();
   const [collaborators, setCollaborators] = useState<Collaborator[]>([]);
   const [showAddCollaborator, setShowAddCollaborator] = useState(false);
-  const [addStep, setAddStep] = useState<"info" | "access">("info");
   const [addType, setAddType] = useState<"family" | null>("family");
   
-  const form = useForm<CollaboratorFormData>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      firstName: "",
-      lastName: "",
-      email: "",
-      role: "",
-      collaboratorType: "",
-      accessLevel: "limited",
-    },
-  });
+  const handleCollaboratorAdded = (newCollaborator: Collaborator) => {
+    setCollaborators([...collaborators, newCollaborator]);
+    setShowAddCollaborator(false);
+  };
+
+  const { form, addStep, setAddStep, onSubmit } = useCollaboratorForm(handleCollaboratorAdded);
 
   useEffect(() => {
     const addParam = searchParams.get('add');
@@ -55,42 +38,12 @@ export default function Sharing() {
     }
   }, [searchParams, setSearchParams]);
 
-  const handleAddCollaborator = (data: CollaboratorFormData) => {
-    const newCollaborator: Collaborator = {
-      id: `collab-${Math.random().toString(36).substring(2, 9)}`,
-      name: `${data.firstName} ${data.lastName}`,
-      email: data.email,
-      role: data.collaboratorType,
-      accessLevel: data.accessLevel,
-      dateAdded: new Date(),
-    };
-    
-    setCollaborators([...collaborators, newCollaborator]);
-    
-    toast({
-      title: "Invitation sent",
-      description: `An invitation has been sent to ${data.email}`,
-    });
-    
-    form.reset();
-    setShowAddCollaborator(false);
-    setAddStep("info");
-  };
-
   const handleRemoveCollaborator = (id: string) => {
     setCollaborators(collaborators.filter(collaborator => collaborator.id !== id));
     toast({
       title: "Collaborator removed",
       description: "The collaborator has been removed successfully.",
     });
-  };
-
-  const onSubmit = (data: CollaboratorFormData) => {
-    if (addStep === "info") {
-      setAddStep("access");
-      return;
-    }
-    handleAddCollaborator(data);
   };
 
   return (
@@ -110,6 +63,7 @@ export default function Sharing() {
                   onClick={() => {
                     setShowAddCollaborator(false);
                     setAddStep("info");
+                    form.reset();
                   }}
                 >
                   <ChevronLeft className="h-4 w-4 mr-1" />
