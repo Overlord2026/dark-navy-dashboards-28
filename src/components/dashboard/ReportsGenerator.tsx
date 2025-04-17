@@ -20,7 +20,6 @@ import { NetWorthReportPreview } from "@/components/reports/NetWorthReportPrevie
 import { CashFlowReportPreview } from "@/components/reports/CashFlowReportPreview";
 import { CustomReportPreview } from "@/components/reports/CustomReportPreview";
 
-// Report types
 type ReportType = 'assets' | 'liabilities' | 'cashflow' | 'networth' | 'custom';
 
 interface ReportConfig {
@@ -37,7 +36,6 @@ export function ReportsGenerator() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedReport, setGeneratedReport] = useState<boolean>(false);
 
-  // Available report configurations
   const reportConfigs: ReportConfig[] = [
     {
       id: 'assets-report',
@@ -87,27 +85,19 @@ export function ReportsGenerator() {
   const handleGenerateReport = () => {
     setIsGenerating(true);
     
-    // Simulate report generation with a delay
     setTimeout(() => {
       setIsGenerating(false);
       setGeneratedReport(true);
       
-      toast({
-        description: `Your ${getSelectedReportConfig().name} has been successfully generated.`,
-      });
+      toast(`Your ${getSelectedReportConfig().name} has been successfully generated.`);
     }, 1500);
   };
 
   const handleDownload = (format: 'pdf' | 'csv' | 'excel') => {
-    toast({
-      description: `Your report is being prepared in ${format.toUpperCase()} format.`,
-    });
+    toast(`Your report is being prepared in ${format.toUpperCase()} format.`);
     
-    // Simulate download delay
     setTimeout(() => {
-      toast({
-        description: `Your ${getSelectedReportConfig().name} has been downloaded.`,
-      });
+      toast(`Your ${getSelectedReportConfig().name} has been downloaded.`);
     }, 1000);
   };
 
@@ -115,7 +105,6 @@ export function ReportsGenerator() {
     return reportConfigs.find(report => report.type === selectedReportType) || reportConfigs[0];
   };
 
-  // Renders a placeholder report component based on the selected type
   const renderReportPreview = () => {
     switch(selectedReportType) {
       case 'assets':
