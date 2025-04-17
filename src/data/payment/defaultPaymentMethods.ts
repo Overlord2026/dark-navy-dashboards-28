@@ -18,3 +18,4 @@ export const DEFAULT_PAYMENT_METHODS: PaymentMethod[] = [
     isDefault: false
   }
 ];
+
