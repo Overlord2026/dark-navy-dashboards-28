@@ -6,13 +6,13 @@ import { NetWorthSummary } from "@/components/dashboard/NetWorthSummary";
 import { TaxPlanningSummary } from "@/components/dashboard/TaxPlanningSummary";
 import { RecentActivity } from "@/components/dashboard/RecentActivity";
 import { ReportsGenerator } from "@/components/dashboard/ReportsGenerator";
-import { useNetWorth } from "@/contexts/NetWorthContext";
+import { useNetWorth } from "@/context/NetWorthContext";
 import { WelcomeTrialBanner } from "@/components/dashboard/WelcomeTrialBanner";
 import { TrialEndingSoonBanner } from "@/components/dashboard/TrialEndingSoonBanner";
 import { MidTrialBanner } from "@/components/dashboard/MidTrialBanner";
-import { useSubscription } from "@/contexts/SubscriptionContext";
+import { useSubscription } from "@/context/SubscriptionContext";
 import { QuickActionsMenu } from "@/components/dashboard/QuickActionsMenu";
-import { useUser } from "@/contexts/UserContext";
+import { useUser } from "@/context/UserContext";
 import { measureRouteLoad } from "@/utils/performance";
 import { usePagePerformance } from "@/hooks/usePagePerformance";
 
