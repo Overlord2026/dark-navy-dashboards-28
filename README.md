@@ -1,69 +1,108 @@
-# Welcome to your Lovable project
 
-## Project info
+# Financial Management Platform
 
-**URL**: https://lovable.dev/projects/00a95494-1379-485c-9fca-9a2135238b56
+## Project Overview
 
-## How can I edit this code?
+This is a comprehensive financial management web application built with React, TypeScript, and modern web technologies. The platform provides users with tools for financial planning, asset tracking, investments, tax planning, and professional collaboration.
 
-There are several ways of editing your application.
+## Technology Stack
 
-**Use Lovable**
+- **Frontend**: React 18
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **UI Components**: Shadcn/UI
+- **State Management**: React Context, Zustand
+- **Routing**: React Router
+- **Form Handling**: React Hook Form
+- **Data Fetching**: Tanstack React Query
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/00a95494-1379-485c-9fca-9a2135238b56) and start prompting.
+## Project Structure
 
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+```
+src/
+├── components/      # Reusable UI components
+├── contexts/        # Global state management
+├── hooks/           # Custom React hooks
+├── pages/           # Top-level page components
+├── services/        # API integrations and business logic
+├── types/           # TypeScript type definitions
+└── utils/           # Utility functions
 ```
 
-**Edit a file directly in GitHub**
+## Prerequisites
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+- Node.js (v18+ recommended)
+- npm or yarn
 
-**Use GitHub Codespaces**
+## Local Development Setup
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+1. Clone the repository
+2. Install dependencies:
+```bash
+npm install
+# or
+yarn install
+```
 
-## What technologies are used for this project?
+3. Create a `.env` file based on `.env.example`
+4. Start the development server:
+```bash
+npm run dev
+# or
+yarn dev
+```
 
-This project is built with .
+## Environment Variables
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+Create a `.env.example` file with placeholders:
+```
+REACT_APP_API_URL=https://api.example.com
+REACT_APP_AUTH_ENDPOINT=https://auth.example.com/oauth
+REACT_APP_STRIPE_PUBLISHABLE_KEY=pk_test_XXXXXXXX
+```
 
-## How can I deploy this project?
+## Key Features
 
-Simply open [Lovable](https://lovable.dev/projects/00a95494-1379-485c-9fca-9a2135238b56) and click on Share -> Publish.
+- Financial planning and projections
+- Asset and investment tracking
+- Tax planning tools
+- Professional collaboration
+- Secure document sharing
+- Insurance and lending insights
 
-## I want to use a custom domain - is that possible?
+## Integration Points
 
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
+- Stripe for payment processing
+- OAuth for authentication
+- External financial data APIs
+- Professional service provider integrations
+
+## Security Considerations
+
+- OAuth 2.0 authentication
+- Encrypted data storage
+- Role-based access control
+- Secure API integrations
+
+## Deployment
+
+The application can be deployed using:
+- Vercel
+- Netlify
+- GitHub Pages
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
+
+## License
+
+[Specify your license, e.g., MIT]
+
+## Support
+
+For support, please open an issue in the GitHub repository or contact support@yourcompany.com
