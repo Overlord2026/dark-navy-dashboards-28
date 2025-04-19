@@ -31,10 +31,15 @@ import NavigationDiagnostics from "@/pages/NavigationDiagnostics";
 import { ProfessionalsRouteWrapper } from "@/components/providers/ProfessionalsRouteWrapper";
 import Investments from "@/pages/Investments";
 import SystemDiagnosticsPage from "@/pages/SystemDiagnostics";
+import Index from "@/pages/Index";
 
 const routes = createBrowserRouter([
   {
     path: "/",
+    element: <Index />
+  },
+  {
+    path: "/dashboard",
     element: <Dashboard />
   },
   {
