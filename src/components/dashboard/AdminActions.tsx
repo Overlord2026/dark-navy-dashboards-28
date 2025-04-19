@@ -27,7 +27,7 @@ export function AdminActions() {
       <CardContent>
         <div className="space-y-2">
           <Button variant="outline" className="w-full justify-between" asChild>
-            <Link to="/system-health">
+            <Link to="/diagnostics">
               <div className="flex items-center">
                 <Gauge className="mr-2 h-4 w-4" />
                 System Health Dashboard
@@ -37,7 +37,7 @@ export function AdminActions() {
           </Button>
           
           <Button variant="outline" className="w-full justify-between" asChild>
-            <Link to="/system-diagnostics">
+            <Link to="/navigation-diagnostics">
               <div className="flex items-center">
                 <BarChart className="mr-2 h-4 w-4" />
                 Full System Diagnostics
