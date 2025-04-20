@@ -13,7 +13,13 @@ export interface NavItem {
 
 export interface NavCategory {
   id: string;
+  title: string;
   label: string;
-  defaultExpanded?: boolean;
   items: NavItem[];
+  defaultExpanded?: boolean;
+}
+
+export interface TabProps {
+  isActive?: boolean;
+  className?: string;
 }

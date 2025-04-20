@@ -1,7 +1,8 @@
 
 import React from "react";
 import { UserIcon, HeartHandshakeIcon } from "lucide-react";
-import { NavItem } from "@/types/navigation";
+import { NavItem, TabProps } from "@/types/navigation";
+import { tabBaseStyles } from "./TabStyles";
 
 export const settingsNavItems: NavItem[] = [
   { 
@@ -16,10 +17,22 @@ export const settingsNavItems: NavItem[] = [
   }
 ];
 
-const SettingsTab = () => {
+const SettingsTab = ({ className }: TabProps) => {
   return (
-    <div className="settings-tab">
-      {/* Additional settings tab specific UI can be added here */}
+    <div className={`${tabBaseStyles.container} ${className}`}>
+      <h2 className={tabBaseStyles.title}>Settings</h2>
+      <div className={tabBaseStyles.grid}>
+        {settingsNavItems.map((item) => (
+          <a 
+            key={item.href} 
+            href={item.href}
+            className={tabBaseStyles.item}
+          >
+            {item.icon && <item.icon className={tabBaseStyles.icon} />}
+            <span>{item.title}</span>
+          </a>
+        ))}
+      </div>
     </div>
   );
 };
