@@ -1,6 +1,5 @@
-
 import React, { useState } from "react";
-import { useNetWorth, Asset } from "@/context/NetWorthContext";
+import { useNetWorth } from "@/contexts/NetWorthContext";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

@@ -10,7 +10,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { DiagnosticsProvider } from "@/contexts/DiagnosticsContext";
 import { AdvisorProvider } from "@/contexts/AdvisorContext";
 import { AuthProvider } from "@/contexts/AuthContext";
-import { AdminProvider } from './contexts/AdminContext';
+import { AdminProvider } from '@/contexts/AdminContext';
 import { TooltipProvider } from "@/components/ui/tooltip";
 
 // Create a Query Client
