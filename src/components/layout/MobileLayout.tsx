@@ -15,8 +15,8 @@ import {
   ChevronRight,
   Plus
 } from "lucide-react";
-import { useTheme } from "@/context/ThemeContext";
-import { useUser } from "@/context/UserContext";
+import { useTheme } from "@/contexts/ThemeContext";
+import { useUser } from "@/contexts/UserContext";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 
