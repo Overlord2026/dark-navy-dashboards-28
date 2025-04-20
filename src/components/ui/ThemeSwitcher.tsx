@@ -1,6 +1,6 @@
 
 import React from "react";
-import { useTheme } from "@/contexts/ThemeContext";
+import { useTheme } from "@/context/ThemeContext";
 import { Button } from "@/components/ui/button";
 import { MoonIcon, SunIcon } from "lucide-react";
 import { toast } from "sonner";

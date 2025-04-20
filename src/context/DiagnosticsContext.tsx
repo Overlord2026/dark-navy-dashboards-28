@@ -1,6 +1,6 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { useUser } from "@/contexts/UserContext";
+import { useUser } from "@/context/UserContext";
 
 type DiagnosticsContextType = {
   isDiagnosticsModeEnabled: boolean;

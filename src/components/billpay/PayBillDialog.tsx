@@ -351,8 +351,8 @@ export function PayBillDialog({ isOpen, onClose, bill }: PayBillDialogProps) {
       </AlertDialog>
 
       <PaymentMethodsDialog
-        open={showPaymentMethodsDialog}
-        onOpenChange={setShowPaymentMethodsDialog}
+        isOpen={showPaymentMethodsDialog}
+        onClose={() => setShowPaymentMethodsDialog(false)}
         paymentMethods={paymentMethods}
         onAddPaymentMethod={handleAddPaymentMethod}
         onSetDefault={handleSetDefault}

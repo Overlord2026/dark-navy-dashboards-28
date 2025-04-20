@@ -1,16 +1,22 @@
-import { API_ENDPOINTS, API_KEYS } from '@/config';
+
 import { Property, PropertyValuation } from "@/types/property";
 import { toast } from "sonner";
 
+// API endpoint for Zillow Property API (would normally be in environment variables)
+const ZILLOW_API_ENDPOINT = "https://api.bridgedataoutput.com/api/v2/zestimates";
+const ZILLOW_API_KEY = "YOUR_ZILLOW_API_KEY"; // This would normally be stored securely
+
 // Service to get property valuations from Zillow
 export const getPropertyValuation = async (address: string): Promise<PropertyValuation> => {
-  // For demo purposes, we'll simulate the API call
-  // In a production environment, this would make a real API call to Zillow:
+  // For demo purposes, we'll simulate the API call with the same random data generator
+  // In a production environment, this would make a real API call to Zillow
+  
+  // A real implementation would look something like this:
   /*
   try {
-    const response = await fetch(`${API_ENDPOINTS.ZILLOW}?address=${encodeURIComponent(address)}`, {
+    const response = await fetch(`${ZILLOW_API_ENDPOINT}?address=${encodeURIComponent(address)}`, {
       headers: {
-        'Authorization': `Bearer ${API_KEYS.ZILLOW}`,
+        'Authorization': `Bearer ${ZILLOW_API_KEY}`,
         'Content-Type': 'application/json'
       }
     });

@@ -3,7 +3,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Activity, Navigation } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useUser } from "@/contexts/UserContext";
+import { useUser } from "@/context/UserContext";
 import { QuickNavigationCheck } from "./QuickNavigationCheck";
 import { toast } from "sonner";
 

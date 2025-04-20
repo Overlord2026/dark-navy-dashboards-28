@@ -11,8 +11,8 @@ import {
 import { OnboardingSidePanel } from "@/components/onboarding/OnboardingSidePanel";
 import { ThemeDialog } from "@/components/ui/ThemeDialog";
 import { useNavigate } from "react-router-dom";
-import { useTheme } from "@/contexts/ThemeContext";
-import { useUser } from "@/contexts/UserContext";
+import { useTheme } from "@/context/ThemeContext";
+import { useUser } from "@/context/UserContext";
 import { toast } from "sonner";
 
 interface UserProfileSectionProps {

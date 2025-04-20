@@ -50,12 +50,14 @@ const BillPay = () => {
   const [showDiagnosticsDialog, setShowDiagnosticsDialog] = useState(false);
   const [diagnosticButtonName, setDiagnosticButtonName] = useState<string | undefined>(undefined);
   
+  // Dialogs state
   const [showAddBillDialog, setShowAddBillDialog] = useState(false);
   const [showPayBillDialog, setShowPayBillDialog] = useState(false);
   const [showPaymentMethodsDialog, setShowPaymentMethodsDialog] = useState(false);
   const [billToPay, setBillToPay] = useState<Bill | null>(null);
   const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>(DEFAULT_PAYMENT_METHODS);
 
+  // Persist data changes
   useEffect(() => {
     localStorage.setItem('upcoming-bills', JSON.stringify(upcomingBills));
   }, [upcomingBills]);
@@ -393,8 +395,8 @@ const BillPay = () => {
         />
 
         <PaymentMethodsDialog
-          open={showPaymentMethodsDialog}
-          onOpenChange={setShowPaymentMethodsDialog}
+          isOpen={showPaymentMethodsDialog}
+          onClose={() => setShowPaymentMethodsDialog(false)}
           paymentMethods={paymentMethods}
           onAddPaymentMethod={handleAddPaymentMethod}
           onSetDefault={handleSetDefault}

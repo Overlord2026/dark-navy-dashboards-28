@@ -9,7 +9,7 @@ import { useDocumentManagement } from "@/hooks/useDocumentManagement";
 import { documentCategories } from "@/data/documentCategories";
 import { Button } from "@/components/ui/button";
 import { Upload } from "lucide-react";
-import { ProfessionalsProvider } from "@/contexts/ProfessionalsContext";
+import { ProfessionalsProvider } from "@/context/ProfessionalsContext";
 
 const Documents = () => {
   const {

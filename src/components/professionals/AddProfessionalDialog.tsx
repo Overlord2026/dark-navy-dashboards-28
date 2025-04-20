@@ -1,14 +1,14 @@
 
 import React, { useState } from "react";
-import { useProfessionals } from "@/hooks/useProfessionals";
-import { Dialog, DialogContent, DialogFooter } from "@/components/ui/dialog";
+import { useProfessionals } from "@/context/ProfessionalsContext"; // Update import path
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ProfessionalType } from "@/types/professional";
-import { DialogHeader } from "./add-dialog/DialogHeader";
-import { PersonalInfoFields } from "./add-dialog/PersonalInfoFields";
-import { ProfessionalTypeSelect } from "./add-dialog/ProfessionalTypeSelect";
-import { NotesField } from "./add-dialog/NotesField";
+import { Textarea } from "@/components/ui/textarea";
+import { toast } from "sonner";
 
 interface AddProfessionalDialogProps {
   isOpen: boolean;
@@ -42,6 +42,7 @@ export function AddProfessionalDialog({ isOpen, onOpenChange }: AddProfessionalD
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
+    // Validation for required fields
     if (!formData.name) {
       toast.error("Name is required");
       return;
@@ -52,14 +53,26 @@ export function AddProfessionalDialog({ isOpen, onOpenChange }: AddProfessionalD
       return;
     }
 
+    // Create new professional with a random ID
     const newProfessional = {
       id: `pro-${Math.random().toString(36).substring(2, 9)}`,
-      ...formData
+      name: formData.name,
+      type: formData.type,
+      company: formData.company,
+      phone: formData.phone,
+      email: formData.email,
+      website: formData.website,
+      address: formData.address,
+      notes: formData.notes,
+      specialties: formData.specialties,
+      certifications: formData.certifications,
     };
 
     addProfessional(newProfessional);
+    
     toast.success("Professional added successfully");
     
+    // Reset form and close dialog
     setFormData({
       name: "",
       type: "" as ProfessionalType,
@@ -79,15 +92,127 @@ export function AddProfessionalDialog({ isOpen, onOpenChange }: AddProfessionalD
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[550px]">
-        <DialogHeader />
+        <DialogHeader>
+          <DialogTitle>Add Professional</DialogTitle>
+          <DialogDescription>
+            Add a new professional to your directory.
+          </DialogDescription>
+        </DialogHeader>
         
         <form onSubmit={handleSubmit} className="space-y-4 py-4">
           <div className="grid grid-cols-2 gap-4">
-            <PersonalInfoFields formData={formData} handleChange={handleChange} />
-            <ProfessionalTypeSelect value={formData.type} onValueChange={handleTypeChange} />
+            <div className="space-y-2">
+              <Label htmlFor="name">Name *</Label>
+              <Input 
+                id="name"
+                name="name"
+                placeholder="John Doe"
+                value={formData.name}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="type">Type *</Label>
+              <Select 
+                value={formData.type} 
+                onValueChange={(value) => handleTypeChange(value as ProfessionalType)}
+                required
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Tax Professional / Accountant">Tax Professional / Accountant</SelectItem>
+                  <SelectItem value="Estate Planning Attorney">Estate Planning Attorney</SelectItem>
+                  <SelectItem value="Financial Advisor">Financial Advisor</SelectItem>
+                  <SelectItem value="Real Estate Agent / Property Manager">Real Estate Agent / Property Manager</SelectItem>
+                  <SelectItem value="Insurance / LTC Specialist">Insurance / LTC Specialist</SelectItem>
+                  <SelectItem value="Mortgage Broker">Mortgage Broker</SelectItem>
+                  <SelectItem value="Auto Insurance Provider">Auto Insurance Provider</SelectItem>
+                  <SelectItem value="Physician">Physician</SelectItem>
+                  <SelectItem value="Dentist">Dentist</SelectItem>
+                  <SelectItem value="Banker">Banker</SelectItem>
+                  <SelectItem value="Consultant">Consultant</SelectItem>
+                  <SelectItem value="Service Professional">Service Professional</SelectItem>
+                  <SelectItem value="Other">Other</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
           
-          <NotesField value={formData.notes} onChange={handleChange} />
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="company">Company</Label>
+              <Input 
+                id="company"
+                name="company"
+                placeholder="Company Name"
+                value={formData.company}
+                onChange={handleChange}
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="phone">Phone</Label>
+              <Input 
+                id="phone"
+                name="phone"
+                placeholder="(555) 123-4567"
+                value={formData.phone}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input 
+                id="email"
+                name="email"
+                placeholder="email@example.com"
+                value={formData.email}
+                onChange={handleChange}
+                type="email"
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="website">Website</Label>
+              <Input 
+                id="website"
+                name="website"
+                placeholder="https://example.com"
+                value={formData.website}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+          
+          <div className="space-y-2">
+            <Label htmlFor="address">Address</Label>
+            <Input 
+              id="address"
+              name="address"
+              placeholder="123 Main St, City, State, Zip"
+              value={formData.address}
+              onChange={handleChange}
+            />
+          </div>
+          
+          <div className="space-y-2">
+            <Label htmlFor="notes">Notes</Label>
+            <Textarea 
+              id="notes"
+              name="notes"
+              placeholder="Add any helpful notes about this professional..."
+              value={formData.notes}
+              onChange={handleChange}
+              className="min-h-[100px]"
+            />
+          </div>
           
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>

@@ -1,6 +1,6 @@
 
 import React from "react";
-import { ProfessionalsProvider } from "@/contexts/ProfessionalsContext";
+import { ProfessionalsProvider } from "@/context/ProfessionalsContext";
 
 interface ProfessionalsRouteWrapperProps {
   children: React.ReactNode;

@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { DashboardHeader } from "@/components/ui/DashboardHeader";
 import NavigationDiagnosticModule from "@/components/diagnostics/NavigationDiagnosticModule";
 import { measureRoutePerformance } from "@/services/performance/performanceMonitorService";
-import { useUser } from "@/contexts/UserContext";
+import { useUser } from "@/context/UserContext";
 import { Navigate } from "react-router-dom";
 import { toast } from "sonner";
 

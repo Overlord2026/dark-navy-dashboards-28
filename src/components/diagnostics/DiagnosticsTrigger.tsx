@@ -1,7 +1,7 @@
 
 import React from 'react';
-import { useDiagnosticsContext } from '@/contexts/DiagnosticsContext';
-import { useUser } from "@/contexts/UserContext";
+import { useDiagnosticsContext } from '@/context/DiagnosticsContext';
+import { useUser } from "@/context/UserContext";
 
 export function DiagnosticsTrigger() {
   const { isDiagnosticsModeEnabled } = useDiagnosticsContext();
