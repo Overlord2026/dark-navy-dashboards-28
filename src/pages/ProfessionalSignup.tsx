@@ -3,7 +3,7 @@ import React from "react";
 import { useLocation } from "react-router-dom";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { CPASignupForm } from "@/components/professionals/CPASignupForm";
-import { ProfessionalsProvider } from "@/context/ProfessionalsContext";
+import { ProfessionalsProvider } from "@/contexts/ProfessionalsContext";
 
 export default function ProfessionalSignup() {
   const location = useLocation();

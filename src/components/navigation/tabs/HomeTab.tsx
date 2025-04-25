@@ -1,8 +1,7 @@
 
 import React from "react";
 import { HomeIcon } from "lucide-react";
-import { NavItem, TabProps } from "@/types/navigation";
-import { tabBaseStyles } from "./TabStyles";
+import { NavItem } from "@/types/navigation";
 
 export const homeNavItems: NavItem[] = [
   { 
@@ -12,22 +11,10 @@ export const homeNavItems: NavItem[] = [
   }
 ];
 
-const HomeTab = ({ className }: TabProps) => {
+const HomeTab = () => {
   return (
-    <div className={`${tabBaseStyles.container} ${className}`}>
-      <h2 className={tabBaseStyles.title}>Home</h2>
-      <div className={tabBaseStyles.grid}>
-        {homeNavItems.map((item) => (
-          <a 
-            key={item.href} 
-            href={item.href}
-            className={tabBaseStyles.item}
-          >
-            {item.icon && <item.icon className={tabBaseStyles.icon} />}
-            <span>{item.title}</span>
-          </a>
-        ))}
-      </div>
+    <div className="home-tab">
+      {/* Additional home tab specific UI can be added here */}
     </div>
   );
 };

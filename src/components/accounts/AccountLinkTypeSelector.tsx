@@ -1,6 +1,7 @@
+
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useTheme } from "@/contexts/ThemeContext";
+import { useTheme } from "@/context/ThemeContext";
 
 interface AccountLinkTypeSelectorProps {
   onSelectPlaid: () => void;

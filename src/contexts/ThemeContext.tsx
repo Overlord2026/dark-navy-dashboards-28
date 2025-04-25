@@ -1,79 +1,74 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
 
-type Theme = "light" | "dark" | "system";
+import React, { createContext, useContext, useState, useEffect } from "react";
+import { ThemeProvider as NextThemesProvider } from "next-themes";
+import { useTheme as useNextTheme } from "next-themes";
+
+type Theme = "dark" | "light";
 
 interface ThemeContextType {
   theme: Theme;
   setTheme: (theme: Theme) => void;
 }
 
-const ThemeContext = createContext<ThemeContextType>({
-  theme: "system",
-  setTheme: () => {}
-});
+const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [theme, setTheme] = useState<Theme>("system");
+export function ThemeProvider({ children }: { children: React.ReactNode }) {
+  const [mounted, setMounted] = useState(false);
+  const [theme, setThemeState] = useState<Theme>(
+    () => (localStorage.getItem("theme") as Theme) || "dark"
+  );
 
+  // Set up next-themes provider
   useEffect(() => {
-    const storedTheme = localStorage.getItem('theme') as Theme;
-    if (storedTheme) {
-      setTheme(storedTheme);
-    } else {
-      // Set initial theme based on system preference
-      setTheme(getSystemTheme());
-    }
-
-    // Listen for system theme changes
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    const handleSystemThemeChange = (event: MediaQueryListEvent) => {
-      if (theme === 'system') {
-        setTheme(getSystemTheme());
-      }
-    };
-
-    mediaQuery.addEventListener('change', handleSystemThemeChange);
-
-    return () => {
-      mediaQuery.removeEventListener('change', handleSystemThemeChange);
-    };
+    setMounted(true);
   }, []);
 
+  // Set theme in localStorage and update DOM
   useEffect(() => {
-    localStorage.setItem('theme', theme);
-    applyTheme(theme);
+    localStorage.setItem("theme", theme);
+    
+    // Apply theme class to document
+    const root = document.documentElement;
+    
+    if (theme === "light") {
+      root.classList.add("light-theme");
+      root.classList.remove("dark-theme");
+      // Apply to body for full coverage
+      document.body.classList.add("light-theme");
+      document.body.classList.remove("dark-theme");
+      // Apply additional class for dialog backgrounds
+      document.body.classList.add("bg-[#F9F7E8]");
+      document.body.classList.remove("bg-[#12121C]");
+    } else {
+      root.classList.add("dark-theme");
+      root.classList.remove("light-theme");
+      // Apply to body for full coverage
+      document.body.classList.add("dark-theme");
+      document.body.classList.remove("light-theme");
+      // Apply additional class for dialog backgrounds
+      document.body.classList.add("bg-[#12121C]");
+      document.body.classList.remove("bg-[#F9F7E8]");
+    }
   }, [theme]);
 
-  const getSystemTheme = (): Theme => {
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-  };
-
-  const applyTheme = (theme: Theme) => {
-    if (theme === 'light') {
-      document.documentElement.classList.remove('dark');
-    } else if (theme === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      const systemTheme = getSystemTheme();
-      if (systemTheme === 'dark') {
-        document.documentElement.classList.add('dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-      }
-    }
+  // Custom setTheme function
+  const setTheme = (newTheme: Theme) => {
+    setThemeState(newTheme);
   };
 
   return (
-    <ThemeContext.Provider value={{ theme, setTheme }}>
-      {children}
-    </ThemeContext.Provider>
+    <NextThemesProvider defaultTheme={theme} attribute="class">
+      <ThemeContext.Provider value={{ theme, setTheme }}>
+        {children}
+      </ThemeContext.Provider>
+    </NextThemesProvider>
   );
-};
+}
 
-export const useTheme = (): ThemeContextType => {
+export function useTheme() {
   const context = useContext(ThemeContext);
-  if (!context) {
-    throw new Error('useTheme must be used within a ThemeProvider');
+  if (context === undefined) {
+    throw new Error("useTheme must be used within a ThemeProvider");
   }
   return context;
-};
+}

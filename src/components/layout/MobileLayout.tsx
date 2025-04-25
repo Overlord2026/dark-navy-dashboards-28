@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { 
@@ -14,8 +15,8 @@ import {
   ChevronRight,
   Plus
 } from "lucide-react";
-import { useTheme } from "@/contexts/ThemeContext";
-import { useUser } from "@/contexts/UserContext";
+import { useTheme } from "@/context/ThemeContext";
+import { useUser } from "@/context/UserContext";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 
@@ -37,6 +38,7 @@ export function MobileLayout({
   const { userProfile } = useUser();
   const isMobile = useIsMobile();
   
+  // If not on mobile, render the regular layout
   if (!isMobile) {
     return <>{children}</>;
   }
@@ -46,6 +48,7 @@ export function MobileLayout({
       (path !== "/" && location.pathname.startsWith(path));
   };
 
+  // Check if current route is a route that should activate the "More" tab
   const isMoreRoute = () => {
     const moreRoutes = ['/more', '/tax-planning', '/education', '/profile', '/advisor-profile', '/security-settings'];
     return moreRoutes.some(route => location.pathname.startsWith(route));
@@ -53,6 +56,7 @@ export function MobileLayout({
 
   return (
     <div className="flex flex-col h-screen bg-[#12121C] text-white overflow-hidden">
+      {/* Mobile Status Bar */}
       <div className="w-full flex justify-between items-center px-4 py-2 bg-[#0D0D15]">
         <div className="text-xl font-bold">5:49</div>
         <div className="flex items-center space-x-2">
@@ -69,6 +73,7 @@ export function MobileLayout({
         </div>
       </div>
       
+      {/* Page Header */}
       <header className="w-full flex justify-between items-center py-4 px-4 bg-[#12121C] border-b border-gray-800">
         <h1 className="text-2xl font-bold">{title}</h1>
         {showAddButton && (
@@ -83,10 +88,12 @@ export function MobileLayout({
         )}
       </header>
       
+      {/* Main Content Area */}
       <main className="flex-1 overflow-y-auto pb-20">
         {children}
       </main>
       
+      {/* Bottom Navigation Bar */}
       <nav className="fixed bottom-0 left-0 right-0 bg-[#0D0D15] border-t border-gray-800 py-2">
         <div className="flex justify-around items-center">
           <NavItem 

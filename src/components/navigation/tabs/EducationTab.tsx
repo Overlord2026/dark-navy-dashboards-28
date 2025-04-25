@@ -1,8 +1,7 @@
 
 import React from "react";
 import { GraduationCapIcon, BarChart3Icon, PieChart, ShieldIcon, BanknoteIcon, ArchiveIcon } from "lucide-react";
-import { NavItem, TabProps } from "@/types/navigation";
-import { tabBaseStyles } from "./TabStyles";
+import { NavItem } from "@/types/navigation";
 
 export const educationNavItems: NavItem[] = [
   { 
@@ -37,18 +36,18 @@ export const educationNavItems: NavItem[] = [
   }
 ];
 
-const EducationTab = ({ className }: TabProps) => {
+const EducationTab = () => {
   return (
-    <div className={`${tabBaseStyles.container} ${className}`}>
-      <h2 className={tabBaseStyles.title}>Education & Solutions</h2>
-      <div className={tabBaseStyles.grid}>
+    <div className="education-tab">
+      <h2 className="text-xl font-semibold mb-4">Education & Solutions</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {educationNavItems.map((item) => (
           <a 
             key={item.href} 
             href={item.href}
-            className={tabBaseStyles.item}
+            className="p-4 border rounded-lg hover:bg-muted/50 transition-colors flex items-center gap-3"
           >
-            {item.icon && <item.icon className={tabBaseStyles.icon} />}
+            {item.icon && <item.icon className="h-5 w-5 text-primary" />}
             <span>{item.title}</span>
           </a>
         ))}

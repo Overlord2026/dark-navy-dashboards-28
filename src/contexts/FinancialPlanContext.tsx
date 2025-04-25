@@ -1,30 +1,75 @@
-import React, { createContext, useContext, useState } from 'react';
+
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { FinancialPlan, FinancialGoal, FinancialAccount, Expense, FinancialPlansSummary } from "@/types/financial-plan";
+import { toast } from "sonner";
+import { useFinancialPlans as useFinancialPlansHook } from "@/hooks/useFinancialPlans";
 
 interface FinancialPlanContextType {
-  planDetails: any; // Replace 'any' with a more specific type
-  updatePlanDetails: (details: any) => void; // Replace 'any' with a more specific type
+  plans: FinancialPlan[];
+  activePlan: FinancialPlan | null;
+  summary: FinancialPlansSummary;
+  loading: boolean;
+  error: Error | null;
+  createPlan: (planData: Partial<FinancialPlan>) => Promise<FinancialPlan>;
+  updatePlan: (id: string, planData: Partial<FinancialPlan>) => Promise<FinancialPlan | null>;
+  deletePlan: (id: string) => Promise<boolean>;
+  saveDraft: (draftData: any) => Promise<FinancialPlan>;
+  setActivePlan: (id: string) => Promise<void>;
+  updateGoal: (planId: string, goal: FinancialGoal) => Promise<boolean>;
+  toggleFavorite: (id: string) => Promise<void>;
+  duplicatePlan: (id: string) => Promise<FinancialPlan | null>;
+  refreshPlans: () => Promise<void>;
 }
 
 const FinancialPlanContext = createContext<FinancialPlanContextType | undefined>(undefined);
 
-export function FinancialPlanProvider({ children }: { children: React.ReactNode }) {
-  const [planDetails, setPlanDetails] = useState({});
-
-  const updatePlanDetails = (details: any) => { // Replace 'any' with a more specific type
-    setPlanDetails(details);
-  };
+export const FinancialPlanProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  // Use the new hook which handles service interactions
+  const {
+    plans,
+    activePlan,
+    summary,
+    loading,
+    error,
+    createPlan,
+    updatePlan,
+    deletePlan,
+    saveDraft,
+    setActivePlan,
+    updateGoal,
+    toggleFavorite,
+    duplicatePlan,
+    refreshPlans
+  } = useFinancialPlansHook();
 
   return (
-    <FinancialPlanContext.Provider value={{ planDetails, updatePlanDetails }}>
+    <FinancialPlanContext.Provider
+      value={{
+        plans,
+        activePlan,
+        summary,
+        loading,
+        error,
+        createPlan,
+        updatePlan,
+        deletePlan,
+        saveDraft,
+        setActivePlan,
+        updateGoal,
+        toggleFavorite,
+        duplicatePlan,
+        refreshPlans
+      }}
+    >
       {children}
     </FinancialPlanContext.Provider>
   );
-}
+};
 
-export function useFinancialPlan() {
+export const useFinancialPlans = () => {
   const context = useContext(FinancialPlanContext);
   if (context === undefined) {
-    throw new Error('useFinancialPlan must be used within a FinancialPlanProvider');
+    throw new Error('useFinancialPlans must be used within a FinancialPlanProvider');
   }
   return context;
-}
+};

@@ -1,2 +1,2 @@
 
-export { useProfessionals, ProfessionalsProvider } from "@/contexts/ProfessionalsContext";
+export { useProfessionals, ProfessionalsProvider } from '@/contexts/ProfessionalsContext';

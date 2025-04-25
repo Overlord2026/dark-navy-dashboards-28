@@ -1,7 +1,7 @@
 
 import { RouterProvider } from "react-router-dom";
 import routes from "./routes";
-import { ThemeProvider } from "@/contexts/ThemeContext"; 
+import { ThemeProvider } from "@/contexts/ThemeContext";
 import { UserProvider } from "@/contexts/UserContext";
 import { NetWorthProvider } from "@/contexts/NetWorthContext";
 import { SubscriptionProvider } from "@/contexts/SubscriptionContext";
@@ -25,29 +25,31 @@ const queryClient = new QueryClient({
 
 function App() {
   return (
-    <AdminProvider>
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider>
-          <UserProvider>
-            <SubscriptionProvider>
-              <NetWorthProvider>
+    // Order contexts from most global to most specific
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider>
+        <AuthProvider>
+          <AdminProvider>
+            <UserProvider>
+              <SubscriptionProvider>
                 <DiagnosticsProvider>
-                  <AdvisorProvider>
-                    <AuthProvider>
+                  <NetWorthProvider>
+                    <AdvisorProvider>
                       <TooltipProvider>
                         <RouterProvider router={routes} />
                         <Toaster position="top-right" richColors closeButton />
                       </TooltipProvider>
-                    </AuthProvider>
-                  </AdvisorProvider>
+                    </AdvisorProvider>
+                  </NetWorthProvider>
                 </DiagnosticsProvider>
-              </NetWorthProvider>
-            </SubscriptionProvider>
-          </UserProvider>
-        </ThemeProvider>
-      </QueryClientProvider>
-    </AdminProvider>
+              </SubscriptionProvider>
+            </UserProvider>
+          </AdminProvider>
+        </AuthProvider>
+      </ThemeProvider>
+    </QueryClientProvider>
   );
 }
 
 export default App;
+

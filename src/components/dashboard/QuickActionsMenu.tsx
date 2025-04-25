@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import { QuickDiagnosticsButton } from "@/components/diagnostics/QuickDiagnosticsButton";
 import { DiagnosticsAccessButton } from "@/components/diagnostics/DiagnosticsAccessButton";
 import { toast } from "sonner";
-import { useUser } from "@/context/UserContext";
+import { useUser } from "@/contexts/UserContext";
 
 export const QuickActionsMenu = () => {
   const { userProfile } = useUser();

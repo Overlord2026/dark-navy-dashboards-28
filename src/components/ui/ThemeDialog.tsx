@@ -6,7 +6,7 @@ import {
   DialogTrigger 
 } from "@/components/ui/dialog";
 import { ThemeSwitcher } from "./ThemeSwitcher";
-import { useTheme } from "@/context/ThemeContext";
+import { useTheme } from "@/contexts/ThemeContext";
 
 export function ThemeDialog({ trigger, open, onOpenChange }: { 
   trigger?: React.ReactNode,

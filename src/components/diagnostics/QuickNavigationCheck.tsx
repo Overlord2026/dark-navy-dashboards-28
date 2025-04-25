@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Navigation } from "lucide-react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import NavigationDiagnosticModule from "./NavigationDiagnosticModule";
-import { useUser } from "@/context/UserContext";
+import { useUser } from "@/contexts/UserContext";
 
 interface QuickNavigationCheckProps {
   buttonText?: string;

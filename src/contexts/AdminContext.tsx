@@ -3,7 +3,7 @@ import React, { createContext, useContext, useState } from 'react';
 
 interface AdminContextType {
   isAdmin: boolean;
-  setIsAdmin: (isAdmin: boolean) => void;
+  setIsAdmin: (value: boolean) => void;
 }
 
 const AdminContext = createContext<AdminContextType | undefined>(undefined);
