@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Settings, ChevronRight, Gauge, BarChart } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useUser } from "@/contexts/UserContext";
+import { useUser } from "@/context/UserContext";
 
 export function AdminActions() {
   const { userProfile } = useUser();

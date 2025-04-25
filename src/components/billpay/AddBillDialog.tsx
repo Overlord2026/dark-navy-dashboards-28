@@ -1,11 +1,8 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { 
   Dialog, 
   DialogContent, 
@@ -24,17 +21,13 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
+import { Calendar } from "lucide-react";
+import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
-import { Bill, BILL_CATEGORIES, BillFrequency } from "@/types/bill";
+import { format } from "date-fns";
+import { cn } from "@/lib/utils";
+import { useToast } from "@/hooks/use-toast";
 
 const billFormSchema = z.object({
   name: z.string().min(2, {
@@ -49,10 +42,6 @@ const billFormSchema = z.object({
   category: z.string().min(1, {
     message: "Category is required.",
   }),
-  frequency: z.enum(['once', 'daily', 'weekly', 'monthly'], {
-    required_error: "Frequency is required.",
-  }),
-  accountNumber: z.string().optional(),
 });
 
 type BillFormValues = z.infer<typeof billFormSchema>;
@@ -61,42 +50,47 @@ const defaultValues: Partial<BillFormValues> = {
   name: "",
   amount: "",
   category: "Utilities",
-  frequency: "monthly",
 };
 
 interface AddBillDialogProps {
   isOpen: boolean;
   onClose: () => void;
-  onAddBill: (bill: Omit<Bill, 'id' | 'createdAt'>) => void;
+  onAddBill: (bill: any) => void;
 }
 
 export function AddBillDialog({ isOpen, onClose, onAddBill }: AddBillDialogProps) {
+  const { toast } = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
   const form = useForm<BillFormValues>({
     resolver: zodResolver(billFormSchema),
     defaultValues,
   });
 
   function onSubmit(data: BillFormValues) {
+    setIsSubmitting(true);
+    
+    // Convert amount string to number
     const newBill = {
+      id: Date.now(), // Simple ID generation
       name: data.name,
       amount: parseFloat(data.amount),
-      dueDate: data.dueDate.toISOString(),
-      category: data.category,
-      frequency: data.frequency,
-      accountNumber: data.accountNumber,
+      dueDate: format(data.dueDate, "yyyy-MM-dd"),
+      category: data.category
     };
     
-    onAddBill(newBill);
-    form.reset(defaultValues);
-    onClose();
+    // Simulate API delay
+    setTimeout(() => {
+      onAddBill(newBill);
+      setIsSubmitting(false);
+      form.reset(defaultValues);
+      toast({
+        title: "Bill created",
+        description: `${data.name} was added successfully.`,
+      });
+      onClose();
+    }, 600);
   }
-
-  const frequencies: { label: string; value: BillFrequency }[] = [
-    { label: "One-time", value: "once" },
-    { label: "Daily", value: "daily" },
-    { label: "Weekly", value: "weekly" },
-    { label: "Monthly", value: "monthly" },
-  ];
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
@@ -131,16 +125,7 @@ export function AddBillDialog({ isOpen, onClose, onAddBill }: AddBillDialogProps
                 <FormItem>
                   <FormLabel>Amount ($)</FormLabel>
                   <FormControl>
-                    <Input 
-                      placeholder="0.00" 
-                      {...field}
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        if (value === '' || /^\d*\.?\d*$/.test(value)) {
-                          field.onChange(value);
-                        }
-                      }}
-                    />
+                    <Input placeholder="0.00" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -168,12 +153,12 @@ export function AddBillDialog({ isOpen, onClose, onAddBill }: AddBillDialogProps
                           ) : (
                             <span>Pick a date</span>
                           )}
-                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                          <Calendar className="ml-auto h-4 w-4 opacity-50" />
                         </Button>
                       </FormControl>
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
+                      <CalendarComponent
                         mode="single"
                         selected={field.value}
                         onSelect={field.onChange}
@@ -181,7 +166,6 @@ export function AddBillDialog({ isOpen, onClose, onAddBill }: AddBillDialogProps
                           date < new Date(new Date().setHours(0, 0, 0, 0))
                         }
                         initialFocus
-                        className="pointer-events-auto"
                       />
                     </PopoverContent>
                   </Popover>
@@ -196,58 +180,18 @@ export function AddBillDialog({ isOpen, onClose, onAddBill }: AddBillDialogProps
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Category</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a category" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {BILL_CATEGORIES.map((category) => (
-                        <SelectItem key={category} value={category}>
-                          {category}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="frequency"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Repeat</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select frequency" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {frequencies.map((freq) => (
-                        <SelectItem key={freq.value} value={freq.value}>
-                          {freq.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="accountNumber"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Account Number (Optional)</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter account number" {...field} />
+                    <select
+                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                      {...field}
+                    >
+                      <option value="Utilities">Utilities</option>
+                      <option value="Housing">Housing</option>
+                      <option value="Entertainment">Entertainment</option>
+                      <option value="Insurance">Insurance</option>
+                      <option value="Transportation">Transportation</option>
+                      <option value="Other">Other</option>
+                    </select>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -258,7 +202,9 @@ export function AddBillDialog({ isOpen, onClose, onAddBill }: AddBillDialogProps
               <DialogClose asChild>
                 <Button variant="outline" type="button">Cancel</Button>
               </DialogClose>
-              <Button type="submit">Add Bill</Button>
+              <Button type="submit" disabled={isSubmitting}>
+                {isSubmitting ? "Saving..." : "Add Bill"}
+              </Button>
             </DialogFooter>
           </form>
         </Form>

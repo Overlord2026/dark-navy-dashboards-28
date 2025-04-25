@@ -11,9 +11,8 @@ import { BillPayButtonDiagnostics } from "@/components/billpay/BillPayButtonDiag
 import { AddBillDialog } from "@/components/billpay/AddBillDialog";
 import { PayBillDialog } from "@/components/billpay/PayBillDialog";
 import { PaymentMethodsDialog, PaymentMethod, DEFAULT_PAYMENT_METHODS } from "@/components/billpay/PaymentMethodsDialog";
-import { Bill as TypedBill, BillFrequency } from "@/types/bill";
-import { useBills } from "@/hooks/useBills";
 
+// Define types
 export interface Bill {
   id: number;
   name: string;
@@ -33,8 +32,6 @@ export interface FrequentBill {
 
 const BillPay = () => {
   const { toast } = useToast();
-  const { bills: typedBills, addBill: addTypedBill } = useBills();
-  
   const [upcomingBills, setUpcomingBills] = useState<Bill[]>(() => {
     const saved = localStorage.getItem('upcoming-bills');
     return saved ? JSON.parse(saved) : [];
@@ -50,12 +47,14 @@ const BillPay = () => {
   const [showDiagnosticsDialog, setShowDiagnosticsDialog] = useState(false);
   const [diagnosticButtonName, setDiagnosticButtonName] = useState<string | undefined>(undefined);
   
+  // Dialogs state
   const [showAddBillDialog, setShowAddBillDialog] = useState(false);
   const [showPayBillDialog, setShowPayBillDialog] = useState(false);
   const [showPaymentMethodsDialog, setShowPaymentMethodsDialog] = useState(false);
   const [billToPay, setBillToPay] = useState<Bill | null>(null);
   const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>(DEFAULT_PAYMENT_METHODS);
 
+  // Persist data changes
   useEffect(() => {
     localStorage.setItem('upcoming-bills', JSON.stringify(upcomingBills));
   }, [upcomingBills]);
@@ -88,23 +87,11 @@ const BillPay = () => {
     setShowPaymentMethodsDialog(true);
   };
 
-  const handleAddBill = (newBillData: Omit<TypedBill, "id" | "createdAt">) => {
-    addTypedBill(newBillData);
-    
-    const isRecurring = newBillData.frequency !== 'once';
-    const newBill: Bill = {
-      id: Date.now(),
-      name: newBillData.name,
-      amount: newBillData.amount,
-      dueDate: newBillData.dueDate,
-      category: newBillData.category,
-      accountNumber: newBillData.accountNumber,
-      isRecurring
-    };
-    
+  const handleAddBill = (newBill: Bill) => {
     setUpcomingBills(prev => [...prev, newBill]);
     
-    if (isRecurring) {
+    // If it's a recurring bill, add to frequent bills
+    if (newBill.isRecurring) {
       const frequentBill: FrequentBill = {
         id: newBill.id,
         name: newBill.name,
@@ -160,7 +147,9 @@ const BillPay = () => {
           text="Manage and schedule all your bill payments from one centralized location."
         />
         
+        {/* Action Buttons */}
         <div className="flex flex-wrap gap-4 mt-2">
+          {/* Create New Bill Button */}
           <div className="relative group">
             <Button 
               variant="default" 
@@ -181,6 +170,7 @@ const BillPay = () => {
             </Button>
           </div>
           
+          {/* View All Bills Button */}
           <div className="relative group">
             <Button 
               variant="outline" 
@@ -201,6 +191,7 @@ const BillPay = () => {
             </Button>
           </div>
           
+          {/* Manage Payment Methods Button */}
           <div className="relative group">
             <Button 
               variant="outline" 
@@ -221,6 +212,7 @@ const BillPay = () => {
             </Button>
           </div>
 
+          {/* Advanced Bill Paying Providers Button */}
           <div className="relative group">
             <Button 
               variant="outline" 
@@ -242,7 +234,9 @@ const BillPay = () => {
           </div>
         </div>
         
+        {/* Main Content Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
+          {/* Upcoming Bills Card */}
           <Card className="lg:col-span-2">
             <CardHeader className="flex flex-row items-center justify-between">
               <div>
@@ -328,6 +322,7 @@ const BillPay = () => {
             </CardFooter>
           </Card>
 
+          {/* Quick Pay Card */}
           <Card>
             <CardHeader>
               <CardTitle className="text-xl flex items-center gap-2">
@@ -377,6 +372,7 @@ const BillPay = () => {
           </Card>
         </div>
 
+        {/* Dialogs */}
         <AddBillDialog 
           isOpen={showAddBillDialog} 
           onClose={() => setShowAddBillDialog(false)} 
@@ -393,8 +389,8 @@ const BillPay = () => {
         />
 
         <PaymentMethodsDialog
-          open={showPaymentMethodsDialog}
-          onOpenChange={setShowPaymentMethodsDialog}
+          isOpen={showPaymentMethodsDialog}
+          onClose={() => setShowPaymentMethodsDialog(false)}
           paymentMethods={paymentMethods}
           onAddPaymentMethod={handleAddPaymentMethod}
           onSetDefault={handleSetDefault}

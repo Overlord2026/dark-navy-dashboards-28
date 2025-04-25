@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { getNavigationDiagnosticsSummary } from "@/services/diagnostics/navigationDiagnostics";
 import { toast } from "sonner";
-import { useUser } from "@/contexts/UserContext";
+import { useUser } from "@/context/UserContext";
 import { useNavigate } from "react-router-dom";
 import { DiagnosticsSummaryCards } from "./navigation/DiagnosticsSummaryCards";
 import { NavigationRouteTabs } from "./navigation/NavigationRouteTabs";

@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Form } from "@/components/ui/form";
-import { useUser } from "@/contexts/UserContext"; // Update import path
+import { useUser } from "@/context/UserContext";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { ProfileFormHeader } from "./ProfileFormHeader";

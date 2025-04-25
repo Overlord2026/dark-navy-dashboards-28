@@ -12,7 +12,7 @@ import { TrustsForm } from "@/components/profile/TrustsForm";
 import { SecurityForm } from "@/components/profile/SecurityForm";
 import { DialogTitle } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { useUser } from "@/contexts/UserContext";
+import { useUser } from "@/context/UserContext";
 
 interface ProfileFormSheetProps {
   isOpen: boolean;

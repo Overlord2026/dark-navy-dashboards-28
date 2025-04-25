@@ -1,7 +1,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-export interface UserProfile {
+interface UserProfile {
   id: string;
   name?: string;
   displayName?: string;
@@ -20,7 +20,7 @@ export interface UserProfile {
   permissions?: string[];
 }
 
-export interface UserContextType {
+interface UserContextType {
   userProfile: UserProfile | null;
   isAuthenticated: boolean;
   isLoading: boolean;
@@ -35,11 +35,15 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  // Simulate loading user data from storage or an API
   useEffect(() => {
+    // In a real app, this would fetch the user profile from an API
     const loadUser = async () => {
       try {
+        // Simulate API delay
         await new Promise(resolve => setTimeout(resolve, 500));
         
+        // For demo purposes, create a mock admin user
         const mockUser: UserProfile = {
           id: 'user-123',
           name: 'Admin User',
@@ -68,8 +72,10 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
       setIsLoading(true);
+      // In a real app, this would make an API call to authenticate
       await new Promise(resolve => setTimeout(resolve, 1000));
       
+      // For demo purposes, accept any credentials and create a mock user
       const mockUser: UserProfile = {
         id: 'user-123',
         name: 'Demo User',
@@ -94,6 +100,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const logout = () => {
+    // In a real app, this would clear tokens, etc.
     setUserProfile(null);
   };
 

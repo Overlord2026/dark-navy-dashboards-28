@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Activity } from "lucide-react";
-import { useUser } from "@/contexts/UserContext";
+import { useUser } from "@/context/UserContext";
 import { QuickDiagnosticsDialog } from "./QuickDiagnosticsDialog";
 import { toast } from "sonner";
 import { auditLog } from "@/services/auditLog/auditLogService";
@@ -58,4 +58,4 @@ export const QuickDiagnosticsButton = () => {
       />
     </>
   );
-}
+};

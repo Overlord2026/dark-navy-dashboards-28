@@ -24,3 +24,4 @@ jobs:
         
     - name: Run TypeScript checks
       run: npx tsc --noEmit
+
