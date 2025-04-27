@@ -9,7 +9,7 @@ interface DashboardHeaderProps {
   title?: string;
 }
 
-export function DashboardHeader({ title = "Dashboard" }: DashboardHeaderProps) {
+export function DashboardHeader({ title }: DashboardHeaderProps) {
   const handleOpenForm = (formId: string) => {
     console.log(`Form ${formId} would open here if implemented`);
   };
@@ -37,6 +37,11 @@ export function DashboardHeader({ title = "Dashboard" }: DashboardHeaderProps) {
             </Tooltip>
           </TooltipProvider>
         </div>
+        {title && (
+          <div className="absolute left-1/2 transform -translate-x-1/2">
+            <h1 className="text-xl font-semibold">{title}</h1>
+          </div>
+        )}
         <div className="absolute right-6">
           <UserProfileDropdown onOpenForm={handleOpenForm} />
         </div>
