@@ -76,13 +76,13 @@ export function DashboardSidebar() {
       {/* User Profile Section at the top */}
       <UserProfileSection showLogo={true} />
 
-      <nav className="flex-1 overflow-y-auto p-2">
+      <nav className="flex-1 overflow-y-auto p-3">
         <Link
           to="/profile"
-          className="flex items-center gap-2 mb-3 p-2 rounded-md hover:bg-muted bg-primary/10 text-primary"
+          className="flex items-center gap-2 mb-4 p-2.5 rounded-md hover:bg-muted bg-amber-100/50 text-amber-900 font-medium shadow-sm border border-amber-200/50 mt-2"
         >
           <User className="h-4 w-4" />
-          <span className="text-sm font-medium">Investor Profile</span>
+          <span className="text-sm">Investor Profile</span>
         </Link>
 
         {navigationGroups.map((group) => (

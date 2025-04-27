@@ -82,10 +82,10 @@ export const UserProfileSection = ({
   };
 
   return (
-    <div className={`px-0 ${isLightTheme ? 'border-[#DCD8C0]' : 'border-white/10'}`}>
+    <div className={`px-0 mt-6 ${isLightTheme ? 'border-[#DCD8C0]' : 'border-white/10'}`}>
       {/* Optional logo above the user profile dropdown */}
       {showLogo && (
-        <div className="mb-2 flex justify-center">
+        <div className="mb-4 flex justify-center">
           <img 
             src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" 
             alt="Boutique Family Office Logo" 
@@ -96,7 +96,7 @@ export const UserProfileSection = ({
       
       <DropdownMenu open={isDropdownOpen} onOpenChange={handleOpenChange}>
         <DropdownMenuTrigger 
-          className={`flex items-center justify-between w-full mx-0 py-2 px-4 rounded-none transition-colors cursor-pointer border-y ${
+          className={`flex items-center justify-between w-full mx-0 py-3 px-4 rounded-none transition-colors cursor-pointer border-y ${
             isLightTheme 
               ? 'hover:bg-[#E9E7D8] text-[#222222] border-gray-400 shadow-sm' 
               : 'hover:bg-white/5 text-white border-gray-600/50 shadow-sm'
