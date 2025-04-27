@@ -1,3 +1,4 @@
+
 import { createBrowserRouter } from "react-router-dom";
 import Dashboard from "@/pages/Dashboard";
 import Settings from "@/pages/Settings";
@@ -36,6 +37,13 @@ import SocialSecurity from "@/pages/SocialSecurity";
 import ProfessionalSignup from "@/pages/ProfessionalSignup";
 import Integration from "@/pages/Integration";
 import Sharing from "@/pages/Sharing";
+
+// Create placeholder pages for the education sub-routes
+import Courses from "@/pages/education/Courses";
+import GuidesWhitepapers from "@/pages/education/GuidesWhitepapers";
+import Books from "@/pages/education/Books";
+import PlanningExamples from "@/pages/education/PlanningExamples";
+import Presentations from "@/pages/education/Presentations";
 
 const routes = createBrowserRouter([
   {
@@ -129,6 +137,27 @@ const routes = createBrowserRouter([
   {
     path: "/education",
     element: <Education />,
+  },
+  // Add routes for education sub-items
+  {
+    path: "/courses",
+    element: <Courses />,
+  },
+  {
+    path: "/guides",
+    element: <GuidesWhitepapers />,
+  },
+  {
+    path: "/books",
+    element: <Books />,
+  },
+  {
+    path: "/examples",
+    element: <PlanningExamples />,
+  },
+  {
+    path: "/presentations",
+    element: <Presentations />,
   },
   {
     path: "/education/tax-planning",
