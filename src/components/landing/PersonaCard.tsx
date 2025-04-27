@@ -11,10 +11,10 @@ export default function PersonaCard({ title, subtitle, onClick }: Props) {
   return (
     <div 
       onClick={onClick}
-      className="cursor-pointer p-8 rounded-lg border border-gray-700 bg-card hover:border-primary/50 transition-all hover:shadow-xl"
+      className="cursor-pointer bg-gray-800 hover:bg-gray-700 transition rounded-lg p-6 flex flex-col justify-between"
     >
-      <h3 className="text-xl font-bold text-foreground">{title}</h3>
-      <p className="mt-2 text-muted-foreground">{subtitle}</p>
+      <h2 className="text-2xl font-semibold text-white">{title}</h2>
+      <p className="mt-2 text-gray-400">{subtitle}</p>
     </div>
   );
 }
