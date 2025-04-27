@@ -11,6 +11,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { GoalInsightsPanel } from "@/components/insights/GoalInsightsPanel";
 
 export interface Goal {
   id: string;
@@ -243,7 +244,6 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
     "Wedding"
   ];
 
-  // Separate retirement goals from other goals
   const retirementGoals = localGoals.filter(goal => 
     goal.targetRetirementAge !== undefined || 
     goal.type === "Retirement" || 
@@ -432,7 +432,7 @@ function GoalCard({ goal, isExpanded, onToggle, onClick, isNew = false }: {
       </div>
       
       {isExpanded && (
-        <div className="mt-4 space-y-2 pt-2 border-t border-blue-900/50">
+        <div className="mt-4 space-y-4 pt-2 border-t border-blue-900/50">
           {(goal.type === "Asset Purchase" || goal.type === "Home Purchase" || goal.type === "Vehicle") && (
             <>
               {goal.purchasePrice !== undefined && (
@@ -622,6 +622,14 @@ function GoalCard({ goal, isExpanded, onToggle, onClick, isNew = false }: {
               </span>
             </div>
           )}
+          
+          <div className="mt-6">
+            <GoalInsightsPanel 
+              goalId={goal.id} 
+              goalTitle={goalTitle} 
+              goalData={goal}
+            />
+          </div>
         </div>
       )}
     </Card>
