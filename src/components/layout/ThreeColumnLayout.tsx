@@ -37,19 +37,23 @@ export function ThreeColumnLayout({
 
   return (
     <div className="flex h-screen bg-background antialiased">
-      {/* Mobile Sidebar */}
-      <MobileDashboardSidebar 
-        mainNavigationItems={mainNavigationItems}
-        sidebarNavigationItems={sidebarNavigationItems}
-      />
-
-      {/* Left Sidebar */}
-      {!hideLeftSidebar && (
-        <DashboardSidebar 
+      {/* Mobile Sidebar - only shown on small screens */}
+      <div className="md:hidden">
+        <MobileDashboardSidebar 
           mainNavigationItems={mainNavigationItems}
           sidebarNavigationItems={sidebarNavigationItems}
-          activeMainItem={activeMainItem}
         />
+      </div>
+
+      {/* Desktop Sidebar - always expanded */}
+      {!hideLeftSidebar && (
+        <div className="hidden md:block">
+          <DashboardSidebar 
+            mainNavigationItems={mainNavigationItems}
+            sidebarNavigationItems={sidebarNavigationItems}
+            activeMainItem={activeMainItem}
+          />
+        </div>
       )}
 
       {/* Main Content */}
