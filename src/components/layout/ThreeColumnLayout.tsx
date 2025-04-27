@@ -1,3 +1,4 @@
+
 import React from "react";
 import { LayoutDashboard, CreditCard, FileLineChart, Brain, Settings, User, Share2 } from "lucide-react";
 import { MainNavItem, SidebarNavItem } from "@/types";
@@ -12,6 +13,7 @@ interface ThreeColumnLayoutProps {
   activeMainItem?: string;
   hideLeftSidebar?: boolean;
   hideRightSidebar?: boolean;
+  title?: string;
 }
 
 export function ThreeColumnLayout({ 
@@ -19,6 +21,7 @@ export function ThreeColumnLayout({
   activeMainItem = "dashboard",
   hideLeftSidebar = false,
   hideRightSidebar = true,
+  title
 }: ThreeColumnLayoutProps) {
   const mainNavigationItems: MainNavItem[] = [
     { name: "Dashboard", href: "/", icon: LayoutDashboard, id: "dashboard" },
@@ -61,8 +64,8 @@ export function ThreeColumnLayout({
             <div className="flex justify-center items-center h-full">
               <img 
                 src="/lovable-uploads/b14f5b06-cfde-4097-8454-4b672d706cba.png"
-                alt="Boutique Family Office" 
-                className="h-20 w-auto invert"
+                alt="Boutique Family Office"
+                className="h-20 w-auto text-white [&>path]:fill-white"
               />
             </div>
             {/* Connected badge absolute positioned */}
