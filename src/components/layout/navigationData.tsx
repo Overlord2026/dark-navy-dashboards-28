@@ -1,4 +1,3 @@
-
 import React from "react";
 import {
   HomeIcon,
@@ -89,6 +88,7 @@ export const navigationCategories: NavCategory[] = [
   {
     id: "collaboration",
     label: "Collaboration & Sharing",
+    defaultExpanded: true,
     items: [
       { id: "professionals", label: "Professional Access", icon: Users2Icon, href: "/professionals" },
       { id: "sharing", label: "Family Member Access", icon: ShareIcon, href: "/sharing" },

@@ -1,8 +1,9 @@
 
 import React from "react";
 import { UserProfileDropdown } from "@/components/profile/UserProfileDropdown";
-import { Network } from "lucide-react";
+import { Network, Info } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Link } from "react-router-dom";
 
 interface DashboardHeaderProps {
   title?: string;
@@ -25,10 +26,10 @@ export function DashboardHeader({ title = "Dashboard" }: DashboardHeaderProps) {
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <div className="flex items-center rounded-md bg-primary/10 px-2 py-1.5 text-primary">
+                <Link to="/integration" className="flex items-center rounded-md bg-primary/10 px-2 py-1.5 text-primary">
                   <Network className="h-4 w-4 mr-1.5" />
                   <span className="text-xs font-medium">Connected</span>
-                </div>
+                </Link>
               </TooltipTrigger>
               <TooltipContent>
                 <p>Part of Family Office Architecture</p>

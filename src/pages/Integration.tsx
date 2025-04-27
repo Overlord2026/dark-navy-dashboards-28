@@ -4,11 +4,47 @@ import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Link } from "react-router-dom";
-import { Share2, FileCode, GitBranch, Plug, Network, Settings } from "lucide-react";
+import { Share2, FileCode, GitBranch, Plug, Network, Settings, Plus, ExternalLink } from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
 
 export default function Integration() {
   const [activeTab, setActiveTab] = useState("projects");
+  const { toast } = useToast();
+  
+  const handleAddProject = () => {
+    toast({
+      title: "Add Project",
+      description: "Project connection dialog would open here. Supabase integration needed.",
+    });
+  };
+
+  const handleManageProject = () => {
+    toast({
+      title: "Manage Project",
+      description: "Project management options would appear here. Supabase integration needed.",
+    });
+  };
+
+  const handleConfigureApi = () => {
+    toast({
+      title: "Configure APIs",
+      description: "API configuration options would appear here. Supabase integration needed.",
+    });
+  };
+
+  const handlePlanArchitecture = () => {
+    toast({
+      title: "Architecture Planning",
+      description: "Planning tools would open here. Supabase integration needed.",
+    });
+  };
+
+  const handlePluginAction = (pluginName: string) => {
+    toast({
+      title: `${pluginName} Selected`,
+      description: `${pluginName} configuration would open here. Supabase integration needed.`,
+    });
+  };
   
   return (
     <ThreeColumnLayout title="Project Integration" activeMainItem="integration">
@@ -63,7 +99,7 @@ export default function Integration() {
                     </div>
                   </div>
                   <div className="flex justify-end mt-4">
-                    <Button variant="outline" size="sm">Manage</Button>
+                    <Button variant="outline" size="sm" onClick={handleManageProject}>Manage</Button>
                   </div>
                 </CardContent>
               </Card>
@@ -71,9 +107,9 @@ export default function Integration() {
               {/* Add project card */}
               <Card className="border-dashed bg-muted/50">
                 <CardContent className="flex flex-col items-center justify-center h-[200px]">
-                  <Share2 className="h-8 w-8 mb-4 text-muted-foreground" />
+                  <Plus className="h-8 w-8 mb-4 text-muted-foreground" />
                   <p className="text-muted-foreground mb-4">Connect another project</p>
-                  <Button>Add Project</Button>
+                  <Button onClick={handleAddProject}>Add Project</Button>
                 </CardContent>
               </Card>
             </div>
@@ -94,7 +130,7 @@ export default function Integration() {
                   <p className="text-muted-foreground max-w-md">
                     Define how all your projects connect together as part of the broader Family Office Vision.
                   </p>
-                  <Button className="mt-4">Start Planning</Button>
+                  <Button className="mt-4" onClick={handlePlanArchitecture}>Start Planning</Button>
                 </div>
               </CardContent>
             </Card>
@@ -115,7 +151,7 @@ export default function Integration() {
                   <p className="text-muted-foreground max-w-md">
                     Set up secure API connections between projects and external systems.
                   </p>
-                  <Button className="mt-4">Configure APIs</Button>
+                  <Button className="mt-4" onClick={handleConfigureApi}>Configure APIs</Button>
                 </div>
               </CardContent>
             </Card>
@@ -132,19 +168,19 @@ export default function Integration() {
               <CardContent>
                 <div className="flex flex-col items-center justify-center py-8 text-center space-y-4">
                   <div className="grid grid-cols-2 gap-4 w-full max-w-md">
-                    <Button variant="outline" className="h-24 flex flex-col">
+                    <Button variant="outline" className="h-24 flex flex-col" onClick={() => handlePluginAction("Data Sync")}>
                       <span className="text-lg mb-2">Data Sync</span>
                       <span className="text-xs text-muted-foreground">Cross-project data synchronization</span>
                     </Button>
-                    <Button variant="outline" className="h-24 flex flex-col">
+                    <Button variant="outline" className="h-24 flex flex-col" onClick={() => handlePluginAction("Auth Bridge")}>
                       <span className="text-lg mb-2">Auth Bridge</span>
                       <span className="text-xs text-muted-foreground">Unified authentication</span>
                     </Button>
-                    <Button variant="outline" className="h-24 flex flex-col">
+                    <Button variant="outline" className="h-24 flex flex-col" onClick={() => handlePluginAction("File Bridge")}>
                       <span className="text-lg mb-2">File Bridge</span>
                       <span className="text-xs text-muted-foreground">Document sharing</span>
                     </Button>
-                    <Button variant="outline" className="h-24 flex flex-col">
+                    <Button variant="outline" className="h-24 flex flex-col" onClick={() => handlePluginAction("Plugin Directory")}>
                       <span className="text-lg mb-2">More...</span>
                       <span className="text-xs text-muted-foreground">Browse plugin directory</span>
                     </Button>
