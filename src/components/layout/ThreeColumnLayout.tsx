@@ -1,9 +1,12 @@
+
 import React from "react";
 import { LayoutDashboard, CreditCard, FileLineChart, Brain, Settings, User, Share2 } from "lucide-react";
 import { MainNavItem, SidebarNavItem } from "@/types";
 import { DashboardSidebar } from "@/components/layout/DashboardSidebar";
-import { DashboardHeader } from "@/components/layout/DashboardHeader";
 import { MobileDashboardSidebar } from "@/components/layout/MobileDashboardSidebar";
+import { Network } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Link } from "react-router-dom";
 
 interface ThreeColumnLayoutProps {
   children: React.ReactNode;
@@ -16,7 +19,6 @@ interface ThreeColumnLayoutProps {
 
 export function ThreeColumnLayout({ 
   children, 
-  title = "Dashboard",
   activeMainItem = "dashboard",
   hideLeftSidebar = false,
   hideRightSidebar = true,
@@ -37,7 +39,7 @@ export function ThreeColumnLayout({
 
   return (
     <div className="flex h-screen bg-background antialiased">
-      {/* Mobile Sidebar - only shown on small screens */}
+      {/* Mobile Sidebar */}
       <div className="md:hidden">
         <MobileDashboardSidebar 
           mainNavigationItems={mainNavigationItems}
@@ -45,7 +47,7 @@ export function ThreeColumnLayout({
         />
       </div>
 
-      {/* Desktop Sidebar - always expanded */}
+      {/* Desktop Sidebar */}
       {!hideLeftSidebar && (
         <div className="hidden md:block">
           <DashboardSidebar 
@@ -58,7 +60,36 @@ export function ThreeColumnLayout({
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-h-screen">
-        <DashboardHeader title={title || undefined} />
+        {/* Header */}
+        <header className="h-24 border-b border-border bg-card fixed top-0 left-0 right-0 z-50">
+          <div className="relative h-full">
+            {/* Centered logo */}
+            <div className="flex justify-center items-center h-full">
+              <img 
+                src="/lovable-uploads/7917640e-0a5d-4111-8e2e-d3faf741374b.png" 
+                alt="Boutique Family Office" 
+                className="h-20 w-auto"
+              />
+            </div>
+            {/* Connected badge absolute positioned */}
+            <div className="absolute top-1/2 -translate-y-1/2 right-6">
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Link to="/integration" className="flex items-center rounded-md bg-primary/10 px-2 py-1.5 text-primary">
+                      <Network className="h-4 w-4 mr-1.5" />
+                      <span className="text-xs font-medium">Connected</span>
+                    </Link>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Part of Family Office Architecture</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
+          </div>
+        </header>
+
         <main className="flex-1 overflow-x-hidden overflow-y-auto pt-24">
           {children}
         </main>
@@ -67,9 +98,10 @@ export function ThreeColumnLayout({
       {/* Right Sidebar */}
       {!hideRightSidebar && (
         <aside className="hidden md:block w-80 border-l border-border py-4 px-3 flex-shrink-0">
-          {/* Add right sidebar content here */}
+          {/* Right sidebar content */}
         </aside>
       )}
     </div>
   );
 }
+
