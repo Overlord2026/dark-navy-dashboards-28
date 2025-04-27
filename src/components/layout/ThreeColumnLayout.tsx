@@ -61,8 +61,8 @@ export function ThreeColumnLayout({
       <div className="flex-1 flex flex-col min-h-screen">
         {/* Header */}
         {!hideHeader && (
-          <header className="h-20 fixed top-0 left-0 right-0 z-50 bg-[#1B1B32]">
-            <div className="flex justify-center items-center h-full">
+          <header className="h-16 fixed top-0 left-0 right-0 z-50 bg-[#1B1B32]">
+            <div className="flex items-center justify-center h-full">
               <img 
                 src="/lovable-uploads/b14f5b06-cfde-4097-8454-4b672d706cba.png"
                 alt="Boutique Family Office"
@@ -72,7 +72,7 @@ export function ThreeColumnLayout({
           </header>
         )}
 
-        <main className={`flex-1 overflow-x-hidden overflow-y-auto ${!hideHeader ? 'pt-20' : ''}`}>
+        <main className={`flex-1 overflow-x-hidden overflow-y-auto ${!hideHeader ? 'pt-16' : ''}`}>
           {children}
         </main>
       </div>
