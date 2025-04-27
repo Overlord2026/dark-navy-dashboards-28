@@ -11,18 +11,20 @@ interface DashboardHeaderProps {
 
 export function DashboardHeader({ title }: DashboardHeaderProps) {
   return (
-    <header className="h-24 border-b border-border bg-white fixed top-0 left-0 right-0 z-50">
+    <header className="h-24 border-b border-border bg-gradient-to-b from-gray-50 to-white fixed top-0 left-0 right-0 z-50">
       <div className="flex items-center h-full px-6 max-w-screen-2xl mx-auto">
         {/* Left section with 1/3 width */}
         <div className="flex-1"></div>
 
         {/* Center section with logo */}
         <div className="flex-1 flex justify-center items-center">
-          <img 
-            src="/lovable-uploads/7917640e-0a5d-4111-8e2e-d3faf741374b.png" 
-            alt="Boutique Family Office" 
-            className="h-20 w-auto"
-          />
+          <div className="bg-gradient-to-b from-amber-50 to-white p-2 rounded-b-lg border-t-0 border border-amber-100">
+            <img 
+              src="/lovable-uploads/7917640e-0a5d-4111-8e2e-d3faf741374b.png" 
+              alt="Boutique Family Office" 
+              className="h-16 w-auto"
+            />
+          </div>
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>

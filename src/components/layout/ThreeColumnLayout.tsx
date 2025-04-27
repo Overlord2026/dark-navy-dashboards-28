@@ -61,7 +61,7 @@ export function ThreeColumnLayout({
           <DashboardHeader title={title} />
         )}
 
-        <main className={`flex-1 overflow-x-hidden overflow-y-auto ${!hideHeader ? 'pt-32' : ''}`}>
+        <main className={`flex-1 overflow-x-hidden overflow-y-auto ${!hideHeader ? 'pt-28' : ''}`}>
           {children}
         </main>
       </div>
