@@ -40,7 +40,6 @@ export function DashboardHeader({ title }: DashboardHeaderProps) {
 
         {/* Right section with profile dropdown */}
         <div className="flex-1 flex items-center justify-end">
-          {title && <h1 className="text-xl font-semibold mr-4">{title}</h1>}
           <UserProfileDropdown onOpenForm={(id) => console.log(`Form ${id} would open here if implemented`)} />
         </div>
       </div>
