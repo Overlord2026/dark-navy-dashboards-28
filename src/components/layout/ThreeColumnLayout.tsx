@@ -1,4 +1,3 @@
-
 import React from "react";
 import { LayoutDashboard, CreditCard, FileLineChart, Brain, Settings, User, Share2 } from "lucide-react";
 import { MainNavItem, SidebarNavItem } from "@/types";
@@ -56,14 +55,14 @@ export function ThreeColumnLayout({
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-h-screen">
         {/* Header */}
-        <header className="h-24 border-b border-border bg-card fixed top-0 left-0 right-0 z-50">
+        <header className="h-24 border-b border-border bg-[#1B1B32] fixed top-0 left-0 right-0 z-50">
           <div className="relative h-full">
             {/* Centered logo */}
             <div className="flex justify-center items-center h-full">
               <img 
-                src="/lovable-uploads/7917640e-0a5d-4111-8e2e-d3faf741374b.png" 
+                src="/lovable-uploads/b14f5b06-cfde-4097-8454-4b672d706cba.png"
                 alt="Boutique Family Office" 
-                className="h-20 w-auto"
+                className="h-20 w-auto invert"
               />
             </div>
             {/* Connected badge absolute positioned */}
