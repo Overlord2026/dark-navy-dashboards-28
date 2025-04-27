@@ -20,7 +20,7 @@ export function DashboardSidebar({
   const location = useLocation();
   
   return (
-    <aside className={`w-64 border-r h-full flex-shrink-0 ${isLightTheme ? 'border-[#DCD8C0]' : 'border-border'}`}>
+    <aside className="hidden md:flex w-64 border-r h-full flex-shrink-0 border-border">
       <div className="h-full flex flex-col">
         <div className="p-4">
           <Link to="/" className="flex items-center">

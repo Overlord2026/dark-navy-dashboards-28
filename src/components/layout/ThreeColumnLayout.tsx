@@ -13,8 +13,6 @@ interface ThreeColumnLayoutProps {
   hideLeftSidebar?: boolean;
   hideRightSidebar?: boolean;
   secondaryMenuItems?: any[];
-  // Add this prop to fix the issue, but as optional so it doesn't break existing code
-  activeSecondaryItem?: string;
 }
 
 export function ThreeColumnLayout({ 
@@ -23,8 +21,7 @@ export function ThreeColumnLayout({
   activeMainItem = "dashboard",
   hideLeftSidebar = false,
   hideRightSidebar = true,
-  secondaryMenuItems = [],
-  activeSecondaryItem = ""
+  secondaryMenuItems = []
 }: ThreeColumnLayoutProps) {
   const mainNavigationItems: MainNavItem[] = [
     { name: "Dashboard", href: "/", icon: LayoutDashboard, id: "dashboard" },
@@ -46,14 +43,12 @@ export function ThreeColumnLayout({
         sidebarNavigationItems={sidebarNavigationItems}
       />
 
-      {/* Left Sidebar */}
+      {/* Left Sidebar - Always visible on desktop, hidden on mobile */}
       {!hideLeftSidebar && (
         <DashboardSidebar 
           mainNavigationItems={mainNavigationItems}
           sidebarNavigationItems={sidebarNavigationItems}
           activeMainItem={activeMainItem}
-          // Also pass down the activeSecondaryItem
-          activeSecondaryItem={activeSecondaryItem}
         />
       )}
 
@@ -65,7 +60,7 @@ export function ThreeColumnLayout({
 
       {/* Right Sidebar (Optional) */}
       {!hideRightSidebar && (
-        <aside className="w-80 border-l border-border py-4 px-3 flex-shrink-0">
+        <aside className="hidden md:block w-80 border-l border-border py-4 px-3 flex-shrink-0">
           {/* Add right sidebar content here */}
         </aside>
       )}
