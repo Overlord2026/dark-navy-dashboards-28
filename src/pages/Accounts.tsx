@@ -1,4 +1,3 @@
-
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { 
   CircleDollarSign, 
@@ -22,13 +21,13 @@ import { EmptyAccountSection } from "@/components/accounts/EmptyAccountSection";
 import { AccountsHeader } from "@/components/accounts/AccountsHeader";
 import { FundingAccountsOverview } from "@/components/accounts/FundingAccountsOverview";
 import { LoanSection } from "@/components/accounts/LoanSection";
+import { EducationSavingsSection } from "@/components/accounts/EducationSavingsSection";
 import { useAccountManagement } from "@/hooks/useAccountManagement";
 
 const Accounts = () => {
   const { toast } = useToast();
   const [loanType, setLoanType] = useState("mortgage");
   
-  // Use the custom hook for account management
   const {
     selectedAccountType,
     showAccountTypeSelector,
@@ -75,7 +74,6 @@ const Accounts = () => {
           onManageFunding={handleManageFunding} 
         />
 
-        {/* Funding Accounts Quick View */}
         <FundingAccountsOverview 
           accounts={fundingAccounts}
           onManageFunding={handleManageFunding}
@@ -96,6 +94,8 @@ const Accounts = () => {
               </Button>
             </div>
           </AccountSection>
+
+          <EducationSavingsSection onAddAccount={handleAccountTypeSelected} />
 
           <AccountSection 
             icon={<Landmark className="h-5 w-5 text-yellow-500 bg-black p-1 rounded-full" />}

@@ -38,6 +38,12 @@ export function useAccountManagement() {
 
   const handleAccountTypeSelected = (type: string) => {
     setSelectedAccountType(type);
+    if (type === "education") {
+      toast({
+        title: "Education Savings Account",
+        description: "Please select the type of education savings account to add"
+      });
+    }
     setShowAddAccountDialog(true);
   };
 
