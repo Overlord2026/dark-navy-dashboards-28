@@ -1,202 +1,131 @@
-import React from "react";
 import { createBrowserRouter } from "react-router-dom";
 import Dashboard from "@/pages/Dashboard";
-import Accounts from "@/pages/Accounts";
-import Education from "@/pages/Education";
-import TaxPlanning from "@/pages/TaxPlanning";
-import Insurance from "@/pages/Insurance";
-import Lending from "@/pages/Lending";
-import EstatePlanning from "@/pages/EstatePlanning";
-import FinancialPlans from "@/pages/FinancialPlans";
-import AllAssets from "@/pages/AllAssets";
-import CashManagement from "@/pages/CashManagement";
-import TaxBudgets from "@/pages/TaxBudgets";
-import Transfers from "@/pages/Transfers";
-import LegacyVault from "@/pages/LegacyVault";
-import SocialSecurity from "@/pages/SocialSecurity";
-import Properties from "@/pages/Properties";
-import BillPay from "@/pages/BillPay";
-import Documents from "@/pages/Documents";
-import Professionals from "@/pages/Professionals";
-import ProfessionalSignup from "@/pages/ProfessionalSignup";
-import Sharing from "@/pages/Sharing";
-import Help from "@/pages/Help";
 import Settings from "@/pages/Settings";
-import IPProtection from "@/pages/IPProtection";
-import AdvisorFeedback from "@/pages/AdvisorFeedback";
+import Profile from "@/pages/Profile";
+import Accounts from "@/pages/Accounts";
+import FinancialPlans from "@/pages/FinancialPlans";
+import AIInsights from "@/pages/AIInsights";
 import NotFound from "@/pages/NotFound";
-import TaxPlanningEducation from "@/pages/TaxPlanningEducation";
-import NavigationDiagnostics from "@/pages/NavigationDiagnostics";
-import { ProfessionalsRouteWrapper } from "@/components/providers/ProfessionalsRouteWrapper";
-import Investments from "@/pages/Investments";
-import Healthcare from "@/pages/Healthcare";
-import AudiencePreferencesPage from "./pages/AudiencePreferencesPage";
+import TaxPlanning from "@/pages/TaxPlanning";
+import AdvisorDashboard from "@/pages/AdvisorDashboard";
+import Login from "@/pages/Login";
+import Register from "@/pages/Register";
+import ForgotPassword from "@/pages/ForgotPassword";
+import ResetPassword from "@/pages/ResetPassword";
+import Subscription from "@/pages/Subscription";
+import Diagnostics from "@/pages/Diagnostics";
+import AdminDashboard from "@/pages/AdminDashboard";
+import AdminUsers from "@/pages/AdminUsers";
+import AdminAdvisors from "@/pages/AdminAdvisors";
+import AdminSettings from "@/pages/AdminSettings";
+import AdminSubscriptions from "@/pages/AdminSubscriptions";
+import AdminDiagnostics from "@/pages/AdminDiagnostics";
+import AdminLogin from "@/pages/AdminLogin";
+import AdminRegister from "@/pages/AdminRegister";
+import Audience from "@/pages/Audience";
 
 const routes = createBrowserRouter([
   {
     path: "/",
-    element: <Dashboard />
+    element: <Dashboard />,
+  },
+  {
+    path: "/dashboard",
+    element: <Dashboard />,
   },
   {
     path: "/accounts",
-    element: <Accounts />
-  },
-  {
-    path: "/education",
-    element: <Education />
-  },
-  {
-    path: "/education/all-courses",
-    element: <Education />
-  },
-  {
-    path: "/education/financial-basics",
-    element: <Education />
-  },
-  {
-    path: "/education/investing",
-    element: <Education />
-  },
-  {
-    path: "/education/retirement-planning",
-    element: <Education />
-  },
-  {
-    path: "/education/tax-planning",
-    element: <TaxPlanningEducation />
-  },
-  {
-    path: "/education/estate-planning",
-    element: <Education />
-  },
-  {
-    path: "/education/debt-management",
-    element: <Education />
-  },
-  {
-    path: "/education/insurance",
-    element: <Education />
-  },
-  {
-    path: "/education/business-education",
-    element: <Education />
-  },
-  {
-    path: "/tax-planning",
-    element: <TaxPlanning />
-  },
-  {
-    path: "/insurance",
-    element: <Insurance />
-  },
-  {
-    path: "/lending",
-    element: <Lending />
-  },
-  {
-    path: "/estate-planning",
-    element: <EstatePlanning />
+    element: <Accounts />,
   },
   {
     path: "/financial-plans",
-    element: <FinancialPlans />
+    element: <FinancialPlans />,
   },
   {
-    path: "/all-assets",
-    element: <AllAssets />
+    path: "/ai-insights",
+    element: <AIInsights />,
   },
   {
-    path: "/cash-management",
-    element: <CashManagement />
-  },
-  {
-    path: "/tax-budgets",
-    element: <TaxBudgets />
-  },
-  {
-    path: "/transfers",
-    element: <Transfers />
-  },
-  {
-    path: "/legacy-vault",
-    element: <LegacyVault />
-  },
-  {
-    path: "/healthcare",
-    element: <Healthcare />
-  },
-  {
-    path: "/social-security",
-    element: <SocialSecurity />
-  },
-  {
-    path: "/properties",
-    element: <Properties />
-  },
-  {
-    path: "/billpay",
-    element: <BillPay />
-  },
-  {
-    path: "/documents",
-    element: <ProfessionalsRouteWrapper><Documents /></ProfessionalsRouteWrapper>
-  },
-  {
-    path: "/professionals",
-    element: <ProfessionalsRouteWrapper><Professionals /></ProfessionalsRouteWrapper>
-  },
-  {
-    path: "/professional-signup",
-    element: <ProfessionalSignup />
-  },
-  {
-    path: "/sharing",
-    element: <Sharing />
-  },
-  {
-    path: "/help",
-    element: <Help />
+    path: "/profile",
+    element: <Profile />,
   },
   {
     path: "/settings",
-    element: <Settings />
+    element: <Settings />,
   },
   {
-    path: "/ip-protection",
-    element: <IPProtection />
+    path: "/tax-planning",
+    element: <TaxPlanning />,
   },
   {
-    path: "/advisor-feedback",
-    element: <AdvisorFeedback />
+    path: "/advisor/dashboard",
+    element: <AdvisorDashboard />,
   },
   {
-    path: '/vehicles-collectibles',
-    element: <AllAssets />
+    path: "/login",
+    element: <Login />,
   },
   {
-    path: '/art-valuables',
-    element: <AllAssets />
+    path: "/register",
+    element: <Register />,
   },
   {
-    path: "/navigation-diagnostics",
-    element: <NavigationDiagnostics />
+    path: "/forgot-password",
+    element: <ForgotPassword />,
   },
   {
-    path: "/investments",
-    element: <Investments />
+    path: "/reset-password",
+    element: <ResetPassword />,
   },
   {
-    path: "/investments/*",
-    element: <Investments />
+    path: "/subscription",
+    element: <Subscription />,
   },
   {
-    path: "/audience-preferences",
-    element: <AudiencePreferencesPage />
+    path: "/diagnostics",
+    element: <Diagnostics />,
   },
+  {
+    path: "/admin/dashboard",
+    element: <AdminDashboard />,
+  },
+  {
+    path: "/admin/users",
+    element: <AdminUsers />,
+  },
+  {
+    path: "/admin/advisors",
+    element: <AdminAdvisors />,
+  },
+  {
+    path: "/admin/settings",
+    element: <AdminSettings />,
+  },
+  {
+    path: "/admin/subscriptions",
+    element: <AdminSubscriptions />,
+  },
+  {
+    path: "/admin/diagnostics",
+    element: <AdminDiagnostics />,
+  },
+  {
+    path: "/admin/login",
+    element: <AdminLogin />,
+  },
+  {
+    path: "/admin/register",
+    element: <AdminRegister />,
+  },
+  {
+    path: "/audience",
+    element: <Audience />,
+  },
+  
   {
     path: "*",
-    element: <NotFound />
-  }
+    element: <NotFound />,
+  },
 ]);
 
 export default routes;

@@ -20,14 +20,14 @@ export function DashboardSidebar({
   const location = useLocation();
   
   return (
-    <aside className="hidden md:flex w-64 border-r h-full flex-shrink-0 border-border">
+    <aside className="md:flex w-64 border-r h-full flex-shrink-0 border-border">
       <div className="h-full flex flex-col">
         <div className="p-4">
           <Link to="/" className="flex items-center">
             <img 
               src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" 
               alt="Logo" 
-              className="h-10 w-auto"
+              className="h-12 w-auto"
             />
           </Link>
         </div>

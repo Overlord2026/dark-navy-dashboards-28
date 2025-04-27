@@ -14,7 +14,14 @@ export function DashboardHeader({ title = "Dashboard" }: DashboardHeaderProps) {
 
   return (
     <header className="h-16 border-b border-border flex items-center justify-between px-6 bg-card">
-      <h1 className="text-xl font-semibold">{title}</h1>
+      <div className="flex items-center gap-4">
+        <img 
+          src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" 
+          alt="Boutique Family Office" 
+          className="h-8 w-auto hidden sm:block"
+        />
+        <h1 className="text-xl font-semibold">{title}</h1>
+      </div>
       <div className="flex items-center gap-4">
         <UserProfileDropdown onOpenForm={handleOpenForm} />
       </div>
