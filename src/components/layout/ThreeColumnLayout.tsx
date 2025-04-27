@@ -5,6 +5,7 @@ import { MainNavItem, SidebarNavItem } from "@/types";
 import { DashboardSidebar } from "@/components/layout/DashboardSidebar";
 import { DashboardHeader } from "@/components/layout/DashboardHeader";
 import { MobileDashboardSidebar } from "@/components/layout/MobileDashboardSidebar";
+import { AudiencePersonaCards } from "@/components/audience/AudiencePersonaCards";
 
 interface ThreeColumnLayoutProps {
   children: React.ReactNode;
@@ -17,7 +18,7 @@ interface ThreeColumnLayoutProps {
 
 export function ThreeColumnLayout({ 
   children, 
-  title = "Wealth Management Platform", 
+  title = "Wealth Management Platform",
   activeMainItem = "dashboard",
   hideLeftSidebar = false,
   hideRightSidebar = true,
@@ -56,6 +57,7 @@ export function ThreeColumnLayout({
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-h-screen">
         <DashboardHeader title={title} />
+        <AudiencePersonaCards />
         <main className="flex-1 overflow-x-hidden overflow-y-auto pt-24">
           {children}
         </main>

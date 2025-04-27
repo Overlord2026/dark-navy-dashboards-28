@@ -19,7 +19,7 @@ export function DashboardHeader({ title = "Dashboard" }: DashboardHeaderProps) {
       <div className="flex items-center justify-between h-full px-6 max-w-screen-2xl mx-auto">
         <div className="flex-1 flex items-center gap-4">
           <img 
-            src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" 
+            src="/lovable-uploads/7917640e-0a5d-4111-8e2e-d3faf741374b.png" 
             alt="Boutique Family Office" 
             className="h-16 w-auto"
           />
