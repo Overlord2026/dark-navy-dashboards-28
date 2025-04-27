@@ -10,11 +10,9 @@ import { Link } from "react-router-dom";
 
 interface ThreeColumnLayoutProps {
   children: React.ReactNode;
-  title?: string | null;
   activeMainItem?: string;
   hideLeftSidebar?: boolean;
   hideRightSidebar?: boolean;
-  secondaryMenuItems?: any[];
 }
 
 export function ThreeColumnLayout({ 
@@ -22,7 +20,6 @@ export function ThreeColumnLayout({
   activeMainItem = "dashboard",
   hideLeftSidebar = false,
   hideRightSidebar = true,
-  secondaryMenuItems = []
 }: ThreeColumnLayoutProps) {
   const mainNavigationItems: MainNavItem[] = [
     { name: "Dashboard", href: "/", icon: LayoutDashboard, id: "dashboard" },
@@ -49,13 +46,11 @@ export function ThreeColumnLayout({
 
       {/* Desktop Sidebar */}
       {!hideLeftSidebar && (
-        <div className="hidden md:block">
-          <DashboardSidebar 
-            mainNavigationItems={mainNavigationItems}
-            sidebarNavigationItems={sidebarNavigationItems}
-            activeMainItem={activeMainItem}
-          />
-        </div>
+        <DashboardSidebar 
+          mainNavigationItems={mainNavigationItems}
+          sidebarNavigationItems={sidebarNavigationItems}
+          activeMainItem={activeMainItem}
+        />
       )}
 
       {/* Main Content */}
@@ -104,4 +99,3 @@ export function ThreeColumnLayout({
     </div>
   );
 }
-

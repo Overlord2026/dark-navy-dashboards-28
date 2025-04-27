@@ -1,30 +1,23 @@
+
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { MainNavItem, SidebarNavItem } from "@/types";
-import { ChevronDown, ChevronRight } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 
 interface DashboardSidebarProps {
   mainNavigationItems: MainNavItem[];
   sidebarNavigationItems: SidebarNavItem[];
   activeMainItem?: string;
-  isLightTheme?: boolean;
 }
 
 export function DashboardSidebar({ 
   mainNavigationItems, 
   sidebarNavigationItems,
-  activeMainItem,
-  isLightTheme = false
+  activeMainItem
 }: DashboardSidebarProps) {
   const location = useLocation();
   
-  // Always keep sections expanded on desktop
-  const expandedSections = {
-    main: true,
-    secondary: true
-  };
-
   return (
     <aside className="hidden md:flex w-64 border-r border-border bg-card h-screen flex-shrink-0 flex-col overflow-y-auto">
       <div className="p-4 border-b border-border">
