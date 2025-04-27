@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import ThreeColumnLayout from '@/components/layout/ThreeColumnLayout';
+import { ThreeColumnLayout } from '@/components/layout/ThreeColumnLayout';
 import PersonaCard from '@/components/landing/PersonaCard';
 
 export default function Landing() {
