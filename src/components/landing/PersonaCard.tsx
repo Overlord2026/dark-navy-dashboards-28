@@ -12,7 +12,7 @@ export default function PersonaCard({ title, subtitle, imagePath, onClick }: Pro
   return (
     <div 
       onClick={onClick}
-      className="cursor-pointer rounded-xl overflow-hidden group transition-all duration-300 hover:scale-105"
+      className="cursor-pointer rounded-xl overflow-hidden group transition-all duration-300 hover:scale-105 border-2 border-transparent hover:border-[#B8860B]"
     >
       <div className="relative h-80">
         <img 

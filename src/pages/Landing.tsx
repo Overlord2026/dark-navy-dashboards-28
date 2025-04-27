@@ -22,13 +22,7 @@ export default function Landing() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 max-w-6xl mx-auto w-full">
-          <PersonaCard
-            title="Aspiring Wealthy"
-            subtitle="Building and growing wealth for a prosperous future"
-            imagePath="/lovable-uploads/7faf1d1a-8aff-4541-8400-18aa687704e7.png"
-            onClick={() => navigate('/dashboard?segment=aspiring')}
-          />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto w-full">
           <PersonaCard
             title="Pre-Retirees & Retirees"
             subtitle="Securing and optimizing retirement wealth"
@@ -36,10 +30,10 @@ export default function Landing() {
             onClick={() => navigate('/dashboard?segment=preretirees')}
           />
           <PersonaCard
-            title="Ultra High Net Worth"
-            subtitle="Sophisticated wealth management & legacy planning"
-            imagePath="/lovable-uploads/94f35b13-8595-4066-b37f-2fb62be96029.png"
-            onClick={() => navigate('/dashboard?segment=ultra')}
+            title="Aspiring Wealthy"
+            subtitle="Building and growing wealth for a prosperous future"
+            imagePath="/lovable-uploads/7faf1d1a-8aff-4541-8400-18aa687704e7.png"
+            onClick={() => navigate('/dashboard?segment=aspiring')}
           />
         </div>
       </div>
