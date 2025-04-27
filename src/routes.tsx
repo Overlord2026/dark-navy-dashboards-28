@@ -36,12 +36,11 @@ import SocialSecurity from "@/pages/SocialSecurity";
 import ProfessionalSignup from "@/pages/ProfessionalSignup";
 import Integration from "@/pages/Integration";
 import Sharing from "@/pages/Sharing";
-import Landing from "@/pages/Landing";
 
 const routes = createBrowserRouter([
   {
     path: "/",
-    element: <Landing />,
+    element: <Dashboard />,
   },
   {
     path: "/dashboard",

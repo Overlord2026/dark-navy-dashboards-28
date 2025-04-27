@@ -1,21 +1,15 @@
 
 import React from "react";
 import { UserProfileDropdown } from "@/components/profile/UserProfileDropdown";
-import { Network, Info } from "lucide-react";
+import { Network } from "lucide-react"; 
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 interface DashboardHeaderProps {
   title?: string;
 }
 
 export function DashboardHeader({ title }: DashboardHeaderProps) {
-  const location = useLocation();
-  const showTitle = location.pathname !== '/';
-  const handleOpenForm = (formId: string) => {
-    console.log(`Form ${formId} would open here if implemented`);
-  };
-
   return (
     <header className="h-24 border-b border-border bg-card fixed top-0 left-0 right-0 z-50">
       <div className="flex items-center h-full px-6 max-w-screen-2xl mx-auto">
@@ -44,12 +38,10 @@ export function DashboardHeader({ title }: DashboardHeaderProps) {
           </TooltipProvider>
         </div>
 
-        {/* Right section with title (if showing) and profile dropdown */}
+        {/* Right section with profile dropdown */}
         <div className="flex-1 flex items-center justify-end">
-          {showTitle && title && (
-            <h1 className="text-xl font-semibold mr-4">{title}</h1>
-          )}
-          <UserProfileDropdown onOpenForm={handleOpenForm} />
+          {title && <h1 className="text-xl font-semibold mr-4">{title}</h1>}
+          <UserProfileDropdown onOpenForm={(id) => console.log(`Form ${id} would open here if implemented`)} />
         </div>
       </div>
     </header>

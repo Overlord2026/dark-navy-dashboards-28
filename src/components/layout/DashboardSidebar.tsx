@@ -1,16 +1,8 @@
-
 import React from "react";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
-import { 
-  BookOpen, 
-  BriefcaseIcon, 
-  FileText, 
-  MessageSquare,
-  ChevronDown,
-  ChevronRight,
-} from "lucide-react";
+import { LucideIcon, BookOpen, BriefcaseIcon, FileText, MessageSquare, ChevronDown, ChevronRight } from "lucide-react";
 import { FamilyProfile } from "@/components/sidebar/FamilyProfile";
 import { AdvisorProfile } from "@/components/sidebar/AdvisorProfile";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -22,7 +14,7 @@ interface NavItem {
 
 interface NavGroup {
   name: string;
-  icon: React.ElementRef<any>;
+  icon: LucideIcon;
   href?: string;
   items?: NavItem[];
 }
