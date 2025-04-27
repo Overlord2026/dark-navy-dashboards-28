@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { 
   Book, 
@@ -10,11 +10,14 @@ import {
   Banknote,
   MessageSquare,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  ChevronLeft,
+  ChevronRight
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { FamilyProfile } from "@/components/sidebar/FamilyProfile";
 import { AdvisorProfile } from "@/components/sidebar/AdvisorProfile";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
 
 interface NavSection {
   id: string;
@@ -27,6 +30,7 @@ interface NavSection {
 export const Sidebar = () => {
   const location = useLocation();
   const [openSections, setOpenSections] = useState<string[]>(["education", "planning"]);
+  const [isCollapsed, setIsCollapsed] = useLocalStorage("sidebarCollapsed", false);
 
   const navSections: NavSection[] = [
     {
@@ -80,31 +84,39 @@ export const Sidebar = () => {
   const isActive = (href: string) => location.pathname === href;
 
   return (
-    <aside className="w-60 h-screen bg-background border-r border-border flex flex-col">
+    <aside className={cn(
+      "hidden md:flex flex-col h-screen bg-background border-r border-border",
+      isCollapsed ? "w-16" : "w-64",
+      "transition-all duration-300"
+    )}>
       <FamilyProfile />
       
       <nav className="flex-1 py-4 overflow-y-auto">
         {navSections.map(section => (
           <div key={section.id} className="mb-2">
             {section.items ? (
-              // Collapsible section
               <div>
                 <button
                   onClick={() => toggleSection(section.id)}
-                  className="w-full flex items-center justify-between px-4 py-2 hover:bg-accent text-sm font-medium"
+                  className={cn(
+                    "w-full flex items-center justify-between px-4 py-2 hover:bg-accent text-sm font-medium",
+                    isCollapsed && "px-2 justify-center"
+                  )}
                 >
                   <div className="flex items-center gap-2">
                     {section.icon && <section.icon className="h-4 w-4" />}
-                    {section.label}
+                    {!isCollapsed && section.label}
                   </div>
-                  {openSections.includes(section.id) ? (
-                    <ChevronUp className="h-4 w-4" />
-                  ) : (
-                    <ChevronDown className="h-4 w-4" />
+                  {!isCollapsed && (
+                    openSections.includes(section.id) ? (
+                      <ChevronUp className="h-4 w-4" />
+                    ) : (
+                      <ChevronDown className="h-4 w-4" />
+                    )
                   )}
                 </button>
                 
-                {openSections.includes(section.id) && (
+                {openSections.includes(section.id) && !isCollapsed && (
                   <div className="mt-1">
                     {section.items.map(item => (
                       <Link
@@ -123,16 +135,16 @@ export const Sidebar = () => {
                 )}
               </div>
             ) : (
-              // Single link
               <Link
                 to={section.href!}
                 className={cn(
                   "flex items-center gap-2 px-4 py-2 text-sm hover:bg-accent",
+                  isCollapsed && "px-2 justify-center",
                   isActive(section.href!) && "bg-accent font-medium"
                 )}
               >
                 {section.icon && <section.icon className="h-4 w-4" />}
-                {section.label}
+                {!isCollapsed && section.label}
               </Link>
             )}
           </div>
@@ -140,7 +152,18 @@ export const Sidebar = () => {
       </nav>
 
       <AdvisorProfile />
+      
+      <button
+        onClick={() => setIsCollapsed(!isCollapsed)}
+        className="p-2 w-full flex justify-center items-center border-t border-border hover:bg-accent"
+        aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+      >
+        {isCollapsed ? (
+          <ChevronRight className="h-4 w-4" />
+        ) : (
+          <ChevronLeft className="h-4 w-4" />
+        )}
+      </button>
     </aside>
   );
 };
-
