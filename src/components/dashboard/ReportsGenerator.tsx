@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -92,22 +93,19 @@ export function ReportsGenerator() {
       setIsGenerating(false);
       setGeneratedReport(true);
       
-      toast({
-        description: `Your ${getSelectedReportConfig().name} has been successfully generated.`,
-      });
+      // Fix: Use proper toast syntax
+      toast(`Your ${getSelectedReportConfig().name} has been successfully generated.`);
     }, 1500);
   };
 
   const handleDownload = (format: 'pdf' | 'csv' | 'excel') => {
-    toast({
-      description: `Your report is being prepared in ${format.toUpperCase()} format.`,
-    });
+    // Fix: Use proper toast syntax
+    toast(`Your report is being prepared in ${format.toUpperCase()} format.`);
     
     // Simulate download delay
     setTimeout(() => {
-      toast({
-        description: `Your ${getSelectedReportConfig().name} has been downloaded.`,
-      });
+      // Fix: Use proper toast syntax
+      toast(`Your ${getSelectedReportConfig().name} has been downloaded.`);
     }, 1000);
   };
 
