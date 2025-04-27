@@ -1,3 +1,4 @@
+
 import React from "react";
 import { LayoutDashboard, CreditCard, FileLineChart, Brain, Settings, User, Share2 } from "lucide-react";
 import { MainNavItem, SidebarNavItem } from "@/types";
@@ -10,6 +11,7 @@ interface ThreeColumnLayoutProps {
   activeMainItem?: string;
   hideLeftSidebar?: boolean;
   hideRightSidebar?: boolean;
+  hideHeader?: boolean;
   title?: string;
   secondaryMenuItems?: CourseCategory[];
 }
@@ -19,6 +21,7 @@ export function ThreeColumnLayout({
   activeMainItem = "dashboard",
   hideLeftSidebar = false,
   hideRightSidebar = true,
+  hideHeader = false,
   title,
   secondaryMenuItems
 }: ThreeColumnLayoutProps) {
@@ -57,17 +60,19 @@ export function ThreeColumnLayout({
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-h-screen">
         {/* Header */}
-        <header className="h-20 fixed top-0 left-0 right-0 z-50 bg-[#1B1B32]">
-          <div className="flex justify-center items-center h-full">
-            <img 
-              src="/lovable-uploads/b14f5b06-cfde-4097-8454-4b672d706cba.png"
-              alt="Boutique Family Office"
-              className="h-auto w-[200px]"
-            />
-          </div>
-        </header>
+        {!hideHeader && (
+          <header className="h-20 fixed top-0 left-0 right-0 z-50 bg-[#1B1B32]">
+            <div className="flex justify-center items-center h-full">
+              <img 
+                src="/lovable-uploads/b14f5b06-cfde-4097-8454-4b672d706cba.png"
+                alt="Boutique Family Office"
+                className="h-auto w-[200px]"
+              />
+            </div>
+          </header>
+        )}
 
-        <main className="flex-1 overflow-x-hidden overflow-y-auto pt-20">
+        <main className={`flex-1 overflow-x-hidden overflow-y-auto ${!hideHeader ? 'pt-20' : ''}`}>
           {children}
         </main>
       </div>

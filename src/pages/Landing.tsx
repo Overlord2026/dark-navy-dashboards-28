@@ -11,6 +11,7 @@ export default function Landing() {
     <ThreeColumnLayout 
       hideLeftSidebar
       hideRightSidebar
+      hideHeader
     >
       <div className="flex flex-col items-center justify-center min-h-[calc(100vh-96px)] px-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto w-full mb-4">
