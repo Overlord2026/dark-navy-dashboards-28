@@ -35,6 +35,8 @@ import TermsOfServicePage from "@/pages/TermsOfServicePage";
 import Properties from "@/pages/Properties";
 import SocialSecurity from "@/pages/SocialSecurity";
 import ProfessionalSignup from "@/pages/ProfessionalSignup";
+import Integration from "@/pages/Integration";
+import Sharing from "@/pages/Sharing";
 
 const routes = createBrowserRouter([
   {
@@ -52,6 +54,14 @@ const routes = createBrowserRouter([
   {
     path: "/financial-plans",
     element: <FinancialPlans />,
+  },
+  {
+    path: "/integration",
+    element: <Integration />,
+  },
+  {
+    path: "/sharing",
+    element: <Sharing />,
   },
   {
     path: "/ai-insights",

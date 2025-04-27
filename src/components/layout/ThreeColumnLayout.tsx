@@ -1,6 +1,6 @@
 
 import React from "react";
-import { LayoutDashboard, CreditCard, FileLineChart, Brain, Settings, User } from "lucide-react";
+import { LayoutDashboard, CreditCard, FileLineChart, Brain, Settings, User, Share2 } from "lucide-react";
 import { MainNavItem, SidebarNavItem } from "@/types";
 import { DashboardSidebar } from "@/components/layout/DashboardSidebar";
 import { DashboardHeader } from "@/components/layout/DashboardHeader";
@@ -27,6 +27,7 @@ export function ThreeColumnLayout({
     { name: "Dashboard", href: "/", icon: LayoutDashboard, id: "dashboard" },
     { name: "Accounts", href: "/accounts", icon: CreditCard, id: "accounts" },
     { name: "Financial Plans", href: "/financial-plans", icon: FileLineChart, id: "financial-plans" },
+    { name: "Project Integration", href: "/integration", icon: Share2, id: "integration" },
     { name: "AI Insights", href: "/ai-insights", icon: Brain, id: "ai-insights" },
   ];
 

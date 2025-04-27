@@ -1,6 +1,8 @@
 
 import React from "react";
 import { UserProfileDropdown } from "@/components/profile/UserProfileDropdown";
+import { Network } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface DashboardHeaderProps {
   title?: string;
@@ -20,6 +22,19 @@ export function DashboardHeader({ title = "Dashboard" }: DashboardHeaderProps) {
             alt="Boutique Family Office" 
             className="h-16 w-auto"
           />
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="flex items-center rounded-md bg-primary/10 px-2 py-1.5 text-primary">
+                  <Network className="h-4 w-4 mr-1.5" />
+                  <span className="text-xs font-medium">Connected</span>
+                </div>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Part of Family Office Architecture</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
         <div className="flex items-center gap-4">
           <h1 className="text-xl font-semibold">{title}</h1>

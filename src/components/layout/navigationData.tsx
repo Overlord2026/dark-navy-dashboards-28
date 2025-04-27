@@ -20,7 +20,8 @@ import {
   Calculator,
   Receipt,
   BookIcon,
-  BarChart2Icon
+  BarChart2Icon,
+  Network
 } from "lucide-react";
 
 type MainMenuItem = {
@@ -91,6 +92,7 @@ export const navigationCategories: NavCategory[] = [
     items: [
       { id: "professionals", label: "Professional Access", icon: Users2Icon, href: "/professionals" },
       { id: "sharing", label: "Family Member Access", icon: ShareIcon, href: "/sharing" },
+      { id: "integration", label: "Project Integration", icon: Network, href: "/integration" },
     ]
   },
 ];
