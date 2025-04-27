@@ -13,16 +13,7 @@ export default function Landing() {
       hideRightSidebar
     >
       <div className="flex flex-col items-center justify-center min-h-[calc(100vh-96px)] px-4">
-        <div className="max-w-5xl mx-auto text-center mb-12">
-          <h1 className="text-5xl font-bold mb-6 text-balance">
-            Welcome to Boutique Family Office
-          </h1>
-          <p className="text-xl text-muted-foreground">
-            Choose your experience
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto w-full">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto w-full mb-4">
           <PersonaCard
             title="Pre-Retirees & Retirees"
             subtitle="Securing and optimizing retirement wealth"
@@ -36,6 +27,10 @@ export default function Landing() {
             onClick={() => navigate('/dashboard?segment=aspiring')}
           />
         </div>
+        
+        <p className="text-xl text-gray-200 mt-4 text-center">
+          Choose your experience
+        </p>
       </div>
     </ThreeColumnLayout>
   );
