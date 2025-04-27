@@ -1,4 +1,3 @@
-
 import React from "react";
 import { LayoutDashboard, CreditCard, FileLineChart, Brain, Settings, User, Share2 } from "lucide-react";
 import { MainNavItem, SidebarNavItem } from "@/types";
@@ -45,7 +44,7 @@ export function ThreeColumnLayout({
         sidebarNavigationItems={sidebarNavigationItems}
       />
 
-      {/* Left Sidebar - Always visible on desktop */}
+      {/* Left Sidebar - Always visible and expanded on desktop */}
       {!hideLeftSidebar && (
         <DashboardSidebar 
           mainNavigationItems={mainNavigationItems}
