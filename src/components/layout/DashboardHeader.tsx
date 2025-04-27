@@ -11,7 +11,7 @@ interface DashboardHeaderProps {
 
 export function DashboardHeader({ title }: DashboardHeaderProps) {
   return (
-    <header className="h-24 border-b border-border bg-blue-600 fixed top-0 left-0 right-0 z-50 shadow-md">
+    <header className="h-24 border-b border-border bg-[#1B1B32] fixed top-0 left-0 right-0 z-50 shadow-md">
       <div className="flex items-center h-full px-6 max-w-screen-2xl mx-auto">
         {/* Left section with 1/3 width */}
         <div className="flex-1"></div>
@@ -19,9 +19,9 @@ export function DashboardHeader({ title }: DashboardHeaderProps) {
         {/* Center section with logo */}
         <div className="flex-1 flex justify-center items-center">
           <img 
-            src="/lovable-uploads/7917640e-0a5d-4111-8e2e-d3faf741374b.png" 
+            src="/lovable-uploads/1e5f557d-a959-44b7-894a-5a58b8feecba.png" 
             alt="Boutique Family Office" 
-            className="h-20 w-auto"
+            className="h-16 w-auto"
           />
           <TooltipProvider>
             <Tooltip>
