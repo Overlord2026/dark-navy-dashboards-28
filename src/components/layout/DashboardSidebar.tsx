@@ -1,90 +1,134 @@
 
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { MainNavItem, SidebarNavItem } from "@/types";
-import { ChevronDown } from "lucide-react";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
+import { 
+  BookOpen, 
+  BriefcaseIcon, 
+  FileText, 
+  MessageSquare,
+  ChevronDown,
+  ChevronRight,
+} from "lucide-react";
+import { FamilyProfile } from "@/components/sidebar/FamilyProfile";
+import { AdvisorProfile } from "@/components/sidebar/AdvisorProfile";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
-interface DashboardSidebarProps {
-  mainNavigationItems: MainNavItem[];
-  sidebarNavigationItems: SidebarNavItem[];
-  activeMainItem?: string;
+interface NavItem {
+  name: string;
+  href: string;
 }
 
-export function DashboardSidebar({ 
-  mainNavigationItems, 
-  sidebarNavigationItems,
-  activeMainItem
-}: DashboardSidebarProps) {
-  const location = useLocation();
+interface NavGroup {
+  name: string;
+  icon: React.ElementRef<any>;
+  href?: string;
+  items?: NavItem[];
+}
+
+export function DashboardSidebar() {
+  const [isCollapsed, setIsCollapsed] = useLocalStorage("sidebarCollapsed", false);
+  const [expandedSections, setExpandedSections] = useLocalStorage("expandedSections", {
+    education: true,
+    planning: true,
+  });
   
+  const navigationGroups: NavGroup[] = [
+    {
+      name: "Education & Solutions",
+      icon: BookOpen,
+      items: [
+        { name: "Education Center", href: "/education" },
+        { name: "Courses", href: "/courses" },
+        { name: "Guides & Whitepapers", href: "/guides" },
+        { name: "Books", href: "/books" },
+        { name: "Planning Examples", href: "/examples" },
+        { name: "Presentations", href: "/presentations" },
+      ],
+    },
+    {
+      name: "Wealth Management",
+      icon: BriefcaseIcon,
+      href: "/wealth-management"
+    },
+    {
+      name: "Planning & Services",
+      icon: FileText,
+      items: [
+        { name: "Financial Planning", href: "/financial-planning" },
+        { name: "Investments", href: "/investments" },
+        { name: "Tax Planning", href: "/tax-planning" },
+        { name: "Estate Planning", href: "/estate-planning" },
+        { name: "Insurance", href: "/insurance" },
+        { name: "Lending", href: "/lending" },
+      ],
+    },
+    {
+      name: "Collaboration",
+      icon: MessageSquare,
+      href: "/collaboration"
+    }
+  ];
+
+  const toggleSection = (section: string) => {
+    setExpandedSections(prev => ({
+      ...prev,
+      [section]: !prev[section]
+    }));
+  };
+
   return (
-    <aside className="hidden md:flex w-64 border-r border-border bg-card h-screen flex-shrink-0 flex-col overflow-y-auto">
-      <div className="p-4 border-b border-border">
-        <h2 className="text-lg font-semibold">Navigation</h2>
-      </div>
+    <aside className="hidden md:flex w-64 flex-col h-screen bg-card border-r border-border">
+      <FamilyProfile />
 
-      <div className="flex-1 overflow-y-auto p-2">
-        <div className="space-y-4">
-          {/* Main Navigation Section - Always Expanded */}
-          <div>
-            <div className="flex items-center justify-between w-full p-2 text-sm font-medium">
-              Main Navigation
-              <ChevronDown className="h-4 w-4" />
-            </div>
-            <div className="mt-1 space-y-1">
-              {mainNavigationItems.map((item) => {
-                const Icon = item.icon;
-                const isActive = item.id === activeMainItem || location.pathname === item.href;
-                
-                return (
-                  <Link
-                    key={item.id}
-                    to={item.href}
-                    className={cn(
-                      "flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors",
-                      isActive 
-                        ? "bg-primary/10 text-primary" 
-                        : "hover:bg-muted"
-                    )}
-                  >
-                    <Icon className="h-5 w-5" />
-                    <span>{item.name}</span>
-                  </Link>
-                );
-              })}
-            </div>
+      <nav className="flex-1 overflow-y-auto p-2">
+        {navigationGroups.map((group) => (
+          <div key={group.name} className="mb-3">
+            {group.items ? (
+              <Collapsible
+                open={expandedSections[group.name.toLowerCase().replace(/\s+/g, '-')]}
+                onOpenChange={() => toggleSection(group.name.toLowerCase().replace(/\s+/g, '-'))}
+              >
+                <CollapsibleTrigger className="flex items-center justify-between w-full p-2 rounded-md hover:bg-muted">
+                  <div className="flex items-center gap-2">
+                    <group.icon className="h-4 w-4" />
+                    <span className="text-sm font-medium">{group.name}</span>
+                  </div>
+                  {expandedSections[group.name.toLowerCase().replace(/\s+/g, '-')] ? (
+                    <ChevronDown className="h-4 w-4" />
+                  ) : (
+                    <ChevronRight className="h-4 w-4" />
+                  )}
+                </CollapsibleTrigger>
+                <CollapsibleContent>
+                  <div className="ml-6 mt-1 space-y-1">
+                    {group.items.map((item) => (
+                      <Link
+                        key={item.name}
+                        to={item.href}
+                        className="block px-2 py-1.5 text-sm rounded-md hover:bg-muted"
+                      >
+                        {item.name}
+                      </Link>
+                    ))}
+                  </div>
+                </CollapsibleContent>
+              </Collapsible>
+            ) : (
+              <Link
+                to={group.href!}
+                className="flex items-center gap-2 p-2 rounded-md hover:bg-muted"
+              >
+                <group.icon className="h-4 w-4" />
+                <span className="text-sm font-medium">{group.name}</span>
+              </Link>
+            )}
           </div>
+        ))}
+      </nav>
 
-          {/* Settings Section - Always Expanded */}
-          <div>
-            <div className="flex items-center justify-between w-full p-2 text-sm font-medium">
-              Settings & Profile
-              <ChevronDown className="h-4 w-4" />
-            </div>
-            <div className="mt-1 space-y-1">
-              {sidebarNavigationItems.map((item) => {
-                const Icon = item.icon;
-                const isActive = location.pathname === item.href;
-                
-                return (
-                  <Link
-                    key={item.id}
-                    to={item.href}
-                    className={cn(
-                      "flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors",
-                      isActive ? "bg-primary/10 text-primary" : "hover:bg-muted"
-                    )}
-                  >
-                    <Icon className="h-5 w-5" />
-                    <span>{item.name}</span>
-                  </Link>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      </div>
+      <AdvisorProfile />
     </aside>
   );
 }
