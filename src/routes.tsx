@@ -32,6 +32,9 @@ import Documents from "@/pages/Documents";
 import DisclosuresPage from "@/pages/DisclosuresPage";
 import TeamPage from "@/pages/TeamPage";
 import TermsOfServicePage from "@/pages/TermsOfServicePage";
+import Properties from "@/pages/Properties";
+import SocialSecurity from "@/pages/SocialSecurity";
+import ProfessionalSignup from "@/pages/ProfessionalSignup";
 
 const routes = createBrowserRouter([
   {
@@ -157,6 +160,18 @@ const routes = createBrowserRouter([
   {
     path: "/terms-of-service",
     element: <TermsOfServicePage />,
+  },
+  {
+    path: "/properties",
+    element: <Properties />,
+  },
+  {
+    path: "/social-security",
+    element: <SocialSecurity />,
+  },
+  {
+    path: "/professional-signup",
+    element: <ProfessionalSignup />,
   },
   {
     path: "*",
