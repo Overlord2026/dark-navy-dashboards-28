@@ -1,4 +1,3 @@
-
 import { createBrowserRouter } from "react-router-dom";
 import Dashboard from "@/pages/Dashboard";
 import Settings from "@/pages/Settings";
@@ -37,11 +36,12 @@ import SocialSecurity from "@/pages/SocialSecurity";
 import ProfessionalSignup from "@/pages/ProfessionalSignup";
 import Integration from "@/pages/Integration";
 import Sharing from "@/pages/Sharing";
+import Landing from "@/pages/Landing";
 
 const routes = createBrowserRouter([
   {
     path: "/",
-    element: <Dashboard />,
+    element: <Landing />,
   },
   {
     path: "/dashboard",
