@@ -29,7 +29,6 @@ export default function Dashboard() {
   const isAdmin = userProfile?.role === "admin" || userProfile?.role === "system_administrator";
 
   useEffect(() => {
-    // If no segment is specified, redirect to preretirees by default
     if (!segment) {
       navigate('/dashboard?segment=preretirees', { replace: true });
     }
@@ -42,15 +41,14 @@ export default function Dashboard() {
   // Show coming soon for non-preretirees segments
   if (segment && segment !== 'preretirees') {
     return (
-      <ThreeColumnLayout title="Dashboard">
+      <ThreeColumnLayout>
         <ComingSoonCard />
       </ThreeColumnLayout>
     );
   }
 
-  // Main dashboard content for preretirees segment and admins
   return (
-    <ThreeColumnLayout title="Dashboard">
+    <ThreeColumnLayout>
       <div className="space-y-4 px-4 py-2 max-w-7xl mx-auto">
         <div className="grid grid-cols-12 gap-4">
           <div className="col-span-12 lg:col-span-8 space-y-4">
