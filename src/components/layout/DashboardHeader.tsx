@@ -11,7 +11,7 @@ interface DashboardHeaderProps {
 
 export function DashboardHeader({ title }: DashboardHeaderProps) {
   return (
-    <header className="h-24 border-b border-border bg-card fixed top-0 left-0 right-0 z-50">
+    <header className="h-24 border-b border-border bg-white fixed top-0 left-0 right-0 z-50">
       <div className="flex items-center h-full px-6 max-w-screen-2xl mx-auto">
         {/* Left section with 1/3 width */}
         <div className="flex-1"></div>
