@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { AudienceProfile, AudienceSegment, AudienceContext as AudienceContextType } from '@/types/audience';
 import { useNetWorth } from '@/context/NetWorthContext';
@@ -9,8 +10,11 @@ const AudienceContext = createContext<AudienceContextType | undefined>(undefined
 export const AudienceProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentSegment, setCurrentSegment] = useState<AudienceSegment>('aspiring');
   const [isSegmentDetected, setIsSegmentDetected] = useState(false);
-  const { totalNetWorth } = useNetWorth();
+  const netWorthContext = useNetWorth();
   const { userProfile } = useUser();
+  
+  // Get total net worth from context - note we need to use getTotalNetWorth() method
+  const totalNetWorth = netWorthContext.getTotalNetWorth();
 
   // Detect audience segment based on net worth or user profile data
   useEffect(() => {
@@ -20,7 +24,8 @@ export const AudienceProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         if (totalNetWorth) {
           if (totalNetWorth >= 10000000) { // $10M+
             setCurrentSegment('uhnw');
-          } else if (totalNetWorth >= 1000000 && userProfile?.age && userProfile.age >= 55) { // $1M+ and 55+
+          } else if (totalNetWorth >= 1000000 && userProfile?.investorType?.toLowerCase().includes('retiree')) { 
+            // Check for retiree status instead of age
             setCurrentSegment('retiree');
           } else {
             setCurrentSegment('aspiring');

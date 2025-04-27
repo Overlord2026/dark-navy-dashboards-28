@@ -51,7 +51,6 @@ export default function TaxPlanningEducation() {
     <ThreeColumnLayout 
       title="Tax Planning Education" 
       activeMainItem="education"
-      activeSecondaryItem={activeCategory}
       secondaryMenuItems={courseCategories}
     >
       <motion.div 

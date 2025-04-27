@@ -13,6 +13,8 @@ interface ThreeColumnLayoutProps {
   hideLeftSidebar?: boolean;
   hideRightSidebar?: boolean;
   secondaryMenuItems?: any[];
+  // Add this prop to fix the issue, but as optional so it doesn't break existing code
+  activeSecondaryItem?: string;
 }
 
 export function ThreeColumnLayout({ 
@@ -21,7 +23,8 @@ export function ThreeColumnLayout({
   activeMainItem = "dashboard",
   hideLeftSidebar = false,
   hideRightSidebar = true,
-  secondaryMenuItems = []
+  secondaryMenuItems = [],
+  activeSecondaryItem = ""
 }: ThreeColumnLayoutProps) {
   const mainNavigationItems: MainNavItem[] = [
     { name: "Dashboard", href: "/", icon: LayoutDashboard, id: "dashboard" },
@@ -49,6 +52,8 @@ export function ThreeColumnLayout({
           mainNavigationItems={mainNavigationItems}
           sidebarNavigationItems={sidebarNavigationItems}
           activeMainItem={activeMainItem}
+          // Also pass down the activeSecondaryItem
+          activeSecondaryItem={activeSecondaryItem}
         />
       )}
 

@@ -23,10 +23,10 @@ import { ThemeDialog } from "@/components/ui/ThemeDialog";
 import { useUser } from "@/context/UserContext";
 
 interface UserProfileDropdownProps {
-  onOpenForm: (formId: string) => void;
+  onOpenForm?: (formId: string) => void;
 }
 
-export const UserProfileDropdown = ({ onOpenForm }: UserProfileDropdownProps) => {
+export const UserProfileDropdown = ({ onOpenForm = () => {} }: UserProfileDropdownProps) => {
   const { userProfile } = useUser();
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [isThemeDialogOpen, setIsThemeDialogOpen] = useState(false);
