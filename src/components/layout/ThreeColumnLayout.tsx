@@ -1,3 +1,4 @@
+
 import React from "react";
 import { LayoutDashboard, CreditCard, FileLineChart, Settings, User, Brain } from "lucide-react";
 import { MainNavItem, SidebarNavItem } from "@/types";
@@ -11,6 +12,7 @@ interface ThreeColumnLayoutProps {
   activeMainItem?: string;
   hideLeftSidebar?: boolean;
   hideRightSidebar?: boolean;
+  secondaryMenuItems?: any[];
 }
 
 export function ThreeColumnLayout({ 
@@ -18,7 +20,8 @@ export function ThreeColumnLayout({
   title = "Wealth Management Platform", 
   activeMainItem = "dashboard",
   hideLeftSidebar = false,
-  hideRightSidebar = true
+  hideRightSidebar = true,
+  secondaryMenuItems = []
 }: ThreeColumnLayoutProps) {
   const mainNavigationItems: MainNavItem[] = [
     { name: "Dashboard", href: "/", icon: LayoutDashboard, id: "dashboard" },

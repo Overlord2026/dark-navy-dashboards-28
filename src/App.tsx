@@ -1,3 +1,4 @@
+
 import { RouterProvider } from "react-router-dom";
 import routes from "./routes";
 import { ThemeProvider } from "@/context/ThemeContext"; // Import from our custom ThemeContext
@@ -12,7 +13,7 @@ import { AuthProvider } from "@/context/AuthContext";
 import { AdminProvider } from './context/AdminContext';
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AIInsightsProvider } from "./components/insights/AIInsightsProvider";
-import AIInsights from "./pages/AIInsights";
+import { AudienceProvider } from "./context/AudienceContext";
 
 // Create a Query Client
 const queryClient = new QueryClient({
@@ -35,10 +36,14 @@ function App() {
                 <DiagnosticsProvider>
                   <AdvisorProvider>
                     <AuthProvider>
-                      <TooltipProvider>
-                        <RouterProvider router={routes} />
-                        <Toaster position="top-right" richColors closeButton />
-                      </TooltipProvider>
+                      <AIInsightsProvider>
+                        <AudienceProvider>
+                          <TooltipProvider>
+                            <RouterProvider router={routes} />
+                            <Toaster position="top-right" richColors closeButton />
+                          </TooltipProvider>
+                        </AudienceProvider>
+                      </AIInsightsProvider>
                     </AuthProvider>
                   </AdvisorProvider>
                 </DiagnosticsProvider>

@@ -1,4 +1,3 @@
-
 import React from "react";
 import { createBrowserRouter } from "react-router-dom";
 import Dashboard from "@/pages/Dashboard";
@@ -31,6 +30,7 @@ import NavigationDiagnostics from "@/pages/NavigationDiagnostics";
 import { ProfessionalsRouteWrapper } from "@/components/providers/ProfessionalsRouteWrapper";
 import Investments from "@/pages/Investments";
 import Healthcare from "@/pages/Healthcare";
+import AudiencePreferencesPage from "./pages/AudiencePreferencesPage";
 
 const routes = createBrowserRouter([
   {
@@ -188,6 +188,10 @@ const routes = createBrowserRouter([
   {
     path: "/investments/*",
     element: <Investments />
+  },
+  {
+    path: "/audience-preferences",
+    element: <AudiencePreferencesPage />
   },
   {
     path: "*",
