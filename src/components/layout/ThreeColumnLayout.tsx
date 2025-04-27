@@ -7,6 +7,7 @@ import { MobileDashboardSidebar } from "@/components/layout/MobileDashboardSideb
 import { Network } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Link } from "react-router-dom";
+import { CourseCategory } from "@/types/education";
 
 interface ThreeColumnLayoutProps {
   children: React.ReactNode;
@@ -14,6 +15,7 @@ interface ThreeColumnLayoutProps {
   hideLeftSidebar?: boolean;
   hideRightSidebar?: boolean;
   title?: string;
+  secondaryMenuItems?: CourseCategory[];
 }
 
 export function ThreeColumnLayout({ 
@@ -21,7 +23,8 @@ export function ThreeColumnLayout({
   activeMainItem = "dashboard",
   hideLeftSidebar = false,
   hideRightSidebar = true,
-  title
+  title,
+  secondaryMenuItems
 }: ThreeColumnLayoutProps) {
   const mainNavigationItems: MainNavItem[] = [
     { name: "Dashboard", href: "/", icon: LayoutDashboard, id: "dashboard" },
