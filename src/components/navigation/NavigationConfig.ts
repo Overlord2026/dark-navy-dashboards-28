@@ -1,3 +1,4 @@
+
 import { 
   HomeIcon, 
   GraduationCapIcon,
@@ -25,7 +26,8 @@ import {
   Calculator,
   PieChart,
   Receipt,
-  Diamond
+  Diamond,
+  HeartPulseIcon
 } from "lucide-react";
 
 import { NavItem } from "@/types/navigation";
@@ -114,6 +116,11 @@ export const familyWealthNavItems: NavItem[] = [
     title: "Transfers", 
     href: "/transfers", 
     icon: ArrowRightLeft 
+  },
+  { 
+    title: "Healthcare", 
+    href: "/healthcare", 
+    icon: HeartPulseIcon 
   },
   { 
     title: "Secure Family Vault", 

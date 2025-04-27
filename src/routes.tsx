@@ -1,3 +1,4 @@
+
 import React from "react";
 import { createBrowserRouter } from "react-router-dom";
 import Dashboard from "@/pages/Dashboard";
@@ -29,6 +30,7 @@ import TaxPlanningEducation from "@/pages/TaxPlanningEducation";
 import NavigationDiagnostics from "@/pages/NavigationDiagnostics";
 import { ProfessionalsRouteWrapper } from "@/components/providers/ProfessionalsRouteWrapper";
 import Investments from "@/pages/Investments";
+import Healthcare from "@/pages/Healthcare";
 
 const routes = createBrowserRouter([
   {
@@ -118,6 +120,10 @@ const routes = createBrowserRouter([
   {
     path: "/legacy-vault",
     element: <LegacyVault />
+  },
+  {
+    path: "/healthcare",
+    element: <Healthcare />
   },
   {
     path: "/social-security",

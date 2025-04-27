@@ -1,6 +1,6 @@
 
 import { Button } from "@/components/ui/button";
-import { Clock } from "lucide-react";
+import { Clock, Download, FileText, FileSpreadsheet } from "lucide-react";
 import { reportConfigs } from "@/config/reportConfigs";
 import { ReportType } from "@/types/reports";
 import { AssetsReportPreview } from "@/components/reports/AssetsReportPreview";
