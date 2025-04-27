@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { 
   Book, 
-  Briefcase, 
+  BriefcaseIcon, 
   FileText, 
   TrendingUp, 
   Shield, 
@@ -45,7 +45,7 @@ export const Sidebar = () => {
     {
       id: "wealth",
       label: "Wealth Management",
-      icon: Briefcase,
+      icon: BriefcaseIcon,
       href: "/wealth-management",
     },
     {
@@ -143,3 +143,4 @@ export const Sidebar = () => {
     </aside>
   );
 };
+
