@@ -3,8 +3,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
-import { LucideIcon, BookOpen, BriefcaseIcon, FileText, MessageSquare, ChevronDown, ChevronRight } from "lucide-react";
-import { FamilyProfile } from "@/components/sidebar/FamilyProfile";
+import { LucideIcon, BookOpen, BriefcaseIcon, FileText, MessageSquare, ChevronDown, ChevronRight, User } from "lucide-react";
+import { UserProfileSection } from "@/components/sidebar/UserProfileSection";
 import { AdvisorProfile } from "@/components/sidebar/AdvisorProfile";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
@@ -73,9 +73,18 @@ export function DashboardSidebar() {
 
   return (
     <aside className="hidden md:flex w-64 flex-col h-screen bg-card border-r border-border">
-      <FamilyProfile />
+      {/* User Profile Section at the top */}
+      <UserProfileSection showLogo={true} />
 
       <nav className="flex-1 overflow-y-auto p-2">
+        <Link
+          to="/profile"
+          className="flex items-center gap-2 mb-3 p-2 rounded-md hover:bg-muted bg-primary/10 text-primary"
+        >
+          <User className="h-4 w-4" />
+          <span className="text-sm font-medium">Investor Profile</span>
+        </Link>
+
         {navigationGroups.map((group) => (
           <div key={group.name} className="mb-3">
             {group.items ? (

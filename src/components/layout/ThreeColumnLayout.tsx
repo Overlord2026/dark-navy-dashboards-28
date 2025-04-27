@@ -58,10 +58,10 @@ export function ThreeColumnLayout({
       <div className="flex-1 flex flex-col min-h-screen">
         {/* Header */}
         {!hideHeader && (
-          <DashboardHeader />
+          <DashboardHeader title={title} />
         )}
 
-        <main className={`flex-1 overflow-x-hidden overflow-y-auto ${!hideHeader ? 'pt-24' : ''}`}>
+        <main className={`flex-1 overflow-x-hidden overflow-y-auto ${!hideHeader ? 'pt-32' : ''}`}>
           {children}
         </main>
       </div>
