@@ -41,7 +41,8 @@ export function useAccountManagement() {
     if (type === "education") {
       toast({
         title: "Education Savings Account",
-        description: "Please select the type of education savings account to add"
+        description: "Choose from 529 Plans, ESA, UGMA/UTMA, or Prepaid Tuition accounts",
+        duration: 5000,
       });
     }
     setShowAddAccountDialog(true);
