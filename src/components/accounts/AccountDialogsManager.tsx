@@ -3,6 +3,7 @@ import { AddAccountDialog } from "@/components/accounts/AddAccountDialog";
 import { PlaidLinkDialog } from "@/components/accounts/PlaidLinkDialog";
 import { ManageFundingDialog } from "@/components/accounts/ManageFundingDialog";
 import { AccountLinkTypeSelector } from "@/components/accounts/AccountLinkTypeSelector";
+import { useToast } from "@/hooks/use-toast";
 
 interface AccountDialogsManagerProps {
   showAccountTypeSelector: boolean;
@@ -35,6 +36,8 @@ export function AccountDialogsManager({
   setShowPlaidDialog,
   setShowManageFundingDialog
 }: AccountDialogsManagerProps) {
+  const { toast } = useToast();
+  
   if (showAccountTypeSelector) {
     return (
       <AccountLinkTypeSelector 

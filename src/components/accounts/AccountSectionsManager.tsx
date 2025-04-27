@@ -1,5 +1,6 @@
 
-import { CircleDollarSign, Briefcase, Building, Home, Landmark, Wallet, CreditCard } from "lucide-react";
+import { CircleDollarSign, Briefcase, Building, Home, Landmark, Wallet, CreditCard, ExternalLink } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { AccountSection } from "@/components/accounts/AccountSection";
 import { EmptyAccountSection } from "@/components/accounts/EmptyAccountSection";
 import { EducationSavingsSection } from "@/components/accounts/EducationSavingsSection";
