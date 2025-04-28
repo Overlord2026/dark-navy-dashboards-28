@@ -27,7 +27,7 @@ export const SidebarSection: React.FC<SidebarSectionProps> = ({
     // Check for query param match (dashboard with segment)
     if (path.includes('?') && 
         currentPath.split('?')[0] === path.split('?')[0] && 
-        currentPath.search.includes(path.split('?')[1])) {
+        currentPath.includes(path.split('?')[1])) {
       return true;
     }
     

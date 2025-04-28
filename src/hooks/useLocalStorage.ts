@@ -33,21 +33,5 @@ export function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T 
     }
   };
 
-  // Listen for changes to this localStorage value from other tabs/windows
-  useEffect(() => {
-    const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === key && e.newValue) {
-        setStoredValue(JSON.parse(e.newValue));
-      }
-    };
-    
-    // This only works for other documents, not the current one
-    window.addEventListener("storage", handleStorageChange);
-    
-    return () => {
-      window.removeEventListener("storage", handleStorageChange);
-    };
-  }, [key]);
-
   return [storedValue, setValue];
 }
