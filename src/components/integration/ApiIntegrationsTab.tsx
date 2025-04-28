@@ -1,134 +1,219 @@
 
 import React from "react";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle2, AlertCircle, Code, Key, RefreshCw } from "lucide-react";
+import { BookOpen, Check, Code, Copy, ExternalLink, Lock, Shield } from "lucide-react";
+import { toast } from "sonner";
 
 export function ApiIntegrationsTab() {
+  const copyToClipboard = (text: string, message: string) => {
+    navigator.clipboard.writeText(text);
+    toast.success(message);
+  };
+  
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl font-semibold">API Integrations</h2>
-        <div className="flex gap-2">
-          <Button variant="outline" size="sm">
-            <Key className="h-4 w-4 mr-2" />
-            Manage API Keys
-          </Button>
-          <Button variant="outline" size="sm">
-            <RefreshCw className="h-4 w-4 mr-2" />
-            Refresh Status
-          </Button>
-        </div>
+        <h2 className="text-xl font-semibold">API Integrations</h2>
+        <Button variant="outline" className="flex items-center gap-2">
+          <Shield className="h-4 w-4" /> Generate New API Keys
+        </Button>
       </div>
       
-      <Card className="mb-6">
-        <CardHeader>
-          <CardTitle>API Health Overview</CardTitle>
-          <CardDescription>Current status of all API integrations</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="bg-green-50 border border-green-100 rounded-lg p-4 flex flex-col items-center">
-              <span className="text-sm text-muted-foreground">Healthy</span>
-              <span className="text-4xl font-bold text-green-600 my-2">12</span>
-              <span className="text-xs text-muted-foreground">API endpoints</span>
-            </div>
-            <div className="bg-yellow-50 border border-yellow-100 rounded-lg p-4 flex flex-col items-center">
-              <span className="text-sm text-muted-foreground">Degraded</span>
-              <span className="text-4xl font-bold text-yellow-600 my-2">2</span>
-              <span className="text-xs text-muted-foreground">API endpoints</span>
-            </div>
-            <div className="bg-red-50 border border-red-100 rounded-lg p-4 flex flex-col items-center">
-              <span className="text-sm text-muted-foreground">Down</span>
-              <span className="text-4xl font-bold text-red-600 my-2">0</span>
-              <span className="text-xs text-muted-foreground">API endpoints</span>
-            </div>
-            <div className="bg-blue-50 border border-blue-100 rounded-lg p-4 flex flex-col items-center">
-              <span className="text-sm text-muted-foreground">Total Requests</span>
-              <span className="text-4xl font-bold text-blue-600 my-2">14.3k</span>
-              <span className="text-xs text-muted-foreground">Last 24 hours</span>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      <p className="text-muted-foreground mb-4">
+        Securely integrate with Family Office Marketplace services using our comprehensive API suite.
+      </p>
       
-      <div className="space-y-4">
-        <div className="flex justify-between items-center">
-          <h3 className="text-lg font-medium">Active API Connections</h3>
-          <Button variant="secondary" size="sm">
-            <Code className="h-4 w-4 mr-2" />
-            View Documentation
-          </Button>
-        </div>
+      {/* API Keys Section */}
+      <Card className="p-6 mb-6">
+        <h3 className="text-lg font-medium mb-4">Your API Keys</h3>
         
         <div className="space-y-4">
-          {/* API Integration 1 */}
-          <Card>
-            <CardHeader className="pb-2">
-              <div className="flex justify-between">
-                <CardTitle>Portfolio Data API</CardTitle>
-                <Badge className="bg-green-100 text-green-800">Healthy</Badge>
-              </div>
-              <CardDescription>Provides real-time portfolio performance data</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                <div>
-                  <p className="text-muted-foreground">Endpoint:</p>
-                  <p className="font-mono">/api/v1/portfolio</p>
-                </div>
-                <div>
-                  <p className="text-muted-foreground">Status:</p>
-                  <div className="flex items-center">
-                    <CheckCircle2 className="h-4 w-4 text-green-500 mr-1" />
-                    <span>Operational (99.98% uptime)</span>
-                  </div>
-                </div>
-                <div>
-                  <p className="text-muted-foreground">Last Check:</p>
-                  <p>5 minutes ago</p>
-                </div>
-              </div>
-            </CardContent>
-            <CardFooter>
-              <Button variant="outline" size="sm">View Details</Button>
-            </CardFooter>
-          </Card>
+          <div className="p-4 bg-muted/50 rounded-lg">
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-sm font-medium">Production API Key</span>
+              <Badge className="bg-green-600">Active</Badge>
+            </div>
+            <div className="flex items-center">
+              <code className="bg-background px-3 py-1 rounded border border-border flex-1 font-mono text-xs md:text-sm overflow-hidden text-ellipsis">
+                •••••••••••••••••••••••••••fam_prod_2023
+              </code>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="ml-2"
+                onClick={() => copyToClipboard("bfo_api_key_1234567890fam_prod_2023", "Production API key copied")}
+              >
+                <Copy className="h-4 w-4" />
+              </Button>
+            </div>
+            <p className="text-xs text-muted-foreground mt-2">Created: March 15, 2024 • Last used: 2 hours ago</p>
+          </div>
           
-          {/* API Integration 2 */}
-          <Card>
-            <CardHeader className="pb-2">
-              <div className="flex justify-between">
-                <CardTitle>Document Management API</CardTitle>
-                <Badge className="bg-yellow-100 text-yellow-800">Degraded</Badge>
-              </div>
-              <CardDescription>Manages document storage and retrieval</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                <div>
-                  <p className="text-muted-foreground">Endpoint:</p>
-                  <p className="font-mono">/api/v1/documents</p>
-                </div>
-                <div>
-                  <p className="text-muted-foreground">Status:</p>
-                  <div className="flex items-center">
-                    <AlertCircle className="h-4 w-4 text-yellow-500 mr-1" />
-                    <span>Partial Outage (94.2% uptime)</span>
-                  </div>
-                </div>
-                <div>
-                  <p className="text-muted-foreground">Last Check:</p>
-                  <p>10 minutes ago</p>
-                </div>
-              </div>
-            </CardContent>
-            <CardFooter>
-              <Button variant="outline" size="sm">View Details</Button>
-            </CardFooter>
-          </Card>
+          <div className="p-4 bg-muted/50 rounded-lg">
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-sm font-medium">Development API Key</span>
+              <Badge variant="outline">Development</Badge>
+            </div>
+            <div className="flex items-center">
+              <code className="bg-background px-3 py-1 rounded border border-border flex-1 font-mono text-xs md:text-sm overflow-hidden text-ellipsis">
+                •••••••••••••••••••••••••••fam_dev_2023
+              </code>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="ml-2"
+                onClick={() => copyToClipboard("bfo_api_key_0987654321fam_dev_2023", "Development API key copied")}
+              >
+                <Copy className="h-4 w-4" />
+              </Button>
+            </div>
+            <p className="text-xs text-muted-foreground mt-2">Created: March 15, 2024 • Last used: 1 day ago</p>
+          </div>
         </div>
+      </Card>
+      
+      {/* Available APIs Section */}
+      <h3 className="text-lg font-medium mb-4">Available APIs</h3>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Portfolio Data API */}
+        <Card className="p-6 border-l-4 border-l-blue-500">
+          <div className="flex justify-between items-start">
+            <h4 className="font-medium">Portfolio Data API</h4>
+            <Badge className="bg-blue-500">Connected</Badge>
+          </div>
+          <p className="text-sm text-muted-foreground mt-1 mb-4">
+            Access and manage investment portfolio data.
+          </p>
+          
+          <div className="space-y-1 mb-4">
+            <div className="flex items-center text-sm">
+              <Check className="h-4 w-4 text-green-500 mr-2" />
+              <span>Read/write account data</span>
+            </div>
+            <div className="flex items-center text-sm">
+              <Check className="h-4 w-4 text-green-500 mr-2" />
+              <span>Performance metrics</span>
+            </div>
+            <div className="flex items-center text-sm">
+              <Check className="h-4 w-4 text-green-500 mr-2" />
+              <span>Asset allocation data</span>
+            </div>
+          </div>
+          
+          <div className="flex items-center justify-between">
+            <Button variant="outline" size="sm" className="flex items-center gap-2">
+              <Code className="h-4 w-4" /> Sample Request
+            </Button>
+            <Button variant="ghost" size="sm" className="text-blue-500 flex items-center gap-1">
+              <BookOpen className="h-4 w-4" /> Documentation
+            </Button>
+          </div>
+        </Card>
+        
+        {/* Document Sharing API */}
+        <Card className="p-6">
+          <div className="flex justify-between items-start">
+            <h4 className="font-medium">Document Sharing API</h4>
+            <Badge variant="outline">Available</Badge>
+          </div>
+          <p className="text-sm text-muted-foreground mt-1 mb-4">
+            Securely share documents between integrated applications.
+          </p>
+          
+          <div className="space-y-1 mb-4">
+            <div className="flex items-center text-sm text-muted-foreground">
+              <Lock className="h-4 w-4 mr-2" />
+              <span>Encrypted document transfer</span>
+            </div>
+            <div className="flex items-center text-sm text-muted-foreground">
+              <Lock className="h-4 w-4 mr-2" />
+              <span>Access control management</span>
+            </div>
+            <div className="flex items-center text-sm text-muted-foreground">
+              <Lock className="h-4 w-4 mr-2" />
+              <span>Version history tracking</span>
+            </div>
+          </div>
+          
+          <div className="flex items-center justify-end">
+            <Button className="flex items-center gap-2">
+              <Shield className="h-4 w-4" /> Enable API
+            </Button>
+          </div>
+        </Card>
+        
+        {/* Client Data API */}
+        <Card className="p-6">
+          <div className="flex justify-between items-start">
+            <h4 className="font-medium">Client Data API</h4>
+            <Badge variant="outline">Available</Badge>
+          </div>
+          <p className="text-sm text-muted-foreground mt-1 mb-4">
+            Access and manage client profile information.
+          </p>
+          
+          <div className="space-y-1 mb-4">
+            <div className="flex items-center text-sm text-muted-foreground">
+              <Lock className="h-4 w-4 mr-2" />
+              <span>Basic profile access</span>
+            </div>
+            <div className="flex items-center text-sm text-muted-foreground">
+              <Lock className="h-4 w-4 mr-2" />
+              <span>Contact information</span>
+            </div>
+            <div className="flex items-center text-sm text-muted-foreground">
+              <Lock className="h-4 w-4 mr-2" />
+              <span>Preference management</span>
+            </div>
+          </div>
+          
+          <div className="flex items-center justify-end">
+            <Button className="flex items-center gap-2">
+              <Shield className="h-4 w-4" /> Enable API
+            </Button>
+          </div>
+        </Card>
+        
+        {/* Tax Planning API */}
+        <Card className="p-6">
+          <div className="flex justify-between items-start">
+            <h4 className="font-medium">Tax Planning API</h4>
+            <Badge variant="outline">Available</Badge>
+          </div>
+          <p className="text-sm text-muted-foreground mt-1 mb-4">
+            Tax scenario modeling and optimization.
+          </p>
+          
+          <div className="space-y-1 mb-4">
+            <div className="flex items-center text-sm text-muted-foreground">
+              <Lock className="h-4 w-4 mr-2" />
+              <span>Tax projection data</span>
+            </div>
+            <div className="flex items-center text-sm text-muted-foreground">
+              <Lock className="h-4 w-4 mr-2" />
+              <span>Strategy recommendations</span>
+            </div>
+            <div className="flex items-center text-sm text-muted-foreground">
+              <Lock className="h-4 w-4 mr-2" />
+              <span>Historical tax data</span>
+            </div>
+          </div>
+          
+          <div className="flex items-center justify-end">
+            <Button className="flex items-center gap-2">
+              <Shield className="h-4 w-4" /> Enable API
+            </Button>
+          </div>
+        </Card>
+      </div>
+      
+      <div className="flex justify-center mt-6">
+        <Button variant="outline" className="flex items-center gap-2">
+          <ExternalLink className="h-4 w-4" /> Visit API Documentation Portal
+        </Button>
       </div>
     </div>
   );

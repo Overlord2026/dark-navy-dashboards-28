@@ -13,12 +13,20 @@ export function AdvisorDashboard({ segment }: AdvisorDashboardProps) {
 
   return (
     <div className="container mx-auto px-4 py-6 max-w-7xl">
-      {/* Hero Banner */}
-      <div className="mb-8 p-6 bg-gradient-to-r from-[#1B1B32] to-[#2D2D44] rounded-lg shadow-md">
-        <h1 className="text-3xl font-bold mb-2 text-white">
-          {loading ? "Welcome to the Advisor Portal" : `Welcome, ${profile?.name || "Advisor"}`}
-        </h1>
-        <p className="text-gray-200 max-w-3xl">
+      {/* Animated Header Banner */}
+      <div className="mb-8 p-6 bg-[#1a202c] rounded-lg shadow-md">
+        <div className="flex items-center justify-between">
+          <span className="text-[#d4af37] text-xl font-semibold animate-pulse">
+            Organize
+          </span>
+          <h1 className="text-3xl font-bold text-white">
+            {loading ? "Welcome to the Advisor Portal" : `Welcome, ${profile?.name || "Advisor"}`}
+          </h1>
+          <span className="text-[#d4af37] text-xl font-semibold animate-pulse">
+            Maximize
+          </span>
+        </div>
+        <p className="text-gray-200 max-w-3xl mt-4 text-center mx-auto">
           Manage your client relationships, access specialized tools, and leverage our platform
           to deliver exceptional service to your high-value clientele.
         </p>
