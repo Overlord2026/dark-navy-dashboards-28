@@ -1,34 +1,24 @@
 
-import React from "react";
-
-export type LucideIcon = React.ForwardRefExoticComponent<
-  React.SVGProps<SVGSVGElement> & React.RefAttributes<SVGSVGElement>
->;
+import { LucideIcon } from "lucide-react";
 
 export interface LoanCategory {
   id: string;
   title: string;
   description: string;
-  icon: LucideIcon;
-  href: string;
+  icon?: LucideIcon;
+  colorLight: string;
+  colorDark: string;
 }
 
 export interface Lender {
   id: string;
   name: string;
+  description: string;
   category: string;
-  offering: string;
-  description: string;
-  about: string;
-  howItWorks: string;
-  otherOfferings: string[];
-  topUnderwriters: string[];
-}
-
-// Add the LoanType interface that matches what's expected by LoanTypeSelector
-export interface LoanType {
-  id: string;
-  name: string;
-  description: string;
-  icon: LucideIcon;
+  logo?: string;
+  tags: string[];
+  features?: string[];
+  eligibility?: string;
+  contactPhone?: string;
+  contactEmail?: string;
 }

@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Card } from "@/components/ui/card";
-import { ArrowRight, Briefcase, Lightbulb, GraduationCap, Plane, Palette, Ship } from "lucide-react";
+import { ArrowRight, Briefcase, Paint, Car, PlaneTakeoff, Award, Wine } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScheduleMeetingButton } from "./ScheduleMeetingButton";
 
@@ -9,9 +9,9 @@ export const SpecialtyLoansContent = () => {
   return (
     <div className="space-y-6">
       <div className="mb-6">
-        <h1 className="text-2xl font-semibold mb-2">Specialty Loans</h1>
+        <h1 className="text-2xl font-semibold mb-2">Specialty Financing</h1>
         <p className="text-muted-foreground">
-          Specialized financing solutions for unique needs.
+          Custom lending solutions for unique assets and opportunities.
         </p>
       </div>
       
@@ -21,9 +21,9 @@ export const SpecialtyLoansContent = () => {
             <div>
               <h3 className="text-xl font-medium mb-3">How It Works</h3>
               <p className="text-muted-foreground mb-4">
-                Specialty loans are designed for specific purposes or industries with 
-                unique financing needs. These loans often feature customized terms and 
-                underwriting criteria tailored to the specific asset or situation.
+                Specialty financing provides tailored lending solutions for unique assets that 
+                traditional lenders may not accommodate. These custom structures allow you to 
+                leverage or acquire valuable assets with specialized terms.
               </p>
               <div className="flex flex-col gap-4">
                 <div className="flex items-center gap-3">
@@ -31,26 +31,26 @@ export const SpecialtyLoansContent = () => {
                     <Briefcase className="h-5 w-5 text-blue-600" />
                   </div>
                   <div>
-                    <p className="font-medium">Tailored Solutions</p>
-                    <p className="text-sm text-muted-foreground">Financing designed for unique needs</p>
+                    <p className="font-medium">Custom Structures</p>
+                    <p className="text-sm text-muted-foreground">Tailored to your unique needs</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="bg-green-50 p-2 rounded-full">
-                    <Lightbulb className="h-5 w-5 text-green-600" />
+                    <Award className="h-5 w-5 text-green-600" />
                   </div>
                   <div>
-                    <p className="font-medium">Expert Guidance</p>
-                    <p className="text-sm text-muted-foreground">Specialist lenders with industry knowledge</p>
+                    <p className="font-medium">Specialized Expertise</p>
+                    <p className="text-sm text-muted-foreground">Industry knowledge for unique assets</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="bg-purple-50 p-2 rounded-full">
-                    <GraduationCap className="h-5 w-5 text-purple-600" />
+                    <PlaneTakeoff className="h-5 w-5 text-purple-600" />
                   </div>
                   <div>
-                    <p className="font-medium">Specialized Terms</p>
-                    <p className="text-sm text-muted-foreground">Structured for specific assets or situations</p>
+                    <p className="font-medium">Asset-Specific Financing</p>
+                    <p className="text-sm text-muted-foreground">Terms aligned with asset characteristics</p>
                   </div>
                 </div>
               </div>
@@ -63,34 +63,34 @@ export const SpecialtyLoansContent = () => {
             <div>
               <h3 className="text-xl font-medium mb-3">Use Cases</h3>
               <p className="text-muted-foreground mb-4">
-                Specialty loans address a wide range of unique financing needs across various industries and assets.
+                Specialty financing can be used for various unique assets and opportunities.
               </p>
               <div className="flex flex-col gap-4">
                 <div className="flex items-center gap-3">
                   <div className="bg-amber-50 p-2 rounded-full">
-                    <Plane className="h-5 w-5 text-amber-600" />
+                    <Paint className="h-5 w-5 text-amber-600" />
                   </div>
                   <div>
-                    <p className="font-medium">Aviation Financing</p>
-                    <p className="text-sm text-muted-foreground">Aircraft purchasing and maintenance</p>
+                    <p className="font-medium">Art & Collectibles</p>
+                    <p className="text-sm text-muted-foreground">Leverage your fine art collection</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="bg-blue-50 p-2 rounded-full">
-                    <Palette className="h-5 w-5 text-blue-600" />
+                    <PlaneTakeoff className="h-5 w-5 text-blue-600" />
                   </div>
                   <div>
-                    <p className="font-medium">Art & Collectibles</p>
-                    <p className="text-sm text-muted-foreground">Financing for high-value collections</p>
+                    <p className="font-medium">Aircraft & Yacht Financing</p>
+                    <p className="text-sm text-muted-foreground">Specialized terms for luxury assets</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="bg-green-50 p-2 rounded-full">
-                    <Ship className="h-5 w-5 text-green-600" />
+                    <Wine className="h-5 w-5 text-green-600" />
                   </div>
                   <div>
-                    <p className="font-medium">Marine Financing</p>
-                    <p className="text-sm text-muted-foreground">Yacht and vessel purchases</p>
+                    <p className="font-medium">Wine Collections</p>
+                    <p className="text-sm text-muted-foreground">Finance rare wine acquisitions</p>
                   </div>
                 </div>
               </div>
@@ -102,11 +102,11 @@ export const SpecialtyLoansContent = () => {
       <Card className="p-6">
         <h3 className="text-xl font-medium mb-4">Ready to Get Started?</h3>
         <p className="text-muted-foreground mb-6">
-          Speak with your advisor to discuss your specialty financing needs and explore 
-          options tailored to your specific situation.
+          Speak with your advisor to explore specialty financing options tailored to 
+          your unique asset acquisition or leverage needs.
         </p>
         <div className="flex flex-col sm:flex-row gap-3">
-          <ScheduleMeetingButton offeringName="Specialty Loans" />
+          <ScheduleMeetingButton offeringName="Specialty Financing" />
           <Button variant="outline">Learn More <ArrowRight className="ml-2 h-4 w-4" /></Button>
         </div>
       </Card>

@@ -1,17 +1,15 @@
 
-import React, { useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Card } from "@/components/ui/card";
+import React from "react";
 import { Button } from "@/components/ui/button";
-import { LoanCategory } from "./types";
-import { Lender } from "./types";
+import { ArrowLeft } from "lucide-react";
+import { LoanCategory, Lender } from "./types";
 
 interface LenderListViewProps {
-  selectedCategory: LoanCategory | null;
+  selectedCategory: LoanCategory;
   lenders: Lender[];
   onLenderSelect: (lenderId: string) => void;
   onBack: () => void;
-  categoryContent?: React.ReactNode;
+  categoryContent: React.ReactNode;
 }
 
 export const LenderListView: React.FC<LenderListViewProps> = ({
@@ -21,99 +19,59 @@ export const LenderListView: React.FC<LenderListViewProps> = ({
   onBack,
   categoryContent,
 }) => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 2; // Number of lenders per page
-
-  const totalPages = Math.ceil(lenders.length / pageSize);
-  const paginatedLenders = lenders.slice((currentPage - 1) * pageSize, currentPage * pageSize);
-
-  const handlePageChange = (direction: 'next' | 'prev') => {
-    if (direction === 'next' && currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
-    } else if (direction === 'prev' && currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
-
   return (
-    <div className="animate-fade-in">
-      <div className="flex items-center mb-6">
-        <Button 
-          variant="ghost" 
-          size="sm" 
-          onClick={onBack} 
-          className="mr-2"
+    <div className="space-y-6">
+      <div className="flex items-center mb-4">
+        <Button
+          variant="outline"
+          size="sm"
+          className="flex items-center gap-2"
+          onClick={onBack}
         >
-          <ChevronLeft className="h-4 w-4 mr-1" /> Back
+          <ArrowLeft className="h-4 w-4" />
+          Back to Categories
         </Button>
-        <div>
-          <h1 className="text-2xl font-semibold mb-1">
-            {selectedCategory?.title}
-          </h1>
-          {!categoryContent && (
-            <p className="text-muted-foreground">
-              {selectedCategory?.description}
-            </p>
-          )}
-        </div>
       </div>
 
-      {categoryContent || (
-        <>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
-            {paginatedLenders.map((lender) => (
-              <Card 
-                key={lender.id} 
-                className="p-6 hover:shadow-md transition-all cursor-pointer"
+      {categoryContent}
+      
+      {lenders.length > 0 && (
+        <div className="mt-8">
+          <h3 className="text-xl font-medium mb-4">Available Lenders</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {lenders.map((lender) => (
+              <div
+                key={lender.id}
+                className="border border-border rounded-lg p-6 hover:border-primary/50 transition-all hover:shadow-md cursor-pointer"
                 onClick={() => onLenderSelect(lender.id)}
               >
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h3 className="text-xl font-medium mb-1">{lender.name}</h3>
-                    <p className="text-muted-foreground mb-4">{lender.offering}</p>
-                    
-                    <div className="mb-4">
-                      <h4 className="font-medium text-sm mb-1">About</h4>
-                      <p className="text-sm text-muted-foreground">{lender.about.substring(0, 150)}...</p>
-                    </div>
-                    
-                    <div>
-                      <h4 className="font-medium text-sm mb-1">How It Works</h4>
-                      <p className="text-sm text-muted-foreground">{lender.howItWorks.substring(0, 150)}...</p>
-                    </div>
-                  </div>
-                  <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                <div className="flex items-center gap-3 mb-4">
+                  {lender.logo ? (
+                    <img 
+                      src={lender.logo} 
+                      alt={lender.name} 
+                      className="h-8 w-auto" 
+                    />
+                  ) : (
+                    <div className="h-8 w-8 bg-muted rounded-full"></div>
+                  )}
+                  <h3 className="font-medium">{lender.name}</h3>
                 </div>
-              </Card>
+                <p className="text-sm text-muted-foreground mb-3">{lender.description}</p>
+                <div className="flex flex-wrap gap-2">
+                  {lender.tags.map((tag, index) => (
+                    <span
+                      key={index}
+                      className="text-xs py-1 px-2 rounded-full bg-muted text-muted-foreground"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
             ))}
           </div>
-          
-          {totalPages > 1 && (
-            <div className="flex justify-between items-center mt-6">
-              <div className="text-sm text-muted-foreground">
-                Page {currentPage} of {totalPages}
-              </div>
-              <div className="flex gap-2">
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  onClick={() => handlePageChange('prev')}
-                  disabled={currentPage === 1}
-                >
-                  <ChevronLeft className="h-4 w-4" />
-                </Button>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  onClick={() => handlePageChange('next')}
-                  disabled={currentPage === totalPages}
-                >
-                  <ChevronRight className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
-          )}
-        </>
+        </div>
       )}
     </div>
   );
