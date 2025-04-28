@@ -28,7 +28,7 @@ const Dashboard: React.FC = () => {
   };
 
   return (
-    <ThreeColumnLayout showAdmin={false}>
+    <ThreeColumnLayout>
       {renderDashboard()}
     </ThreeColumnLayout>
   );
