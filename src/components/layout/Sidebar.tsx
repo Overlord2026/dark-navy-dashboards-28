@@ -13,7 +13,9 @@ import {
   ChevronUp,
   ChevronLeft,
   ChevronRight,
-  VaultIcon
+  VaultIcon,
+  HomeIcon,
+  Grid
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { FamilyProfile } from "@/components/sidebar/FamilyProfile";
@@ -35,6 +37,19 @@ export const Sidebar = () => {
 
   const navSections: NavSection[] = [
     {
+      id: "marketplace",
+      label: "Marketplace",
+      icon: BriefcaseIcon,
+      items: [
+        { label: "Landing", href: "/landing", icon: HomeIcon },
+        { label: "Dashboard", href: "/dashboard?segment=preretirees", icon: Grid },
+        { label: "Aspiring Wealthy", href: "/dashboard?segment=aspiring", icon: TrendingUp },
+        { label: "Pre-Retirees & Retirees", href: "/dashboard?segment=preretirees", icon: Shield },
+        { label: "Ultra-HNW", href: "/dashboard?segment=ultrahnw", icon: Banknote },
+        { label: "Advisor", href: "/dashboard?segment=advisor", icon: BriefcaseIcon },
+      ],
+    },
+    {
       id: "education",
       label: "Education & Solutions",
       icon: Book,
@@ -53,7 +68,6 @@ export const Sidebar = () => {
       icon: BriefcaseIcon,
       items: [
         { label: "Secure Family Vault", href: "/legacy-vault", icon: VaultIcon },
-        { label: "Dashboard", href: "/wealth-management", icon: BriefcaseIcon },
         { label: "Accounts", href: "/accounts", icon: FileText },
         { label: "Financial Plans", href: "/financial-plans", icon: FileText },
         { label: "Investments", href: "/accounts", icon: TrendingUp },
@@ -71,7 +85,7 @@ export const Sidebar = () => {
         { label: "Tax Planning", href: "/tax-planning", icon: FileText },
         { label: "Estate Planning", href: "/estate-planning", icon: FileText },
         { label: "Insurance", href: "/insurance", icon: Shield },
-        { label: "Lending", href: "/lending", icon: Banknote }, // Updated to correct href
+        { label: "Lending", href: "/lending", icon: Banknote },
       ],
     },
     {
@@ -127,7 +141,7 @@ export const Sidebar = () => {
                 <button
                   className={cn(
                     "flex items-center justify-between w-full p-2 rounded-md hover:bg-muted transition-colors",
-                    isSectionActive(section) && "bg-muted/80",
+                    location.pathname === section.href && "bg-muted/80",
                     isCollapsed && "justify-center"
                   )}
                   onClick={() => toggleSection(section.id)}
@@ -153,7 +167,11 @@ export const Sidebar = () => {
                         to={item.href}
                         className={cn(
                           "flex items-center gap-2 p-2 rounded-md text-sm hover:bg-muted transition-colors",
-                          location.pathname === item.href && "bg-muted font-medium"
+                          (location.pathname === item.href || 
+                           (item.href.includes('?') && 
+                            location.pathname === item.href.split('?')[0] && 
+                            location.search.includes(item.href.split('?')[1]))) && 
+                          "bg-muted font-medium"
                         )}
                       >
                         {item.icon && <item.icon size={16} />}
