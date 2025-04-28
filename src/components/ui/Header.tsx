@@ -6,8 +6,10 @@ export const Header = () => {
     <div className="w-full px-4 py-1 flex flex-col items-center justify-center bg-gradient-to-r from-[#0A1F44] to-[#1B1B32] z-10">
       {/* Header container with logo */}
       <div className="w-full max-w-7xl flex justify-between items-center h-16">
-        {/* Left section spacing */}
-        <div className="flex-1"></div>
+        {/* Left section with keyword */}
+        <div className="flex-1 flex justify-end mr-4">
+          <span className="text-[#D4AF37] font-semibold text-xl">Organize</span>
+        </div>
         
         {/* Centered area with logo */}
         <div className="flex justify-center">
@@ -18,8 +20,10 @@ export const Header = () => {
           />
         </div>
         
-        {/* Right section spacing */}
-        <div className="flex-1"></div>
+        {/* Right section with keyword */}
+        <div className="flex-1 flex justify-start ml-4">
+          <span className="text-[#D4AF37] font-semibold text-xl">Maximize</span>
+        </div>
       </div>
     </div>
   );
