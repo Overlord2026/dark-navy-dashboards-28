@@ -22,3 +22,12 @@ export interface Lender {
   contactPhone?: string;
   contactEmail?: string;
 }
+
+export interface LoanType {
+  id: string;
+  name: string;
+  description: string;
+  icon: LucideIcon;
+}
+
+export type { LucideIcon };

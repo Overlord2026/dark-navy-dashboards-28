@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Card } from "@/components/ui/card";
-import { ArrowRight, Briefcase, Paint, Car, PlaneTakeoff, Award, Wine } from "lucide-react";
+import { ArrowRight, Briefcase, Award, Car, PlaneTakeoff, Wine } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScheduleMeetingButton } from "./ScheduleMeetingButton";
 
@@ -68,11 +68,11 @@ export const SpecialtyLoansContent = () => {
               <div className="flex flex-col gap-4">
                 <div className="flex items-center gap-3">
                   <div className="bg-amber-50 p-2 rounded-full">
-                    <Paint className="h-5 w-5 text-amber-600" />
+                    <Car className="h-5 w-5 text-amber-600" />
                   </div>
                   <div>
-                    <p className="font-medium">Art & Collectibles</p>
-                    <p className="text-sm text-muted-foreground">Leverage your fine art collection</p>
+                    <p className="font-medium">Luxury Vehicles</p>
+                    <p className="text-sm text-muted-foreground">Finance for premium automobiles</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
