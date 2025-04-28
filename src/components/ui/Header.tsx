@@ -8,7 +8,7 @@ export const Header = () => {
   };
 
   return (
-    <div className="w-full px-4 py-1 flex flex-col items-center justify-center bg-[#0A1F44] z-10">
+    <div className="w-full px-4 py-1 flex flex-col items-center justify-center bg-gradient-to-r from-[#0A1F44] to-[#1B1B32] z-10">
       {/* Header container with logo */}
       <div className="w-full max-w-7xl flex justify-between items-center">
         {/* Logo on the left */}
@@ -17,9 +17,9 @@ export const Header = () => {
         {/* Centered logo */}
         <div className="flex justify-center">
           <img 
-            src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" 
+            src="/lovable-uploads/44608b26-0af4-4b77-998a-0d2cde72da54.png" 
             alt="Boutique Family Office Logo" 
-            className="h-10 w-auto"
+            className="h-16 w-auto"
           />
         </div>
         
