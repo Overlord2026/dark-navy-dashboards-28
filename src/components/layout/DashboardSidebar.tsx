@@ -3,7 +3,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
-import { LucideIcon, BookOpen, BriefcaseIcon, FileText, MessageSquare, ChevronDown, ChevronRight, User, VaultIcon } from "lucide-react";
+import { LucideIcon, BookOpen, BriefcaseIcon, FileText, MessageSquare, ChevronDown, ChevronRight, User, VaultIcon, BanknoteIcon } from "lucide-react";
 import { UserProfileSection } from "@/components/sidebar/UserProfileSection";
 import { AdvisorProfile } from "@/components/sidebar/AdvisorProfile";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -44,11 +44,11 @@ export function DashboardSidebar() {
     {
       name: "Wealth Management",
       icon: BriefcaseIcon,
-      items: [ // Convert this to have items instead of a direct href
+      items: [
         { name: "Secure Family Vault", href: "/legacy-vault" },
         { name: "Accounts", href: "/accounts" },
         { name: "Financial Plans", href: "/financial-plans" },
-        { name: "Investments", href: "/accounts" }, // Temporarily point to accounts
+        { name: "Investments", href: "/accounts" },
         { name: "Tax & Budgets", href: "/tax-budgets" },
         { name: "Properties", href: "/properties" },
       ],
@@ -58,17 +58,17 @@ export function DashboardSidebar() {
       icon: FileText,
       items: [
         { name: "Financial Planning", href: "/financial-plans" },
-        { name: "Investments", href: "/accounts" }, // Temporarily point to accounts
+        { name: "Investments", href: "/accounts" },
         { name: "Tax Planning", href: "/tax-planning" },
         { name: "Estate Planning", href: "/estate-planning" },
         { name: "Insurance", href: "/insurance" },
-        { name: "Lending", href: "/tax-planning" }, // Temporarily point to tax-planning
+        { name: "Lending", href: "/lending" }, // Updated to correct href
       ],
     },
     {
       name: "Collaboration",
       icon: MessageSquare,
-      href: "/integration" // Point to the integration page which exists
+      href: "/integration"
     }
   ];
 

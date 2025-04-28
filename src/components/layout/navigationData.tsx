@@ -1,3 +1,4 @@
+
 import React from "react";
 import {
   HomeIcon,
@@ -65,7 +66,7 @@ export const navigationCategories: NavCategory[] = [
       { id: "education", label: "Education Center", icon: GraduationCapIcon, href: "/education" },
       { id: "tax-planning", label: "Tax Planning", icon: PieChart, href: "/tax-planning" },
       { id: "insurance", label: "Insurance", icon: ShieldIcon, href: "/insurance" },
-      { id: "lending", label: "Lending", icon: BanknoteIcon, href: "/lending" },
+      { id: "lending", label: "Lending", icon: BanknoteIcon, href: "/lending" }, // Updated to correct href
       { id: "estate-planning", label: "Estate Planning", icon: ArchiveIcon, href: "/estate-planning" },
     ]
   },
@@ -105,7 +106,7 @@ export const navigationCategories: NavCategory[] = [
       { id: "tax-planning", label: "Tax Planning", icon: FileTextIcon, href: "/tax-planning" },
       { id: "estate-planning", label: "Estate Planning", icon: FileTextIcon, href: "/estate-planning" },
       { id: "insurance", label: "Insurance", icon: ShieldIcon, href: "/insurance" },
-      { id: "lending", label: "Lending", icon: BanknoteIcon, href: "/lending" },
+      { id: "lending", label: "Lending", icon: BanknoteIcon, href: "/lending" }, // Updated to correct href
     ]
   },
   {

@@ -71,7 +71,7 @@ export const Sidebar = () => {
         { label: "Tax Planning", href: "/tax-planning", icon: FileText },
         { label: "Estate Planning", href: "/estate-planning", icon: FileText },
         { label: "Insurance", href: "/insurance", icon: Shield },
-        { label: "Lending", href: "/tax-planning", icon: Banknote },
+        { label: "Lending", href: "/lending", icon: Banknote }, // Updated to correct href
       ],
     },
     {

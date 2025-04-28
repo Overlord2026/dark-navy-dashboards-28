@@ -4,6 +4,7 @@ import {
   BookIcon,
   FileTextIcon,
   PieChart,
+  BanknoteIcon
 } from "lucide-react";
 import { NavItem } from "@/types/navigation";
 
@@ -17,6 +18,11 @@ export const educationNavItems: NavItem[] = [
     title: "Tax Planning", 
     href: "/tax-planning", 
     icon: PieChart 
+  },
+  { 
+    title: "Lending", 
+    href: "/lending", 
+    icon: BanknoteIcon 
   },
   { 
     title: "Books", 
