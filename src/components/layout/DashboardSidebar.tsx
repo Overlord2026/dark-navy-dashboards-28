@@ -3,7 +3,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
-import { LucideIcon, BookOpen, BriefcaseIcon, FileText, MessageSquare, ChevronDown, ChevronRight, User, VaultIcon, BanknoteIcon } from "lucide-react";
+import { LucideIcon, BookOpen, BriefcaseIcon, FileText, MessageSquare, ChevronDown, ChevronRight, VaultIcon, BanknoteIcon } from "lucide-react";
 import { UserProfileSection } from "@/components/sidebar/UserProfileSection";
 import { AdvisorProfile } from "@/components/sidebar/AdvisorProfile";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -62,7 +62,7 @@ export function DashboardSidebar() {
         { name: "Tax Planning", href: "/tax-planning" },
         { name: "Estate Planning", href: "/estate-planning" },
         { name: "Insurance", href: "/insurance" },
-        { name: "Lending", href: "/lending" }, // Updated to correct href
+        { name: "Lending", href: "/lending" },
       ],
     },
     {
@@ -85,14 +85,6 @@ export function DashboardSidebar() {
       <UserProfileSection showLogo={true} />
 
       <nav className="flex-1 overflow-y-auto p-3">
-        <Link
-          to="/profile"
-          className="flex items-center gap-2 mb-4 p-2.5 rounded-md hover:bg-muted bg-amber-100/50 text-amber-900 font-medium shadow-sm border border-amber-200/50 mt-2"
-        >
-          <User className="h-4 w-4" />
-          <span className="text-sm">Investor Profile</span>
-        </Link>
-
         {navigationGroups.map((group) => (
           <div key={group.name} className="mb-3">
             {group.items ? (
