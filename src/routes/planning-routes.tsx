@@ -1,11 +1,12 @@
 
+import React from "react";
+import { RouteObject } from "react-router-dom";
 import TaxPlanning from "@/pages/TaxPlanning";
 import EstatePlanning from "@/pages/EstatePlanning";
 import Insurance from "@/pages/Insurance";
-import Healthcare from "@/pages/Healthcare";
-import SocialSecurity from "@/pages/SocialSecurity";
+import Lending from "@/pages/Lending";
 
-export const planningRoutes = [
+export const planningRoutes: RouteObject[] = [
   {
     path: "/tax-planning",
     element: <TaxPlanning />,
@@ -19,11 +20,7 @@ export const planningRoutes = [
     element: <Insurance />,
   },
   {
-    path: "/healthcare",
-    element: <Healthcare />,
+    path: "/lending",
+    element: <Lending />,
   },
-  {
-    path: "/social-security",
-    element: <SocialSecurity />,
-  }
 ];
