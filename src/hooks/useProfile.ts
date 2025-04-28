@@ -25,18 +25,13 @@ export function useProfile() {
 
       try {
         setLoading(true);
-        const { data, error } = await supabase
-          .from('users')
-          .select('id, name, role, email')
-          .eq('id', userProfile.id)
-          .maybeSingle();
-
-        if (error) {
-          throw error;
-        }
-
-        // If no data returned from Supabase, use the context user profile
-        const profileData = data || {
+        
+        // The Supabase database doesn't have a 'users' table, it only has 'user_roles'
+        // Instead of trying to fetch from a non-existent table, we'll directly use the user profile
+        // data from the context, which is what we'd fall back to anyway
+        
+        // Create profile data from the context
+        const profileData = {
           id: userProfile.id,
           name: userProfile.name || `${userProfile.firstName || ''} ${userProfile.lastName || ''}`.trim(),
           role: userProfile.role,
@@ -45,7 +40,7 @@ export function useProfile() {
 
         setProfile(profileData);
       } catch (err) {
-        console.error("Error fetching profile:", err);
+        console.error("Error handling profile:", err);
         setError(err instanceof Error ? err : new Error(String(err)));
         
         // Fallback to context user data
