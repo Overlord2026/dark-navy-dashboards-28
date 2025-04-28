@@ -2,18 +2,12 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { BellIcon, DollarSignIcon, UsersIcon, LogOutIcon, BarChart4Icon, XIcon } from "lucide-react";
-import { Header } from "@/components/ui/Header";
+import { BellIcon, LogOutIcon } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
-import { 
-  Dialog, 
-  DialogContent, 
-  DialogHeader, 
-  DialogTitle,
-  DialogDescription,
-  DialogFooter
-} from "@/components/ui/dialog";
 import { toast } from "sonner";
+import { MetricsCard } from "@/components/advisor/dashboard/MetricsCard";
+import { NotificationsPanel } from "@/components/advisor/dashboard/NotificationsPanel";
+import { ClientsList } from "@/components/advisor/dashboard/ClientsList";
 
 export default function AdvisorDashboard() {
   const { isAuthenticated, logout } = useAuth();
@@ -38,15 +32,11 @@ export default function AdvisorDashboard() {
     pendingReviews: 7
   };
   
-  const topClients = [
+  const allClients = [
     { id: 1, name: "Brady Family", aum: "$28.5M", lastActivity: "2 days ago" },
     { id: 2, name: "Johnson Trust", aum: "$19.7M", lastActivity: "5 days ago" },
     { id: 3, name: "Wilson Holdings", aum: "$15.2M", lastActivity: "Today" },
-    { id: 4, name: "Chen Investments", aum: "$12.8M", lastActivity: "Yesterday" }
-  ];
-
-  const allClients = [
-    ...topClients,
+    { id: 4, name: "Chen Investments", aum: "$12.8M", lastActivity: "Yesterday" },
     { id: 5, name: "Smith Family", aum: "$9.3M", lastActivity: "3 days ago" },
     { id: 6, name: "Anderson LLC", aum: "$7.8M", lastActivity: "1 week ago" },
     { id: 7, name: "Rodriguez Ventures", aum: "$6.2M", lastActivity: "2 days ago" },
@@ -71,7 +61,6 @@ export default function AdvisorDashboard() {
   };
   
   const viewClientDetail = (clientId: number) => {
-    // In a real app, you would navigate to a client detail page
     toast.info(`Viewing details for client #${clientId}`);
     setClientsOpen(false);
   };
@@ -120,159 +109,43 @@ export default function AdvisorDashboard() {
           <h1 className="text-3xl font-bold mb-8 text-[#222222]">Advisor Portal</h1>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div className="bg-white p-6 rounded-lg shadow-sm border border-[#DCD8C0]">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-semibold text-[#222222]">Total AUM</h2>
-                <DollarSignIcon className="h-8 w-8 text-green-600" />
-              </div>
-              <p className="text-3xl font-bold text-[#222222]">{clientMetrics.totalAUM}</p>
-              <p className="text-sm text-gray-500 mt-2">Across {clientMetrics.activeClients} client accounts</p>
-            </div>
+            <MetricsCard 
+              type="aum"
+              value={clientMetrics.totalAUM}
+              subtitle={`Across ${clientMetrics.activeClients} client accounts`}
+              trend={{ value: "$124,500 (5.3%)", isPositive: true }}
+            />
             
-            <div className="bg-white p-6 rounded-lg shadow-sm border border-[#DCD8C0]">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-semibold text-[#222222]">Monthly Fees</h2>
-                <BarChart4Icon className="h-8 w-8 text-blue-600" />
-              </div>
-              <p className="text-3xl font-bold text-[#222222]">{clientMetrics.monthlyFees}</p>
-              <p className="text-sm text-gray-500 mt-2">Average of $6,903 per client</p>
-            </div>
+            <MetricsCard 
+              type="fees"
+              value={clientMetrics.monthlyFees}
+              subtitle="Average of $6,903 per client"
+              trend={{ value: "$12,300 (1.5%)", isPositive: true }}
+            />
             
-            <div className="bg-white p-6 rounded-lg shadow-sm border border-[#DCD8C0]">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-semibold text-[#222222]">Active Clients</h2>
-                <UsersIcon className="h-8 w-8 text-purple-600" />
-              </div>
-              <p className="text-3xl font-bold text-[#222222]">{clientMetrics.activeClients}</p>
-              <p className="text-sm text-gray-500 mt-2">{clientMetrics.pendingReviews} reviews pending</p>
-            </div>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-white p-6 rounded-lg shadow-sm border border-[#DCD8C0]">
-              <h2 className="text-xl font-semibold mb-4 text-[#222222]">Recent Notifications</h2>
-              <div className="space-y-4">
-                {notifications.map((notification) => (
-                  <div key={notification.id} className="border-b border-gray-100 pb-3 last:border-0">
-                    <p className="text-gray-800">{notification.message}</p>
-                    <p className="text-sm text-gray-500">{notification.time}</p>
-                  </div>
-                ))}
-              </div>
-              <Button 
-                variant="ghost" 
-                className="mt-4 w-full"
-                onClick={() => setNotificationsOpen(true)}
-              >
-                View All Notifications
-              </Button>
-            </div>
-            
-            <div className="bg-white p-6 rounded-lg shadow-sm border border-[#DCD8C0]">
-              <h2 className="text-xl font-semibold mb-4 text-[#222222]">Top Clients by AUM</h2>
-              <div className="space-y-0">
-                <div className="grid grid-cols-3 py-2 border-b border-gray-200 font-medium text-gray-600">
-                  <div>Client</div>
-                  <div>AUM</div>
-                  <div>Last Activity</div>
-                </div>
-                {topClients.map((client) => (
-                  <div 
-                    key={client.id} 
-                    className="grid grid-cols-3 py-3 border-b border-gray-100 last:border-0 cursor-pointer hover:bg-gray-50"
-                    onClick={() => viewClientDetail(client.id)}
-                  >
-                    <div className="text-[#222222]">{client.name}</div>
-                    <div className="text-green-600 font-medium">{client.aum}</div>
-                    <div className="text-gray-500 text-sm">{client.lastActivity}</div>
-                  </div>
-                ))}
-              </div>
-              <Button 
-                variant="ghost" 
-                className="mt-4 w-full"
-                onClick={() => setClientsOpen(true)}
-              >
-                View All Clients
-              </Button>
-            </div>
+            <MetricsCard 
+              type="clients"
+              value={String(clientMetrics.activeClients)}
+              subtitle={`${clientMetrics.pendingReviews} reviews pending`}
+              trend={{ value: "2 new this month", isPositive: true }}
+            />
           </div>
         </div>
       </main>
 
-      {/* All Notifications Dialog */}
-      <Dialog open={notificationsOpen} onOpenChange={setNotificationsOpen}>
-        <DialogContent className="sm:max-w-[600px]">
-          <DialogHeader>
-            <DialogTitle>All Notifications</DialogTitle>
-            <DialogDescription>
-              Stay updated with your client activities and important events.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="my-4 max-h-[400px] overflow-y-auto">
-            {notifications.map((notification) => (
-              <div key={notification.id} className="py-3 border-b border-gray-100 last:border-0">
-                <div className="flex justify-between">
-                  <p className="text-gray-800 font-medium">{notification.message}</p>
-                  <Button size="sm" variant="ghost" className="h-6 w-6 p-0">
-                    <XIcon className="h-4 w-4" />
-                  </Button>
-                </div>
-                <p className="text-sm text-gray-500 mt-1">{notification.time}</p>
-              </div>
-            ))}
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setNotificationsOpen(false)}>
-              Close
-            </Button>
-            <Button onClick={markAllAsRead}>
-              Mark All as Read
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <NotificationsPanel 
+        notifications={notifications}
+        open={notificationsOpen}
+        onOpenChange={setNotificationsOpen}
+        onMarkAllRead={markAllAsRead}
+      />
 
-      {/* All Clients Dialog */}
-      <Dialog open={clientsOpen} onOpenChange={setClientsOpen}>
-        <DialogContent className="sm:max-w-[700px]">
-          <DialogHeader>
-            <DialogTitle>All Clients</DialogTitle>
-            <DialogDescription>
-              View and manage all your client relationships.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="my-4 max-h-[400px] overflow-y-auto">
-            <div className="grid grid-cols-3 py-2 border-b border-gray-200 font-medium text-gray-600 sticky top-0 bg-white">
-              <div>Client</div>
-              <div>AUM</div>
-              <div>Last Activity</div>
-            </div>
-            {allClients.map((client) => (
-              <div 
-                key={client.id} 
-                className="grid grid-cols-3 py-3 border-b border-gray-100 last:border-0 cursor-pointer hover:bg-gray-50"
-                onClick={() => viewClientDetail(client.id)}
-              >
-                <div className="text-[#222222] font-medium">{client.name}</div>
-                <div className="text-green-600">{client.aum}</div>
-                <div className="text-gray-500 text-sm">{client.lastActivity}</div>
-              </div>
-            ))}
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setClientsOpen(false)}>
-              Close
-            </Button>
-            <Button onClick={() => {
-              toast.success("New client feature coming soon!");
-              setClientsOpen(false);
-            }}>
-              Add New Client
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <ClientsList 
+        clients={allClients}
+        open={clientsOpen}
+        onOpenChange={setClientsOpen}
+        onViewDetail={viewClientDetail}
+      />
 
       <footer className="py-6 px-4 bg-[#1B1B32] text-white text-center">
         <p>&copy; {new Date().getFullYear()} Boutique Family Office. All rights reserved.</p>
