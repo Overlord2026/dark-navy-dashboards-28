@@ -1,4 +1,3 @@
-
 import React from "react";
 import {
   HomeIcon,
@@ -84,6 +83,29 @@ export const navigationCategories: NavCategory[] = [
       { id: "social-security", label: "Social Security", icon: CircleDollarSignIcon, href: "/social-security" },
       { id: "properties", label: "Real Estate & Properties", icon: BuildingIcon, href: "/properties" },
       { id: "billpay", label: "Bill Pay", icon: Receipt, href: "/billpay" },
+    ]
+  },
+  {
+    id: "planning",
+    label: "Planning & Services",
+    defaultExpanded: true,
+    items: [
+      { id: "financial-planning", label: "Financial Planning", icon: FileTextIcon, href: "/financial-plans" },
+      { 
+        id: "investments",
+        label: "Investments",
+        icon: BarChart3Icon,
+        href: "/investments",
+        items: [
+          { id: "bfo-models", label: "BFO Models", icon: LineChartIcon, href: "/investments?tab=model-portfolios" },
+          { id: "intelligent-allocation", label: "Intelligent Allocation", icon: PieChart, href: "/investments?tab=intelligent-allocation" },
+          { id: "private-markets", label: "Private Markets", icon: BarChart3Icon, href: "/investments?tab=alternative-assets" },
+        ]
+      },
+      { id: "tax-planning", label: "Tax Planning", icon: FileTextIcon, href: "/tax-planning" },
+      { id: "estate-planning", label: "Estate Planning", icon: FileTextIcon, href: "/estate-planning" },
+      { id: "insurance", label: "Insurance", icon: ShieldIcon, href: "/insurance" },
+      { id: "lending", label: "Lending", icon: BanknoteIcon, href: "/tax-planning" },
     ]
   },
   {
