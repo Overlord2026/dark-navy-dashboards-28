@@ -1,99 +1,110 @@
 
 import React from "react";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Link } from "react-router-dom";
-import { ArrowRight, ArrowUpRight, CheckCircle, Users, Briefcase, Diamond } from "lucide-react";
+import { Link2, RefreshCw, Settings, ExternalLink } from "lucide-react";
 
 export function ConnectedProjectsTab() {
-  const projects = [
-    {
-      id: "aspiring",
-      name: "Aspiring Wealthy Portal",
-      description: "Growth-focused portal for building and securing wealth",
-      status: "connected",
-      icon: <Users className="h-5 w-5 text-blue-500" />,
-      color: "bg-blue-500/10 border-blue-500/30",
-      url: "https://lovable.dev/projects/13afeb41-40dc-4128-a1e4-84b3b531647f"
-    },
-    {
-      id: "retirees",
-      name: "Retirees Portal",
-      description: "Optimized portal for retirement planning and wealth preservation",
-      status: "connected",
-      icon: <Briefcase className="h-5 w-5 text-amber-500" />,
-      color: "bg-amber-500/10 border-amber-500/30",
-      url: "https://lovable.dev/projects/824ab698-b76c-4745-ae63-67479651e785"
-    },
-    {
-      id: "uhnw",
-      name: "UHNW Family Office",
-      description: "Comprehensive wealth management for ultra-high net worth families",
-      status: "active",
-      icon: <Diamond className="h-5 w-5 text-indigo-500" />,
-      color: "bg-indigo-500/10 border-indigo-500/30",
-      url: "#"
-    }
-  ];
-
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {projects.map(project => (
-          <Card key={project.id} className={`border ${project.color} transition-all hover:shadow-md`}>
-            <CardHeader className="pb-2">
-              <div className="flex justify-between items-start">
-                <div className="p-2 rounded-full bg-background">{project.icon}</div>
-                <Badge variant={project.status === "connected" ? "outline" : "secondary"} className="flex gap-1 items-center">
-                  {project.status === "connected" ? (
-                    <>
-                      <CheckCircle className="h-3 w-3 text-green-500" />
-                      Connected
-                    </>
-                  ) : "Active"}
-                </Badge>
-              </div>
-              <CardTitle className="mt-2">{project.name}</CardTitle>
-              <CardDescription>{project.description}</CardDescription>
-            </CardHeader>
-            <CardFooter>
-              <Button variant="ghost" className="w-full flex items-center justify-between" asChild>
-                <Link to={project.url} target="_blank">
-                  View Project <ArrowUpRight className="h-4 w-4 ml-1" />
-                </Link>
-              </Button>
-            </CardFooter>
-          </Card>
-        ))}
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-2xl font-semibold">Connected Projects</h2>
+        <Button variant="outline" size="sm">
+          <RefreshCw className="h-4 w-4 mr-2" />
+          Refresh Connections
+        </Button>
       </div>
-
-      <div className="mt-8">
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Family Office Core Platform */}
         <Card>
           <CardHeader>
-            <CardTitle>Integration Status</CardTitle>
-            <CardDescription>All projects are successfully connected to the Family Office Architecture</CardDescription>
+            <div className="flex justify-between">
+              <CardTitle>Family Office Core Platform</CardTitle>
+              <Badge variant="outline" className="bg-green-100 text-green-800">Connected</Badge>
+            </div>
+            <CardDescription>Central platform for family office operations</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between pb-4 border-b">
-                <span className="font-medium">Data Synchronization</span>
-                <Badge className="bg-green-500">Active</Badge>
+            <div className="space-y-3">
+              <div className="flex justify-between text-sm">
+                <span className="text-muted-foreground">Status:</span>
+                <span className="font-medium text-green-600">Active</span>
               </div>
-              <div className="flex items-center justify-between pb-4 border-b">
-                <span className="font-medium">Authentication</span>
-                <Badge className="bg-green-500">Integrated</Badge>
+              <div className="flex justify-between text-sm">
+                <span className="text-muted-foreground">Last Synced:</span>
+                <span>Today at 09:45 AM</span>
               </div>
-              <div className="flex items-center justify-between">
-                <span className="font-medium">Services Communication</span>
-                <Badge className="bg-green-500">Online</Badge>
+              <div className="flex justify-between text-sm">
+                <span className="text-muted-foreground">Integration Type:</span>
+                <span>Deep Integration</span>
               </div>
             </div>
           </CardContent>
-          <CardFooter>
-            <Button variant="outline" className="w-full">
-              Test Integration Connections
+          <CardFooter className="flex justify-between">
+            <Button variant="outline" size="sm">
+              <Settings className="h-4 w-4 mr-2" />
+              Configure
             </Button>
+            <Button variant="default" size="sm">
+              <ExternalLink className="h-4 w-4 mr-2" />
+              Open Dashboard
+            </Button>
+          </CardFooter>
+        </Card>
+        
+        {/* Investment Management Hub */}
+        <Card>
+          <CardHeader>
+            <div className="flex justify-between">
+              <CardTitle>Investment Management Hub</CardTitle>
+              <Badge variant="outline" className="bg-green-100 text-green-800">Connected</Badge>
+            </div>
+            <CardDescription>Portfolio management and reporting</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              <div className="flex justify-between text-sm">
+                <span className="text-muted-foreground">Status:</span>
+                <span className="font-medium text-green-600">Active</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-muted-foreground">Last Synced:</span>
+                <span>Yesterday at 17:30 PM</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-muted-foreground">Integration Type:</span>
+                <span>API Integration</span>
+              </div>
+            </div>
+          </CardContent>
+          <CardFooter className="flex justify-between">
+            <Button variant="outline" size="sm">
+              <Settings className="h-4 w-4 mr-2" />
+              Configure
+            </Button>
+            <Button variant="default" size="sm">
+              <ExternalLink className="h-4 w-4 mr-2" />
+              Open Dashboard
+            </Button>
+          </CardFooter>
+        </Card>
+
+        {/* Add Connection Card */}
+        <Card className="border-dashed bg-muted/50">
+          <CardHeader>
+            <CardTitle>Add New Connection</CardTitle>
+            <CardDescription>Connect to another Family Office application</CardDescription>
+          </CardHeader>
+          <CardContent className="flex flex-col items-center justify-center py-8">
+            <Link2 className="h-12 w-12 text-muted-foreground mb-4" />
+            <p className="text-center text-muted-foreground mb-4">
+              Enhance your platform by integrating with other Family Office applications
+            </p>
+          </CardContent>
+          <CardFooter>
+            <Button className="w-full">Browse Marketplace</Button>
           </CardFooter>
         </Card>
       </div>

@@ -1,108 +1,64 @@
 
 import React from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Database, Users, Lock, Server, Layers, CloudCog, Network } from "lucide-react";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
 export function ArchitectureTab() {
   return (
     <div className="space-y-6">
+      <div className="mb-6">
+        <h2 className="text-2xl font-semibold mb-2">System Architecture</h2>
+        <p className="text-muted-foreground">
+          Overview of the integrated Family Office platform architecture
+        </p>
+      </div>
+      
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Layers className="h-5 w-5 text-primary" />
-            Family Office Architecture
-          </CardTitle>
-          <CardDescription>
-            Overview of the current system architecture connecting all projects
-          </CardDescription>
+          <CardTitle>Architecture Diagram</CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="bg-background p-6 rounded-md border border-dashed">
-            <div className="relative">
-              {/* Architecture diagram would be here - for now using a simple placeholder */}
-              <div className="flex flex-col items-center gap-8">
-                <div className="w-full bg-blue-500/10 p-4 rounded-md border border-blue-500/30 text-center">
-                  <p className="font-medium">Client Portals Layer</p>
-                  <div className="mt-3 flex justify-center gap-4">
-                    <Badge variant="outline" className="bg-blue-500/10">Aspiring</Badge>
-                    <Badge variant="outline" className="bg-amber-500/10">Retirees</Badge>
-                    <Badge variant="outline" className="bg-indigo-500/10">UHNW</Badge>
-                  </div>
-                </div>
-                
-                <Network className="h-6 w-6 text-gray-400" />
-                
-                <div className="w-full bg-primary/10 p-4 rounded-md border border-primary/30 text-center">
-                  <p className="font-medium">Integration & Authentication Layer</p>
-                  <div className="mt-3 flex justify-center gap-4">
-                    <Badge variant="outline" className="bg-primary/10">Supabase</Badge>
-                    <Badge variant="outline" className="bg-primary/10">API Gateway</Badge>
-                  </div>
-                </div>
-                
-                <Network className="h-6 w-6 text-gray-400" />
-                
-                <div className="w-full bg-green-500/10 p-4 rounded-md border border-green-500/30 text-center">
-                  <p className="font-medium">Advisor & Admin Layer</p>
-                  <div className="mt-3 flex justify-center gap-4">
-                    <Badge variant="outline" className="bg-green-500/10">Admin Portal</Badge>
-                    <Badge variant="outline" className="bg-green-500/10">Advisor Dashboard</Badge>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
-            <div className="p-4 border rounded-md flex items-start gap-3">
-              <Database className="h-5 w-5 text-blue-500 mt-0.5" />
-              <div>
-                <h3 className="font-medium">Shared Database</h3>
-                <p className="text-sm text-muted-foreground">Centralized data storage for all portals</p>
-              </div>
-            </div>
-            
-            <div className="p-4 border rounded-md flex items-start gap-3">
-              <Lock className="h-5 w-5 text-amber-500 mt-0.5" />
-              <div>
-                <h3 className="font-medium">Unified Authentication</h3>
-                <p className="text-sm text-muted-foreground">Single sign-on across all platforms</p>
-              </div>
-            </div>
-            
-            <div className="p-4 border rounded-md flex items-start gap-3">
-              <Server className="h-5 w-5 text-indigo-500 mt-0.5" />
-              <div>
-                <h3 className="font-medium">Microservices</h3>
-                <p className="text-sm text-muted-foreground">Specialized services for each segment</p>
-              </div>
+        <CardContent className="flex justify-center">
+          <div className="border border-dashed border-muted-foreground p-8 rounded-lg w-full max-w-4xl">
+            <div className="flex flex-col items-center justify-center min-h-[400px]">
+              <p className="text-muted-foreground text-center mb-4">Architecture diagram placeholder</p>
+              <p className="text-sm text-center text-muted-foreground">
+                This will display a visual representation of how all Family Office applications are interconnected
+              </p>
             </div>
           </div>
         </CardContent>
       </Card>
       
-      <Card>
-        <CardHeader>
-          <CardTitle>Architecture Documentation</CardTitle>
-          <CardDescription>Technical resources and documentation</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <Button variant="outline" className="w-full justify-start">
-            <CloudCog className="mr-2 h-4 w-4" />
-            Infrastructure Diagram
-          </Button>
-          <Button variant="outline" className="w-full justify-start">
-            <Database className="mr-2 h-4 w-4" />
-            Database Schema
-          </Button>
-          <Button variant="outline" className="w-full justify-start">
-            <Network className="mr-2 h-4 w-4" />
-            API Documentation
-          </Button>
-        </CardContent>
-      </Card>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+        <Card>
+          <CardHeader>
+            <CardTitle>Data Flow</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ul className="space-y-3 list-disc pl-5">
+              <li>Centralized authentication and authorization</li>
+              <li>Secure data exchange between applications</li>
+              <li>Real-time updates across connected platforms</li>
+              <li>Standardized API protocols for consistency</li>
+              <li>Encrypted data transmission for sensitive information</li>
+            </ul>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardHeader>
+            <CardTitle>Infrastructure</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ul className="space-y-3 list-disc pl-5">
+              <li>Cloud-based distributed architecture</li>
+              <li>High-availability deployment configuration</li>
+              <li>Automated scaling to handle increased workloads</li>
+              <li>Disaster recovery with multi-region redundancy</li>
+              <li>Continuous monitoring and alerting system</li>
+            </ul>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }
