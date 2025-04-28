@@ -1,4 +1,9 @@
-
+import { 
+  HomeIcon, 
+  BookIcon, 
+  HeartHandshakeIcon, 
+  UserIcon 
+} from "lucide-react";
 import { homeNavItems } from "./config/homeNavConfig";
 import { educationNavItems } from "./config/educationNavConfig";
 import { familyWealthNavItems } from "./config/wealthNavConfig";
