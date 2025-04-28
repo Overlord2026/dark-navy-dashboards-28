@@ -1,23 +1,35 @@
 
 import React from "react";
-import { Card } from "@/components/ui/card";
-import { Info, ExternalLink } from "lucide-react";
+import { AlertTriangle } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
-export function SupabaseRequiredNotice() {
+interface SupabaseRequiredNoticeProps {
+  feature: string;
+}
+
+export function SupabaseRequiredNotice({ feature }: SupabaseRequiredNoticeProps) {
   return (
-    <Card className="p-4 bg-blue-500/10 border-blue-500/30 flex items-center gap-3">
-      <div className="bg-blue-500/20 p-1.5 rounded-full">
-        <Info className="h-4 w-4 text-blue-500" />
-      </div>
-      <div className="flex-1">
-        <p className="text-sm">
-          To enable full integration functionality, make sure your Supabase instance is properly configured and connected.
+    <Alert className="mb-4">
+      <AlertTriangle className="h-4 w-4" />
+      <AlertTitle>Supabase Connection Required</AlertTitle>
+      <AlertDescription className="flex flex-col gap-2">
+        <p>
+          To use the {feature} feature, you need to connect this application to Supabase. 
+          This allows for database storage and retrieval of your projects and integrations.
         </p>
-      </div>
-      <Button variant="ghost" size="sm" className="text-blue-500 flex items-center gap-1 whitespace-nowrap">
-        Learn More <ExternalLink className="h-3 w-3 ml-1" />
-      </Button>
-    </Card>
+        <div className="flex gap-2 mt-2">
+          <Button variant="outline" size="sm" asChild>
+            <a href="https://docs.lovable.dev/integrations/supabase/" target="_blank" rel="noopener noreferrer">
+              View Integration Docs
+            </a>
+          </Button>
+          <Button size="sm" variant="default">
+            Connect Supabase
+          </Button>
+        </div>
+      </AlertDescription>
+    </Alert>
   );
 }

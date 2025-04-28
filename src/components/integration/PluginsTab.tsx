@@ -1,266 +1,189 @@
 
 import React from "react";
-import { Card } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Download, ExternalLink, Info, Plug, Plus, Settings, Star } from "lucide-react";
+import { PlugIcon, Download, Settings, ToggleRight } from "lucide-react";
 
 export function PluginsTab() {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold">Plugins Marketplace</h2>
-        <Button variant="outline" className="flex items-center gap-2">
-          <Plus className="h-4 w-4" /> Upload Custom Plugin
+        <h2 className="text-2xl font-semibold">Plugins</h2>
+        <Button>
+          <Download className="h-4 w-4 mr-2" />
+          Browse Plugin Marketplace
         </Button>
       </div>
       
-      <p className="text-muted-foreground mb-4">
-        Extend your Family Office platform functionality with these specialized plugins.
-      </p>
-      
-      {/* Installed Plugins */}
-      <h3 className="text-lg font-medium mb-4">Installed Plugins</h3>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        <Card className="p-6 border-l-4 border-l-green-500">
-          <div className="flex items-start justify-between">
-            <div className="flex items-start gap-3">
-              <div className="bg-green-500/20 p-2 rounded">
-                <Plug className="h-5 w-5 text-green-500" />
+      <div className="grid grid-cols-1 gap-6">
+        {/* Plugin 1 */}
+        <Card>
+          <CardHeader>
+            <div className="flex justify-between">
+              <div className="flex gap-3 items-center">
+                <div className="bg-primary/10 p-2 rounded-md">
+                  <PlugIcon className="h-6 w-6 text-primary" />
+                </div>
+                <div>
+                  <CardTitle>Tax Document Analyzer</CardTitle>
+                  <CardDescription>Automatically analyzes tax documents</CardDescription>
+                </div>
               </div>
-              <div>
-                <h4 className="font-medium">Tax Document Analyzer</h4>
-                <p className="text-xs text-muted-foreground mt-1">
-                  v2.3.4 • Installed 3 months ago
-                </p>
-                <div className="flex items-center mt-1">
-                  <Star className="h-3 w-3 text-yellow-500 fill-yellow-500" />
-                  <Star className="h-3 w-3 text-yellow-500 fill-yellow-500" />
-                  <Star className="h-3 w-3 text-yellow-500 fill-yellow-500" />
-                  <Star className="h-3 w-3 text-yellow-500 fill-yellow-500" />
-                  <Star className="h-3 w-3 text-yellow-500 fill-yellow-500" />
-                  <span className="text-xs ml-1">(128)</span>
+              <Badge className="bg-green-100 text-green-800">Active</Badge>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <p className="text-sm">
+                This plugin uses AI to extract and categorize information from tax documents, providing summaries and identifying potential deductions or issues.
+              </p>
+              
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm">
+                <div>
+                  <p className="text-muted-foreground">Version:</p>
+                  <p>2.4.1</p>
+                </div>
+                <div>
+                  <p className="text-muted-foreground">Developer:</p>
+                  <p>FinTech Solutions</p>
+                </div>
+                <div>
+                  <p className="text-muted-foreground">Last Updated:</p>
+                  <p>2 weeks ago</p>
+                </div>
+                <div>
+                  <p className="text-muted-foreground">Category:</p>
+                  <p>Tax Planning</p>
                 </div>
               </div>
             </div>
-            <Badge className="bg-green-500">Active</Badge>
-          </div>
-          
-          <p className="text-sm mt-4">
-            Automatically extracts and categorizes data from tax documents for faster processing.
-          </p>
-          
-          <div className="mt-4 flex justify-between items-center">
-            <div className="flex items-center gap-2">
-              <Badge variant="outline" className="text-xs">Official</Badge>
-              <Badge variant="outline" className="text-xs">Premium</Badge>
+          </CardContent>
+          <CardFooter className="flex justify-between">
+            <div className="flex items-center">
+              <ToggleRight className="h-5 w-5 text-green-500 mr-1" />
+              <span className="text-sm">Enabled</span>
             </div>
-            <Button variant="ghost" size="sm" className="flex items-center gap-2">
-              <Settings className="h-4 w-4" /> Configure
-            </Button>
-          </div>
+            <div className="flex gap-2">
+              <Button variant="outline" size="sm">
+                <Settings className="h-4 w-4 mr-2" />
+                Configure
+              </Button>
+            </div>
+          </CardFooter>
         </Card>
         
-        <Card className="p-6 border-l-4 border-l-blue-500">
-          <div className="flex items-start justify-between">
-            <div className="flex items-start gap-3">
-              <div className="bg-blue-500/20 p-2 rounded">
-                <Plug className="h-5 w-5 text-blue-500" />
+        {/* Plugin 2 */}
+        <Card>
+          <CardHeader>
+            <div className="flex justify-between">
+              <div className="flex gap-3 items-center">
+                <div className="bg-primary/10 p-2 rounded-md">
+                  <PlugIcon className="h-6 w-6 text-primary" />
+                </div>
+                <div>
+                  <CardTitle>Estate Planning Assistant</CardTitle>
+                  <CardDescription>Collaborative estate planning tools</CardDescription>
+                </div>
               </div>
-              <div>
-                <h4 className="font-medium">Portfolio Rebalancer</h4>
-                <p className="text-xs text-muted-foreground mt-1">
-                  v1.9.2 • Installed 1 month ago
-                </p>
-                <div className="flex items-center mt-1">
-                  <Star className="h-3 w-3 text-yellow-500 fill-yellow-500" />
-                  <Star className="h-3 w-3 text-yellow-500 fill-yellow-500" />
-                  <Star className="h-3 w-3 text-yellow-500 fill-yellow-500" />
-                  <Star className="h-3 w-3 text-yellow-500 fill-yellow-500" />
-                  <Star className="h-3 w-3 text-gray-300" />
-                  <span className="text-xs ml-1">(94)</span>
+              <Badge className="bg-green-100 text-green-800">Active</Badge>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <p className="text-sm">
+                Helps families and their advisors collaborate on estate planning with document templates, checklists, and scenario modeling tools.
+              </p>
+              
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm">
+                <div>
+                  <p className="text-muted-foreground">Version:</p>
+                  <p>1.8.0</p>
+                </div>
+                <div>
+                  <p className="text-muted-foreground">Developer:</p>
+                  <p>Legacy Planning Group</p>
+                </div>
+                <div>
+                  <p className="text-muted-foreground">Last Updated:</p>
+                  <p>1 month ago</p>
+                </div>
+                <div>
+                  <p className="text-muted-foreground">Category:</p>
+                  <p>Estate Planning</p>
                 </div>
               </div>
             </div>
-            <Badge className="bg-blue-500">Active</Badge>
-          </div>
-          
-          <p className="text-sm mt-4">
-            Automated portfolio rebalancing tools with customizable thresholds and tax optimization.
-          </p>
-          
-          <div className="mt-4 flex justify-between items-center">
-            <div className="flex items-center gap-2">
-              <Badge variant="outline" className="text-xs">Partner</Badge>
-              <Badge variant="outline" className="text-xs">Premium</Badge>
+          </CardContent>
+          <CardFooter className="flex justify-between">
+            <div className="flex items-center">
+              <ToggleRight className="h-5 w-5 text-green-500 mr-1" />
+              <span className="text-sm">Enabled</span>
             </div>
-            <Button variant="ghost" size="sm" className="flex items-center gap-2">
-              <Settings className="h-4 w-4" /> Configure
-            </Button>
-          </div>
-        </Card>
-      </div>
-      
-      {/* Available Plugins */}
-      <h3 className="text-lg font-medium mb-4">Available Plugins</h3>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card className="p-6">
-          <div className="flex items-start justify-between">
-            <div className="flex items-start gap-3">
-              <div className="bg-gray-100 dark:bg-gray-800 p-2 rounded">
-                <Plug className="h-5 w-5 text-gray-500" />
-              </div>
-              <div>
-                <h4 className="font-medium">Estate Planning Assistant</h4>
-                <p className="text-xs text-muted-foreground mt-1">
-                  v3.1.0 • Updated 2 weeks ago
-                </p>
-                <div className="flex items-center mt-1">
-                  <Star className="h-3 w-3 text-yellow-500 fill-yellow-500" />
-                  <Star className="h-3 w-3 text-yellow-500 fill-yellow-500" />
-                  <Star className="h-3 w-3 text-yellow-500 fill-yellow-500" />
-                  <Star className="h-3 w-3 text-yellow-500 fill-yellow-500" />
-                  <Star className="h-3 w-3 text-yellow-500 fill-yellow-500" />
-                  <span className="text-xs ml-1">(207)</span>
-                </div>
-              </div>
+            <div className="flex gap-2">
+              <Button variant="outline" size="sm">
+                <Settings className="h-4 w-4 mr-2" />
+                Configure
+              </Button>
             </div>
-          </div>
-          
-          <p className="text-sm mt-4">
-            Comprehensive estate planning tools with document generation and scenario modeling.
-          </p>
-          
-          <div className="mt-4 flex justify-between items-center">
-            <div className="flex items-center gap-2">
-              <Badge variant="outline" className="text-xs">Official</Badge>
-              <Badge variant="outline" className="text-xs">Premium</Badge>
-            </div>
-            <Button className="flex items-center gap-2">
-              <Download className="h-4 w-4" /> Install
-            </Button>
-          </div>
+          </CardFooter>
         </Card>
         
-        <Card className="p-6">
-          <div className="flex items-start justify-between">
-            <div className="flex items-start gap-3">
-              <div className="bg-gray-100 dark:bg-gray-800 p-2 rounded">
-                <Plug className="h-5 w-5 text-gray-500" />
+        {/* Plugin 3 */}
+        <Card>
+          <CardHeader>
+            <div className="flex justify-between">
+              <div className="flex gap-3 items-center">
+                <div className="bg-primary/10 p-2 rounded-md">
+                  <PlugIcon className="h-6 w-6 text-primary" />
+                </div>
+                <div>
+                  <CardTitle>Multi-Family Office Dashboard</CardTitle>
+                  <CardDescription>Consolidated view across multiple families</CardDescription>
+                </div>
               </div>
-              <div>
-                <h4 className="font-medium">Family Meeting Manager</h4>
-                <p className="text-xs text-muted-foreground mt-1">
-                  v2.0.5 • Updated 1 month ago
-                </p>
-                <div className="flex items-center mt-1">
-                  <Star className="h-3 w-3 text-yellow-500 fill-yellow-500" />
-                  <Star className="h-3 w-3 text-yellow-500 fill-yellow-500" />
-                  <Star className="h-3 w-3 text-yellow-500 fill-yellow-500" />
-                  <Star className="h-3 w-3 text-yellow-500 fill-yellow-500" />
-                  <Star className="h-3 w-3 text-gray-300" />
-                  <span className="text-xs ml-1">(76)</span>
+              <Badge className="bg-green-100 text-green-800">Active</Badge>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <p className="text-sm">
+                Provides advisors with a consolidated view across multiple family offices, with customizable reporting and analytics tools.
+              </p>
+              
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm">
+                <div>
+                  <p className="text-muted-foreground">Version:</p>
+                  <p>3.1.2</p>
+                </div>
+                <div>
+                  <p className="text-muted-foreground">Developer:</p>
+                  <p>Family Office Solutions</p>
+                </div>
+                <div>
+                  <p className="text-muted-foreground">Last Updated:</p>
+                  <p>1 week ago</p>
+                </div>
+                <div>
+                  <p className="text-muted-foreground">Category:</p>
+                  <p>Advisor Tools</p>
                 </div>
               </div>
             </div>
-          </div>
-          
-          <p className="text-sm mt-4">
-            Tools for scheduling, documenting and following up on family governance meetings.
-          </p>
-          
-          <div className="mt-4 flex justify-between items-center">
-            <div className="flex items-center gap-2">
-              <Badge variant="outline" className="text-xs">Partner</Badge>
-              <Badge variant="outline" className="text-xs">Free</Badge>
+          </CardContent>
+          <CardFooter className="flex justify-between">
+            <div className="flex items-center">
+              <ToggleRight className="h-5 w-5 text-green-500 mr-1" />
+              <span className="text-sm">Enabled</span>
             </div>
-            <Button className="flex items-center gap-2">
-              <Download className="h-4 w-4" /> Install
-            </Button>
-          </div>
+            <div className="flex gap-2">
+              <Button variant="outline" size="sm">
+                <Settings className="h-4 w-4 mr-2" />
+                Configure
+              </Button>
+            </div>
+          </CardFooter>
         </Card>
-        
-        <Card className="p-6">
-          <div className="flex items-start justify-between">
-            <div className="flex items-start gap-3">
-              <div className="bg-gray-100 dark:bg-gray-800 p-2 rounded">
-                <Plug className="h-5 w-5 text-gray-500" />
-              </div>
-              <div>
-                <h4 className="font-medium">Charitable Giving Tracker</h4>
-                <p className="text-xs text-muted-foreground mt-1">
-                  v1.4.2 • Updated 3 months ago
-                </p>
-                <div className="flex items-center mt-1">
-                  <Star className="h-3 w-3 text-yellow-500 fill-yellow-500" />
-                  <Star className="h-3 w-3 text-yellow-500 fill-yellow-500" />
-                  <Star className="h-3 w-3 text-yellow-500 fill-yellow-500" />
-                  <Star className="h-3 w-3 text-yellow-500 fill-yellow-500" />
-                  <Star className="h-3 w-3 text-gray-300" />
-                  <span className="text-xs ml-1">(42)</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <p className="text-sm mt-4">
-            Track donations, generate tax reports, and measure impact of philanthropic activities.
-          </p>
-          
-          <div className="mt-4 flex justify-between items-center">
-            <div className="flex items-center gap-2">
-              <Badge variant="outline" className="text-xs">Community</Badge>
-              <Badge variant="outline" className="text-xs">Free</Badge>
-            </div>
-            <Button className="flex items-center gap-2">
-              <Download className="h-4 w-4" /> Install
-            </Button>
-          </div>
-        </Card>
-        
-        <Card className="p-6">
-          <div className="flex items-start justify-between">
-            <div className="flex items-start gap-3">
-              <div className="bg-gray-100 dark:bg-gray-800 p-2 rounded">
-                <Plug className="h-5 w-5 text-gray-500" />
-              </div>
-              <div>
-                <h4 className="font-medium">Risk Assessment Suite</h4>
-                <p className="text-xs text-muted-foreground mt-1">
-                  v2.2.0 • Updated 2 months ago
-                </p>
-                <div className="flex items-center mt-1">
-                  <Star className="h-3 w-3 text-yellow-500 fill-yellow-500" />
-                  <Star className="h-3 w-3 text-yellow-500 fill-yellow-500" />
-                  <Star className="h-3 w-3 text-yellow-500 fill-yellow-500" />
-                  <Star className="h-3 w-3 text-yellow-500 fill-yellow-500" />
-                  <Star className="h-3 w-3 text-yellow-500 fill-yellow-500" />
-                  <span className="text-xs ml-1">(136)</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <p className="text-sm mt-4">
-            Advanced risk modeling, stress testing, and scenario analysis for complex portfolios.
-          </p>
-          
-          <div className="mt-4 flex justify-between items-center">
-            <div className="flex items-center gap-2">
-              <Badge variant="outline" className="text-xs">Official</Badge>
-              <Badge variant="outline" className="text-xs">Premium</Badge>
-            </div>
-            <Button className="flex items-center gap-2">
-              <Download className="h-4 w-4" /> Install
-            </Button>
-          </div>
-        </Card>
-      </div>
-      
-      <div className="flex justify-center mt-8">
-        <Button variant="outline" className="flex items-center gap-2">
-          <ExternalLink className="h-4 w-4" /> Browse All Plugins
-        </Button>
       </div>
     </div>
   );
