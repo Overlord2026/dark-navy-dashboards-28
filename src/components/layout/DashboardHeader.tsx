@@ -19,8 +19,12 @@ export function DashboardHeader({ title }: DashboardHeaderProps) {
         {/* Center section with logo */}
         <div className="flex-1 flex justify-center items-center">
           <div className="flex items-center">
-            {/* White text logo */}
-            <span className="text-white font-semibold text-xl tracking-wider">BOUTIQUE FAMILY OFFICE</span>
+            {/* Full BFO logo with text */}
+            <img 
+              src="/lovable-uploads/6a34ec79-15f4-4659-a4d1-471b49705d4d.png" 
+              alt="Boutique Family Office" 
+              className="h-16 w-auto"
+            />
           </div>
           <TooltipProvider>
             <Tooltip>
