@@ -1,3 +1,4 @@
+
 import React from "react";
 import { toast } from "sonner";
 
@@ -18,7 +19,7 @@ export const Header = () => {
           <img 
             src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" 
             alt="Boutique Family Office Logo" 
-            className="h-14 w-auto"
+            className="h-10 w-auto"
           />
         </div>
         

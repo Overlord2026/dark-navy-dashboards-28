@@ -1,3 +1,4 @@
+
 import React from "react";
 import { UserProfileDropdown } from "@/components/profile/UserProfileDropdown";
 import { Network } from "lucide-react"; 
@@ -20,7 +21,7 @@ export function DashboardHeader({ title }: DashboardHeaderProps) {
           <img 
             src="/lovable-uploads/1e5f557d-a959-44b7-894a-5a58b8feecba.png" 
             alt="Boutique Family Office" 
-            className="h-16 w-auto"
+            className="h-10 w-auto"
           />
           <TooltipProvider>
             <Tooltip>
