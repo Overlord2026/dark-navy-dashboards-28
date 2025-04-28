@@ -19,12 +19,6 @@ export function DashboardHeader({ title }: DashboardHeaderProps) {
         {/* Center section with logo */}
         <div className="flex-1 flex justify-center items-center">
           <div className="flex items-center">
-            {/* Gold tree logo */}
-            <img 
-              src="/lovable-uploads/90781be1-cf1d-4b67-b35a-0e5c45072062.png" 
-              alt="BFO Gold Tree" 
-              className="h-10 w-auto mr-3"
-            />
             {/* White text logo */}
             <span className="text-white font-semibold text-xl tracking-wider">BOUTIQUE FAMILY OFFICE</span>
           </div>
