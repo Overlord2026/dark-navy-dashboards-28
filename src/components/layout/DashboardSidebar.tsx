@@ -25,6 +25,7 @@ export function DashboardSidebar() {
   const [expandedSections, setExpandedSections] = useLocalStorage("expandedSections", {
     education: true,
     planning: true,
+    wealth: true, // Set wealth to be expanded by default
   });
   
   const navigationGroups: NavGroup[] = [
@@ -43,24 +44,30 @@ export function DashboardSidebar() {
     {
       name: "Wealth Management",
       icon: BriefcaseIcon,
-      href: "/wealth-management"
+      items: [ // Convert this to have items instead of a direct href
+        { name: "Accounts", href: "/accounts" },
+        { name: "Financial Plans", href: "/financial-plans" },
+        { name: "Investments", href: "/accounts" }, // Temporarily point to accounts
+        { name: "Tax & Budgets", href: "/tax-budgets" },
+        { name: "Properties", href: "/properties" },
+      ],
     },
     {
       name: "Planning & Services",
       icon: FileText,
       items: [
-        { name: "Financial Planning", href: "/financial-planning" },
-        { name: "Investments", href: "/investments" },
+        { name: "Financial Planning", href: "/financial-plans" },
+        { name: "Investments", href: "/accounts" }, // Temporarily point to accounts
         { name: "Tax Planning", href: "/tax-planning" },
         { name: "Estate Planning", href: "/estate-planning" },
         { name: "Insurance", href: "/insurance" },
-        { name: "Lending", href: "/lending" },
+        { name: "Lending", href: "/tax-planning" }, // Temporarily point to tax-planning
       ],
     },
     {
       name: "Collaboration",
       icon: MessageSquare,
-      href: "/collaboration"
+      href: "/integration" // Point to the integration page which exists
     }
   ];
 

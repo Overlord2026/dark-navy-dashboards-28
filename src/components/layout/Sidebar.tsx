@@ -29,7 +29,7 @@ interface NavSection {
 
 export const Sidebar = () => {
   const location = useLocation();
-  const [openSections, setOpenSections] = useState<string[]>(["education", "planning"]);
+  const [openSections, setOpenSections] = useState<string[]>(["education", "planning", "wealth"]);
   const [isCollapsed, setIsCollapsed] = useLocalStorage("sidebarCollapsed", false);
 
   const navSections: NavSection[] = [
@@ -50,26 +50,33 @@ export const Sidebar = () => {
       id: "wealth",
       label: "Wealth Management",
       icon: BriefcaseIcon,
-      href: "/wealth-management",
+      items: [
+        { label: "Dashboard", href: "/wealth-management", icon: BriefcaseIcon },
+        { label: "Accounts", href: "/accounts", icon: FileText },
+        { label: "Financial Plans", href: "/financial-plans", icon: FileText },
+        { label: "Investments", href: "/accounts", icon: TrendingUp },
+        { label: "Properties", href: "/properties", icon: FileText },
+        { label: "Tax & Budgets", href: "/tax-budgets", icon: FileText },
+      ],
     },
     {
       id: "planning",
       label: "Planning & Services",
       icon: FileText,
       items: [
-        { label: "Financial Planning", href: "/financial-planning", icon: FileText },
-        { label: "Investments", href: "/investments", icon: TrendingUp },
+        { label: "Financial Planning", href: "/financial-plans", icon: FileText },
+        { label: "Investments", href: "/accounts", icon: TrendingUp },
         { label: "Tax Planning", href: "/tax-planning", icon: FileText },
         { label: "Estate Planning", href: "/estate-planning", icon: FileText },
         { label: "Insurance", href: "/insurance", icon: Shield },
-        { label: "Lending", href: "/lending", icon: Banknote },
+        { label: "Lending", href: "/tax-planning", icon: Banknote },
       ],
     },
     {
       id: "collaboration",
       label: "Collaboration",
       icon: MessageSquare,
-      href: "/collaboration",
+      href: "/integration",
     },
   ];
 
@@ -81,89 +88,97 @@ export const Sidebar = () => {
     );
   };
 
-  const isActive = (href: string) => location.pathname === href;
+  const isSectionActive = (section: NavSection) => {
+    const currentPath = location.pathname;
+
+    // Check if section has a direct href and it matches current path
+    if (section.href && currentPath === section.href) {
+      return true;
+    }
+
+    // Check if any of the section's items' href matches current path
+    if (section.items && section.items.some(item => item.href === currentPath)) {
+      return true;
+    }
+
+    return false;
+  };
 
   return (
-    <aside className={cn(
-      "hidden md:flex flex-col h-screen bg-background border-r border-border",
-      isCollapsed ? "w-16" : "w-64",
-      "transition-all duration-300"
-    )}>
-      <FamilyProfile />
+    <div className={cn("h-full flex flex-col", isCollapsed ? "w-16" : "w-64")}>
+      <div className="p-4 flex justify-between items-center border-b">
+        {!isCollapsed && <h1 className="font-semibold">Navigation</h1>}
+        <button
+          onClick={() => setIsCollapsed(prev => !prev)}
+          className="p-1 rounded hover:bg-muted"
+          aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+        >
+          {isCollapsed ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
+        </button>
+      </div>
       
-      <nav className="flex-1 py-4 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto p-2">
         {navSections.map(section => (
-          <div key={section.id} className="mb-2">
+          <div key={section.id} className="mb-3">
             {section.items ? (
               <div>
                 <button
-                  onClick={() => toggleSection(section.id)}
                   className={cn(
-                    "w-full flex items-center justify-between px-4 py-2 hover:bg-accent text-sm font-medium",
-                    isCollapsed && "px-2 justify-center"
+                    "flex items-center justify-between w-full p-2 rounded-md hover:bg-muted transition-colors",
+                    isSectionActive(section) && "bg-muted/80",
+                    isCollapsed && "justify-center"
                   )}
+                  onClick={() => toggleSection(section.id)}
                 >
                   <div className="flex items-center gap-2">
-                    {section.icon && <section.icon className="h-4 w-4" />}
-                    {!isCollapsed && section.label}
+                    {section.icon && <section.icon size={18} />}
+                    {!isCollapsed && <span>{section.label}</span>}
                   </div>
                   {!isCollapsed && (
                     openSections.includes(section.id) ? (
-                      <ChevronUp className="h-4 w-4" />
+                      <ChevronUp size={16} />
                     ) : (
-                      <ChevronDown className="h-4 w-4" />
+                      <ChevronDown size={16} />
                     )
                   )}
                 </button>
                 
                 {openSections.includes(section.id) && !isCollapsed && (
-                  <div className="mt-1">
+                  <div className="mt-1 ml-6 space-y-1">
                     {section.items.map(item => (
                       <Link
-                        key={item.href}
+                        key={item.label}
                         to={item.href}
                         className={cn(
-                          "flex items-center gap-2 px-6 py-2 text-sm hover:bg-accent",
-                          isActive(item.href) && "bg-accent font-medium"
+                          "flex items-center gap-2 p-2 rounded-md text-sm hover:bg-muted transition-colors",
+                          location.pathname === item.href && "bg-muted font-medium"
                         )}
                       >
-                        <item.icon className="h-4 w-4" />
-                        {item.label}
+                        {item.icon && <item.icon size={16} />}
+                        <span>{item.label}</span>
                       </Link>
                     ))}
                   </div>
                 )}
               </div>
-            ) : (
+            ) : section.href ? (
               <Link
-                to={section.href!}
+                to={section.href}
                 className={cn(
-                  "flex items-center gap-2 px-4 py-2 text-sm hover:bg-accent",
-                  isCollapsed && "px-2 justify-center",
-                  isActive(section.href!) && "bg-accent font-medium"
+                  "flex items-center gap-2 p-2 rounded-md hover:bg-muted transition-colors",
+                  location.pathname === section.href && "bg-muted font-medium",
+                  isCollapsed && "justify-center"
                 )}
               >
-                {section.icon && <section.icon className="h-4 w-4" />}
-                {!isCollapsed && section.label}
+                {section.icon && <section.icon size={18} />}
+                {!isCollapsed && <span>{section.label}</span>}
               </Link>
-            )}
+            ) : null}
           </div>
         ))}
-      </nav>
-
-      <AdvisorProfile />
-      
-      <button
-        onClick={() => setIsCollapsed(!isCollapsed)}
-        className="p-2 w-full flex justify-center items-center border-t border-border hover:bg-accent"
-        aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-      >
-        {isCollapsed ? (
-          <ChevronRight className="h-4 w-4" />
-        ) : (
-          <ChevronLeft className="h-4 w-4" />
-        )}
-      </button>
-    </aside>
+      </div>
+    </div>
   );
 };
+
+export default Sidebar;
