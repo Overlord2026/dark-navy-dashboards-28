@@ -26,9 +26,9 @@ export function DashboardHeader({ title }: DashboardHeaderProps) {
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Link to="/integration" className="flex items-center rounded-md bg-white/10 px-2 py-1.5 text-white ml-2">
+                <Link to="/integration" className="flex items-center rounded-md bg-yellow-400 px-2 py-1.5 text-white font-semibold ml-2">
                   <Network className="h-4 w-4 mr-1.5" />
-                  <span className="text-xs font-medium">Connected</span>
+                  <span className="text-xs">Connected</span>
                 </Link>
               </TooltipTrigger>
               <TooltipContent>
