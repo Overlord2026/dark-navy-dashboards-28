@@ -2,17 +2,22 @@
 import React from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Card } from "@/components/ui/card";
+import { useProfile } from "@/hooks/useProfile";
 
 interface PreRetireesDashboardProps {
   segment?: string;
 }
 
 export function PreRetireesDashboard({ segment }: PreRetireesDashboardProps) {
+  const { profile, loading } = useProfile();
+
   return (
     <div className="container mx-auto px-4 py-6 max-w-7xl">
       {/* Hero Banner */}
       <div className="mb-8 p-6 bg-gradient-to-r from-[#1B1B32] to-[#2D2D44] rounded-lg shadow-md">
-        <h1 className="text-3xl font-bold mb-2 text-white">Pre-Retirees & Retirees Dashboard</h1>
+        <h1 className="text-3xl font-bold mb-2 text-white">
+          {loading ? "Welcome" : `Welcome, ${profile?.name || "User"}`}
+        </h1>
         <p className="text-gray-200 max-w-3xl">
           Secure your retirement journey with comprehensive planning tools, income strategies,
           and resources designed to protect and optimize your legacy.
