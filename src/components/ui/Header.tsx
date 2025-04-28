@@ -21,7 +21,7 @@ export const Header = () => {
         </div>
         
         {/* Right section with keyword */}
-        <div className="flex-1 flex justify-start ml-12 items-center">
+        <div className="flex-1 flex justify-start ml-16 items-center">
           <span className="text-[#D4AF37] font-semibold text-3xl">Maximize</span>
         </div>
       </div>
