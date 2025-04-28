@@ -11,12 +11,9 @@ export function DashboardHeader({ title }: DashboardHeaderProps) {
   return (
     <header className="h-20 border-b border-border bg-gradient-to-r from-[#0A1F44] to-[#1B1B32] fixed top-0 left-0 right-0 z-50 shadow-md">
       <div className="flex items-center h-full px-6 max-w-screen-2xl mx-auto">
-        {/* Left section with keyword and arrow */}
+        {/* Left section with keyword */}
         <div className="flex-1 flex justify-end mr-12 items-center">
           <span className="text-[#D4AF37] font-semibold text-3xl">Organize</span>
-          <svg className="h-8 w-16 text-red-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-          </svg>
         </div>
 
         {/* Center section with logo */}
@@ -35,12 +32,9 @@ export function DashboardHeader({ title }: DashboardHeaderProps) {
           </div>
         </div>
 
-        {/* Right section with keyword, arrow and profile dropdown */}
+        {/* Right section with keyword and profile dropdown */}
         <div className="flex-1 flex items-center justify-between">
           <div className="flex items-center">
-            <svg className="h-8 w-16 text-red-500 rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-            </svg>
             <span className="text-[#D4AF37] font-semibold text-3xl">Maximize</span>
           </div>
           <UserProfileDropdown onOpenForm={(id) => console.log(`Form ${id} would open here if implemented`)} />
