@@ -13,13 +13,14 @@ export function DashboardHeader({ title }: DashboardHeaderProps) {
         {/* Left section with 1/3 width */}
         <div className="flex-1"></div>
 
-        {/* Center section with logo placeholder */}
+        {/* Center section with logo */}
         <div className="flex-1 flex justify-center items-center">
           <div className="flex items-center">
-            {/* Logo placeholder - to be added by user */}
-            <div className="h-16 w-48 flex items-center justify-center text-white opacity-50">
-              Logo Area
-            </div>
+            <img 
+              src="/lovable-uploads/5d3bcbf7-9c7e-4071-8db1-b7011ac1a630.png" 
+              alt="Boutique Family Office Logo" 
+              className="h-16 w-auto"
+            />
           </div>
         </div>
 
