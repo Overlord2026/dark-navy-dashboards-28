@@ -1,3 +1,4 @@
+
 import React from "react";
 import {
   HomeIcon,
@@ -29,7 +30,7 @@ type MainMenuItem = {
   icon: React.ElementType | React.FC;
   href: string;
   active?: boolean;
-  subItems?: MainMenuItem[];
+  items?: MainMenuItem[]; // Added this line to support nested menu items
 };
 
 type NavCategory = {
