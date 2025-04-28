@@ -27,7 +27,7 @@ export function AdminActions() {
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          {/* Integration Status - Moved from header */}
+          {/* Integration Status - For admins only */}
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>

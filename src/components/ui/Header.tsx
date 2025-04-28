@@ -1,29 +1,23 @@
 
 import React from "react";
-import { toast } from "sonner";
 
 export const Header = () => {
-  const handleQuickAction = (label: string) => {
-    toast.success(`Navigating to ${label}`);
-  };
-
   return (
     <div className="w-full px-4 py-1 flex flex-col items-center justify-center bg-gradient-to-r from-[#0A1F44] to-[#1B1B32] z-10">
-      {/* Header container with logo */}
-      <div className="w-full max-w-7xl flex justify-between items-center">
-        {/* Logo on the left */}
+      {/* Header container with space for logo */}
+      <div className="w-full max-w-7xl flex justify-between items-center h-16">
+        {/* Left section spacing */}
         <div className="flex-1"></div>
         
-        {/* Centered logo */}
+        {/* Centered area for future logo */}
         <div className="flex justify-center">
-          <img 
-            src="/lovable-uploads/44608b26-0af4-4b77-998a-0d2cde72da54.png" 
-            alt="Boutique Family Office Logo" 
-            className="h-16 w-auto"
-          />
+          {/* Logo placeholder - to be added by user */}
+          <div className="h-16 w-48 flex items-center justify-center text-white opacity-50">
+            Logo Area
+          </div>
         </div>
         
-        {/* Right side spacing */}
+        {/* Right section spacing */}
         <div className="flex-1"></div>
       </div>
     </div>

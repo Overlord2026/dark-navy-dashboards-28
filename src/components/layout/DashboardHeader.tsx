@@ -1,7 +1,6 @@
 
 import React from "react";
 import { UserProfileDropdown } from "@/components/profile/UserProfileDropdown";
-import { Link } from "react-router-dom";
 
 interface DashboardHeaderProps {
   title?: string;
@@ -14,15 +13,13 @@ export function DashboardHeader({ title }: DashboardHeaderProps) {
         {/* Left section with 1/3 width */}
         <div className="flex-1"></div>
 
-        {/* Center section with logo */}
+        {/* Center section with logo placeholder */}
         <div className="flex-1 flex justify-center items-center">
           <div className="flex items-center">
-            {/* Updated logo with more prominence */}
-            <img 
-              src="/lovable-uploads/44608b26-0af4-4b77-998a-0d2cde72da54.png" 
-              alt="Boutique Family Office" 
-              className="h-16 w-auto"
-            />
+            {/* Logo placeholder - to be added by user */}
+            <div className="h-16 w-48 flex items-center justify-center text-white opacity-50">
+              Logo Area
+            </div>
           </div>
         </div>
 
