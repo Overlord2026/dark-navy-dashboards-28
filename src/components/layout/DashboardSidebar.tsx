@@ -3,7 +3,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
-import { LucideIcon, BookOpen, BriefcaseIcon, FileText, MessageSquare, ChevronDown, ChevronRight, User } from "lucide-react";
+import { LucideIcon, BookOpen, BriefcaseIcon, FileText, MessageSquare, ChevronDown, ChevronRight, User, VaultIcon } from "lucide-react";
 import { UserProfileSection } from "@/components/sidebar/UserProfileSection";
 import { AdvisorProfile } from "@/components/sidebar/AdvisorProfile";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -45,6 +45,7 @@ export function DashboardSidebar() {
       name: "Wealth Management",
       icon: BriefcaseIcon,
       items: [ // Convert this to have items instead of a direct href
+        { name: "Secure Family Vault", href: "/legacy-vault" },
         { name: "Accounts", href: "/accounts" },
         { name: "Financial Plans", href: "/financial-plans" },
         { name: "Investments", href: "/accounts" }, // Temporarily point to accounts

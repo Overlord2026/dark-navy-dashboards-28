@@ -38,6 +38,7 @@ import ProfessionalSignup from "@/pages/ProfessionalSignup";
 import Integration from "@/pages/Integration";
 import Sharing from "@/pages/Sharing";
 import WealthManagement from "@/pages/WealthManagement";
+import LegacyVault from "@/pages/LegacyVault";
 
 // Create placeholder pages for the education sub-routes
 import Courses from "@/pages/education/Courses";
@@ -216,6 +217,11 @@ const routes = createBrowserRouter([
   {
     path: "/wealth-management",
     element: <WealthManagement />,
+  },
+  // Add the LegacyVault route
+  {
+    path: "/legacy-vault",
+    element: <LegacyVault />,
   },
   {
     path: "*",

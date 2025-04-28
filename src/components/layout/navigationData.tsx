@@ -1,3 +1,4 @@
+
 import React from "react";
 import {
   HomeIcon,
@@ -74,12 +75,12 @@ export const navigationCategories: NavCategory[] = [
     label: "Family Wealth",
     defaultExpanded: true,
     items: [
+      { id: "legacy-vault", label: "Secure Family Vault", icon: VaultIcon, href: "/legacy-vault" },
       { id: "financial-plans", label: "Financial Plans", icon: LineChartIcon, href: "/financial-plans" },
       { id: "accounts", label: "Accounts Overview", icon: WalletIcon, href: "/accounts" },
       { id: "cash-management", label: "Cash Management", icon: BanknoteIcon, href: "/cash-management" },
       { id: "tax-budgets", label: "Tax & Budgets", icon: Calculator, href: "/tax-budgets" },
       { id: "transfers", label: "Transfers", icon: ArrowRightLeft, href: "/transfers" },
-      { id: "legacy-vault", label: "Secure Family Vault", icon: VaultIcon, href: "/legacy-vault" },
       { id: "social-security", label: "Social Security", icon: CircleDollarSignIcon, href: "/social-security" },
       { id: "properties", label: "Real Estate & Properties", icon: BuildingIcon, href: "/properties" },
       { id: "billpay", label: "Bill Pay", icon: Receipt, href: "/billpay" },

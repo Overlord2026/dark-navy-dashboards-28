@@ -12,7 +12,8 @@ import {
   ChevronDown,
   ChevronUp,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  VaultIcon
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { FamilyProfile } from "@/components/sidebar/FamilyProfile";
@@ -51,6 +52,7 @@ export const Sidebar = () => {
       label: "Wealth Management",
       icon: BriefcaseIcon,
       items: [
+        { label: "Secure Family Vault", href: "/legacy-vault", icon: VaultIcon },
         { label: "Dashboard", href: "/wealth-management", icon: BriefcaseIcon },
         { label: "Accounts", href: "/accounts", icon: FileText },
         { label: "Financial Plans", href: "/financial-plans", icon: FileText },

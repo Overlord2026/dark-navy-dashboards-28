@@ -18,6 +18,11 @@ import { NavItem } from "@/types/navigation";
 
 export const familyWealthNavItems: NavItem[] = [
   { 
+    title: "Secure Family Vault", 
+    href: "/legacy-vault", 
+    icon: VaultIcon 
+  },
+  { 
     title: "Financial Plans", 
     href: "/financial-plans", 
     icon: LineChartIcon 
@@ -61,11 +66,6 @@ export const familyWealthNavItems: NavItem[] = [
     title: "Healthcare", 
     href: "/healthcare", 
     icon: HeartPulseIcon 
-  },
-  { 
-    title: "Secure Family Vault", 
-    href: "/legacy-vault", 
-    icon: VaultIcon 
   },
   { 
     title: "Social Security", 
