@@ -7,8 +7,8 @@ export const Header = () => {
       {/* Header container with logo */}
       <div className="w-full max-w-7xl flex justify-between items-center h-16">
         {/* Left section with keyword */}
-        <div className="flex-1 flex justify-end mr-4">
-          <span className="text-[#D4AF37] font-semibold text-xl">Organize</span>
+        <div className="flex-1 flex justify-end mr-12">
+          <span className="text-[#D4AF37] font-semibold text-3xl">Organize</span>
         </div>
         
         {/* Centered area with logo */}
@@ -21,8 +21,8 @@ export const Header = () => {
         </div>
         
         {/* Right section with keyword */}
-        <div className="flex-1 flex justify-start ml-4">
-          <span className="text-[#D4AF37] font-semibold text-xl">Maximize</span>
+        <div className="flex-1 flex justify-start ml-12">
+          <span className="text-[#D4AF37] font-semibold text-3xl">Maximize</span>
         </div>
       </div>
     </div>
