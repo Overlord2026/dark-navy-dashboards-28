@@ -52,7 +52,7 @@ export const SegmentCard: React.FC<SegmentCardProps> = ({
       </ul>
       
       <Button 
-        className="mt-auto w-full bg-transparent border border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37]/10 font-medium"
+        className="mt-auto w-full bg-[#FFC829] text-white hover:bg-white hover:text-[#FFC829] font-medium border border-[#FFC829] transition-colors duration-200"
         onClick={() => onClick(id)}
       >
         {buttonText} <ArrowRight className="h-4 w-4 ml-1" />
