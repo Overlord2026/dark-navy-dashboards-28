@@ -14,7 +14,12 @@ export default function Landing() {
     { 
       id: "aspiring", 
       label: "Aspiring Wealthy", 
-      description: "Building your foundation for long-term financial success. Take control of your wealth journey today.", 
+      description: "Build your financial foundations and accelerate growth.", 
+      bulletPoints: [
+        "Set clear, achievable goals",
+        "Launch an investment portfolio",
+        "Optimize your tax strategy",
+      ],
       icon: TreeDeciduous,
       tagline: "Growth-Focused",
       buttonText: "Get Started"
@@ -22,7 +27,12 @@ export default function Landing() {
     { 
       id: "preretirees", 
       label: "Pre-Retirees & Retirees", 
-      description: "Protect what you've built and create a legacy that lasts. Optimize your wealth for the retirement you deserve.",
+      description: "Secure your lifestyle and enjoy peace of mind.",
+      bulletPoints: [
+        "Create a sustainable income plan",
+        "Protect your assets from market swings",
+        "Plan your estate and legacy",
+      ],
       icon: Sunset,
       tagline: "Security-Focused",
       buttonText: "Plan My Retirement"
@@ -30,7 +40,12 @@ export default function Landing() {
     { 
       id: "ultrahnw", 
       label: "Ultra-High Net Worth", 
-      description: "Sophisticated strategies for complex wealth. Leverage our expertise to preserve and grow your significant assets.",
+      description: "Access exclusive strategies for preserving and growing significant wealth.",
+      bulletPoints: [
+        "Advanced trust & estate planning",
+        "Bespoke tax minimization",
+        "Private market & alternative investments",
+      ],
       icon: Crown,
       tagline: "Legacy-Focused",
       buttonText: "Manage My Legacy"
@@ -72,7 +87,18 @@ export default function Landing() {
                     </span>
                   </div>
                   <h2 className="text-xl font-semibold text-[#D4AF37] mb-2">{seg.label}</h2>
-                  <p className="text-gray-300 text-sm mb-4">{seg.description}</p>
+                  <p className="text-gray-300 text-sm mb-3">{seg.description}</p>
+                  
+                  {/* Bullet points */}
+                  <ul className="text-sm text-gray-300 mb-4 space-y-1.5">
+                    {seg.bulletPoints.map((point, index) => (
+                      <li key={index} className="flex items-start">
+                        <span className="text-[#D4AF37] mr-1.5">•</span>
+                        <span>{point}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  
                   <Button 
                     className="mt-auto w-full bg-transparent border border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37]/10"
                     onClick={() => handleSegmentClick(seg.id)}
@@ -84,11 +110,11 @@ export default function Landing() {
             })}
           </div>
           
-          <div className="mt-14 text-center">
-            <p className="text-gray-400 mb-4">Are you a financial advisor?</p>
+          <div className="mt-8 text-center">
+            <p className="text-gray-400 text-sm mb-2">Are you a financial advisor?</p>
             <button 
               onClick={() => navigate('/advisor/login')}
-              className="px-5 py-2.5 border border-[#D4AF37] text-[#D4AF37] rounded-md hover:bg-[#D4AF37]/10 transition-colors"
+              className="px-4 py-2 border border-[#D4AF37] text-[#D4AF37] text-sm rounded-md hover:bg-[#D4AF37]/10 transition-colors"
             >
               Access Advisor Portal
             </button>
@@ -121,7 +147,7 @@ export default function Landing() {
           </div>
 
           <div 
-            className="landing-animated-bg grid grid-cols-1 md:grid-cols-3 gap-8 px-4 mb-24 relative py-6" 
+            className="landing-animated-bg grid grid-cols-1 md:grid-cols-3 gap-8 px-4 mb-12 relative py-6" 
           >
             {/* Animated background particles */}
             <div className="absolute inset-0 overflow-hidden">
@@ -141,8 +167,19 @@ export default function Landing() {
                       {seg.tagline}
                     </span>
                   </div>
-                  <h2 className="text-2xl font-semibold text-[#D4AF37] mb-3">{seg.label}</h2>
-                  <p className="text-gray-300 mb-6">{seg.description}</p>
+                  <h2 className="text-2xl font-semibold text-[#D4AF37] mb-2">{seg.label}</h2>
+                  <p className="text-gray-300 mb-4">{seg.description}</p>
+                  
+                  {/* Bullet points */}
+                  <ul className="text-gray-300 mb-6 space-y-2">
+                    {seg.bulletPoints.map((point, index) => (
+                      <li key={index} className="flex items-start">
+                        <span className="text-[#D4AF37] mr-2">•</span>
+                        <span>{point}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  
                   <Button 
                     className="mt-auto w-full bg-transparent border border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37]/10 font-medium"
                     onClick={() => handleSegmentClick(seg.id)}
@@ -154,11 +191,12 @@ export default function Landing() {
             })}
           </div>
           
-          <div className="mt-16 text-center">
-            <p className="text-gray-300 mb-6 text-lg">Are you a financial advisor?</p>
+          {/* Advisor section moved up */}
+          <div className="mb-16 text-center">
+            <p className="text-gray-300 mb-3 text-base">Are you a financial advisor?</p>
             <Button 
               variant="outline"
-              className="px-6 py-3 text-lg border-2 border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37]/10"
+              className="px-5 py-2 text-base border-2 border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37]/10"
               onClick={() => navigate('/advisor/login')}
             >
               Access Advisor Portal
