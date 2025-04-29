@@ -106,6 +106,107 @@ export default function AdvisorDashboard() {
 
       <main className="flex-1 py-8 px-4">
         <div className="max-w-7xl mx-auto">
+          {/* New welcome section */}
+          <div className="bg-white rounded-lg shadow-md p-8 mb-8">
+            <h1 className="text-3xl font-bold mb-4 text-[#1B1B32]">Welcome to Boutique Family Office</h1>
+            
+            <div className="prose max-w-none text-gray-700">
+              <p className="mb-4">
+                Founded in 2025 by financial industry veteran Antonio Gomes, alongside fintech and data entrepreneurs, 
+                Boutique Family Office (BFO) is dedicated to empowering financial advisors and their clients 
+                to excel in the era of artificial intelligence.
+              </p>
+              
+              <p className="mb-4">
+                At BFO, we believe financial advisors will not only remain vital but will thrive as technological 
+                advancements accelerate. Rather than replacing advisors, we envision AI as an essential partner, 
+                enabling advisors to focus on their most impactful work: building deep, trusting relationships with 
+                their clients and guiding them through life's most significant financial decisions.
+              </p>
+              
+              <p className="mb-6">
+                Our vision is clear: to develop innovative technology solutions that empower both advisors and 
+                the families they serve, enhancing every aspect of financial advisory services.
+              </p>
+              
+              <h2 className="text-xl font-semibold mb-3 mt-6">Explore the comprehensive suite of services we enable advisors to offer their clients:</h2>
+              
+              <div className="grid md:grid-cols-3 gap-6 mb-6">
+                <div>
+                  <h3 className="text-lg font-semibold text-[#D4AF37] mb-2">Education & Solutions</h3>
+                  <ul className="list-disc pl-5 space-y-1">
+                    <li>Education Center</li>
+                    <li>Courses</li>
+                    <li>Guides & Whitepapers</li>
+                    <li>Books</li>
+                    <li>Planning Examples</li>
+                    <li>Presentations</li>
+                  </ul>
+                </div>
+                
+                <div>
+                  <h3 className="text-lg font-semibold text-[#D4AF37] mb-2">Wealth Management</h3>
+                  <ul className="list-disc pl-5 space-y-1">
+                    <li>Secure Family Vault</li>
+                    <li>Accounts</li>
+                    <li>Financial Plans</li>
+                    <li>Investments</li>
+                    <li>Tax & Budgets</li>
+                    <li>Properties</li>
+                  </ul>
+                </div>
+                
+                <div>
+                  <h3 className="text-lg font-semibold text-[#D4AF37] mb-2">Planning & Services</h3>
+                  <ul className="list-disc pl-5 space-y-1">
+                    <li>Financial Planning</li>
+                    <li>Investments</li>
+                    <li>Tax Planning</li>
+                    <li>Estate Planning</li>
+                    <li>Insurance</li>
+                    <li>Lending</li>
+                  </ul>
+                </div>
+              </div>
+              
+              <h2 className="text-xl font-semibold mb-3 mt-6">Our Advisor Platform provides powerful tools designed specifically for financial advisors:</h2>
+              
+              <h3 className="text-lg font-semibold mb-2 mt-4">Key Features:</h3>
+              
+              <ul className="list-none space-y-2">
+                <li className="flex gap-2">
+                  <span className="font-semibold">Prospect Management:</span> 
+                  <span>Streamline prospect verification and management using advanced verification tools.</span>
+                </li>
+                <li className="flex gap-2">
+                  <span className="font-semibold">Meeting Intelligence:</span> 
+                  <span>AI-powered recording, transcription, and analysis to capture actionable insights from client interactions.</span>
+                </li>
+                <li className="flex gap-2">
+                  <span className="font-semibold">Questionnaires:</span> 
+                  <span>Automate client questionnaires and analyze responses efficiently, aligning insights directly with client meetings.</span>
+                </li>
+                <li className="flex gap-2">
+                  <span className="font-semibold">Email Templates:</span> 
+                  <span>Create personalized email communication effortlessly with customizable templates.</span>
+                </li>
+                <li className="flex gap-2">
+                  <span className="font-semibold">ROI Tracker:</span> 
+                  <span>Analyze the effectiveness of your marketing campaigns and track client conversions seamlessly.</span>
+                </li>
+                <li className="flex gap-2">
+                  <span className="font-semibold">Integrations:</span> 
+                  <span>Connect effortlessly with popular CRM systems, email providers, and verification services.</span>
+                </li>
+              </ul>
+              
+              <div className="mt-8 bg-[#1B1B32] text-white p-6 rounded-lg">
+                <h3 className="text-xl font-semibold mb-3">Ready to streamline your advisory practice?</h3>
+                <p>Experience the future of advisory services today with Boutique Family Office.</p>
+              </div>
+            </div>
+          </div>
+          
           <h1 className="text-3xl font-bold mb-8 text-[#222222]">Advisor Portal</h1>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
