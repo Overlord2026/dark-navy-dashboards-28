@@ -11,12 +11,10 @@ const AdvisorComingSoon = () => {
         <div className="inline-flex items-center justify-center h-16 w-16 rounded-full bg-yellow-600/20 text-yellow-500 mb-6">
           <AlertTriangleIcon className="h-8 w-8" />
         </div>
-        <h1 className="text-4xl font-bold mb-4 text-yellow-500">Coming Soon</h1>
-        <div className="mt-12">
-          <Button asChild className="bg-yellow-600 hover:bg-yellow-700 text-white">
-            <Link to="/">Return to Dashboard</Link>
-          </Button>
-        </div>
+        <h1 className="text-4xl font-bold mb-8 text-yellow-500">Coming Soon</h1>
+        <Button asChild className="bg-yellow-600 hover:bg-yellow-700 text-white">
+          <Link to="/">Return to Dashboard</Link>
+        </Button>
       </div>
     </div>
   );
