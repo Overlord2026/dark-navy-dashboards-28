@@ -10,7 +10,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({ title = "Dashb
   return (
     <header className="flex items-center justify-between w-full px-4 h-16 border-b border-[#333]">
       <div className="flex items-center">
-        {/* Empty div to maintain layout */}
+        {title && <h1 className="text-lg font-medium">{title}</h1>}
       </div>
       <div className="flex items-center space-x-2">
         <UserProfileDropdown />

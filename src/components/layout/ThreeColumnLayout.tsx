@@ -15,6 +15,7 @@ interface ThreeColumnLayoutProps {
   contentClassName?: string;
   title?: string;
   activeMainItem?: string;
+  secondaryMenuItems?: any[]; // Added to fix TypeScript error
 }
 
 export const ThreeColumnLayout: React.FC<ThreeColumnLayoutProps> = ({
@@ -27,6 +28,7 @@ export const ThreeColumnLayout: React.FC<ThreeColumnLayoutProps> = ({
   contentClassName,
   title,
   activeMainItem,
+  secondaryMenuItems,
 }) => {
   const renderSidebar = () => {
     if (leftSidebar) {
@@ -48,7 +50,7 @@ export const ThreeColumnLayout: React.FC<ThreeColumnLayoutProps> = ({
         {renderSidebar()}
 
         <div className={cn("flex flex-col flex-1 h-full overflow-y-auto", contentClassName)}>
-          {!noHeader && <DashboardHeader heading={title || ""} />}
+          {!noHeader && <DashboardHeader title={title || ""} />}
           {children}
         </div>
 
