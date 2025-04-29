@@ -1,7 +1,6 @@
 
 import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import GoldTreeLogo from "@/assets/logo-gold-tree.svg";
 
 interface UserProfileSectionProps {
   showLogo?: boolean;
@@ -15,8 +14,8 @@ export const UserProfileSection: React.FC<UserProfileSectionProps> = ({
       {showLogo && (
         <div className="flex items-center">
           <img 
-            src={GoldTreeLogo} 
-            alt="Gold Tree Logo" 
+            src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" 
+            alt="Boutique Family Office Logo" 
             className="h-8 w-auto mr-2"
           />
           <span className="font-semibold">Family Office</span>

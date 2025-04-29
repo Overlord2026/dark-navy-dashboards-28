@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { SidebarSection } from "@/components/sidebar/SidebarSection";
 import { SidebarToggle } from "@/components/sidebar/SidebarToggle";
+import { Share2 } from "lucide-react";
 import { navSections } from "@/components/sidebar/navigationConfig";
 
 export const Sidebar = () => {
@@ -24,6 +25,17 @@ export const Sidebar = () => {
     setIsCollapsed(!isCollapsed);
   };
 
+  // Ensure navSections have icons
+  const sectionsWithIcons = navSections.map(section => {
+    if (!section.icon) {
+      return {
+        ...section,
+        icon: <Share2 size={18} />  // Default icon if none provided
+      };
+    }
+    return section;
+  });
+
   return (
     <div className={cn("h-full flex flex-col", isCollapsed ? "w-16" : "w-64")}>
       <div className="p-4 flex justify-between items-center border-b">
@@ -32,7 +44,7 @@ export const Sidebar = () => {
       </div>
       
       <div className="flex-1 overflow-y-auto p-2">
-        {navSections.map(section => (
+        {sectionsWithIcons.map(section => (
           <SidebarSection
             key={section.id}
             section={section}
