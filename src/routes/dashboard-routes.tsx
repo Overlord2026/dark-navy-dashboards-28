@@ -1,10 +1,11 @@
 
 import { Route } from "react-router-dom";
-import Dashboard from "@/pages/Dashboard"; // Direct import from Dashboard component
+import Dashboard from "@/pages/Dashboard";
+import Landing from "@/pages/Landing";
 
 const dashboardRoutes = [
-  <Route key="dashboard" path="/dashboard" element={<Dashboard />} />,
-  <Route key="root" path="/" element={<Dashboard />} /> // Root path redirect to Dashboard
+  <Route key="landing" path="/" element={<Landing />} />,
+  <Route key="dashboard" path="/dashboard" element={<Dashboard />} />
 ];
 
 export default dashboardRoutes;

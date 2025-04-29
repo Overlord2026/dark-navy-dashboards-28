@@ -1,3 +1,3 @@
 
-import Dashboard from "@/pages/Dashboard";
-export default Dashboard;
+import Landing from "@/pages/Landing";
+export default Landing;
