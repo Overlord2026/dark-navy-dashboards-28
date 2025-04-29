@@ -5,6 +5,7 @@ import { educationRoutes } from "./routes/education-routes";
 import { planningRoutes } from "./routes/planning-routes";
 import { settingsRoutes } from "./routes/settings-routes";
 import { integrationRoutes } from "./routes/integration-routes";
+import NotFound from "./pages/NotFound";
 
 // Convert all route elements to RouteObject type
 const routes = createBrowserRouter([
@@ -13,6 +14,10 @@ const routes = createBrowserRouter([
   ...planningRoutes as unknown as RouteObject[],
   ...settingsRoutes as unknown as RouteObject[],
   ...integrationRoutes as unknown as RouteObject[],
+  {
+    path: "*",
+    element: <NotFound />
+  }
 ]);
 
 export default routes;
