@@ -27,7 +27,7 @@ export default function Landing() {
           <div className="text-center">
             <h1 className="text-2xl font-bold mb-4">Organize & Maximize</h1>
             <img 
-              src="/lovable-uploads/5d3bcbf7-9c7e-4071-8db1-b7011ac1a630.png" 
+              src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" 
               alt="Boutique Family Office" 
               className="h-20 w-auto mx-auto mb-8" 
             />
@@ -78,7 +78,7 @@ export default function Landing() {
           <div className="landing-header text-center py-16">
             <h1 className="text-4xl font-bold mb-4">Organize & Maximize</h1>
             <img 
-              src="/lovable-uploads/5d3bcbf7-9c7e-4071-8db1-b7011ac1a630.png" 
+              src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" 
               alt="Boutique Family Office" 
               className="h-20 w-auto mx-auto mb-8" 
             />

@@ -14,7 +14,7 @@ export const Header = () => {
         {/* Centered area with logo */}
         <div className="mx-4">
           <img 
-            src="/lovable-uploads/5d3bcbf7-9c7e-4071-8db1-b7011ac1a630.png" 
+            src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" 
             alt="Boutique Family Office Logo" 
             className="h-16 w-auto"
           />
@@ -27,4 +27,4 @@ export const Header = () => {
       </div>
     </div>
   );
-};
+}
