@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { LogoBanner } from "@/components/layout/LogoBanner";
+import { BrandedHeader } from "@/components/layout/BrandedHeader";
 
 export default function LoginPage({ isAdvisor = false }) {
   const navigate = useNavigate();
@@ -22,7 +22,7 @@ export default function LoginPage({ isAdvisor = false }) {
   
   return (
     <div className="min-h-screen bg-[#F9F7E8] flex flex-col">
-      <LogoBanner />
+      <BrandedHeader />
       <div className="flex-1 flex justify-center items-center p-4 mt-20">
         <div className="bg-white p-8 rounded-lg shadow-md border border-[#DCD8C0] w-full max-w-md">
           <div className="text-center mb-6">

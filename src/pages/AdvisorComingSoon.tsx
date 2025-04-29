@@ -3,12 +3,12 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { AlertTriangleIcon } from "lucide-react";
 import { Link } from "react-router-dom";
-import { LogoBanner } from "@/components/layout/LogoBanner";
+import { BrandedHeader } from "@/components/layout/BrandedHeader";
 
 const AdvisorComingSoon = () => {
   return (
     <>
-      <LogoBanner />
+      <BrandedHeader />
       <div className="min-h-screen flex flex-col items-center justify-center bg-[#1B1B32] text-white p-4 mt-20">
         <div className="text-center max-w-md mx-auto">
           <div className="inline-flex items-center justify-center h-16 w-16 rounded-full bg-yellow-600/20 text-yellow-500 mb-6">

@@ -6,7 +6,7 @@ import { DashboardSidebar } from "@/components/layout/DashboardSidebar";
 import { MobileDashboardSidebar } from "@/components/layout/MobileDashboardSidebar";
 import { CourseCategory } from "@/types/education";
 import { DashboardHeader } from "@/components/layout/DashboardHeader";
-import { LogoBanner } from "./LogoBanner";
+import { BrandedHeader } from "./BrandedHeader";
 
 interface ThreeColumnLayoutProps {
   children: React.ReactNode;
@@ -42,7 +42,7 @@ export function ThreeColumnLayout({
 
   return (
     <>
-      <LogoBanner />
+      <BrandedHeader />
       <div className="flex h-screen bg-background antialiased mt-20">
         {/* Mobile Sidebar */}
         <div className="md:hidden">
