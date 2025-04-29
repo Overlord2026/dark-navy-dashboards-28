@@ -5,7 +5,6 @@ import { cn } from "@/lib/utils";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { SidebarSection } from "@/components/sidebar/SidebarSection";
 import { SidebarToggle } from "@/components/sidebar/SidebarToggle";
-import { Share2 } from "lucide-react";
 import { navSections } from "@/components/sidebar/navigationConfig";
 
 export const Sidebar = () => {

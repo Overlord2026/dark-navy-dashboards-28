@@ -21,6 +21,7 @@ export const navSections = [
   {
     id: 'main',
     label: 'Main',
+    icon: LayoutDashboard,
     items: [
       {
         id: 'dashboard',
@@ -33,6 +34,7 @@ export const navSections = [
   {
     id: 'wealth',
     label: 'Wealth Management',
+    icon: BriefcaseIcon,
     items: [
       {
         id: 'accounts',
@@ -57,6 +59,7 @@ export const navSections = [
   {
     id: 'planning',
     label: 'Planning',
+    icon: FileLineChart,
     items: [
       {
         id: 'financial-plans',
@@ -81,6 +84,7 @@ export const navSections = [
   {
     id: 'education',
     label: 'Education',
+    icon: BookOpen,
     items: [
       {
         id: 'education-center',
@@ -93,6 +97,7 @@ export const navSections = [
   {
     id: 'integration',
     label: 'Integration',
+    icon: Share2,
     items: [
       {
         id: 'project-integration',
@@ -105,6 +110,7 @@ export const navSections = [
   {
     id: 'support',
     label: 'Support',
+    icon: MessageCircle,
     items: [
       {
         id: 'ai-insights',
@@ -123,6 +129,7 @@ export const navSections = [
   {
     id: 'account',
     label: 'Account',
+    icon: User,
     items: [
       {
         id: 'profile',

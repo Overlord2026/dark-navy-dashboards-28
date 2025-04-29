@@ -60,27 +60,6 @@ export default function Landing() {
     navigate(`/dashboard?segment=${segmentId}`);
   };
 
-  if (isMobile) {
-    return (
-      <div className="flex flex-col items-center min-h-screen bg-[#0A1F44] text-white pt-16">
-        <BrandedHeader />
-        <div className="w-full px-4">
-          <div className="mt-4">
-            <SegmentCards 
-              segments={segments} 
-              onSegmentClick={handleSegmentClick} 
-              isMobile={true} 
-            />
-          </div>
-          
-          <AdvisorPrompt isMobile={true} />
-        </div>
-        
-        <Footer isMobile={true} />
-      </div>
-    );
-  }
-
   return (
     <div className="flex flex-col items-center min-h-screen bg-[#0A1F44] text-white pt-16">
       <BrandedHeader />
@@ -89,11 +68,11 @@ export default function Landing() {
           <SegmentCards 
             segments={segments} 
             onSegmentClick={handleSegmentClick} 
-            isMobile={false} 
+            isMobile={isMobile} 
           />
         </div>
         
-        <AdvisorPrompt isMobile={false} />
+        <AdvisorPrompt isMobile={isMobile} />
       </div>
       
       <Footer />

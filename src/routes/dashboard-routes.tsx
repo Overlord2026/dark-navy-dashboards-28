@@ -1,6 +1,6 @@
 
 import Landing from "@/pages/Landing";
-import Dashboard from "@/pages/Dashboard";
+import Dashboard from "@/pages/Dashboard"; // Import with correct case
 import AdvisorDashboard from "@/pages/AdvisorDashboard";
 
 export const dashboardRoutes = [

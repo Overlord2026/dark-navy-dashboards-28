@@ -3,13 +3,12 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { navSections } from "./navigationConfig";
 import { LucideIcon } from "lucide-react";
 
 interface NavItem {
   label: string;
   href: string;
-  icon: LucideIcon;
+  icon: React.ReactNode;
 }
 
 interface NavSection {
@@ -49,6 +48,8 @@ export const SidebarSection: React.FC<SidebarSectionProps> = ({
     return false;
   };
 
+  const SectionIcon = section.icon;
+
   if (section.href) {
     // Single link section (like Collaboration)
     return (
@@ -60,7 +61,7 @@ export const SidebarSection: React.FC<SidebarSectionProps> = ({
           isCollapsed && "justify-center"
         )}
       >
-        {section.icon && <section.icon size={18} />}
+        {section.icon && <SectionIcon size={18} />}
         {!isCollapsed && <span>{section.label}</span>}
       </Link>
     );
@@ -71,7 +72,7 @@ export const SidebarSection: React.FC<SidebarSectionProps> = ({
     return (
       <div className="mb-3">
         <div className="flex justify-center p-2">
-          {section.icon && <section.icon size={18} />}
+          {<SectionIcon size={18} />}
         </div>
         {isOpen && section.items && (
           <div className="space-y-1">
@@ -84,7 +85,7 @@ export const SidebarSection: React.FC<SidebarSectionProps> = ({
                   isActive(item.href) && "bg-muted"
                 )}
               >
-                <item.icon size={16} />
+                {item.icon}
               </Link>
             ))}
           </div>
@@ -101,7 +102,7 @@ export const SidebarSection: React.FC<SidebarSectionProps> = ({
         onClick={() => toggleSection(section.id)}
       >
         <div className="flex items-center gap-2">
-          {section.icon && <section.icon size={18} />}
+          {<SectionIcon size={18} />}
           <span>{section.label}</span>
         </div>
         {isOpen ? (
@@ -122,7 +123,7 @@ export const SidebarSection: React.FC<SidebarSectionProps> = ({
                 isActive(item.href) && "bg-muted font-medium"
               )}
             >
-              <item.icon size={16} />
+              {item.icon}
               <span>{item.label}</span>
             </Link>
           ))}
