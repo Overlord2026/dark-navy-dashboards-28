@@ -8,7 +8,7 @@ export const BrandedHeader: React.FC = () => {
         {/* Logo and text */}
         <div className="flex items-center justify-center">
           <img 
-            src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" 
+            src="/lovable-uploads/dcc6226b-47e8-4e6b-97ff-d902f2ef4f1c.png" 
             alt="Boutique Family Office Logo" 
             className="h-10 w-auto"
           />
