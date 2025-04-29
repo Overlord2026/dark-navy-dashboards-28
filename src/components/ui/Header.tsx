@@ -18,7 +18,7 @@ export const Header = () => {
         {/* Tagline */}
         <div className="mt-2 text-center">
           <h3 className="font-dwite text-[#D4AF37] text-xl">Organize & Maximize</h3>
-          <p className="text-white text-sm mt-1">Your personalized path to lasting prosperity</p>
+          <p className="text-white text-xs uppercase tracking-wide mt-1">Your personalized path to lasting prosperity</p>
         </div>
       </div>
     </div>
