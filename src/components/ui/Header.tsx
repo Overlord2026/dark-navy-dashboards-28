@@ -5,24 +5,14 @@ export const Header = () => {
   return (
     <div className="w-full px-4 py-1 flex flex-col items-center justify-center bg-[#0A1F44] z-10">
       {/* Header container with logo */}
-      <div className="w-full max-w-7xl flex justify-between items-center h-16">
-        {/* Left section with keyword */}
-        <div className="flex-1 flex justify-end mr-12 items-center">
-          <span className="text-[#D4AF37] font-semibold text-3xl">Organize</span>
-        </div>
-        
+      <div className="w-full max-w-7xl flex justify-center items-center h-16">
         {/* Centered area with logo */}
-        <div className="mx-4">
+        <div className="mx-4 font-dwite">
           <img 
             src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" 
             alt="Boutique Family Office Logo" 
             className="h-16 w-auto"
           />
-        </div>
-        
-        {/* Right section with keyword */}
-        <div className="flex-1 flex justify-start ml-16 items-center">
-          <span className="text-[#D4AF37] font-semibold text-3xl">Maximize</span>
         </div>
       </div>
     </div>

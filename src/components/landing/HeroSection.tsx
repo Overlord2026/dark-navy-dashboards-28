@@ -13,11 +13,13 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ isMobile }) => {
       
       <div className="relative z-10 py-12">
         <div className="flex flex-col items-center">
-          <img 
-            src="/lovable-uploads/dcc6226b-47e8-4e6b-97ff-d902f2ef4f1c.png" 
-            alt="Boutique Family Office Logo" 
-            className={`${isMobile ? 'h-24 w-auto' : 'h-32 w-auto'} mx-auto`} 
-          />
+          <div className="font-dwite">
+            <img 
+              src="/lovable-uploads/dcc6226b-47e8-4e6b-97ff-d902f2ef4f1c.png" 
+              alt="Boutique Family Office Logo" 
+              className={`${isMobile ? 'h-24 w-auto' : 'h-32 w-auto'} mx-auto`} 
+            />
+          </div>
         </div>
       </div>
     </div>
