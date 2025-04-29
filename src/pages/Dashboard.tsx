@@ -1,6 +1,6 @@
 
 import React from "react";
-import { useSearchParams, Navigate } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { AspiringDashboard } from "@/components/dashboard/AspiringDashboard";
 import { PreRetireesDashboard } from "@/components/dashboard/PreRetireesDashboard";
@@ -9,7 +9,7 @@ import { AdvisorDashboard } from "@/components/dashboard/AdvisorDashboard";
 
 const Dashboard: React.FC = () => {
   const [searchParams] = useSearchParams();
-  const segment = searchParams.get("segment");
+  const segment = searchParams.get("segment") || "preretirees"; // Default to preretirees if no segment
 
   // Render the appropriate dashboard based on segment
   const renderDashboard = () => {
@@ -23,12 +23,12 @@ const Dashboard: React.FC = () => {
       case "advisor":
         return <AdvisorDashboard segment={segment} />;
       default:
-        return <Navigate to="/landing" replace />;
+        return <PreRetireesDashboard segment="preretirees" />; // Fallback to preretirees
     }
   };
 
   return (
-    <ThreeColumnLayout>
+    <ThreeColumnLayout title={segment === "integration" ? "Integration" : undefined}>
       {renderDashboard()}
     </ThreeColumnLayout>
   );
