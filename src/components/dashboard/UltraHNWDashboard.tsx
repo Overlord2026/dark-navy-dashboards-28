@@ -4,6 +4,7 @@ import { Card } from "@/components/ui/card";
 import { useProfile } from "@/hooks/useProfile";
 import { SegmentAwareHero } from "./SegmentAwareHero";
 import { FreeTrialCallout } from "./FreeTrialCallout";
+import { DatabaseIcon, BriefcaseIcon, ChartBarIcon } from "lucide-react";
 
 interface UltraHNWDashboardProps {
   segment?: string;
@@ -26,26 +27,35 @@ export function UltraHNWDashboard({ segment }: UltraHNWDashboardProps) {
       {/* Free Trial Callout */}
       <FreeTrialCallout />
       
-      {/* Main Content */}
+      {/* Main Content - Segment Specific Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <Card className="p-6">
-          <h2 className="text-xl font-semibold mb-4">Private Investments</h2>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-semibold">Trust & Estate Dashboard</h2>
+            <DatabaseIcon className="h-6 w-6 text-indigo-500" />
+          </div>
           <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-md text-center">
-            Your exclusive investment opportunities go here
+            Comprehensive trust and estate management
           </div>
         </Card>
         
         <Card className="p-6">
-          <h2 className="text-xl font-semibold mb-4">Family Governance</h2>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-semibold">Bespoke Tax Strategy</h2>
+            <BriefcaseIcon className="h-6 w-6 text-emerald-600" />
+          </div>
           <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-md text-center">
-            Your family office management tools go here
+            Sophisticated tax planning solutions
           </div>
         </Card>
         
         <Card className="p-6">
-          <h2 className="text-xl font-semibold mb-4">Legacy & Philanthropy</h2>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-semibold">Alternative Investments Hub</h2>
+            <ChartBarIcon className="h-6 w-6 text-amber-600" />
+          </div>
           <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-md text-center">
-            Your impact planning resources go here
+            Exclusive private market opportunities
           </div>
         </Card>
       </div>

@@ -4,6 +4,7 @@ import { Card } from "@/components/ui/card";
 import { useProfile } from "@/hooks/useProfile";
 import { SegmentAwareHero } from "./SegmentAwareHero";
 import { FreeTrialCallout } from "./FreeTrialCallout";
+import { WalletIcon, ShieldIcon, FileTextIcon } from "lucide-react";
 
 interface PreRetireesDashboardProps {
   segment?: string;
@@ -34,26 +35,35 @@ export function PreRetireesDashboard({ segment }: PreRetireesDashboardProps) {
       {/* Free Trial Callout */}
       <FreeTrialCallout />
       
-      {/* Main Content */}
+      {/* Main Content - Segment Specific Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <Card className="p-6">
-          <h2 className="text-xl font-semibold mb-4">Growth Metrics</h2>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-semibold">Income & Withdrawal Planner</h2>
+            <WalletIcon className="h-6 w-6 text-emerald-500" />
+          </div>
           <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-md text-center">
-            Your metrics go here
+            Plan your retirement income strategy
           </div>
         </Card>
         
         <Card className="p-6">
-          <h2 className="text-xl font-semibold mb-4">Investment Opportunities</h2>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-semibold">Risk Protection Tools</h2>
+            <ShieldIcon className="h-6 w-6 text-blue-500" />
+          </div>
           <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-md text-center">
-            Your investment tools go here
+            Safeguard your retirement assets
           </div>
         </Card>
         
         <Card className="p-6">
-          <h2 className="text-xl font-semibold mb-4">Financial Education</h2>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-semibold">Estate & Legacy Guide</h2>
+            <FileTextIcon className="h-6 w-6 text-amber-500" />
+          </div>
           <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-md text-center">
-            Your learning resources go here
+            Comprehensive estate planning resources
           </div>
         </Card>
       </div>
