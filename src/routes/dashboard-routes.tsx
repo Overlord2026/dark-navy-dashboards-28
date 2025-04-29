@@ -1,6 +1,7 @@
 
 import { Route } from "react-router-dom";
-import Dashboard from "@/pages/dashboard"; // Using lowercase to match the actual file name
+// Use an alternative import approach to avoid the casing issue
+import Dashboard from "@/pages/index"; // Using the index file which exports the correct dashboard
 
 const dashboardRoutes = [
   <Route key="dashboard" path="/dashboard" element={<Dashboard />} />,
