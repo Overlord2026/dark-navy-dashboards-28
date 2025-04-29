@@ -1,88 +1,147 @@
 
+import React from 'react';
 import { 
-  Book, 
-  BriefcaseIcon, 
-  FileText, 
-  TrendingUp, 
-  Shield, 
-  Banknote,
-  MessageSquare,
+  LayoutDashboard, 
+  CreditCard, 
+  FileLineChart, 
+  FileText,
+  BookOpen,
+  Building2,
+  MessageCircle,
+  Settings,
+  User,
   VaultIcon,
-  HomeIcon,
-  Grid
-} from "lucide-react";
+  BriefcaseIcon,
+  Shield,
+  Brain,
+  Share2
+} from 'lucide-react';
 
-export interface NavItem {
-  label: string;
-  href: string;
-  icon: React.ElementType;
-}
-
-export interface NavSection {
-  id: string;
-  label: string;
-  icon?: React.ElementType;
-  items?: NavItem[];
-  href?: string;
-}
-
-export const navSections: NavSection[] = [
+export const navSections = [
   {
-    id: "marketplace",
-    label: "Marketplace",
-    icon: BriefcaseIcon,
+    id: 'main',
+    label: 'Main',
     items: [
-      { label: "Landing", href: "/landing", icon: HomeIcon },
-      { label: "Dashboard", href: "/dashboard?segment=preretirees", icon: Grid },
-      { label: "Aspiring Wealthy", href: "/dashboard?segment=aspiring", icon: TrendingUp },
-      { label: "Pre-Retirees & Retirees", href: "/dashboard?segment=preretirees", icon: Shield },
-      { label: "Ultra-HNW", href: "/dashboard?segment=ultrahnw", icon: Banknote },
-      { label: "Advisor", href: "/dashboard?segment=advisor", icon: BriefcaseIcon },
+      {
+        id: 'dashboard',
+        label: 'Dashboard',
+        href: '/',
+        icon: <LayoutDashboard className="h-4 w-4" />,
+      },
     ],
   },
   {
-    id: "education",
-    label: "Education & Solutions",
-    icon: Book,
+    id: 'wealth',
+    label: 'Wealth Management',
     items: [
-      { label: "Education Center", href: "/education", icon: Book },
-      { label: "Courses", href: "/courses", icon: Book },
-      { label: "Guides & Whitepapers", href: "/guides", icon: FileText },
-      { label: "Books", href: "/books", icon: Book },
-      { label: "Planning Examples", href: "/examples", icon: FileText },
-      { label: "Presentations", href: "/presentations", icon: FileText },
+      {
+        id: 'accounts',
+        label: 'Accounts',
+        href: '/accounts',
+        icon: <CreditCard className="h-4 w-4" />,
+      },
+      {
+        id: 'vault',
+        label: 'Family Vault',
+        href: '/legacy-vault',
+        icon: <VaultIcon className="h-4 w-4" />,
+      },
+      {
+        id: 'investments',
+        label: 'Investments',
+        href: '/investments',
+        icon: <BriefcaseIcon className="h-4 w-4" />,
+      },
     ],
   },
   {
-    id: "wealth",
-    label: "Wealth Management",
-    icon: BriefcaseIcon,
+    id: 'planning',
+    label: 'Planning',
     items: [
-      { label: "Secure Family Vault", href: "/legacy-vault", icon: VaultIcon },
-      { label: "Accounts", href: "/accounts", icon: FileText },
-      { label: "Financial Plans", href: "/financial-plans", icon: FileText },
-      { label: "Investments", href: "/accounts", icon: TrendingUp },
-      { label: "Properties", href: "/properties", icon: FileText },
-      { label: "Tax & Budgets", href: "/tax-budgets", icon: FileText },
+      {
+        id: 'financial-plans',
+        label: 'Financial Plans',
+        href: '/financial-plans',
+        icon: <FileLineChart className="h-4 w-4" />,
+      },
+      {
+        id: 'tax-planning',
+        label: 'Tax Planning',
+        href: '/tax-planning',
+        icon: <FileText className="h-4 w-4" />,
+      },
+      {
+        id: 'estate-planning',
+        label: 'Estate Planning',
+        href: '/estate-planning',
+        icon: <Building2 className="h-4 w-4" />,
+      },
     ],
   },
   {
-    id: "planning",
-    label: "Planning & Services",
-    icon: FileText,
+    id: 'education',
+    label: 'Education',
     items: [
-      { label: "Financial Planning", href: "/financial-plans", icon: FileText },
-      { label: "Investments", href: "/accounts", icon: TrendingUp },
-      { label: "Tax Planning", href: "/tax-planning", icon: FileText },
-      { label: "Estate Planning", href: "/estate-planning", icon: FileText },
-      { label: "Insurance", href: "/insurance", icon: Shield },
-      { label: "Lending", href: "/lending", icon: Banknote },
+      {
+        id: 'education-center',
+        label: 'Education Center',
+        href: '/education',
+        icon: <BookOpen className="h-4 w-4" />,
+      },
     ],
   },
   {
-    id: "collaboration",
-    label: "Collaboration",
-    icon: MessageSquare,
-    href: "/integration",
+    id: 'integration',
+    label: 'Integration',
+    items: [
+      {
+        id: 'project-integration',
+        label: 'Project Integration',
+        href: '/integration',
+        icon: <Share2 className="h-4 w-4" />,
+      },
+    ],
+  },
+  {
+    id: 'support',
+    label: 'Support',
+    items: [
+      {
+        id: 'ai-insights',
+        label: 'AI Insights',
+        href: '/ai-insights',
+        icon: <Brain className="h-4 w-4" />,
+      },
+      {
+        id: 'help',
+        label: 'Help & Support',
+        href: '/help',
+        icon: <MessageCircle className="h-4 w-4" />,
+      },
+    ],
+  },
+  {
+    id: 'account',
+    label: 'Account',
+    items: [
+      {
+        id: 'profile',
+        label: 'Profile',
+        href: '/profile',
+        icon: <User className="h-4 w-4" />,
+      },
+      {
+        id: 'security',
+        label: 'Security',
+        href: '/security-settings',
+        icon: <Shield className="h-4 w-4" />,
+      },
+      {
+        id: 'settings',
+        label: 'Settings',
+        href: '/settings',
+        icon: <Settings className="h-4 w-4" />,
+      },
+    ],
   },
 ];

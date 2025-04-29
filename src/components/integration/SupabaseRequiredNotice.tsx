@@ -1,23 +1,20 @@
 
 import React from "react";
-import { Card } from "@/components/ui/card";
-import { Info, ExternalLink } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-export function SupabaseRequiredNotice() {
+export const SupabaseRequiredNotice = () => {
   return (
-    <Card className="p-4 bg-blue-500/10 border-blue-500/30 flex items-center gap-3">
-      <div className="bg-blue-500/20 p-1.5 rounded-full">
-        <Info className="h-4 w-4 text-blue-500" />
-      </div>
-      <div className="flex-1">
-        <p className="text-sm">
-          To enable full integration functionality, make sure your Supabase instance is properly configured and connected.
-        </p>
-      </div>
-      <Button variant="ghost" size="sm" className="text-blue-500 flex items-center gap-1 whitespace-nowrap">
-        Learn More <ExternalLink className="h-3 w-3 ml-1" />
-      </Button>
-    </Card>
+    <Alert className="bg-amber-900/20 text-amber-200 border-amber-500/50 mb-6">
+      <AlertCircle className="h-4 w-4" />
+      <AlertTitle>Supabase Integration Required</AlertTitle>
+      <AlertDescription className="flex flex-col sm:flex-row sm:items-center gap-4">
+        <span>Connect your Supabase instance to enable full integration functionality.</span>
+        <Button size="sm" className="bg-black text-[#D4AF37] hover:bg-black/80 whitespace-nowrap">
+          Configure Supabase
+        </Button>
+      </AlertDescription>
+    </Alert>
   );
-}
+};
