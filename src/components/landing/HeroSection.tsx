@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 interface HeroSectionProps {
@@ -7,11 +6,11 @@ interface HeroSectionProps {
 
 export const HeroSection: React.FC<HeroSectionProps> = ({ isMobile }) => {
   return (
-    <div className={`landing-header text-center mb-16 relative overflow-hidden`}>
+    <div className="landing-header text-center mb-16 relative overflow-hidden">
       {/* Radial gradient background */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,#1A1F2C_0%,transparent_70%)] z-0"></div>
       
-      <div className="relative z-10 pt-8 pb-12">
+      <div className="relative z-10 py-8">
         <h1 className={`${isMobile ? 'text-2xl' : 'text-3xl'} font-bold mb-2 text-[#FFC829]`}>
           Organize & Maximize
         </h1>
