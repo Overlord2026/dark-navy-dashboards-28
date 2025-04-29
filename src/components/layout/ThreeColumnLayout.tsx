@@ -13,6 +13,8 @@ interface ThreeColumnLayoutProps {
   noHeader?: boolean;
   className?: string;
   contentClassName?: string;
+  title?: string;
+  activeMainItem?: string;
 }
 
 export const ThreeColumnLayout: React.FC<ThreeColumnLayoutProps> = ({
@@ -23,6 +25,8 @@ export const ThreeColumnLayout: React.FC<ThreeColumnLayoutProps> = ({
   noHeader = false,
   className,
   contentClassName,
+  title,
+  activeMainItem,
 }) => {
   const renderSidebar = () => {
     if (leftSidebar) {
@@ -38,13 +42,13 @@ export const ThreeColumnLayout: React.FC<ThreeColumnLayoutProps> = ({
 
   return (
     <div className={cn("flex flex-col h-screen", className)}>
-      <BrandedHeader />
+      <BrandedHeader isConnected={activeMainItem === "integration"} />
 
       <div className="flex flex-1 overflow-hidden pt-16">
         {renderSidebar()}
 
         <div className={cn("flex flex-col flex-1 h-full overflow-y-auto", contentClassName)}>
-          {!noHeader && <DashboardHeader />}
+          {!noHeader && <DashboardHeader heading={title || ""} />}
           {children}
         </div>
 

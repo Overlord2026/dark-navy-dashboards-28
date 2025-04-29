@@ -14,9 +14,8 @@ export const AdvisorPrompt: React.FC<AdvisorPromptProps> = ({ isMobile }) => {
     <div className={`${isMobile ? 'mt-8' : 'mb-16'} text-center`}>
       <p className={`text-gray-${isMobile ? '400' : '300'} mb-2 text-sm`}>Are you a financial advisor?</p>
       <Button 
-        variant="outline"
-        className={`px-4 py-1.5 text-sm border-${isMobile ? '' : '2'} border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37]/10`}
-        onClick={() => navigate('/advisor/dashboard')} // Updated to go directly to dashboard
+        className="bg-[#FFC700] text-[#0F1E3A] hover:bg-[#E0B000] font-medium"
+        onClick={() => navigate('/advisor')}
       >
         Access Advisor Portal
       </Button>

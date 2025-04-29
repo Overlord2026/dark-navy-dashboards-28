@@ -1,7 +1,9 @@
 
 import Landing from "@/pages/Landing";
-import Dashboard from "@/pages/Dashboard"; // Import with correct case
+import Dashboard from "@/pages/Dashboard"; 
 import AdvisorDashboard from "@/pages/AdvisorDashboard";
+import LoginPage from "@/pages/LoginPage";
+import AdvisorLanding from "@/pages/AdvisorLanding";
 
 export const dashboardRoutes = [
   {
@@ -18,11 +20,15 @@ export const dashboardRoutes = [
   },
   {
     path: "/advisor/login",
-    element: <AdvisorDashboard />,
+    element: <LoginPage isAdvisor={true} />,
   },
   {
     path: "/advisor/dashboard",
     element: <AdvisorDashboard />,
+  },
+  {
+    path: "/advisor",
+    element: <AdvisorLanding />,
   },
   {
     path: "/advisor/*",

@@ -1,33 +1,28 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { useLocation, Link } from "react-router-dom";
+import { CalendarClock } from "lucide-react";
 
-export const FreeTrialCallout: React.FC = () => {
-  const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
-  const segment = queryParams.get('segment');
-  
-  const trialLink = `/signup?segment=${segment || "default"}`;
-  
+export function FreeTrialCallout() {
   return (
-    <div className="w-full bg-gray-100 dark:bg-gray-800 rounded-lg p-6 mb-8 text-center border border-yellow-400">
-      <h2 className="text-xl font-semibold mb-4">Try your 90-Day Free Trial!</h2>
-      <div className="flex flex-col items-center gap-3">
-        <Button
-          asChild
-          className="bg-black text-[#FFC107] hover:bg-black/90 border border-[#FFC107]"
-        >
-          <Link to={trialLink}>Start Free Trial</Link>
-        </Button>
-        
-        <Link 
-          to="/create-profile" 
-          className="text-[#FFC107] font-medium text-sm uppercase tracking-wide hover:underline"
-        >
-          Create Your Profile
-        </Link>
+    <div className="mb-8 p-6 bg-[#162B4D] border border-[#2A3E5C] rounded-lg shadow-md">
+      <div className="flex flex-col md:flex-row items-center justify-between">
+        <div>
+          <h2 className="text-xl font-semibold mb-2 text-[#FFC700]">Advisor Premium Access</h2>
+          <p className="text-white mb-4 md:mb-0 max-w-lg">
+            Upgrade to unlock advanced features, custom branding, and unlimited client access.
+          </p>
+        </div>
+        <div className="flex gap-4">
+          <Button className="bg-[#FFC700] text-[#0F1E3A] hover:bg-[#E0B000] font-medium">
+            Upgrade Now
+          </Button>
+          <Button variant="outline" className="border-[#FFC700] text-[#FFC700] hover:bg-[#FFC700]/10">
+            <CalendarClock className="mr-2 h-4 w-4" />
+            Schedule Demo
+          </Button>
+        </div>
       </div>
     </div>
   );
-};
+}
