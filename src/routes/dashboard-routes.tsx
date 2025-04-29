@@ -1,10 +1,10 @@
 
 import { lazy } from "react";
 import { Route } from "react-router-dom";
-import Dashboard from "@/pages/dashboard"; // Fixed casing issue here
+import Dashboard from "@/pages/dashboard"; // Using lowercase to match the actual filename
 
-const dashboardRoutes = (
-  <Route path="/dashboard" element={<Dashboard />} />
-);
+const dashboardRoutes = [
+  <Route key="dashboard" path="/dashboard" element={<Dashboard />} />
+];
 
 export default dashboardRoutes;
