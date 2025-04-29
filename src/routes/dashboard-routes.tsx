@@ -1,6 +1,7 @@
 
+
 import Index from "@/pages/index";
-import Dashboard from "@/pages/Dashboard";
+import Dashboard from "@/pages/dashboard";
 import Landing from "@/pages/Landing";
 
 export const dashboardRoutes = [
@@ -17,3 +18,4 @@ export const dashboardRoutes = [
     element: <Index />,
   },
 ];
+
