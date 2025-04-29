@@ -64,10 +64,10 @@ export default function Landing() {
   if (isMobile) {
     return (
       <div className="flex flex-col items-center min-h-screen bg-[#0A1F44] text-white">
-        <div className="w-full px-4 py-8 mt-32">
+        <div className="w-full px-4 mt-8">
           <HeroSection isMobile={true} />
 
-          <div className="mt-16">
+          <div className="mt-12">
             <SegmentCards 
               segments={segments} 
               onSegmentClick={handleSegmentClick} 
@@ -90,10 +90,10 @@ export default function Landing() {
       hideHeader
     >
       <div className="flex flex-col items-center min-h-screen bg-[#0A1F44] text-white">
-        <div className="w-full max-w-7xl px-4 py-12 md:py-20 mt-32">
+        <div className="w-full max-w-7xl py-0">
           <HeroSection isMobile={false} />
 
-          <div className="mt-16">
+          <div className="mt-12 px-4">
             <SegmentCards 
               segments={segments} 
               onSegmentClick={handleSegmentClick} 

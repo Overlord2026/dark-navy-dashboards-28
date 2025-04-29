@@ -1,6 +1,7 @@
 
 import Landing from "@/pages/Landing";
-import Dashboard from "@/pages/dashboard"; // Using lowercase to match the actual file name
+// Use a different import approach to avoid TypeScript casing issues
+import { default as Dashboard } from "../pages/dashboard";
 
 export const dashboardRoutes = [
   {
