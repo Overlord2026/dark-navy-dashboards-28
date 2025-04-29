@@ -24,6 +24,16 @@ export const QuickActionsMenu = () => {
         <>
           <QuickDiagnosticsButton />
           <DiagnosticsAccessButton />
+          <Button 
+            size="sm" 
+            variant="outline" 
+            className="bg-white text-blue-600 border-blue-200 hover:bg-blue-50"
+            asChild
+          >
+            <Link to="/integration?segment=integration">
+              Integration Hub
+            </Link>
+          </Button>
         </>
       )}
     </div>

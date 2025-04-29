@@ -6,10 +6,14 @@ import { AspiringDashboard } from "@/components/dashboard/AspiringDashboard";
 import { PreRetireesDashboard } from "@/components/dashboard/PreRetireesDashboard";
 import { UltraHNWDashboard } from "@/components/dashboard/UltraHNWDashboard";
 import { AdvisorDashboard } from "@/components/dashboard/AdvisorDashboard";
+import { AdminIntegrationDashboard } from "@/components/dashboard/AdminIntegrationDashboard";
+import { useUser } from "@/context/UserContext";
 
 const Dashboard: React.FC = () => {
   const [searchParams] = useSearchParams();
   const segment = searchParams.get("segment") || "preretirees"; // Default to preretirees if no segment
+  const { userProfile } = useUser();
+  const isAdmin = userProfile?.role === "admin" || userProfile?.role === "system_administrator";
 
   // Render the appropriate dashboard based on segment
   const renderDashboard = () => {
@@ -22,13 +26,16 @@ const Dashboard: React.FC = () => {
         return <UltraHNWDashboard segment={segment} />;
       case "advisor":
         return <AdvisorDashboard segment={segment} />;
+      case "integration":
+        // Only render integration dashboard for admins
+        return isAdmin ? <AdminIntegrationDashboard /> : <PreRetireesDashboard segment="preretirees" />;
       default:
         return <PreRetireesDashboard segment="preretirees" />; // Fallback to preretirees
     }
   };
 
   return (
-    <ThreeColumnLayout title={segment === "integration" ? "Integration" : undefined}>
+    <ThreeColumnLayout title={segment === "integration" && isAdmin ? "Integration" : undefined}>
       {renderDashboard()}
     </ThreeColumnLayout>
   );
