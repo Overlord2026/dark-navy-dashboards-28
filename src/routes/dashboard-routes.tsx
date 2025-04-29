@@ -1,7 +1,7 @@
 
-import IndexPage from "@/pages/index";
-import DashboardPage from "@/pages/dashboard";
 import Landing from "@/pages/Landing";
+import DashboardPage from "@/pages/Dashboard";
+import IndexPage from "@/pages/Landing";
 
 export const dashboardRoutes = [
   {

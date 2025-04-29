@@ -136,14 +136,14 @@ export default function Landing() {
     >
       <div className="flex flex-col items-center min-h-screen bg-[#0A1F44] text-white">
         <div className="w-full max-w-7xl px-4 py-12 md:py-20">
-          <div className="landing-header text-center mb-20">
-            <h1 className="text-3xl font-medium mb-2">Organize & Maximize</h1>
-            <p className="text-gray-300 mb-6">Your personalized path to lasting prosperity.</p>
+          <div className="landing-header text-center mb-16">
+            <h1 className="text-3xl font-normal mb-1.5">Organize & Maximize</h1>
             <img 
               src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" 
               alt="Boutique Family Office" 
-              className="h-14 w-auto mx-auto" 
+              className="h-16 w-auto mx-auto my-5" 
             />
+            <p className="text-gray-300 text-lg">Your personalized path to lasting prosperity.</p>
           </div>
 
           <div 
@@ -191,12 +191,12 @@ export default function Landing() {
             })}
           </div>
           
-          {/* Advisor section moved up */}
+          {/* Advisor section moved up as requested */}
           <div className="mb-16 text-center">
-            <p className="text-gray-300 mb-3 text-base">Are you a financial advisor?</p>
+            <p className="text-gray-300 mb-2 text-sm">Are you a financial advisor?</p>
             <Button 
               variant="outline"
-              className="px-5 py-2 text-base border-2 border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37]/10"
+              className="px-4 py-1.5 text-sm border-2 border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37]/10"
               onClick={() => navigate('/advisor/login')}
             >
               Access Advisor Portal
