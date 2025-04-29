@@ -1,4 +1,6 @@
+
 import React from 'react';
+import { TreePine } from 'lucide-react';
 
 interface HeroSectionProps {
   isMobile: boolean;
@@ -17,11 +19,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ isMobile }) => {
         <p className={`${isMobile ? 'text-sm' : 'text-base'} text-white font-medium mb-6`}>
           Your personalized path to lasting prosperity.
         </p>
-        <img 
-          src="/lovable-uploads/e35d27cf-24a1-42f7-a83c-588c6cbb0a02.png" 
-          alt="Boutique Family Office Logo" 
-          className={`${isMobile ? 'h-16 w-auto' : 'h-20 w-auto'} mx-auto`} 
-        />
+        <div className="flex flex-col items-center">
+          <TreePine className="h-16 w-16 text-[#FFC829] mb-2" />
+          <span className="text-white font-medium">Boutique Family Office</span>
+        </div>
       </div>
     </div>
   );
