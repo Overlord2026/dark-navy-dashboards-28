@@ -7,6 +7,7 @@ import { AspiringDashboard } from "@/components/dashboard/AspiringDashboard";
 import { PreRetireesDashboard } from "@/components/dashboard/PreRetireesDashboard";
 import { UltraHNWDashboard } from "@/components/dashboard/UltraHNWDashboard";
 import { AdvisorDashboard } from "@/components/dashboard/AdvisorDashboard";
+import { BrandedHeader } from "@/components/layout/BrandedHeader";
 
 export default function Dashboard() {
   const location = useLocation();
@@ -29,11 +30,11 @@ export default function Dashboard() {
   };
 
   return (
-    <ThreeColumnLayout>
-      <DashboardHeader title={segment === 'advisor' ? 'Advisor Portal' : 'Financial Dashboard'} />
+    <div className="min-h-screen bg-background">
+      <BrandedHeader />
       <div className="px-6 py-12 mt-20">
         {renderSegmentDashboard()}
       </div>
-    </ThreeColumnLayout>
+    </div>
   );
 }

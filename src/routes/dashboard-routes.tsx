@@ -1,7 +1,7 @@
 
 import Landing from "@/pages/Landing";
-import Dashboard from "@/pages/dashboard"; // Using lowercase to match actual file
-import AdvisorDashboard from "@/pages/AdvisorDashboard"; // Import the real dashboard
+import Dashboard from "@/pages/Dashboard"; // Fixed casing
+import AdvisorDashboard from "@/pages/AdvisorDashboard";
 
 export const dashboardRoutes = [
   {
@@ -18,14 +18,14 @@ export const dashboardRoutes = [
   },
   {
     path: "/advisor/login",
-    element: <AdvisorDashboard />, // Updated to use real dashboard
+    element: <AdvisorDashboard />,
   },
   {
     path: "/advisor/dashboard",
-    element: <AdvisorDashboard />, // Updated to use real dashboard
+    element: <AdvisorDashboard />,
   },
   {
     path: "/advisor/*",
-    element: <AdvisorDashboard />, // Updated to use real dashboard
+    element: <AdvisorDashboard />,
   },
 ];

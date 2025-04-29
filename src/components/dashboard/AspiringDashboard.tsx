@@ -6,6 +6,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { SegmentAwareHero } from "./SegmentAwareHero";
 import { FreeTrialCallout } from "./FreeTrialCallout";
 import { TrendingUpIcon, LayoutDashboardIcon, BookIcon } from "lucide-react";
+import { BrandedHeader } from "@/components/layout/BrandedHeader";
 
 interface AspiringDashboardProps {
   segment?: string;
@@ -16,7 +17,9 @@ export function AspiringDashboard({ segment }: AspiringDashboardProps) {
   const isMobile = useIsMobile();
 
   return (
-    <div className="container mx-auto px-4 py-6 max-w-7xl">
+    <div className="container mx-auto px-4 py-6 max-w-7xl mt-20">
+      <BrandedHeader />
+      
       {/* Animated Header Banner */}
       <div className="mb-8 p-6 bg-[#1a202c] rounded-lg shadow-md">
         {isMobile ? (
