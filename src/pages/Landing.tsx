@@ -64,50 +64,46 @@ export default function Landing() {
 
   if (isMobile) {
     return (
-      <>
+      <div className="flex flex-col items-center min-h-screen bg-[#0A1F44] text-white">
         <BrandedHeader />
-        <div className="flex flex-col items-center min-h-screen bg-[#0A1F44] text-white mt-20">
-          <div className="w-full px-4 mt-0">
-            <HeroSection isMobile={true} />
+        <div className="w-full px-4 mt-20">
+          <HeroSection isMobile={true} />
 
-            <div className="mt-4">
-              <SegmentCards 
-                segments={segments} 
-                onSegmentClick={handleSegmentClick} 
-                isMobile={true} 
-              />
-            </div>
-            
-            <AdvisorPrompt isMobile={true} />
+          <div className="mt-4">
+            <SegmentCards 
+              segments={segments} 
+              onSegmentClick={handleSegmentClick} 
+              isMobile={true} 
+            />
           </div>
           
-          <Footer isMobile={true} />
+          <AdvisorPrompt isMobile={true} />
         </div>
-      </>
+        
+        <Footer isMobile={true} />
+      </div>
     );
   }
 
   return (
-    <>
+    <div className="flex flex-col items-center min-h-screen bg-[#0A1F44] text-white">
       <BrandedHeader />
-      <div className="flex flex-col items-center min-h-screen bg-[#0A1F44] text-white mt-20">
-        <div className="w-full max-w-7xl py-0">
-          <HeroSection isMobile={false} />
+      <div className="w-full max-w-7xl py-0 mt-20">
+        <HeroSection isMobile={false} />
 
-          <div className="mt-4 px-4">
-            <SegmentCards 
-              segments={segments} 
-              onSegmentClick={handleSegmentClick} 
-              isMobile={false} 
-            />
-          </div>
-          
-          <AdvisorPrompt isMobile={false} />
+        <div className="mt-4 px-4">
+          <SegmentCards 
+            segments={segments} 
+            onSegmentClick={handleSegmentClick} 
+            isMobile={false} 
+          />
         </div>
         
-        <Footer />
-        <AnimatedBackground />
+        <AdvisorPrompt isMobile={false} />
       </div>
-    </>
+      
+      <Footer />
+      <AnimatedBackground />
+    </div>
   );
 }

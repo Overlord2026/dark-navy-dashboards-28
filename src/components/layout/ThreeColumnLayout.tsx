@@ -6,7 +6,6 @@ import { DashboardSidebar } from "@/components/layout/DashboardSidebar";
 import { MobileDashboardSidebar } from "@/components/layout/MobileDashboardSidebar";
 import { CourseCategory } from "@/types/education";
 import { DashboardHeader } from "@/components/layout/DashboardHeader";
-import { BrandedHeader } from "./BrandedHeader";
 
 interface ThreeColumnLayoutProps {
   children: React.ReactNode;
@@ -41,41 +40,38 @@ export function ThreeColumnLayout({
   ];
 
   return (
-    <>
-      <BrandedHeader />
-      <div className="flex h-screen bg-background antialiased mt-20">
-        {/* Mobile Sidebar */}
-        <div className="md:hidden">
-          <MobileDashboardSidebar 
-            mainNavigationItems={mainNavigationItems}
-            sidebarNavigationItems={sidebarNavigationItems}
-          />
-        </div>
-
-        {/* Desktop Sidebar */}
-        {!hideLeftSidebar && (
-          <DashboardSidebar />
-        )}
-
-        {/* Main Content */}
-        <div className="flex-1 flex flex-col min-h-screen">
-          {/* Header */}
-          {!hideHeader && (
-            <DashboardHeader title={title} />
-          )}
-
-          <main className={`flex-1 overflow-x-hidden overflow-y-auto ${!hideHeader ? 'pt-16' : ''}`}>
-            {children}
-          </main>
-        </div>
-
-        {/* Right Sidebar */}
-        {!hideRightSidebar && (
-          <aside className="hidden md:block w-80 border-l border-border py-4 px-3 flex-shrink-0">
-            {/* Right sidebar content */}
-          </aside>
-        )}
+    <div className="flex h-screen bg-background antialiased">
+      {/* Mobile Sidebar */}
+      <div className="md:hidden">
+        <MobileDashboardSidebar 
+          mainNavigationItems={mainNavigationItems}
+          sidebarNavigationItems={sidebarNavigationItems}
+        />
       </div>
-    </>
+
+      {/* Desktop Sidebar */}
+      {!hideLeftSidebar && (
+        <DashboardSidebar />
+      )}
+
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col min-h-screen">
+        {/* Header */}
+        {!hideHeader && (
+          <DashboardHeader title={title} />
+        )}
+
+        <main className={`flex-1 overflow-x-hidden overflow-y-auto ${!hideHeader ? 'pt-16' : ''}`}>
+          {children}
+        </main>
+      </div>
+
+      {/* Right Sidebar */}
+      {!hideRightSidebar && (
+        <aside className="hidden md:block w-80 border-l border-border py-4 px-3 flex-shrink-0">
+          {/* Right sidebar content */}
+        </aside>
+      )}
+    </div>
   );
 }
