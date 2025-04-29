@@ -3,6 +3,7 @@ import React from "react";
 import { Card } from "@/components/ui/card";
 import { useProfile } from "@/hooks/useProfile";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { SegmentAwareHero } from "./SegmentAwareHero";
 
 interface AspiringDashboardProps {
   segment?: string;
@@ -18,9 +19,7 @@ export function AspiringDashboard({ segment }: AspiringDashboardProps) {
       <div className="mb-8 p-6 bg-[#1a202c] rounded-lg shadow-md">
         {isMobile ? (
           <div className="text-center">
-            <h1 className="text-2xl font-bold text-white mb-2">
-              {loading ? "Welcome" : `Welcome, ${profile?.name || "User"}`}
-            </h1>
+            <SegmentAwareHero />
             <p className="text-gray-200 text-sm">
               Welcome to your personalized wealth-building journey. Track your progress, discover strategies, 
               and accelerate your path to financial independence.
@@ -32,9 +31,7 @@ export function AspiringDashboard({ segment }: AspiringDashboardProps) {
               <span className="text-[#d4af37] text-xl font-semibold animate-pulse">
                 Organize
               </span>
-              <h1 className="text-3xl font-bold text-white">
-                {loading ? "Welcome" : `Welcome, ${profile?.name || "User"}`}
-              </h1>
+              <SegmentAwareHero />
               <span className="text-[#d4af37] text-xl font-semibold animate-pulse">
                 Maximize
               </span>

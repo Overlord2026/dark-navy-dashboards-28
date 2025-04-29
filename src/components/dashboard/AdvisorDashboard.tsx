@@ -1,8 +1,8 @@
 
 import React from "react";
-import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Card } from "@/components/ui/card";
 import { useProfile } from "@/hooks/useProfile";
+import { SegmentAwareHero } from "./SegmentAwareHero";
 
 interface AdvisorDashboardProps {
   segment?: string;
@@ -19,9 +19,7 @@ export function AdvisorDashboard({ segment }: AdvisorDashboardProps) {
           <span className="text-[#d4af37] text-xl font-semibold animate-pulse">
             Organize
           </span>
-          <h1 className="text-3xl font-bold text-white">
-            {loading ? "Welcome to the Advisor Portal" : `Welcome, ${profile?.name || "Advisor"}`}
-          </h1>
+          <SegmentAwareHero />
           <span className="text-[#d4af37] text-xl font-semibold animate-pulse">
             Maximize
           </span>
