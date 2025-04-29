@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ThreeColumnLayout } from '@/components/layout/ThreeColumnLayout';
@@ -15,7 +16,7 @@ export default function Landing() {
   ];
 
   const handleSegmentClick = (segmentId: string) => {
-    // Ensure we're navigating to the dashboard with the correct segment parameter
+    // Navigate directly to the dashboard with the correct segment parameter
     navigate(`/dashboard?segment=${segmentId}`);
   };
 

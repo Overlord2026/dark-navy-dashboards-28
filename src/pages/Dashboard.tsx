@@ -30,19 +30,9 @@ const Dashboard: React.FC = () => {
         // Only render integration dashboard for admins
         return isAdmin ? <AdminIntegrationDashboard /> : <PreRetireesDashboard segment="preretirees" />;
       default:
-        return <PreRetireesDashboard segment="preretirees" />; // Fallback to preretirees
+        return <PreRetireesDashboard segment="preretirees" />;
     }
   };
-
-  // If user is not an admin but trying to access the integration dashboard,
-  // we still show the regular dashboard based on segment, not the integration dashboard
-  if (segment === "integration" && !isAdmin) {
-    return (
-      <ThreeColumnLayout>
-        <PreRetireesDashboard segment="preretirees" />
-      </ThreeColumnLayout>
-    );
-  }
 
   return (
     <ThreeColumnLayout title={segment === "integration" && isAdmin ? "Integration" : undefined}>
