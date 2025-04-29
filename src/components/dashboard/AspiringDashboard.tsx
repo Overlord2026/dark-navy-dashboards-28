@@ -3,7 +3,6 @@ import React from "react";
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useProfile } from "@/hooks/useProfile";
-import { useIsMobile } from "@/hooks/use-mobile";
 import { BookIcon, ArrowRightIcon } from "lucide-react";
 import { AssetsSummary } from "./AssetsSummary";
 
@@ -13,7 +12,6 @@ interface AspiringDashboardProps {
 
 export function AspiringDashboard({ segment }: AspiringDashboardProps) {
   const { profile, loading } = useProfile();
-  const isMobile = useIsMobile();
 
   return (
     <div className="container mx-auto px-4 py-6 max-w-7xl">
