@@ -8,15 +8,17 @@ interface HeroSectionProps {
 export const HeroSection: React.FC<HeroSectionProps> = ({ isMobile }) => {
   return (
     <div className="landing-header text-center mb-16">
-      <h1 className={`${isMobile ? 'text-2xl' : 'text-3xl'} font-normal mb-1.5`}>Organize & Maximize</h1>
-      <img 
-        src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" 
-        alt="Boutique Family Office" 
-        className={`${isMobile ? 'h-14 w-auto mx-auto mb-4' : 'h-16 w-auto mx-auto my-5'}`} 
-      />
-      <p className={`${isMobile ? 'text-sm text-gray-300 mb-4' : 'text-gray-300 text-lg'}`}>
+      <h1 className={`${isMobile ? 'text-2xl' : 'text-3xl'} font-semibold mb-2 text-[#FFC829]`}>
+        Organize & Maximize
+      </h1>
+      <p className={`${isMobile ? 'text-sm' : 'text-base'} text-white font-medium mb-6`}>
         Your personalized path to lasting prosperity.
       </p>
+      <img 
+        src="/lovable-uploads/e35d27cf-24a1-42f7-a83c-588c6cbb0a02.png" 
+        alt="Boutique Family Office Logo" 
+        className={`${isMobile ? 'h-16 w-auto' : 'h-20 w-auto'} mx-auto`} 
+      />
     </div>
   );
 };

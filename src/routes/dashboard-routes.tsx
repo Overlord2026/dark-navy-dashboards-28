@@ -1,6 +1,6 @@
 
 import Landing from "@/pages/Landing";
-import DashboardPage from "@/pages/Dashboard";
+import DashboardPage from "@/pages/dashboard";
 
 export const dashboardRoutes = [
   {
