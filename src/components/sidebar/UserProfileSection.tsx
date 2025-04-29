@@ -13,11 +13,6 @@ export const UserProfileSection: React.FC<UserProfileSectionProps> = ({
     <div className="p-4 border-b border-border flex items-center justify-between">
       {showLogo && (
         <div className="flex items-center">
-          <img 
-            src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" 
-            alt="Boutique Family Office Logo" 
-            className="h-8 w-auto mr-2"
-          />
           <span className="font-semibold">Family Office</span>
         </div>
       )}

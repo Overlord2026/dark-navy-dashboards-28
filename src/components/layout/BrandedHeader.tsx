@@ -6,11 +6,7 @@ export const BrandedHeader: React.FC = () => {
     <header className="w-full flex justify-center items-center bg-black fixed top-0 left-0 right-0 z-50 shadow-md">
       <div className="flex items-center justify-center py-1">
         <div className="flex items-center">
-          <img 
-            src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" 
-            alt="Boutique Family Office Logo" 
-            className="h-12 w-auto mr-3"
-          />
+          {/* Logo placeholder - you'll provide the correct logo to be used here */}
           <div className="flex flex-col">
             <span className="text-white text-xl font-semibold">BOUTIQUE FAMILY OFFICE</span>
             <p className="text-[#D4AF37] text-xs uppercase tracking-wide">ORGANIZE &amp; MAXIMIZE</p>
