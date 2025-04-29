@@ -15,6 +15,11 @@ export default function Landing() {
     { id: "ultrahnw", label: "Ultra-High Net Worth" },
   ];
 
+  const handleSegmentClick = (segmentId: string) => {
+    // Ensure we're navigating to the dashboard with the correct segment parameter
+    navigate(`/dashboard?segment=${segmentId}`);
+  };
+
   if (isMobile) {
     return (
       <div className="flex flex-col items-center min-h-screen bg-[#0A1F44] text-white">
@@ -33,7 +38,7 @@ export default function Landing() {
               <div
                 key={seg.id}
                 className="p-5 rounded-lg bg-black/20 hover:bg-black/30 border border-[#D4AF37]/20 cursor-pointer transition flex items-center"
-                onClick={() => navigate(`/dashboard?segment=${seg.id}`)}
+                onClick={() => handleSegmentClick(seg.id)}
               >
                 <div className="flex-1">
                   <h2 className="text-xl font-semibold text-[#D4AF37]">{seg.label}</h2>
@@ -84,7 +89,7 @@ export default function Landing() {
               <div
                 key={seg.id}
                 className="p-6 rounded-lg bg-black/20 hover:bg-black/30 border border-[#D4AF37]/20 cursor-pointer transition flex flex-col"
-                onClick={() => navigate(`/dashboard?segment=${seg.id}`)}
+                onClick={() => handleSegmentClick(seg.id)}
               >
                 <h2 className="text-2xl font-semibold text-[#D4AF37] mb-2">{seg.label}</h2>
                 <p className="text-gray-300 mb-4">Click to enter your customized experience</p>

@@ -1,6 +1,6 @@
 
-import Index from "@/pages/Index";
-import Dashboard from "@/pages/Dashboard";
+import { default as IndexPage } from "@/pages/index";
+import { default as DashboardPage } from "@/pages/dashboard";
 import Landing from "@/pages/Landing";
 
 export const dashboardRoutes = [
@@ -10,10 +10,10 @@ export const dashboardRoutes = [
   },
   {
     path: "/dashboard",
-    element: <Dashboard />,
+    element: <DashboardPage />,
   },
   {
     path: "/index",
-    element: <Index />,
+    element: <IndexPage />,
   },
 ];
