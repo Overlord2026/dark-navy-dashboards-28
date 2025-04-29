@@ -1,7 +1,7 @@
 
 import Landing from "@/pages/Landing";
 // Import using the exact casing that matches the file system
-import Dashboard from "../pages/Dashboard";
+import Dashboard from "../pages/dashboard";
 import AdvisorComingSoon from "../pages/AdvisorComingSoon";
 
 export const dashboardRoutes = [
