@@ -1,6 +1,6 @@
 
 import Landing from "@/pages/Landing";
-import Dashboard from "@/pages/Dashboard"; // Fixed casing
+import Dashboard from "@/pages/Dashboard";
 import AdvisorDashboard from "@/pages/AdvisorDashboard";
 
 export const dashboardRoutes = [

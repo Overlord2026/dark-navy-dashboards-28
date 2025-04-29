@@ -11,9 +11,9 @@ export const BrandedHeader: React.FC = () => {
           <img 
             src={GoldTreeLogo} 
             alt="Boutique Family Office Logo" 
-            className="h-10 w-auto"
+            className="h-12 w-auto mr-2"
           />
-          <span className="text-white text-lg font-semibold ml-2">BOUTIQUE FAMILY OFFICE</span>
+          <span className="text-white text-xl font-semibold ml-1">BOUTIQUE FAMILY OFFICE</span>
         </div>
         
         {/* Tagline */}

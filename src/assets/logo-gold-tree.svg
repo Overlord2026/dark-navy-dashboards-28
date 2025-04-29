@@ -1,8 +1,4 @@
 
 <svg width="50" height="50" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <path d="M25 2L10 40H40L25 2Z" fill="#D4AF37"/>
-  <path d="M25 10L20 25H30L25 10Z" fill="#D4AF37"/>
-  <path d="M25 30L22 40H28L25 30Z" fill="#D4AF37"/>
-  <path d="M25 25L15 45H35L25 25Z" fill="#D4AF37"/>
-  <path d="M25 15V45" stroke="#D4AF37" stroke-width="2"/>
+  <path d="M25 5L8 40H42L25 5Z" fill="#D4AF37"/>
 </svg>
