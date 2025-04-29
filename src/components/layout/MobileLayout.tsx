@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { 
@@ -19,6 +18,7 @@ import { useTheme } from "@/context/ThemeContext";
 import { useUser } from "@/context/UserContext";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { LogoBanner } from "./LogoBanner";
 
 interface MobileLayoutProps {
   children: React.ReactNode;
@@ -56,8 +56,9 @@ export function MobileLayout({
 
   return (
     <div className="flex flex-col h-screen bg-[#12121C] text-white overflow-hidden">
+      <LogoBanner />
       {/* Mobile Status Bar */}
-      <div className="w-full flex justify-between items-center px-4 py-2 bg-[#0D0D15]">
+      <div className="w-full flex justify-between items-center px-4 py-2 bg-[#0D0D15] mt-20">
         <div className="text-xl font-bold">5:49</div>
         <div className="flex items-center space-x-2">
           <div className="flex space-x-1">

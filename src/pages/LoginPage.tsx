@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
+import { LogoBanner } from "@/components/layout/LogoBanner";
 
 export default function LoginPage({ isAdvisor = false }) {
   const navigate = useNavigate();
@@ -21,24 +22,8 @@ export default function LoginPage({ isAdvisor = false }) {
   
   return (
     <div className="min-h-screen bg-[#F9F7E8] flex flex-col">
-      <header className="w-full flex justify-center items-center py-4 border-b border-[#DCD8C0] bg-[#F9F7E8] sticky top-0 z-50">
-        <div className="container flex justify-between items-center max-w-7xl px-4">
-          <Link to="/" className="flex items-center">
-            <img 
-              src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" 
-              alt="Boutique Family Office Logo" 
-              className="h-16 w-auto"
-            />
-          </Link>
-          <div>
-            <Button variant="ghost" asChild>
-              <Link to="/">Back to Home</Link>
-            </Button>
-          </div>
-        </div>
-      </header>
-      
-      <div className="flex-1 flex justify-center items-center p-4">
+      <LogoBanner />
+      <div className="flex-1 flex justify-center items-center p-4 mt-20">
         <div className="bg-white p-8 rounded-lg shadow-md border border-[#DCD8C0] w-full max-w-md">
           <div className="text-center mb-6">
             <h1 className="text-2xl font-bold text-[#222222]">

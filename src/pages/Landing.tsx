@@ -9,6 +9,7 @@ import { SegmentCards } from '@/components/landing/SegmentCards';
 import { AdvisorPrompt } from '@/components/landing/AdvisorPrompt';
 import { AnimatedBackground } from '@/components/landing/AnimatedBackground';
 import { Footer } from '@/components/landing/Footer';
+import { LogoBanner } from '@/components/layout/LogoBanner';
 
 export default function Landing() {
   const navigate = useNavigate();
@@ -63,50 +64,56 @@ export default function Landing() {
 
   if (isMobile) {
     return (
-      <div className="flex flex-col items-center min-h-screen bg-[#0A1F44] text-white">
-        <div className="w-full px-4 mt-0">
-          <HeroSection isMobile={true} />
+      <>
+        <LogoBanner />
+        <div className="flex flex-col items-center min-h-screen bg-[#0A1F44] text-white mt-20">
+          <div className="w-full px-4 mt-0">
+            <HeroSection isMobile={true} />
 
-          <div className="mt-4">
-            <SegmentCards 
-              segments={segments} 
-              onSegmentClick={handleSegmentClick} 
-              isMobile={true} 
-            />
+            <div className="mt-4">
+              <SegmentCards 
+                segments={segments} 
+                onSegmentClick={handleSegmentClick} 
+                isMobile={true} 
+              />
+            </div>
+            
+            <AdvisorPrompt isMobile={true} />
           </div>
           
-          <AdvisorPrompt isMobile={true} />
+          <Footer isMobile={true} />
         </div>
-        
-        <Footer isMobile={true} />
-      </div>
+      </>
     );
   }
 
   return (
-    <ThreeColumnLayout 
-      hideLeftSidebar
-      hideRightSidebar
-      hideHeader
-    >
-      <div className="flex flex-col items-center min-h-screen bg-[#0A1F44] text-white">
-        <div className="w-full max-w-7xl py-0">
-          <HeroSection isMobile={false} />
+    <>
+      <LogoBanner />
+      <ThreeColumnLayout 
+        hideLeftSidebar
+        hideRightSidebar
+        hideHeader
+      >
+        <div className="flex flex-col items-center min-h-screen bg-[#0A1F44] text-white">
+          <div className="w-full max-w-7xl py-0">
+            <HeroSection isMobile={false} />
 
-          <div className="mt-4 px-4">
-            <SegmentCards 
-              segments={segments} 
-              onSegmentClick={handleSegmentClick} 
-              isMobile={false} 
-            />
+            <div className="mt-4 px-4">
+              <SegmentCards 
+                segments={segments} 
+                onSegmentClick={handleSegmentClick} 
+                isMobile={false} 
+              />
+            </div>
+            
+            <AdvisorPrompt isMobile={false} />
           </div>
           
-          <AdvisorPrompt isMobile={false} />
+          <Footer />
+          <AnimatedBackground />
         </div>
-        
-        <Footer />
-        <AnimatedBackground />
-      </div>
-    </ThreeColumnLayout>
+      </ThreeColumnLayout>
+    </>
   );
 }
