@@ -1,7 +1,7 @@
 
 import Landing from "@/pages/Landing";
-// Use a different import approach to avoid TypeScript casing issues
-import { default as Dashboard } from "../pages/dashboard";
+// Fix the import to use the correct casing
+import Dashboard from "@/pages/Dashboard";
 
 export const dashboardRoutes = [
   {
