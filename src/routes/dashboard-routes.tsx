@@ -1,7 +1,7 @@
 
 import Landing from "@/pages/Landing";
-// Fix the import to use the correct casing
-import Dashboard from "@/pages/Dashboard";
+// Resolve the casing issue by using the relative path directly
+import Dashboard from "../pages/Dashboard";
 
 export const dashboardRoutes = [
   {

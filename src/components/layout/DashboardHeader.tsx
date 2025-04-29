@@ -9,11 +9,11 @@ interface DashboardHeaderProps {
 
 export function DashboardHeader({ title }: DashboardHeaderProps) {
   return (
-    <header className="py-0 border-b border-border bg-[#0A1F44] fixed top-0 left-0 right-0 z-50 shadow-md">
+    <header className="py-0 border-b border-border bg-black fixed top-0 left-0 right-0 z-50 shadow-md">
       <div className="flex items-center justify-between h-full max-w-screen-2xl mx-auto">
         {/* Center section with logo and tagline */}
         <div className="mx-auto flex flex-col items-center w-full">
-          <div className="pt-4 pb-3 w-full flex flex-col items-center justify-center bg-black relative">
+          <div className="pt-0 pb-2 w-full flex flex-col items-center justify-center relative">
             <img 
               src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" 
               alt="Boutique Family Office Logo" 
