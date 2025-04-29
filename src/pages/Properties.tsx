@@ -1,18 +1,13 @@
-
 import React from "react";
-import { Sidebar } from "@/components/ui/Sidebar";
-import { Header } from "@/components/ui/Header";
-import { PropertyManager } from "@/components/properties/PropertyManager";
-import { useSearchParams } from "react-router-dom";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 
 const Properties = () => {
-  const [searchParams] = useSearchParams();
-  const filter = searchParams.get("filter");
-
   return (
-    <ThreeColumnLayout title="Real Estate" activeMainItem="family-wealth">
-      <PropertyManager initialFilter={filter} />
+    <ThreeColumnLayout title="Properties">
+      <div className="container mx-auto px-4 py-6">
+        <h1 className="text-2xl font-bold mb-4">Properties</h1>
+        {/* Properties content */}
+      </div>
     </ThreeColumnLayout>
   );
 };

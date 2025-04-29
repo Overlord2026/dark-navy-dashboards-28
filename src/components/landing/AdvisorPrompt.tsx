@@ -16,10 +16,10 @@ export const AdvisorPrompt: React.FC<AdvisorPromptProps> = ({ isMobile }) => {
       <Button 
         variant="outline"
         className={`px-4 py-1.5 text-sm border-${isMobile ? '' : '2'} border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37]/10`}
-        onClick={() => navigate('/advisor/login')}
+        onClick={() => navigate('/advisor/dashboard')} // Updated to go directly to dashboard
       >
         Access Advisor Portal
       </Button>
     </div>
   );
-};
+}
