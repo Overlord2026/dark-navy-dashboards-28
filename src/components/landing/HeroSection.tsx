@@ -11,18 +11,12 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ isMobile }) => {
       {/* Radial gradient background */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,#1A1F2C_0%,transparent_70%)] z-0"></div>
       
-      <div className="relative z-10 py-8">
-        <h1 className={`${isMobile ? 'text-2xl' : 'text-3xl'} font-bold mb-2 text-[#FFC829]`}>
-          Organize & Maximize
-        </h1>
-        <p className={`${isMobile ? 'text-sm' : 'text-base'} text-white font-medium mb-6`}>
-          Your personalized path to lasting prosperity.
-        </p>
+      <div className="relative z-10 py-12">
         <div className="flex flex-col items-center">
           <img 
             src="/lovable-uploads/dcc6226b-47e8-4e6b-97ff-d902f2ef4f1c.png" 
             alt="Boutique Family Office Logo" 
-            className={`${isMobile ? 'h-20 w-auto' : 'h-24 w-auto'} mx-auto`} 
+            className={`${isMobile ? 'h-24 w-auto' : 'h-32 w-auto'} mx-auto`} 
           />
         </div>
       </div>
