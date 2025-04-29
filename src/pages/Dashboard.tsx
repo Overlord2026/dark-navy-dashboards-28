@@ -1,6 +1,5 @@
 
 import React from "react";
-import { DashboardHeader } from "@/components/layout/DashboardHeader";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { useLocation } from "react-router-dom";
 import { AspiringDashboard } from "@/components/dashboard/AspiringDashboard";
@@ -30,11 +29,13 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <>
       <BrandedHeader />
-      <div className="px-6 py-12 mt-20">
-        {renderSegmentDashboard()}
-      </div>
-    </div>
+      <ThreeColumnLayout>
+        <div className="px-6 py-6">
+          {renderSegmentDashboard()}
+        </div>
+      </ThreeColumnLayout>
+    </>
   );
 }

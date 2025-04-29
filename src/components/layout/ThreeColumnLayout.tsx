@@ -5,8 +5,6 @@ import { MainNavItem, SidebarNavItem } from "@/types";
 import { DashboardSidebar } from "@/components/layout/DashboardSidebar";
 import { MobileDashboardSidebar } from "@/components/layout/MobileDashboardSidebar";
 import { CourseCategory } from "@/types/education";
-import { DashboardHeader } from "@/components/layout/DashboardHeader";
-import { BrandedHeader } from "@/components/layout/BrandedHeader";
 
 interface ThreeColumnLayoutProps {
   children: React.ReactNode;

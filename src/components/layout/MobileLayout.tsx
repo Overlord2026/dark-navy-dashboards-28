@@ -7,12 +7,6 @@ import {
   ArrowRightLeft, 
   FileText, 
   MoreHorizontal,
-  User,
-  UserPlus,
-  Palette,
-  Shield,
-  LogOut,
-  ChevronRight,
   Plus
 } from "lucide-react";
 import { useTheme } from "@/context/ThemeContext";
@@ -57,6 +51,8 @@ export function MobileLayout({
 
   return (
     <div className="flex flex-col h-screen bg-[#12121C] text-white overflow-hidden pt-16">
+      <BrandedHeader />
+      
       {/* Page Header */}
       <header className="w-full flex justify-between items-center py-4 px-4 bg-[#12121C] border-b border-gray-800">
         <h1 className="text-2xl font-bold">{title}</h1>

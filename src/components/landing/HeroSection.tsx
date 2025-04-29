@@ -6,27 +6,6 @@ interface HeroSectionProps {
 }
 
 export const HeroSection: React.FC<HeroSectionProps> = ({ isMobile }) => {
-  return (
-    <div className="landing-header text-center mb-8 relative overflow-hidden">
-      {/* Dark navy background - changed to pure black */}
-      <div className="absolute inset-0 bg-black z-0"></div>
-      
-      <div className="relative z-10 py-6">
-        <div className="flex flex-col items-center">
-          <div>
-            <img 
-              src="/lovable-uploads/dcc6226b-47e8-4e6b-97ff-d902f2ef4f1c.png" 
-              alt="Boutique Family Office Logo" 
-              className={`${isMobile ? 'h-20 w-auto' : 'h-28 w-auto'} mx-auto`} 
-            />
-          </div>
-          
-          {/* Tagline */}
-          <div className="mt-2 text-center">
-            <p className="text-white text-xs uppercase tracking-wide mt-1">Your personalized path to lasting prosperity</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+  // Component intentionally left empty as we're now using BrandedHeader consistently across the app
+  return null;
 };

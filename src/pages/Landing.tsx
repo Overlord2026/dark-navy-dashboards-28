@@ -3,7 +3,6 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Leaf, Sunrise, Crown } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { HeroSection } from '@/components/landing/HeroSection';
 import { SegmentCards } from '@/components/landing/SegmentCards';
 import { AdvisorPrompt } from '@/components/landing/AdvisorPrompt';
 import { AnimatedBackground } from '@/components/landing/AnimatedBackground';
@@ -64,9 +63,8 @@ export default function Landing() {
   if (isMobile) {
     return (
       <div className="flex flex-col items-center min-h-screen bg-[#0A1F44] text-white pt-16">
+        <BrandedHeader />
         <div className="w-full px-4">
-          <HeroSection isMobile={true} />
-
           <div className="mt-4">
             <SegmentCards 
               segments={segments} 
@@ -85,9 +83,8 @@ export default function Landing() {
 
   return (
     <div className="flex flex-col items-center min-h-screen bg-[#0A1F44] text-white pt-16">
+      <BrandedHeader />
       <div className="w-full max-w-7xl py-0">
-        <HeroSection isMobile={false} />
-
         <div className="mt-4 px-4">
           <SegmentCards 
             segments={segments} 
