@@ -34,7 +34,7 @@ export function DashboardHeader({ title }: DashboardHeaderProps) {
 
         {/* Right section with keyword and profile dropdown */}
         <div className="flex-1 flex items-center justify-between">
-          <div className="flex justify-end items-center w-3/4">
+          <div className="flex justify-end items-center w-3/4 mr-24">
             <span className="text-[#D4AF37] font-semibold text-3xl">Maximize</span>
           </div>
           <UserProfileDropdown onOpenForm={(id) => console.log(`Form ${id} would open here if implemented`)} />
