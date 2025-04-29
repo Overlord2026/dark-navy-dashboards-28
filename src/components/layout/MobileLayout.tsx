@@ -19,7 +19,7 @@ import { useTheme } from "@/context/ThemeContext";
 import { useUser } from "@/context/UserContext";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { DashboardHeader } from "@/components/layout/DashboardHeader";
+import { BrandedHeader } from "@/components/layout/BrandedHeader";
 
 interface MobileLayoutProps {
   children: React.ReactNode;
@@ -56,24 +56,7 @@ export function MobileLayout({
   };
 
   return (
-    <div className="flex flex-col h-screen bg-[#12121C] text-white overflow-hidden">
-      {/* Mobile Status Bar */}
-      <div className="w-full flex justify-between items-center px-4 py-2 bg-[#0D0D15]">
-        <div className="text-xl font-bold">5:49</div>
-        <div className="flex items-center space-x-2">
-          <div className="flex space-x-1">
-            <div className="h-3 w-1 bg-gray-400 rounded-sm"></div>
-            <div className="h-4 w-1 bg-gray-400 rounded-sm"></div>
-            <div className="h-5 w-1 bg-gray-400 rounded-sm"></div>
-            <div className="h-6 w-1 bg-gray-400 rounded-sm"></div>
-          </div>
-          <div className="text-sm">5G</div>
-          <div className="w-8 h-4 border border-gray-400 rounded-sm relative">
-            <div className="absolute top-0.5 bottom-0.5 left-0.5 right-1 bg-gray-400 rounded-sm"></div>
-          </div>
-        </div>
-      </div>
-      
+    <div className="flex flex-col h-screen bg-[#12121C] text-white overflow-hidden pt-16">
       {/* Page Header */}
       <header className="w-full flex justify-between items-center py-4 px-4 bg-[#12121C] border-b border-gray-800">
         <h1 className="text-2xl font-bold">{title}</h1>

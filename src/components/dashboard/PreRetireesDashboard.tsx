@@ -5,7 +5,6 @@ import { useProfile } from "@/hooks/useProfile";
 import { SegmentAwareHero } from "./SegmentAwareHero";
 import { FreeTrialCallout } from "./FreeTrialCallout";
 import { WalletIcon, ShieldIcon, FileTextIcon } from "lucide-react";
-import { BrandedHeader } from "@/components/layout/BrandedHeader";
 
 interface PreRetireesDashboardProps {
   segment?: string;
@@ -15,9 +14,7 @@ export function PreRetireesDashboard({ segment }: PreRetireesDashboardProps) {
   const { profile, loading } = useProfile();
 
   return (
-    <div className="container mx-auto px-4 py-6 max-w-7xl mt-20">
-      <BrandedHeader />
-      
+    <div className="container mx-auto px-4 py-6 max-w-7xl">
       {/* Animated Header Banner */}
       <div className="mb-8 p-6 bg-[#1a202c] rounded-lg shadow-md">
         <div className="flex items-center justify-between">

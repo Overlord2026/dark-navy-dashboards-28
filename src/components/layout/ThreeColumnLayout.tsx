@@ -6,6 +6,7 @@ import { DashboardSidebar } from "@/components/layout/DashboardSidebar";
 import { MobileDashboardSidebar } from "@/components/layout/MobileDashboardSidebar";
 import { CourseCategory } from "@/types/education";
 import { DashboardHeader } from "@/components/layout/DashboardHeader";
+import { BrandedHeader } from "@/components/layout/BrandedHeader";
 
 interface ThreeColumnLayoutProps {
   children: React.ReactNode;
@@ -40,7 +41,7 @@ export function ThreeColumnLayout({
   ];
 
   return (
-    <div className="flex h-screen bg-background antialiased">
+    <div className="flex h-screen bg-background antialiased pt-16">
       {/* Mobile Sidebar */}
       <div className="md:hidden">
         <MobileDashboardSidebar 
@@ -56,12 +57,7 @@ export function ThreeColumnLayout({
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-h-screen">
-        {/* Header */}
-        {!hideHeader && (
-          <DashboardHeader title={title} />
-        )}
-
-        <main className={`flex-1 overflow-x-hidden overflow-y-auto ${!hideHeader ? 'pt-16' : ''}`}>
+        <main className="flex-1 overflow-x-hidden overflow-y-auto">
           {children}
         </main>
       </div>

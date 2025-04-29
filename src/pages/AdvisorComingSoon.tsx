@@ -7,9 +7,9 @@ import { BrandedHeader } from "@/components/layout/BrandedHeader";
 
 const AdvisorComingSoon = () => {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-[#1B1B32] text-white p-4">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-[#1B1B32] text-white p-4 pt-16">
       <BrandedHeader />
-      <div className="text-center max-w-md mx-auto mt-20">
+      <div className="text-center max-w-md mx-auto">
         <div className="inline-flex items-center justify-center h-16 w-16 rounded-full bg-yellow-600/20 text-yellow-500 mb-6">
           <AlertTriangleIcon className="h-8 w-8" />
         </div>
@@ -20,6 +20,6 @@ const AdvisorComingSoon = () => {
       </div>
     </div>
   );
-};
+}
 
 export default AdvisorComingSoon;

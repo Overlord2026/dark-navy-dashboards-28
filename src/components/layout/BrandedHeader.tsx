@@ -4,7 +4,7 @@ import GoldTreeLogo from "@/assets/logo-gold-tree.svg";
 
 export const BrandedHeader: React.FC = () => {
   return (
-    <header className="w-full flex justify-center items-center bg-black fixed top-0 left-0 right-0 z-50 py-2">
+    <header className="w-full flex justify-center items-center bg-black fixed top-0 left-0 right-0 z-50 py-3 shadow-md">
       <div className="flex flex-col items-center justify-center">
         {/* Logo and text */}
         <div className="flex items-center justify-center">

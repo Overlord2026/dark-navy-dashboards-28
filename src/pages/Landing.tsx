@@ -1,7 +1,6 @@
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ThreeColumnLayout } from '@/components/layout/ThreeColumnLayout';
 import { Leaf, Sunrise, Crown } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { HeroSection } from '@/components/landing/HeroSection';
@@ -64,9 +63,8 @@ export default function Landing() {
 
   if (isMobile) {
     return (
-      <div className="flex flex-col items-center min-h-screen bg-[#0A1F44] text-white">
-        <BrandedHeader />
-        <div className="w-full px-4 mt-20">
+      <div className="flex flex-col items-center min-h-screen bg-[#0A1F44] text-white pt-16">
+        <div className="w-full px-4">
           <HeroSection isMobile={true} />
 
           <div className="mt-4">
@@ -86,9 +84,8 @@ export default function Landing() {
   }
 
   return (
-    <div className="flex flex-col items-center min-h-screen bg-[#0A1F44] text-white">
-      <BrandedHeader />
-      <div className="w-full max-w-7xl py-0 mt-20">
+    <div className="flex flex-col items-center min-h-screen bg-[#0A1F44] text-white pt-16">
+      <div className="w-full max-w-7xl py-0">
         <HeroSection isMobile={false} />
 
         <div className="mt-4 px-4">

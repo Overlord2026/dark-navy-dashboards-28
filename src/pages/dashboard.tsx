@@ -1,12 +1,12 @@
 
 import React from "react";
-import { DashboardHeader } from "@/components/layout/DashboardHeader";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { useLocation } from "react-router-dom";
 import { AspiringDashboard } from "@/components/dashboard/AspiringDashboard";
 import { PreRetireesDashboard } from "@/components/dashboard/PreRetireesDashboard";
 import { UltraHNWDashboard } from "@/components/dashboard/UltraHNWDashboard";
 import { AdvisorDashboard } from "@/components/dashboard/AdvisorDashboard";
+import { BrandedHeader } from "@/components/layout/BrandedHeader";
 
 export default function Dashboard() {
   const location = useLocation();
@@ -29,11 +29,13 @@ export default function Dashboard() {
   };
 
   return (
-    <ThreeColumnLayout>
-      <DashboardHeader title={segment === 'advisor' ? 'Advisor Portal' : 'Financial Dashboard'} />
-      <div className="px-6 py-12 mt-20">
-        {renderSegmentDashboard()}
-      </div>
-    </ThreeColumnLayout>
+    <>
+      <BrandedHeader />
+      <ThreeColumnLayout>
+        <div className="px-6 py-6">
+          {renderSegmentDashboard()}
+        </div>
+      </ThreeColumnLayout>
+    </>
   );
 }
