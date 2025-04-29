@@ -1,6 +1,6 @@
 
 import Landing from "@/pages/Landing";
-import Dashboard from "@/pages/Dashboard"; // Fixed casing to match actual file
+import Dashboard from "@/pages/dashboard"; // Using lowercase to match the actual file name
 
 export const dashboardRoutes = [
   {
