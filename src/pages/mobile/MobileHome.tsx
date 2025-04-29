@@ -44,7 +44,7 @@ export default function MobileHome() {
         
         {/* Quick Actions */}
         <div>
-          <h2 className="text-lg font-semibold mb-3">Quick Actions</h2>
+          <h2 className="text-lg font-semibold mb-3 px-1">Quick Actions</h2>
           <div className="grid grid-cols-2 gap-3">
             <Link to="/accounts">
               <Card className="bg-[#1B1B32] border border-[#2A2A45] h-full">
@@ -86,7 +86,7 @@ export default function MobileHome() {
         
         {/* Wealth Management Section */}
         <div>
-          <h2 className="text-lg font-semibold mb-3">Wealth Management</h2>
+          <h2 className="text-lg font-semibold mb-3 px-1">Wealth Management</h2>
           <div className="space-y-3">
             <Link to="/accounts">
               <Card className="bg-[#1B1B32] border border-[#2A2A45]">
@@ -95,11 +95,11 @@ export default function MobileHome() {
                     <div className="mr-4 p-2 bg-[#2A2A45] rounded-full">
                       <Wallet className="h-5 w-5 text-blue-400" />
                     </div>
-                    <div>
+                    <div className="flex-1">
                       <h3 className="font-medium">Accounts & Assets</h3>
                       <p className="text-xs text-gray-400">View all your financial accounts</p>
                     </div>
-                    <ChevronRight className="ml-auto h-5 w-5 text-gray-500" />
+                    <ChevronRight className="ml-2 h-5 w-5 text-gray-500 flex-shrink-0" />
                   </div>
                 </CardContent>
               </Card>
@@ -112,11 +112,11 @@ export default function MobileHome() {
                     <div className="mr-4 p-2 bg-[#2A2A45] rounded-full">
                       <BarChart3 className="h-5 w-5 text-green-400" />
                     </div>
-                    <div>
+                    <div className="flex-1">
                       <h3 className="font-medium">Investments</h3>
                       <p className="text-xs text-gray-400">Manage your investment portfolio</p>
                     </div>
-                    <ChevronRight className="ml-auto h-5 w-5 text-gray-500" />
+                    <ChevronRight className="ml-2 h-5 w-5 text-gray-500 flex-shrink-0" />
                   </div>
                 </CardContent>
               </Card>
@@ -126,7 +126,7 @@ export default function MobileHome() {
         
         {/* Education & Planning Section */}
         <div>
-          <h2 className="text-lg font-semibold mb-3">Education & Planning</h2>
+          <h2 className="text-lg font-semibold mb-3 px-1">Education & Planning</h2>
           <div className="space-y-3">
             <Link to="/tax-planning">
               <Card className="bg-[#1B1B32] border border-[#2A2A45]">
@@ -135,11 +135,11 @@ export default function MobileHome() {
                     <div className="mr-4 p-2 bg-[#2A2A45] rounded-full">
                       <PieChart className="h-5 w-5 text-purple-400" />
                     </div>
-                    <div>
+                    <div className="flex-1">
                       <h3 className="font-medium">Tax Planning</h3>
                       <p className="text-xs text-gray-400">Optimize your tax strategy</p>
                     </div>
-                    <ChevronRight className="ml-auto h-5 w-5 text-gray-500" />
+                    <ChevronRight className="ml-2 h-5 w-5 text-gray-500 flex-shrink-0" />
                   </div>
                 </CardContent>
               </Card>
@@ -152,11 +152,11 @@ export default function MobileHome() {
                     <div className="mr-4 p-2 bg-[#2A2A45] rounded-full">
                       <GraduationCap className="h-5 w-5 text-orange-400" />
                     </div>
-                    <div>
+                    <div className="flex-1">
                       <h3 className="font-medium">Education Center</h3>
                       <p className="text-xs text-gray-400">Learn financial concepts and strategies</p>
                     </div>
-                    <ChevronRight className="ml-auto h-5 w-5 text-gray-500" />
+                    <ChevronRight className="ml-2 h-5 w-5 text-gray-500 flex-shrink-0" />
                   </div>
                 </CardContent>
               </Card>

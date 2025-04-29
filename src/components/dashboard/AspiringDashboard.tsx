@@ -3,6 +3,7 @@ import React from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Card } from "@/components/ui/card";
 import { useProfile } from "@/hooks/useProfile";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface AspiringDashboardProps {
   segment?: string;
@@ -10,26 +11,41 @@ interface AspiringDashboardProps {
 
 export function AspiringDashboard({ segment }: AspiringDashboardProps) {
   const { profile, loading } = useProfile();
+  const isMobile = useIsMobile();
 
   return (
     <div className="container mx-auto px-4 py-6 max-w-7xl">
       {/* Animated Header Banner */}
       <div className="mb-8 p-6 bg-[#1a202c] rounded-lg shadow-md">
-        <div className="flex items-center justify-between">
-          <span className="text-[#d4af37] text-xl font-semibold animate-pulse">
-            Organize
-          </span>
-          <h1 className="text-3xl font-bold text-white">
-            {loading ? "Welcome" : `Welcome, ${profile?.name || "User"}`}
-          </h1>
-          <span className="text-[#d4af37] text-xl font-semibold animate-pulse">
-            Maximize
-          </span>
-        </div>
-        <p className="text-gray-200 max-w-3xl mt-4 text-center mx-auto">
-          Welcome to your personalized wealth-building journey. Track your progress, discover strategies, 
-          and accelerate your path to financial independence.
-        </p>
+        {isMobile ? (
+          <div className="text-center">
+            <h1 className="text-2xl font-bold text-white mb-2">
+              {loading ? "Welcome" : `Welcome, ${profile?.name || "User"}`}
+            </h1>
+            <p className="text-gray-200 text-sm">
+              Welcome to your personalized wealth-building journey. Track your progress, discover strategies, 
+              and accelerate your path to financial independence.
+            </p>
+          </div>
+        ) : (
+          <>
+            <div className="flex items-center justify-between">
+              <span className="text-[#d4af37] text-xl font-semibold animate-pulse">
+                Organize
+              </span>
+              <h1 className="text-3xl font-bold text-white">
+                {loading ? "Welcome" : `Welcome, ${profile?.name || "User"}`}
+              </h1>
+              <span className="text-[#d4af37] text-xl font-semibold animate-pulse">
+                Maximize
+              </span>
+            </div>
+            <p className="text-gray-200 max-w-3xl mt-4 text-center mx-auto">
+              Welcome to your personalized wealth-building journey. Track your progress, discover strategies, 
+              and accelerate your path to financial independence.
+            </p>
+          </>
+        )}
       </div>
       
       {/* Main Content */}
