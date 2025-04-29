@@ -2,7 +2,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ThreeColumnLayout } from '@/components/layout/ThreeColumnLayout';
-import { TreeDeciduous, Sunset, Crown } from 'lucide-react';
+import { Leaf, Sunrise, Crown } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { HeroSection } from '@/components/landing/HeroSection';
 import { SegmentCards } from '@/components/landing/SegmentCards';
@@ -24,7 +24,7 @@ export default function Landing() {
         "Launch an investment portfolio",
         "Optimize your tax strategy",
       ],
-      icon: TreeDeciduous,
+      icon: Leaf,
       tagline: "Growth-Focused",
       buttonText: "Get Started"
     },
@@ -37,7 +37,7 @@ export default function Landing() {
         "Protect your assets from market swings",
         "Plan your estate and legacy",
       ],
-      icon: Sunset,
+      icon: Sunrise,
       tagline: "Security-Focused",
       buttonText: "Plan My Retirement"
     },
