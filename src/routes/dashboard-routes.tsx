@@ -1,37 +1,10 @@
 
-import Landing from "@/pages/Landing";
-import Dashboard from "@/pages/dashboard"; 
-import AdvisorDashboard from "@/pages/AdvisorDashboard";
-import LoginPage from "@/pages/LoginPage";
-import AdvisorLanding from "@/pages/AdvisorLanding";
+import { lazy } from "react";
+import { Route } from "react-router-dom";
+import Dashboard from "@/pages/dashboard"; // Fixed casing issue here
 
-export const dashboardRoutes = [
-  {
-    path: "/",
-    element: <Landing />,
-  },
-  {
-    path: "/dashboard",
-    element: <Dashboard />,
-  },
-  {
-    path: "/index",
-    element: <Landing />,
-  },
-  {
-    path: "/advisor/login",
-    element: <LoginPage isAdvisor={true} />,
-  },
-  {
-    path: "/advisor/dashboard",
-    element: <AdvisorDashboard />,
-  },
-  {
-    path: "/advisor",
-    element: <AdvisorLanding />,
-  },
-  {
-    path: "/advisor/*",
-    element: <AdvisorDashboard />,
-  },
-];
+const dashboardRoutes = (
+  <Route path="/dashboard" element={<Dashboard />} />
+);
+
+export default dashboardRoutes;
