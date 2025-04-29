@@ -28,7 +28,7 @@ export default function Dashboard() {
   };
 
   return (
-    <ThreeColumnLayout>
+    <ThreeColumnLayout activeMainItem="integration">
       <div className="px-6 py-6">
         {renderSegmentDashboard()}
       </div>
