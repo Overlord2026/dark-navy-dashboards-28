@@ -3,6 +3,7 @@ import React from "react";
 import { Card } from "@/components/ui/card";
 import { useProfile } from "@/hooks/useProfile";
 import { SegmentAwareHero } from "./SegmentAwareHero";
+import { FreeTrialCallout } from "./FreeTrialCallout";
 
 interface UltraHNWDashboardProps {
   segment?: string;
@@ -21,6 +22,9 @@ export function UltraHNWDashboard({ segment }: UltraHNWDashboardProps) {
           private investments, and multi-generational planning tools.
         </p>
       </div>
+      
+      {/* Free Trial Callout */}
+      <FreeTrialCallout />
       
       {/* Main Content */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

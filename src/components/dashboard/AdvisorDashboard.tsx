@@ -3,6 +3,7 @@ import React from "react";
 import { Card } from "@/components/ui/card";
 import { useProfile } from "@/hooks/useProfile";
 import { SegmentAwareHero } from "./SegmentAwareHero";
+import { FreeTrialCallout } from "./FreeTrialCallout";
 
 interface AdvisorDashboardProps {
   segment?: string;
@@ -29,6 +30,9 @@ export function AdvisorDashboard({ segment }: AdvisorDashboardProps) {
           to deliver exceptional service to your high-value clientele.
         </p>
       </div>
+      
+      {/* Free Trial Callout */}
+      <FreeTrialCallout />
       
       {/* Main Content */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

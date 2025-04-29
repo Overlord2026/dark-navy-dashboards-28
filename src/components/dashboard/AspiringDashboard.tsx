@@ -4,6 +4,7 @@ import { Card } from "@/components/ui/card";
 import { useProfile } from "@/hooks/useProfile";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { SegmentAwareHero } from "./SegmentAwareHero";
+import { FreeTrialCallout } from "./FreeTrialCallout";
 
 interface AspiringDashboardProps {
   segment?: string;
@@ -43,6 +44,9 @@ export function AspiringDashboard({ segment }: AspiringDashboardProps) {
           </>
         )}
       </div>
+      
+      {/* Free Trial Callout */}
+      <FreeTrialCallout />
       
       {/* Main Content */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
