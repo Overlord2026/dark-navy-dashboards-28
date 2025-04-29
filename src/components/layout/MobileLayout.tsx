@@ -53,7 +53,7 @@ export function MobileLayout({
     <div className="flex flex-col h-screen bg-[#12121C] text-white overflow-hidden pt-16">
       <BrandedHeader />
       
-      {/* Page Header */}
+      {/* Page Header - Only showing title and add button, no logo */}
       <header className="w-full flex justify-between items-center py-4 px-4 bg-[#12121C] border-b border-gray-800">
         <h1 className="text-2xl font-bold">{title}</h1>
         {showAddButton && (

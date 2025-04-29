@@ -5,6 +5,7 @@ import { MainNavItem, SidebarNavItem } from "@/types";
 import { DashboardSidebar } from "@/components/layout/DashboardSidebar";
 import { MobileDashboardSidebar } from "@/components/layout/MobileDashboardSidebar";
 import { CourseCategory } from "@/types/education";
+import { BrandedHeader } from "@/components/layout/BrandedHeader";
 
 interface ThreeColumnLayoutProps {
   children: React.ReactNode;
@@ -39,33 +40,36 @@ export function ThreeColumnLayout({
   ];
 
   return (
-    <div className="flex h-screen bg-background antialiased pt-16">
-      {/* Mobile Sidebar */}
-      <div className="md:hidden">
-        <MobileDashboardSidebar 
-          mainNavigationItems={mainNavigationItems}
-          sidebarNavigationItems={sidebarNavigationItems}
-        />
+    <>
+      <BrandedHeader />
+      <div className="flex h-screen bg-background antialiased pt-16">
+        {/* Mobile Sidebar */}
+        <div className="md:hidden">
+          <MobileDashboardSidebar 
+            mainNavigationItems={mainNavigationItems}
+            sidebarNavigationItems={sidebarNavigationItems}
+          />
+        </div>
+
+        {/* Desktop Sidebar */}
+        {!hideLeftSidebar && (
+          <DashboardSidebar />
+        )}
+
+        {/* Main Content */}
+        <div className="flex-1 flex flex-col min-h-screen">
+          <main className="flex-1 overflow-x-hidden overflow-y-auto">
+            {children}
+          </main>
+        </div>
+
+        {/* Right Sidebar */}
+        {!hideRightSidebar && (
+          <aside className="hidden md:block w-80 border-l border-border py-4 px-3 flex-shrink-0">
+            {/* Right sidebar content */}
+          </aside>
+        )}
       </div>
-
-      {/* Desktop Sidebar */}
-      {!hideLeftSidebar && (
-        <DashboardSidebar />
-      )}
-
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col min-h-screen">
-        <main className="flex-1 overflow-x-hidden overflow-y-auto">
-          {children}
-        </main>
-      </div>
-
-      {/* Right Sidebar */}
-      {!hideRightSidebar && (
-        <aside className="hidden md:block w-80 border-l border-border py-4 px-3 flex-shrink-0">
-          {/* Right sidebar content */}
-        </aside>
-      )}
-    </div>
+    </>
   );
 }

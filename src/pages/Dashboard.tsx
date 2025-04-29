@@ -6,7 +6,6 @@ import { AspiringDashboard } from "@/components/dashboard/AspiringDashboard";
 import { PreRetireesDashboard } from "@/components/dashboard/PreRetireesDashboard";
 import { UltraHNWDashboard } from "@/components/dashboard/UltraHNWDashboard";
 import { AdvisorDashboard } from "@/components/dashboard/AdvisorDashboard";
-import { BrandedHeader } from "@/components/layout/BrandedHeader";
 
 export default function Dashboard() {
   const location = useLocation();
@@ -29,13 +28,10 @@ export default function Dashboard() {
   };
 
   return (
-    <>
-      <BrandedHeader />
-      <ThreeColumnLayout>
-        <div className="px-6 py-6">
-          {renderSegmentDashboard()}
-        </div>
-      </ThreeColumnLayout>
-    </>
+    <ThreeColumnLayout>
+      <div className="px-6 py-6">
+        {renderSegmentDashboard()}
+      </div>
+    </ThreeColumnLayout>
   );
 }
