@@ -67,11 +67,13 @@ export default function Landing() {
         <div className="w-full px-4 py-8">
           <HeroSection isMobile={true} />
 
-          <SegmentCards 
-            segments={segments} 
-            onSegmentClick={handleSegmentClick} 
-            isMobile={true} 
-          />
+          <div className="mt-16">
+            <SegmentCards 
+              segments={segments} 
+              onSegmentClick={handleSegmentClick} 
+              isMobile={true} 
+            />
+          </div>
           
           <AdvisorPrompt isMobile={true} />
         </div>
@@ -91,11 +93,13 @@ export default function Landing() {
         <div className="w-full max-w-7xl px-4 py-12 md:py-20">
           <HeroSection isMobile={false} />
 
-          <SegmentCards 
-            segments={segments} 
-            onSegmentClick={handleSegmentClick} 
-            isMobile={false} 
-          />
+          <div className="mt-16">
+            <SegmentCards 
+              segments={segments} 
+              onSegmentClick={handleSegmentClick} 
+              isMobile={false} 
+            />
+          </div>
           
           <AdvisorPrompt isMobile={false} />
         </div>
