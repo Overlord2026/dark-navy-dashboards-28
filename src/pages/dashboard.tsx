@@ -1,3 +1,3 @@
 
-import Dashboard from "@/pages/Index";
+import Dashboard from "@/pages/Dashboard";
 export default Dashboard;
