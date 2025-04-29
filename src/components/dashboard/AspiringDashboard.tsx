@@ -22,10 +22,6 @@ export function AspiringDashboard({ segment }: AspiringDashboardProps) {
         {isMobile ? (
           <div className="text-center">
             <SegmentAwareHero />
-            <p className="text-gray-200 text-sm">
-              Welcome to your personalized wealth-building journey. Track your progress, discover strategies, 
-              and accelerate your path to financial independence.
-            </p>
           </div>
         ) : (
           <>
@@ -38,10 +34,6 @@ export function AspiringDashboard({ segment }: AspiringDashboardProps) {
                 Maximize
               </span>
             </div>
-            <p className="text-gray-200 max-w-3xl mt-4 text-center mx-auto">
-              Welcome to your personalized wealth-building journey. Track your progress, discover strategies, 
-              and accelerate your path to financial independence.
-            </p>
           </>
         )}
       </div>

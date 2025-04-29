@@ -26,10 +26,6 @@ export function UltraHNWDashboard({ segment }: UltraHNWDashboardProps) {
             Maximize
           </span>
         </div>
-        <p className="text-gray-200 max-w-3xl mt-4 text-center mx-auto">
-          Exclusive wealth management solutions for complex portfolios. Access sophisticated strategies, 
-          private investments, and multi-generational planning tools.
-        </p>
       </div>
       
       {/* Free Trial Callout */}

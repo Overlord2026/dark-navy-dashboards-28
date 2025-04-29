@@ -26,10 +26,6 @@ export function PreRetireesDashboard({ segment }: PreRetireesDashboardProps) {
             Maximize
           </span>
         </div>
-        <p className="text-gray-200 max-w-3xl mt-4 text-center mx-auto">
-          Welcome to your personalized wealth-building journey. Track your progress, discover strategies, 
-          and accelerate your path to financial independence.
-        </p>
       </div>
       
       {/* Free Trial Callout */}
