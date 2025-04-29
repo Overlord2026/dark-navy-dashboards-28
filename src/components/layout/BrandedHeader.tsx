@@ -13,7 +13,7 @@ export const BrandedHeader: React.FC<BrandedHeaderProps> = ({ isConnected = fals
         <div className="flex flex-col items-center">
           <div className="flex items-center">
             <img 
-              src="/lovable-uploads/e2094719-bcbd-449d-905f-811f97dd1f13.png" 
+              src="/lovable-uploads/421ecf90-6573-4083-aaa4-765dcf0b7600.png" 
               alt="Boutique Family Office Logo" 
               className="h-10 w-auto"
             />
