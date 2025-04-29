@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
 import { Link } from "react-router-dom";
 import { MainNavItem, SidebarNavItem } from "@/types";
+import GoldTreeLogo from "@/assets/logo-gold-tree.svg";
 
 interface MobileDashboardSidebarProps {
   mainNavigationItems: MainNavItem[];
@@ -30,10 +31,11 @@ export function MobileDashboardSidebar({
           <div className="p-4">
             <Link to="/" className="flex items-center" onClick={() => setOpen(false)}>
               <img 
-                src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" 
-                alt="Logo" 
+                src={GoldTreeLogo} 
+                alt="Gold Tree Logo" 
                 className="h-10 w-auto"
               />
+              <span className="text-lg font-semibold ml-2">Family Office</span>
             </Link>
           </div>
 

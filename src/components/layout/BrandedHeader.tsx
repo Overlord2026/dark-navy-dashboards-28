@@ -1,5 +1,6 @@
 
 import React from "react";
+import GoldTreeLogo from "@/assets/logo-gold-tree.svg";
 
 export const BrandedHeader: React.FC = () => {
   return (
@@ -8,7 +9,7 @@ export const BrandedHeader: React.FC = () => {
         {/* Logo and text */}
         <div className="flex items-center justify-center">
           <img 
-            src="/lovable-uploads/dcc6226b-47e8-4e6b-97ff-d902f2ef4f1c.png" 
+            src={GoldTreeLogo} 
             alt="Boutique Family Office Logo" 
             className="h-10 w-auto"
           />

@@ -3,7 +3,22 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { NavSection, NavItem } from "./navigationConfig";
+import { navSections } from "./navigationConfig";
+import { LucideIcon } from "lucide-react";
+
+interface NavItem {
+  label: string;
+  href: string;
+  icon: LucideIcon;
+}
+
+interface NavSection {
+  id: string;
+  label: string;
+  icon: LucideIcon;
+  href?: string;
+  items?: NavItem[];
+}
 
 interface SidebarSectionProps {
   section: NavSection;
