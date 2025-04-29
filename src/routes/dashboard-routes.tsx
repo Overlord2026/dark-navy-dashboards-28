@@ -1,7 +1,6 @@
 
 import Landing from "@/pages/Landing";
 import DashboardPage from "@/pages/Dashboard";
-import IndexPage from "@/pages/Landing";
 
 export const dashboardRoutes = [
   {
@@ -14,6 +13,6 @@ export const dashboardRoutes = [
   },
   {
     path: "/index",
-    element: <IndexPage />,
+    element: <Landing />,
   },
 ];
