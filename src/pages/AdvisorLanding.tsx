@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { BriefcaseIcon, Users, BarChart3, ShieldCheck, ArrowRight } from "lucide-react";
 import { BrandedHeader } from '@/components/layout/BrandedHeader';
+import { AdvisorTrialBanner } from '@/components/advisor/AdvisorTrialBanner';
 
 export default function AdvisorLanding() {
   const navigate = useNavigate();
@@ -44,7 +45,9 @@ export default function AdvisorLanding() {
     <div className="flex flex-col min-h-screen bg-[#0F1E3A] text-white">
       <BrandedHeader />
       
-      <main className="flex-grow pt-20 px-4">
+      <AdvisorTrialBanner />
+      
+      <main className="flex-grow pt-8 px-4">
         <div className="max-w-6xl mx-auto">
           {/* Hero Section */}
           <div className="text-center mb-12 pt-8">

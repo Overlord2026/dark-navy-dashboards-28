@@ -1,6 +1,6 @@
 
 import Landing from "@/pages/Landing";
-import Dashboard from "@/pages/Dashboard"; // Fixed casing back to uppercase to match actual file
+import Dashboard from "@/pages/Dashboard"; 
 import AdvisorDashboard from "@/pages/AdvisorDashboard";
 import LoginPage from "@/pages/LoginPage";
 import AdvisorLanding from "@/pages/AdvisorLanding";
