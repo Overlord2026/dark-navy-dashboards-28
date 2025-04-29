@@ -1,44 +1,39 @@
 
 import React from "react";
-import { useSearchParams } from "react-router-dom";
+import { DashboardHeader } from "@/components/layout/DashboardHeader";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
+import { useLocation } from "react-router-dom";
 import { AspiringDashboard } from "@/components/dashboard/AspiringDashboard";
 import { PreRetireesDashboard } from "@/components/dashboard/PreRetireesDashboard";
 import { UltraHNWDashboard } from "@/components/dashboard/UltraHNWDashboard";
 import { AdvisorDashboard } from "@/components/dashboard/AdvisorDashboard";
-import { AdminIntegrationDashboard } from "@/components/dashboard/AdminIntegrationDashboard";
-import { useUser } from "@/context/UserContext";
 
-const Dashboard: React.FC = () => {
-  const [searchParams] = useSearchParams();
-  const segment = searchParams.get("segment") || "preretirees"; // Default to preretirees if no segment
-  const { userProfile } = useUser();
-  const isAdmin = userProfile?.role === "admin" || userProfile?.role === "system_administrator";
+export default function Dashboard() {
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const segment = queryParams.get('segment');
 
-  // Render the appropriate dashboard based on segment
-  const renderDashboard = () => {
+  const renderSegmentDashboard = () => {
     switch (segment) {
-      case "aspiring":
-        return <AspiringDashboard segment={segment} />;
-      case "preretirees":
-        return <PreRetireesDashboard segment={segment} />;
-      case "ultrahnw":
-        return <UltraHNWDashboard segment={segment} />;
-      case "advisor":
-        return <AdvisorDashboard segment={segment} />;
-      case "integration":
-        // Only render integration dashboard for admins
-        return isAdmin ? <AdminIntegrationDashboard /> : <PreRetireesDashboard segment="preretirees" />;
+      case 'aspiring':
+        return <AspiringDashboard />;
+      case 'preretirees':
+        return <PreRetireesDashboard />;
+      case 'ultrahnw':
+        return <UltraHNWDashboard />;
+      case 'advisor':
+        return <AdvisorDashboard />;
       default:
-        return <PreRetireesDashboard segment="preretirees" />;
+        return <AspiringDashboard />;
     }
   };
 
   return (
-    <ThreeColumnLayout title={segment === "integration" && isAdmin ? "Integration" : undefined}>
-      {renderDashboard()}
+    <ThreeColumnLayout>
+      <DashboardHeader title={segment === 'advisor' ? 'Advisor Portal' : 'Financial Dashboard'} />
+      <div className="px-6 py-12 mt-20">
+        {renderSegmentDashboard()}
+      </div>
     </ThreeColumnLayout>
   );
-};
-
-export default Dashboard;
+}
