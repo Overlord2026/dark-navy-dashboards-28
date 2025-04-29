@@ -1,7 +1,7 @@
 
 import { lazy } from "react";
 import { Route } from "react-router-dom";
-import Dashboard from "@/pages/dashboard"; // Fixed import with correct lowercase casing
+import Dashboard from "@/pages/Dashboard"; // Using correct casing
 
 const dashboardRoutes = [
   <Route key="dashboard" path="/dashboard" element={<Dashboard />} />
