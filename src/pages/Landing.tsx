@@ -61,7 +61,7 @@ export default function Landing() {
 
   return (
     <div className="flex flex-col items-center min-h-screen bg-[#0A1F44] text-white">
-      <div className="w-full max-w-7xl py-0 mt-28">
+      <main className="w-full max-w-7xl py-0 pt-[80px]">
         <div className="mt-4 px-4">
           <SegmentCards 
             segments={segments} 
@@ -71,7 +71,7 @@ export default function Landing() {
         </div>
         
         <AdvisorPrompt isMobile={isMobile} />
-      </div>
+      </main>
       
       <Footer />
       <AnimatedBackground />

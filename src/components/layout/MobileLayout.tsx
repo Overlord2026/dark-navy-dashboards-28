@@ -49,9 +49,9 @@ export function MobileLayout({
   };
 
   return (
-    <div className="flex flex-col h-screen bg-[#12121C] text-white overflow-hidden pt-28">
+    <div className="flex flex-col h-screen bg-[#12121C] text-white overflow-hidden">
       {/* Page Header - Only showing title and add button */}
-      <header className="w-full flex justify-between items-center py-4 px-4 bg-[#12121C] border-b border-gray-800">
+      <header className="w-full flex justify-between items-center py-4 px-4 bg-[#12121C] border-b border-gray-800 fixed top-[80px] left-0 right-0 z-10">
         <h1 className="text-2xl font-bold">{title}</h1>
         {showAddButton && (
           <Button 
@@ -66,7 +66,7 @@ export function MobileLayout({
       </header>
       
       {/* Main Content Area */}
-      <main className="flex-1 overflow-y-auto pb-20">
+      <main className="flex-1 overflow-y-auto pb-20 pt-[140px]">
         {children}
       </main>
       

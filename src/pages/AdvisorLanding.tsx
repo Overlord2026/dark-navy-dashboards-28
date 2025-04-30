@@ -44,7 +44,7 @@ export default function AdvisorLanding() {
     <div className="flex flex-col min-h-screen bg-[#0F1E3A] text-white">
       <AdvisorTrialBanner />
       
-      <main className="flex-grow pt-28 px-4">
+      <main className="flex-grow pt-[80px] px-4">
         <div className="max-w-6xl mx-auto">
           {/* Hero Section */}
           <div className="text-center mb-12 pt-8">
