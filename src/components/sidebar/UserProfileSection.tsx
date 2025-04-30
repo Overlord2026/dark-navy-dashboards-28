@@ -1,6 +1,7 @@
 
 import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import Logo from "../common/Logo";
 
 interface UserProfileSectionProps {
   showLogo?: boolean;
@@ -13,7 +14,7 @@ export const UserProfileSection: React.FC<UserProfileSectionProps> = ({
     <div className="p-4 border-b border-border flex items-center justify-between">
       {showLogo && (
         <div className="flex items-center">
-          <span className="font-semibold">Family Office</span>
+          <Logo size="small" showText={false} />
         </div>
       )}
       
