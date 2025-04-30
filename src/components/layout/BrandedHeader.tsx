@@ -1,5 +1,6 @@
 
 import React from 'react';
+import Logo from '../common/Logo';
 
 interface BrandedHeaderProps {
   title?: string;
@@ -7,10 +8,8 @@ interface BrandedHeaderProps {
 
 export const BrandedHeader: React.FC<BrandedHeaderProps> = ({ title }) => {
   return (
-    <div className="text-center py-4 mt-[100px]">
-      <h1 className="text-2xl font-bold">
-        {title || 'Boutique Family Office'}
-      </h1>
+    <div className="text-center py-4 mt-[120px]">
+      {!title ? <Logo size="medium" /> : <h1 className="text-2xl font-bold">{title}</h1>}
     </div>
   );
 };

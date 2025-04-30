@@ -16,10 +16,11 @@ export default function Dashboard() {
   
   const { currentSegment } = useAudience();
   
-  // Use the segment from URL params if provided, otherwise use the one from context if available
+  // Use the segment from URL params if provided, otherwise use the one from context ONLY if explicitly set
   const segment = segmentParam || currentSegment || null;
 
   const renderSegmentDashboard = () => {
+    // Only render segment-specific content when explicitly requested via URL or user selection
     switch (segment) {
       case 'aspiring':
         return <AspiringDashboard />;
@@ -30,6 +31,7 @@ export default function Dashboard() {
       case 'advisor':
         return <AdvisorDashboard />;
       default:
+        // Show the default dashboard when no segment is specified
         return <DefaultDashboard />;
     }
   };

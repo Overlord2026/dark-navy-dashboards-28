@@ -16,20 +16,22 @@ export const AudienceProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   // Get total net worth from context - note we need to use getTotalNetWorth() method
   const totalNetWorth = netWorthContext.getTotalNetWorth();
 
-  // Only detect audience segment when appropriate - not automatically
+  // We'll leave the detection logic, but we won't auto-set the segment
+  // This will only run if a user explicitly opts in or if we need to detect from profile
   useEffect(() => {
     const detectSegment = () => {
       if (!isSegmentDetected && totalNetWorth && userProfile?.investorType) {
-        // Only set a segment if we have enough information
-        if (totalNetWorth >= 10000000) { // $10M+
-          setCurrentSegment('uhnw');
-        } else if (totalNetWorth >= 1000000 && userProfile?.investorType?.toLowerCase().includes('retiree')) { 
-          // Check for retiree status instead of age
-          setCurrentSegment('retiree');
-        } else if (totalNetWorth >= 250000) {
-          setCurrentSegment('aspiring');
+        // Only set a segment when explicitly opted-in through the UI
+        if (false) { // Disable auto-detection completely
+          if (totalNetWorth >= 10000000) { // $10M+
+            setCurrentSegment('uhnw');
+          } else if (totalNetWorth >= 1000000 && userProfile?.investorType?.toLowerCase().includes('retiree')) { 
+            setCurrentSegment('retiree');
+          } else if (totalNetWorth >= 250000) {
+            setCurrentSegment('aspiring');
+          }
+          setIsSegmentDetected(true);
         }
-        setIsSegmentDetected(true);
       }
     };
 

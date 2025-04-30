@@ -17,7 +17,7 @@ export const Logo: React.FC<LogoProps> = ({ size = 'medium', showText = true, cl
   return (
     <div className={`flex flex-col items-center ${className}`}>
       <img 
-        src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" 
+        src="/lovable-uploads/044929b9-43f4-4d21-afb5-c1a377579749.png" 
         alt="Boutique Family Office Logo" 
         className={sizeClasses[size]}
       />

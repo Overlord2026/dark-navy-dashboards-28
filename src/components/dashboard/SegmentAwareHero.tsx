@@ -18,7 +18,7 @@ export const SegmentAwareHero: React.FC = () => {
       case 'advisor':
         return "Welcome, Advisor!";
       default:
-        return "Welcome!";
+        return "Welcome to Boutique Family Office!";
     }
   };
   

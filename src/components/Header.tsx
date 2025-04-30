@@ -12,7 +12,7 @@ export const Header: React.FC<HeaderProps> = ({ isConnected = false, isAdvisor =
   return (
     <header className="
       fixed top-0 left-0 w-full bg-black z-50
-      flex flex-col items-center py-1 sm:py-2
+      flex flex-col items-center py-3 sm:py-4
     ">
       <Link to="/" className="flex flex-col items-center">
         <Logo size="medium" />
