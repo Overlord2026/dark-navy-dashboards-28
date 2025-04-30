@@ -65,8 +65,8 @@ export function MobileLayout({
         )}
       </header>
       
-      {/* Main Content Area */}
-      <main className="flex-1 overflow-y-auto pb-20 pt-[140px]">
+      {/* Main Content Area - Updated with correct padding for the main header (80px) + page header */}
+      <main className="flex-1 overflow-y-auto pb-20 pt-[144px]">
         {children}
       </main>
       

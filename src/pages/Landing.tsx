@@ -60,8 +60,8 @@ export default function Landing() {
   };
 
   return (
-    <div className="flex flex-col items-center min-h-screen bg-[#0A1F44] text-white">
-      <main className="w-full max-w-7xl py-0 pt-[80px]">
+    <div className="flex flex-col items-center min-h-screen bg-[#0A1F44] text-white pt-[80px]">
+      <main className="w-full max-w-7xl py-0">
         <div className="mt-4 px-4">
           <SegmentCards 
             segments={segments} 
