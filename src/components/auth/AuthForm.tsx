@@ -28,7 +28,7 @@ export const AuthForm: React.FC = () => {
     setIsLoading(true);
     
     try {
-      // In a real implementation, this would use Supabase or another auth provider
+      // Call the updated login function that returns a Promise<boolean>
       const success = await login(email, password);
       if (success) {
         toast.success("Login successful!");
