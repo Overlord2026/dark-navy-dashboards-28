@@ -43,7 +43,7 @@ export const ThreeColumnLayout: React.FC<ThreeColumnLayoutProps> = ({
 
   return (
     <div className={cn("flex flex-col h-screen", className)}>
-      <div className="flex flex-1 overflow-hidden pt-[80px]">
+      <div className="flex flex-1 overflow-hidden pt-[60px]">
         {renderSidebar()}
 
         <main className={cn("flex flex-col flex-1 h-full overflow-y-auto", contentClassName)}>
