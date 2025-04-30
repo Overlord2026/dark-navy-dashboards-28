@@ -16,10 +16,8 @@ export const Header: React.FC<HeaderProps> = ({ isConnected = false }) => {
         alt='Boutique Family Office'
         className='h-10 mb-1'
       />
-      <div className="text-center">
-        <p className="text-xl font-semibold text-white">
-          Organize & Maximize
-        </p>
+      <div className="text-center px-4">
+        <p className="text-xl font-semibold text-[#D4AF37]">Organize & Maximize</p>
         <p className="text-sm text-gray-300 uppercase tracking-wide">
           Your personalized path to lasting prosperity
         </p>
