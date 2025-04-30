@@ -28,6 +28,13 @@ export const SegmentCard: React.FC<SegmentCardProps> = ({
   isMobile,
   benefits,
 }) => {
+  const navigate = useNavigate();
+  
+  const handleClick = () => {
+    // Navigate directly to auth page with segment parameter
+    navigate(`/auth?segment=${id}`);
+  };
+  
   return (
     <div 
       className={`
@@ -75,7 +82,7 @@ export const SegmentCard: React.FC<SegmentCardProps> = ({
       </div>
       
       <button 
-        onClick={() => onClick(id)} 
+        onClick={handleClick} 
         className="
           w-full py-3 px-4 bg-white bg-opacity-10 hover:bg-opacity-20
           text-white font-medium rounded-lg transition-all duration-300

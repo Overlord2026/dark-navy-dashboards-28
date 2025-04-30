@@ -10,7 +10,11 @@ import { useNavigate } from "react-router-dom";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 
-export const AuthForm: React.FC = () => {
+interface AuthFormProps {
+  segment?: string | null;
+}
+
+export const AuthForm: React.FC<AuthFormProps> = ({ segment }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<"login" | "signup">("login");
   const { login } = useAuth();
@@ -32,7 +36,8 @@ export const AuthForm: React.FC = () => {
       const success = await login(email, password);
       if (success) {
         toast.success("Login successful!");
-        navigate("/dashboard");
+        // Include segment in navigation if available
+        navigate(segment ? `/dashboard?segment=${segment}` : "/dashboard");
       } else {
         toast.error("Login failed. Please check your credentials.");
       }
@@ -67,10 +72,26 @@ export const AuthForm: React.FC = () => {
     }
   };
 
+  // Get title based on segment
+  const getSegmentTitle = () => {
+    switch(segment) {
+      case 'aspiring': 
+        return "Aspiring Wealthy Portal";
+      case 'preretirees': 
+        return "Pre-Retirees & Retirees Portal";
+      case 'ultrahnw': 
+        return "Ultra-High Net Worth Portal";
+      case 'advisor': 
+        return "Advisor Portal";
+      default: 
+        return "Boutique Family Office";
+    }
+  };
+
   return (
     <Card className="w-full max-w-md mx-auto">
       <CardHeader>
-        <CardTitle>Welcome to Boutique Family Office</CardTitle>
+        <CardTitle>{getSegmentTitle()}</CardTitle>
         <CardDescription>
           Sign in to your account or create a new one
         </CardDescription>

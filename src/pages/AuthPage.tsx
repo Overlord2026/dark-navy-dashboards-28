@@ -2,14 +2,16 @@
 import React from "react";
 import { AuthForm } from "@/components/auth/AuthForm";
 import { useAuth } from "@/context/AuthContext";
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation, useSearchParams } from "react-router-dom";
 
 export default function AuthPage() {
   const { isAuthenticated } = useAuth();
+  const [searchParams] = useSearchParams();
+  const segment = searchParams.get('segment');
   
-  // If user is already authenticated, redirect to dashboard
+  // If user is already authenticated, redirect to dashboard with segment parameter if available
   if (isAuthenticated) {
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to={segment ? `/dashboard?segment=${segment}` : "/dashboard"} replace />;
   }
   
   return (
@@ -23,7 +25,7 @@ export default function AuthPage() {
             </p>
           </div>
           
-          <AuthForm />
+          <AuthForm segment={segment} />
         </div>
       </div>
     </div>

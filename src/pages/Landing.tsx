@@ -74,7 +74,7 @@ export default function Landing() {
   ];
 
   const handleSegmentClick = (segmentId: string) => {
-    // Now navigate to auth page with the segment parameter
+    // Updated to navigate to auth with segment
     navigate(`/auth?segment=${segmentId}`);
   };
 

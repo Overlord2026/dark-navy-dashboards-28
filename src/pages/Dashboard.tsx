@@ -2,18 +2,26 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
-import { useLocation } from "react-router-dom";
+import { useLocation, useSearchParams } from "react-router-dom";
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { BookIcon, ArrowRightIcon } from "lucide-react";
 import { AssetsSummary } from "@/components/dashboard/AssetsSummary";
+import { SegmentAwareHero } from "@/components/dashboard/SegmentAwareHero";
 
 export default function Dashboard() {
   const location = useLocation();
+  const [searchParams] = useSearchParams();
+  const segment = searchParams.get('segment');
+  
+  // Segment-specific dashboard content will be handled by the SegmentAwareHero component
   
   return (
     <ThreeColumnLayout activeMainItem="dashboard">
       <div className="space-y-6">
+        {/* Add segment-aware hero section */}
+        <SegmentAwareHero />
+        
         {/* Assets Summary */}
         <AssetsSummary />
         
