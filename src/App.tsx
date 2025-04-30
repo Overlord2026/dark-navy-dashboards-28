@@ -14,6 +14,7 @@ import { AdminProvider } from './context/AdminContext';
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AIInsightsProvider } from "./components/insights/AIInsightsProvider";
 import { AudienceProvider } from "./context/AudienceContext";
+import Header from "@/components/Header";
 
 // Create a Query Client
 const queryClient = new QueryClient({
@@ -39,6 +40,7 @@ function App() {
                       <AIInsightsProvider>
                         <AudienceProvider>
                           <TooltipProvider>
+                            <Header />
                             <RouterProvider router={routes} />
                             <Toaster position="top-right" richColors closeButton />
                           </TooltipProvider>
