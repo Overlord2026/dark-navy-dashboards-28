@@ -7,12 +7,17 @@ import { settingsRoutes } from "./routes/settings-routes";
 import { integrationRoutes } from "./routes/integration-routes";
 import NotFound from "./pages/NotFound";
 import Landing from "./pages/Landing";
+import AuthPage from "./pages/AuthPage";
 
 // Convert all route elements to RouteObject type
 const routes = createBrowserRouter([
   {
     path: "/",
     element: <Landing />
+  },
+  {
+    path: "/auth",
+    element: <AuthPage />
   },
   ...dashboardRoutes as unknown as RouteObject[],
   ...educationRoutes as unknown as RouteObject[],

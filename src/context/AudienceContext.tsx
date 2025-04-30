@@ -8,7 +8,7 @@ import { audienceProfiles } from '@/data/audienceProfiles';
 const AudienceContext = createContext<AudienceContextType | undefined>(undefined);
 
 export const AudienceProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [currentSegment, setCurrentSegment] = useState<AudienceSegment>('aspiring');
+  const [currentSegment, setCurrentSegment] = useState<AudienceSegment | null>(null);
   const [isSegmentDetected, setIsSegmentDetected] = useState(false);
   const netWorthContext = useNetWorth();
   const { userProfile } = useUser();
@@ -16,30 +16,30 @@ export const AudienceProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   // Get total net worth from context - note we need to use getTotalNetWorth() method
   const totalNetWorth = netWorthContext.getTotalNetWorth();
 
-  // Detect audience segment based on net worth or user profile data
+  // Only detect audience segment when appropriate - not automatically
   useEffect(() => {
     const detectSegment = () => {
-      if (!isSegmentDetected) {
-        // Use net worth as primary determinant if available
-        if (totalNetWorth) {
-          if (totalNetWorth >= 10000000) { // $10M+
-            setCurrentSegment('uhnw');
-          } else if (totalNetWorth >= 1000000 && userProfile?.investorType?.toLowerCase().includes('retiree')) { 
-            // Check for retiree status instead of age
-            setCurrentSegment('retiree');
-          } else {
-            setCurrentSegment('aspiring');
-          }
-          setIsSegmentDetected(true);
+      if (!isSegmentDetected && totalNetWorth && userProfile?.investorType) {
+        // Only set a segment if we have enough information
+        if (totalNetWorth >= 10000000) { // $10M+
+          setCurrentSegment('uhnw');
+        } else if (totalNetWorth >= 1000000 && userProfile?.investorType?.toLowerCase().includes('retiree')) { 
+          // Check for retiree status instead of age
+          setCurrentSegment('retiree');
+        } else if (totalNetWorth >= 250000) {
+          setCurrentSegment('aspiring');
         }
-        // Otherwise, keep the default 'aspiring' segment until we have more data
+        setIsSegmentDetected(true);
       }
     };
 
-    detectSegment();
+    // Only detect if user has opted in or we have enough profile data
+    if (userProfile?.investorType && !isSegmentDetected) {
+      detectSegment();
+    }
   }, [totalNetWorth, userProfile, isSegmentDetected]);
 
-  const currentProfile = audienceProfiles[currentSegment];
+  const currentProfile = currentSegment ? audienceProfiles[currentSegment] : null;
 
   const contextValue: AudienceContextType = {
     currentSegment,

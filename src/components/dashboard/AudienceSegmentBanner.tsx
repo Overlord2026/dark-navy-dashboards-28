@@ -11,6 +11,11 @@ import { AudienceProfileCard } from "@/components/audience/AudienceProfileCard";
 export function AudienceSegmentBanner() {
   const { currentSegment, isSegmentDetected } = useAudience();
   
+  // Don't display anything if no segment is set
+  if (!currentSegment) {
+    return null;
+  }
+  
   // For Retiree and UHNW segments, we don't display this banner
   if (currentSegment === 'retiree' || currentSegment === 'uhnw') {
     return null;

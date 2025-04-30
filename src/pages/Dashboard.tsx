@@ -6,11 +6,18 @@ import { AspiringDashboard } from "@/components/dashboard/AspiringDashboard";
 import { PreRetireesDashboard } from "@/components/dashboard/PreRetireesDashboard";
 import { UltraHNWDashboard } from "@/components/dashboard/UltraHNWDashboard";
 import { AdvisorDashboard } from "@/components/dashboard/AdvisorDashboard";
+import { DefaultDashboard } from "@/components/dashboard/DefaultDashboard";
+import { useAudience } from "@/context/AudienceContext";
 
 export default function Dashboard() {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  const segment = queryParams.get('segment');
+  const segmentParam = queryParams.get('segment');
+  
+  const { currentSegment } = useAudience();
+  
+  // Use the segment from URL params if provided, otherwise use the one from context if available
+  const segment = segmentParam || currentSegment || null;
 
   const renderSegmentDashboard = () => {
     switch (segment) {
@@ -23,7 +30,7 @@ export default function Dashboard() {
       case 'advisor':
         return <AdvisorDashboard />;
       default:
-        return <AspiringDashboard />;
+        return <DefaultDashboard />;
     }
   };
 

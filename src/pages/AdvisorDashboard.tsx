@@ -66,43 +66,26 @@ export default function AdvisorDashboard() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#F9F7E8]">
-      <header className="w-full flex justify-center items-center py-4 border-b border-[#DCD8C0] bg-[#F9F7E8] sticky top-0 z-50">
-        <div className="container flex justify-between items-center max-w-7xl px-4">
-          <div className="flex items-center">
-            <Link to="/advisor/dashboard">
-              <img 
-                src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" 
-                alt="Boutique Family Office Logo" 
-                className="h-16 w-auto"
-              />
-            </Link>
-          </div>
-          <div className="hidden md:flex gap-8 text-[#222222]">
-            <Link to="/advisor/dashboard" className="font-medium">Dashboard</Link>
-            <Link to="/advisor/clients" className="hover:text-primary font-medium">Clients</Link>
-            <Link to="/advisor/documents" className="hover:text-primary font-medium">Documents</Link>
-            <Link to="/advisor/calendar" className="hover:text-primary font-medium">Calendar</Link>
-          </div>
-          <div className="flex gap-4 items-center">
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              className="relative"
-              onClick={handleNotificationClick}
-            >
-              <BellIcon className="h-5 w-5" />
-              {showNotificationBadge && (
-                <span className="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full"></span>
-              )}
-            </Button>
-            <Button onClick={handleLogout} variant="outline" className="gap-2">
-              <LogOutIcon className="h-4 w-4" />
-              Logout
-            </Button>
-          </div>
+    <div className="flex flex-col min-h-screen bg-[#F9F7E8] pt-[80px]">
+      <div className="flex justify-end px-4 py-2 border-b border-[#DCD8C0]">
+        <div className="flex gap-4 items-center">
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="relative"
+            onClick={handleNotificationClick}
+          >
+            <BellIcon className="h-5 w-5" />
+            {showNotificationBadge && (
+              <span className="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full"></span>
+            )}
+          </Button>
+          <Button onClick={handleLogout} variant="outline" className="gap-2">
+            <LogOutIcon className="h-4 w-4" />
+            Logout
+          </Button>
         </div>
-      </header>
+      </div>
 
       <main className="flex-1 py-8 px-4">
         <div className="max-w-7xl mx-auto">
