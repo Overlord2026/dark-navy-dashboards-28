@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { BriefcaseIcon, Users, BarChart3, ShieldCheck, ArrowRight } from "lucide-react";
-import { BrandedHeader } from '@/components/layout/BrandedHeader';
+import Header from '@/components/Header';
 import { AdvisorTrialBanner } from '@/components/advisor/AdvisorTrialBanner';
 
 export default function AdvisorLanding() {
@@ -43,11 +43,11 @@ export default function AdvisorLanding() {
 
   return (
     <div className="flex flex-col min-h-screen bg-[#0F1E3A] text-white">
-      <BrandedHeader />
+      <Header />
       
       <AdvisorTrialBanner />
       
-      <main className="flex-grow pt-8 px-4">
+      <main className="flex-grow pt-28 px-4">
         <div className="max-w-6xl mx-auto">
           {/* Hero Section */}
           <div className="text-center mb-12 pt-8">
@@ -72,7 +72,7 @@ export default function AdvisorLanding() {
             </div>
           </div>
           
-          {/* Features Section - Updated to match dashboard card pattern */}
+          {/* Features Section */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
             {features.map((feature, index) => (
               <Card key={index} className="bg-[#0F1E3A] border border-[#2A3E5C] hover:border-[#FFC700] transition-all">

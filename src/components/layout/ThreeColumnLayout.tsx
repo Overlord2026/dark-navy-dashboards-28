@@ -2,7 +2,7 @@
 import React from "react";
 import { Sidebar } from "./Sidebar";
 import { DashboardHeader } from "./DashboardHeader";
-import { Header } from "@/components/Header";
+import Header from "@/components/Header";
 import { cn } from "@/lib/utils";
 
 interface ThreeColumnLayoutProps {
@@ -46,7 +46,7 @@ export const ThreeColumnLayout: React.FC<ThreeColumnLayoutProps> = ({
     <div className={cn("flex flex-col h-screen", className)}>
       <Header isConnected={activeMainItem === "integration"} />
 
-      <div className="flex flex-1 overflow-hidden pt-16">
+      <div className="flex flex-1 overflow-hidden pt-28">
         {renderSidebar()}
 
         <div className={cn("flex flex-col flex-1 h-full overflow-y-auto", contentClassName)}>

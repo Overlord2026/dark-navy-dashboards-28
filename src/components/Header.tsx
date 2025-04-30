@@ -1,6 +1,5 @@
 
 import React from "react";
-import { Badge } from "@/components/ui/badge";
 
 interface HeaderProps {
   isConnected?: boolean;
@@ -8,22 +7,30 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ isConnected = false }) => {
   return (
-    <header className="w-full flex justify-center items-center bg-[#0F1E3A] fixed top-0 left-0 right-0 z-50 shadow-md border-b border-[#FFC700]/30">
-      <div className="flex items-center justify-center py-3 relative w-full px-4">
-        <div className="flex flex-col items-center">
-          <div className="flex items-center">
-            <img 
-              src="/lovable-uploads/421ecf90-6573-4083-aaa4-765dcf0b7600.png" 
-              alt="Boutique Family Office Logo" 
-              className="h-10 w-auto"
-            />
-            {isConnected && (
-              <Badge className="ml-2 bg-[#FFC700] text-[#0F1E3A] font-medium">Connected</Badge>
-            )}
-          </div>
-          <p className="text-[#FFC700] text-xs uppercase tracking-wide font-medium mt-1">ORGANIZE &amp; MAXIMIZE</p>
-        </div>
+    <header className="
+      fixed top-0 left-0 w-full bg-black z-50
+      flex flex-col items-center py-2
+    ">
+      <img
+        src='/assets/logo-gold-tree.svg'
+        alt='Boutique Family Office'
+        className='h-10 mb-1'
+      />
+      <div className="text-center">
+        <p className="text-xl font-semibold text-white">
+          Organize & Maximize
+        </p>
+        <p className="text-sm text-gray-300 uppercase tracking-wide">
+          Your personalized path to lasting prosperity
+        </p>
       </div>
+      {isConnected && (
+        <div className="absolute right-4 top-4">
+          <span className="bg-[#FFC700] text-black text-xs px-2 py-1 rounded-full font-medium">Connected</span>
+        </div>
+      )}
     </header>
   );
 };
+
+export default Header;
