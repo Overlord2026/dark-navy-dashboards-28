@@ -1,5 +1,6 @@
 
 import React from "react";
+import { Link } from "react-router-dom";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { useLocation } from "react-router-dom";
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
@@ -32,9 +33,15 @@ export default function Dashboard() {
               </p>
             </CardContent>
             <CardFooter>
-              <Button className="ml-auto flex items-center gap-2" variant="outline">
-                Go to Education Center
-                <ArrowRightIcon className="h-4 w-4" />
+              <Button 
+                className="ml-auto flex items-center gap-2" 
+                variant="outline"
+                asChild
+              >
+                <Link to="/education">
+                  Go to Education Center
+                  <ArrowRightIcon className="h-4 w-4" />
+                </Link>
               </Button>
             </CardFooter>
           </Card>
@@ -50,8 +57,14 @@ export default function Dashboard() {
               </p>
             </CardContent>
             <CardFooter>
-              <Button className="ml-auto" variant="default">
-                Create Your Profile
+              <Button 
+                className="ml-auto" 
+                variant="default"
+                asChild
+              >
+                <Link to="/auth">
+                  Create Your Profile
+                </Link>
               </Button>
             </CardFooter>
           </Card>

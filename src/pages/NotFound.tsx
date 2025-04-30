@@ -26,7 +26,7 @@ const NotFound = () => {
           The page you're looking for doesn't exist or has been moved.
         </p>
         <Button asChild className="bg-accent hover:bg-accent/90 text-white">
-          <Link to="/">Return to Dashboard</Link>
+          <Link to="/dashboard">Return to Dashboard</Link>
         </Button>
       </div>
     </div>

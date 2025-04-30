@@ -20,7 +20,7 @@ export const Logo: React.FC<LogoProps> = ({ size = 'medium', showText = true, cl
         <img 
           src="/assets/logo-gold-tree.svg" 
           alt="Boutique Family Office Logo" 
-          className={sizeClasses[size]}
+          className={`${sizeClasses[size]} object-contain`}
         />
         {showText && (
           <div className="text-center mt-1">

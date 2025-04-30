@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { ArrowRight, Check } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 export interface SegmentCardProps {
   id: string;
