@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Leaf, Sunrise, Crown } from 'lucide-react';
@@ -7,7 +6,6 @@ import { SegmentCards } from '@/components/landing/SegmentCards';
 import { AdvisorPrompt } from '@/components/landing/AdvisorPrompt';
 import { AnimatedBackground } from '@/components/landing/AnimatedBackground';
 import { Footer } from '@/components/landing/Footer';
-import { BrandedHeader } from '@/components/layout/BrandedHeader';
 import { BrandedBanner } from '@/components/landing/BrandedBanner';
 
 export default function Landing() {
