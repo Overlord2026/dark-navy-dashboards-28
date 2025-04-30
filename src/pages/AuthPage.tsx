@@ -1,9 +1,8 @@
 
-import React, { useEffect } from "react";
+import React from "react";
 import { AuthForm } from "@/components/auth/AuthForm";
 import { useAuth } from "@/context/AuthContext";
 import { Navigate } from "react-router-dom";
-import Header from "@/components/Header";
 
 export default function AuthPage() {
   const { isAuthenticated } = useAuth();
@@ -15,7 +14,6 @@ export default function AuthPage() {
   
   return (
     <div className="min-h-screen bg-[#F9F7E8]">
-      {/* Header is already included in App.tsx, no need to add it again */}
       <div className="pt-[100px] px-4 flex flex-col items-center justify-center min-h-[calc(100vh-100px)]">
         <div className="w-full max-w-md space-y-8">
           <div className="text-center">

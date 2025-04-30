@@ -1,12 +1,10 @@
 
-import { RouterProvider } from "react-router-dom";
-import routes from "./routes";
-import { ThemeProvider } from "@/context/ThemeContext"; // Import from our custom ThemeContext
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ThemeProvider } from "@/context/ThemeContext";
 import { UserProvider } from "@/context/UserContext";
 import { NetWorthProvider } from "@/context/NetWorthContext";
 import { SubscriptionProvider } from "@/context/SubscriptionContext";
 import { Toaster } from "@/components/ui/sonner";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { DiagnosticsProvider } from "@/context/DiagnosticsContext";
 import { AdvisorProvider } from "@/context/AdvisorContext";
 import { AuthProvider } from "@/context/AuthContext";
@@ -14,7 +12,8 @@ import { AdminProvider } from './context/AdminContext';
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AIInsightsProvider } from "./components/insights/AIInsightsProvider";
 import { AudienceProvider } from "./context/AudienceContext";
-import Header from "@/components/Header";
+import routes from "./routes";
+import { RouterProvider } from "react-router-dom";
 
 // Create a Query Client
 const queryClient = new QueryClient({
@@ -40,7 +39,6 @@ function App() {
                       <AIInsightsProvider>
                         <AudienceProvider>
                           <TooltipProvider>
-                            <Header isConnected={false} />
                             <RouterProvider router={routes} />
                             <Toaster position="top-right" richColors closeButton />
                           </TooltipProvider>
