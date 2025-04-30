@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -26,17 +25,8 @@ export default function TeamPage() {
   return (
     <div className="flex flex-col min-h-screen bg-[#F9F7E8]">
       {/* Header */}
-      <header className="w-full flex justify-center items-center py-4 border-b border-[#DCD8C0] bg-[#F9F7E8] sticky top-0 z-50">
+      <header className="w-full flex justify-center items-center py-4 border-b border-[#DCD8C0] bg-[#F9F7E8] sticky top-0 z-50 mt-[80px]">
         <div className="container flex justify-between items-center max-w-7xl px-4">
-          <div className="flex items-center">
-            <Link to="/home">
-              <img 
-                src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" 
-                alt="Boutique Family Office Logo" 
-                className="h-16 w-auto"
-              />
-            </Link>
-          </div>
           <div className="hidden md:flex gap-8 text-[#222222]">
             <Link to="/services" className="hover:text-primary font-medium">Services</Link>
             <Link to="/about" className="hover:text-primary font-medium">About Us</Link>
@@ -113,11 +103,7 @@ export default function TeamPage() {
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
-              <img 
-                src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" 
-                alt="Boutique Family Office Logo" 
-                className="h-16 w-auto mb-4"
-              />
+              <p className="text-xl font-bold mb-4 text-white">Boutique Family Office</p>
               <p className="text-gray-300">
                 Comprehensive wealth management for high-net-worth individuals and families.
               </p>
