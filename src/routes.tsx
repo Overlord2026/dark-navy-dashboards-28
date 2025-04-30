@@ -14,7 +14,7 @@ import Header from "./components/Header";
 const RootLayout = () => {
   return (
     <>
-      <Header isConnected={false} />
+      <Header isConnected={true} />
       <Outlet />
     </>
   );
@@ -38,11 +38,11 @@ const routes = createBrowserRouter([
       ...planningRoutes as unknown as RouteObject[],
       ...settingsRoutes as unknown as RouteObject[],
       ...integrationRoutes as unknown as RouteObject[],
+      {
+        path: "*",
+        element: <NotFound />
+      }
     ]
-  },
-  {
-    path: "*",
-    element: <NotFound />
   }
 ]);
 

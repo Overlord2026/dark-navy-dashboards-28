@@ -8,7 +8,7 @@ interface BrandedHeaderProps {
 
 export const BrandedHeader: React.FC<BrandedHeaderProps> = ({ title }) => {
   return (
-    <div className="text-center py-4 mt-[120px]">
+    <div className="text-center py-4 mt-4">
       {!title ? <Logo size="medium" /> : <h1 className="text-2xl font-bold">{title}</h1>}
     </div>
   );

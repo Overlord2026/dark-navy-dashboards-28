@@ -2,44 +2,60 @@
 import React from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { useLocation } from "react-router-dom";
-import { AspiringDashboard } from "@/components/dashboard/AspiringDashboard";
-import { PreRetireesDashboard } from "@/components/dashboard/PreRetireesDashboard";
-import { UltraHNWDashboard } from "@/components/dashboard/UltraHNWDashboard";
-import { AdvisorDashboard } from "@/components/dashboard/AdvisorDashboard";
-import { DefaultDashboard } from "@/components/dashboard/DefaultDashboard";
-import { useAudience } from "@/context/AudienceContext";
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { BookIcon, ArrowRightIcon } from "lucide-react";
+import { AssetsSummary } from "@/components/dashboard/AssetsSummary";
 
 export default function Dashboard() {
   const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
-  const segmentParam = queryParams.get('segment');
   
-  const { currentSegment } = useAudience();
-  
-  // Use the segment from URL params if provided, otherwise use the one from context ONLY if explicitly set
-  const segment = segmentParam || currentSegment || null;
-
-  const renderSegmentDashboard = () => {
-    // Only render segment-specific content when explicitly requested via URL or user selection
-    switch (segment) {
-      case 'aspiring':
-        return <AspiringDashboard />;
-      case 'preretirees':
-        return <PreRetireesDashboard />;
-      case 'ultrahnw':
-        return <UltraHNWDashboard />;
-      case 'advisor':
-        return <AdvisorDashboard />;
-      default:
-        // Show the default dashboard when no segment is specified
-        return <DefaultDashboard />;
-    }
-  };
-
   return (
-    <ThreeColumnLayout activeMainItem="integration">
-      <div className="px-6 py-6">
-        {renderSegmentDashboard()}
+    <ThreeColumnLayout activeMainItem="dashboard">
+      <div className="space-y-6">
+        {/* Assets Summary */}
+        <AssetsSummary />
+        
+        {/* Two side-by-side cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Education & Solutions Card */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <BookIcon className="h-5 w-5 text-primary" />
+                Learning Modules
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground">
+                Explore our learning center to build your financial knowledge.
+              </p>
+            </CardContent>
+            <CardFooter>
+              <Button className="ml-auto flex items-center gap-2" variant="outline">
+                Go to Education Center
+                <ArrowRightIcon className="h-4 w-4" />
+              </Button>
+            </CardFooter>
+          </Card>
+          
+          {/* My Profile & Trial Card */}
+          <Card>
+            <CardHeader>
+              <CardTitle>90-Day Trial</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground">
+                Start your free 90-day trial
+              </p>
+            </CardContent>
+            <CardFooter>
+              <Button className="ml-auto" variant="default">
+                Create Your Profile
+              </Button>
+            </CardFooter>
+          </Card>
+        </div>
       </div>
     </ThreeColumnLayout>
   );

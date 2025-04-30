@@ -13,33 +13,11 @@ export const AudienceProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const netWorthContext = useNetWorth();
   const { userProfile } = useUser();
   
-  // Get total net worth from context - note we need to use getTotalNetWorth() method
+  // Get total net worth from context
   const totalNetWorth = netWorthContext.getTotalNetWorth();
 
-  // We'll leave the detection logic, but we won't auto-set the segment
-  // This will only run if a user explicitly opts in or if we need to detect from profile
-  useEffect(() => {
-    const detectSegment = () => {
-      if (!isSegmentDetected && totalNetWorth && userProfile?.investorType) {
-        // Only set a segment when explicitly opted-in through the UI
-        if (false) { // Disable auto-detection completely
-          if (totalNetWorth >= 10000000) { // $10M+
-            setCurrentSegment('uhnw');
-          } else if (totalNetWorth >= 1000000 && userProfile?.investorType?.toLowerCase().includes('retiree')) { 
-            setCurrentSegment('retiree');
-          } else if (totalNetWorth >= 250000) {
-            setCurrentSegment('aspiring');
-          }
-          setIsSegmentDetected(true);
-        }
-      }
-    };
-
-    // Only detect if user has opted in or we have enough profile data
-    if (userProfile?.investorType && !isSegmentDetected) {
-      detectSegment();
-    }
-  }, [totalNetWorth, userProfile, isSegmentDetected]);
+  // Completely disable auto-detection of segments
+  // Only set segment when explicitly chosen by user through UI
 
   const currentProfile = currentSegment ? audienceProfiles[currentSegment] : null;
 
