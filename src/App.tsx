@@ -40,7 +40,7 @@ function App() {
                       <AIInsightsProvider>
                         <AudienceProvider>
                           <TooltipProvider>
-                            <Header />
+                            <Header isConnected={false} />
                             <RouterProvider router={routes} />
                             <Toaster position="top-right" richColors closeButton />
                           </TooltipProvider>
