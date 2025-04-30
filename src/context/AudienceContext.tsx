@@ -13,9 +13,6 @@ export const AudienceProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const netWorthContext = useNetWorth();
   const { userProfile } = useUser();
   
-  // Get total net worth from context
-  const totalNetWorth = netWorthContext.getTotalNetWorth();
-
   // Completely disable auto-detection of segments
   // Only set segment when explicitly chosen by user through UI
 
