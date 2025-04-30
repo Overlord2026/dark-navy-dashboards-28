@@ -2,7 +2,6 @@
 import React from "react";
 import { Sidebar } from "./Sidebar";
 import { DashboardHeader } from "./DashboardHeader";
-import Header from "@/components/Header";
 import { cn } from "@/lib/utils";
 
 interface ThreeColumnLayoutProps {
@@ -44,8 +43,6 @@ export const ThreeColumnLayout: React.FC<ThreeColumnLayoutProps> = ({
 
   return (
     <div className={cn("flex flex-col h-screen", className)}>
-      <Header isConnected={activeMainItem === "integration"} />
-
       <div className="flex flex-1 overflow-hidden pt-28">
         {renderSidebar()}
 

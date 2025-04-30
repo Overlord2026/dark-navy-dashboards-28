@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { BriefcaseIcon, Users, BarChart3, ShieldCheck, ArrowRight } from "lucide-react";
-import Header from '@/components/Header';
 import { AdvisorTrialBanner } from '@/components/advisor/AdvisorTrialBanner';
 
 export default function AdvisorLanding() {
@@ -43,8 +42,6 @@ export default function AdvisorLanding() {
 
   return (
     <div className="flex flex-col min-h-screen bg-[#0F1E3A] text-white">
-      <Header />
-      
       <AdvisorTrialBanner />
       
       <main className="flex-grow pt-28 px-4">

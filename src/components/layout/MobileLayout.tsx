@@ -13,7 +13,6 @@ import { useTheme } from "@/context/ThemeContext";
 import { useUser } from "@/context/UserContext";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
-import Header from "@/components/Header";
 
 interface MobileLayoutProps {
   children: React.ReactNode;
@@ -51,8 +50,6 @@ export function MobileLayout({
 
   return (
     <div className="flex flex-col h-screen bg-[#12121C] text-white overflow-hidden pt-28">
-      <Header />
-      
       {/* Page Header - Only showing title and add button */}
       <header className="w-full flex justify-between items-center py-4 px-4 bg-[#12121C] border-b border-gray-800">
         <h1 className="text-2xl font-bold">{title}</h1>

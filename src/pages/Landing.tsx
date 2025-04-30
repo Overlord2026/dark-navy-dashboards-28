@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Leaf, Sunrise, Crown } from 'lucide-react';
@@ -6,7 +7,6 @@ import { SegmentCards } from '@/components/landing/SegmentCards';
 import { AdvisorPrompt } from '@/components/landing/AdvisorPrompt';
 import { AnimatedBackground } from '@/components/landing/AnimatedBackground';
 import { Footer } from '@/components/landing/Footer';
-import Header from '@/components/Header';
 
 export default function Landing() {
   const navigate = useNavigate();
@@ -61,7 +61,6 @@ export default function Landing() {
 
   return (
     <div className="flex flex-col items-center min-h-screen bg-[#0A1F44] text-white">
-      <Header />
       <div className="w-full max-w-7xl py-0 mt-28">
         <div className="mt-4 px-4">
           <SegmentCards 
