@@ -21,7 +21,7 @@ export const BrandedHeader: React.FC<BrandedHeaderProps> = ({ isConnected = fals
               <Badge className="ml-2 bg-[#FFC700] text-[#0F1E3A] font-medium">Connected</Badge>
             )}
           </div>
-          <p className="text-[#FFC700] text-xs uppercase tracking-wide">ORGANIZE &amp; MAXIMIZE</p>
+          <p className="text-[#FFC700] text-xs uppercase tracking-wide font-medium mt-1">ORGANIZE &amp; MAXIMIZE</p>
         </div>
       </div>
     </header>
