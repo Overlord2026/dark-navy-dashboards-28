@@ -1,4 +1,3 @@
-
 import { DiagnosticTestStatus } from './common';
 
 export interface ApiEndpointDiagnosticResult {
@@ -10,6 +9,20 @@ export interface ApiEndpointDiagnosticResult {
   timestamp: string;
   message: string;
   details?: any;
+  name?: string;
+  url?: string;
+  errorMessage?: string;
+  warningMessage?: string;
+  expectedDataStructure?: string;
+  responseStatus?: number;
+  schemaValidation?: {
+    valid: boolean;
+    errors?: string[];
+    expected?: any;
+    actual?: any;
+  };
+  service?: string;
+  authStatus?: string;
 }
 
 export interface AccessibilityAuditResult {

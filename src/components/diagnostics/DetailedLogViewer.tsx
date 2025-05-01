@@ -1,208 +1,116 @@
+import React from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { DownloadIcon, FilterIcon, RefreshCw } from "lucide-react";
+import LogsList from "./LogsList";
+import { useDiagnosticsLogs } from "@/hooks/useDiagnosticsLogs";
 
-import React, { useState, useEffect } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { toast } from "sonner";
-import { runDiagnostics } from "@/services/diagnosticsService";
-import { LogEntry, LogLevel } from "@/types/diagnostics";
-import { LogsToolbar } from "./LogsToolbar";
-import { LogsList } from "./LogsList";
+interface DetailedLogViewerProps {
+  onClose: () => void;
+}
 
-export const DetailedLogViewer = () => {
-  const [logs, setLogs] = useState<LogEntry[]>([]);
-  const [filter, setFilter] = useState("");
-  const [sortDesc, setSortDesc] = useState(true);
-  const [expandedLog, setExpandedLog] = useState<string | null>(null);
-  const [isRunningFullTest, setIsRunningFullTest] = useState(false);
-  
-  // Simulate fetching logs
-  useEffect(() => {
-    // In a real app, this would be an API call
-    const fetchLogs = () => {
-      const sampleLogs: LogEntry[] = [
-        {
-          id: "log-1",
-          timestamp: new Date(Date.now() - 120000).toISOString(),
-          level: "error",
-          message: "Failed to connect to API endpoint",
-          source: "ApiService",
-          details: "Connection timeout after 30 seconds. Endpoint: /api/v1/data. Response code: 504."
-        },
-        {
-          id: "log-2",
-          timestamp: new Date(Date.now() - 180000).toISOString(),
-          level: "warning",
-          message: "User session expired",
-          source: "AuthService",
-          details: "User session timed out after period of inactivity. User ID: USR-12345"
-        },
-        {
-          id: "log-3",
-          timestamp: new Date(Date.now() - 240000).toISOString(),
-          level: "info",
-          message: "User completed onboarding flow",
-          source: "OnboardingService"
-        },
-        {
-          id: "log-4",
-          timestamp: new Date(Date.now() - 300000).toISOString(),
-          level: "debug",
-          message: "Rendering component with props",
-          source: "DashboardComponent",
-          details: "Props: { userId: 'USR-12345', showWelcome: true, notifications: 3 }"
-        },
-        {
-          id: "log-5",
-          timestamp: new Date(Date.now() - 360000).toISOString(),
-          level: "error",
-          message: "Invalid data format received",
-          source: "DataProcessor",
-          details: "Expected JSON object but received array. Data: [1, 2, 3]"
-        }
-      ];
-      
-      setLogs(sampleLogs);
-    };
-    
-    fetchLogs();
-  }, []);
-  
-  // Run a full system diagnostic test
-  const runFullSystemDiagnostic = async () => {
-    setIsRunningFullTest(true);
-    toast.info("Running comprehensive system diagnostic test...");
-    
-    try {
-      // Run the diagnostics
-      const results = await runDiagnostics();
-      
-      // Generate detailed logs from the diagnostic results
-      const newLogs: LogEntry[] = [];
-      
-      // Add an overall summary log
-      newLogs.push({
-        id: `diagnostic-summary-${Date.now()}`,
-        timestamp: new Date().toISOString(),
-        level: results.overall as LogLevel,
-        message: `System Diagnostic Test: Overall status is ${results.overall}`,
-        source: "DiagnosticService",
-        details: `Completed full diagnostic scan at ${new Date().toLocaleString()}. Found ${
-          results.errors
-        } errors and ${
-          results.warnings
-        } warnings.`
-      });
-      
-      // Process all diagnostic results from the results array
-      results.results.forEach((test: any, index: number) => {
-        const category = test.category || "general";
-        
-        newLogs.push({
-          id: `${category}-${index}-${Date.now()}`,
-          timestamp: new Date().toISOString(),
-          level: test.status as LogLevel,
-          message: `${category} Test: ${test.name || test.id}`,
-          source: `${category.charAt(0).toUpperCase() + category.slice(1)}Service`,
-          details: test.message || `${category} test completed with status: ${test.status}`
-        });
-      });
-      
-      // Set the new logs
-      setLogs(newLogs);
-      
-      toast.success("System diagnostic test completed", {
-        description: "Check the logs for detailed results"
-      });
-    } catch (error) {
-      toast.error("Failed to run diagnostic test", {
-        description: error instanceof Error ? error.message : "An unknown error occurred"
-      });
-      
-      // Add error log
-      setLogs([
-        {
-          id: `diagnostic-error-${Date.now()}`,
-          timestamp: new Date().toISOString(),
-          level: "error",
-          message: "Failed to run system diagnostic test",
-          source: "DiagnosticService",
-          details: error instanceof Error ? error.message : "An unknown error occurred"
-        },
-        ...logs
-      ]);
-    } finally {
-      setIsRunningFullTest(false);
-    }
-  };
-  
-  // Filter and sort logs
-  const filteredLogs = logs
-    .filter(log => 
-      log.message.toLowerCase().includes(filter.toLowerCase()) ||
-      log.source.toLowerCase().includes(filter.toLowerCase()) ||
-      log.level.toLowerCase().includes(filter.toLowerCase())
-    )
-    .sort((a, b) => {
-      const timeA = new Date(a.timestamp).getTime();
-      const timeB = new Date(b.timestamp).getTime();
-      return sortDesc ? timeB - timeA : timeA - timeB;
-    });
-  
-  // Refresh logs
-  const handleRefresh = () => {
-    // In a real app, this would re-fetch logs from the API
-    toast.success("Refreshing logs...");
-    // For now, just shuffle the order a bit to simulate refresh
-    setLogs(prev => [...prev].sort(() => Math.random() - 0.5));
-  };
+export const DetailedLogViewer: React.FC<DetailedLogViewerProps> = ({ onClose }) => {
+  const { 
+    logs, 
+    filteredLogs,
+    logLevels, 
+    selectedLevel, 
+    searchTerm, 
+    loading, 
+    error, 
+    setSearchTerm, 
+    setSelectedLevel, 
+    clearFilters, 
+    downloadLogs, 
+    refreshLogs 
+  } = useDiagnosticsLogs();
 
-  // Export logs as JSON for backend developers
-  const exportLogs = () => {
-    const logData = JSON.stringify(logs, null, 2);
-    const blob = new Blob([logData], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `system-diagnostic-logs-${new Date().toISOString().split('T')[0]}.json`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    
-    toast.success("Logs exported successfully", {
-      description: "Diagnostic data has been saved as JSON file"
-    });
-  };
-  
   return (
-    <Card>
-      <CardHeader className="pb-3">
-        <CardTitle className="text-xl flex items-center gap-2">System Logs</CardTitle>
-        <CardDescription>Detailed logs for system diagnostics and debugging</CardDescription>
+    <Card className="w-full">
+      <CardHeader>
+        <div className="flex justify-between items-center">
+          <CardTitle>Detailed Log Viewer</CardTitle>
+          <div className="flex items-center space-x-2">
+            <Button variant="outline" size="sm" onClick={refreshLogs} disabled={loading}>
+              {loading ? (
+                <>
+                  <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
+                  Refreshing
+                </>
+              ) : (
+                <>
+                  <RefreshCw className="mr-2 h-4 w-4" />
+                  Refresh
+                </>
+              )}
+            </Button>
+            <Button variant="secondary" size="sm" onClick={downloadLogs}>
+              <DownloadIcon className="mr-2 h-4 w-4" />
+              Download
+            </Button>
+            <Button variant="ghost" size="sm" onClick={onClose}>
+              Close
+            </Button>
+          </div>
+        </div>
       </CardHeader>
       <CardContent>
-        <LogsToolbar 
-          filter={filter}
-          setFilter={setFilter}
-          sortDesc={sortDesc}
-          setSortDesc={setSortDesc}
-          handleRefresh={handleRefresh}
-          exportLogs={exportLogs}
-          runFullSystemDiagnostic={runFullSystemDiagnostic}
-          isRunningFullTest={isRunningFullTest}
-          logsCount={logs.length}
-        />
-        
-        <ScrollArea className="h-[400px] rounded-md border p-4">
-          <LogsList 
-            logs={filteredLogs}
-            isLoading={isRunningFullTest}
-            filter={filter}
-            expandedLog={expandedLog}
-            setExpandedLog={setExpandedLog}
-            setFilter={setFilter}
-          />
-        </ScrollArea>
+        <Tabs defaultValue="all" className="space-y-4">
+          <TabsList>
+            <TabsTrigger value="all">All Logs</TabsTrigger>
+            {logLevels.map((level) => (
+              <TabsTrigger key={level} value={level}>
+                {level.toUpperCase()}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+          
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <Select onValueChange={setSelectedLevel}>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Filter by Level" defaultValue={selectedLevel} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Levels</SelectItem>
+                  {logLevels.map((level) => (
+                    <SelectItem key={level} value={level}>
+                      {level.toUpperCase()}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              
+              <Button variant="outline" size="sm" onClick={clearFilters}>
+                <FilterIcon className="mr-2 h-4 w-4" />
+                Clear Filters
+              </Button>
+            </div>
+            
+            <Input
+              type="search"
+              placeholder="Search logs..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+
+          <TabsContent value="all">
+            {loading && <p>Loading logs...</p>}
+            {error && <p>Error: {error}</p>}
+            <LogsList logs={filteredLogs} />
+          </TabsContent>
+          
+          {logLevels.map((level) => (
+            <TabsContent key={level} value={level}>
+              {loading && <p>Loading logs...</p>}
+              {error && <p>Error: {error}</p>}
+              <LogsList logs={filteredLogs.filter((log) => log.level === level)} />
+            </TabsContent>
+          ))}
+        </Tabs>
       </CardContent>
     </Card>
   );

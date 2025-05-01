@@ -7,7 +7,7 @@ export interface DiagnosticResult {
   message: string;
   route?: string;
   details?: any;
-  timestamp?: number;
+  timestamp?: string | number;
 }
 
 export interface Recommendation {

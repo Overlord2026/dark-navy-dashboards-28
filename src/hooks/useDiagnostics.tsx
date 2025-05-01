@@ -4,18 +4,20 @@ import { toast } from 'sonner';
 import { DiagnosticResult, Recommendation } from '@/types/diagnostics/common';
 import { QuickFix as DiagnosticQuickFix, FixHistoryEntry as DiagnosticFixHistoryEntry } from '@/types/diagnostics/recommendations';
 
-// Rename to avoid conflicts with local declarations
-type QuickFixType = DiagnosticQuickFix;
-type FixHistoryEntryType = DiagnosticFixHistoryEntry;
+// Re-export these types to maintain compatibility with existing imports
+export type QuickFix = DiagnosticQuickFix;
+export type FixHistoryEntry = DiagnosticFixHistoryEntry;
 
 export const useDiagnostics = () => {
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState<DiagnosticResult[]>([]);
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
-  const [quickFixes, setQuickFixes] = useState<QuickFixType[]>([]);
-  const [fixHistory, setFixHistory] = useState<FixHistoryEntryType[]>([]);
+  const [quickFixes, setQuickFixes] = useState<QuickFix[]>([]);
+  const [fixHistory, setFixHistory] = useState<FixHistoryEntry[]>([]);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
-
+  const [fixInProgress, setFixInProgress] = useState<string | null>(null);
+  const [quickFixLoading, setQuickFixLoading] = useState<boolean>(false);
+  
   // Function to run diagnostics
   const runDiagnostics = useCallback(async () => {
     setLoading(true);
@@ -70,7 +72,8 @@ export const useDiagnostics = () => {
 
   // Function to apply a quick fix
   const applyQuickFix = useCallback(async (fixId: string) => {
-    setLoading(true);
+    setQuickFixLoading(true);
+    setFixInProgress(fixId);
     try {
       // Mock API call
       await new Promise(resolve => setTimeout(resolve, 1000));
@@ -80,7 +83,7 @@ export const useDiagnostics = () => {
       
       if (appliedFix) {
         // Add to fix history
-        const historyEntry: FixHistoryEntryType = {
+        const historyEntry: FixHistoryEntry = {
           id: `hist-${Date.now()}`,
           title: appliedFix.title,
           timestamp: new Date().toISOString(),
@@ -97,18 +100,44 @@ export const useDiagnostics = () => {
         
         toast.success(`Applied fix: ${appliedFix.title}`);
       }
+      return true;
     } catch (error) {
       console.error('Error applying quick fix:', error);
       toast.error('Failed to apply fix');
+      return false;
     } finally {
-      setLoading(false);
+      setQuickFixLoading(false);
+      setFixInProgress(null);
     }
   }, [quickFixes]);
+
+  // Function to apply a diagnostic fix
+  const applyDiagnosticFix = useCallback(async (id: string, category: string, name: string) => {
+    setFixInProgress(id);
+    try {
+      // Mock API call
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      toast.success(`Applied diagnostic fix for ${name}`);
+      return true;
+    } catch (error) {
+      console.error('Error applying diagnostic fix:', error);
+      toast.error('Failed to apply diagnostic fix');
+      return false;
+    } finally {
+      setFixInProgress(null);
+    }
+  }, []);
+
+  // Function to refresh diagnostics
+  const refreshDiagnostics = useCallback(async () => {
+    return runDiagnostics();
+  }, [runDiagnostics]);
 
   // Initially load diagnostics
   useEffect(() => {
     // Set up mock quick fixes
-    const initialQuickFixes: QuickFixType[] = [
+    const initialQuickFixes: QuickFix[] = [
       {
         id: 'qf-1',
         title: 'Optimize API response time',
@@ -132,7 +161,7 @@ export const useDiagnostics = () => {
     setQuickFixes(initialQuickFixes);
     
     // Set up mock fix history
-    const initialFixHistory: FixHistoryEntryType[] = [
+    const initialFixHistory: FixHistoryEntry[] = [
       {
         id: 'hist-1',
         title: 'Updated API timeout settings',
@@ -149,13 +178,19 @@ export const useDiagnostics = () => {
 
   return {
     loading,
+    isLoading: loading, // Alias for consistency
     results,
+    diagnosticResults: results, // Alias for consistency
     recommendations,
     quickFixes,
     fixHistory,
     lastUpdated,
     runDiagnostics,
-    applyQuickFix
+    refreshDiagnostics,
+    applyQuickFix,
+    applyDiagnosticFix,
+    fixInProgress,
+    quickFixLoading
   };
 };
 

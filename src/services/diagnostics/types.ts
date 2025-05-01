@@ -1,22 +1,5 @@
 
-/**
- * Types for API diagnostics and testing
- */
-
-// Common diagnostic status for all test types
-export type DiagnosticTestStatus = "success" | "warning" | "error";
-
-export interface DiagnosticResult {
-  id: string;
-  timestamp: string;
-  category: string;
-  status: DiagnosticTestStatus;
-  message: string;
-  details?: any;
-  name?: string;
-  description?: string;
-  route?: string;
-}
+import { DiagnosticTestStatus } from '@/types/diagnostics/common';
 
 export interface ApiIntegrationTestResult {
   id: string;
@@ -25,80 +8,47 @@ export interface ApiIntegrationTestResult {
   responseTime: number;
   status: DiagnosticTestStatus;
   message: string;
-  authStatus: 'valid' | 'invalid' | 'expired';
+  url?: string;
+  method?: string;
+  errorMessage?: string;
+  warningMessage?: string;
+  expectedDataStructure?: string;
+  authStatus?: string;
+  details?: any;
+  name?: string;
+  canAutoFix?: boolean;
+  fixMessage?: string;
 }
 
-export interface ApiEndpointPerformance {
-  endpoint: string;
-  averageResponseTime: number;
-  p95ResponseTime: number;
-  p99ResponseTime: number;
-  errorRate: number;
-  callVolume: number;
-  lastChecked: string;
-}
-
-export interface ApiServiceHealth {
-  service: string;
-  status: 'operational' | 'degraded' | 'outage';
-  lastIncident?: {
-    time: string;
-    message: string;
-  };
-  uptime: number;
-  responseTime: number;
-}
-
-export interface ApiSecurityVulnerability {
+export interface FormValidationTestResult {
   id: string;
-  endpoint: string;
-  severity: 'low' | 'medium' | 'high' | 'critical';
-  type: string;
-  description: string;
-  remediation: string;
-  discoveredAt: string;
-  status: 'open' | 'in_progress' | 'resolved' | 'accepted';
+  formId: string;
+  formName: string;
+  testName: string;
+  status: DiagnosticTestStatus;
+  message: string;
+  timestamp: string;
+  details?: any;
 }
 
-// Navigation test result
 export interface NavigationTestResult {
   id: string;
   route: string;
   status: DiagnosticTestStatus;
-  name: string;
   message: string;
-  responseTime?: number;
+  loadTime?: number;
+  timestamp: string;
   details?: any;
 }
 
-// Form validation test result
-export interface FormValidationTestResult {
-  formId: string;
-  status: DiagnosticTestStatus;
-  success: boolean;
-  message: string;
-  timestamp: string;
-  fields?: Array<{
-    name: string;
-    type: string;
-    errors?: string[];
-    validations?: string[];
-  }>;
-  validationDetails?: {
-    invalidFields?: string[];
-    unexpectedErrors?: string[];
-    missingErrors?: string[];
-  };
-}
-
-// Performance test result
 export interface PerformanceTestResult {
   id: string;
-  name: string;
-  status: DiagnosticTestStatus;
-  responseTime: number;
+  component: string;
+  metric: string;
+  value: number;
   threshold: number;
+  status: DiagnosticTestStatus;
   message: string;
   timestamp: string;
+  details?: any;
 }
-

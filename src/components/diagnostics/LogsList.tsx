@@ -1,7 +1,7 @@
 
 import React from 'react';
-import { LogEntry } from '@/types/diagnostics';
-import LogEntryItem from './LogEntryItem';
+import { LogEntry } from '@/types/diagnostics/logs';
+import { LogEntryItem } from './LogEntryItem';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {

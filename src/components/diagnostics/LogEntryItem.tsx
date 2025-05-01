@@ -1,75 +1,92 @@
 
-import React from "react";
-import { Badge } from "@/components/ui/badge";
-import { AlertCircle, Info, Bug, CheckCircle, AlertTriangle, ChevronDown } from "lucide-react";
-import { LogEntry, LogLevel } from "@/types/diagnostics";
-import { AccordionTrigger } from "@/components/ui/accordion";
+import React from 'react';
+import { LogEntry } from '@/types/diagnostics/logs';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Copy, ChevronDown, ChevronUp } from 'lucide-react';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { toast } from 'sonner';
 
 interface LogEntryItemProps {
   log: LogEntry;
-  isExpanded: boolean;
-  onToggleExpand: () => void;
 }
 
-export const LogEntryItem: React.FC<LogEntryItemProps> = ({ 
-  log, 
-  isExpanded, 
-  onToggleExpand 
-}) => {
-  // Get icon for log level
-  const getLogLevelIcon = (level: LogLevel) => {
-    switch (level) {
-      case "error":
-        return <AlertCircle className="h-4 w-4 text-red-500" />;
-      case "warning":
-        return <AlertTriangle className="h-4 w-4 text-yellow-500" />;
-      case "info":
-        return <Info className="h-4 w-4 text-blue-500" />;
-      case "debug":
-        return <Bug className="h-4 w-4 text-gray-500" />;
-      case "success":
-        return <CheckCircle className="h-4 w-4 text-green-500" />;
+export const LogEntryItem: React.FC<LogEntryItemProps> = ({ log }) => {
+  const [isExpanded, setIsExpanded] = React.useState(false);
+  
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(JSON.stringify(log, null, 2));
+    toast.success('Log entry copied to clipboard');
+  };
+  
+  const getLevelBadge = (level: string) => {
+    switch (level.toLowerCase()) {
+      case 'error':
+        return <Badge variant="destructive">{level.toUpperCase()}</Badge>;
+      case 'warning':
+        return <Badge variant="warning">{level.toUpperCase()}</Badge>;
+      case 'info':
+        return <Badge variant="secondary">{level.toUpperCase()}</Badge>;
+      case 'debug':
+        return <Badge variant="outline">{level.toUpperCase()}</Badge>;
+      case 'success':
+        return <Badge variant="success">{level.toUpperCase()}</Badge>;
       default:
-        return <Info className="h-4 w-4" />;
+        return <Badge>{level.toUpperCase()}</Badge>;
     }
   };
   
-  // Get badge for log level
-  const getLogLevelBadge = (level: LogLevel) => {
-    switch (level) {
-      case "error":
-        return <Badge variant="destructive">Error</Badge>;
-      case "warning":
-        return <Badge variant="outline" className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-500">Warning</Badge>;
-      case "info":
-        return <Badge variant="outline" className="bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-500">Info</Badge>;
-      case "debug":
-        return <Badge variant="outline" className="bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-500">Debug</Badge>;
-      case "success":
-        return <Badge variant="outline" className="bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-500">Success</Badge>;
-      default:
-        return <Badge variant="outline">Unknown</Badge>;
+  // Render details based on type
+  const renderDetails = () => {
+    if (!log.details) return null;
+    
+    if (typeof log.details === 'string') {
+      return <p className="text-sm text-muted-foreground">{log.details}</p>;
     }
+    
+    return (
+      <pre className="p-2 bg-muted rounded-md overflow-auto text-xs mt-2">
+        {JSON.stringify(log.details, null, 2)}
+      </pre>
+    );
   };
-
+  
   return (
-    <AccordionTrigger className="hover:no-underline">
-      <div className="p-3 w-full text-left">
-        <div className="flex items-start justify-between">
-          <div className="flex items-start gap-3">
-            <div className="mt-0.5">{getLogLevelIcon(log.level)}</div>
-            <div>
-              <div className="font-medium">{log.message}</div>
-              <div className="text-sm text-muted-foreground">
-                {new Date(log.timestamp).toLocaleString()} • Source: {log.source}
-              </div>
+    <Collapsible open={isExpanded} onOpenChange={setIsExpanded}>
+      <div className="border rounded-lg p-3 mb-3">
+        <div className="flex justify-between items-start">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              {getLevelBadge(log.level)}
+              <span className="font-medium">{log.message}</span>
+            </div>
+            <div className="flex gap-3 text-xs text-muted-foreground">
+              <span>{new Date(log.timestamp).toLocaleString()}</span>
+              <span>|</span>
+              <span>{log.source}</span>
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            {getLogLevelBadge(log.level)}
+          <div className="flex items-center">
+            <Button variant="ghost" size="icon" onClick={copyToClipboard}>
+              <Copy className="h-4 w-4" />
+            </Button>
+            <CollapsibleTrigger asChild>
+              <Button variant="ghost" size="icon">
+                {isExpanded ? (
+                  <ChevronUp className="h-4 w-4" />
+                ) : (
+                  <ChevronDown className="h-4 w-4" />
+                )}
+              </Button>
+            </CollapsibleTrigger>
           </div>
         </div>
+        <CollapsibleContent>
+          <div className="mt-3 pt-3 border-t">
+            {renderDetails()}
+          </div>
+        </CollapsibleContent>
       </div>
-    </AccordionTrigger>
+    </Collapsible>
   );
 };
