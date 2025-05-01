@@ -1,6 +1,7 @@
+
 import React from "react";
 import { Navigate } from "react-router-dom";
-import Dashboard from "@/pages/Dashboard"; // Fixed casing to match file name
+import Dashboard from "@/pages/dashboard"; // Fixed casing to match file name
 
 export const dashboardRoutes = [
   {
