@@ -1,7 +1,9 @@
+
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input"; // Add the correct import
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { DownloadIcon, FilterIcon, RefreshCw } from "lucide-react";
 import LogsList from "./LogsList";
@@ -99,14 +101,14 @@ export const DetailedLogViewer: React.FC<DetailedLogViewerProps> = ({ onClose })
 
           <TabsContent value="all">
             {loading && <p>Loading logs...</p>}
-            {error && <p>Error: {error}</p>}
+            {error && <p>Error: {error.message}</p>}
             <LogsList logs={filteredLogs} />
           </TabsContent>
           
           {logLevels.map((level) => (
             <TabsContent key={level} value={level}>
               {loading && <p>Loading logs...</p>}
-              {error && <p>Error: {error}</p>}
+              {error && <p>Error: {error.message}</p>}
               <LogsList logs={filteredLogs.filter((log) => log.level === level)} />
             </TabsContent>
           ))}

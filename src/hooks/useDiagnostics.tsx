@@ -3,6 +3,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { toast } from 'sonner';
 import { DiagnosticResult, Recommendation } from '@/types/diagnostics/common';
 import { QuickFix as DiagnosticQuickFix, FixHistoryEntry as DiagnosticFixHistoryEntry } from '@/types/diagnostics/recommendations';
+import { DiagnosticResultSummary } from '@/types/diagnostics';
 
 // Re-export these types to maintain compatibility with existing imports
 export type QuickFix = DiagnosticQuickFix;
@@ -10,12 +11,11 @@ export type FixHistoryEntry = DiagnosticFixHistoryEntry;
 
 export const useDiagnostics = () => {
   const [loading, setLoading] = useState(false);
-  const [results, setResults] = useState<DiagnosticResult[]>([]);
+  const [results, setResults] = useState<any>({});
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
   const [quickFixes, setQuickFixes] = useState<QuickFix[]>([]);
   const [fixHistory, setFixHistory] = useState<FixHistoryEntry[]>([]);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
-  const [fixInProgress, setFixInProgress] = useState<string | null>(null);
   const [quickFixLoading, setQuickFixLoading] = useState<boolean>(false);
   
   // Function to run diagnostics
@@ -25,25 +25,69 @@ export const useDiagnostics = () => {
       // Mock API call
       await new Promise(resolve => setTimeout(resolve, 1500));
       
-      // Mock results
-      const mockResults: DiagnosticResult[] = [
-        {
-          id: 'diag-1',
-          status: 'success',
-          message: 'Authentication service is working correctly',
-          timestamp: new Date().toISOString(),
-        },
-        {
-          id: 'diag-2',
-          status: 'warning',
-          message: 'API response time is slower than expected',
-          timestamp: new Date().toISOString(),
-          details: {
-            responseTime: '1.2s',
-            threshold: '0.8s'
+      // Mock results - make these match the DiagnosticResultSummary interface
+      const mockResults: DiagnosticResultSummary = {
+        overall: 'warning',
+        timestamp: new Date().toISOString(),
+        securityTests: [
+          {
+            id: 'sec-1',
+            status: 'success',
+            message: 'Authentication service is working correctly',
+            timestamp: new Date().toISOString(),
+          },
+          {
+            id: 'sec-2',
+            status: 'warning',
+            message: 'CSRF protection needs improvement',
+            timestamp: new Date().toISOString(),
           }
-        },
-      ];
+        ],
+        apiIntegrationTests: [
+          {
+            id: 'api-1',
+            status: 'warning',
+            message: 'API response time is slower than expected',
+            timestamp: new Date().toISOString(),
+            details: {
+              responseTime: '1.2s',
+              threshold: '0.8s'
+            }
+          }
+        ],
+        performanceTests: [
+          {
+            id: 'perf-1',
+            status: 'success',
+            message: 'Core components rendering within expected time',
+            timestamp: new Date().toISOString(),
+          }
+        ],
+        navigationTests: [
+          {
+            id: 'nav-1',
+            status: 'success',
+            message: 'All routes accessible',
+            timestamp: new Date().toISOString(),
+          }
+        ],
+        formValidationTests: [
+          {
+            id: 'form-1',
+            status: 'success',
+            message: 'All form validations working properly',
+            timestamp: new Date().toISOString(),
+          }
+        ],
+        iconTests: [
+          {
+            id: 'icon-1', 
+            status: 'success',
+            message: 'All icons loaded correctly',
+            timestamp: new Date().toISOString(),
+          }
+        ]
+      };
       
       setResults(mockResults);
       setLastUpdated(new Date());
@@ -62,18 +106,22 @@ export const useDiagnostics = () => {
       setRecommendations(mockRecommendations);
       
       toast.success('Diagnostics completed successfully');
+      return mockResults;
     } catch (error) {
       console.error('Error running diagnostics:', error);
       toast.error('Failed to run diagnostics');
+      throw error;
     } finally {
       setLoading(false);
     }
   }, []);
 
+  // Alias for runDiagnostics for backward compatibility
+  const runSystemDiagnostics = runDiagnostics;
+
   // Function to apply a quick fix
   const applyQuickFix = useCallback(async (fixId: string) => {
     setQuickFixLoading(true);
-    setFixInProgress(fixId);
     try {
       // Mock API call
       await new Promise(resolve => setTimeout(resolve, 1000));
@@ -107,27 +155,11 @@ export const useDiagnostics = () => {
       return false;
     } finally {
       setQuickFixLoading(false);
-      setFixInProgress(null);
     }
   }, [quickFixes]);
 
-  // Function to apply a diagnostic fix
-  const applyDiagnosticFix = useCallback(async (id: string, category: string, name: string) => {
-    setFixInProgress(id);
-    try {
-      // Mock API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      toast.success(`Applied diagnostic fix for ${name}`);
-      return true;
-    } catch (error) {
-      console.error('Error applying diagnostic fix:', error);
-      toast.error('Failed to apply diagnostic fix');
-      return false;
-    } finally {
-      setFixInProgress(null);
-    }
-  }, []);
+  // Alias for applyQuickFix for backward compatibility
+  const applyDiagnosticFix = applyQuickFix;
 
   // Function to refresh diagnostics
   const refreshDiagnostics = useCallback(async () => {
@@ -174,7 +206,10 @@ export const useDiagnostics = () => {
     ];
     
     setFixHistory(initialFixHistory);
-  }, []);
+    
+    // Initial diagnostic run
+    runDiagnostics();
+  }, [runDiagnostics]);
 
   return {
     loading,
@@ -189,8 +224,9 @@ export const useDiagnostics = () => {
     refreshDiagnostics,
     applyQuickFix,
     applyDiagnosticFix,
-    fixInProgress,
-    quickFixLoading
+    quickFixLoading,
+    fixInProgress: quickFixLoading, // Alias for backward compatibility
+    runSystemDiagnostics // Additional function expected by some components
   };
 };
 

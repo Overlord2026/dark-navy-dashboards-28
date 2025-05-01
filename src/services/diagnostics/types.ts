@@ -1,6 +1,8 @@
 
 import { DiagnosticTestStatus } from '@/types/diagnostics/common';
 
+export { DiagnosticTestStatus };
+
 export interface ApiIntegrationTestResult {
   id: string;
   service: string;
@@ -29,6 +31,23 @@ export interface FormValidationTestResult {
   message: string;
   timestamp: string;
   details?: any;
+  // Add missing properties
+  validationDetails?: {
+    invalidFields?: string[];
+    unexpectedErrors?: string[];
+    missingErrors?: string[];
+  };
+  fields?: Array<{
+    name: string;
+    type: string;
+    status?: DiagnosticTestStatus;
+    errors?: string[];
+    message?: string;
+    validations?: string[];
+  }>;
+  success?: boolean;
+  location?: string;
+  name?: string;
 }
 
 export interface NavigationTestResult {
@@ -39,6 +58,11 @@ export interface NavigationTestResult {
   loadTime?: number;
   timestamp: string;
   details?: any;
+  component?: string;
+  errorType?: string;
+  attemptCount?: number;
+  relatedFiles?: string[];
+  lastTested?: string;
 }
 
 export interface PerformanceTestResult {

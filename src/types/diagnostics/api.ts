@@ -1,3 +1,4 @@
+
 import { DiagnosticTestStatus } from './common';
 
 export interface ApiEndpointDiagnosticResult {
@@ -33,4 +34,11 @@ export interface AccessibilityAuditResult {
   timestamp: string;
   violations: number;
   details?: any;
+  // Add missing properties
+  impact?: 'critical' | 'serious' | 'moderate' | 'minor';
+  rule?: string;
+  elements?: string[];
+  element?: string;
+  recommendation?: string;
+  helpUrl?: string;
 }

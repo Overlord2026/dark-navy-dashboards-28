@@ -26,3 +26,15 @@ export interface DiagnosticSummary {
   errors: number;
   timestamp: string;
 }
+
+// Define a unified diagnostic results interface that components expect
+export interface DiagnosticResultSummary {
+  overall: import('./common').DiagnosticTestStatus;
+  timestamp: string;
+  securityTests?: any[];
+  apiIntegrationTests?: any[];
+  performanceTests?: any[];
+  navigationTests?: any[];
+  formValidationTests?: any[];
+  iconTests?: any[];
+}

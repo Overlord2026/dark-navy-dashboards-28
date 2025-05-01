@@ -4,7 +4,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Button } from "@/components/ui/button";
 import { AlertTriangle, CheckCircle2, RefreshCw, Shield } from "lucide-react";
 import { runDiagnostics } from "@/services/diagnostics/index";
-import { DiagnosticTestStatus } from "@/services/diagnostics/types";
+import { DiagnosticTestStatus } from "@/types/diagnostics/common";
 
 export interface DiagnosticsSummaryProps {
   showControls?: boolean;
