@@ -1,531 +1,132 @@
-import React from 'react';
-import {
-  LayoutDashboard,
+import { 
+  LayoutIcon, 
+  LineChart, 
+  Library, 
+  BookOpen, 
+  Scale, 
+  FileText, 
+  Home, 
+  BookMarked, 
+  MoveRight,
+  Info,
   Settings,
   User,
-  Network,
-  Activity,
-  CreditCard,
-  HelpCircle,
-  Contact2,
-  LucideIcon,
-  Wallet,
-  FileText,
-  Coins,
-  TrendingUp,
-  MessageSquare,
-  Calendar,
-  ListChecks,
-  FileSearch2,
-  Building2,
-  Mailbox,
-  ScrollText,
-  File,
-  FolderKanban,
-  LineChart,
-  BarChart,
+  Heart, 
+  Building, 
+  GanttChart,
+  BarChart3,
+  Folders,
   PieChart,
-  KanbanSquare,
-  ListOrdered,
-  PanelLeft,
-  PanelRight,
-  PanelTop,
-  PanelBottom,
-  PanelTopBottom,
-  PanelLeftRight,
-  Panel,
-  Layout,
-  LayoutList,
+  FileBox,
   LayoutGrid,
-  LayoutKanban,
-  LayoutRows,
-  LayoutColumns,
-  LayoutSections,
-  LayoutDashboard as LayoutDashboardIcon,
+  PanelsTopBottom,
+  PanelsLeftRight,
+  Plane,
+  LayoutList,
   LayoutTemplate,
-  LayoutSchema,
-  LayoutPanelLeft,
-  LayoutPanelRight,
-  LayoutPanelTop,
-  LayoutPanelBottom,
-  LayoutPanelTopBottom,
-  LayoutPanelLeftRight,
-  LayoutPanel,
-  LayoutAlignLeft,
-  LayoutAlignCenter,
-  LayoutAlignRight,
-  LayoutJustify,
-  LayoutList as LayoutListIcon,
-  LayoutGrid as LayoutGridIcon,
-  LayoutKanban as LayoutKanbanIcon,
-  LayoutRows as LayoutRowsIcon,
-  LayoutColumns as LayoutColumnsIcon,
-  LayoutSections as LayoutSectionsIcon,
-  LayoutTemplate as LayoutTemplateIcon,
-  LayoutSchema as LayoutSchemaIcon,
-  LayoutPanelLeft as LayoutPanelLeftIcon,
-  LayoutPanelRight as LayoutPanelRightIcon,
-  LayoutPanelTop as LayoutPanelTopIcon,
-  LayoutPanelBottom as LayoutPanelBottomIcon,
-  LayoutPanelTopBottom as LayoutPanelTopBottomIcon,
-  LayoutPanelLeftRight as LayoutPanelLeftRightIcon,
-  LayoutPanel as LayoutPanelIcon,
-  LayoutAlignLeft as LayoutAlignLeftIcon,
-  LayoutAlignCenter as LayoutAlignCenterIcon,
-  LayoutAlignRight as LayoutAlignRightIcon,
-  LayoutJustify as LayoutJustifyIcon,
-} from 'lucide-react';
+  LayoutDashboard,
+  ListChecks,
+  CheckCircle,
+  Shield
+} from "lucide-react";
 
-type NavItem = {
-  title: string;
-  href: string;
-  disabled?: boolean;
-  external?: boolean;
-  icon?: LucideIcon;
-  label?: string;
-};
-
-export type SidebarNavItem = {
-  title: string;
-  disabled?: boolean;
-  external?: boolean;
-  icon?: LucideIcon;
-  label?: string;
-  items: NavItem[];
-};
-
-export type MainNavItem = NavItem;
-
-interface DocsConfig {
-  mainNav: MainNavItem[];
-  sidebarNav: SidebarNavItem[];
-}
-
-export const dashboardNavigationData: SidebarNavItem[] = [
+export const navigationData = [
   {
-    title: 'Wealth Overview',
-    icon: LayoutDashboard,
+    title: "Getting Started",
     items: [
       {
-        title: 'Dashboard',
-        href: '/dashboard',
-        icon: LayoutDashboardIcon,
+        title: "Dashboard",
+        href: "/",
+        icon: LayoutIcon,
+        description: "Your personalized overview.",
       },
       {
-        title: 'Net Worth',
-        href: '/dashboard/net-worth',
-        icon: Wallet,
-      },
-      {
-        title: 'Transactions',
-        href: '/dashboard/transactions',
-        icon: CreditCard,
-      },
-      {
-        title: 'Budgeting',
-        href: '/dashboard/budgeting',
-        icon: Coins,
-      },
-    ],
-  },
-  {
-    title: 'Investments',
-    icon: TrendingUp,
-    items: [
-      {
-        title: 'Portfolio',
-        href: '/investments/portfolio',
-        icon: PieChart,
-      },
-      {
-        title: 'Research',
-        href: '/investments/research',
-        icon: FileSearch2,
-      },
-      {
-        title: 'Trading',
-        href: '/investments/trading',
+        title: "Net Worth",
+        href: "/net-worth",
         icon: LineChart,
+        description: "Track your financial progress.",
       },
     ],
   },
   {
-    title: 'Planning & Insights',
-    icon: ListChecks,
+    title: "Financial Planning",
     items: [
       {
-        title: 'Financial Goals',
-        href: '/planning/goals',
-        icon: ListOrdered,
+        title: "Budgeting",
+        href: "/budgeting",
+        icon: Scale,
+        description: "Manage your income and expenses.",
       },
       {
-        title: 'Retirement',
-        href: '/planning/retirement',
-        icon: Calendar,
+        title: "Goals",
+        href: "/goals",
+        icon: BookMarked,
+        description: "Set and achieve your financial goals.",
       },
       {
-        title: 'Tax Optimization',
-        href: '/planning/tax',
+        title: "Investments",
+        href: "/investments",
+        icon: BarChart3,
+        description: "Manage your investment portfolio.",
+      },
+      {
+        title: "Insurance",
+        href: "/insurance",
+        icon: Shield,
+        description: "Protect yourself and your assets.",
+      },
+      {
+        title: "Estate Planning",
+        href: "/estate-planning",
         icon: FileText,
+        description: "Plan for the future and secure your legacy.",
       },
     ],
   },
   {
-    title: 'Insurance',
-    icon: ShieldCheck,
+    title: "Resources",
     items: [
       {
-        title: 'Policies',
-        href: '/insurance/policies',
-        icon: File,
+        title: "Financial Education",
+        href: "/financial-education",
+        icon: BookOpen,
+        description: "Learn about personal finance.",
       },
       {
-        title: 'Claims',
-        href: '/insurance/claims',
-        icon: FileText,
-      },
-    ],
-  },
-  {
-    title: 'Real Estate',
-    icon: Building2,
-    items: [
-      {
-        title: 'Properties',
-        href: '/real-estate/properties',
-        icon: Building2,
+        title: "Marketplace",
+        href: "/marketplace",
+        icon: Library,
+        description: "Explore financial products and services.",
       },
       {
-        title: 'Mortgages',
-        href: '/real-estate/mortgages',
-        icon: CreditCard,
-      },
-    ],
-  },
-  {
-    title: 'Documents',
-    icon: FileText,
-    items: [
-      {
-        title: 'Vault',
-        href: '/documents/vault',
-        icon: FolderKanban,
-      },
-      {
-        title: 'Statements',
-        href: '/documents/statements',
-        icon: FileText,
-      },
-    ],
-  },
-  {
-    title: 'Communication',
-    icon: MessageSquare,
-    items: [
-      {
-        title: 'Messages',
-        href: '/communication/messages',
-        icon: MessageSquare,
-      },
-      {
-        title: 'Notifications',
-        href: '/communication/notifications',
-        icon: Mailbox,
-      },
-    ],
-  },
-  {
-    title: 'Settings',
-    icon: Settings,
-    items: [
-      {
-        title: 'Profile',
-        href: '/settings/profile',
+        title: "Find an Advisor",
+        href: "/find-an-advisor",
         icon: User,
+        description: "Connect with a financial advisor.",
+      },
+    ],
+  },
+  {
+    title: "Boutique Family Office",
+    items: [
+      {
+        title: "About Us",
+        href: "/about",
+        icon: Info,
+        description: "Learn about our company and mission.",
       },
       {
-        title: 'Account',
-        href: '/settings/account',
+        title: "Contact",
+        href: "/contact",
+        icon: MoveRight,
+        description: "Get in touch with our team.",
+      },
+      {
+        title: "Settings",
+        href: "/settings",
         icon: Settings,
-      },
-    ],
-  },
-  {
-    title: "Project Integration",
-    href: "/integration",
-    icon: <Network className="h-5 w-5" />, // Make sure to import Network from lucide-react
-    items: [
-      {
-        title: "Connected Projects",
-        href: "/integration/connected-projects",
-      },
-      {
-        title: "Architecture",
-        href: "/integration/architecture",
-      },
-      {
-        title: "API Integrations",
-        href: "/integration/api",
-      },
-      {
-        title: "Plugins",
-        href: "/integration/plugins",
+        description: "Manage your account settings.",
       },
     ],
   },
 ];
-
-export const advisorNavigationData: SidebarNavItem[] = [
-  {
-    title: 'Advisor Overview',
-    icon: LayoutDashboard,
-    items: [
-      {
-        title: 'Dashboard',
-        href: '/advisor/dashboard',
-        icon: LayoutDashboardIcon,
-      },
-      {
-        title: 'Client Management',
-        href: '/advisor/clients',
-        icon: Users,
-      },
-      {
-        title: 'Portfolio Analysis',
-        href: '/advisor/portfolio-analysis',
-        icon: BarChart,
-      },
-    ],
-  },
-  {
-    title: 'Communication',
-    icon: MessageSquare,
-    items: [
-      {
-        title: 'Messages',
-        href: '/advisor/communication/messages',
-        icon: MessageSquare,
-      },
-      {
-        title: 'Notifications',
-        href: '/advisor/communication/notifications',
-        icon: Mailbox,
-      },
-    ],
-  },
-  {
-    title: 'Resources',
-    icon: FileText,
-    items: [
-      {
-        title: 'Research',
-        href: '/advisor/resources/research',
-        icon: FileSearch2,
-      },
-      {
-        title: 'Templates',
-        href: '/advisor/resources/templates',
-        icon: LayoutTemplate,
-      },
-    ],
-  },
-  {
-    title: 'Settings',
-    icon: Settings,
-    items: [
-      {
-        title: 'Profile',
-        href: '/advisor/settings/profile',
-        icon: User,
-      },
-      {
-        title: 'Account',
-        href: '/advisor/settings/account',
-        icon: Settings,
-      },
-    ],
-  },
-];
-
-export const marketingNavigationData: SidebarNavItem[] = [
-  {
-    title: 'Marketing Overview',
-    icon: LayoutDashboard,
-    items: [
-      {
-        title: 'Dashboard',
-        href: '/marketing/dashboard',
-        icon: LayoutDashboardIcon,
-      },
-      {
-        title: 'Campaigns',
-        href: '/marketing/campaigns',
-        icon: TrendingUp,
-      },
-      {
-        title: 'Analytics',
-        href: '/marketing/analytics',
-        icon: BarChart,
-      },
-    ],
-  },
-  {
-    title: 'Content',
-    icon: ScrollText,
-    items: [
-      {
-        title: 'Blog Posts',
-        href: '/marketing/content/blog',
-        icon: ScrollText,
-      },
-      {
-        title: 'Email Templates',
-        href: '/marketing/content/email',
-        icon: Mailbox,
-      },
-    ],
-  },
-  {
-    title: 'Social Media',
-    icon: Network,
-    items: [
-      {
-        title: 'Posts',
-        href: '/marketing/social/posts',
-        icon: MessageSquare,
-      },
-      {
-        title: 'Analytics',
-        href: '/marketing/social/analytics',
-        icon: BarChart,
-      },
-    ],
-  },
-  {
-    title: 'Settings',
-    icon: Settings,
-    items: [
-      {
-        title: 'Profile',
-        href: '/marketing/settings/profile',
-        icon: User,
-      },
-      {
-        title: 'Account',
-        href: '/marketing/settings/account',
-        icon: Settings,
-      },
-    ],
-  },
-];
-
-export const adminNavigationData: SidebarNavItem[] = [
-  {
-    title: 'Admin Overview',
-    icon: LayoutDashboard,
-    items: [
-      {
-        title: 'Dashboard',
-        href: '/admin/dashboard',
-        icon: LayoutDashboardIcon,
-      },
-      {
-        title: 'User Management',
-        href: '/admin/users',
-        icon: Users,
-      },
-      {
-        title: 'System Logs',
-        href: '/admin/logs',
-        icon: Activity,
-      },
-    ],
-  },
-  {
-    title: 'System Configuration',
-    icon: Settings,
-    items: [
-      {
-        title: 'Settings',
-        href: '/admin/settings/system',
-        icon: Settings,
-      },
-      {
-        title: 'Integrations',
-        href: '/admin/settings/integrations',
-        icon: Network,
-      },
-    ],
-  },
-  {
-    title: 'Data Management',
-    icon: FileText,
-    items: [
-      {
-        title: 'Backups',
-        href: '/admin/data/backups',
-        icon: File,
-      },
-      {
-        title: 'Database',
-        href: '/admin/data/database',
-        icon: FolderKanban,
-      },
-    ],
-  },
-  {
-    title: 'Security',
-    icon: ShieldCheck,
-    items: [
-      {
-        title: 'Firewall',
-        href: '/admin/security/firewall',
-        icon: ShieldCheck,
-      },
-      {
-        title: 'Audits',
-        href: '/admin/security/audits',
-        icon: ListChecks,
-      },
-    ],
-  },
-];
-
-export const mainNavigation: MainNavItem[] = [
-  {
-    title: 'Home',
-    href: '/',
-  },
-  {
-    title: 'Features',
-    href: '/#features',
-  },
-  {
-    title: 'Pricing',
-    href: '/pricing',
-  },
-  {
-    title: 'Contact',
-    href: '/contact',
-  },
-  {
-    title: 'Login',
-    href: '/auth',
-  },
-];
-
-export const siteConfig = {
-  name: 'Boutique Family Office',
-  description:
-    'Your personalized path to lasting prosperity. Choose the approach that best matches your financial journey.',
-  url: 'https://localhost:3000',
-  ogImage: 'https://ui.shadcn.com/og.jpg',
-  links: {
-    twitter: 'https://twitter.com/shadcn',
-    github: 'https://github.com/shadcn/ui',
-  },
-  mainNav: mainNavigation,
-  sidebarNav: dashboardNavigationData,
-};
-
-export default siteConfig;
