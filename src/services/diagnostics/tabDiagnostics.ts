@@ -1,3 +1,4 @@
+
 import { DiagnosticTestStatus } from './types';
 import { NavigationTestResult } from './types';
 

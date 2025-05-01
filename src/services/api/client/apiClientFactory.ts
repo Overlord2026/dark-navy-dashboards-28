@@ -130,17 +130,22 @@ export function createApiClient(options: ApiClientOptions): AxiosInstance {
     (error: AxiosError) => {
       // Handle and log error
       if (error.response) {
-        logger.error(`API Error: ${error.response.status} ${error.config?.url}`, {
+        logger.error(`API Error: ${error.response.status} ${error.config?.url || 'unknown'}`, {
           url: error.config?.url,
           status: error.response.status,
           statusText: error.response.statusText,
           data: safeStringify(error.response.data)
         }, 'ApiClient');
-      } else {
-        logger.error(`API Request Failed: ${error.message}`, {
-          url: error.config?.url,
+      } else if (error.request) {
+        logger.error(`API Request Failed: ${error.message || 'Unknown error'}`, {
+          url: error.config?.url || 'unknown',
           code: error.code,
-          message: error.message
+          message: error.message || 'Unknown error'
+        }, 'ApiClient');
+      } else {
+        logger.error(`API Error: ${error.message || 'Unknown error'}`, {
+          code: error.code,
+          message: error.message || 'Unknown error'
         }, 'ApiClient');
       }
       
@@ -175,10 +180,10 @@ export function createApiClient(options: ApiClientOptions): AxiosInstance {
       retryCount = config._retryCount;
 
       // Log retry attempt
-      logger.warning(`API Retry ${retryCount}/${mergedRetryConfig.retries}: ${config.url}`, {
+      logger.warning(`API Retry ${retryCount}/${mergedRetryConfig.retries}: ${config.url || 'unknown'}`, {
         url: config.url,
         retryCount,
-        error: error.message
+        error: error.message || 'Unknown error'
       }, 'ApiClient');
 
       // Calculate delay with exponential backoff

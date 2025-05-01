@@ -27,4 +27,9 @@ export interface FormValidationTestResult {
   message?: string;
   timestamp: number;
   success?: boolean;
+  validationDetails?: {
+    invalidFields?: string[];
+    unexpectedErrors?: string[];
+    missingErrors?: string[];
+  };
 }

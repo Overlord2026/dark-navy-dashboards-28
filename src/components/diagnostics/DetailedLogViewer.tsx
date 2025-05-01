@@ -87,73 +87,23 @@ export const DetailedLogViewer = () => {
         message: `System Diagnostic Test: Overall status is ${results.overall}`,
         source: "DiagnosticService",
         details: `Completed full diagnostic scan at ${new Date().toLocaleString()}. Found ${
-          Object.values(results).flat().filter((test: any) => test.status === "error").length
+          results.errors
         } errors and ${
-          Object.values(results).flat().filter((test: any) => test.status === "warning").length
+          results.warnings
         } warnings.`
       });
       
-      // Add logs for security tests
-      results.securityTests?.forEach((test: any, index: number) => {
+      // Process all diagnostic results from the results array
+      results.results.forEach((test: any, index: number) => {
+        const category = test.category || "general";
+        
         newLogs.push({
-          id: `security-${index}-${Date.now()}`,
+          id: `${category}-${index}-${Date.now()}`,
           timestamp: new Date().toISOString(),
           level: test.status as LogLevel,
-          message: `Security Test: ${test.name}`,
-          source: "SecurityService",
-          details: `${test.message}${test.severity ? ` | Severity: ${test.severity}` : ''}${
-            test.remediation ? ` | Remediation: ${test.remediation}` : ''
-          }`
-        });
-      });
-      
-      // Add logs for API integration tests
-      results.apiIntegrationTests?.forEach((test: any, index: number) => {
-        newLogs.push({
-          id: `api-${index}-${Date.now()}`,
-          timestamp: new Date().toISOString(),
-          level: test.status as LogLevel,
-          message: `API Test: ${test.service} (${test.endpoint})`,
-          source: "ApiService",
-          details: `${test.message} | Response Time: ${test.responseTime}ms${
-            test.authStatus ? ` | Auth Status: ${test.authStatus}` : ''
-          }`
-        });
-      });
-      
-      // Add logs for navigation tests
-      results.navigationTests?.forEach((test: any, index: number) => {
-        newLogs.push({
-          id: `nav-${index}-${Date.now()}`,
-          timestamp: new Date().toISOString(),
-          level: test.status as LogLevel,
-          message: `Navigation Test: ${test.route}`,
-          source: "RouterService",
-          details: test.message
-        });
-      });
-      
-      // Add logs for permission tests
-      results.permissionsTests?.forEach((test: any, index: number) => {
-        newLogs.push({
-          id: `perm-${index}-${Date.now()}`,
-          timestamp: new Date().toISOString(),
-          level: test.status as LogLevel,
-          message: `Permission Test: ${test.role} - ${test.permission}`,
-          source: "AuthorizationService",
-          details: test.message
-        });
-      });
-      
-      // Add logs for performance tests
-      results.performanceTests?.forEach((test: any, index: number) => {
-        newLogs.push({
-          id: `perf-${index}-${Date.now()}`,
-          timestamp: new Date().toISOString(),
-          level: test.status as LogLevel,
-          message: `Performance Test: ${test.name}`,
-          source: "PerformanceService",
-          details: `${test.message} | Response Time: ${test.responseTime}ms | CPU: ${test.cpuUsage}% | Memory: ${test.memoryUsage}MB`
+          message: `${category} Test: ${test.name || test.id}`,
+          source: `${category.charAt(0).toUpperCase() + category.slice(1)}Service`,
+          details: test.message || `${category} test completed with status: ${test.status}`
         });
       });
       
