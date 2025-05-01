@@ -43,7 +43,7 @@ export const SocialLoginButton: React.FC<SocialLoginButtonProps> = ({
               />
             </svg>
           ),
-          bgColor: 'bg-gray-100 text-gray-800 border border-gray-300 hover:bg-gray-200'
+          bgColor: 'bg-gray-100 text-black border border-gray-300 hover:bg-gray-200 shadow-sm'
         };
       case 'microsoft':
         return {
@@ -56,7 +56,7 @@ export const SocialLoginButton: React.FC<SocialLoginButtonProps> = ({
               <path fill="#ffba08" d="M12 12h10v10H12z" />
             </svg>
           ),
-          bgColor: 'bg-gray-100 text-gray-800 border border-gray-300 hover:bg-gray-200'
+          bgColor: 'bg-gray-100 text-black border border-gray-300 hover:bg-gray-200 shadow-sm'
         };
       case 'apple':
         return {
@@ -88,7 +88,7 @@ export const SocialLoginButton: React.FC<SocialLoginButtonProps> = ({
     >
       <div className="flex items-center justify-center">
         {details.icon}
-        <span className="font-medium">{details.label}</span>
+        <span className="font-semibold text-black">{details.label}</span>
       </div>
       <Shield className="h-4 w-4 absolute right-3 text-green-600" />
     </Button>
