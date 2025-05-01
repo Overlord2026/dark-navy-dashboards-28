@@ -24,6 +24,7 @@ export const SegmentCard: React.FC<SegmentCardProps> = ({
   icon: Icon,
   tagline,
   buttonText,
+  onClick,
   isMobile,
   benefits,
 }) => {
