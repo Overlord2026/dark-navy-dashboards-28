@@ -28,7 +28,7 @@ function App() {
         {/* Advisor routes */}
         <Route path="/advisor" element={<AdvisorDashboard />} />
         
-        {/* Include integration route */}
+        {/* Include integration routes - must be spread, not directly included */}
         {integrationRoutes}
         
         {/* Include route groups */}

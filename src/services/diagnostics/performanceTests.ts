@@ -11,7 +11,7 @@ export function runComponentPerformanceTests(): PerformanceTestResult[] {
       metric: "Render Time",
       value: 120,
       threshold: 100,
-      status: DiagnosticTestStatus.WARNING,
+      status: "warning",
       message: "Dashboard renders slower than optimal threshold",
       timestamp: new Date().toISOString(),
       details: { renderCalls: 5, reRenders: 2 }
@@ -22,7 +22,7 @@ export function runComponentPerformanceTests(): PerformanceTestResult[] {
       metric: "Data Loading",
       value: 350,
       threshold: 500,
-      status: DiagnosticTestStatus.SUCCESS,
+      status: "success",
       message: "Asset table data loads within acceptable time",
       timestamp: new Date().toISOString(),
       details: { dataPoints: 250, queryTime: "342ms" }
@@ -33,7 +33,7 @@ export function runComponentPerformanceTests(): PerformanceTestResult[] {
       metric: "Animation FPS",
       value: 45,
       threshold: 60,
-      status: DiagnosticTestStatus.WARNING,
+      status: "warning",
       message: "Chart animations dropping frames on lower-end devices",
       timestamp: new Date().toISOString(),
       details: { averageFPS: 45, minFPS: 30 }
@@ -41,4 +41,8 @@ export function runComponentPerformanceTests(): PerformanceTestResult[] {
   ];
   
   return results;
+}
+
+export function runPerformanceTests(): PerformanceTestResult[] {
+  return runComponentPerformanceTests();
 }

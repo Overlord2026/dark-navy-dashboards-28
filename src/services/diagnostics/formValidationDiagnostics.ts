@@ -1,6 +1,6 @@
 
 import { v4 as uuidv4 } from "uuid";
-import { DiagnosticTestStatus } from "./types";
+import { DiagnosticTestStatus } from "@/types/diagnostics/common";
 import { FormField, FormValidationTestResult } from "@/types/diagnostics";
 
 export function runFormValidationTests(): FormValidationTestResult[] {
@@ -20,7 +20,7 @@ export function runFormValidationTests(): FormValidationTestResult[] {
     formId: "profile-form",
     formName: "Profile Update Form",
     testName: "Required Fields Validation",
-    status: DiagnosticTestStatus.SUCCESS,
+    status: "success",
     message: "All required fields are properly validated",
     timestamp: new Date().toISOString(),
     validationDetails: {
@@ -29,7 +29,7 @@ export function runFormValidationTests(): FormValidationTestResult[] {
     fields: profileFormFields.map(field => ({
       name: field.name,
       type: field.type,
-      status: DiagnosticTestStatus.SUCCESS,
+      status: "success",
       validations: field.validations
     })),
   });
@@ -47,7 +47,7 @@ export function runFormValidationTests(): FormValidationTestResult[] {
     formId: "payment-form",
     formName: "Payment Form",
     testName: "Payment Card Validation",
-    status: DiagnosticTestStatus.WARNING,
+    status: "warning",
     message: "Credit card validation could be improved",
     timestamp: new Date().toISOString(),
     validationDetails: {
@@ -57,7 +57,7 @@ export function runFormValidationTests(): FormValidationTestResult[] {
     fields: paymentFormFields.map(field => ({
       name: field.name,
       type: field.type,
-      status: field.name === "cardNumber" ? DiagnosticTestStatus.WARNING : DiagnosticTestStatus.SUCCESS,
+      status: field.name === "cardNumber" ? "warning" : "success",
       validations: field.validations,
       errors: field.name === "cardNumber" ? ["Incomplete validation rules"] : undefined
     })),

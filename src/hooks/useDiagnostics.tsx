@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
 import { toast } from 'sonner';
 import { DiagnosticResult, Recommendation } from '@/types/diagnostics/common';
@@ -29,6 +28,11 @@ export const useDiagnostics = () => {
       const mockResults: DiagnosticResultSummary = {
         overall: 'warning',
         timestamp: new Date().toISOString(),
+        apiTests: { passed: 8, failed: 2, total: 10 },
+        navigationTests2: { passed: 12, failed: 1, total: 13 },
+        formValidationTests2: { passed: 5, failed: 0, total: 5 },
+        performanceTests2: { passed: 6, failed: 2, total: 8 },
+        securityTests2: { passed: 7, failed: 0, total: 7 },
         securityTests: [
           {
             id: 'sec-1',
@@ -85,6 +89,15 @@ export const useDiagnostics = () => {
             status: 'success',
             message: 'All icons loaded correctly',
             timestamp: new Date().toISOString(),
+          }
+        ],
+        recommendations: [
+          {
+            id: 'rec-1',
+            text: 'Optimize API calls to improve response time',
+            priority: 'medium',
+            actionable: true,
+            action: 'View optimization guide',
           }
         ]
       };

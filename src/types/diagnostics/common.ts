@@ -1,30 +1,36 @@
 
-export type DiagnosticTestStatus = "success" | "warning" | "error";
-
-export interface DiagnosticResult {
-  id: string;
-  status: DiagnosticTestStatus;
-  message: string;
-  route?: string;
-  details?: any;
-  timestamp?: string | number;
+export enum DiagnosticTestStatus {
+  SUCCESS = "success",
+  WARNING = "warning",
+  ERROR = "error"
 }
 
 export interface Recommendation {
-  id?: string;
-  text: string;
-  priority: "low" | "medium" | "high";
-  actionable: boolean;
-  action?: string | { label: string; } | (() => Promise<void>);
-  category?: string;
+  id: string;
+  title?: string;
+  text?: string;
+  priority: "high" | "medium" | "low";
   description?: string;
-  effort?: string;
-  impact?: string;
+  actionable: boolean;
+  action?: string;
 }
 
-export interface DiagnosticModule {
+export interface QuickFix {
   id: string;
-  name: string;
+  title: string;
   description: string;
-  run: () => Promise<DiagnosticResult[]>;
+  area: string;
+  severity: "high" | "medium" | "low";
+  category: string;
+  actionable: boolean;
+}
+
+export interface FixHistoryEntry {
+  id: string;
+  title: string;
+  timestamp: string;
+  area: string;
+  severity: "high" | "medium" | "low";
+  description: string;
+  status: "success" | "failed" | "pending";
 }

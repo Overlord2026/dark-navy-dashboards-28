@@ -1,6 +1,6 @@
 
 import { v4 as uuidv4 } from "uuid";
-import { DiagnosticTestStatus } from "./types";
+import { DiagnosticTestStatus } from "@/types/diagnostics/common";
 
 export interface DiagnosticResult {
   id: string;

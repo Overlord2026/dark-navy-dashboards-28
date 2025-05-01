@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui
 import { NavigationTests } from './NavigationTests';
 import { Badge } from '../ui/badge';
 import { RecommendationsList } from './RecommendationsList';
-import { NavigationTestResult, DiagnosticResultSummary } from '@/types/diagnostics';
+import { NavigationTestResult, DiagnosticResultSummary, Recommendation } from '@/types/diagnostics';
 
 interface NavigationDiagnosticModuleProps {
   onComplete?: () => void;
@@ -61,13 +61,15 @@ export function NavigationDiagnosticModule({ onComplete }: NavigationDiagnosticM
             </Button>
           </div>
         ) : (
-          <NavigationTests results={results} />
+          <NavigationTests tests={results} />
         )}
 
-        {resultSummary && resultSummary.recommendations.length > 0 && (
-          <RecommendationsList recommendations={resultSummary.recommendations} />
+        {resultSummary && resultSummary.recommendations && resultSummary.recommendations.length > 0 && (
+          <RecommendationsList recommendations={resultSummary.recommendations as Recommendation[]} />
         )}
       </CardContent>
     </Card>
   );
 }
+
+export default NavigationDiagnosticModule;

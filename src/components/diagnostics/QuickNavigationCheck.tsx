@@ -1,9 +1,9 @@
 
 import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "../ui/button";
 import { Navigation } from "lucide-react";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import NavigationDiagnosticModule from "./NavigationDiagnosticModule";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
+import { NavigationDiagnosticModule } from "./NavigationDiagnosticModule";
 import { useUser } from "@/context/UserContext";
 
 interface QuickNavigationCheckProps {
