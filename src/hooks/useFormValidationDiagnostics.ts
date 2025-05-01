@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { FormValidationTestResult } from '@/types/diagnostics';
+import { FormValidationTestResult, FormField } from '@/types/diagnostics';
 
 interface UseFormValidationDiagnosticsProps {
   formId?: string;
@@ -16,7 +16,8 @@ const mockFormValidationTests: FormValidationTestResult[] = [
     location: '/auth/register',
     status: 'success',
     message: 'Email validation working correctly',
-    timestamp: Date.now() - 300000,
+    timestamp: new Date(Date.now() - 300000).toISOString(), // Use string timestamp
+    success: true,
     fields: [
       {
         id: "email-field",
@@ -25,7 +26,8 @@ const mockFormValidationTests: FormValidationTestResult[] = [
         validations: ['required', 'email'],
         value: 'test@example.com',
         status: 'success',
-        errors: []
+        errors: [],
+        valid: true
       }
     ]
   },
@@ -37,7 +39,8 @@ const mockFormValidationTests: FormValidationTestResult[] = [
     location: '/auth/register',
     status: 'warning',
     message: 'Password strength indicator showing warnings inconsistently',
-    timestamp: Date.now() - 200000,
+    timestamp: new Date(Date.now() - 200000).toISOString(), // Use string timestamp
+    success: false,
     fields: [
       {
         id: "password-field",
@@ -46,7 +49,8 @@ const mockFormValidationTests: FormValidationTestResult[] = [
         validations: ['required', 'minLength:8'],
         value: 'Password123',
         status: 'warning',
-        errors: ['Password not strong enough']
+        errors: ['Password not strong enough'],
+        valid: false
       }
     ]
   },
@@ -58,7 +62,8 @@ const mockFormValidationTests: FormValidationTestResult[] = [
     location: '/auth/login',
     status: 'error',
     message: 'Email validation not triggering on blur',
-    timestamp: Date.now() - 100000,
+    timestamp: new Date(Date.now() - 100000).toISOString(), // Use string timestamp
+    success: false,
     fields: [
       {
         id: "email-field",
@@ -67,7 +72,8 @@ const mockFormValidationTests: FormValidationTestResult[] = [
         validations: ['required', 'email'],
         value: 'invalid-email',
         status: 'error',
-        errors: ['Invalid email format']
+        errors: ['Invalid email format'],
+        valid: false
       }
     ]
   },
@@ -79,7 +85,8 @@ const mockFormValidationTests: FormValidationTestResult[] = [
     location: '/contact',
     status: 'success',
     message: 'Message length validation working correctly',
-    timestamp: Date.now() - 50000,
+    timestamp: new Date(Date.now() - 50000).toISOString(), // Use string timestamp
+    success: true,
     fields: [
       {
         id: "message-field",
@@ -88,7 +95,8 @@ const mockFormValidationTests: FormValidationTestResult[] = [
         validations: ['required', 'minLength:10'],
         value: 'This is a test message with proper length',
         status: 'success',
-        errors: []
+        errors: [],
+        valid: true
       }
     ]
   }
@@ -155,12 +163,11 @@ export const useFormValidationDiagnostics = (props?: UseFormValidationDiagnostic
     setError(null);
     
     try {
-      // In a real implementation, this would call the API
       await new Promise(resolve => setTimeout(resolve, 700));
       
       // Filter mock results for the specified form
       const formResults = mockFormValidationTests.filter(test => 
-        test.formId === formId || test.form === formId || test.formName === formId
+        test.formId === formId || test.formName === formId
       );
       
       if (testIndex !== undefined && formResults[testIndex]) {
@@ -204,7 +211,7 @@ export const useFormValidationDiagnostics = (props?: UseFormValidationDiagnostic
       const field = result.fields?.find(f => f.name === fieldName);
       if (field) {
         if (field.status) return field.status;
-        if (!field.valid) return 'error';
+        if (field.valid === false) return 'error';
         return field.errors && field.errors.length > 0 ? 'warning' : 'success';
       }
     }

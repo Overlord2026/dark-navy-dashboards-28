@@ -5,15 +5,21 @@ export interface DiagnosticResult {
   id: string;
   status: DiagnosticTestStatus;
   message: string;
+  route?: string;
   details?: any;
   timestamp?: number;
 }
 
 export interface Recommendation {
+  id?: string;
   text: string;
   priority: "low" | "medium" | "high";
   actionable: boolean;
-  action?: () => Promise<void>;
+  action?: string | { label: string; } | (() => Promise<void>);
+  category?: string;
+  description?: string;
+  effort?: string;
+  impact?: string;
 }
 
 export interface DiagnosticModule {

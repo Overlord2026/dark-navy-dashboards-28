@@ -1,11 +1,11 @@
 
-import { FormValidationTestResult } from '@/types/diagnostics';
+import { FormValidationTestResult, FormField } from '@/types/diagnostics';
 
 export const runFormValidationDiagnostics = async (): Promise<FormValidationTestResult[]> => {
   // This would typically connect to your form validation service
   // and run actual tests against your forms
   
-  // For now, we'll return mock data
+  // Now, we'll return mock data with string timestamps
   return [
     {
       id: "login-form-test",
@@ -14,8 +14,8 @@ export const runFormValidationDiagnostics = async (): Promise<FormValidationTest
       formName: "login-form",
       status: "success",
       message: "All validation rules working correctly",
-      timestamp: Date.now(),
-      success: true, // Added for consistency
+      timestamp: new Date().toISOString(), // Convert to string
+      success: true,
       fields: [
         {
           id: "email-field",
@@ -36,7 +36,7 @@ export const runFormValidationDiagnostics = async (): Promise<FormValidationTest
           message: "Password meets requirements"
         }
       ]
-    },
+    }
     // Add more form tests as needed
   ];
 };
@@ -45,20 +45,20 @@ export const validateFormSubmission = (formName: string, formData: Record<string
   // In a real application, this would validate the form data
   // against your validation rules
   
-  // For now, return a mock result
+  // For now, return a mock result with string timestamp
   return {
     id: `${formName}-submission`,
     name: formName,
+    formId: formName,
     formName: formName,
     status: "success",
     message: "Form submission validated successfully",
-    timestamp: Date.now(),
-    success: true, // Added for consistency
-    formId: formName, // Added for consistency
+    timestamp: new Date().toISOString(), // Convert to string
+    success: true,
     fields: Object.entries(formData).map(([key, value]) => ({
       id: `${key}-field`,
       name: key,
-      type: typeof value === "string" ? "text" : "checkbox" as any,
+      type: typeof value === "string" ? "text" : "checkbox",
       validations: ["required"],
       value: String(value),
       status: "success",
@@ -73,21 +73,21 @@ export const runSingleFormValidationTest = async (formId: string, testIndex?: nu
   if (testIndex !== undefined && testIndex >= 0 && testIndex < results.length) {
     return results[testIndex];
   }
-  const foundResult = results.find(result => result.id === formId);
+  const foundResult = results.find(result => result.formId === formId);
   return foundResult || {
     id: formId,
     name: "Unknown Form",
     status: "error",
     message: "Form test not found",
-    timestamp: Date.now(),
-    formId: formId, // Added for consistency
-    formName: "Unknown", // Added for consistency
-    success: false, // Added for consistency
+    timestamp: new Date().toISOString(), // Convert to string
+    formId: formId,
+    formName: "Unknown",
+    success: false,
     fields: []
   };
 };
 
 export const getAvailableFormTests = async (): Promise<string[]> => {
   const results = await runFormValidationDiagnostics();
-  return results.map(result => result.id);
+  return results.map(result => result.formId);
 };

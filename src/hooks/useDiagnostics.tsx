@@ -1,6 +1,8 @@
+
 import { useState, useEffect } from "react";
 import { runDiagnostics } from "@/services/diagnostics";
-import { DiagnosticTestStatus } from "@/services/diagnostics/types";
+import { DiagnosticTestStatus } from "@/types/diagnostics/common";
+import { QuickFix, FixHistoryEntry } from "@/types/diagnostics/recommendations";
 import { toast } from "sonner";
 
 export interface QuickFix {

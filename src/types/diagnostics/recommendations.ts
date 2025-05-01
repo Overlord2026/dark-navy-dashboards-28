@@ -4,12 +4,12 @@ import { DiagnosticTestStatus } from './common';
 
 // Define the Recommendation interface (moved from common.ts to avoid circular dependencies)
 export interface Recommendation {
-  id: string;
+  id?: string;
   text: string;
   priority: 'high' | 'medium' | 'low';
   category: 'security' | 'performance' | 'reliability' | 'usability';
   actionable: boolean;
-  action?: string | { label: string; };
+  action?: string | { label: string; } | (() => Promise<void>);
   effort?: string;
   impact?: string;
   description?: string;
