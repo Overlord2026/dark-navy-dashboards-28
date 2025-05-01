@@ -3,11 +3,10 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
-import { LucideIcon, BookOpen, BriefcaseIcon, FileText, MessageSquare, ChevronDown, ChevronRight } from "lucide-react";
+import { LucideIcon, BookOpen, BriefcaseIcon, FileText, MessageSquare, ChevronDown, ChevronRight, VaultIcon, BanknoteIcon } from "lucide-react";
 import { UserProfileSection } from "@/components/sidebar/UserProfileSection";
 import { AdvisorProfile } from "@/components/sidebar/AdvisorProfile";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import Logo from "../common/Logo";
 
 interface NavItem {
   name: string;

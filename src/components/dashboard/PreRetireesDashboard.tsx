@@ -1,64 +1,67 @@
 
 import React from "react";
-import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { useProfile } from "@/hooks/useProfile";
-import { BookIcon, ArrowRightIcon } from "lucide-react";
-import { AssetsSummary } from "./AssetsSummary";
+import { SegmentAwareHero } from "./SegmentAwareHero";
+import { FreeTrialCallout } from "./FreeTrialCallout";
+import { WalletIcon, ShieldIcon, FileTextIcon } from "lucide-react";
 
-interface PreRetieesDashboardProps {
+interface PreRetireesDashboardProps {
   segment?: string;
 }
 
-export function PreRetireesDashboard({ segment }: PreRetieesDashboardProps) {
+export function PreRetireesDashboard({ segment }: PreRetireesDashboardProps) {
   const { profile, loading } = useProfile();
 
   return (
     <div className="container mx-auto px-4 py-6 max-w-7xl">
-      <div className="space-y-6">
-        {/* Assets Summary */}
-        <AssetsSummary />
-        
-        {/* Two side-by-side cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Education & Solutions Card */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <BookIcon className="h-5 w-5 text-primary" />
-                Learning Modules
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground">
-                Explore our learning center to build your financial knowledge.
-              </p>
-            </CardContent>
-            <CardFooter>
-              <Button className="ml-auto flex items-center gap-2" variant="outline">
-                Go to Education Center
-                <ArrowRightIcon className="h-4 w-4" />
-              </Button>
-            </CardFooter>
-          </Card>
-          
-          {/* My Profile & Trial Card */}
-          <Card>
-            <CardHeader>
-              <CardTitle>90-Day Trial</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground">
-                Start your free 90-day trial
-              </p>
-            </CardContent>
-            <CardFooter>
-              <Button className="ml-auto" variant="default">
-                Create Your Profile
-              </Button>
-            </CardFooter>
-          </Card>
+      {/* Animated Header Banner */}
+      <div className="mb-8 p-6 bg-[#1a202c] rounded-lg shadow-md">
+        <div className="flex items-center justify-between">
+          <span className="text-[#d4af37] text-xl font-semibold animate-pulse">
+            Organize
+          </span>
+          <SegmentAwareHero />
+          <span className="text-[#d4af37] text-xl font-semibold animate-pulse">
+            Maximize
+          </span>
         </div>
+      </div>
+      
+      {/* Free Trial Callout */}
+      <FreeTrialCallout />
+      
+      {/* Main Content - Segment Specific Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <Card className="p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-semibold">Income & Withdrawal Planner</h2>
+            <WalletIcon className="h-6 w-6 text-emerald-500" />
+          </div>
+          <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-md text-center">
+            Plan your retirement income strategy
+          </div>
+        </Card>
+        
+        <Card className="p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-semibold">Risk Protection Tools</h2>
+            <ShieldIcon className="h-6 w-6 text-blue-500" />
+          </div>
+          <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-md text-center">
+            Safeguard your retirement assets
+          </div>
+        </Card>
+        
+        <Card className="p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-semibold">Estate & Legacy Guide</h2>
+            <FileTextIcon className="h-6 w-6 text-amber-500" />
+          </div>
+          <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-md text-center">
+            Comprehensive estate planning resources
+          </div>
+        </Card>
       </div>
     </div>
   );

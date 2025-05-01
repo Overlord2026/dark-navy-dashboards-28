@@ -1,71 +1,226 @@
 
-import React from 'react';
-import { PerformanceTestResult } from '@/types/diagnostics';
-import { 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableHead, 
-  TableHeader, 
-  TableRow 
-} from '@/components/ui/table';
-import { CheckCircle, AlertCircle, AlertTriangle } from 'lucide-react';
+import { Activity, Clock, Cpu, ExternalLink, Wrench } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { StatusIcon, getStatusColor } from "./StatusIcon";
+import { Progress } from "@/components/ui/progress";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { toast } from "sonner";
 
 interface PerformanceTestsProps {
-  tests: PerformanceTestResult[];
+  tests: any[];
+  isLoading?: boolean;
 }
 
-export function PerformanceTests({ tests }: PerformanceTestsProps) {
-  if (!tests || tests.length === 0) {
+export const PerformanceTests = ({ tests, isLoading = false }: PerformanceTestsProps) => {
+  const [fixInProgress, setFixInProgress] = useState<string | null>(null);
+
+  const handleFix = async (testId: string, testName: string) => {
+    setFixInProgress(testId);
+    
+    try {
+      // Simulate fix process
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      toast.success(`Fix applied successfully for "${testName}"`, {
+        description: "The performance issue has been addressed.",
+      });
+    } catch (error) {
+      toast.error(`Unable to fix "${testName}"`, {
+        description: "Please try the manual steps or contact support.",
+      });
+    } finally {
+      setFixInProgress(null);
+    }
+  };
+
+  if (isLoading) {
     return (
-      <div className="text-center py-10 text-muted-foreground">
-        No performance tests have been run yet.
-      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Activity className="h-5 w-5" />
+            Performance & Load Tests
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            {[1, 2, 3].map((_, i) => (
+              <div key={i} className="space-y-2">
+                <Skeleton className="h-6 w-3/4" />
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-8 w-full" />
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
     );
   }
 
   return (
-    <div className="space-y-4">
-      <h3 className="text-lg font-medium">Performance Test Results</h3>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-[100px]">Status</TableHead>
-            <TableHead>Component</TableHead>
-            <TableHead>Metric</TableHead>
-            <TableHead className="text-right">Value</TableHead>
-            <TableHead className="text-right">Threshold</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {tests.map((test) => (
-            <TableRow key={test.id}>
-              <TableCell>
-                {test.status === "pass" || test.status === "success" ? (
-                  <div className="flex items-center text-green-600">
-                    <CheckCircle className="h-4 w-4 mr-1" />
-                    <span>Pass</span>
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Activity className="h-5 w-5" />
+          Performance & Load Tests
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-4">
+          {tests.map((test, index) => (
+            <Collapsible key={index}>
+              <div className={`p-4 rounded-md border ${getStatusColor(test.status)}`}>
+                <CollapsibleTrigger className="w-full text-left">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-start gap-2">
+                      <StatusIcon status={test.status} />
+                      <div>
+                        <span className="font-medium">{test.name}</span>
+                        <p className="text-sm text-muted-foreground">Endpoint: {test.endpoint}</p>
+                      </div>
+                    </div>
+                    <span className="text-sm px-2 py-1 rounded-full bg-muted">
+                      {test.status}
+                    </span>
                   </div>
-                ) : test.status === "warn" || test.status === "warning" ? (
-                  <div className="flex items-center text-amber-600">
-                    <AlertTriangle className="h-4 w-4 mr-1" />
-                    <span>Warning</span>
+                  
+                  <p className="text-sm mb-3">{test.message}</p>
+                </CollapsibleTrigger>
+                
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="space-y-1">
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="flex items-center gap-1 text-muted-foreground">
+                        <Clock className="h-3 w-3" /> Response Time
+                      </span>
+                      <span className={test.responseTime > 1000 ? "text-destructive" : 
+                                      test.responseTime > 500 ? "text-amber-500" : 
+                                      "text-emerald-500"}>
+                        {test.responseTime}ms
+                      </span>
+                    </div>
+                    <Progress value={Math.min(100, (test.responseTime / 15))} 
+                              className={test.responseTime > 1000 ? "text-destructive" : 
+                                        test.responseTime > 500 ? "text-amber-500" : 
+                                        "text-emerald-500"} />
                   </div>
-                ) : (
-                  <div className="flex items-center text-red-600">
-                    <AlertCircle className="h-4 w-4 mr-1" />
-                    <span>Fail</span>
+                  
+                  <div className="space-y-1">
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="flex items-center gap-1 text-muted-foreground">
+                        <Cpu className="h-3 w-3" /> CPU Usage
+                      </span>
+                      <span className={test.cpuUsage > 70 ? "text-destructive" : 
+                                      test.cpuUsage > 40 ? "text-amber-500" : 
+                                      "text-emerald-500"}>
+                        {test.cpuUsage}%
+                      </span>
+                    </div>
+                    <Progress value={test.cpuUsage} 
+                              className={test.cpuUsage > 70 ? "text-destructive" : 
+                                        test.cpuUsage > 40 ? "text-amber-500" : 
+                                        "text-emerald-500"} />
+                  </div>
+                  
+                  <div className="space-y-1">
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="flex items-center gap-1 text-muted-foreground">
+                        Concurrent Users
+                      </span>
+                      <span>{test.concurrentUsers}</span>
+                    </div>
+                    <Progress value={Math.min(100, (test.concurrentUsers / 1.5))} />
+                  </div>
+                </div>
+                
+                {test.status !== "success" && (
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {test.canAutoFix && (
+                      <Button 
+                        variant="default" 
+                        size="sm" 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleFix(`perf-${index}`, test.name);
+                        }}
+                        disabled={fixInProgress === `perf-${index}`}
+                        className="flex items-center gap-1"
+                      >
+                        <Wrench className="h-3.5 w-3.5" />
+                        {fixInProgress === `perf-${index}` ? "Fixing..." : "Fix Issue"}
+                      </Button>
+                    )}
+                    
+                    {test.documentationUrl && (
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          window.open(test.documentationUrl, '_blank');
+                        }}
+                        className="flex items-center gap-1"
+                      >
+                        <ExternalLink className="h-3.5 w-3.5" />
+                        Learn More
+                      </Button>
+                    )}
                   </div>
                 )}
-              </TableCell>
-              <TableCell>{test.component}</TableCell>
-              <TableCell>{test.metric}</TableCell>
-              <TableCell className="text-right">{test.value}</TableCell>
-              <TableCell className="text-right">{test.threshold}</TableCell>
-            </TableRow>
+                
+                <CollapsibleContent>
+                  <div className="border-t mt-4 pt-4">
+                    <div className="mt-3">
+                      <h4 className="text-sm font-medium mb-1">Detailed Performance Analysis:</h4>
+                      <div className="bg-muted p-2 rounded text-xs font-mono overflow-x-auto">
+                        <p>[{new Date().toISOString()}] Performance test results for {test.name}</p>
+                        <p>Endpoint: {test.endpoint}</p>
+                        <p>Response Time: {test.responseTime}ms</p>
+                        <p>CPU Usage: {test.cpuUsage}%</p>
+                        <p>Memory Usage: {test.memoryUsage}MB</p>
+                        <p>Concurrent Users: {test.concurrentUsers}</p>
+                        <p>Status: {test.status}</p>
+                      </div>
+                    </div>
+                    
+                    {test.status !== "success" && (
+                      <div className="mt-3">
+                        <h4 className="text-sm font-medium mb-1">Recommendations:</h4>
+                        <ul className="list-disc list-inside text-sm space-y-1">
+                          {test.responseTime > 1000 && (
+                            <li>Optimize endpoint response time - current value exceeds recommended threshold</li>
+                          )}
+                          {test.cpuUsage > 70 && (
+                            <li>High CPU usage detected - review resource-intensive operations</li>
+                          )}
+                          {test.memoryUsage > 500 && (
+                            <li>High memory consumption - check for potential memory leaks</li>
+                          )}
+                          {test.concurrentUsers < 10 && (
+                            <li>Low concurrency support - improve scalability for production use</li>
+                          )}
+                          <li>Consider implementing caching mechanisms to improve performance</li>
+                          <li>Review database queries for optimization opportunities</li>
+                        </ul>
+                      </div>
+                    )}
+                    
+                    {test.fixMessage && (
+                      <div className="mt-3">
+                        <h4 className="text-sm font-medium mb-1">Fix Details:</h4>
+                        <p className="text-sm">{test.fixMessage}</p>
+                      </div>
+                    )}
+                  </div>
+                </CollapsibleContent>
+              </div>
+            </Collapsible>
           ))}
-        </TableBody>
-      </Table>
-    </div>
+        </div>
+      </CardContent>
+    </Card>
   );
-}
+};

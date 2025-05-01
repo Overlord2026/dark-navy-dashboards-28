@@ -1,24 +1,37 @@
-// src/routes/dashboard-routes.tsx
-import React from 'react'
-import { RouteObject } from 'react-router-dom'
-import Dashboard from '@/pages/Dashboard'
-import SystemHealthDashboard from '@/pages/SystemHealthDashboard'
-import FullSystemDiagnostics from '@/pages/FullSystemDiagnostics'
 
-const dashboardRoutes: RouteObject[] = [
+import Landing from "@/pages/Landing";
+import Dashboard from "@/pages/dashboard"; 
+import AdvisorDashboard from "@/pages/AdvisorDashboard";
+import LoginPage from "@/pages/LoginPage";
+import AdvisorLanding from "@/pages/AdvisorLanding";
+
+export const dashboardRoutes = [
   {
-    path: '/dashboard',
+    path: "/",
+    element: <Landing />,
+  },
+  {
+    path: "/dashboard",
     element: <Dashboard />,
   },
   {
-    path: '/dashboard/health',
-    element: <SystemHealthDashboard />,
+    path: "/index",
+    element: <Landing />,
   },
   {
-    path: '/dashboard/diagnostics',
-    element: <FullSystemDiagnostics />,
+    path: "/advisor/login",
+    element: <LoginPage isAdvisor={true} />,
   },
-]
-
-export default dashboardRoutes
-
+  {
+    path: "/advisor/dashboard",
+    element: <AdvisorDashboard />,
+  },
+  {
+    path: "/advisor",
+    element: <AdvisorLanding />,
+  },
+  {
+    path: "/advisor/*",
+    element: <AdvisorDashboard />,
+  },
+];

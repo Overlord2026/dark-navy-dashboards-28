@@ -5,16 +5,14 @@ export const runFormValidationTests = async (): Promise<FormValidationTestResult
   // This would typically connect to your form validation service
   // and run actual tests against your forms
   
-  // For now, we'll return mock data with string timestamps
+  // For now, we'll return mock data
   return [
     {
       id: "login-form-test",
       name: "Login Form",
       status: "success",
       message: "All validation rules working correctly",
-      timestamp: new Date().toISOString(), // Convert to string
-      formId: "login-form",
-      success: true,
+      timestamp: Date.now(),
       fields: [
         {
           id: "email-field",
@@ -35,7 +33,7 @@ export const runFormValidationTests = async (): Promise<FormValidationTestResult
           message: "Password meets requirements"
         }
       ]
-    }
+    },
     // Add more form tests as needed
   ];
 };
@@ -44,15 +42,13 @@ export const validateFormSubmission = (formName: string, formData: Record<string
   // In a real application, this would validate the form data
   // against your validation rules
   
-  // For now, return a mock result with string timestamp
+  // For now, return a mock result
   return {
     id: `${formName}-submission`,
     name: formName,
     status: "success",
     message: "Form submission validated successfully",
-    timestamp: new Date().toISOString(), // Convert to string
-    formId: formName,
-    success: true,
+    timestamp: Date.now(),
     fields: Object.entries(formData).map(([key, value]) => ({
       id: `${key}-field`,
       name: key,

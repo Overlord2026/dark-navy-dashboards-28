@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { 
   Home, 
@@ -13,6 +13,7 @@ import { useTheme } from "@/context/ThemeContext";
 import { useUser } from "@/context/UserContext";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { BrandedHeader } from "@/components/layout/BrandedHeader";
 
 interface MobileLayoutProps {
   children: React.ReactNode;
@@ -49,9 +50,11 @@ export function MobileLayout({
   };
 
   return (
-    <div className="flex flex-col h-screen bg-[#12121C] text-white overflow-hidden">
+    <div className="flex flex-col h-screen bg-[#12121C] text-white overflow-hidden pt-16">
+      <BrandedHeader />
+      
       {/* Page Header - Only showing title and add button */}
-      <header className="w-full flex justify-between items-center py-4 px-4 bg-[#12121C] border-b border-gray-800 fixed top-[80px] left-0 right-0 z-10">
+      <header className="w-full flex justify-between items-center py-4 px-4 bg-[#12121C] border-b border-gray-800">
         <h1 className="text-2xl font-bold">{title}</h1>
         {showAddButton && (
           <Button 
@@ -65,8 +68,8 @@ export function MobileLayout({
         )}
       </header>
       
-      {/* Main Content Area - Updated with correct padding for the main header (80px) + page header */}
-      <main className="flex-1 overflow-y-auto pb-20 pt-[144px]">
+      {/* Main Content Area */}
+      <main className="flex-1 overflow-y-auto pb-20">
         {children}
       </main>
       

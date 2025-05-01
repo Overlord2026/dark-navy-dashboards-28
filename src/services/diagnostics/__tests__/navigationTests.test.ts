@@ -1,5 +1,5 @@
 
-import { runNavigationTests } from '../navigationTests';
+import { testNavigation } from '../navigationTests';
 
 // Mock any dependencies
 jest.mock('../tabDiagnostics', () => ({
@@ -25,7 +25,7 @@ jest.mock('../tabDiagnostics', () => ({
 /**
  * Test suite for the navigationTests module
  * 
- * This suite verifies that the runNavigationTests function correctly:
+ * This suite verifies that the testNavigation function correctly:
  * - Returns results in the expected format
  * - Handles successful test cases
  * - Properly reports test statuses
@@ -35,10 +35,10 @@ jest.mock('../tabDiagnostics', () => ({
  */
 describe('Navigation Tests', () => {
   /**
-   * Verifies that runNavigationTests returns results in the expected format
+   * Verifies that testNavigation returns results in the expected format
    */
   it('should return an array of test results', async () => {
-    const results = runNavigationTests();
+    const results = await testNavigation();
     
     // Verify that the results are an array with at least one element
     expect(Array.isArray(results)).toBe(true);
@@ -66,7 +66,7 @@ describe('Navigation Tests', () => {
       new Error('Test error')
     );
     
-    const results = await runNavigationTests();
+    const results = await testNavigation();
     
     // Find the dashboard test result
     const dashboardResult = results.find(r => r.route === '/dashboard');
@@ -102,7 +102,7 @@ describe('Navigation Tests', () => {
    * 
    * 3. Add a specific test for the new tab if needed:
    *    it('should test the new feature tab', async () => {
-   *      const results = await runNavigationTests();
+   *      const results = await testNavigation();
    *      const newFeatureResult = results.find(r => r.route === '/new-feature');
    *      expect(newFeatureResult).toBeDefined();
    *      expect(newFeatureResult?.status).toBe('success');

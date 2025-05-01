@@ -1,6 +1,6 @@
 
 import { AlertTriangle, CheckCircle, HelpCircle, XCircle } from "lucide-react";
-import { DiagnosticTestStatus } from "@/types/diagnostics/common";
+import { DiagnosticTestStatus } from "@/services/diagnostics/types";
 
 interface StatusIconProps {
   status: DiagnosticTestStatus;

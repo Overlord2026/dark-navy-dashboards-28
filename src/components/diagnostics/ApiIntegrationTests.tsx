@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -64,10 +65,9 @@ export function ApiIntegrationTests({
     }
   };
   
-  const runDiagnosticFix = async (testId: string) => {
+  const runDiagnosticFix = async (testId: string, serviceName: string) => {
     try {
-      // Fix: Updated to pass only one argument as expected by the hook
-      await applyDiagnosticFix(testId);
+      await applyDiagnosticFix(testId, "api", serviceName);
     } catch (error) {
       console.error("Error applying fix:", error);
     }
@@ -174,7 +174,7 @@ export function ApiIntegrationTests({
                           variant="default" 
                           size="sm"
                           disabled={!!fixInProgress}
-                          onClick={() => runDiagnosticFix(test.id)}
+                          onClick={() => runDiagnosticFix(test.id, test.service)}
                         >
                           {fixInProgress === test.id ? (
                             <>

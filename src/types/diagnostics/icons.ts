@@ -3,10 +3,14 @@ import { DiagnosticTestStatus } from './common';
 
 export interface IconTestResult {
   id: string;
-  name: string;
+  name?: string;
+  icon?: string;
+  location?: string;
+  iconName?: string;
   status: DiagnosticTestStatus;
   message: string;
-  iconName: string;
-  timestamp: string;
-  details?: any;
+  iconType: string;
+  renderOutput?: string;
+  renderTime?: number;
+  timestamp: number;
 }

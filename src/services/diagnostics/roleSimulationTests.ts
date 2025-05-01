@@ -1,31 +1,155 @@
 
-import { v4 as uuidv4 } from "uuid";
-import { DiagnosticTestStatus } from "./types";
-import { RoleSimulationTestResult } from "@/types/diagnostics";
+import { RoleSimulationTestResult } from '@/types/diagnostics';
+import { v4 as uuidv4 } from 'uuid';
 
-export function runRoleSimulationTests(): RoleSimulationTestResult[] {
-  const results: RoleSimulationTestResult[] = [];
+export const testRoleSimulations = async (): Promise<RoleSimulationTestResult[]> => {
+  // Simulate response delay
+  await new Promise(resolve => setTimeout(resolve, 500));
   
-  // Mock role simulation tests
-  const roleSimulations = [
-    { role: "admin", scenario: "Access admin dashboard", status: "pass", message: "Admin can access admin dashboard" },
-    { role: "admin", scenario: "Modify user permissions", status: "pass", message: "Admin can modify user permissions" },
-    { role: "advisor", scenario: "View client portfolios", status: "pass", message: "Advisor can view client portfolios" },
-    { role: "advisor", scenario: "Access admin settings", status: "fail", message: "Advisor correctly blocked from admin settings" },
-    { role: "client", scenario: "View own portfolio", status: "pass", message: "Client can view their portfolio" },
-    { role: "client", scenario: "View other client data", status: "fail", message: "Client correctly blocked from other clients' data" },
-  ];
-  
-  roleSimulations.forEach(sim => {
-    results.push({
+  // Sample role simulation tests
+  return [
+    {
       id: uuidv4(),
-      role: sim.role,
-      scenario: sim.scenario,
-      status: sim.status as "pass" | "fail" | "warn",
-      message: sim.message,
-      details: { timestamp: new Date().toISOString() }
-    });
-  });
-
-  return results;
-}
+      role: "admin",
+      action: "view_dashboard",
+      status: "success",
+      message: "Admin can view dashboard",
+      expected: true,
+      actual: true,
+      timestamp: Date.now()
+    },
+    {
+      id: uuidv4(),
+      role: "admin",
+      action: "manage_users",
+      status: "success",
+      message: "Admin can manage users",
+      expected: true,
+      actual: true,
+      timestamp: Date.now()
+    },
+    {
+      id: uuidv4(),
+      role: "admin",
+      action: "access_settings",
+      status: "success",
+      message: "Admin can access settings",
+      expected: true,
+      actual: true,
+      timestamp: Date.now()
+    },
+    {
+      id: uuidv4(),
+      role: "manager",
+      action: "view_dashboard",
+      status: "success",
+      message: "Manager can view dashboard",
+      expected: true,
+      actual: true,
+      timestamp: Date.now()
+    },
+    {
+      id: uuidv4(),
+      role: "manager",
+      action: "manage_team",
+      status: "success",
+      message: "Manager can manage team",
+      expected: true,
+      actual: true,
+      timestamp: Date.now()
+    },
+    {
+      id: uuidv4(),
+      role: "manager",
+      action: "access_settings",
+      status: "error",
+      message: "Manager cannot access settings but should be able to",
+      expected: true,
+      actual: false,
+      timestamp: Date.now()
+    },
+    {
+      id: uuidv4(),
+      role: "client",
+      action: "view_dashboard",
+      status: "success",
+      message: "Client can view dashboard",
+      expected: true,
+      actual: true,
+      timestamp: Date.now()
+    },
+    {
+      id: uuidv4(),
+      role: "client",
+      action: "manage_profile",
+      status: "success",
+      message: "Client can manage profile",
+      expected: true,
+      actual: true,
+      timestamp: Date.now()
+    },
+    {
+      id: uuidv4(),
+      role: "client",
+      action: "access_settings",
+      status: "success",
+      message: "Client cannot access settings",
+      expected: false,
+      actual: false,
+      timestamp: Date.now()
+    },
+    {
+      id: uuidv4(),
+      role: "advisor",
+      action: "view_dashboard",
+      status: "success",
+      message: "Advisor can view dashboard",
+      expected: true,
+      actual: true,
+      timestamp: Date.now()
+    },
+    {
+      id: uuidv4(),
+      role: "advisor",
+      action: "manage_clients",
+      status: "success",
+      message: "Advisor can manage clients",
+      expected: true,
+      actual: true,
+      timestamp: Date.now()
+    },
+    {
+      id: uuidv4(),
+      role: "advisor",
+      action: "view_reports",
+      status: "warning",
+      message: "Advisor can view reports but with limited data",
+      expected: true,
+      actual: true,
+      timestamp: Date.now(),
+      details: {
+        limitations: "Can only see reports for assigned clients"
+      }
+    },
+    {
+      id: uuidv4(),
+      role: "guest",
+      action: "view_dashboard",
+      status: "success",
+      message: "Guest cannot view dashboard",
+      expected: false,
+      actual: false,
+      timestamp: Date.now()
+    },
+    {
+      id: uuidv4(),
+      role: "guest",
+      action: "view_public_content",
+      status: "success",
+      message: "Guest can view public content",
+      expected: true,
+      actual: true,
+      timestamp: Date.now()
+    }
+  ];
+};

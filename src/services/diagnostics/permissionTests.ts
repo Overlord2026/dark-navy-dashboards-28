@@ -1,32 +1,69 @@
 
-import { v4 as uuidv4 } from "uuid";
-import { DiagnosticTestStatus } from "./types";
-import { PermissionTestResult } from "@/types/diagnostics";
+import { PermissionTestResult } from '@/types/diagnostics';
+import { v4 as uuidv4 } from 'uuid';
 
-export function runPermissionTests(): PermissionTestResult[] {
-  const results: PermissionTestResult[] = [];
-  
-  // Mock permission tests
-  const permissionTests = [
-    { role: "admin", resource: "dashboard", permission: "view", status: "pass", message: "Admin can view dashboard" },
-    { role: "admin", resource: "settings", permission: "modify", status: "pass", message: "Admin can modify settings" },
-    { role: "user", resource: "dashboard", permission: "view", status: "pass", message: "User can view dashboard" },
-    { role: "user", resource: "settings", permission: "view", status: "pass", message: "User can view settings" },
-    { role: "user", resource: "settings", permission: "modify", status: "fail", message: "User cannot modify settings as expected" },
-    { role: "guest", resource: "dashboard", permission: "view", status: "pass", message: "Guest can view dashboard" },
-    { role: "guest", resource: "settings", permission: "view", status: "fail", message: "Guest should not view settings" },
-  ];
-  
-  permissionTests.forEach(test => {
-    results.push({
+export const testPermissions = (): PermissionTestResult[] => {
+  // Sample permission tests
+  return [
+    {
       id: uuidv4(),
-      role: test.role,
-      resource: test.resource,
-      permission: test.permission,
-      status: test.status as "pass" | "fail" | "warn",
-      message: test.message
-    });
-  });
-
-  return results;
-}
+      permission: "settings:read",
+      status: "success",
+      message: "Admin can read settings",
+      role: "admin",
+      expected: true,
+      actual: true,
+      timestamp: Date.now()
+    },
+    {
+      id: uuidv4(),
+      permission: "settings:write",
+      status: "success",
+      message: "Admin can write settings",
+      role: "admin",
+      expected: true,
+      actual: true,
+      timestamp: Date.now()
+    },
+    {
+      id: uuidv4(),
+      permission: "users:read",
+      status: "success",
+      message: "Manager can read users",
+      role: "manager",
+      expected: true,
+      actual: true,
+      timestamp: Date.now()
+    },
+    {
+      id: uuidv4(),
+      permission: "users:write",
+      status: "error",
+      message: "Manager cannot write users but should be able to",
+      role: "manager",
+      expected: true,
+      actual: false,
+      timestamp: Date.now()
+    },
+    {
+      id: uuidv4(),
+      permission: "api:access",
+      status: "warning",
+      message: "Client has API access but it should be limited",
+      role: "client",
+      expected: false,
+      actual: true,
+      timestamp: Date.now()
+    },
+    {
+      id: uuidv4(),
+      permission: "reports:delete",
+      status: "success",
+      message: "Client cannot delete reports",
+      role: "client",
+      expected: false,
+      actual: false,
+      timestamp: Date.now()
+    }
+  ];
+};

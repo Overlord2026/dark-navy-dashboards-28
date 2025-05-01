@@ -1,54 +1,73 @@
 
-import React from 'react';
-import { Recommendation } from '@/types/diagnostics';
-import { Card, CardContent } from '../ui/card';
-import { Badge } from '../ui/badge';
-import { Button } from '../ui/button';
-import { AlertTriangle, AlertCircle, Info } from 'lucide-react';
+import React, { useMemo } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Lightbulb } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Recommendation } from "@/types/diagnostics";
+import { RecommendationItem } from "./RecommendationItem";
 
-interface RecommendationsListProps {
-  recommendations: Recommendation[];
+export interface RecommendationsListProps {
+  recommendations: Recommendation[] | string[];
+  isLoading: boolean;
+  onActionClick?: (recommendation: Recommendation) => void;
 }
 
-export function RecommendationsList({ recommendations }: RecommendationsListProps) {
-  if (!recommendations || recommendations.length === 0) {
-    return null;
-  }
+export const RecommendationsList = ({ 
+  recommendations, 
+  isLoading,
+  onActionClick 
+}: RecommendationsListProps) => {
+  // Memoize the structured recommendations to avoid unnecessary calculations
+  const structuredRecommendations = useMemo(() => {
+    // Check if recommendations is an array of strings or Recommendation objects
+    const hasStructuredRecommendations = recommendations.length > 0 && 
+      typeof recommendations[0] !== 'string';
+
+    // Convert simple string recommendations to structured format
+    return hasStructuredRecommendations 
+      ? recommendations as Recommendation[]
+      : (recommendations as string[]).map((text, index) => ({
+          id: `simple-rec-${index}`,
+          text,
+          priority: 'medium' as const,
+          category: 'reliability' as const,
+          actionable: false
+        }));
+  }, [recommendations]);
 
   return (
-    <div className="mt-6 space-y-4">
-      <h3 className="text-lg font-medium">Recommendations</h3>
-      <div className="space-y-3">
-        {recommendations.map((rec) => (
-          <Card key={rec.id} className={`
-            ${rec.priority === 'high' ? 'border-l-4 border-l-red-500' : ''}
-            ${rec.priority === 'medium' ? 'border-l-4 border-l-amber-500' : ''}
-            ${rec.priority === 'low' ? 'border-l-4 border-l-blue-500' : ''}
-          `}>
-            <CardContent className="p-4 flex justify-between items-start">
-              <div>
-                <div className="flex items-center gap-2">
-                  {rec.priority === 'high' && <AlertCircle className="h-4 w-4 text-red-500" />}
-                  {rec.priority === 'medium' && <AlertTriangle className="h-4 w-4 text-amber-500" />}
-                  {rec.priority === 'low' && <Info className="h-4 w-4 text-blue-500" />}
-                  <h4 className="font-medium">{rec.title || rec.text}</h4>
-                  <Badge className={`
-                    ${rec.priority === 'high' ? 'bg-red-100 text-red-700 hover:bg-red-100' : ''}
-                    ${rec.priority === 'medium' ? 'bg-amber-100 text-amber-700 hover:bg-amber-100' : ''}
-                    ${rec.priority === 'low' ? 'bg-blue-100 text-blue-700 hover:bg-blue-100' : ''}
-                  `}>
-                    {rec.priority} priority
-                  </Badge>
-                </div>
-                {rec.description && <p className="text-sm text-muted-foreground mt-1">{rec.description}</p>}
-              </div>
-              {rec.actionable && rec.action && (
-                <Button size="sm" variant="outline">{rec.action}</Button>
-              )}
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-    </div>
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Lightbulb className="h-5 w-5" />
+          System Recommendations
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        {isLoading ? (
+          <div className="space-y-4">
+            <Skeleton className="h-5 w-full" />
+            <Skeleton className="h-5 w-full" />
+            <Skeleton className="h-5 w-full" />
+            <Skeleton className="h-5 w-4/5" />
+            <Skeleton className="h-5 w-3/4" />
+          </div>
+        ) : structuredRecommendations.length > 0 ? (
+          <ul className="space-y-4">
+            {structuredRecommendations.map((recommendation, index) => (
+              <RecommendationItem 
+                key={recommendation.id || index}
+                recommendation={recommendation}
+                onRecommendationAction={onActionClick}
+              />
+            ))}
+          </ul>
+        ) : (
+          <p className="text-sm text-muted-foreground">
+            No recommendations available at this time.
+          </p>
+        )}
+      </CardContent>
+    </Card>
   );
-}
+};

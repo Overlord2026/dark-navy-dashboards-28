@@ -1,38 +1,29 @@
 
 import React from 'react';
-import { SegmentCard } from './SegmentCard';
-import { useNavigate } from 'react-router-dom';
+import { SegmentCard, SegmentCardProps } from './SegmentCard';
 
 interface SegmentCardsProps {
-  segments: Array<{
-    id: string;
-    label: string;
-    description: string;
-    bulletPoints: string[];
-    icon: React.ElementType;
-    tagline: string;
-    buttonText: string;
-    benefits?: string[];
-  }>;
+  segments: Omit<SegmentCardProps, 'onClick' | 'isMobile'>[];
   onSegmentClick: (segmentId: string) => void;
   isMobile: boolean;
 }
 
 export const SegmentCards: React.FC<SegmentCardsProps> = ({ segments, onSegmentClick, isMobile }) => {
-  const navigate = useNavigate();
-
-  const handleSegmentClick = (segmentId: string) => {
-    // Navigate to auth page with segment parameter
-    navigate(`/auth?segment=${segmentId}`);
-  };
-
   return (
-    <div className={`grid grid-cols-1 ${isMobile ? '' : 'md:grid-cols-3'} gap-6`}>
+    <div 
+      className={`landing-animated-bg ${isMobile ? '' : 'grid grid-cols-1 md:grid-cols-3 gap-8 px-4 mb-12 relative py-6'} ${isMobile ? 'mt-8 space-y-6' : ''}`}
+    >
+      {isMobile ? null : (
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="particles-container"></div>
+        </div>
+      )}
+      
       {segments.map((segment) => (
-        <SegmentCard
+        <SegmentCard 
           key={segment.id}
           {...segment}
-          onClick={handleSegmentClick}
+          onClick={onSegmentClick}
           isMobile={isMobile}
         />
       ))}

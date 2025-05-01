@@ -2,6 +2,7 @@
 import React from "react";
 import { Sidebar } from "./Sidebar";
 import { DashboardHeader } from "./DashboardHeader";
+import { BrandedHeader } from "./BrandedHeader";
 import { cn } from "@/lib/utils";
 
 interface ThreeColumnLayoutProps {
@@ -43,15 +44,15 @@ export const ThreeColumnLayout: React.FC<ThreeColumnLayoutProps> = ({
 
   return (
     <div className={cn("flex flex-col h-screen", className)}>
-      <div className="flex flex-1 overflow-hidden pt-[60px]">
+      <BrandedHeader isConnected={activeMainItem === "integration"} />
+
+      <div className="flex flex-1 overflow-hidden pt-16">
         {renderSidebar()}
 
-        <main className={cn("flex flex-col flex-1 h-full overflow-y-auto", contentClassName)}>
+        <div className={cn("flex flex-col flex-1 h-full overflow-y-auto", contentClassName)}>
           {!noHeader && <DashboardHeader title={title || ""} />}
-          <div className="h-full p-6">
-            {children}
-          </div>
-        </main>
+          {children}
+        </div>
 
         {rightSidebar && (
           <div className="w-80 border-l border-border bg-background overflow-y-auto hidden lg:block">

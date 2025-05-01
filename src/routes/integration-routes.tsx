@@ -1,16 +1,10 @@
 
-import { Route } from "react-router-dom";
+import React from "react";
 import Integration from "@/pages/Integration";
-import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 
 export const integrationRoutes = [
-  <Route 
-    key="integration" 
-    path="/integration" 
-    element={
-      <ProtectedRoute>
-        <Integration />
-      </ProtectedRoute>
-    } 
-  />
+  {
+    path: "/integration",
+    element: <Integration />,
+  },
 ];

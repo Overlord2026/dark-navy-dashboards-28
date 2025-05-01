@@ -1,246 +1,244 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { toast } from 'sonner';
-import { DiagnosticResult, Recommendation } from '@/types/diagnostics/common';
-import { QuickFix as DiagnosticQuickFix, FixHistoryEntry as DiagnosticFixHistoryEntry } from '@/types/diagnostics/recommendations';
-import { DiagnosticResultSummary } from '@/types/diagnostics';
+import { useState, useEffect } from "react";
+import { runDiagnostics } from "@/services/diagnostics";
+import { DiagnosticTestStatus } from "@/services/diagnostics/types";
+import { toast } from "sonner";
 
-// Re-export these types to maintain compatibility with existing imports
-export type QuickFix = DiagnosticQuickFix;
-export type FixHistoryEntry = DiagnosticFixHistoryEntry;
+export interface QuickFix {
+  id: string;
+  title: string;
+  description: string;
+  area: 'system' | 'performance' | 'security' | 'config' | 'api';
+  severity: "critical" | "high" | "medium" | "low";
+  category: "reliability" | "security" | "performance" | "usability";
+  actionable?: boolean;
+}
 
-export const useDiagnostics = () => {
-  const [loading, setLoading] = useState(false);
-  const [results, setResults] = useState<any>({});
-  const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
-  const [quickFixes, setQuickFixes] = useState<QuickFix[]>([]);
-  const [fixHistory, setFixHistory] = useState<FixHistoryEntry[]>([]);
-  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
-  const [quickFixLoading, setQuickFixLoading] = useState<boolean>(false);
+interface FixHistoryEntry {
+  id: string;
+  title: string;
+  timestamp: string;
+  area: 'system' | 'performance' | 'security' | 'config' | 'api';
+  severity: string;
+  description: string;
+  status: 'success' | 'failed' | 'pending';
+}
+
+export function useDiagnostics() {
+  const [isRunning, setIsRunning] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [quickFixLoading, setQuickFixLoading] = useState(false);
+  const [diagnosticResults, setDiagnosticResults] = useState<any>(null);
+  const [lastRunTimestamp, setLastRunTimestamp] = useState<string | null>(null);
+  const [fixInProgress, setFixInProgress] = useState<string | null>(null);
   
-  // Function to run diagnostics
-  const runDiagnostics = useCallback(async () => {
-    setLoading(true);
-    try {
-      // Mock API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Mock results - make these match the DiagnosticResultSummary interface
-      const mockResults: DiagnosticResultSummary = {
-        overall: 'warning',
-        timestamp: new Date().toISOString(),
-        apiTests: { passed: 8, failed: 2, total: 10 },
-        navigationTests2: { passed: 12, failed: 1, total: 13 },
-        formValidationTests2: { passed: 5, failed: 0, total: 5 },
-        performanceTests2: { passed: 6, failed: 2, total: 8 },
-        securityTests2: { passed: 7, failed: 0, total: 7 },
-        securityTests: [
-          {
-            id: 'sec-1',
-            status: 'success',
-            message: 'Authentication service is working correctly',
-            timestamp: new Date().toISOString(),
-          },
-          {
-            id: 'sec-2',
-            status: 'warning',
-            message: 'CSRF protection needs improvement',
-            timestamp: new Date().toISOString(),
-          }
-        ],
-        apiIntegrationTests: [
-          {
-            id: 'api-1',
-            status: 'warning',
-            message: 'API response time is slower than expected',
-            timestamp: new Date().toISOString(),
-            details: {
-              responseTime: '1.2s',
-              threshold: '0.8s'
-            }
-          }
-        ],
-        performanceTests: [
-          {
-            id: 'perf-1',
-            status: 'success',
-            message: 'Core components rendering within expected time',
-            timestamp: new Date().toISOString(),
-          }
-        ],
-        navigationTests: [
-          {
-            id: 'nav-1',
-            status: 'success',
-            message: 'All routes accessible',
-            timestamp: new Date().toISOString(),
-          }
-        ],
-        formValidationTests: [
-          {
-            id: 'form-1',
-            status: 'success',
-            message: 'All form validations working properly',
-            timestamp: new Date().toISOString(),
-          }
-        ],
-        iconTests: [
-          {
-            id: 'icon-1', 
-            status: 'success',
-            message: 'All icons loaded correctly',
-            timestamp: new Date().toISOString(),
-          }
-        ],
-        recommendations: [
-          {
-            id: 'rec-1',
-            text: 'Optimize API calls to improve response time',
-            priority: 'medium',
-            actionable: true,
-            action: 'View optimization guide',
-          }
-        ]
-      };
-      
-      setResults(mockResults);
-      setLastUpdated(new Date());
-      
-      // Mock recommendations based on results
-      const mockRecommendations: Recommendation[] = [
-        {
-          id: 'rec-1',
-          text: 'Optimize API calls to improve response time',
-          priority: 'medium',
-          actionable: true,
-          action: 'View optimization guide',
-        },
-      ];
-      
-      setRecommendations(mockRecommendations);
-      
-      toast.success('Diagnostics completed successfully');
-      return mockResults;
-    } catch (error) {
-      console.error('Error running diagnostics:', error);
-      toast.error('Failed to run diagnostics');
-      throw error;
-    } finally {
-      setLoading(false);
+  const [quickFixes, setQuickFixes] = useState<QuickFix[]>([
+    {
+      id: "fix-1",
+      title: "Optimize API response caching",
+      description: "Implement proper caching headers for REST API responses to improve performance",
+      area: "performance",
+      severity: "medium",
+      category: "performance"
+    },
+    {
+      id: "fix-2",
+      title: "Fix role permissions for advisors",
+      description: "Advisors currently have access to admin subscription page",
+      area: "security",
+      severity: "high",
+      category: "security"
+    },
+    {
+      id: "fix-3",
+      title: "Update authentication tokens",
+      description: "Tax Software Integration credentials are invalid or expired",
+      area: "api",
+      severity: "high",
+      category: "reliability"
+    },
+    {
+      id: "fix-4",
+      title: "Fix calendar icon in mobile view",
+      description: "Calendar icon is missing in mobile view for appointments",
+      area: "config",
+      severity: "low",
+      category: "usability"
+    },
+    {
+      id: "fix-5",
+      title: "Fix form validation in Loan Application",
+      description: "Form submission fails with valid data - issue with select and date fields",
+      area: "system",
+      severity: "medium",
+      category: "reliability"
+    },
+    {
+      id: "fix-6",
+      title: "Resolve memory leak in Investment listings",
+      description: "Possible memory leak when loading large investment catalogs",
+      area: "performance",
+      severity: "high",
+      category: "performance"
+    }
+  ]);
+
+  const [fixHistory, setFixHistory] = useState<FixHistoryEntry[]>([]);
+  useEffect(() => {
+    const storedHistory = localStorage.getItem('diagnostics-fix-history');
+    if (storedHistory) {
+      try {
+        setFixHistory(JSON.parse(storedHistory));
+      } catch (e) {
+        console.error("Error loading fix history:", e);
+        setFixHistory([]);
+      }
     }
   }, []);
 
-  // Alias for runDiagnostics for backward compatibility
-  const runSystemDiagnostics = runDiagnostics;
+  const runSystemDiagnostics = async () => {
+    setIsRunning(true);
+    setIsLoading(true);
+    try {
+      const results = await runDiagnostics();
+      setDiagnosticResults(results);
+      setLastRunTimestamp(new Date().toISOString());
+      return results;
+    } catch (error) {
+      console.error("Error running diagnostics:", error);
+      throw error;
+    } finally {
+      setIsRunning(false);
+      setIsLoading(false);
+    }
+  };
+  
+  const refreshDiagnostics = async () => {
+    setIsLoading(true);
+    try {
+      await runSystemDiagnostics();
+      toast.success("Diagnostics re-check completed", {
+        description: "System status has been updated."
+      });
+    } catch (error) {
+      toast.error("Failed to re-check diagnostics", {
+        description: error instanceof Error ? error.message : "Unknown error"
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-  // Function to apply a quick fix
-  const applyQuickFix = useCallback(async (fixId: string) => {
+  const addFixToHistory = (fix: QuickFix) => {
+    const historyEntry: FixHistoryEntry = {
+      id: fix.id,
+      title: fix.title,
+      timestamp: new Date().toISOString(),
+      area: fix.area,
+      severity: fix.severity,
+      description: fix.description,
+      status: 'success'
+    };
+    
+    const updatedHistory = [historyEntry, ...fixHistory].slice(0, 20);
+    setFixHistory(updatedHistory);
+    
+    try {
+      localStorage.setItem('diagnostics-fix-history', JSON.stringify(updatedHistory));
+    } catch (e) {
+      console.error("Error saving fix history:", e);
+    }
+  };
+
+  const applyQuickFix = async (fixId: string) => {
     setQuickFixLoading(true);
     try {
-      // Mock API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      console.log(`Applying fix: ${fixId}`);
+      await new Promise(resolve => setTimeout(resolve, 1500));
       
-      // Find the fix that was applied
       const appliedFix = quickFixes.find(fix => fix.id === fixId);
-      
       if (appliedFix) {
-        // Add to fix history
-        const historyEntry: FixHistoryEntry = {
-          id: `hist-${Date.now()}`,
-          title: appliedFix.title,
-          timestamp: new Date().toISOString(),
-          area: appliedFix.area,
-          severity: appliedFix.severity,
-          description: appliedFix.description,
-          status: 'success'
-        };
-        
-        setFixHistory(prev => [historyEntry, ...prev]);
-        
-        // Remove from quick fixes
-        setQuickFixes(prev => prev.filter(fix => fix.id !== fixId));
-        
-        toast.success(`Applied fix: ${appliedFix.title}`);
+        addFixToHistory(appliedFix);
+        toast.success(`Fixed: ${appliedFix.title}`, {
+          description: "Issue has been resolved successfully."
+        });
       }
+      
+      setQuickFixes(prevFixes => prevFixes.filter(fix => fix.id !== fixId));
+      
       return true;
     } catch (error) {
-      console.error('Error applying quick fix:', error);
-      toast.error('Failed to apply fix');
+      console.error(`Error applying fix ${fixId}:`, error);
       return false;
     } finally {
       setQuickFixLoading(false);
     }
-  }, [quickFixes]);
+  };
 
-  // Alias for applyQuickFix for backward compatibility
-  const applyDiagnosticFix = applyQuickFix;
-
-  // Function to refresh diagnostics
-  const refreshDiagnostics = useCallback(async () => {
-    return runDiagnostics();
-  }, [runDiagnostics]);
-
-  // Initially load diagnostics
-  useEffect(() => {
-    // Set up mock quick fixes
-    const initialQuickFixes: QuickFix[] = [
-      {
-        id: 'qf-1',
-        title: 'Optimize API response time',
-        description: 'Apply caching to improve response times',
-        area: 'performance',
-        severity: 'medium',
-        category: 'performance',
-        actionable: true
-      },
-      {
-        id: 'qf-2',
-        title: 'Fix security vulnerability in auth flow',
-        description: 'Update authentication middleware',
-        area: 'security',
-        severity: 'high',
-        category: 'security',
-        actionable: true
+  const applyDiagnosticFix = async (testId: string, category: string, name: string) => {
+    setFixInProgress(testId);
+    
+    try {
+      console.log(`Applying diagnostic fix for ${category} - ${name} (ID: ${testId})`);
+      
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      toast.success(`Fix applied successfully for "${name}"`, {
+        description: "The issue has been resolved.",
+      });
+      
+      addFixToHistory({
+        id: testId,
+        title: name,
+        description: `${category} issue fixed`,
+        area: category as QuickFix['area'],
+        severity: "medium",
+        category: "reliability"
+      });
+      
+      if (diagnosticResults && diagnosticResults[`${category}Tests`]) {
+        const updatedTests = diagnosticResults[`${category}Tests`].map((test: any) => {
+          if (test.name === name || test.endpoint === name || test.route === name) {
+            return { ...test, status: "success" };
+          }
+          return test;
+        });
+        
+        setDiagnosticResults({
+          ...diagnosticResults,
+          [`${category}Tests`]: updatedTests
+        });
       }
-    ];
-    
-    setQuickFixes(initialQuickFixes);
-    
-    // Set up mock fix history
-    const initialFixHistory: FixHistoryEntry[] = [
-      {
-        id: 'hist-1',
-        title: 'Updated API timeout settings',
-        timestamp: new Date(Date.now() - 86400000).toISOString(), // 1 day ago
-        area: 'config',
-        severity: 'medium',
-        description: 'Increased API timeout from 30s to 60s',
-        status: 'success'
-      }
-    ];
-    
-    setFixHistory(initialFixHistory);
-    
-    // Initial diagnostic run
-    runDiagnostics();
-  }, [runDiagnostics]);
+      
+      return true;
+    } catch (error) {
+      console.error(`Error applying fix for ${testId}:`, error);
+      toast.error(`Unable to fix "${name}"`, {
+        description: "Please try the manual steps or contact support.",
+      });
+      return false;
+    } finally {
+      setFixInProgress(null);
+    }
+  };
+
+  const getOverallStatus = (): DiagnosticTestStatus => {
+    if (!diagnosticResults) return "success";
+    return diagnosticResults.overall || "success";
+  };
 
   return {
-    loading,
-    isLoading: loading, // Alias for consistency
-    results,
-    diagnosticResults: results, // Alias for consistency
-    recommendations,
+    isRunning,
+    isLoading,
+    quickFixLoading,
+    diagnosticResults,
+    lastRunTimestamp,
     quickFixes,
+    fixInProgress,
     fixHistory,
-    lastUpdated,
-    runDiagnostics,
+    runSystemDiagnostics,
     refreshDiagnostics,
     applyQuickFix,
     applyDiagnosticFix,
-    quickFixLoading,
-    fixInProgress: quickFixLoading, // Alias for backward compatibility
-    runSystemDiagnostics // Additional function expected by some components
+    getOverallStatus
   };
-};
-
-export default useDiagnostics;
+}

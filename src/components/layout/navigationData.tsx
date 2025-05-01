@@ -1,156 +1,158 @@
-import { 
-  LayoutIcon, 
-  LineChart, 
-  Library, 
-  BookOpen, 
-  Scale, 
-  FileText, 
-  Home, 
-  BookMarked, 
-  MoveRight,
-  Info,
-  Settings,
-  User,
-  Heart, 
-  Building, 
-  GanttChart,
-  BarChart3,
-  Folders,
+
+import React from "react";
+import {
+  HomeIcon,
+  BarChart3Icon,
+  ShieldIcon,
+  BanknoteIcon,
+  WalletIcon,
+  FileTextIcon,
+  ShareIcon,
+  GraduationCapIcon,
+  BuildingIcon,
+  Users2Icon,
+  VaultIcon,
+  LineChartIcon,
+  CircleDollarSignIcon,
+  ArchiveIcon,
   PieChart,
-  FileBox,
-  LayoutGrid,
-  PanelsTopBottom,
-  PanelsLeftRight,
-  Plane,
-  LayoutList,
-  LayoutTemplate,
-  LayoutDashboard,
-  ListChecks,
-  CheckCircle,
-  Shield,
-  LucideIcon
+  ArrowRightLeft,
+  Calculator,
+  Receipt,
+  BookIcon,
+  BarChart2Icon,
+  Network
 } from "lucide-react";
 
-export const navigationData = [
+type MainMenuItem = {
+  id: string;
+  label: string;
+  icon: React.ElementType | React.FC;
+  href: string;
+  active?: boolean;
+  items?: MainMenuItem[]; // Added this line to support nested menu items
+};
+
+type NavCategory = {
+  id: string;
+  label: string;
+  items: MainMenuItem[];
+  defaultExpanded?: boolean;
+};
+
+const CustomHomeIcon: React.FC = () => (
+  <img 
+    src="/lovable-uploads/e4ac2159-1b66-4f15-9257-68a0f00c8311.png" 
+    alt="Home"
+    className="h-5 w-5"
+  />
+);
+
+export const navigationCategories: NavCategory[] = [
   {
-    title: "Getting Started",
+    id: "home",
+    label: "Home",
+    defaultExpanded: true,
     items: [
-      {
-        title: "Dashboard",
-        href: "/",
-        icon: LayoutIcon,
-        description: "Your personalized overview.",
-      },
-      {
-        title: "Net Worth",
-        href: "/net-worth",
-        icon: LineChart,
-        description: "Track your financial progress.",
-      },
-      {
-        title: "Profile",
-        href: "/profile",
-        icon: User,
-        description: "Manage your account settings.",
-      },
-      {
-        title: "Trial",
-        href: "/trial",
-        icon: CheckCircle,
-        description: "Manage your trial subscription.",
-      }
-    ],
+      { id: "home", label: "Home", icon: CustomHomeIcon, href: "/" },
+      { id: "documents", label: "Documents", icon: BookIcon, href: "/documents" },
+    ]
   },
   {
-    title: "Financial Planning",
+    id: "education-solutions",
+    label: "Education & Solutions",
+    defaultExpanded: true,
     items: [
-      {
-        title: "Budgeting",
-        href: "/budgeting",
-        icon: Scale,
-        description: "Manage your income and expenses.",
-      },
-      {
-        title: "Goals",
-        href: "/goals",
-        icon: BookMarked,
-        description: "Set and achieve your financial goals.",
-      },
-      {
-        title: "Investments",
+      { id: "education", label: "Education Center", icon: GraduationCapIcon, href: "/education" },
+      { id: "tax-planning", label: "Tax Planning", icon: PieChart, href: "/tax-planning" },
+      { id: "insurance", label: "Insurance", icon: ShieldIcon, href: "/insurance" },
+      { id: "lending", label: "Lending", icon: BanknoteIcon, href: "/lending" }, // Updated to correct href
+      { id: "estate-planning", label: "Estate Planning", icon: ArchiveIcon, href: "/estate-planning" },
+    ]
+  },
+  {
+    id: "family-wealth",
+    label: "Family Wealth",
+    defaultExpanded: true,
+    items: [
+      { id: "legacy-vault", label: "Secure Family Vault", icon: VaultIcon, href: "/legacy-vault" },
+      { id: "financial-plans", label: "Financial Plans", icon: LineChartIcon, href: "/financial-plans" },
+      { id: "accounts", label: "Accounts Overview", icon: WalletIcon, href: "/accounts" },
+      { id: "cash-management", label: "Cash Management", icon: BanknoteIcon, href: "/cash-management" },
+      { id: "tax-budgets", label: "Tax & Budgets", icon: Calculator, href: "/tax-budgets" },
+      { id: "transfers", label: "Transfers", icon: ArrowRightLeft, href: "/transfers" },
+      { id: "social-security", label: "Social Security", icon: CircleDollarSignIcon, href: "/social-security" },
+      { id: "properties", label: "Real Estate & Properties", icon: BuildingIcon, href: "/properties" },
+      { id: "billpay", label: "Bill Pay", icon: Receipt, href: "/billpay" },
+    ]
+  },
+  {
+    id: "planning",
+    label: "Planning & Services",
+    defaultExpanded: true,
+    items: [
+      { id: "financial-planning", label: "Financial Planning", icon: FileTextIcon, href: "/financial-plans" },
+      { 
+        id: "investments",
+        label: "Investments",
+        icon: BarChart3Icon,
         href: "/investments",
-        icon: BarChart3,
-        description: "Manage your investment portfolio.",
+        items: [
+          { id: "bfo-models", label: "BFO Models", icon: LineChartIcon, href: "/investments?tab=model-portfolios" },
+          { id: "intelligent-allocation", label: "Intelligent Allocation", icon: PieChart, href: "/investments?tab=intelligent-allocation" },
+          { id: "private-markets", label: "Private Markets", icon: BarChart3Icon, href: "/investments?tab=alternative-assets" },
+        ]
       },
-      {
-        title: "Insurance",
-        href: "/insurance",
-        icon: Shield,
-        description: "Protect yourself and your assets.",
-      },
-      {
-        title: "Estate Planning",
-        href: "/estate-planning",
-        icon: FileText,
-        description: "Plan for the future and secure your legacy.",
-      },
-    ],
+      { id: "tax-planning", label: "Tax Planning", icon: FileTextIcon, href: "/tax-planning" },
+      { id: "estate-planning", label: "Estate Planning", icon: FileTextIcon, href: "/estate-planning" },
+      { id: "insurance", label: "Insurance", icon: ShieldIcon, href: "/insurance" },
+      { id: "lending", label: "Lending", icon: BanknoteIcon, href: "/lending" }, // Updated to correct href
+    ]
   },
   {
-    title: "Resources",
+    id: "collaboration",
+    label: "Collaboration & Sharing",
+    defaultExpanded: true,
     items: [
-      {
-        title: "Financial Education",
-        href: "/financial-education",
-        icon: BookOpen,
-        description: "Learn about personal finance.",
-      },
-      {
-        title: "Marketplace",
-        href: "/marketplace",
-        icon: Library,
-        description: "Explore financial products and services.",
-      },
-      {
-        title: "Find an Advisor",
-        href: "/find-an-advisor",
-        icon: User,
-        description: "Connect with a financial advisor.",
-      },
-    ],
-  },
-  {
-    title: "Boutique Family Office",
-    items: [
-      {
-        title: "About Us",
-        href: "/about",
-        icon: Info,
-        description: "Learn about our company and mission.",
-      },
-      {
-        title: "Contact",
-        href: "/contact",
-        icon: MoveRight,
-        description: "Get in touch with our team.",
-      },
-      {
-        title: "Settings",
-        href: "/settings",
-        icon: Settings,
-        description: "Manage your account settings.",
-      },
-    ],
-  },
-  {
-    title: "Project Integration",
-    items: [
-      {
-        title: "Integration Hub",
-        href: "/integration",
-        icon: Folders,
-        description: "Manage project integrations.",
-      }
+      { id: "professionals", label: "Professional Access", icon: Users2Icon, href: "/professionals" },
+      { id: "sharing", label: "Family Member Access", icon: ShareIcon, href: "/sharing" },
+      { id: "integration", label: "Project Integration", icon: Network, href: "/integration" },
     ]
   },
 ];
+
+export type MenuItem = {
+  id: string;
+  label?: string;
+  name?: string;
+  active?: boolean;
+};
+
+export const accountsSubMenuItems: MenuItem[] = [];
+
+export const sharingSubMenuItems: MenuItem[] = [
+  { id: "shared-with-me", name: "Shared With Me", active: true },
+  { id: "shared-by-me", name: "Shared By Me" },
+  { id: "collaborators", name: "Collaborators" },
+];
+
+export const educationSubMenuItems: MenuItem[] = [
+  { id: "all-courses", name: "All Courses", active: true },
+  { id: "financial-basics", name: "Financial Basics" },
+  { id: "investing", name: "Investing" },
+  { id: "retirement", name: "Retirement" },
+  { id: "premium", name: "Premium Courses" },
+];
+
+export const getSecondaryMenuItems = (activeMainItem: string): MenuItem[] => {
+  switch (activeMainItem) {
+    case "accounts":
+      return accountsSubMenuItems;
+    case "sharing":
+      return sharingSubMenuItems;
+    case "education":
+      return educationSubMenuItems;
+    default:
+      return [];
+  }
+};

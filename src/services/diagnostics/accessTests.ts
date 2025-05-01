@@ -1,28 +1,30 @@
 
-import { DiagnosticTestStatus } from './types';
+import { DiagnosticResult } from './types';
 
-export function runAccessTests() {
+/**
+ * Test access control functionality
+ * @returns An array of diagnostic results for access permissions
+ */
+export const testAccess = async (): Promise<DiagnosticResult[]> => {
+  // Mock implementation for access tests
   return [
     {
-      id: 'access-1',
-      name: 'Admin Dashboard',
-      status: 'success' as DiagnosticTestStatus,
-      message: 'Admin dashboard is accessible with proper permissions',
-      timestamp: new Date().toISOString()
+      name: "User permissions",
+      description: "Tests if user permissions are correctly configured",
+      status: "success",
+      message: "All user permissions are configured correctly"
     },
     {
-      id: 'access-2',
-      name: 'User Settings',
-      status: 'success' as DiagnosticTestStatus,
-      message: 'User settings are accessible with proper permissions',
-      timestamp: new Date().toISOString()
+      name: "Role-based access",
+      description: "Tests role-based access control functionality",
+      status: "success",
+      message: "Role-based access controls working properly"
     },
     {
-      id: 'access-3',
-      name: 'API Keys',
-      status: 'success' as DiagnosticTestStatus,
-      message: 'API keys are accessible with proper permissions',
-      timestamp: new Date().toISOString()
+      name: "Access token validation",
+      description: "Validates access token functionality",
+      status: "success",
+      message: "Access tokens validated successfully"
     }
   ];
-}
+};

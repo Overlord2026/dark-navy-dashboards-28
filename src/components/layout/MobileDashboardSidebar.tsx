@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { MainNavItem, SidebarNavItem } from "@/types";
-import Logo from "../common/Logo";
 
 interface MobileDashboardSidebarProps {
   mainNavigationItems: MainNavItem[];
@@ -32,7 +31,12 @@ export function MobileDashboardSidebar({
           <div className="fixed inset-y-0 left-0 w-64 bg-background p-6 shadow-lg">
             <div className="flex items-center justify-between mb-8">
               <div className="flex items-center">
-                <Logo size="small" showText={false} />
+                <img 
+                  src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" 
+                  alt="Boutique Family Office Logo" 
+                  className="h-8 w-auto mr-2"
+                />
+                <span className="text-foreground text-lg font-semibold">BFO</span>
               </div>
               <button
                 className="rounded-md p-1 text-foreground"

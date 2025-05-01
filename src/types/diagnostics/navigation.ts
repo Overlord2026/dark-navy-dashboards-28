@@ -1,19 +1,14 @@
 
-import { DiagnosticTestStatus } from './common';
+import { DiagnosticTestStatus, DiagnosticResult, Recommendation } from './common';
 
 export interface NavigationTestResult {
   id: string;
   route: string;
-  status: DiagnosticTestStatus | "pass" | "fail" | "warn";
-  name?: string;
-  message: string;
-  timestamp: string | number;
-  responseTime?: number;
-  loadTime?: number;
+  status: DiagnosticTestStatus;
+  message?: string; 
+  timestamp: number;
+  recommendations?: (string | Recommendation)[];
   details?: any;
-  component?: string;
-  errorType?: string;
-  attemptCount?: number;
-  relatedFiles?: string[];
-  lastTested?: string;
 }
+
+export type NavigationDiagnosticResult = NavigationTestResult;

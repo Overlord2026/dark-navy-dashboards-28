@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Badge } from "@/components/ui/badge";
-import { DiagnosticTestStatus } from "@/types/diagnostics/common";
+import { DiagnosticTestStatus } from "@/services/diagnostics/types";
 
 interface StatusBadgesProps {
   total: number;

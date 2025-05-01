@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { StatusIcon, getStatusColor } from "./StatusIcon";
@@ -259,7 +260,11 @@ export const CoreServicesSummary = ({ report, isLoading }: CoreServicesSummaryPr
                       {issue.canAutoFix && (
                         <Button 
                           size="sm" 
-                          onClick={() => applyDiagnosticFix(issue.id || `issue-${index}`)}
+                          onClick={() => applyDiagnosticFix(
+                            issue.id || `${index}`, 
+                            issue.category || (issue.service ? "api" : issue.route ? "navigation" : "security"),
+                            issue.name || issue.service || issue.route || issue.endpoint || ""
+                          )}
                           disabled={!!fixInProgress}
                           className="gap-1"
                         >

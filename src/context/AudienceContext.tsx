@@ -8,15 +8,38 @@ import { audienceProfiles } from '@/data/audienceProfiles';
 const AudienceContext = createContext<AudienceContextType | undefined>(undefined);
 
 export const AudienceProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [currentSegment, setCurrentSegment] = useState<AudienceSegment | null>(null);
+  const [currentSegment, setCurrentSegment] = useState<AudienceSegment>('aspiring');
   const [isSegmentDetected, setIsSegmentDetected] = useState(false);
   const netWorthContext = useNetWorth();
   const { userProfile } = useUser();
   
-  // Completely disable auto-detection of segments
-  // Only set segment when explicitly chosen by user through UI
+  // Get total net worth from context - note we need to use getTotalNetWorth() method
+  const totalNetWorth = netWorthContext.getTotalNetWorth();
 
-  const currentProfile = currentSegment ? audienceProfiles[currentSegment] : null;
+  // Detect audience segment based on net worth or user profile data
+  useEffect(() => {
+    const detectSegment = () => {
+      if (!isSegmentDetected) {
+        // Use net worth as primary determinant if available
+        if (totalNetWorth) {
+          if (totalNetWorth >= 10000000) { // $10M+
+            setCurrentSegment('uhnw');
+          } else if (totalNetWorth >= 1000000 && userProfile?.investorType?.toLowerCase().includes('retiree')) { 
+            // Check for retiree status instead of age
+            setCurrentSegment('retiree');
+          } else {
+            setCurrentSegment('aspiring');
+          }
+          setIsSegmentDetected(true);
+        }
+        // Otherwise, keep the default 'aspiring' segment until we have more data
+      }
+    };
+
+    detectSegment();
+  }, [totalNetWorth, userProfile, isSegmentDetected]);
+
+  const currentProfile = audienceProfiles[currentSegment];
 
   const contextValue: AudienceContextType = {
     currentSegment,

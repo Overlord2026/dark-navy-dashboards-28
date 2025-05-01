@@ -2,43 +2,20 @@
 import { DiagnosticTestStatus } from './common';
 
 export interface ApiEndpointDiagnosticResult {
-  id: string;
-  endpoint: string;
-  method: string;
+  id?: string;
+  name: string;
+  url: string;
+  method: "GET" | "POST" | "PUT" | "DELETE";
   status: DiagnosticTestStatus;
   responseTime: number;
-  timestamp: string;
-  message: string;
-  details?: any;
-  name?: string;
-  url?: string;
+  responseStatus?: number;
   errorMessage?: string;
   warningMessage?: string;
-  expectedDataStructure?: string;
-  responseStatus?: number;
-  schemaValidation?: {
+  expectedDataStructure: string;
+  schemaValidation: {
     valid: boolean;
-    errors?: string[];
-    expected?: any;
-    actual?: any;
+    expected: any;
+    actual: any;
+    errors: string[];
   };
-  service?: string;
-  authStatus?: string;
-}
-
-export interface AccessibilityAuditResult {
-  id: string;
-  component: string;
-  status: DiagnosticTestStatus;
-  message: string;
-  timestamp: string;
-  violations: number;
-  details?: any;
-  // Add missing properties
-  impact?: 'critical' | 'serious' | 'moderate' | 'minor';
-  rule?: string;
-  elements?: string[];
-  element?: string;
-  recommendation?: string;
-  helpUrl?: string;
 }

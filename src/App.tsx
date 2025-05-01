@@ -1,46 +1,58 @@
 
-import React from 'react';
-import { Routes, Route } from 'react-router-dom';
-import { Toaster } from '@/components/ui/toaster';
-import { Toaster as SonnerToaster } from 'sonner';
-import dashboardRoutes from './routes/dashboard-routes';
-import { educationRoutes } from './routes/education-routes';
-import { integrationRoutes } from './routes/integration-routes';
-import Landing from './pages/Landing';
-import AuthPage from './pages/AuthPage';
-import Dashboard from './pages/Dashboard';
-import NotFound from './pages/NotFound';
-import { ProtectedRoute } from './components/auth/ProtectedRoute';
-import AdvisorDashboard from './pages/AdvisorDashboard';
+import { RouterProvider } from "react-router-dom";
+import routes from "./routes";
+import { ThemeProvider } from "@/context/ThemeContext"; // Import from our custom ThemeContext
+import { UserProvider } from "@/context/UserContext";
+import { NetWorthProvider } from "@/context/NetWorthContext";
+import { SubscriptionProvider } from "@/context/SubscriptionContext";
+import { Toaster } from "@/components/ui/sonner";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { DiagnosticsProvider } from "@/context/DiagnosticsContext";
+import { AdvisorProvider } from "@/context/AdvisorContext";
+import { AuthProvider } from "@/context/AuthContext";
+import { AdminProvider } from './context/AdminContext';
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { AIInsightsProvider } from "./components/insights/AIInsightsProvider";
+import { AudienceProvider } from "./context/AudienceContext";
+
+// Create a Query Client
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      retry: 1,
+    },
+  },
+});
 
 function App() {
   return (
-    <>
-      <Routes>
-        <Route path="/" element={<Landing />} />
-        <Route path="/auth" element={<AuthPage />} />
-        <Route path="/dashboard" element={
-          <ProtectedRoute>
-            <Dashboard />
-          </ProtectedRoute>
-        } />
-        
-        {/* Advisor routes */}
-        <Route path="/advisor" element={<AdvisorDashboard />} />
-        
-        {/* Include integration routes - must be spread, not directly included */}
-        {integrationRoutes}
-        
-        {/* Include route groups */}
-        {dashboardRoutes}
-        {educationRoutes}
-        
-        {/* Catch-all route */}
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-      <Toaster />
-      <SonnerToaster position="bottom-right" />
-    </>
+    <AdminProvider>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider>
+          <UserProvider>
+            <SubscriptionProvider>
+              <NetWorthProvider>
+                <DiagnosticsProvider>
+                  <AdvisorProvider>
+                    <AuthProvider>
+                      <AIInsightsProvider>
+                        <AudienceProvider>
+                          <TooltipProvider>
+                            <RouterProvider router={routes} />
+                            <Toaster position="top-right" richColors closeButton />
+                          </TooltipProvider>
+                        </AudienceProvider>
+                      </AIInsightsProvider>
+                    </AuthProvider>
+                  </AdvisorProvider>
+                </DiagnosticsProvider>
+              </NetWorthProvider>
+            </SubscriptionProvider>
+          </UserProvider>
+        </ThemeProvider>
+      </QueryClientProvider>
+    </AdminProvider>
   );
 }
 

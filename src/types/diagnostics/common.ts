@@ -1,36 +1,37 @@
 
-export enum DiagnosticTestStatus {
-  SUCCESS = "success",
-  WARNING = "warning",
-  ERROR = "error"
+export type DiagnosticTestStatus = "success" | "warning" | "error";
+
+export interface DiagnosticResult {
+  id?: string;
+  name: string;
+  description?: string;
+  status: DiagnosticTestStatus;
+  message?: string;
+  details?: any;
+  timestamp?: number;
+  route?: string;
+  recommendations?: (string | Recommendation)[];
 }
 
+export interface DiagnosticSummary {
+  overall: DiagnosticTestStatus;
+  total: number;
+  success: number;
+  warnings: number;
+  errors: number;
+  timestamp: string;
+}
+
+// Forward declaration for Recommendation which is defined in recommendations.ts
+// This is needed to avoid circular imports
 export interface Recommendation {
   id: string;
-  title?: string;
-  text?: string;
-  priority: "high" | "medium" | "low";
+  text: string;
+  priority: 'high' | 'medium' | 'low';
+  category: 'security' | 'performance' | 'reliability' | 'usability';
+  actionable: boolean;
+  action?: string | { label: string; };
+  effort?: string;
+  impact?: string;
   description?: string;
-  actionable: boolean;
-  action?: string;
-}
-
-export interface QuickFix {
-  id: string;
-  title: string;
-  description: string;
-  area: string;
-  severity: "high" | "medium" | "low";
-  category: string;
-  actionable: boolean;
-}
-
-export interface FixHistoryEntry {
-  id: string;
-  title: string;
-  timestamp: string;
-  area: string;
-  severity: "high" | "medium" | "low";
-  description: string;
-  status: "success" | "failed" | "pending";
 }
