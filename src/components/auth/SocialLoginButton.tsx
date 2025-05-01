@@ -3,6 +3,7 @@ import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Shield, LockIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Provider } from "@supabase/supabase-js";
 
 interface SocialLoginButtonProps {
   provider: 'google' | 'microsoft' | 'apple';

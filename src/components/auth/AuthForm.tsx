@@ -12,7 +12,6 @@ import { toast } from "sonner";
 import { SocialLoginButton } from "./SocialLoginButton";
 import { Separator } from "@/components/ui/separator";
 import { Shield, Lock } from "lucide-react";
-import { Provider } from "@supabase/supabase-js";
 
 interface AuthFormProps {
   segment?: string | null;
@@ -73,8 +72,13 @@ export const AuthForm: React.FC<AuthFormProps> = ({ segment }) => {
     }
   };
 
-  const handleSocialLogin = async (provider: Provider) => {
-    await loginWithSocial(provider);
+  const handleSocialLogin = async (provider: 'google' | 'microsoft' | 'apple') => {
+    try {
+      await loginWithSocial(provider as any);
+    } catch (error) {
+      console.error("Social login error:", error);
+      toast.error(`Failed to sign in with ${provider}`);
+    }
   };
 
   // Get title based on segment
