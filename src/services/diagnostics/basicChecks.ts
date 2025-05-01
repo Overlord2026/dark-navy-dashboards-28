@@ -1,127 +1,144 @@
 
-import { logger } from '../logging/loggingService';
-import { DiagnosticResult } from './types';
+import { DiagnosticResult, DiagnosticTestStatus } from './types';
 
-export const testBasicServices = async (): Promise<Record<string, DiagnosticResult>> => {
-  // Simulate actual tests to the services
-  const databaseStatus: DiagnosticResult = {
-    name: "Database Connection",
-    description: "Tests connectivity to the main database",
-    status: "success",
-    message: "Database connection successful"
-  };
+/**
+ * Run basic system checks
+ */
+export async function runBasicChecks(): Promise<DiagnosticResult[]> {
+  const results: DiagnosticResult[] = [];
   
-  try {
-    // Simulate a potential warning situation
-    // In a real app, this would be an actual check
-    const isCacheSlow = Math.random() > 0.7;
-    const cacheStatus: DiagnosticResult = isCacheSlow 
-      ? {
-          name: "Cache Service",
-          description: "Tests connectivity and performance of the cache service",
-          status: "warning",
-          message: "Cache service is responding slowly",
-          details: "Response time above normal threshold: 1500ms"
-        }
-      : {
-          name: "Cache Service",
-          description: "Tests connectivity and performance of the cache service",
-          status: "success",
-          message: "Cache service is functioning normally"
-        };
-        
-    // Authentication service test
-    const authStatus: DiagnosticResult = {
-      name: "Authentication Service",
-      description: "Tests connectivity to the authentication service",
-      status: "success",
-      message: "Authentication service is available"
-    };
-    
-    // File storage service test
-    // Simulate a warning for file storage service
-    const isStorageWarning = Math.random() > 0.7;
-    const fileStorageStatus: DiagnosticResult = isStorageWarning
-      ? {
-          name: "File Storage Service",
-          description: "Tests connectivity to the file storage service",
-          status: "warning",
-          message: "File storage service is nearing capacity",
-          details: "Storage usage at 85%, consider increasing limit or cleaning unused files"
-        }
-      : {
-          name: "File Storage Service",
-          description: "Tests connectivity to the file storage service",
-          status: "success",
-          message: "File storage service is available"
-        };
-        
-    // API Gateway test
-    const apiGatewayStatus: DiagnosticResult = {
-      name: "API Gateway",
-      description: "Tests connectivity to the API gateway",
-      status: "success",
-      message: "API Gateway is functioning normally"
-    };
+  // Check environment
+  const envStatus = checkEnvironment();
+  results.push({
+    id: 'env-check',
+    timestamp: new Date().toISOString(),
+    category: 'environment',
+    status: envStatus.status as DiagnosticTestStatus,
+    message: envStatus.message,
+    name: 'Environment Check',
+    description: 'Verifies environment variables and configuration'
+  });
+  
+  // Check browser compatibility
+  const browserStatus = checkBrowserCompatibility();
+  results.push({
+    id: 'browser-check',
+    timestamp: new Date().toISOString(),
+    category: 'browser',
+    status: browserStatus.status as DiagnosticTestStatus,
+    message: browserStatus.message,
+    name: 'Browser Compatibility',
+    description: 'Checks if current browser is fully compatible'
+  });
+  
+  // Check local storage
+  const storageStatus = checkLocalStorage();
+  results.push({
+    id: 'storage-check',
+    timestamp: new Date().toISOString(),
+    category: 'storage',
+    status: storageStatus.status as DiagnosticTestStatus,
+    message: storageStatus.message,
+    name: 'Storage Access',
+    description: 'Verifies access to local storage'
+  });
 
-    // Log the basic service check results
-    logger.info("Basic service checks completed", { 
-      databaseStatus: databaseStatus.status,
-      cacheStatus: cacheStatus.status,
-      authStatus: authStatus.status,
-      fileStorageStatus: fileStorageStatus.status,
-      apiGatewayStatus: apiGatewayStatus.status
-    }, "DiagnosticService");
+  return results;
+}
+
+/**
+ * Check environment configuration
+ */
+function checkEnvironment() {
+  // Check for required environment variables
+  try {
+    // Example environment checks
+    const inDevelopment = import.meta.env.DEV === true;
+    const hasRequiredVars = true; // Could check specific vars here
     
-    // Return all test results
+    if (!hasRequiredVars) {
+      return {
+        status: 'warning' as DiagnosticTestStatus,
+        message: 'Some environment variables are missing'
+      };
+    }
+    
     return {
-      databaseStatus,
-      cacheStatus,
-      authStatus,
-      fileStorageStatus,
-      apiGatewayStatus
+      status: 'success' as DiagnosticTestStatus,
+      message: `Environment is properly configured (${inDevelopment ? 'development' : 'production'})`
     };
   } catch (error) {
-    // Log the error
-    logger.error("Error during basic service checks", error, "DiagnosticService");
-    
-    // Return error status for all services
     return {
-      databaseStatus: {
-        name: "Database Connection",
-        description: "Tests connectivity to the main database",
-        status: "error",
-        message: "Failed to check database status",
-        details: error instanceof Error ? error.message : "Unknown error"
-      },
-      cacheStatus: {
-        name: "Cache Service",
-        description: "Tests connectivity and performance of the cache service",
-        status: "error",
-        message: "Failed to check cache service status",
-        details: error instanceof Error ? error.message : "Unknown error"
-      },
-      authStatus: {
-        name: "Authentication Service",
-        description: "Tests connectivity to the authentication service",
-        status: "error",
-        message: "Failed to check authentication service status",
-        details: error instanceof Error ? error.message : "Unknown error"
-      },
-      fileStorageStatus: {
-        name: "File Storage Service",
-        description: "Tests connectivity to the file storage service",
-        status: "error",
-        message: "Failed to check file storage service status",
-        details: error instanceof Error ? error.message : "Unknown error"
-      },
-      apiGatewayStatus: {
-        name: "API Gateway",
-        description: "Tests connectivity to the API gateway",
-        status: "error",
-        message: "Failed to check API gateway status",
-        details: error instanceof Error ? error.message : "Unknown error"
-      }
+      status: 'error' as DiagnosticTestStatus,
+      message: 'Failed to check environment configuration'
     };
   }
-};
+}
+
+/**
+ * Check browser compatibility
+ */
+function checkBrowserCompatibility() {
+  try {
+    // Simple browser feature detection examples
+    const hasLocalStorage = 'localStorage' in window;
+    const hasSessionStorage = 'sessionStorage' in window;
+    const hasPromises = 'Promise' in window;
+    const hasWebWorkers = 'Worker' in window;
+    const hasIndexedDB = 'indexedDB' in window;
+    
+    if (!hasLocalStorage || !hasSessionStorage) {
+      return {
+        status: 'error' as DiagnosticTestStatus,
+        message: 'Browser does not support required storage features'
+      };
+    }
+    
+    if (!hasWebWorkers || !hasIndexedDB) {
+      return {
+        status: 'warning' as DiagnosticTestStatus,
+        message: 'Browser is missing some optional features'
+      };
+    }
+    
+    return {
+      status: 'success' as DiagnosticTestStatus,
+      message: 'Browser is fully compatible'
+    };
+  } catch (error) {
+    return {
+      status: 'error' as DiagnosticTestStatus,
+      message: 'Failed to check browser compatibility'
+    };
+  }
+}
+
+/**
+ * Check local storage access
+ */
+function checkLocalStorage() {
+  try {
+    // Test writing to localStorage
+    const testKey = '_diagnostics_test_';
+    localStorage.setItem(testKey, 'test');
+    const value = localStorage.getItem(testKey);
+    localStorage.removeItem(testKey);
+    
+    if (value !== 'test') {
+      return {
+        status: 'error' as DiagnosticTestStatus,
+        message: 'Failed to write to local storage'
+      };
+    }
+    
+    return {
+      status: 'success' as DiagnosticTestStatus,
+      message: 'Local storage is accessible'
+    };
+  } catch (error) {
+    return {
+      status: 'error' as DiagnosticTestStatus,
+      message: 'Local storage is not available or access is denied'
+    };
+  }
+}

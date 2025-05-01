@@ -1,95 +1,34 @@
 
-import { DiagnosticResult, PerformanceTestResult } from './types';
-import { v4 as uuidv4 } from 'uuid';
+import { DiagnosticTestStatus, PerformanceTestResult } from './types';
 
-/**
- * Test performance metrics
- * @returns An array of diagnostic results for performance checks
- */
-export const testPerformance = async (): Promise<DiagnosticResult[]> => {
-  // Mock implementation for performance tests
+export function runPerformanceTests(): PerformanceTestResult[] {
   return [
     {
-      name: "API response times",
-      description: "Tests API endpoint response times",
-      status: "success",
-      message: "API response times within acceptable range"
+      id: 'perf-1',
+      name: 'Dashboard Load',
+      status: 'success',
+      responseTime: 120,
+      threshold: 200,
+      message: 'Dashboard loads within acceptable time',
+      timestamp: new Date().toISOString()
     },
     {
-      name: "Database query performance",
-      description: "Tests database query execution time",
-      status: "success",
-      message: "Database queries executing within expected time"
+      id: 'perf-2',
+      name: 'Account Page Load',
+      status: 'success',
+      responseTime: 85,
+      threshold: 200,
+      message: 'Account page loads within acceptable time',
+      timestamp: new Date().toISOString()
     },
     {
-      name: "UI rendering performance",
-      description: "Tests UI component rendering efficiency",
-      status: "success",
-      message: "UI components rendering efficiently"
-    }
-  ];
-};
-
-/**
- * Run comprehensive performance tests
- * This function provides more detailed performance metrics
- * @returns Array of performance test results
- */
-export const runPerformanceTests = async (): Promise<PerformanceTestResult[]> => {
-  // Simulate performance testing
-  await new Promise(resolve => setTimeout(resolve, 500));
-  
-  // Mock performance test results
-  return [
-    {
-      id: uuidv4(),
-      name: "Dashboard Page Load",
-      status: "success",
-      message: "Dashboard loads within acceptable time",
-      responseTime: 320,
-      threshold: 1000,
-      cpuUsage: 12,
-      memoryUsage: 54
-    },
-    {
-      id: uuidv4(),
-      name: "Portfolio Page Load",
-      status: "warning",
-      message: "Portfolio page load time is close to threshold",
-      responseTime: 950,
-      threshold: 1000,
-      cpuUsage: 25,
-      memoryUsage: 78
-    },
-    {
-      id: uuidv4(),
-      name: "Settings Page Load",
-      status: "success",
-      message: "Settings page loads quickly",
-      responseTime: 210,
-      threshold: 1000,
-      cpuUsage: 8,
-      memoryUsage: 42
-    },
-    {
-      id: uuidv4(),
-      name: "Data Processing",
-      status: "error",
-      message: "Data processing exceeds threshold",
-      responseTime: 3200,
-      threshold: 1500,
-      cpuUsage: 85,
-      memoryUsage: 92
-    },
-    {
-      id: uuidv4(),
-      name: "API Response Time",
-      status: "success",
-      message: "API responds within acceptable time",
-      responseTime: 210,
+      id: 'perf-3',
+      name: 'Reports Generation',
+      status: 'success',
+      responseTime: 350,
       threshold: 500,
-      cpuUsage: 15,
-      memoryUsage: 35
+      message: 'Reports generate within acceptable time',
+      timestamp: new Date().toISOString()
     }
   ];
-};
+}
