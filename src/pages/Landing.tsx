@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Leaf, Sunrise, Crown, CheckCircle2, ArrowRight } from 'lucide-react';
+import { Leaf, Sunrise, Crown, CheckCircle2, ArrowRight, Shield, Lock } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { SegmentCards } from '@/components/landing/SegmentCards';
 import { AdvisorPrompt } from '@/components/landing/AdvisorPrompt';
@@ -108,13 +108,45 @@ export default function Landing() {
                 className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
                 onClick={() => navigate("/auth")}
               >
-                Sign Up Now <ArrowRight className="ml-2 h-4 w-4" />
+                Sign Up Securely <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
               <a href="#features">
                 <Button variant="outline" size="lg">
                   Learn More
                 </Button>
               </a>
+            </div>
+          </div>
+        </div>
+        
+        {/* Security Features Section */}
+        <div className="mt-12 text-center">
+          <h2 className="text-2xl md:text-3xl font-bold mb-3">Enterprise-Grade Security</h2>
+          <p className="text-gray-300 mb-8 max-w-2xl mx-auto">
+            Your financial data deserves the highest level of protection. Our platform employs bank-level security measures.
+          </p>
+          
+          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            <div className="bg-black/20 p-6 rounded-lg border border-gray-800">
+              <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full bg-blue-900/30">
+                <Shield className="h-6 w-6 text-blue-400" />
+              </div>
+              <h3 className="text-xl font-semibold mb-2">Advanced Encryption</h3>
+              <p className="text-gray-300">AES-256 bit encryption for all data, both in transit and at rest</p>
+            </div>
+            <div className="bg-black/20 p-6 rounded-lg border border-gray-800">
+              <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full bg-blue-900/30">
+                <Lock className="h-6 w-6 text-blue-400" />
+              </div>
+              <h3 className="text-xl font-semibold mb-2">Multi-Factor Authentication</h3>
+              <p className="text-gray-300">Secure your account with additional verification methods</p>
+            </div>
+            <div className="bg-black/20 p-6 rounded-lg border border-gray-800">
+              <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full bg-blue-900/30">
+                <CheckCircle2 className="h-6 w-6 text-blue-400" />
+              </div>
+              <h3 className="text-xl font-semibold mb-2">SOC 2 Compliance</h3>
+              <p className="text-gray-300">Adherence to rigorous security, availability, and confidentiality standards</p>
             </div>
           </div>
         </div>

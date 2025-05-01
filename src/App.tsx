@@ -30,12 +30,12 @@ function App() {
     <AdminProvider>
       <QueryClientProvider client={queryClient}>
         <ThemeProvider>
-          <UserProvider>
-            <SubscriptionProvider>
-              <NetWorthProvider>
-                <DiagnosticsProvider>
-                  <AdvisorProvider>
-                    <AuthProvider>
+          <AuthProvider>
+            <UserProvider>
+              <SubscriptionProvider>
+                <NetWorthProvider>
+                  <DiagnosticsProvider>
+                    <AdvisorProvider>
                       <AIInsightsProvider>
                         <AudienceProvider>
                           <TooltipProvider>
@@ -44,12 +44,12 @@ function App() {
                           </TooltipProvider>
                         </AudienceProvider>
                       </AIInsightsProvider>
-                    </AuthProvider>
-                  </AdvisorProvider>
-                </DiagnosticsProvider>
-              </NetWorthProvider>
-            </SubscriptionProvider>
-          </UserProvider>
+                    </AdvisorProvider>
+                  </DiagnosticsProvider>
+                </NetWorthProvider>
+              </SubscriptionProvider>
+            </UserProvider>
+          </AuthProvider>
         </ThemeProvider>
       </QueryClientProvider>
     </AdminProvider>
