@@ -1,13 +1,14 @@
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Leaf, Sunrise, Crown } from 'lucide-react';
+import { Leaf, Sunrise, Crown, Shield } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { SegmentCards } from '@/components/landing/SegmentCards';
 import { AdvisorPrompt } from '@/components/landing/AdvisorPrompt';
 import { AnimatedBackground } from '@/components/landing/AnimatedBackground';
 import { Footer } from '@/components/landing/Footer';
 import { BrandedHeader } from '@/components/layout/BrandedHeader';
+import { Button } from '@/components/ui/button';
 
 export default function Landing() {
   const navigate = useNavigate();
@@ -60,6 +61,10 @@ export default function Landing() {
     navigate(`/dashboard?segment=${segmentId}`);
   };
 
+  const handleSecureLogin = () => {
+    navigate('/secure-login');
+  };
+
   return (
     <div className="flex flex-col items-center min-h-screen bg-[#0A1F44] text-white pt-16">
       <BrandedHeader />
@@ -72,7 +77,19 @@ export default function Landing() {
           />
         </div>
         
-        <AdvisorPrompt isMobile={isMobile} />
+        <div className={`${isMobile ? 'mt-8' : 'mb-12 mt-8'} text-center`}>
+          <p className={`text-gray-${isMobile ? '400' : '300'} mb-2 text-sm`}>Already have an account?</p>
+          <div className="flex flex-col sm:flex-row justify-center gap-4">
+            <Button 
+              onClick={handleSecureLogin}
+              className="bg-[#9b87f5] hover:bg-[#7E69AB] text-white font-medium flex items-center gap-2"
+            >
+              <Shield className="h-4 w-4" />
+              Secure Login
+            </Button>
+            <AdvisorPrompt isMobile={isMobile} />
+          </div>
+        </div>
       </div>
       
       <Footer />

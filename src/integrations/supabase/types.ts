@@ -9,6 +9,178 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      feedback: {
+        Row: {
+          category: string
+          comments: string
+          created_at: string | null
+          id: string
+          page: string
+          user_id: string | null
+        }
+        Insert: {
+          category: string
+          comments: string
+          created_at?: string | null
+          id?: string
+          page: string
+          user_id?: string | null
+        }
+        Update: {
+          category?: string
+          comments?: string
+          created_at?: string | null
+          id?: string
+          page?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      lead_source_logs: {
+        Row: {
+          completed_at: string | null
+          details: Json | null
+          error: string | null
+          id: string
+          lead_source_id: string
+          message: string | null
+          records_failed: number | null
+          records_imported: number | null
+          records_processed: number | null
+          started_at: string
+          status: string
+        }
+        Insert: {
+          completed_at?: string | null
+          details?: Json | null
+          error?: string | null
+          id?: string
+          lead_source_id: string
+          message?: string | null
+          records_failed?: number | null
+          records_imported?: number | null
+          records_processed?: number | null
+          started_at?: string
+          status: string
+        }
+        Update: {
+          completed_at?: string | null
+          details?: Json | null
+          error?: string | null
+          id?: string
+          lead_source_id?: string
+          message?: string | null
+          records_failed?: number | null
+          records_imported?: number | null
+          records_processed?: number | null
+          started_at?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lead_source_logs_lead_source_id_fkey"
+            columns: ["lead_source_id"]
+            isOneToOne: false
+            referencedRelation: "lead_sources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      lead_sources: {
+        Row: {
+          config: Json
+          created_at: string
+          credentials: Json
+          id: string
+          is_active: boolean
+          last_sync_at: string | null
+          name: string
+          source_type: string
+          updated_at: string
+        }
+        Insert: {
+          config?: Json
+          created_at?: string
+          credentials?: Json
+          id?: string
+          is_active?: boolean
+          last_sync_at?: string | null
+          name: string
+          source_type: string
+          updated_at?: string
+        }
+        Update: {
+          config?: Json
+          created_at?: string
+          credentials?: Json
+          id?: string
+          is_active?: boolean
+          last_sync_at?: string | null
+          name?: string
+          source_type?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      prospects: {
+        Row: {
+          created_at: string
+          email: string | null
+          first_name: string | null
+          hnw_score: string | null
+          id: string
+          last_name: string | null
+          lead_source_id: string | null
+          metadata: Json | null
+          next_meeting: string | null
+          phone: string | null
+          source: string | null
+          stage: string | null
+          status: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          first_name?: string | null
+          hnw_score?: string | null
+          id?: string
+          last_name?: string | null
+          lead_source_id?: string | null
+          metadata?: Json | null
+          next_meeting?: string | null
+          phone?: string | null
+          source?: string | null
+          stage?: string | null
+          status?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          first_name?: string | null
+          hnw_score?: string | null
+          id?: string
+          last_name?: string | null
+          lead_source_id?: string | null
+          metadata?: Json | null
+          next_meeting?: string | null
+          phone?: string | null
+          source?: string | null
+          stage?: string | null
+          status?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "prospects_lead_source_id_fkey"
+            columns: ["lead_source_id"]
+            isOneToOne: false
+            referencedRelation: "lead_sources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           created_at: string | null
