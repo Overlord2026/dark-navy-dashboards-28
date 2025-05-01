@@ -1,38 +1,55 @@
-// Add proper type definitions for apiClient and error handling
-interface ApiConfig {
+
+// Type definitions for API Client
+export interface ApiConfig {
   baseUrl: string;
   headers: Record<string, string>;
+  timeout?: number;
   // Add other config properties as needed
 }
 
-interface ApiClient {
+export interface ApiClient {
   config: ApiConfig;
   // Add other client methods and properties
 }
 
-interface ApiError {
+export interface ApiError {
   message: string;
   code?: string;
   status?: number;
   // Add other error properties
 }
 
-// Rest of the file would remain the same with properly typed apiClient and errors
-// For example:
-const createApiClient = (): ApiClient => {
+export interface ApiClientOptions {
+  baseURL: string;
+  timeout?: number;
+  headers?: Record<string, string>;
+  retryConfig?: {
+    retries: number;
+    retryDelay?: number;
+  };
+  circuitBreakerConfig?: {
+    failureThreshold: number;
+    resetTimeout: number;
+    name: string;
+  };
+}
+
+// API Client Factory
+export const createApiClient = (options: ApiClientOptions): ApiClient => {
   return {
     config: {
-      baseUrl: "https://api.example.com",
-      headers: {
+      baseUrl: options.baseURL,
+      headers: options.headers || {
         "Content-Type": "application/json"
-      }
+      },
+      timeout: options.timeout || 30000
     }
     // Other implementation details
   };
 };
 
-// For the error handling:
-const handleApiError = (error: unknown): never => {
+// Error handling
+export const handleApiError = (error: unknown): never => {
   const apiError = error as ApiError;
   console.error(`API Error: ${apiError.message}`);
   throw apiError;

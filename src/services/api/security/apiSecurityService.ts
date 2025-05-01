@@ -5,7 +5,7 @@
  * Central service for API security configuration and monitoring.
  */
 
-import { createApiClient, ApiClientOptions } from '../client/apiClientFactory';
+import { createApiClient, ApiClientOptions, ApiClient } from '../client/apiClientFactory';
 import { CircuitBreaker } from '../resilience/circuitBreaker';
 import { logger } from '@/services/logging/loggingService';
 import { SensitiveDataType, MaskingConfig } from './piiProtection';
@@ -51,7 +51,7 @@ const DEFAULT_CONFIG: ApiSecurityConfig = {
  */
 export class ApiSecurityService {
   private config: ApiSecurityConfig;
-  private clients: Record<string, any> = {};
+  private clients: Record<string, ApiClient> = {};
   private circuitBreakers: Record<string, CircuitBreaker> = {};
   private rateLimiters: Record<string, {
     requests: number;

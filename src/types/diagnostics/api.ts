@@ -2,20 +2,22 @@
 import { DiagnosticTestStatus } from './common';
 
 export interface ApiEndpointDiagnosticResult {
-  id?: string;
-  name: string;
-  url: string;
-  method: "GET" | "POST" | "PUT" | "DELETE";
+  id: string;
+  endpoint: string;
+  method: string;
   status: DiagnosticTestStatus;
   responseTime: number;
-  responseStatus?: number;
-  errorMessage?: string;
-  warningMessage?: string;
-  expectedDataStructure: string;
-  schemaValidation: {
-    valid: boolean;
-    expected: any;
-    actual: any;
-    errors: string[];
-  };
+  timestamp: string;
+  message: string;
+  details?: any;
+}
+
+export interface AccessibilityAuditResult {
+  id: string;
+  component: string;
+  status: DiagnosticTestStatus;
+  message: string;
+  timestamp: string;
+  violations: number;
+  details?: any;
 }
