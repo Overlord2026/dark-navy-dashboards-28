@@ -12,8 +12,4 @@ export const integrationRoutes = [
     path: "/secure-login",
     element: <SecureLogin />,
   },
-  {
-    path: "/sign-up",
-    element: <SecureLogin />,  // For now, reuse SecureLogin page - can be expanded later
-  },
 ];
