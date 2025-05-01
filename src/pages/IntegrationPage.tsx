@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArchiveIcon, ApiIcon, PlugIcon, Network } from "lucide-react";
+import { ArchiveIcon, DatabaseIcon, PlugIcon, Network } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function IntegrationPage() {
@@ -80,7 +80,7 @@ export default function IntegrationPage() {
               </CardHeader>
               <CardContent>
                 <div className="flex justify-center py-12 border-2 border-dashed border-secondary rounded-md">
-                  <ApiIcon className="h-12 w-12 text-muted-foreground" />
+                  <DatabaseIcon className="h-12 w-12 text-muted-foreground" />
                   <p className="text-muted-foreground ml-2">API integrations will be displayed here</p>
                 </div>
               </CardContent>
