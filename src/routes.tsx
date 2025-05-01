@@ -10,6 +10,8 @@ import NotFound from "./pages/NotFound";
 import Landing from "./pages/Landing";
 import AuthPage from "./pages/AuthPage";
 import Header from "./components/Header";
+import ProfilePage from "./pages/ProfilePage";
+import TrialPage from "./pages/TrialPage";
 
 // Root layout component that includes the Header
 const RootLayout = () => {
@@ -33,6 +35,14 @@ const routes = createBrowserRouter([
       {
         path: "/auth",
         element: <AuthPage />
+      },
+      {
+        path: "/profile",
+        element: <ProfilePage />
+      },
+      {
+        path: "/trial",
+        element: <TrialPage />
       },
       ...dashboardRoutes as unknown as RouteObject[],
       ...educationRoutes as unknown as RouteObject[],

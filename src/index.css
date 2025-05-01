@@ -6,6 +6,13 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Logo consistency fix */
+.logo-container,
+.logo-container img {
+  background-image: none !important;
+  background-color: transparent !important;
+}
+
 @layer base {
   :root, .dark-theme {
     --background: 240 22% 9%; /* #12121C */

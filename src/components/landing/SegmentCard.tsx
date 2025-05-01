@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { ArrowRight, Check } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 export interface SegmentCardProps {
   id: string;
@@ -24,17 +24,9 @@ export const SegmentCard: React.FC<SegmentCardProps> = ({
   icon: Icon,
   tagline,
   buttonText,
-  onClick,
   isMobile,
   benefits,
 }) => {
-  const navigate = useNavigate();
-  
-  const handleClick = () => {
-    // Navigate directly to auth page with segment parameter
-    navigate(`/auth?segment=${id}`);
-  };
-  
   return (
     <div 
       className={`
@@ -81,8 +73,8 @@ export const SegmentCard: React.FC<SegmentCardProps> = ({
         )}
       </div>
       
-      <button 
-        onClick={handleClick} 
+      <Link 
+        to={`/dashboard?segment=${id}`}
         className="
           w-full py-3 px-4 bg-white bg-opacity-10 hover:bg-opacity-20
           text-white font-medium rounded-lg transition-all duration-300
@@ -91,7 +83,7 @@ export const SegmentCard: React.FC<SegmentCardProps> = ({
       >
         {buttonText}
         <ArrowRight className="ml-2 w-4 h-4" />
-      </button>
+      </Link>
     </div>
   );
 };

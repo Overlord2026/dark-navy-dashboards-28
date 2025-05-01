@@ -15,7 +15,7 @@ export const Header: React.FC<HeaderProps> = ({ isConnected = false, isAdvisor =
       py-3 sm:py-4 shadow-md
     ">
       <div className="container mx-auto flex justify-center items-center px-4 relative">
-        <Link to="/" className="flex items-center">
+        <Link to="/" className="flex items-center bg-transparent">
           <Logo size="medium" showText={false} />
         </Link>
         {isConnected && (

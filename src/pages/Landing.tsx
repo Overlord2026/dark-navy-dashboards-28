@@ -74,8 +74,7 @@ export default function Landing() {
   ];
 
   const handleSegmentClick = (segmentId: string) => {
-    // Updated to navigate to auth with segment
-    navigate(`/auth?segment=${segmentId}`);
+    navigate(`/dashboard?segment=${segmentId}`);
   };
 
   return (
@@ -103,13 +102,14 @@ export default function Landing() {
               Get full access to all features with no commitment. Experience how our platform can transform your financial future.
             </p>
             <div className="flex flex-col md:flex-row gap-4 justify-center">
-              <Button 
-                size="lg" 
-                className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
-                onClick={() => navigate("/auth")}
-              >
-                Sign Up Securely <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
+              <Link to="/auth">
+                <Button 
+                  size="lg" 
+                  className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
+                >
+                  Sign Up Securely <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
               <a href="#features">
                 <Button variant="outline" size="lg">
                   Learn More

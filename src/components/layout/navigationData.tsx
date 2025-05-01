@@ -27,7 +27,8 @@ import {
   LayoutDashboard,
   ListChecks,
   CheckCircle,
-  Shield
+  Shield,
+  LucideIcon
 } from "lucide-react";
 
 export const navigationData = [
@@ -46,6 +47,18 @@ export const navigationData = [
         icon: LineChart,
         description: "Track your financial progress.",
       },
+      {
+        title: "Profile",
+        href: "/profile",
+        icon: User,
+        description: "Manage your account settings.",
+      },
+      {
+        title: "Trial",
+        href: "/trial",
+        icon: CheckCircle,
+        description: "Manage your trial subscription.",
+      }
     ],
   },
   {
@@ -128,5 +141,16 @@ export const navigationData = [
         description: "Manage your account settings.",
       },
     ],
+  },
+  {
+    title: "Project Integration",
+    items: [
+      {
+        title: "Integration Hub",
+        href: "/integration",
+        icon: Folders,
+        description: "Manage project integrations.",
+      }
+    ]
   },
 ];

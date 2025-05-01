@@ -15,7 +15,7 @@ export const Logo: React.FC<LogoProps> = ({ size = 'medium', showText = true, cl
   };
 
   return (
-    <div className={`flex items-center ${className}`}>
+    <div className={`flex items-center logo-container ${className}`}>
       <div className="flex flex-col items-center">
         <img 
           src="/assets/logo-gold-tree.svg" 
