@@ -163,7 +163,13 @@ export function createApiClient(options: ApiClientOptions): AxiosInstance {
       return Promise.reject(error);
     }
 
-    const config = error.config as AxiosRequestConfig & { _retryCount?: number };
+    // TypeScript fix: Explicitly type the config with _retryCount property
+    interface ExtendedAxiosRequestConfig extends AxiosRequestConfig {
+      _retryCount?: number;
+    }
+
+    const config = error.config as ExtendedAxiosRequestConfig | undefined;
+    
     if (!config) {
       return Promise.reject(error);
     }

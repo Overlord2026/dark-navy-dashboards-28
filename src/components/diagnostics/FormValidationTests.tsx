@@ -4,7 +4,7 @@ import { FileText, ChevronDown } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { StatusIcon, getStatusColor } from "./StatusIcon";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { FormValidationTestResult, FormField } from "@/services/diagnostics/types";
+import { FormValidationTestResult, FormField } from "@/types/diagnostics/forms";
 
 interface FormValidationTestsProps {
   tests: FormValidationTestResult[];
