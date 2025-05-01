@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Button } from "@/components/ui/button";
-import { Shield, LockIcon } from "lucide-react";
+import { Shield } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Provider } from "@supabase/supabase-js";
 
@@ -80,7 +80,7 @@ export const SocialLoginButton: React.FC<SocialLoginButtonProps> = ({
   return (
     <Button 
       className={cn(
-        "w-full justify-center mb-2 relative", 
+        "w-full justify-center mb-3 relative h-12 shadow-md", 
         details.bgColor, 
         className
       )}
@@ -89,7 +89,7 @@ export const SocialLoginButton: React.FC<SocialLoginButtonProps> = ({
     >
       <div className="flex items-center justify-center">
         {details.icon}
-        <span>{details.label}</span>
+        <span className="font-medium">{details.label}</span>
       </div>
       <Shield className="h-4 w-4 absolute right-3 text-green-600" />
     </Button>
