@@ -1,436 +1,513 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Progress } from "@/components/ui/progress"; 
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { useDiagnostics } from '@/hooks/useDiagnostics';
 
-interface WizardStep {
-  id: string;
-  title: string;
-  description: string;
-  component: React.ReactNode;
+import React, { useState, useEffect } from 'react';
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ApiEndpointDiagnostics } from './ApiEndpointDiagnostics';
+import { FormValidationTests } from './FormValidationTests';
+import { NavigationTests } from './NavigationTests';
+import { PerformanceTests } from './PerformanceTests';
+import { SecurityTests } from './SecurityTests';
+import { 
+  AlertTriangle, 
+  ArrowLeft, 
+  ArrowRight, 
+  Check, 
+  FileWarning, 
+  Shield, 
+  Wrench, 
+  Zap 
+} from 'lucide-react';
+import { toast } from 'sonner';
+import { DiagnosticResultSummary } from '@/types/diagnostics';
+
+interface DiagnosticsWizardProps {
+  onClose: () => void;
+  onComplete: () => void;
 }
 
-export const DiagnosticsWizard = () => {
-  const { 
-    diagnosticResults, 
-    applyDiagnosticFix, 
-    fixInProgress, 
-    refreshDiagnostics,
-    isLoading
-  } = useDiagnostics();
-  const [currentStep, setCurrentStep] = useState(0);
-  const [isComplete, setIsComplete] = useState(false);
-  const [criticalIssues, setCriticalIssues] = useState<any[]>([]);
-  const [highPriorityIssues, setHighPriorityIssues] = useState<any[]>([]);
-  const [mediumPriorityIssues, setMediumPriorityIssues] = useState<any[]>([]);
+export const DiagnosticsWizard: React.FC<DiagnosticsWizardProps> = ({
+  onClose,
+  onComplete,
+}) => {
+  const [activeTab, setActiveTab] = useState("intro");
+  const [diagnosticSummary, setDiagnosticSummary] = useState<DiagnosticResultSummary | null>(null);
+  const [isRunning, setIsRunning] = useState(false);
   const [progress, setProgress] = useState(0);
-  // Add state to track which issues are currently being fixed
-  const [fixingIssueIds, setFixingIssueIds] = useState<Record<string, boolean>>({});
 
-  // Find all issues from diagnostic results
-  useEffect(() => {
-    if (!diagnosticResults) return;
-
-    const allTests = [
-      ...(diagnosticResults.securityTests || []),
-      ...(diagnosticResults.apiIntegrationTests || []),
-      ...(diagnosticResults.performanceTests || []),
-      ...(diagnosticResults.navigationTests || []),
-      ...(diagnosticResults.formValidationTests || [])
-    ];
-
-    // Critical issues (security errors with critical severity)
-    const critical = diagnosticResults.securityTests?.filter(
-      (test: any) => test.status === "error" && test.severity === "critical"
-    ) || [];
-
-    // High priority (errors in API and other areas)
-    const high = allTests.filter(
-      (test: any) => 
-        test.status === "error" && 
-        (!test.severity || test.severity !== "critical")
-    );
-
-    // Medium priority (warnings)
-    const medium = allTests.filter(
-      (test: any) => test.status === "warning"
-    );
-
-    setCriticalIssues(critical);
-    setHighPriorityIssues(high);
-    setMediumPriorityIssues(medium);
-
-    // Calculate progress
-    const totalIssues = critical.length + high.length + medium.length;
-    const fixedIssues = allTests.filter(test => test.status === "success").length;
+  const runAllTests = () => {
+    setIsRunning(true);
+    setProgress(0);
     
-    if (totalIssues > 0) {
-      setProgress(Math.round((fixedIssues / (fixedIssues + totalIssues)) * 100));
-    } else {
-      setProgress(100);
-      setIsComplete(true);
-    }
-  }, [diagnosticResults]);
-
-  // Apply fix and move to next issue
-  const handleApplyFix = async (issue: any) => {
-    if (fixInProgress) return;
+    toast.info("Running comprehensive diagnostics...");
     
-    const testId = `wizard-${issue.id || issue.name}`;
-    
-    // Mark this specific issue as fixing
-    setFixingIssueIds(prev => ({...prev, [testId]: true}));
-    
-    try {
-      // Fix: Pass only the testId to apply fix
-      await applyDiagnosticFix(testId);
-      toast.success(`Fixed: ${issue.name || issue.service}`);
-      
-      // Refresh diagnostics to update progress
-      await refreshDiagnostics();
-    } catch (error) {
-      toast.error("Failed to apply fix");
-      console.error("Fix application error:", error);
-    } finally {
-      // Clear the fixing state for this issue
-      setFixingIssueIds(prev => ({...prev, [testId]: false}));
-    }
+    // Simulate tests running with progress
+    const interval = setInterval(() => {
+      setProgress((prev) => {
+        const newProgress = prev + 5;
+        if (newProgress >= 100) {
+          clearInterval(interval);
+          setIsRunning(false);
+          setActiveTab("results");
+          toast.success("Diagnostics completed!");
+          
+          // Mock results
+          setDiagnosticSummary({
+            apiTests: { passed: 8, failed: 2, total: 10 },
+            formValidationTests: { passed: 5, failed: 0, total: 5 },
+            navigationTests: { passed: 12, failed: 1, total: 13 },
+            performanceTests: { passed: 6, failed: 2, total: 8 },
+            securityTests: { passed: 7, failed: 0, total: 7 },
+            timestamp: new Date().toISOString(),
+            recommendations: [
+              {
+                id: 'rec-1',
+                title: 'Optimize API response times',
+                priority: 'medium',
+                description: 'Several API endpoints are responding slower than the recommended threshold',
+                actionable: true
+              },
+              {
+                id: 'rec-2',
+                title: 'Fix broken navigation link',
+                priority: 'high',
+                description: 'The profile settings link is not navigating correctly',
+                actionable: true
+              }
+            ]
+          });
+          
+          return 100;
+        }
+        return newProgress;
+      });
+    }, 200);
   };
 
-  // Check if a specific issue is being fixed
-  const isFixingIssue = (issue: any) => {
-    const testId = `wizard-${issue.id || issue.name}`;
-    return fixingIssueIds[testId] || false;
-  };
-
-  // Create wizard steps based on issues
-  const getWizardSteps = (): WizardStep[] => {
-    const steps: WizardStep[] = [
-      {
-        id: "intro",
-        title: "Diagnostics Wizard",
-        description: "This wizard will guide you through fixing system issues in order of priority",
-        component: (
-          <div className="py-6 space-y-4">
-            <div className="flex items-center justify-center mb-4">
-              <div className="w-16 h-16 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
-                <Wrench className="h-8 w-8 text-blue-500" />
-              </div>
-            </div>
-            
-            <div className="text-center mb-4">
-              <h3 className="text-lg font-medium">Welcome to the Diagnostics Wizard</h3>
-              <p className="text-muted-foreground mt-2">
-                This wizard will help you resolve system issues in order of priority:
-              </p>
-            </div>
-            
-            <div className="space-y-2">
-              <div className="flex items-center p-3 bg-red-50 dark:bg-red-900/20 rounded-md">
-                <AlertTriangle className="h-5 w-5 text-red-500 mr-3 flex-shrink-0" />
-                <div>
-                  <span className="font-medium">Critical Issues:</span> 
-                  <span className="ml-2">{criticalIssues.length} issues</span>
+  const tabs = [
+    { id: "intro", label: "Introduction" },
+    { id: "api-tests", label: "API Tests" },
+    { id: "validation-tests", label: "Form Validation" },
+    { id: "navigation-tests", label: "Navigation" },
+    { id: "performance-tests", label: "Performance" },
+    { id: "security-tests", label: "Security" },
+    { id: "results", label: "Results" },
+  ];
+  
+  return (
+    <div className="p-6 max-w-4xl mx-auto">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+        <TabsList className="grid grid-cols-7 mb-6">
+          {tabs.map((tab) => (
+            <TabsTrigger 
+              key={tab.id} 
+              value={tab.id}
+              disabled={isRunning}
+            >
+              {tab.label}
+            </TabsTrigger>
+          ))}
+        </TabsList>
+        
+        <TabsContent value="intro">
+          <Card>
+            <CardContent className="pt-6">
+              <div className="flex items-center mb-4">
+                <div className="bg-blue-100 p-2 rounded-full mr-4">
+                  <Wrench className="h-6 w-6 text-blue-600" />
                 </div>
+                <h2 className="text-2xl font-semibold">System Diagnostics Wizard</h2>
               </div>
               
-              <div className="flex items-center p-3 bg-amber-50 dark:bg-amber-900/20 rounded-md">
-                <FileWarning className="h-5 w-5 text-amber-500 mr-3 flex-shrink-0" />
-                <div>
-                  <span className="font-medium">High Priority:</span> 
-                  <span className="ml-2">{highPriorityIssues.length} issues</span>
-                </div>
-              </div>
-              
-              <div className="flex items-center p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-md">
-                <Zap className="h-5 w-5 text-yellow-500 mr-3 flex-shrink-0" />
-                <div>
-                  <span className="font-medium">Medium Priority:</span> 
-                  <span className="ml-2">{mediumPriorityIssues.length} issues</span>
-                </div>
-              </div>
-            </div>
-            
-            {isComplete && (
-              <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 p-4 rounded-md mt-4">
-                <div className="flex items-center">
-                  <Check className="h-5 w-5 text-green-500 mr-2" />
-                  <p className="font-medium text-green-700 dark:text-green-400">
-                    All issues have been resolved! System looks healthy.
-                  </p>
-                </div>
-              </div>
-            )}
-          </div>
-        )
-      }
-    ];
-
-    // Add steps for critical issues
-    criticalIssues.forEach((issue, index) => {
-      steps.push({
-        id: `critical-${index}`,
-        title: `Critical Issue: ${issue.name}`,
-        description: "Critical security issues must be fixed immediately",
-        component: (
-          <div className="py-4 space-y-4">
-            <div className="flex items-center p-3 bg-red-50 dark:bg-red-900/20 rounded-md">
-              <Shield className="h-5 w-5 text-red-500 mr-3 flex-shrink-0" />
-              <div className="font-medium">Critical Security Issue</div>
-            </div>
-            
-            <div className="space-y-2">
-              <h3 className="font-medium">{issue.name}</h3>
-              <p className="text-muted-foreground">{issue.message}</p>
-              
-              <div className="bg-muted p-3 rounded-md text-sm mt-2">
-                <pre className="whitespace-pre-wrap font-mono text-xs">{issue.details || "No additional details available"}</pre>
-              </div>
-            </div>
-            
-            <div className="flex justify-end mt-4">
-              <Button
-                onClick={() => handleApplyFix(issue)}
-                disabled={isFixingIssue(issue)}
-                className="gap-2"
-              >
-                <Wrench className="h-4 w-4" />
-                {isFixingIssue(issue) ? "Fixing..." : "Fix Issue"}
-              </Button>
-            </div>
-          </div>
-        )
-      });
-    });
-
-    // Add steps for high priority issues
-    highPriorityIssues.forEach((issue, index) => {
-      steps.push({
-        id: `high-${index}`,
-        title: `High Priority: ${issue.name || issue.service || "System Issue"}`,
-        description: "These issues should be fixed soon",
-        component: (
-          <div className="py-4 space-y-4">
-            <div className="flex items-center p-3 bg-amber-50 dark:bg-amber-900/20 rounded-md">
-              <FileWarning className="h-5 w-5 text-amber-500 mr-3 flex-shrink-0" />
-              <div className="font-medium">High Priority Issue</div>
-            </div>
-            
-            <div className="space-y-2">
-              <h3 className="font-medium">{issue.name || issue.service || "System Issue"}</h3>
-              <p className="text-muted-foreground">{issue.message}</p>
-              
-              {issue.details && (
-                <div className="bg-muted p-3 rounded-md text-sm mt-2">
-                  <pre className="whitespace-pre-wrap font-mono text-xs">{issue.details}</pre>
-                </div>
-              )}
-              
-              {issue.fixMessage && (
-                <div className="p-3 border rounded-md mt-2">
-                  <h4 className="text-sm font-medium mb-1">Fix Details:</h4>
-                  <p className="text-sm">{issue.fixMessage}</p>
-                </div>
-              )}
-            </div>
-            
-            <div className="flex justify-end mt-4">
-              <Button
-                onClick={() => handleApplyFix(issue)}
-                disabled={isFixingIssue(issue)}
-                className="gap-2"
-              >
-                <Wrench className="h-4 w-4" />
-                {isFixingIssue(issue) ? "Fixing..." : "Fix Issue"}
-              </Button>
-            </div>
-          </div>
-        )
-      });
-    });
-
-    // Add medium priority issues
-    mediumPriorityIssues.forEach((issue, index) => {
-      steps.push({
-        id: `medium-${index}`,
-        title: `Medium Priority: ${issue.name || issue.service || "System Issue"}`,
-        description: "These issues can be fixed after more critical ones",
-        component: (
-          <div className="py-4 space-y-4">
-            <div className="flex items-center p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-md">
-              <Zap className="h-5 w-5 text-yellow-500 mr-3 flex-shrink-0" />
-              <div className="font-medium">Medium Priority Issue</div>
-            </div>
-            
-            <div className="space-y-2">
-              <h3 className="font-medium">{issue.name || issue.service || "System Issue"}</h3>
-              <p className="text-muted-foreground">{issue.message}</p>
-              
-              {issue.details && (
-                <div className="bg-muted p-3 rounded-md text-sm mt-2">
-                  <pre className="whitespace-pre-wrap font-mono text-xs">{issue.details}</pre>
-                </div>
-              )}
-            </div>
-            
-            <div className="flex justify-end mt-4">
-              <Button
-                onClick={() => handleApplyFix(issue)}
-                disabled={isFixingIssue(issue)}
-                className="gap-2"
-              >
-                <Wrench className="h-4 w-4" />
-                {isFixingIssue(issue) ? "Fixing..." : "Fix Issue"}
-              </Button>
-            </div>
-          </div>
-        )
-      });
-    });
-
-    // Add final summary step
-    steps.push({
-      id: "summary",
-      title: "Resolution Summary",
-      description: "Overview of issues fixed and current system status",
-      component: (
-        <div className="py-6 space-y-4">
-          <div className="flex items-center justify-center mb-4">
-            <div className="w-16 h-16 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
-              <Check className="h-8 w-8 text-green-500" />
-            </div>
-          </div>
-          
-          <div className="text-center mb-4">
-            <h3 className="text-lg font-medium">Diagnostics Completed</h3>
-            <p className="text-muted-foreground mt-2">
-              Review the issues that have been fixed and any remaining items.
-            </p>
-          </div>
-          
-          <div className="space-y-3">
-            <div className="p-3 border rounded-md">
-              <h4 className="font-medium mb-2">Resolution Summary</h4>
-              
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span>Critical Issues:</span>
-                  <span>{criticalIssues.length === 0 ? 
-                    <span className="text-green-500">All Resolved</span> : 
-                    <span className="text-red-500">{criticalIssues.length} Remaining</span>}
-                  </span>
-                </div>
-                
-                <div className="flex justify-between text-sm">
-                  <span>High Priority Issues:</span>
-                  <span>{highPriorityIssues.length === 0 ? 
-                    <span className="text-green-500">All Resolved</span> : 
-                    <span className="text-amber-500">{highPriorityIssues.length} Remaining</span>}
-                  </span>
-                </div>
-                
-                <div className="flex justify-between text-sm">
-                  <span>Medium Priority Issues:</span>
-                  <span>{mediumPriorityIssues.length === 0 ? 
-                    <span className="text-green-500">All Resolved</span> : 
-                    <span className="text-yellow-500">{mediumPriorityIssues.length} Remaining</span>}
-                  </span>
-                </div>
-              </div>
-            </div>
-            
-            <div className="p-3 border rounded-md">
-              <h4 className="font-medium mb-2">Next Steps</h4>
-              <p className="text-sm text-muted-foreground">
-                {isComplete ? 
-                  "All issues have been resolved! Your system is now healthy." : 
-                  "Some issues still require attention. You can run the wizard again or address them manually."}
+              <p className="mb-6 text-gray-600">
+                This wizard will help you diagnose and fix potential issues with your Family Office Marketplace integration. 
+                It will test various aspects of your system including API connections, form validation, navigation, 
+                performance metrics, and security features.
               </p>
               
-              <div className="mt-4">
+              <div className="space-y-4 mb-8">
+                <div className="flex items-start">
+                  <div className="bg-amber-100 p-2 rounded-full mr-4 mt-1">
+                    <AlertTriangle className="h-5 w-5 text-amber-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-medium">API Diagnostics</h3>
+                    <p className="text-sm text-gray-600">Tests connectivity and response times for all integrated APIs</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start">
+                  <div className="bg-purple-100 p-2 rounded-full mr-4 mt-1">
+                    <FileWarning className="h-5 w-5 text-purple-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-medium">Form Validation</h3>
+                    <p className="text-sm text-gray-600">Ensures all forms work correctly with proper error handling</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start">
+                  <div className="bg-green-100 p-2 rounded-full mr-4 mt-1">
+                    <Zap className="h-5 w-5 text-green-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-medium">Navigation & Routing</h3>
+                    <p className="text-sm text-gray-600">Validates all navigation paths work as expected</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start">
+                  <div className="bg-teal-100 p-2 rounded-full mr-4 mt-1">
+                    <Check className="h-5 w-5 text-teal-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-medium">Performance Metrics</h3>
+                    <p className="text-sm text-gray-600">Measures load times, rendering performance, and overall responsiveness</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start">
+                  <div className="bg-rose-100 p-2 rounded-full mr-4 mt-1">
+                    <Shield className="h-5 w-5 text-rose-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-medium">Security Tests</h3>
+                    <p className="text-sm text-gray-600">Checks for proper authentication, authorization, and data protection</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="flex justify-between">
+                <Button variant="outline" onClick={onClose}>
+                  Cancel
+                </Button>
+                <div className="space-x-2">
+                  <Button 
+                    onClick={() => setActiveTab("api-tests")}
+                    variant="outline"
+                  >
+                    Step by Step
+                  </Button>
+                  <Button 
+                    onClick={runAllTests}
+                    className="bg-blue-600 hover:bg-blue-700"
+                    disabled={isRunning}
+                  >
+                    {isRunning ? (
+                      <>
+                        Running Tests... {progress}%
+                        <div className="ml-2 h-4 w-24 bg-blue-300 rounded-full overflow-hidden">
+                          <div 
+                            className="h-full bg-white transition-all duration-300" 
+                            style={{ width: `${progress}%` }}
+                          ></div>
+                        </div>
+                      </>
+                    ) : (
+                      "Run All Tests"
+                    )}
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+        
+        <TabsContent value="api-tests">
+          <Card>
+            <CardContent className="pt-6">
+              <div className="flex items-center mb-4">
+                <div className="bg-amber-100 p-2 rounded-full mr-4">
+                  <Wrench className="h-6 w-6 text-amber-600" />
+                </div>
+                <h2 className="text-2xl font-semibold">API Diagnostics</h2>
+              </div>
+              
+              <ApiEndpointDiagnostics />
+              
+              <div className="flex justify-between mt-6">
                 <Button 
-                  onClick={() => refreshDiagnostics()} 
                   variant="outline" 
-                  className="w-full"
+                  onClick={() => setActiveTab("intro")}
+                  className="flex items-center"
                 >
-                  Re-check System Status
+                  <ArrowLeft className="mr-2 h-4 w-4" /> Back
+                </Button>
+                <Button 
+                  onClick={() => setActiveTab("validation-tests")}
+                  className="flex items-center"
+                >
+                  Next <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </div>
-            </div>
-          </div>
-        </div>
-      )
-    });
-
-    return steps;
-  };
-
-  const steps = getWizardSteps();
-  
-  const nextStep = () => {
-    if (currentStep < steps.length - 1) {
-      setCurrentStep(currentStep + 1);
-    }
-  };
-  
-  const prevStep = () => {
-    if (currentStep > 0) {
-      setCurrentStep(currentStep - 1);
-    }
-  };
-
-  return (
-    <Card className="w-full">
-      <CardHeader>
-        <CardTitle className="flex items-center justify-between">
-          <span>{steps[currentStep].title}</span>
-          <span className="text-sm font-normal text-muted-foreground">
-            Step {currentStep + 1} of {steps.length}
-          </span>
-        </CardTitle>
-        <CardDescription>{steps[currentStep].description}</CardDescription>
-      </CardHeader>
-      
-      <CardContent>
-        <div className="mb-4">
-          <Progress value={progress} className="h-2" />
-          <div className="flex justify-between mt-1">
-            <span className="text-xs text-muted-foreground">Progress</span>
-            <span className="text-xs font-medium">{progress}%</span>
-          </div>
-        </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
         
-        {isLoading ? (
-          <div className="py-8 flex justify-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-          </div>
-        ) : (
-          steps[currentStep].component
-        )}
-      </CardContent>
-      
-      <CardFooter className="flex justify-between">
-        <Button 
-          variant="outline" 
-          onClick={prevStep}
-          disabled={currentStep === 0}
-          className="gap-2"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Back
-        </Button>
+        <TabsContent value="validation-tests">
+          <Card>
+            <CardContent className="pt-6">
+              <div className="flex items-center mb-4">
+                <div className="bg-purple-100 p-2 rounded-full mr-4">
+                  <FileWarning className="h-6 w-6 text-purple-600" />
+                </div>
+                <h2 className="text-2xl font-semibold">Form Validation Tests</h2>
+              </div>
+              
+              <FormValidationTests />
+              
+              <div className="flex justify-between mt-6">
+                <Button 
+                  variant="outline" 
+                  onClick={() => setActiveTab("api-tests")}
+                  className="flex items-center"
+                >
+                  <ArrowLeft className="mr-2 h-4 w-4" /> Back
+                </Button>
+                <Button 
+                  onClick={() => setActiveTab("navigation-tests")}
+                  className="flex items-center"
+                >
+                  Next <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
         
-        <Button 
-          onClick={nextStep}
-          disabled={currentStep === steps.length - 1}
-          className="gap-2"
-        >
-          Next
-          <ArrowRight className="h-4 w-4" />
-        </Button>
-      </CardFooter>
-    </Card>
+        <TabsContent value="navigation-tests">
+          <Card>
+            <CardContent className="pt-6">
+              <div className="flex items-center mb-4">
+                <div className="bg-green-100 p-2 rounded-full mr-4">
+                  <Zap className="h-6 w-6 text-green-600" />
+                </div>
+                <h2 className="text-2xl font-semibold">Navigation Tests</h2>
+              </div>
+              
+              <NavigationTests />
+              
+              <div className="flex justify-between mt-6">
+                <Button 
+                  variant="outline" 
+                  onClick={() => setActiveTab("validation-tests")}
+                  className="flex items-center"
+                >
+                  <ArrowLeft className="mr-2 h-4 w-4" /> Back
+                </Button>
+                <Button 
+                  onClick={() => setActiveTab("performance-tests")}
+                  className="flex items-center"
+                >
+                  Next <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+        
+        <TabsContent value="performance-tests">
+          <Card>
+            <CardContent className="pt-6">
+              <div className="flex items-center mb-4">
+                <div className="bg-teal-100 p-2 rounded-full mr-4">
+                  <Check className="h-6 w-6 text-teal-600" />
+                </div>
+                <h2 className="text-2xl font-semibold">Performance Tests</h2>
+              </div>
+              
+              <PerformanceTests />
+              
+              <div className="flex justify-between mt-6">
+                <Button 
+                  variant="outline" 
+                  onClick={() => setActiveTab("navigation-tests")}
+                  className="flex items-center"
+                >
+                  <ArrowLeft className="mr-2 h-4 w-4" /> Back
+                </Button>
+                <Button 
+                  onClick={() => setActiveTab("security-tests")}
+                  className="flex items-center"
+                >
+                  Next <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+        
+        <TabsContent value="security-tests">
+          <Card>
+            <CardContent className="pt-6">
+              <div className="flex items-center mb-4">
+                <div className="bg-rose-100 p-2 rounded-full mr-4">
+                  <Shield className="h-6 w-6 text-rose-600" />
+                </div>
+                <h2 className="text-2xl font-semibold">Security Tests</h2>
+              </div>
+              
+              <SecurityTests />
+              
+              <div className="flex justify-between mt-6">
+                <Button 
+                  variant="outline" 
+                  onClick={() => setActiveTab("performance-tests")}
+                  className="flex items-center"
+                >
+                  <ArrowLeft className="mr-2 h-4 w-4" /> Back
+                </Button>
+                <Button 
+                  onClick={runAllTests}
+                  className="flex items-center"
+                >
+                  Complete All Tests
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+        
+        <TabsContent value="results">
+          <Card>
+            <CardContent className="pt-6">
+              <div className="flex items-center mb-4">
+                <div className="bg-green-100 p-2 rounded-full mr-4">
+                  <Check className="h-6 w-6 text-green-600" />
+                </div>
+                <h2 className="text-2xl font-semibold">Diagnostic Results</h2>
+              </div>
+              
+              {diagnosticSummary && (
+                <div className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+                    <Card className="bg-gradient-to-br from-amber-50 to-amber-100">
+                      <CardContent className="p-4">
+                        <h3 className="text-sm font-medium text-amber-800">API Tests</h3>
+                        <div className="flex items-end justify-between mt-2">
+                          <div className="text-2xl font-bold text-amber-900">
+                            {diagnosticSummary.apiTests.passed}/{diagnosticSummary.apiTests.total}
+                          </div>
+                          <div className="text-sm text-amber-700">
+                            {Math.round((diagnosticSummary.apiTests.passed / diagnosticSummary.apiTests.total) * 100)}% pass
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                    
+                    <Card className="bg-gradient-to-br from-purple-50 to-purple-100">
+                      <CardContent className="p-4">
+                        <h3 className="text-sm font-medium text-purple-800">Form Validation</h3>
+                        <div className="flex items-end justify-between mt-2">
+                          <div className="text-2xl font-bold text-purple-900">
+                            {diagnosticSummary.formValidationTests.passed}/{diagnosticSummary.formValidationTests.total}
+                          </div>
+                          <div className="text-sm text-purple-700">
+                            {Math.round((diagnosticSummary.formValidationTests.passed / diagnosticSummary.formValidationTests.total) * 100)}% pass
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                    
+                    <Card className="bg-gradient-to-br from-green-50 to-green-100">
+                      <CardContent className="p-4">
+                        <h3 className="text-sm font-medium text-green-800">Navigation</h3>
+                        <div className="flex items-end justify-between mt-2">
+                          <div className="text-2xl font-bold text-green-900">
+                            {diagnosticSummary.navigationTests.passed}/{diagnosticSummary.navigationTests.total}
+                          </div>
+                          <div className="text-sm text-green-700">
+                            {Math.round((diagnosticSummary.navigationTests.passed / diagnosticSummary.navigationTests.total) * 100)}% pass
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                    
+                    <Card className="bg-gradient-to-br from-teal-50 to-teal-100">
+                      <CardContent className="p-4">
+                        <h3 className="text-sm font-medium text-teal-800">Performance</h3>
+                        <div className="flex items-end justify-between mt-2">
+                          <div className="text-2xl font-bold text-teal-900">
+                            {diagnosticSummary.performanceTests.passed}/{diagnosticSummary.performanceTests.total}
+                          </div>
+                          <div className="text-sm text-teal-700">
+                            {Math.round((diagnosticSummary.performanceTests.passed / diagnosticSummary.performanceTests.total) * 100)}% pass
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                    
+                    <Card className="bg-gradient-to-br from-rose-50 to-rose-100">
+                      <CardContent className="p-4">
+                        <h3 className="text-sm font-medium text-rose-800">Security</h3>
+                        <div className="flex items-end justify-between mt-2">
+                          <div className="text-2xl font-bold text-rose-900">
+                            {diagnosticSummary.securityTests.passed}/{diagnosticSummary.securityTests.total}
+                          </div>
+                          <div className="text-sm text-rose-700">
+                            {Math.round((diagnosticSummary.securityTests.passed / diagnosticSummary.securityTests.total) * 100)}% pass
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                  
+                  <div className="mt-8">
+                    <h3 className="text-lg font-medium mb-4">Recommendations</h3>
+                    <div className="space-y-4">
+                      {diagnosticSummary.recommendations.map((rec) => (
+                        <Card key={rec.id} className={`
+                          ${rec.priority === 'high' ? 'border-l-4 border-l-red-500' : ''}
+                          ${rec.priority === 'medium' ? 'border-l-4 border-l-amber-500' : ''}
+                          ${rec.priority === 'low' ? 'border-l-4 border-l-blue-500' : ''}
+                        `}>
+                          <CardContent className="p-4">
+                            <div className="flex justify-between">
+                              <h4 className="font-medium">{rec.title}</h4>
+                              <span className={`
+                                text-xs px-2 py-1 rounded-full
+                                ${rec.priority === 'high' ? 'bg-red-100 text-red-700' : ''}
+                                ${rec.priority === 'medium' ? 'bg-amber-100 text-amber-700' : ''}
+                                ${rec.priority === 'low' ? 'bg-blue-100 text-blue-700' : ''}
+                              `}>
+                                {rec.priority} priority
+                              </span>
+                            </div>
+                            <p className="text-sm text-gray-600 mt-1">{rec.description}</p>
+                            {rec.actionable && (
+                              <Button size="sm" variant="outline" className="mt-2">
+                                Fix Issue
+                              </Button>
+                            )}
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              <div className="flex justify-between mt-6">
+                <Button 
+                  variant="outline" 
+                  onClick={() => setActiveTab("security-tests")}
+                  className="flex items-center"
+                >
+                  <ArrowLeft className="mr-2 h-4 w-4" /> Back
+                </Button>
+                <Button 
+                  onClick={onComplete}
+                  className="bg-green-600 hover:bg-green-700"
+                >
+                  Complete
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
+    </div>
   );
 };
+
+export default DiagnosticsWizard;

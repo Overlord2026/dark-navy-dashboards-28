@@ -1,34 +1,44 @@
 
-import { DiagnosticTestStatus, PerformanceTestResult } from './types';
+import { DiagnosticTestStatus } from '@/types/diagnostics/common';
+import { PerformanceTestResult } from '@/types/diagnostics';
+import { v4 as uuidv4 } from 'uuid';
 
-export function runPerformanceTests(): PerformanceTestResult[] {
-  return [
+export function runComponentPerformanceTests(): PerformanceTestResult[] {
+  const results: PerformanceTestResult[] = [
     {
-      id: 'perf-1',
-      name: 'Dashboard Load',
-      status: 'success',
-      responseTime: 120,
-      threshold: 200,
-      message: 'Dashboard loads within acceptable time',
-      timestamp: new Date().toISOString()
+      id: uuidv4(),
+      component: "Dashboard",
+      metric: "Render Time",
+      value: 120,
+      threshold: 100,
+      status: DiagnosticTestStatus.WARNING,
+      message: "Dashboard renders slower than optimal threshold",
+      timestamp: new Date().toISOString(),
+      details: { renderCalls: 5, reRenders: 2 }
     },
     {
-      id: 'perf-2',
-      name: 'Account Page Load',
-      status: 'success',
-      responseTime: 85,
-      threshold: 200,
-      message: 'Account page loads within acceptable time',
-      timestamp: new Date().toISOString()
-    },
-    {
-      id: 'perf-3',
-      name: 'Reports Generation',
-      status: 'success',
-      responseTime: 350,
+      id: uuidv4(),
+      component: "AssetTable",
+      metric: "Data Loading",
+      value: 350,
       threshold: 500,
-      message: 'Reports generate within acceptable time',
-      timestamp: new Date().toISOString()
+      status: DiagnosticTestStatus.SUCCESS,
+      message: "Asset table data loads within acceptable time",
+      timestamp: new Date().toISOString(),
+      details: { dataPoints: 250, queryTime: "342ms" }
+    },
+    {
+      id: uuidv4(),
+      component: "NetWorthChart",
+      metric: "Animation FPS",
+      value: 45,
+      threshold: 60,
+      status: DiagnosticTestStatus.WARNING,
+      message: "Chart animations dropping frames on lower-end devices",
+      timestamp: new Date().toISOString(),
+      details: { averageFPS: 45, minFPS: 30 }
     }
   ];
+  
+  return results;
 }

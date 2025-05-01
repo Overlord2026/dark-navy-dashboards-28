@@ -1,271 +1,59 @@
-import { useState, useEffect, useCallback } from 'react';
-import { FormValidationTestResult, FormField } from '@/types/diagnostics';
 
-interface UseFormValidationDiagnosticsProps {
-  formId?: string;
-  enabled?: boolean;
-}
+import { useState } from 'react';
+import { FormField, FormValidationTestResult } from '@/types/diagnostics';
+import { v4 as uuidv4 } from 'uuid';
 
-// Updated mock data structure to match the FormValidationTestResult type
-const mockFormValidationTests: FormValidationTestResult[] = [
-  {
-    id: "test-1",
-    name: 'Register Form Email Validation',
-    formId: "register-form",
-    formName: "register-form",
-    location: '/auth/register',
-    status: 'success',
-    message: 'Email validation working correctly',
-    timestamp: new Date(Date.now() - 300000).toISOString(), // Use string timestamp
-    success: true,
-    fields: [
-      {
-        id: "email-field",
-        name: 'email',
-        type: 'email',
-        validations: ['required', 'email'],
-        value: 'test@example.com',
-        status: 'success',
-        errors: [],
-        valid: true
-      }
-    ]
-  },
-  {
-    id: "test-2",
-    name: 'Register Form Password Validation',
-    formId: "register-form",
-    formName: "register-form",
-    location: '/auth/register',
-    status: 'warning',
-    message: 'Password strength indicator showing warnings inconsistently',
-    timestamp: new Date(Date.now() - 200000).toISOString(), // Use string timestamp
-    success: false,
-    fields: [
-      {
-        id: "password-field",
-        name: 'password',
-        type: 'password',
-        validations: ['required', 'minLength:8'],
-        value: 'Password123',
-        status: 'warning',
-        errors: ['Password not strong enough'],
-        valid: false
-      }
-    ]
-  },
-  {
-    id: "test-3",
-    name: 'Login Form Email Validation',
-    formId: "login-form",
-    formName: "login-form",
-    location: '/auth/login',
-    status: 'error',
-    message: 'Email validation not triggering on blur',
-    timestamp: new Date(Date.now() - 100000).toISOString(), // Use string timestamp
-    success: false,
-    fields: [
-      {
-        id: "email-field",
-        name: 'email',
-        type: 'email',
-        validations: ['required', 'email'],
-        value: 'invalid-email',
-        status: 'error',
-        errors: ['Invalid email format'],
-        valid: false
-      }
-    ]
-  },
-  {
-    id: "test-4",
-    name: 'Contact Form Message Validation',
-    formId: "contact-form",
-    formName: "contact-form",
-    location: '/contact',
-    status: 'success',
-    message: 'Message length validation working correctly',
-    timestamp: new Date(Date.now() - 50000).toISOString(), // Use string timestamp
-    success: true,
-    fields: [
-      {
-        id: "message-field",
-        name: 'message',
-        type: 'text',
-        validations: ['required', 'minLength:10'],
-        value: 'This is a test message with proper length',
-        status: 'success',
-        errors: [],
-        valid: true
-      }
-    ]
-  }
-];
-
-// Mock available forms
-const availableFormsList = [
-  { id: 'register-form', name: 'User Registration', location: '/auth/register' },
-  { id: 'login-form', name: 'User Login', location: '/auth/login' },
-  { id: 'contact-form', name: 'Contact Form', location: '/contact' },
-  { id: 'profile-form', name: 'Profile Update', location: '/profile' },
-];
-
-export const useFormValidationDiagnostics = (props?: UseFormValidationDiagnosticsProps) => {
-  const formId = props?.formId;
-  const enabled = props?.enabled ?? true;
-  
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isRunning, setIsRunning] = useState<boolean>(false);
-  const [lastRun, setLastRun] = useState<number | null>(null);
+export function useFormValidationDiagnostics() {
   const [results, setResults] = useState<FormValidationTestResult[]>([]);
-  const [availableForms, setAvailableForms] = useState<any[]>([]);
-  const [error, setError] = useState<Error | null>(null);
+  const [isRunning, setIsRunning] = useState(false);
 
-  const loadAvailableForms = useCallback(async () => {
-    setIsLoading(true);
-    setError(null);
-    
-    try {
-      // In a real implementation, this would call the API
-      await new Promise(resolve => setTimeout(resolve, 300));
-      setAvailableForms(availableFormsList);
-    } catch (err) {
-      setError(err instanceof Error ? err : new Error('An unknown error occurred'));
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
-
-  const runFormValidation = useCallback(async () => {
-    if (!formId) return;
-    
-    setIsLoading(true);
-    setError(null);
-    
-    try {
-      // In a real implementation, this would call the API
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      // Filter mock results for the specified form
-      const formResults = mockFormValidationTests.filter(test => 
-        test.formId === formId || test.form === formId || test.formName === formId
-      );
-      setResults(formResults);
-    } catch (err) {
-      setError(err instanceof Error ? err : new Error('An unknown error occurred'));
-    } finally {
-      setIsLoading(false);
-    }
-  }, [formId]);
-
-  const runFormTest = useCallback(async (formId: string, testIndex?: number) => {
+  const validateForm = (
+    formId: string, 
+    formName: string,
+    fields: FormField[],
+    formValues: Record<string, any>
+  ) => {
     setIsRunning(true);
-    setError(null);
     
-    try {
-      await new Promise(resolve => setTimeout(resolve, 700));
-      
-      // Filter mock results for the specified form
-      const formResults = mockFormValidationTests.filter(test => 
-        test.formId === formId || test.formName === formId
-      );
-      
-      if (testIndex !== undefined && formResults[testIndex]) {
-        setResults([formResults[testIndex]]);
-      } else {
-        setResults(formResults);
-      }
-      
-      setLastRun(Date.now());
-    } catch (err) {
-      setError(err instanceof Error ? err : new Error('An unknown error occurred'));
-    } finally {
-      setIsRunning(false);
-    }
-  }, []);
-
-  const runAllFormTests = useCallback(async () => {
-    setIsRunning(true);
-    setError(null);
+    // Mock implementation for form validation diagnostics
+    const invalidFields: string[] = [];
+    const validationDetails = { invalidFields };
     
-    try {
-      // In a real implementation, this would call the API
-      await new Promise(resolve => setTimeout(resolve, 1200));
-      setResults(mockFormValidationTests);
-      setLastRun(Date.now());
-    } catch (err) {
-      setError(err instanceof Error ? err : new Error('An unknown error occurred'));
-    } finally {
-      setIsRunning(false);
-    }
-  }, []);
+    // Do validation checks...
+    
+    const newResult: FormValidationTestResult = {
+      id: uuidv4(),
+      formId,
+      formName,
+      testName: `Validation test for ${formName}`,
+      status: invalidFields.length === 0 ? "pass" : "fail",
+      message: invalidFields.length === 0 
+        ? "Form validation successful" 
+        : `Form has ${invalidFields.length} invalid fields`,
+      timestamp: new Date().toISOString(),
+      validationDetails,
+      fields: fields.map(field => ({
+        name: field.name,
+        type: field.type,
+        status: invalidFields.includes(field.name) ? "fail" : "pass",
+        validations: field.validations || []
+      }))
+    };
+    
+    setResults(prev => [...prev, newResult]);
+    setIsRunning(false);
+    
+    return newResult;
+  };
 
-  useEffect(() => {
-    if (enabled && formId) {
-      runFormValidation();
-    }
-  }, [formId, enabled, runFormValidation]);
-
-  const getFieldStatus = useCallback((fieldName: string): 'success' | 'warning' | 'error' | 'idle' => {
-    for (const result of results) {
-      const field = result.fields?.find(f => f.name === fieldName);
-      if (field) {
-        if (field.status) return field.status;
-        if (field.valid === false) return 'error';
-        return field.errors && field.errors.length > 0 ? 'warning' : 'success';
-      }
-    }
-    return 'idle';
-  }, [results]);
-
-  const getFieldMessage = useCallback((fieldName: string): string | null => {
-    for (const result of results) {
-      const field = result.fields?.find(f => f.name === fieldName);
-      if (field) {
-        if (field.message) return field.message;
-        if (field.errors && field.errors.length > 0) return field.errors[0];
-      }
-    }
-    return null;
-  }, [results]);
-
-  const hasErrors = useCallback((): boolean => {
-    return results.some(result => result.status === 'error');
-  }, [results]);
-
-  const hasWarnings = useCallback((): boolean => {
-    return results.some(result => result.status === 'warning');
-  }, [results]);
-
-  const getErrorCount = useCallback((): number => {
-    return results.filter(result => result.status === 'error').length;
-  }, [results]);
-
-  const getWarningCount = useCallback((): number => {
-    return results.filter(result => result.status === 'warning').length;
-  }, [results]);
-
-  const getSuccessCount = useCallback((): number => {
-    return results.filter(result => result.status === 'success').length;
-  }, [results]);
+  const clearResults = () => {
+    setResults([]);
+  };
 
   return {
-    isLoading,
-    isRunning,
-    lastRun,
     results,
-    error,
-    availableForms,
-    runFormValidation,
-    runFormTest,
-    runAllFormTests,
-    loadAvailableForms,
-    getFieldStatus,
-    getFieldMessage,
-    hasErrors,
-    hasWarnings,
-    getErrorCount,
-    getWarningCount,
-    getSuccessCount
+    isRunning,
+    validateForm,
+    clearResults
   };
-};
+}

@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { ArrowRight, Check } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export interface SegmentCardProps {
   id: string;
@@ -28,6 +28,18 @@ export const SegmentCard: React.FC<SegmentCardProps> = ({
   isMobile,
   benefits,
 }) => {
+  const navigate = useNavigate();
+
+  const handleMainButtonClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    navigate(`/auth?segment=${id}`);
+  };
+
+  const handleTrialButtonClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    navigate(`/auth?segment=${id}&trial=true`);
+  };
+
   return (
     <div 
       className={`
@@ -75,8 +87,8 @@ export const SegmentCard: React.FC<SegmentCardProps> = ({
       </div>
       
       <div className="flex flex-col gap-2">
-        <Link 
-          to={`/dashboard?segment=${id}`}
+        <button 
+          onClick={handleMainButtonClick}
           className="
             w-full py-3 px-4 bg-white bg-opacity-10 hover:bg-opacity-20
             text-white font-medium rounded-lg transition-all duration-300
@@ -85,10 +97,10 @@ export const SegmentCard: React.FC<SegmentCardProps> = ({
         >
           {buttonText}
           <ArrowRight className="ml-2 w-4 h-4" />
-        </Link>
+        </button>
         
-        <Link 
-          to={`/trial?segment=${id}`}
+        <button 
+          onClick={handleTrialButtonClick}
           className="
             w-full py-2 px-4 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700
             text-white font-medium rounded-lg transition-all duration-300
@@ -97,7 +109,7 @@ export const SegmentCard: React.FC<SegmentCardProps> = ({
         >
           Start 90-Day Free Trial
           <ArrowRight className="ml-2 w-3 h-3" />
-        </Link>
+        </button>
       </div>
     </div>
   );

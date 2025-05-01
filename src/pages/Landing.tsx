@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Leaf, Sunrise, Crown, CheckCircle2, ArrowRight, Shield, Lock } from 'lucide-react';
@@ -74,7 +73,7 @@ export default function Landing() {
   ];
 
   const handleSegmentClick = (segmentId: string) => {
-    navigate(`/dashboard?segment=${segmentId}`);
+    navigate(`/auth?segment=${segmentId}`);
   };
 
   return (
@@ -106,22 +105,20 @@ export default function Landing() {
               Get full access to all features with no commitment. Experience how our platform can transform your financial future.
             </p>
             <div className="flex flex-col md:flex-row gap-4 justify-center">
-              <Link to="/auth">
-                <Button 
-                  size="lg" 
-                  className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
-                >
-                  Sign Up Securely <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </Link>
-              <Link to="/trial">
-                <Button 
-                  size="lg" 
-                  className="bg-gradient-to-r from-green-500 to-teal-600 hover:from-green-600 hover:to-teal-700"
-                >
-                  Start Free Trial <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </Link>
+              <Button 
+                size="lg" 
+                onClick={() => navigate('/auth')}
+                className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
+              >
+                Sign Up Securely <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+              <Button 
+                size="lg" 
+                onClick={() => navigate('/auth?trial=true')}
+                className="bg-gradient-to-r from-green-500 to-teal-600 hover:from-green-600 hover:to-teal-700"
+              >
+                Start Free Trial <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
             </div>
           </div>
         </div>

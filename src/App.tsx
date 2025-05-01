@@ -1,61 +1,38 @@
+
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { Toaster } from '@/components/ui/toaster';
 import { Toaster as SonnerToaster } from 'sonner';
 import dashboardRoutes from './routes/dashboard-routes';
-import accountRoutes from './routes/account-routes';
-import educationRoutes from './routes/education-routes';
-import { integrationRoute } from './routes/index';
+import { educationRoutes } from './routes/education-routes';
+import { integrationRoutes } from './routes/integration-routes';
 import Landing from './pages/Landing';
-import Auth from './pages/Auth';
+import AuthPage from './pages/AuthPage';
 import Dashboard from './pages/Dashboard';
-import Profile from './pages/Profile';
-import Settings from './pages/Settings';
 import NotFound from './pages/NotFound';
-import ProtectedRoute from './components/auth/ProtectedRoute';
-import MobileHome from './pages/mobile/MobileHome';
-import MobileAccounts from './pages/mobile/MobileAccounts';
-import MobileSettings from './pages/mobile/MobileSettings';
+import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import AdvisorDashboard from './pages/AdvisorDashboard';
-import AdvisorLogin from './pages/AdvisorLogin';
 
 function App() {
   return (
     <>
       <Routes>
         <Route path="/" element={<Landing />} />
-        <Route path="/auth" element={<Auth />} />
+        <Route path="/auth" element={<AuthPage />} />
         <Route path="/dashboard" element={
           <ProtectedRoute>
             <Dashboard />
           </ProtectedRoute>
         } />
-        <Route path="/profile" element={
-          <ProtectedRoute>
-            <Profile />
-          </ProtectedRoute>
-        } />
-        <Route path="/settings" element={
-          <ProtectedRoute>
-            <Settings />
-          </ProtectedRoute>
-        } />
-        
-        {/* Mobile routes */}
-        <Route path="/mobile" element={<MobileHome />} />
-        <Route path="/mobile/accounts" element={<MobileAccounts />} />
-        <Route path="/mobile/settings" element={<MobileSettings />} />
         
         {/* Advisor routes */}
         <Route path="/advisor" element={<AdvisorDashboard />} />
-        <Route path="/advisor/login" element={<AdvisorLogin />} />
         
         {/* Include integration route */}
-        {integrationRoute}
+        {integrationRoutes}
         
         {/* Include route groups */}
         {dashboardRoutes}
-        {accountRoutes}
         {educationRoutes}
         
         {/* Catch-all route */}
