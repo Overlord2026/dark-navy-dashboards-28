@@ -1,18 +1,24 @@
+// src/routes/dashboard-routes.tsx
+import React from 'react'
+import { RouteObject } from 'react-router-dom'
+import Dashboard from '@/pages/Dashboard'
+import SystemHealthDashboard from '@/pages/SystemHealthDashboard'
+import FullSystemDiagnostics from '@/pages/FullSystemDiagnostics'
 
-import { Route } from "react-router-dom";
-import Dashboard from "@/pages/Dashboard";
-import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
+const dashboardRoutes: RouteObject[] = [
+  {
+    path: '/dashboard',
+    element: <Dashboard />,
+  },
+  {
+    path: '/dashboard/health',
+    element: <SystemHealthDashboard />,
+  },
+  {
+    path: '/dashboard/diagnostics',
+    element: <FullSystemDiagnostics />,
+  },
+]
 
-const dashboardRoutes = [
-  <Route 
-    key="dashboard" 
-    path="/dashboard" 
-    element={
-      <ProtectedRoute>
-        <Dashboard />
-      </ProtectedRoute>
-    } 
-  />
-];
+export default dashboardRoutes
 
-export default dashboardRoutes;
