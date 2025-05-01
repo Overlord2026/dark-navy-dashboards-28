@@ -1,7 +1,13 @@
-
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { useDiagnostics } from "@/hooks/useDiagnostics";
 import { Progress } from "@/components/ui/progress";
 import { ArrowRight, ArrowLeft, Check, AlertTriangle, FileWarning, Zap, Shield, Wrench } from "lucide-react";
@@ -29,6 +35,8 @@ export const DiagnosticsWizard = () => {
   const [highPriorityIssues, setHighPriorityIssues] = useState<any[]>([]);
   const [mediumPriorityIssues, setMediumPriorityIssues] = useState<any[]>([]);
   const [progress, setProgress] = useState(0);
+  // Add state to track which issues are currently being fixed
+  const [fixingIssueIds, setFixingIssueIds] = useState<Record<string, boolean>>({});
 
   // Find all issues from diagnostic results
   useEffect(() => {
@@ -76,12 +84,17 @@ export const DiagnosticsWizard = () => {
   }, [diagnosticResults]);
 
   // Apply fix and move to next issue
-  const handleApplyFix = async (issue: any, category: string) => {
+  const handleApplyFix = async (issue: any) => {
     if (fixInProgress) return;
     
     const testId = `wizard-${issue.id || issue.name}`;
+    
+    // Mark this specific issue as fixing
+    setFixingIssueIds(prev => ({...prev, [testId]: true}));
+    
     try {
-      await applyDiagnosticFix(testId, category, issue.name || issue.service);
+      // Fix: Pass only the testId to apply fix
+      await applyDiagnosticFix(testId);
       toast.success(`Fixed: ${issue.name || issue.service}`);
       
       // Refresh diagnostics to update progress
@@ -89,7 +102,16 @@ export const DiagnosticsWizard = () => {
     } catch (error) {
       toast.error("Failed to apply fix");
       console.error("Fix application error:", error);
+    } finally {
+      // Clear the fixing state for this issue
+      setFixingIssueIds(prev => ({...prev, [testId]: false}));
     }
+  };
+
+  // Check if a specific issue is being fixed
+  const isFixingIssue = (issue: any) => {
+    const testId = `wizard-${issue.id || issue.name}`;
+    return fixingIssueIds[testId] || false;
   };
 
   // Create wizard steps based on issues
@@ -179,12 +201,12 @@ export const DiagnosticsWizard = () => {
             
             <div className="flex justify-end mt-4">
               <Button
-                onClick={() => handleApplyFix(issue, "security")}
-                disabled={fixInProgress === `wizard-${issue.id || issue.name}`}
+                onClick={() => handleApplyFix(issue)}
+                disabled={isFixingIssue(issue)}
                 className="gap-2"
               >
                 <Wrench className="h-4 w-4" />
-                {fixInProgress === `wizard-${issue.id || issue.name}` ? "Fixing..." : "Fix Issue"}
+                {isFixingIssue(issue) ? "Fixing..." : "Fix Issue"}
               </Button>
             </div>
           </div>
@@ -194,14 +216,6 @@ export const DiagnosticsWizard = () => {
 
     // Add steps for high priority issues
     highPriorityIssues.forEach((issue, index) => {
-      // Determine the category based on the issue
-      let category = "system";
-      if (issue.service) category = "apiIntegration";
-      else if (issue.route) category = "navigation";
-      else if (issue.formId) category = "formValidation";
-      else if (issue.testName && issue.testName.includes("security")) category = "security";
-      else if (issue.responseTime) category = "performance";
-
       steps.push({
         id: `high-${index}`,
         title: `High Priority: ${issue.name || issue.service || "System Issue"}`,
@@ -233,12 +247,12 @@ export const DiagnosticsWizard = () => {
             
             <div className="flex justify-end mt-4">
               <Button
-                onClick={() => handleApplyFix(issue, category)}
-                disabled={fixInProgress === `wizard-${issue.id || issue.name}`}
+                onClick={() => handleApplyFix(issue)}
+                disabled={isFixingIssue(issue)}
                 className="gap-2"
               >
                 <Wrench className="h-4 w-4" />
-                {fixInProgress === `wizard-${issue.id || issue.name}` ? "Fixing..." : "Fix Issue"}
+                {isFixingIssue(issue) ? "Fixing..." : "Fix Issue"}
               </Button>
             </div>
           </div>
@@ -248,14 +262,6 @@ export const DiagnosticsWizard = () => {
 
     // Add medium priority issues
     mediumPriorityIssues.forEach((issue, index) => {
-      // Determine the category based on the issue
-      let category = "system";
-      if (issue.service) category = "apiIntegration";
-      else if (issue.route) category = "navigation";
-      else if (issue.formId) category = "formValidation";
-      else if (issue.testName && issue.testName.includes("security")) category = "security";
-      else if (issue.responseTime) category = "performance";
-
       steps.push({
         id: `medium-${index}`,
         title: `Medium Priority: ${issue.name || issue.service || "System Issue"}`,
@@ -280,12 +286,12 @@ export const DiagnosticsWizard = () => {
             
             <div className="flex justify-end mt-4">
               <Button
-                onClick={() => handleApplyFix(issue, category)}
-                disabled={fixInProgress === `wizard-${issue.id || issue.name}`}
+                onClick={() => handleApplyFix(issue)}
+                disabled={isFixingIssue(issue)}
                 className="gap-2"
               >
                 <Wrench className="h-4 w-4" />
-                {fixInProgress === `wizard-${issue.id || issue.name}` ? "Fixing..." : "Fix Issue"}
+                {isFixingIssue(issue) ? "Fixing..." : "Fix Issue"}
               </Button>
             </div>
           </div>

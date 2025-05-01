@@ -1,9 +1,9 @@
-
 // This file contains the API diagnostics logic
 import { ApiEndpointDiagnosticResult } from '@/types/diagnostics';
 import { ApiFinancialPlanService } from '../financial-plans/ApiFinancialPlanService';
 import { logger } from '../logging/loggingService';
 import { SchemaDefinition, validateSchema, generateSampleFromSchema } from './schemaValidator';
+import { v4 as uuidv4 } from 'uuid';
 
 /**
  * Tests all API endpoints used in the application.
@@ -263,6 +263,10 @@ const testFinancialPlansApi = async (results: ApiEndpointDiagnosticResult[]) => 
     const expectedSample = generateSampleFromSchema(schemas.financialPlans.list);
     
     results.push({
+      id: uuidv4(),
+      endpoint: "/api/financial-plans",
+      timestamp: new Date().toISOString(),
+      message: "API implementation not yet available",
       name: "Get Financial Plans",
       url: "/api/financial-plans",
       method: "GET",
@@ -279,6 +283,10 @@ const testFinancialPlansApi = async (results: ApiEndpointDiagnosticResult[]) => 
     });
   } catch (error) {
     results.push({
+      id: uuidv4(),
+      endpoint: "/api/financial-plans",
+      timestamp: new Date().toISOString(),
+      message: error instanceof Error ? error.message : "Unknown error",
       name: "Get Financial Plans",
       url: "/api/financial-plans",
       method: "GET",
@@ -302,6 +310,10 @@ const testFinancialPlansApi = async (results: ApiEndpointDiagnosticResult[]) => 
     await financialPlanService.getPlanById("sample-plan-id");
     
     results.push({
+      id: uuidv4(),
+      endpoint: "/api/financial-plans/{id}",
+      timestamp: new Date().toISOString(),
+      message: "API implementation not yet available",
       name: "Get Financial Plan by ID",
       url: "/api/financial-plans/{id}",
       method: "GET",
@@ -318,6 +330,10 @@ const testFinancialPlansApi = async (results: ApiEndpointDiagnosticResult[]) => 
     });
   } catch (error) {
     results.push({
+      id: uuidv4(),
+      endpoint: "/api/financial-plans/{id}",
+      timestamp: new Date().toISOString(),
+      message: error instanceof Error ? error.message : "Unknown error",
       name: "Get Financial Plan by ID",
       url: "/api/financial-plans/{id}",
       method: "GET",
@@ -360,6 +376,10 @@ const testUserProfileApi = async (results: ApiEndpointDiagnosticResult[]) => {
   const validation = validateApiResponse(mockResponseData, 'userProfile');
   
   results.push({
+    id: uuidv4(),
+    endpoint: "/api/user/profile",
+    timestamp: new Date().toISOString(),
+    message: validation.valid ? "User profile data validated successfully" : "User profile data validation failed",
     name: "Get User Profile",
     url: "/api/user/profile",
     method: "GET",
@@ -398,6 +418,10 @@ const testDocumentManagementApi = async (results: ApiEndpointDiagnosticResult[])
   const validation = validateApiResponse(mockDocuments, 'documents', 'list');
   
   results.push({
+    id: uuidv4(),
+    endpoint: "/api/documents",
+    timestamp: new Date().toISOString(),
+    message: validation.valid ? "Document list retrieved successfully" : "Document list validation failed",
     name: "List Documents",
     url: "/api/documents",
     method: "GET",
@@ -419,6 +443,10 @@ const testDocumentManagementApi = async (results: ApiEndpointDiagnosticResult[])
   };
   
   results.push({
+    id: uuidv4(),
+    endpoint: "/api/documents",
+    timestamp: new Date().toISOString(),
+    message: "Document uploaded successfully",
     name: "Upload Document",
     url: "/api/documents",
     method: "POST",
@@ -480,6 +508,10 @@ const testInvestmentApi = async (results: ApiEndpointDiagnosticResult[]) => {
   const portfolioValidation = validateApiResponse(portfolioData, 'investments', 'portfolio');
   
   results.push({
+    id: uuidv4(),
+    endpoint: "/api/investments/portfolio",
+    timestamp: new Date().toISOString(),
+    message: portfolioValidation.valid ? "Portfolio data retrieved successfully" : "Portfolio data validation failed",
     name: "Get Investment Portfolio",
     url: "/api/investments/portfolio",
     method: "GET",
@@ -506,6 +538,10 @@ const testInvestmentApi = async (results: ApiEndpointDiagnosticResult[]) => {
   const marketValidation = validateApiResponse(marketData, 'investments', 'marketData');
   
   results.push({
+    id: uuidv4(),
+    endpoint: "/api/market/data",
+    timestamp: new Date().toISOString(),
+    message: "Limited market data available in development environment",
     name: "Get Market Data",
     url: "/api/market/data",
     method: "GET",
@@ -549,6 +585,10 @@ const testAccountApi = async (results: ApiEndpointDiagnosticResult[]) => {
   const accountsValidation = validateApiResponse(accountsData, 'accounts', 'list');
   
   results.push({
+    id: uuidv4(),
+    endpoint: "/api/accounts",
+    timestamp: new Date().toISOString(),
+    message: accountsValidation.valid ? "Account data retrieved successfully" : "Account data validation failed",
     name: "List Accounts",
     url: "/api/accounts",
     method: "GET",
@@ -587,6 +627,10 @@ const testAccountApi = async (results: ApiEndpointDiagnosticResult[]) => {
   const transactionsValidation = validateApiResponse(transactionsData, 'accounts', 'transactions');
   
   results.push({
+    id: uuidv4(),
+    endpoint: "/api/accounts/{id}/transactions",
+    timestamp: new Date().toISOString(),
+    message: transactionsValidation.valid ? "Transaction data retrieved successfully" : "Transaction data validation failed",
     name: "Get Account Transactions",
     url: "/api/accounts/{id}/transactions",
     method: "GET",
@@ -625,6 +669,10 @@ const testEducationApi = async (results: ApiEndpointDiagnosticResult[]) => {
   const coursesValidation = validateApiResponse(coursesData, 'courses', 'list');
   
   results.push({
+    id: uuidv4(),
+    endpoint: "/api/courses",
+    timestamp: new Date().toISOString(),
+    message: coursesValidation.valid ? "Courses data retrieved successfully" : "Courses data validation failed",
     name: "List Education Courses",
     url: "/api/courses",
     method: "GET",
@@ -667,6 +715,10 @@ const testEducationApi = async (results: ApiEndpointDiagnosticResult[]) => {
   const courseDetailValidation = validateApiResponse(courseDetailData, 'courses', 'detail');
   
   results.push({
+    id: uuidv4(),
+    endpoint: "/api/courses/{id}",
+    timestamp: new Date().toISOString(),
+    message: courseDetailValidation.valid ? "Course details retrieved successfully" : "Course details validation failed", 
     name: "Get Course Details",
     url: "/api/courses/{id}",
     method: "GET",
