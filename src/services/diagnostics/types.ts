@@ -1,7 +1,8 @@
 
 import { DiagnosticTestStatus } from '@/types/diagnostics/common';
 
-export { DiagnosticTestStatus };
+// Use export type to fix the isolatedModules error
+export type { DiagnosticTestStatus };
 
 export interface ApiIntegrationTestResult {
   id: string;

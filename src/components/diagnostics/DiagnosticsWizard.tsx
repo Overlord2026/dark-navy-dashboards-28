@@ -1,18 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from 'react';
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { useDiagnostics } from "@/hooks/useDiagnostics";
-import { Progress } from "@/components/ui/progress";
-import { ArrowRight, ArrowLeft, Check, AlertTriangle, FileWarning, Zap, Shield, Wrench } from "lucide-react";
-import { toast } from "sonner";
-import { StatusIcon } from "./StatusIcon";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Progress } from "@/components/ui/progress"; 
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { useDiagnostics } from '@/hooks/useDiagnostics';
 
 interface WizardStep {
   id: string;

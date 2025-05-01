@@ -19,7 +19,7 @@ export const Header: React.FC<HeaderProps> = ({ isConnected = false, isAdvisor =
           <Logo size="medium" showText={false} />
         </Link>
         {isConnected && (
-          <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
+          <div className="absolute right-4 top-1/2 transform -translate-y-1/2 z-10">
             <span className="bg-[#FFC700] text-black text-xs px-2 py-1 rounded-full font-medium">Connected</span>
           </div>
         )}

@@ -3,7 +3,6 @@ import React from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { useLocation, useSearchParams } from "react-router-dom";
 import { DefaultDashboard } from "@/components/dashboard/DefaultDashboard";
-import { AspiringDashboard } from "@/components/dashboard/AspiringDashboard";
 import { PreRetireesDashboard } from "@/components/dashboard/PreRetireesDashboard";
 import { UltraHNWDashboard } from "@/components/dashboard/UltraHNWDashboard";
 import { AdminActions } from "@/components/dashboard/AdminActions";
@@ -34,8 +33,7 @@ export default function Dashboard() {
   
   const renderDashboardContent = () => {
     switch (segment) {
-      case 'aspiring':
-        return <AspiringDashboard segment={segment} />;
+      // Removed 'aspiring' case to remove the Aspiring Wealthy quadrant
       case 'preretirees':
         return <PreRetireesDashboard segment={segment} />;
       case 'ultrahnw':

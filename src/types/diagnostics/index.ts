@@ -1,40 +1,16 @@
 
-// Re-export from other diagnostic modules
+// Fix re-export issues
 export * from './common';
-export * from './navigation';
-export * from './forms';
-export * from './api';
-export * from './security';
-export * from './accessibility';
-export * from './icons';
-// Re-export recommendations without the conflicting type
-export * from './logs';
-// Export specific named exports from recommendations to avoid conflicts
-export { 
-  RecommendationList, 
-  DiagnosticRecommendation, 
-  QuickFix, 
-  FixHistoryEntry 
-} from './recommendations';
+export * from './recommendations';
 
-// Define additional types used across the application
-export interface DiagnosticSummary {
-  overall: import('./common').DiagnosticTestStatus;
-  total: number;
-  success: number;
-  warnings: number;
-  errors: number;
-  timestamp: string;
-}
+// Export types to fix isolatedModules errors
+export type { 
+  ApiEndpointDiagnosticResult,
+  AccessibilityAuditResult 
+} from './api';
 
-// Define a unified diagnostic results interface that components expect
-export interface DiagnosticResultSummary {
-  overall: import('./common').DiagnosticTestStatus;
-  timestamp: string;
-  securityTests?: any[];
-  apiIntegrationTests?: any[];
-  performanceTests?: any[];
-  navigationTests?: any[];
-  formValidationTests?: any[];
-  iconTests?: any[];
-}
+export type { DiagnosticResultSummary } from './summary';
+export type { DiagnosticResult } from './common';
+export type { FormValidationTestResult } from './forms';
+export type { NavigationTestResult } from './navigation';
+export type { PerformanceTestResult } from './performance';
