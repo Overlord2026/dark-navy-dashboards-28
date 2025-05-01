@@ -1,37 +1,18 @@
-
-import Landing from "@/pages/Landing";
-import Dashboard from "@/pages/dashboard"; 
-import AdvisorDashboard from "@/pages/AdvisorDashboard";
-import LoginPage from "@/pages/LoginPage";
-import AdvisorLanding from "@/pages/AdvisorLanding";
+import React from "react";
+import { Navigate } from "react-router-dom";
+import Dashboard from "@/pages/Dashboard"; // Fixed casing to match file name
 
 export const dashboardRoutes = [
   {
     path: "/",
-    element: <Landing />,
+    element: <Dashboard />,
   },
   {
     path: "/dashboard",
     element: <Dashboard />,
   },
   {
-    path: "/index",
-    element: <Landing />,
-  },
-  {
-    path: "/advisor/login",
-    element: <LoginPage isAdvisor={true} />,
-  },
-  {
-    path: "/advisor/dashboard",
-    element: <AdvisorDashboard />,
-  },
-  {
-    path: "/advisor",
-    element: <AdvisorLanding />,
-  },
-  {
-    path: "/advisor/*",
-    element: <AdvisorDashboard />,
+    path: "/home",
+    element: <Navigate to="/dashboard" replace />,
   },
 ];
