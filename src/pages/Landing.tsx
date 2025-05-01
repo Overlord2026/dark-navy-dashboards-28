@@ -82,9 +82,13 @@ export default function Landing() {
       <main className="w-full max-w-7xl py-0 px-4 md:px-8">
         <div className="text-center mb-12">
           <h1 className="text-3xl md:text-5xl font-bold mb-4">Your Personalized Path to Lasting Prosperity</h1>
-          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+          <p className="text-xl text-gray-300 max-w-2xl mx-auto mb-4">
             Choose the approach that best matches your financial journey
           </p>
+          <div className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-4 py-2 rounded-full inline-flex items-center mb-8">
+            <span className="font-medium">All plans include a 90-day free trial</span>
+            <ArrowRight className="h-4 w-4 ml-2" />
+          </div>
         </div>
         
         <div className="mt-4">
@@ -110,11 +114,14 @@ export default function Landing() {
                   Sign Up Securely <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
-              <a href="#features">
-                <Button variant="outline" size="lg">
-                  Learn More
+              <Link to="/trial">
+                <Button 
+                  size="lg" 
+                  className="bg-gradient-to-r from-green-500 to-teal-600 hover:from-green-600 hover:to-teal-700"
+                >
+                  Start Free Trial <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
-              </a>
+              </Link>
             </div>
           </div>
         </div>

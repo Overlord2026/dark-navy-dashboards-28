@@ -73,17 +73,31 @@ export const SegmentCard: React.FC<SegmentCardProps> = ({
         )}
       </div>
       
-      <Link 
-        to={`/dashboard?segment=${id}`}
-        className="
-          w-full py-3 px-4 bg-white bg-opacity-10 hover:bg-opacity-20
-          text-white font-medium rounded-lg transition-all duration-300
-          flex items-center justify-center mt-auto
-        "
-      >
-        {buttonText}
-        <ArrowRight className="ml-2 w-4 h-4" />
-      </Link>
+      <div className="flex flex-col gap-2">
+        <Link 
+          to={`/dashboard?segment=${id}`}
+          className="
+            w-full py-3 px-4 bg-white bg-opacity-10 hover:bg-opacity-20
+            text-white font-medium rounded-lg transition-all duration-300
+            flex items-center justify-center
+          "
+        >
+          {buttonText}
+          <ArrowRight className="ml-2 w-4 h-4" />
+        </Link>
+        
+        <Link 
+          to={`/trial?segment=${id}`}
+          className="
+            w-full py-2 px-4 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700
+            text-white font-medium rounded-lg transition-all duration-300
+            flex items-center justify-center text-sm
+          "
+        >
+          Start 90-Day Free Trial
+          <ArrowRight className="ml-2 w-3 h-3" />
+        </Link>
+      </div>
     </div>
   );
 };
