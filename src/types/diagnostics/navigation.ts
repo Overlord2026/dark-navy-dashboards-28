@@ -7,7 +7,7 @@ export interface NavigationTestResult {
   status: DiagnosticTestStatus;
   name?: string;
   message?: string; 
-  timestamp: number;
+  timestamp?: number;  // Make timestamp optional
   responseTime?: number;
   recommendations?: (string | Recommendation)[];
   details?: any;

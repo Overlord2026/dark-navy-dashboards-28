@@ -2,31 +2,23 @@
 import { DiagnosticTestStatus } from './common';
 
 export interface FormField {
-  id?: string;
   name: string;
-  fieldName?: string;
-  type: "text" | "email" | "password" | "number" | "date" | "select" | "checkbox" | "radio";
-  validations?: string[];
-  value?: string;
+  type: string;
   status?: DiagnosticTestStatus;
-  message?: string;
-  fieldType?: string;
   errors?: string[];
-  valid?: boolean;
+  validations?: string[];
+  message?: string;
 }
 
 export interface FormValidationTestResult {
-  id: string;
+  formId: string;
   name: string;
-  form?: string;
-  formId?: string;
-  formName?: string;
   location?: string;
   status: DiagnosticTestStatus;
-  fields: FormField[];
-  message?: string;
-  timestamp: number;
-  success?: boolean;
+  success: boolean;
+  message: string;
+  timestamp: string;
+  fields?: FormField[];
   validationDetails?: {
     invalidFields?: string[];
     unexpectedErrors?: string[];

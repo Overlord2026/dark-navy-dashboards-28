@@ -1,6 +1,6 @@
 
-import { DiagnosticTestStatus } from './types';
-import { NavigationTestResult } from './types';
+import { DiagnosticTestStatus } from '@/types/diagnostics/common';
+import { NavigationTestResult } from '@/types/diagnostics/navigation';
 
 /**
  * Diagnoses the health of the Dashboard tab

@@ -1,64 +1,58 @@
 
-import { v4 as uuidv4 } from 'uuid';
-import { NavigationTestResult } from '@/types/diagnostics';
+import { NavigationTestResult } from '@/types/diagnostics/navigation';
+import { runNavigationTests } from './navigationTests';
 
-// Simulate an API call to get navigation diagnostics
+/**
+ * Returns a summary of navigation diagnostics
+ */
 export const getNavigationDiagnosticsSummary = async () => {
-  // This would be a real API call in a production environment
-  await new Promise(resolve => setTimeout(resolve, 1000));
+  const results = runNavigationTests();
   
-  // Sample diagnostic data with corrected properties
-  const results: Record<string, NavigationTestResult[]> = {
-    home: [
-      { id: uuidv4(), route: "/", status: "success", message: "Dashboard loads correctly", timestamp: Date.now() },
-      { id: uuidv4(), route: "/accounts", status: "success", message: "Accounts page loads correctly", timestamp: Date.now() }
-    ],
-    educationSolutions: [
-      { id: uuidv4(), route: "/education", status: "success", message: "Education center loads correctly", timestamp: Date.now() },
-      { id: uuidv4(), route: "/education/tax-planning", status: "success", message: "Tax planning education loads correctly", timestamp: Date.now() },
-      { id: uuidv4(), route: "/financial-plans", status: "warning", message: "Performance issues detected", timestamp: Date.now() }
-    ],
-    familyWealth: [
-      { id: uuidv4(), route: "/all-assets", status: "success", message: "All assets page loads correctly", timestamp: Date.now() },
-      { id: uuidv4(), route: "/properties", status: "warning", message: "Properties page slow to load", timestamp: Date.now() },
-      { id: uuidv4(), route: "/estate-planning", status: "success", message: "Estate planning page loads correctly", timestamp: Date.now() }
-    ],
-    collaboration: [
-      { id: uuidv4(), route: "/sharing", status: "success", message: "Sharing page loads correctly", timestamp: Date.now() },
-      { id: uuidv4(), route: "/professionals", status: "warning", message: "Missing mobile optimizations", timestamp: Date.now() }
-    ],
-    investments: [
-      { id: uuidv4(), route: "/investments", status: "success", message: "Investments page loads correctly", timestamp: Date.now() },
-      { id: uuidv4(), route: "/investments/stock-screener", status: "error", message: "API endpoint unavailable", timestamp: Date.now() },
-      { id: uuidv4(), route: "/investments/model-portfolios", status: "success", message: "Model portfolios page loads correctly", timestamp: Date.now() }
-    ]
-  };
+  // Calculate summary statistics
+  const totalRoutes = results.length;
+  const successCount = results.filter(r => r.status === "success").length;
+  const warningCount = results.filter(r => r.status === "warning").length;
+  const errorCount = results.filter(r => r.status === "error").length;
   
-  // Count results by status
-  const allResults = Object.values(results).flat();
-  const totalRoutes = allResults.length;
-  const successCount = allResults.filter(r => r.status === "success").length;
-  const warningCount = allResults.filter(r => r.status === "warning").length;
-  const errorCount = allResults.filter(r => r.status === "error").length;
-  
-  // Determine overall status
-  const overallStatus = 
-    errorCount > 0 ? "error" : 
-    warningCount > 0 ? "warning" : 
-    "success";
+  let overallStatus: "success" | "warning" | "error" = "success";
+  if (errorCount > 0) {
+    overallStatus = "error";
+  } else if (warningCount > 0) {
+    overallStatus = "warning";
+  }
   
   return {
-    results,
-    overallStatus,
+    results: {
+      routeTests: results
+    },
     totalRoutes,
     successCount,
     warningCount,
-    errorCount
+    errorCount,
+    overallStatus,
+    timestamp: Date.now()
   };
 };
 
-// Add function to test all navigation routes
+/**
+ * Tests all navigation routes and returns results grouped by category
+ */
 export const testAllNavigationRoutes = async (): Promise<Record<string, NavigationTestResult[]>> => {
-  const summary = await getNavigationDiagnosticsSummary();
-  return summary.results;
+  const results = runNavigationTests();
+  
+  // Group tests by categories (can be expanded as needed)
+  return {
+    main: results.filter(r => ['/dashboard', '/', '/home'].includes(r.route)),
+    accounts: results.filter(r => r.route.includes('/account') || r.route.includes('/funding')),
+    investments: results.filter(r => r.route.includes('/investment') || r.route.includes('/portfolio')),
+    documents: results.filter(r => r.route.includes('/document')),
+    other: results.filter(r => 
+      !['/dashboard', '/', '/home'].includes(r.route) && 
+      !r.route.includes('/account') && 
+      !r.route.includes('/funding') &&
+      !r.route.includes('/investment') && 
+      !r.route.includes('/portfolio') &&
+      !r.route.includes('/document')
+    )
+  };
 };

@@ -3,6 +3,7 @@ import { Route } from "react-router-dom";
 import AdvisorDashboard from "@/pages/AdvisorDashboard";
 import AdvisorLanding from "@/pages/AdvisorLanding";
 import LoginPage from "@/pages/LoginPage";
+import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 
 export const advisorRoutes = [
   <Route 
@@ -13,7 +14,11 @@ export const advisorRoutes = [
   <Route 
     key="advisor-dashboard" 
     path="/advisor/dashboard" 
-    element={<AdvisorDashboard />} 
+    element={
+      <ProtectedRoute>
+        <AdvisorDashboard />
+      </ProtectedRoute>
+    } 
   />,
   <Route 
     key="advisor-login" 
