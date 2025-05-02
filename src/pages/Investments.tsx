@@ -4,7 +4,7 @@ import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { InvestmentForm } from "@/components/investments/InvestmentForm";
 import { SuggestionsPanel } from "@/components/investments/SuggestionsPanel";
 import { Investment } from "@/types/investments";
-import { supabase } from "@/integrations/supabase/client";
+import { notifyAdvisor } from "@/services/advisorNotifier";
 import { toast } from "sonner";
 
 const Investments: React.FC = () => {
@@ -24,20 +24,9 @@ const Investments: React.FC = () => {
         timestamp: new Date().toISOString()
       };
       
-      // Call the RPC function to notify the advisor
-      const { data, error } = await supabase.rpc(
-        'notify_advisor', 
-        { 
-          type: 'investment_interest', 
-          data: payload 
-        }
-      );
+      // Use the shared service to notify the advisor
+      await notifyAdvisor('investment_interest', payload);
       
-      if (error) {
-        throw error;
-      }
-      
-      console.log("Advisor notification success, ID:", data);
       toast.success("Advisor notified successfully", {
         description: "Your advisor has been notified about your investment interests"
       });

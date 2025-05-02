@@ -1,6 +1,6 @@
 
 import Landing from "@/pages/Landing";
-import Dashboard from "@/pages/dashboard"; 
+import Dashboard from "@/pages/Dashboard"; // Fixed casing in the import
 import AdvisorDashboard from "@/pages/AdvisorDashboard";
 import LoginPage from "@/pages/LoginPage";
 import AdvisorLanding from "@/pages/AdvisorLanding";
