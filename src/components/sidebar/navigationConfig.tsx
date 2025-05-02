@@ -120,6 +120,12 @@ export const navSections = [
         icon: <Users className="h-4 w-4" />,
       },
       {
+        id: 'service-professionals-collab',
+        label: 'Service Professionals Collaboration',
+        href: '/collaboration/service-professionals',
+        icon: <Users className="h-4 w-4" />,
+      },
+      {
         id: 'sharing',
         label: 'Family Member Access',
         href: '/sharing',
