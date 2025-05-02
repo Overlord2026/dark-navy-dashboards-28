@@ -9,8 +9,10 @@ import { investmentRoutes } from "./routes/investment-routes";
 import { budgetRoutes } from "./routes/budget-routes";
 import { goalsRoutes } from "./routes/goals-routes";
 import { accountsRoutes } from "./routes/accounts-routes";
+import { publicRoutes } from "./routes/public-routes";
 
 const routes = createBrowserRouter([
+  ...publicRoutes, // Add the public routes first
   ...dashboardRoutes,
   ...educationRoutes,
   ...planningRoutes,
