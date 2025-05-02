@@ -14,7 +14,8 @@ import {
   BriefcaseIcon,
   Shield,
   Brain,
-  Share2
+  Share2,
+  Building
 } from 'lucide-react';
 
 export const navSections = [
@@ -53,6 +54,18 @@ export const navSections = [
         label: 'Investments',
         href: '/investments',
         icon: <BriefcaseIcon className="h-4 w-4" />,
+      },
+      {
+        id: 'insurance',
+        label: 'Insurance',
+        href: '/insurance',
+        icon: <Shield className="h-4 w-4" />,
+      },
+      {
+        id: 'properties',
+        label: 'Properties',
+        href: '/properties',
+        icon: <Building className="h-4 w-4" />,
       },
     ],
   },
