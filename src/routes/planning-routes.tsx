@@ -5,6 +5,19 @@ import TaxPlanning from "@/pages/TaxPlanning";
 import EstatePlanning from "@/pages/EstatePlanning";
 import Insurance from "@/pages/Insurance";
 import Lending from "@/pages/Lending";
+import FamilyVault from "@/pages/FamilyVault";
+import { useAuth } from "@/context/AuthContext";
+import { Navigate } from "react-router-dom";
+
+const AuthGuard = ({ children }: { children: React.ReactNode }) => {
+  const { isAuthenticated } = useAuth();
+  
+  if (!isAuthenticated) {
+    return <Navigate to="/secure-login" />;
+  }
+  
+  return <>{children}</>;
+};
 
 export const planningRoutes: RouteObject[] = [
   {
@@ -22,5 +35,13 @@ export const planningRoutes: RouteObject[] = [
   {
     path: "/lending",
     element: <Lending />,
+  },
+  {
+    path: "/family-vault",
+    element: (
+      <AuthGuard>
+        <FamilyVault />
+      </AuthGuard>
+    ),
   },
 ];
