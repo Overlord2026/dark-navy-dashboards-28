@@ -1,6 +1,6 @@
 
 import { RouteObject } from "react-router-dom";
-import Dashboard from "@/pages/Dashboard"; // Using the correct casing
+import Dashboard from "@/pages/dashboard"; // Using lowercase to match the actual file
 
 export const dashboardRoutes: RouteObject[] = [
   {
