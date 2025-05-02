@@ -6,6 +6,7 @@ import EstatePlanning from "@/pages/EstatePlanning";
 import Insurance from "@/pages/Insurance";
 import Lending from "@/pages/Lending";
 import FamilyVault from "@/pages/FamilyVault";
+import LegacyVault from "@/pages/LegacyVault"; // Add import for LegacyVault
 import { useAuth } from "@/context/AuthContext";
 import { Navigate } from "react-router-dom";
 
@@ -41,6 +42,15 @@ export const planningRoutes: RouteObject[] = [
     element: (
       <AuthGuard>
         <FamilyVault />
+      </AuthGuard>
+    ),
+  },
+  // Add route for legacy-vault
+  {
+    path: "/legacy-vault",
+    element: (
+      <AuthGuard>
+        <LegacyVault />
       </AuthGuard>
     ),
   },
