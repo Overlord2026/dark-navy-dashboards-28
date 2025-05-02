@@ -170,6 +170,102 @@ export type Database = {
         }
         Relationships: []
       }
+      partner_api_mappings: {
+        Row: {
+          id: string
+          lead_source_id: string | null
+          mapping: Json
+          updated_at: string | null
+        }
+        Insert: {
+          id?: string
+          lead_source_id?: string | null
+          mapping: Json
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          lead_source_id?: string | null
+          mapping?: Json
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partner_api_mappings_lead_source_id_fkey"
+            columns: ["lead_source_id"]
+            isOneToOne: true
+            referencedRelation: "lead_sources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      partner_webhooks: {
+        Row: {
+          created_at: string | null
+          event_type: string
+          id: string
+          is_active: boolean | null
+          lead_source_id: string | null
+          target_url: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          event_type: string
+          id?: string
+          is_active?: boolean | null
+          lead_source_id?: string | null
+          target_url: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          event_type?: string
+          id?: string
+          is_active?: boolean | null
+          lead_source_id?: string | null
+          target_url?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partner_webhooks_lead_source_id_fkey"
+            columns: ["lead_source_id"]
+            isOneToOne: false
+            referencedRelation: "lead_sources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      prospect_events: {
+        Row: {
+          event_type: string
+          id: string
+          occurred_at: string | null
+          prospect_id: string | null
+        }
+        Insert: {
+          event_type: string
+          id?: string
+          occurred_at?: string | null
+          prospect_id?: string | null
+        }
+        Update: {
+          event_type?: string
+          id?: string
+          occurred_at?: string | null
+          prospect_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "prospect_events_prospect_id_fkey"
+            columns: ["prospect_id"]
+            isOneToOne: false
+            referencedRelation: "prospects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       prospects: {
         Row: {
           created_at: string
