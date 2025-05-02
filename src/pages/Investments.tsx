@@ -10,7 +10,7 @@ import { toast } from "sonner";
 const Investments: React.FC = () => {
   const [isNotifying, setIsNotifying] = useState(false);
   
-  const handleNotifyAdvisor = async (investments: Investment[]) => {
+  const handleNotifyAdvisor = async (investments: Investment[]): Promise<void> => {
     setIsNotifying(true);
     
     try {
@@ -38,10 +38,14 @@ const Investments: React.FC = () => {
       }
       
       console.log("Advisor notification success, ID:", data);
-      return data;
+      toast.success("Advisor notified successfully", {
+        description: "Your advisor has been notified about your investment interests"
+      });
     } catch (error) {
       console.error("Error notifying advisor:", error);
-      throw error;
+      toast.error("Failed to notify advisor", {
+        description: "Please try again later"
+      });
     } finally {
       setIsNotifying(false);
     }
