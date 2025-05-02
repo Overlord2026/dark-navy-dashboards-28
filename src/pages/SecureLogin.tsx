@@ -1,18 +1,19 @@
 
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { BrandedHeader } from "@/components/layout/BrandedHeader";
 import { Shield, Mail, Lock } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 export default function SecureLogin() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const isAdvisor = searchParams.get('advisor') === 'true';
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -31,7 +32,11 @@ export default function SecureLogin() {
         toast.error(error.message);
       } else {
         toast.success("Login successful!");
-        navigate("/dashboard");
+        if (isAdvisor) {
+          navigate("/advisor/dashboard");
+        } else {
+          navigate("/dashboard");
+        }
       }
     } catch (error) {
       toast.error("An unexpected error occurred.");
@@ -47,7 +52,7 @@ export default function SecureLogin() {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/dashboard`,
+          redirectTo: `${window.location.origin}${isAdvisor ? '/advisor/dashboard' : '/dashboard'}`,
         }
       });
       
@@ -73,10 +78,12 @@ export default function SecureLogin() {
               <Shield className="text-[#FFC700] h-7 w-7" />
             </div>
             <h1 className="text-2xl font-bold text-white">
-              Secure Client Portal
+              {isAdvisor ? "Advisor Secure Portal" : "Secure Client Portal"}
             </h1>
             <p className="text-gray-400 mt-2">
-              Access your personalized financial dashboard
+              {isAdvisor 
+                ? "Access your advisor dashboard and client management tools" 
+                : "Access your personalized financial dashboard"}
             </p>
           </div>
           
@@ -159,7 +166,7 @@ export default function SecureLogin() {
               className="w-full bg-[#9b87f5] hover:bg-[#7E69AB] text-white font-medium"
               disabled={isLoading}
             >
-              {isLoading ? "Authenticating..." : "Sign In Securely"}
+              {isLoading ? "Authenticating..." : isAdvisor ? "Sign In as Advisor" : "Sign In Securely"}
             </Button>
           </form>
           

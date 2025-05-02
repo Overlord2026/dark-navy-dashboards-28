@@ -24,10 +24,10 @@ export default function HomePage() {
           </div>
           <div className="flex gap-4">
             <Button variant="outline" asChild>
-              <Link to="/advisor/login">Advisor Login</Link>
+              <Link to="/secure-login?advisor=true">Advisor Login</Link>
             </Button>
             <Button className="bg-black text-white hover:bg-black/80" asChild>
-              <Link to="/login">Client Login</Link>
+              <Link to="/secure-login">Client Login</Link>
             </Button>
           </div>
         </div>
@@ -43,7 +43,7 @@ export default function HomePage() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Button size="lg" className="bg-white text-[#1B1B32] hover:bg-white/90" asChild>
-                <Link to="/login">
+                <Link to="/secure-login">
                   Client Portal 
                   <ChevronRight className="ml-2 h-5 w-5" />
                 </Link>

@@ -34,7 +34,7 @@ export default function AdvisorLanding() {
   ];
 
   const handleLogin = () => {
-    navigate('/advisor/login');
+    navigate('/secure-login?advisor=true');
   };
 
   const handleDashboard = () => {

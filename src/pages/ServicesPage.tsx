@@ -26,10 +26,10 @@ export default function ServicesPage() {
           </div>
           <div className="flex gap-4">
             <Button variant="outline" asChild>
-              <Link to="/advisor/login">Advisor Login</Link>
+              <Link to="/secure-login?advisor=true">Advisor Login</Link>
             </Button>
             <Button className="bg-black text-white hover:bg-black/80" asChild>
-              <Link to="/login">Client Login</Link>
+              <Link to="/secure-login">Client Login</Link>
             </Button>
           </div>
         </div>
