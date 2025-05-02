@@ -8,7 +8,7 @@ import {
   Network, 
   LucideArrowRightLeft, 
   Webhook, 
-  PuzzlePiece,
+  Puzzle,
   LucideLayoutTemplate
 } from "lucide-react";
 
@@ -152,7 +152,7 @@ const ProjectIntegration = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="border rounded-lg p-4">
                 <div className="flex items-center gap-2 mb-3">
-                  <PuzzlePiece className="h-5 w-5" />
+                  <Puzzle className="h-5 w-5" />
                   <h4 className="font-semibold">Data Visualizer</h4>
                 </div>
                 <p className="text-sm text-muted-foreground mb-3">
@@ -163,7 +163,7 @@ const ProjectIntegration = () => {
               
               <div className="border rounded-lg p-4">
                 <div className="flex items-center gap-2 mb-3">
-                  <PuzzlePiece className="h-5 w-5" />
+                  <Puzzle className="h-5 w-5" />
                   <h4 className="font-semibold">Document Sync</h4>
                 </div>
                 <p className="text-sm text-muted-foreground mb-3">
@@ -174,7 +174,7 @@ const ProjectIntegration = () => {
               
               <div className="border rounded-lg p-4">
                 <div className="flex items-center gap-2 mb-3">
-                  <PuzzlePiece className="h-5 w-5" />
+                  <Puzzle className="h-5 w-5" />
                   <h4 className="font-semibold">Reporting Engine</h4>
                 </div>
                 <p className="text-sm text-muted-foreground mb-3">
