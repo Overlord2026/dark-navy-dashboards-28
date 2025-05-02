@@ -8,6 +8,7 @@ import { integrationRoutes } from "./routes/integration-routes";
 import { investmentRoutes } from "./routes/investment-routes";
 import { budgetRoutes } from "./routes/budget-routes";
 import { goalsRoutes } from "./routes/goals-routes";
+import { accountsRoutes } from "./routes/accounts-routes";
 
 const routes = createBrowserRouter([
   ...dashboardRoutes,
@@ -18,6 +19,7 @@ const routes = createBrowserRouter([
   ...investmentRoutes,
   ...budgetRoutes,
   ...goalsRoutes,
+  ...accountsRoutes,
 ]);
 
 export default routes;
