@@ -1,7 +1,8 @@
 
+import { RouteObject } from "react-router-dom";
+import ProjectIntegration from "@/pages/ProjectIntegration";
 import { useAuth } from "@/context/AuthContext";
 import { Navigate } from "react-router-dom";
-import Insurance from "@/pages/Insurance";
 
 const AuthGuard = ({ children }: { children: React.ReactNode }) => {
   const { isAuthenticated } = useAuth();
@@ -13,12 +14,12 @@ const AuthGuard = ({ children }: { children: React.ReactNode }) => {
   return <>{children}</>;
 };
 
-export const integrationRoutes = [
+export const integrationRoutes: RouteObject[] = [
   {
-    path: "/insurance",
+    path: "/integration",
     element: (
       <AuthGuard>
-        <Insurance />
+        <ProjectIntegration />
       </AuthGuard>
     ),
   },
