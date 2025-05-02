@@ -15,7 +15,8 @@ import {
   Shield,
   Brain,
   Share2,
-  Building
+  Building,
+  Users
 } from 'lucide-react';
 
 export const navSections = [
@@ -108,10 +109,22 @@ export const navSections = [
     ],
   },
   {
-    id: 'integration',
-    label: 'Integration',
-    icon: Share2,
+    id: 'collaboration',
+    label: 'Collaboration',
+    icon: Users,
     items: [
+      {
+        id: 'professionals',
+        label: 'Service Professionals',
+        href: '/professionals',
+        icon: <Users className="h-4 w-4" />,
+      },
+      {
+        id: 'sharing',
+        label: 'Family Member Access',
+        href: '/sharing',
+        icon: <User className="h-4 w-4" />,
+      },
       {
         id: 'project-integration',
         label: 'Project Integration',
