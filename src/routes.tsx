@@ -11,6 +11,7 @@ import { goalsRoutes } from "./routes/goals-routes";
 import { accountsRoutes } from "./routes/accounts-routes";
 import { publicRoutes } from "./routes/public-routes";
 import { propertiesRoutes } from "./routes/properties-routes";
+import { financialPlansRoutes } from "./routes/financial-plans-routes";
 
 const routes = createBrowserRouter([
   ...publicRoutes, // Add the public routes first
@@ -24,6 +25,7 @@ const routes = createBrowserRouter([
   ...goalsRoutes,
   ...accountsRoutes,
   ...propertiesRoutes,
+  ...financialPlansRoutes,
 ]);
 
 export default routes;
