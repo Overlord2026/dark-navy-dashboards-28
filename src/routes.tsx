@@ -6,6 +6,8 @@ import { planningRoutes } from "./routes/planning-routes";
 import { settingsRoutes } from "./routes/settings-routes";
 import { integrationRoutes } from "./routes/integration-routes";
 import { investmentRoutes } from "./routes/investment-routes";
+import { budgetRoutes } from "./routes/budget-routes";
+import { goalsRoutes } from "./routes/goals-routes";
 
 const routes = createBrowserRouter([
   ...dashboardRoutes,
@@ -14,6 +16,8 @@ const routes = createBrowserRouter([
   ...settingsRoutes,
   ...integrationRoutes,
   ...investmentRoutes,
+  ...budgetRoutes,
+  ...goalsRoutes,
 ]);
 
 export default routes;
