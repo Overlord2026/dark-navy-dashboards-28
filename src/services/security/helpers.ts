@@ -9,8 +9,9 @@ import { logger } from "@/services/logging/loggingService";
 export async function ensureAuditLogsTable(): Promise<void> {
   try {
     // Try to query the table to confirm it exists
+    // Use a dynamic query approach to avoid TypeScript errors
     const { error } = await supabase
-      .from('audit_logs')
+      .from('audit_logs' as any)
       .select('id')
       .limit(1);
     
