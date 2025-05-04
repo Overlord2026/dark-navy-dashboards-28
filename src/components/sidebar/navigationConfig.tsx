@@ -1,4 +1,3 @@
-
 import React from "react";
 import {
   LayoutDashboard,
@@ -15,6 +14,7 @@ import {
   Boxes
 } from "lucide-react";
 
+// Keep the navigationItems export for backwards compatibility
 export const navigationItems = [
   {
     title: "Home",
@@ -112,3 +112,6 @@ export const navigationItems = [
     ],
   },
 ];
+
+// Add this export to match the import in Sidebar.tsx
+export const navSections = navigationItems;
