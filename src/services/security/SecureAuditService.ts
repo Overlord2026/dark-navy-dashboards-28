@@ -47,33 +47,19 @@ export class SecureAuditService {
       // Log to console during development
       logger.info(`Security Audit: ${eventType} - ${status}`, enrichedMetadata, 'SecureAudit');
       
-      // Create the audit log entry in the new audit_logs table
-      const result = await supabase.from('audit_logs').insert({
+      // Create the audit log entry directly - we know the table exists now
+      const { error } = await supabase.from('audit_logs').insert({
         user_id: userId,
         event_type: eventType,
         status,
         details: enrichedMetadata
       });
       
-      if (result.error) {
-        logger.error('Failed to record audit log:', result.error, 'SecureAudit');
+      if (error) {
+        logger.error('Failed to record audit log:', error, 'SecureAudit');
       }
     } catch (error) {
       logger.error('Error recording security audit event:', error, 'SecureAudit');
-    }
-  }
-  
-  /**
-   * Ensures the audit_logs table exists
-   * @deprecated Use ensureAuditLogsTable from helpers.ts instead
-   */
-  private async ensureAuditTable() {
-    try {
-      // This functionality is now handled by the ensureAuditLogsTable function in helpers.ts
-      logger.info('Ensuring audit_logs table exists', {}, 'SecureAudit');
-      await import("./helpers").then(helpers => helpers.ensureAuditLogsTable());
-    } catch (err) {
-      logger.error('Error ensuring audit table exists:', err, 'SecureAudit');
     }
   }
 }

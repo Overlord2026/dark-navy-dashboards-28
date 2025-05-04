@@ -3,31 +3,24 @@ import { supabase } from "@/integrations/supabase/client";
 import { logger } from "@/services/logging/loggingService";
 
 /**
- * Check if the audit_logs table exists and create it if needed
- * This is a temporary solution until proper migrations are implemented
+ * Check if the audit_logs table exists
+ * This is now just a validation check rather than creation
  */
 export async function ensureAuditLogsTable(): Promise<void> {
   try {
-    // We'll check if the table exists using our custom function
-    const { data, error } = await supabase.rpc('check_table_exists', {
-      table_name: 'audit_logs'
-    });
+    // Try to query the table to confirm it exists
+    const { error } = await supabase
+      .from('audit_logs')
+      .select('id')
+      .limit(1);
     
     if (error) {
-      logger.info('Creating audit_logs table for security compliance', {}, 'SecurityHelpers');
-      
-      // Call our function to create the audit_logs table
-      const { error: createError } = await supabase.rpc('create_audit_logs_function');
-      
-      if (createError) {
-        logger.error('Failed to create audit_logs table:', createError, 'SecurityHelpers');
-        throw createError;
-      }
-      
-      logger.info('Successfully created audit_logs table', {}, 'SecurityHelpers');
+      logger.error('Error accessing audit_logs table:', error, 'SecurityHelpers');
+    } else {
+      logger.info('Audit logs table is accessible', {}, 'SecurityHelpers');
     }
   } catch (error) {
-    logger.error('Unexpected error ensuring audit_logs table:', error, 'SecurityHelpers');
+    logger.error('Unexpected error checking audit_logs table:', error, 'SecurityHelpers');
     // Don't throw here to prevent application startup failure
   }
 }
