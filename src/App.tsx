@@ -9,7 +9,6 @@ import { Toaster } from "@/components/ui/sonner";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { DiagnosticsProvider } from "@/context/DiagnosticsContext";
 import { AdvisorProvider } from "@/context/AdvisorContext";
-import { AuthProvider } from "@/context/AuthContext";
 import { AdminProvider } from './context/AdminContext';
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AIInsightsProvider } from "./components/insights/AIInsightsProvider";
@@ -35,16 +34,14 @@ function App() {
               <NetWorthProvider>
                 <DiagnosticsProvider>
                   <AdvisorProvider>
-                    <AuthProvider>
-                      <AIInsightsProvider>
-                        <AudienceProvider>
-                          <TooltipProvider>
-                            <RouterProvider router={routes} />
-                            <Toaster position="top-right" richColors closeButton />
-                          </TooltipProvider>
-                        </AudienceProvider>
-                      </AIInsightsProvider>
-                    </AuthProvider>
+                    <AIInsightsProvider>
+                      <AudienceProvider>
+                        <TooltipProvider>
+                          <RouterProvider router={routes} />
+                          <Toaster position="top-right" richColors closeButton />
+                        </TooltipProvider>
+                      </AudienceProvider>
+                    </AIInsightsProvider>
                   </AdvisorProvider>
                 </DiagnosticsProvider>
               </NetWorthProvider>

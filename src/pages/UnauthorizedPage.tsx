@@ -4,7 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ShieldX, AlertTriangle, ChevronLeft } from "lucide-react";
 import { useUser } from "@/context/UserContext";
-import { secureAudit } from "@/services/security/SecureAuditService";
+import { supabase } from "@/integrations/supabase/client";
+import { logger } from "@/services/logging/loggingService";
 
 export default function UnauthorizedPage() {
   const navigate = useNavigate();
@@ -13,24 +14,20 @@ export default function UnauthorizedPage() {
   // Log the unauthorized access for audit purposes
   React.useEffect(() => {
     if (userProfile?.id) {
-      secureAudit.recordEvent(
-        userProfile.id,
-        'permission_change',
-        'failure',
-        {
-          userName: userProfile?.name || "Unknown User",
-          userRole: userProfile?.role || "Unknown Role",
-          resourceType: 'page_access',
-          details: {
-            action: 'Unauthorized access attempt',
-            accessPath: window.location.pathname
-          },
-          reason: 'Insufficient permissions'
-        },
-        { persistImmediately: true }
-      );
+      logger.warning('Unauthorized access', {
+        userId: userProfile.id,
+        userName: userProfile?.name || "Unknown User",
+        userRole: userProfile?.role || "Unknown Role",
+        accessPath: window.location.pathname,
+        timestamp: new Date().toISOString()
+      }, 'UnauthorizedPage');
     }
   }, [userProfile]);
+  
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    window.location.href = "/secure-login";
+  };
   
   return (
     <div className="min-h-screen bg-[#0A1F44] flex flex-col items-center justify-center p-4">
@@ -68,7 +65,7 @@ export default function UnauthorizedPage() {
           </Button>
           
           <Button 
-            onClick={() => window.location.href = "/secure-login"}
+            onClick={handleSignOut}
             className="bg-red-700 hover:bg-red-800 text-white w-full"
           >
             Sign Out

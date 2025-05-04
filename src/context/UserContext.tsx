@@ -1,5 +1,8 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { supabase } from "@/integrations/supabase/client";
+import { User, Session } from '@supabase/supabase-js';
+import { logger } from "@/services/logging/loggingService";
 
 interface UserProfile {
   id: string;
@@ -24,8 +27,10 @@ interface UserContextType {
   userProfile: UserProfile | null;
   isAuthenticated: boolean;
   isLoading: boolean;
+  session: Session | null;
+  user: User | null;
   login: (email: string, password: string) => Promise<boolean>;
-  logout: () => void;
+  logout: () => Promise<void>;
   updateUserProfile: (profile: Partial<UserProfile>) => void;
 }
 
@@ -33,75 +38,108 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Simulate loading user data from storage or an API
+  // Set up auth state listener and initialize from session
   useEffect(() => {
-    // In a real app, this would fetch the user profile from an API
-    const loadUser = async () => {
+    // First, set up the auth state listener
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, currentSession) => {
+        logger.info(`Auth state change: ${event}`, {}, 'UserProvider');
+        setSession(currentSession);
+        setUser(currentSession?.user ?? null);
+        
+        if (currentSession?.user) {
+          // Use setTimeout to avoid Supabase SDK deadlock
+          setTimeout(() => {
+            updateUserProfileFromSession(currentSession.user);
+          }, 0);
+        } else if (event === 'SIGNED_OUT') {
+          setUserProfile(null);
+        }
+      }
+    );
+
+    // Then, check for existing session
+    const initializeFromSession = async () => {
       try {
-        // Simulate API delay
-        await new Promise(resolve => setTimeout(resolve, 500));
+        const { data: { session: initialSession } } = await supabase.auth.getSession();
+        setSession(initialSession);
+        setUser(initialSession?.user ?? null);
         
-        // For demo purposes, create a mock admin user
-        const mockUser: UserProfile = {
-          id: 'user-123',
-          name: 'Admin User',
-          displayName: 'Admin',
-          email: 'admin@example.com',
-          firstName: 'Tom',
-          lastName: 'Brady',
-          role: 'admin',
-          permissions: ['all'],
-          phone: '(555) 123-4567',
-          investorType: 'High Net Worth Individual'
-        };
-        
-        setUserProfile(mockUser);
+        if (initialSession?.user) {
+          await updateUserProfileFromSession(initialSession.user);
+        }
       } catch (error) {
-        console.error('Error loading user profile:', error);
-        setUserProfile(null);
+        logger.error('Error initializing from session:', error, 'UserProvider');
       } finally {
         setIsLoading(false);
       }
     };
     
-    loadUser();
+    initializeFromSession();
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
-  const login = async (email: string, password: string): Promise<boolean> => {
+  const updateUserProfileFromSession = async (user: User) => {
     try {
-      setIsLoading(true);
-      // In a real app, this would make an API call to authenticate
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // For demo purposes, accept any credentials and create a mock user
+      // For demo purposes, create a mock user profile from the auth user
+      // In a real app, you would fetch this data from a profiles table
       const mockUser: UserProfile = {
-        id: 'user-123',
-        name: 'Demo User',
-        displayName: email.split('@')[0],
-        firstName: 'Tom',
-        lastName: 'Brady',
-        email,
+        id: user.id,
+        name: user.user_metadata?.full_name || 'Demo User',
+        displayName: user.email?.split('@')[0] || user.user_metadata?.preferred_username,
+        firstName: user.user_metadata?.first_name || 'Tom',
+        lastName: user.user_metadata?.last_name || 'Brady',
+        email: user.email,
         role: 'admin',
         permissions: ['all'],
-        phone: '(555) 123-4567',
+        phone: user.phone || '(555) 123-4567',
         investorType: 'High Net Worth Individual'
       };
       
       setUserProfile(mockUser);
+    } catch (error) {
+      logger.error('Error updating user profile from session:', error, 'UserProvider');
+    }
+  };
+
+  const login = async (email: string, password: string): Promise<boolean> => {
+    try {
+      setIsLoading(true);
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      
+      if (error) {
+        logger.error('Login error:', error, 'UserProvider');
+        return false;
+      }
+      
       return true;
     } catch (error) {
-      console.error('Login error:', error);
+      logger.error('Login error:', error, 'UserProvider');
       return false;
     } finally {
       setIsLoading(false);
     }
   };
 
-  const logout = () => {
-    // In a real app, this would clear tokens, etc.
-    setUserProfile(null);
+  const logout = async () => {
+    try {
+      setIsLoading(true);
+      await supabase.auth.signOut();
+      setUserProfile(null);
+      setSession(null);
+      setUser(null);
+    } catch (error) {
+      logger.error('Logout error:', error, 'UserProvider');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const updateUserProfile = (profile: Partial<UserProfile>) => {
@@ -114,8 +152,10 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     <UserContext.Provider
       value={{
         userProfile,
-        isAuthenticated: !!userProfile,
+        isAuthenticated: !!session,
         isLoading,
+        session,
+        user,
         login,
         logout,
         updateUserProfile

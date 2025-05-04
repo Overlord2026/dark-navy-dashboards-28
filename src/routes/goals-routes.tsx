@@ -1,10 +1,10 @@
 
-import { useAuth } from "@/context/AuthContext";
+import { useUser } from "@/context/UserContext";
 import { Navigate } from "react-router-dom";
 import Goals from "@/pages/Goals";
 
 const AuthGuard = ({ children }: { children: React.ReactNode }) => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated } = useUser();
   
   if (!isAuthenticated) {
     return <Navigate to="/secure-login" />;

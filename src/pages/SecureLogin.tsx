@@ -9,14 +9,24 @@ import { BrandedHeader } from "@/components/layout/BrandedHeader";
 import { Shield, Mail, Lock } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { useUser } from "@/context/UserContext";
 
 export default function SecureLogin() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const { login, isAuthenticated } = useUser();
   const isAdvisor = searchParams.get('advisor') === 'true';
+  const redirectPath = searchParams.get('redirect') || (isAdvisor ? '/advisor/dashboard' : '/dashboard');
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  
+  // Redirect if already logged in
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate(redirectPath);
+    }
+  }, [isAuthenticated, navigate, redirectPath]);
   
   const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,11 +42,7 @@ export default function SecureLogin() {
         toast.error(error.message);
       } else {
         toast.success("Login successful!");
-        if (isAdvisor) {
-          navigate("/advisor/dashboard");
-        } else {
-          navigate("/dashboard");
-        }
+        navigate(redirectPath);
       }
     } catch (error) {
       toast.error("An unexpected error occurred.");
@@ -52,7 +58,7 @@ export default function SecureLogin() {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}${isAdvisor ? '/advisor/dashboard' : '/dashboard'}`,
+          redirectTo: `${window.location.origin}${redirectPath}`,
         }
       });
       

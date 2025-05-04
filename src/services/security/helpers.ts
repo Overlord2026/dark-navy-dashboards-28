@@ -8,18 +8,17 @@ import { logger } from "@/services/logging/loggingService";
  */
 export async function ensureAuditLogsTable(): Promise<void> {
   try {
-    // Try to query the table to see if it exists
-    const { error } = await supabase
-      .from('audit_logs')
-      .select('id')
-      .limit(1);
+    // We'll check if the table exists using our existing RPC function
+    const { error } = await supabase.rpc('check_table_exists', {
+      table_name: 'audit_logs'
+    });
     
-    // If we get a specific error about the table not existing, create it
-    if (error && error.code === '42P01') { // 42P01 is the PostgreSQL error code for "relation does not exist"
+    if (error) {
       logger.info('Creating audit_logs table for security compliance', {}, 'SecurityHelpers');
       
-      // Create the table using raw SQL
-      const { error: createError } = await supabase.rpc('create_audit_logs_table');
+      // Create the table using direct SQL since the audit_logs table doesn't exist yet
+      // This would normally be done via a migration
+      const { error: createError } = await supabase.rpc('create_audit_logs_function');
       
       if (createError) {
         logger.error('Failed to create audit_logs table:', createError, 'SecurityHelpers');
@@ -27,9 +26,6 @@ export async function ensureAuditLogsTable(): Promise<void> {
       }
       
       logger.info('Successfully created audit_logs table', {}, 'SecurityHelpers');
-    } else if (error) {
-      logger.error('Error checking for audit_logs table:', error, 'SecurityHelpers');
-      // Don't throw here to prevent application startup failure
     }
   } catch (error) {
     logger.error('Unexpected error ensuring audit_logs table:', error, 'SecurityHelpers');

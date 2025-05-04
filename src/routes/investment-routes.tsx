@@ -1,10 +1,10 @@
 
 import Investments from "@/pages/Investments";
-import { useAuth } from "@/context/AuthContext";
+import { useUser } from "@/context/UserContext";
 import { Navigate } from "react-router-dom";
 
 const AuthGuard = ({ children }: { children: React.ReactNode }) => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated } = useUser();
   
   if (!isAuthenticated) {
     return <Navigate to="/secure-login" />;

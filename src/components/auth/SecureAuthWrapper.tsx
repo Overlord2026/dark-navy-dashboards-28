@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { useUser } from "@/context/UserContext";
-import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { auditLog } from "@/services/auditLog/auditLogService";
@@ -19,8 +18,7 @@ export function SecureAuthWrapper({
   requiredRole, 
   requireMFA = true 
 }: SecureAuthWrapperProps) {
-  const { userProfile, isAuthenticated } = useUser();
-  const { isAuthenticated: authContextAuthenticated } = useAuth();
+  const { userProfile, isAuthenticated, session } = useUser();
   const location = useLocation();
   const [sessionChecked, setSessionChecked] = useState(false);
   const [mfaRequired, setMfaRequired] = useState(false);
@@ -31,17 +29,14 @@ export function SecureAuthWrapper({
   useEffect(() => {
     const checkSession = async () => {
       try {
-        // Get current session from Supabase
-        const { data: { session } } = await supabase.auth.getSession();
-        
-        if (session) {
+        if (session && userProfile) {
           // Log access attempt for audit trail
           auditLog.log(
-            session.user.id,
+            userProfile.id,
             'login',
             'success',
             {
-              userName: userProfile?.name || session.user.email,
+              userName: userProfile?.name || userProfile.email,
               userRole: userProfile?.role,
               ipAddress: 'client-ip', // In production, this would be captured server-side
               resourceId: location.pathname,
@@ -71,7 +66,7 @@ export function SecureAuthWrapper({
 
     // Set up listener for auth state changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
+      (event, sessionData) => {
         if (event === 'SIGNED_OUT') {
           // Log the sign out event
           logger.info('User signed out', {
@@ -87,7 +82,7 @@ export function SecureAuthWrapper({
     return () => {
       subscription.unsubscribe();
     };
-  }, [location.pathname, userProfile]);
+  }, [location.pathname, userProfile, session]);
 
   // Check role requirements
   useEffect(() => {
@@ -188,7 +183,7 @@ export function SecureAuthWrapper({
     return <div>Verifying your secure session...</div>;
   }
 
-  if (!isAuthenticated || !authContextAuthenticated) {
+  if (!isAuthenticated) {
     // Redirect to login and preserve the intended destination
     return <Navigate to={`/secure-login?redirect=${encodeURIComponent(location.pathname)}`} replace />;
   }
