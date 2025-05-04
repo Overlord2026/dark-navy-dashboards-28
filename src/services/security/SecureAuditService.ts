@@ -48,8 +48,7 @@ export class SecureAuditService {
       logger.info(`Security Audit: ${eventType} - ${status}`, enrichedMetadata, 'SecureAudit');
       
       // Create the audit log entry directly - we know the table exists now
-      // Use a type assertion to get around TypeScript error until Supabase types are regenerated
-      const { error } = await supabase.from('audit_logs' as any).insert({
+      const { error } = await supabase.from('audit_logs').insert({
         user_id: userId,
         event_type: eventType,
         status,
