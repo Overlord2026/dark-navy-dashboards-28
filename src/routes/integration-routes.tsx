@@ -1,26 +1,22 @@
 
 import { RouteObject } from "react-router-dom";
-import ProjectIntegration from "@/pages/ProjectIntegration";
-import { useAuth } from "@/context/AuthContext";
-import { Navigate } from "react-router-dom";
+import { SecureAuthWrapper } from "@/components/auth/SecureAuthWrapper";
+import ProjectIntegrationPage from "@/pages/ProjectIntegrationPage";
 
-const AuthGuard = ({ children }: { children: React.ReactNode }) => {
-  const { isAuthenticated } = useAuth();
-  
-  if (!isAuthenticated) {
-    return <Navigate to="/secure-login" />;
-  }
-  
-  return <>{children}</>;
-};
-
+/**
+ * Routes for Project Integration functionality
+ * - Connected Projects
+ * - Architecture
+ * - API Integrations
+ * - Plugins
+ */
 export const integrationRoutes: RouteObject[] = [
   {
     path: "/integration",
     element: (
-      <AuthGuard>
-        <ProjectIntegration />
-      </AuthGuard>
+      <SecureAuthWrapper requireMFA={false}>
+        <ProjectIntegrationPage />
+      </SecureAuthWrapper>
     ),
   },
 ];

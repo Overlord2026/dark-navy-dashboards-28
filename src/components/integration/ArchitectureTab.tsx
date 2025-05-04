@@ -1,63 +1,96 @@
 
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Download, ZoomIn } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Info } from "lucide-react";
 
-export const ArchitectureTab = () => {
+export function ArchitectureTab() {
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-semibold">System Architecture</h2>
-        <div className="flex gap-2">
-          <Button variant="outline" className="flex items-center gap-2">
-            <Download className="h-4 w-4" /> Export
-          </Button>
-          <Button variant="outline" className="flex items-center gap-2">
-            <ZoomIn className="h-4 w-4" /> Zoom
-          </Button>
-        </div>
-      </div>
-
-      <Card className="border-[#333] bg-[#1F1F2E] p-4">
-        <CardHeader>
-          <CardTitle className="text-[#D4AF37]">Architecture Diagram</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="bg-[#121221] border border-[#333] rounded-md p-8 flex items-center justify-center min-h-[400px]">
+      <Alert>
+        <Info className="h-4 w-4" />
+        <AlertTitle>Architecture Diagram</AlertTitle>
+        <AlertDescription>
+          This diagram shows how your project connects to other systems in the Family Office ecosystem.
+        </AlertDescription>
+      </Alert>
+      
+      <Card>
+        <CardContent className="p-6">
+          <div className="flex items-center justify-center p-8 bg-muted rounded-md">
             <div className="text-center">
-              <p className="text-muted-foreground mb-4">Interactive architecture diagram will display here</p>
-              <Button className="bg-black hover:bg-black/80 text-[#D4AF37]">Generate Architecture View</Button>
+              <h3 className="mb-2 font-semibold">System Architecture Diagram</h3>
+              <div className="w-full h-[400px] flex items-center justify-center bg-card border rounded-md p-4">
+                {/* In a real implementation, this would be an actual architecture diagram */}
+                <div className="space-y-4 text-center">
+                  <p className="text-muted-foreground">
+                    Integration architecture visualization will appear here
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    Showing connections between Family Office modules, API endpoints, and external services
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </CardContent>
       </Card>
-
-      <div className="grid gap-6 md:grid-cols-2">
-        <Card className="border-[#333] bg-[#1F1F2E]">
-          <CardHeader>
-            <CardTitle className="text-[#D4AF37]">Data Flow</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-muted-foreground mb-4">
-              Visualize how data moves between different components and services in your architecture.
-            </p>
-            <Button className="bg-black hover:bg-black/80 text-[#D4AF37] w-full">View Data Flow</Button>
-          </CardContent>
+      
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <Card className="p-4">
+          <h3 className="font-medium mb-2">Core Systems</h3>
+          <ul className="space-y-2 text-sm">
+            <li className="flex items-center justify-between">
+              <span>Family Office Core</span>
+              <span className="text-green-500 text-xs font-medium">Connected</span>
+            </li>
+            <li className="flex items-center justify-between">
+              <span>Client Portal</span>
+              <span className="text-green-500 text-xs font-medium">Connected</span>
+            </li>
+            <li className="flex items-center justify-between">
+              <span>Document Management</span>
+              <span className="text-yellow-500 text-xs font-medium">Partial</span>
+            </li>
+          </ul>
         </Card>
-
-        <Card className="border-[#333] bg-[#1F1F2E]">
-          <CardHeader>
-            <CardTitle className="text-[#D4AF37]">Component Dependencies</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-muted-foreground mb-4">
-              Explore relationships and dependencies between different components in your system.
-            </p>
-            <Button className="bg-black hover:bg-black/80 text-[#D4AF37] w-full">View Dependencies</Button>
-          </CardContent>
+        
+        <Card className="p-4">
+          <h3 className="font-medium mb-2">External Interfaces</h3>
+          <ul className="space-y-2 text-sm">
+            <li className="flex items-center justify-between">
+              <span>Banking APIs</span>
+              <span className="text-green-500 text-xs font-medium">Connected</span>
+            </li>
+            <li className="flex items-center justify-between">
+              <span>Market Data</span>
+              <span className="text-green-500 text-xs font-medium">Connected</span>
+            </li>
+            <li className="flex items-center justify-between">
+              <span>Regulatory Filing</span>
+              <span className="text-red-500 text-xs font-medium">Not Connected</span>
+            </li>
+          </ul>
+        </Card>
+        
+        <Card className="p-4">
+          <h3 className="font-medium mb-2">Security Systems</h3>
+          <ul className="space-y-2 text-sm">
+            <li className="flex items-center justify-between">
+              <span>Audit Logging</span>
+              <span className="text-green-500 text-xs font-medium">Connected</span>
+            </li>
+            <li className="flex items-center justify-between">
+              <span>Identity Provider</span>
+              <span className="text-green-500 text-xs font-medium">Connected</span>
+            </li>
+            <li className="flex items-center justify-between">
+              <span>Encryption Gateway</span>
+              <span className="text-red-500 text-xs font-medium">Not Connected</span>
+            </li>
+          </ul>
         </Card>
       </div>
     </div>
   );
-};
+}
