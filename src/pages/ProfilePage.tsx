@@ -1,5 +1,4 @@
-
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -23,6 +22,30 @@ export default function ProfilePage() {
   
   const [isLoading, setIsLoading] = useState(false);
   
+  // Log profile access for compliance with SOC 2 Audit
+  useEffect(() => {
+    if (userProfile?.id) {
+      // Use the secure audit service for compliant logging
+      import('@/services/security/SecureAuditService').then(({ secureAudit }) => {
+        secureAudit.recordEvent(
+          userProfile.id,
+          'document_access',
+          'success',
+          {
+            userName: userProfile.name || userProfile.email,
+            userRole: userProfile.role,
+            resourceId: 'user-profile',
+            resourceType: 'profile',
+            details: {
+              action: 'View profile',
+              timestamp: new Date().toISOString()
+            }
+          }
+        );
+      });
+    }
+  }, [userProfile]);
+  
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -42,6 +65,29 @@ export default function ProfilePage() {
         phone: formData.phone
       });
       
+      // Log the profile update for audit trail
+      if (userProfile?.id) {
+        import('@/services/security/SecureAuditService').then(({ secureAudit }) => {
+          secureAudit.recordEvent(
+            userProfile.id,
+            'profile_update',
+            'success',
+            {
+              userName: userProfile.name || userProfile.email,
+              userRole: userProfile.role,
+              resourceId: 'user-profile',
+              resourceType: 'profile',
+              details: {
+                action: 'Update profile',
+                changedFields: ['name', 'investorType', 'phone'],
+                timestamp: new Date().toISOString()
+              }
+            },
+            { persistImmediately: true }
+          );
+        });
+      }
+      
       // In a real app, you would also save this to Supabase
       // const { error } = await supabase
       //   .from('profiles')
@@ -60,6 +106,30 @@ export default function ProfilePage() {
         duration: 3000
       });
     } catch (error) {
+      // Log failed update attempt
+      if (userProfile?.id) {
+        import('@/services/security/SecureAuditService').then(({ secureAudit }) => {
+          secureAudit.recordEvent(
+            userProfile.id,
+            'profile_update',
+            'failure',
+            {
+              userName: userProfile.name || userProfile.email,
+              userRole: userProfile.role,
+              resourceId: 'user-profile',
+              resourceType: 'profile',
+              details: {
+                action: 'Update profile',
+                error: error instanceof Error ? error.message : 'Unknown error',
+                timestamp: new Date().toISOString()
+              },
+              reason: error instanceof Error ? error.message : 'Unknown error'
+            },
+            { persistImmediately: true }
+          );
+        });
+      }
+      
       toast({
         title: "Error",
         description: "Failed to update profile. Please try again.",
