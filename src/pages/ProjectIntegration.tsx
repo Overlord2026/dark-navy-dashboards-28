@@ -1,188 +1,204 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { 
-  Network, 
-  LucideArrowRightLeft, 
-  Webhook, 
-  Puzzle,
-  LucideLayoutTemplate
-} from "lucide-react";
+import { Link, LucideGitPullRequest, LucidePlugZap, LucideServer } from "lucide-react";
 
-const ProjectIntegration = () => {
+const ProjectIntegration: React.FC = () => {
+  const [activeTab, setActiveTab] = useState("connected-projects");
+
   return (
-    <ThreeColumnLayout title="Project Integration">
-      <div className="container mx-auto px-4 py-6">
-        <div className="flex justify-between items-center mb-6">
-          <div>
-            <h1 className="text-3xl font-bold flex items-center gap-2">
-              Project Integration
-              <Badge className="ml-2 bg-green-500 hover:bg-green-600">Connected</Badge>
-            </h1>
-            <p className="text-muted-foreground mt-1">
-              Manage integrations with other products in the Family Office Marketplace
-            </p>
-          </div>
-          <Button className="bg-blue-600 hover:bg-blue-700">
-            + Add New Integration
-          </Button>
+    <ThreeColumnLayout 
+      title="Project Integration" 
+      activeMainItem="integration"
+    >
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <h1 className="text-2xl font-semibold">Project Integration Hub</h1>
+          <Badge variant="outline" className="bg-green-100 text-green-800 border-green-200 flex items-center gap-1">
+            <span className="h-2 w-2 bg-green-500 rounded-full"></span>
+            Connected
+          </Badge>
         </div>
-        
-        <Tabs defaultValue="connected" className="w-full">
-          <TabsList className="grid w-full grid-cols-4 mb-8">
-            <TabsTrigger value="connected">Connected Projects</TabsTrigger>
+
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
+          <TabsList className="grid grid-cols-4 gap-4">
+            <TabsTrigger value="connected-projects">Connected Projects</TabsTrigger>
             <TabsTrigger value="architecture">Architecture</TabsTrigger>
-            <TabsTrigger value="api">API Integrations</TabsTrigger>
+            <TabsTrigger value="api-integrations">API Integrations</TabsTrigger>
             <TabsTrigger value="plugins">Plugins</TabsTrigger>
           </TabsList>
-          
-          <TabsContent value="connected" className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              <div className="bg-card border rounded-lg p-4 shadow-sm">
-                <div className="flex items-center justify-between mb-3">
-                  <h3 className="font-semibold">Family Office Dashboard</h3>
-                  <Badge>Active</Badge>
+
+          <TabsContent value="connected-projects" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <LucideGitPullRequest className="h-5 w-5" />
+                  Connected Projects
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Card className="bg-muted/50">
+                    <CardHeader className="pb-2">
+                      <div className="flex justify-between items-center">
+                        <CardTitle className="text-base">Family Office Portal</CardTitle>
+                        <Badge>Primary</Badge>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-sm text-muted-foreground mb-4">Core financial management dashboard and client portal</p>
+                      <div className="flex gap-2">
+                        <Badge variant="outline">Connected</Badge>
+                        <Badge variant="outline" className="bg-green-100 text-green-800 border-green-200">Active</Badge>
+                      </div>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card className="bg-muted/50">
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-base">Wealth Analytics Engine</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-sm text-muted-foreground mb-4">Advanced portfolio analytics and reporting</p>
+                      <div className="flex gap-2">
+                        <Badge variant="outline">Connected</Badge>
+                        <Badge variant="outline">Read-only</Badge>
+                      </div>
+                    </CardContent>
+                  </Card>
                 </div>
-                <p className="text-sm text-muted-foreground mb-4">Main operational dashboard for family office</p>
-                <div className="flex justify-between items-center">
-                  <Button variant="outline" size="sm">Configure</Button>
-                  <span className="text-xs text-muted-foreground">Last synced: Today</span>
-                </div>
-              </div>
-              
-              <div className="bg-card border rounded-lg p-4 shadow-sm">
-                <div className="flex items-center justify-between mb-3">
-                  <h3 className="font-semibold">Estate Planning Tool</h3>
-                  <Badge>Active</Badge>
-                </div>
-                <p className="text-sm text-muted-foreground mb-4">Estate and trust management application</p>
-                <div className="flex justify-between items-center">
-                  <Button variant="outline" size="sm">Configure</Button>
-                  <span className="text-xs text-muted-foreground">Last synced: Yesterday</span>
-                </div>
-              </div>
-              
-              <div className="bg-card border rounded-lg p-4 shadow-sm">
-                <div className="flex items-center justify-between mb-3">
-                  <h3 className="font-semibold">Investment Tracker</h3>
-                  <Badge variant="outline">Pending</Badge>
-                </div>
-                <p className="text-sm text-muted-foreground mb-4">Portfolio tracking and analysis</p>
-                <div className="flex justify-between items-center">
-                  <Button variant="outline" size="sm">Finalize</Button>
-                  <span className="text-xs text-muted-foreground">Setup required</span>
-                </div>
-              </div>
-            </div>
+              </CardContent>
+            </Card>
           </TabsContent>
-          
+
           <TabsContent value="architecture" className="space-y-4">
-            <div className="bg-card border rounded-lg p-6">
-              <h3 className="text-xl font-semibold mb-4">System Architecture</h3>
-              <div className="flex justify-center mb-6">
-                <div className="max-w-3xl w-full bg-muted p-8 rounded-lg flex flex-col items-center">
-                  <LucideLayoutTemplate className="h-16 w-16 mb-4 text-primary" />
-                  <p className="text-center text-sm">
-                    System architecture diagram showing connections between applications in the Family Office Marketplace
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <LucideServer className="h-5 w-5" />
+                  System Architecture
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="p-4 border rounded-lg bg-muted/30">
+                  <h3 className="font-medium mb-2">Family Office Marketplace Architecture</h3>
+                  <p className="text-muted-foreground text-sm mb-4">
+                    This application is part of a larger ecosystem of financial management tools
+                    designed to work together through secure APIs and data synchronization.
                   </p>
+
+                  <div className="p-4 border border-dashed rounded-md my-4">
+                    <h4 className="font-medium mb-2">Integration Layers</h4>
+                    <ul className="list-disc pl-5 space-y-2 text-sm">
+                      <li>API Gateway Layer - Secure access point for all services</li>
+                      <li>Data Synchronization Layer - Real-time data consistency</li>
+                      <li>Authentication & Authorization Layer - Unified security model</li>
+                      <li>Event Messaging Layer - Inter-service communication</li>
+                    </ul>
+                  </div>
                 </div>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                <div className="border rounded p-4">
-                  <h4 className="font-semibold mb-2">Data Flow</h4>
-                  <p className="text-sm text-muted-foreground">
-                    Secure data exchange between integrated applications with end-to-end encryption
-                  </p>
-                </div>
-                <div className="border rounded p-4">
-                  <h4 className="font-semibold mb-2">Security Model</h4>
-                  <p className="text-sm text-muted-foreground">
-                    Role-based access controls and multi-factor authentication for all integration points
-                  </p>
-                </div>
-              </div>
-            </div>
+              </CardContent>
+            </Card>
           </TabsContent>
-          
-          <TabsContent value="api" className="space-y-4">
-            <div className="bg-card border rounded-lg p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-xl font-semibold">API Connections</h3>
-                <Button variant="outline">View Documentation</Button>
-              </div>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between border-b pb-4">
-                  <div className="flex items-center gap-3">
-                    <Webhook className="h-5 w-5" />
-                    <div>
-                      <h4 className="font-medium">REST API</h4>
-                      <p className="text-xs text-muted-foreground">Secure data access</p>
+
+          <TabsContent value="api-integrations" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Link className="h-5 w-5" />
+                  API Integrations
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="p-4 border rounded-lg">
+                    <div className="flex justify-between items-start mb-2">
+                      <h3 className="font-medium">Investment Data API</h3>
+                      <Badge className="bg-green-100 text-green-800 border-green-200">Active</Badge>
+                    </div>
+                    <p className="text-sm text-muted-foreground mb-2">
+                      Real-time investment data synchronization between marketplace applications
+                    </p>
+                    <div className="flex gap-2 text-xs">
+                      <span className="px-2 py-1 bg-muted rounded">GET</span>
+                      <span className="px-2 py-1 bg-muted rounded">POST</span>
+                      <span className="px-2 py-1 bg-muted rounded">PUT</span>
                     </div>
                   </div>
-                  <Badge className="bg-green-500">Connected</Badge>
-                </div>
-                <div className="flex items-center justify-between border-b pb-4">
-                  <div className="flex items-center gap-3">
-                    <LucideArrowRightLeft className="h-5 w-5" />
-                    <div>
-                      <h4 className="font-medium">GraphQL Endpoint</h4>
-                      <p className="text-xs text-muted-foreground">Query optimization</p>
+                  
+                  <div className="p-4 border rounded-lg">
+                    <div className="flex justify-between items-start mb-2">
+                      <h3 className="font-medium">Document Exchange API</h3>
+                      <Badge className="bg-green-100 text-green-800 border-green-200">Active</Badge>
+                    </div>
+                    <p className="text-sm text-muted-foreground mb-2">
+                      Secure document sharing across family office applications
+                    </p>
+                    <div className="flex gap-2 text-xs">
+                      <span className="px-2 py-1 bg-muted rounded">GET</span>
+                      <span className="px-2 py-1 bg-muted rounded">POST</span>
                     </div>
                   </div>
-                  <Badge className="bg-green-500">Connected</Badge>
                 </div>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <Network className="h-5 w-5" />
-                    <div>
-                      <h4 className="font-medium">Webhooks</h4>
-                      <p className="text-xs text-muted-foreground">Event notifications</p>
-                    </div>
-                  </div>
-                  <Badge variant="outline">Setup Required</Badge>
-                </div>
-              </div>
-            </div>
+              </CardContent>
+            </Card>
           </TabsContent>
-          
+
           <TabsContent value="plugins" className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="border rounded-lg p-4">
-                <div className="flex items-center gap-2 mb-3">
-                  <Puzzle className="h-5 w-5" />
-                  <h4 className="font-semibold">Data Visualizer</h4>
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <LucidePlugZap className="h-5 w-5" />
+                  Marketplace Plugins
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Card className="bg-muted/50">
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-base">Tax Optimization Engine</CardTitle>
+                    </CardHeader>
+                    <CardContent className="text-sm">
+                      <p className="text-muted-foreground mb-4">Advanced tax strategies and optimization</p>
+                      <Badge variant="outline">Enabled</Badge>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card className="bg-muted/50">
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-base">Estate Planning Tools</CardTitle>
+                    </CardHeader>
+                    <CardContent className="text-sm">
+                      <p className="text-muted-foreground mb-4">Family wealth transfer planning tools</p>
+                      <Badge variant="outline">Enabled</Badge>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card className="bg-muted/50">
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-base">Risk Analysis Module</CardTitle>
+                    </CardHeader>
+                    <CardContent className="text-sm">
+                      <p className="text-muted-foreground mb-4">Portfolio risk assessment tools</p>
+                      <Badge variant="outline" className="bg-amber-100 text-amber-800 border-amber-200">Available</Badge>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card className="bg-muted/50">
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-base">Alternative Investment Tracker</CardTitle>
+                    </CardHeader>
+                    <CardContent className="text-sm">
+                      <p className="text-muted-foreground mb-4">Private equity and alternative asset tracking</p>
+                      <Badge variant="outline" className="bg-amber-100 text-amber-800 border-amber-200">Available</Badge>
+                    </CardContent>
+                  </Card>
                 </div>
-                <p className="text-sm text-muted-foreground mb-3">
-                  Enhanced data visualization for portfolio analytics
-                </p>
-                <Button size="sm" variant="outline">Install</Button>
-              </div>
-              
-              <div className="border rounded-lg p-4">
-                <div className="flex items-center gap-2 mb-3">
-                  <Puzzle className="h-5 w-5" />
-                  <h4 className="font-semibold">Document Sync</h4>
-                </div>
-                <p className="text-sm text-muted-foreground mb-3">
-                  Automatic document synchronization
-                </p>
-                <Button size="sm" className="bg-green-500 hover:bg-green-600">Installed</Button>
-              </div>
-              
-              <div className="border rounded-lg p-4">
-                <div className="flex items-center gap-2 mb-3">
-                  <Puzzle className="h-5 w-5" />
-                  <h4 className="font-semibold">Reporting Engine</h4>
-                </div>
-                <p className="text-sm text-muted-foreground mb-3">
-                  Custom report generation for financial data
-                </p>
-                <Button size="sm" variant="outline">Install</Button>
-              </div>
-            </div>
+              </CardContent>
+            </Card>
           </TabsContent>
         </Tabs>
       </div>

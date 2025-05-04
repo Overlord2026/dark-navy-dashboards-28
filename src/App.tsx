@@ -1,55 +1,70 @@
-
-import { RouterProvider } from "react-router-dom";
-import routes from "./routes";
-import { ThemeProvider } from "@/context/ThemeContext"; // Import from our custom ThemeContext
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { dashboardRoutes } from "./routes/dashboard-routes";
+import { goalsRoutes } from "./routes/goals-routes";
+import { budgetRoutes } from "./routes/budget-routes";
+import { accountsRoutes } from "./routes/accounts-routes";
+import { investmentRoutes } from "./routes/investment-routes";
+import { financialPlansRoutes } from "./routes/financial-plans-routes";
+import { collaborationRoutes } from "./routes/collaboration-routes";
+import { integrationRoutes } from "./routes/integration-routes";
+import SecureLogin from "@/pages/SecureLogin";
+import Unauthorized from "@/pages/Unauthorized";
+import Diagnostics from "@/pages/Diagnostics";
+import FamilyVault from "@/pages/FamilyVault";
+import Documents from "@/pages/Documents";
+import FeedbackPage from "@/pages/FeedbackPage";
+import NotificationsPage from "@/pages/NotificationsPage";
+import PublicHomePage from "@/pages/PublicHomePage";
 import { UserProvider } from "@/context/UserContext";
-import { NetWorthProvider } from "@/context/NetWorthContext";
-import { SubscriptionProvider } from "@/context/SubscriptionContext";
-import { Toaster } from "@/components/ui/sonner";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { DiagnosticsProvider } from "@/context/DiagnosticsContext";
-import { AdvisorProvider } from "@/context/AdvisorContext";
-import { AdminProvider } from './context/AdminContext';
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { AIInsightsProvider } from "./components/insights/AIInsightsProvider";
-import { AudienceProvider } from "./context/AudienceContext";
-
-// Create a Query Client
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      refetchOnWindowFocus: false,
-      retry: 1,
-    },
-  },
-});
 
 function App() {
+  const router = createBrowserRouter([
+    ...dashboardRoutes,
+    ...goalsRoutes,
+    ...budgetRoutes,
+    ...accountsRoutes,
+    ...investmentRoutes,
+    ...financialPlansRoutes, 
+    ...collaborationRoutes,
+    ...integrationRoutes,
+    {
+      path: "/secure-login",
+      element: <SecureLogin />,
+    },
+    {
+      path: "/unauthorized",
+      element: <Unauthorized />,
+    },
+    {
+      path: "/diagnostics",
+      element: <Diagnostics />,
+    },
+    {
+      path: "/family-vault",
+      element: <FamilyVault />,
+    },
+    {
+      path: "/documents",
+      element: <Documents />,
+    },
+    {
+      path: "/feedback",
+      element: <FeedbackPage />,
+    },
+    {
+      path: "/notifications",
+      element: <NotificationsPage />,
+    },
+    {
+      path: "/",
+      element: <PublicHomePage />,
+    },
+  ]);
+
   return (
-    <AdminProvider>
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider>
-          <UserProvider>
-            <SubscriptionProvider>
-              <NetWorthProvider>
-                <DiagnosticsProvider>
-                  <AdvisorProvider>
-                    <AIInsightsProvider>
-                      <AudienceProvider>
-                        <TooltipProvider>
-                          <RouterProvider router={routes} />
-                          <Toaster position="top-right" richColors closeButton />
-                        </TooltipProvider>
-                      </AudienceProvider>
-                    </AIInsightsProvider>
-                  </AdvisorProvider>
-                </DiagnosticsProvider>
-              </NetWorthProvider>
-            </SubscriptionProvider>
-          </UserProvider>
-        </ThemeProvider>
-      </QueryClientProvider>
-    </AdminProvider>
+    <UserProvider>
+      <RouterProvider router={router} />
+    </UserProvider>
   );
 }
 

@@ -47,10 +47,7 @@ export class SecureAuditService {
       // Log to console during development
       logger.info(`Security Audit: ${eventType} - ${status}`, enrichedMetadata, 'SecureAudit');
       
-      // Try to record in database if it exists (we'll create it if needed)
-      await this.ensureAuditTable();
-      
-      // Create the audit log entry
+      // Create the audit log entry in the new audit_logs table
       const result = await supabase.from('audit_logs').insert({
         user_id: userId,
         event_type: eventType,
@@ -68,31 +65,16 @@ export class SecureAuditService {
   
   /**
    * Ensures the audit_logs table exists
+   * @deprecated Use ensureAuditLogsTable from helpers.ts instead
    */
   private async ensureAuditTable() {
     try {
-      // First check if table exists by trying to query it
-      const { error } = await supabase.from('audit_logs').select('id').limit(1);
-      
-      if (error) {
-        // If table doesn't exist, attempt to create it
-        logger.info('Creating audit_logs table for security compliance', {}, 'SecureAudit');
-        
-        // Call our stored procedure that creates the table
-        await this.createAuditLogsTable();
-      }
+      // This functionality is now handled by the ensureAuditLogsTable function in helpers.ts
+      logger.info('Ensuring audit_logs table exists', {}, 'SecureAudit');
+      await import("./helpers").then(helpers => helpers.ensureAuditLogsTable());
     } catch (err) {
       logger.error('Error ensuring audit table exists:', err, 'SecureAudit');
     }
-  }
-  
-  /**
-   * Creates the audit_logs table using a stored procedure
-   */
-  private async createAuditLogsTable() {
-    // This is normally handled by the ensureAuditLogsTable function in helpers.ts
-    // This is a backup in case that fails
-    logger.info('Creating audit_logs table directly', {}, 'SecureAudit');
   }
 }
 

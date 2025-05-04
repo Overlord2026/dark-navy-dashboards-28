@@ -8,16 +8,15 @@ import { logger } from "@/services/logging/loggingService";
  */
 export async function ensureAuditLogsTable(): Promise<void> {
   try {
-    // We'll check if the table exists using our existing RPC function
-    const { error } = await supabase.rpc('check_table_exists', {
+    // We'll check if the table exists using our custom function
+    const { data, error } = await supabase.rpc('check_table_exists', {
       table_name: 'audit_logs'
     });
     
     if (error) {
       logger.info('Creating audit_logs table for security compliance', {}, 'SecurityHelpers');
       
-      // Create the table using direct SQL since the audit_logs table doesn't exist yet
-      // This would normally be done via a migration
+      // Call our function to create the audit_logs table
       const { error: createError } = await supabase.rpc('create_audit_logs_function');
       
       if (createError) {
