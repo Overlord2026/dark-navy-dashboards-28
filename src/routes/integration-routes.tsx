@@ -1,25 +1,16 @@
 
-import { useUser } from "@/context/UserContext";
-import { Navigate } from "react-router-dom";
+import { RouteObject } from "react-router-dom";
 import ProjectIntegration from "@/pages/ProjectIntegration";
+import ProjectIntegrationPage from "@/pages/ProjectIntegrationPage";
 
-const AuthGuard = ({ children }: { children: React.ReactNode }) => {
-  const { isAuthenticated } = useUser();
-  
-  if (!isAuthenticated) {
-    return <Navigate to="/secure-login" />;
-  }
-  
-  return <>{children}</>;
-};
-
-export const integrationRoutes = [
+export const integrationRoutes: RouteObject[] = [
+  {
+    path: "/project-integration",
+    element: <ProjectIntegration />,
+  },
+  // Legacy route for backwards compatibility
   {
     path: "/integration",
-    element: (
-      <AuthGuard>
-        <ProjectIntegration />
-      </AuthGuard>
-    ),
-  },
+    element: <ProjectIntegrationPage />,
+  }
 ];

@@ -10,7 +10,7 @@ export async function ensureAuditLogsTable(): Promise<void> {
   try {
     // Try to query the table to confirm it exists
     const { error } = await supabase
-      .from('audit_logs')
+      .from('audit_logs' as unknown as string)
       .select('id')
       .limit(1);
     

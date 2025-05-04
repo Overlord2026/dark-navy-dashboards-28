@@ -48,7 +48,7 @@ export class SecureAuditService {
       logger.info(`Security Audit: ${eventType} - ${status}`, enrichedMetadata, 'SecureAudit');
       
       // Create the audit log entry directly - we know the table exists now
-      const { error } = await supabase.from('audit_logs').insert({
+      const { error } = await supabase.from('audit_logs' as unknown as string).insert({
         user_id: userId,
         event_type: eventType,
         status,

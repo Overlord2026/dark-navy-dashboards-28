@@ -1,15 +1,23 @@
 
 import React from "react";
 import { Badge } from "@/components/ui/badge";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { CheckCircle } from "lucide-react";
 
 export const ConnectedBadge = () => {
   return (
-    <Badge 
-      variant="outline" 
-      className="bg-green-100 text-green-800 border-green-200 flex items-center gap-1"
-    >
-      <span className="h-2 w-2 bg-green-500 rounded-full"></span>
-      Connected
-    </Badge>
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 flex items-center gap-1">
+            <CheckCircle className="h-3 w-3" />
+            Connected
+          </Badge>
+        </TooltipTrigger>
+        <TooltipContent>
+          <p>This project is connected to the Family Office Marketplace ecosystem</p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   );
 };
