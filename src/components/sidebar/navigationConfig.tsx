@@ -23,7 +23,7 @@ export const navigationItems = [
     icon: LayoutDashboard,
     items: [
       {
-        title: "Dashboard",
+        label: "Dashboard",
         href: "/dashboard",
         icon: <LayoutDashboard className="h-5 w-5" />,
       },
@@ -35,12 +35,12 @@ export const navigationItems = [
     icon: User,
     items: [
       {
-        title: "Profile",
+        label: "Profile",
         href: "/profile",
         icon: <User className="h-5 w-5" />,
       },
       {
-        title: "Documents",
+        label: "Documents",
         href: "/documents",
         icon: <FileText className="h-5 w-5" />,
       },
@@ -52,12 +52,12 @@ export const navigationItems = [
     icon: TrendingUp,
     items: [
       {
-        title: "Investments",
+        label: "Investments",
         href: "/investments",
         icon: <TrendingUp className="h-5 w-5" />,
       },
       {
-        title: "Properties",
+        label: "Properties",
         href: "/properties",
         icon: <Folder className="h-5 w-5" />,
       },
@@ -69,12 +69,12 @@ export const navigationItems = [
     icon: LifeBuoy,
     items: [
       {
-        title: "Help",
+        label: "Help",
         href: "/help",
         icon: <LifeBuoy className="h-5 w-5" />,
       },
       {
-        title: "FAQ",
+        label: "FAQ",
         href: "/faq",
         icon: <BadgeHelp className="h-5 w-5" />,
       },
@@ -86,7 +86,7 @@ export const navigationItems = [
     icon: BarChartHorizontal,
     items: [
       {
-        title: "Diagnostics",
+        label: "Diagnostics",
         href: "/system-diagnostics",
         icon: <BarChartHorizontal className="h-5 w-5" />,
       },
@@ -98,17 +98,17 @@ export const navigationItems = [
     icon: Network,
     items: [
       {
-        title: "Project Integration",
+        label: "Project Integration",
         href: "/project-integration",
         icon: <Network className="h-5 w-5" />,
       },
       {
-        title: "Connected Users",
+        label: "Connected Users",
         href: "/connected-users",
         icon: <Users className="h-5 w-5" />,
       },
       {
-        title: "Marketplace",
+        label: "Marketplace",
         href: "/marketplace",
         icon: <Boxes className="h-5 w-5" />,
       },
@@ -120,7 +120,7 @@ export const navigationItems = [
     icon: Settings,
     items: [
       {
-        title: "Settings",
+        label: "Settings",
         href: "/settings",
         icon: <Settings className="h-5 w-5" />,
       },
