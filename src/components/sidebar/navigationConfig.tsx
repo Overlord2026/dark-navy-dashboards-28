@@ -1,3 +1,4 @@
+
 import React from "react";
 import {
   LayoutDashboard,
@@ -14,10 +15,12 @@ import {
   Boxes
 } from "lucide-react";
 
-// Keep the navigationItems export for backwards compatibility
+// Define each section properly with id, label and icon properties
 export const navigationItems = [
   {
-    title: "Home",
+    id: "home",
+    label: "Home",
+    icon: LayoutDashboard,
     items: [
       {
         title: "Dashboard",
@@ -27,7 +30,9 @@ export const navigationItems = [
     ],
   },
   {
-    title: "Personal",
+    id: "personal",
+    label: "Personal",
+    icon: User,
     items: [
       {
         title: "Profile",
@@ -42,7 +47,9 @@ export const navigationItems = [
     ],
   },
   {
-    title: "Wealth",
+    id: "wealth",
+    label: "Wealth",
+    icon: TrendingUp,
     items: [
       {
         title: "Investments",
@@ -57,7 +64,9 @@ export const navigationItems = [
     ],
   },
   {
-    title: "Support",
+    id: "support",
+    label: "Support",
+    icon: LifeBuoy,
     items: [
       {
         title: "Help",
@@ -72,7 +81,9 @@ export const navigationItems = [
     ],
   },
   {
-    title: "Admin",
+    id: "admin",
+    label: "Admin",
+    icon: BarChartHorizontal,
     items: [
       {
         title: "Diagnostics",
@@ -82,7 +93,9 @@ export const navigationItems = [
     ],
   },
   {
-    title: "Integration",
+    id: "integration",
+    label: "Integration",
+    icon: Network,
     items: [
       {
         title: "Project Integration",
@@ -102,7 +115,9 @@ export const navigationItems = [
     ],
   },
   {
-    title: "Settings",
+    id: "settings",
+    label: "Settings",
+    icon: Settings,
     items: [
       {
         title: "Settings",
