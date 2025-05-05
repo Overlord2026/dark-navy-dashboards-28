@@ -1,6 +1,7 @@
 
 import React from "react";
 import { Badge } from "@/components/ui/badge";
+import { Network } from "lucide-react";
 
 interface BrandedHeaderProps {
   isConnected?: boolean;
@@ -8,17 +9,22 @@ interface BrandedHeaderProps {
 
 export const BrandedHeader: React.FC<BrandedHeaderProps> = ({ isConnected = false }) => {
   return (
-    <header className="w-full flex justify-center items-center bg-[#0F1E3A] fixed top-0 left-0 right-0 z-50 shadow-md border-b border-[#FFC700]/30">
-      <div className="flex items-center justify-center py-3 relative w-full px-4">
-        <div className="flex flex-col items-center">
-          <div className="flex items-center">
-            <span className="text-white text-xl font-semibold">BOUTIQUE FAMILY OFFICE</span>
-            {isConnected && (
-              <Badge className="ml-2 bg-[#FFC700] text-[#0F1E3A] font-medium">Connected</Badge>
-            )}
-          </div>
-          <p className="text-[#FFC700] text-xs uppercase tracking-wide">ORGANIZE &amp; MAXIMIZE</p>
-        </div>
+    <header className="fixed top-0 left-0 right-0 h-16 flex items-center justify-between px-4 bg-background border-b border-border z-50">
+      <div className="flex items-center space-x-4">
+        <div className="font-bold text-xl">Family Office</div>
+        {isConnected && (
+          <Badge variant="outline" className="flex items-center gap-1 bg-primary/10">
+            <Network className="h-3 w-3" />
+            <span>Connected</span>
+          </Badge>
+        )}
+      </div>
+      <div className="flex items-center space-x-4">
+        <nav className="hidden md:flex items-center space-x-4">
+          <a href="/dashboard" className="text-sm font-medium hover:text-primary">Dashboard</a>
+          <a href="/integration" className="text-sm font-medium hover:text-primary">Integration</a>
+          <a href="/profile" className="text-sm font-medium hover:text-primary">Profile</a>
+        </nav>
       </div>
     </header>
   );

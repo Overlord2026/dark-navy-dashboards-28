@@ -19,6 +19,7 @@ import NotificationsPage from "@/pages/NotificationsPage";
 import PublicHomePage from "@/pages/PublicHomePage";
 import NotFound from "@/pages/NotFound";
 import { UserProvider } from "@/context/UserContext";
+import { AdvisorProvider } from "@/context/AdvisorContext";
 
 function App() {
   const router = createBrowserRouter([
@@ -71,7 +72,9 @@ function App() {
 
   return (
     <UserProvider>
-      <RouterProvider router={router} />
+      <AdvisorProvider>
+        <RouterProvider router={router} />
+      </AdvisorProvider>
     </UserProvider>
   );
 }

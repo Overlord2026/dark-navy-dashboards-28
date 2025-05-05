@@ -1,28 +1,15 @@
 
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState } from "react";
 
-export interface Experience {
-  title: string;
-  company: string;
-  period: string;
-  description: string;
-}
-
-export interface AdvisorInfo {
+interface AdvisorInfo {
   name: string;
   title: string;
-  location: string;
   email: string;
-  serviceEmail?: string;
   phone: string;
-  office: string;
+  location: string;
   bio: string;
+  certifications: string[];
   linkedin?: string;
-  hometown?: string;
-  experience?: Experience[];
-  certifications?: string[];
-  education?: string[];
-  specialties?: string[];
 }
 
 interface AdvisorContextType {
@@ -31,44 +18,23 @@ interface AdvisorContextType {
 }
 
 const defaultAdvisorInfo: AdvisorInfo = {
-  name: "Daniel Zamora",
-  title: "Certified Financial Planner™",
-  location: "Sarasota, FL",
-  email: "Daniel@awmfl.com",
-  serviceEmail: "Service@awmfl.com",
-  phone: "(800) 555-1234",
-  office: "Sarasota, FL",
-  hometown: "Asheville, NC",
-  bio: "Daniel, a seasoned finance professional, guides high net worth investors. His approach blends investment management, risk mitigation, tax optimization, and overall strategy. Starting at Vanguard, then UBS, he directed client acquisition at Fisher Investments before joining BFO. Originally from Asheville, NC, Daniel now resides in Sarasota, enjoying fitness, community activities, and sunny days by the water.",
-  experience: [
-    {
-      title: "Senior Financial Advisor",
-      company: "Vanguard",
-      period: "2015-2018",
-      description: "Managed portfolios for high net worth individuals and provided strategic investment advice."
-    },
-    {
-      title: "Wealth Management Consultant",
-      company: "UBS",
-      period: "2018-2020",
-      description: "Developed comprehensive financial plans for clients with complex financial situations."
-    }
-  ],
-  certifications: ["CFP®", "ChFC®", "RICP®"],
-  education: ["BS, Finance", "Executive Financial Planning Program"],
-  specialties: ["Retirement Planning", "Tax Optimization", "Estate Planning"]
+  name: "John Smith",
+  title: "Senior Financial Advisor",
+  email: "john.smith@example.com",
+  phone: "(555) 123-4567",
+  location: "New York, NY",
+  bio: "Experienced financial advisor with over 15 years of expertise in wealth management and estate planning.",
+  certifications: ["CFP", "CFA"],
+  linkedin: "https://linkedin.com/in/johnsmith"
 };
 
 const AdvisorContext = createContext<AdvisorContextType | undefined>(undefined);
 
-export const AdvisorProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const AdvisorProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [advisorInfo, setAdvisorInfo] = useState<AdvisorInfo>(defaultAdvisorInfo);
 
   const updateAdvisorInfo = (info: Partial<AdvisorInfo>) => {
-    setAdvisorInfo(prevInfo => ({
-      ...prevInfo,
-      ...info
-    }));
+    setAdvisorInfo(prev => ({ ...prev, ...info }));
   };
 
   return (
@@ -81,7 +47,7 @@ export const AdvisorProvider: React.FC<{ children: ReactNode }> = ({ children })
 export const useAdvisor = (): AdvisorContextType => {
   const context = useContext(AdvisorContext);
   if (context === undefined) {
-    throw new Error('useAdvisor must be used within an AdvisorProvider');
+    throw new Error("useAdvisor must be used within an AdvisorProvider");
   }
   return context;
 };
