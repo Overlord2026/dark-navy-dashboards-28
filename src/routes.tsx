@@ -16,6 +16,7 @@ import { collaborationRoutes } from "./routes/collaboration-routes";
 import { profileRoutes } from "./routes/profile-routes";
 import { secureRoutes } from "./routes/secure-routes";
 import UnauthorizedPage from "@/pages/UnauthorizedPage";
+import NotFound from "@/pages/NotFound";
 
 const routes = createBrowserRouter([
   ...publicRoutes, // Add the public routes first
@@ -36,6 +37,11 @@ const routes = createBrowserRouter([
   {
     path: "/unauthorized",
     element: <UnauthorizedPage />
+  },
+  // Add a catch-all route to handle 404 errors
+  {
+    path: "*",
+    element: <NotFound />
   }
 ]);
 

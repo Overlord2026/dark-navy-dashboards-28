@@ -4,6 +4,7 @@ import { RouteObject } from "react-router-dom";
 import { Navigate } from "react-router-dom";
 import Landing from "@/pages/Landing";
 import SecureLogin from "@/pages/SecureLogin";
+import AboutUsPage from "@/pages/AboutUsPage";
 
 export const publicRoutes: RouteObject[] = [
   {
@@ -21,5 +22,9 @@ export const publicRoutes: RouteObject[] = [
   {
     path: "/secure-login",
     element: <SecureLogin />,
+  },
+  {
+    path: "/about",
+    element: <AboutUsPage />,
   },
 ];

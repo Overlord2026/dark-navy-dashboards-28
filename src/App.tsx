@@ -1,3 +1,4 @@
+
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { dashboardRoutes } from "./routes/dashboard-routes";
 import { goalsRoutes } from "./routes/goals-routes";
@@ -7,6 +8,7 @@ import { investmentRoutes } from "./routes/investment-routes";
 import { financialPlansRoutes } from "./routes/financial-plans-routes";
 import { collaborationRoutes } from "./routes/collaboration-routes";
 import { integrationRoutes } from "./routes/integration-routes";
+import { publicRoutes } from "./routes/public-routes";
 import SecureLogin from "@/pages/SecureLogin";
 import Unauthorized from "@/pages/Unauthorized";
 import Diagnostics from "@/pages/Diagnostics";
@@ -15,10 +17,12 @@ import Documents from "@/pages/Documents";
 import FeedbackPage from "@/pages/FeedbackPage";
 import NotificationsPage from "@/pages/NotificationsPage";
 import PublicHomePage from "@/pages/PublicHomePage";
+import NotFound from "@/pages/NotFound";
 import { UserProvider } from "@/context/UserContext";
 
 function App() {
   const router = createBrowserRouter([
+    ...publicRoutes,
     ...dashboardRoutes,
     ...goalsRoutes,
     ...budgetRoutes,
@@ -59,6 +63,10 @@ function App() {
       path: "/",
       element: <PublicHomePage />,
     },
+    {
+      path: "*",
+      element: <NotFound />,
+    }
   ]);
 
   return (
