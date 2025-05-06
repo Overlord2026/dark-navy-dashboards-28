@@ -3,6 +3,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { NavItem } from "@/types/navigation";
+import { LucideIcon } from "lucide-react";
 
 interface SidebarBottomNavProps {
   items: NavItem[];
@@ -26,6 +27,8 @@ export const SidebarBottomNav: React.FC<SidebarBottomNavProps> = ({
     <nav className="space-y-1">
       {items.map((item) => {
         const normalizedHref = normalizePath(item.href);
+        const IconComponent = item.icon as LucideIcon;
+        
         return (
           <Link
             key={item.title}
@@ -42,7 +45,7 @@ export const SidebarBottomNav: React.FC<SidebarBottomNavProps> = ({
             title={collapsed ? item.title : undefined}
           >
             {item.icon && (
-              <item.icon 
+              <IconComponent 
                 className={cn(
                   "h-5 w-5 flex-shrink-0", 
                   !collapsed && "mr-3"
@@ -56,7 +59,7 @@ export const SidebarBottomNav: React.FC<SidebarBottomNavProps> = ({
               <span className="sr-only">{item.title}</span>
             )}
           </Link>
-        )
+        );
       })}
     </nav>
   );

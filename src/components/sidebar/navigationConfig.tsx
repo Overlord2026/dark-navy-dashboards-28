@@ -79,6 +79,12 @@ export const navSections = [
         href: '/estate-planning',
         icon: <Building2 className="h-4 w-4" />,
       },
+      {
+        id: 'insurance',
+        label: 'Insurance',
+        href: '/insurance',
+        icon: <Shield className="h-4 w-4" />,
+      },
     ],
   },
   {

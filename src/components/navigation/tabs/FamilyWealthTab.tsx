@@ -18,61 +18,73 @@ import { NavItem } from "@/types/navigation";
 
 export const familyWealthNavItems: NavItem[] = [
   { 
+    id: "secure-family-vault",
     title: "Secure Family Vault", 
     href: "/legacy-vault", 
     icon: VaultIcon 
   },
   { 
+    id: "financial-plans",
     title: "Financial Plans", 
     href: "/financial-plans", 
     icon: LineChartIcon 
   },
   { 
+    id: "accounts-overview",
     title: "Accounts Overview", 
     href: "/accounts", 
     icon: WalletIcon 
   },
   { 
+    id: "all-assets",
     title: "All Assets", 
     href: "/all-assets", 
     icon: Diamond 
   },
   { 
+    id: "documents",
     title: "Documents", 
     href: "/documents", 
     icon: BookIcon 
   },
   { 
+    id: "cash-management",
     title: "Cash Management", 
     href: "/cash-management", 
     icon: BanknoteIcon
   },
   { 
+    id: "transfers",
     title: "Transfers", 
     href: "/transfers", 
     icon: ArrowRightLeft 
   },
   { 
+    id: "properties",
     title: "Properties", 
     href: "/properties", 
     icon: BuildingIcon 
   },
   { 
+    id: "tax-budgets",
     title: "Tax & Budgets", 
     href: "/tax-budgets", 
     icon: Calculator 
   },
   { 
+    id: "healthcare",
     title: "Healthcare", 
     href: "/healthcare", 
     icon: HeartPulseIcon 
   },
   { 
+    id: "social-security",
     title: "Social Security", 
     href: "/social-security", 
     icon: CircleDollarSignIcon 
   },
   { 
+    id: "bill-pay",
     title: "Bill Pay", 
     href: "/billpay", 
     icon: Receipt 
@@ -84,16 +96,19 @@ const FamilyWealthTab = () => {
     <div className="family-wealth-tab">
       <h2 className="text-xl font-semibold mb-4">Family Wealth Management</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {familyWealthNavItems.map((item) => (
-          <a 
-            key={item.href} 
-            href={item.href}
-            className="p-4 border rounded-lg hover:bg-muted/50 transition-colors flex items-center gap-3"
-          >
-            {item.icon && <item.icon className="h-5 w-5 text-primary" />}
-            <span>{item.title}</span>
-          </a>
-        ))}
+        {familyWealthNavItems.map((item) => {
+          const IconComponent = item.icon;
+          return (
+            <a 
+              key={item.href} 
+              href={item.href}
+              className="p-4 border rounded-lg hover:bg-muted/50 transition-colors flex items-center gap-3"
+            >
+              {item.icon && <IconComponent className="h-5 w-5 text-primary" />}
+              <span>{item.title}</span>
+            </a>
+          );
+        })}
       </div>
     </div>
   );
