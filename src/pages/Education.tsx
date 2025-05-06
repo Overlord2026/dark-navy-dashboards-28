@@ -99,10 +99,7 @@ export default function Education() {
             <h2 className="text-2xl font-bold tracking-tight">
               {isAdmin ? "Education Management Dashboard" : "Welcome to the SWAG Education Center"}
             </h2>
-            <Button variant="outline" size="sm" onClick={toggleAdminMode} className="flex items-center gap-2">
-              <Shield className="h-4 w-4" />
-              {isAdmin ? "Exit Admin Mode" : "Admin Mode"}
-            </Button>
+            
           </div>
 
           {isAdmin ? <AdminEducationTabs tabs={[{
