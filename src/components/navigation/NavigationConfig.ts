@@ -22,11 +22,13 @@ export {
 // Bottom navigation items
 export const bottomNavItems: NavItem[] = [
   { 
+    id: "help",
     title: "Help", 
     href: "/help", 
     icon: HeartHandshakeIcon 
   },
   { 
+    id: "settings",
     title: "Settings", 
     href: "/settings", 
     icon: UserIcon 

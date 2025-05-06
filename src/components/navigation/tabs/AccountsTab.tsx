@@ -5,21 +5,25 @@ import { NavItem } from "@/types/navigation";
 
 export const accountsNavItems: NavItem[] = [
   { 
+    id: "accounts-overview",
     title: "Accounts Overview", 
     href: "/accounts", 
     icon: WalletIcon 
   },
   { 
+    id: "cash-management",
     title: "Cash Management", 
     href: "/cash-management", 
     icon: BanknoteIcon
   },
   { 
+    id: "transfers",
     title: "Transfers", 
     href: "/transfers", 
     icon: ArrowRightLeft 
   },
   { 
+    id: "funding-accounts",
     title: "Funding Accounts", 
     href: "/funding-accounts", 
     icon: WalletIcon 

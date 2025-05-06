@@ -41,6 +41,7 @@ const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
     
     return (
       <a
+        key={item.id || item.title}
         href={normalizedHref}
         target={item.external ? "_blank" : undefined}
         rel={item.external ? "noreferrer" : undefined}
@@ -63,7 +64,9 @@ const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
         }}
       >
         {item.icon && (
-          <item.icon className="mr-2 h-4 w-4" />
+          typeof item.icon === 'function' ? 
+            <item.icon className="mr-2 h-4 w-4" /> : 
+            <span className="mr-2">{item.icon}</span>
         )}
         <span className="whitespace-nowrap overflow-hidden text-ellipsis">{item.title}</span>
         {item.label && (
@@ -112,8 +115,8 @@ const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
           </button>
         </CollapsibleTrigger>
         <CollapsibleContent className="space-y-1">
-          {items.map((item, index) => (
-            <React.Fragment key={index}>
+          {Array.isArray(items) && items.map((item, index) => (
+            <React.Fragment key={item.id || index}>
               {item.href ? (
                 renderNavItem(item)
               ) : (
@@ -133,7 +136,7 @@ const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
                       </CollapsibleTrigger>
                       <CollapsibleContent className="space-y-1">
                         {item.items.map((subItem, subIndex) => (
-                          <React.Fragment key={subIndex}>
+                          <React.Fragment key={subItem.id || subIndex}>
                             {subItem.href && renderNavItem(subItem)}
                           </React.Fragment>
                         ))}

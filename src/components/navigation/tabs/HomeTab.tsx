@@ -5,6 +5,7 @@ import { NavItem } from "@/types/navigation";
 
 export const homeNavItems: NavItem[] = [
   { 
+    id: "home",
     title: "Home", 
     href: "/", 
     icon: HomeIcon 

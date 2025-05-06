@@ -5,31 +5,37 @@ import { NavItem } from "@/types/navigation";
 
 export const educationNavItems: NavItem[] = [
   { 
+    id: "education-center",
     title: "Education Center", 
     href: "/education", 
     icon: GraduationCapIcon 
   },
   { 
+    id: "investments",
     title: "Investments", 
     href: "/investments", 
     icon: BarChart3Icon 
   },
   { 
+    id: "tax-planning",
     title: "Tax Planning", 
     href: "/tax-planning", 
     icon: PieChart 
   },
   { 
+    id: "insurance",
     title: "Insurance", 
     href: "/insurance", 
     icon: ShieldIcon 
   },
   { 
+    id: "lending",
     title: "Lending", 
     href: "/lending", 
     icon: BanknoteIcon 
   },
   { 
+    id: "estate-planning",
     title: "Estate Planning", 
     href: "/estate-planning", 
     icon: ArchiveIcon 
