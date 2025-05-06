@@ -1,14 +1,12 @@
+
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { auditLog, AuditLogEntry } from "@/services/auditLog/auditLogService";
 import { Button } from "@/components/ui/button";
 import { RefreshCw, Search, Download } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { SupabaseAuditLogViewer } from "./SupabaseAuditLogViewer";
 
 export function PublishAuditLogViewer() {
-  // Use in-memory logs for backwards compatibility
-  const [useSupabase, setUseSupabase] = useState(true);
   const [logs, setLogs] = useState<AuditLogEntry[]>([]);
   const [filteredLogs, setFilteredLogs] = useState<AuditLogEntry[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -62,12 +60,6 @@ export function PublishAuditLogViewer() {
     }, 100);
   };
   
-  // Use the Supabase viewer component if enabled
-  if (useSupabase) {
-    return <SupabaseAuditLogViewer />;
-  }
-  
-  // Otherwise fall back to the old in-memory version
   return (
     <Card className="w-full">
       <CardHeader className="flex flex-row items-center justify-between pb-2">

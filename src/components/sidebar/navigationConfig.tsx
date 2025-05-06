@@ -1,132 +1,154 @@
 
-import React from "react";
-import {
-  LayoutDashboard,
-  User,
+import React from 'react';
+import { 
+  LayoutDashboard, 
+  CreditCard, 
+  FileLineChart, 
   FileText,
+  BookOpen,
+  Building2,
+  MessageCircle,
   Settings,
-  TrendingUp,
-  Folder,
-  LifeBuoy,
-  BadgeHelp,
-  BarChartHorizontal,
-  Network,
-  Users,
-  Boxes
-} from "lucide-react";
+  User,
+  VaultIcon,
+  BriefcaseIcon,
+  Shield,
+  Brain,
+  Share2
+} from 'lucide-react';
 
-// Define each section properly with id, label and icon properties
-export const navigationItems = [
+export const navSections = [
   {
-    id: "home",
-    label: "Home",
+    id: 'main',
+    label: 'Main',
     icon: LayoutDashboard,
     items: [
       {
-        label: "Dashboard",
-        href: "/dashboard",
-        icon: <LayoutDashboard className="h-5 w-5" />,
+        id: 'dashboard',
+        label: 'Dashboard',
+        href: '/',
+        icon: <LayoutDashboard className="h-4 w-4" />,
       },
     ],
   },
   {
-    id: "personal",
-    label: "Personal",
+    id: 'wealth',
+    label: 'Wealth Management',
+    icon: BriefcaseIcon,
+    items: [
+      {
+        id: 'accounts',
+        label: 'Accounts',
+        href: '/accounts',
+        icon: <CreditCard className="h-4 w-4" />,
+      },
+      {
+        id: 'vault',
+        label: 'Family Vault',
+        href: '/legacy-vault',
+        icon: <VaultIcon className="h-4 w-4" />,
+      },
+      {
+        id: 'investments',
+        label: 'Investments',
+        href: '/investments',
+        icon: <BriefcaseIcon className="h-4 w-4" />,
+      },
+    ],
+  },
+  {
+    id: 'planning',
+    label: 'Planning',
+    icon: FileLineChart,
+    items: [
+      {
+        id: 'financial-plans',
+        label: 'Financial Plans',
+        href: '/financial-plans',
+        icon: <FileLineChart className="h-4 w-4" />,
+      },
+      {
+        id: 'tax-planning',
+        label: 'Tax Planning',
+        href: '/tax-planning',
+        icon: <FileText className="h-4 w-4" />,
+      },
+      {
+        id: 'estate-planning',
+        label: 'Estate Planning',
+        href: '/estate-planning',
+        icon: <Building2 className="h-4 w-4" />,
+      },
+    ],
+  },
+  {
+    id: 'education',
+    label: 'Education',
+    icon: BookOpen,
+    items: [
+      {
+        id: 'education-center',
+        label: 'Education Center',
+        href: '/education',
+        icon: <BookOpen className="h-4 w-4" />,
+      },
+    ],
+  },
+  {
+    id: 'integration',
+    label: 'Integration',
+    icon: Share2,
+    items: [
+      {
+        id: 'project-integration',
+        label: 'Project Integration',
+        href: '/integration',
+        icon: <Share2 className="h-4 w-4" />,
+      },
+    ],
+  },
+  {
+    id: 'support',
+    label: 'Support',
+    icon: MessageCircle,
+    items: [
+      {
+        id: 'ai-insights',
+        label: 'AI Insights',
+        href: '/ai-insights',
+        icon: <Brain className="h-4 w-4" />,
+      },
+      {
+        id: 'help',
+        label: 'Help & Support',
+        href: '/help',
+        icon: <MessageCircle className="h-4 w-4" />,
+      },
+    ],
+  },
+  {
+    id: 'account',
+    label: 'Account',
     icon: User,
     items: [
       {
-        label: "Profile",
-        href: "/profile",
-        icon: <User className="h-5 w-5" />,
+        id: 'profile',
+        label: 'Profile',
+        href: '/profile',
+        icon: <User className="h-4 w-4" />,
       },
       {
-        label: "Documents",
-        href: "/documents",
-        icon: <FileText className="h-5 w-5" />,
-      },
-    ],
-  },
-  {
-    id: "wealth",
-    label: "Wealth",
-    icon: TrendingUp,
-    items: [
-      {
-        label: "Investments",
-        href: "/investments",
-        icon: <TrendingUp className="h-5 w-5" />,
+        id: 'security',
+        label: 'Security',
+        href: '/security-settings',
+        icon: <Shield className="h-4 w-4" />,
       },
       {
-        label: "Properties",
-        href: "/properties",
-        icon: <Folder className="h-5 w-5" />,
-      },
-    ],
-  },
-  {
-    id: "support",
-    label: "Support",
-    icon: LifeBuoy,
-    items: [
-      {
-        label: "Help",
-        href: "/help",
-        icon: <LifeBuoy className="h-5 w-5" />,
-      },
-      {
-        label: "FAQ",
-        href: "/faq",
-        icon: <BadgeHelp className="h-5 w-5" />,
-      },
-    ],
-  },
-  {
-    id: "admin",
-    label: "Admin",
-    icon: BarChartHorizontal,
-    items: [
-      {
-        label: "Diagnostics",
-        href: "/system-diagnostics",
-        icon: <BarChartHorizontal className="h-5 w-5" />,
-      },
-    ],
-  },
-  {
-    id: "integration",
-    label: "Integration",
-    icon: Network,
-    items: [
-      {
-        label: "Project Integration",
-        href: "/project-integration",
-        icon: <Network className="h-5 w-5" />,
-      },
-      {
-        label: "Connected Users",
-        href: "/connected-users",
-        icon: <Users className="h-5 w-5" />,
-      },
-      {
-        label: "Marketplace",
-        href: "/marketplace",
-        icon: <Boxes className="h-5 w-5" />,
-      },
-    ],
-  },
-  {
-    id: "settings",
-    label: "Settings",
-    icon: Settings,
-    items: [
-      {
-        label: "Settings",
-        href: "/settings",
-        icon: <Settings className="h-5 w-5" />,
+        id: 'settings',
+        label: 'Settings',
+        href: '/settings',
+        icon: <Settings className="h-4 w-4" />,
       },
     ],
   },
 ];
-
-// Add this export to match the import in Sidebar.tsx
-export const navSections = navigationItems;

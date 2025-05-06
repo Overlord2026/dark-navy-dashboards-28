@@ -1,73 +1,67 @@
 
 import React from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Link, ArrowUpRight, Check } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Plus } from "lucide-react";
 
 export const ConnectedProjectsTab = () => {
-  const connectedProjects = [
+  const projects = [
     {
-      id: "1",
-      name: "Wealth Management Platform",
-      status: "active",
-      connectionType: "API",
-      lastSync: "2 hours ago"
+      id: 1,
+      name: "Family Office Client Portal",
+      status: "Connected",
+      lastSync: "Today at 2:15 PM",
+      description: "Main client interface for portfolio management and reporting."
     },
     {
-      id: "2",
-      name: "Family Office Dashboard",
-      status: "active",
-      connectionType: "Plugin",
-      lastSync: "1 day ago"
+      id: 2,
+      name: "Advisor Dashboard",
+      status: "Connected",
+      lastSync: "Today at 1:30 PM",
+      description: "Financial advisor management interface with client portfolios."
+    },
+    {
+      id: 3,
+      name: "Financial Planning Module",
+      status: "Pending",
+      lastSync: "Never",
+      description: "Advanced financial planning and scenario analysis tools."
     }
   ];
 
   return (
     <div className="space-y-6">
-      <Card>
-        <CardHeader className="pb-3">
-          <CardTitle>Connected Projects</CardTitle>
-          <CardDescription>
-            Projects connected to your Family Office Marketplace ecosystem
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {connectedProjects.map((project) => (
-              <div key={project.id} className="flex items-center justify-between p-3 border rounded-md">
-                <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-md bg-primary/10 flex items-center justify-center">
-                    <Link className="h-5 w-5 text-primary" />
-                  </div>
-                  <div>
-                    <p className="font-medium">{project.name}</p>
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <Badge variant={project.status === "active" ? "success" : "secondary"} className="text-xs">
-                        {project.status === "active" ? (
-                          <><Check className="h-3 w-3 mr-1" /> Active</>
-                        ) : (
-                          "Inactive"
-                        )}
-                      </Badge>
-                      <span>• {project.connectionType}</span>
-                      <span>• Last sync {project.lastSync}</span>
-                    </div>
-                  </div>
-                </div>
-                <Button variant="ghost" size="sm">
-                  <ArrowUpRight className="h-4 w-4 mr-2" />
-                  View
-                </Button>
-              </div>
-            ))}
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-semibold">Connected Projects</h2>
+        <Button className="bg-black hover:bg-black/80 text-[#D4AF37]">
+          <Plus className="h-4 w-4 mr-2" /> Connect New Project
+        </Button>
+      </div>
 
-            <Button className="w-full mt-4" variant="outline">
-              Connect New Project
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {projects.map((project) => (
+          <Card key={project.id} className="border-[#333] bg-[#1F1F2E]">
+            <CardHeader>
+              <div className="flex justify-between items-start">
+                <CardTitle className="text-[#D4AF37]">{project.name}</CardTitle>
+                <Badge variant={project.status === "Connected" ? "outline" : "secondary"} 
+                  className={project.status === "Connected" ? "bg-green-900/30 text-green-300 border-green-500/50" : ""}>
+                  {project.status}
+                </Badge>
+              </div>
+              <CardDescription>Last synced: {project.lastSync}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-muted-foreground">{project.description}</p>
+            </CardContent>
+            <CardFooter className="flex justify-between">
+              <Button variant="outline" className="text-[#D4AF37] border-[#D4AF37]">View Details</Button>
+              <Button className="bg-black hover:bg-black/80 text-[#D4AF37]">Manage</Button>
+            </CardFooter>
+          </Card>
+        ))}
+      </div>
     </div>
   );
 };

@@ -66,7 +66,7 @@ export default function ContactPage() {
                   <Mail className="h-6 w-6 text-[#1B1B32] flex-shrink-0 mt-1" />
                   <div className="ml-4">
                     <h3 className="text-lg font-medium mb-1 text-[#222222]">Email</h3>
-                    <p className="text-gray-600">service@awmfl.com</p>
+                    <p className="text-gray-600">contact@boutiquefamilyoffice.com</p>
                   </div>
                 </div>
                 

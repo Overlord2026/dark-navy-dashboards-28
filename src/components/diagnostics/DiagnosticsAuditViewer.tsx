@@ -5,74 +5,19 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { RefreshCw, Zap, Calendar } from "lucide-react";
 import { auditLog, AuditLogEntry } from "@/services/auditLog/auditLogService";
-import { secureAudit } from "@/services/security/SecureAuditService";
-import { useUser } from "@/context/UserContext";
-
-interface DatabaseAuditLog {
-  id: string;
-  user_id: string;
-  event_type: string;
-  status: string;
-  details: any;
-  created_at: string;
-}
 
 export function DiagnosticsAuditViewer() {
   const [logs, setLogs] = useState<AuditLogEntry[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const { userProfile } = useUser();
-  const userId = userProfile?.id;
   
-  const refreshLogs = async () => {
-    // Get all diagnostics-related logs from memory first
-    const memoryLogs = auditLog.getRecentEntries(100).filter(log => 
+  const refreshLogs = () => {
+    // Get all diagnostics-related logs
+    const allLogs = auditLog.getRecentEntries(200);
+    const diagnosticsLogs = allLogs.filter(log => 
       log.eventType === 'diagnostics_access' || 
       (log.eventType === 'settings_change' && 
        log.metadata?.resourceType === 'diagnostics')
     );
-    
-    setLogs(memoryLogs);
-    
-    // Then try to get logs from the database if possible
-    if (userId) {
-      setIsLoading(true);
-      try {
-        const { logs: dbLogs, error } = await secureAudit.getAuditLogs({
-          limit: 100,
-          eventType: "diagnostics_access" as any
-        });
-        
-        if (!error && dbLogs && dbLogs.length > 0) {
-          // Convert Supabase logs to our AuditLogEntry format
-          const formattedDbLogs = (dbLogs as DatabaseAuditLog[]).map(dbLog => ({
-            id: dbLog.id,
-            userId: dbLog.user_id,
-            eventType: dbLog.event_type as any,
-            timestamp: new Date(dbLog.created_at),
-            status: dbLog.status as 'success' | 'failure',
-            result: dbLog.status as 'success' | 'failure',
-            metadata: dbLog.details
-          }));
-          
-          // Merge with memory logs, removing duplicates by ID
-          const allLogs = [...memoryLogs];
-          formattedDbLogs.forEach(dbLog => {
-            if (!allLogs.some(memLog => memLog.id === dbLog.id)) {
-              allLogs.push(dbLog);
-            }
-          });
-          
-          // Sort by timestamp, newest first
-          allLogs.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
-          
-          setLogs(allLogs);
-        }
-      } catch (error) {
-        console.error("Error fetching database logs:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    }
+    setLogs(diagnosticsLogs);
   };
   
   useEffect(() => {
@@ -80,15 +25,15 @@ export function DiagnosticsAuditViewer() {
     // Set up an interval to refresh logs every 10 seconds
     const interval = setInterval(refreshLogs, 10000);
     return () => clearInterval(interval);
-  }, [userId]);
+  }, []);
   
   return (
     <Card>
       <CardContent className="pt-6">
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-lg font-medium">Diagnostics Activity</h3>
-          <Button variant="outline" size="sm" onClick={refreshLogs} className="gap-1" disabled={isLoading}>
-            <RefreshCw className={`h-4 w-4 ${isLoading ? "animate-spin" : ""}`} />
+          <Button variant="outline" size="sm" onClick={refreshLogs} className="gap-1">
+            <RefreshCw className="h-4 w-4" />
             <span>Refresh</span>
           </Button>
         </div>

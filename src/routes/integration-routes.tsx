@@ -1,32 +1,25 @@
 
-import React from "react";
-import { RouteObject } from "react-router-dom";
-import { SecureAuthWrapper } from "@/components/auth/SecureAuthWrapper";
-import ProjectIntegration from "@/pages/ProjectIntegration";
+import { useAuth } from "@/context/AuthContext";
+import { Navigate } from "react-router-dom";
+import Insurance from "@/pages/Insurance";
 
-export const integrationRoutes: RouteObject[] = [
+const AuthGuard = ({ children }: { children: React.ReactNode }) => {
+  const { isAuthenticated } = useAuth();
+  
+  if (!isAuthenticated) {
+    return <Navigate to="/secure-login" />;
+  }
+  
+  return <>{children}</>;
+};
+
+export const integrationRoutes = [
   {
-    path: "/integration",
+    path: "/insurance",
     element: (
-      <SecureAuthWrapper>
-        <ProjectIntegration />
-      </SecureAuthWrapper>
-    ),
-  },
-  {
-    path: "/project-integration",
-    element: (
-      <SecureAuthWrapper>
-        <ProjectIntegration />
-      </SecureAuthWrapper>
-    ),
-  },
-  {
-    path: "/marketplace",
-    element: (
-      <SecureAuthWrapper>
-        <ProjectIntegration />
-      </SecureAuthWrapper>
+      <AuthGuard>
+        <Insurance />
+      </AuthGuard>
     ),
   },
 ];

@@ -57,33 +57,6 @@ export type Database = {
         }
         Relationships: []
       }
-      audit_logs: {
-        Row: {
-          created_at: string
-          details: Json
-          event_type: string
-          id: string
-          status: string
-          user_id: string
-        }
-        Insert: {
-          created_at?: string
-          details?: Json
-          event_type: string
-          id?: string
-          status: string
-          user_id: string
-        }
-        Update: {
-          created_at?: string
-          details?: Json
-          event_type?: string
-          id?: string
-          status?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
       feedback: {
         Row: {
           category: string
@@ -263,42 +236,6 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
-      }
-      profiles: {
-        Row: {
-          avatar_url: string | null
-          created_at: string | null
-          display_name: string | null
-          first_name: string | null
-          id: string
-          last_name: string | null
-          role: string | null
-          title: string | null
-          updated_at: string | null
-        }
-        Insert: {
-          avatar_url?: string | null
-          created_at?: string | null
-          display_name?: string | null
-          first_name?: string | null
-          id: string
-          last_name?: string | null
-          role?: string | null
-          title?: string | null
-          updated_at?: string | null
-        }
-        Update: {
-          avatar_url?: string | null
-          created_at?: string | null
-          display_name?: string | null
-          first_name?: string | null
-          id?: string
-          last_name?: string | null
-          role?: string | null
-          title?: string | null
-          updated_at?: string | null
-        }
-        Relationships: []
       }
       prospect_events: {
         Row: {

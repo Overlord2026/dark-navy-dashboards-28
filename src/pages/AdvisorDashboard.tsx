@@ -1,15 +1,16 @@
+
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { BellIcon, LogOutIcon } from "lucide-react";
-import { useUser } from "@/context/UserContext";
+import { useAuth } from "@/context/AuthContext";
 import { toast } from "sonner";
 import { MetricsCard } from "@/components/advisor/dashboard/MetricsCard";
 import { NotificationsPanel } from "@/components/advisor/dashboard/NotificationsPanel";
 import { ClientsList } from "@/components/advisor/dashboard/ClientsList";
 
 export default function AdvisorDashboard() {
-  const { isAuthenticated, logout } = useUser();
+  const { isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
   
   const [notificationsOpen, setNotificationsOpen] = useState(false);
@@ -42,9 +43,9 @@ export default function AdvisorDashboard() {
     { id: 8, name: "Parker Trust", aum: "$5.9M", lastActivity: "Yesterday" }
   ];
 
-  const handleLogout = async () => {
+  const handleLogout = () => {
     if (logout) {
-      await logout();
+      logout();
       navigate("/advisor/login");
     }
   };
@@ -234,28 +235,14 @@ export default function AdvisorDashboard() {
       </main>
 
       <NotificationsPanel 
-        notifications={[
-          { id: 1, message: "New client document uploaded by Tom Brady", time: "10 minutes ago" },
-          { id: 2, message: "Client meeting scheduled with Sarah Johnson", time: "1 hour ago" },
-          { id: 3, message: "Document approval requested by Michael Chen", time: "Yesterday" },
-          { id: 4, message: "Monthly report review pending for Wilson family", time: "2 days ago" }
-        ]}
+        notifications={notifications}
         open={notificationsOpen}
         onOpenChange={setNotificationsOpen}
         onMarkAllRead={markAllAsRead}
       />
 
       <ClientsList 
-        clients={[
-          { id: 1, name: "Brady Family", aum: "$28.5M", lastActivity: "2 days ago" },
-          { id: 2, name: "Johnson Trust", aum: "$19.7M", lastActivity: "5 days ago" },
-          { id: 3, name: "Wilson Holdings", aum: "$15.2M", lastActivity: "Today" },
-          { id: 4, name: "Chen Investments", aum: "$12.8M", lastActivity: "Yesterday" },
-          { id: 5, name: "Smith Family", aum: "$9.3M", lastActivity: "3 days ago" },
-          { id: 6, name: "Anderson LLC", aum: "$7.8M", lastActivity: "1 week ago" },
-          { id: 7, name: "Rodriguez Ventures", aum: "$6.2M", lastActivity: "2 days ago" },
-          { id: 8, name: "Parker Trust", aum: "$5.9M", lastActivity: "Yesterday" }
-        ]}
+        clients={allClients}
         open={clientsOpen}
         onOpenChange={setClientsOpen}
         onViewDetail={viewClientDetail}

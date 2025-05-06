@@ -1,85 +1,131 @@
 
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
-import { ChevronDown, ChevronRight } from "lucide-react";
+import { Link } from "react-router-dom";
+import { ChevronDown, ChevronUp } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { LucideIcon } from "lucide-react";
 
-interface SidebarItemProps {
+interface NavItem {
   label: string;
   href: string;
   icon: React.ReactNode;
-  isActive: boolean;
 }
 
-const SidebarItem: React.FC<SidebarItemProps> = ({ label, href, icon, isActive }) => {
-  return (
-    <Link
-      to={href}
-      className={cn(
-        "flex items-center px-3 py-2 text-sm rounded-md transition-colors",
-        isActive 
-          ? "bg-accent/30 text-accent-foreground font-medium" 
-          : "hover:bg-accent/20 text-foreground/80"
-      )}
-    >
-      <span className="mr-2">{icon}</span>
-      <span>{label}</span>
-    </Link>
-  );
-};
+interface NavSection {
+  id: string;
+  label: string;
+  icon: LucideIcon;
+  href?: string;
+  items?: NavItem[];
+}
 
 interface SidebarSectionProps {
-  title: string;
-  icon: React.ElementType;
-  items: Array<{
-    label: string;
-    href: string;
-    icon: React.ElementType;
-  }>;
+  section: NavSection;
   isOpen: boolean;
-  onToggle: () => void;
+  toggleSection: (sectionId: string) => void;
+  isCollapsed: boolean;
+  currentPath: string;
 }
 
 export const SidebarSection: React.FC<SidebarSectionProps> = ({
-  title,
-  icon: Icon,
-  items,
+  section,
   isOpen,
-  onToggle,
+  toggleSection,
+  isCollapsed,
+  currentPath
 }) => {
-  const location = useLocation();
-  const hasActiveItem = items.some(item => location.pathname === item.href);
-  
-  return (
-    <div className="mb-2">
-      <button
-        onClick={onToggle}
+  const isActive = (path: string): boolean => {
+    // Check for direct route match
+    if (path === currentPath) return true;
+    
+    // Check for query param match (dashboard with segment)
+    if (path.includes('?') && 
+        currentPath.split('?')[0] === path.split('?')[0] && 
+        currentPath.includes(path.split('?')[1])) {
+      return true;
+    }
+    
+    return false;
+  };
+
+  const SectionIcon = section.icon;
+
+  if (section.href) {
+    // Single link section (like Collaboration)
+    return (
+      <Link
+        to={section.href}
         className={cn(
-          "w-full flex items-center justify-between p-2 text-sm rounded-md transition-colors",
-          hasActiveItem ? "text-accent-foreground" : "text-foreground/80",
-          "hover:bg-accent/10"
+          "flex items-center gap-2 p-2 rounded-md hover:bg-muted transition-colors",
+          currentPath === section.href && "bg-muted font-medium",
+          isCollapsed && "justify-center"
         )}
       >
-        <div className="flex items-center">
-          <Icon className="h-5 w-5 mr-2" />
-          <span className="font-medium">{title}</span>
+        {section.icon && <SectionIcon size={18} />}
+        {!isCollapsed && <span>{section.label}</span>}
+      </Link>
+    );
+  }
+
+  if (isCollapsed) {
+    // Collapsed view shows just icons
+    return (
+      <div className="mb-3">
+        <div className="flex justify-center p-2">
+          {<SectionIcon size={18} />}
+        </div>
+        {isOpen && section.items && (
+          <div className="space-y-1">
+            {section.items.map((item) => (
+              <Link
+                key={item.label}
+                to={item.href}
+                className={cn(
+                  "flex justify-center p-2 rounded-md hover:bg-muted transition-colors",
+                  isActive(item.href) && "bg-muted"
+                )}
+              >
+                {item.icon}
+              </Link>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // Expanded view with items
+  return (
+    <div className="mb-3">
+      <button
+        className="flex items-center justify-between w-full p-2 rounded-md hover:bg-muted transition-colors"
+        onClick={() => toggleSection(section.id)}
+      >
+        <div className="flex items-center gap-2">
+          {<SectionIcon size={18} />}
+          <span>{section.label}</span>
         </div>
         {isOpen ? (
-          <ChevronDown className="h-4 w-4" />
+          <ChevronUp size={16} />
         ) : (
-          <ChevronRight className="h-4 w-4" />
+          <ChevronDown size={16} />
         )}
       </button>
-      {isOpen && (
-        <div className="mt-1 ml-4 space-y-1 pl-2 border-l border-border/50">
-          {items.map((item, index) => (
-            <SidebarItem
-              key={index}
-              label={item.label}
-              href={item.href}
-              icon={<item.icon className="h-4 w-4" />}
-              isActive={location.pathname === item.href}
-            />
+      
+      {isOpen && section.items && (
+        <div className="mt-1 ml-6 space-y-1">
+          {section.items.map((item) => (
+            <Link
+              key={item.label}
+              to={item.href}
+              className={cn(
+                "flex items-center gap-2 p-2 rounded-md text-sm hover:bg-muted transition-colors",
+                isActive(item.href) && "bg-muted font-medium"
+              )}
+            >
+              {item.icon}
+              <span>{item.label}</span>
+            </Link>
           ))}
         </div>
       )}

@@ -96,7 +96,7 @@ export default function Help() {
               <Mail className="text-primary h-5 w-5" />
               <div>
                 <p className="font-medium">Email Support</p>
-                <p className="text-muted-foreground">service@awmfl.com</p>
+                <p className="text-muted-foreground">support@example.com</p>
               </div>
             </div>
           </div>
