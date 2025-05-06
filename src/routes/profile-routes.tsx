@@ -1,6 +1,7 @@
 
 import { RouteObject } from "react-router-dom";
 import ProfilePage from "@/pages/ProfilePage";
+import AdvisorProfile from "@/pages/AdvisorProfile";
 import { useUser } from "@/context/UserContext";
 import { Navigate } from "react-router-dom";
 
@@ -21,6 +22,14 @@ export const profileRoutes: RouteObject[] = [
     element: (
       <AuthGuard>
         <ProfilePage />
+      </AuthGuard>
+    ),
+  },
+  {
+    path: "/advisor-profile",
+    element: (
+      <AuthGuard>
+        <AdvisorProfile />
       </AuthGuard>
     ),
   },

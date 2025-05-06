@@ -9,6 +9,7 @@ import { financialPlansRoutes } from "./routes/financial-plans-routes";
 import { collaborationRoutes } from "./routes/collaboration-routes";
 import { integrationRoutes } from "./routes/integration-routes";
 import { publicRoutes } from "./routes/public-routes";
+import { profileRoutes } from "./routes/profile-routes"; // Add import for profile routes
 import SecureLogin from "@/pages/SecureLogin";
 import Unauthorized from "@/pages/Unauthorized";
 import Diagnostics from "@/pages/Diagnostics";
@@ -32,6 +33,7 @@ function App() {
     ...financialPlansRoutes, 
     ...collaborationRoutes,
     ...integrationRoutes,
+    ...profileRoutes, // Add profile routes to router
     {
       path: "/secure-login",
       element: <SecureLogin />,
