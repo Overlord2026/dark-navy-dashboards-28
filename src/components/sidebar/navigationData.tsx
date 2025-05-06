@@ -1,5 +1,5 @@
 
-import { BarChart3, Settings, Users, PieChart, Home, Wallet, Target, Link, FileCode2, LayoutGrid, Plug } from "lucide-react";
+import { BarChart3, Settings, Users, PieChart, Home, Wallet, Target, Link, FileCode2, LayoutGrid, Plug, Shield } from "lucide-react";
 import { NavigationItem } from "@/types/navigationItem";
 
 export const navigationData: NavigationItem[] = [
@@ -32,6 +32,12 @@ export const navigationData: NavigationItem[] = [
     title: 'Goals',
     href: '/goals',
     icon: <Target className="w-5 h-5" />,
+  },
+  {
+    id: 'insurance',
+    title: 'Insurance',
+    href: '/insurance',
+    icon: <Shield className="w-5 h-5" />,
   },
   {
     id: 'integration',

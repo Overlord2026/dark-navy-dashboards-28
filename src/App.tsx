@@ -11,6 +11,7 @@ import { publicRoutes } from "./routes/public-routes";
 import { budgetRoutes } from "./routes/budget-routes";
 import { goalsRoutes } from "./routes/goals-routes";
 import { integrationRoutes } from "./routes/integration-routes";
+import { insuranceRoutes } from "./routes/insurance-routes";
 
 function App() {
   return (
@@ -53,6 +54,11 @@ function App() {
 
                 {/* Integration routes */}
                 {integrationRoutes.map((route) => (
+                  <Route key={route.path} path={route.path} element={route.element} />
+                ))}
+                
+                {/* Insurance routes */}
+                {insuranceRoutes.map((route) => (
                   <Route key={route.path} path={route.path} element={route.element} />
                 ))}
               </Route>
