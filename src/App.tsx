@@ -1,4 +1,3 @@
-
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { dashboardRoutes } from "./routes/dashboard-routes";
 import { goalsRoutes } from "./routes/goals-routes";
@@ -9,7 +8,8 @@ import { financialPlansRoutes } from "./routes/financial-plans-routes";
 import { collaborationRoutes } from "./routes/collaboration-routes";
 import { integrationRoutes } from "./routes/integration-routes";
 import { publicRoutes } from "./routes/public-routes";
-import { profileRoutes } from "./routes/profile-routes"; // Add import for profile routes
+import { profileRoutes } from "./routes/profile-routes";
+import { authRoutes } from "./routes/auth-routes";
 import SecureLogin from "@/pages/SecureLogin";
 import Unauthorized from "@/pages/Unauthorized";
 import Diagnostics from "@/pages/Diagnostics";
@@ -21,10 +21,12 @@ import PublicHomePage from "@/pages/PublicHomePage";
 import NotFound from "@/pages/NotFound";
 import { UserProvider } from "@/context/UserContext";
 import { AdvisorProvider } from "@/context/AdvisorContext";
+import { AuthProvider } from "@/context/AuthContext";
 
 function App() {
   const router = createBrowserRouter([
     ...publicRoutes,
+    ...authRoutes,
     ...dashboardRoutes,
     ...goalsRoutes,
     ...budgetRoutes,
@@ -33,7 +35,7 @@ function App() {
     ...financialPlansRoutes, 
     ...collaborationRoutes,
     ...integrationRoutes,
-    ...profileRoutes, // Add profile routes to router
+    ...profileRoutes,
     {
       path: "/secure-login",
       element: <SecureLogin />,
@@ -73,11 +75,13 @@ function App() {
   ]);
 
   return (
-    <UserProvider>
-      <AdvisorProvider>
-        <RouterProvider router={router} />
-      </AdvisorProvider>
-    </UserProvider>
+    <AuthProvider>
+      <UserProvider>
+        <AdvisorProvider>
+          <RouterProvider router={router} />
+        </AdvisorProvider>
+      </UserProvider>
+    </AuthProvider>
   );
 }
 
