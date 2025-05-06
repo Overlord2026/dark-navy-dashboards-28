@@ -11,24 +11,21 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Shield } from "lucide-react";
 import { CourseApiDemo } from "@/components/education/CourseApiDemo";
 import { useAdmin } from "@/context/AdminContext";
-
 export default function Education() {
   const [searchParams] = useSearchParams();
   const [activeCategory, setActiveCategory] = useState("all-courses");
   const [activeSection, setActiveSection] = useState("courses");
   const [showApiDemo, setShowApiDemo] = useState(false);
-  
   const location = useLocation();
-  
-  const { isAdmin, setIsAdmin } = useAdmin();
-  
+  const {
+    isAdmin,
+    setIsAdmin
+  } = useAdmin();
   useEffect(() => {
     const category = searchParams.get("category");
     const section = searchParams.get("section");
     const apiDemo = searchParams.get("api") === "true";
-    
     const stateCategory = location.state?.category;
-    
     if (stateCategory) {
       setActiveCategory(stateCategory);
       setActiveSection("courses");
@@ -41,15 +38,12 @@ export default function Education() {
         setActiveSection(section);
       }
     }
-    
     if (location.pathname.includes('/education/all-courses')) {
       setActiveCategory("all-courses");
       setActiveSection("courses");
     }
-    
     setShowApiDemo(apiDemo);
   }, [searchParams, location.state, location.pathname]);
-
   const handleCourseEnrollment = (courseId: string | number, title: string, isPaid: boolean, ghlUrl?: string) => {
     if (ghlUrl) {
       handleCourseAccess(courseId, title, isPaid, ghlUrl);
@@ -61,76 +55,73 @@ export default function Education() {
       }
     }
   };
-
   const toggleAdminMode = () => {
     setIsAdmin(!isAdmin);
     toast.success(isAdmin ? "Exited admin mode" : "Entered admin mode");
   };
-
   const toggleApiDemo = () => {
     setShowApiDemo(!showApiDemo);
   };
-
-  const handleTabsUpdate = (newTabs: Array<{ id: string; label: string; value: string; }>) => {
+  const handleTabsUpdate = (newTabs: Array<{
+    id: string;
+    label: string;
+    value: string;
+  }>) => {
     toast.success("Tabs updated successfully");
   };
-
   const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: { 
+    hidden: {
+      opacity: 0
+    },
+    visible: {
       opacity: 1,
-      transition: { 
+      transition: {
         duration: 0.3,
         when: "beforeChildren",
         staggerChildren: 0.1
       }
     }
   };
-
   const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 }
+    hidden: {
+      opacity: 0,
+      y: 20
+    },
+    visible: {
+      opacity: 1,
+      y: 0
+    }
   };
-
-  return (
-    <ThreeColumnLayout 
-      title={isAdmin ? "Education Management" : "SWAG Education Center"}
-      activeMainItem="education"
-    >
-      <motion.div 
-        className="space-y-6 px-1"
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-      >
+  return <ThreeColumnLayout title={isAdmin ? "Education Management" : "SWAG Education Center"} activeMainItem="education">
+      <motion.div className="space-y-6 px-1" variants={containerVariants} initial="hidden" animate="visible">
         <motion.div variants={itemVariants}>
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-2xl font-bold tracking-tight">
               {isAdmin ? "Education Management Dashboard" : "Welcome to the SWAG Education Center"}
             </h2>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={toggleAdminMode}
-              className="flex items-center gap-2"
-            >
+            <Button variant="outline" size="sm" onClick={toggleAdminMode} className="flex items-center gap-2">
               <Shield className="h-4 w-4" />
               {isAdmin ? "Exit Admin Mode" : "Admin Mode"}
             </Button>
           </div>
 
-          {isAdmin ? (
-            <AdminEducationTabs 
-              tabs={[
-                { id: 'courses', label: 'Courses', value: 'courses' },
-                { id: 'guides', label: 'Guides', value: 'guides' },
-                { id: 'books', label: 'Books', value: 'books' },
-                { id: 'whitepapers', label: 'Whitepapers', value: 'whitepapers' }
-              ]}
-              onUpdateTabs={handleTabsUpdate}
-            />
-          ) : (
-            <>
+          {isAdmin ? <AdminEducationTabs tabs={[{
+          id: 'courses',
+          label: 'Courses',
+          value: 'courses'
+        }, {
+          id: 'guides',
+          label: 'Guides',
+          value: 'guides'
+        }, {
+          id: 'books',
+          label: 'Books',
+          value: 'books'
+        }, {
+          id: 'whitepapers',
+          label: 'Whitepapers',
+          value: 'whitepapers'
+        }]} onUpdateTabs={handleTabsUpdate} /> : <>
               <p className="text-muted-foreground mt-2">
                 Explore our collection of financial education resources to help you build wealth and achieve your financial goals.
               </p>
@@ -143,40 +134,28 @@ export default function Education() {
                     </Button>
                   </Link>
                   
-                  <Button 
-                    variant={showApiDemo ? "default" : "outline"} 
-                    className="flex items-center gap-2"
-                    onClick={toggleApiDemo}
-                  >
-                    {showApiDemo ? "Hide API Demo" : "Show API Demo"}
-                  </Button>
+                  
                 </div>
                 
-                {showApiDemo && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="mb-8"
-                  >
+                {showApiDemo && <motion.div initial={{
+              opacity: 0,
+              height: 0
+            }} animate={{
+              opacity: 1,
+              height: "auto"
+            }} exit={{
+              opacity: 0,
+              height: 0
+            }} transition={{
+              duration: 0.3
+            }} className="mb-8">
                     <CourseApiDemo />
-                  </motion.div>
-                )}
+                  </motion.div>}
                 
-                <EducationalTabs 
-                  activeSection={activeSection}
-                  activeCategory={activeCategory}
-                  setActiveSection={setActiveSection}
-                  setActiveCategory={setActiveCategory}
-                  handleCourseEnrollment={handleCourseEnrollment}
-                  isAdmin={false}
-                />
+                <EducationalTabs activeSection={activeSection} activeCategory={activeCategory} setActiveSection={setActiveSection} setActiveCategory={setActiveCategory} handleCourseEnrollment={handleCourseEnrollment} isAdmin={false} />
               </div>
-            </>
-          )}
+            </>}
         </motion.div>
       </motion.div>
-    </ThreeColumnLayout>
-  );
+    </ThreeColumnLayout>;
 }
