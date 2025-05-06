@@ -1,6 +1,13 @@
 
 import React, { createContext, useContext, useState } from "react";
 
+interface Experience {
+  title: string;
+  company: string;
+  period: string;
+  description: string;
+}
+
 interface AdvisorInfo {
   name: string;
   title: string;
@@ -10,6 +17,12 @@ interface AdvisorInfo {
   bio: string;
   certifications: string[];
   linkedin?: string;
+  office: string;
+  hometown?: string;
+  serviceEmail?: string;
+  experience?: Experience[];
+  education?: string[];
+  specialties?: string[];
 }
 
 interface AdvisorContextType {
@@ -25,7 +38,26 @@ const defaultAdvisorInfo: AdvisorInfo = {
   location: "New York, NY",
   bio: "Experienced financial advisor with over 15 years of expertise in wealth management and estate planning.",
   certifications: ["CFP", "CFA"],
-  linkedin: "https://linkedin.com/in/johnsmith"
+  linkedin: "https://linkedin.com/in/johnsmith",
+  office: "123 Wall Street, New York, NY",
+  hometown: "Boston, MA",
+  serviceEmail: "support@example.com",
+  experience: [
+    {
+      title: "Senior Financial Advisor",
+      company: "Wealth Management Inc.",
+      period: "2015-Present",
+      description: "Providing comprehensive financial planning and investment management services to high-net-worth clients."
+    },
+    {
+      title: "Financial Analyst",
+      company: "Investment Group",
+      period: "2010-2015",
+      description: "Conducted in-depth analysis of investment opportunities and market trends."
+    }
+  ],
+  education: ["MBA, Finance - University of Florida", "BS, Business Administration - UNC Chapel Hill"],
+  specialties: ["Retirement Planning", "Estate Planning", "Tax Optimization", "Investment Management"]
 };
 
 const AdvisorContext = createContext<AdvisorContextType | undefined>(undefined);
