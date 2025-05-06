@@ -1,10 +1,14 @@
+
 import React from "react";
 import { Card } from "@/components/ui/card";
 import { useProfile } from "@/hooks/useProfile";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { SegmentAwareHero } from "./SegmentAwareHero";
 import { FreeTrialCallout } from "./FreeTrialCallout";
-import { TrendingUpIcon, LayoutDashboardIcon, BookIcon } from "lucide-react";
+import { TrendingUpIcon, LayoutDashboardIcon, BookIcon, UserIcon } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+
 interface AspiringDashboardProps {
   segment?: string;
 }
@@ -57,11 +61,15 @@ export function AspiringDashboard({
         
         <Card className="p-6">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-semibold">Learning Modules</h2>
-            <BookIcon className="h-6 w-6 text-purple-500" />
+            <h2 className="text-xl font-semibold">Profile</h2>
+            <UserIcon className="h-6 w-6 text-purple-500" />
           </div>
           <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-md text-center">
-            Financial education resources for growth
+            <Link to="/profile">
+              <Button variant="outline" className="mt-2">
+                View Profile
+              </Button>
+            </Link>
           </div>
         </Card>
       </div>

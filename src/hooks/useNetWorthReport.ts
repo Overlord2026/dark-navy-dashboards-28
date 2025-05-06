@@ -2,19 +2,26 @@
 import { useState, useEffect } from 'react';
 import { useAssetReport } from './useAssetReport';
 import { useLiabilityReport } from './useLiabilityReport';
+import { useNetWorth } from '@/context/NetWorthContext';
 
 export function useNetWorthReport() {
-  const { assets, getTotalValue: getTotalAssets, getTotalByType: getTotalAssetsByType } = useAssetReport();
+  // Use the NetWorth context which has been refactored properly
+  const { 
+    assets, 
+    getTotalNetWorth, 
+    getTotalAssetsByType 
+  } = useNetWorth();
+  
   const { liabilities, getTotalLiabilities } = useLiabilityReport();
   
   const getNetWorth = () => {
-    return getTotalAssets() - getTotalLiabilities();
+    return getTotalNetWorth() - getTotalLiabilities();
   };
 
   return {
     assets,
     liabilities,
-    getTotalAssets,
+    getTotalAssets: getTotalNetWorth,
     getTotalLiabilities,
     getNetWorth,
     getTotalAssetsByType
