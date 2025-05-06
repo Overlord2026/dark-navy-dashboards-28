@@ -35,8 +35,9 @@ export const NetWorthProvider: React.FC<{ children: ReactNode }> = ({ children }
   console.log('NetWorthProvider rendering');
   
   // Move all React state hooks inside the component
-  const [assets, setAssets] = useState<Asset[]>(getInitialAssets());
-  const [accounts] = useState<Account[]>(getInitialAccounts());
+  // Cast the initial assets to the correct Asset type to satisfy TypeScript
+  const [assets, setAssets] = useState<Asset[]>(getInitialAssets() as Asset[]);
+  const [accounts] = useState<Account[]>(getInitialAccounts() as Account[]);
   
   // Add an asset to the list
   const addAsset = (asset: Asset) => {

@@ -1,10 +1,12 @@
 
 // Sample initial data for assets and accounts
+import { Asset, Account, Property } from '@/types/assets';
+
 const initialAssets = [
   {
     id: 'cash1',
     name: 'Checking Account',
-    type: 'cash',
+    type: 'cash' as Asset['type'],
     value: 25000,
     owner: 'Tom Brady',
     lastUpdated: new Date().toISOString().split('T')[0]
@@ -12,7 +14,7 @@ const initialAssets = [
   {
     id: 'invest1',
     name: 'Stock Portfolio',
-    type: 'investment',
+    type: 'investment' as Asset['type'],
     value: 350000,
     owner: 'Tom Brady',
     lastUpdated: new Date().toISOString().split('T')[0]
@@ -20,7 +22,7 @@ const initialAssets = [
   {
     id: 'retire1',
     name: '401(k)',
-    type: 'retirement',
+    type: 'retirement' as Asset['type'],
     value: 420000,
     owner: 'Tom Brady',
     lastUpdated: new Date().toISOString().split('T')[0]
@@ -28,7 +30,7 @@ const initialAssets = [
   {
     id: 'vehicle1',
     name: 'Tesla Model X',
-    type: 'vehicle',
+    type: 'vehicle' as Asset['type'],
     value: 85000,
     owner: 'Tom Brady',
     lastUpdated: new Date().toISOString().split('T')[0],
@@ -42,7 +44,7 @@ const initialAssets = [
   {
     id: 'boat1',
     name: 'Yacht',
-    type: 'boat',
+    type: 'boat' as Asset['type'],
     value: 750000,
     owner: 'Tom Brady',
     lastUpdated: new Date().toISOString().split('T')[0],
@@ -56,7 +58,7 @@ const initialAssets = [
   {
     id: 'art1',
     name: 'Modern Art Collection',
-    type: 'art',
+    type: 'art' as Asset['type'],
     value: 120000,
     owner: 'Tom Brady',
     lastUpdated: new Date().toISOString().split('T')[0],
@@ -68,7 +70,7 @@ const initialAssets = [
   {
     id: 'digital1',
     name: 'Cryptocurrency Portfolio',
-    type: 'digital',
+    type: 'digital' as Asset['type'],
     value: 85000,
     owner: 'Tom Brady',
     lastUpdated: new Date().toISOString().split('T')[0],
@@ -82,21 +84,21 @@ const initialAccounts = [
   {
     id: 'acc1',
     name: 'Primary Checking',
-    type: 'banking',
+    type: 'banking' as Account['type'],
     value: 15000,
     institution: 'Chase Bank'
   },
   {
     id: 'acc2',
     name: 'Investment Account',
-    type: 'investment',
+    type: 'investment' as Account['type'],
     value: 250000,
     institution: 'Fidelity'
   },
   {
     id: 'acc3',
     name: 'Managed Portfolio',
-    type: 'managed',
+    type: 'managed' as Account['type'],
     value: 500000,
     institution: 'Family Office'
   }
@@ -107,21 +109,21 @@ export const getInitialAssets = () => initialAssets;
 export const getInitialAccounts = () => initialAccounts;
 
 // Asset calculation utility functions (no React hooks)
-export const calculateTotalNetWorth = (assets) => {
+export const calculateTotalNetWorth = (assets: Asset[]) => {
   return assets.reduce((total, asset) => total + asset.value, 0);
 };
 
-export const calculateTotalAssetsByType = (assets, type) => {
+export const calculateTotalAssetsByType = (assets: Asset[], type: Asset['type']) => {
   return assets
     .filter(asset => asset.type === type)
     .reduce((total, asset) => total + asset.value, 0);
 };
 
-export const getAssetsByOwner = (assets, owner) => {
+export const getAssetsByOwner = (assets: Asset[], owner: string) => {
   return assets.filter(asset => asset.owner === owner);
 };
 
-export const getAssetsByCategory = (assets, category) => {
+export const getAssetsByCategory = (assets: Asset[], category: string) => {
   if (category === 'vehicles') {
     return assets.filter(asset => ['vehicle', 'boat'].includes(asset.type));
   }
@@ -139,11 +141,11 @@ export const getAssetsByCategory = (assets, category) => {
 };
 
 // Convert properties to assets
-export const createPropertyAssets = (properties) => {
+export const createPropertyAssets = (properties: Property[]): Asset[] => {
   return properties.map(property => ({
     id: `property-${property.id}`,
     name: property.name,
-    type: 'property',
+    type: 'property' as Asset['type'],
     value: property.currentValue,
     owner: property.owner,
     lastUpdated: property.valuation?.lastUpdated || new Date().toISOString().split('T')[0],

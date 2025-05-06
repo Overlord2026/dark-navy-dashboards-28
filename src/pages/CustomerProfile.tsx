@@ -118,7 +118,7 @@ const CustomerProfile = () => {
           <div>
             <h1 className="text-[24px] font-semibold mb-1 text-[#E2E2E2]">Client Profile</h1>
             <div className="flex items-center text-muted-foreground">
-              <span>{`${userProfile.firstName} ${userProfile.lastName}`}</span>
+              <span>{`${userProfile?.firstName || ''} ${userProfile?.lastName || ''}`}</span>
             </div>
           </div>
           
@@ -128,19 +128,19 @@ const CustomerProfile = () => {
                 <UserCircle className="h-8 w-8 text-primary" />
               </div>
               <div>
-                <h3 className="font-medium">{`${userProfile.firstName} ${userProfile.lastName}`}</h3>
-                <p className="text-sm text-muted-foreground">{userProfile.investorType}</p>
+                <h3 className="font-medium">{`${userProfile?.firstName || ''} ${userProfile?.lastName || ''}`}</h3>
+                <p className="text-sm text-muted-foreground">{userProfile?.investorType || 'Investor'}</p>
               </div>
             </div>
             <div className="mt-2 pt-2 border-t border-border/50">
               <div className="grid grid-cols-2 gap-2 text-sm">
                 <div>
                   <p className="text-muted-foreground">Email:</p>
-                  <p>{userProfile.email}</p>
+                  <p>{userProfile?.email || 'N/A'}</p>
                 </div>
                 <div>
                   <p className="text-muted-foreground">Phone:</p>
-                  <p>{userProfile.phone}</p>
+                  <p>{userProfile?.phone || 'N/A'}</p>
                 </div>
               </div>
               <Button 
