@@ -1,29 +1,20 @@
 
+import { RouteObject } from "react-router-dom";
 import Settings from "@/pages/Settings";
-import Help from "@/pages/Help";
-import Sharing from "@/pages/Sharing";
-import ProfessionalSignup from "@/pages/ProfessionalSignup";
-import NotFound from "@/pages/NotFound";
+import IPProtection from "@/pages/IPProtection";
+import SecuritySettings from "@/pages/SecuritySettings";
 
-export const settingsRoutes = [
+export const settingsRoutes: RouteObject[] = [
   {
     path: "/settings",
-    element: <Settings />,
+    element: <Settings />
   },
   {
-    path: "/help",
-    element: <Help />,
+    path: "/ip-protection",
+    element: <IPProtection />
   },
   {
-    path: "/sharing",
-    element: <Sharing />,
-  },
-  {
-    path: "/professional-signup",
-    element: <ProfessionalSignup />,
-  },
-  {
-    path: "*",
-    element: <NotFound />,
+    path: "/security-settings",
+    element: <SecuritySettings />
   }
 ];

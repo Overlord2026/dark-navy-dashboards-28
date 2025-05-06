@@ -26,6 +26,7 @@ import {
   Wallet,
   ExternalLink,
   WalletIcon,
+  Shield,
 } from "lucide-react";
 
 // Home Section
@@ -165,6 +166,11 @@ export const bottomNavItems = [
     title: "Support",
     href: "/support",
     icon: LifeBuoyIcon
+  },
+  {
+    title: "Security",
+    href: "/security-settings",
+    icon: Shield
   },
   {
     title: "Settings",
