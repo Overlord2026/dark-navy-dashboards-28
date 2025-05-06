@@ -1,25 +1,37 @@
 
 import React from "react";
+import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
+import { useLocation } from "react-router-dom";
+import { AspiringDashboard } from "@/components/dashboard/AspiringDashboard";
+import { PreRetireesDashboard } from "@/components/dashboard/PreRetireesDashboard";
+import { UltraHNWDashboard } from "@/components/dashboard/UltraHNWDashboard";
+import { AdvisorDashboard } from "@/components/dashboard/AdvisorDashboard";
 
 export default function Dashboard() {
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const segment = queryParams.get('segment');
+
+  const renderSegmentDashboard = () => {
+    switch (segment) {
+      case 'aspiring':
+        return <AspiringDashboard />;
+      case 'preretirees':
+        return <PreRetireesDashboard />;
+      case 'ultrahnw':
+        return <UltraHNWDashboard />;
+      case 'advisor':
+        return <AdvisorDashboard />;
+      default:
+        return <AspiringDashboard />;
+    }
+  };
+
   return (
-    <div className="space-y-6">
-      <div>
-        <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
-        <p className="text-muted-foreground">
-          Welcome to your Family Office Management dashboard
-        </p>
+    <ThreeColumnLayout>
+      <div className="px-6 py-6">
+        {renderSegmentDashboard()}
       </div>
-      
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        {/* Dashboard cards and widgets would go here */}
-        <div className="rounded-xl bg-card text-card-foreground shadow">
-          <div className="p-6">
-            <h3 className="font-semibold">Summary</h3>
-            <p className="text-muted-foreground">Your portfolio overview</p>
-          </div>
-        </div>
-      </div>
-    </div>
+    </ThreeColumnLayout>
   );
 }

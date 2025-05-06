@@ -1,61 +1,19 @@
 
-import { useAuth } from "@/context/AuthContext";
-import { Navigate } from "react-router-dom";
-import ProjectIntegration from "@/pages/ProjectIntegration";
-import ConnectedProjects from "@/pages/integration/ConnectedProjects";
-import Architecture from "@/pages/integration/Architecture";
-import ApiIntegrations from "@/pages/integration/ApiIntegrations";
-import Plugins from "@/pages/integration/Plugins";
-
-const AuthGuard = ({ children }: { children: React.ReactNode }) => {
-  const { isAuthenticated } = useAuth();
-  
-  if (!isAuthenticated) {
-    return <Navigate to="/secure-login" />;
-  }
-  
-  return <>{children}</>;
-};
+import React from "react";
+import Integration from "@/pages/Integration";
+import SecureLogin from "@/pages/SecureLogin";
 
 export const integrationRoutes = [
   {
     path: "/integration",
-    element: (
-      <AuthGuard>
-        <ProjectIntegration />
-      </AuthGuard>
-    ),
+    element: <Integration />,
   },
   {
-    path: "/integration/connected-projects",
-    element: (
-      <AuthGuard>
-        <ConnectedProjects />
-      </AuthGuard>
-    ),
+    path: "/secure-login",
+    element: <SecureLogin />,
   },
   {
-    path: "/integration/architecture",
-    element: (
-      <AuthGuard>
-        <Architecture />
-      </AuthGuard>
-    ),
-  },
-  {
-    path: "/integration/api",
-    element: (
-      <AuthGuard>
-        <ApiIntegrations />
-      </AuthGuard>
-    ),
-  },
-  {
-    path: "/integration/plugins",
-    element: (
-      <AuthGuard>
-        <Plugins />
-      </AuthGuard>
-    ),
+    path: "/sign-up",
+    element: <SecureLogin />,  // For now, reuse SecureLogin page - can be expanded later
   },
 ];

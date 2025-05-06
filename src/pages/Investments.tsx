@@ -1,66 +1,65 @@
 
 import React, { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
-import { InvestmentForm } from "@/components/investments/InvestmentForm";
-import { SuggestionsPanel } from "@/components/investments/SuggestionsPanel";
-import { Investment } from "@/types/investments";
-import { notifyAdvisor } from "@/services/advisorNotifier";
-import { toast } from "sonner";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import OfferingsList from "@/components/investments/OfferingsList";
+import ModelPortfoliosTab from "@/components/investments/ModelPortfoliosTab";
+import AlternativeAssetsTab from "@/components/investments/AlternativeAssetsTab";
+import IntelligentAllocationTab from "@/components/investments/IntelligentAllocationTab";
 
 const Investments: React.FC = () => {
-  const [isNotifying, setIsNotifying] = useState(false);
-  
-  const handleNotifyAdvisor = async (investments: Investment[]): Promise<void> => {
-    setIsNotifying(true);
-    
-    try {
-      // Format investments data for the notification
-      const payload = {
-        investments: investments.map(inv => ({
-          name: inv.name,
-          value: inv.currentValue,
-          purchaseDate: inv.purchaseDate.toISOString()
-        })),
-        timestamp: new Date().toISOString()
-      };
-      
-      // Use the shared service to notify the advisor
-      await notifyAdvisor('investment_interest', payload);
-      
-      toast.success("Advisor notified successfully", {
-        description: "Your advisor has been notified about your investment interests"
-      });
-    } catch (error) {
-      console.error("Error notifying advisor:", error);
-      toast.error("Failed to notify advisor", {
-        description: "Please try again later"
-      });
-    } finally {
-      setIsNotifying(false);
-    }
-  };
+  const [activeTab, setActiveTab] = useState<string>("model-portfolios");
   
   return (
-    <ThreeColumnLayout title="My Investments">
-      <div className="w-full max-w-6xl mx-auto px-4">
-        <h1 className="text-2xl font-bold mb-6 text-white">My Investments</h1>
-        
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2">
-            <div className="bg-[#0F1E3A] p-6 rounded-lg border border-[#2A3E5C] mb-6">
-              <h2 className="text-xl font-medium mb-4 text-white">Investment Details</h2>
-              <p className="text-gray-400 mb-6">
-                Enter the details of investments you're interested in, and we'll notify your advisor
-                to discuss these options with you.
-              </p>
-              
-              <InvestmentForm onNotify={handleNotifyAdvisor} />
-            </div>
-          </div>
+    <ThreeColumnLayout title="Investments">
+      <div className="w-full max-w-6xl mx-auto">
+        <div className="mb-8">
+          <h2 className="text-xl font-medium mb-4">Investment Management</h2>
+          <p className="text-gray-400 mb-6">
+            Explore a curated selection of investment options tailored to your financial goals.
+            Our solutions range from model portfolios to exclusive alternative assets.
+          </p>
           
-          <div className="lg:col-span-1">
-            <SuggestionsPanel />
-          </div>
+          <Tabs 
+            defaultValue="model-portfolios" 
+            value={activeTab}
+            onValueChange={setActiveTab}
+            className="w-full"
+          >
+            <TabsList className="w-full grid grid-cols-3 mb-8 bg-[#1a283e] rounded-md overflow-hidden">
+              <TabsTrigger 
+                value="model-portfolios"
+                className="min-h-10 px-2 py-2 flex items-center justify-center text-center border-r border-[#2a3854] data-[state=active]:bg-black data-[state=active]:text-white transition-colors focus:outline-none text-xs sm:text-sm"
+              >
+                BFO Models
+              </TabsTrigger>
+              <TabsTrigger 
+                value="intelligent-allocation"
+                className="min-h-10 px-2 py-2 flex items-center justify-center text-center border-r border-[#2a3854] data-[state=active]:bg-black data-[state=active]:text-white transition-colors focus:outline-none text-xs sm:text-sm"
+              >
+                <span className="sm:hidden">Intel. Alloc.</span>
+                <span className="hidden sm:inline">Intelligent Alloc.</span>
+              </TabsTrigger>
+              <TabsTrigger 
+                value="alternative-assets"
+                className="min-h-10 px-2 py-2 flex items-center justify-center text-center data-[state=active]:bg-black data-[state=active]:text-white transition-colors focus:outline-none text-xs sm:text-sm"
+              >
+                Private Markets
+              </TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="model-portfolios">
+              <ModelPortfoliosTab />
+            </TabsContent>
+            
+            <TabsContent value="intelligent-allocation">
+              <IntelligentAllocationTab />
+            </TabsContent>
+            
+            <TabsContent value="alternative-assets">
+              <AlternativeAssetsTab />
+            </TabsContent>
+          </Tabs>
         </div>
       </div>
     </ThreeColumnLayout>

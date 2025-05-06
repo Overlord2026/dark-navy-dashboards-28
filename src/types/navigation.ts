@@ -1,29 +1,32 @@
 
-import { ReactNode } from "react";
+import React from "react";
 import { LucideIcon } from "lucide-react";
 
 export interface NavItem {
-  id: string;
-  title?: string;
+  title: string;
+  href: string;
+  disabled?: boolean;
+  external?: boolean;
+  icon?: LucideIcon;
   label?: string;
-  href?: string;
-  icon?: React.ElementType | ReactNode;
   items?: NavItem[];
-  badge?: string;
+  submenu?: NavItem[]; // Adding this for compatibility with existing code
 }
 
 export interface NavCategory {
-  id: string;
-  title?: string;
-  label: string;
+  id: string; // Adding the id property
+  title: string;
+  label: string; // Changing from optional to required
   items: NavItem[];
-  defaultExpanded?: boolean;
+  defaultExpanded?: boolean; // Adding this for compatibility
 }
 
 export interface SidebarProps {
   isLightTheme: boolean;
   collapsed: boolean;
-  navItems: any;
+  navItems: {
+    [key: string]: NavItem[];
+  };
   expandedSubmenus: Record<string, boolean>;
   toggleSubmenu: (id: string) => void;
   toggleTheme: () => void;

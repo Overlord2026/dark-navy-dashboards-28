@@ -78,7 +78,6 @@ export const navigationCategories: NavCategory[] = [
       { id: "legacy-vault", label: "Secure Family Vault", icon: VaultIcon, href: "/legacy-vault" },
       { id: "financial-plans", label: "Financial Plans", icon: LineChartIcon, href: "/financial-plans" },
       { id: "accounts", label: "Accounts Overview", icon: WalletIcon, href: "/accounts" },
-      { id: "investments", label: "My Investments", icon: BarChart3Icon, href: "/investments" },
       { id: "cash-management", label: "Cash Management", icon: BanknoteIcon, href: "/cash-management" },
       { id: "tax-budgets", label: "Tax & Budgets", icon: Calculator, href: "/tax-budgets" },
       { id: "transfers", label: "Transfers", icon: ArrowRightLeft, href: "/transfers" },

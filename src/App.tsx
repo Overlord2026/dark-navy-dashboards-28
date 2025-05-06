@@ -1,72 +1,58 @@
 
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { ThemeProvider } from "./context/ThemeContext";
-import { AuthProvider } from "./context/AuthContext";
-import { UserProvider } from "./context/UserContext";
-import Layout from "./layouts/Layout";
-import { dashboardRoutes } from "./routes/dashboard-routes";
-import { accountsRoutes } from "./routes/accounts-routes";
-import { investmentRoutes } from "./routes/investment-routes";
-import { publicRoutes } from "./routes/public-routes";
-import { budgetRoutes } from "./routes/budget-routes";
-import { goalsRoutes } from "./routes/goals-routes";
-import { integrationRoutes } from "./routes/integration-routes";
-import { insuranceRoutes } from "./routes/insurance-routes";
+import { RouterProvider } from "react-router-dom";
+import routes from "./routes";
+import { ThemeProvider } from "@/context/ThemeContext"; // Import from our custom ThemeContext
+import { UserProvider } from "@/context/UserContext";
+import { NetWorthProvider } from "@/context/NetWorthContext";
+import { SubscriptionProvider } from "@/context/SubscriptionContext";
+import { Toaster } from "@/components/ui/sonner";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { DiagnosticsProvider } from "@/context/DiagnosticsContext";
+import { AdvisorProvider } from "@/context/AdvisorContext";
+import { AuthProvider } from "@/context/AuthContext";
+import { AdminProvider } from './context/AdminContext';
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { AIInsightsProvider } from "./components/insights/AIInsightsProvider";
+import { AudienceProvider } from "./context/AudienceContext";
+
+// Create a Query Client
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      retry: 1,
+    },
+  },
+});
 
 function App() {
   return (
-    <ThemeProvider>
-      <AuthProvider>
-        <UserProvider>
-          <Router>
-            <Routes>
-              {/* Public Routes */}
-              {publicRoutes.map((route) => (
-                <Route key={route.path} path={route.path} element={route.element} />
-              ))}
-
-              {/* Main application */}
-              <Route path="/" element={<Layout />}>
-                {/* Dashboard routes */}
-                {dashboardRoutes.map((route) => (
-                  <Route key={route.path} path={route.path} element={route.element} />
-                ))}
-
-                {/* Account routes */}
-                {accountsRoutes.map((route) => (
-                  <Route key={route.path} path={route.path} element={route.element} />
-                ))}
-
-                {/* Investment routes */}
-                {investmentRoutes.map((route) => (
-                  <Route key={route.path} path={route.path} element={route.element} />
-                ))}
-
-                {/* Budget routes */}
-                {budgetRoutes.map((route) => (
-                  <Route key={route.path} path={route.path} element={route.element} />
-                ))}
-
-                {/* Goals routes */}
-                {goalsRoutes.map((route) => (
-                  <Route key={route.path} path={route.path} element={route.element} />
-                ))}
-
-                {/* Integration routes */}
-                {integrationRoutes.map((route) => (
-                  <Route key={route.path} path={route.path} element={route.element} />
-                ))}
-                
-                {/* Insurance routes */}
-                {insuranceRoutes.map((route) => (
-                  <Route key={route.path} path={route.path} element={route.element} />
-                ))}
-              </Route>
-            </Routes>
-          </Router>
-        </UserProvider>
-      </AuthProvider>
-    </ThemeProvider>
+    <AdminProvider>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider>
+          <UserProvider>
+            <SubscriptionProvider>
+              <NetWorthProvider>
+                <DiagnosticsProvider>
+                  <AdvisorProvider>
+                    <AuthProvider>
+                      <AIInsightsProvider>
+                        <AudienceProvider>
+                          <TooltipProvider>
+                            <RouterProvider router={routes} />
+                            <Toaster position="top-right" richColors closeButton />
+                          </TooltipProvider>
+                        </AudienceProvider>
+                      </AIInsightsProvider>
+                    </AuthProvider>
+                  </AdvisorProvider>
+                </DiagnosticsProvider>
+              </NetWorthProvider>
+            </SubscriptionProvider>
+          </UserProvider>
+        </ThemeProvider>
+      </QueryClientProvider>
+    </AdminProvider>
   );
 }
 

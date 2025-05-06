@@ -18,73 +18,61 @@ import { NavItem } from "@/types/navigation";
 
 export const familyWealthNavItems: NavItem[] = [
   { 
-    id: "family-vault",
     title: "Secure Family Vault", 
     href: "/legacy-vault", 
     icon: VaultIcon 
   },
   { 
-    id: "financial-plans",
     title: "Financial Plans", 
     href: "/financial-plans", 
     icon: LineChartIcon 
   },
   { 
-    id: "accounts",
     title: "Accounts Overview", 
     href: "/accounts", 
     icon: WalletIcon 
   },
   { 
-    id: "all-assets",
     title: "All Assets", 
     href: "/all-assets", 
     icon: Diamond 
   },
   { 
-    id: "documents",
     title: "Documents", 
     href: "/documents", 
     icon: BookIcon 
   },
   { 
-    id: "cash-management",
     title: "Cash Management", 
     href: "/cash-management", 
     icon: BanknoteIcon
   },
   { 
-    id: "transfers",
     title: "Transfers", 
     href: "/transfers", 
     icon: ArrowRightLeft 
   },
   { 
-    id: "properties",
     title: "Properties", 
     href: "/properties", 
     icon: BuildingIcon 
   },
   { 
-    id: "tax-budgets",
     title: "Tax & Budgets", 
     href: "/tax-budgets", 
     icon: Calculator 
   },
   { 
-    id: "healthcare",
     title: "Healthcare", 
     href: "/healthcare", 
     icon: HeartPulseIcon 
   },
   { 
-    id: "social-security",
     title: "Social Security", 
     href: "/social-security", 
     icon: CircleDollarSignIcon 
   },
   { 
-    id: "billpay",
     title: "Bill Pay", 
     href: "/billpay", 
     icon: Receipt 

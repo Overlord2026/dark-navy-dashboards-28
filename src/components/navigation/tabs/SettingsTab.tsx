@@ -5,13 +5,11 @@ import { NavItem } from "@/types/navigation";
 
 export const settingsNavItems: NavItem[] = [
   { 
-    id: "help",
     title: "Help", 
     href: "/help", 
     icon: HeartHandshakeIcon 
   },
   { 
-    id: "settings",
     title: "Settings", 
     href: "/settings", 
     icon: UserIcon 
