@@ -6,6 +6,7 @@ import EstatePlanning from "@/pages/EstatePlanning";
 import Insurance from "@/pages/Insurance";
 import Lending from "@/pages/Lending";
 import LegacyVault from "@/pages/LegacyVault";
+import Investments from "@/pages/Investments";
 
 export const planningRoutes: RouteObject[] = [
   {
@@ -27,5 +28,9 @@ export const planningRoutes: RouteObject[] = [
   {
     path: "/legacy-vault",
     element: <LegacyVault />,
+  },
+  {
+    path: "/investments",
+    element: <Investments />,
   },
 ];
