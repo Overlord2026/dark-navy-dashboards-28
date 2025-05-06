@@ -6,10 +6,10 @@ import { educationNavItems } from "./tabs/EducationTab";
 import { familyWealthNavItems } from "./tabs/FamilyWealthTab";
 import { collaborationNavItems } from "./tabs/CollaborationTab";
 import { settingsNavItems } from "./tabs/SettingsTab";
-import { NavCategory } from "@/types/navigation";
+import { NavItem } from "@/types/navigation";
 
 // Define navigation categories
-export const navigationCategories: NavCategory[] = [
+export const navigationCategories = [
   {
     id: "home",
     title: "HOME",

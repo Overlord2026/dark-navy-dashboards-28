@@ -1,4 +1,3 @@
-
 import React from "react";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { NavigationItem } from "./NavigationItem";
@@ -7,7 +6,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { NavItem, NavCategory } from "@/types/navigation";
+import { NavItem } from "@/types/navigation";
 import { cn } from "@/lib/utils";
 
 interface MainMenuItem {
@@ -18,7 +17,7 @@ interface MainMenuItem {
 }
 
 interface NavigationCategoryProps {
-  category: NavCategory | {
+  category: {
     id: string;
     label: string;
     items: MainMenuItem[] | NavItem[];

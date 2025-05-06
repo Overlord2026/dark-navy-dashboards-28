@@ -10,7 +10,8 @@ const Layout: React.FC = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isLightTheme, setIsLightTheme] = useState(false);
   const [expandedSubmenus, setExpandedSubmenus] = useState<Record<string, boolean>>({
-    integration: true // Pre-expand the integration section
+    integration: true, // Pre-expand the integration section
+    insurance: true // Pre-expand the insurance section as well
   });
 
   const toggleSubmenu = (id: string) => {

@@ -1,4 +1,5 @@
 
+import React from "react";
 import { BarChart3, Settings, Users, PieChart, Home, Wallet, Target, Link, FileCode2, LayoutGrid, Plug, Shield } from "lucide-react";
 import { NavigationItem } from "@/types/navigationItem";
 

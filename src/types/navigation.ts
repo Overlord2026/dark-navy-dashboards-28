@@ -1,12 +1,23 @@
 
 import { ReactNode } from "react";
+import { LucideIcon } from "lucide-react";
 
 export interface NavItem {
   id: string;
-  label: string;
+  title?: string;
+  label?: string;
   href?: string;
-  icon?: ReactNode;
+  icon?: React.ElementType | ReactNode;
   items?: NavItem[];
+  badge?: string;
+}
+
+export interface NavCategory {
+  id: string;
+  title?: string;
+  label: string;
+  items: NavItem[];
+  defaultExpanded?: boolean;
 }
 
 export interface SidebarProps {

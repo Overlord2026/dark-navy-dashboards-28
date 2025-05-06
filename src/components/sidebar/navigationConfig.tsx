@@ -10,8 +10,6 @@ import {
   MessageCircle,
   Settings,
   User,
-  VaultIcon,
-  BriefcaseIcon,
   Shield,
   Brain,
   Share2
@@ -34,7 +32,7 @@ export const navSections = [
   {
     id: 'wealth',
     label: 'Wealth Management',
-    icon: BriefcaseIcon,
+    icon: CreditCard,
     items: [
       {
         id: 'accounts',
@@ -43,16 +41,10 @@ export const navSections = [
         icon: <CreditCard className="h-4 w-4" />,
       },
       {
-        id: 'vault',
-        label: 'Family Vault',
-        href: '/legacy-vault',
-        icon: <VaultIcon className="h-4 w-4" />,
-      },
-      {
         id: 'investments',
         label: 'Investments',
         href: '/investments',
-        icon: <BriefcaseIcon className="h-4 w-4" />,
+        icon: <FileLineChart className="h-4 w-4" />,
       },
     ],
   },
@@ -78,6 +70,19 @@ export const navSections = [
         label: 'Estate Planning',
         href: '/estate-planning',
         icon: <Building2 className="h-4 w-4" />,
+      },
+    ],
+  },
+  {
+    id: 'insurance',
+    label: 'Insurance',
+    icon: Shield,
+    items: [
+      {
+        id: 'insurance',
+        label: 'Insurance',
+        href: '/insurance',
+        icon: <Shield className="h-4 w-4" />,
       },
     ],
   },
