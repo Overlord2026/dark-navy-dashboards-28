@@ -13,9 +13,9 @@ export const BrandedHeader: React.FC<BrandedHeaderProps> = ({ isConnected = fals
         <div className="flex flex-col items-center">
           <div className="flex items-center">
             <img 
-              src="/lovable-uploads/b8be209b-a733-430c-a7f3-1b9f6fba960c.png" 
+              src="/lovable-uploads/27271a88-28e0-4eab-a76b-3b44be771df0.png" 
               alt="Boutique Family Office Logo" 
-              className="h-6 md:h-8"
+              className="h-8 md:h-10"
             />
             {isConnected && (
               <Badge className="ml-2 bg-[#FFC700] text-[#0F1E3A] font-medium">Connected</Badge>
