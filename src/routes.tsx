@@ -4,12 +4,19 @@ import { dashboardRoutes } from "./routes/dashboard-routes";
 import { educationRoutes } from "./routes/education-routes";
 import { planningRoutes } from "./routes/planning-routes";
 import { settingsRoutes } from "./routes/settings-routes";
+import { collaborationRoutes } from "./routes/collaboration-routes";
+import NotFound from "./pages/NotFound";
 
 const routes = createBrowserRouter([
   ...dashboardRoutes,
   ...educationRoutes,
   ...planningRoutes,
   ...settingsRoutes,
+  ...collaborationRoutes,
+  {
+    path: "*",
+    element: <NotFound />
+  }
 ]);
 
 export default routes;
