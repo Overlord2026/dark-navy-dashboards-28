@@ -1,7 +1,7 @@
 
 import { Property } from './property';
 
-export type AssetType = 'cash' | 'investment' | 'retirement' | 'property' | 'vehicle' | 'boat' | 'art' | 'digital' | 'other';
+export type AssetType = 'cash' | 'investment' | 'retirement' | 'property' | 'vehicle' | 'boat' | 'art' | 'digital' | 'other' | 'antique' | 'jewelry' | 'collectible';
 export type AccountType = 'banking' | 'investment' | 'retirement' | 'managed' | 'other' | 'manual' | 'loan';
 
 export interface AssetDetails {
@@ -48,5 +48,5 @@ export interface NetWorthContextType {
   totalLiabilityValue: number;
 }
 
-// Re-export Property type from property.ts to fix TS2459 errors
-export { Property } from './property';
+// Fix for TS1205: Use export type for re-exporting types with isolatedModules
+export type { Property } from './property';
