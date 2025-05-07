@@ -1,108 +1,87 @@
 
 import React from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { SearchIcon, Plus } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
+import { Download, PlusCircle } from "lucide-react";
 
 export const PluginsTab = () => {
-  const plugins = [
-    {
-      id: 1,
-      name: "Advanced Tax Planning",
-      author: "Boutique Family Office",
-      version: "2.1.3",
-      status: "Installed",
-      description: "Sophisticated tax optimization strategies for high-net-worth clients."
-    },
-    {
-      id: 2,
-      name: "Estate Transfer Simulator",
-      author: "Legacy Systems, Inc.",
-      version: "1.4.0",
-      status: "Installed",
-      description: "Model wealth transfer scenarios and optimize estate planning outcomes."
-    },
-    {
-      id: 3,
-      name: "Alternative Investment Analyzer",
-      author: "Wealth Metrics LLC",
-      version: "3.2.5",
-      status: "Available",
-      description: "Analytics for private equity, real estate, and hedge fund investments."
-    },
-    {
-      id: 4,
-      name: "Family Governance Tools",
-      author: "Boutique Family Office",
-      version: "1.0.2",
-      status: "Available",
-      description: "Framework for implementing family constitutions and governance structures."
-    }
-  ];
-
   return (
-    <div className="space-y-6">
+    <div>
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-semibold">Plugins</h2>
-        <Button className="bg-black hover:bg-black/80 text-[#D4AF37]">
-          <Plus className="h-4 w-4 mr-2" /> Upload Custom Plugin
+        <h2 className="text-2xl font-bold">Plugins</h2>
+        <Button>
+          <PlusCircle className="mr-2 h-4 w-4" />
+          Browse Plugin Store
         </Button>
       </div>
-
-      <div className="relative mb-6">
-        <SearchIcon className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-        <Input 
-          placeholder="Search plugins..." 
-          className="pl-9 bg-[#121221] border-[#333]" 
-        />
-      </div>
-
-      <div className="grid gap-6 md:grid-cols-2">
-        {plugins.map((plugin) => (
-          <Card key={plugin.id} className="border-[#333] bg-[#1F1F2E]">
-            <CardHeader>
-              <div className="flex justify-between items-start">
-                <CardTitle className="text-[#D4AF37]">{plugin.name}</CardTitle>
-                <Badge 
-                  variant={plugin.status === "Installed" ? "outline" : "secondary"}
-                  className={plugin.status === "Installed" 
-                    ? "bg-green-900/30 text-green-300 border-green-500/50" 
-                    : ""
-                  }
-                >
-                  {plugin.status}
-                </Badge>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <Card>
+          <CardHeader>
+            <div className="flex justify-between items-start">
+              <div>
+                <CardTitle>Tax Calculator</CardTitle>
+                <CardDescription>Advanced tax estimation tool</CardDescription>
               </div>
-              <CardDescription>v{plugin.version} | By {plugin.author}</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground">{plugin.description}</p>
-            </CardContent>
-            <CardFooter className="flex justify-between">
-              <Button variant="outline" className="text-[#D4AF37] border-[#D4AF37]">Details</Button>
-              {plugin.status === "Installed" ? (
-                <Button variant="destructive">Uninstall</Button>
-              ) : (
-                <Button className="bg-black hover:bg-black/80 text-[#D4AF37]">Install</Button>
-              )}
-            </CardFooter>
-          </Card>
-        ))}
+              <Switch checked={true} />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground">
+              Provides advanced tax calculation capabilities for multiple jurisdictions with real-time updates.
+            </p>
+            <div className="flex items-center mt-4">
+              <Badge variant="outline" className="mr-2">v2.3.1</Badge>
+              <Badge className="bg-green-500/10 text-green-500 hover:bg-green-500/20">Stable</Badge>
+            </div>
+          </CardContent>
+          <CardFooter className="flex justify-end gap-2">
+            <Button variant="outline" size="sm">Settings</Button>
+          </CardFooter>
+        </Card>
+        
+        <Card>
+          <CardHeader>
+            <div className="flex justify-between items-start">
+              <div>
+                <CardTitle>Document Scanner</CardTitle>
+                <CardDescription>OCR for financial documents</CardDescription>
+              </div>
+              <Switch checked={true} />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground">
+              Extract data from financial documents using optical character recognition for automatic data entry.
+            </p>
+            <div className="flex items-center mt-4">
+              <Badge variant="outline" className="mr-2">v1.8.0</Badge>
+              <Badge className="bg-amber-500/10 text-amber-500 hover:bg-amber-500/20">Update Available</Badge>
+            </div>
+          </CardContent>
+          <CardFooter className="flex justify-end gap-2">
+            <Button variant="outline" size="sm" className="flex items-center">
+              <Download className="h-4 w-4 mr-1" /> Update
+            </Button>
+            <Button variant="outline" size="sm">Settings</Button>
+          </CardFooter>
+        </Card>
+        
+        <Card className="border-dashed">
+          <CardHeader>
+            <CardTitle>Install New Plugin</CardTitle>
+            <CardDescription>Enhance your application with plugins</CardDescription>
+          </CardHeader>
+          <CardContent className="flex flex-col items-center justify-center py-8">
+            <Button variant="outline" className="w-full">
+              <PlusCircle className="mr-2 h-4 w-4" />
+              Browse Plugins
+            </Button>
+          </CardContent>
+        </Card>
       </div>
-
-      <Card className="border-[#333] bg-[#1F1F2E]">
-        <CardHeader>
-          <CardTitle className="text-[#D4AF37]">Plugin Marketplace</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-muted-foreground mb-4">
-            Discover additional plugins created by our partners and the community to extend your system's capabilities.
-          </p>
-          <Button className="bg-black hover:bg-black/80 text-[#D4AF37]">Browse Marketplace</Button>
-        </CardContent>
-      </Card>
     </div>
   );
 };

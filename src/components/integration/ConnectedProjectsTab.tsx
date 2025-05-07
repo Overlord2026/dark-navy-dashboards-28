@@ -3,64 +3,74 @@ import React from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Plus } from "lucide-react";
+import { PlusCircle, Link as LinkIcon } from "lucide-react";
 
 export const ConnectedProjectsTab = () => {
-  const projects = [
-    {
-      id: 1,
-      name: "Family Office Client Portal",
-      status: "Connected",
-      lastSync: "Today at 2:15 PM",
-      description: "Main client interface for portfolio management and reporting."
-    },
-    {
-      id: 2,
-      name: "Advisor Dashboard",
-      status: "Connected",
-      lastSync: "Today at 1:30 PM",
-      description: "Financial advisor management interface with client portfolios."
-    },
-    {
-      id: 3,
-      name: "Financial Planning Module",
-      status: "Pending",
-      lastSync: "Never",
-      description: "Advanced financial planning and scenario analysis tools."
-    }
-  ];
-
   return (
-    <div className="space-y-6">
+    <div>
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-semibold">Connected Projects</h2>
-        <Button className="bg-black hover:bg-black/80 text-[#D4AF37]">
-          <Plus className="h-4 w-4 mr-2" /> Connect New Project
+        <h2 className="text-2xl font-bold">Connected Projects</h2>
+        <Button>
+          <PlusCircle className="mr-2 h-4 w-4" />
+          Connect New Project
         </Button>
       </div>
-
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {projects.map((project) => (
-          <Card key={project.id} className="border-[#333] bg-[#1F1F2E]">
-            <CardHeader>
-              <div className="flex justify-between items-start">
-                <CardTitle className="text-[#D4AF37]">{project.name}</CardTitle>
-                <Badge variant={project.status === "Connected" ? "outline" : "secondary"} 
-                  className={project.status === "Connected" ? "bg-green-900/30 text-green-300 border-green-500/50" : ""}>
-                  {project.status}
-                </Badge>
-              </div>
-              <CardDescription>Last synced: {project.lastSync}</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground">{project.description}</p>
-            </CardContent>
-            <CardFooter className="flex justify-between">
-              <Button variant="outline" className="text-[#D4AF37] border-[#D4AF37]">View Details</Button>
-              <Button className="bg-black hover:bg-black/80 text-[#D4AF37]">Manage</Button>
-            </CardFooter>
-          </Card>
-        ))}
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex justify-between items-center">
+              Family Office CRM
+              <Badge className="bg-green-500">Active</Badge>
+            </CardTitle>
+            <CardDescription>Client relationship management system</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground mb-2">Connected on: May 1, 2025</p>
+            <div className="flex items-center text-sm text-muted-foreground">
+              <LinkIcon className="mr-1 h-3 w-3" /> 
+              <span>3 active integrations</span>
+            </div>
+          </CardContent>
+          <CardFooter className="flex justify-end gap-2">
+            <Button variant="outline" size="sm">Settings</Button>
+            <Button variant="default" size="sm">Manage</Button>
+          </CardFooter>
+        </Card>
+        
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex justify-between items-center">
+              Portfolio Tracker
+              <Badge className="bg-green-500">Active</Badge>
+            </CardTitle>
+            <CardDescription>Investment portfolio analytics</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground mb-2">Connected on: April 15, 2025</p>
+            <div className="flex items-center text-sm text-muted-foreground">
+              <LinkIcon className="mr-1 h-3 w-3" /> 
+              <span>2 active integrations</span>
+            </div>
+          </CardContent>
+          <CardFooter className="flex justify-end gap-2">
+            <Button variant="outline" size="sm">Settings</Button>
+            <Button variant="default" size="sm">Manage</Button>
+          </CardFooter>
+        </Card>
+        
+        <Card className="border-dashed">
+          <CardHeader>
+            <CardTitle>Connect New Project</CardTitle>
+            <CardDescription>Add a new project to your ecosystem</CardDescription>
+          </CardHeader>
+          <CardContent className="flex flex-col items-center justify-center py-8">
+            <Button variant="outline" className="w-full">
+              <PlusCircle className="mr-2 h-4 w-4" />
+              Add Project
+            </Button>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

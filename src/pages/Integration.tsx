@@ -1,30 +1,41 @@
 
-import React from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import React, { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { DashboardHeader } from "@/components/ui/DashboardHeader";
 import { ConnectedProjectsTab } from "@/components/integration/ConnectedProjectsTab";
 import { ArchitectureTab } from "@/components/integration/ArchitectureTab";
 import { ApiIntegrationsTab } from "@/components/integration/ApiIntegrationsTab";
 import { PluginsTab } from "@/components/integration/PluginsTab";
 import { SupabaseRequiredNotice } from "@/components/integration/SupabaseRequiredNotice";
 
-export default function Integration() {
+const Integration = () => {
+  const [activeTab, setActiveTab] = useState("projects");
+  
   return (
-    <ThreeColumnLayout activeMainItem="integration" title="Project Integration">
-      <div className="container mx-auto py-8">
+    <ThreeColumnLayout title="Project Integration">
+      <div className="container mx-auto px-4 py-6">
+        <DashboardHeader 
+          heading="Project Integration" 
+          text="Connect your application to our marketplace and enable powerful integrations."
+        />
+        
         <SupabaseRequiredNotice />
         
-        <h1 className="text-3xl font-bold mb-6">Project Integration Hub</h1>
-        
-        <Tabs defaultValue="connected-projects" className="w-full">
-          <TabsList className="mb-6">
-            <TabsTrigger value="connected-projects">Connected Projects</TabsTrigger>
+        <Tabs 
+          defaultValue="projects" 
+          value={activeTab}
+          onValueChange={setActiveTab}
+          className="w-full"
+        >
+          <TabsList className="grid grid-cols-4 mb-8">
+            <TabsTrigger value="projects">Connected Projects</TabsTrigger>
             <TabsTrigger value="architecture">Architecture</TabsTrigger>
-            <TabsTrigger value="api-integrations">API Integrations</TabsTrigger>
+            <TabsTrigger value="api">API Integrations</TabsTrigger>
             <TabsTrigger value="plugins">Plugins</TabsTrigger>
           </TabsList>
           
-          <TabsContent value="connected-projects">
+          <TabsContent value="projects">
             <ConnectedProjectsTab />
           </TabsContent>
           
@@ -32,7 +43,7 @@ export default function Integration() {
             <ArchitectureTab />
           </TabsContent>
           
-          <TabsContent value="api-integrations">
+          <TabsContent value="api">
             <ApiIntegrationsTab />
           </TabsContent>
           
@@ -43,4 +54,6 @@ export default function Integration() {
       </div>
     </ThreeColumnLayout>
   );
-}
+};
+
+export default Integration;

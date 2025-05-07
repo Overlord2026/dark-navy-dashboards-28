@@ -1,96 +1,95 @@
 
 import React from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle, AlertCircle, Plus } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { CheckCircle2, XCircle, PlusCircle } from "lucide-react";
 
 export const ApiIntegrationsTab = () => {
-  const integrations = [
-    {
-      id: 1,
-      name: "Portfolio Management API",
-      status: "Active",
-      lastChecked: "5 minutes ago",
-      description: "Real-time portfolio data and performance analytics"
-    },
-    {
-      id: 2,
-      name: "Market Data Service",
-      status: "Active",
-      lastChecked: "15 minutes ago",
-      description: "Market indices, stock quotes, and economic indicators"
-    },
-    {
-      id: 3,
-      name: "Document Management API",
-      status: "Issue",
-      lastChecked: "1 hour ago",
-      description: "Secure document storage and sharing capabilities"
-    },
-    {
-      id: 4,
-      name: "Financial Planning Tools",
-      status: "Active",
-      lastChecked: "30 minutes ago",
-      description: "Retirement modeling and goal-based planning tools"
-    }
-  ];
-
   return (
-    <div className="space-y-6">
+    <div>
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-semibold">API Integrations</h2>
-        <Button className="bg-black hover:bg-black/80 text-[#D4AF37]">
-          <Plus className="h-4 w-4 mr-2" /> Add Integration
+        <h2 className="text-2xl font-bold">API Integrations</h2>
+        <Button>
+          <PlusCircle className="mr-2 h-4 w-4" />
+          New Integration
         </Button>
       </div>
-
-      <div className="grid gap-6 md:grid-cols-2">
-        {integrations.map((integration) => (
-          <Card key={integration.id} className="border-[#333] bg-[#1F1F2E]">
-            <CardHeader className="pb-2">
-              <div className="flex justify-between items-start">
-                <CardTitle className="text-[#D4AF37]">{integration.name}</CardTitle>
-                <Badge 
-                  variant={integration.status === "Active" ? "outline" : "secondary"}
-                  className={integration.status === "Active" 
-                    ? "bg-green-900/30 text-green-300 border-green-500/50 flex items-center gap-1"
-                    : "bg-amber-900/30 text-amber-300 border-amber-500/50 flex items-center gap-1"
-                  }
-                >
-                  {integration.status === "Active" ? (
-                    <><CheckCircle className="h-3 w-3" /> {integration.status}</>
-                  ) : (
-                    <><AlertCircle className="h-3 w-3" /> {integration.status}</>
-                  )}
-                </Badge>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex justify-between items-center">
+              Financial Data API
+              <Badge className="bg-green-500">Active</Badge>
+            </CardTitle>
+            <CardDescription>Real-time market data feed</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              <div className="flex items-center">
+                <CheckCircle2 className="text-green-500 h-4 w-4 mr-2" />
+                <span className="text-sm">Authentication configured</span>
               </div>
-              <CardDescription>Last checked: {integration.lastChecked}</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground">{integration.description}</p>
-            </CardContent>
-            <CardFooter className="flex justify-between">
-              <Button variant="outline" className="text-[#D4AF37] border-[#D4AF37]">View Logs</Button>
-              <Button className="bg-black hover:bg-black/80 text-[#D4AF37]">Configure</Button>
-            </CardFooter>
-          </Card>
-        ))}
+              <div className="flex items-center">
+                <CheckCircle2 className="text-green-500 h-4 w-4 mr-2" />
+                <span className="text-sm">Rate limiting enabled</span>
+              </div>
+              <div className="flex items-center">
+                <CheckCircle2 className="text-green-500 h-4 w-4 mr-2" />
+                <span className="text-sm">Webhooks configured</span>
+              </div>
+            </div>
+          </CardContent>
+          <CardFooter className="flex justify-end gap-2">
+            <Button variant="outline" size="sm">Documentation</Button>
+            <Button variant="default" size="sm">Manage</Button>
+          </CardFooter>
+        </Card>
+        
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex justify-between items-center">
+              CRM Integration
+              <Badge className="bg-amber-500 text-amber-950">Setup Required</Badge>
+            </CardTitle>
+            <CardDescription>Client relationship data sync</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              <div className="flex items-center">
+                <CheckCircle2 className="text-green-500 h-4 w-4 mr-2" />
+                <span className="text-sm">Authentication configured</span>
+              </div>
+              <div className="flex items-center">
+                <XCircle className="text-red-500 h-4 w-4 mr-2" />
+                <span className="text-sm">Data mapping incomplete</span>
+              </div>
+              <div className="flex items-center">
+                <XCircle className="text-red-500 h-4 w-4 mr-2" />
+                <span className="text-sm">Webhooks not configured</span>
+              </div>
+            </div>
+          </CardContent>
+          <CardFooter className="flex justify-end gap-2">
+            <Button variant="outline" size="sm">Documentation</Button>
+            <Button variant="default" size="sm">Complete Setup</Button>
+          </CardFooter>
+        </Card>
+        
+        <Card className="border-dashed">
+          <CardHeader>
+            <CardTitle>Add New API Integration</CardTitle>
+            <CardDescription>Connect to third-party services</CardDescription>
+          </CardHeader>
+          <CardContent className="flex flex-col items-center justify-center py-8">
+            <Button variant="outline" className="w-full">
+              <PlusCircle className="mr-2 h-4 w-4" />
+              Connect API
+            </Button>
+          </CardContent>
+        </Card>
       </div>
-
-      <Card className="border-[#333] bg-[#1F1F2E]">
-        <CardHeader>
-          <CardTitle className="text-[#D4AF37]">API Documentation</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-muted-foreground mb-4">
-            Access comprehensive documentation for all available APIs, including endpoints, 
-            authentication methods, and example requests.
-          </p>
-          <Button className="bg-black hover:bg-black/80 text-[#D4AF37]">View Documentation</Button>
-        </CardContent>
-      </Card>
     </div>
   );
 };
