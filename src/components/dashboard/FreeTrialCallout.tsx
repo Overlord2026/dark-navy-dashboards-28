@@ -6,9 +6,7 @@ export function FreeTrialCallout() {
       <div className="flex flex-col md:flex-row items-center justify-between">
         <div>
           <h2 className="text-xl font-semibold mb-2 text-[#FFC700]">BFO Premium Access</h2>
-          <p className="text-white mb-4 md:mb-0 max-w-lg">
-            Upgrade to unlock advanced features, custom branding, and unlimited client access.
-          </p>
+          <p className="text-white mb-4 md:mb-0 max-w-lg">Upgrade to get advanced features</p>
         </div>
         <div className="flex gap-4">
           <Button className="bg-[#FFC700] text-[#0F1E3A] hover:bg-[#E0B000] font-medium">
