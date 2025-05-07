@@ -55,14 +55,12 @@ export const navSections = [
         label: 'Investments',
         href: '/investments',
         icon: <BriefcaseIcon className="h-4 w-4" />,
-        items: [
-          {
-            id: 'properties',
-            label: 'Properties',
-            href: '/properties',
-            icon: <Home className="h-4 w-4" />,
-          }
-        ]
+      },
+      {
+        id: 'properties',
+        label: 'Properties',
+        href: '/properties',
+        icon: <Home className="h-4 w-4" />,
       },
     ],
   },
