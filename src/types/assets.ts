@@ -1,49 +1,38 @@
 
-// Define the assets structure
+import { Property } from './property';
+
+export type AssetType = 'cash' | 'investment' | 'retirement' | 'property' | 'vehicle' | 'boat' | 'art' | 'digital' | 'other';
+export type AccountType = 'banking' | 'investment' | 'retirement' | 'managed' | 'other';
+
+export interface AssetDetails {
+  [key: string]: any;
+  description?: string;
+}
+
 export interface Asset {
   id: string;
   name: string;
-  type: 'property' | 'investment' | 'cash' | 'retirement' | 'vehicle' | 'boat' | 'collectible' | 'digital' | 'art' | 'antique' | 'jewelry' | 'other';
+  type: AssetType;
   value: number;
   owner: string;
   lastUpdated: string;
-  sourceId?: string; // Reference to the source object (like property.id)
-  source?: 'zillow' | 'manual' | 'other'; // Where the valuation came from
-  details?: {
-    year?: string;
-    make?: string;
-    model?: string;
-    description?: string;
-    location?: string;
-    insuredValue?: number;
-    purchaseDate?: string;
-    condition?: string;
-    imageUrl?: string;
-  };
+  details?: AssetDetails;
+  sourceId?: string;
+  source?: string;
 }
 
-// Define account structure for mobile accounts page
 export interface Account {
   id: string;
   name: string;
-  type: 'managed' | 'investment' | 'manual' | 'loan' | 'banking';
+  type: AccountType;
   value: number;
-  institution?: string;
-  lastUpdated?: string;
+  institution: string;
 }
 
-export interface Property {
-  id: string;
-  name: string;
-  address?: string;
-  owner: string;
-  currentValue: number;
-  valuation?: {
-    lastUpdated: string;
-    source?: string;
-  };
-  purchaseInfo?: {
-    date: string;
-    price: number;
-  };
+export interface NetWorthContextType {
+  assets: Asset[];
+  accounts: Account[];
+  calculateTotalNetWorth: () => number;
+  calculateTotalAssetsByType: (type: AssetType) => number;
+  syncPropertiesToAssets: (properties: Property[]) => void;
 }

@@ -1,8 +1,8 @@
 
-export type PropertyType = 'primary' | 'vacation' | 'rental' | 'business';
-export type OwnershipType = 'single' | 'joint' | 'trust' | 'llc';
+export type PropertyType = "primary" | "vacation" | "rental" | "business";
+export type OwnershipType = "single" | "joint" | "trust" | "llc";
 
-export interface Improvement {
+export interface PropertyImprovement {
   description: string;
   date: string;
   cost: number;
@@ -24,9 +24,9 @@ export interface BusinessDetails {
 
 export interface PropertyValuation {
   estimatedValue: number;
-  lastUpdated: string;
-  confidence: 'high' | 'medium' | 'low';
   source: string;
+  confidence: "low" | "medium" | "high";
+  lastUpdated: string;
 }
 
 export interface Property {
@@ -39,26 +39,13 @@ export interface Property {
   purchaseDate: string;
   originalCost: number;
   currentValue: number;
-  improvements: Improvement[];
+  improvements: PropertyImprovement[];
   rental?: RentalDetails;
   business?: BusinessDetails;
   notes?: string;
   valuation?: PropertyValuation;
 }
 
-export interface PropertyFormData {
-  name: string;
-  type: PropertyType;
-  address: string;
-  ownership: OwnershipType;
-  owner: string;
-  purchaseDate: string;
-  originalCost: number;
-  currentValue: number;
-  improvements: Improvement[];
-  rental?: RentalDetails;
-  business?: BusinessDetails;
-  notes?: string;
+export interface PropertyFormData extends Omit<Property, "id"> {
   id?: string;
-  valuation?: PropertyValuation;
 }
