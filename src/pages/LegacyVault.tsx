@@ -18,8 +18,10 @@ import { FamilyLegacyBox } from "@/components/estate-planning/FamilyLegacyBox";
 import { HealthcareFolder } from "@/components/healthcare/HealthcareFolder";
 import { ProfessionalsProvider } from "@/context/ProfessionalsContext";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+
 const importantDocumentCategories = documentCategories.filter(cat => ["documents-to-sign", "bfo-records", "alternative-investments", "business-ownership", "education", "employer-agreements", "leases", "property-ownership", "statements", "taxes", "vehicles"].includes(cat.id));
 const estateDocumentCategories = documentCategories.filter(cat => ["estate-planning", "trusts", "other"].includes(cat.id));
+
 export default function LegacyVault() {
   const [activeCategory, setActiveCategory] = useState("all");
   const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
@@ -134,14 +136,12 @@ export default function LegacyVault() {
   };
   return <ThreeColumnLayout activeMainItem="legacy-vault" title="Secure Family Vault">
       <ProfessionalsProvider>
-        <div className="container mx-auto p-4 space-y-6">
+        <div className="p-4 space-y-6 w-full max-w-full">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
             <div>
               <h1 className="text-2xl font-bold mb-1">Secure Family Vault</h1>
               <p className="text-muted-foreground">Store and organize your important documents securely</p>
             </div>
-
-            
           </div>
           
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
@@ -186,7 +186,7 @@ export default function LegacyVault() {
               </div>
             </TabsContent>
             
-            <TabsContent value="legacy-box">
+            <TabsContent value="legacy-box" className="w-full">
               <FamilyLegacyBox />
             </TabsContent>
 

@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -123,14 +122,14 @@ export const AdvancedTaxStrategies: React.FC = () => {
   };
 
   return (
-    <Card>
-      <CardHeader>
+    <Card className="shadow-lg">
+      <CardHeader className="bg-muted/30">
         <CardTitle className="flex items-center gap-2">
           <Lightbulb className="h-5 w-5 text-amber-500" />
           Advanced Tax Planning Strategies
         </CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="p-6">
         <p className="text-muted-foreground mb-4">
           Explore sophisticated tax planning approaches to potentially reduce your tax burden and optimize your wealth transfer strategies.
         </p>

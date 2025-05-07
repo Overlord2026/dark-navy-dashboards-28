@@ -146,31 +146,31 @@ export const FamilyLegacyBox: React.FC = () => {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
       <div className="lg:col-span-3 space-y-6">
-        <Card>
-          <CardHeader>
+        <Card className="shadow-lg">
+          <CardHeader className="bg-muted/30">
             <CardTitle>Family Legacy Box</CardTitle>
           </CardHeader>
-          <CardContent>
-            <Tabs defaultValue="overview" value={activeTab} onValueChange={setActiveTab}>
-              <TabsList className="grid w-full grid-cols-3">
+          <CardContent className="p-6">
+            <Tabs defaultValue="overview" value={activeTab} onValueChange={setActiveTab} className="w-full">
+              <TabsList className="grid w-full grid-cols-3 mb-6">
                 <TabsTrigger value="overview">Document Overview</TabsTrigger>
                 <TabsTrigger value="uploaded">My Documents</TabsTrigger>
                 <TabsTrigger value="shared">Shared Documents</TabsTrigger>
               </TabsList>
-              <TabsContent value="overview">
+              <TabsContent value="overview" className="pt-4">
                 <DocumentChecklist
                   onUploadDocument={handleUploadDocument}
                   documents={documents}
                 />
               </TabsContent>
-              <TabsContent value="uploaded">
+              <TabsContent value="uploaded" className="pt-4">
                 <UploadedDocuments
                   documents={documents}
                   onViewDocument={handleViewDocument}
                   onShareDocument={handleShareDocument}
                 />
               </TabsContent>
-              <TabsContent value="shared">
+              <TabsContent value="shared" className="pt-4">
                 <SharedDocuments
                   sharedDocuments={sharedDocuments}
                   onViewDocument={handleViewDocument}
@@ -186,7 +186,9 @@ export const FamilyLegacyBox: React.FC = () => {
         <CompletionProgress completedItems={completedDocuments} totalItems={totalDocuments} />
       </div>
       
-      <ResourcesCard />
+      <div className="lg:col-span-1">
+        <ResourcesCard />
+      </div>
       
       {/* Dialogs */}
       <UploadDocumentDialog 
