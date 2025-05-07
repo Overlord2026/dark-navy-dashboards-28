@@ -14,6 +14,7 @@ import {
   BriefcaseIcon,
   Shield,
   Brain,
+  Users2,
   Share2
 } from 'lucide-react';
 
@@ -85,6 +86,12 @@ export const navSections = [
         href: '/insurance',
         icon: <Shield className="h-4 w-4" />,
       },
+      {
+        id: 'lending',
+        label: 'Lending',
+        href: '/lending',
+        icon: <BanknoteIcon className="h-4 w-4" />,
+      },
     ],
   },
   {
@@ -101,15 +108,21 @@ export const navSections = [
     ],
   },
   {
-    id: 'integration',
-    label: 'Integration',
-    icon: Share2,
+    id: 'collaboration',
+    label: 'Collaboration',
+    icon: MessageCircle,
     items: [
       {
-        id: 'project-integration',
-        label: 'Project Integration',
-        href: '/integration',
+        id: 'family-collaboration',
+        label: 'Family Collaboration',
+        href: '/sharing',
         icon: <Share2 className="h-4 w-4" />,
+      },
+      {
+        id: 'professional-collaboration',
+        label: 'Professional Collaboration',
+        href: '/professionals',
+        icon: <Users2 className="h-4 w-4" />,
       },
     ],
   },

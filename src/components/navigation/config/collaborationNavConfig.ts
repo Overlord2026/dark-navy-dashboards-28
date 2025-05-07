@@ -1,25 +1,19 @@
 
 import { 
   Users2Icon, 
-  ShareIcon,
-  Network
+  ShareIcon
 } from "lucide-react";
 import { NavItem } from "@/types/navigation";
 
 export const collaborationNavItems: NavItem[] = [
   { 
-    title: "Service Professionals", 
+    title: "Professional Collaboration", 
     href: "/professionals", 
     icon: Users2Icon 
   },
   { 
-    title: "Family Member Access", 
+    title: "Family Collaboration", 
     href: "/sharing", 
     icon: ShareIcon 
-  },
-  {
-    title: "Project Integration",
-    href: "/integration",
-    icon: Network
   }
 ];
