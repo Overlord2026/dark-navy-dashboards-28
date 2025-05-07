@@ -11,6 +11,7 @@ import { CollaboratorsTable } from "@/components/sharing/CollaboratorsTable";
 import { EmptyCollaborators } from "@/components/sharing/EmptyCollaborators";
 import { Collaborator } from "@/components/sharing/types";
 import { useCollaboratorForm } from "@/hooks/useCollaboratorForm";
+import { FormProvider } from "react-hook-form";
 
 export default function Sharing() {
   const { toast } = useToast();
@@ -92,48 +93,50 @@ export default function Sharing() {
                   </div>
                 </div>
                 
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                  {addStep === "info" ? (
-                    <CollaboratorInfoStep form={form} />
-                  ) : (
-                    <CollaboratorAccessStep form={form} />
-                  )}
-                  
-                  <div className="flex justify-between pt-4">
-                    <Button 
-                      type="button" 
-                      variant="outline" 
-                      onClick={() => {
-                        setShowAddCollaborator(false);
-                        setAddStep("info");
-                        form.reset();
-                      }}
-                      className="border border-white/20 bg-transparent text-white hover:bg-gray-800"
-                    >
-                      Cancel
-                    </Button>
+                <FormProvider {...form}>
+                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                    {addStep === "info" ? (
+                      <CollaboratorInfoStep form={form} />
+                    ) : (
+                      <CollaboratorAccessStep form={form} />
+                    )}
                     
-                    <div className="flex gap-2">
-                      {addStep === "access" && (
-                        <Button
-                          type="button"
-                          variant="outline"
-                          onClick={() => setAddStep("info")}
-                          className="border border-white/20 bg-transparent text-white hover:bg-gray-800"
-                        >
-                          Back
-                        </Button>
-                      )}
-                      
+                    <div className="flex justify-between pt-4">
                       <Button 
-                        type="submit"
-                        className="bg-blue-600 hover:bg-blue-700 text-white"
+                        type="button" 
+                        variant="outline" 
+                        onClick={() => {
+                          setShowAddCollaborator(false);
+                          setAddStep("info");
+                          form.reset();
+                        }}
+                        className="border border-white/20 bg-transparent text-white hover:bg-gray-800"
                       >
-                        {addStep === "info" ? "Next" : "Send Invitation"}
+                        Cancel
                       </Button>
+                      
+                      <div className="flex gap-2">
+                        {addStep === "access" && (
+                          <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => setAddStep("info")}
+                            className="border border-white/20 bg-transparent text-white hover:bg-gray-800"
+                          >
+                            Back
+                          </Button>
+                        )}
+                        
+                        <Button 
+                          type="submit"
+                          className="bg-blue-600 hover:bg-blue-700 text-white"
+                        >
+                          {addStep === "info" ? "Next" : "Send Invitation"}
+                        </Button>
+                      </div>
                     </div>
-                  </div>
-                </form>
+                  </form>
+                </FormProvider>
               </div>
             </div>
           ) : (
