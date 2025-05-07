@@ -2,9 +2,17 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ChevronRight, CheckCircle, Shield, Users, BarChart3, FileText, CreditCard } from "lucide-react";
+import { ChevronRight, CheckCircle, Shield, Users, BarChart3, FileText, CreditCard, CalendarClock } from "lucide-react";
+import { toast } from "sonner";
 
 export default function HomePage() {
+  const handleScheduleDemo = () => {
+    window.open("https://calendly.com/tonygomes/60min", "_blank");
+    toast.success("Opening scheduling page", {
+      description: "Schedule a meeting to discuss our services with an advisor.",
+    });
+  };
+
   return (
     <div className="flex flex-col min-h-screen bg-[#F9F7E8]">
       {/* Header */}
@@ -48,8 +56,14 @@ export default function HomePage() {
                   <ChevronRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10" asChild>
-                <Link to="/services">Explore Services</Link>
+              <Button 
+                size="lg" 
+                variant="outline" 
+                className="border-white text-white hover:bg-white/10 flex items-center gap-2"
+                onClick={handleScheduleDemo}
+              >
+                <CalendarClock className="h-5 w-5" />
+                Schedule a Demo
               </Button>
             </div>
           </div>
@@ -157,8 +171,13 @@ export default function HomePage() {
             <Button size="lg" className="bg-black text-white hover:bg-black/80" asChild>
               <Link to="/login">Access Client Portal</Link>
             </Button>
-            <Button size="lg" className="bg-black text-white hover:bg-black/80" asChild>
-              <Link to="/contact">Contact an Advisor</Link>
+            <Button 
+              size="lg" 
+              className="bg-black text-white hover:bg-black/80 flex items-center gap-2"
+              onClick={handleScheduleDemo}
+            >
+              <CalendarClock className="h-5 w-5" />
+              Schedule a Demo
             </Button>
           </div>
         </div>
