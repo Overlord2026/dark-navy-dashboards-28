@@ -1,9 +1,10 @@
 
 import { InfoIcon } from "lucide-react";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { UseFormReturn } from "react-hook-form";
 import { CollaboratorFormData } from "./types";
+import { Input } from "@/components/ui/input";
 
 interface CollaboratorAccessStepProps {
   form: UseFormReturn<CollaboratorFormData>;
@@ -49,6 +50,27 @@ export const CollaboratorAccessStep = ({ form }: CollaboratorAccessStepProps) =>
                   </SelectGroup>
                 </SelectContent>
               </Select>
+              <FormMessage className="text-red-400 text-xs mt-1" />
+            </FormItem>
+          )}
+        />
+        
+        <FormField
+          control={form.control}
+          name="role"
+          render={({ field }) => (
+            <FormItem className="mb-4">
+              <FormLabel className="flex items-center gap-1 text-sm font-normal text-white">
+                Role
+              </FormLabel>
+              <FormControl>
+                <Input 
+                  {...field} 
+                  className="bg-transparent border-gray-700 focus:border-gray-500"
+                  placeholder="e.g., Beneficiary, Co-owner"
+                />
+              </FormControl>
+              <FormMessage className="text-red-400 text-xs mt-1" />
             </FormItem>
           )}
         />
@@ -76,6 +98,7 @@ export const CollaboratorAccessStep = ({ form }: CollaboratorAccessStepProps) =>
                   <SelectItem value="limited">Limited Access</SelectItem>
                 </SelectContent>
               </Select>
+              <FormMessage className="text-red-400 text-xs mt-1" />
             </FormItem>
           )}
         />

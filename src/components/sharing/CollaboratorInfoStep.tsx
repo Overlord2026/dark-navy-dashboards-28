@@ -1,6 +1,6 @@
 
 import { Input } from "@/components/ui/input";
-import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { UseFormReturn } from "react-hook-form";
 import { CollaboratorFormData } from "./types";
 
@@ -29,6 +29,7 @@ export const CollaboratorInfoStep = ({ form }: CollaboratorInfoStepProps) => {
                     placeholder="First Name"
                   />
                 </FormControl>
+                <FormMessage className="text-red-400 text-xs mt-1" />
               </FormItem>
             )}
           />
@@ -46,6 +47,7 @@ export const CollaboratorInfoStep = ({ form }: CollaboratorInfoStepProps) => {
                     placeholder="Last Name"
                   />
                 </FormControl>
+                <FormMessage className="text-red-400 text-xs mt-1" />
               </FormItem>
             )}
           />
@@ -65,6 +67,7 @@ export const CollaboratorInfoStep = ({ form }: CollaboratorInfoStepProps) => {
                   placeholder="Email"
                 />
               </FormControl>
+              <FormMessage className="text-red-400 text-xs mt-1" />
             </FormItem>
           )}
         />

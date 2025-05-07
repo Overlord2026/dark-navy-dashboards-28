@@ -6,6 +6,27 @@ import { z } from 'zod';
 import { useToast } from '@/hooks/use-toast';
 import { CollaboratorFormData, Collaborator } from '@/components/sharing/types';
 
+// Step-specific schemas
+const infoStepSchema = z.object({
+  firstName: z.string().min(1, "First name is required"),
+  lastName: z.string().min(1, "Last name is required"),
+  email: z.string().email("Invalid email address"),
+  // These fields will be validated in the next step
+  role: z.string().optional(),
+  collaboratorType: z.string().optional(),
+  accessLevel: z.enum(["full", "limited"]).optional(),
+});
+
+const accessStepSchema = z.object({
+  firstName: z.string(),
+  lastName: z.string(),
+  email: z.string().email(),
+  role: z.string().min(1, "Role is required"),
+  collaboratorType: z.string().min(1, "Collaborator type is required"),
+  accessLevel: z.enum(["full", "limited"]),
+});
+
+// Complete schema for the final submission
 const formSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
   lastName: z.string().min(1, "Last name is required"),
@@ -22,7 +43,7 @@ export const useCollaboratorForm = (
   const [addStep, setAddStep] = useState<"info" | "access">("info");
   
   const form = useForm<CollaboratorFormData>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(addStep === "info" ? infoStepSchema : accessStepSchema),
     defaultValues: {
       firstName: "",
       lastName: "",
@@ -54,12 +75,30 @@ export const useCollaboratorForm = (
     setAddStep("info");
   };
 
-  const onSubmit = (data: CollaboratorFormData) => {
+  const onSubmit = async (data: CollaboratorFormData) => {
     if (addStep === "info") {
-      setAddStep("access");
+      // Validate first step fields only
+      try {
+        await infoStepSchema.parseAsync(data);
+        setAddStep("access");
+      } catch (error) {
+        console.error("Validation error in info step:", error);
+      }
       return;
     }
-    handleAddCollaborator(data);
+
+    // For the access step, validate the complete form
+    try {
+      await formSchema.parseAsync(data);
+      handleAddCollaborator(data);
+    } catch (error) {
+      console.error("Validation error in access step:", error);
+      toast({
+        title: "Validation Error",
+        description: "Please check all required fields.",
+        variant: "destructive",
+      });
+    }
   };
 
   return {
@@ -69,4 +108,3 @@ export const useCollaboratorForm = (
     onSubmit,
   };
 };
-
