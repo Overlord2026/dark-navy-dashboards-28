@@ -1,7 +1,6 @@
 
 import React from "react";
-import { useNetWorth } from "@/context/NetWorthContext";
-import { Asset } from "@/types/assets";
+import { useNetWorth, Asset } from "@/context/NetWorthContext";
 import { 
   Dialog, 
   DialogContent, 

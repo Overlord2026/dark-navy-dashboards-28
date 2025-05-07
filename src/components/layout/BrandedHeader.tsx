@@ -12,11 +12,7 @@ export const BrandedHeader: React.FC<BrandedHeaderProps> = ({ isConnected = fals
       <div className="flex items-center justify-center py-3 relative w-full px-4">
         <div className="flex flex-col items-center">
           <div className="flex items-center">
-            <img 
-              src="/lovable-uploads/a156237c-d58c-4c66-aaf4-1dfbe4e6f3c8.png" 
-              alt="Boutique Family Office Logo" 
-              className="h-10 max-w-[260px] object-contain"
-            />
+            <span className="text-white text-xl font-semibold">BOUTIQUE FAMILY OFFICE</span>
             {isConnected && (
               <Badge className="ml-2 bg-[#FFC700] text-[#0F1E3A] font-medium">Connected</Badge>
             )}

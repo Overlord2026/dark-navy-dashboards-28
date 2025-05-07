@@ -1,52 +1,49 @@
 
-import { Property } from './property';
-
-export type AssetType = 'cash' | 'investment' | 'retirement' | 'property' | 'vehicle' | 'boat' | 'art' | 'digital' | 'other' | 'antique' | 'jewelry' | 'collectible';
-export type AccountType = 'banking' | 'investment' | 'retirement' | 'managed' | 'other' | 'manual' | 'loan';
-
-export interface AssetDetails {
-  [key: string]: any;
-  description?: string;
-}
-
+// Define the assets structure
 export interface Asset {
   id: string;
   name: string;
-  type: AssetType;
+  type: 'property' | 'investment' | 'cash' | 'retirement' | 'vehicle' | 'boat' | 'collectible' | 'digital' | 'art' | 'antique' | 'jewelry' | 'other';
   value: number;
   owner: string;
   lastUpdated: string;
-  details?: AssetDetails;
-  sourceId?: string;
-  source?: string;
+  sourceId?: string; // Reference to the source object (like property.id)
+  source?: 'zillow' | 'manual' | 'other'; // Where the valuation came from
+  details?: {
+    year?: string;
+    make?: string;
+    model?: string;
+    description?: string;
+    location?: string;
+    insuredValue?: number;
+    purchaseDate?: string;
+    condition?: string;
+    imageUrl?: string;
+  };
 }
 
+// Define account structure for mobile accounts page
 export interface Account {
   id: string;
   name: string;
-  type: AccountType;
+  type: 'managed' | 'investment' | 'manual' | 'loan' | 'banking';
   value: number;
-  institution: string;
+  institution?: string;
+  lastUpdated?: string;
 }
 
-export interface NetWorthContextType {
-  assets: Asset[];
-  accounts: Account[];
-  calculateTotalNetWorth: () => number;
-  calculateTotalAssetsByType: (type: AssetType) => number;
-  syncPropertiesToAssets: (properties: Property[]) => void;
-  
-  // Adding missing methods/properties to fix TypeScript errors
-  addAsset: (asset: Asset) => void;
-  removeAsset: (id: string) => void;
-  updateAsset: (id: string, updates: Partial<Asset>) => void;
-  getTotalNetWorth: () => number;
-  getTotalAssetsByType: (type: AssetType) => number;
-  getAssetsByCategory: (category: string) => Asset[];
-  getAssetsByOwner: (owner: string) => Asset[];
-  totalAssetValue: number;
-  totalLiabilityValue: number;
+export interface Property {
+  id: string;
+  name: string;
+  address?: string;
+  owner: string;
+  currentValue: number;
+  valuation?: {
+    lastUpdated: string;
+    source?: string;
+  };
+  purchaseInfo?: {
+    date: string;
+    price: number;
+  };
 }
-
-// Fix for TS1205: Use export type for re-exporting types with isolatedModules
-export type { Property } from './property';

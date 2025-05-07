@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { useNetWorth } from "@/context/NetWorthContext";
-import { Asset } from "@/types/assets";
+import { useNetWorth, Asset } from "@/context/NetWorthContext";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { 

@@ -1,79 +1,173 @@
-
-import React from "react";
-import {
-  Home,
-  BarChart3,
-  BookOpen,
-  Settings,
-  Users,
+import React from 'react';
+import { 
+  LayoutDashboard, 
+  CreditCard, 
+  FileLineChart, 
   FileText,
-  Banknote,
+  BookOpen,
   Building2,
-  Heart,
-  FileStack,
-  ShieldCheck,
-  Network
-} from "lucide-react";
+  MessageCircle,
+  Settings,
+  User,
+  VaultIcon,
+  BriefcaseIcon,
+  Shield,
+  Brain,
+  Users2,
+  Share2,
+  BanknoteIcon
+} from 'lucide-react';
 
-export const navigationConfig = [
+export const navSections = [
   {
-    id: "home",
-    label: "Dashboard",
-    href: "/",
-    icon: Home,
-    items: []
-  },
-  {
-    id: "wealth",
-    label: "Wealth",
-    icon: Banknote,
+    id: 'main',
+    label: 'Main',
+    icon: LayoutDashboard,
     items: [
-      { label: "Accounts", href: "/accounts", icon: <BarChart3 size={16} /> },
-      { label: "Investments", href: "/investments", icon: <BarChart3 size={16} /> },
-      { label: "Properties", href: "/properties", icon: <Building2 size={16} /> },
-    ]
+      {
+        id: 'dashboard',
+        label: 'Dashboard',
+        href: '/',
+        icon: <LayoutDashboard className="h-4 w-4" />,
+      },
+    ],
   },
   {
-    id: "planning",
-    label: "Planning",
-    icon: FileText,
+    id: 'wealth',
+    label: 'Wealth Management',
+    icon: BriefcaseIcon,
     items: [
-      { label: "Financial Plans", href: "/financial-plans", icon: <BarChart3 size={16} /> },
-      { label: "Estate", href: "/estate-planning", icon: <FileText size={16} /> },
-      { label: "Tax", href: "/tax-planning", icon: <FileStack size={16} /> },
-      { label: "Insurance", href: "/insurance", icon: <ShieldCheck size={16} /> },
-      { label: "Healthcare", href: "/healthcare", icon: <Heart size={16} /> }
-    ]
+      {
+        id: 'accounts',
+        label: 'Accounts',
+        href: '/accounts',
+        icon: <CreditCard className="h-4 w-4" />,
+      },
+      {
+        id: 'vault',
+        label: 'Family Vault',
+        href: '/legacy-vault',
+        icon: <VaultIcon className="h-4 w-4" />,
+      },
+      {
+        id: 'investments',
+        label: 'Investments',
+        href: '/investments',
+        icon: <BriefcaseIcon className="h-4 w-4" />,
+      },
+    ],
   },
   {
-    id: "collaboration",
-    label: "Collaboration",
-    href: "/professionals",
-    icon: Users,
-    items: []
+    id: 'planning',
+    label: 'Planning',
+    icon: FileLineChart,
+    items: [
+      {
+        id: 'financial-plans',
+        label: 'Financial Plans',
+        href: '/financial-plans',
+        icon: <FileLineChart className="h-4 w-4" />,
+      },
+      {
+        id: 'tax-planning',
+        label: 'Tax Planning',
+        href: '/tax-planning',
+        icon: <FileText className="h-4 w-4" />,
+      },
+      {
+        id: 'estate-planning',
+        label: 'Estate Planning',
+        href: '/estate-planning',
+        icon: <Building2 className="h-4 w-4" />,
+      },
+      {
+        id: 'insurance',
+        label: 'Insurance',
+        href: '/insurance',
+        icon: <Shield className="h-4 w-4" />,
+      },
+      {
+        id: 'lending',
+        label: 'Lending',
+        href: '/lending',
+        icon: <BanknoteIcon className="h-4 w-4" />,
+      },
+    ],
   },
   {
-    id: "integration",
-    label: "Project Integration",
-    href: "/integration",
-    icon: Network,
-    items: []
-  },
-  {
-    id: "education",
-    label: "Education",
-    href: "/education",
+    id: 'education',
+    label: 'Education',
     icon: BookOpen,
-    items: []
+    items: [
+      {
+        id: 'education-center',
+        label: 'Education Center',
+        href: '/education',
+        icon: <BookOpen className="h-4 w-4" />,
+      },
+    ],
   },
   {
-    id: "settings",
-    label: "Settings",
-    href: "/settings",
-    icon: Settings,
-    items: []
-  }
+    id: 'collaboration',
+    label: 'Collaboration',
+    icon: MessageCircle,
+    items: [
+      {
+        id: 'family-collaboration',
+        label: 'Family Collaboration',
+        href: '/sharing',
+        icon: <Share2 className="h-4 w-4" />,
+      },
+      {
+        id: 'professional-collaboration',
+        label: 'Professional Collaboration',
+        href: '/professionals',
+        icon: <Users2 className="h-4 w-4" />,
+      },
+    ],
+  },
+  {
+    id: 'support',
+    label: 'Support',
+    icon: MessageCircle,
+    items: [
+      {
+        id: 'ai-insights',
+        label: 'AI Insights',
+        href: '/ai-insights',
+        icon: <Brain className="h-4 w-4" />,
+      },
+      {
+        id: 'help',
+        label: 'Help & Support',
+        href: '/help',
+        icon: <MessageCircle className="h-4 w-4" />,
+      },
+    ],
+  },
+  {
+    id: 'account',
+    label: 'Account',
+    icon: User,
+    items: [
+      {
+        id: 'profile',
+        label: 'Profile',
+        href: '/profile',
+        icon: <User className="h-4 w-4" />,
+      },
+      {
+        id: 'security',
+        label: 'Security',
+        href: '/security-settings',
+        icon: <Shield className="h-4 w-4" />,
+      },
+      {
+        id: 'settings',
+        label: 'Settings',
+        href: '/settings',
+        icon: <Settings className="h-4 w-4" />,
+      },
+    ],
+  },
 ];
-
-// Export the navigationConfig as navSections to match the import in Sidebar.tsx
-export const navSections = navigationConfig;
