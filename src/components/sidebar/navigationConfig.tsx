@@ -16,7 +16,8 @@ import {
   Users2,
   Share2,
   BanknoteIcon,
-  Home
+  Home,
+  Receipt
 } from 'lucide-react';
 
 export const navSections = [
@@ -61,6 +62,12 @@ export const navSections = [
         label: 'Properties',
         href: '/properties',
         icon: <Home className="h-4 w-4" />,
+      },
+      {
+        id: 'billpay',
+        label: 'Bill Pay',
+        href: '/billpay',
+        icon: <Receipt className="h-4 w-4" />,
       },
     ],
   },
