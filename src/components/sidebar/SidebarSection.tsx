@@ -4,11 +4,13 @@ import { Link } from "react-router-dom";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { LucideIcon } from "lucide-react";
+import { useRoleCheck } from "@/hooks/useRoleCheck";
 
 interface NavItem {
   label: string;
   href: string;
   icon: React.ReactNode;
+  requireRoles?: string[];
 }
 
 interface NavSection {
@@ -17,6 +19,7 @@ interface NavSection {
   icon: LucideIcon;
   href?: string;
   items?: NavItem[];
+  requireRoles?: string[];
 }
 
 interface SidebarSectionProps {
@@ -34,6 +37,19 @@ export const SidebarSection: React.FC<SidebarSectionProps> = ({
   isCollapsed,
   currentPath
 }) => {
+  const { hasRole } = useRoleCheck();
+  
+  // Check if the section has role requirements
+  if (section.requireRoles && section.requireRoles.length > 0) {
+    // Check if the user has any of the required roles
+    const hasRequiredRole = section.requireRoles.some(role => hasRole(role));
+    
+    // If the user doesn't have any of the required roles, don't display this section
+    if (!hasRequiredRole) {
+      return null;
+    }
+  }
+  
   const isActive = (path: string): boolean => {
     // Check for direct route match
     if (path === currentPath) return true;
@@ -76,7 +92,13 @@ export const SidebarSection: React.FC<SidebarSectionProps> = ({
         </div>
         {isOpen && section.items && (
           <div className="space-y-1">
-            {section.items.map((item) => (
+            {section.items.filter(item => {
+              // Filter items based on role requirements
+              if (item.requireRoles && item.requireRoles.length > 0) {
+                return item.requireRoles.some(role => hasRole(role));
+              }
+              return true;
+            }).map((item) => (
               <Link
                 key={item.label}
                 to={item.href}
@@ -114,7 +136,13 @@ export const SidebarSection: React.FC<SidebarSectionProps> = ({
       
       {isOpen && section.items && (
         <div className="mt-1 ml-6 space-y-1">
-          {section.items.map((item) => (
+          {section.items.filter(item => {
+            // Filter items based on role requirements
+            if (item.requireRoles && item.requireRoles.length > 0) {
+              return item.requireRoles.some(role => hasRole(role));
+            }
+            return true;
+          }).map((item) => (
             <Link
               key={item.label}
               to={item.href}
