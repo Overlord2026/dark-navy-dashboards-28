@@ -75,3 +75,5 @@ export const navigationConfig = [
   }
 ];
 
+// Export the navigationConfig as navSections to match the import in Sidebar.tsx
+export const navSections = navigationConfig;
