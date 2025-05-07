@@ -1,14 +1,11 @@
-
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { CalendarClock } from "lucide-react";
-
 export function FreeTrialCallout() {
-  return (
-    <div className="mb-8 p-6 bg-[#162B4D] border border-[#2A3E5C] rounded-lg shadow-md">
+  return <div className="mb-8 p-6 bg-[#162B4D] border border-[#2A3E5C] rounded-lg shadow-md">
       <div className="flex flex-col md:flex-row items-center justify-between">
         <div>
-          <h2 className="text-xl font-semibold mb-2 text-[#FFC700]">Advisor Premium Access</h2>
+          <h2 className="text-xl font-semibold mb-2 text-[#FFC700]">BFO Premium Access</h2>
           <p className="text-white mb-4 md:mb-0 max-w-lg">
             Upgrade to unlock advanced features, custom branding, and unlimited client access.
           </p>
@@ -23,6 +20,5 @@ export function FreeTrialCallout() {
           </Button>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 }
