@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { 
   LayoutDashboard, 
@@ -15,7 +14,8 @@ import {
   Shield,
   Brain,
   Users2,
-  Share2
+  Share2,
+  BanknoteIcon
 } from 'lucide-react';
 
 export const navSections = [
