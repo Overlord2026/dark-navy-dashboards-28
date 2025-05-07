@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { CheckCircle, Upload, Info, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -129,11 +128,11 @@ export const DocumentChecklist: React.FC<DocumentChecklistProps> = ({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 w-full">
       {documentGroups.map((group) => (
         <div 
           key={group.id} 
-          className="bg-[#1A1F2C] border border-red-900/30 rounded-xl overflow-hidden shadow-lg"
+          className="bg-[#1A1F2C] border border-red-900/30 rounded-xl overflow-hidden shadow-lg w-full"
         >
           <div
             className="flex items-center justify-between p-5 bg-red-900/20 cursor-pointer hover:bg-red-900/30 transition-colors"
@@ -150,7 +149,7 @@ export const DocumentChecklist: React.FC<DocumentChecklistProps> = ({
           </div>
 
           {expandedGroups.includes(group.id) && (
-            <div className="divide-y divide-red-900/30">
+            <div className="divide-y divide-red-900/30 w-full">
               {group.items.map((item) => {
                 const status = getDocumentStatus(item.id);
                 const date = getDocumentDate(item.id);

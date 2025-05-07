@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -122,7 +123,7 @@ export const AdvancedTaxStrategies: React.FC = () => {
   };
 
   return (
-    <Card className="shadow-lg">
+    <Card className="shadow-lg w-full">
       <CardHeader className="bg-muted/30">
         <CardTitle className="flex items-center gap-2">
           <Lightbulb className="h-5 w-5 text-amber-500" />
