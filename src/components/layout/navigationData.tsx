@@ -1,6 +1,5 @@
-
 import React from "react";
-import { Home, DollarSign, BookOpen, Settings, Users, Share2, GraduationCap, Gauge, Heart, FileText, Puzzle } from "lucide-react";
+import { Home, DollarSign, BookOpen, Settings, Users, Share2, GraduationCap, Gauge, Heart, FileText } from "lucide-react";
 
 export const navigationData = [
   {
@@ -15,11 +14,6 @@ export const navigationData = [
         name: "Accounts",
         icon: <DollarSign className="h-5 w-5" />,
         path: "/accounts",
-      },
-      {
-        name: "Project Integration",
-        icon: <Puzzle className="h-5 w-5" />,
-        path: "/integration",
       },
     ],
   },

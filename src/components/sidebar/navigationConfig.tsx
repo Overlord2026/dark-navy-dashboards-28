@@ -17,11 +17,7 @@ import {
   Share2,
   BanknoteIcon,
   Home,
-  Receipt,
-  Blocks,
-  Network,
-  Code,
-  PuzzleIcon
+  Receipt
 } from 'lucide-react';
 
 export const navSections = [
@@ -112,19 +108,7 @@ export const navSections = [
       },
     ],
   },
-  {
-    id: 'integration',
-    label: 'Integration',
-    icon: Blocks,
-    items: [
-      {
-        id: 'project-integration',
-        label: 'Project Integration',
-        href: '/integration',
-        icon: <Blocks className="h-4 w-4" />,
-      },
-    ],
-  },
+  // Integration section removed
   {
     id: 'education',
     label: 'Education',

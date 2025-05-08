@@ -44,7 +44,7 @@ export const ThreeColumnLayout: React.FC<ThreeColumnLayoutProps> = ({
 
   return (
     <div className={cn("flex flex-col h-screen", className)}>
-      <BrandedHeader isConnected={activeMainItem === "integration"} />
+      <BrandedHeader isConnected={false} />
 
       <div className="flex flex-1 overflow-hidden pt-16">
         {renderSidebar()}

@@ -1,10 +1,9 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Settings, ChevronRight, Gauge, BarChart, Network } from "lucide-react";
+import { Settings, ChevronRight, Gauge, BarChart } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useUser } from "@/context/UserContext";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 export function AdminActions() {
   const { userProfile } = useUser();
@@ -27,23 +26,7 @@ export function AdminActions() {
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          {/* Integration Status - For admins only */}
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link to="/integration" className="flex items-center justify-between w-full p-2 rounded-md bg-yellow-400 text-white font-semibold hover:bg-yellow-500 transition-colors">
-                  <div className="flex items-center">
-                    <Network className="h-4 w-4 mr-2" />
-                    <span>Connected</span>
-                  </div>
-                  <ChevronRight className="h-4 w-4" />
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Part of Family Office Architecture</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+          {/* Integration Status removed */}
           
           <Button variant="outline" className="w-full justify-between" asChild>
             <Link to="/system-health">
