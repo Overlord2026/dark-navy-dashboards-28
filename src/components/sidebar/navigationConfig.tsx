@@ -21,7 +21,7 @@ import {
   Blocks,
   Network,
   Code,
-  Plugins
+  PuzzleIcon
 } from 'lucide-react';
 
 export const navSections = [

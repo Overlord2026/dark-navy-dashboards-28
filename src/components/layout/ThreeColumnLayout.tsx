@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Sidebar } from "./Sidebar";
-import { DashboardHeader } from "./DashboardHeader";
+import DashboardHeader from "./DashboardHeader";
 import { BrandedHeader } from "./BrandedHeader";
 import { cn } from "@/lib/utils";
 
