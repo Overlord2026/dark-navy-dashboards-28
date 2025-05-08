@@ -1,36 +1,34 @@
 
-import React from "react";
+import React, { useState } from "react";
+import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { DashboardHeader } from "@/components/ui/DashboardHeader";
 import { ConnectedProjectsTab } from "@/components/integration/ConnectedProjectsTab";
 import { ArchitectureTab } from "@/components/integration/ArchitectureTab";
 import { ApiIntegrationsTab } from "@/components/integration/ApiIntegrationsTab";
 import { PluginsTab } from "@/components/integration/PluginsTab";
-import { RoleBasedAccess } from "@/components/auth/RoleBasedAccess";
-import { useLocation } from "react-router-dom";
-import { Network } from "lucide-react";
+import { SupabaseRequiredNotice } from "@/components/integration/SupabaseRequiredNotice";
 
-export default function Integration() {
-  const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
-  const defaultTab = searchParams.get('segment') || 'projects';
+const Integration = () => {
+  const [activeTab, setActiveTab] = useState("projects");
   
   return (
-    <RoleBasedAccess allowedRoles={['admin', 'advisor']}>
-      <div className="container mx-auto py-8">
-        <div className="mb-6 flex items-center gap-3">
-          <div className="rounded-full bg-green-100 p-2">
-            <Network className="h-5 w-5 text-green-600" />
-          </div>
-          <div>
-            <h1 className="text-3xl font-bold">Project Integration</h1>
-            <p className="text-muted-foreground">
-              Connect and manage services within the Family Office ecosystem
-            </p>
-          </div>
-        </div>
+    <ThreeColumnLayout title="Project Integration">
+      <div className="container mx-auto px-4 py-6">
+        <DashboardHeader 
+          heading="Project Integration" 
+          text="Connect your application to our marketplace and enable powerful integrations."
+        />
         
-        <Tabs defaultValue={defaultTab} className="w-full">
-          <TabsList className="mb-4">
+        <SupabaseRequiredNotice />
+        
+        <Tabs 
+          defaultValue="projects" 
+          value={activeTab}
+          onValueChange={setActiveTab}
+          className="w-full"
+        >
+          <TabsList className="grid grid-cols-4 mb-8">
             <TabsTrigger value="projects">Connected Projects</TabsTrigger>
             <TabsTrigger value="architecture">Architecture</TabsTrigger>
             <TabsTrigger value="api">API Integrations</TabsTrigger>
@@ -54,6 +52,8 @@ export default function Integration() {
           </TabsContent>
         </Tabs>
       </div>
-    </RoleBasedAccess>
+    </ThreeColumnLayout>
   );
-}
+};
+
+export default Integration;

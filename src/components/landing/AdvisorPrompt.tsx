@@ -1,28 +1,21 @@
 
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { CalendarClock } from 'lucide-react';
-import { toast } from 'sonner';
 
 interface AdvisorPromptProps {
   isMobile: boolean;
 }
 
 export const AdvisorPrompt: React.FC<AdvisorPromptProps> = ({ isMobile }) => {
-  const handleScheduleDemo = () => {
-    window.open("https://calendly.com/tonygomes/60min", "_blank");
-    toast.success("Opening scheduling page", {
-      description: "Schedule a meeting to discuss our services with an advisor.",
-    });
-  };
+  const navigate = useNavigate();
 
   return (
     <Button 
-      onClick={handleScheduleDemo}
-      className={`bg-white hover:bg-gray-200 text-[#0A1F44] flex items-center gap-2`}
+      className="bg-[#FFC700] text-[#0F1E3A] hover:bg-[#E0B000] font-medium"
+      onClick={() => navigate('/advisor')}
     >
-      <CalendarClock className="h-4 w-4" />
-      Schedule a Demo
+      Access Advisor Portal
     </Button>
   );
-};
+}

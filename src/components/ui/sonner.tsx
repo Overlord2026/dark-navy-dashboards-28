@@ -22,7 +22,7 @@ export function Toaster({ ...props }: ToasterProps) {
             "group-[.toast]:bg-muted group-[.toast]:text-muted-foreground",
         },
       }}
-      // Allow our schedule meeting toast through filter
+      // Ultra-aggressive filtering to prevent any ghost toasts
       filter={(toast) => {
         if (!toast) return false; // Block empty toasts
         
@@ -30,12 +30,12 @@ export function Toaster({ ...props }: ToasterProps) {
         const titleText = (toast.title?.toString() || '').toLowerCase();
         const descriptionText = (toast.description?.toString() || '').toLowerCase();
         
-        // Allow our calendly toast and other important toasts
+        // Only allow very specific toasts related to critical user actions
+        // Whitelist approach instead of blacklist
         const allowedPatterns = [
           "error loading financial plans",
           "unknown error creating plan",
-          "you don't have permission",
-          "opening scheduling page" // Add this to allow our new toast
+          "you don't have permission"
         ];
         
         // Only allow toasts that match our whitelist

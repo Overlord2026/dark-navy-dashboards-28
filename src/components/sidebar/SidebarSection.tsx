@@ -1,10 +1,23 @@
 
 import React from "react";
-import { useLocation } from "react-router-dom";
-import { cn } from "@/lib/utils";
-import { useRoleCheck } from "@/hooks/useRoleCheck";
-import { NavItem, NavSection } from "./navigationConfig";
+import { Link } from "react-router-dom";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { LucideIcon } from "lucide-react";
+
+interface NavItem {
+  label: string;
+  href: string;
+  icon: React.ReactNode;
+}
+
+interface NavSection {
+  id: string;
+  label: string;
+  icon: LucideIcon;
+  href?: string;
+  items?: NavItem[];
+}
 
 interface SidebarSectionProps {
   section: NavSection;
@@ -21,19 +34,6 @@ export const SidebarSection: React.FC<SidebarSectionProps> = ({
   isCollapsed,
   currentPath
 }) => {
-  const { hasRole } = useRoleCheck();
-  
-  // Check if the section has role requirements
-  if (section.requireRoles && section.requireRoles.length > 0) {
-    // Check if the user has any of the required roles
-    const hasRequiredRole = section.requireRoles.some(role => hasRole(role));
-    
-    // If the user doesn't have any of the required roles, don't display this section
-    if (!hasRequiredRole) {
-      return null;
-    }
-  }
-  
   const isActive = (path: string): boolean => {
     // Check for direct route match
     if (path === currentPath) return true;
@@ -48,23 +48,22 @@ export const SidebarSection: React.FC<SidebarSectionProps> = ({
     return false;
   };
 
-  // Create icon component instance
   const SectionIcon = section.icon;
 
   if (section.href) {
     // Single link section (like Collaboration)
     return (
-      <a
-        href={section.href}
+      <Link
+        to={section.href}
         className={cn(
           "flex items-center gap-2 p-2 rounded-md hover:bg-muted transition-colors",
           currentPath === section.href && "bg-muted font-medium",
           isCollapsed && "justify-center"
         )}
       >
-        {section.icon && <SectionIcon className={isCollapsed ? "h-5 w-5" : "h-5 w-5"} />}
+        {section.icon && <SectionIcon size={18} />}
         {!isCollapsed && <span>{section.label}</span>}
-      </a>
+      </Link>
     );
   }
 
@@ -73,31 +72,22 @@ export const SidebarSection: React.FC<SidebarSectionProps> = ({
     return (
       <div className="mb-3">
         <div className="flex justify-center p-2">
-          <SectionIcon className="h-5 w-5" />
+          {<SectionIcon size={18} />}
         </div>
         {isOpen && section.items && (
           <div className="space-y-1">
-            {section.items.filter(item => {
-              // Filter items based on role requirements
-              if (item.requireRoles && item.requireRoles.length > 0) {
-                return item.requireRoles.some(role => hasRole(role));
-              }
-              return true;
-            }).map((item) => {
-              const ItemIcon = item.icon;
-              return (
-                <a
-                  key={item.label}
-                  href={item.href}
-                  className={cn(
-                    "flex justify-center p-2 rounded-md hover:bg-muted transition-colors",
-                    isActive(item.href) && "bg-muted"
-                  )}
-                >
-                  <ItemIcon className="h-4 w-4" />
-                </a>
-              );
-            })}
+            {section.items.map((item) => (
+              <Link
+                key={item.label}
+                to={item.href}
+                className={cn(
+                  "flex justify-center p-2 rounded-md hover:bg-muted transition-colors",
+                  isActive(item.href) && "bg-muted"
+                )}
+              >
+                {item.icon}
+              </Link>
+            ))}
           </div>
         )}
       </div>
@@ -112,7 +102,7 @@ export const SidebarSection: React.FC<SidebarSectionProps> = ({
         onClick={() => toggleSection(section.id)}
       >
         <div className="flex items-center gap-2">
-          <SectionIcon className="h-5 w-5" />
+          {<SectionIcon size={18} />}
           <span>{section.label}</span>
         </div>
         {isOpen ? (
@@ -124,32 +114,21 @@ export const SidebarSection: React.FC<SidebarSectionProps> = ({
       
       {isOpen && section.items && (
         <div className="mt-1 ml-6 space-y-1">
-          {section.items.filter(item => {
-            // Filter items based on role requirements
-            if (item.requireRoles && item.requireRoles.length > 0) {
-              return item.requireRoles.some(role => hasRole(role));
-            }
-            return true;
-          }).map((item) => {
-            const ItemIcon = item.icon;
-            return (
-              <a
-                key={item.label}
-                href={item.href}
-                className={cn(
-                  "flex items-center gap-2 p-2 rounded-md text-sm hover:bg-muted transition-colors",
-                  isActive(item.href) && "bg-muted font-medium"
-                )}
-              >
-                <ItemIcon className="h-4 w-4" />
-                <span>{item.label}</span>
-              </a>
-            );
-          })}
+          {section.items.map((item) => (
+            <Link
+              key={item.label}
+              to={item.href}
+              className={cn(
+                "flex items-center gap-2 p-2 rounded-md text-sm hover:bg-muted transition-colors",
+                isActive(item.href) && "bg-muted font-medium"
+              )}
+            >
+              {item.icon}
+              <span>{item.label}</span>
+            </Link>
+          ))}
         </div>
       )}
     </div>
   );
 };
-
-export default SidebarSection;

@@ -1,78 +1,187 @@
-
 import React from 'react';
 import { 
   LayoutDashboard, 
-  BookOpen, 
-  FileText, 
-  Users,
-  Network
-} from "lucide-react";
-import { LucideIcon } from "lucide-react";
+  CreditCard, 
+  FileLineChart, 
+  FileText,
+  BookOpen,
+  Building2,
+  MessageCircle,
+  Settings,
+  User,
+  VaultIcon,
+  BriefcaseIcon,
+  Shield,
+  Brain,
+  Users2,
+  Share2,
+  BanknoteIcon,
+  Home,
+  Receipt
+} from 'lucide-react';
 
-export interface NavItem {
-  label: string;
-  href: string;
-  icon: LucideIcon;
-  requireRoles?: string[];
-}
-
-export interface NavSection {
-  id: string;
-  label: string;
-  icon: LucideIcon;
-  href?: string;
-  items?: NavItem[];
-  requireRoles?: string[];
-}
-
-export const navSections: NavSection[] = [
+export const navSections = [
   {
-    id: "dashboard",
-    label: "Dashboard",
+    id: 'main',
+    label: 'Main',
     icon: LayoutDashboard,
-    href: "/"
+    items: [
+      {
+        id: 'dashboard',
+        label: 'Dashboard',
+        href: '/',
+        icon: <LayoutDashboard className="h-4 w-4" />,
+      },
+    ],
   },
   {
-    id: "education",
-    label: "Education & Solutions",
+    id: 'wealth',
+    label: 'Wealth Management',
+    icon: BriefcaseIcon,
+    items: [
+      {
+        id: 'accounts',
+        label: 'Accounts',
+        href: '/accounts',
+        icon: <CreditCard className="h-4 w-4" />,
+      },
+      {
+        id: 'vault',
+        label: 'Family Vault',
+        href: '/legacy-vault',
+        icon: <VaultIcon className="h-4 w-4" />,
+      },
+      {
+        id: 'investments',
+        label: 'Investments',
+        href: '/investments',
+        icon: <BriefcaseIcon className="h-4 w-4" />,
+      },
+      {
+        id: 'properties',
+        label: 'Properties',
+        href: '/properties',
+        icon: <Home className="h-4 w-4" />,
+      },
+      {
+        id: 'billpay',
+        label: 'Bill Pay',
+        href: '/billpay',
+        icon: <Receipt className="h-4 w-4" />,
+      },
+    ],
+  },
+  {
+    id: 'planning',
+    label: 'Planning',
+    icon: FileLineChart,
+    items: [
+      {
+        id: 'financial-plans',
+        label: 'Financial Plans',
+        href: '/financial-plans',
+        icon: <FileLineChart className="h-4 w-4" />,
+      },
+      {
+        id: 'tax-planning',
+        label: 'Tax Planning',
+        href: '/tax-planning',
+        icon: <FileText className="h-4 w-4" />,
+      },
+      {
+        id: 'estate-planning',
+        label: 'Estate Planning',
+        href: '/estate-planning',
+        icon: <Building2 className="h-4 w-4" />,
+      },
+      {
+        id: 'insurance',
+        label: 'Insurance',
+        href: '/insurance',
+        icon: <Shield className="h-4 w-4" />,
+      },
+      {
+        id: 'lending',
+        label: 'Lending',
+        href: '/lending',
+        icon: <BanknoteIcon className="h-4 w-4" />,
+      },
+    ],
+  },
+  {
+    id: 'education',
+    label: 'Education',
     icon: BookOpen,
     items: [
-      { label: "Education Center", href: "/education", icon: BookOpen },
-      { label: "Courses", href: "/courses", icon: BookOpen },
-      { label: "Guides", href: "/guides", icon: FileText }
-    ]
+      {
+        id: 'education-center',
+        label: 'Education Center',
+        href: '/education',
+        icon: <BookOpen className="h-4 w-4" />,
+      },
+    ],
   },
   {
-    id: "planning",
-    label: "Planning & Services",
-    icon: FileText,
+    id: 'collaboration',
+    label: 'Collaboration',
+    icon: MessageCircle,
     items: [
-      { label: "Financial Plans", href: "/financial-plans", icon: FileText },
-      { label: "Tax Planning", href: "/tax-planning", icon: FileText },
-      { label: "Estate Planning", href: "/estate-planning", icon: FileText }
-    ]
+      {
+        id: 'family-collaboration',
+        label: 'Family Collaboration',
+        href: '/sharing',
+        icon: <Share2 className="h-4 w-4" />,
+      },
+      {
+        id: 'professional-collaboration',
+        label: 'Professional Collaboration',
+        href: '/professionals',
+        icon: <Users2 className="h-4 w-4" />,
+      },
+    ],
   },
   {
-    id: "wealth",
-    label: "Wealth Management",
-    icon: FileText,
+    id: 'support',
+    label: 'Support',
+    icon: MessageCircle,
     items: [
-      { label: "Accounts", href: "/accounts", icon: FileText },
-      { label: "Investments", href: "/investments", icon: FileText },
-      { label: "Properties", href: "/properties", icon: FileText }
-    ]
+      {
+        id: 'ai-insights',
+        label: 'AI Insights',
+        href: '/ai-insights',
+        icon: <Brain className="h-4 w-4" />,
+      },
+      {
+        id: 'help',
+        label: 'Help & Support',
+        href: '/help',
+        icon: <MessageCircle className="h-4 w-4" />,
+      },
+    ],
   },
   {
-    id: "collaboration",
-    label: "Collaboration",
-    icon: Users,
-    href: "/sharing"
+    id: 'account',
+    label: 'Account',
+    icon: User,
+    items: [
+      {
+        id: 'profile',
+        label: 'Profile',
+        href: '/profile',
+        icon: <User className="h-4 w-4" />,
+      },
+      {
+        id: 'security',
+        label: 'Security',
+        href: '/security-settings',
+        icon: <Shield className="h-4 w-4" />,
+      },
+      {
+        id: 'settings',
+        label: 'Settings',
+        href: '/settings',
+        icon: <Settings className="h-4 w-4" />,
+      },
+    ],
   },
-  {
-    id: "integration",
-    label: "Project Integration",
-    icon: Network,
-    href: "/integration",
-    requireRoles: ["admin", "advisor"] // This section requires admin or advisor role
-  }
 ];

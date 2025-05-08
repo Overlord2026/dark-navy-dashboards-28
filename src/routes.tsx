@@ -7,7 +7,6 @@ import { settingsRoutes } from "./routes/settings-routes";
 import { collaborationRoutes } from "./routes/collaboration-routes";
 import { integrationRoutes } from "./routes/integration-routes";
 import NotFound from "./pages/NotFound";
-import Unauthorized from "./pages/Unauthorized";
 
 const routes = createBrowserRouter([
   ...dashboardRoutes,
@@ -16,10 +15,6 @@ const routes = createBrowserRouter([
   ...settingsRoutes,
   ...collaborationRoutes,
   ...integrationRoutes,
-  {
-    path: "/unauthorized",
-    element: <Unauthorized />
-  },
   {
     path: "*",
     element: <NotFound />
