@@ -11,13 +11,14 @@ import {
 export interface NavItem {
   label: string;
   href: string;
-  icon: React.ComponentType<{ className?: string }>;
+  icon: React.ComponentType<{ className?: string; size?: number }>;
+  requireRoles?: string[];
 }
 
 export interface NavSection {
   id: string;
   label: string;
-  icon: React.ComponentType<{ className?: string }>;
+  icon: React.ComponentType<{ className?: string; size?: number }>;
   href?: string;
   items?: NavItem[];
   requireRoles?: string[];

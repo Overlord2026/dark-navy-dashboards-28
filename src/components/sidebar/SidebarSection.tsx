@@ -3,7 +3,7 @@ import React from "react";
 import { useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useRoleCheck } from "@/hooks/useRoleCheck";
-import { NavItem, NavSection, navSections } from "./navigationConfig";
+import { NavItem, NavSection } from "./navigationConfig";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
 interface SidebarSectionProps {
@@ -48,7 +48,7 @@ export const SidebarSection: React.FC<SidebarSectionProps> = ({
     return false;
   };
 
-  // Use the icon component directly
+  // Create icon component instance
   const SectionIcon = section.icon;
 
   if (section.href) {
@@ -62,7 +62,7 @@ export const SidebarSection: React.FC<SidebarSectionProps> = ({
           isCollapsed && "justify-center"
         )}
       >
-        {section.icon && <SectionIcon size={18} />}
+        {section.icon && <SectionIcon className={isCollapsed ? "h-5 w-5" : "h-5 w-5"} />}
         {!isCollapsed && <span>{section.label}</span>}
       </a>
     );
@@ -73,7 +73,7 @@ export const SidebarSection: React.FC<SidebarSectionProps> = ({
     return (
       <div className="mb-3">
         <div className="flex justify-center p-2">
-          <SectionIcon size={18} />
+          <SectionIcon className="h-5 w-5" />
         </div>
         {isOpen && section.items && (
           <div className="space-y-1">
@@ -112,7 +112,7 @@ export const SidebarSection: React.FC<SidebarSectionProps> = ({
         onClick={() => toggleSection(section.id)}
       >
         <div className="flex items-center gap-2">
-          <SectionIcon size={18} />
+          <SectionIcon className="h-5 w-5" />
           <span>{section.label}</span>
         </div>
         {isOpen ? (
