@@ -1,24 +1,10 @@
+
 import React from "react";
-import { Link } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { LucideIcon } from "lucide-react";
 import { useRoleCheck } from "@/hooks/useRoleCheck";
-
-interface NavItem {
-  label: string;
-  href: string;
-  icon: React.ComponentType<{ className?: string }>;
-  requireRoles?: string[];
-}
-
-interface NavSection {
-  id: string;
-  label: string;
-  icon: LucideIcon;
-  href?: string;
-  items?: NavItem[];
-  requireRoles?: string[];
-}
+import { NavItem, NavSection, navSections } from "./navigationConfig";
+import { ChevronDown, ChevronUp } from "lucide-react";
 
 interface SidebarSectionProps {
   section: NavSection;
@@ -68,8 +54,8 @@ export const SidebarSection: React.FC<SidebarSectionProps> = ({
   if (section.href) {
     // Single link section (like Collaboration)
     return (
-      <Link
-        to={section.href}
+      <a
+        href={section.href}
         className={cn(
           "flex items-center gap-2 p-2 rounded-md hover:bg-muted transition-colors",
           currentPath === section.href && "bg-muted font-medium",
@@ -78,7 +64,7 @@ export const SidebarSection: React.FC<SidebarSectionProps> = ({
       >
         {section.icon && <SectionIcon size={18} />}
         {!isCollapsed && <span>{section.label}</span>}
-      </Link>
+      </a>
     );
   }
 
@@ -100,16 +86,16 @@ export const SidebarSection: React.FC<SidebarSectionProps> = ({
             }).map((item) => {
               const ItemIcon = item.icon;
               return (
-                <Link
+                <a
                   key={item.label}
-                  to={item.href}
+                  href={item.href}
                   className={cn(
                     "flex justify-center p-2 rounded-md hover:bg-muted transition-colors",
                     isActive(item.href) && "bg-muted"
                   )}
                 >
                   <ItemIcon className="h-4 w-4" />
-                </Link>
+                </a>
               );
             })}
           </div>
@@ -147,9 +133,9 @@ export const SidebarSection: React.FC<SidebarSectionProps> = ({
           }).map((item) => {
             const ItemIcon = item.icon;
             return (
-              <Link
+              <a
                 key={item.label}
-                to={item.href}
+                href={item.href}
                 className={cn(
                   "flex items-center gap-2 p-2 rounded-md text-sm hover:bg-muted transition-colors",
                   isActive(item.href) && "bg-muted font-medium"
@@ -157,7 +143,7 @@ export const SidebarSection: React.FC<SidebarSectionProps> = ({
               >
                 <ItemIcon className="h-4 w-4" />
                 <span>{item.label}</span>
-              </Link>
+              </a>
             );
           })}
         </div>
@@ -165,3 +151,5 @@ export const SidebarSection: React.FC<SidebarSectionProps> = ({
     </div>
   );
 };
+
+export default SidebarSection;
