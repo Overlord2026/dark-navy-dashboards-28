@@ -50,7 +50,7 @@ export const ThreeColumnLayout: React.FC<ThreeColumnLayoutProps> = ({
         {renderSidebar()}
 
         <div className={cn("flex flex-col flex-1 h-full overflow-y-auto", contentClassName)}>
-          {!noHeader && <DashboardHeader title={title || ""} />}
+          {!noHeader && <DashboardHeader />}
           {children}
         </div>
 
