@@ -56,7 +56,7 @@ export async function createFieldMapping(
         {
           lead_source_id: leadSourceId,
           mapping,
-          updated_at: new Date()
+          updated_at: new Date().toISOString() // Convert Date to string
         },
         { onConflict: "lead_source_id" }
       );
