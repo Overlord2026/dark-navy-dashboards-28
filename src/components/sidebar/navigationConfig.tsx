@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { 
   LayoutDashboard, 
@@ -12,7 +13,6 @@ import {
   VaultIcon,
   BriefcaseIcon,
   Shield,
-  Brain,
   Users2,
   Share2,
   BanknoteIcon,
@@ -146,12 +146,6 @@ export const navSections = [
     icon: MessageCircle,
     items: [
       {
-        id: 'ai-insights',
-        label: 'AI Insights',
-        href: '/ai-insights',
-        icon: <Brain className="h-4 w-4" />,
-      },
-      {
         id: 'help',
         label: 'Help & Support',
         href: '/help',
@@ -185,3 +179,4 @@ export const navSections = [
     ],
   },
 ];
+
