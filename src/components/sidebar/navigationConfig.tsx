@@ -7,18 +7,19 @@ import {
   Users,
   Network
 } from "lucide-react";
+import { LucideIcon } from "lucide-react";
 
 export interface NavItem {
   label: string;
   href: string;
-  icon: React.ComponentType<{ className?: string; size?: number }>;
+  icon: LucideIcon;
   requireRoles?: string[];
 }
 
 export interface NavSection {
   id: string;
   label: string;
-  icon: React.ComponentType<{ className?: string; size?: number }>;
+  icon: LucideIcon;
   href?: string;
   items?: NavItem[];
   requireRoles?: string[];
