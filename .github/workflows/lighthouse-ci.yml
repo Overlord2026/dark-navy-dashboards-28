@@ -1,0 +1,87 @@
+
+name: Lighthouse CI
+
+on:
+  pull_request:
+    branches: [ main, master ]
+  # Allow manual triggering
+  workflow_dispatch:
+
+jobs:
+  lighthouse-ci:
+    name: Lighthouse CI Audit
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          
+      - name: Install Lighthouse CI
+        run: npm install -g @lhci/cli
+      
+      - name: Run Lighthouse CI against staging
+        run: |
+          lhci autorun --config=./.lighthouserc.js
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+          # You'll need to set up this secret in your GitHub repository settings
+      
+      - name: Upload Lighthouse reports
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: lighthouse-reports
+          path: ./.lighthouseci/
+          
+      - name: Add PR comment with Lighthouse results
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            
+            // Find the most recent report
+            const reportDir = path.resolve('.lighthouseci');
+            if (!fs.existsSync(reportDir)) {
+              console.log('No Lighthouse report found');
+              return;
+            }
+            
+            const reportFiles = fs.readdirSync(reportDir).filter(f => f.endsWith('.json'));
+            if (reportFiles.length === 0) {
+              console.log('No Lighthouse report JSON files found');
+              return;
+            }
+            
+            // Get the most recent report
+            const reportPath = path.join(reportDir, reportFiles[reportFiles.length - 1]);
+            const report = JSON.parse(fs.readFileSync(reportPath, 'utf8'));
+            
+            // Create markdown table with the results
+            let comment = `## Lighthouse CI Audit Results\n\n`;
+            comment += `| Category | Score |\n`;
+            comment += `| -------- | ----- |\n`;
+            
+            const categories = report.categories;
+            for (const key in categories) {
+              const score = Math.round(categories[key].score * 100);
+              const emoji = score >= 90 ? '✅' : score >= 80 ? '⚠️' : '❌';
+              comment += `| ${categories[key].title} | ${emoji} ${score} |\n`;
+            }
+            
+            comment += `\n[View full report](${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID})`;
+            
+            // Post comment to the PR
+            const pr_number = context.issue.number;
+            github.rest.issues.createComment({
+              issue_number: pr_number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
