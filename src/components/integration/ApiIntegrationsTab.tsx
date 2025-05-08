@@ -1,95 +1,165 @@
 
 import React from "react";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
-import { CheckCircle2, XCircle, PlusCircle } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Plus, FileCode, Key, RefreshCcw, AlertCircle } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
-export const ApiIntegrationsTab = () => {
+export const ApiIntegrationsTab: React.FC = () => {
+  const apiEndpoints = [
+    {
+      id: "api-1",
+      name: "User Management API",
+      endpoint: "/api/v1/users",
+      status: "active",
+      authType: "jwt",
+      lastAccessed: "2025-05-07T15:30:00Z"
+    },
+    {
+      id: "api-2",
+      name: "Documents API",
+      endpoint: "/api/v1/documents",
+      status: "active",
+      authType: "jwt",
+      lastAccessed: "2025-05-07T14:20:00Z"
+    },
+    {
+      id: "api-3",
+      name: "Financial Data API",
+      endpoint: "/api/v1/financial",
+      status: "active",
+      authType: "api_key",
+      lastAccessed: "2025-05-07T10:45:00Z"
+    },
+    {
+      id: "api-4",
+      name: "Reports Generation API",
+      endpoint: "/api/v1/reports",
+      status: "inactive",
+      authType: "jwt",
+      lastAccessed: null
+    },
+    {
+      id: "api-5",
+      name: "Notifications Webhook",
+      endpoint: "/api/v1/webhooks/notifications",
+      status: "maintenance",
+      authType: "webhook_secret",
+      lastAccessed: "2025-05-06T22:15:00Z"
+    }
+  ];
+
+  const handleToggleApi = (apiId: string) => {
+    console.log(`Toggle API ${apiId}`);
+    // In a real app, this would update the API status
+  };
+
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case "active":
+        return <Badge className="bg-green-600">Active</Badge>;
+      case "inactive":
+        return <Badge variant="outline" className="text-slate-500 border-slate-300">Inactive</Badge>;
+      case "maintenance":
+        return <Badge className="bg-amber-500">Maintenance</Badge>;
+      default:
+        return <Badge variant="outline">Unknown</Badge>;
+    }
+  };
+
   return (
-    <div>
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold">API Integrations</h2>
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <div>
+          <h3 className="text-lg font-medium">API Integrations</h3>
+          <p className="text-sm text-muted-foreground">
+            Manage API endpoints and integration settings
+          </p>
+        </div>
         <Button>
-          <PlusCircle className="mr-2 h-4 w-4" />
-          New Integration
+          <Plus className="h-4 w-4 mr-2" />
+          New API Endpoint
         </Button>
       </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex justify-between items-center">
-              Financial Data API
-              <Badge className="bg-green-500">Active</Badge>
-            </CardTitle>
-            <CardDescription>Real-time market data feed</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
-              <div className="flex items-center">
-                <CheckCircle2 className="text-green-500 h-4 w-4 mr-2" />
-                <span className="text-sm">Authentication configured</span>
-              </div>
-              <div className="flex items-center">
-                <CheckCircle2 className="text-green-500 h-4 w-4 mr-2" />
-                <span className="text-sm">Rate limiting enabled</span>
-              </div>
-              <div className="flex items-center">
-                <CheckCircle2 className="text-green-500 h-4 w-4 mr-2" />
-                <span className="text-sm">Webhooks configured</span>
-              </div>
-            </div>
-          </CardContent>
-          <CardFooter className="flex justify-end gap-2">
-            <Button variant="outline" size="sm">Documentation</Button>
-            <Button variant="default" size="sm">Manage</Button>
-          </CardFooter>
-        </Card>
-        
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex justify-between items-center">
-              CRM Integration
-              <Badge className="bg-amber-500 text-amber-950">Setup Required</Badge>
-            </CardTitle>
-            <CardDescription>Client relationship data sync</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
-              <div className="flex items-center">
-                <CheckCircle2 className="text-green-500 h-4 w-4 mr-2" />
-                <span className="text-sm">Authentication configured</span>
-              </div>
-              <div className="flex items-center">
-                <XCircle className="text-red-500 h-4 w-4 mr-2" />
-                <span className="text-sm">Data mapping incomplete</span>
-              </div>
-              <div className="flex items-center">
-                <XCircle className="text-red-500 h-4 w-4 mr-2" />
-                <span className="text-sm">Webhooks not configured</span>
-              </div>
-            </div>
-          </CardContent>
-          <CardFooter className="flex justify-end gap-2">
-            <Button variant="outline" size="sm">Documentation</Button>
-            <Button variant="default" size="sm">Complete Setup</Button>
-          </CardFooter>
-        </Card>
-        
-        <Card className="border-dashed">
-          <CardHeader>
-            <CardTitle>Add New API Integration</CardTitle>
-            <CardDescription>Connect to third-party services</CardDescription>
-          </CardHeader>
-          <CardContent className="flex flex-col items-center justify-center py-8">
-            <Button variant="outline" className="w-full">
-              <PlusCircle className="mr-2 h-4 w-4" />
-              Connect API
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
+
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>API Name</TableHead>
+            <TableHead>Endpoint</TableHead>
+            <TableHead>Auth Type</TableHead>
+            <TableHead>Last Accessed</TableHead>
+            <TableHead>Status</TableHead>
+            <TableHead>Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {apiEndpoints.map((api) => (
+            <TableRow key={api.id}>
+              <TableCell className="font-medium">{api.name}</TableCell>
+              <TableCell>
+                <code className="bg-muted px-1 py-0.5 rounded text-sm">{api.endpoint}</code>
+              </TableCell>
+              <TableCell>
+                <div className="flex items-center">
+                  <Key className="h-3.5 w-3.5 mr-1.5 text-muted-foreground" />
+                  <span className="capitalize">{api.authType.replace("_", " ")}</span>
+                </div>
+              </TableCell>
+              <TableCell>
+                {api.lastAccessed ? new Date(api.lastAccessed).toLocaleString() : "Never"}
+              </TableCell>
+              <TableCell>{getStatusBadge(api.status)}</TableCell>
+              <TableCell>
+                <div className="flex items-center gap-2">
+                  <Switch 
+                    checked={api.status === "active"}
+                    onCheckedChange={() => handleToggleApi(api.id)}
+                  />
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button variant="ghost" size="icon" className="h-8 w-8">
+                          <RefreshCcw className="h-4 w-4" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Refresh API Key</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button variant="ghost" size="icon" className="h-8 w-8">
+                          <FileCode className="h-4 w-4" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>View Documentation</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                  {api.status === "maintenance" && (
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <AlertCircle className="h-4 w-4 text-amber-500" />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>API is under maintenance</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  )}
+                </div>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
     </div>
   );
 };

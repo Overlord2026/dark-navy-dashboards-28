@@ -1,24 +1,31 @@
-import React from "react";
-import { UserProfileDropdown } from "@/components/profile/UserProfileDropdown";
-import { Badge } from "@/components/ui/badge";
-import { useLocation } from "react-router-dom";
-interface DashboardHeaderProps {
-  title?: string;
-}
-export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
-  title = "Dashboard"
-}) => {
+
+import React from 'react';
+import { ConnectedBadge } from "@/components/integration/ConnectedBadge";
+import { useLocation } from 'react-router-dom';
+
+export default function DashboardHeader() {
   const location = useLocation();
-  const path = location.pathname;
-  const isConnected = path === "/integration";
-  return <header className="flex items-center justify-between w-full px-4 h-16 border-b border-[#333]">
-      
-      
-      <div className="flex items-center space-x-2">
-        {isConnected && <Badge variant="outline" className="bg-green-100 text-green-800 border-green-300">
-            Connected
-          </Badge>}
-        <UserProfileDropdown />
+  const isIntegrated = true; // In a real app, this would be determined by an API check
+  const showConnectedBadge = isIntegrated && location.pathname !== '/integration';
+  
+  return (
+    <div className="flex items-center justify-between px-6 h-16 border-b">
+      <div>
+        <h2 className="text-xl font-bold">Family Office Marketplace</h2>
       </div>
-    </header>;
-};
+      <div className="flex items-center space-x-4">
+        {showConnectedBadge && <ConnectedBadge />}
+        <UserAccountMenu />
+      </div>
+    </div>
+  );
+}
+
+// Placeholder component - In a real app, you'd import this from elsewhere
+function UserAccountMenu() {
+  return (
+    <div className="rounded-full h-8 w-8 bg-gray-300 flex items-center justify-center">
+      <span className="text-sm">AB</span>
+    </div>
+  );
+}
