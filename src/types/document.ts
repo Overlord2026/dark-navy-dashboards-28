@@ -1,4 +1,3 @@
-
 export type DocumentType = "pdf" | "image" | "spreadsheet" | "document" | "folder" | "legal" | "medical" | "financial" | "property" | "healthcare" | "insurance" | "prescription";
 
 // Access level types for healthcare documents
@@ -36,6 +35,8 @@ export interface DocumentItem {
   isPrivate?: boolean; // Flag to mark document as private/sensitive
   lastAccessedBy?: string; // Last person who accessed the document
   lastAccessedAt?: string; // When the document was last accessed
+  color?: string; // New field for folder color
+  parentId?: string; // New field for subfolder relationships
 }
 
 export interface DocumentCategory {
