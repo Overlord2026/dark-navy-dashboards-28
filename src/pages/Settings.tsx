@@ -33,7 +33,7 @@ const Settings = () => {
   const handleLogout = () => {
     logout();
     toast.success("You have been logged out successfully");
-    navigate("/");
+    navigate("/secure-login");
   };
   
   return (
