@@ -95,16 +95,24 @@ export default function LegacyVault() {
     toast.success("Document uploaded successfully");
     setIsUploadDialogOpen(false);
   };
-  const handleCreateFolder = (folderName: string, category: string = activeCategory) => {
+  const handleCreateFolder = (folderName: string, category: string = activeCategory, description?: string, color?: string) => {
     const newFolder: DocumentItem = {
       id: Math.random().toString(36).substring(2, 9),
       name: folderName,
       type: "folder",
       category: category === "all" ? "general" : category,
-      created: new Date().toISOString()
+      created: new Date().toISOString(),
+      description: description,
+      color: color,
     };
     setDocuments(prev => [...prev, newFolder]);
-    toast.success("Folder created successfully");
+    const folderColorName = color ? color.charAt(0).toUpperCase() + color.slice(1) : '';
+    const successMessage = folderColorName 
+      ? `${folderColorName} folder "${folderName}" created successfully` 
+      : `Folder "${folderName}" created successfully`;
+    toast.success(successMessage, {
+      description: description ? `${description.substring(0, 50)}${description.length > 50 ? '...' : ''}` : undefined
+    });
     setIsNewFolderDialogOpen(false);
   };
   const handleAddDocument = (document: DocumentItem) => {
@@ -162,13 +170,17 @@ export default function LegacyVault() {
             
             <TabsContent value="documents" className="space-y-4">
               <div className="flex justify-end space-x-4">
-                <Button onClick={() => setIsNewFolderDialogOpen(true)} variant="outline" className="flex items-center">
-                  <FolderPlus className="mr-2 h-4 w-4" />
-                  New Folder
-                </Button>
+                <NewFolderDialog 
+                  onCreateFolder={handleCreateFolder} 
+                  activeCategory={activeCategory}
+                  categories={importantDocumentCategories as DocumentCategory[]}
+                />
                 
-                <Button onClick={() => setIsUploadDialogOpen(true)} className="flex items-center">
-                  <Upload className="mr-2 h-4 w-4" />
+                <Button 
+                  onClick={() => setIsUploadDialogOpen(true)} 
+                  className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white shadow-md"
+                >
+                  <Upload className="h-4 w-4" />
                   Upload
                 </Button>
               </div>
