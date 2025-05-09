@@ -1,9 +1,6 @@
-
-import { AddAccountDialog } from "@/components/accounts/AddAccountDialog";
-import { PlaidLinkDialog } from "@/components/accounts/PlaidLinkDialog";
+import { useState } from "react";
 import { ManageFundingDialog } from "@/components/accounts/ManageFundingDialog";
-import { AccountLinkTypeSelector } from "@/components/accounts/AccountLinkTypeSelector";
-import { useToast } from "@/hooks/use-toast";
+import { FundingAccount } from "@/hooks/useAccountManagement";
 
 interface AccountDialogsManagerProps {
   showAccountTypeSelector: boolean;
@@ -11,17 +8,20 @@ interface AccountDialogsManagerProps {
   showPlaidDialog: boolean;
   showManageFundingDialog: boolean;
   selectedAccountType: string;
-  fundingAccounts: Array<{ id: string; name: string; type: string; }>;
-  onPlaidSuccess: (token: string) => void;
+  fundingAccounts: FundingAccount[];
+  onPlaidSuccess: (linkToken: string) => void;
   onBackToAccounts: () => void;
   onPlaidSelected: () => void;
   onManualSelected: () => void;
   setShowAddAccountDialog: (show: boolean) => void;
   setShowPlaidDialog: (show: boolean) => void;
   setShowManageFundingDialog: (show: boolean) => void;
+  onAddFundingAccount: (account: Omit<FundingAccount, "id">) => FundingAccount;
+  onRemoveFundingAccount: (id: string) => boolean;
+  onSetPrimaryFundingAccount: (id: string) => boolean;
 }
 
-export function AccountDialogsManager({
+export const AccountDialogsManager = ({
   showAccountTypeSelector,
   showAddAccountDialog,
   showPlaidDialog,
@@ -34,53 +34,28 @@ export function AccountDialogsManager({
   onManualSelected,
   setShowAddAccountDialog,
   setShowPlaidDialog,
-  setShowManageFundingDialog
-}: AccountDialogsManagerProps) {
-  const { toast } = useToast();
+  setShowManageFundingDialog,
+  onAddFundingAccount,
+  onRemoveFundingAccount,
+  onSetPrimaryFundingAccount
+}: AccountDialogsManagerProps) => {
+  // Add any additional state or logic specific to managing account dialogs if needed
   
-  if (showAccountTypeSelector) {
-    return (
-      <AccountLinkTypeSelector 
-        onSelectPlaid={onPlaidSelected}
-        onSelectManual={onManualSelected}
-        onBack={onBackToAccounts}
-      />
-    );
-  }
-
   return (
     <>
-      {showAddAccountDialog && (
-        <AddAccountDialog 
-          isOpen={showAddAccountDialog}
-          onClose={() => setShowAddAccountDialog(false)}
-          onAddAccount={() => {
-            setShowAddAccountDialog(false);
-            toast({
-              title: "Account Added",
-              description: "Your account has been successfully added"
-            });
-          }}
-          accountType={selectedAccountType || "Account"}
-          sectionType={selectedAccountType || "General"}
-        />
-      )}
-
-      {showPlaidDialog && (
-        <PlaidLinkDialog
-          isOpen={showPlaidDialog}
-          onClose={() => setShowPlaidDialog(false)}
-          onSuccess={onPlaidSuccess}
-        />
-      )}
-
-      {showManageFundingDialog && (
-        <ManageFundingDialog
-          isOpen={showManageFundingDialog}
-          onClose={() => setShowManageFundingDialog(false)}
-          accounts={fundingAccounts}
-        />
-      )}
+      {/* Placeholder for account type selector dialog */}
+      {/* Placeholder for add account dialog */}
+      {/* Placeholder for Plaid connection dialog */}
+      
+      {/* Manage Funding Dialog */}
+      <ManageFundingDialog
+        isOpen={showManageFundingDialog}
+        onClose={() => setShowManageFundingDialog(false)}
+        accounts={fundingAccounts}
+        onAddAccount={onAddFundingAccount}
+        onRemoveAccount={onRemoveFundingAccount}
+        onSetPrimary={onSetPrimaryFundingAccount}
+      />
     </>
   );
-}
+};

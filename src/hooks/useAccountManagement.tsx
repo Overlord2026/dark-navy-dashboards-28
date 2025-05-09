@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 
 // Types
@@ -16,7 +16,10 @@ export interface FundingAccount {
   id: string;
   name: string;
   type: string;
+  isPrimary?: boolean;
 }
+
+const STORAGE_KEY = "fundingAccounts";
 
 export function useAccountManagement() {
   const { toast } = useToast();
@@ -26,11 +29,100 @@ export function useAccountManagement() {
   const [showPlaidDialog, setShowPlaidDialog] = useState(false);
   const [showManageFundingDialog, setShowManageFundingDialog] = useState(false);
   
-  // Sample linked funding accounts - in a real app, this would come from an API
-  const fundingAccounts = [
-    { id: "fa1", name: "Chase Checking ****4582", type: "checking" },
-    { id: "fa2", name: "Bank of America Savings ****7839", type: "savings" },
-  ];
+  // Funding accounts state management
+  const [fundingAccounts, setFundingAccounts] = useState<FundingAccount[]>([]);
+
+  // Load funding accounts from storage on component mount
+  useEffect(() => {
+    const storedAccounts = localStorage.getItem(STORAGE_KEY);
+    if (storedAccounts) {
+      try {
+        setFundingAccounts(JSON.parse(storedAccounts));
+      } catch (e) {
+        console.error("Failed to parse stored funding accounts:", e);
+      }
+    } else {
+      // Default accounts if none are stored
+      const defaultAccounts = [
+        { id: "fa1", name: "Chase Checking ****4582", type: "checking", isPrimary: true },
+        { id: "fa2", name: "Bank of America Savings ****7839", type: "savings", isPrimary: false },
+      ];
+      setFundingAccounts(defaultAccounts);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultAccounts));
+    }
+  }, []);
+
+  // Save accounts to local storage when they change
+  useEffect(() => {
+    if (fundingAccounts.length > 0) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(fundingAccounts));
+    }
+  }, [fundingAccounts]);
+
+  // Add a new funding account
+  const addFundingAccount = (account: Omit<FundingAccount, "id">) => {
+    const newAccount = {
+      ...account,
+      id: `fa${Date.now()}`, // Generate a unique ID
+      isPrimary: fundingAccounts.length === 0 // Make first account primary by default
+    };
+    
+    setFundingAccounts(prev => [...prev, newAccount]);
+    
+    toast({
+      title: "Account Added",
+      description: `${account.name} has been added as a funding source`
+    });
+    
+    return newAccount;
+  };
+
+  // Remove a funding account
+  const removeFundingAccount = (id: string) => {
+    const accountToRemove = fundingAccounts.find(acc => acc.id === id);
+    if (!accountToRemove) return false;
+    
+    const wasPrimary = accountToRemove.isPrimary;
+    
+    setFundingAccounts(prev => {
+      const filtered = prev.filter(acc => acc.id !== id);
+      
+      // If we removed the primary account, set a new primary
+      if (wasPrimary && filtered.length > 0) {
+        filtered[0].isPrimary = true;
+      }
+      
+      return filtered;
+    });
+    
+    toast({
+      title: "Account Removed",
+      description: `${accountToRemove.name} has been removed from your funding sources`
+    });
+    
+    return true;
+  };
+
+  // Set an account as primary
+  const setPrimaryFundingAccount = (id: string) => {
+    const exists = fundingAccounts.some(acc => acc.id === id);
+    if (!exists) return false;
+    
+    setFundingAccounts(prev => 
+      prev.map(acc => ({
+        ...acc,
+        isPrimary: acc.id === id
+      }))
+    );
+    
+    const account = fundingAccounts.find(acc => acc.id === id);
+    toast({
+      title: "Primary Account Set",
+      description: `${account?.name} is now your primary funding source`
+    });
+    
+    return true;
+  };
 
   const handleAddAccount = () => {
     setShowAccountTypeSelector(true);
@@ -93,6 +185,11 @@ export function useAccountManagement() {
     showPlaidDialog,
     showManageFundingDialog,
     fundingAccounts,
+    
+    // Funding account actions
+    addFundingAccount,
+    removeFundingAccount,
+    setPrimaryFundingAccount,
     
     // Actions
     handleAddAccount,

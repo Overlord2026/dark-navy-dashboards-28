@@ -5,6 +5,7 @@ import { FundingAccountsOverview } from "@/components/accounts/FundingAccountsOv
 import { AccountSectionsManager } from "@/components/accounts/AccountSectionsManager";
 import { AccountDialogsManager } from "@/components/accounts/AccountDialogsManager";
 import { useAccountManagement } from "@/hooks/useAccountManagement";
+import { ConnectedBadge } from "@/components/integration/ConnectedBadge";
 
 const Accounts = () => {
   const {
@@ -14,6 +15,9 @@ const Accounts = () => {
     showPlaidDialog,
     showManageFundingDialog,
     fundingAccounts,
+    addFundingAccount,
+    removeFundingAccount,
+    setPrimaryFundingAccount,
     handleAddAccount,
     handleAccountTypeSelected,
     handlePlaidSelected,
@@ -33,10 +37,13 @@ const Accounts = () => {
       title="Accounts"
     >
       <div className="min-h-screen animate-fade-in space-y-6 p-4">
-        <AccountsHeader 
-          onAddAccount={handleAddAccount} 
-          onManageFunding={handleManageFunding} 
-        />
+        <div className="flex items-center justify-between">
+          <AccountsHeader 
+            onAddAccount={handleAddAccount} 
+            onManageFunding={handleManageFunding} 
+          />
+          <ConnectedBadge />
+        </div>
 
         <FundingAccountsOverview 
           accounts={fundingAccounts}
@@ -57,6 +64,10 @@ const Accounts = () => {
           setShowAddAccountDialog={setShowAddAccountDialog}
           setShowPlaidDialog={setShowPlaidDialog}
           setShowManageFundingDialog={setShowManageFundingDialog}
+          // Pass the new functions to manage funding accounts
+          onAddFundingAccount={addFundingAccount}
+          onRemoveFundingAccount={removeFundingAccount}
+          onSetPrimaryFundingAccount={setPrimaryFundingAccount}
         />
 
         {!showAccountTypeSelector && (
