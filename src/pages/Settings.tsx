@@ -13,17 +13,27 @@ import {
   Lock, 
   Globe, 
   Palette,
-  ArrowLeft
+  ArrowLeft,
+  LogOut
 } from "lucide-react";
 import { ThemeSwitcher } from "@/components/ui/ThemeSwitcher";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "@/context/UserContext";
+import { toast } from "sonner";
 
 const Settings = () => {
   const navigate = useNavigate();
+  const { logout } = useUser();
   
   const handleGoBack = () => {
     navigate(-1);
+  };
+  
+  const handleLogout = () => {
+    logout();
+    toast.success("You have been logged out successfully");
+    navigate("/");
   };
   
   return (
@@ -108,6 +118,27 @@ const Settings = () => {
           </Card>
         </TabsContent>
       </Tabs>
+      
+      {/* Logout Button Section */}
+      <div className="mt-10 pt-6 border-t border-border">
+        <Card className="bg-card/50 hover:bg-card/70 transition-colors">
+          <CardContent className="pt-6 flex flex-col items-center">
+            <h3 className="text-lg font-medium mb-4">Account Session</h3>
+            <p className="text-muted-foreground mb-6 text-center">
+              Ready to end your current session? Click below to log out of your account.
+            </p>
+            <Button 
+              variant="destructive" 
+              size="lg" 
+              className="flex items-center gap-2"
+              onClick={handleLogout}
+            >
+              <LogOut className="h-5 w-5" />
+              Log Out
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 };
