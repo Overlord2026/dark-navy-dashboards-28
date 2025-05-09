@@ -13,11 +13,19 @@ import {
   KeyIcon, 
   Bell,
   FingerprintIcon,
-  HistoryIcon
+  HistoryIcon,
+  ArrowLeft
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 const SecuritySettings = () => {
   const [activeTab, setActiveTab] = useState("2fa");
+  const navigate = useNavigate();
+
+  const handleGoBack = () => {
+    navigate(-1);
+  };
 
   const handleSaveComplete = () => {
     console.log("Security settings saved successfully");
@@ -25,7 +33,17 @@ const SecuritySettings = () => {
 
   return (
     <div className="container mx-auto py-8 space-y-6">
-      <h1 className="text-3xl font-bold mb-6">Security Settings</h1>
+      <div className="flex items-center gap-4 mb-6">
+        <Button 
+          variant="ghost" 
+          size="icon"
+          onClick={handleGoBack}
+          aria-label="Go back"
+        >
+          <ArrowLeft className="h-5 w-5" />
+        </Button>
+        <h1 className="text-3xl font-bold">Security Settings</h1>
+      </div>
       
       <Tabs defaultValue="2fa" className="w-full" onValueChange={setActiveTab}>
         <TabsList className="grid w-full md:w-auto md:inline-grid grid-cols-5 h-auto">
