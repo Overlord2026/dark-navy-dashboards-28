@@ -5,7 +5,7 @@ import { educationRoutes } from "./routes/education-routes";
 import { planningRoutes } from "./routes/planning-routes";
 import { settingsRoutes } from "./routes/settings-routes";
 import { collaborationRoutes } from "./routes/collaboration-routes";
-// Integration routes import removed
+import { integrationRoutes } from "./routes/integration-routes"; // Re-added integration routes import
 import NotFound from "./pages/NotFound";
 
 const routes = createBrowserRouter([
@@ -14,7 +14,7 @@ const routes = createBrowserRouter([
   ...planningRoutes,
   ...settingsRoutes,
   ...collaborationRoutes,
-  // Integration routes removed
+  ...integrationRoutes, // Re-added integration routes
   {
     path: "*",
     element: <NotFound />
