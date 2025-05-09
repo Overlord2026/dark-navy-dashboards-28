@@ -12,14 +12,33 @@ import {
   Bell, 
   Lock, 
   Globe, 
-  Palette
+  Palette,
+  ArrowLeft
 } from "lucide-react";
 import { ThemeSwitcher } from "@/components/ui/ThemeSwitcher";
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 const Settings = () => {
+  const navigate = useNavigate();
+  
+  const handleGoBack = () => {
+    navigate(-1);
+  };
+  
   return (
     <div className="container mx-auto py-8">
-      <h1 className="text-3xl font-bold mb-8">Settings</h1>
+      <div className="flex items-center gap-4 mb-8">
+        <Button 
+          variant="ghost" 
+          size="icon"
+          onClick={handleGoBack}
+          aria-label="Go back"
+        >
+          <ArrowLeft className="h-5 w-5" />
+        </Button>
+        <h1 className="text-3xl font-bold">Settings</h1>
+      </div>
       
       <Tabs defaultValue="profile" className="space-y-4">
         <TabsList className="grid w-full md:w-auto md:inline-grid grid-cols-5 h-auto">
