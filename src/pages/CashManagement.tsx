@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -17,6 +18,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { ManageFundingDialog } from "@/components/accounts/ManageFundingDialog";
+import { useAccountManagement } from "@/hooks/useAccountManagement";
 
 const CashManagement = () => {
   const location = useLocation();
@@ -25,6 +27,14 @@ const CashManagement = () => {
   
   const [activeTab, setActiveTab] = useState(tabFromUrl || "overview");
   const [showManageFundingDialog, setShowManageFundingDialog] = useState(false);
+  
+  // Get account management functions from the hook
+  const { 
+    fundingAccounts,
+    addFundingAccount,
+    removeFundingAccount,
+    setPrimaryFundingAccount
+  } = useAccountManagement();
   
   // Sample account data - in a real application, this would come from an API
   const accounts = [
@@ -376,6 +386,9 @@ const CashManagement = () => {
           isOpen={showManageFundingDialog}
           onClose={() => setShowManageFundingDialog(false)}
           accounts={fundingAccounts}
+          onRemoveAccount={removeFundingAccount}
+          onSetPrimary={setPrimaryFundingAccount}
+          onAddAccount={addFundingAccount}
         />
       </div>
     </ThreeColumnLayout>
