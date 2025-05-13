@@ -3,90 +3,53 @@ import React from "react";
 import {
   LayoutDashboard,
   BookOpen,
-  Settings,
-  Users,
+  Briefcase,
   FileText,
-  Building2,
-  BadgePercent,
-  LandPlot,
-  HandCoins,
-  Home,
-  Network,
-  Layers,
-  BarChart
+  MessageSquare,
+  Settings,
+  User,
+  PuzzlePiece,
+  Boxes,
 } from "lucide-react";
 
+// Main navigation items
 export const navigationItems = [
   {
-    title: "Dashboard",
+    label: "Dashboard",
     href: "/dashboard",
-    icon: <LayoutDashboard className="h-5 w-5" />,
+    icon: <LayoutDashboard size={18} />
   },
   {
-    title: "Education",
-    href: "/education",
-    icon: <BookOpen className="h-5 w-5" />,
-  },
-  {
-    title: "Family Wealth",
-    href: "/family-wealth",
-    icon: <Building2 className="h-5 w-5" />,
-  },
-  {
-    title: "Professionals",
-    href: "/professionals",
-    icon: <Users className="h-5 w-5" />,
-  },
-  {
-    title: "Planning",
-    href: "/planning",
-    icon: <FileText className="h-5 w-5" />,
-  },
-  {
-    title: "Reports",
-    href: "/reports",
-    icon: <BarChart className="h-5 w-5" />,
-  },
+    label: "Project Integration",
+    href: "/integration",
+    icon: <Boxes size={18} />
+  }
 ];
 
+// Bottom navigation items (typically settings, profile, etc.)
 export const bottomNavigationItems = [
   {
-    title: "Project Integration",
-    href: "/integration",
-    icon: <Network className="h-5 w-5" />,
-    badge: "New",
+    label: "Settings",
+    href: "/settings",
+    icon: <Settings size={18} />
   },
   {
-    title: "Settings",
-    href: "/settings",
-    icon: <Settings className="h-5 w-5" />,
-  },
+    label: "Profile",
+    href: "/profile",
+    icon: <User size={18} />
+  }
 ];
 
+// These are for the advisor dashboard
 export const advisorNavigationItems = [
   {
-    title: "Dashboard",
+    label: "Advisor Dashboard",
     href: "/advisor/dashboard",
-    icon: <LayoutDashboard className="h-5 w-5" />,
+    icon: <LayoutDashboard size={18} />
   },
   {
-    title: "Clients",
+    label: "Clients",
     href: "/advisor/clients",
-    icon: <Users className="h-5 w-5" />,
-  },
-  {
-    title: "Marketing",
-    href: "/advisor/marketing",
-    icon: <BadgePercent className="h-5 w-5" />,
-  },
-  {
-    title: "Practice",
-    href: "/advisor/practice",
-    icon: <Building2 className="h-5 w-5" />,
-  },
-  {
-    title: "Reports",
-    href: "/advisor/reports",
-    icon: <FileText className="h-5 w-5" />,
-  },
+    icon: <User size={18} />
+  }
 ];
