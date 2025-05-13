@@ -8,14 +8,8 @@ import { ApiIntegrationsTab } from "@/components/integration/ApiIntegrationsTab"
 import { PluginsTab } from "@/components/integration/PluginsTab";
 import { Badge } from "@/components/ui/badge";
 import { Share2 } from "lucide-react";
-import { toast } from "sonner";
 
 export function AdminIntegrationDashboard() {
-  const handleCopyToken = () => {
-    navigator.clipboard.writeText("fmo_api_" + Math.random().toString(36).substring(2, 15));
-    toast.success("Integration token copied to clipboard");
-  };
-
   return (
     <div className="container mx-auto px-4 py-6 max-w-7xl">
       <div className="mb-8">
@@ -37,7 +31,7 @@ export function AdminIntegrationDashboard() {
         </TabsList>
         
         <TabsContent value="connected-projects">
-          <ConnectedProjectsTab onCopyToken={handleCopyToken} />
+          <ConnectedProjectsTab />
         </TabsContent>
         
         <TabsContent value="architecture">

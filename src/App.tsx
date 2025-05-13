@@ -9,11 +9,12 @@ import { Toaster } from "@/components/ui/sonner";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { DiagnosticsProvider } from "@/context/DiagnosticsContext";
 import { AdvisorProvider } from "@/context/AdvisorContext";
-import { AuthProvider } from "@/context/AuthContext";
+import { AuthProvider as LegacyAuthProvider } from "@/context/AuthContext";
 import { AdminProvider } from './context/AdminContext';
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AIInsightsProvider } from "./components/insights/AIInsightsProvider";
 import { AudienceProvider } from "./context/AudienceContext";
+import { AuthProvider } from "./context/SupabaseAuthContext";
 
 // Create a Query Client
 const queryClient = new QueryClient({
@@ -30,26 +31,28 @@ function App() {
     <AdminProvider>
       <QueryClientProvider client={queryClient}>
         <ThemeProvider>
-          <UserProvider>
-            <SubscriptionProvider>
-              <NetWorthProvider>
-                <DiagnosticsProvider>
-                  <AdvisorProvider>
-                    <AuthProvider>
-                      <AIInsightsProvider>
-                        <AudienceProvider>
-                          <TooltipProvider>
-                            <RouterProvider router={routes} />
-                            <Toaster position="top-right" richColors closeButton />
-                          </TooltipProvider>
-                        </AudienceProvider>
-                      </AIInsightsProvider>
-                    </AuthProvider>
-                  </AdvisorProvider>
-                </DiagnosticsProvider>
-              </NetWorthProvider>
-            </SubscriptionProvider>
-          </UserProvider>
+          <AuthProvider>
+            <UserProvider>
+              <SubscriptionProvider>
+                <NetWorthProvider>
+                  <DiagnosticsProvider>
+                    <AdvisorProvider>
+                      <LegacyAuthProvider>
+                        <AIInsightsProvider>
+                          <AudienceProvider>
+                            <TooltipProvider>
+                              <RouterProvider router={routes} />
+                              <Toaster position="top-right" richColors closeButton />
+                            </TooltipProvider>
+                          </AudienceProvider>
+                        </AIInsightsProvider>
+                      </LegacyAuthProvider>
+                    </AdvisorProvider>
+                  </DiagnosticsProvider>
+                </NetWorthProvider>
+              </SubscriptionProvider>
+            </UserProvider>
+          </AuthProvider>
         </ThemeProvider>
       </QueryClientProvider>
     </AdminProvider>
