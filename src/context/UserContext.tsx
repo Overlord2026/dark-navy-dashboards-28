@@ -1,5 +1,8 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useSupabaseAuth } from '@/context/SupabaseAuthContext';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
 interface UserProfile {
   id: string;
@@ -34,79 +37,147 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const { user, session, isAuthenticated: supabaseIsAuthenticated, signIn, signOut } = useSupabaseAuth();
 
-  // Simulate loading user data from storage or an API
+  // Load user profile data from Supabase when auth state changes
   useEffect(() => {
-    // In a real app, this would fetch the user profile from an API
-    const loadUser = async () => {
+    const loadUserData = async () => {
+      if (!user) {
+        setUserProfile(null);
+        setIsLoading(false);
+        return;
+      }
+
       try {
-        // Simulate API delay
-        await new Promise(resolve => setTimeout(resolve, 500));
+        setIsLoading(true);
         
-        // For demo purposes, create a mock admin user
-        const mockUser: UserProfile = {
-          id: 'user-123',
-          name: 'Admin User',
-          displayName: 'Admin',
-          email: 'admin@example.com',
-          firstName: 'Tom',
-          lastName: 'Brady',
-          role: 'admin',
-          permissions: ['all'],
-          phone: '(555) 123-4567',
-          investorType: 'High Net Worth Individual'
+        // Fetch profile data from Supabase
+        const { data: profileData, error } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', user.id)
+          .single();
+        
+        if (error) {
+          console.error('Error fetching user profile:', error);
+          toast.error('Failed to load user profile');
+          setUserProfile(null);
+          return;
+        }
+
+        // Check for user roles if we have a profiles table
+        let userRole: UserProfile['role'] = 'client'; // Default role
+        
+        try {
+          const { data: rolesData } = await supabase
+            .from('user_roles')
+            .select('role')
+            .eq('user_id', user.id);
+            
+          if (rolesData && rolesData.length > 0) {
+            // Assign the first role found (most systems assign one primary role)
+            userRole = rolesData[0].role as UserProfile['role'];
+          }
+        } catch (roleError) {
+          console.error('Error fetching user roles:', roleError);
+          // Continue with default role if there's an error
+        }
+
+        // Transform Supabase profile data to our UserProfile format
+        const mappedProfile: UserProfile = {
+          id: user.id,
+          email: user.email || undefined,
+          firstName: profileData?.first_name || undefined,
+          lastName: profileData?.last_name || undefined,
+          displayName: profileData?.display_name || user.email?.split('@')[0] || 'User',
+          name: profileData?.first_name && profileData?.last_name 
+            ? `${profileData.first_name} ${profileData.last_name}` 
+            : profileData?.display_name || user.email?.split('@')[0] || 'User',
+          role: profileData?.role as UserProfile['role'] || userRole,
+          phone: profileData?.phone || undefined,
+          title: profileData?.title || undefined,
+          avatar_url: profileData?.avatar_url || undefined,
+          // Add more fields as needed
         };
         
-        setUserProfile(mockUser);
+        setUserProfile(mappedProfile);
       } catch (error) {
-        console.error('Error loading user profile:', error);
-        setUserProfile(null);
+        console.error('Error processing user profile:', error);
+        toast.error('Failed to process user profile');
       } finally {
         setIsLoading(false);
       }
     };
     
-    loadUser();
-  }, []);
+    loadUserData();
+  }, [user]);
 
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
       setIsLoading(true);
-      // In a real app, this would make an API call to authenticate
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const { error } = await signIn(email, password);
       
-      // For demo purposes, accept any credentials and create a mock user
-      const mockUser: UserProfile = {
-        id: 'user-123',
-        name: 'Demo User',
-        displayName: email.split('@')[0],
-        firstName: 'Tom',
-        lastName: 'Brady',
-        email,
-        role: 'admin',
-        permissions: ['all'],
-        phone: '(555) 123-4567',
-        investorType: 'High Net Worth Individual'
-      };
+      if (error) {
+        toast.error(error.message);
+        return false;
+      }
       
-      setUserProfile(mockUser);
       return true;
     } catch (error) {
       console.error('Login error:', error);
+      toast.error('An unexpected error occurred during login');
       return false;
     } finally {
       setIsLoading(false);
     }
   };
 
-  const logout = () => {
-    // In a real app, this would clear tokens, etc.
-    setUserProfile(null);
+  const logout = async () => {
+    try {
+      await signOut();
+      setUserProfile(null);
+    } catch (error) {
+      console.error('Logout error:', error);
+      toast.error('Error signing out');
+    }
   };
 
-  const updateUserProfile = (profile: Partial<UserProfile>) => {
-    if (userProfile) {
-      setUserProfile({ ...userProfile, ...profile });
+  const updateUserProfile = async (profile: Partial<UserProfile>) => {
+    if (!userProfile) {
+      toast.error('Cannot update profile: User not authenticated');
+      return;
+    }
+
+    try {
+      // Map our UserProfile format back to Supabase profile format
+      const supabaseProfileData: Record<string, any> = {};
+      
+      if (profile.firstName !== undefined) supabaseProfileData.first_name = profile.firstName;
+      if (profile.lastName !== undefined) supabaseProfileData.last_name = profile.lastName;
+      if (profile.displayName !== undefined) supabaseProfileData.display_name = profile.displayName;
+      if (profile.title !== undefined) supabaseProfileData.title = profile.title;
+      if (profile.phone !== undefined) supabaseProfileData.phone = profile.phone;
+      
+      // Only update if we have something to update
+      if (Object.keys(supabaseProfileData).length > 0) {
+        const { error } = await supabase
+          .from('profiles')
+          .update(supabaseProfileData)
+          .eq('id', userProfile.id);
+        
+        if (error) {
+          console.error('Error updating profile:', error);
+          toast.error('Failed to update profile');
+          return;
+        }
+        
+        // Update local state after successful database update
+        setUserProfile(prev => prev ? { ...prev, ...profile } : null);
+        toast.success('Profile updated successfully');
+      }
+    } catch (error) {
+      console.error('Error in updateUserProfile:', error);
+      toast.error('An unexpected error occurred while updating your profile');
     }
   };
 
@@ -114,7 +185,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     <UserContext.Provider
       value={{
         userProfile,
-        isAuthenticated: !!userProfile,
+        isAuthenticated: supabaseIsAuthenticated && !!userProfile,
         isLoading,
         login,
         logout,
