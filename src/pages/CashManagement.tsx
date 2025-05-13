@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -84,12 +83,6 @@ const CashManagement = () => {
       amount: 500,
       type: "transfer"
     }
-  ];
-
-  // Sample linked funding accounts
-  const fundingAccounts = [
-    { id: "fa1", name: "Chase Checking ****4582", type: "checking" },
-    { id: "fa2", name: "Bank of America Savings ****7839", type: "savings" },
   ];
 
   return (

@@ -1,19 +1,15 @@
 
-import React from "react";
-import Integration from "@/pages/Integration";
-import SecureLogin from "@/pages/SecureLogin";
+import { RouteObject } from "react-router-dom";
+import IntegrationHub from "@/pages/integration/IntegrationHub";
+import NavigationDiagnostics from "@/pages/NavigationDiagnostics";
 
-export const integrationRoutes = [
+export const integrationRoutes: RouteObject[] = [
   {
     path: "/integration",
-    element: <Integration />,
+    element: <IntegrationHub />
   },
   {
-    path: "/secure-login",
-    element: <SecureLogin />,
-  },
-  {
-    path: "/sign-up",
-    element: <SecureLogin />,  // For now, reuse SecureLogin page - can be expanded later
-  },
+    path: "/navigation-diagnostics",
+    element: <NavigationDiagnostics />
+  }
 ];
