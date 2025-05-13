@@ -8,7 +8,7 @@ import {
   MessageSquare,
   Settings,
   User,
-  PuzzlePiece,
+  Puzzle,
   Boxes,
 } from "lucide-react";
 
