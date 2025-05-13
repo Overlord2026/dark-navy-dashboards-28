@@ -1,55 +1,62 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ConnectedBadge } from "@/components/integration/ConnectedBadge";
 import { ConnectedProjectsTab } from "@/components/integration/ConnectedProjectsTab";
 import { ArchitectureTab } from "@/components/integration/ArchitectureTab";
 import { ApiIntegrationsTab } from "@/components/integration/ApiIntegrationsTab";
 import { PluginsTab } from "@/components/integration/PluginsTab";
-import { ConnectedBadge } from "@/components/integration/ConnectedBadge";
-import { usePagePerformance } from "@/hooks/usePagePerformance";
+import { SupabaseRequiredNotice } from "@/components/integration/SupabaseRequiredNotice";
 
 export default function Integration() {
-  // Track page performance metrics
-  usePagePerformance('/integration');
+  const [activeTab, setActiveTab] = useState("connected-projects");
   
   return (
-    <div className="container mx-auto py-6 space-y-6">
-      <div className="flex justify-between items-center">
+    <div className="container py-6">
+      <div className="flex items-center justify-between mb-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Project Integration Hub</h1>
-          <p className="text-muted-foreground mt-1">
-            Connect, extend and manage your integration with other systems
+          <h1 className="text-3xl font-bold tracking-tight">Project Integration</h1>
+          <p className="text-muted-foreground">
+            Connect and manage external project integrations
           </p>
         </div>
         <ConnectedBadge />
       </div>
       
-      <Card>
-        <CardHeader>
-          <CardTitle>Family Office Marketplace Integration</CardTitle>
-          <CardDescription>
-            Configure how this application integrates with the Family Office Marketplace
-          </CardDescription>
+      <SupabaseRequiredNotice />
+      
+      <Card className="mt-4">
+        <CardHeader className="pb-3">
+          <CardTitle>Integration Hub</CardTitle>
         </CardHeader>
         <CardContent>
-          <Tabs defaultValue="connected" className="w-full">
-            <TabsList className="grid grid-cols-4 mb-8">
-              <TabsTrigger value="connected">Connected Projects</TabsTrigger>
+          <Tabs
+            defaultValue="connected-projects" 
+            value={activeTab}
+            onValueChange={setActiveTab}
+            className="space-y-4"
+          >
+            <TabsList className="grid grid-cols-4 md:w-[600px]">
+              <TabsTrigger value="connected-projects">Connected Projects</TabsTrigger>
               <TabsTrigger value="architecture">Architecture</TabsTrigger>
-              <TabsTrigger value="api">API Integrations</TabsTrigger>
+              <TabsTrigger value="api-integrations">API Integrations</TabsTrigger>
               <TabsTrigger value="plugins">Plugins</TabsTrigger>
             </TabsList>
-            <TabsContent value="connected">
+            
+            <TabsContent value="connected-projects" className="space-y-4">
               <ConnectedProjectsTab />
             </TabsContent>
-            <TabsContent value="architecture">
+            
+            <TabsContent value="architecture" className="space-y-4">
               <ArchitectureTab />
             </TabsContent>
-            <TabsContent value="api">
+            
+            <TabsContent value="api-integrations" className="space-y-4">
               <ApiIntegrationsTab />
             </TabsContent>
-            <TabsContent value="plugins">
+            
+            <TabsContent value="plugins" className="space-y-4">
               <PluginsTab />
             </TabsContent>
           </Tabs>

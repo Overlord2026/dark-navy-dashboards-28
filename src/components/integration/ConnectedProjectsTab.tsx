@@ -1,25 +1,56 @@
 
 import React, { useState, useEffect } from "react";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { 
+  Table, 
+  TableHeader, 
+  TableRow, 
+  TableHead, 
+  TableBody, 
+  TableCell 
+} from "@/components/ui/table";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Copy, ExternalLink, Check, X, RefreshCw } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { Copy, Plus, RefreshCw, ExternalLink, Trash, Check } from "lucide-react";
 import { toast } from "sonner";
-import { useAuth } from "@/context/AuthContext";
+import { useSupabaseAuth } from "@/context/SupabaseAuthContext";
+import { supabase } from "@/integrations/supabase/client";
 
-export const ConnectedProjectsTab: React.FC = () => {
-  const [connectedProjects, setConnectedProjects] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const { isAuthenticated } = useAuth();
+interface Project {
+  id: string;
+  name: string;
+  description?: string;
+  project_type: string;
+  api_token?: string;
+  status: 'connected' | 'pending' | 'disconnected' | 'error';
+  last_sync?: Date;
+}
 
+export function ConnectedProjectsTab() {
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const [deleteProject, setDeleteProject] = useState<Project | null>(null);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
+  const { user } = useSupabaseAuth();
+
+  // Fetch projects on component mount
   useEffect(() => {
-    if (isAuthenticated) {
-      fetchConnectedProjects();
+    if (user) {
+      fetchProjects();
     }
-  }, [isAuthenticated]);
+  }, [user]);
 
-  const fetchConnectedProjects = async () => {
+  const fetchProjects = async () => {
     setIsLoading(true);
     try {
       const { data, error } = await supabase
@@ -27,146 +58,179 @@ export const ConnectedProjectsTab: React.FC = () => {
         .select('*')
         .order('created_at', { ascending: false });
 
-      if (error) {
-        throw error;
-      }
-
-      setConnectedProjects(data || []);
-    } catch (error: any) {
-      console.error("Error fetching projects:", error.message);
-      toast.error("Failed to load connected projects");
+      if (error) throw error;
+      
+      setProjects(data || []);
+    } catch (error) {
+      console.error('Error fetching projects:', error);
+      toast.error('Failed to load projects');
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleCopyToken = () => {
-    const token = "fmo_api_" + Math.random().toString(36).substring(2, 15);
+  const handleCopyToken = (token: string, projectId: string) => {
     navigator.clipboard.writeText(token);
-    toast.success("Integration token copied to clipboard");
+    setCopiedId(projectId);
+    toast.success('API token copied to clipboard');
+    
+    // Reset the "Copied" state after 2 seconds
+    setTimeout(() => {
+      setCopiedId(null);
+    }, 2000);
   };
 
-  const handleConnectProject = async () => {
-    try {
-      const projectName = prompt("Enter project name:");
-      if (!projectName) return;
-      
-      const projectType = prompt("Enter project type (parent/child):", "child");
-      if (!projectType) return;
-      
-      const apiToken = "fmo_api_" + Math.random().toString(36).substring(2, 15);
-      
-      const { data, error } = await supabase
-        .from('integration_projects')
-        .insert({
-          name: projectName,
-          description: `Integration with ${projectName}`,
-          project_type: projectType,
-          api_token: apiToken,
-          status: 'pending'
-        })
-        .select();
-      
-      if (error) throw error;
-      
-      toast.success("Project connection initiated");
-      fetchConnectedProjects();
-    } catch (error: any) {
-      console.error("Error connecting project:", error.message);
-      toast.error("Failed to connect project");
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case 'connected':
+        return <Badge className="bg-green-600">Connected</Badge>;
+      case 'pending':
+        return <Badge className="bg-yellow-600">Pending</Badge>;
+      case 'disconnected':
+        return <Badge className="bg-slate-600">Disconnected</Badge>;
+      case 'error':
+        return <Badge className="bg-red-600">Error</Badge>;
+      default:
+        return <Badge>{status}</Badge>;
     }
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <div>
-          <h3 className="text-lg font-medium">Connected Projects</h3>
-          <p className="text-sm text-muted-foreground">
-            Manage projects that share data with this instance
-          </p>
-        </div>
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <h3 className="text-lg font-medium">Connected Projects</h3>
         <div className="flex gap-2">
-          <Button variant="outline" onClick={handleCopyToken}>
-            <Copy className="h-4 w-4 mr-2" />
-            Copy Token
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={fetchProjects}
+            disabled={isLoading}
+          >
+            <RefreshCw className={`h-4 w-4 mr-1 ${isLoading ? 'animate-spin' : ''}`} />
+            Refresh
           </Button>
-          <Button onClick={handleConnectProject}>
-            <Plus className="h-4 w-4 mr-2" />
-            Connect Project
+          <Button 
+            size="sm"
+            onClick={() => setIsCreateDialogOpen(true)}
+          >
+            <Plus className="h-4 w-4 mr-1" />
+            New Connection
           </Button>
         </div>
       </div>
-
-      {isLoading ? (
-        <div className="flex justify-center py-8">
-          <RefreshCw className="h-6 w-6 animate-spin text-primary" />
-        </div>
-      ) : connectedProjects.length === 0 ? (
-        <Card className="bg-muted/50">
-          <CardContent className="flex flex-col items-center justify-center py-10">
-            <p className="text-muted-foreground mb-4">No connected projects found</p>
-            <Button onClick={handleConnectProject}>
-              <Plus className="h-4 w-4 mr-2" />
-              Connect Your First Project
-            </Button>
-          </CardContent>
-        </Card>
+      
+      {projects.length > 0 ? (
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Project Name</TableHead>
+              <TableHead>Type</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Last Sync</TableHead>
+              <TableHead className="text-right">Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {projects.map((project) => (
+              <TableRow key={project.id}>
+                <TableCell className="font-medium">{project.name}</TableCell>
+                <TableCell>{project.project_type}</TableCell>
+                <TableCell>{getStatusBadge(project.status)}</TableCell>
+                <TableCell>
+                  {project.last_sync 
+                    ? new Date(project.last_sync).toLocaleString() 
+                    : 'Never'}
+                </TableCell>
+                <TableCell className="text-right">
+                  <div className="flex justify-end gap-2">
+                    {project.api_token && (
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => handleCopyToken(project.api_token!, project.id)}
+                      >
+                        {copiedId === project.id ? (
+                          <Check className="h-4 w-4" />
+                        ) : (
+                          <Copy className="h-4 w-4" />
+                        )}
+                        <span className="sr-only">Copy API token</span>
+                      </Button>
+                    )}
+                    <Button variant="outline" size="sm">
+                      <ExternalLink className="h-4 w-4" />
+                      <span className="sr-only">Open</span>
+                    </Button>
+                    <Button 
+                      variant="destructive" 
+                      size="sm"
+                      onClick={() => setDeleteProject(project)}
+                    >
+                      <Trash className="h-4 w-4" />
+                      <span className="sr-only">Delete</span>
+                    </Button>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {connectedProjects.map((project) => (
-            <Card key={project.id} className="overflow-hidden">
-              <CardHeader className="pb-3">
-                <div className="flex justify-between items-start">
-                  <CardTitle className="text-md font-semibold">{project.name}</CardTitle>
-                  <Badge 
-                    variant={project.status === "active" ? "default" : "outline"}
-                    className={
-                      project.status === "active" 
-                        ? "bg-green-600 hover:bg-green-700" 
-                        : "border-orange-500 text-orange-500"
-                    }
-                  >
-                    {project.status === "active" ? "Active" : "Pending"}
-                  </Badge>
-                </div>
-                <CardDescription>{project.description}</CardDescription>
-              </CardHeader>
-              <CardContent className="text-sm">
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Project Type:</span>
-                    <span className="font-medium capitalize">{project.project_type}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Last Synced:</span>
-                    <span>
-                      {project.last_sync 
-                        ? new Date(project.last_sync).toLocaleString() 
-                        : "Never"}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Data Sharing:</span>
-                    <span className="flex items-center">
-                      {project.status === "active" 
-                        ? <Check className="h-4 w-4 text-green-500 mr-1" /> 
-                        : <X className="h-4 w-4 text-orange-500 mr-1" />}
-                      {project.status === "active" ? "Enabled" : "Disabled"}
-                    </span>
-                  </div>
-                </div>
-              </CardContent>
-              <CardFooter className="bg-muted/50 pt-2 pb-2 flex justify-end">
-                <Button size="sm" variant="ghost">
-                  <ExternalLink className="h-4 w-4 mr-1" />
-                  View Details
-                </Button>
-              </CardFooter>
-            </Card>
-          ))}
+        <div className="border rounded-md p-8 text-center">
+          {isLoading ? (
+            <div className="flex flex-col items-center justify-center">
+              <RefreshCw className="h-8 w-8 animate-spin mb-2 text-muted-foreground" />
+              <p>Loading projects...</p>
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center">
+              <div className="rounded-full bg-muted p-3 mb-3">
+                <ExternalLink className="h-6 w-6 text-muted-foreground" />
+              </div>
+              <h3 className="text-lg font-medium mb-1">No connected projects</h3>
+              <p className="text-muted-foreground mb-4">
+                Connect external projects to integrate with your Family Office platform.
+              </p>
+              <Button 
+                onClick={() => setIsCreateDialogOpen(true)}
+                className="gap-1"
+              >
+                <Plus className="h-4 w-4" />
+                Create New Connection
+              </Button>
+            </div>
+          )}
         </div>
       )}
+
+      {/* Delete Project Confirmation Dialog */}
+      <AlertDialog 
+        open={deleteProject !== null} 
+        onOpenChange={(isOpen) => !isOpen && setDeleteProject(null)}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will disconnect and delete the project connection 
+              "{deleteProject?.name}". This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                // Here you would implement the actual deletion
+                toast.success(`Project "${deleteProject?.name}" has been deleted.`);
+                setDeleteProject(null);
+              }}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
-};
+}

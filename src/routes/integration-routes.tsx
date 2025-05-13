@@ -1,15 +1,10 @@
 
-import { RouteObject } from "react-router-dom";
-import Integration from "@/pages/Integration";
-import NavigationDiagnostics from "@/pages/NavigationDiagnostics";
+import { RouteObject } from 'react-router-dom';
+import Integration from '@/pages/Integration';
 
 export const integrationRoutes: RouteObject[] = [
   {
     path: "/integration",
-    element: <Integration />
+    element: <Integration />,
   },
-  {
-    path: "/navigation-diagnostics",
-    element: <NavigationDiagnostics />
-  }
 ];

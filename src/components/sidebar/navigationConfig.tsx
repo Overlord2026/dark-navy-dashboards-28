@@ -1,182 +1,91 @@
 
-import React from 'react';
-import { 
-  LayoutDashboard, 
-  CreditCard, 
-  FileLineChart, 
-  FileText,
+import {
+  LayoutDashboard,
   BookOpen,
-  Building2,
-  MessageCircle,
   Settings,
-  User,
-  VaultIcon,
-  BriefcaseIcon,
-  Shield,
-  Users2,
-  Share2,
-  BanknoteIcon,
+  Users,
+  FileText,
+  Building2,
+  BadgePercent,
+  LandPlot,
+  HandCoins,
   Home,
-  Receipt
-} from 'lucide-react';
+  Network,
+  Layers,
+  BarChart
+} from "lucide-react";
 
-export const navSections = [
+export const navigationItems = [
   {
-    id: 'main',
-    label: 'Main',
-    icon: LayoutDashboard,
-    items: [
-      {
-        id: 'dashboard',
-        label: 'Dashboard',
-        href: '/',
-        icon: <LayoutDashboard className="h-4 w-4" />,
-      },
-    ],
+    title: "Dashboard",
+    href: "/dashboard",
+    icon: <LayoutDashboard className="h-5 w-5" />,
   },
   {
-    id: 'wealth',
-    label: 'Wealth Management',
-    icon: BriefcaseIcon,
-    items: [
-      {
-        id: 'accounts',
-        label: 'Accounts',
-        href: '/accounts',
-        icon: <CreditCard className="h-4 w-4" />,
-      },
-      {
-        id: 'vault',
-        label: 'Family Vault',
-        href: '/legacy-vault',
-        icon: <VaultIcon className="h-4 w-4" />,
-      },
-      {
-        id: 'investments',
-        label: 'Investments',
-        href: '/investments',
-        icon: <BriefcaseIcon className="h-4 w-4" />,
-      },
-      {
-        id: 'properties',
-        label: 'Properties',
-        href: '/properties',
-        icon: <Home className="h-4 w-4" />,
-      },
-      {
-        id: 'billpay',
-        label: 'Bill Pay',
-        href: '/billpay',
-        icon: <Receipt className="h-4 w-4" />,
-      },
-    ],
+    title: "Education",
+    href: "/education",
+    icon: <BookOpen className="h-5 w-5" />,
   },
   {
-    id: 'planning',
-    label: 'Planning',
-    icon: FileLineChart,
-    items: [
-      {
-        id: 'financial-plans',
-        label: 'Financial Plans',
-        href: '/financial-plans',
-        icon: <FileLineChart className="h-4 w-4" />,
-      },
-      {
-        id: 'tax-planning',
-        label: 'Tax Planning',
-        href: '/tax-planning',
-        icon: <FileText className="h-4 w-4" />,
-      },
-      {
-        id: 'estate-planning',
-        label: 'Estate Planning',
-        href: '/estate-planning',
-        icon: <Building2 className="h-4 w-4" />,
-      },
-      {
-        id: 'insurance',
-        label: 'Insurance',
-        href: '/insurance',
-        icon: <Shield className="h-4 w-4" />,
-      },
-      {
-        id: 'lending',
-        label: 'Lending',
-        href: '/lending',
-        icon: <BanknoteIcon className="h-4 w-4" />,
-      },
-    ],
-  },
-  // Integration section removed
-  {
-    id: 'education',
-    label: 'Education',
-    icon: BookOpen,
-    items: [
-      {
-        id: 'education-center',
-        label: 'Education Center',
-        href: '/education',
-        icon: <BookOpen className="h-4 w-4" />,
-      },
-    ],
+    title: "Family Wealth",
+    href: "/family-wealth",
+    icon: <Building2 className="h-5 w-5" />,
   },
   {
-    id: 'collaboration',
-    label: 'Collaboration',
-    icon: MessageCircle,
-    items: [
-      {
-        id: 'family-collaboration',
-        label: 'Family Collaboration',
-        href: '/sharing',
-        icon: <Share2 className="h-4 w-4" />,
-      },
-      {
-        id: 'professional-collaboration',
-        label: 'Professional Collaboration',
-        href: '/professionals',
-        icon: <Users2 className="h-4 w-4" />,
-      },
-    ],
+    title: "Professionals",
+    href: "/professionals",
+    icon: <Users className="h-5 w-5" />,
   },
   {
-    id: 'support',
-    label: 'Support',
-    icon: MessageCircle,
-    items: [
-      {
-        id: 'help',
-        label: 'Help & Support',
-        href: '/help',
-        icon: <MessageCircle className="h-4 w-4" />,
-      },
-    ],
+    title: "Planning",
+    href: "/planning",
+    icon: <FileText className="h-5 w-5" />,
   },
   {
-    id: 'account',
-    label: 'Account',
-    icon: User,
-    items: [
-      {
-        id: 'profile',
-        label: 'Profile',
-        href: '/profile',
-        icon: <User className="h-4 w-4" />,
-      },
-      {
-        id: 'security',
-        label: 'Security',
-        href: '/security-settings',
-        icon: <Shield className="h-4 w-4" />,
-      },
-      {
-        id: 'settings',
-        label: 'Settings',
-        href: '/settings',
-        icon: <Settings className="h-4 w-4" />,
-      },
-    ],
+    title: "Reports",
+    href: "/reports",
+    icon: <BarChart className="h-5 w-5" />,
+  },
+];
+
+export const bottomNavigationItems = [
+  {
+    title: "Project Integration",
+    href: "/integration",
+    icon: <Network className="h-5 w-5" />,
+    badge: "New",
+  },
+  {
+    title: "Settings",
+    href: "/settings",
+    icon: <Settings className="h-5 w-5" />,
+  },
+];
+
+export const advisorNavigationItems = [
+  {
+    title: "Dashboard",
+    href: "/advisor/dashboard",
+    icon: <LayoutDashboard className="h-5 w-5" />,
+  },
+  {
+    title: "Clients",
+    href: "/advisor/clients",
+    icon: <Users className="h-5 w-5" />,
+  },
+  {
+    title: "Marketing",
+    href: "/advisor/marketing",
+    icon: <BadgePercent className="h-5 w-5" />,
+  },
+  {
+    title: "Practice",
+    href: "/advisor/practice",
+    icon: <Building2 className="h-5 w-5" />,
+  },
+  {
+    title: "Reports",
+    href: "/advisor/reports",
+    icon: <FileText className="h-5 w-5" />,
   },
 ];

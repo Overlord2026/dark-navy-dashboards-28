@@ -62,7 +62,7 @@ export default function Landing() {
   };
 
   const handleSecureLogin = () => {
-    navigate('/secure-login');
+    navigate('/auth');
   };
 
   return (

@@ -1,69 +1,107 @@
 
 import React from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Info, Database, Server, Lock } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Database, Server, Layers, Network } from "lucide-react";
 
-export const ArchitectureTab: React.FC = () => {
+export function ArchitectureTab() {
   return (
     <div className="space-y-6">
-      <div>
-        <h3 className="text-lg font-medium">System Architecture</h3>
-        <p className="text-sm text-muted-foreground">
-          Overview of your Family Office Marketplace integration architecture
-        </p>
+      <p className="text-muted-foreground">
+        The Family Office Marketplace platform architecture provides a secure and flexible foundation
+        for integrating with external systems and services.
+      </p>
+      
+      <div className="grid gap-6 grid-cols-1 md:grid-cols-2">
+        <Card>
+          <CardHeader className="flex flex-row items-center gap-2">
+            <Database className="h-5 w-5" />
+            <div>
+              <CardTitle>Data Layer</CardTitle>
+              <CardDescription>Core data services and persistence</CardDescription>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <ul className="list-disc pl-5 space-y-2">
+              <li>Supabase PostgreSQL backend for relational data</li>
+              <li>Real-time data synchronization</li>
+              <li>Row-level security for fine-grained access control</li>
+              <li>Full auditing capabilities for data changes</li>
+            </ul>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardHeader className="flex flex-row items-center gap-2">
+            <Server className="h-5 w-5" />
+            <div>
+              <CardTitle>API Layer</CardTitle>
+              <CardDescription>Integration interfaces and services</CardDescription>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <ul className="list-disc pl-5 space-y-2">
+              <li>RESTful API endpoints for all resources</li>
+              <li>GraphQL interface for complex data queries</li>
+              <li>Webhook infrastructure for event-driven integrations</li>
+              <li>API rate limiting and monitoring</li>
+            </ul>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardHeader className="flex flex-row items-center gap-2">
+            <Layers className="h-5 w-5" />
+            <div>
+              <CardTitle>Application Layer</CardTitle>
+              <CardDescription>Business logic and processing</CardDescription>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <ul className="list-disc pl-5 space-y-2">
+              <li>Modular service architecture</li>
+              <li>Event-driven processing with message queues</li>
+              <li>Scheduled tasks and background processing</li>
+              <li>Extensible plugin system</li>
+            </ul>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardHeader className="flex flex-row items-center gap-2">
+            <Network className="h-5 w-5" />
+            <div>
+              <CardTitle>Security Layer</CardTitle>
+              <CardDescription>Authentication and authorization</CardDescription>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <ul className="list-disc pl-5 space-y-2">
+              <li>Supabase Auth for identity management</li>
+              <li>Role-based access control (RBAC)</li>
+              <li>JWT token-based API authentication</li>
+              <li>Data encryption at rest and in transit</li>
+            </ul>
+          </CardContent>
+        </Card>
       </div>
       
-      <Alert>
-        <Info className="h-4 w-4" />
-        <AlertTitle>Architecture Overview</AlertTitle>
-        <AlertDescription>
-          This diagram shows how your Family Office Marketplace connects with other systems
-          and the data flow between components.
-        </AlertDescription>
-      </Alert>
-
-      <Card className="bg-muted/30 border-dashed">
-        <CardContent className="pt-6 pb-6">
-          <div className="flex items-center justify-center h-80">
-            {/* Architecture Diagram Placeholder */}
-            <div className="text-center space-y-6">
-              <div className="flex justify-center">
-                <div className="bg-primary/10 border border-primary/20 rounded-lg p-4 w-40 text-center">
-                  <Database className="h-10 w-10 mx-auto mb-2 text-primary" />
-                  <p className="font-medium">BFO System</p>
-                </div>
-              </div>
-              
-              <div className="flex justify-center gap-16">
-                <div className="border border-dashed border-muted-foreground h-20 w-0"></div>
-                <div className="border border-dashed border-muted-foreground h-20 w-0"></div>
-              </div>
-              
-              <div className="flex justify-between gap-8">
-                <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4 w-40 text-center">
-                  <Lock className="h-10 w-10 mx-auto mb-2 text-blue-500" />
-                  <p className="font-medium">Security Layer</p>
-                </div>
-                <div className="bg-amber-500/10 border border-amber-500/20 rounded-lg p-4 w-40 text-center">
-                  <Server className="h-10 w-10 mx-auto mb-2 text-amber-500" />
-                  <p className="font-medium">API Gateway</p>
-                </div>
-                <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-4 w-40 text-center">
-                  <Database className="h-10 w-10 mx-auto mb-2 text-green-500" />
-                  <p className="font-medium">Data Store</p>
-                </div>
-              </div>
-            </div>
+      <div className="bg-muted p-4 rounded-md">
+        <h3 className="text-sm font-semibold mb-2">System Requirements</h3>
+        <div className="grid grid-cols-2 gap-x-8 gap-y-2 text-sm">
+          <div>
+            <span className="font-medium">Database:</span> PostgreSQL 14+
           </div>
-        </CardContent>
-      </Card>
-
-      <div className="flex justify-end gap-2">
-        <Button variant="outline">Export Diagram</Button>
-        <Button variant="outline">View Documentation</Button>
+          <div>
+            <span className="font-medium">Auth Provider:</span> Supabase Auth
+          </div>
+          <div>
+            <span className="font-medium">API Runtime:</span> Node.js 18+
+          </div>
+          <div>
+            <span className="font-medium">Frontend:</span> React 18+
+          </div>
+        </div>
       </div>
     </div>
   );
-};
+}
