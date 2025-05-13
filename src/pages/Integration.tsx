@@ -1,75 +1,54 @@
 
-import React, { useState } from "react";
+import React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { ConnectedBadge } from "@/components/integration/ConnectedBadge";
 import { ConnectedProjectsTab } from "@/components/integration/ConnectedProjectsTab";
 import { ArchitectureTab } from "@/components/integration/ArchitectureTab";
 import { ApiIntegrationsTab } from "@/components/integration/ApiIntegrationsTab";
 import { PluginsTab } from "@/components/integration/PluginsTab";
-import { SupabaseRequiredNotice } from "@/components/integration/SupabaseRequiredNotice";
-import { toast } from "sonner";
+import { ConnectedBadge } from "@/components/integration/ConnectedBadge";
+import { usePagePerformance } from "@/hooks/usePagePerformance";
 
 export default function Integration() {
-  const [activeTab, setActiveTab] = useState("projects");
-  const isConnected = true; // This would typically be determined by an API check
-
-  const handleCopyToken = () => {
-    navigator.clipboard.writeText("fmo_api_" + Math.random().toString(36).substring(2, 15));
-    toast.success("Integration token copied to clipboard");
-  };
-
+  // Track page performance metrics
+  usePagePerformance('/integration');
+  
   return (
-    <div className="container mx-auto py-8 space-y-6">
-      <div className="flex items-center justify-between">
-        <div className="space-y-1">
-          <h1 className="text-3xl font-bold tracking-tight">Project Integration</h1>
-          <p className="text-muted-foreground">
-            Connect your Family Office Marketplace project to other systems
+    <div className="container mx-auto py-6 space-y-6">
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Project Integration Hub</h1>
+          <p className="text-muted-foreground mt-1">
+            Connect, extend and manage your integration with other systems
           </p>
         </div>
-        <ConnectedBadge className="px-3 py-1" />
+        <ConnectedBadge />
       </div>
-
-      <SupabaseRequiredNotice />
-
+      
       <Card>
-        <CardHeader className="pb-2">
-          <div className="flex items-center justify-between">
-            <div>
-              <CardTitle>Integration Hub</CardTitle>
-              <CardDescription>
-                Manage connected projects and integration settings
-              </CardDescription>
-            </div>
-          </div>
+        <CardHeader>
+          <CardTitle>Family Office Marketplace Integration</CardTitle>
+          <CardDescription>
+            Configure how this application integrates with the Family Office Marketplace
+          </CardDescription>
         </CardHeader>
-        <CardContent className="pt-6">
-          <Tabs 
-            defaultValue="projects" 
-            value={activeTab} 
-            onValueChange={setActiveTab} 
-            className="w-full"
-          >
+        <CardContent>
+          <Tabs defaultValue="connected" className="w-full">
             <TabsList className="grid grid-cols-4 mb-8">
-              <TabsTrigger value="projects">Connected Projects</TabsTrigger>
+              <TabsTrigger value="connected">Connected Projects</TabsTrigger>
               <TabsTrigger value="architecture">Architecture</TabsTrigger>
-              <TabsTrigger value="apis">API Integrations</TabsTrigger>
+              <TabsTrigger value="api">API Integrations</TabsTrigger>
               <TabsTrigger value="plugins">Plugins</TabsTrigger>
             </TabsList>
-            
-            <TabsContent value="projects">
-              <ConnectedProjectsTab onCopyToken={handleCopyToken} />
+            <TabsContent value="connected">
+              <ConnectedProjectsTab />
             </TabsContent>
-            
             <TabsContent value="architecture">
               <ArchitectureTab />
             </TabsContent>
-            
-            <TabsContent value="apis">
+            <TabsContent value="api">
               <ApiIntegrationsTab />
             </TabsContent>
-            
             <TabsContent value="plugins">
               <PluginsTab />
             </TabsContent>
