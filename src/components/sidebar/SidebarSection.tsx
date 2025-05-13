@@ -61,7 +61,7 @@ export const SidebarSection: React.FC<SidebarSectionProps> = ({
           isCollapsed && "justify-center"
         )}
       >
-        {section.icon && <SectionIcon size={18} />}
+        {<SectionIcon size={18} />}
         {!isCollapsed && <span>{section.label}</span>}
       </Link>
     );

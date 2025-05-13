@@ -6,19 +6,20 @@ import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { SidebarSection } from "@/components/sidebar/SidebarSection";
 import { SidebarToggle } from "@/components/sidebar/SidebarToggle";
 import { navigationItems, bottomNavigationItems, advisorNavigationItems } from "@/components/sidebar/navigationConfig";
+import { LayoutDashboard, Settings } from "lucide-react";
 
 // Create navSections from the imported navigation items
 const navSections = [
   {
     id: "main",
     label: "Main Navigation",
-    icon: () => null,
+    icon: LayoutDashboard, // Using an actual Lucide icon component
     items: navigationItems
   },
   {
     id: "bottom",
     label: "Settings",
-    icon: () => null,
+    icon: Settings, // Using an actual Lucide icon component
     items: bottomNavigationItems
   }
 ];
