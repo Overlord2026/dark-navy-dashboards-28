@@ -216,6 +216,45 @@ export type Database = {
         }
         Relationships: []
       }
+      integration_projects: {
+        Row: {
+          api_token: string | null
+          created_at: string
+          description: string | null
+          id: string
+          last_sync: string | null
+          name: string
+          project_type: string
+          status: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          api_token?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          last_sync?: string | null
+          name: string
+          project_type: string
+          status?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          api_token?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          last_sync?: string | null
+          name?: string
+          project_type?: string
+          status?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       lead_source_logs: {
         Row: {
           completed_at: string | null
