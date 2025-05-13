@@ -31,8 +31,9 @@ interface Project {
   description?: string;
   project_type: string;
   api_token?: string;
-  status: 'connected' | 'pending' | 'disconnected' | 'error';
-  last_sync?: Date;
+  // Change status to accept string to match what comes from Supabase
+  status: string;
+  last_sync?: Date | string | null;
 }
 
 export function ConnectedProjectsTab() {
@@ -60,7 +61,18 @@ export function ConnectedProjectsTab() {
 
       if (error) throw error;
       
-      setProjects(data || []);
+      // Map the data to Project type to ensure compatibility
+      const typedProjects: Project[] = data?.map(item => ({
+        id: item.id,
+        name: item.name,
+        description: item.description,
+        project_type: item.project_type,
+        api_token: item.api_token,
+        status: item.status,
+        last_sync: item.last_sync
+      })) || [];
+      
+      setProjects(typedProjects);
     } catch (error) {
       console.error('Error fetching projects:', error);
       toast.error('Failed to load projects');
