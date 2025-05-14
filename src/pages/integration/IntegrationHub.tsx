@@ -5,6 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge-extended";
+import { ConnectedBadge } from "@/components/integration/ConnectedBadge";
 import { 
   NetworkIcon, 
   Code, 
@@ -23,7 +24,10 @@ export default function IntegrationHub() {
       <div className="p-6">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Integration Hub</h1>
+            <h1 className="text-3xl font-bold tracking-tight flex items-center">
+              Integration Hub
+              <ConnectedBadge className="ml-2" />
+            </h1>
             <p className="text-muted-foreground mt-1">Manage connected projects and external integrations</p>
           </div>
           <Button>
