@@ -1,8 +1,7 @@
-
 import React from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { StatusIcon, getStatusColor } from "../StatusIcon";
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@/components/ui/badge-extended";
 import { DiagnosticTestStatus } from "@/types/diagnostics";
 
 interface NavigationTestItem {

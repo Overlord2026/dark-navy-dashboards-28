@@ -3,7 +3,7 @@ import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Calendar, Clock, CreditCard, Plus, ArrowUp, Wallet, BanknoteIcon, CreditCard as CreditCardIcon, ExternalLink, ActivityIcon } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { Badge as BadgeExtended } from "@/components/ui/badge-extended";
 import { useToast } from "@/hooks/use-toast";
 import { DashboardHeader } from "@/components/ui/DashboardHeader";
 import { AdvancedBillPayingProvidersDialog } from "@/components/billpay/AdvancedBillPayingProvidersDialog";
@@ -283,12 +283,12 @@ const BillPay = () => {
                       <div className="flex items-center gap-4">
                         <div className="flex flex-col items-end">
                           <span className="font-semibold">${bill.amount.toFixed(2)}</span>
-                          <Badge variant={getDueBadgeVariant(getDaysUntilDue(bill.dueDate))}>
+                          <BadgeExtended variant={getDueBadgeVariant(getDaysUntilDue(bill.dueDate))}>
                             {getDaysUntilDue(bill.dueDate) <= 0 
                               ? `Overdue by ${Math.abs(getDaysUntilDue(bill.dueDate))} days`
                               : `Due in ${getDaysUntilDue(bill.dueDate)} days`
                             }
-                          </Badge>
+                          </BadgeExtended>
                         </div>
                         <div className="relative group">
                           <Button 

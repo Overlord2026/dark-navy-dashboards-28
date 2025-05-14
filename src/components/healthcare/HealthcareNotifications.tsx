@@ -1,12 +1,12 @@
-
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { Calendar, Clock, Hospital, User, MapPin, AlertCircle, Pill, Badge, CalendarClock } from "lucide-react";
+import { Calendar, Clock, Hospital, User, MapPin, AlertCircle, Pill, Badge } from "@/components/ui/badge-extended";
 import { Badge as BadgeComponent } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { auditLog } from "@/services/auditLog/auditLogService";
+import { CalendarClock } from "lucide-react";
 
 // Define interfaces for the component props
 export interface UpcomingAppointment {

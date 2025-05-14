@@ -6,7 +6,7 @@ import { DocumentItem } from "@/types/document";
 import { Button } from "@/components/ui/button";
 import { HealthcareNotificationCenter } from "./HealthcareNotificationCenter";
 import { format } from "date-fns";
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@/components/ui/badge-extended";
 import { Progress } from "@/components/ui/progress";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 

@@ -1,5 +1,5 @@
 
-import { HomeIcon, BookIcon, Connection } from "lucide-react";
+import { HomeIcon, BookIcon, NetworkIcon } from "lucide-react";
 import { NavItem } from "@/types/navigation";
 
 export const homeNavItems: NavItem[] = [
@@ -16,6 +16,6 @@ export const homeNavItems: NavItem[] = [
   {
     title: "Project Integration",
     href: "/integration",
-    icon: Connection
+    icon: NetworkIcon
   }
 ];

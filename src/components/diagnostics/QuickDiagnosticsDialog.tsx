@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -9,7 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@/components/ui/badge-extended";
 import { AlertTriangle, CheckCircle2, RefreshCw, Shield, Terminal, Zap } from "lucide-react";
 import { useDiagnostics } from "@/hooks/useDiagnostics";
 import { QuickFix } from "@/types/diagnostics";
