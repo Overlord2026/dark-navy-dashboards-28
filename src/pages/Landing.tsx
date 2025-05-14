@@ -13,8 +13,10 @@ export default function Landing() {
     // Only redirect after both auth contexts have been checked
     if (!supabaseIsLoading && !userIsLoading) {
       if (supabaseIsAuthenticated && userIsAuthenticated) {
+        console.log('Auth verified, redirecting to dashboard');
         navigate('/dashboard');
       } else {
+        console.log('Not authenticated, redirecting to auth page');
         navigate('/auth');
       }
     }

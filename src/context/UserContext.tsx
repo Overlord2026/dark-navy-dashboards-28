@@ -21,7 +21,7 @@ interface UserProfile {
   investorType?: string;
   role: 'client' | 'advisor' | 'admin' | 'system_administrator' | 'developer' | 'consultant' | 'accountant' | 'attorney';
   permissions?: string[];
-  avatar_url?: string; // Add this to fix the type error
+  avatar_url?: string;
 }
 
 interface UserContextType {
@@ -95,8 +95,6 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
             ? `${profileData.first_name} ${profileData.last_name}` 
             : profileData?.display_name || user.email?.split('@')[0] || 'User',
           role: profileData?.role as UserProfile['role'] || userRole,
-          // Only set phone if it exists in profileData
-          ...(profileData?.phone && { phone: profileData.phone }),
           title: profileData?.title || undefined,
           avatar_url: profileData?.avatar_url || undefined,
           // Add more fields as needed

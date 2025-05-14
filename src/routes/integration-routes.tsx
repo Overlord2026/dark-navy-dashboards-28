@@ -1,10 +1,17 @@
 
 import { RouteObject } from "react-router-dom";
-import Integration from "@/pages/Integration";
+import DefaultLayout from "@/components/layout/DefaultLayout";
+import IntegrationHub from "@/pages/integration/IntegrationHub";
 
 export const integrationRoutes: RouteObject[] = [
   {
     path: "/integration",
-    element: <Integration />
+    element: <DefaultLayout />,
+    children: [
+      {
+        index: true,
+        element: <IntegrationHub />,
+      }
+    ]
   }
 ];
