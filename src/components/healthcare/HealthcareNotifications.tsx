@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { Calendar, Clock, Hospital, User, MapPin, AlertCircle, Pill, Badge } from "@/components/ui/badge-extended";
+import { Calendar, Clock, Hospital, User, MapPin, AlertCircle, Pill } from "lucide-react";
 import { Badge as BadgeComponent } from "@/components/ui/badge";
+import { Badge } from "@/components/ui/badge-extended";
 import { toast } from "sonner";
 import { auditLog } from "@/services/auditLog/auditLogService";
 import { CalendarClock } from "lucide-react";
@@ -136,7 +137,7 @@ export const HealthcareNotifications: React.FC<HealthcareNotificationsProps> = (
             Medications
           </TabsTrigger>
           <TabsTrigger value="insurance" className="flex items-center gap-1">
-            <Badge className="h-4 w-4" />
+            <BadgeComponent className="h-4 w-4" />
             Insurance
           </TabsTrigger>
         </TabsList>

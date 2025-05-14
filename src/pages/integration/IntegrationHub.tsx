@@ -10,8 +10,7 @@ import {
   Network, 
   Package, 
   PuzzleIcon,
-  ExternalLink,
-  ConnectionIcon
+  ExternalLink
 } from 'lucide-react';
 import { useSupabaseAuth } from '@/context/SupabaseAuthContext';
 
@@ -111,7 +110,7 @@ export default function IntegrationHub() {
           <Card className="p-6 border border-dashed border-gray-300 bg-gray-50">
             <div className="flex justify-center items-center flex-col text-center">
               <div className="h-12 w-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 mb-3">
-                <ConnectionIcon size={24} />
+                <Network size={24} />
               </div>
               <h3 className="font-medium text-lg mb-2">Connect a new project</h3>
               <p className="text-muted-foreground mb-4 max-w-md">
