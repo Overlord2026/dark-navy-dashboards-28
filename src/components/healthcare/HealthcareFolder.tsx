@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -17,7 +18,7 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { HealthcareDashboard } from "./HealthcareDashboard";
-import { HealthcareNotifications } from "./HealthcareNotifications";
+import HealthcareNotifications from "./HealthcareNotifications";
 import { HealthcareTemplates } from "./HealthcareTemplates";
 import { DocumentVersionControl } from "./DocumentVersionControl";
 import { HealthcareShareDialog } from "./HealthcareShareDialog";
