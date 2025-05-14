@@ -1,40 +1,23 @@
 
-import { 
-  HomeIcon, 
-  BookIcon, 
-  HeartHandshakeIcon, 
-  UserIcon 
-} from "lucide-react";
 import { homeNavItems } from "./config/homeNavConfig";
-import { educationNavItems } from "./config/educationNavConfig";
-import { familyWealthNavItems } from "./config/wealthNavConfig";
-import { collaborationNavItems } from "./config/collaborationNavConfig";
-import { NavItem } from "@/types/navigation";
 
-// Re-export all navigation items
+// Export navigation configurations grouped by page
 export {
-  homeNavItems,
-  educationNavItems,
-  familyWealthNavItems,
-  collaborationNavItems,
+  homeNavItems
 };
 
-// Bottom navigation items
-export const bottomNavItems: NavItem[] = [
-  { 
-    title: "Help", 
-    href: "/help", 
-    icon: HeartHandshakeIcon 
-  },
-  { 
-    title: "Settings", 
-    href: "/settings", 
-    icon: UserIcon 
-  }
-];
+// Add typings for navigation items
+export interface NavItem {
+  title: string;
+  href: string;
+  icon: any;
+  sections?: {
+    title: string;
+    href: string;
+  }[];
+}
 
-// Remove deprecated exports for backward compatibility
-export const wealthManagementNavItems: NavItem[] = [];
-export const bankingNavItems: NavItem[] = [];
-export const securityNavItems: NavItem[] = [];
-export const propertiesNavItems: NavItem[] = [];
+// Export commonly used navigation constants
+export const DEFAULT_DASHBOARD_PATH = "/dashboard";
+export const DEFAULT_AUTH_PATH = "/auth";
+export const DEFAULT_LANDING_PATH = "/";

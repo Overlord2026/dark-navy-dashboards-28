@@ -1,340 +1,179 @@
-import React, { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
+import React from "react";
+import { Bell, X, Check } from "lucide-react";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
 import { Calendar, Clock, Hospital, User, MapPin, AlertCircle, Pill } from "lucide-react";
-import { Badge as BadgeComponent } from "@/components/ui/badge";
 import { Badge } from "@/components/ui/badge-extended";
-import { toast } from "sonner";
-import { auditLog } from "@/services/auditLog/auditLogService";
-import { CalendarClock } from "lucide-react";
 
-// Define interfaces for the component props
-export interface UpcomingAppointment {
-  id: string;
-  title: string;
-  doctor: string;
-  location: string;
-  date: Date | string;
-  time: string;
-  notes?: string;
-}
+const notifications = [
+  {
+    id: "1",
+    title: "Appointment Reminder",
+    description: "Your appointment with Dr. Smith is scheduled for tomorrow at 10:00 AM.",
+    time: "8:00 AM",
+    type: "Reminder",
+    isRead: false,
+  },
+  {
+    id: "2",
+    title: "Medication Alert",
+    description: "Remember to take your medication at 12:00 PM.",
+    time: "11:30 AM",
+    type: "Alert",
+    isRead: false,
+  },
+  {
+    id: "3",
+    title: "Lab Results Available",
+    description: "Your recent lab results are now available in your portal.",
+    time: "Yesterday",
+    type: "Update",
+    isRead: true,
+  },
+  {
+    id: "4",
+    title: "Upcoming Checkup",
+    description: "Schedule your annual checkup with Dr. Johnson.",
+    time: "2 days ago",
+    type: "Reminder",
+    isRead: true,
+  },
+  {
+    id: "5",
+    title: "New Message",
+    description: "You have a new message from your healthcare provider.",
+    time: "1 week ago",
+    type: "Message",
+    isRead: true,
+  },
+];
 
-export interface Medication {
-  id: string;
-  name: string;
-  dosage: string;
-  frequency: string;
-  nextRefill: Date | string;
-  doctor?: string;
-  pharmacy?: string;
-}
+const HealthcareNotifications = () => {
+  const [readNotifications, setReadNotifications] = React.useState([]);
+  const [dismissedNotifications, setDismissedNotifications] = React.useState([]);
 
-export interface InsurancePolicy {
-  id: string;
-  name: string;
-  endDate: string;
-  provider?: string;
-  coverage?: string;
-  policyNumber?: string;
-}
-
-interface HealthcareNotificationsProps {
-  upcomingAppointments: UpcomingAppointment[];
-  medications: Medication[];
-  policies?: InsurancePolicy[];
-}
-
-export const HealthcareNotifications: React.FC<HealthcareNotificationsProps> = ({
-  upcomingAppointments,
-  medications,
-  policies = []
-}) => {
-  const [activeTab, setActiveTab] = useState<string>("appointments");
-  
-  const handleReminderSetup = (type: string, id: string) => {
-    // For demo purposes, we'll just log this and show a toast
-    // In a real app, this would integrate with a notification system
-    const userId = "current-user"; // In a real app, this would come from auth context
-    
-    auditLog.log(
-      userId,
-      type === "appointment" ? "appointment_reminder" : 
-      type === "medication" ? "medication_reminder" : "insurance_reminder",
-      "success",
-      {
-        resourceId: id,
-        resourceType: `healthcare_${type}`,
-        details: {
-          action: "set_reminder",
-          type
-        }
-      }
-    );
-    
-    toast.success(`Reminder set up successfully for ${type}`);
+  const markAsRead = (id) => {
+    setReadNotifications([...readNotifications, id]);
   };
-  
-  const getDaysRemaining = (date: Date | string): number => {
-    if (!date) return 0;
-    
-    try {
-      const targetDate = typeof date === 'string' ? new Date(date) : date;
-      const today = new Date();
-      
-      // Reset time part for accurate day calculation
-      today.setHours(0, 0, 0, 0);
-      const targetWithoutTime = new Date(targetDate);
-      targetWithoutTime.setHours(0, 0, 0, 0);
-      
-      const diffTime = targetWithoutTime.getTime() - today.getTime();
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-      
-      return diffDays;
-    } catch (error) {
-      console.error("Error calculating days remaining:", error);
-      return 0;
-    }
+
+  const dismissNotification = (id) => {
+    setDismissedNotifications([...dismissedNotifications, id]);
   };
-  
-  const getUrgencyColor = (days: number): string => {
-    if (days < 0) return "text-red-500";
-    if (days < 3) return "text-amber-500";
-    if (days < 7) return "text-yellow-500";
-    return "text-green-500";
-  };
-  
-  const getUrgencyBadge = (days: number) => {
-    if (days < 0) {
-      return <BadgeComponent variant="destructive">Overdue</BadgeComponent>;
-    }
-    if (days < 3) {
-      return <BadgeComponent variant="destructive">Urgent</BadgeComponent>;
-    }
-    if (days < 7) {
-      return <BadgeComponent variant="warning">Soon</BadgeComponent>;
-    }
-    return <BadgeComponent variant="outline">Upcoming</BadgeComponent>;
-  };
-  
+
+  const unreadNotifications = notifications.filter(
+    (notification) =>
+      !readNotifications.includes(notification.id) &&
+      !dismissedNotifications.includes(notification.id)
+  );
+
   return (
-    <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold mb-4">Healthcare Reminders</h2>
-        <p className="text-muted-foreground">
-          Manage your upcoming healthcare appointments, medication refills, and insurance renewals
-        </p>
+    <div className="w-full max-w-md rounded-md border bg-popover text-popover-foreground shadow-md outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 motion-reduce:transition-none">
+      <div className="flex items-center justify-between rounded-t-md border-b p-4">
+        <div className="flex items-center">
+          <Bell className="mr-2 h-4 w-4" />
+          <h4 className="text-sm font-semibold">Notifications</h4>
+        </div>
       </div>
-      
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="mb-4">
-          <TabsTrigger value="appointments" className="flex items-center gap-1">
-            <CalendarClock className="h-4 w-4" />
-            Appointments
-          </TabsTrigger>
-          <TabsTrigger value="medications" className="flex items-center gap-1">
-            <Pill className="h-4 w-4" />
-            Medications
-          </TabsTrigger>
-          <TabsTrigger value="insurance" className="flex items-center gap-1">
-            <BadgeComponent className="h-4 w-4" />
-            Insurance
-          </TabsTrigger>
-        </TabsList>
-        
-        <TabsContent value="appointments">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {upcomingAppointments.length > 0 ? (
-              upcomingAppointments.map(appointment => {
-                const daysUntil = getDaysRemaining(appointment.date);
-                const appointmentDate = typeof appointment.date === 'string' 
-                  ? new Date(appointment.date) 
-                  : appointment.date;
-                
-                return (
-                  <Card key={appointment.id} className="overflow-hidden">
-                    <CardHeader className="pb-2">
-                      <CardTitle className="flex justify-between items-center">
-                        <span>{appointment.title}</span>
-                        {getUrgencyBadge(daysUntil)}
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-3">
-                      <div className="space-y-1">
-                        <div className="flex items-center text-sm">
-                          <Calendar className="h-4 w-4 mr-2" />
-                          <span className={getUrgencyColor(daysUntil)}>
-                            {appointmentDate.toLocaleDateString()} 
-                            ({daysUntil < 0 ? `${Math.abs(daysUntil)} days ago` : daysUntil === 0 ? "Today" : `in ${daysUntil} days`})
-                          </span>
-                        </div>
-                        <div className="flex items-center text-sm">
-                          <Clock className="h-4 w-4 mr-2" />
-                          <span>{appointment.time}</span>
-                        </div>
-                        <div className="flex items-center text-sm">
-                          <User className="h-4 w-4 mr-2" />
-                          <span>{appointment.doctor}</span>
-                        </div>
-                        <div className="flex items-center text-sm">
-                          <MapPin className="h-4 w-4 mr-2" />
-                          <span>{appointment.location}</span>
-                        </div>
-                        {appointment.notes && (
-                          <div className="flex items-start text-sm">
-                            <AlertCircle className="h-4 w-4 mr-2 mt-0.5" />
-                            <span>{appointment.notes}</span>
-                          </div>
-                        )}
-                      </div>
-                      
-                      <Button 
-                        size="sm" 
-                        variant="outline" 
-                        className="w-full"
-                        onClick={() => handleReminderSetup("appointment", appointment.id)}
-                      >
-                        Set Reminder
-                      </Button>
-                    </CardContent>
-                  </Card>
-                );
-              })
-            ) : (
-              <div className="col-span-full py-8 text-center">
-                <p className="text-muted-foreground">No upcoming appointments scheduled</p>
-              </div>
-            )}
+      <ScrollArea className="h-[400px] p-0">
+        {unreadNotifications.length > 0 ? (
+          unreadNotifications.map((notification) => (
+            <NotificationItem
+              key={notification.id}
+              title={notification.title}
+              description={notification.description}
+              time={notification.time}
+              type={notification.type}
+              isRead={readNotifications.includes(notification.id)}
+              onMarkRead={() => markAsRead(notification.id)}
+              onDismiss={() => dismissNotification(notification.id)}
+            />
+          ))
+        ) : (
+          <div className="p-4 text-center text-sm text-muted-foreground">
+            No new notifications
           </div>
-        </TabsContent>
-        
-        <TabsContent value="medications">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {medications.length > 0 ? (
-              medications.map(medication => {
-                const daysUntil = getDaysRemaining(medication.nextRefill);
-                const refillDate = typeof medication.nextRefill === 'string' 
-                  ? new Date(medication.nextRefill) 
-                  : medication.nextRefill;
-                
-                return (
-                  <Card key={medication.id} className="overflow-hidden">
-                    <CardHeader className="pb-2">
-                      <CardTitle className="flex justify-between items-center">
-                        <span>{medication.name}</span>
-                        {getUrgencyBadge(daysUntil)}
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-3">
-                      <div className="space-y-1">
-                        <div className="flex items-center text-sm">
-                          <Pill className="h-4 w-4 mr-2" />
-                          <span>{medication.dosage}, {medication.frequency}</span>
-                        </div>
-                        <div className="flex items-center text-sm">
-                          <Calendar className="h-4 w-4 mr-2" />
-                          <span className={getUrgencyColor(daysUntil)}>
-                            Next refill: {refillDate.toLocaleDateString()} 
-                            ({daysUntil < 0 ? `${Math.abs(daysUntil)} days ago` : daysUntil === 0 ? "Today" : `in ${daysUntil} days`})
-                          </span>
-                        </div>
-                        {medication.doctor && (
-                          <div className="flex items-center text-sm">
-                            <User className="h-4 w-4 mr-2" />
-                            <span>Prescribed by: {medication.doctor}</span>
-                          </div>
-                        )}
-                        {medication.pharmacy && (
-                          <div className="flex items-center text-sm">
-                            <Hospital className="h-4 w-4 mr-2" />
-                            <span>Pharmacy: {medication.pharmacy}</span>
-                          </div>
-                        )}
-                      </div>
-                      
-                      <Button 
-                        size="sm" 
-                        variant="outline" 
-                        className="w-full"
-                        onClick={() => handleReminderSetup("medication", medication.id)}
-                      >
-                        Set Refill Reminder
-                      </Button>
-                    </CardContent>
-                  </Card>
-                );
-              })
-            ) : (
-              <div className="col-span-full py-8 text-center">
-                <p className="text-muted-foreground">No medications to track</p>
-              </div>
-            )}
-          </div>
-        </TabsContent>
-        
-        <TabsContent value="insurance">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {policies && policies.length > 0 ? (
-              policies.map(policy => {
-                const daysUntil = getDaysRemaining(policy.endDate);
-                
-                return (
-                  <Card key={policy.id} className="overflow-hidden">
-                    <CardHeader className="pb-2">
-                      <CardTitle className="flex justify-between items-center">
-                        <span>{policy.name}</span>
-                        {getUrgencyBadge(daysUntil)}
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-3">
-                      <div className="space-y-1">
-                        <div className="flex items-center text-sm">
-                          <Calendar className="h-4 w-4 mr-2" />
-                          <span className={getUrgencyColor(daysUntil)}>
-                            Renewal: {new Date(policy.endDate).toLocaleDateString()} 
-                            ({daysUntil < 0 ? `${Math.abs(daysUntil)} days ago` : daysUntil === 0 ? "Today" : `in ${daysUntil} days`})
-                          </span>
-                        </div>
-                        {policy.provider && (
-                          <div className="flex items-center text-sm">
-                            <Badge className="h-4 w-4 mr-2" />
-                            <span>Provider: {policy.provider}</span>
-                          </div>
-                        )}
-                        {policy.policyNumber && (
-                          <div className="flex items-center text-sm">
-                            <Badge className="h-4 w-4 mr-2" />
-                            <span>Policy #: {policy.policyNumber}</span>
-                          </div>
-                        )}
-                        {policy.coverage && (
-                          <div className="flex items-center text-sm">
-                            <Badge className="h-4 w-4 mr-2" />
-                            <span>Coverage: {policy.coverage}</span>
-                          </div>
-                        )}
-                      </div>
-                      
-                      <Button 
-                        size="sm" 
-                        variant="outline" 
-                        className="w-full"
-                        onClick={() => handleReminderSetup("insurance", policy.id)}
-                      >
-                        Set Renewal Reminder
-                      </Button>
-                    </CardContent>
-                  </Card>
-                );
-              })
-            ) : (
-              <div className="col-span-full py-8 text-center">
-                <p className="text-muted-foreground">No insurance policies to track</p>
-              </div>
-            )}
-          </div>
-        </TabsContent>
-      </Tabs>
+        )}
+      </ScrollArea>
     </div>
   );
 };
+
+const NotificationItem = ({ 
+  title, 
+  description, 
+  time, 
+  type, 
+  isRead, 
+  onMarkRead, 
+  onDismiss 
+}) => {
+  const handleMarkRead = (e) => {
+    e.stopPropagation();
+    onMarkRead();
+  };
+
+  const handleDismiss = (e) => {
+    e.stopPropagation();
+    onDismiss();
+  };
+
+  // Get the appropriate icon based on notification type
+  const getNotificationIcon = () => {
+    switch (type) {
+      case "Reminder":
+        return <Calendar className="h-4 w-4" />;
+      case "Alert":
+        return <AlertCircle className="h-4 w-4" />;
+      case "Update":
+        return <Pill className="h-4 w-4" />;
+      case "Message":
+        return <User className="h-4 w-4" />;
+      default:
+        return <Bell className="h-4 w-4" />;
+    }
+  };
+
+  return (
+    <div className={`p-4 ${isRead ? 'bg-background' : 'bg-muted/30'} border-b border-border`}>
+      <div className="flex items-center justify-end gap-2">
+        {!isRead && (
+          <button
+            className="rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary"
+            onClick={handleMarkRead}
+          >
+            <Check className="h-4 w-4" />
+            <span className="sr-only">Mark as read</span>
+          </button>
+        )}
+        <button
+          className="rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary"
+          onClick={handleDismiss}
+        >
+          <X className="h-4 w-4" />
+          <span className="sr-only">Dismiss</span>
+        </button>
+      </div>
+      
+      <div className="flex items-start gap-3">
+        <div className="rounded-full bg-background p-2 border border-border">
+          {getNotificationIcon()}
+        </div>
+        
+        <div className="flex-1">
+          <div className="flex items-center justify-between mb-1">
+            <h4 className="font-medium">{title}</h4>
+            <Badge variant="warning" className="text-xs py-0">
+              {type}
+            </Badge>
+          </div>
+          
+          <p className="text-sm text-muted-foreground">{description}</p>
+        </div>
+      </div>
+      
+      <div className="text-xs text-muted-foreground mt-2">{time}</div>
+    </div>
+  );
+};
+
+export default HealthcareNotifications;

@@ -1,269 +1,269 @@
-import React from 'react';
+
+import React from "react";
+import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge-extended";
 import { 
-  ArrowUpRight, 
-  Code2, 
-  GitMerge, 
-  GitPullRequest, 
-  Network, 
-  Package, 
+  NetworkIcon, 
+  Code, 
+  GitBranch, 
+  Plug, 
+  ArrowRight, 
+  CheckCircle, 
+  AlertCircle, 
   PuzzleIcon,
-  ExternalLink
-} from 'lucide-react';
-import { useSupabaseAuth } from '@/context/SupabaseAuthContext';
+  Activity
+} from "lucide-react";
 
 export default function IntegrationHub() {
-  const { profile } = useSupabaseAuth();
-
   return (
-    <div className="container py-8">
-      <div className="flex justify-between items-center mb-6">
-        <div>
-          <h1 className="text-3xl font-bold mb-1">Project Integration</h1>
-          <p className="text-muted-foreground">
-            Connect and manage external projects and services
-          </p>
-        </div>
-        <div>
-          <Badge variant="default" className="bg-emerald-600 hover:bg-emerald-700 flex items-center gap-1">
-            <span className="h-2 w-2 rounded-full bg-emerald-300"></span>
-            Connected
-          </Badge>
-        </div>
-      </div>
-
-      <Tabs defaultValue="connected" className="w-full">
-        <TabsList className="grid grid-cols-4 mb-8">
-          <TabsTrigger value="connected">Connected Projects</TabsTrigger>
-          <TabsTrigger value="architecture">Architecture</TabsTrigger>
-          <TabsTrigger value="api">API Integrations</TabsTrigger>
-          <TabsTrigger value="plugins">Plugins</TabsTrigger>
-        </TabsList>
-        
-        <TabsContent value="connected" className="space-y-6">
-          <div className="grid md:grid-cols-2 gap-6">
-            <Card className="p-6 border border-gray-200">
-              <div className="flex justify-between items-start mb-4">
-                <div className="flex items-center">
-                  <div className="h-10 w-10 rounded-md bg-blue-100 flex items-center justify-center text-blue-600 mr-3">
-                    <Network size={20} />
-                  </div>
-                  <div>
-                    <h3 className="font-medium">Family Office Core</h3>
-                    <p className="text-sm text-muted-foreground">Primary platform</p>
-                  </div>
-                </div>
-                <Badge variant="outline" className="bg-green-50 text-green-600 border-green-200">Active</Badge>
-              </div>
-              <div className="space-y-2 mb-4">
-                <div className="flex justify-between items-center text-sm">
-                  <span className="text-muted-foreground">Connection status</span>
-                  <span className="font-medium text-green-600">Connected</span>
-                </div>
-                <div className="flex justify-between items-center text-sm">
-                  <span className="text-muted-foreground">Last synced</span>
-                  <span className="font-medium">2 minutes ago</span>
-                </div>
-              </div>
-              <div className="flex justify-end">
-                <a href="#" className="text-sm text-blue-600 hover:underline flex items-center gap-1">
-                  Manage 
-                  <ArrowUpRight size={14} />
-                </a>
-              </div>
-            </Card>
-            
-            <Card className="p-6 border border-gray-200">
-              <div className="flex justify-between items-start mb-4">
-                <div className="flex items-center">
-                  <div className="h-10 w-10 rounded-md bg-purple-100 flex items-center justify-center text-purple-600 mr-3">
-                    <GitMerge size={20} />
-                  </div>
-                  <div>
-                    <h3 className="font-medium">Wealth Management System</h3>
-                    <p className="text-sm text-muted-foreground">Data provider</p>
-                  </div>
-                </div>
-                <Badge variant="outline" className="bg-green-50 text-green-600 border-green-200">Active</Badge>
-              </div>
-              <div className="space-y-2 mb-4">
-                <div className="flex justify-between items-center text-sm">
-                  <span className="text-muted-foreground">Connection status</span>
-                  <span className="font-medium text-green-600">Connected</span>
-                </div>
-                <div className="flex justify-between items-center text-sm">
-                  <span className="text-muted-foreground">Last synced</span>
-                  <span className="font-medium">5 minutes ago</span>
-                </div>
-              </div>
-              <div className="flex justify-end">
-                <a href="#" className="text-sm text-blue-600 hover:underline flex items-center gap-1">
-                  Manage 
-                  <ArrowUpRight size={14} />
-                </a>
-              </div>
-            </Card>
+    <ThreeColumnLayout>
+      <div className="p-6">
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">Integration Hub</h1>
+            <p className="text-muted-foreground mt-1">Manage connected projects and external integrations</p>
           </div>
+          <Button>
+            Connect New Project
+            <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
+        </div>
 
-          <Card className="p-6 border border-dashed border-gray-300 bg-gray-50">
-            <div className="flex justify-center items-center flex-col text-center">
-              <div className="h-12 w-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 mb-3">
-                <Network size={24} />
-              </div>
-              <h3 className="font-medium text-lg mb-2">Connect a new project</h3>
-              <p className="text-muted-foreground mb-4 max-w-md">
-                Expand your ecosystem by connecting additional projects and services
-              </p>
-              <a href="#" className="text-blue-600 hover:underline flex items-center gap-1 font-medium">
-                Add connection
-                <ArrowUpRight size={16} />
-              </a>
+        <Tabs defaultValue="connected" className="w-full">
+          <TabsList className="mb-6">
+            <TabsTrigger value="connected">
+              <NetworkIcon className="h-4 w-4 mr-2" />
+              Connected Projects
+            </TabsTrigger>
+            <TabsTrigger value="architecture">
+              <GitBranch className="h-4 w-4 mr-2" />
+              Architecture
+            </TabsTrigger>
+            <TabsTrigger value="api">
+              <Code className="h-4 w-4 mr-2" />
+              API Integrations
+            </TabsTrigger>
+            <TabsTrigger value="plugins">
+              <PuzzleIcon className="h-4 w-4 mr-2" />
+              Plugins
+            </TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="connected" className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <ConnectedProjectCard 
+                name="Family Office CRM"
+                description="Primary client relationship management system"
+                status="active"
+                lastSync="2 hours ago"
+                type="CRM"
+              />
+              <ConnectedProjectCard 
+                name="Investment Analytics"
+                description="Portfolio tracking and analysis platform"
+                status="active"
+                lastSync="1 day ago"
+                type="Analytics"
+              />
+              <ConnectedProjectCard 
+                name="Document Management"
+                description="Secure document storage and sharing"
+                status="warning"
+                lastSync="3 days ago"
+                type="Storage"
+              />
+              <ConnectedProjectCard 
+                name="Billing System"
+                description="Client invoicing and payment processing"
+                status="inactive"
+                lastSync="Never"
+                type="Finance"
+              />
             </div>
-          </Card>
-        </TabsContent>
-        
-        <TabsContent value="architecture">
-          <Card className="p-6">
-            <h3 className="text-lg font-medium mb-4">System Architecture</h3>
-            <div className="border border-gray-200 rounded-md p-6 bg-gray-50 mb-6">
-              <div className="flex flex-col items-center justify-center min-h-[300px]">
-                <Code2 size={64} className="text-gray-400 mb-4" />
-                <p className="text-muted-foreground text-center max-w-md">
-                  The architecture diagram shows how your Family Office Marketplace 
-                  connects with other systems and services in your ecosystem.
-                </p>
-              </div>
+          </TabsContent>
+          
+          <TabsContent value="architecture">
+            <Card>
+              <CardHeader>
+                <CardTitle>System Architecture</CardTitle>
+                <CardDescription>Overall integration architecture and data flow</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="p-8 border rounded-md flex items-center justify-center">
+                  <p className="text-muted-foreground">Architecture diagram will display here</p>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+          
+          <TabsContent value="api">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <ApiIntegrationCard 
+                name="CRM API"
+                description="Connect to client data"
+                status="active"
+                endpoints={12}
+              />
+              <ApiIntegrationCard 
+                name="Portfolio API"
+                description="Investment data access"
+                status="active"
+                endpoints={8}
+              />
+              <ApiIntegrationCard 
+                name="Document API"
+                description="Document storage and retrieval"
+                status="active"
+                endpoints={6}
+              />
+              <ApiIntegrationCard 
+                name="Reporting API"
+                description="Generate customized reports"
+                status="inactive"
+                endpoints={0}
+              />
             </div>
-            <div className="grid md:grid-cols-3 gap-4">
-              <div className="border border-gray-200 rounded-md p-4">
-                <h4 className="font-medium mb-2 flex items-center gap-2">
-                  <GitPullRequest size={16} /> 
-                  API Gateway
-                </h4>
-                <p className="text-sm text-muted-foreground">Central entry point for all API requests</p>
-              </div>
-              <div className="border border-gray-200 rounded-md p-4">
-                <h4 className="font-medium mb-2 flex items-center gap-2">
-                  <Package size={16} />
-                  Microservices
-                </h4>
-                <p className="text-sm text-muted-foreground">Modular services for specific functionality</p>
-              </div>
-              <div className="border border-gray-200 rounded-md p-4">
-                <h4 className="font-medium mb-2 flex items-center gap-2">
-                  <Network size={16} />
-                  Data Layer
-                </h4>
-                <p className="text-sm text-muted-foreground">Shared data repositories and storage</p>
-              </div>
+          </TabsContent>
+          
+          <TabsContent value="plugins">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <PluginCard 
+                name="Data Connector"
+                description="Sync data between systems"
+                status="active"
+                version="1.2.3"
+              />
+              <PluginCard 
+                name="Report Builder"
+                description="Create custom client reports"
+                status="active"
+                version="2.1.0"
+              />
+              <PluginCard 
+                name="Task Automator"
+                description="Automate routine workflows"
+                status="warning"
+                version="0.9.5"
+              />
+              <PluginCard 
+                name="AI Assistant"
+                description="Intelligent data analysis"
+                status="inactive"
+                version="0.5.0"
+              />
             </div>
-          </Card>
-        </TabsContent>
-        
-        <TabsContent value="api">
-          <Card className="p-6">
-            <h3 className="text-lg font-medium mb-4">API Integrations</h3>
-            <div className="space-y-4">
-              <div className="border border-gray-200 rounded-md p-4">
-                <div className="flex justify-between items-center mb-2">
-                  <h4 className="font-medium">Portfolio Management API</h4>
-                  <Badge variant="outline" className="bg-green-50 text-green-600 border-green-200">Active</Badge>
-                </div>
-                <p className="text-sm text-muted-foreground mb-2">Access to portfolio data and investment analytics</p>
-                <div className="flex gap-2">
-                  <Badge variant="secondary">v2.3</Badge>
-                  <Badge variant="secondary">REST</Badge>
-                </div>
-              </div>
-              
-              <div className="border border-gray-200 rounded-md p-4">
-                <div className="flex justify-between items-center mb-2">
-                  <h4 className="font-medium">Document Management API</h4>
-                  <Badge variant="outline" className="bg-green-50 text-green-600 border-green-200">Active</Badge>
-                </div>
-                <p className="text-sm text-muted-foreground mb-2">Secure document storage and retrieval</p>
-                <div className="flex gap-2">
-                  <Badge variant="secondary">v1.8</Badge>
-                  <Badge variant="secondary">GraphQL</Badge>
-                </div>
-              </div>
-              
-              <div className="border border-gray-200 rounded-md p-4 bg-gray-50">
-                <div className="flex justify-between items-center mb-2">
-                  <h4 className="font-medium">Financial Planning API</h4>
-                  <Badge variant="outline" className="bg-amber-50 text-amber-600 border-amber-200">Setup Required</Badge>
-                </div>
-                <p className="text-sm text-muted-foreground mb-2">Financial planning tools and projections</p>
-                <div className="flex gap-2">
-                  <Badge variant="secondary">v3.0</Badge>
-                  <Badge variant="secondary">REST</Badge>
-                </div>
-              </div>
-            </div>
-          </Card>
-        </TabsContent>
-        
-        <TabsContent value="plugins">
-          <Card className="p-6">
-            <h3 className="text-lg font-medium mb-4">Integration Plugins</h3>
-            <div className="grid md:grid-cols-2 gap-4">
-              <div className="border border-gray-200 rounded-md p-4">
-                <div className="flex items-start gap-3">
-                  <div className="h-10 w-10 rounded bg-blue-100 flex items-center justify-center text-blue-600">
-                    <PuzzleIcon size={20} />
-                  </div>
-                  <div>
-                    <h4 className="font-medium mb-1">Data Synchronization</h4>
-                    <p className="text-sm text-muted-foreground mb-2">Keeps data in sync across all connected platforms</p>
-                    <Badge className="bg-green-100 text-green-700 hover:bg-green-100">Installed</Badge>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="border border-gray-200 rounded-md p-4">
-                <div className="flex items-start gap-3">
-                  <div className="h-10 w-10 rounded bg-purple-100 flex items-center justify-center text-purple-600">
-                    <PuzzleIcon size={20} />
-                  </div>
-                  <div>
-                    <h4 className="font-medium mb-1">Single Sign-On</h4>
-                    <p className="text-sm text-muted-foreground mb-2">Unified authentication across all platforms</p>
-                    <Badge className="bg-green-100 text-green-700 hover:bg-green-100">Installed</Badge>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="border border-gray-200 rounded-md p-4">
-                <div className="flex items-start gap-3">
-                  <div className="h-10 w-10 rounded bg-amber-100 flex items-center justify-center text-amber-600">
-                    <PuzzleIcon size={20} />
-                  </div>
-                  <div>
-                    <h4 className="font-medium mb-1">API Gateway</h4>
-                    <p className="text-sm text-muted-foreground mb-2">Centralized API management and security</p>
-                    <Badge className="bg-green-100 text-green-700 hover:bg-green-100">Installed</Badge>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="border border-gray-200 rounded-md p-4 bg-gray-50">
-                <div className="flex items-start gap-3">
-                  <div className="h-10 w-10 rounded bg-gray-200 flex items-center justify-center text-gray-600">
-                    <PuzzleIcon size={20} />
-                  </div>
-                  <div>
-                    <h4 className="font-medium mb-1">Reporting Engine</h4>
-                    <p className="text-sm text-muted-foreground mb-2">Cross-platform consolidated reporting</p>
-                    <Badge variant="outline" className="bg-gray-100 text-gray-700 hover:bg-gray-100">Available</Badge>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </Card>
-        </TabsContent>
-      </Tabs>
-    </div>
+          </TabsContent>
+        </Tabs>
+      </div>
+    </ThreeColumnLayout>
   );
+}
+
+function ConnectedProjectCard({ name, description, status, lastSync, type }) {
+  return (
+    <Card>
+      <CardHeader className="pb-3">
+        <div className="flex justify-between items-start">
+          <CardTitle>{name}</CardTitle>
+          <StatusBadge status={status} />
+        </div>
+        <CardDescription>{description}</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="grid grid-cols-2 gap-2 text-sm">
+          <div className="text-muted-foreground">Type:</div>
+          <div className="font-medium">{type}</div>
+          <div className="text-muted-foreground">Last Sync:</div>
+          <div className="font-medium">{lastSync}</div>
+        </div>
+      </CardContent>
+      <CardFooter className="pt-2">
+        <Button variant="outline" size="sm" className="w-full">
+          Manage Connection
+        </Button>
+      </CardFooter>
+    </Card>
+  );
+}
+
+function ApiIntegrationCard({ name, description, status, endpoints }) {
+  return (
+    <Card>
+      <CardHeader className="pb-3">
+        <div className="flex justify-between items-start">
+          <CardTitle>{name}</CardTitle>
+          <StatusBadge status={status} />
+        </div>
+        <CardDescription>{description}</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="text-sm">
+          <div className="text-muted-foreground mb-1">Active Endpoints</div>
+          <div className="text-2xl font-bold">{endpoints}</div>
+        </div>
+      </CardContent>
+      <CardFooter className="pt-2">
+        <Button variant="outline" size="sm" className="w-full">
+          <Code className="h-4 w-4 mr-2" />
+          View Documentation
+        </Button>
+      </CardFooter>
+    </Card>
+  );
+}
+
+function PluginCard({ name, description, status, version }) {
+  return (
+    <Card>
+      <CardHeader className="pb-3">
+        <div className="flex justify-between items-start">
+          <CardTitle>{name}</CardTitle>
+          <StatusBadge status={status} />
+        </div>
+        <CardDescription>{description}</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="grid grid-cols-2 gap-2 text-sm">
+          <div className="text-muted-foreground">Version:</div>
+          <div className="font-medium">{version}</div>
+          <div className="text-muted-foreground">Updated:</div>
+          <div className="font-medium">2 weeks ago</div>
+        </div>
+      </CardContent>
+      <CardFooter className="pt-2">
+        <Button variant="outline" size="sm" className="w-full">
+          <Plug className="h-4 w-4 mr-2" />
+          Configure Plugin
+        </Button>
+      </CardFooter>
+    </Card>
+  );
+}
+
+function StatusBadge({ status }) {
+  if (status === "active") {
+    return (
+      <Badge variant="success" className="gap-1 px-2 py-1">
+        <CheckCircle className="h-3 w-3" />
+        Active
+      </Badge>
+    );
+  } else if (status === "warning") {
+    return (
+      <Badge variant="warning" className="gap-1 px-2 py-1">
+        <AlertCircle className="h-3 w-3" />
+        Warning
+      </Badge>
+    );
+  } else {
+    return (
+      <Badge variant="destructive" className="gap-1 px-2 py-1">
+        <Activity className="h-3 w-3" />
+        Inactive
+      </Badge>
+    );
+  }
 }
