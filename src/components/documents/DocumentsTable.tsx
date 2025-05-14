@@ -12,6 +12,10 @@ export interface DocumentsTableProps {
   onDeleteDocument?: (document: DocumentItem) => void;
   onViewDocument?: (document: DocumentItem) => void;
   onDownloadDocument?: (document: DocumentItem) => void;
+  showCategory?: boolean;
+  onEditPermissions?: (document: DocumentItem) => void;
+  onShare?: (document: DocumentItem) => void;
+  onView?: (document: DocumentItem) => void;
   extraColumns?: {
     header: string;
     cell: (document: DocumentItem) => React.ReactNode;
@@ -25,6 +29,10 @@ export const DocumentsTable: React.FC<DocumentsTableProps> = ({
   onDeleteDocument,
   onViewDocument,
   onDownloadDocument,
+  showCategory = false,
+  onEditPermissions,
+  onShare,
+  onView,
   extraColumns = []
 }) => {
   const getDocumentIcon = (type: string) => {
@@ -37,6 +45,21 @@ export const DocumentsTable: React.FC<DocumentsTableProps> = ({
     }
   };
   
+  // Handle compatibility between old and new prop names
+  const handleViewDocument = (document: DocumentItem) => {
+    if (onViewDocument) onViewDocument(document);
+    else if (onView) onView(document);
+  };
+  
+  const handleShareDocument = (document: DocumentItem) => {
+    if (onShareDocument) onShareDocument(document);
+    else if (onShare) onShare(document);
+  };
+  
+  const handleEditPermissions = (document: DocumentItem) => {
+    if (onEditPermissions) onEditPermissions(document);
+  };
+  
   return (
     <Table>
       <TableHeader>
@@ -44,6 +67,7 @@ export const DocumentsTable: React.FC<DocumentsTableProps> = ({
           <TableHead>Name</TableHead>
           <TableHead>Date</TableHead>
           <TableHead>Size</TableHead>
+          {showCategory && <TableHead>Category</TableHead>}
           {extraColumns?.map((col, index) => (
             <TableHead key={`extra-col-${index}`}>{col.header}</TableHead>
           ))}
@@ -64,6 +88,10 @@ export const DocumentsTable: React.FC<DocumentsTableProps> = ({
             <TableCell>{document.created ? new Date(document.created).toLocaleDateString() : '-'}</TableCell>
             <TableCell>{typeof document.size === 'number' ? `${(document.size / (1024 * 1024)).toFixed(2)} MB` : document.size || '-'}</TableCell>
             
+            {showCategory && (
+              <TableCell>{document.category || '-'}</TableCell>
+            )}
+            
             {extraColumns?.map((col, index) => (
               <TableCell key={`document-${document.id}-col-${index}`}>
                 {col.cell(document)}
@@ -72,11 +100,11 @@ export const DocumentsTable: React.FC<DocumentsTableProps> = ({
             
             <TableCell className="text-right">
               <div className="flex justify-end space-x-2">
-                {onViewDocument && (
+                {(onViewDocument || onView) && (
                   <Button 
                     variant="ghost" 
                     size="icon" 
-                    onClick={() => onViewDocument(document)}
+                    onClick={() => handleViewDocument(document)}
                     aria-label="View Document"
                   >
                     <Eye className="h-4 w-4" />
@@ -105,11 +133,11 @@ export const DocumentsTable: React.FC<DocumentsTableProps> = ({
                   </Button>
                 )}
                 
-                {onShareDocument && (
+                {(onShareDocument || onShare) && (
                   <Button 
                     variant="ghost" 
                     size="icon" 
-                    onClick={() => onShareDocument(document)}
+                    onClick={() => handleShareDocument(document)}
                     aria-label="Share Document"
                   >
                     <Share2 className="h-4 w-4" />
@@ -124,6 +152,17 @@ export const DocumentsTable: React.FC<DocumentsTableProps> = ({
                     aria-label="Delete Document"
                   >
                     <Trash2 className="h-4 w-4" />
+                  </Button>
+                )}
+                
+                {onEditPermissions && (
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    onClick={() => handleEditPermissions(document)}
+                    aria-label="Edit Permissions"
+                  >
+                    <Edit className="h-4 w-4" />
                   </Button>
                 )}
               </div>

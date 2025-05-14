@@ -1,9 +1,36 @@
+
 import React from "react";
 import { Bell, X, Check } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Calendar, Clock, Hospital, User, MapPin, AlertCircle, Pill } from "lucide-react";
 import { Badge } from "@/components/ui/badge-extended";
+
+interface HealthcareNotificationsProps {
+  upcomingAppointments?: {
+    id: string;
+    title: string;
+    doctor: string;
+    date: Date;
+    time: string;
+    notes: string;
+    location: string;
+  }[];
+  medications?: {
+    id: string;
+    name: string;
+    nextRefill: string;
+    dosage: string;
+    frequency: string;
+    doctor: string;
+    pharmacy: string;
+  }[];
+  policies?: {
+    id: string;
+    name: string;
+    endDate: string;
+  }[];
+}
 
 const notifications = [
   {
@@ -48,15 +75,19 @@ const notifications = [
   },
 ];
 
-const HealthcareNotifications = () => {
-  const [readNotifications, setReadNotifications] = React.useState([]);
-  const [dismissedNotifications, setDismissedNotifications] = React.useState([]);
+const HealthcareNotifications: React.FC<HealthcareNotificationsProps> = ({
+  upcomingAppointments = [],
+  medications = [],
+  policies = []
+}) => {
+  const [readNotifications, setReadNotifications] = React.useState<string[]>([]);
+  const [dismissedNotifications, setDismissedNotifications] = React.useState<string[]>([]);
 
-  const markAsRead = (id) => {
+  const markAsRead = (id: string) => {
     setReadNotifications([...readNotifications, id]);
   };
 
-  const dismissNotification = (id) => {
+  const dismissNotification = (id: string) => {
     setDismissedNotifications([...dismissedNotifications, id]);
   };
 
@@ -98,7 +129,17 @@ const HealthcareNotifications = () => {
   );
 };
 
-const NotificationItem = ({ 
+interface NotificationItemProps {
+  title: string;
+  description: string;
+  time: string;
+  type: string;
+  isRead: boolean;
+  onMarkRead: () => void;
+  onDismiss: () => void;
+}
+
+const NotificationItem: React.FC<NotificationItemProps> = ({ 
   title, 
   description, 
   time, 
@@ -107,12 +148,12 @@ const NotificationItem = ({
   onMarkRead, 
   onDismiss 
 }) => {
-  const handleMarkRead = (e) => {
+  const handleMarkRead = (e: React.MouseEvent) => {
     e.stopPropagation();
     onMarkRead();
   };
 
-  const handleDismiss = (e) => {
+  const handleDismiss = (e: React.MouseEvent) => {
     e.stopPropagation();
     onDismiss();
   };
