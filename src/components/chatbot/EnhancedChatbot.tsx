@@ -44,13 +44,23 @@ export const EnhancedChatbot: React.FC<EnhancedChatbotProps> = ({ onClose }) => 
   
   // Set initial welcome message based on context
   useEffect(() => {
-    const welcomeMessage = getWelcomeMessage(chatContext.currentSection);
-    setMessages([{
-      id: generateId(),
-      content: welcomeMessage,
-      sender: 'bot',
-      timestamp: new Date()
-    }]);
+    try {
+      const welcomeMessage = getWelcomeMessage(chatContext.currentSection);
+      setMessages([{
+        id: generateId(),
+        content: welcomeMessage,
+        sender: 'bot',
+        timestamp: new Date()
+      }]);
+    } catch (error) {
+      console.error("Error setting welcome message:", error);
+      setMessages([{
+        id: generateId(),
+        content: "Hello! I'm your Family Office assistant. How can I help you today?",
+        sender: 'bot',
+        timestamp: new Date()
+      }]);
+    }
   }, [chatContext.currentSection]);
   
   // Auto-scroll to bottom when messages change
@@ -118,18 +128,27 @@ export const EnhancedChatbot: React.FC<EnhancedChatbotProps> = ({ onClose }) => 
   
   // Quick reply suggestions based on context
   const quickReplies = useMemo(() => {
-    if (chatContext.currentSection === 'Integration Hub') {
+    try {
+      if (chatContext.currentSection === 'Integration Hub') {
+        return [
+          "How do I connect a new project?",
+          "What APIs are available?",
+          "How do plugins work?"
+        ];
+      }
       return [
-        "How do I connect a new project?",
-        "What APIs are available?",
-        "How do plugins work?"
+        "Tell me about Family Office",
+        "What features are available?",
+        "How do I get started?"
+      ];
+    } catch (error) {
+      console.error("Error generating quick replies:", error);
+      return [
+        "Tell me about Family Office",
+        "What features are available?",
+        "How do I get started?"
       ];
     }
-    return [
-      "Tell me about Family Office",
-      "What features are available?",
-      "How do I get started?"
-    ];
   }, [chatContext.currentSection]);
 
   return (

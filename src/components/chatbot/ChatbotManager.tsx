@@ -12,15 +12,10 @@ export function ChatbotManager() {
   const [hasBeenGreeted, setHasBeenGreeted] = useState(false);
   const [messageCount, setMessageCount] = useLocalStorage('chatbot-message-count', 0);
   
-  // Only show the chatbot for authenticated users
-  if (!isAuthenticated) {
-    return null;
-  }
-
   // Auto-open the chatbot after a delay when on the integration page
   // and user hasn't been greeted yet in this session
   useEffect(() => {
-    if (window.location.pathname === '/integration' && !hasBeenGreeted) {
+    if (isAuthenticated && window.location.pathname === '/integration' && !hasBeenGreeted) {
       const timer = setTimeout(() => {
         setShowChatbot(true);
         setHasBeenGreeted(true);
@@ -28,7 +23,12 @@ export function ChatbotManager() {
       
       return () => clearTimeout(timer);
     }
-  }, [hasBeenGreeted]);
+  }, [isAuthenticated, hasBeenGreeted]);
+
+  // Don't render anything for unauthenticated users
+  if (!isAuthenticated) {
+    return null;
+  }
 
   return (
     <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-2">
