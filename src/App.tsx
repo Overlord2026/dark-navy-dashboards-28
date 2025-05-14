@@ -15,6 +15,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { AIInsightsProvider } from "./components/insights/AIInsightsProvider";
 import { AudienceProvider } from "./context/AudienceContext";
 import { AuthProvider } from "./context/SupabaseAuthContext";
+import { AIChatbotManager } from "./components/ai/AIChatbotManager";
 
 // Create a Query Client
 const queryClient = new QueryClient({
@@ -42,6 +43,7 @@ function App() {
                           <AudienceProvider>
                             <TooltipProvider>
                               <RouterProvider router={routes} />
+                              <AIChatbotManager />
                               <Toaster position="top-right" richColors closeButton />
                             </TooltipProvider>
                           </AudienceProvider>

@@ -1,19 +1,11 @@
 
-import React, { useState } from "react";
+import React from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { CategoryList } from "@/components/documents/CategoryList";
 import { DocumentsTable } from "@/components/documents/DocumentsTable";
 import { NoDocumentsState } from "@/components/documents/EmptyStates";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
-import { Lock, FolderPlus, Upload, Tag, Eye, Users } from "lucide-react";
-import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
-import { Badge } from "@/components/ui/badge";
-import { healthcareCategories } from "@/data/documentCategories";
-import { healthcareTags } from "@/types/document";
 import { DocumentItem } from "@/types/document";
-import { auditLog } from "@/services/auditLog/auditLogService";
+import { Filter, Upload, FolderPlus } from "lucide-react";
 
 interface DocumentsTabContentProps {
   documents: DocumentItem[];
@@ -32,152 +24,104 @@ export const DocumentsTabContent: React.FC<DocumentsTabContentProps> = ({
   onUploadClick,
   onCreateFolderClick
 }) => {
-  const [activeSubcategory, setActiveSubcategory] = useState<string>("healthcare");
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [showOnlyEncrypted, setShowOnlyEncrypted] = useState(false);
+  const healthcareDocuments = documents.filter(doc => 
+    doc.category === "healthcare" || doc.category === "medical"
+  );
   
-  const filteredDocuments = documents
-    .filter(doc => 
-      doc.category === activeSubcategory || 
-      (activeSubcategory === "healthcare" && healthcareCategories.some(c => c.id === doc.category))
-    )
-    .filter(doc => selectedTags.length > 0 ? doc.tags?.some(tag => selectedTags.includes(tag)) : true)
-    .filter(doc => showOnlyEncrypted ? doc.encrypted === true : true);
-
-  const toggleTag = (tagId: string) => {
-    if (selectedTags.includes(tagId)) {
-      setSelectedTags(selectedTags.filter(id => id !== tagId));
-    } else {
-      setSelectedTags([...selectedTags, tagId]);
-    }
-  };
-
-  const relevantTags = activeSubcategory === "healthcare" 
-    ? healthcareTags 
-    : healthcareTags.filter(tag => tag.category === activeSubcategory);
-
-  const activeSubcategoryName = healthcareCategories.find(cat => cat.id === activeSubcategory)?.name || "Healthcare";
+  const recentUploads = healthcareDocuments
+    .sort((a, b) => new Date(b.created).getTime() - new Date(a.created).getTime())
+    .slice(0, 5);
+  
+  const sharedDocuments = healthcareDocuments.filter(doc => doc.shared);
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-      <div className="md:col-span-1">
-        <CategoryList
-          categories={healthcareCategories}
-          activeCategory={activeSubcategory}
-          onCategorySelect={setActiveSubcategory}
-        />
-        
-        <Card className="mt-6 bg-[#0a1629] border-none shadow-lg">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-white">Privacy Options</CardTitle>
+    <div className="space-y-6">
+      <div className="flex flex-col gap-6 md:flex-row">
+        <Card className="flex-1">
+          <CardHeader>
+            <CardTitle className="flex items-center justify-between text-xl">
+              Recent Uploads
+            </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center space-x-2">
-              <Switch 
-                id="encryption-filter" 
-                checked={showOnlyEncrypted}
-                onCheckedChange={setShowOnlyEncrypted}
+          <CardContent>
+            {recentUploads.length > 0 ? (
+              <DocumentsTable 
+                documents={recentUploads}
+                showCategory={false}
+                onEditPermissions={onEditPermissions}
+                onShare={onShareDocument}
+                onView={onViewDocument}
               />
-              <Label htmlFor="encryption-filter" className="flex items-center gap-1">
-                <Lock className="h-3.5 w-3.5" />
-                <span>Show only encrypted</span>
-              </Label>
-            </div>
+            ) : (
+              <NoDocumentsState 
+                onUploadClick={onUploadClick}
+                title="No recent uploads"
+                description="Upload your first medical document to get started"
+              />
+            )}
           </CardContent>
         </Card>
         
-        {relevantTags.length > 0 && (
-          <Card className="mt-6 bg-[#0a1629] border-none shadow-lg">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-white">Tags</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex flex-wrap gap-2">
-                {relevantTags.map(tag => (
-                  <Button
-                    key={tag.id}
-                    variant={selectedTags.includes(tag.id) ? "default" : "outline"}
-                    size="sm"
-                    className="flex items-center gap-1"
-                    onClick={() => toggleTag(tag.id)}
-                  >
-                    <Tag className="h-3 w-3" />
-                    <span className="text-xs">{tag.name}</span>
-                  </Button>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        )}
+        <Card className="flex-1">
+          <CardHeader>
+            <CardTitle className="flex items-center justify-between text-xl">
+              Shared With Healthcare Providers
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {sharedDocuments.length > 0 ? (
+              <DocumentsTable 
+                documents={sharedDocuments}
+                showCategory={false}
+                onEditPermissions={onEditPermissions}
+                onShare={onShareDocument}
+                onView={onViewDocument}
+              />
+            ) : (
+              <NoDocumentsState 
+                onUploadClick={onUploadClick}
+                title="No shared documents"
+                description="Share documents with your healthcare providers"
+              />
+            )}
+          </CardContent>
+        </Card>
       </div>
       
-      <div className="md:col-span-3">
-        {filteredDocuments.length > 0 ? (
-          <div className="space-y-6">
-            <DocumentsTable 
-              documents={filteredDocuments} 
-              onEditDocument={onEditPermissions}
-              onShareDocument={onShareDocument}
-              onViewDocument={onViewDocument}
-              extraColumns={[
-                {
-                  header: "Privacy",
-                  cell: (document) => (
-                    <div className="flex items-center space-x-1">
-                      <TooltipProvider>
-                        {document.encrypted && (
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <div>
-                                <Lock className="h-4 w-4 text-green-500" />
-                              </div>
-                            </TooltipTrigger>
-                            <TooltipContent>Encrypted</TooltipContent>
-                          </Tooltip>
-                        )}
-                        {document.isPrivate && (
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <div>
-                                <Eye className="h-4 w-4 text-amber-500" />
-                              </div>
-                            </TooltipTrigger>
-                            <TooltipContent>Private</TooltipContent>
-                          </Tooltip>
-                        )}
-                      </TooltipProvider>
-                    </div>
-                  )
-                },
-                {
-                  header: "Shared With",
-                  cell: (document) => (
-                    <div className="flex items-center space-x-1">
-                      {document.permissions && document.permissions.length > 1 ? (
-                        <Badge variant="outline" className="flex items-center gap-1">
-                          <Users className="h-3 w-3" />
-                          <span>{document.permissions.length - 1}</span>
-                        </Badge>
-                      ) : (
-                        <span className="text-xs text-muted-foreground">Only you</span>
-                      )}
-                    </div>
-                  )
-                }
-              ]}
-            />
-            <p className="text-sm text-muted-foreground">
-              <Lock className="h-3.5 w-3.5 inline mr-1" />
-              All healthcare documents are encrypted and have individual access controls
-            </p>
+      <Card>
+        <CardHeader className="pb-3">
+          <div className="flex justify-between items-center">
+            <CardTitle className="text-xl">All Healthcare Documents</CardTitle>
+            <div className="flex gap-2">
+              <Button variant="outline" size="sm" onClick={onCreateFolderClick}>
+                <FolderPlus className="h-4 w-4 mr-2" />
+                New Folder
+              </Button>
+              <Button size="sm" onClick={onUploadClick}>
+                <Upload className="h-4 w-4 mr-2" />
+                Upload
+              </Button>
+            </div>
           </div>
-        ) : (
-          <NoDocumentsState
-            onUploadClick={onUploadClick}
-            categoryName={activeSubcategoryName}
-          />
-        )}
-      </div>
+        </CardHeader>
+        <CardContent>
+          {healthcareDocuments.length > 0 ? (
+            <DocumentsTable 
+              documents={healthcareDocuments}
+              showCategory={true}
+              onEditPermissions={onEditPermissions}
+              onShare={onShareDocument}
+              onView={onViewDocument}
+            />
+          ) : (
+            <NoDocumentsState 
+              onUploadClick={onUploadClick}
+              title="No documents found"
+              description="Upload your first healthcare document"
+            />
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 };
