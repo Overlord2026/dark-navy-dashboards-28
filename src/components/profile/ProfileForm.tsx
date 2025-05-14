@@ -31,7 +31,7 @@ export function ProfileForm({ onSave }: { onSave: () => void }) {
   
   // Convert date string to Date object if needed
   const getInitialDate = (): Date => {
-    if (!userProfile.dateOfBirth) {
+    if (!userProfile?.dateOfBirth) {
       return new Date("1985-05-03");
     }
     
@@ -45,13 +45,13 @@ export function ProfileForm({ onSave }: { onSave: () => void }) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: userProfile.title || "Mr",
-      firstName: "Tom", // Always set to Tom
-      middleName: userProfile.middleName || "",
-      lastName: "Brady", // Always set to Brady
-      suffix: userProfile.suffix || "none",
-      gender: userProfile.gender || "Male",
-      maritalStatus: userProfile.maritalStatus || "Single",
+      title: userProfile?.title || "Mr",
+      firstName: userProfile?.firstName || "Tom",
+      middleName: userProfile?.middleName || "",
+      lastName: userProfile?.lastName || "Brady",
+      suffix: userProfile?.suffix || "none",
+      gender: userProfile?.gender || "Male",
+      maritalStatus: userProfile?.maritalStatus || "Single",
       dateOfBirth: getInitialDate(),
     },
   });
@@ -61,9 +61,9 @@ export function ProfileForm({ onSave }: { onSave: () => void }) {
     if (userProfile) {
       form.reset({
         title: userProfile.title || "Mr",
-        firstName: "Tom", // Always reset to Tom
+        firstName: userProfile.firstName || "Tom",
         middleName: userProfile.middleName || "",
-        lastName: "Brady", // Always reset to Brady
+        lastName: userProfile.lastName || "Brady",
         suffix: userProfile.suffix || "none",
         gender: userProfile.gender || "Male",
         maritalStatus: userProfile.maritalStatus || "Single",
@@ -72,7 +72,7 @@ export function ProfileForm({ onSave }: { onSave: () => void }) {
     }
   }, [userProfile, form]);
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log("Form submitted with values:", values);
     setIsSubmitting(true);
     
@@ -84,20 +84,22 @@ export function ProfileForm({ onSave }: { onSave: () => void }) {
         lastName: "Brady"
       };
       
-      // Update global user profile state
-      updateUserProfile && updateUserProfile(updatedValues);
+      // Update global user profile state and Supabase
+      const success = await updateUserProfile(updatedValues);
       
-      // Show success message
-      toast.success("Profile information updated successfully", {
-        duration: 3000,
-        position: "top-center"
-      });
-      
-      // Call the onSave callback to update parent components
-      if (onSave) {
-        setTimeout(() => {
-          onSave();
-        }, 300);
+      if (success) {
+        // Show success message
+        toast.success("Profile information updated successfully", {
+          duration: 3000,
+          position: "top-center"
+        });
+        
+        // Call the onSave callback to update parent components
+        if (onSave) {
+          setTimeout(() => {
+            onSave();
+          }, 300);
+        }
       }
     } catch (error) {
       console.error("Error updating profile:", error);

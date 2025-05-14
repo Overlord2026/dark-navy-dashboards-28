@@ -10,9 +10,9 @@ import { BeneficiariesForm } from "@/components/profile/BeneficiariesForm";
 import { AffiliationsForm } from "@/components/profile/AffiliationsForm";
 import { TrustsForm } from "@/components/profile/TrustsForm";
 import { SecurityForm } from "@/components/profile/SecurityForm";
-import { DialogTitle } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { useUser } from "@/context/UserContext";
+import { supabase } from "@/integrations/supabase/client";
 
 interface ProfileFormSheetProps {
   isOpen: boolean;
@@ -27,18 +27,44 @@ export const ProfileFormSheet = ({
   activeForm, 
   onFormSave 
 }: ProfileFormSheetProps) => {
-  const { userProfile } = useUser();
+  const { userProfile, loadUserData } = useUser();
   
-  // Force re-render when profile data changes
+  // Ensure we have fresh data when opening a form
   useEffect(() => {
-    if (isOpen) {
-      console.log("ProfileFormSheet: UserProfile changed", userProfile);
+    if (isOpen && activeForm && userProfile?.id) {
+      loadUserData();
+      console.log("ProfileFormSheet: Loading fresh user data");
     }
-  }, [userProfile, isOpen]);
+  }, [isOpen, activeForm, userProfile?.id, loadUserData]);
   
   // Handle saving the form data
   const handleSave = (formId: string) => {
     console.log(`Form ${formId} saved from ProfileFormSheet`);
+    
+    // Update audit log
+    if (userProfile?.id) {
+      const logAuditEvent = async () => {
+        try {
+          await supabase
+            .from('audit_logs')
+            .insert({
+              user_id: userProfile.id,
+              event_type: 'profile_update',
+              status: 'success',
+              details: {
+                form: formId,
+                updated_at: new Date().toISOString()
+              }
+            });
+        } catch (error) {
+          console.error("Error logging profile update:", error);
+        }
+      };
+      
+      logAuditEvent();
+    }
+    
+    // Notify parent component
     if (onFormSave) {
       onFormSave(formId);
     }

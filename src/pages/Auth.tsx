@@ -1,17 +1,20 @@
 
 import React, { useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { BrandedHeader } from "@/components/layout/BrandedHeader";
 import { Shield, Lock, AlertCircle } from "lucide-react";
 import { useSupabaseAuth } from "@/context/SupabaseAuthContext";
+import { useUser } from "@/context/UserContext";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function Auth() {
   const navigate = useNavigate();
-  const { signIn, signUp, signInWithGoogle, signInWithMicrosoft, isAuthenticated, isLoading } = useSupabaseAuth();
+  const location = useLocation();
+  const { signIn, signUp, signInWithGoogle, signInWithMicrosoft, isAuthenticated: supabaseIsAuthenticated, isLoading: supabaseIsLoading } = useSupabaseAuth();
+  const { isAuthenticated: userIsAuthenticated, isLoading: userIsLoading } = useUser();
   const [activeTab, setActiveTab] = useState<"login" | "signup">("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -20,12 +23,15 @@ export default function Auth() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
   
+  // Get return path from location state or use dashboard as default
+  const from = location.state?.from?.pathname || "/dashboard";
+  
   // Redirect if already authenticated
   useEffect(() => {
-    if (isAuthenticated && !isLoading) {
-      navigate("/dashboard");
+    if ((supabaseIsAuthenticated && userIsAuthenticated) && !supabaseIsLoading && !userIsLoading) {
+      navigate(from);
     }
-  }, [isAuthenticated, isLoading, navigate]);
+  }, [supabaseIsAuthenticated, userIsAuthenticated, supabaseIsLoading, userIsLoading, navigate, from]);
 
   const handleEmailPasswordLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,7 +43,7 @@ export default function Auth() {
       if (signInError) {
         setError(signInError.message);
       } else {
-        navigate("/dashboard");
+        navigate(from);
       }
     } catch (err) {
       setError("An unexpected error occurred. Please try again.");
@@ -57,8 +63,14 @@ export default function Auth() {
       return;
     }
     
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters");
+      setIsSubmitting(false);
+      return;
+    }
+    
     try {
-      const { error: signUpError } = await signUp(email, password, {
+      const { error: signUpError, user } = await signUp(email, password, {
         first_name: firstName,
         last_name: lastName,
         display_name: `${firstName} ${lastName}`
@@ -66,8 +78,20 @@ export default function Auth() {
       
       if (signUpError) {
         setError(signUpError.message);
-      } else {
+      } else if (user) {
+        // Signup successful
         setActiveTab("login");
+        setError("");
+        setPassword("");
+        // Display success message
+        const successMessage = document.createElement('div');
+        successMessage.className = 'text-green-500 text-sm mt-2';
+        successMessage.textContent = 'Account created successfully! Please check your email to confirm your account.';
+        document.getElementById('signup-form')?.appendChild(successMessage);
+        
+        setTimeout(() => {
+          successMessage.remove();
+        }, 5000);
       }
     } catch (err) {
       setError("An unexpected error occurred. Please try again.");
@@ -76,7 +100,7 @@ export default function Auth() {
     }
   };
   
-  if (isLoading) {
+  if (supabaseIsLoading || userIsLoading) {
     return (
       <div className="min-h-screen bg-[#0A1F44] flex flex-col items-center justify-center">
         <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-white"></div>
@@ -232,7 +256,7 @@ export default function Auth() {
             </TabsContent>
             
             <TabsContent value="signup">
-              <form onSubmit={handleEmailPasswordSignup} className="space-y-4">
+              <form id="signup-form" onSubmit={handleEmailPasswordSignup} className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="firstName" className="text-white">First Name</Label>
@@ -293,6 +317,7 @@ export default function Auth() {
                     className="bg-[#1B2A47] border-[#2A3E5C] text-white" 
                     required 
                   />
+                  <p className="text-xs text-gray-400">Password must be at least 6 characters long</p>
                 </div>
                 
                 <div className="flex justify-between mt-6">

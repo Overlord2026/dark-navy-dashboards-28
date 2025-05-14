@@ -1,63 +1,62 @@
 
-import { RouterProvider } from "react-router-dom";
-import routes from "./routes";
-import { ThemeProvider } from "@/context/ThemeContext"; // Import from our custom ThemeContext
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { Suspense, lazy } from "react";
+import { ThemeProvider } from "@/components/ThemeProvider";
 import { UserProvider } from "@/context/UserContext";
-import { NetWorthProvider } from "@/context/NetWorthContext";
-import { SubscriptionProvider } from "@/context/SubscriptionContext";
-import { Toaster } from "@/components/ui/sonner";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { DiagnosticsProvider } from "@/context/DiagnosticsContext";
-import { AdvisorProvider } from "@/context/AdvisorContext";
-import { AuthProvider as LegacyAuthProvider } from "@/context/AuthContext";
-import { AdminProvider } from './context/AdminContext';
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { AIInsightsProvider } from "./components/insights/AIInsightsProvider";
-import { AudienceProvider } from "./context/AudienceContext";
-import { AuthProvider } from "./context/SupabaseAuthContext";
-import { ChatbotManager } from "./components/chatbot/ChatbotManager";
+import { AuthProvider } from "@/context/SupabaseAuthContext";
+import { Toaster } from "sonner";
+import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 
-// Create a Query Client
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      refetchOnWindowFocus: false,
-      retry: 1,
-    },
-  },
-});
+// Lazy load pages
+const Dashboard = lazy(() => import("@/pages/Dashboard"));
+const CustomerProfile = lazy(() => import("@/pages/CustomerProfile"));
+const AdvisorProfile = lazy(() => import("@/pages/AdvisorProfile"));
+const Documents = lazy(() => import("@/pages/Documents"));
+const Billing = lazy(() => import("@/pages/Billing"));
+const Settings = lazy(() => import("@/pages/Settings"));
+const Auth = lazy(() => import("@/pages/Auth"));
+const Landing = lazy(() => import("@/pages/Landing"));
+const IntegrationHub = lazy(() => import("@/pages/IntegrationHub"));
+const NotFound = lazy(() => import("@/pages/NotFound"));
 
 function App() {
   return (
-    <AdminProvider>
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider>
-          <AuthProvider>
-            <UserProvider>
-              <SubscriptionProvider>
-                <NetWorthProvider>
-                  <DiagnosticsProvider>
-                    <AdvisorProvider>
-                      <LegacyAuthProvider>
-                        <AIInsightsProvider>
-                          <AudienceProvider>
-                            <TooltipProvider>
-                              <RouterProvider router={routes} />
-                              <ChatbotManager />
-                              <Toaster position="top-right" richColors closeButton />
-                            </TooltipProvider>
-                          </AudienceProvider>
-                        </AIInsightsProvider>
-                      </LegacyAuthProvider>
-                    </AdvisorProvider>
-                  </DiagnosticsProvider>
-                </NetWorthProvider>
-              </SubscriptionProvider>
-            </UserProvider>
-          </AuthProvider>
-        </ThemeProvider>
-      </QueryClientProvider>
-    </AdminProvider>
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <AuthProvider>
+        <UserProvider>
+          <Suspense fallback={
+            <div className="h-screen w-screen flex items-center justify-center">
+              <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-primary"></div>
+            </div>
+          }>
+            <Router>
+              <Routes>
+                {/* Public routes */}
+                <Route path="/" element={<Landing />} />
+                <Route path="/auth" element={<Auth />} />
+                
+                {/* Protected routes */}
+                <Route element={<ProtectedRoute />}>
+                  <Route path="/dashboard" element={<Dashboard />} />
+                  <Route path="/profile" element={<CustomerProfile />} />
+                  <Route path="/advisor-profile" element={<AdvisorProfile />} />
+                  <Route path="/documents" element={<Documents />} />
+                  <Route path="/billing" element={<Billing />} />
+                  <Route path="/settings" element={<Settings />} />
+                  <Route path="/integration" element={<IntegrationHub />} />
+                </Route>
+                
+                {/* Fallbacks */}
+                <Route path="/home" element={<Navigate to="/dashboard" replace />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </Router>
+          </Suspense>
+          
+          <Toaster position="top-right" />
+        </UserProvider>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
 

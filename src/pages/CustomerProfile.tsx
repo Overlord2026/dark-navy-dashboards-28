@@ -12,21 +12,25 @@ import { UserCircle } from "lucide-react";
 import { toast } from "sonner";
 import { useUser } from "@/context/UserContext";
 import { Button } from "@/components/ui/button";
+import { supabase } from '@/integrations/supabase/client';
+import { useNavigate } from "react-router-dom";
 
 const CustomerProfile = () => {
-  const { userProfile } = useUser();
+  const { userProfile, isAuthenticated, isLoading } = useUser();
+  const navigate = useNavigate();
   const [activeForm, setActiveForm] = useState<string | null>(null);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [isAdvisorDrawerOpen, setIsAdvisorDrawerOpen] = useState(false);
   const [activeAdvisorTab, setActiveAdvisorTab] = useState<string | null>(null);
   const [profileKey, setProfileKey] = useState(Date.now());
+  const [checklistCompletionStatus, setChecklistCompletionStatus] = useState<Record<string, boolean>>({});
 
   const [checklistItems, setChecklistItems] = useState([
     { id: "investor-profile", name: "Investor Profile", completed: true },
     { id: "contact-information", name: "Contact Information", completed: true },
     { id: "additional-information", name: "Additional Information", completed: false, description: "Please fill out" },
-    { id: "beneficiaries", name: "Beneficiaries", completed: true },
-    { id: "affiliations", name: "Affiliations", completed: true },
+    { id: "beneficiaries", name: "Beneficiaries", completed: false, description: "Please fill out" },
+    { id: "affiliations", name: "Affiliations", completed: false, description: "Please fill out" },
     { id: "trusts", name: "Trusts", completed: false, description: "Please fill out" },
     { id: "security-access", name: "Security & Access", completed: false, description: "Please fill out" },
     { id: "investment-advisory-agreement", name: "Investment Advisory Agreement", completed: true },
@@ -43,6 +47,60 @@ const CustomerProfile = () => {
     office: "Sarasota, FL",
     bio: "Daniel, a seasoned finance professional, guides high net worth investors through complex financial landscapes. His comprehensive approach integrates investment management, risk mitigation, tax optimization, and overall financial strategy.\n\nBeginning his career at Vanguard, Daniel honed his skills at UBS before directing client acquisition at Fisher Investments. He now brings his expertise to our firm, where he helps clients achieve their long-term financial objectives.\n\nOriginally from Asheville, NC, Daniel now resides in Sarasota, where he enjoys fitness activities, community involvement, and enjoying the coastal lifestyle."
   };
+
+  // Check if user is authenticated
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      toast.error("Please log in to view your profile");
+      navigate("/auth");
+    }
+  }, [isAuthenticated, isLoading, navigate]);
+
+  // Load completion status from Supabase
+  useEffect(() => {
+    const loadCompletionStatus = async () => {
+      if (!userProfile?.id) return;
+      
+      try {
+        // Check for beneficiaries completion
+        const { data: beneficiaries } = await supabase
+          .from('user_beneficiaries')
+          .select('count')
+          .eq('user_id', userProfile.id);
+        
+        const hasBeneficiaries = beneficiaries && beneficiaries.length > 0;
+        
+        // Check for affiliations completion
+        const { data: affiliations } = await supabase
+          .from('user_affiliations')
+          .select('id')
+          .eq('user_id', userProfile.id)
+          .single();
+        
+        const hasAffiliations = !!affiliations;
+        
+        // Update checklist items based on data
+        setChecklistCompletionStatus({
+          "beneficiaries": hasBeneficiaries,
+          "affiliations": hasAffiliations
+        });
+        
+        setChecklistItems(prev => prev.map(item => {
+          if (item.id === 'beneficiaries') {
+            return { ...item, completed: hasBeneficiaries };
+          }
+          if (item.id === 'affiliations') {
+            return { ...item, completed: hasAffiliations };
+          }
+          return item;
+        }));
+      } catch (error) {
+        console.error("Error loading completion status:", error);
+      }
+    };
+    
+    loadCompletionStatus();
+  }, [userProfile?.id, profileKey]);
 
   // Force refresh of profile data when userProfile changes
   useEffect(() => {
@@ -105,11 +163,22 @@ const CustomerProfile = () => {
         console.log("Change theme clicked");
         break;
       case "log-out":
-        toast.info("Logout functionality coming soon");
-        console.log("Log out clicked");
+        supabase.auth.signOut().then(() => {
+          toast.success("You have been logged out");
+          setTimeout(() => navigate("/auth"), 500);
+        });
         break;
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+        <span className="ml-3">Loading your profile...</span>
+      </div>
+    );
+  }
 
   return (
     <ThreeColumnLayout activeMainItem="home" title="Home">
