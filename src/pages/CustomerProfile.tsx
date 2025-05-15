@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { SetupChecklist } from "@/components/profile/SetupChecklist";
@@ -64,7 +63,7 @@ const CustomerProfile = () => {
       try {
         // Check for beneficiaries completion
         const { data: beneficiaries } = await supabase
-          .from('user_beneficiaries')
+          .from('user_beneficiaries' as any)
           .select('count')
           .eq('user_id', userProfile.id);
         
@@ -72,7 +71,7 @@ const CustomerProfile = () => {
         
         // Check for affiliations completion
         const { data: affiliations } = await supabase
-          .from('user_affiliations')
+          .from('user_affiliations' as any)
           .select('id')
           .eq('user_id', userProfile.id)
           .single();

@@ -17,9 +17,7 @@ const IntegrationHub: React.FC = () => {
     <ThreeColumnLayout 
       activeMainItem="integration" 
       title="Project Integration" 
-      secondarySidebarTitle="Integration"
-      secondarySidebarItems={integrationNavItems}
-      rightSidebar={<ConnectedBadge />}
+      sidebarItems={integrationNavItems}
     >
       <div className="mx-auto w-full max-w-6xl space-y-6 p-4">
         <div>
@@ -57,6 +55,11 @@ const IntegrationHub: React.FC = () => {
             <PluginsTab />
           </TabsContent>
         </Tabs>
+      </div>
+      
+      {/* Add the connected badge to the right side bar */}
+      <div className="sidebar-right">
+        <ConnectedBadge />
       </div>
     </ThreeColumnLayout>
   );

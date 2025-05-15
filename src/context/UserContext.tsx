@@ -34,6 +34,28 @@ interface UserContextType {
   loadUserData: () => Promise<void>;
 }
 
+// Define an extended profile type that includes all the possible fields from Supabase
+interface ProfileData {
+  id: string;
+  first_name?: string;
+  last_name?: string;
+  middle_name?: string; 
+  display_name?: string;
+  title?: string;
+  suffix?: string;
+  gender?: string;
+  marital_status?: string;
+  date_of_birth?: string;
+  phone?: string;
+  investor_type?: string;
+  role?: string;
+  permissions?: string[];
+  avatar_url?: string;
+  created_at?: string;
+  updated_at?: string;
+  [key: string]: any; // Allow for other fields
+}
+
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -87,6 +109,9 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return;
       }
 
+      // Cast profileData to our extended type
+      const typedProfileData = profileData as unknown as ProfileData;
+
       // Check for user roles
       let userRole: UserProfile['role'] = 'client'; // Default role
       
@@ -109,23 +134,23 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const mappedProfile: UserProfile = {
         id: user.id,
         email: user.email || undefined,
-        firstName: profileData?.first_name || undefined,
-        lastName: profileData?.last_name || undefined,
-        middleName: profileData?.middle_name || undefined,
-        displayName: profileData?.display_name || user.email?.split('@')[0] || 'User',
-        name: profileData?.first_name && profileData?.last_name 
-          ? `${profileData.first_name} ${profileData.last_name}` 
-          : profileData?.display_name || user.email?.split('@')[0] || 'User',
-        role: profileData?.role as UserProfile['role'] || userRole,
-        title: profileData?.title || undefined,
-        suffix: profileData?.suffix || undefined,
-        gender: profileData?.gender || undefined,
-        maritalStatus: profileData?.marital_status || undefined,
-        dateOfBirth: profileData?.date_of_birth ? new Date(profileData.date_of_birth) : undefined,
-        phone: profileData?.phone || undefined,
-        investorType: profileData?.investor_type || undefined,
-        avatar_url: profileData?.avatar_url || undefined,
-        permissions: profileData?.permissions || [],
+        firstName: typedProfileData?.first_name || undefined,
+        lastName: typedProfileData?.last_name || undefined,
+        middleName: typedProfileData?.middle_name || undefined,
+        displayName: typedProfileData?.display_name || user.email?.split('@')[0] || 'User',
+        name: typedProfileData?.first_name && typedProfileData?.last_name 
+          ? `${typedProfileData.first_name} ${typedProfileData.last_name}` 
+          : typedProfileData?.display_name || user.email?.split('@')[0] || 'User',
+        role: typedProfileData?.role as UserProfile['role'] || userRole,
+        title: typedProfileData?.title || undefined,
+        suffix: typedProfileData?.suffix || undefined,
+        gender: typedProfileData?.gender || undefined,
+        maritalStatus: typedProfileData?.marital_status || undefined,
+        dateOfBirth: typedProfileData?.date_of_birth ? new Date(typedProfileData.date_of_birth) : undefined,
+        phone: typedProfileData?.phone || undefined,
+        investorType: typedProfileData?.investor_type || undefined,
+        avatar_url: typedProfileData?.avatar_url || undefined,
+        permissions: typedProfileData?.permissions || [],
       };
       
       console.log('UserContext: User data loaded successfully');

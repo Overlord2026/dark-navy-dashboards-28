@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useUser } from '@/context/UserContext';
 
-// Define interface for affiliations since we can't modify the types.ts file
+// Define interface for affiliations and export it
 export interface Affiliation {
   id?: string;
   user_id?: string;
