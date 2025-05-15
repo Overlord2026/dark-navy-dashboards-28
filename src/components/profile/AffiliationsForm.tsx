@@ -8,9 +8,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Form } from "@/components/ui/form";
-import { supabase } from "@/integrations/supabase/client";
-import { useUser } from "@/context/UserContext";
 import { AlertCircle } from "lucide-react";
+import { useAffiliations, Affiliation } from "@/hooks/useAffiliations";
 
 // Define form schema with validation
 const affiliationsFormSchema = z.object({
@@ -26,11 +25,9 @@ const affiliationsFormSchema = z.object({
 type AffiliationFormValues = z.infer<typeof affiliationsFormSchema>;
 
 export function AffiliationsForm({ onSave }: { onSave: () => void }) {
-  const { userProfile } = useUser();
-  const [isLoading, setIsLoading] = useState(true);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { affiliations, isLoading, error: apiError, saveAffiliations } = useAffiliations();
   const [error, setError] = useState<string | null>(null);
-  const [affiliationId, setAffiliationId] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Initialize form with resolver and default values
   const form = useForm<AffiliationFormValues>({
@@ -46,93 +43,41 @@ export function AffiliationsForm({ onSave }: { onSave: () => void }) {
     }
   });
 
-  // Load affiliations from Supabase on component mount
+  // Update form values when affiliations are loaded
   useEffect(() => {
-    const loadAffiliations = async () => {
-      if (!userProfile?.id) return;
-      
-      try {
-        setIsLoading(true);
-        setError(null);
-        
-        const { data, error } = await supabase
-          .from('user_affiliations')
-          .select('*')
-          .eq('user_id', userProfile.id)
-          .single();
-          
-        if (error && error.code !== 'PGRST116') { // Not found error
-          console.error("Error loading affiliations:", error);
-          setError("Failed to load affiliations");
-          return;
-        }
-        
-        if (data) {
-          setAffiliationId(data.id);
-          form.reset({
-            stock_exchange_or_finra: data.stock_exchange_or_finra || false,
-            public_company: data.public_company || false,
-            us_politically_exposed: data.us_politically_exposed || false,
-            awm_employee: data.awm_employee || false,
-            custodian: data.custodian || false,
-            broker_dealer: data.broker_dealer || false,
-            family_broker_dealer: data.family_broker_dealer || false,
-          });
-        }
-      } catch (err) {
-        console.error("Unexpected error loading affiliations:", err);
-        setError("An unexpected error occurred");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    
-    loadAffiliations();
-  }, [userProfile?.id, form]);
+    if (affiliations) {
+      form.reset({
+        stock_exchange_or_finra: affiliations.stock_exchange_or_finra || false,
+        public_company: affiliations.public_company || false,
+        us_politically_exposed: affiliations.us_politically_exposed || false,
+        awm_employee: affiliations.awm_employee || false,
+        custodian: affiliations.custodian || false,
+        broker_dealer: affiliations.broker_dealer || false,
+        family_broker_dealer: affiliations.family_broker_dealer || false,
+      });
+    }
+  }, [affiliations, form]);
+
+  // Update error state when API error changes
+  useEffect(() => {
+    setError(apiError);
+  }, [apiError]);
 
   // Form submission handler
   const onSubmit = async (data: AffiliationFormValues) => {
-    if (!userProfile?.id) {
-      toast.error("You must be logged in to save affiliations");
-      return;
-    }
-    
     setIsSubmitting(true);
     setError(null);
     
     try {
-      const affiliationData = {
-        ...data,
-        user_id: userProfile.id,
-        id: affiliationId || undefined
-      };
+      const success = await saveAffiliations(data as Partial<Affiliation>);
       
-      const { error: upsertError } = await supabase
-        .from('user_affiliations')
-        .upsert([affiliationData], { onConflict: 'user_id' });
-      
-      if (upsertError) {
-        throw new Error(upsertError.message);
-      }
-      
-      // If this was a new record, get the ID for future updates
-      if (!affiliationId) {
-        const { data: newData, error: fetchError } = await supabase
-          .from('user_affiliations')
-          .select('id')
-          .eq('user_id', userProfile.id)
-          .single();
-          
-        if (!fetchError && newData) {
-          setAffiliationId(newData.id);
+      if (success) {
+        toast.success("Affiliations saved successfully");
+        
+        // Call the onSave callback
+        if (onSave) {
+          setTimeout(() => onSave(), 300);
         }
-      }
-      
-      toast.success("Affiliations saved successfully");
-      
-      // Call the onSave callback
-      if (onSave) {
-        setTimeout(() => onSave(), 300);
       }
     } catch (err) {
       console.error("Error saving affiliations:", err);

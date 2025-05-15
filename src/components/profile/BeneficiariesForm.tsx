@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Trash2, Plus, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
@@ -9,8 +9,7 @@ import { z } from "zod";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { supabase } from "@/integrations/supabase/client";
-import { useUser } from "@/context/UserContext";
+import { useBeneficiaries, Beneficiary } from "@/hooks/useBeneficiaries";
 
 // Define form schema with validation
 const beneficiarySchema = z.object({
@@ -32,38 +31,18 @@ const beneficiariesFormSchema = z.object({
 
 type BeneficiaryFormValues = z.infer<typeof beneficiariesFormSchema>;
 
-interface Beneficiary {
-  id?: string;
-  user_id?: string;
-  first_name: string;
-  last_name: string;
-  relationship: string;
-  date_of_birth?: string;
-  ssn?: string;
-  email?: string;
-  address?: string;
-  city?: string;
-  state?: string;
-  zip_code?: string;
-}
-
 export function BeneficiariesForm({ onSave }: { onSave: () => void }) {
-  const { userProfile } = useUser();
-  const [isLoading, setIsLoading] = useState(true);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { beneficiaries, isLoading, error: apiError, saveBeneficiaries } = useBeneficiaries();
   const [error, setError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Initialize form with resolver and default values
   const form = useForm<BeneficiaryFormValues>({
     resolver: zodResolver(beneficiariesFormSchema),
     defaultValues: {
-      beneficiaries: [
-        {
-          first_name: "",
-          last_name: "",
-          relationship: "",
-        }
-      ]
+      beneficiaries: beneficiaries.length > 0 
+        ? beneficiaries 
+        : [{ first_name: "", last_name: "", relationship: "" }]
     }
   });
 
@@ -73,84 +52,21 @@ export function BeneficiariesForm({ onSave }: { onSave: () => void }) {
     control: form.control,
   });
 
-  // Load beneficiaries from Supabase on component mount
-  useEffect(() => {
-    const loadBeneficiaries = async () => {
-      if (!userProfile?.id) return;
-      
-      try {
-        setIsLoading(true);
-        setError(null);
-        
-        const { data, error } = await supabase
-          .from('user_beneficiaries')
-          .select('*')
-          .eq('user_id', userProfile.id);
-          
-        if (error) {
-          console.error("Error loading beneficiaries:", error);
-          setError("Failed to load beneficiaries");
-          return;
-        }
-        
-        if (data && data.length > 0) {
-          form.reset({ beneficiaries: data });
-        }
-      } catch (err) {
-        console.error("Unexpected error loading beneficiaries:", err);
-        setError("An unexpected error occurred");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    
-    loadBeneficiaries();
-  }, [userProfile?.id, form]);
-
   // Form submission handler
   const onSubmit: SubmitHandler<BeneficiaryFormValues> = async (data) => {
-    if (!userProfile?.id) {
-      toast.error("You must be logged in to save beneficiaries");
-      return;
-    }
-    
     setIsSubmitting(true);
     setError(null);
     
     try {
-      // First, get existing beneficiaries to determine which to update/delete
-      const { data: existingBeneficiaries, error: fetchError } = await supabase
-        .from('user_beneficiaries')
-        .select('id')
-        .eq('user_id', userProfile.id);
+      const success = await saveBeneficiaries(data.beneficiaries as Beneficiary[]);
+      
+      if (success) {
+        toast.success("Beneficiaries saved successfully");
         
-      if (fetchError) {
-        throw new Error(fetchError.message);
-      }
-      
-      // Get existing IDs
-      const existingIds = existingBeneficiaries?.map(b => b.id) || [];
-      
-      // Add user_id to each beneficiary
-      const beneficiariesWithUserID = data.beneficiaries.map(b => ({
-        ...b,
-        user_id: userProfile.id
-      }));
-      
-      // Insert or update beneficiaries
-      const { error: upsertError } = await supabase
-        .from('user_beneficiaries')
-        .upsert(beneficiariesWithUserID, { onConflict: 'id' });
-      
-      if (upsertError) {
-        throw new Error(upsertError.message);
-      }
-      
-      toast.success("Beneficiaries saved successfully");
-      
-      // Call the onSave callback
-      if (onSave) {
-        setTimeout(() => onSave(), 300);
+        // Call the onSave callback
+        if (onSave) {
+          setTimeout(() => onSave(), 300);
+        }
       }
     } catch (err) {
       console.error("Error saving beneficiaries:", err);
@@ -171,10 +87,10 @@ export function BeneficiariesForm({ onSave }: { onSave: () => void }) {
         </p>
       </div>
       
-      {error && (
+      {(error || apiError) && (
         <div className="bg-destructive/15 p-4 rounded-md flex items-start">
           <AlertCircle className="h-5 w-5 text-destructive mr-2 mt-0.5 flex-shrink-0" />
-          <p className="text-sm text-destructive">{error}</p>
+          <p className="text-sm text-destructive">{error || apiError}</p>
         </div>
       )}
       

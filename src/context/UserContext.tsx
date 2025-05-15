@@ -40,25 +40,37 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const { user, session, isAuthenticated: supabaseIsAuthenticated, signIn, signOut } = useSupabaseAuth();
+  const [userLoaded, setUserLoaded] = useState(false);
 
-  // Load user profile data from Supabase when auth state changes
+  // Load user profile data when auth state changes
   useEffect(() => {
-    if (user) {
-      loadUserData();
-    } else {
-      setUserProfile(null);
-      setIsLoading(false);
-    }
-  }, [user]);
+    // When auth state is determined, determine if we need to load user data
+    const checkAuthState = async () => {
+      // Clear timeout if component unmounts
+      if (user && !userLoaded) {
+        console.log('UserContext: Auth state detected user, loading data');
+        await loadUserData();
+      } else if (!user) {
+        console.log('UserContext: No authenticated user');
+        setUserProfile(null);
+        setUserLoaded(false);
+        setIsLoading(false);
+      }
+    };
+    
+    checkAuthState();
+  }, [user]); // Only depend on user, not on session
 
   const loadUserData = async () => {
     if (!user) {
+      console.log('UserContext: loadUserData called but no user');
       setUserProfile(null);
       setIsLoading(false);
       return;
     }
 
     try {
+      console.log('UserContext: Loading user data for', user.id);
       setIsLoading(true);
       
       // Fetch profile data from Supabase
@@ -116,7 +128,9 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
         permissions: profileData?.permissions || [],
       };
       
+      console.log('UserContext: User data loaded successfully');
       setUserProfile(mappedProfile);
+      setUserLoaded(true);
     } catch (error) {
       console.error('Error processing user profile:', error);
       toast.error('Failed to process user profile');
@@ -149,6 +163,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       await signOut();
       setUserProfile(null);
+      setUserLoaded(false);
     } catch (error) {
       console.error('Logout error:', error);
       toast.error('Error signing out');

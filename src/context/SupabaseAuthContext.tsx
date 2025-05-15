@@ -34,54 +34,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [authInitialized, setAuthInitialized] = useState(false);
 
-  // Initialize auth
-  useEffect(() => {
-    // Set up auth state listener FIRST
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, newSession) => {
-        console.log('Auth state changed:', event);
-        setSession(newSession);
-        setUser(newSession?.user ?? null);
-        
-        if (newSession?.user) {
-          // Defer profile fetch to avoid Supabase auth deadlock
-          setTimeout(() => {
-            fetchProfile(newSession.user.id);
-          }, 0);
-        } else {
-          setProfile(null);
-        }
-      }
-    );
-
-    // THEN check for existing session
-    const initializeAuth = async () => {
-      try {
-        setIsLoading(true);
-        const { data: { session: initialSession } } = await supabase.auth.getSession();
-        
-        setSession(initialSession);
-        setUser(initialSession?.user ?? null);
-        
-        if (initialSession?.user) {
-          await fetchProfile(initialSession.user.id);
-        }
-      } catch (error) {
-        console.error('Error initializing auth:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    initializeAuth();
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, []);
-
+  // Handle profile fetching separately to avoid auth deadlocks
   const fetchProfile = async (userId: string) => {
+    if (!userId) return null;
+    
     try {
       const { data, error } = await supabase
         .from('profiles')
@@ -91,14 +49,90 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       if (error) {
         console.error('Error fetching profile:', error);
-        return;
+        return null;
       }
 
-      setProfile(data);
+      return data as Profile;
     } catch (error) {
       console.error('Error in fetchProfile:', error);
+      return null;
     }
   };
+
+  // Initialize auth
+  useEffect(() => {
+    // Important: first check for existing session before setting up listener
+    // to avoid race conditions
+    const initializeAuth = async () => {
+      try {
+        setIsLoading(true);
+        console.log('Initializing Supabase auth...');
+        
+        // Get existing session first
+        const { data: { session: initialSession } } = await supabase.auth.getSession();
+        
+        // Update state based on initial session
+        setSession(initialSession);
+        setUser(initialSession?.user ?? null);
+        
+        if (initialSession?.user) {
+          console.log('Found existing authenticated session');
+          // Don't wait for profile fetch to complete the initialization
+          fetchProfile(initialSession.user.id).then(profileData => {
+            if (profileData) {
+              setProfile(profileData);
+            }
+          });
+        } else {
+          console.log('No existing authenticated session');
+        }
+        
+        setAuthInitialized(true);
+      } catch (error) {
+        console.error('Error initializing auth:', error);
+        setAuthInitialized(true); // Still mark as initialized even on error
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    initializeAuth();
+  }, []);
+
+  // Set up auth state listener after initialization
+  useEffect(() => {
+    if (!authInitialized) return;
+    
+    console.log('Setting up auth state change listener');
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, newSession) => {
+        console.log('Auth state changed:', event);
+        
+        // Update session and user synchronously
+        setSession(newSession);
+        setUser(newSession?.user ?? null);
+        
+        // Handle profile fetch with setTimeout to avoid deadlocks
+        if (newSession?.user) {
+          // Use setTimeout to defer profile fetch
+          setTimeout(() => {
+            fetchProfile(newSession.user.id).then(profileData => {
+              if (profileData) {
+                setProfile(profileData);
+              }
+            });
+          }, 0);
+        } else {
+          setProfile(null);
+        }
+      }
+    );
+
+    // Cleanup subscription
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [authInitialized]);
 
   const signIn = async (email: string, password: string) => {
     try {
@@ -142,6 +176,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signOut = async () => {
     try {
       await supabase.auth.signOut();
+      // Profile will be cleared by auth state change event
     } catch (error) {
       console.error('Error signing out:', error);
       toast.error('Error signing out');

@@ -1,5 +1,5 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSupabaseAuth } from '@/context/SupabaseAuthContext';
 import { useUser } from '@/context/UserContext';
@@ -7,11 +7,21 @@ import { useUser } from '@/context/UserContext';
 export default function Landing() {
   const { isAuthenticated: supabaseIsAuthenticated, isLoading: supabaseIsLoading } = useSupabaseAuth();
   const { isAuthenticated: userIsAuthenticated, isLoading: userIsLoading } = useUser();
+  const [redirectAttempted, setRedirectAttempted] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Only redirect after both auth contexts have been checked
-    if (!supabaseIsLoading && !userIsLoading) {
+    // Track if we've been on this page too long to prevent infinite loops
+    const timeoutId = setTimeout(() => {
+      if (!redirectAttempted) {
+        console.log('Redirect timeout reached, forcing navigation');
+        navigate('/auth');
+        setRedirectAttempted(true);
+      }
+    }, 3000); // 3 second safety timeout
+
+    // Only redirect after both auth contexts have completed loading
+    if (!supabaseIsLoading && !userIsLoading && !redirectAttempted) {
       if (supabaseIsAuthenticated && userIsAuthenticated) {
         console.log('Auth verified, redirecting to dashboard');
         navigate('/dashboard');
@@ -19,8 +29,20 @@ export default function Landing() {
         console.log('Not authenticated, redirecting to auth page');
         navigate('/auth');
       }
+      setRedirectAttempted(true);
     }
-  }, [supabaseIsAuthenticated, userIsAuthenticated, supabaseIsLoading, userIsLoading, navigate]);
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [
+    supabaseIsAuthenticated, 
+    userIsAuthenticated, 
+    supabaseIsLoading, 
+    userIsLoading, 
+    navigate,
+    redirectAttempted
+  ]);
 
   // Show loading while checking auth status
   return (

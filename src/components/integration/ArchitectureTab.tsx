@@ -1,104 +1,70 @@
 
 import React from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { FileText, Download } from "lucide-react";
+import { SupabaseRequiredNotice } from './SupabaseRequiredNotice';
 
 export const ArchitectureTab: React.FC = () => {
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-semibold mb-2">System Architecture</h2>
-        <p className="text-muted-foreground">
-          Overview of the architectural design and component relationships
-        </p>
+      <div className="flex justify-between items-center">
+        <h2 className="text-xl font-semibold">System Architecture</h2>
+        <Button variant="outline">
+          <Download className="h-4 w-4 mr-2" /> 
+          Export Architecture Diagram
+        </Button>
       </div>
-
+      
+      <SupabaseRequiredNotice />
+      
       <Card>
         <CardHeader>
-          <CardTitle>Integration Architecture</CardTitle>
+          <CardTitle>Architecture Overview</CardTitle>
           <CardDescription>
-            Current system architecture showing how components interact
+            Key components and relationships in your Family Office system
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="h-96 bg-muted rounded-md flex items-center justify-center">
-            <p className="text-muted-foreground">Architecture diagram will be displayed here</p>
+          <div className="flex items-center justify-center bg-muted p-8 rounded-md min-h-[300px]">
+            <div className="text-center">
+              <FileText className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+              <p className="text-muted-foreground">
+                Architecture diagram will be displayed here.
+              </p>
+              <Button className="mt-4">Generate Architecture Diagram</Button>
+            </div>
           </div>
         </CardContent>
       </Card>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Card>
-          <CardHeader>
-            <CardTitle>Key Components</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ul className="space-y-2">
-              <li className="flex items-start">
-                <div className="w-2 h-2 rounded-full bg-primary mt-2 mr-2"></div>
-                <div>
-                  <h4 className="font-medium">Client Portal</h4>
-                  <p className="text-sm text-muted-foreground">User-facing application for clients</p>
-                </div>
-              </li>
-              <li className="flex items-start">
-                <div className="w-2 h-2 rounded-full bg-primary mt-2 mr-2"></div>
-                <div>
-                  <h4 className="font-medium">Admin Dashboard</h4>
-                  <p className="text-sm text-muted-foreground">Administrative control panel</p>
-                </div>
-              </li>
-              <li className="flex items-start">
-                <div className="w-2 h-2 rounded-full bg-primary mt-2 mr-2"></div>
-                <div>
-                  <h4 className="font-medium">Document Service</h4>
-                  <p className="text-sm text-muted-foreground">Document management and storage</p>
-                </div>
-              </li>
-              <li className="flex items-start">
-                <div className="w-2 h-2 rounded-full bg-primary mt-2 mr-2"></div>
-                <div>
-                  <h4 className="font-medium">Authentication Service</h4>
-                  <p className="text-sm text-muted-foreground">Identity and access management</p>
-                </div>
-              </li>
-            </ul>
-          </CardContent>
-        </Card>
-
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card>
           <CardHeader>
             <CardTitle>Data Flow</CardTitle>
+            <CardDescription>How data moves between components</CardDescription>
           </CardHeader>
           <CardContent>
-            <ul className="space-y-2">
-              <li className="flex items-start">
-                <div className="w-2 h-2 rounded-full bg-primary mt-2 mr-2"></div>
-                <div>
-                  <h4 className="font-medium">User Authentication</h4>
-                  <p className="text-sm text-muted-foreground">SSO and identity verification flow</p>
-                </div>
-              </li>
-              <li className="flex items-start">
-                <div className="w-2 h-2 rounded-full bg-primary mt-2 mr-2"></div>
-                <div>
-                  <h4 className="font-medium">Document Processing</h4>
-                  <p className="text-sm text-muted-foreground">Upload, validation, and storage workflow</p>
-                </div>
-              </li>
-              <li className="flex items-start">
-                <div className="w-2 h-2 rounded-full bg-primary mt-2 mr-2"></div>
-                <div>
-                  <h4 className="font-medium">Reporting Pipeline</h4>
-                  <p className="text-sm text-muted-foreground">Data aggregation and reporting process</p>
-                </div>
-              </li>
-              <li className="flex items-start">
-                <div className="w-2 h-2 rounded-full bg-primary mt-2 mr-2"></div>
-                <div>
-                  <h4 className="font-medium">Notification System</h4>
-                  <p className="text-sm text-muted-foreground">Events and alerts distribution</p>
-                </div>
-              </li>
+            <ul className="list-disc pl-5 space-y-2">
+              <li>Client data ingestion through API gateways</li>
+              <li>Secure data transformation pipeline</li>
+              <li>Database storage with row-level security</li>
+              <li>Reporting and analytics data flows</li>
+            </ul>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardHeader>
+            <CardTitle>Integration Points</CardTitle>
+            <CardDescription>External system connections</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ul className="list-disc pl-5 space-y-2">
+              <li>Financial data providers via secure APIs</li>
+              <li>Document management system integration</li>
+              <li>Compliance system connections</li>
+              <li>Client portal authentication</li>
             </ul>
           </CardContent>
         </Card>
