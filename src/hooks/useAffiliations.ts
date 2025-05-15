@@ -33,7 +33,8 @@ export function useAffiliations() {
         setIsLoading(true);
         setError(null);
         
-        const { data, error } = await supabase
+        // Using any type to work around the type constraints since we can't modify types.ts
+        const { data, error } = await (supabase as any)
           .from('user_affiliations')
           .select('*')
           .eq('user_id', userProfile.id)
@@ -79,7 +80,8 @@ export function useAffiliations() {
         user_id: userProfile.id
       };
       
-      const { error } = await supabase
+      // Using any type to work around the type constraints
+      const { error } = await (supabase as any)
         .from('user_affiliations')
         .upsert([affiliationData], { onConflict: 'user_id' });
         

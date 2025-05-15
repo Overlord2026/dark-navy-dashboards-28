@@ -1,18 +1,18 @@
 
 import React from 'react';
-import { Badge } from "@/components/ui/badge";
-import { CheckCircle } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Badge } from '@/components/ui/badge';
+import { Check } from 'lucide-react';
 
-interface ConnectedBadgeProps {
-  className?: string;
-}
-
-export const ConnectedBadge: React.FC<ConnectedBadgeProps> = ({ className }) => {
+export const ConnectedBadge: React.FC = () => {
   return (
-    <Badge variant="outline" className={cn("bg-green-50 text-green-700 border-green-200 flex items-center gap-1 px-2 py-0.5", className)}>
-      <CheckCircle className="w-3 h-3" />
-      <span>Connected</span>
-    </Badge>
+    <div className="p-4">
+      <Badge variant="success" className="flex items-center">
+        <Check className="h-3 w-3 mr-1" />
+        Connected
+      </Badge>
+      <p className="text-xs text-muted-foreground mt-2">
+        This project is connected to the Family Office Marketplace ecosystem
+      </p>
+    </div>
   );
 };

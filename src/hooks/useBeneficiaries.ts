@@ -37,7 +37,8 @@ export function useBeneficiaries() {
         setIsLoading(true);
         setError(null);
         
-        const { data, error } = await supabase
+        // Using any type to work around the type constraints
+        const { data, error } = await (supabase as any)
           .from('user_beneficiaries')
           .select('*')
           .eq('user_id', userProfile.id);
@@ -73,7 +74,8 @@ export function useBeneficiaries() {
         user_id: userProfile.id
       };
       
-      const { data, error } = await supabase
+      // Using any type to work around the type constraints
+      const { data, error } = await (supabase as any)
         .from('user_beneficiaries')
         .insert([newBeneficiary])
         .select();
@@ -99,7 +101,8 @@ export function useBeneficiaries() {
     }
     
     try {
-      const { error } = await supabase
+      // Using any type to work around the type constraints
+      const { error } = await (supabase as any)
         .from('user_beneficiaries')
         .update(beneficiary)
         .eq('id', id)
@@ -129,7 +132,8 @@ export function useBeneficiaries() {
     }
     
     try {
-      const { error } = await supabase
+      // Using any type to work around the type constraints
+      const { error } = await (supabase as any)
         .from('user_beneficiaries')
         .delete()
         .eq('id', id)
@@ -162,7 +166,8 @@ export function useBeneficiaries() {
         user_id: userProfile.id
       }));
       
-      const { error } = await supabase
+      // Using any type to work around the type constraints
+      const { error } = await (supabase as any)
         .from('user_beneficiaries')
         .upsert(beneficiariesWithUserID);
         
@@ -171,7 +176,7 @@ export function useBeneficiaries() {
       }
       
       // Reload beneficiaries after save
-      const { data: refreshedData, error: refreshError } = await supabase
+      const { data: refreshedData, error: refreshError } = await (supabase as any)
         .from('user_beneficiaries')
         .select('*')
         .eq('user_id', userProfile.id);
