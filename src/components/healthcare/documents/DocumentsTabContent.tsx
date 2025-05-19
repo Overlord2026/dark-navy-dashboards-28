@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -32,7 +31,7 @@ export const DocumentsTabContent: React.FC<DocumentsTabContentProps> = ({
     .sort((a, b) => new Date(b.created).getTime() - new Date(a.created).getTime())
     .slice(0, 5);
   
-  const sharedDocuments = healthcareDocuments.filter(doc => doc.shared);
+  const sharedDocuments = healthcareDocuments.filter(doc => doc?.shared);
 
   return (
     <div className="space-y-6">

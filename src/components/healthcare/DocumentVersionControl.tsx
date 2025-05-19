@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -66,8 +65,8 @@ export const DocumentVersionControl: React.FC<DocumentVersionControlProps> = ({
         id: `v-${Math.random().toString(36).substring(2, 9)}`,
         documentId: document.id,
         timestamp: document.modified,
-        userId: document.lastAccessedBy || "Tom Brady",
-        userName: document.lastAccessedBy || "Tom Brady",
+        userId: document.lastAccessedBy || document.uploadedBy || "Tom Brady",
+        userName: document.lastAccessedBy || document.uploadedBy || "Tom Brady",
         action: "update",
         details: {
           changes: ["Content updated"]

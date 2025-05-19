@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -100,7 +99,7 @@ export const HealthcareTemplates: React.FC<HealthcareTemplatesProps> = ({
         {
           userId: "Tom Brady",
           userName: "Tom Brady",
-          accessLevel: "full",
+          accessLevel: "admin",
           grantedAt: new Date().toISOString()
         }
       ]

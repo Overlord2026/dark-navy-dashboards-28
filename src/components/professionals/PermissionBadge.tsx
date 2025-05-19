@@ -24,5 +24,5 @@ export function PermissionBadge({ permission }: PermissionBadgeProps) {
 
 // Helper function to validate permission values
 function isValidAccessLevel(permission: string): boolean {
-  return ["none", "view", "edit", "full"].includes(permission);
+  return ["none", "view", "edit", "full", "admin", "restricted"].includes(permission);
 }

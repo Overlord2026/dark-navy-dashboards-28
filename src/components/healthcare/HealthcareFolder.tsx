@@ -66,8 +66,10 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
         {
           userId: userId,
           userName: userId,
-          accessLevel: "full",
-          grantedAt: new Date().toISOString()
+          userRole: "Family Member", // Add missing userRole
+          accessLevel: "admin",
+          grantedAt: new Date().toISOString(),
+          grantedBy: userId
         }
       ]
     };
@@ -150,6 +152,7 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
     const collaboratorPermissions = collaboratorIds.map(id => ({
       userId: id,
       userName: `Collaborator ${id}`,
+      userRole: "Family Member", // Add missing userRole
       accessLevel: "view" as const,
       grantedAt: new Date().toISOString(),
       grantedBy: userId

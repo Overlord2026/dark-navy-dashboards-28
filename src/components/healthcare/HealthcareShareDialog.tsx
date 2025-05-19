@@ -1,4 +1,5 @@
 
+// Update the imports to use the correct types
 import React, { useState, useEffect } from "react";
 import { 
   Dialog, 
