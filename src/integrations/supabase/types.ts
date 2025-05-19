@@ -9,6 +9,47 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      access_permissions: {
+        Row: {
+          access_level: Database["public"]["Enums"]["access_level"]
+          can_export: boolean | null
+          can_view_panorama: boolean | null
+          created_at: string | null
+          id: string
+          network_id: string
+          permissions_config: Json | null
+          updated_at: string | null
+        }
+        Insert: {
+          access_level?: Database["public"]["Enums"]["access_level"]
+          can_export?: boolean | null
+          can_view_panorama?: boolean | null
+          created_at?: string | null
+          id?: string
+          network_id: string
+          permissions_config?: Json | null
+          updated_at?: string | null
+        }
+        Update: {
+          access_level?: Database["public"]["Enums"]["access_level"]
+          can_export?: boolean | null
+          can_view_panorama?: boolean | null
+          created_at?: string | null
+          id?: string
+          network_id?: string
+          permissions_config?: Json | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "access_permissions_network_id_fkey"
+            columns: ["network_id"]
+            isOneToOne: false
+            referencedRelation: "family_network"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       advisor_notifications: {
         Row: {
           created_at: string
@@ -57,6 +98,42 @@ export type Database = {
         }
         Relationships: []
       }
+      asset_correlations: {
+        Row: {
+          asset_1_id: string
+          asset_2_id: string
+          correlation_coefficient: number | null
+          created_at: string | null
+          id: string
+          period_end: string
+          period_start: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          asset_1_id: string
+          asset_2_id: string
+          correlation_coefficient?: number | null
+          created_at?: string | null
+          id?: string
+          period_end: string
+          period_start: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          asset_1_id?: string
+          asset_2_id?: string
+          correlation_coefficient?: number | null
+          created_at?: string | null
+          id?: string
+          period_end?: string
+          period_start?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       audit_logs: {
         Row: {
           created_at: string
@@ -80,6 +157,83 @@ export type Database = {
           event_type?: string
           id?: string
           status?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      budget_categories: {
+        Row: {
+          amount: number
+          budget_id: string
+          color: string
+          created_at: string
+          id: string
+          name: string
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          amount?: number
+          budget_id: string
+          color: string
+          created_at?: string
+          id?: string
+          name: string
+          type: string
+          updated_at?: string
+        }
+        Update: {
+          amount?: number
+          budget_id?: string
+          color?: string
+          created_at?: string
+          id?: string
+          name?: string
+          type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "budget_categories_budget_id_fkey"
+            columns: ["budget_id"]
+            isOneToOne: false
+            referencedRelation: "budgets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      budgets: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          period: string
+          savings_goal: number
+          total_expenses: number
+          total_income: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          period?: string
+          savings_goal?: number
+          total_expenses?: number
+          total_income?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          period?: string
+          savings_goal?: number
+          total_expenses?: number
+          total_income?: number
+          updated_at?: string
           user_id?: string
         }
         Relationships: []
@@ -142,6 +296,116 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      compliance_records: {
+        Row: {
+          created_at: string
+          expiry_date: string | null
+          id: string
+          professional_id: string
+          record_type: Database["public"]["Enums"]["compliance_record_type"]
+          status: Database["public"]["Enums"]["compliance_status"]
+          updated_at: string
+          verification_data: Json | null
+          verification_date: string | null
+          verification_method: string | null
+          verifier_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          expiry_date?: string | null
+          id?: string
+          professional_id: string
+          record_type: Database["public"]["Enums"]["compliance_record_type"]
+          status?: Database["public"]["Enums"]["compliance_status"]
+          updated_at?: string
+          verification_data?: Json | null
+          verification_date?: string | null
+          verification_method?: string | null
+          verifier_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          expiry_date?: string | null
+          id?: string
+          professional_id?: string
+          record_type?: Database["public"]["Enums"]["compliance_record_type"]
+          status?: Database["public"]["Enums"]["compliance_status"]
+          updated_at?: string
+          verification_data?: Json | null
+          verification_date?: string | null
+          verification_method?: string | null
+          verifier_id?: string | null
+        }
+        Relationships: []
+      }
+      content_tags: {
+        Row: {
+          content_id: string
+          created_at: string
+          id: string
+          tag: string
+        }
+        Insert: {
+          content_id: string
+          created_at?: string
+          id?: string
+          tag: string
+        }
+        Update: {
+          content_id?: string
+          created_at?: string
+          id?: string
+          tag?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_tags_content_id_fkey"
+            columns: ["content_id"]
+            isOneToOne: false
+            referencedRelation: "educational_content"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      data_processing_consents: {
+        Row: {
+          consent_date: string
+          consent_type: Database["public"]["Enums"]["data_consent_type"]
+          created_at: string
+          expiry_date: string | null
+          id: string
+          ip_address: string | null
+          status: boolean
+          updated_at: string
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          consent_date?: string
+          consent_type: Database["public"]["Enums"]["data_consent_type"]
+          created_at?: string
+          expiry_date?: string | null
+          id?: string
+          ip_address?: string | null
+          status?: boolean
+          updated_at?: string
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          consent_date?: string
+          consent_type?: Database["public"]["Enums"]["data_consent_type"]
+          created_at?: string
+          expiry_date?: string | null
+          id?: string
+          ip_address?: string | null
+          status?: boolean
+          updated_at?: string
+          user_agent?: string | null
+          user_id?: string
+        }
+        Relationships: []
       }
       document_shares: {
         Row: {
@@ -247,6 +511,111 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      educational_content: {
+        Row: {
+          category: string
+          content: string
+          content_type: string
+          created_at: string
+          id: string
+          is_featured: boolean
+          reading_time: number
+          slug: string
+          summary: string
+          thumbnail_url: string | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          category: string
+          content: string
+          content_type: string
+          created_at?: string
+          id?: string
+          is_featured?: boolean
+          reading_time?: number
+          slug: string
+          summary: string
+          thumbnail_url?: string | null
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          category?: string
+          content?: string
+          content_type?: string
+          created_at?: string
+          id?: string
+          is_featured?: boolean
+          reading_time?: number
+          slug?: string
+          summary?: string
+          thumbnail_url?: string | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      encrypted_professional_data: {
+        Row: {
+          created_at: string
+          encrypted_personal_details: Json
+          encrypted_verification_documents: Json
+          encryption_key_id: string | null
+          id: string
+          professional_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          encrypted_personal_details?: Json
+          encrypted_verification_documents?: Json
+          encryption_key_id?: string | null
+          id?: string
+          professional_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          encrypted_personal_details?: Json
+          encrypted_verification_documents?: Json
+          encryption_key_id?: string | null
+          id?: string
+          professional_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      family_network: {
+        Row: {
+          created_at: string | null
+          id: string
+          member_id: string
+          owner_id: string
+          relationship_type: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          member_id: string
+          owner_id: string
+          relationship_type?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          member_id?: string
+          owner_id?: string
+          relationship_type?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
       }
       feedback: {
         Row: {
@@ -465,6 +834,167 @@ export type Database = {
         }
         Relationships: []
       }
+      luxury_travel_bookings: {
+        Row: {
+          booking_date: string
+          created_at: string
+          id: string
+          passengers: number
+          special_requests: string | null
+          status: string
+          total_price: number
+          travel_option_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          booking_date: string
+          created_at?: string
+          id?: string
+          passengers?: number
+          special_requests?: string | null
+          status?: string
+          total_price: number
+          travel_option_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          booking_date?: string
+          created_at?: string
+          id?: string
+          passengers?: number
+          special_requests?: string | null
+          status?: string
+          total_price?: number
+          travel_option_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "luxury_travel_bookings_travel_option_id_fkey"
+            columns: ["travel_option_id"]
+            isOneToOne: false
+            referencedRelation: "luxury_travel_options"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      luxury_travel_options: {
+        Row: {
+          available_from: string
+          available_to: string
+          created_at: string
+          description: string
+          duration: string
+          id: string
+          image_url: string | null
+          location: string
+          name: string
+          price: number
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          available_from?: string
+          available_to: string
+          created_at?: string
+          description: string
+          duration: string
+          id?: string
+          image_url?: string | null
+          location: string
+          name: string
+          price: number
+          type: string
+          updated_at?: string
+        }
+        Update: {
+          available_from?: string
+          available_to?: string
+          created_at?: string
+          description?: string
+          duration?: string
+          id?: string
+          image_url?: string | null
+          location?: string
+          name?: string
+          price?: number
+          type?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      network_invitations: {
+        Row: {
+          access_level: Database["public"]["Enums"]["access_level"] | null
+          created_at: string | null
+          email: string
+          expires_at: string | null
+          id: string
+          invite_code: string
+          inviter_id: string
+          relationship_type: string | null
+          status: string | null
+        }
+        Insert: {
+          access_level?: Database["public"]["Enums"]["access_level"] | null
+          created_at?: string | null
+          email: string
+          expires_at?: string | null
+          id?: string
+          invite_code: string
+          inviter_id: string
+          relationship_type?: string | null
+          status?: string | null
+        }
+        Update: {
+          access_level?: Database["public"]["Enums"]["access_level"] | null
+          created_at?: string | null
+          email?: string
+          expires_at?: string | null
+          id?: string
+          invite_code?: string
+          inviter_id?: string
+          relationship_type?: string | null
+          status?: string | null
+        }
+        Relationships: []
+      }
+      panorama_views: {
+        Row: {
+          created_at: string | null
+          filters: Json | null
+          id: string
+          is_default: boolean | null
+          layout_config: Json | null
+          name: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          filters?: Json | null
+          id?: string
+          is_default?: boolean | null
+          layout_config?: Json | null
+          name: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          filters?: Json | null
+          id?: string
+          is_default?: boolean | null
+          layout_config?: Json | null
+          name?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       partner_api_mappings: {
         Row: {
           id: string
@@ -592,6 +1122,61 @@ export type Database = {
           link_token?: string
           metadata?: Json | null
           user_id?: string
+        }
+        Relationships: []
+      }
+      professional_profiles: {
+        Row: {
+          bio: string | null
+          certifications: string[] | null
+          created_at: string | null
+          expertise: string[] | null
+          id: string
+          is_verified: boolean | null
+          kyc_status: Database["public"]["Enums"]["compliance_status"] | null
+          license_number: string
+          profession_type: Database["public"]["Enums"]["profession_type"] | null
+          professional_type: string
+          rating: number | null
+          region: string | null
+          review_count: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          bio?: string | null
+          certifications?: string[] | null
+          created_at?: string | null
+          expertise?: string[] | null
+          id: string
+          is_verified?: boolean | null
+          kyc_status?: Database["public"]["Enums"]["compliance_status"] | null
+          license_number: string
+          profession_type?:
+            | Database["public"]["Enums"]["profession_type"]
+            | null
+          professional_type: string
+          rating?: number | null
+          region?: string | null
+          review_count?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          bio?: string | null
+          certifications?: string[] | null
+          created_at?: string | null
+          expertise?: string[] | null
+          id?: string
+          is_verified?: boolean | null
+          kyc_status?: Database["public"]["Enums"]["compliance_status"] | null
+          license_number?: string
+          profession_type?:
+            | Database["public"]["Enums"]["profession_type"]
+            | null
+          professional_type?: string
+          rating?: number | null
+          region?: string | null
+          review_count?: number | null
+          updated_at?: string | null
         }
         Relationships: []
       }
@@ -796,6 +1381,36 @@ export type Database = {
         }
         Relationships: []
       }
+      wealth_snapshots: {
+        Row: {
+          asset_breakdown: Json
+          created_at: string | null
+          id: string
+          snapshot_date: string
+          total_assets: number
+          total_liabilities: number
+          user_id: string
+        }
+        Insert: {
+          asset_breakdown: Json
+          created_at?: string | null
+          id?: string
+          snapshot_date: string
+          total_assets: number
+          total_liabilities: number
+          user_id: string
+        }
+        Update: {
+          asset_breakdown?: Json
+          created_at?: string | null
+          id?: string
+          snapshot_date?: string
+          total_assets?: number
+          total_liabilities?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -815,6 +1430,7 @@ export type Database = {
       }
     }
     Enums: {
+      access_level: "full_access" | "partial_access" | "read_only" | "no_access"
       account_type:
         | "checking"
         | "savings"
@@ -826,6 +1442,20 @@ export type Database = {
         | "crypto"
         | "other"
       app_role: "advisor" | "client"
+      compliance_record_type:
+        | "kyc_verification"
+        | "gdpr_consent"
+        | "terms_acceptance"
+        | "data_access"
+      compliance_status: "pending" | "approved" | "rejected" | "expired"
+      data_consent_type: "gdpr" | "ccpa" | "marketing" | "data_sharing"
+      profession_type:
+        | "accountant"
+        | "attorney"
+        | "tax_advisor"
+        | "estate_planner"
+        | "financial_advisor"
+        | "other"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -941,6 +1571,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      access_level: ["full_access", "partial_access", "read_only", "no_access"],
       account_type: [
         "checking",
         "savings",
@@ -953,6 +1584,22 @@ export const Constants = {
         "other",
       ],
       app_role: ["advisor", "client"],
+      compliance_record_type: [
+        "kyc_verification",
+        "gdpr_consent",
+        "terms_acceptance",
+        "data_access",
+      ],
+      compliance_status: ["pending", "approved", "rejected", "expired"],
+      data_consent_type: ["gdpr", "ccpa", "marketing", "data_sharing"],
+      profession_type: [
+        "accountant",
+        "attorney",
+        "tax_advisor",
+        "estate_planner",
+        "financial_advisor",
+        "other",
+      ],
     },
   },
 } as const

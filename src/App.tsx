@@ -17,6 +17,7 @@ const Settings = lazy(() => import("@/pages/Settings"));
 const Auth = lazy(() => import("@/pages/Auth"));
 const Landing = lazy(() => import("@/pages/Landing"));
 const IntegrationHub = lazy(() => import("@/pages/IntegrationHub"));
+const LegacyVault = lazy(() => import("@/pages/LegacyVault"));
 const NotFound = lazy(() => import("@/pages/NotFound"));
 
 function App() {
@@ -44,6 +45,7 @@ function App() {
                   <Route path="/billing" element={<Billing />} />
                   <Route path="/settings" element={<Settings />} />
                   <Route path="/integration" element={<IntegrationHub />} />
+                  <Route path="/legacy-vault" element={<LegacyVault />} />
                 </Route>
                 
                 {/* Fallbacks */}
