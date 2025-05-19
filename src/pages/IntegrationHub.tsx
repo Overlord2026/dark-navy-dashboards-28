@@ -17,7 +17,8 @@ const IntegrationHub: React.FC = () => {
     <ThreeColumnLayout 
       activeMainItem="integration" 
       title="Project Integration" 
-      mainNavItems={navItems} // Updated to use mainNavItems instead of sidebarItems
+      // Make sure the secondaryMenuItems prop name matches what's expected by ThreeColumnLayout
+      secondaryMenuItems={navItems}
     >
       <div className="mx-auto w-full max-w-6xl space-y-6 p-4">
         <div>

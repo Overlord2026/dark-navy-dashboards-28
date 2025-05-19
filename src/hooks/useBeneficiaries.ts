@@ -52,7 +52,7 @@ export function useBeneficiaries() {
         }
         
         // Use type assertion to ensure the right type
-        setBeneficiaries((data as Beneficiary[]) || []);
+        setBeneficiaries((data as unknown as Beneficiary[]) || []);
       } catch (err) {
         console.error("Unexpected error loading beneficiaries:", err);
         setError("An unexpected error occurred");
@@ -78,7 +78,6 @@ export function useBeneficiaries() {
       };
       
       // Type assertion to work around the type constraints
-      // Remove the 'returning' option as it's not supported in the current version
       const { error, data: newData } = await supabase
         .from('user_beneficiaries' as any)
         .upsert([beneficiaryData], { 
@@ -94,9 +93,10 @@ export function useBeneficiaries() {
         // Update existing
         setBeneficiaries(prev => prev.map(b => b.id === data.id ? {...beneficiaryData, id: data.id} : b));
       } else {
-        // Add new with safe access to newData
-        const newBeneficiary = newData && newData.length > 0 ? 
-          {...beneficiaryData, id: newData[0]?.id} : 
+        // Add new and safely handle potential null newData
+        const addedData = newData as unknown as any[];
+        const newBeneficiary = addedData && addedData.length > 0 ? 
+          {...beneficiaryData, id: addedData[0]?.id} : 
           beneficiaryData;
         setBeneficiaries(prev => [...prev, newBeneficiary as Beneficiary]);
       }
@@ -164,7 +164,7 @@ export function useBeneficiaries() {
         .eq('user_id', userProfile.id);
         
       if (!refreshError) {
-        setBeneficiaries(refreshedData as Beneficiary[] || []);
+        setBeneficiaries(refreshedData as unknown as Beneficiary[] || []);
       }
       
       return true;

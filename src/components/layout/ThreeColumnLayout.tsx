@@ -15,7 +15,7 @@ interface ThreeColumnLayoutProps {
   contentClassName?: string;
   title?: string;
   activeMainItem?: string;
-  secondaryMenuItems?: any[]; // Added to fix TypeScript error
+  secondaryMenuItems?: any[]; // Added to properly accept secondaryMenuItems
 }
 
 export const ThreeColumnLayout: React.FC<ThreeColumnLayoutProps> = ({

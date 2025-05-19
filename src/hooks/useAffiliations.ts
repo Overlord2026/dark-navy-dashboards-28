@@ -62,7 +62,8 @@ export function useAffiliations() {
           return;
         }
         
-        setAffiliations(data as Affiliation);
+        // Adding a type assertion to handle the conversion safely
+        setAffiliations(data as unknown as Affiliation);
       } catch (err) {
         console.error("Unexpected error loading affiliations:", err);
         setError("An unexpected error occurred");
