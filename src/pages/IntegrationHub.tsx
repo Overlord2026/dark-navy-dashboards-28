@@ -11,13 +11,13 @@ import { ConnectedBadge } from '@/components/integration/ConnectedBadge';
 
 const IntegrationHub: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>("connected-projects");
-  const integrationNavItems = getSidebarNavItems('integration');
+  const navItems = getSidebarNavItems('integration');
 
   return (
     <ThreeColumnLayout 
       activeMainItem="integration" 
       title="Project Integration" 
-      sidebarItems={integrationNavItems}
+      mainNavItems={navItems} // Updated to use mainNavItems instead of sidebarItems
     >
       <div className="mx-auto w-full max-w-6xl space-y-6 p-4">
         <div>

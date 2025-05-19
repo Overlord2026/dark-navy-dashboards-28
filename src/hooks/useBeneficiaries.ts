@@ -51,7 +51,8 @@ export function useBeneficiaries() {
           return;
         }
         
-        setBeneficiaries(data as Beneficiary[] || []);
+        // Use type assertion to ensure the right type
+        setBeneficiaries((data as Beneficiary[]) || []);
       } catch (err) {
         console.error("Unexpected error loading beneficiaries:", err);
         setError("An unexpected error occurred");
@@ -77,11 +78,11 @@ export function useBeneficiaries() {
       };
       
       // Type assertion to work around the type constraints
+      // Remove the 'returning' option as it's not supported in the current version
       const { error, data: newData } = await supabase
         .from('user_beneficiaries' as any)
         .upsert([beneficiaryData], { 
-          onConflict: 'id',
-          returning: 'representation'
+          onConflict: 'id'
         });
         
       if (error) {
@@ -93,8 +94,11 @@ export function useBeneficiaries() {
         // Update existing
         setBeneficiaries(prev => prev.map(b => b.id === data.id ? {...beneficiaryData, id: data.id} : b));
       } else {
-        // Add new
-        setBeneficiaries(prev => [...prev, {...beneficiaryData, id: newData?.[0]?.id}]);
+        // Add new with safe access to newData
+        const newBeneficiary = newData && newData.length > 0 ? 
+          {...beneficiaryData, id: newData[0]?.id} : 
+          beneficiaryData;
+        setBeneficiaries(prev => [...prev, newBeneficiary as Beneficiary]);
       }
       
       return true;
@@ -128,11 +132,56 @@ export function useBeneficiaries() {
     }
   };
 
+  // Save multiple beneficiaries
+  const saveBeneficiaries = async (beneficiariesData: Beneficiary[]) => {
+    if (!userProfile?.id) {
+      setError("User not authenticated");
+      return false;
+    }
+    
+    try {
+      // Add user_id to each beneficiary
+      const beneficiariesWithUserID = beneficiariesData.map(b => ({
+        ...b,
+        user_id: userProfile.id
+      }));
+      
+      // Type assertion to work around the type constraints
+      const { error } = await supabase
+        .from('user_beneficiaries' as any)
+        .upsert(beneficiariesWithUserID, {
+          onConflict: 'id'
+        });
+        
+      if (error) {
+        throw new Error(error.message);
+      }
+      
+      // Reload beneficiaries after save
+      const { data: refreshedData, error: refreshError } = await supabase
+        .from('user_beneficiaries' as any)
+        .select('*')
+        .eq('user_id', userProfile.id);
+        
+      if (!refreshError) {
+        setBeneficiaries(refreshedData as Beneficiary[] || []);
+      }
+      
+      return true;
+    } catch (err) {
+      console.error("Error saving beneficiaries:", err);
+      setError("Failed to save beneficiaries");
+      return false;
+    }
+  };
+
   return {
     beneficiaries,
     isLoading,
     error,
     saveBeneficiary,
-    deleteBeneficiary
+    deleteBeneficiary,
+    saveBeneficiaries,
+    setBeneficiaries
   };
 }

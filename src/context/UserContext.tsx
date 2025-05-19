@@ -1,3 +1,4 @@
+
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -29,6 +30,10 @@ interface UserContextType {
   setUserProfile: React.Dispatch<React.SetStateAction<UserProfile | null>>;
   isLoading: boolean;
   error: string | null;
+  isAuthenticated: boolean; // Added this property
+  logout: () => void; // Added this property
+  updateUserProfile: (data: Partial<UserProfile>) => Promise<boolean>; // Added this property
+  loadUserData: () => Promise<void>; // Added this property
 }
 
 // Create the context with a default value
@@ -37,6 +42,10 @@ const UserContext = createContext<UserContextType>({
   setUserProfile: () => {},
   isLoading: true,
   error: null,
+  isAuthenticated: false, // Initialize the new property
+  logout: () => {}, // Initialize the new property
+  updateUserProfile: async () => false, // Initialize the new property
+  loadUserData: async () => {}, // Initialize the new property
 });
 
 // Create a provider component
@@ -45,50 +54,108 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchUserProfile = async () => {
-      setIsLoading(true);
-      setError(null);
+  // Added loadUserData function to fetch user profile
+  const loadUserData = async () => {
+    setIsLoading(true);
+    setError(null);
+    
+    try {
+      const { data: authUser, error: authError } = await supabase.auth.getUser();
       
-      try {
-        const { data: authUser, error: authError } = await supabase.auth.getUser();
-        
-        if (authError) {
-          console.error("Error fetching user:", authError);
-          setError("Failed to fetch user");
+      if (authError) {
+        console.error("Error fetching user:", authError);
+        setError("Failed to fetch user");
+        return;
+      }
+      
+      if (authUser.user) {
+        const { data: dbUser, error: dbError } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', authUser.user.id)
+          .single();
+          
+        if (dbError) {
+          console.error("Error fetching profile:", dbError);
+          setError("Failed to fetch profile");
           return;
         }
         
-        if (authUser.user) {
-          const { data: dbUser, error: dbError } = await supabase
-            .from('profiles')
-            .select('*')
-            .eq('id', authUser.user.id)
-            .single();
-            
-          if (dbError) {
-            console.error("Error fetching profile:", dbError);
-            setError("Failed to fetch profile");
-            return;
-          }
-          
-          const formattedProfile = formatUserProfile(dbUser);
-          setUserProfile(formattedProfile);
-        }
-      } catch (err) {
-        console.error("Unexpected error:", err);
-        setError("An unexpected error occurred");
-      } finally {
-        setIsLoading(false);
+        const formattedProfile = formatUserProfile(dbUser);
+        setUserProfile(formattedProfile);
       }
-    };
+    } catch (err) {
+      console.error("Unexpected error:", err);
+      setError("An unexpected error occurred");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Implement logout function
+  const logout = async () => {
+    try {
+      await supabase.auth.signOut();
+      setUserProfile(null);
+    } catch (err) {
+      console.error("Error logging out:", err);
+      setError("Failed to log out");
+    }
+  };
+
+  // Implement updateUserProfile function
+  const updateUserProfile = async (data: Partial<UserProfile>): Promise<boolean> => {
+    if (!userProfile?.id) {
+      setError("User not authenticated");
+      return false;
+    }
     
-    fetchUserProfile();
+    try {
+      // Prepare data for Supabase (convert from camelCase to snake_case)
+      const profileData = {
+        first_name: data.firstName,
+        last_name: data.lastName,
+        middle_name: data.middleName,
+        display_name: data.displayName || `${data.firstName || ''} ${data.lastName || ''}`.trim(),
+        role: data.role,
+        avatar_url: data.avatar,
+        title: data.title,
+        suffix: data.suffix,
+        gender: data.gender,
+        marital_status: data.maritalStatus,
+        date_of_birth: data.dateOfBirth ? data.dateOfBirth.toISOString() : null,
+        phone: data.phone,
+        investor_type: data.investorType,
+      };
+      
+      const { error: updateError } = await supabase
+        .from('profiles')
+        .update(profileData)
+        .eq('id', userProfile.id);
+        
+      if (updateError) {
+        console.error("Error updating profile:", updateError);
+        setError("Failed to update profile");
+        return false;
+      }
+      
+      // Update local state with new data
+      setUserProfile(prev => prev ? { ...prev, ...data } : null);
+      return true;
+    } catch (err) {
+      console.error("Unexpected error updating profile:", err);
+      setError("An unexpected error occurred while updating profile");
+      return false;
+    }
+  };
+
+  useEffect(() => {
+    loadUserData();
     
     // Subscribe to auth state changes
     supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'SIGNED_IN' && session) {
-        fetchUserProfile();
+        loadUserData();
       } else if (event === 'SIGNED_OUT') {
         setUserProfile(null);
       }
@@ -122,7 +189,18 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <UserContext.Provider value={{ userProfile, setUserProfile, isLoading, error }}>
+    <UserContext.Provider 
+      value={{ 
+        userProfile, 
+        setUserProfile, 
+        isLoading, 
+        error, 
+        isAuthenticated: !!userProfile,
+        logout,
+        updateUserProfile,
+        loadUserData
+      }}
+    >
       {children}
     </UserContext.Provider>
   );
