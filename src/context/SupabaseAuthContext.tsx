@@ -11,6 +11,7 @@ export interface Profile {
   display_name?: string;
   avatar_url?: string;
   role?: string;
+  email?: string;
 }
 
 interface AuthContextType {
@@ -41,6 +42,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (!userId) return null;
     
     try {
+      // Query the profiles table we just created
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
@@ -225,6 +227,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
     
     try {
+      // Update the profiles table
       const { error } = await supabase
         .from('profiles')
         .update(updates)

@@ -1,19 +1,18 @@
 
-import { useState, useEffect } from 'react';
-import { supabase } from '@/integrations/supabase/client';
-import { useUser } from '@/context/UserContext';
+import { useState, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { useUser } from "@/context/UserContext";
 
-// Define the Affiliation interface and export it
-export interface Affiliation {
+interface Affiliation {
   id?: string;
-  user_id?: string;
-  stock_exchange_or_finra: boolean;
-  public_company: boolean;
-  us_politically_exposed: boolean;
-  awm_employee: boolean;
-  custodian: boolean;
-  broker_dealer: boolean;
-  family_broker_dealer: boolean;
+  user_id: string;
+  stock_exchange_or_finra?: boolean;
+  public_company?: boolean;
+  us_politically_exposed?: boolean;
+  awm_employee?: boolean;
+  custodian?: boolean;
+  broker_dealer?: boolean;
+  family_broker_dealer?: boolean;
   created_at?: string;
   updated_at?: string;
 }
@@ -21,109 +20,118 @@ export interface Affiliation {
 export function useAffiliations() {
   const { userProfile } = useUser();
   const [affiliations, setAffiliations] = useState<Affiliation | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
 
-  // Load affiliations from Supabase
   useEffect(() => {
-    const loadAffiliations = async () => {
+    const fetchAffiliations = async () => {
       if (!userProfile?.id) {
-        setIsLoading(false);
+        setLoading(false);
         return;
       }
-      
+
       try {
-        setIsLoading(true);
+        setLoading(true);
         setError(null);
         
-        const { data, error } = await supabase
-          .from('user_affiliations' as any)
+        // Query user affiliations from the new table
+        const { data, error: fetchError } = await supabase
+          .from('user_affiliations')
           .select('*')
           .eq('user_id', userProfile.id)
           .single();
-          
-        if (error) {
-          if (error.code === 'PGRST116') { // No rows returned
-            // Create default affiliations object
-            const defaultAffiliations: Omit<Affiliation, 'id' | 'user_id'> = {
-              stock_exchange_or_finra: false,
-              public_company: false,
-              us_politically_exposed: false,
-              awm_employee: false,
-              custodian: false,
-              broker_dealer: false,
-              family_broker_dealer: false,
-            };
-            setAffiliations(defaultAffiliations as Affiliation);
+
+        if (fetchError) {
+          if (fetchError.code === 'PGRST116') { // No rows returned
+            // No affiliations found, this is a valid state for new users
+            setAffiliations(null);
           } else {
-            console.error("Error loading affiliations:", error);
-            setError("Failed to load affiliations");
+            console.error("Error fetching affiliations:", fetchError);
+            setError(new Error(fetchError.message));
           }
-          return;
+        } else {
+          setAffiliations(data);
         }
-        
-        // Adding a type assertion to handle the conversion safely
-        setAffiliations(data as unknown as Affiliation);
       } catch (err) {
-        console.error("Unexpected error loading affiliations:", err);
-        setError("An unexpected error occurred");
+        const error = err instanceof Error ? err : new Error(String(err));
+        console.error("Error handling affiliations:", error);
+        setError(error);
       } finally {
-        setIsLoading(false);
+        setLoading(false);
       }
     };
-    
-    loadAffiliations();
+
+    fetchAffiliations();
   }, [userProfile?.id]);
 
-  // Save affiliations to Supabase
-  const saveAffiliations = async (data: Partial<Affiliation>) => {
+  const saveAffiliations = async (data: Partial<Affiliation>): Promise<boolean> => {
     if (!userProfile?.id) {
-      setError("User not authenticated");
+      setError(new Error("User not authenticated"));
       return false;
     }
     
     try {
+      setLoading(true);
       const affiliationData = {
         ...data,
         user_id: userProfile.id,
+        updated_at: new Date().toISOString()
       };
       
       if (affiliations?.id) {
-        // Update existing
-        const { error } = await supabase
-          .from('user_affiliations' as any)
+        // Update existing record
+        const { error: updateError } = await supabase
+          .from('user_affiliations')
           .update(affiliationData)
           .eq('id', affiliations.id);
           
-        if (error) {
-          throw new Error(error.message);
+        if (updateError) {
+          console.error("Error updating affiliations:", updateError);
+          setError(new Error(updateError.message));
+          return false;
         }
       } else {
-        // Insert new
-        const { error } = await supabase
-          .from('user_affiliations' as any)
+        // Create new record
+        const { error: insertError } = await supabase
+          .from('user_affiliations')
           .insert([affiliationData]);
           
-        if (error) {
-          throw new Error(error.message);
+        if (insertError) {
+          console.error("Error creating affiliations:", insertError);
+          setError(new Error(insertError.message));
+          return false;
         }
       }
       
-      // Update local state
-      setAffiliations(prev => prev ? { ...prev, ...affiliationData } : affiliationData as Affiliation);
+      // Refresh the data
+      const { data: refreshedData, error: refreshError } = await supabase
+        .from('user_affiliations')
+        .select('*')
+        .eq('user_id', userProfile.id)
+        .single();
+        
+      if (refreshError) {
+        console.error("Error refreshing affiliations:", refreshError);
+        setError(new Error(refreshError.message));
+      } else {
+        setAffiliations(refreshedData);
+      }
       
       return true;
     } catch (err) {
-      console.error("Error saving affiliations:", err);
-      setError(err instanceof Error ? err.message : "Failed to save affiliations");
+      const error = err instanceof Error ? err : new Error(String(err));
+      console.error("Error saving affiliations:", error);
+      setError(error);
       return false;
+    } finally {
+      setLoading(false);
     }
   };
 
-  return {
-    affiliations,
-    isLoading,
-    error,
-    saveAffiliations
+  return { 
+    affiliations, 
+    loading, 
+    error, 
+    saveAffiliations 
   };
 }

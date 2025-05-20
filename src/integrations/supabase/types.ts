@@ -9,7 +9,138 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      audit_logs: {
+        Row: {
+          created_at: string | null
+          details: Json | null
+          event_type: string
+          id: string
+          status: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          details?: Json | null
+          event_type: string
+          id?: string
+          status: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          details?: Json | null
+          event_type?: string
+          id?: string
+          status?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string | null
+          date_of_birth: string | null
+          display_name: string | null
+          email: string | null
+          first_name: string | null
+          gender: string | null
+          id: string
+          investor_type: string | null
+          last_name: string | null
+          marital_status: string | null
+          middle_name: string | null
+          permissions: string[] | null
+          phone: string | null
+          role: string | null
+          suffix: string | null
+          title: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string | null
+          date_of_birth?: string | null
+          display_name?: string | null
+          email?: string | null
+          first_name?: string | null
+          gender?: string | null
+          id: string
+          investor_type?: string | null
+          last_name?: string | null
+          marital_status?: string | null
+          middle_name?: string | null
+          permissions?: string[] | null
+          phone?: string | null
+          role?: string | null
+          suffix?: string | null
+          title?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string | null
+          date_of_birth?: string | null
+          display_name?: string | null
+          email?: string | null
+          first_name?: string | null
+          gender?: string | null
+          id?: string
+          investor_type?: string | null
+          last_name?: string | null
+          marital_status?: string | null
+          middle_name?: string | null
+          permissions?: string[] | null
+          phone?: string | null
+          role?: string | null
+          suffix?: string | null
+          title?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      user_affiliations: {
+        Row: {
+          awm_employee: boolean | null
+          broker_dealer: boolean | null
+          created_at: string | null
+          custodian: boolean | null
+          family_broker_dealer: boolean | null
+          id: string
+          public_company: boolean | null
+          stock_exchange_or_finra: boolean | null
+          updated_at: string | null
+          us_politically_exposed: boolean | null
+          user_id: string
+        }
+        Insert: {
+          awm_employee?: boolean | null
+          broker_dealer?: boolean | null
+          created_at?: string | null
+          custodian?: boolean | null
+          family_broker_dealer?: boolean | null
+          id?: string
+          public_company?: boolean | null
+          stock_exchange_or_finra?: boolean | null
+          updated_at?: string | null
+          us_politically_exposed?: boolean | null
+          user_id: string
+        }
+        Update: {
+          awm_employee?: boolean | null
+          broker_dealer?: boolean | null
+          created_at?: string | null
+          custodian?: boolean | null
+          family_broker_dealer?: boolean | null
+          id?: string
+          public_company?: boolean | null
+          stock_exchange_or_finra?: boolean | null
+          updated_at?: string | null
+          us_politically_exposed?: boolean | null
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

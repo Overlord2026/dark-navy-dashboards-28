@@ -1,213 +1,121 @@
-import React, { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { FileText, Download, Plus } from "lucide-react";
-import { toast } from "@/hooks/use-toast";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
-import { DocumentItem } from "@/types/document";
-import { auditLog } from "@/services/auditLog/auditLogService";
 
-// Template definitions
-const healthcareTemplates = [
+import React from "react";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { DocumentPermission } from "@/types/document";
+
+interface Template {
+  id: string;
+  name: string;
+  description: string;
+  category: string;
+  permissions: DocumentPermission[];
+  lastUpdated: string;
+}
+
+const templates: Template[] = [
   {
-    id: "hipaa-authorization",
+    id: "1",
     name: "HIPAA Authorization Form",
-    description: "Standard form authorizing the release of protected health information",
-    category: "medical-records",
-    type: "legal"
+    description: "Standard HIPAA Authorization form for disclosure of protected health information.",
+    category: "Legal Documents",
+    permissions: [
+      {
+        userId: "admin1",
+        userName: "Admin User",
+        userRole: "System Administrator",
+        accessLevel: "admin",
+        grantedBy: "System",
+        grantedAt: "2023-01-15T12:00:00Z"
+      }
+    ],
+    lastUpdated: "2023-08-15"
   },
   {
-    id: "advance-directive",
-    name: "Advance Healthcare Directive",
-    description: "Legal document specifying healthcare wishes if you're unable to communicate",
-    category: "medical-records",
-    type: "legal"
+    id: "2",
+    name: "Medical History Questionnaire",
+    description: "Comprehensive medical history questionnaire for new patients.",
+    category: "Intake Forms",
+    permissions: [
+      {
+        userId: "admin1",
+        userName: "Admin User",
+        userRole: "System Administrator",
+        accessLevel: "admin",
+        grantedBy: "System",
+        grantedAt: "2023-02-20T14:30:00Z"
+      }
+    ],
+    lastUpdated: "2023-09-01"
   },
   {
-    id: "living-will",
-    name: "Living Will",
-    description: "Document specifying medical treatments you would or would not want",
-    category: "medical-records",
-    type: "legal"
+    id: "3",
+    name: "Medication List Template",
+    description: "Template for tracking current medications, dosages, and schedules.",
+    category: "Medical Records",
+    permissions: [
+      {
+        userId: "admin1",
+        userName: "Admin User",
+        userRole: "System Administrator",
+        accessLevel: "admin",
+        grantedBy: "System",
+        grantedAt: "2023-03-10T09:15:00Z"
+      }
+    ],
+    lastUpdated: "2023-07-22"
   },
   {
-    id: "medication-list",
-    name: "Medication Tracking List",
-    description: "Template for tracking current medications, dosages, and schedules",
-    category: "prescriptions",
-    type: "document"
-  },
-  {
-    id: "emergency-contacts",
-    name: "Emergency Medical Contacts",
-    description: "List of emergency contacts and healthcare providers",
-    category: "physicians",
-    type: "document"
-  },
-  {
-    id: "insurance-claim",
-    name: "Healthcare Insurance Claim Form",
-    description: "Standard form for submitting healthcare insurance claims",
-    category: "insurance-coverage",
-    type: "financial"
+    id: "4",
+    name: "Advanced Directive",
+    description: "Legal document outlining a person's wishes regarding medical treatments.",
+    category: "Legal Documents",
+    permissions: [
+      {
+        userId: "admin1",
+        userName: "Admin User",
+        userRole: "System Administrator",
+        accessLevel: "admin",
+        grantedBy: "System",
+        grantedAt: "2023-04-05T16:45:00Z"
+      }
+    ],
+    lastUpdated: "2023-06-30"
   }
 ];
 
-interface HealthcareTemplatesProps {
-  onAddDocument: (document: DocumentItem) => void;
-}
-
-export const HealthcareTemplates: React.FC<HealthcareTemplatesProps> = ({
-  onAddDocument
-}) => {
-  const [selectedTemplate, setSelectedTemplate] = useState<typeof healthcareTemplates[0] | null>(null);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  
-  const handleTemplateSelect = (template: typeof healthcareTemplates[0]) => {
-    setSelectedTemplate(template);
-    setIsDialogOpen(true);
-  };
-  
-  const handleDownloadTemplate = () => {
-    if (!selectedTemplate) return;
-    
-    // In a real app, this would download an actual file template
-    // For demo purposes, we're just showing a toast
-    toast({
-      title: "Template downloaded",
-      description: `${selectedTemplate.name} has been downloaded`
-    });
-    
-    setIsDialogOpen(false);
-  };
-  
-  const handleAddToVault = () => {
-    if (!selectedTemplate) return;
-    
-    // Create a new document from the template
-    const newDocument: DocumentItem = {
-      id: `template-${Math.random().toString(36).substring(2, 9)}`,
-      name: selectedTemplate.name,
-      type: selectedTemplate.type as any,
-      category: selectedTemplate.category,
-      created: new Date().toISOString(),
-      size: "0 KB",
-      encrypted: true,
-      isPrivate: true,
-      uploadedBy: "Tom Brady", // In a real app, this would be the current user
-      permissions: [
-        {
-          userId: "Tom Brady",
-          userName: "Tom Brady",
-          accessLevel: "admin",
-          grantedAt: new Date().toISOString()
-        }
-      ]
-    };
-    
-    onAddDocument(newDocument);
-    
-    auditLog.log(
-      "Tom Brady", // In a real app, this would be the current user
-      "document_creation",
-      "success",
-      {
-        resourceId: newDocument.id,
-        resourceType: "healthcare_template",
-        details: {
-          action: "template_create",
-          templateName: selectedTemplate.name,
-          category: selectedTemplate.category
-        }
-      }
-    );
-    
-    toast({
-      title: "Template added to vault",
-      description: `${selectedTemplate.name} has been added to your healthcare documents`
-    });
-    
-    setIsDialogOpen(false);
-  };
-  
+export function HealthcareTemplates() {
   return (
-    <>
-      <Card>
-        <CardHeader className="pb-3">
-          <CardTitle className="text-lg flex items-center gap-2">
-            <FileText className="h-5 w-5 text-primary" />
-            Healthcare Document Templates
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {healthcareTemplates.map(template => (
-              <div 
-                key={template.id}
-                className="border rounded-md p-4 hover:border-primary cursor-pointer transition-colors"
-                onClick={() => handleTemplateSelect(template)}
-              >
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h3 className="font-medium">{template.name}</h3>
-                    <p className="text-sm text-muted-foreground">{template.description}</p>
-                  </div>
-                  <Button variant="ghost" size="icon">
-                    <Plus className="h-4 w-4" />
-                  </Button>
-                </div>
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h2 className="text-2xl font-bold">Document Templates</h2>
+        <Button>Create New Template</Button>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {templates.map((template) => (
+          <Card key={template.id} className="overflow-hidden">
+            <CardHeader className="bg-blue-50 dark:bg-blue-950">
+              <CardTitle>{template.name}</CardTitle>
+              <CardDescription className="text-blue-600 dark:text-blue-300">
+                {template.category}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="pt-4">
+              <p className="text-sm text-gray-600 dark:text-gray-300">{template.description}</p>
+              <div className="mt-3 text-xs text-gray-500">
+                Last updated: {new Date(template.lastUpdated).toLocaleDateString()}
               </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-      
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>{selectedTemplate?.name}</DialogTitle>
-            <DialogDescription>
-              {selectedTemplate?.description}
-            </DialogDescription>
-          </DialogHeader>
-          
-          <div className="py-4">
-            <p className="text-sm text-muted-foreground mb-4">
-              Choose how you'd like to use this template:
-            </p>
-            
-            <div className="space-y-4">
-              <div className="flex items-center justify-between border p-3 rounded-md">
-                <div>
-                  <h4 className="font-medium">Download Template</h4>
-                  <p className="text-sm text-muted-foreground">Download and fill out offline</p>
-                </div>
-                <Button variant="outline" onClick={handleDownloadTemplate} className="flex items-center gap-2">
-                  <Download className="h-4 w-4" />
-                  Download
-                </Button>
-              </div>
-              
-              <div className="flex items-center justify-between border p-3 rounded-md">
-                <div>
-                  <h4 className="font-medium">Add to Vault</h4>
-                  <p className="text-sm text-muted-foreground">Create an editable document in your vault</p>
-                </div>
-                <Button onClick={handleAddToVault} className="flex items-center gap-2">
-                  <Plus className="h-4 w-4" />
-                  Add to Vault
-                </Button>
-              </div>
-            </div>
-          </div>
-          
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
-              Cancel
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </>
+            </CardContent>
+            <CardFooter className="flex justify-end space-x-2 bg-gray-50 dark:bg-gray-900">
+              <Button variant="outline" size="sm">
+                Preview
+              </Button>
+              <Button size="sm">Use Template</Button>
+            </CardFooter>
+          </Card>
+        ))}
+      </div>
+    </div>
   );
-};
+}

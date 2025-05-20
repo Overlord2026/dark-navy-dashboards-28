@@ -1,4 +1,3 @@
-
 import React, { useEffect } from "react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetClose } from "@/components/ui/sheet";
 import { X, ChevronDown } from "lucide-react";
@@ -45,6 +44,7 @@ export const ProfileFormSheet = ({
     if (userProfile?.id) {
       const logAuditEvent = async () => {
         try {
+          // Use the new audit_logs table in Supabase
           await supabase
             .from('audit_logs')
             .insert({
@@ -75,7 +75,7 @@ export const ProfileFormSheet = ({
     }, 300);
   };
 
-  const renderFormContent = () => {
+  function renderFormContent() {
     if (!activeForm) return null;
     
     switch (activeForm) {
@@ -102,9 +102,9 @@ export const ProfileFormSheet = ({
       default:
         return null;
     }
-  };
+  }
 
-  const getFormTitle = () => {
+  function getFormTitle() {
     switch (activeForm) {
       case "investor-profile":
         return "Investor Profile";
@@ -129,7 +129,7 @@ export const ProfileFormSheet = ({
       default:
         return "";
     }
-  };
+  }
 
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>

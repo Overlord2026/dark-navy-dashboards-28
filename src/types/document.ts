@@ -1,16 +1,16 @@
 
 export type DocumentType = "document" | "pdf" | "spreadsheet" | "image" | "folder" | "external-link";
 
-export type HealthcareAccessLevel = "none" | "view" | "edit" | "full" | "restricted";
+export type HealthcareAccessLevel = "none" | "view" | "edit" | "full" | "restricted" | "admin";
 
 export interface DocumentPermission {
   userId: string;
   userName: string;
   userRole: string;
-  accessLevel: "view" | "edit" | "admin" | "full";  // Added "full" as a valid access level
+  accessLevel: HealthcareAccessLevel;  // Updated to use HealthcareAccessLevel
   grantedBy: string;
   grantedAt: string;
-  userEmail?: string;  // Added optional userEmail property
+  userEmail?: string;
 }
 
 export interface DocumentCategory {
@@ -33,9 +33,9 @@ export interface DocumentItem {
   color?: string;
   sharedWith?: string[];
   permissions?: DocumentPermission[];
-  url?: string;  // For external links
-  shared?: boolean;  // Added shared property
-  lastAccessedBy?: string;  // Added lastAccessedBy property
+  url?: string;
+  shared?: boolean;
+  lastAccessedBy?: string;
   encrypted?: boolean;
   isPrivate?: boolean;
 }

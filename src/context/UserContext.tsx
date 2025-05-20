@@ -30,10 +30,10 @@ interface UserContextType {
   setUserProfile: React.Dispatch<React.SetStateAction<UserProfile | null>>;
   isLoading: boolean;
   error: string | null;
-  isAuthenticated: boolean; // Added this property
-  logout: () => void; // Added this property
-  updateUserProfile: (data: Partial<UserProfile>) => Promise<boolean>; // Added this property
-  loadUserData: () => Promise<void>; // Added this property
+  isAuthenticated: boolean;
+  logout: () => void;
+  updateUserProfile: (data: Partial<UserProfile>) => Promise<boolean>;
+  loadUserData: () => Promise<void>;
 }
 
 // Create the context with a default value
@@ -42,10 +42,10 @@ const UserContext = createContext<UserContextType>({
   setUserProfile: () => {},
   isLoading: true,
   error: null,
-  isAuthenticated: false, // Initialize the new property
-  logout: () => {}, // Initialize the new property
-  updateUserProfile: async () => false, // Initialize the new property
-  loadUserData: async () => {}, // Initialize the new property
+  isAuthenticated: false,
+  logout: () => {},
+  updateUserProfile: async () => false,
+  loadUserData: async () => {},
 });
 
 // Create a provider component
@@ -69,6 +69,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
       
       if (authUser.user) {
+        // Query the profiles table we just created
         const { data: dbUser, error: dbError } = await supabase
           .from('profiles')
           .select('*')
@@ -128,6 +129,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
         investor_type: data.investorType,
       };
       
+      // Update the profiles table
       const { error: updateError } = await supabase
         .from('profiles')
         .update(profileData)
@@ -172,19 +174,19 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
       email: userData.email || '',
       firstName: userData.first_name || '',
       lastName: userData.last_name || '',
-      middleName: userData.middle_name || '', // Added with default
+      middleName: userData.middle_name || '',
       displayName: userData.display_name || '',
       role: userData.role || 'client',
       avatar: userData.avatar_url || '',
       title: userData.title || '',
-      suffix: userData.suffix || '', // Added with default
-      gender: userData.gender || '', // Added with default
-      maritalStatus: userData.marital_status || '', // Added with default
-      dateOfBirth: userData.date_of_birth ? new Date(userData.date_of_birth) : null, // Handle with default
-      phone: userData.phone || '', // Added with default
-      investorType: userData.investor_type || '', // Added with default
+      suffix: userData.suffix || '',
+      gender: userData.gender || '',
+      maritalStatus: userData.marital_status || '',
+      dateOfBirth: userData.date_of_birth ? new Date(userData.date_of_birth) : null,
+      phone: userData.phone || '',
+      investorType: userData.investor_type || '',
       createdAt: userData.created_at,
-      permissions: userData.permissions || [], // Added with default
+      permissions: userData.permissions || [],
     };
   };
 
