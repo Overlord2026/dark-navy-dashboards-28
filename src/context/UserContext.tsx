@@ -53,21 +53,59 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const { user, profile, isLoading: supabaseLoading, signOut, isAuthenticated } = useSupabaseAuth();
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [profileLoaded, setProfileLoaded] = useState(false);
 
   // Load user data based on Supabase auth state
   const loadUserData = async () => {
-    if (!user || !profile) {
+    if (!user) {
       setUserProfile(null);
+      setProfileLoaded(true);
       return;
     }
 
     try {
-      const formattedProfile = formatUserProfile(profile);
+      // If we have a user but no profile yet, try to create a basic profile from user data
+      const profileData = profile || {
+        id: user.id,
+        email: user.email,
+        first_name: user.user_metadata?.first_name || '',
+        last_name: user.user_metadata?.last_name || '',
+        display_name: user.user_metadata?.display_name || '',
+        role: 'client'
+      };
+
+      const formattedProfile = formatUserProfile(profileData);
       setUserProfile(formattedProfile);
       setError(null);
     } catch (err) {
       console.error("Error formatting profile:", err);
       setError("Failed to load user profile");
+      
+      // Even if profile formatting fails, create a minimal profile so user isn't stuck
+      if (user) {
+        setUserProfile({
+          id: user.id,
+          name: user.email?.split('@')[0] || 'User',
+          email: user.email || '',
+          firstName: '',
+          lastName: '',
+          middleName: '',
+          displayName: user.email?.split('@')[0] || 'User',
+          role: 'client',
+          avatar: '',
+          title: '',
+          suffix: '',
+          gender: '',
+          maritalStatus: '',
+          dateOfBirth: null,
+          phone: '',
+          investorType: '',
+          createdAt: user.created_at || new Date().toISOString(),
+          permissions: [],
+        });
+      }
+    } finally {
+      setProfileLoaded(true);
     }
   };
 
@@ -76,6 +114,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       await signOut();
       setUserProfile(null);
+      setProfileLoaded(false);
     } catch (err) {
       console.error("Error logging out:", err);
       setError("Failed to log out");
@@ -102,6 +141,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Sync with Supabase auth state
   useEffect(() => {
+    setProfileLoaded(false);
     loadUserData();
   }, [user, profile]);
 
@@ -110,7 +150,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     
     return {
       id: userData.id,
-      name: `${userData.first_name || ''} ${userData.last_name || ''}`.trim() || userData.display_name || 'User',
+      name: `${userData.first_name || ''} ${userData.last_name || ''}`.trim() || userData.display_name || userData.email?.split('@')[0] || 'User',
       email: userData.email || '',
       firstName: userData.first_name || '',
       lastName: userData.last_name || '',
@@ -125,17 +165,20 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
       dateOfBirth: userData.date_of_birth ? new Date(userData.date_of_birth) : null,
       phone: userData.phone || '',
       investorType: userData.investor_type || '',
-      createdAt: userData.created_at,
+      createdAt: userData.created_at || new Date().toISOString(),
       permissions: userData.permissions || [],
     };
   };
+
+  // The overall loading state should only be true if Supabase is loading or we haven't tried to load the profile yet
+  const isLoading = supabaseLoading || (!profileLoaded && isAuthenticated);
 
   return (
     <UserContext.Provider 
       value={{ 
         userProfile, 
         setUserProfile, 
-        isLoading: supabaseLoading,
+        isLoading,
         error, 
         isAuthenticated,
         logout,
