@@ -1,8 +1,7 @@
-
 import React from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { DocumentPermission } from "@/types/document";
+import { DocumentPermission, DocumentItem } from "@/types/document";
 
 interface Template {
   id: string;
@@ -11,6 +10,11 @@ interface Template {
   category: string;
   permissions: DocumentPermission[];
   lastUpdated: string;
+}
+
+// Add props interface
+interface HealthcareTemplatesProps {
+  onAddDocument?: (document: DocumentItem) => void;
 }
 
 const templates: Template[] = [
@@ -84,7 +88,24 @@ const templates: Template[] = [
   }
 ];
 
-export function HealthcareTemplates() {
+export function HealthcareTemplates({ onAddDocument }: HealthcareTemplatesProps) {
+  const handleUseTemplate = (template: Template) => {
+    if (onAddDocument) {
+      const newDocument: DocumentItem = {
+        id: Math.random().toString(36).substring(2, 9),
+        name: template.name,
+        type: "document",
+        category: "healthcare",
+        created: new Date().toISOString(),
+        modified: new Date().toISOString(),
+        uploadedBy: "System",
+        permissions: template.permissions,
+        description: template.description
+      };
+      onAddDocument(newDocument);
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -111,7 +132,9 @@ export function HealthcareTemplates() {
               <Button variant="outline" size="sm">
                 Preview
               </Button>
-              <Button size="sm">Use Template</Button>
+              <Button size="sm" onClick={() => handleUseTemplate(template)}>
+                Use Template
+              </Button>
             </CardFooter>
           </Card>
         ))}
