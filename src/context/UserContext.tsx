@@ -50,16 +50,14 @@ const UserContext = createContext<UserContextType>({
 
 // Create a provider component
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { user, profile, isLoading: supabaseLoading, signOut } = useSupabaseAuth();
+  const { user, profile, isLoading: supabaseLoading, signOut, isAuthenticated } = useSupabaseAuth();
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   // Load user data based on Supabase auth state
   const loadUserData = async () => {
     if (!user || !profile) {
       setUserProfile(null);
-      setIsLoading(false);
       return;
     }
 
@@ -70,8 +68,6 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } catch (err) {
       console.error("Error formatting profile:", err);
       setError("Failed to load user profile");
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -106,13 +102,8 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Sync with Supabase auth state
   useEffect(() => {
-    if (supabaseLoading) {
-      setIsLoading(true);
-      return;
-    }
-
     loadUserData();
-  }, [user, profile, supabaseLoading]);
+  }, [user, profile]);
 
   const formatUserProfile = (userData: any): UserProfile => {
     if (!userData) return null;
@@ -144,9 +135,9 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
       value={{ 
         userProfile, 
         setUserProfile, 
-        isLoading, 
+        isLoading: supabaseLoading,
         error, 
-        isAuthenticated: !!userProfile,
+        isAuthenticated,
         logout,
         updateUserProfile,
         loadUserData
