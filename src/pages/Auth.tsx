@@ -1,22 +1,18 @@
-
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { BrandedHeader } from "@/components/layout/BrandedHeader";
-import { Shield, Lock, AlertCircle } from "lucide-react";
+import { AlertCircle } from "lucide-react";
 import { useSupabaseAuth } from "@/context/SupabaseAuthContext";
-import { useUser } from "@/context/UserContext";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 export default function Auth() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { signIn, signUp, signInWithGoogle, signInWithMicrosoft, isAuthenticated: supabaseIsAuthenticated, isLoading: supabaseIsLoading } = useSupabaseAuth();
-  const { isAuthenticated: userIsAuthenticated, isLoading: userIsLoading } = useUser();
+  const { signIn, signUp, signInWithGoogle, signInWithMicrosoft, isAuthenticated, isLoading } = useSupabaseAuth();
   const [activeTab, setActiveTab] = useState<"login" | "signup">("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -30,10 +26,10 @@ export default function Auth() {
   
   // Redirect if already authenticated
   useEffect(() => {
-    if ((supabaseIsAuthenticated && userIsAuthenticated) && !supabaseIsLoading && !userIsLoading) {
+    if (isAuthenticated && !isLoading) {
       navigate(from);
     }
-  }, [supabaseIsAuthenticated, userIsAuthenticated, supabaseIsLoading, userIsLoading, navigate, from]);
+  }, [isAuthenticated, isLoading, navigate, from]);
 
   const handleEmailPasswordLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -43,10 +39,7 @@ export default function Auth() {
     try {
       console.log("Attempting login with:", email);
       
-      const { error: signInError } = await supabase.auth.signInWithPassword({
-        email,
-        password
-      });
+      const { error: signInError } = await signIn(email, password);
       
       if (signInError) {
         console.error("Login error:", signInError);
@@ -97,7 +90,6 @@ export default function Auth() {
         setError(signUpError.message);
         toast.error(signUpError.message);
       } else if (user) {
-        // Signup successful
         console.log("Signup successful:", user);
         setActiveTab("login");
         setError("");
@@ -126,7 +118,7 @@ export default function Auth() {
     }
   };
   
-  if (supabaseIsLoading || userIsLoading) {
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-[#0A1F44] flex flex-col items-center justify-center">
         <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-white"></div>
