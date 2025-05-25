@@ -131,31 +131,31 @@ export default function Auth() {
     <div className="min-h-screen bg-[#0A1F44] flex flex-col">
       <BrandedHeader />
       
-      <div className="flex-1 flex justify-center items-center p-4 sm:p-6 lg:p-8">
-        <div className="bg-[#0F1E3A] p-6 sm:p-8 lg:p-10 rounded-lg shadow-xl border border-[#2A3E5C] w-full max-w-sm sm:max-w-md lg:max-w-lg xl:max-w-xl">
-          <div className="text-center mb-6">
-            <h1 className="text-xl sm:text-2xl font-bold text-white">
+      <div className="flex-1 flex justify-center items-start py-8 px-4 sm:py-12 sm:px-6 lg:py-16 lg:px-8">
+        <div className="bg-[#0F1E3A] p-4 sm:p-6 lg:p-8 rounded-lg shadow-xl border border-[#2A3E5C] w-full max-w-xs sm:max-w-sm lg:max-w-md">
+          <div className="text-center mb-4 sm:mb-6">
+            <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-white">
               {activeTab === "login" ? "Log in securely" : "Create your account"}
             </h1>
-            <p className="text-gray-400 mt-1 text-sm sm:text-base">
+            <p className="text-gray-400 mt-1 text-xs sm:text-sm">
               {activeTab === "login" 
                 ? "Access your family office portal" 
                 : "Join our family office platform"}
             </p>
           </div>
           
-          <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as "login" | "signup")} className="mb-6">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="login">Login</TabsTrigger>
-              <TabsTrigger value="signup">Sign Up</TabsTrigger>
+          <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as "login" | "signup")} className="mb-4 sm:mb-6">
+            <TabsList className="grid w-full grid-cols-2 h-10">
+              <TabsTrigger value="login" className="text-xs sm:text-sm">Login</TabsTrigger>
+              <TabsTrigger value="signup" className="text-xs sm:text-sm">Sign Up</TabsTrigger>
             </TabsList>
             
             <TabsContent value="login">
-              <div className="mb-6">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="text-[#FFC700] text-base sm:text-lg font-bold">Boutique Family Office</div>
-                  <div className="flex items-center text-white text-xs sm:text-sm">
-                    <Lock className="h-3 w-3 sm:h-4 sm:w-4 mr-2 text-green-500" />
+              <div className="mb-4 sm:mb-6">
+                <div className="flex items-center justify-between mb-3 sm:mb-4">
+                  <div className="text-[#FFC700] text-sm sm:text-base lg:text-lg font-bold">Boutique Family Office</div>
+                  <div className="flex items-center text-white text-xs">
+                    <Lock className="h-3 w-3 mr-1 sm:mr-2 text-green-500" />
                     Secure login
                   </div>
                 </div>
@@ -163,9 +163,9 @@ export default function Auth() {
                 <button 
                   onClick={() => signInWithGoogle()}
                   disabled={isSubmitting}
-                  className="w-full bg-white hover:bg-gray-100 text-gray-800 font-medium py-2 sm:py-3 px-4 border border-gray-300 rounded-md mb-3 flex items-center justify-center text-sm sm:text-base"
+                  className="w-full bg-white hover:bg-gray-100 text-gray-800 font-medium py-2 px-3 sm:py-2.5 sm:px-4 border border-gray-300 rounded-md mb-2 sm:mb-3 flex items-center justify-center text-xs sm:text-sm"
                 >
-                  <svg className="h-4 w-4 sm:h-5 sm:w-5 mr-2" viewBox="0 0 24 24">
+                  <svg className="h-3 w-3 sm:h-4 sm:w-4 mr-2" viewBox="0 0 24 24">
                     <path
                       fill="#4285F4"
                       d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -187,8 +187,8 @@ export default function Auth() {
                   <span className="hidden sm:inline">Continue with Google</span>
                   <span className="sm:hidden">Google</span>
                   <div className="ml-auto">
-                    <div className="h-3 w-3 sm:h-4 sm:w-4 rounded-full border border-green-500 flex items-center justify-center">
-                      <div className="h-1.5 w-1.5 sm:h-2 sm:w-2 bg-green-500 rounded-full"></div>
+                    <div className="h-2 w-2 sm:h-3 sm:w-3 rounded-full border border-green-500 flex items-center justify-center">
+                      <div className="h-1 w-1 sm:h-1.5 sm:w-1.5 bg-green-500 rounded-full"></div>
                     </div>
                   </div>
                 </button>
@@ -196,9 +196,9 @@ export default function Auth() {
                 <button 
                   onClick={() => signInWithMicrosoft()}
                   disabled={isSubmitting}
-                  className="w-full bg-white hover:bg-gray-100 text-gray-800 font-medium py-2 sm:py-3 px-4 border border-gray-300 rounded-md mb-4 flex items-center justify-center text-sm sm:text-base"
+                  className="w-full bg-white hover:bg-gray-100 text-gray-800 font-medium py-2 px-3 sm:py-2.5 sm:px-4 border border-gray-300 rounded-md mb-3 sm:mb-4 flex items-center justify-center text-xs sm:text-sm"
                 >
-                  <svg className="h-4 w-4 sm:h-5 sm:w-5 mr-2" viewBox="0 0 23 23">
+                  <svg className="h-3 w-3 sm:h-4 sm:w-4 mr-2" viewBox="0 0 23 23">
                     <path fill="#f3f3f3" d="M0 0h23v23H0z" />
                     <path fill="#f35325" d="M1 1h10v10H1z" />
                     <path fill="#81bc06" d="M12 1h10v10H12z" />
@@ -208,27 +208,27 @@ export default function Auth() {
                   <span className="hidden sm:inline">Continue with Microsoft</span>
                   <span className="sm:hidden">Microsoft</span>
                   <div className="ml-auto">
-                    <div className="h-3 w-3 sm:h-4 sm:w-4 rounded-full border border-green-500 flex items-center justify-center">
-                      <div className="h-1.5 w-1.5 sm:h-2 sm:w-2 bg-green-500 rounded-full"></div>
+                    <div className="h-2 w-2 sm:h-3 sm:w-3 rounded-full border border-green-500 flex items-center justify-center">
+                      <div className="h-1 w-1 sm:h-1.5 sm:w-1.5 bg-green-500 rounded-full"></div>
                     </div>
                   </div>
                 </button>
                 
-                <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center justify-between mb-3 sm:mb-4">
                   <div className="border-t border-[#2A3E5C] flex-grow"></div>
-                  <div className="text-gray-400 text-xs mx-4">OR CONTINUE WITH</div>
+                  <div className="text-gray-400 text-xs mx-2 sm:mx-4">OR CONTINUE WITH</div>
                   <div className="border-t border-[#2A3E5C] flex-grow"></div>
                 </div>
               </div>
               
-              <form onSubmit={handleEmailPasswordLogin} className="space-y-4">
-                <div className="space-y-2">
+              <form onSubmit={handleEmailPasswordLogin} className="space-y-3 sm:space-y-4">
+                <div className="space-y-1 sm:space-y-2">
                   <div className="flex justify-between">
-                    <Label htmlFor="email" className="text-white text-sm">Email</Label>
+                    <Label htmlFor="email" className="text-white text-xs sm:text-sm">Email</Label>
                     {error && (
                       <div className="text-red-500 text-xs flex items-center">
                         <AlertCircle className="h-3 w-3 mr-1" />
-                        {error}
+                        <span className="hidden sm:inline">{error}</span>
                       </div>
                     )}
                   </div>
@@ -239,15 +239,15 @@ export default function Auth() {
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="you@example.com" 
                     autoComplete="email" 
-                    className="bg-[#1B2A47] border-[#2A3E5C] text-white text-sm sm:text-base" 
+                    className="bg-[#1B2A47] border-[#2A3E5C] text-white text-xs sm:text-sm h-8 sm:h-10" 
                     required 
                   />
                 </div>
                 
-                <div className="space-y-2">
+                <div className="space-y-1 sm:space-y-2">
                   <div className="flex justify-between items-center">
-                    <Label htmlFor="password" className="text-white text-sm">Password</Label>
-                    <Link to="/forgot-password" className="text-xs sm:text-sm text-blue-400 hover:underline">
+                    <Label htmlFor="password" className="text-white text-xs sm:text-sm">Password</Label>
+                    <Link to="/forgot-password" className="text-xs text-blue-400 hover:underline">
                       Forgot password?
                     </Link>
                   </div>
@@ -258,15 +258,15 @@ export default function Auth() {
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••" 
                     autoComplete="current-password"
-                    className="bg-[#1B2A47] border-[#2A3E5C] text-white text-sm sm:text-base" 
+                    className="bg-[#1B2A47] border-[#2A3E5C] text-white text-xs sm:text-sm h-8 sm:h-10" 
                     required 
                   />
                 </div>
                 
-                <div className="flex justify-between mt-6">
+                <div className="flex justify-between mt-4 sm:mt-6">
                   <Button 
                     type="submit" 
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white text-sm sm:text-base py-2 sm:py-3"
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm py-2"
                     disabled={isSubmitting}
                   >
                     {isSubmitting ? "Authenticating..." : "Login"}
@@ -275,7 +275,7 @@ export default function Auth() {
               </form>
 
               {/* Debug button - hidden in production */}
-              <div className="mt-4 text-center">
+              <div className="mt-3 sm:mt-4 text-center">
                 <Button
                   type="button"
                   variant="ghost" 
@@ -288,40 +288,40 @@ export default function Auth() {
             </TabsContent>
             
             <TabsContent value="signup">
-              <form id="signup-form" onSubmit={handleEmailPasswordSignup} className="space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="firstName" className="text-white text-sm">First Name</Label>
+              <form id="signup-form" onSubmit={handleEmailPasswordSignup} className="space-y-3 sm:space-y-4">
+                <div className="grid grid-cols-2 gap-2 sm:gap-4">
+                  <div className="space-y-1 sm:space-y-2">
+                    <Label htmlFor="firstName" className="text-white text-xs sm:text-sm">First Name</Label>
                     <Input 
                       id="firstName" 
                       value={firstName}
                       onChange={(e) => setFirstName(e.target.value)}
                       placeholder="John" 
-                      className="bg-[#1B2A47] border-[#2A3E5C] text-white text-sm sm:text-base" 
+                      className="bg-[#1B2A47] border-[#2A3E5C] text-white text-xs sm:text-sm h-8 sm:h-10" 
                       required 
                     />
                   </div>
                   
-                  <div className="space-y-2">
-                    <Label htmlFor="lastName" className="text-white text-sm">Last Name</Label>
+                  <div className="space-y-1 sm:space-y-2">
+                    <Label htmlFor="lastName" className="text-white text-xs sm:text-sm">Last Name</Label>
                     <Input 
                       id="lastName" 
                       value={lastName}
                       onChange={(e) => setLastName(e.target.value)}
                       placeholder="Doe" 
-                      className="bg-[#1B2A47] border-[#2A3E5C] text-white text-sm sm:text-base" 
+                      className="bg-[#1B2A47] border-[#2A3E5C] text-white text-xs sm:text-sm h-8 sm:h-10" 
                       required 
                     />
                   </div>
                 </div>
                 
-                <div className="space-y-2">
+                <div className="space-y-1 sm:space-y-2">
                   <div className="flex justify-between">
-                    <Label htmlFor="signupEmail" className="text-white text-sm">Email</Label>
+                    <Label htmlFor="signupEmail" className="text-white text-xs sm:text-sm">Email</Label>
                     {error && (
                       <div className="text-red-500 text-xs flex items-center">
                         <AlertCircle className="h-3 w-3 mr-1" />
-                        {error}
+                        <span className="hidden sm:inline">{error}</span>
                       </div>
                     )}
                   </div>
@@ -332,13 +332,13 @@ export default function Auth() {
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="you@example.com" 
                     autoComplete="email" 
-                    className="bg-[#1B2A47] border-[#2A3E5C] text-white text-sm sm:text-base" 
+                    className="bg-[#1B2A47] border-[#2A3E5C] text-white text-xs sm:text-sm h-8 sm:h-10" 
                     required 
                   />
                 </div>
                 
-                <div className="space-y-2">
-                  <Label htmlFor="signupPassword" className="text-white text-sm">Password</Label>
+                <div className="space-y-1 sm:space-y-2">
+                  <Label htmlFor="signupPassword" className="text-white text-xs sm:text-sm">Password</Label>
                   <Input 
                     id="signupPassword" 
                     type="password"
@@ -346,23 +346,23 @@ export default function Auth() {
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••" 
                     autoComplete="new-password"
-                    className="bg-[#1B2A47] border-[#2A3E5C] text-white text-sm sm:text-base" 
+                    className="bg-[#1B2A47] border-[#2A3E5C] text-white text-xs sm:text-sm h-8 sm:h-10" 
                     required 
                   />
                   <p className="text-xs text-gray-400">Password must be at least 6 characters long</p>
                 </div>
                 
-                <div className="flex justify-between mt-6">
+                <div className="flex justify-between mt-4 sm:mt-6">
                   <Button 
                     type="submit" 
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white text-sm sm:text-base py-2 sm:py-3"
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm py-2"
                     disabled={isSubmitting}
                   >
                     {isSubmitting ? "Creating Account..." : "Sign Up"}
                   </Button>
                 </div>
                 
-                <p className="text-xs sm:text-sm text-gray-400 mt-4">
+                <p className="text-xs text-gray-400 mt-3 sm:mt-4">
                   By signing up, you agree to our{" "}
                   <Link to="/terms" className="text-blue-400 hover:underline">
                     Terms of Service
@@ -376,20 +376,20 @@ export default function Auth() {
             </TabsContent>
           </Tabs>
           
-          <div className="mt-6 sm:mt-8 text-center">
-            <p className="text-gray-400 text-xs sm:text-sm">Protected by industry-leading security protocols</p>
-            <div className="flex items-center justify-center mt-2">
-              <div className="h-3 w-3 sm:h-4 sm:w-4 rounded-full border border-green-500 flex items-center justify-center mr-2">
-                <div className="h-1.5 w-1.5 sm:h-2 sm:w-2 bg-green-500 rounded-full"></div>
+          <div className="mt-4 sm:mt-6 text-center">
+            <p className="text-gray-400 text-xs">Protected by industry-leading security protocols</p>
+            <div className="flex items-center justify-center mt-1 sm:mt-2">
+              <div className="h-2 w-2 sm:h-3 sm:w-3 rounded-full border border-green-500 flex items-center justify-center mr-1 sm:mr-2">
+                <div className="h-1 w-1 sm:h-1.5 sm:w-1.5 bg-green-500 rounded-full"></div>
               </div>
-              <span className="text-green-500 text-xs sm:text-sm">256-bit encryption</span>
+              <span className="text-green-500 text-xs">256-bit encryption</span>
             </div>
           </div>
         </div>
       </div>
       
-      <footer className="py-4 sm:py-6 px-4 bg-[#0A1429] text-white text-center border-t border-[#2A3E5C]">
-        <p className="text-xs sm:text-sm">&copy; {new Date().getFullYear()} Boutique Family Office. All rights reserved.</p>
+      <footer className="py-3 sm:py-4 lg:py-6 px-4 bg-[#0A1429] text-white text-center border-t border-[#2A3E5C]">
+        <p className="text-xs">&copy; {new Date().getFullYear()} Boutique Family Office. All rights reserved.</p>
       </footer>
     </div>
   );
