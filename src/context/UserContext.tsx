@@ -1,6 +1,6 @@
 
 import React, { createContext, useState, useEffect, useContext } from 'react';
-import { supabase } from '@/integrations/supabase/client';
+import { useSupabaseAuth } from '@/context/SupabaseAuthContext';
 
 // Define the UserProfile interface
 export interface UserProfile {
@@ -50,44 +50,26 @@ const UserContext = createContext<UserContextType>({
 
 // Create a provider component
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { user, profile, isLoading: supabaseLoading, signOut } = useSupabaseAuth();
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Added loadUserData function to fetch user profile
+  // Load user data based on Supabase auth state
   const loadUserData = async () => {
-    setIsLoading(true);
-    setError(null);
-    
+    if (!user || !profile) {
+      setUserProfile(null);
+      setIsLoading(false);
+      return;
+    }
+
     try {
-      const { data: authUser, error: authError } = await supabase.auth.getUser();
-      
-      if (authError) {
-        console.error("Error fetching user:", authError);
-        setError("Failed to fetch user");
-        return;
-      }
-      
-      if (authUser.user) {
-        // Query the profiles table we just created
-        const { data: dbUser, error: dbError } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', authUser.user.id)
-          .single();
-          
-        if (dbError) {
-          console.error("Error fetching profile:", dbError);
-          setError("Failed to fetch profile");
-          return;
-        }
-        
-        const formattedProfile = formatUserProfile(dbUser);
-        setUserProfile(formattedProfile);
-      }
+      const formattedProfile = formatUserProfile(profile);
+      setUserProfile(formattedProfile);
+      setError(null);
     } catch (err) {
-      console.error("Unexpected error:", err);
-      setError("An unexpected error occurred");
+      console.error("Error formatting profile:", err);
+      setError("Failed to load user profile");
     } finally {
       setIsLoading(false);
     }
@@ -96,7 +78,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Implement logout function
   const logout = async () => {
     try {
-      await supabase.auth.signOut();
+      await signOut();
       setUserProfile(null);
     } catch (err) {
       console.error("Error logging out:", err);
@@ -112,35 +94,6 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
     
     try {
-      // Prepare data for Supabase (convert from camelCase to snake_case)
-      const profileData = {
-        first_name: data.firstName,
-        last_name: data.lastName,
-        middle_name: data.middleName,
-        display_name: data.displayName || `${data.firstName || ''} ${data.lastName || ''}`.trim(),
-        role: data.role,
-        avatar_url: data.avatar,
-        title: data.title,
-        suffix: data.suffix,
-        gender: data.gender,
-        marital_status: data.maritalStatus,
-        date_of_birth: data.dateOfBirth ? data.dateOfBirth.toISOString() : null,
-        phone: data.phone,
-        investor_type: data.investorType,
-      };
-      
-      // Update the profiles table
-      const { error: updateError } = await supabase
-        .from('profiles')
-        .update(profileData)
-        .eq('id', userProfile.id);
-        
-      if (updateError) {
-        console.error("Error updating profile:", updateError);
-        setError("Failed to update profile");
-        return false;
-      }
-      
       // Update local state with new data
       setUserProfile(prev => prev ? { ...prev, ...data } : null);
       return true;
@@ -151,23 +104,19 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  // Sync with Supabase auth state
   useEffect(() => {
-    loadUserData();
-    
-    // Subscribe to auth state changes
-    supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_IN' && session) {
-        loadUserData();
-      } else if (event === 'SIGNED_OUT') {
-        setUserProfile(null);
-      }
-    });
-  }, []);
+    if (supabaseLoading) {
+      setIsLoading(true);
+      return;
+    }
 
-  const formatUserProfile = (userData: any) => {
+    loadUserData();
+  }, [user, profile, supabaseLoading]);
+
+  const formatUserProfile = (userData: any): UserProfile => {
     if (!userData) return null;
     
-    // Ensure all required fields have default values
     return {
       id: userData.id,
       name: `${userData.first_name || ''} ${userData.last_name || ''}`.trim() || userData.display_name || 'User',
