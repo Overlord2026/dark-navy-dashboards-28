@@ -1,6 +1,5 @@
 
 import React from 'react';
-import { BrowserRouter } from 'react-router-dom';
 import { RouterProvider } from 'react-router-dom';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { AuthProvider } from '@/context/AuthContext';
@@ -11,7 +10,6 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import routes from './routes';
 import './App.css';
 
-// Create a query client
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
