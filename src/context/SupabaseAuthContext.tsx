@@ -35,18 +35,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [authInitialized, setAuthInitialized] = useState(false);
 
+  // Handle profile fetching separately to avoid auth deadlocks
   const fetchProfile = async (userId: string) => {
     if (!userId) return null;
     
     try {
+      // Query the profiles table we just created
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
         .eq('id', userId)
         .single();
 
-      if (error && error.code !== 'PGRST116') {
+      if (error) {
         console.error('Error fetching profile:', error);
         return null;
       }
@@ -58,72 +61,80 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  // Initialize auth
   useEffect(() => {
-    let mounted = true;
-
+    // Important: first check for existing session before setting up listener
+    // to avoid race conditions
     const initializeAuth = async () => {
       try {
+        setIsLoading(true);
         console.log('Initializing Supabase auth...');
         
-        const { data: { session: initialSession }, error } = await supabase.auth.getSession();
+        // Get existing session first
+        const { data: { session: initialSession } } = await supabase.auth.getSession();
         
-        if (error) {
-          console.error('Error getting session:', error);
-        }
+        // Update state based on initial session
+        setSession(initialSession);
+        setUser(initialSession?.user ?? null);
         
-        if (mounted) {
-          setSession(initialSession);
-          setUser(initialSession?.user ?? null);
-          
-          if (initialSession?.user) {
-            console.log('Found existing authenticated session');
-            const profileData = await fetchProfile(initialSession.user.id);
-            if (mounted && profileData) {
+        if (initialSession?.user) {
+          console.log('Found existing authenticated session');
+          // Don't wait for profile fetch to complete the initialization
+          fetchProfile(initialSession.user.id).then(profileData => {
+            if (profileData) {
               setProfile(profileData);
             }
-          }
-          
-          setIsLoading(false);
+          });
+        } else {
+          console.log('No existing authenticated session');
         }
+        
+        setAuthInitialized(true);
       } catch (error) {
         console.error('Error initializing auth:', error);
-        if (mounted) {
-          setIsLoading(false);
-        }
+        setAuthInitialized(true); // Still mark as initialized even on error
+      } finally {
+        setIsLoading(false);
       }
     };
 
     initializeAuth();
+  }, []);
 
+  // Set up auth state listener after initialization
+  useEffect(() => {
+    if (!authInitialized) return;
+    
+    console.log('Setting up auth state change listener');
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, newSession) => {
+      (event, newSession) => {
         console.log('Auth state changed:', event);
         
-        if (mounted) {
-          setSession(newSession);
-          setUser(newSession?.user ?? null);
-          
-          if (newSession?.user && event !== 'TOKEN_REFRESHED') {
-            const profileData = await fetchProfile(newSession.user.id);
-            if (mounted && profileData) {
-              setProfile(profileData);
-            }
-          } else if (!newSession) {
-            setProfile(null);
-          }
-          
-          if (!isLoading) {
-            setIsLoading(false);
-          }
+        // Update session and user synchronously
+        setSession(newSession);
+        setUser(newSession?.user ?? null);
+        
+        // Handle profile fetch with setTimeout to avoid deadlocks
+        if (newSession?.user) {
+          // Use setTimeout to defer profile fetch
+          setTimeout(() => {
+            fetchProfile(newSession.user.id).then(profileData => {
+              if (profileData) {
+                setProfile(profileData);
+              }
+            });
+          }, 0);
+        } else {
+          setProfile(null);
         }
       }
     );
 
+    // Cleanup subscription
     return () => {
-      mounted = false;
       subscription.unsubscribe();
     };
-  }, [isLoading]);
+  }, [authInitialized]);
 
   const signIn = async (email: string, password: string) => {
     try {
@@ -132,7 +143,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         toast.error(error.message);
         return { error };
       }
-      toast.success('Login successful');
       return { error: null };
     } catch (error) {
       console.error('Unexpected error during sign in:', error);
@@ -168,7 +178,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signOut = async () => {
     try {
       await supabase.auth.signOut();
-      toast.success('Logged out successfully');
+      // Profile will be cleared by auth state change event
     } catch (error) {
       console.error('Error signing out:', error);
       toast.error('Error signing out');
@@ -217,6 +227,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
     
     try {
+      // Update the profiles table
       const { error } = await supabase
         .from('profiles')
         .update(updates)

@@ -1,6 +1,6 @@
 
 import React, { createContext, useState, useEffect, useContext } from 'react';
-import { useSupabaseAuth } from '@/context/SupabaseAuthContext';
+import { supabase } from '@/integrations/supabase/client';
 
 // Define the UserProfile interface
 export interface UserProfile {
@@ -50,71 +50,54 @@ const UserContext = createContext<UserContextType>({
 
 // Create a provider component
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { user, profile, isLoading: supabaseLoading, signOut, isAuthenticated } = useSupabaseAuth();
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [profileLoaded, setProfileLoaded] = useState(false);
 
-  // Load user data based on Supabase auth state
+  // Added loadUserData function to fetch user profile
   const loadUserData = async () => {
-    if (!user) {
-      setUserProfile(null);
-      setProfileLoaded(true);
-      return;
-    }
-
+    setIsLoading(true);
+    setError(null);
+    
     try {
-      // If we have a user but no profile yet, try to create a basic profile from user data
-      const profileData = profile || {
-        id: user.id,
-        email: user.email,
-        first_name: user.user_metadata?.first_name || '',
-        last_name: user.user_metadata?.last_name || '',
-        display_name: user.user_metadata?.display_name || '',
-        role: 'client'
-      };
-
-      const formattedProfile = formatUserProfile(profileData);
-      setUserProfile(formattedProfile);
-      setError(null);
-    } catch (err) {
-      console.error("Error formatting profile:", err);
-      setError("Failed to load user profile");
+      const { data: authUser, error: authError } = await supabase.auth.getUser();
       
-      // Even if profile formatting fails, create a minimal profile so user isn't stuck
-      if (user) {
-        setUserProfile({
-          id: user.id,
-          name: user.email?.split('@')[0] || 'User',
-          email: user.email || '',
-          firstName: '',
-          lastName: '',
-          middleName: '',
-          displayName: user.email?.split('@')[0] || 'User',
-          role: 'client',
-          avatar: '',
-          title: '',
-          suffix: '',
-          gender: '',
-          maritalStatus: '',
-          dateOfBirth: null,
-          phone: '',
-          investorType: '',
-          createdAt: user.created_at || new Date().toISOString(),
-          permissions: [],
-        });
+      if (authError) {
+        console.error("Error fetching user:", authError);
+        setError("Failed to fetch user");
+        return;
       }
+      
+      if (authUser.user) {
+        // Query the profiles table we just created
+        const { data: dbUser, error: dbError } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', authUser.user.id)
+          .single();
+          
+        if (dbError) {
+          console.error("Error fetching profile:", dbError);
+          setError("Failed to fetch profile");
+          return;
+        }
+        
+        const formattedProfile = formatUserProfile(dbUser);
+        setUserProfile(formattedProfile);
+      }
+    } catch (err) {
+      console.error("Unexpected error:", err);
+      setError("An unexpected error occurred");
     } finally {
-      setProfileLoaded(true);
+      setIsLoading(false);
     }
   };
 
   // Implement logout function
   const logout = async () => {
     try {
-      await signOut();
+      await supabase.auth.signOut();
       setUserProfile(null);
-      setProfileLoaded(false);
     } catch (err) {
       console.error("Error logging out:", err);
       setError("Failed to log out");
@@ -129,6 +112,35 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
     
     try {
+      // Prepare data for Supabase (convert from camelCase to snake_case)
+      const profileData = {
+        first_name: data.firstName,
+        last_name: data.lastName,
+        middle_name: data.middleName,
+        display_name: data.displayName || `${data.firstName || ''} ${data.lastName || ''}`.trim(),
+        role: data.role,
+        avatar_url: data.avatar,
+        title: data.title,
+        suffix: data.suffix,
+        gender: data.gender,
+        marital_status: data.maritalStatus,
+        date_of_birth: data.dateOfBirth ? data.dateOfBirth.toISOString() : null,
+        phone: data.phone,
+        investor_type: data.investorType,
+      };
+      
+      // Update the profiles table
+      const { error: updateError } = await supabase
+        .from('profiles')
+        .update(profileData)
+        .eq('id', userProfile.id);
+        
+      if (updateError) {
+        console.error("Error updating profile:", updateError);
+        setError("Failed to update profile");
+        return false;
+      }
+      
       // Update local state with new data
       setUserProfile(prev => prev ? { ...prev, ...data } : null);
       return true;
@@ -139,18 +151,26 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  // Sync with Supabase auth state
   useEffect(() => {
-    setProfileLoaded(false);
     loadUserData();
-  }, [user, profile]);
+    
+    // Subscribe to auth state changes
+    supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN' && session) {
+        loadUserData();
+      } else if (event === 'SIGNED_OUT') {
+        setUserProfile(null);
+      }
+    });
+  }, []);
 
-  const formatUserProfile = (userData: any): UserProfile => {
+  const formatUserProfile = (userData: any) => {
     if (!userData) return null;
     
+    // Ensure all required fields have default values
     return {
       id: userData.id,
-      name: `${userData.first_name || ''} ${userData.last_name || ''}`.trim() || userData.display_name || userData.email?.split('@')[0] || 'User',
+      name: `${userData.first_name || ''} ${userData.last_name || ''}`.trim() || userData.display_name || 'User',
       email: userData.email || '',
       firstName: userData.first_name || '',
       lastName: userData.last_name || '',
@@ -165,22 +185,19 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
       dateOfBirth: userData.date_of_birth ? new Date(userData.date_of_birth) : null,
       phone: userData.phone || '',
       investorType: userData.investor_type || '',
-      createdAt: userData.created_at || new Date().toISOString(),
+      createdAt: userData.created_at,
       permissions: userData.permissions || [],
     };
   };
-
-  // The overall loading state should only be true if Supabase is loading or we haven't tried to load the profile yet
-  const isLoading = supabaseLoading || (!profileLoaded && isAuthenticated);
 
   return (
     <UserContext.Provider 
       value={{ 
         userProfile, 
         setUserProfile, 
-        isLoading,
+        isLoading, 
         error, 
-        isAuthenticated,
+        isAuthenticated: !!userProfile,
         logout,
         updateUserProfile,
         loadUserData
