@@ -96,13 +96,6 @@ export default function Education() {
       >
         <motion.div variants={itemVariants}>
           <div className="flex justify-between items-start mb-4">
-            <div>
-              <h2 className="text-2xl font-bold tracking-tight">Welcome to the SWAG Education Center</h2>
-              <p className="text-muted-foreground mt-2">
-                Explore our collection of financial education resources to help you build wealth and achieve your financial goals.
-              </p>
-            </div>
-            
             <div className="flex items-center gap-2">
               <Select value={activeCategory} onValueChange={handleCategoryChange}>
                 <SelectTrigger className="w-[200px]">
