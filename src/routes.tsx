@@ -1,3 +1,4 @@
+
 import React from "react";
 import { createBrowserRouter } from "react-router-dom";
 import Dashboard from "@/pages/Dashboard";
@@ -37,10 +38,6 @@ import NavigationDiagnostics from "@/pages/NavigationDiagnostics";
 import { ProfessionalsRouteWrapper } from "@/components/providers/ProfessionalsRouteWrapper";
 
 const routes = createBrowserRouter([
-  {
-    path: "/",
-    element: <Dashboard />
-  },
   {
     path: "/client-dashboard",
     element: <Dashboard />
