@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { ArrowLeft, ArrowRight, ChevronRight, X, ShieldCheck, Shield, ShieldAlert, Calendar } from "lucide-react";
@@ -314,7 +315,6 @@ const Insurance = () => {
     <ThreeColumnLayout activeMainItem="insurance" title={getInsuranceTitle(selectedType)}>
       <div className="animate-fade-in min-h-screen p-4 text-white bg-[#121a2c]">
         <div className="mb-6">
-          <h1 className="text-2xl font-semibold">{getInsuranceTitle(selectedType)}</h1>
           <p className="text-gray-400">{getInsuranceDescription(selectedType)}</p>
         </div>
 
@@ -407,6 +407,29 @@ const Insurance = () => {
                   </Button>
                 </div>
               </div>
+            </div>
+          </div>
+        </Card>
+
+        {/* Get Started Section */}
+        <Card className="bg-[#0f1628] border border-gray-800 mb-6">
+          <div className="p-6">
+            <h3 className="text-xl font-semibold text-white mb-4">Get Started</h3>
+            <p className="text-gray-400 mb-6">
+              Ready to explore {getInsuranceTitle(selectedType)} options with {getProviderName(selectedProvider)}? 
+              Schedule a meeting with your advisor or express your interest to get personalized recommendations.
+            </p>
+            <div className="flex gap-3">
+              <Button 
+                variant="outline" 
+                className="border-gray-700 text-white hover:bg-[#1c2e4a]"
+                onClick={handleInterested}
+              >
+                I'm Interested
+              </Button>
+              <ScheduleMeetingDialog 
+                assetName={`${getInsuranceTitle(selectedType)} Insurance by ${getProviderName(selectedProvider)}`} 
+              />
             </div>
           </div>
         </Card>
