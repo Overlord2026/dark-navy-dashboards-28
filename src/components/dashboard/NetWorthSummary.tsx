@@ -7,6 +7,7 @@ import { useNetWorth } from "@/context/NetWorthContext";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "@/context/UserContext";
 import { formatCurrency } from "@/lib/formatters";
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from "recharts";
 
 export const NetWorthSummary = () => {
   console.log('NetWorthSummary rendering');
@@ -38,8 +39,14 @@ export const NetWorthSummary = () => {
     const propertyCount = assets.filter(asset => asset.type === 'property').length;
     const vehicleCount = assets.filter(asset => asset.type === 'vehicle' || asset.type === 'boat').length;
     
-    // Get unique asset owners - simplified to show only top 2
-    const owners = Array.from(new Set(assets.map(asset => asset.owner))).slice(0, 2);
+    // Prepare data for pie chart
+    const pieChartData = [
+      realEstateValue > 0 && { name: "Real Estate", value: realEstateValue, percentage: realEstatePercentage, color: "#3b82f6" },
+      vehiclesValue > 0 && { name: "Vehicles & Boats", value: vehiclesValue, percentage: vehiclesPercentage, color: "#22c55e" },
+      retirementValue > 0 && { name: "Retirement Accounts", value: retirementValue, percentage: retirementPercentage, color: "#a855f7" },
+      investmentsValue > 0 && { name: "Investments", value: investmentsValue, percentage: investmentsPercentage, color: "#6366f1" },
+      cashValue > 0 && { name: "Cash & Equivalents", value: cashValue, percentage: cashPercentage, color: "#f59e0b" }
+    ].filter(Boolean);
 
     return (
       <div className="bg-[#121a2c]/80 rounded-lg p-4 border border-gray-800">
@@ -53,7 +60,7 @@ export const NetWorthSummary = () => {
               variant="ghost" 
               size="icon" 
               className="h-6 w-6"
-              onClick={() => navigate('/all-assets')}
+              onClick={() => navigate('all-assets')}
             >
               <Maximize2 className="h-4 w-4" />
               <span className="sr-only">View All Assets</span>
@@ -89,7 +96,7 @@ export const NetWorthSummary = () => {
                   variant="ghost" 
                   size="sm" 
                   className="text-xs flex items-center text-blue-400 hover:text-blue-300 px-1"
-                  onClick={() => navigate('/properties')}
+                  onClick={() => navigate('properties')}
                 >
                   <Home className="h-3 w-3 mr-1" />
                   {propertyCount}
@@ -101,7 +108,7 @@ export const NetWorthSummary = () => {
                   variant="ghost" 
                   size="sm" 
                   className="text-xs flex items-center text-green-400 hover:text-green-300 px-1"
-                  onClick={() => navigate('/all-assets')}
+                  onClick={() => navigate('all-assets')}
                 >
                   <Car className="h-3 w-3 mr-1" />
                   {vehicleCount}
@@ -111,81 +118,52 @@ export const NetWorthSummary = () => {
           </div>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-6">
           <div>
             <h3 className="text-sm font-medium mb-3">Asset Allocation</h3>
-            <div className="space-y-2">
-              {realEstateValue > 0 && (
-                <AssetItem 
-                  label="Real Estate" 
-                  value={formatCurrency(realEstateValue)} 
-                  percentage={realEstatePercentage} 
-                  color="bg-blue-500" 
-                />
-              )}
+            <div className="flex flex-col md:flex-row gap-6">
+              {/* Pie Chart */}
+              <div className="md:w-1/2 h-[300px] flex items-center justify-center">
+                {pieChartData.length > 0 ? (
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={pieChartData}
+                        cx="50%"
+                        cy="50%"
+                        innerRadius={60}
+                        outerRadius={100}
+                        paddingAngle={2}
+                        dataKey="value"
+                      >
+                        {pieChartData.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={entry.color} />
+                        ))}
+                      </Pie>
+                      <Tooltip 
+                        formatter={(value) => [formatCurrency(Number(value)), 'Value']}
+                        labelFormatter={(label) => `${label}`}
+                      />
+                      <Legend />
+                    </PieChart>
+                  </ResponsiveContainer>
+                ) : (
+                  <div className="text-gray-400 text-center">No asset data available</div>
+                )}
+              </div>
               
-              {vehiclesValue > 0 && (
-                <AssetItem 
-                  label="Vehicles & Boats" 
-                  value={formatCurrency(vehiclesValue)} 
-                  percentage={vehiclesPercentage} 
-                  color="bg-green-500" 
-                />
-              )}
-              
-              {retirementValue > 0 && (
-                <AssetItem 
-                  label="Retirement Accounts" 
-                  value={formatCurrency(retirementValue)} 
-                  percentage={retirementPercentage} 
-                  color="bg-purple-500" 
-                />
-              )}
-              
-              {investmentsValue > 0 && (
-                <AssetItem 
-                  label="Investments" 
-                  value={formatCurrency(investmentsValue)} 
-                  percentage={investmentsPercentage} 
-                  color="bg-indigo-500" 
-                />
-              )}
-              
-              {cashValue > 0 && (
-                <AssetItem 
-                  label="Cash & Equivalents" 
-                  value={formatCurrency(cashValue)} 
-                  percentage={cashPercentage} 
-                  color="bg-amber-500" 
-                />
-              )}
-            </div>
-          </div>
-          
-          <div>
-            <h3 className="text-sm font-medium mb-3">Ownership Breakdown</h3>
-            <div className="space-y-2">
-              {owners.map((owner, index) => {
-                const ownerAssets = getAssetsByOwner(owner);
-                const ownerTotal = ownerAssets.reduce((sum, asset) => sum + asset.value, 0);
-                const ownerPercentage = totalNetWorth > 0 ? Math.round((ownerTotal / totalNetWorth) * 100) : 0;
-                
-                return (
-                  <div key={index}>
-                    <div className="flex justify-between items-center mb-1">
-                      <span className="text-sm flex items-center">
-                        <User className="h-3 w-3 mr-1 text-blue-400" />
-                        {owner}
-                      </span>
-                      <span className="text-sm font-medium">{formatCurrency(ownerTotal)}</span>
-                    </div>
-                    <div className="flex items-center">
-                      <Progress value={ownerPercentage} className="h-2 bg-blue-500/20" indicatorClassName="bg-blue-500" />
-                      <span className="ml-2 text-xs">{ownerPercentage}%</span>
-                    </div>
-                  </div>
-                );
-              })}
+              {/* Asset List */}
+              <div className="md:w-1/2 space-y-2">
+                {pieChartData.map((asset, index) => (
+                  <AssetItem 
+                    key={index}
+                    label={asset.name} 
+                    value={formatCurrency(asset.value)} 
+                    percentage={asset.percentage} 
+                    color={asset.color} 
+                  />
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -194,7 +172,7 @@ export const NetWorthSummary = () => {
           <Button 
             variant="link" 
             className="text-blue-400 hover:text-blue-300 text-sm p-0" 
-            onClick={() => navigate('/all-assets')}
+            onClick={() => navigate('all-assets')}
           >
             View All Assets →
           </Button>
@@ -225,11 +203,17 @@ const AssetItem = ({ label, value, percentage, color }: AssetItemProps) => {
   return (
     <div>
       <div className="flex justify-between items-center mb-1">
-        <span className="text-sm">{label}</span>
+        <span className="text-sm flex items-center">
+          <div 
+            className="w-3 h-3 rounded-full mr-2" 
+            style={{ backgroundColor: color }}
+          />
+          {label}
+        </span>
         <span className="text-sm font-medium">{value}</span>
       </div>
       <div className="flex items-center">
-        <Progress value={percentage} className={`h-2 ${color}/20`} indicatorClassName={color} />
+        <Progress value={percentage} className="h-2" style={{backgroundColor: `${color}20`}} />
         <span className="ml-2 text-xs">{percentage}%</span>
       </div>
     </div>
