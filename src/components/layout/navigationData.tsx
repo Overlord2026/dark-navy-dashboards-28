@@ -1,3 +1,4 @@
+
 import {
   HomeIcon,
   CreditCardIcon,
@@ -68,4 +69,25 @@ export const navigationData: Record<string, NavItem[]> = {
     { title: "Help", href: "/help", icon: HelpCircleIcon },
     { title: "Settings", href: "/settings", icon: SettingsIcon },
   ],
+};
+
+export const getSecondaryMenuItems = (activeMainItem: string): { id: string; label?: string; name?: string; active?: boolean }[] => {
+  // For most items, return empty array as they don't have secondary menus
+  // This function can be expanded in the future for items that need secondary navigation
+  switch (activeMainItem) {
+    case "investments":
+      return [
+        { id: "overview", name: "Overview" },
+        { id: "alternative", name: "Alternative" },
+        { id: "model-portfolios", name: "Model Portfolios" },
+        { id: "stock-screener", name: "Stock Screener" },
+      ];
+    case "sharing":
+      return [
+        { id: "documents", name: "Documents" },
+        { id: "professionals", name: "Professionals" },
+      ];
+    default:
+      return [];
+  }
 };
