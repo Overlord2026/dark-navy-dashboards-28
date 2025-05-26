@@ -5,7 +5,7 @@ import { NavItem } from "@/types/navigation";
 
 export const homeNavItems: NavItem[] = [
   { 
-    title: "Home", 
+    title: "Dashboard", 
     href: "/client-dashboard", 
     icon: HomeIcon 
   }
