@@ -71,7 +71,10 @@ export function ThreeColumnLayout({
   const menuItems = secondaryMenuItems || getSecondaryMenuItems(currentActiveMainItem);
   
   const isMainInvestmentsPage = location.pathname === "/investments";
-  const hasSecondaryMenu = !isMainInvestmentsPage && menuItems.length > 0;
+  const isEducationPage = location.pathname === "/client-education" || location.pathname.startsWith("/client-education");
+  
+  // Don't show secondary menu for education pages or main investments page
+  const hasSecondaryMenu = !isMainInvestmentsPage && !isEducationPage && menuItems.length > 0;
   
   const isLightTheme = theme === "light";
   const isHomePage = location.pathname === "/";
