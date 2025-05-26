@@ -1,3 +1,4 @@
+
 import React from "react";
 import { createBrowserRouter } from "react-router-dom";
 import Dashboard from "@/pages/Dashboard";
@@ -68,7 +69,7 @@ const routes = createBrowserRouter([
     element: <ProtectedRoute><TaxPlanning /></ProtectedRoute>
   },
   {
-    path: "/insurance",
+    path: "/client-insurance",
     element: <ProtectedRoute><Insurance /></ProtectedRoute>
   },
   {
