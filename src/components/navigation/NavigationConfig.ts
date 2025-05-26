@@ -68,7 +68,7 @@ export const educationSolutionsNavItems: NavItem[] = [
   },
   { 
     title: "Lending", 
-    href: "/lending", 
+    href: "/client-lending", 
     icon: BanknoteIcon 
   },
   { 
