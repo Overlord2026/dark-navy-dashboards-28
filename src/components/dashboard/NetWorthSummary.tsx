@@ -1,6 +1,7 @@
+
 import React from "react";
 import { Progress } from "@/components/ui/progress";
-import { ArrowUpRight, Wallet, Maximize2, Home, User, Car, Palette, Coins } from "lucide-react";
+import { ArrowUpRight, Wallet, Maximize2, Home, User, Car } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNetWorth } from "@/context/NetWorthContext";
 import { useNavigate } from "react-router-dom";
@@ -33,29 +34,16 @@ export const NetWorthSummary = () => {
     const vehiclesValue = getTotalAssetsByType('vehicle') + getTotalAssetsByType('boat');
     const vehiclesPercentage = totalNetWorth > 0 ? Math.round((vehiclesValue / totalNetWorth) * 100) : 0;
     
-    const collectiblesValue = 
-      getTotalAssetsByType('art') + 
-      getTotalAssetsByType('antique') + 
-      getTotalAssetsByType('jewelry') + 
-      getTotalAssetsByType('collectible');
-    const collectiblesPercentage = totalNetWorth > 0 ? Math.round((collectiblesValue / totalNetWorth) * 100) : 0;
-    
-    const digitalValue = getTotalAssetsByType('digital');
-    const digitalPercentage = totalNetWorth > 0 ? Math.round((digitalValue / totalNetWorth) * 100) : 0;
-    
-    const otherValue = getTotalAssetsByType('other');
-    const otherPercentage = totalNetWorth > 0 ? Math.round((otherValue / totalNetWorth) * 100) : 0;
-    
     // Get property count
     const propertyCount = assets.filter(asset => asset.type === 'property').length;
     const vehicleCount = assets.filter(asset => asset.type === 'vehicle' || asset.type === 'boat').length;
     
-    // Get unique asset owners
-    const owners = Array.from(new Set(assets.map(asset => asset.owner)));
+    // Get unique asset owners - simplified to show only top 2
+    const owners = Array.from(new Set(assets.map(asset => asset.owner))).slice(0, 2);
 
     return (
-      <div className="bg-[#121a2c]/80 rounded-lg p-3 border border-gray-800">
-        <div className="flex items-center justify-between mb-3">
+      <div className="bg-[#121a2c]/80 rounded-lg p-4 border border-gray-800">
+        <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-semibold flex items-center">
             <Wallet className="mr-2 h-5 w-5 text-blue-400" />
             Net Worth Summary
@@ -72,35 +60,35 @@ export const NetWorthSummary = () => {
             </Button>
             <span className="text-green-400 flex items-center text-sm">
               <ArrowUpRight className="mr-1 h-4 w-4" />
-              +5.2% from last month
+              +5.2%
             </span>
           </div>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
           <div className="bg-[#1a2236] p-3 rounded-lg border border-gray-800">
             <div className="text-sm text-gray-400 mb-1">Total Assets</div>
-            <div className="text-2xl font-semibold">{formatCurrency(totalNetWorth)}</div>
+            <div className="text-xl font-semibold">{formatCurrency(totalNetWorth)}</div>
             <div className="text-xs text-green-400">+$124,500 (5.3%)</div>
           </div>
           
           <div className="bg-[#1a2236] p-3 rounded-lg border border-gray-800">
             <div className="text-sm text-gray-400 mb-1">Total Liabilities</div>
-            <div className="text-2xl font-semibold">{formatCurrency(845210)}</div>
+            <div className="text-xl font-semibold">{formatCurrency(845210)}</div>
             <div className="text-xs text-red-400">+$12,300 (1.5%)</div>
           </div>
           
           <div className="bg-[#1a2236] p-3 rounded-lg border border-gray-800 relative">
             <div className="text-sm text-gray-400 mb-1">Net Worth</div>
-            <div className="text-2xl font-semibold text-blue-400">{formatCurrency(totalNetWorth - 845210)}</div>
+            <div className="text-xl font-semibold text-blue-400">{formatCurrency(totalNetWorth - 845210)}</div>
             <div className="text-xs text-green-400">+$112,200 (7.5%)</div>
             
-            <div className="flex gap-2 absolute top-1 right-1">
+            <div className="flex gap-1 absolute top-1 right-1">
               {propertyCount > 0 && (
                 <Button 
                   variant="ghost" 
                   size="sm" 
-                  className="text-xs flex items-center text-blue-400 hover:text-blue-300"
+                  className="text-xs flex items-center text-blue-400 hover:text-blue-300 px-1"
                   onClick={() => navigate('/properties')}
                 >
                   <Home className="h-3 w-3 mr-1" />
@@ -112,7 +100,7 @@ export const NetWorthSummary = () => {
                 <Button 
                   variant="ghost" 
                   size="sm" 
-                  className="text-xs flex items-center text-green-400 hover:text-green-300"
+                  className="text-xs flex items-center text-green-400 hover:text-green-300 px-1"
                   onClick={() => navigate('/all-assets')}
                 >
                   <Car className="h-3 w-3 mr-1" />
@@ -123,9 +111,9 @@ export const NetWorthSummary = () => {
           </div>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <h3 className="text-sm font-medium mb-2">Asset Allocation</h3>
+            <h3 className="text-sm font-medium mb-3">Asset Allocation</h3>
             <div className="space-y-2">
               {realEstateValue > 0 && (
                 <AssetItem 
@@ -133,7 +121,6 @@ export const NetWorthSummary = () => {
                   value={formatCurrency(realEstateValue)} 
                   percentage={realEstatePercentage} 
                   color="bg-blue-500" 
-                  icon={<Home className="h-3 w-3 mr-1 text-blue-400" />}
                 />
               )}
               
@@ -143,7 +130,6 @@ export const NetWorthSummary = () => {
                   value={formatCurrency(vehiclesValue)} 
                   percentage={vehiclesPercentage} 
                   color="bg-green-500" 
-                  icon={<Car className="h-3 w-3 mr-1 text-green-400" />}
                 />
               )}
               
@@ -173,40 +159,11 @@ export const NetWorthSummary = () => {
                   color="bg-amber-500" 
                 />
               )}
-              
-              {collectiblesValue > 0 && (
-                <AssetItem 
-                  label="Collectibles & Art" 
-                  value={formatCurrency(collectiblesValue)} 
-                  percentage={collectiblesPercentage} 
-                  color="bg-pink-500" 
-                  icon={<Palette className="h-3 w-3 mr-1 text-pink-400" />}
-                />
-              )}
-              
-              {digitalValue > 0 && (
-                <AssetItem 
-                  label="Digital Assets" 
-                  value={formatCurrency(digitalValue)} 
-                  percentage={digitalPercentage} 
-                  color="bg-cyan-500" 
-                  icon={<Coins className="h-3 w-3 mr-1 text-cyan-400" />}
-                />
-              )}
-              
-              {otherValue > 0 && (
-                <AssetItem 
-                  label="Other Assets" 
-                  value={formatCurrency(otherValue)} 
-                  percentage={otherPercentage} 
-                  color="bg-gray-500" 
-                />
-              )}
             </div>
           </div>
           
           <div>
-            <h3 className="text-sm font-medium mb-2">Ownership Breakdown</h3>
+            <h3 className="text-sm font-medium mb-3">Ownership Breakdown</h3>
             <div className="space-y-2">
               {owners.map((owner, index) => {
                 const ownerAssets = getAssetsByOwner(owner);
@@ -230,20 +187,10 @@ export const NetWorthSummary = () => {
                 );
               })}
             </div>
-            
-            <div className="mt-4">
-              <h3 className="text-sm font-medium mb-2">Liability Breakdown</h3>
-              <div className="space-y-2">
-                <AssetItem label="Mortgage" value="$685,000" percentage={81} color="bg-red-500" />
-                <AssetItem label="Auto Loans" value="$48,210" percentage={6} color="bg-orange-500" />
-                <AssetItem label="Student Loans" value="$72,000" percentage={9} color="bg-pink-500" />
-                <AssetItem label="Credit Cards" value="$40,000" percentage={4} color="bg-cyan-500" />
-              </div>
-            </div>
           </div>
         </div>
         
-        <div className="mt-3 pt-3 border-t border-gray-800 flex justify-end">
+        <div className="mt-4 pt-3 border-t border-gray-800 flex justify-end">
           <Button 
             variant="link" 
             className="text-blue-400 hover:text-blue-300 text-sm p-0" 
@@ -272,17 +219,13 @@ interface AssetItemProps {
   value: string;
   percentage: number;
   color: string;
-  icon?: React.ReactNode;
 }
 
-const AssetItem = ({ label, value, percentage, color, icon }: AssetItemProps) => {
+const AssetItem = ({ label, value, percentage, color }: AssetItemProps) => {
   return (
     <div>
       <div className="flex justify-between items-center mb-1">
-        <span className="text-sm flex items-center">
-          {icon}
-          {label}
-        </span>
+        <span className="text-sm">{label}</span>
         <span className="text-sm font-medium">{value}</span>
       </div>
       <div className="flex items-center">

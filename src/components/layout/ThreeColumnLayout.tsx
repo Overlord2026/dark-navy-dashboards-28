@@ -75,6 +75,7 @@ export function ThreeColumnLayout({
   
   const isLightTheme = theme === "light";
   const isHomePage = location.pathname === "/";
+  const isDashboardPage = location.pathname === "/client-dashboard";
 
   const getCurrentPath = () => {
     const pathSegments = location.pathname.split('/').filter(Boolean);
@@ -163,9 +164,11 @@ export function ThreeColumnLayout({
           ) : null}
           
           <main className="flex-1 overflow-y-auto p-3 font-sans w-full">
-            <div className="flex justify-between items-center mb-4">
-              <h1 className="text-2xl font-bold">{title}</h1>
-            </div>
+            {!isDashboardPage && (
+              <div className="flex justify-between items-center mb-4">
+                <h1 className="text-2xl font-bold">{title}</h1>
+              </div>
+            )}
             {children}
           </main>
         </div>
