@@ -1,7 +1,6 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Heart } from "lucide-react";
 import { toast } from "sonner";
 
 interface InterestedButtonProps {
@@ -26,13 +25,11 @@ export const InterestedButton: React.FC<InterestedButtonProps> = ({ assetName, o
   
   return (
     <Button 
-      variant={isInterested ? "default" : "outline"} 
-      size="icon"
+      variant={isInterested ? "success" : "interested"} 
       disabled={isInterested}
       onClick={handleInterested}
-      className={isInterested ? "bg-red-500 hover:bg-red-600 border-red-500" : ""}
     >
-      <Heart className={`h-4 w-4 ${isInterested ? "fill-white" : ""}`} />
+      {isInterested ? "Interest Recorded" : "I am interested"}
     </Button>
   );
 };
