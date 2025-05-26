@@ -31,7 +31,7 @@ export default function Dashboard() {
   }, []);
 
   return (
-    <ThreeColumnLayout title="Dashboard">
+    <ThreeColumnLayout>
       <div className="space-y-4 px-4 py-2 max-w-7xl mx-auto">
         {isInFreeTrial && showWelcomeBanner && (
           <WelcomeTrialBanner onDismiss={handleDismissBanner} />
