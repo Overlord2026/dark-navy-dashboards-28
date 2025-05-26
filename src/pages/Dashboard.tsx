@@ -3,9 +3,7 @@ import React, { useState, useEffect } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { FinancialOverview } from "@/components/dashboard/FinancialOverview";
 import { NetWorthSummary } from "@/components/dashboard/NetWorthSummary";
-import { ExpenseOptimizationCard } from "@/components/dashboard/ExpenseOptimizationCard";
 import { TaxPlanningSummary } from "@/components/dashboard/TaxPlanningSummary";
-import { ReportsGenerator } from "@/components/dashboard/ReportsGenerator";
 import { useUser } from "@/context/UserContext";
 import { useSubscription } from "@/context/SubscriptionContext";
 import { WelcomeTrialBanner } from "@/components/dashboard/WelcomeTrialBanner";
@@ -44,16 +42,9 @@ export default function Dashboard() {
           <FinancialOverview />
         </div>
         
-        <div id="reports-section">
-          <ReportsGenerator />
-        </div>
-        
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <NetWorthSummary />
-          <div className="space-y-5">
-            <ExpenseOptimizationCard />
-            <TaxPlanningSummary />
-          </div>
+          <TaxPlanningSummary />
         </div>
       </div>
     </ThreeColumnLayout>
