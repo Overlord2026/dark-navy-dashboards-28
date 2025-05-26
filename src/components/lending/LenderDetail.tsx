@@ -49,7 +49,6 @@ export const LenderDetail: React.FC<LenderDetailProps> = ({ isOpen, onClose, len
         
         <div className="space-y-6">
           <div>
-            <h3 className="font-medium text-base">{lender.offering}</h3>
             <p className="text-sm text-muted-foreground">{lender.description}</p>
           </div>
           
