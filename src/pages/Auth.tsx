@@ -22,7 +22,7 @@ export default function Auth() {
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
-        navigate('/client-dashboard');
+        navigate('client-dashboard');
       }
     };
     checkAuth();
@@ -54,7 +54,7 @@ export default function Auth() {
           }
         } else if (data.user) {
           toast.success('Account created successfully! You are now logged in.');
-          navigate('/client-dashboard');
+          navigate('client-dashboard');
         }
       } else {
         const { data, error } = await supabase.auth.signInWithPassword({
@@ -70,7 +70,7 @@ export default function Auth() {
           }
         } else if (data.user) {
           toast.success('Logged in successfully!');
-          navigate('/client-dashboard');
+          navigate('client-dashboard');
         }
       }
     } catch (error) {

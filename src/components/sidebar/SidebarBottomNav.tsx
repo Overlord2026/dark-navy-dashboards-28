@@ -17,9 +17,9 @@ export const SidebarBottomNav: React.FC<SidebarBottomNavProps> = ({
   isActive,
   isLightTheme
 }) => {
-  // Helper to ensure consistent path handling
+  // Helper to ensure consistent path handling without forward slashes
   const normalizePath = (path: string): string => {
-    return path.startsWith("/") ? path : `/${path}`;
+    return path === "" ? "" : path;
   };
 
   return (

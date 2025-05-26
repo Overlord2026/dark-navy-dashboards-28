@@ -23,8 +23,8 @@ export const NavigationItem = ({
 }: NavigationItemProps) => {
   const Icon = item.icon;
   
-  // Normalize href to ensure it starts with a forward slash
-  const normalizedHref = item.href.startsWith("/") ? item.href : `/${item.href}`;
+  // Add forward slash only if href is not empty
+  const normalizedHref = item.href === "" ? "" : item.href;
   
   return (
     <Link

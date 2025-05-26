@@ -1,3 +1,4 @@
+
 import React from "react";
 import {
   HomeIcon,
@@ -39,7 +40,7 @@ type NavCategory = {
 
 const CustomHomeIcon: React.FC = () => (
   <img 
-    src="/lovable-uploads/e4ac2159-1b66-4f15-9257-68a0f00c8311.png" 
+    src="lovable-uploads/e4ac2159-1b66-4f15-9257-68a0f00c8311.png" 
     alt="Home"
     className="h-5 w-5"
   />
@@ -51,8 +52,8 @@ export const navigationCategories: NavCategory[] = [
     label: "Home",
     defaultExpanded: true,
     items: [
-      { id: "home", label: "Home", icon: CustomHomeIcon, href: "/" },
-      { id: "documents", label: "Documents", icon: BookIcon, href: "/documents" },
+      { id: "home", label: "Home", icon: CustomHomeIcon, href: "" },
+      { id: "documents", label: "Documents", icon: BookIcon, href: "documents" },
     ]
   },
   {
@@ -60,12 +61,12 @@ export const navigationCategories: NavCategory[] = [
     label: "Education & Solutions",
     defaultExpanded: true,
     items: [
-      { id: "education", label: "Education Center", icon: GraduationCapIcon, href: "/education" },
-      { id: "investments", label: "Investments", icon: BarChart3Icon, href: "/investments" },
-      { id: "tax-planning", label: "Tax Planning", icon: PieChart, href: "/tax-planning" },
-      { id: "insurance", label: "Insurance", icon: ShieldIcon, href: "/insurance" },
-      { id: "lending", label: "Lending", icon: BanknoteIcon, href: "/lending" },
-      { id: "estate-planning", label: "Estate Planning", icon: ArchiveIcon, href: "/estate-planning" },
+      { id: "education", label: "Education Center", icon: GraduationCapIcon, href: "education" },
+      { id: "investments", label: "Investments", icon: BarChart3Icon, href: "investments" },
+      { id: "tax-planning", label: "Tax Planning", icon: PieChart, href: "tax-planning" },
+      { id: "insurance", label: "Insurance", icon: ShieldIcon, href: "insurance" },
+      { id: "lending", label: "Lending", icon: BanknoteIcon, href: "lending" },
+      { id: "estate-planning", label: "Estate Planning", icon: ArchiveIcon, href: "estate-planning" },
     ]
   },
   {
@@ -73,23 +74,23 @@ export const navigationCategories: NavCategory[] = [
     label: "Family Wealth",
     defaultExpanded: true,
     items: [
-      { id: "financial-plans", label: "Financial Plans", icon: LineChartIcon, href: "/financial-plans" },
-      { id: "accounts", label: "Accounts Overview", icon: WalletIcon, href: "/accounts" },
-      { id: "cash-management", label: "Cash Management", icon: BanknoteIcon, href: "/cash-management" },
-      { id: "tax-budgets", label: "Tax & Budgets", icon: Calculator, href: "/tax-budgets" },
-      { id: "transfers", label: "Transfers", icon: ArrowRightLeft, href: "/transfers" },
-      { id: "legacy-vault", label: "Secure Family Vault", icon: VaultIcon, href: "/legacy-vault" },
-      { id: "social-security", label: "Social Security", icon: CircleDollarSignIcon, href: "/social-security" },
-      { id: "properties", label: "Real Estate & Properties", icon: BuildingIcon, href: "/properties" },
-      { id: "billpay", label: "Bill Pay", icon: Receipt, href: "/billpay" },
+      { id: "financial-plans", label: "Financial Plans", icon: LineChartIcon, href: "financial-plans" },
+      { id: "accounts", label: "Accounts Overview", icon: WalletIcon, href: "accounts" },
+      { id: "cash-management", label: "Cash Management", icon: BanknoteIcon, href: "cash-management" },
+      { id: "tax-budgets", label: "Tax & Budgets", icon: Calculator, href: "tax-budgets" },
+      { id: "transfers", label: "Transfers", icon: ArrowRightLeft, href: "transfers" },
+      { id: "legacy-vault", label: "Secure Family Vault", icon: VaultIcon, href: "legacy-vault" },
+      { id: "social-security", label: "Social Security", icon: CircleDollarSignIcon, href: "social-security" },
+      { id: "properties", label: "Real Estate & Properties", icon: BuildingIcon, href: "properties" },
+      { id: "billpay", label: "Bill Pay", icon: Receipt, href: "billpay" },
     ]
   },
   {
     id: "collaboration",
     label: "Collaboration & Sharing",
     items: [
-      { id: "professionals", label: "Professional Access", icon: Users2Icon, href: "/professionals" },
-      { id: "sharing", label: "Family Member Access", icon: ShareIcon, href: "/sharing" },
+      { id: "professionals", label: "Professional Access", icon: Users2Icon, href: "professionals" },
+      { id: "sharing", label: "Family Member Access", icon: ShareIcon, href: "sharing" },
     ]
   },
 ];
