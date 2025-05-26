@@ -64,7 +64,7 @@ export const LenderDetail: React.FC<LenderDetailProps> = ({ isOpen, onClose, len
           </div>
           
           <div>
-            <h3 className="font-medium text-base mb-2">Get Started</h3>
+            <h3 className="font-medium text-base mb-2">Ready to Get Started?</h3>
             <p className="text-sm text-muted-foreground mb-4">
               To get started, schedule a meeting with your advisor or tell them you're interested in this offering.
             </p>
