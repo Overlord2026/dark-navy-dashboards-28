@@ -2,8 +2,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { ArrowLeft, ArrowRight, ChevronRight, X } from "lucide-react";
-import { Sheet, SheetContent, SheetClose } from "@/components/ui/sheet";
+import { ArrowLeft, ArrowRight, ChevronRight } from "lucide-react";
 import { ScheduleMeetingDialog } from "@/components/investments/ScheduleMeetingDialog";
 import { InsuranceType, InsuranceProvider, InsuranceTypeInfo } from "@/types/insuranceProvider";
 import { getInsuranceTitle, getInsuranceDescription } from "@/utils/insuranceUtils";
@@ -20,13 +19,11 @@ interface InsuranceDetailViewProps {
   selectedProvider: InsuranceProvider | null;
   currentPage: number;
   totalPages: number;
-  isDetailPanelOpen: boolean;
   insuranceTypeProviders: Record<InsuranceType, InsuranceTypeInfo>;
   onBackToMain: () => void;
   onNextProvider: () => void;
   onPrevProvider: () => void;
   onSelectProvider: (provider: InsuranceProvider) => void;
-  onSetDetailPanelOpen: (open: boolean) => void;
   onInterested: () => void;
 }
 
@@ -35,13 +32,11 @@ export const InsuranceDetailView = ({
   selectedProvider,
   currentPage,
   totalPages,
-  isDetailPanelOpen,
   insuranceTypeProviders,
   onBackToMain,
   onNextProvider,
   onPrevProvider,
   onSelectProvider,
-  onSetDetailPanelOpen,
   onInterested
 }: InsuranceDetailViewProps) => {
   const providers = insuranceTypeProviders[selectedType].providers;
@@ -166,120 +161,27 @@ export const InsuranceDetailView = ({
         </div>
       </Card>
 
-      <Button 
-        variant="outline" 
-        className="w-full"
-        onClick={() => onSetDetailPanelOpen(true)}
-      >
-        View Details
-      </Button>
-
-      <Sheet open={isDetailPanelOpen} onOpenChange={onSetDetailPanelOpen}>
-        <SheetContent side="right" className="w-full max-w-md p-0 border-l border-gray-800 bg-[#121a2c] text-white">
-          <div className="p-6 max-h-screen overflow-y-auto">
-            <div className="flex justify-end">
-              <SheetClose className="rounded-full">
-                <X className="h-5 w-5" />
-              </SheetClose>
+      <Card className="bg-[#0f1628] border border-gray-800 mb-6">
+        <div className="p-6">
+          <h3 className="text-lg font-medium text-gray-300 mb-4">
+            Additional Details
+          </h3>
+          <div className="space-y-4">
+            <div className="bg-[#121a2c] border border-gray-800 rounded-lg p-4">
+              <h4 className="font-medium text-white mb-2">Other Offerings</h4>
+              <p className="text-sm text-gray-400">
+                {getProviderOtherOfferings(selectedProvider, selectedType)}
+              </p>
             </div>
-
-            <h2 className="text-2xl font-semibold mb-4">
-              {getProviderName(selectedProvider)}
-            </h2>
-
-            <div className="space-y-6">
-              <div>
-                <h3 className="text-lg font-medium text-gray-300 mb-2">
-                  {getInsuranceTitle(selectedType)} Offering
-                </h3>
-                <p className="text-gray-400">
-                  {getInsuranceDescription(selectedType)}
-                </p>
-              </div>
-
-              <div>
-                <h3 className="text-lg font-medium text-gray-300 mb-2">
-                  About {getProviderName(selectedProvider)}
-                </h3>
-                <p className="text-gray-400">
-                  {getProviderDescription(selectedProvider, selectedType)}
-                </p>
-              </div>
-
-              <div>
-                <h3 className="text-lg font-medium text-gray-300 mb-2">
-                  How It Works
-                </h3>
-                <p className="text-gray-400">
-                  {getProviderWorkflow(selectedProvider, selectedType)}
-                </p>
-              </div>
-
-              <div>
-                <h3 className="text-lg font-medium text-gray-300 mb-2">
-                  Other Available Providers
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {providers.map((provider) => (
-                    <Button
-                      key={provider}
-                      variant={selectedProvider === provider ? "default" : "outline"}
-                      size="sm"
-                      className={selectedProvider === provider 
-                        ? "bg-blue-600 hover:bg-blue-700" 
-                        : "border-gray-700 text-white hover:bg-[#1c2e4a]"}
-                      onClick={() => onSelectProvider(provider)}
-                    >
-                      {getProviderName(provider)}
-                    </Button>
-                  ))}
-                </div>
-              </div>
-
-              <div className="bg-[#0f1628] border border-gray-800 rounded-lg p-6">
-                <h3 className="text-lg font-medium text-white mb-4">
-                  Get Started
-                </h3>
-                <p className="text-gray-400 mb-6">
-                  To get started, schedule a meeting with your advisor or tell them you're interested in this offering.
-                </p>
-                <div className="flex gap-3">
-                  <Button 
-                    variant="outline" 
-                    className="border-gray-700 text-white hover:bg-[#1c2e4a] w-1/2"
-                    onClick={onInterested}
-                  >
-                    I'm Interested
-                  </Button>
-                  <ScheduleMeetingDialog 
-                    assetName={`${getInsuranceTitle(selectedType)} Insurance by ${getProviderName(selectedProvider)}`} 
-                  />
-                </div>
-              </div>
-
-              <div>
-                <h3 className="text-lg font-medium text-gray-300 mb-4">
-                  Details
-                </h3>
-                <div className="space-y-2">
-                  <div className="bg-[#0f1628] border border-gray-800 rounded-lg p-4">
-                    <h4 className="font-medium">Other Offerings</h4>
-                    <p className="text-sm text-gray-400 mt-2">
-                      {getProviderOtherOfferings(selectedProvider, selectedType)}
-                    </p>
-                  </div>
-                  <div className="bg-[#0f1628] border border-gray-800 rounded-lg p-4">
-                    <h4 className="font-medium">Top Carriers</h4>
-                    <p className="text-sm text-gray-400 mt-2">
-                      {getProviderTopCarriers(selectedProvider)}
-                    </p>
-                  </div>
-                </div>
-              </div>
+            <div className="bg-[#121a2c] border border-gray-800 rounded-lg p-4">
+              <h4 className="font-medium text-white mb-2">Top Carriers</h4>
+              <p className="text-sm text-gray-400">
+                {getProviderTopCarriers(selectedProvider)}
+              </p>
             </div>
           </div>
-        </SheetContent>
-      </Sheet>
+        </div>
+      </Card>
     </div>
   );
 };

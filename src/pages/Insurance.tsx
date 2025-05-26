@@ -12,7 +12,6 @@ const Insurance = () => {
   const [selectedProvider, setSelectedProvider] = useState<InsuranceProvider | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [isDetailPanelOpen, setIsDetailPanelOpen] = useState(false);
 
   // Map insurance types to their available providers
   const insuranceTypeProviders: Record<InsuranceType, InsuranceTypeInfo> = {
@@ -37,13 +36,11 @@ const Insurance = () => {
     // Set total pages based on number of providers
     setTotalPages(providers.length);
     setCurrentPage(1);
-    setIsDetailPanelOpen(true); // Open the detail panel when type is selected
   };
 
   const handleBackToMain = () => {
     setSelectedType(null);
     setSelectedProvider(null);
-    setIsDetailPanelOpen(false);
   };
 
   const handleInterested = () => {
@@ -101,13 +98,11 @@ const Insurance = () => {
         selectedProvider={selectedProvider}
         currentPage={currentPage}
         totalPages={totalPages}
-        isDetailPanelOpen={isDetailPanelOpen}
         insuranceTypeProviders={insuranceTypeProviders}
         onBackToMain={handleBackToMain}
         onNextProvider={handleNextProvider}
         onPrevProvider={handlePrevProvider}
         onSelectProvider={selectProvider}
-        onSetDetailPanelOpen={setIsDetailPanelOpen}
         onInterested={handleInterested}
       />
     </ThreeColumnLayout>
