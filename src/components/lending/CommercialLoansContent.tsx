@@ -1,9 +1,9 @@
 
 import React from "react";
 import { Card } from "@/components/ui/card";
-import { ArrowRight, Building, BarChart4, CreditCard, PiggyBank, LineChart, TrendingUp } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Building, Briefcase, TrendingUp, Users } from "lucide-react";
 import { ScheduleMeetingButton } from "./ScheduleMeetingButton";
+import { InterestedButton } from "@/components/investments/InterestedButton";
 
 export const CommercialLoansContent = () => {
   return (
@@ -11,7 +11,7 @@ export const CommercialLoansContent = () => {
       <div className="mb-6">
         <h1 className="text-2xl font-semibold mb-2">Commercial Loans</h1>
         <p className="text-muted-foreground">
-          Financing for business expenses and growth opportunities.
+          Financing for business expenses and commercial real estate.
         </p>
       </div>
       
@@ -21,9 +21,9 @@ export const CommercialLoansContent = () => {
             <div>
               <h3 className="text-xl font-medium mb-3">How It Works</h3>
               <p className="text-muted-foreground mb-4">
-                Commercial loans provide businesses with capital for expansion, equipment, 
-                working capital, or real estate purchases. These loans are typically structured 
-                based on your business needs and repayment capacity.
+                Commercial loans provide financing for business operations, expansion, 
+                equipment purchases, and commercial real estate acquisitions. We work 
+                with specialized lenders to structure solutions for your business needs.
               </p>
               <div className="flex flex-col gap-4">
                 <div className="flex items-center gap-3">
@@ -31,26 +31,26 @@ export const CommercialLoansContent = () => {
                     <Building className="h-5 w-5 text-blue-600" />
                   </div>
                   <div>
-                    <p className="font-medium">Business Growth</p>
-                    <p className="text-sm text-muted-foreground">Fuel expansion and scaling operations</p>
+                    <p className="font-medium">Real Estate Financing</p>
+                    <p className="text-sm text-muted-foreground">Commercial property acquisition and refinancing</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="bg-green-50 p-2 rounded-full">
-                    <CreditCard className="h-5 w-5 text-green-600" />
+                    <Briefcase className="h-5 w-5 text-green-600" />
                   </div>
                   <div>
-                    <p className="font-medium">Flexible Terms</p>
-                    <p className="text-sm text-muted-foreground">Tailored to business cash flow</p>
+                    <p className="font-medium">Equipment Loans</p>
+                    <p className="text-sm text-muted-foreground">Financing for business equipment and machinery</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="bg-purple-50 p-2 rounded-full">
-                    <BarChart4 className="h-5 w-5 text-purple-600" />
+                    <TrendingUp className="h-5 w-5 text-purple-600" />
                   </div>
                   <div>
-                    <p className="font-medium">Strategic Financing</p>
-                    <p className="text-sm text-muted-foreground">Optimize your capital structure</p>
+                    <p className="font-medium">Working Capital</p>
+                    <p className="text-sm text-muted-foreground">Lines of credit for business operations</p>
                   </div>
                 </div>
               </div>
@@ -61,9 +61,10 @@ export const CommercialLoansContent = () => {
         <Card className="p-6">
           <div className="flex items-start justify-between">
             <div>
-              <h3 className="text-xl font-medium mb-3">Use Cases</h3>
+              <h3 className="text-xl font-medium mb-3">Loan Types</h3>
               <p className="text-muted-foreground mb-4">
-                Commercial loans can be used in various scenarios to help businesses meet their financial needs.
+                Various commercial financing options to support different business needs 
+                and growth strategies across industries and business sizes.
               </p>
               <div className="flex flex-col gap-4">
                 <div className="flex items-center gap-3">
@@ -71,26 +72,26 @@ export const CommercialLoansContent = () => {
                     <Building className="h-5 w-5 text-amber-600" />
                   </div>
                   <div>
-                    <p className="font-medium">Real Estate Acquisition</p>
-                    <p className="text-sm text-muted-foreground">Purchase or develop commercial property</p>
+                    <p className="font-medium">SBA Loans</p>
+                    <p className="text-sm text-muted-foreground">Government-backed financing programs</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="bg-blue-50 p-2 rounded-full">
-                    <TrendingUp className="h-5 w-5 text-blue-600" />
+                    <Users className="h-5 w-5 text-blue-600" />
                   </div>
                   <div>
-                    <p className="font-medium">Equipment Financing</p>
-                    <p className="text-sm text-muted-foreground">Upgrade machinery and technology</p>
+                    <p className="font-medium">Business Acquisition</p>
+                    <p className="text-sm text-muted-foreground">Financing for purchasing existing businesses</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="bg-green-50 p-2 rounded-full">
-                    <LineChart className="h-5 w-5 text-green-600" />
+                    <TrendingUp className="h-5 w-5 text-green-600" />
                   </div>
                   <div>
-                    <p className="font-medium">Working Capital</p>
-                    <p className="text-sm text-muted-foreground">Manage cash flow and operations</p>
+                    <p className="font-medium">Business Expansion</p>
+                    <p className="text-sm text-muted-foreground">Growth capital for scaling operations</p>
                   </div>
                 </div>
               </div>
@@ -102,12 +103,12 @@ export const CommercialLoansContent = () => {
       <Card className="p-6">
         <h3 className="text-xl font-medium mb-4">Ready to Get Started?</h3>
         <p className="text-muted-foreground mb-6">
-          Speak with your advisor to discuss how commercial loans can support your business 
-          goals and learn about specific options available to you.
+          Connect with your advisor to discuss your commercial financing needs and 
+          explore business lending solutions tailored to your industry and goals.
         </p>
         <div className="flex flex-col sm:flex-row gap-3">
+          <InterestedButton assetName="Commercial Loans" />
           <ScheduleMeetingButton offeringName="Commercial Loans" />
-          <Button variant="outline">Learn More <ArrowRight className="ml-2 h-4 w-4" /></Button>
         </div>
       </Card>
     </div>
