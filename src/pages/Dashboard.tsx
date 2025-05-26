@@ -5,7 +5,6 @@ import { FinancialOverview } from "@/components/dashboard/FinancialOverview";
 import { NetWorthSummary } from "@/components/dashboard/NetWorthSummary";
 import { ExpenseOptimizationCard } from "@/components/dashboard/ExpenseOptimizationCard";
 import { TaxPlanningSummary } from "@/components/dashboard/TaxPlanningSummary";
-import { AdminActions } from "@/components/dashboard/AdminActions";
 import { ReportsGenerator } from "@/components/dashboard/ReportsGenerator";
 import { useUser } from "@/context/UserContext";
 import { useSubscription } from "@/context/SubscriptionContext";
@@ -19,7 +18,7 @@ export default function Dashboard() {
   
   usePagePerformance('/dashboard');
   
-  const isAdmin = userProfile?.role === "admin" || userProfile?.role === "system_administrator";
+  console.log('Dashboard: AdminActions component completely removed');
 
   const handleDismissBanner = () => {
     setShowWelcomeBanner(false);
@@ -27,6 +26,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     console.log('Dashboard component rendered:', new Date().toISOString());
+    console.log('Dashboard: NO AdminActions component rendered');
     
     return () => {
       console.log('Dashboard component unmounted:', new Date().toISOString());
@@ -36,12 +36,6 @@ export default function Dashboard() {
   return (
     <ThreeColumnLayout title="Dashboard">
       <div className="space-y-4 px-4 py-2 max-w-7xl mx-auto">
-        {isAdmin && (
-          <div className="mt-1">
-            <AdminActions />
-          </div>
-        )}
-        
         {isInFreeTrial && showWelcomeBanner && (
           <WelcomeTrialBanner onDismiss={handleDismissBanner} />
         )}
