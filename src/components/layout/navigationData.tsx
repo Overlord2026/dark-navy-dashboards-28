@@ -1,4 +1,3 @@
-
 import React from "react";
 import {
   HomeIcon,
@@ -67,7 +66,7 @@ export const navigationCategories: NavCategory[] = [
       { id: "education", label: "Education Center", icon: GraduationCapIcon, href: "/client-education" },
       { id: "investments", label: "Investments", icon: BarChart3Icon, href: "/investments" },
       { id: "tax-planning", label: "Tax Planning", icon: PieChart, href: "/tax-planning" },
-      { id: "insurance", label: "Client-Insurance", icon: ShieldIcon, href: "/client-insurance" },
+      { id: "insurance", label: "Insurance", icon: ShieldIcon, href: "/client-insurance" },
       { id: "lending", label: "Lending", icon: BanknoteIcon, href: "/lending" },
       { id: "estate-planning", label: "Estate Planning", icon: ArchiveIcon, href: "/estate-planning" },
     ]

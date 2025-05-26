@@ -20,7 +20,7 @@ export const educationNavItems: NavItem[] = [
     icon: PieChart 
   },
   { 
-    title: "Client-Insurance", 
+    title: "Insurance", 
     href: "/client-insurance", 
     icon: ShieldIcon 
   },
