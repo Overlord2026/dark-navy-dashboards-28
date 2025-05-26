@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CourseList } from "./CourseList";
-import { CourseCategories } from "./CourseCategories";
 import { coursesByCategory } from "@/data/education/coursesByCategory";
 import { educationalResources } from "@/data/education/educationalResources";
 import { courseCategories } from "@/data/education/categories";
@@ -79,25 +78,15 @@ export const EducationalTabs: React.FC<EducationalTabsProps> = ({
       </div>
       
       <TabsContent value="courses" className="py-4">
-        <div className="grid grid-cols-12 gap-6">
-          <div className="col-span-12 md:col-span-3">
-            <CourseCategories 
-              categories={courseCategories}
-              onSelectCategory={setActiveCategory}
-            />
-          </div>
-          <div className="col-span-12 md:col-span-9">
-            <CourseList
-              title={activeCategory === "all-courses" ? "All Courses" : "Category Courses"}
-              courses={
-                activeCategory === "all-courses"
-                  ? Object.values(coursesByCategory).flat()
-                  : coursesByCategory[activeCategory] || []
-              }
-              onCourseEnrollment={handleCourseEnrollment}
-            />
-          </div>
-        </div>
+        <CourseList
+          title={activeCategory === "all-courses" ? "All Courses" : "Category Courses"}
+          courses={
+            activeCategory === "all-courses"
+              ? Object.values(coursesByCategory).flat()
+              : coursesByCategory[activeCategory] || []
+          }
+          onCourseEnrollment={handleCourseEnrollment}
+        />
       </TabsContent>
       
       <TabsContent value="guides" className="py-4">
