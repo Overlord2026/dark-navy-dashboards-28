@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { FinancialOverview } from "@/components/dashboard/FinancialOverview";
@@ -16,8 +15,8 @@ import { usePagePerformance } from "@/hooks/usePagePerformance";
 export default function Index() {
   console.log('Index page rendering - NO AdminActions component');
   
-  // Use the performance hook
-  usePagePerformance('/');
+  // Use the performance hook with the new route
+  usePagePerformance('/client-dashboard');
   
   try {
     // Access context hooks
@@ -36,8 +35,8 @@ export default function Index() {
     useEffect(() => {
       setDashboardKey(Date.now());
       
-      // Log dashboard rendering time
-      const cleanup = measureRouteLoad('/');
+      // Log dashboard rendering time with new route
+      const cleanup = measureRouteLoad('/client-dashboard');
       
       // Console log for debugging
       console.log(`Index page rendered: ${new Date().toISOString()}`);

@@ -16,7 +16,7 @@ export default function Dashboard() {
   const { isInFreeTrial } = useSubscription();
   const [showWelcomeBanner, setShowWelcomeBanner] = useState(true);
   
-  usePagePerformance('/dashboard');
+  usePagePerformance('/client-dashboard');
   
   console.log('Dashboard: AdminActions component completely removed');
 
