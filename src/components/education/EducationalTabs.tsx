@@ -8,8 +8,6 @@ import { courseCategories } from "@/data/education/categories";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { BookList } from './BookList';
 import { BookManagement } from './BookManagement';
-import { Switch } from '@/components/ui/switch';
-import { Label } from '@/components/ui/label';
 import { EducationalResource } from "@/types/education";
 import { toast } from 'sonner';
 
@@ -30,7 +28,6 @@ export const EducationalTabs: React.FC<EducationalTabsProps> = ({
 }) => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [isAdmin, setIsAdmin] = useState(false);
   const [books, setBooks] = useState<EducationalResource[]>(educationalResources.books);
 
   // Effect to update URL when active section changes
@@ -64,17 +61,6 @@ export const EducationalTabs: React.FC<EducationalTabsProps> = ({
           <TabsTrigger value="books">Books</TabsTrigger>
           <TabsTrigger value="whitepapers">Whitepapers</TabsTrigger>
         </TabsList>
-        
-        {activeSection === 'books' && (
-          <div className="flex items-center space-x-2">
-            <Switch 
-              id="admin-mode"
-              checked={isAdmin} 
-              onCheckedChange={setIsAdmin}
-            />
-            <Label htmlFor="admin-mode">Admin Mode</Label>
-          </div>
-        )}
       </div>
       
       <TabsContent value="courses" className="py-4">
@@ -116,11 +102,7 @@ export const EducationalTabs: React.FC<EducationalTabsProps> = ({
       </TabsContent>
       
       <TabsContent value="books" className="py-4">
-        {isAdmin ? (
-          <BookManagement books={books} onUpdateBooks={handleUpdateBooks} />
-        ) : (
-          <BookList books={books} />
-        )}
+        <BookList books={books} />
       </TabsContent>
       
       <TabsContent value="whitepapers" className="py-4">
