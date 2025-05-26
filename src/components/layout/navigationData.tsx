@@ -18,7 +18,10 @@ import {
   ArrowRightLeft,
   Calculator,
   Receipt,
-  BookIcon
+  BookIcon,
+  Settings,
+  User,
+  LogOut
 } from "lucide-react";
 
 type MainMenuItem = {
@@ -91,6 +94,15 @@ export const navigationCategories: NavCategory[] = [
       { id: "advisor-feedback", label: "Advisor", icon: Users2Icon, href: "/advisor-feedback" },
       { id: "professionals", label: "User Account", icon: Users2Icon, href: "/professionals" },
       { id: "sharing", label: "Family Member Access", icon: ShareIcon, href: "/sharing" },
+    ]
+  },
+  {
+    id: "settings",
+    label: "Settings",
+    items: [
+      { id: "profile-settings", label: "Profile Settings", icon: User, href: "/profile-settings" },
+      { id: "account-settings", label: "Account Settings", icon: Settings, href: "/account-settings" },
+      { id: "logout", label: "Logout", icon: LogOut, href: "/logout" },
     ]
   },
 ];
