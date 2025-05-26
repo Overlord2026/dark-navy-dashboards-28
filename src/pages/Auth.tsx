@@ -81,8 +81,8 @@ export default function Auth() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F9F7E8] flex flex-col">
-      <header className="w-full flex justify-center items-center py-4 border-b border-[#DCD8C0] bg-[#F9F7E8] sticky top-0 z-50">
+    <div className="min-h-screen bg-white flex flex-col">
+      <header className="w-full flex justify-center items-center py-4 border-b border-gray-200 bg-[#1B1B32] sticky top-0 z-50">
         <div className="container flex justify-between items-center max-w-7xl px-4">
           <Link to="/" className="flex items-center">
             <img 
@@ -92,17 +92,17 @@ export default function Auth() {
             />
           </Link>
           <div>
-            <Button variant="ghost" asChild>
+            <Button variant="ghost" asChild className="text-white hover:bg-white/10">
               <Link to="/">Back to Home</Link>
             </Button>
           </div>
         </div>
       </header>
       
-      <div className="flex-1 flex justify-center items-center p-4">
-        <Card className="p-8 w-full max-w-md bg-white border border-[#DCD8C0]">
+      <div className="flex-1 flex justify-center items-center p-4 bg-white">
+        <Card className="p-8 w-full max-w-md bg-white border border-gray-200 shadow-lg">
           <div className="text-center mb-6">
-            <h1 className="text-2xl font-bold text-[#222222]">
+            <h1 className="text-2xl font-bold text-[#1B1B32]">
               {isSignUp ? "Create Account" : "Sign In"}
             </h1>
             <p className="text-gray-600 mt-2">
@@ -116,25 +116,27 @@ export default function Auth() {
             {isSignUp && (
               <>
                 <div className="space-y-2">
-                  <Label htmlFor="firstName">First Name</Label>
+                  <Label htmlFor="firstName" className="text-[#1B1B32]">First Name</Label>
                   <Input 
                     id="firstName" 
                     type="text" 
                     placeholder="Enter your first name"
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
+                    className="border-gray-300 focus:border-[#1B1B32] focus:ring-[#1B1B32]"
                     required 
                   />
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="lastName">Last Name</Label>
+                  <Label htmlFor="lastName" className="text-[#1B1B32]">Last Name</Label>
                   <Input 
                     id="lastName" 
                     type="text" 
                     placeholder="Enter your last name"
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
+                    className="border-gray-300 focus:border-[#1B1B32] focus:ring-[#1B1B32]"
                     required 
                   />
                 </div>
@@ -142,26 +144,28 @@ export default function Auth() {
             )}
             
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email" className="text-[#1B1B32]">Email</Label>
               <Input 
                 id="email" 
                 type="email" 
                 placeholder="you@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                className="border-gray-300 focus:border-[#1B1B32] focus:ring-[#1B1B32]"
                 autoComplete="email" 
                 required 
               />
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password" className="text-[#1B1B32]">Password</Label>
               <Input 
                 id="password" 
                 type="password" 
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                className="border-gray-300 focus:border-[#1B1B32] focus:ring-[#1B1B32]"
                 autoComplete={isSignUp ? "new-password" : "current-password"}
                 required 
               />
@@ -169,7 +173,7 @@ export default function Auth() {
             
             <Button 
               type="submit" 
-              className="w-full bg-black text-white hover:bg-black/80"
+              className="w-full bg-[#1B1B32] text-white hover:bg-[#1B1B32]/90"
               disabled={loading}
             >
               {loading ? "Loading..." : (isSignUp ? "Create Account" : "Sign In")}
@@ -182,7 +186,7 @@ export default function Auth() {
               <button
                 type="button"
                 onClick={() => setIsSignUp(!isSignUp)}
-                className="text-primary hover:underline font-medium"
+                className="text-[#1B1B32] hover:underline font-medium"
               >
                 {isSignUp ? "Sign in" : "Create account"}
               </button>
