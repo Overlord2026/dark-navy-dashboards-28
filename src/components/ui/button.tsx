@@ -19,7 +19,7 @@ const buttonVariants = cva(
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
-        interested: "bg-yellow-500 hover:bg-yellow-600 text-black font-medium",
+        interested: "bg-transparent border border-yellow-500 text-yellow-500 hover:bg-yellow-500/10 font-medium",
         advisor: "bg-[#1EAEDB] hover:bg-[#1EAEDB]/90 text-white font-medium",
         marketplace: "bg-[#0EA5E9] hover:bg-[#0EA5E9]/90 text-white font-medium rounded-lg",
         vault: "bg-[#0a1629] hover:bg-[#0a1629]/90 text-white font-medium shadow-md border border-gray-700",
