@@ -1,5 +1,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useAuth } from './AuthContext';
+import { supabase } from '@/lib/supabase';
 
 interface UserProfile {
   id: string;
@@ -34,79 +36,120 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const { user, session, isAuthenticated, login: authLogin, logout: authLogout } = useAuth();
 
-  // Simulate loading user data from storage or an API
   useEffect(() => {
-    // In a real app, this would fetch the user profile from an API
-    const loadUser = async () => {
-      try {
-        // Simulate API delay
-        await new Promise(resolve => setTimeout(resolve, 500));
-        
-        // For demo purposes, create a mock admin user
-        const mockUser: UserProfile = {
-          id: 'user-123',
-          name: 'Admin User',
-          displayName: 'Admin',
-          email: 'admin@example.com',
-          firstName: 'Tom',
-          lastName: 'Brady',
-          role: 'admin',
-          permissions: ['all'],
-          phone: '(555) 123-4567',
-          investorType: 'High Net Worth Individual'
-        };
-        
-        setUserProfile(mockUser);
-      } catch (error) {
-        console.error('Error loading user profile:', error);
+    const loadUserProfile = async () => {
+      if (user && session) {
+        try {
+          const { data: profile, error } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', user.id)
+            .single();
+
+          if (error && error.code !== 'PGRST116') {
+            console.error('Error loading profile:', error);
+            setUserProfile(null);
+          } else if (profile) {
+            setUserProfile({
+              id: profile.id,
+              name: profile.display_name || `${profile.first_name} ${profile.last_name}`,
+              displayName: profile.display_name,
+              email: profile.email || user.email,
+              firstName: profile.first_name,
+              lastName: profile.last_name,
+              middleName: profile.middle_name,
+              title: profile.title,
+              suffix: profile.suffix,
+              gender: profile.gender,
+              maritalStatus: profile.marital_status,
+              dateOfBirth: profile.date_of_birth ? new Date(profile.date_of_birth) : undefined,
+              phone: profile.phone,
+              investorType: profile.investor_type,
+              role: profile.role || 'client',
+              permissions: profile.permissions || []
+            });
+          } else {
+            // Create profile if it doesn't exist
+            const newProfile = {
+              id: user.id,
+              email: user.email,
+              first_name: user.user_metadata?.first_name || '',
+              last_name: user.user_metadata?.last_name || '',
+              display_name: user.user_metadata?.display_name || `${user.user_metadata?.first_name || ''} ${user.user_metadata?.last_name || ''}`,
+              role: 'client'
+            };
+            
+            const { error: insertError } = await supabase
+              .from('profiles')
+              .insert([newProfile]);
+              
+            if (!insertError) {
+              setUserProfile({
+                id: user.id,
+                name: newProfile.display_name,
+                displayName: newProfile.display_name,
+                email: newProfile.email,
+                firstName: newProfile.first_name,
+                lastName: newProfile.last_name,
+                role: 'client',
+                permissions: []
+              });
+            }
+          }
+        } catch (error) {
+          console.error('Error in loadUserProfile:', error);
+          setUserProfile(null);
+        }
+      } else {
         setUserProfile(null);
-      } finally {
-        setIsLoading(false);
       }
+      setIsLoading(false);
     };
-    
-    loadUser();
-  }, []);
+
+    loadUserProfile();
+  }, [user, session]);
 
   const login = async (email: string, password: string): Promise<boolean> => {
-    try {
-      setIsLoading(true);
-      // In a real app, this would make an API call to authenticate
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // For demo purposes, accept any credentials and create a mock user
-      const mockUser: UserProfile = {
-        id: 'user-123',
-        name: 'Demo User',
-        displayName: email.split('@')[0],
-        firstName: 'Tom',
-        lastName: 'Brady',
-        email,
-        role: 'admin',
-        permissions: ['all'],
-        phone: '(555) 123-4567',
-        investorType: 'High Net Worth Individual'
-      };
-      
-      setUserProfile(mockUser);
-      return true;
-    } catch (error) {
-      console.error('Login error:', error);
-      return false;
-    } finally {
-      setIsLoading(false);
-    }
+    return await authLogin(email, password);
   };
 
   const logout = () => {
-    // In a real app, this would clear tokens, etc.
+    authLogout();
     setUserProfile(null);
   };
 
-  const updateUserProfile = (profile: Partial<UserProfile>) => {
-    if (userProfile) {
-      setUserProfile({ ...userProfile, ...profile });
+  const updateUserProfile = async (profile: Partial<UserProfile>) => {
+    if (userProfile && user) {
+      try {
+        const updateData = {
+          first_name: profile.firstName,
+          last_name: profile.lastName,
+          middle_name: profile.middleName,
+          display_name: profile.displayName,
+          title: profile.title,
+          suffix: profile.suffix,
+          gender: profile.gender,
+          marital_status: profile.maritalStatus,
+          phone: profile.phone,
+          investor_type: profile.investorType,
+          updated_at: new Date().toISOString()
+        };
+
+        const { error } = await supabase
+          .from('profiles')
+          .update(updateData)
+          .eq('id', user.id);
+
+        if (!error) {
+          setUserProfile({ ...userProfile, ...profile });
+        } else {
+          console.error('Error updating profile:', error);
+        }
+      } catch (error) {
+        console.error('Error in updateUserProfile:', error);
+      }
     }
   };
 
@@ -114,7 +157,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     <UserContext.Provider
       value={{
         userProfile,
-        isAuthenticated: !!userProfile,
+        isAuthenticated,
         isLoading,
         login,
         logout,
