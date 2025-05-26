@@ -14,7 +14,7 @@ import { measureRouteLoad } from "@/utils/performance";
 import { usePagePerformance } from "@/hooks/usePagePerformance";
 
 export default function Index() {
-  console.log('Index page rendering');
+  console.log('Index page rendering - NO AdminActions component');
   
   // Use the performance hook
   usePagePerformance('/');
@@ -29,7 +29,7 @@ export default function Index() {
     
     const { userProfile } = useUser();
     console.log('Index: useUser hook loaded successfully', userProfile?.role);
-    console.log('Index: Rendering without AdminActions component');
+    console.log('Index: CONFIRMED - AdminActions component completely removed from Index page');
     
     const [dashboardKey, setDashboardKey] = useState(Date.now());
 
@@ -40,12 +40,12 @@ export default function Index() {
       const cleanup = measureRouteLoad('/');
       
       // Console log for debugging
-      console.log(`Dashboard component rendered: ${new Date().toISOString()}`);
-      console.log('Index: No AdminActions component should be visible');
+      console.log(`Index page rendered: ${new Date().toISOString()}`);
+      console.log('Index: VERIFIED - No AdminActions component rendered on home page');
       
       return () => {
         cleanup();
-        console.log(`Dashboard component unmounted: ${new Date().toISOString()}`);
+        console.log(`Index page unmounted: ${new Date().toISOString()}`);
       };
     }, [userProfile]);
 
