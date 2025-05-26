@@ -1,10 +1,10 @@
+
 import React, { useState, useEffect } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { FinancialOverview } from "@/components/dashboard/FinancialOverview";
 import { NetWorthSummary } from "@/components/dashboard/NetWorthSummary";
 import { ExpenseOptimizationCard } from "@/components/dashboard/ExpenseOptimizationCard";
 import { TaxPlanningSummary } from "@/components/dashboard/TaxPlanningSummary";
-import { RecentActivity } from "@/components/dashboard/RecentActivity";
 import { AdminActions } from "@/components/dashboard/AdminActions";
 import { ReportsGenerator } from "@/components/dashboard/ReportsGenerator";
 import { useUser } from "@/context/UserContext";
@@ -60,10 +60,6 @@ export default function Dashboard() {
             <ExpenseOptimizationCard />
             <TaxPlanningSummary />
           </div>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          <RecentActivity />
         </div>
       </div>
     </ThreeColumnLayout>
