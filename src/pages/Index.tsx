@@ -29,6 +29,7 @@ export default function Index() {
     
     const { userProfile } = useUser();
     console.log('Index: useUser hook loaded successfully', userProfile?.role);
+    console.log('Index: Rendering without AdminActions component');
     
     const [dashboardKey, setDashboardKey] = useState(Date.now());
 
@@ -40,6 +41,7 @@ export default function Index() {
       
       // Console log for debugging
       console.log(`Dashboard component rendered: ${new Date().toISOString()}`);
+      console.log('Index: No AdminActions component should be visible');
       
       return () => {
         cleanup();
