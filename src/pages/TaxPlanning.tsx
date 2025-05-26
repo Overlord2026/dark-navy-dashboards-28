@@ -43,7 +43,7 @@ export default function TaxPlanning() {
 
   return (
     <ThreeColumnLayout 
-      title="Tax Planning" 
+      title="" 
       activeMainItem="education"
       activeSecondaryItem="tax-planning"
       secondaryMenuItems={[]}
