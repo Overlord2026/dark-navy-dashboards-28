@@ -38,11 +38,11 @@ import { ProfessionalsRouteWrapper } from "@/components/providers/ProfessionalsR
 
 const routes = createBrowserRouter([
   {
-    path: "/client-dashboard",
+    path: "/",
     element: <Dashboard />
   },
   {
-    path: "/",
+    path: "/client-dashboard",
     element: <Dashboard />
   },
   {
