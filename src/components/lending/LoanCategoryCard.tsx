@@ -2,10 +2,16 @@
 import React from "react";
 import { Card } from "@/components/ui/card";
 import { ArrowRight } from "lucide-react";
-import { LoanCategory } from "./types";
+import { LucideIcon } from "lucide-react";
 
 interface LoanCategoryProps {
-  category: LoanCategory;
+  category: {
+    id: string;
+    title: string;
+    description: string;
+    icon: LucideIcon;
+    href: string;
+  };
   onSelect: () => void;
 }
 

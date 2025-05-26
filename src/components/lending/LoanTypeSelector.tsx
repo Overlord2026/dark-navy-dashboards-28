@@ -1,6 +1,13 @@
 
-import { LoanType } from "./types";
-import { LoanItemCard } from "./ui/LoanItemCard";
+import { Button } from "@/components/ui/button";
+import { LucideIcon } from "lucide-react";
+
+interface LoanType {
+  id: string;
+  name: string;
+  icon: LucideIcon;
+  description: string;
+}
 
 interface LoanTypeSelectorProps {
   loanTypes: LoanType[];
@@ -16,14 +23,22 @@ export function LoanTypeSelector({ loanTypes, onSelect }: LoanTypeSelectorProps)
       
       <div className="grid grid-cols-1 gap-4">
         {loanTypes.map((loanType) => (
-          <LoanItemCard
+          <Button
             key={loanType.id}
-            id={loanType.id}
-            title={loanType.name}
-            description={loanType.description}
-            icon={loanType.icon}
+            variant="outline"
+            className="flex items-start justify-between h-auto p-4 hover:bg-accent"
             onClick={() => onSelect(loanType.id)}
-          />
+          >
+            <div className="flex items-center gap-3">
+              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 text-primary">
+                <loanType.icon className="h-5 w-5" />
+              </div>
+              <div className="text-left">
+                <h3 className="font-medium">{loanType.name}</h3>
+                <p className="text-sm text-muted-foreground mt-1">{loanType.description}</p>
+              </div>
+            </div>
+          </Button>
         ))}
       </div>
     </div>

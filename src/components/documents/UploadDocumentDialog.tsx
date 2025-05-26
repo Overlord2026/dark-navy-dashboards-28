@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { Cloud, Link as LinkIcon } from "lucide-react";
+import { Cloud } from "lucide-react";
 import { useDocumentManagement } from "@/hooks/useDocumentManagement";
 import { useProfessionals } from "@/hooks/useProfessionals";
 import { DocumentDialogProps, FileInfo } from "./types/documentDialog";
@@ -17,15 +17,14 @@ export function UploadDocumentDialog({
   category = "documents",
   activeCategory,
   documentCategories,
-  onFileUpload: externalFileUpload,
-  onLinkAdd: externalLinkAdd
+  onFileUpload: externalFileUpload
 }: DocumentDialogProps) {
   const [fileInfo, setFileInfo] = useState<FileInfo | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [shareAfterUpload, setShareAfterUpload] = useState(false);
   const [selectedProfessionalId, setSelectedProfessionalId] = useState<string>("");
   
-  const { handleFileUpload, handleLinkAdd } = useDocumentManagement();
+  const { handleFileUpload } = useDocumentManagement();
   const { professionals } = useProfessionals();
   
   const handleDialogClose = () => {
@@ -36,8 +35,8 @@ export function UploadDocumentDialog({
   };
   
   const handleSubmit = () => {
-    if (!fileInfo) {
-      toast.error("Please select a file or enter an external link");
+    if (!fileInfo?.file) {
+      toast.error("Please select a file to upload");
       return;
     }
     
@@ -49,28 +48,14 @@ export function UploadDocumentDialog({
     setIsUploading(true);
     
     setTimeout(() => {
-      let uploadedDoc;
+      // Upload the document
+      const uploadedDoc = externalFileUpload 
+        ? externalFileUpload(fileInfo.file, fileInfo.name, category)
+        : handleFileUpload(fileInfo.file, fileInfo.name, category);
       
-      // Handle external link
-      if (fileInfo.isExternalLink && fileInfo.url) {
-        uploadedDoc = externalLinkAdd 
-          ? externalLinkAdd(fileInfo.url, fileInfo.name, fileInfo.description, category)
-          : handleLinkAdd(fileInfo.url, fileInfo.name, fileInfo.description, category);
-        
-        toast.success("Link added successfully", {
-          description: `"${fileInfo.name}" has been added to your documents.`
-        });
-      } 
-      // Handle file upload
-      else if (fileInfo.file) {
-        uploadedDoc = externalFileUpload 
-          ? externalFileUpload(fileInfo.file, fileInfo.name, category)
-          : handleFileUpload(fileInfo.file, fileInfo.name, category);
-        
-        toast.success("Document uploaded successfully", {
-          description: `"${fileInfo.name}" has been added to your documents.`
-        });
-      }
+      toast.success("Document uploaded successfully", {
+        description: `"${fileInfo.name}" has been added to your documents.`
+      });
       
       // Handle sharing if needed
       if (shareAfterUpload && selectedProfessionalId && uploadedDoc) {
@@ -100,8 +85,8 @@ export function UploadDocumentDialog({
           <DialogTitle>Upload Document</DialogTitle>
           <DialogDescription>
             {category === "professional-documents" 
-              ? "Upload a document or link to share with your service professionals" 
-              : "Add a document or link to your legacy box"}
+              ? "Upload a document to share with your service professionals" 
+              : "Add a document to your legacy box"}
           </DialogDescription>
         </DialogHeader>
         
@@ -122,17 +107,8 @@ export function UploadDocumentDialog({
         
         <DialogFooter className="sm:justify-between">
           <div className="flex items-center text-sm text-muted-foreground">
-            {fileInfo?.isExternalLink ? (
-              <div className="flex items-center">
-                <LinkIcon className="mr-1 h-3 w-3" />
-                <span>External links may have different security</span>
-              </div>
-            ) : (
-              <div className="flex items-center">
-                <Cloud className="mr-1 h-3 w-3" />
-                <span>Files are encrypted and secure</span>
-              </div>
-            )}
+            <Cloud className="mr-1 h-3 w-3" />
+            <span>Files are encrypted and secure</span>
           </div>
           <div className="flex gap-2">
             <Button variant="outline" onClick={handleDialogClose}>
@@ -140,9 +116,9 @@ export function UploadDocumentDialog({
             </Button>
             <Button 
               onClick={handleSubmit} 
-              disabled={isUploading || !fileInfo || (!fileInfo.file && !fileInfo.url) || !fileInfo.name.trim()}
+              disabled={isUploading || !fileInfo?.file || !fileInfo?.name.trim()}
             >
-              {isUploading ? "Processing..." : fileInfo?.isExternalLink ? "Add Link" : "Upload"}
+              {isUploading ? "Uploading..." : "Upload"}
             </Button>
           </div>
         </DialogFooter>

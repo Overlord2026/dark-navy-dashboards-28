@@ -75,63 +75,6 @@ export const useDocumentManagement = () => {
     // Return the newly created document
     return newDocument;
   };
-  
-  const handleLinkAdd = (url: string, customName: string, description?: string, category: string = "documents") => {
-    // Validate URL
-    let isValid = false;
-    try {
-      new URL(url);
-      isValid = url.includes('drive.google.com');
-    } catch (e) {
-      toast({
-        title: "Invalid URL",
-        description: "Please enter a valid Google Drive URL",
-        variant: "destructive"
-      });
-      return;
-    }
-    
-    if (!isValid) {
-      toast({
-        title: "Invalid Google Drive link",
-        description: "Please make sure you're using a Google Drive link",
-        variant: "destructive"
-      });
-      return;
-    }
-    
-    // Make sure we have an active category or use the provided one
-    const documentCategory = activeCategory || category;
-    
-    if (!documentCategory) {
-      toast({
-        title: "Please select a category",
-        variant: "destructive"
-      });
-      return;
-    }
-    
-    const newDocument: DocumentItem = {
-      id: `link-${Math.random().toString(36).substring(2, 9)}`,
-      name: customName || "External Document",
-      created: new Date().toLocaleDateString(),
-      type: "external-link",
-      category: documentCategory,
-      description,
-      url
-    };
-    
-    setDocuments(prevDocs => [...prevDocs, newDocument]);
-    setIsUploadDialogOpen(false);
-    
-    toast({
-      title: "Link added",
-      description: `${newDocument.name} has been added successfully to BFO Legacy Vault`
-    });
-
-    // Return the newly created document
-    return newDocument;
-  };
 
   const shareDocument = (options: ShareDocumentOptions) => {
     const { documentId, professionalId, professionalName, professionalRole, permission } = options;
@@ -217,7 +160,6 @@ export const useDocumentManagement = () => {
     setIsUploadDialogOpen,
     handleCreateFolder,
     handleFileUpload,
-    handleLinkAdd,
     shareDocument,
     deleteSharedDocument,
     updateDocumentPermissions,
@@ -251,14 +193,6 @@ function getSampleDocuments(): DocumentItem[] {
       created: "03/15/2025",
       category: "professional-documents",
       size: "3.7 MB"
-    },
-    {
-      id: "link-1",
-      name: "Educational Resources",
-      type: "external-link",
-      created: "05/14/2025",
-      category: "education",
-      url: "https://drive.google.com/file/d/1o1v2gCB6ivt5uwiEd2ITzOQ15O691hJ-/view?usp=sharing"
     }
   ];
 }

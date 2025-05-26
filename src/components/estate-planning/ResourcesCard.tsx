@@ -6,57 +6,52 @@ import { ExternalLink, FileText } from "lucide-react";
 
 export const ResourcesCard: React.FC = () => {
   return (
-    <Card className="h-full">
+    <Card className="w-full lg:w-1/4">
       <CardHeader>
-        <CardTitle className="text-lg">Estate Planning Resources</CardTitle>
+        <CardTitle className="text-lg">Resources</CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-6">
         <div>
-          <h4 className="font-medium mb-2">Educational Resources</h4>
+          <h4 className="font-medium mb-2">DIY Estate Planning</h4>
+          <div className="space-y-2">
+            <Button 
+              variant="outline" 
+              className="w-full flex items-center justify-between"
+              onClick={() => window.open('https://trustandwill.com', '_blank')}
+            >
+              <span>Trust and Will</span>
+              <ExternalLink className="h-4 w-4" />
+            </Button>
+            <Button 
+              variant="outline" 
+              className="w-full flex items-center justify-between"
+              onClick={() => window.open('https://wealth.com', '_blank')}
+            >
+              <span>Wealth.com</span>
+              <ExternalLink className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+        
+        <div>
+          <h4 className="font-medium mb-2">Estate Planning Guides</h4>
           <ul className="space-y-2">
-            <li>
-              <a href="#" className="text-primary hover:underline flex items-center">
-                <FileText className="h-4 w-4 mr-2" />
-                Estate Planning Guide
-                <ExternalLink className="h-3 w-3 ml-1" />
-              </a>
-            </li>
-            <li>
-              <a href="#" className="text-primary hover:underline flex items-center">
-                <FileText className="h-4 w-4 mr-2" />
-                Will & Trust Basics
-                <ExternalLink className="h-3 w-3 ml-1" />
-              </a>
-            </li>
-            <li>
-              <a href="#" className="text-primary hover:underline flex items-center">
-                <FileText className="h-4 w-4 mr-2" />
-                Power of Attorney Guide
-                <ExternalLink className="h-3 w-3 ml-1" />
-              </a>
-            </li>
+            {["Estate Planning Basics", "Power of Attorney Guide", "Trust Formation"].map((guide, idx) => (
+              <li key={idx} className="flex items-center gap-2 text-sm text-primary">
+                <FileText className="h-4 w-4" />
+                <a href="#" className="hover:underline">{guide}</a>
+              </li>
+            ))}
           </ul>
         </div>
         
         <div>
-          <h4 className="font-medium mb-2">Professional Assistance</h4>
-          <ul className="space-y-2">
-            <li>
-              <a href="#" className="text-primary hover:underline flex items-center">
-                Find an Estate Attorney
-              </a>
-            </li>
-            <li>
-              <a href="#" className="text-primary hover:underline flex items-center">
-                Schedule a Planning Session
-              </a>
-            </li>
-          </ul>
+          <h4 className="font-medium mb-2">Get Expert Help</h4>
+          <p className="text-sm text-muted-foreground mb-2">
+            Need assistance with estate planning?
+          </p>
+          <Button className="w-full">Schedule a Consultation</Button>
         </div>
-        
-        <Button className="w-full mt-4" variant="outline">
-          Download Complete Resource Kit
-        </Button>
       </CardContent>
     </Card>
   );

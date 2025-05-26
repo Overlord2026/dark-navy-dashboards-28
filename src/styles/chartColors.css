@@ -2,24 +2,9 @@
 :root {
   --color-emerald: #10b981;
   --color-destructive: #ef4444;
-  --badge-bg: rgba(255, 255, 255, 0.15);
-  --badge-text: #ffffff;
-  --tag-bg: rgba(255, 255, 255, 0.2);
-  --tag-text: #ffffff;
 }
 
 .dark {
   --color-emerald: #34d399;
   --color-destructive: #f87171;
-  --badge-bg: rgba(255, 255, 255, 0.15);
-  --badge-text: #ffffff;
-  --tag-bg: rgba(255, 255, 255, 0.2);
-  --tag-text: #ffffff;
-}
-
-.light {
-  --badge-bg: rgba(0, 0, 0, 0.1);
-  --badge-text: #000000;
-  --tag-bg: rgba(0, 0, 0, 0.08);
-  --tag-text: #000000;
 }

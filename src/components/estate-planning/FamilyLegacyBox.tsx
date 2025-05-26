@@ -144,45 +144,49 @@ export const FamilyLegacyBox: React.FC = () => {
   const completedDocuments = documents.length;
 
   return (
-    <div className="space-y-6 w-full">
-      <Card className="shadow-lg">
-        <CardHeader className="bg-muted/30">
-          <CardTitle>Family Legacy Box</CardTitle>
-        </CardHeader>
-        <CardContent className="p-6">
-          <Tabs defaultValue="overview" value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-3 mb-6">
-              <TabsTrigger value="overview">Document Overview</TabsTrigger>
-              <TabsTrigger value="uploaded">My Documents</TabsTrigger>
-              <TabsTrigger value="shared">Shared Documents</TabsTrigger>
-            </TabsList>
-            <TabsContent value="overview" className="pt-4">
-              <DocumentChecklist
-                onUploadDocument={handleUploadDocument}
-                documents={documents}
-              />
-            </TabsContent>
-            <TabsContent value="uploaded" className="pt-4">
-              <UploadedDocuments
-                documents={documents}
-                onViewDocument={handleViewDocument}
-                onShareDocument={handleShareDocument}
-              />
-            </TabsContent>
-            <TabsContent value="shared" className="pt-4">
-              <SharedDocuments
-                sharedDocuments={sharedDocuments}
-                onViewDocument={handleViewDocument}
-              />
-            </TabsContent>
-          </Tabs>
-        </CardContent>
-      </Card>
+    <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+      <div className="lg:col-span-3 space-y-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>Family Legacy Box</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Tabs defaultValue="overview" value={activeTab} onValueChange={setActiveTab}>
+              <TabsList className="grid w-full grid-cols-3">
+                <TabsTrigger value="overview">Document Overview</TabsTrigger>
+                <TabsTrigger value="uploaded">My Documents</TabsTrigger>
+                <TabsTrigger value="shared">Shared Documents</TabsTrigger>
+              </TabsList>
+              <TabsContent value="overview">
+                <DocumentChecklist
+                  onUploadDocument={handleUploadDocument}
+                  documents={documents}
+                />
+              </TabsContent>
+              <TabsContent value="uploaded">
+                <UploadedDocuments
+                  documents={documents}
+                  onViewDocument={handleViewDocument}
+                  onShareDocument={handleShareDocument}
+                />
+              </TabsContent>
+              <TabsContent value="shared">
+                <SharedDocuments
+                  sharedDocuments={sharedDocuments}
+                  onViewDocument={handleViewDocument}
+                />
+              </TabsContent>
+            </Tabs>
+          </CardContent>
+        </Card>
+        
+        {/* Advanced Tax Planning Strategies section - now as a separate component */}
+        <AdvancedTaxStrategies />
+        
+        <CompletionProgress completedItems={completedDocuments} totalItems={totalDocuments} />
+      </div>
       
-      {/* Advanced Tax Planning Strategies section */}
-      <AdvancedTaxStrategies />
-      
-      <CompletionProgress completedItems={completedDocuments} totalItems={totalDocuments} />
+      <ResourcesCard />
       
       {/* Dialogs */}
       <UploadDocumentDialog 

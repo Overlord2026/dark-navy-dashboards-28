@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
-import OfferingsList from "@/components/investments/OfferingsList";
+import { OfferingsList } from "@/components/investments/OfferingsList";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft } from "lucide-react";
 

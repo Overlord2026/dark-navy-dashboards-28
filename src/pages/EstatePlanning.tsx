@@ -2,17 +2,31 @@
 import React, { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
-import { Calendar, FileText, CheckCircle2 } from "lucide-react";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { 
+  ArchiveIcon, 
+  CheckCircle2, 
+  Clock, 
+  FileText, 
+  List, 
+  Shield, 
+  Users2, 
+  ExternalLink,
+  Upload,
+  Lock,
+  FileCheck,
+  CheckCircle,
+  Circle,
+  Calendar
+} from "lucide-react";
 import { toast } from "sonner";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { WhyChooseUs } from "@/components/estate-planning/WhyChooseUs";
 import { FamilyLegacyBox } from "@/components/estate-planning/FamilyLegacyBox";
-import { ServicesSection } from "@/components/estate-planning/ServicesSection";
-import { InterestDialog } from "@/components/estate-planning/InterestDialog";
-import { ExpertiseSection } from "@/components/estate-planning/ExpertiseSection";
-import { ProcessSection } from "@/components/estate-planning/ProcessSection";
-import { ResourcesTabContent } from "@/components/estate-planning/ResourcesTabContent";
-import { AdvisorDialog } from "@/components/estate-planning/AdvisorDialog";
+import { SecureTaxReturnAnalysis } from "@/components/estate-planning/SecureTaxReturnAnalysis";
 
 export default function EstatePlanning() {
   const [showInterestDialog, setShowInterestDialog] = useState(false);
@@ -30,8 +44,12 @@ export default function EstatePlanning() {
   };
 
   const handleShowInterest = () => {
+    // Send email to advisor
     console.log("Sending email to advisor with form data:", formData);
+    
+    // Alert advisor in real-time
     console.log("Alerting advisor about interest:", formData);
+    
     toast.success("Thank you for your interest! An advisor will contact you soon.");
     setShowInterestDialog(false);
   };
@@ -41,13 +59,46 @@ export default function EstatePlanning() {
     toast.success("Opening scheduling page");
   };
 
+  const services = [
+    {
+      title: "Family Legacy Box",
+      icon: ArchiveIcon,
+      description: "Preserve your family history, values, and wishes in a comprehensive digital format for future generations."
+    },
+    {
+      title: "Will & Trust Creation",
+      icon: FileText,
+      description: "Professional drafting of legally binding wills and trusts tailored to your specific wishes and circumstances."
+    },
+    {
+      title: "Estate Tax Planning",
+      icon: Shield,
+      description: "Strategic planning to minimize tax burdens on your estate and maximize the wealth passed to your beneficiaries."
+    },
+    {
+      title: "Succession Planning",
+      icon: Users2,
+      description: "Structured approach to transitioning business ownership and management to ensure continuity."
+    },
+    {
+      title: "Estate Administration",
+      icon: List,
+      description: "Professional management of estate settlement processes, including probate navigation and asset distribution."
+    },
+    {
+      title: "Regular Review Services",
+      icon: Clock,
+      description: "Scheduled reviews of your estate plan to ensure it remains aligned with your goals as laws and circumstances change."
+    }
+  ];
+
   return (
     <ThreeColumnLayout activeMainItem="estate-planning" title="Estate Planning">
       <div className="space-y-8">
         <div className="rounded-lg border bg-card text-card-foreground shadow-sm overflow-hidden">
           <div className="bg-muted/50 p-6 sm:p-10 flex flex-col sm:flex-row gap-6 items-center">
             <div className="bg-primary/10 p-3 rounded-full">
-              <Calendar className="h-10 w-10 text-primary" />
+              <ArchiveIcon className="h-10 w-10 text-primary" />
             </div>
             <div className="space-y-2 flex-1 text-center sm:text-left">
               <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Estate Planning Services</h1>
@@ -57,10 +108,102 @@ export default function EstatePlanning() {
         </div>
 
         <div className="space-y-4">
-          <ExpertiseSection 
-            onScheduleClick={() => setShowAdvisorDialog(true)}
-            onInterestClick={() => setShowInterestDialog(true)}
-          />
+          <div className="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
+            <div>
+              <h2 className="text-2xl font-semibold">Our Estate Planning Expertise</h2>
+              <p className="text-muted-foreground mt-1">
+                Meet with our estate planning guru to create a comprehensive plan tailored to your needs.
+              </p>
+            </div>
+            <div className="flex gap-3 w-full sm:w-auto">
+              <Dialog open={showAdvisorDialog} onOpenChange={setShowAdvisorDialog}>
+                <DialogTrigger asChild>
+                  <Button className="w-full sm:w-auto">
+                    <Calendar className="mr-2 h-4 w-4" />
+                    Schedule Appointment
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[425px]">
+                  <DialogHeader>
+                    <DialogTitle>Schedule a Meeting</DialogTitle>
+                    <DialogDescription>
+                      Schedule a meeting with our estate planning expert to discuss your needs.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-4 py-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="name">Full Name</Label>
+                      <Input id="name" name="name" value={formData.name} onChange={handleInputChange} placeholder="John Doe" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="email">Email</Label>
+                      <Input id="email" name="email" type="email" value={formData.email} onChange={handleInputChange} placeholder="john@example.com" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="phone">Phone Number</Label>
+                      <Input id="phone" name="phone" value={formData.phone} onChange={handleInputChange} placeholder="(555) 123-4567" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="preferred-time">Preferred Time</Label>
+                      <div className="flex flex-wrap gap-2">
+                        {["Morning", "Afternoon", "Evening"].map((time) => (
+                          <Button key={time} variant="outline" onClick={() => toast.info(`${time} selected`)}>
+                            {time}
+                          </Button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                  <DialogFooter>
+                    <Button variant="outline" onClick={() => setShowAdvisorDialog(false)}>Cancel</Button>
+                    <Button onClick={handleScheduleAppointment}>Schedule</Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+
+              <Dialog open={showInterestDialog} onOpenChange={setShowInterestDialog}>
+                <DialogTrigger asChild>
+                  <Button variant="outline" className="w-full sm:w-auto">I'm Interested</Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[425px]">
+                  <DialogHeader>
+                    <DialogTitle>Express Interest</DialogTitle>
+                    <DialogDescription>
+                      Let us know what estate planning services you're interested in.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-4 py-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="interest-name">Full Name</Label>
+                      <Input id="interest-name" name="name" value={formData.name} onChange={handleInputChange} placeholder="John Doe" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="interest-email">Email</Label>
+                      <Input id="interest-email" name="email" type="email" value={formData.email} onChange={handleInputChange} placeholder="john@example.com" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="interest-services">Services of Interest</Label>
+                      <div className="flex flex-wrap gap-2">
+                        {services.slice(0, 3).map((service) => (
+                          <Button key={service.title} variant="outline" onClick={() => toast.info(`${service.title} selected`)}>
+                            {service.title}
+                          </Button>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="message">Message</Label>
+                      <Textarea id="message" name="message" value={formData.message} onChange={handleInputChange} placeholder="Tell us about your estate planning needs..." />
+                    </div>
+                  </div>
+                  <DialogFooter>
+                    <Button variant="outline" onClick={() => setShowInterestDialog(false)}>Cancel</Button>
+                    <Button onClick={handleShowInterest}>Submit</Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+            </div>
+          </div>
 
           <Tabs defaultValue="services" className="w-full">
             <TabsList className="w-full mb-6">
@@ -70,8 +213,30 @@ export default function EstatePlanning() {
               <TabsTrigger value="resources" className="flex-1">Resources</TabsTrigger>
             </TabsList>
 
-            <TabsContent value="services">
-              <ServicesSection onInterestClick={() => setShowInterestDialog(true)} />
+            <TabsContent value="services" className="space-y-6">
+              {/* Add the Secure Tax Return Analysis component at the top of the Services tab */}
+              <SecureTaxReturnAnalysis />
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {services.map((service) => (
+                  <Card key={service.title} className="h-full">
+                    <CardHeader className="pb-2">
+                      <div className="flex items-center gap-2">
+                        <service.icon className="h-5 w-5 text-primary" />
+                        <CardTitle className="text-xl">{service.title}</CardTitle>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-muted-foreground">{service.description}</p>
+                    </CardContent>
+                    <CardFooter>
+                      <Button variant="outline" className="w-full" onClick={() => setShowInterestDialog(true)}>
+                        Learn More
+                      </Button>
+                    </CardFooter>
+                  </Card>
+                ))}
+              </div>
             </TabsContent>
 
             <TabsContent value="family-legacy-box" className="space-y-6">
@@ -79,37 +244,155 @@ export default function EstatePlanning() {
             </TabsContent>
 
             <TabsContent value="process" className="space-y-6">
-              <ProcessSection onScheduleClick={handleScheduleAppointment} />
+              <div className="space-y-6">
+                <div className="border rounded-lg p-6">
+                  <h3 className="text-xl font-semibold">Our Estate Planning Process</h3>
+                  <div className="mt-4 space-y-6">
+                    {[
+                      {
+                        step: 1,
+                        title: "Initial Consultation",
+                        description: "Meet with our estate planning expert to discuss your goals, concerns, and family situation."
+                      },
+                      {
+                        step: 2,
+                        title: "Plan Design",
+                        description: "Our team creates a tailored estate plan addressing your specific needs and objectives."
+                      },
+                      {
+                        step: 3,
+                        title: "Document Preparation",
+                        description: "Legal documents are drafted, including wills, trusts, powers of attorney, and healthcare directives."
+                      },
+                      {
+                        step: 4,
+                        title: "Review & Execution",
+                        description: "Review all documents, make necessary adjustments, and formally execute the estate plan."
+                      },
+                      {
+                        step: 5,
+                        title: "Implementation & Funding",
+                        description: "Transfer assets to trusts and update beneficiary designations as needed."
+                      },
+                      {
+                        step: 6,
+                        title: "Ongoing Support",
+                        description: "Regular reviews to keep your plan current with life changes and law updates."
+                      }
+                    ].map((item) => (
+                      <div key={item.step} className="flex gap-4 items-start">
+                        <div className="bg-primary/10 rounded-full p-3 flex-shrink-0">
+                          <span className="font-bold text-primary">{item.step}</span>
+                        </div>
+                        <div>
+                          <h4 className="font-semibold text-lg">{item.title}</h4>
+                          <p className="text-muted-foreground">{item.description}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="mt-6">
+                    <Button onClick={handleScheduleAppointment}>
+                      <Calendar className="mr-2 h-4 w-4" />
+                      Schedule Appointment
+                    </Button>
+                  </div>
+                </div>
+              </div>
             </TabsContent>
 
             <TabsContent value="resources" className="space-y-6">
-              <ResourcesTabContent onInterestClick={() => setShowInterestDialog(true)} />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Estate Planning Guides</CardTitle>
+                    <CardDescription>Free resources to help you understand estate planning</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-2">
+                    {[
+                      "Estate Planning 101: The Basics",
+                      "Understanding Wills vs. Trusts",
+                      "How to Choose an Executor",
+                      "Estate Tax Planning Strategies",
+                      "Digital Asset Protection Guide"
+                    ].map((guide) => (
+                      <div key={guide} className="flex items-center gap-2">
+                        <FileText className="h-4 w-4 text-primary" />
+                        <span>{guide}</span>
+                      </div>
+                    ))}
+                  </CardContent>
+                  <CardFooter>
+                    <Button variant="outline" className="w-full" onClick={() => toast.info("Downloading resources...")}>
+                      Download Guides
+                    </Button>
+                  </CardFooter>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Family Legacy Box</CardTitle>
+                    <CardDescription>Preserve your family history and values</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-muted-foreground mb-4">
+                      Our Family Legacy Box is a comprehensive digital solution that helps you preserve important memories, 
+                      documents, and personal messages for future generations. It includes:
+                    </p>
+                    <ul className="space-y-2">
+                      {[
+                        "Digital storage of important documents",
+                        "Family history preservation",
+                        "Video and audio recording capabilities",
+                        "Ethical will creation tools",
+                        "Secure access for designated family members"
+                      ].map((feature) => (
+                        <li key={feature} className="flex items-center gap-2">
+                          <CheckCircle2 className="h-4 w-4 text-green-500" />
+                          <span>{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </CardContent>
+                  <CardFooter>
+                    <Button className="w-full" onClick={() => setShowInterestDialog(true)}>
+                      Learn More About Legacy Box
+                    </Button>
+                  </CardFooter>
+                </Card>
+              </div>
             </TabsContent>
           </Tabs>
         </div>
 
-        <WhyChooseUs />
-
-        <InterestDialog
-          open={showInterestDialog}
-          onOpenChange={setShowInterestDialog}
-          formData={formData}
-          onInputChange={handleInputChange}
-          onSubmit={handleShowInterest}
-          services={[
-            { title: "Family Legacy Box" },
-            { title: "Will & Trust Creation" },
-            { title: "Estate Tax Planning" }
-          ]}
-        />
-
-        <AdvisorDialog
-          open={showAdvisorDialog}
-          onOpenChange={setShowAdvisorDialog}
-          formData={formData}
-          onInputChange={handleInputChange}
-          onSchedule={handleScheduleAppointment}
-        />
+        <Card>
+          <CardHeader>
+            <CardTitle>Why Choose Our Estate Planning Services</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {[
+                {
+                  title: "Personalized Approach",
+                  description: "We take the time to understand your unique situation and create customized solutions."
+                },
+                {
+                  title: "Comprehensive Protection",
+                  description: "Our holistic approach ensures all aspects of your estate and legacy are protected."
+                },
+                {
+                  title: "Expert Guidance",
+                  description: "Work with experienced professionals who specialize in estate planning and wealth preservation."
+                }
+              ].map((item, i) => (
+                <div key={i} className="space-y-2">
+                  <h3 className="font-semibold text-lg">{item.title}</h3>
+                  <p className="text-muted-foreground">{item.description}</p>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </ThreeColumnLayout>
   );

@@ -1,95 +1,56 @@
-import React from 'react';
-import { Button } from "@/components/ui/button";
-import { CourseCategory } from "@/types/education";
-import { cn } from "@/lib/utils";
-import { Card } from '@/components/ui/card';
-import { courseCategories } from '@/data/education';
-import { useNavigate, useLocation } from 'react-router-dom';
 
-export interface CourseCategoryProps {
-  activeCategory: string;
-  onCategorySelect: (category: string) => void;
-  courses: any;
-  onCourseEnrollment: (courseId: string | number, title: string, isPaid: boolean, ghlUrl?: string) => void;
+import { motion } from "framer-motion";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+
+interface CourseCategoryProps {
+  categories: Array<{ id: string, name: string, active?: boolean }>;
+  onSelectCategory: (categoryId: string) => void;
 }
 
-export const CourseCategories: React.FC<CourseCategoryProps> = ({ 
-  activeCategory,
-  onCategorySelect,
-  courses,
-  onCourseEnrollment 
-}) => {
-  const categories = courseCategories;
-  const navigate = useNavigate();
-  const location = useLocation();
-  
-  const handleCategoryClick = (categoryId: string) => {
-    onCategorySelect(categoryId);
-    
-    if (location.pathname.includes('/education/')) {
-      navigate('/education', { state: { category: categoryId } });
-    } else {
-      navigate(`/education?category=${categoryId}`, { replace: true });
+export function CourseCategories({ categories, onSelectCategory }: CourseCategoryProps) {
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { 
+      opacity: 1,
+      transition: { 
+        staggerChildren: 0.1 
+      }
     }
   };
-  
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 }
+  };
+
   return (
-    <div className="space-y-6 w-full">
-      <div className="flex flex-wrap gap-2 mb-6">
-        {categories.map(category => (
-          <Button
-            key={category.id}
-            variant="outline"
-            size="sm"
-            onClick={() => handleCategoryClick(category.id)}
-            className={cn(
-              "rounded-full",
-              activeCategory === category.id 
-                ? "bg-primary text-primary-foreground hover:bg-primary/90 border-primary"
-                : ""
-            )}
-          >
-            {category.name}
-          </Button>
-        ))}
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {Array.isArray(courses) && courses.length > 0 ? (
-          courses.map((course) => (
-            <Card key={course.id} className="p-4 flex flex-col h-full">
-              <div className="flex flex-col h-full">
-                <div className="flex justify-between mb-2">
-                  <h3 className="font-semibold">{course.title}</h3>
-                  {course.isPaid && (
-                    <span className="text-xs bg-primary/20 text-primary px-2 py-1 rounded-full">
-                      Premium
-                    </span>
-                  )}
-                </div>
-                <p className="text-sm text-muted-foreground mb-3 flex-grow">{course.description}</p>
-                <div className="flex justify-between text-xs text-muted-foreground mb-3">
-                  <span>{course.level}</span>
-                  <span>{course.duration}</span>
-                </div>
+    <motion.div 
+      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+    >
+      {categories.map((category) => (
+        category.id !== "all-courses" && (
+          <motion.div key={category.id} variants={itemVariants}>
+            <Card className="h-full hover:border-primary hover:shadow-md transition-all duration-300">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-lg">{category.name}</CardTitle>
+              </CardHeader>
+              <CardContent className="flex items-end pb-6">
                 <Button 
-                  onClick={() => onCourseEnrollment(course.id, course.title, course.isPaid || false, course.ghlUrl)}
-                  variant={course.isPaid ? "default" : "outline"}
-                  className="w-full mt-auto"
+                  variant="outline" 
+                  className="w-full hover:bg-primary hover:text-primary-foreground transition-colors duration-300"
+                  onClick={() => onSelectCategory(category.id)}
                 >
-                  {course.isPaid ? "Enroll Now" : "Start Learning"}
+                  Explore Courses
                 </Button>
-              </div>
+              </CardContent>
             </Card>
-          ))
-        ) : (
-          <div className="col-span-full text-center py-8">
-            <p className="text-muted-foreground">No courses available in this category.</p>
-          </div>
-        )}
-      </div>
-    </div>
+          </motion.div>
+        )
+      ))}
+    </motion.div>
   );
-};
-
-export default CourseCategories;
+}

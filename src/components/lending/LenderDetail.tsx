@@ -1,105 +1,106 @@
 
 import React from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogClose } from "@/components/ui/dialog";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetClose } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { X, ExternalLink, Calendar, Phone, Mail } from "lucide-react";
-import { Lender } from "./types";
+import { Calendar, X } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { InterestedButton } from "@/components/investments/InterestedButton";
 
-interface LenderDetailProps {
-  lender: Lender;
-  isOpen: boolean;
-  onClose: () => void;
+interface Lender {
+  id: string;
+  name: string;
+  category: string;
+  offering: string;
+  description: string;
+  about: string;
+  howItWorks: string;
+  otherOfferings: string[];
+  topUnderwriters: string[];
 }
 
-const LenderDetail: React.FC<LenderDetailProps> = ({ lender, isOpen, onClose }) => {
+interface LenderDetailProps {
+  isOpen: boolean;
+  onClose: () => void;
+  lender: Lender;
+}
+
+export const LenderDetail: React.FC<LenderDetailProps> = ({ isOpen, onClose, lender }) => {
+  const { toast } = useToast();
+
+  const handleScheduleMeeting = () => {
+    toast({
+      title: "Meeting Requested",
+      description: `Your advisor has been notified about your interest in scheduling a meeting about ${lender.name} ${lender.offering}.`,
+      duration: 5000,
+    });
+  };
+
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-y-auto">
-        <DialogHeader>
-          <div className="flex items-center justify-between">
-            <DialogTitle className="text-xl">{lender.name}</DialogTitle>
-            <DialogClose asChild>
-              <Button variant="ghost" size="icon" className="h-8 w-8">
-                <X className="h-4 w-4" />
-                <span className="sr-only">Close</span>
-              </Button>
-            </DialogClose>
-          </div>
-        </DialogHeader>
+    <Sheet open={isOpen} onOpenChange={onClose}>
+      <SheetContent className="w-full sm:max-w-md overflow-y-auto">
+        <SheetHeader className="flex flex-row items-start justify-between mb-5">
+          <SheetTitle className="text-xl font-semibold">{lender.name}</SheetTitle>
+          <SheetClose asChild>
+            <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full">
+              <X className="h-4 w-4" />
+            </Button>
+          </SheetClose>
+        </SheetHeader>
         
-        <div className="space-y-6 py-4">
-          <div className="flex items-center gap-3">
-            {lender.logo ? (
-              <img 
-                src={lender.logo} 
-                alt={lender.name} 
-                className="h-10 w-auto" 
-              />
-            ) : (
-              <div className="h-10 w-10 bg-muted rounded-full"></div>
-            )}
-            <div>
-              <h2 className="font-medium">{lender.name}</h2>
-              <p className="text-sm text-muted-foreground">{lender.category}</p>
+        <div className="space-y-6">
+          <div>
+            <h3 className="font-medium text-base">{lender.offering}</h3>
+            <p className="text-sm text-muted-foreground">{lender.description}</p>
+          </div>
+          
+          <div>
+            <h3 className="font-medium text-base mb-2">About {lender.name}</h3>
+            <p className="text-sm text-muted-foreground">{lender.about}</p>
+          </div>
+          
+          <div>
+            <h3 className="font-medium text-base mb-2">How It Works</h3>
+            <p className="text-sm text-muted-foreground">{lender.howItWorks}</p>
+          </div>
+          
+          <div>
+            <h3 className="font-medium text-base mb-2">Get Started</h3>
+            <p className="text-sm text-muted-foreground mb-4">
+              To get started, schedule a meeting with your advisor or tell them you're interested in this offering.
+            </p>
+            <div className="flex gap-3">
+              <InterestedButton assetName={`${lender.name} ${lender.offering}`} />
+              <Button variant="outline" onClick={handleScheduleMeeting}>
+                <Calendar className="h-4 w-4 mr-2" /> Schedule a Meeting
+              </Button>
             </div>
           </div>
           
           <div>
-            <h3 className="text-lg font-medium mb-2">About</h3>
-            <p className="text-muted-foreground">{lender.description}</p>
-          </div>
-          
-          {lender.features && lender.features.length > 0 && (
-            <div>
-              <h3 className="text-lg font-medium mb-2">Key Features</h3>
-              <ul className="list-disc pl-5 space-y-1">
-                {lender.features.map((feature, index) => (
-                  <li key={index} className="text-muted-foreground">{feature}</li>
-                ))}
-              </ul>
-            </div>
-          )}
-          
-          {lender.eligibility && (
-            <div>
-              <h3 className="text-lg font-medium mb-2">Eligibility</h3>
-              <p className="text-muted-foreground">{lender.eligibility}</p>
-            </div>
-          )}
-          
-          <div className="flex flex-col sm:flex-row gap-3 pt-4">
-            <Button className="flex items-center gap-2">
-              <Calendar className="h-4 w-4" />
-              Schedule Consultation
-            </Button>
+            <h3 className="font-medium text-base mb-2">Details</h3>
             
-            <Button variant="outline" className="flex items-center gap-2">
-              <ExternalLink className="h-4 w-4" />
-              Visit Website
-            </Button>
-          </div>
-          
-          <div className="border-t border-border pt-4">
-            <h3 className="text-lg font-medium mb-3">Contact Information</h3>
-            <div className="space-y-2">
-              <div className="flex items-center gap-2">
-                <Phone className="h-4 w-4 text-muted-foreground" />
-                <span className="text-sm">
-                  {lender.contactPhone || "Contact through advisor"}
-                </span>
+            <div className="space-y-4">
+              <div className="border rounded-md p-4">
+                <h4 className="text-sm font-medium mb-2">Other Offerings</h4>
+                <ul className="text-sm text-muted-foreground space-y-1">
+                  {lender.otherOfferings.map((offering, index) => (
+                    <li key={index}>{offering}</li>
+                  ))}
+                </ul>
               </div>
-              <div className="flex items-center gap-2">
-                <Mail className="h-4 w-4 text-muted-foreground" />
-                <span className="text-sm">
-                  {lender.contactEmail || "Contact through advisor"}
-                </span>
+              
+              <div className="border rounded-md p-4">
+                <h4 className="text-sm font-medium mb-2">Top Underwriters</h4>
+                <ul className="text-sm text-muted-foreground space-y-1">
+                  {lender.topUnderwriters.map((underwriter, index) => (
+                    <li key={index}>{underwriter}</li>
+                  ))}
+                </ul>
               </div>
             </div>
           </div>
         </div>
-      </DialogContent>
-    </Dialog>
+      </SheetContent>
+    </Sheet>
   );
 };
-
-export default LenderDetail;

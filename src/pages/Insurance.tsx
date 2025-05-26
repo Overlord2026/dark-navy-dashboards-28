@@ -1,12 +1,11 @@
-
 import { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { ArrowLeft, ArrowRight, ChevronRight, X, ShieldCheck, Shield, ShieldAlert, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet";
-import { InterestedButton } from "@/components/common/InterestedButton";
-import { ScheduleMeetingDialog } from "@/components/common/ScheduleMeetingDialog";
+import { InterestedButton } from "@/components/investments/InterestedButton";
+import { ScheduleMeetingDialog } from "@/components/investments/ScheduleMeetingDialog";
 import { toast } from "sonner";
 
 // Insurance type definitions

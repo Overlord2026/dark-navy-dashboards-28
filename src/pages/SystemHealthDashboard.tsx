@@ -1,8 +1,9 @@
+
 import React, { useState, useEffect } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge-extended";
+import { Badge } from "@/components/ui/badge";
 import { Activity, AlertTriangle, Check, RefreshCw, Shield, Terminal, Wrench, Zap } from "lucide-react";
 import { useDiagnostics } from "@/hooks/useDiagnostics";
 import { QuickDiagnosticsDialog } from "@/components/diagnostics/QuickDiagnosticsDialog";

@@ -1,15 +1,7 @@
 
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { Asset, Account, Property } from '@/types/assets';
-import { 
-  getInitialAssets, 
-  getInitialAccounts,
-  calculateTotalNetWorth,
-  calculateTotalAssetsByType,
-  getAssetsByOwner,
-  getAssetsByCategory,
-  createPropertyAssets
-} from '@/hooks/useAssetManagement';
+import { useAssetManagement } from '@/hooks/useAssetManagement';
 
 interface NetWorthContextType {
   assets: Asset[];
@@ -34,61 +26,19 @@ export { type Asset }; // Export Asset type to be used by components
 export const NetWorthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   console.log('NetWorthProvider rendering');
   
-  // Move all React state hooks inside the component
-  // Cast the initial assets to the correct Asset type to satisfy TypeScript
-  const [assets, setAssets] = useState<Asset[]>(getInitialAssets() as Asset[]);
-  const [accounts] = useState<Account[]>(getInitialAccounts() as Account[]);
-  
-  // Add an asset to the list
-  const addAsset = (asset: Asset) => {
-    setAssets(prevAssets => [...prevAssets, asset]);
-  };
-
-  // Update an existing asset
-  const updateAsset = (id: string, updates: Partial<Asset>) => {
-    setAssets(prevAssets => 
-      prevAssets.map(asset => 
-        asset.id === id ? { ...asset, ...updates } : asset
-      )
-    );
-  };
-
-  // Remove an asset
-  const removeAsset = (id: string) => {
-    setAssets(prevAssets => prevAssets.filter(asset => asset.id !== id));
-  };
-
-  // Get total net worth across all assets
-  const getTotalNetWorth = () => {
-    return calculateTotalNetWorth(assets);
-  };
-
-  // Get total value of assets by type
-  const getTotalAssetsByType = (type: Asset['type']) => {
-    return calculateTotalAssetsByType(assets, type);
-  };
-
-  // Get assets by owner - pass current assets to the utility function
-  const getAssetsByOwnerFn = (owner: string) => {
-    return getAssetsByOwner(assets, owner);
-  };
-  
-  // Get assets by category - pass current assets to the utility function
-  const getAssetsByCategoryFn = (category: string) => {
-    return getAssetsByCategory(assets, category);
-  };
-
-  // Sync properties to assets list
-  const syncPropertiesToAssets = (properties: Property[]) => {
-    // First, remove all existing property assets
-    const nonPropertyAssets = assets.filter(asset => asset.type !== 'property');
-    
-    // Create asset entries for each property
-    const propertyAssets: Asset[] = createPropertyAssets(properties);
-    
-    // Update the assets list with non-property assets and new property assets
-    setAssets([...nonPropertyAssets, ...propertyAssets]);
-  };
+  // Use our custom hook for asset management logic
+  const { 
+    assets, 
+    accounts,
+    addAsset, 
+    updateAsset, 
+    removeAsset, 
+    getTotalNetWorth,
+    getTotalAssetsByType,
+    getAssetsByOwner,
+    getAssetsByCategory,
+    syncPropertiesToAssets
+  } = useAssetManagement();
   
   // Calculate totals
   const totalAssetValue = assets.reduce((total, asset) => total + asset.value, 0);
@@ -105,8 +55,8 @@ export const NetWorthProvider: React.FC<{ children: ReactNode }> = ({ children }
     getTotalNetWorth, 
     getTotalAssetsByType,
     syncPropertiesToAssets,
-    getAssetsByOwner: getAssetsByOwnerFn,
-    getAssetsByCategory: getAssetsByCategoryFn
+    getAssetsByOwner,
+    getAssetsByCategory
   };
 
   console.log('NetWorthProvider context created with assets:', assets.length);

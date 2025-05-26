@@ -1,4 +1,3 @@
-
 import React from "react";
 import { 
   LineChartIcon, 
@@ -11,17 +10,11 @@ import {
   Calculator,
   Diamond,
   BookIcon,
-  WalletIcon,
-  HeartPulseIcon
+  WalletIcon
 } from "lucide-react";
 import { NavItem } from "@/types/navigation";
 
 export const familyWealthNavItems: NavItem[] = [
-  { 
-    title: "Secure Family Vault", 
-    href: "/legacy-vault", 
-    icon: VaultIcon 
-  },
   { 
     title: "Financial Plans", 
     href: "/financial-plans", 
@@ -63,9 +56,9 @@ export const familyWealthNavItems: NavItem[] = [
     icon: Calculator 
   },
   { 
-    title: "Healthcare", 
-    href: "/healthcare", 
-    icon: HeartPulseIcon 
+    title: "Secure Family Vault", 
+    href: "/legacy-vault", 
+    icon: VaultIcon 
   },
   { 
     title: "Social Security", 
@@ -84,19 +77,16 @@ const FamilyWealthTab = () => {
     <div className="family-wealth-tab">
       <h2 className="text-xl font-semibold mb-4">Family Wealth Management</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {familyWealthNavItems.map((item) => {
-          const IconComponent = item.icon;
-          return (
-            <a 
-              key={item.href} 
-              href={item.href}
-              className="p-4 border rounded-lg hover:bg-muted/50 transition-colors flex items-center gap-3"
-            >
-              {item.icon && <IconComponent className="h-5 w-5 text-primary" />}
-              <span>{item.title}</span>
-            </a>
-          );
-        })}
+        {familyWealthNavItems.map((item) => (
+          <a 
+            key={item.href} 
+            href={item.href}
+            className="p-4 border rounded-lg hover:bg-muted/50 transition-colors flex items-center gap-3"
+          >
+            {item.icon && <item.icon className="h-5 w-5 text-primary" />}
+            <span>{item.title}</span>
+          </a>
+        ))}
       </div>
     </div>
   );

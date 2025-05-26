@@ -2,7 +2,7 @@
 import React from "react";
 import { cn } from "@/lib/utils";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { ChevronDown, ChevronRight, LucideIcon } from "lucide-react";
+import { ChevronDown, ChevronRight } from "lucide-react";
 import { NavItem } from "@/types/navigation";
 
 interface SidebarNavCategoryProps {
@@ -38,11 +38,12 @@ const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
   const renderNavItem = (item: NavItem) => {
     const normalizedHref = normalizePath(item.href);
     const isItemActive = isActive(normalizedHref);
-    const IconComponent = item.icon as LucideIcon;
     
     return (
       <a
         href={normalizedHref}
+        target={item.external ? "_blank" : undefined}
+        rel={item.external ? "noreferrer" : undefined}
         className={cn(
           "group flex w-full items-center rounded-md px-3 py-2 text-sm outline-none transition-colors",
           isLightTheme
@@ -52,7 +53,7 @@ const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
             (isLightTheme
               ? "bg-[#D8D8D8] text-foreground font-medium"
               : "bg-secondary text-secondary-foreground font-medium"),
-          item.label && "cursor-not-allowed opacity-50"
+          item.disabled && "cursor-not-allowed opacity-50"
         )}
         onClick={(e) => {
           if (item.items && item.items.length > 0) {
@@ -62,7 +63,7 @@ const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
         }}
       >
         {item.icon && (
-          <IconComponent className="mr-2 h-4 w-4" />
+          <item.icon className="mr-2 h-4 w-4" />
         )}
         <span className="whitespace-nowrap overflow-hidden text-ellipsis">{item.title}</span>
         {item.label && (

@@ -1,138 +1,156 @@
 
 import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
+import { 
+  Dialog, 
+  DialogContent, 
+  DialogHeader, 
+  DialogTitle, 
+  DialogDescription,
+  DialogFooter
 } from "@/components/ui/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
+import { 
+  Select, 
+  SelectContent, 
+  SelectItem, 
+  SelectTrigger, 
+  SelectValue 
+} from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
+import { Check, Search, X, Filter } from "lucide-react";
+import { toast } from "sonner";
 
 interface PortfolioFilterDialogProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onApplyFilters: (filters: any) => void;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
 }
 
-const PortfolioFilterDialog: React.FC<PortfolioFilterDialogProps> = ({
-  isOpen,
-  onClose,
-  onApplyFilters,
+export const PortfolioFilterDialog: React.FC<PortfolioFilterDialogProps> = ({
+  open,
+  onOpenChange
 }) => {
-  const [filters, setFilters] = useState({
-    investmentType: "all",
-    minimumAmount: "all",
-    tags: [] as string[],
-  });
-
-  const handleFilterChange = (key: string, value: any) => {
-    setFilters((prev) => ({ ...prev, [key]: value }));
+  const [selectedPortfolioTypes, setSelectedPortfolioTypes] = useState<string[]>([]);
+  const [selectedRiskLevels, setSelectedRiskLevels] = useState<string[]>([]);
+  const [selectedAssetClasses, setSelectedAssetClasses] = useState<string[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  
+  const portfolioTypes = ["Model", "Sleeve", "Model of Models"];
+  const riskLevels = ["Low", "Medium", "High"];
+  const assetClasses = ["Equity", "Fixed Income", "Alternative", "Cash", "Multi-Asset"];
+  
+  const toggleSelection = (item: string, currentSelections: string[], setSelections: React.Dispatch<React.SetStateAction<string[]>>) => {
+    if (currentSelections.includes(item)) {
+      setSelections(currentSelections.filter(i => i !== item));
+    } else {
+      setSelections([...currentSelections, item]);
+    }
   };
-
-  const handleTagToggle = (tag: string) => {
-    setFilters((prev) => {
-      const currentTags = prev.tags;
-      return {
-        ...prev,
-        tags: currentTags.includes(tag)
-          ? currentTags.filter((t) => t !== tag)
-          : [...currentTags, tag],
-      };
-    });
+  
+  const handleApplyFilters = () => {
+    toast.success("Filters applied successfully");
+    toast.info(`Searching for "${searchTerm || 'all'}" with ${selectedPortfolioTypes.length} types, ${selectedRiskLevels.length} risk levels, and ${selectedAssetClasses.length} asset classes`);
+    onOpenChange(false);
   };
-
-  const handleApply = () => {
-    onApplyFilters(filters);
-    onClose();
+  
+  const handleClearFilters = () => {
+    setSelectedPortfolioTypes([]);
+    setSelectedRiskLevels([]);
+    setSelectedAssetClasses([]);
+    setSearchTerm("");
   };
-
+  
   return (
-    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-[425px] bg-[#0f1628] text-white border-gray-800">
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle className="text-xl font-semibold text-white">Filter Investments</DialogTitle>
+          <DialogTitle className="flex items-center gap-2">
+            <Filter className="h-5 w-5" />
+            Find Portfolios
+          </DialogTitle>
+          <DialogDescription>
+            Filter and search through available portfolio models based on your criteria.
+          </DialogDescription>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="investmentType" className="text-white">
-              Type
-            </Label>
-            <Select
-              value={filters.investmentType}
-              onValueChange={(value) => handleFilterChange("investmentType", value)}
-            >
-              <SelectTrigger className="col-span-3 bg-[#1a283e] border-gray-700">
-                <SelectValue placeholder="Select type" />
-              </SelectTrigger>
-              <SelectContent className="bg-[#1a283e] border-gray-700 text-white">
-                <SelectItem value="all">All Types</SelectItem>
-                <SelectItem value="private-equity">Private Equity</SelectItem>
-                <SelectItem value="private-debt">Private Debt</SelectItem>
-                <SelectItem value="digital-assets">Digital Assets</SelectItem>
-                <SelectItem value="real-assets">Real Assets</SelectItem>
-              </SelectContent>
-            </Select>
+        
+        <div className="py-4 space-y-6">
+          <div className="relative">
+            <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search by name, benchmark, or tags..."
+              className="pl-10"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
           </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="minimumAmount" className="text-white">
-              Minimum
-            </Label>
-            <Select
-              value={filters.minimumAmount}
-              onValueChange={(value) => handleFilterChange("minimumAmount", value)}
-            >
-              <SelectTrigger className="col-span-3 bg-[#1a283e] border-gray-700">
-                <SelectValue placeholder="Select minimum" />
-              </SelectTrigger>
-              <SelectContent className="bg-[#1a283e] border-gray-700 text-white">
-                <SelectItem value="all">All Amounts</SelectItem>
-                <SelectItem value="under100k">Under $100,000</SelectItem>
-                <SelectItem value="under250k">Under $250,000</SelectItem>
-                <SelectItem value="under500k">Under $500,000</SelectItem>
-                <SelectItem value="under1m">Under $1,000,000</SelectItem>
-                <SelectItem value="over1m">Over $1,000,000</SelectItem>
-              </SelectContent>
-            </Select>
+          
+          <div>
+            <Label className="mb-2 block">Portfolio Type</Label>
+            <div className="flex flex-wrap gap-2">
+              {portfolioTypes.map((type) => (
+                <Badge
+                  key={type}
+                  variant={selectedPortfolioTypes.includes(type) ? "default" : "outline"}
+                  className="cursor-pointer"
+                  onClick={() => toggleSelection(type, selectedPortfolioTypes, setSelectedPortfolioTypes)}
+                >
+                  {selectedPortfolioTypes.includes(type) && (
+                    <Check className="mr-1 h-3 w-3" />
+                  )}
+                  {type}
+                </Badge>
+              ))}
+            </div>
           </div>
-          <div className="grid gap-2">
-            <Label className="text-white">Tags</Label>
-            <div className="grid grid-cols-2 gap-2">
-              {["Growth Equity", "Buyout", "Venture Capital", "Mezzanine", "Secondaries"].map(
-                (tag) => (
-                  <div key={tag} className="flex items-center space-x-2">
-                    <Checkbox
-                      id={tag}
-                      checked={filters.tags.includes(tag)}
-                      onCheckedChange={() => handleTagToggle(tag)}
-                      className="border-gray-600"
-                    />
-                    <label
-                      htmlFor={tag}
-                      className="text-sm font-medium leading-none text-gray-300 peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    >
-                      {tag}
-                    </label>
-                  </div>
-                )
-              )}
+          
+          <div>
+            <Label className="mb-2 block">Risk Level</Label>
+            <div className="flex flex-wrap gap-2">
+              {riskLevels.map((level) => (
+                <Badge
+                  key={level}
+                  variant={selectedRiskLevels.includes(level) ? "default" : "outline"}
+                  className="cursor-pointer"
+                  onClick={() => toggleSelection(level, selectedRiskLevels, setSelectedRiskLevels)}
+                >
+                  {selectedRiskLevels.includes(level) && (
+                    <Check className="mr-1 h-3 w-3" />
+                  )}
+                  {level}
+                </Badge>
+              ))}
+            </div>
+          </div>
+          
+          <div>
+            <Label className="mb-2 block">Asset Class</Label>
+            <div className="flex flex-wrap gap-2">
+              {assetClasses.map((assetClass) => (
+                <Badge
+                  key={assetClass}
+                  variant={selectedAssetClasses.includes(assetClass) ? "default" : "outline"}
+                  className="cursor-pointer"
+                  onClick={() => toggleSelection(assetClass, selectedAssetClasses, setSelectedAssetClasses)}
+                >
+                  {selectedAssetClasses.includes(assetClass) && (
+                    <Check className="mr-1 h-3 w-3" />
+                  )}
+                  {assetClass}
+                </Badge>
+              ))}
             </div>
           </div>
         </div>
-        <DialogFooter>
-          <Button variant="outline" onClick={onClose} className="border-gray-700 text-white hover:bg-gray-800">
+        
+        <DialogFooter className="gap-2">
+          <Button variant="outline" onClick={handleClearFilters}>
+            Clear Filters
+          </Button>
+          <Button variant="outline" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
-          <Button onClick={handleApply} className="bg-primary text-white hover:bg-primary/90">
+          <Button onClick={handleApplyFilters}>
             Apply Filters
           </Button>
         </DialogFooter>
@@ -140,5 +158,3 @@ const PortfolioFilterDialog: React.FC<PortfolioFilterDialogProps> = ({
     </Dialog>
   );
 };
-
-export default PortfolioFilterDialog;

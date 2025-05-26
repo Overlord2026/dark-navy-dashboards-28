@@ -1,19 +1,18 @@
 
 import React from "react";
-import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
+import { Sidebar } from "@/components/ui/Sidebar";
+import { Header } from "@/components/ui/Header";
 import { PropertyManager } from "@/components/properties/PropertyManager";
-import { DashboardHeader } from "@/components/ui/DashboardHeader";
+import { useSearchParams } from "react-router-dom";
+import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 
 const Properties = () => {
+  const [searchParams] = useSearchParams();
+  const filter = searchParams.get("filter");
+
   return (
-    <ThreeColumnLayout title="Properties">
-      <div className="container mx-auto px-4 py-6">
-        <DashboardHeader 
-          heading="Properties" 
-          text="Manage your real estate assets and track their performance."
-        />
-        <PropertyManager />
-      </div>
+    <ThreeColumnLayout title="Real Estate" activeMainItem="family-wealth">
+      <PropertyManager initialFilter={filter} />
     </ThreeColumnLayout>
   );
 };

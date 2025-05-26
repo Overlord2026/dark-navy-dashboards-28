@@ -1,3 +1,4 @@
+
 import React, { useEffect } from "react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetClose } from "@/components/ui/sheet";
 import { X, ChevronDown } from "lucide-react";
@@ -9,9 +10,9 @@ import { BeneficiariesForm } from "@/components/profile/BeneficiariesForm";
 import { AffiliationsForm } from "@/components/profile/AffiliationsForm";
 import { TrustsForm } from "@/components/profile/TrustsForm";
 import { SecurityForm } from "@/components/profile/SecurityForm";
+import { DialogTitle } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { useUser } from "@/context/UserContext";
-import { supabase } from "@/integrations/supabase/client";
 
 interface ProfileFormSheetProps {
   isOpen: boolean;
@@ -26,45 +27,18 @@ export const ProfileFormSheet = ({
   activeForm, 
   onFormSave 
 }: ProfileFormSheetProps) => {
-  const { userProfile, loadUserData } = useUser();
+  const { userProfile } = useUser();
   
-  // Ensure we have fresh data when opening a form
+  // Force re-render when profile data changes
   useEffect(() => {
-    if (isOpen && activeForm && userProfile?.id) {
-      loadUserData();
-      console.log("ProfileFormSheet: Loading fresh user data");
+    if (isOpen) {
+      console.log("ProfileFormSheet: UserProfile changed", userProfile);
     }
-  }, [isOpen, activeForm, userProfile?.id, loadUserData]);
+  }, [userProfile, isOpen]);
   
   // Handle saving the form data
   const handleSave = (formId: string) => {
     console.log(`Form ${formId} saved from ProfileFormSheet`);
-    
-    // Update audit log
-    if (userProfile?.id) {
-      const logAuditEvent = async () => {
-        try {
-          // Use the new audit_logs table in Supabase
-          await supabase
-            .from('audit_logs')
-            .insert({
-              user_id: userProfile.id,
-              event_type: 'profile_update',
-              status: 'success',
-              details: {
-                form: formId,
-                updated_at: new Date().toISOString()
-              }
-            });
-        } catch (error) {
-          console.error("Error logging profile update:", error);
-        }
-      };
-      
-      logAuditEvent();
-    }
-    
-    // Notify parent component
     if (onFormSave) {
       onFormSave(formId);
     }
@@ -75,7 +49,7 @@ export const ProfileFormSheet = ({
     }, 300);
   };
 
-  function renderFormContent() {
+  const renderFormContent = () => {
     if (!activeForm) return null;
     
     switch (activeForm) {
@@ -102,9 +76,9 @@ export const ProfileFormSheet = ({
       default:
         return null;
     }
-  }
+  };
 
-  function getFormTitle() {
+  const getFormTitle = () => {
     switch (activeForm) {
       case "investor-profile":
         return "Investor Profile";
@@ -129,7 +103,7 @@ export const ProfileFormSheet = ({
       default:
         return "";
     }
-  }
+  };
 
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>

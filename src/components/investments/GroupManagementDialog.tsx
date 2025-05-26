@@ -1,113 +1,76 @@
 
-import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
+import React from "react";
+import { 
+  Dialog, 
+  DialogContent, 
+  DialogHeader, 
+  DialogTitle, 
+  DialogDescription,
+  DialogFooter
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Plus, Trash2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Share } from "lucide-react";
+import { GroupForm } from "./groups/GroupForm";
+import { GroupList } from "./groups/GroupList";
+import { useGroupManagement } from "./groups/useGroupManagement";
+import { GroupManagementDialogProps } from "./groups/types";
 
-interface GroupManagementDialogProps {
-  isOpen: boolean;
-  onClose: () => void;
-  groups: string[];
-  onSaveGroups: (groups: string[]) => void;
-}
-
-const GroupManagementDialog: React.FC<GroupManagementDialogProps> = ({
-  isOpen,
-  onClose,
-  groups = [],
-  onSaveGroups,
+export const GroupManagementDialog: React.FC<GroupManagementDialogProps> = ({
+  open,
+  onOpenChange
 }) => {
-  const [currentGroups, setCurrentGroups] = useState<string[]>(groups);
-  const [newGroupName, setNewGroupName] = useState("");
-
-  const handleAddGroup = () => {
-    if (newGroupName.trim() !== "" && !currentGroups.includes(newGroupName)) {
-      setCurrentGroups([...currentGroups, newGroupName]);
-      setNewGroupName("");
-    }
-  };
-
-  const handleRemoveGroup = (index: number) => {
-    const updatedGroups = [...currentGroups];
-    updatedGroups.splice(index, 1);
-    setCurrentGroups(updatedGroups);
-  };
-
-  const handleSave = () => {
-    onSaveGroups(currentGroups);
-    onClose();
-  };
-
+  const {
+    groups,
+    newGroupName,
+    setNewGroupName,
+    editingGroup,
+    editName,
+    setEditName,
+    handleAddGroup,
+    handleEditGroup,
+    handleCancelEdit,
+    handleSaveEdit,
+    handleDeleteGroup
+  } = useGroupManagement();
+  
   return (
-    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-[425px] bg-[#0f1628] text-white border-gray-800">
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle className="text-xl font-semibold text-white">Manage Groups</DialogTitle>
+          <DialogTitle className="flex items-center gap-2">
+            <Share className="h-5 w-5" />
+            Manage Groups
+          </DialogTitle>
+          <DialogDescription>
+            Create and manage groups to organize clients and portfolio models.
+          </DialogDescription>
         </DialogHeader>
-        <div className="py-4 space-y-4">
-          <div className="flex items-end gap-2">
-            <div className="flex-1">
-              <Label htmlFor="newGroup" className="text-white mb-2 block">
-                Add New Group
-              </Label>
-              <Input
-                id="newGroup"
-                value={newGroupName}
-                onChange={(e) => setNewGroupName(e.target.value)}
-                placeholder="Enter group name"
-                className="bg-[#1a283e] border-gray-700 text-white"
-              />
-            </div>
-            <Button
-              onClick={handleAddGroup}
-              variant="outline"
-              className="border-gray-700 text-white hover:bg-gray-800"
-            >
-              <Plus className="h-4 w-4" />
-            </Button>
-          </div>
-          <div className="space-y-2">
-            <Label className="text-white">Current Groups</Label>
-            {currentGroups.length === 0 ? (
-              <p className="text-gray-400 text-sm">No groups created yet</p>
-            ) : (
-              <div className="space-y-2">
-                {currentGroups.map((group, index) => (
-                  <div key={index} className="flex items-center justify-between bg-[#1a283e] p-2 rounded">
-                    <span className="text-gray-300">{group}</span>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => handleRemoveGroup(index)}
-                      className="text-gray-400 hover:text-white hover:bg-transparent"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
+        
+        <div className="py-4 space-y-6">
+          <GroupForm 
+            newGroupName={newGroupName}
+            setNewGroupName={setNewGroupName}
+            onAddGroup={handleAddGroup}
+          />
+          
+          <GroupList 
+            groups={groups}
+            editingGroup={editingGroup}
+            editName={editName}
+            setEditName={setEditName}
+            onEdit={handleEditGroup}
+            onSaveEdit={handleSaveEdit}
+            onCancelEdit={handleCancelEdit}
+            onDelete={handleDeleteGroup}
+          />
         </div>
+        
         <DialogFooter>
-          <Button variant="outline" onClick={onClose} className="border-gray-700 text-white hover:bg-gray-800">
-            Cancel
-          </Button>
-          <Button onClick={handleSave} className="bg-primary text-white hover:bg-primary/90">
-            Save Groups
+          <Button onClick={() => onOpenChange(false)}>
+            Done
           </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
   );
 };
-
-export default GroupManagementDialog;

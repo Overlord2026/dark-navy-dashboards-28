@@ -3,46 +3,37 @@ import { Course } from "@/types/education";
 
 export const featuredCourses: Course[] = [
   {
-    id: "1",
+    id: 1,
     title: "Financial Fundamentals",
     description: "Learn the basics of personal finance management and budgeting.",
     level: "Beginner",
     duration: "2 hours",
     image: "/placeholder.svg",
     isPaid: false,
-    ghlUrl: "https://ghl.example.com/courses/financial-fundamentals",
-    categoryId: "financial-basics",
-    instructor: "John Smith",
-    price: "Free"
+    ghlUrl: "https://ghl.example.com/courses/financial-fundamentals"
   },
   {
-    id: "2",
+    id: 2,
     title: "Investment Strategies 101",
     description: "Introduction to different investment options and basic strategies.",
     level: "Beginner",
     duration: "3 hours",
     image: "/placeholder.svg",
     isPaid: false,
-    ghlUrl: "https://ghl.example.com/courses/investment-strategies-101",
-    categoryId: "investing",
-    instructor: "Sarah Johnson",
-    price: "Free"
+    ghlUrl: "https://ghl.example.com/courses/investment-strategies-101"
   },
   {
-    id: "3",
+    id: 3,
     title: "Wealth Building for Beginners",
     description: "Start your journey toward building sustainable wealth.",
     level: "Beginner",
     duration: "2.5 hours",
     image: "/placeholder.svg",
     isPaid: false,
-    ghlUrl: "https://ghl.example.com/courses/wealth-building-beginners",
-    categoryId: "financial-basics",
-    instructor: "Michael Wong",
-    price: "Free"
+    ghlUrl: "https://ghl.example.com/courses/wealth-building-beginners"
   },
   {
-    id: "4",
+    id: 4,
     title: "Advanced Trading",
     description: "Learn advanced trading techniques and market analysis.",
     level: "Advanced",
@@ -50,13 +41,10 @@ export const featuredCourses: Course[] = [
     image: "/placeholder.svg",
     isPaid: true,
     comingSoon: true,
-    ghlUrl: "https://ghl.example.com/courses/advanced-trading",
-    categoryId: "investing",
-    instructor: "David Chen",
-    price: 149
+    ghlUrl: "https://ghl.example.com/courses/advanced-trading"
   },
   {
-    id: "5",
+    id: 5,
     title: "Estate Planning",
     description: "Comprehensive guide to estate planning and wealth preservation.",
     level: "Intermediate",
@@ -64,9 +52,6 @@ export const featuredCourses: Course[] = [
     image: "/placeholder.svg",
     isPaid: true,
     comingSoon: true,
-    ghlUrl: "https://ghl.example.com/courses/estate-planning",
-    categoryId: "estate-planning",
-    instructor: "Elizabeth Taylor",
-    price: 99
+    ghlUrl: "https://ghl.example.com/courses/estate-planning"
   }
 ];

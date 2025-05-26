@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { StatusIcon, getStatusColor } from "./StatusIcon";
@@ -5,7 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { ExternalLink, ArrowRight, AlertTriangle, Shield, Zap, PieChart } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
-import { Badge } from "@/components/ui/badge-extended";
+import { Badge } from "@/components/ui/badge";
 import { useDiagnostics } from "@/hooks/useDiagnostics";
 
 export interface CoreServicesSummaryProps {
@@ -152,7 +153,6 @@ export const CoreServicesSummary = ({ report, isLoading }: CoreServicesSummaryPr
                     {report.overall.toUpperCase()}
                   </Badge>
                 </div>
-                
                 <Progress 
                   value={healthPercentage} 
                   className="h-2.5" 

@@ -25,9 +25,7 @@ export function AdminActions() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="space-y-4">
-          {/* Integration Status removed */}
-          
+        <div className="space-y-2">
           <Button variant="outline" className="w-full justify-between" asChild>
             <Link to="/system-health">
               <div className="flex items-center">

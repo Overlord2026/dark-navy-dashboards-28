@@ -6,27 +6,17 @@ import { motion } from "framer-motion";
 import { EducationalTabs } from "@/components/education/EducationalTabs";
 import { courseCategories } from "@/data/education";
 import { handleCourseAccess } from "@/components/education/courseUtils";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
-import { useAdmin } from "@/context/AdminContext";
 
 export default function TaxPlanningEducation() {
   const [activeCategory] = useState("tax-planning");
   const [activeSection, setActiveSection] = useState("courses");
-  const navigate = useNavigate();
-  const { isAdmin } = useAdmin();
   
   const handleCourseEnrollment = (courseId: string | number, title: string, isPaid: boolean, ghlUrl?: string) => {
     if (ghlUrl) {
       // Use the handleCourseAccess utility for proper course access flow
       handleCourseAccess(courseId, title, isPaid, ghlUrl);
-    }
-  };
-  
-  const setActiveCategory = (category: string) => {
-    // If user changes category from tax-planning, redirect to main education page
-    if (category !== "tax-planning") {
-      navigate('/education', { state: { category } });
     }
   };
 
@@ -51,6 +41,7 @@ export default function TaxPlanningEducation() {
     <ThreeColumnLayout 
       title="Tax Planning Education" 
       activeMainItem="education"
+      activeSecondaryItem={activeCategory}
       secondaryMenuItems={courseCategories}
     >
       <motion.div 
@@ -79,9 +70,8 @@ export default function TaxPlanningEducation() {
               activeSection={activeSection}
               activeCategory={activeCategory}
               setActiveSection={setActiveSection}
-              setActiveCategory={setActiveCategory}
+              setActiveCategory={() => {}}
               handleCourseEnrollment={handleCourseEnrollment}
-              isAdmin={isAdmin}
             />
           </div>
         </motion.div>

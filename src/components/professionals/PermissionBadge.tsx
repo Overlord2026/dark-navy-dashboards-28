@@ -17,10 +17,6 @@ export function PermissionBadge({ permission }: PermissionBadgeProps) {
       return <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">Full Access</Badge>;
     case "none":
       return <Badge variant="outline" className="bg-gray-50 text-gray-700 border-gray-200">No Access</Badge>;
-    case "admin":
-      return <Badge variant="outline" className="bg-purple-50 text-purple-700 border-purple-200">Admin</Badge>;
-    case "restricted":
-      return <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200">Restricted</Badge>;
     default:
       return <Badge variant="outline">Unknown</Badge>;
   }
@@ -28,5 +24,5 @@ export function PermissionBadge({ permission }: PermissionBadgeProps) {
 
 // Helper function to validate permission values
 function isValidAccessLevel(permission: string): boolean {
-  return ["none", "view", "edit", "full", "admin", "restricted"].includes(permission);
+  return ["none", "view", "edit", "full"].includes(permission);
 }

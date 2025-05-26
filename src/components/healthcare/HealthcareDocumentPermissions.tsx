@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -122,7 +123,7 @@ export function HealthcareDocumentPermissions({
         return <Badge variant="outline" className="bg-blue-100 text-blue-800">View Only</Badge>;
       case "edit":
         return <Badge variant="outline" className="bg-amber-100 text-amber-800">Can Edit</Badge>;
-      case "admin":
+      case "full":
         return <Badge variant="outline" className="bg-green-100 text-green-800">Full Access</Badge>;
       default:
         return <Badge variant="outline">Unknown</Badge>;
@@ -183,7 +184,7 @@ export function HealthcareDocumentPermissions({
                       <TableCell>{getAccessLevelBadge(permission.accessLevel)}</TableCell>
                       <TableCell className="text-right">
                         {/* Don't allow removing owner's access */}
-                        {permission.accessLevel !== "admin" && (
+                        {permission.accessLevel !== "full" && (
                           <Button 
                             variant="ghost" 
                             size="icon" 

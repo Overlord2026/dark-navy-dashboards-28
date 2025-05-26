@@ -1,19 +1,20 @@
+
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { FileSpreadsheet, BarChart, CircleDollarSign, Wallet, RefreshCw, ArrowRight, CheckCircle, ExternalLink } from "lucide-react";
-import { toast } from "sonner";
+import { FileSpreadsheet, BarChart, CircleDollarSign, Wallet, RefreshCw, ArrowRight, CheckCircle } from "lucide-react";
+import { toast } from "@/components/ui/use-toast";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
 
 type AccountingSoftware = {
   id: string;
@@ -21,8 +22,7 @@ type AccountingSoftware = {
   icon: React.ReactNode;
   description: string;
   popular?: boolean;
-  connected: boolean;
-  lastSync?: string;
+  connected?: boolean;
 };
 
 export function AccountingSoftwareIntegration() {
@@ -30,8 +30,8 @@ export function AccountingSoftwareIntegration() {
   const [selectedSoftware, setSelectedSoftware] = useState<AccountingSoftware | null>(null);
   const [oauthUrl, setOauthUrl] = useState("");
   const [manualApiKey, setManualApiKey] = useState("");
-  const [isSyncing, setIsSyncing] = useState<string | null>(null);
-  const [accountingSoftwareOptions, setAccountingSoftwareOptions] = useState<AccountingSoftware[]>([
+
+  const accountingSoftwareOptions: AccountingSoftware[] = [
     {
       id: "quickbooks",
       name: "QuickBooks",
@@ -62,13 +62,14 @@ export function AccountingSoftwareIntegration() {
       description: "Connect to FreshBooks to import business expense data",
       connected: false
     }
-  ]);
+  ];
 
   const handleConnectSoftware = (software: AccountingSoftware) => {
     setSelectedSoftware(software);
     setIsConnectDialogOpen(true);
     
-    // Set the OAuth URL for each provider
+    // In a real implementation, you would set the OAuth URL for each provider
+    // This is a placeholder
     switch (software.id) {
       case "quickbooks":
         setOauthUrl("https://appcenter.intuit.com/connect/oauth2");
@@ -76,154 +77,53 @@ export function AccountingSoftwareIntegration() {
       case "xero":
         setOauthUrl("https://login.xero.com/identity/connect/authorize");
         break;
-      case "sage":
-        setOauthUrl("https://www.sage.com/oauth/authorize");
-        break;
-      case "freshbooks":
-        setOauthUrl("https://auth.freshbooks.com/oauth/authorize");
-        break;
       default:
         setOauthUrl("");
     }
   };
 
   const handleConnect = () => {
-    if (!selectedSoftware) return;
-    
-    // For OAuth-based services
-    if (oauthUrl) {
-      // Simulate successful connection for demonstration
-      simulateOAuthConnection();
+    // For OAuth-based services like QuickBooks or Xero
+    if (oauthUrl && selectedSoftware) {
+      // In a real implementation, you would redirect to OAuth
+      toast({
+        title: "Connecting to " + selectedSoftware.name,
+        description: "You'll be redirected to authorize this connection"
+      });
+      
+      // Simulating successful connection for demonstration
+      setTimeout(() => {
+        toast({
+          title: selectedSoftware.name + " Connected",
+          description: "Your accounting data will be synced automatically"
+        });
+      }, 2000);
     } 
     // For API key-based services
-    else if (manualApiKey) {
-      // Simulate successful connection for API key method
-      simulateApiKeyConnection();
+    else if (manualApiKey && selectedSoftware) {
+      toast({
+        title: selectedSoftware.name + " Connected",
+        description: "Your API key has been saved securely"
+      });
     }
     
     setIsConnectDialogOpen(false);
     setManualApiKey("");
   };
 
-  const simulateOAuthConnection = () => {
-    if (!selectedSoftware) return;
-    
-    toast.info(`Connecting to ${selectedSoftware.name}...`, {
-      duration: 2000,
-    });
-    
-    // Update the software state after "connection"
-    setTimeout(() => {
-      setAccountingSoftwareOptions(prev => 
-        prev.map(software => 
-          software.id === selectedSoftware.id 
-            ? { 
-                ...software, 
-                connected: true,
-                lastSync: new Date().toISOString() 
-              } 
-            : software
-        )
-      );
-      
-      toast.success(`${selectedSoftware.name} connected successfully!`, {
-        description: "Your accounting data will be synced automatically"
-      });
-    }, 2000);
-  };
-
-  const simulateApiKeyConnection = () => {
-    if (!selectedSoftware) return;
-    
-    toast.info(`Connecting to ${selectedSoftware.name}...`, {
-      duration: 2000,
-    });
-    
-    // Update the software state after "connection"
-    setTimeout(() => {
-      setAccountingSoftwareOptions(prev => 
-        prev.map(software => 
-          software.id === selectedSoftware.id 
-            ? { 
-                ...software, 
-                connected: true,
-                lastSync: new Date().toISOString() 
-              } 
-            : software
-        )
-      );
-      
-      toast.success(`${selectedSoftware.name} API key saved`, {
-        description: "Your accounting data will be synced automatically"
-      });
-    }, 2000);
-  };
-
-  const handleSyncData = (softwareId: string, softwareName: string) => {
-    setIsSyncing(softwareId);
-    
-    toast.info(`Syncing data from ${softwareName}...`, {
-      description: "Please wait while we import your financial data"
+  const handleSyncData = (softwareName: string) => {
+    toast({
+      title: "Syncing data from " + softwareName,
+      description: "Your financial data is being imported"
     });
     
     // Simulate completed sync
     setTimeout(() => {
-      // Update last sync time
-      setAccountingSoftwareOptions(prev => 
-        prev.map(software => 
-          software.id === softwareId 
-            ? { 
-                ...software, 
-                lastSync: new Date().toISOString() 
-              } 
-            : software
-        )
-      );
-      
-      setIsSyncing(null);
-      
-      toast.success("Data sync complete", {
-        description: "Your tax planning data has been updated successfully"
-      });
-    }, 3000);
-  };
-
-  const handleDisconnect = (softwareId: string, softwareName: string) => {
-    toast.info(`Disconnecting ${softwareName}...`, {
-      duration: 2000,
-    });
-    
-    // Update the software state after disconnection
-    setTimeout(() => {
-      setAccountingSoftwareOptions(prev => 
-        prev.map(software => 
-          software.id === softwareId 
-            ? { 
-                ...software, 
-                connected: false,
-                lastSync: undefined
-              } 
-            : software
-        )
-      );
-      
-      toast.success(`${softwareName} disconnected`, {
-        description: "Connection removed successfully"
+      toast({
+        title: "Data sync complete",
+        description: "Your tax planning data has been updated"
       });
     }, 2000);
-  };
-
-  const formatLastSync = (isoDate: string | undefined) => {
-    if (!isoDate) return "";
-    
-    const date = new Date(isoDate);
-    return new Intl.DateTimeFormat('en-US', {
-      month: 'short',
-      day: 'numeric',
-      hour: 'numeric',
-      minute: 'numeric',
-      hour12: true
-    }).format(date);
   };
 
   return (
@@ -252,19 +152,14 @@ export function AccountingSoftwareIntegration() {
                       <div className="flex items-center">
                         <h3 className="font-medium">{software.name}</h3>
                         {software.popular && (
-                          <Badge className="ml-2 text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full">
+                          <span className="ml-2 text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full">
                             Popular
-                          </Badge>
+                          </span>
                         )}
                       </div>
                       <p className="text-sm text-muted-foreground mt-1">
                         {software.description}
                       </p>
-                      {software.connected && software.lastSync && (
-                        <p className="text-xs text-muted-foreground mt-1">
-                          Last sync: {formatLastSync(software.lastSync)}
-                        </p>
-                      )}
                     </div>
                   </div>
                 </div>
@@ -279,25 +174,9 @@ export function AccountingSoftwareIntegration() {
                       <Button 
                         variant="outline" 
                         size="sm"
-                        onClick={() => handleSyncData(software.id, software.name)}
-                        disabled={isSyncing === software.id}
+                        onClick={() => handleSyncData(software.name)}
                       >
-                        {isSyncing === software.id ? (
-                          <>
-                            <RefreshCw className="mr-1 h-3 w-3 animate-spin" />
-                            Syncing...
-                          </>
-                        ) : (
-                          <>Sync Data</>
-                        )}
-                      </Button>
-                      <Button 
-                        variant="outline" 
-                        size="sm"
-                        onClick={() => handleDisconnect(software.id, software.name)}
-                        className="border-destructive/30 text-destructive hover:bg-destructive/10"
-                      >
-                        Disconnect
+                        Sync Data
                       </Button>
                     </>
                   ) : (
@@ -352,25 +231,10 @@ export function AccountingSoftwareIntegration() {
           
           <div className="py-4">
             {oauthUrl ? (
-              <div className="space-y-4">
-                <div className="rounded-md bg-blue-50 p-4 text-sm text-blue-800 dark:bg-blue-950 dark:text-blue-200">
-                  <div className="flex">
-                    <div className="flex-shrink-0">
-                      <ExternalLink className="h-5 w-5 text-blue-600 dark:text-blue-300" />
-                    </div>
-                    <div className="ml-3">
-                      <h3 className="font-medium">Secure OAuth Connection</h3>
-                      <p className="mt-1">
-                        You'll be redirected to {selectedSoftware?.name} to securely log in. We never store your {selectedSoftware?.name} credentials.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <div className="flex items-center justify-center p-2">
-                  <Button onClick={handleConnect} className="w-full">
-                    Authorize with {selectedSoftware?.name}
-                  </Button>
-                </div>
+              <div className="flex items-center justify-center p-4">
+                <Button onClick={handleConnect}>
+                  Authorize with {selectedSoftware?.name}
+                </Button>
               </div>
             ) : (
               <div className="space-y-4">

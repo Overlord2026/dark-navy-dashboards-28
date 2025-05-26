@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { CheckCircle, Upload, Info, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -128,93 +129,90 @@ export const DocumentChecklist: React.FC<DocumentChecklistProps> = ({
   };
 
   return (
-    <div className="space-y-6 w-full">
-      {documentGroups.map((group) => (
-        <div 
-          key={group.id} 
-          className="bg-[#1A1F2C] border border-red-900/30 rounded-xl overflow-hidden shadow-lg w-full"
-        >
-          <div
-            className="flex items-center justify-between p-5 bg-red-900/20 cursor-pointer hover:bg-red-900/30 transition-colors"
-            onClick={() => toggleGroup(group.id)}
-          >
-            <h3 className="text-xl font-semibold text-white">{group.title}</h3>
-            <Button variant="ghost" size="sm" className="h-10 w-10 p-0 text-red-500">
-              {expandedGroups.includes(group.id) ? (
-                <CheckCircle className="h-6 w-6" />
-              ) : (
-                <Info className="h-6 w-6" />
-              )}
-            </Button>
-          </div>
-
-          {expandedGroups.includes(group.id) && (
-            <div className="divide-y divide-red-900/30 w-full">
-              {group.items.map((item) => {
-                const status = getDocumentStatus(item.id);
-                const date = getDocumentDate(item.id);
-
-                return (
-                  <div
-                    key={item.id}
-                    className="p-5 flex items-center justify-between hover:bg-red-900/10 transition-colors"
-                  >
-                    <div className="flex-1 space-y-1">
-                      <div className="flex items-center space-x-3">
-                        <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <span>
-                                <FileText className="h-6 w-6 text-red-500" />
-                              </span>
-                            </TooltipTrigger>
-                            <TooltipContent className="bg-red-900 text-white">
-                              <p>{item.description}</p>
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                        <span
-                          className={`text-lg font-medium ${
-                            status === "completed" ? "text-red-500" : "text-white"
-                          }`}
-                        >
-                          {item.name}
-                        </span>
-                      </div>
-                      {date && (
-                        <p className="text-sm text-red-300/70">
-                          Last updated: {date}
-                        </p>
-                      )}
-                    </div>
-                    <div>
-                      {status === "completed" ? (
-                        <Button 
-                          variant="outline" 
-                          size="sm" 
-                          className="ml-2 border-red-500 text-red-500 hover:bg-red-500/10"
-                        >
-                          View
-                        </Button>
-                      ) : (
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="ml-2 border-red-500 text-red-500 hover:bg-red-500/10"
-                          onClick={() => onUploadDocument(item.id)}
-                        >
-                          <Upload className="h-4 w-4 mr-2" />
-                          Upload
-                        </Button>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
+    <>
+      <div className="mt-6 space-y-4">
+        {documentGroups.map((group) => (
+          <div key={group.id} className="border rounded-lg overflow-hidden">
+            <div
+              className="flex items-center justify-between p-4 bg-muted cursor-pointer"
+              onClick={() => toggleGroup(group.id)}
+            >
+              <h3 className="text-lg font-medium">{group.title}</h3>
+              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                {expandedGroups.includes(group.id) ? (
+                  <CheckCircle className="h-5 w-5" />
+                ) : (
+                  <Info className="h-5 w-5" />
+                )}
+              </Button>
             </div>
-          )}
-        </div>
-      ))}
-    </div>
+
+            {expandedGroups.includes(group.id) && (
+              <div className="divide-y">
+                {group.items.map((item) => {
+                  const status = getDocumentStatus(item.id);
+                  const date = getDocumentDate(item.id);
+
+                  return (
+                    <div
+                      key={item.id}
+                      className="p-4 flex items-center justify-between"
+                    >
+                      <div className="flex-1">
+                        <div className="flex items-center">
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <span className="mr-2">
+                                  <FileText className="h-5 w-5 text-primary" />
+                                </span>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p>{item.description}</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                          <span
+                            className={
+                              status === "completed"
+                                ? "text-primary font-medium"
+                                : ""
+                            }
+                          >
+                            {item.name}
+                          </span>
+                        </div>
+                        {date && (
+                          <p className="text-sm text-muted-foreground mt-1">
+                            Last updated: {date}
+                          </p>
+                        )}
+                      </div>
+                      <div>
+                        {status === "completed" ? (
+                          <Button variant="outline" size="sm" className="ml-2">
+                            View
+                          </Button>
+                        ) : (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="ml-2"
+                            onClick={() => onUploadDocument(item.id)}
+                          >
+                            <Upload className="h-4 w-4 mr-1" />
+                            Upload
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    </>
   );
 };

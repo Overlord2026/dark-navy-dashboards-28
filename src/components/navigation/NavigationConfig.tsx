@@ -26,7 +26,6 @@ import {
   Wallet,
   ExternalLink,
   WalletIcon,
-  Shield,
 } from "lucide-react";
 
 // Home Section
@@ -144,12 +143,12 @@ export const familyWealthNavItems = [
 // Collaboration Section
 export const collaborationNavItems = [
   {
-    title: "Family Collaboration",
+    title: "Family Members",
     href: "/sharing",
     icon: UsersIcon
   },
   {
-    title: "Professional Collaboration",
+    title: "Service Professionals",
     href: "/professionals",
     icon: BriefcaseIcon
   },
@@ -166,11 +165,6 @@ export const bottomNavItems = [
     title: "Support",
     href: "/support",
     icon: LifeBuoyIcon
-  },
-  {
-    title: "Security",
-    href: "/security-settings",
-    icon: Shield
   },
   {
     title: "Settings",

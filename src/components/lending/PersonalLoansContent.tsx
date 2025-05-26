@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Card } from "@/components/ui/card";
-import { ArrowRight, CreditCard, DollarSign, CalendarClock, Shield, WalletCards, PiggyBank } from "lucide-react";
+import { ArrowRight, CreditCard, Gem, BadgeCheck, Car, GraduationCap, Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScheduleMeetingButton } from "./ScheduleMeetingButton";
 
@@ -11,7 +11,7 @@ export const PersonalLoansContent = () => {
       <div className="mb-6">
         <h1 className="text-2xl font-semibold mb-2">Personal Loans</h1>
         <p className="text-muted-foreground">
-          Flexible financing for personal needs and major expenses.
+          Unsecured loans for personal expenses and life goals.
         </p>
       </div>
       
@@ -21,9 +21,8 @@ export const PersonalLoansContent = () => {
             <div>
               <h3 className="text-xl font-medium mb-3">How It Works</h3>
               <p className="text-muted-foreground mb-4">
-                Personal loans provide a lump-sum amount that you repay over a fixed term with 
-                regular monthly payments. These unsecured loans can be used for various personal 
-                expenses and don't require collateral.
+                Personal loans provide flexible financing for a variety of needs without requiring 
+                collateral. Loan approval is based on your creditworthiness, income, and other financial factors.
               </p>
               <div className="flex flex-col gap-4">
                 <div className="flex items-center gap-3">
@@ -31,26 +30,26 @@ export const PersonalLoansContent = () => {
                     <CreditCard className="h-5 w-5 text-blue-600" />
                   </div>
                   <div>
-                    <p className="font-medium">Fixed Amounts</p>
-                    <p className="text-sm text-muted-foreground">Borrow what you need upfront</p>
+                    <p className="font-medium">Fixed Payments</p>
+                    <p className="text-sm text-muted-foreground">Predictable monthly installments</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="bg-green-50 p-2 rounded-full">
-                    <CalendarClock className="h-5 w-5 text-green-600" />
+                    <Gem className="h-5 w-5 text-green-600" />
                   </div>
                   <div>
-                    <p className="font-medium">Set Repayment Terms</p>
-                    <p className="text-sm text-muted-foreground">Predictable monthly payments</p>
+                    <p className="font-medium">Competitive Rates</p>
+                    <p className="text-sm text-muted-foreground">Based on your financial profile</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="bg-purple-50 p-2 rounded-full">
-                    <Shield className="h-5 w-5 text-purple-600" />
+                    <BadgeCheck className="h-5 w-5 text-purple-600" />
                   </div>
                   <div>
-                    <p className="font-medium">No Collateral Required</p>
-                    <p className="text-sm text-muted-foreground">Typically unsecured financing</p>
+                    <p className="font-medium">Quick Approvals</p>
+                    <p className="text-sm text-muted-foreground">Fast decision and funding process</p>
                   </div>
                 </div>
               </div>
@@ -63,34 +62,34 @@ export const PersonalLoansContent = () => {
             <div>
               <h3 className="text-xl font-medium mb-3">Use Cases</h3>
               <p className="text-muted-foreground mb-4">
-                Personal loans can be used for various purposes to meet your financial needs.
+                Personal loans can be used to fund a variety of life events and financial needs.
               </p>
               <div className="flex flex-col gap-4">
                 <div className="flex items-center gap-3">
                   <div className="bg-amber-50 p-2 rounded-full">
-                    <WalletCards className="h-5 w-5 text-amber-600" />
+                    <Home className="h-5 w-5 text-amber-600" />
                   </div>
                   <div>
-                    <p className="font-medium">Debt Consolidation</p>
-                    <p className="text-sm text-muted-foreground">Simplify multiple debts into one payment</p>
+                    <p className="font-medium">Home Improvements</p>
+                    <p className="text-sm text-muted-foreground">Renovations and upgrades</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="bg-blue-50 p-2 rounded-full">
-                    <PiggyBank className="h-5 w-5 text-blue-600" />
+                    <GraduationCap className="h-5 w-5 text-blue-600" />
                   </div>
                   <div>
-                    <p className="font-medium">Major Expenses</p>
-                    <p className="text-sm text-muted-foreground">Home improvements, weddings, etc.</p>
+                    <p className="font-medium">Education Expenses</p>
+                    <p className="text-sm text-muted-foreground">Tuition and educational costs</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="bg-green-50 p-2 rounded-full">
-                    <DollarSign className="h-5 w-5 text-green-600" />
+                    <Car className="h-5 w-5 text-green-600" />
                   </div>
                   <div>
-                    <p className="font-medium">Unexpected Costs</p>
-                    <p className="text-sm text-muted-foreground">Medical bills or emergency expenses</p>
+                    <p className="font-medium">Vehicle Purchases</p>
+                    <p className="text-sm text-muted-foreground">New or used auto financing</p>
                   </div>
                 </div>
               </div>
@@ -103,7 +102,7 @@ export const PersonalLoansContent = () => {
         <h3 className="text-xl font-medium mb-4">Ready to Get Started?</h3>
         <p className="text-muted-foreground mb-6">
           Speak with your advisor to explore personal loan options tailored to your 
-          financial needs and goals.
+          financial situation and goals.
         </p>
         <div className="flex flex-col sm:flex-row gap-3">
           <ScheduleMeetingButton offeringName="Personal Loans" />
