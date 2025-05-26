@@ -1,9 +1,9 @@
 
 import React from "react";
 import { Card } from "@/components/ui/card";
-import { ArrowRight, Briefcase, Lightbulb, GraduationCap, Plane, Palette, Ship } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Briefcase, Lightbulb, GraduationCap, Plane, Palette, Ship } from "lucide-react";
 import { ScheduleMeetingButton } from "./ScheduleMeetingButton";
+import { InterestedButton } from "@/components/investments/InterestedButton";
 
 export const SpecialtyLoansContent = () => {
   return (
@@ -106,8 +106,8 @@ export const SpecialtyLoansContent = () => {
           options tailored to your specific situation.
         </p>
         <div className="flex flex-col sm:flex-row gap-3">
+          <InterestedButton assetName="Specialty Loans" />
           <ScheduleMeetingButton offeringName="Specialty Loans" />
-          <Button variant="outline">Learn More <ArrowRight className="ml-2 h-4 w-4" /></Button>
         </div>
       </Card>
     </div>
