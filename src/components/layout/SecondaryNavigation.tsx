@@ -40,14 +40,14 @@ export const SecondaryNavigation = ({
   
   if (skipRendering) return null;
   
-  // Build the link path based on the active main item without forward slashes
+  // Build the link path based on the active main item
   const getLinkPath = (item: MenuItem) => {
     if (["investments", "education", "sharing"].includes(activeMainItem)) {
       // For standard secondary navigation
-      return `${activeMainItem}-${item.id}`;
+      return `/${activeMainItem}/${item.id}`;
     } else {
       // Default case for other items
-      return `${activeMainItem}-${item.id}`;
+      return `/${activeMainItem}/${item.id}`;
     }
   };
   

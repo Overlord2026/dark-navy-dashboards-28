@@ -1,4 +1,3 @@
-
 import React from "react";
 import { createBrowserRouter } from "react-router-dom";
 import Dashboard from "@/pages/Dashboard";
@@ -41,151 +40,151 @@ import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 
 const routes = createBrowserRouter([
   {
-    path: "",
+    path: "/",
     element: <Auth />
   },
   {
-    path: "auth",
+    path: "/auth",
     element: <Auth />
   },
   {
-    path: "client-dashboard",
+    path: "/client-dashboard",
     element: <ProtectedRoute><Dashboard /></ProtectedRoute>
   },
   {
-    path: "accounts",
+    path: "/accounts",
     element: <ProtectedRoute><Accounts /></ProtectedRoute>
   },
   {
-    path: "education",
+    path: "/education",
     element: <ProtectedRoute><Education /></ProtectedRoute>
   },
   {
-    path: "investments",
+    path: "/investments",
     element: <ProtectedRoute><Investments /></ProtectedRoute>
   },
   {
-    path: "tax-planning",
+    path: "/tax-planning",
     element: <ProtectedRoute><TaxPlanning /></ProtectedRoute>
   },
   {
-    path: "insurance",
+    path: "/insurance",
     element: <ProtectedRoute><Insurance /></ProtectedRoute>
   },
   {
-    path: "lending",
+    path: "/lending",
     element: <ProtectedRoute><Lending /></ProtectedRoute>
   },
   {
-    path: "estate-planning",
+    path: "/estate-planning",
     element: <ProtectedRoute><EstatePlanning /></ProtectedRoute>
   },
   {
-    path: "financial-plans",
+    path: "/financial-plans",
     element: <ProtectedRoute><FinancialPlans /></ProtectedRoute>
   },
   {
-    path: "all-assets",
+    path: "/all-assets",
     element: <ProtectedRoute><AllAssets /></ProtectedRoute>
   },
   {
-    path: "cash-management",
+    path: "/cash-management",
     element: <ProtectedRoute><CashManagement /></ProtectedRoute>
   },
   {
-    path: "tax-budgets",
+    path: "/tax-budgets",
     element: <ProtectedRoute><TaxBudgets /></ProtectedRoute>
   },
   {
-    path: "transfers",
+    path: "/transfers",
     element: <ProtectedRoute><Transfers /></ProtectedRoute>
   },
   {
-    path: "legacy-vault",
+    path: "/legacy-vault",
     element: <ProtectedRoute><LegacyVault /></ProtectedRoute>
   },
   {
-    path: "social-security",
+    path: "/social-security",
     element: <ProtectedRoute><SocialSecurity /></ProtectedRoute>
   },
   {
-    path: "properties",
+    path: "/properties",
     element: <ProtectedRoute><Properties /></ProtectedRoute>
   },
   {
-    path: "billpay",
+    path: "/billpay",
     element: <ProtectedRoute><BillPay /></ProtectedRoute>
   },
   {
-    path: "documents",
+    path: "/documents",
     element: <ProtectedRoute><ProfessionalsRouteWrapper><Documents /></ProfessionalsRouteWrapper></ProtectedRoute>
   },
   {
-    path: "professionals",
+    path: "/professionals",
     element: <ProtectedRoute><ProfessionalsRouteWrapper><Professionals /></ProfessionalsRouteWrapper></ProtectedRoute>
   },
   {
-    path: "professional-signup",
+    path: "/professional-signup",
     element: <ProtectedRoute><ProfessionalSignup /></ProtectedRoute>
   },
   {
-    path: "sharing",
+    path: "/sharing",
     element: <ProtectedRoute><Sharing /></ProtectedRoute>
   },
   {
-    path: "help",
+    path: "/help",
     element: <ProtectedRoute><Help /></ProtectedRoute>
   },
   {
-    path: "settings",
+    path: "/settings",
     element: <ProtectedRoute><Settings /></ProtectedRoute>
   },
   {
-    path: "ip-protection",
+    path: "/ip-protection",
     element: <ProtectedRoute><IPProtection /></ProtectedRoute>
   },
   {
-    path: "advisor-feedback",
+    path: "/advisor-feedback",
     element: <ProtectedRoute><AdvisorFeedback /></ProtectedRoute>
   },
   {
-    path: "investments-alternative-private-equity",
+    path: "/investments/alternative/private-equity",
     element: <ProtectedRoute><PrivateEquity /></ProtectedRoute>
   },
   {
-    path: "investments-alternative-private-debt",
+    path: "/investments/alternative/private-debt",
     element: <ProtectedRoute><PrivateDebt /></ProtectedRoute>
   },
   {
-    path: "investments-alternative-digital-assets",
+    path: "/investments/alternative/digital-assets",
     element: <ProtectedRoute><DigitalAssets /></ProtectedRoute>
   },
   {
-    path: "investments-alternative-real-assets",
+    path: "/investments/alternative/real-assets",
     element: <ProtectedRoute><RealAssets /></ProtectedRoute>
   },
   {
-    path: "investments-model-portfolios",
+    path: "/investments/model-portfolios",
     element: <ProtectedRoute><ModelPortfolios /></ProtectedRoute>
   },
   {
-    path: "investments-stock-screener",
+    path: "/investments/stock-screener",
     element: <ProtectedRoute><StockScreener /></ProtectedRoute>
   },
   {
-    path: 'vehicles-collectibles',
+    path: '/vehicles-collectibles',
     element: <ProtectedRoute><AllAssets /></ProtectedRoute>
   },
   {
-    path: 'art-valuables',
+    path: '/art-valuables',
     element: <ProtectedRoute><AllAssets /></ProtectedRoute>
   },
   {
-    path: "education-tax-planning",
+    path: "/education/tax-planning",
     element: <ProtectedRoute><TaxPlanningEducation /></ProtectedRoute>
   },
   {
-    path: "navigation-diagnostics",
+    path: "/navigation-diagnostics",
     element: <ProtectedRoute><NavigationDiagnostics /></ProtectedRoute>
   },
   {
