@@ -138,8 +138,6 @@ const Insurance = () => {
     return (
       <ThreeColumnLayout activeMainItem="insurance" title="Insurance">
         <div className="animate-fade-in min-h-screen p-4 text-white bg-[#121a2c]">
-          <h1 className="text-2xl font-semibold mb-6">Insurance</h1>
-          
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             {/* Term Life Card */}
             <Card 
