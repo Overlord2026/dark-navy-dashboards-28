@@ -5,6 +5,7 @@ import { CourseList } from "./CourseList";
 import { CourseCategories } from "./CourseCategories";
 import { coursesByCategory } from "@/data/education/coursesByCategory";
 import { educationalResources } from "@/data/education/educationalResources";
+import { courseCategories } from "@/data/education/categories";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { BookList } from './BookList';
 import { BookManagement } from './BookManagement';
@@ -80,7 +81,10 @@ export const EducationalTabs: React.FC<EducationalTabsProps> = ({
       <TabsContent value="courses" className="py-4">
         <div className="grid grid-cols-12 gap-6">
           <div className="col-span-12 md:col-span-3">
-            <CourseCategories />
+            <CourseCategories 
+              categories={courseCategories}
+              onSelectCategory={setActiveCategory}
+            />
           </div>
           <div className="col-span-12 md:col-span-9">
             <CourseList
