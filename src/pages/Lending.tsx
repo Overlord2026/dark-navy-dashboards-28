@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { 
@@ -210,7 +211,7 @@ const Lending = () => {
 
   return (
     <ThreeColumnLayout 
-      title="Lending Solutions" 
+      title="" 
       activeMainItem="lending"
     >
       <div className="animate-fade-in">
