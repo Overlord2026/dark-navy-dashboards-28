@@ -63,7 +63,7 @@ export const navigationCategories: NavCategory[] = [
     label: "Education & Solutions",
     defaultExpanded: true,
     items: [
-      { id: "education", label: "Education Center", icon: GraduationCapIcon, href: "/education" },
+      { id: "education", label: "Education Center", icon: GraduationCapIcon, href: "/client-education" },
       { id: "investments", label: "Investments", icon: BarChart3Icon, href: "/investments" },
       { id: "tax-planning", label: "Tax Planning", icon: PieChart, href: "/tax-planning" },
       { id: "insurance", label: "Insurance", icon: ShieldIcon, href: "/insurance" },

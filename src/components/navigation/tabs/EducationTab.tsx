@@ -6,7 +6,7 @@ import { NavItem } from "@/types/navigation";
 export const educationNavItems: NavItem[] = [
   { 
     title: "Education Center", 
-    href: "/education", 
+    href: "/client-education", 
     icon: GraduationCapIcon 
   },
   { 

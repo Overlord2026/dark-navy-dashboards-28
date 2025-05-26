@@ -56,7 +56,7 @@ const routes = createBrowserRouter([
     element: <ProtectedRoute><Accounts /></ProtectedRoute>
   },
   {
-    path: "/education",
+    path: "/client-education",
     element: <ProtectedRoute><Education /></ProtectedRoute>
   },
   {
@@ -180,7 +180,7 @@ const routes = createBrowserRouter([
     element: <ProtectedRoute><AllAssets /></ProtectedRoute>
   },
   {
-    path: "/education/tax-planning",
+    path: "/client-education/tax-planning",
     element: <ProtectedRoute><TaxPlanningEducation /></ProtectedRoute>
   },
   {

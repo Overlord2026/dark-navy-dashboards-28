@@ -52,7 +52,7 @@ export default function TaxPlanningEducation() {
       >
         <motion.div variants={itemVariants}>
           <div className="flex items-center mb-4">
-            <Link to="/education">
+            <Link to="/client-education">
               <Button variant="outline" size="sm" className="flex items-center gap-2">
                 <ArrowLeft className="h-4 w-4" />
                 Back to Education Center
