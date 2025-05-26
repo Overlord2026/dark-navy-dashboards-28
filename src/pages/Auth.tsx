@@ -83,19 +83,12 @@ export default function Auth() {
   return (
     <div className="min-h-screen bg-white flex flex-col">
       <header className="w-full flex justify-center items-center py-4 border-b border-gray-200 bg-[#1B1B32] sticky top-0 z-50">
-        <div className="container flex justify-between items-center max-w-7xl px-4">
-          <Link to="/" className="flex items-center">
-            <img 
-              src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" 
-              alt="Boutique Family Office Logo" 
-              className="h-16 w-auto"
-            />
-          </Link>
-          <div>
-            <Button variant="ghost" asChild className="text-white hover:bg-white/10">
-              <Link to="/">Back to Home</Link>
-            </Button>
-          </div>
+        <div className="flex justify-center items-center">
+          <img 
+            src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" 
+            alt="Boutique Family Office Logo" 
+            className="h-16 w-auto"
+          />
         </div>
       </header>
       
