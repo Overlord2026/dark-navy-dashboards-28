@@ -71,7 +71,7 @@ export const LenderDetail: React.FC<LenderDetailProps> = ({ isOpen, onClose, len
             <div className="flex gap-3">
               <InterestedButton assetName={`${lender.name} ${lender.offering}`} />
               <Button variant="outline" onClick={handleScheduleMeeting}>
-                <Calendar className="h-4 w-4 mr-2" /> Schedule a Meeting
+                <Calendar className="h-4 w-4 mr-2" /> Schedule Appointment
               </Button>
             </div>
           </div>
