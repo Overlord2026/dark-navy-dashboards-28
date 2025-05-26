@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { FinancialOverview } from "@/components/dashboard/FinancialOverview";
@@ -9,7 +8,6 @@ import { WelcomeTrialBanner } from "@/components/dashboard/WelcomeTrialBanner";
 import { TrialEndingSoonBanner } from "@/components/dashboard/TrialEndingSoonBanner";
 import { MidTrialBanner } from "@/components/dashboard/MidTrialBanner";
 import { useSubscription } from "@/context/SubscriptionContext";
-import { QuickActionsMenu } from "@/components/dashboard/QuickActionsMenu";
 import { useUser } from "@/context/UserContext";
 import { measureRouteLoad } from "@/utils/performance";
 import { usePagePerformance } from "@/hooks/usePagePerformance";
@@ -69,7 +67,7 @@ export default function Index() {
           
           {isAdmin && (
             <div className="mt-1">
-              <QuickActionsMenu />
+              
             </div>
           )}
           
