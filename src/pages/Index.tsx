@@ -31,8 +31,6 @@ export default function Index() {
     console.log('Index: useUser hook loaded successfully', userProfile?.role);
     
     const [dashboardKey, setDashboardKey] = useState(Date.now());
-    const userRole = userProfile?.role || "client";
-    const isAdmin = userRole === "admin" || userRole === "system_administrator";
 
     useEffect(() => {
       setDashboardKey(Date.now());
