@@ -88,7 +88,8 @@ export const navigationCategories: NavCategory[] = [
     id: "collaboration",
     label: "Collaboration & Sharing",
     items: [
-      { id: "professionals", label: "Professional Access", icon: Users2Icon, href: "/professionals" },
+      { id: "advisor-feedback", label: "Advisor", icon: Users2Icon, href: "/advisor-feedback" },
+      { id: "professionals", label: "User Account", icon: Users2Icon, href: "/professionals" },
       { id: "sharing", label: "Family Member Access", icon: ShareIcon, href: "/sharing" },
     ]
   },
