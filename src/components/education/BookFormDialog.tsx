@@ -67,14 +67,16 @@ export const BookFormDialog: React.FC<BookFormDialogProps> = ({
   });
   
   function onSubmit(values: BookFormValues) {
-    const bookData = {
-      ...values,
-      id: book?.id
+    const bookData: Omit<EducationalResource, 'id'> & { id?: string } = {
+      title: values.title,
+      description: values.description,
+      author: values.author,
+      ghlUrl: values.ghlUrl,
+      level: values.level,
+      isPaid: values.isPaid,
+      ...(book?.id && { id: book.id }),
+      ...(values.coverImage && { coverImage: values.coverImage })
     };
-    
-    if (!bookData.coverImage) {
-      delete bookData.coverImage;
-    }
     
     onSave(bookData);
   }

@@ -30,8 +30,8 @@ const Investments = () => {
   const [selectedTab, setSelectedTab] = useState("private-market");
   const [alternativeData, setAlternativeData] = useState<any>({});
   const [isLoading, setIsLoading] = useState(true);
-  const [scheduleMeetingOpen, setScheduleMeetingOpen] = useState(false);
   const [selectedAsset, setSelectedAsset] = useState("");
+  const [scheduleMeetingOpen, setScheduleMeetingOpen] = useState(false);
   
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -472,11 +472,12 @@ const Investments = () => {
           </TabsContent>
         </Tabs>
         
-        <ScheduleMeetingDialog 
-          open={scheduleMeetingOpen} 
-          onOpenChange={setScheduleMeetingOpen}
-          assetName={selectedAsset}
-        />
+        {scheduleMeetingOpen && (
+          <ScheduleMeetingDialog 
+            assetName={selectedAsset}
+            consultationType="investment"
+          />
+        )}
       </div>
     </ThreeColumnLayout>
   );

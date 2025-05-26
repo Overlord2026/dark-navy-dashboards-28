@@ -80,10 +80,7 @@ export const EducationalTabs: React.FC<EducationalTabsProps> = ({
       <TabsContent value="courses" className="py-4">
         <div className="grid grid-cols-12 gap-6">
           <div className="col-span-12 md:col-span-3">
-            <CourseCategories 
-              activeCategory={activeCategory}
-              setActiveCategory={setActiveCategory}
-            />
+            <CourseCategories />
           </div>
           <div className="col-span-12 md:col-span-9">
             <CourseList
