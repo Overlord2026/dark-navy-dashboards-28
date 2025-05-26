@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { FinancialOverview } from "@/components/dashboard/FinancialOverview";
@@ -64,12 +65,6 @@ export default function Index() {
       <ThreeColumnLayout title="Dashboard">
         <div key={dashboardKey} className="space-y-4 px-4 py-2 max-w-7xl mx-auto">
           {renderTrialBanner()}
-          
-          {isAdmin && (
-            <div className="mt-1">
-              
-            </div>
-          )}
           
           <div id="financial-overview-section">
             <FinancialOverview />
