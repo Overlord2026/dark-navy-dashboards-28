@@ -3,8 +3,6 @@ import React, { useEffect, useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { FinancialOverview } from "@/components/dashboard/FinancialOverview";
 import { NetWorthSummary } from "@/components/dashboard/NetWorthSummary";
-import { TaxPlanningSummary } from "@/components/dashboard/TaxPlanningSummary";
-import { RecentActivity } from "@/components/dashboard/RecentActivity";
 import { ReportsGenerator } from "@/components/dashboard/ReportsGenerator";
 import { useNetWorth } from "@/context/NetWorthContext";
 import { WelcomeTrialBanner } from "@/components/dashboard/WelcomeTrialBanner";
@@ -85,13 +83,6 @@ export default function Index() {
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             <NetWorthSummary />
-            <div className="space-y-5">
-              <TaxPlanningSummary />
-            </div>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            <RecentActivity />
           </div>
         </div>
       </ThreeColumnLayout>
