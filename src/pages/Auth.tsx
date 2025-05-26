@@ -93,12 +93,12 @@ export default function Auth() {
       </header>
       
       <div className="flex-1 flex justify-center items-center p-4 bg-white">
-        <Card className="p-8 w-full max-w-md bg-white border border-gray-200 shadow-lg">
+        <Card className="p-8 w-full max-w-md bg-[#1B1B32] border border-gray-200 shadow-lg">
           <div className="text-center mb-6">
-            <h1 className="text-2xl font-bold text-[#1B1B32]">
+            <h1 className="text-2xl font-bold text-white">
               {isSignUp ? "Create Account" : "Sign In"}
             </h1>
-            <p className="text-gray-600 mt-2">
+            <p className="text-gray-300 mt-2">
               {isSignUp 
                 ? "Join our family office platform" 
                 : "Access your personalized financial dashboard"}
@@ -109,27 +109,27 @@ export default function Auth() {
             {isSignUp && (
               <>
                 <div className="space-y-2">
-                  <Label htmlFor="firstName" className="text-[#1B1B32]">First Name</Label>
+                  <Label htmlFor="firstName" className="text-white">First Name</Label>
                   <Input 
                     id="firstName" 
                     type="text" 
                     placeholder="Enter your first name"
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
-                    className="border-gray-300 focus:border-[#1B1B32] focus:ring-[#1B1B32]"
+                    className="bg-white border-gray-300 text-black placeholder:text-gray-500 focus:border-white focus:ring-white"
                     required 
                   />
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="lastName" className="text-[#1B1B32]">Last Name</Label>
+                  <Label htmlFor="lastName" className="text-white">Last Name</Label>
                   <Input 
                     id="lastName" 
                     type="text" 
                     placeholder="Enter your last name"
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
-                    className="border-gray-300 focus:border-[#1B1B32] focus:ring-[#1B1B32]"
+                    className="bg-white border-gray-300 text-black placeholder:text-gray-500 focus:border-white focus:ring-white"
                     required 
                   />
                 </div>
@@ -137,28 +137,28 @@ export default function Auth() {
             )}
             
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-[#1B1B32]">Email</Label>
+              <Label htmlFor="email" className="text-white">Email</Label>
               <Input 
                 id="email" 
                 type="email" 
                 placeholder="you@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="border-gray-300 focus:border-[#1B1B32] focus:ring-[#1B1B32]"
+                className="bg-white border-gray-300 text-black placeholder:text-gray-500 focus:border-white focus:ring-white"
                 autoComplete="email" 
                 required 
               />
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="password" className="text-[#1B1B32]">Password</Label>
+              <Label htmlFor="password" className="text-white">Password</Label>
               <Input 
                 id="password" 
                 type="password" 
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="border-gray-300 focus:border-[#1B1B32] focus:ring-[#1B1B32]"
+                className="bg-white border-gray-300 text-black placeholder:text-gray-500 focus:border-white focus:ring-white"
                 autoComplete={isSignUp ? "new-password" : "current-password"}
                 required 
               />
@@ -166,20 +166,20 @@ export default function Auth() {
             
             <Button 
               type="submit" 
-              className="w-full bg-[#1B1B32] text-white hover:bg-[#1B1B32]/90"
+              className="w-full bg-white text-[#1B1B32] hover:bg-gray-100 font-medium"
               disabled={loading}
             >
               {loading ? "Loading..." : (isSignUp ? "Create Account" : "Sign In")}
             </Button>
           </form>
           
-          <div className="mt-6 text-center text-sm text-gray-600">
+          <div className="mt-6 text-center text-sm text-gray-300">
             <p>
               {isSignUp ? "Already have an account?" : "Don't have an account?"}{" "}
               <button
                 type="button"
                 onClick={() => setIsSignUp(!isSignUp)}
-                className="text-[#1B1B32] hover:underline font-medium"
+                className="text-white hover:underline font-medium"
               >
                 {isSignUp ? "Sign in" : "Create account"}
               </button>
