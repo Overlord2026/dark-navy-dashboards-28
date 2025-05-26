@@ -10,6 +10,13 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { CourseApiDemo } from "@/components/education/CourseApiDemo";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function Education() {
   const [searchParams] = useSearchParams();
@@ -50,6 +57,11 @@ export default function Education() {
     }
   };
 
+  const handleCategoryChange = (categoryId: string) => {
+    setActiveCategory(categoryId);
+    setActiveSection("courses");
+  };
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: { 
@@ -85,13 +97,32 @@ export default function Education() {
         animate="visible"
       >
         <motion.div variants={itemVariants}>
-          <h2 className="text-2xl font-bold tracking-tight">Welcome to the SWAG Education Center</h2>
-          <p className="text-muted-foreground mt-2">
-            Explore our collection of financial education resources to help you build wealth and achieve your financial goals.
-          </p>
+          <div className="flex justify-between items-start mb-4">
+            <div>
+              <h2 className="text-2xl font-bold tracking-tight">Welcome to the SWAG Education Center</h2>
+              <p className="text-muted-foreground mt-2">
+                Explore our collection of financial education resources to help you build wealth and achieve your financial goals.
+              </p>
+            </div>
+            
+            <div className="flex items-center gap-2">
+              <Select value={activeCategory} onValueChange={handleCategoryChange}>
+                <SelectTrigger className="w-[200px]">
+                  <SelectValue placeholder="Select a category" />
+                </SelectTrigger>
+                <SelectContent>
+                  {courseCategories.map((category) => (
+                    <SelectItem key={category.id} value={category.id}>
+                      {category.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
           
           <div className="mt-4 mb-6 flex gap-2">
-            <Link to="/education/tax-planning">
+            <Link to="/client-education/tax-planning">
               <Button variant="outline" className="flex items-center gap-2">
                 Tax Planning <ArrowRight className="h-4 w-4" />
               </Button>
