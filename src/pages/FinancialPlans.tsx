@@ -301,7 +301,7 @@ const FinancialPlans = () => {
   const activePlans = plans.filter(plan => plan.status === 'Active');
 
   return (
-    <ThreeColumnLayout activeMainItem="financial-plans" title="Financial Plans">
+    <ThreeColumnLayout activeMainItem="financial-plans" title="">
       <div className="animate-fade-in space-y-6">
         <section className="flex flex-col space-y-2">
           <h1 className="text-2xl font-semibold">Financial Plans</h1>
