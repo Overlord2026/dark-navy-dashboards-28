@@ -1,4 +1,3 @@
-
 import React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -349,8 +348,7 @@ export function BeneficiariesFormNew({ onSave }: { onSave: () => void }) {
                   <FormControl>
                     <DatePicker
                       date={field.value}
-                      onDateChange={field.onChange}
-                      placeholder="Select date of birth"
+                      onSelect={field.onChange}
                       className="bg-gray-800 border-gray-700 text-white"
                     />
                   </FormControl>
