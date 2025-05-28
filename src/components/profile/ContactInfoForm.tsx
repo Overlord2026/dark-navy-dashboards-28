@@ -30,6 +30,7 @@ const contactSchema = z.object({
 
 export function ContactInfoForm({ onSave }: { onSave: () => void }) {
   const { user } = useAuth();
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
   
   const form = useForm<z.infer<typeof contactSchema>>({
     resolver: zodResolver(contactSchema),
@@ -52,7 +53,7 @@ export function ContactInfoForm({ onSave }: { onSave: () => void }) {
         .from('user_contact_info')
         .select('*')
         .eq('user_id', user.id)
-        .single();
+        .maybeSingle();
         
       if (data && !error) {
         form.reset({
@@ -71,11 +72,22 @@ export function ContactInfoForm({ onSave }: { onSave: () => void }) {
   }, [user, form]);
 
   async function onSubmit(values: z.infer<typeof contactSchema>) {
-    if (!user) return;
+    if (!user) {
+      toast.error("User not authenticated");
+      return;
+    }
     
-    const { error } = await supabase
-      .from('user_contact_info')
-      .upsert({
+    setIsSubmitting(true);
+    
+    try {
+      // First, check if a record exists
+      const { data: existingData } = await supabase
+        .from('user_contact_info')
+        .select('id')
+        .eq('user_id', user.id)
+        .maybeSingle();
+
+      const contactData = {
         user_id: user.id,
         email: values.email,
         phone: values.phone,
@@ -85,13 +97,37 @@ export function ContactInfoForm({ onSave }: { onSave: () => void }) {
         state: values.state,
         zip_code: values.zipCode,
         updated_at: new Date().toISOString(),
-      });
-      
-    if (error) {
-      toast.error("Failed to save contact information");
-      console.error(error);
-    } else {
-      onSave();
+      };
+
+      let error;
+
+      if (existingData) {
+        // Update existing record
+        const { error: updateError } = await supabase
+          .from('user_contact_info')
+          .update(contactData)
+          .eq('user_id', user.id);
+        error = updateError;
+      } else {
+        // Insert new record
+        const { error: insertError } = await supabase
+          .from('user_contact_info')
+          .insert([contactData]);
+        error = insertError;
+      }
+
+      if (error) {
+        console.error("Database operation error:", error);
+        toast.error("Failed to save contact information");
+      } else {
+        toast.success("Contact information saved successfully");
+        onSave();
+      }
+    } catch (error) {
+      console.error("Unexpected error:", error);
+      toast.error("An unexpected error occurred");
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
@@ -242,9 +278,10 @@ export function ContactInfoForm({ onSave }: { onSave: () => void }) {
           <div className="flex justify-end">
             <Button 
               type="submit" 
+              disabled={isSubmitting}
               className="bg-blue-600 text-white hover:bg-blue-700"
             >
-              Save Contact Information
+              {isSubmitting ? "Saving..." : "Save Contact Information"}
             </Button>
           </div>
         </form>
