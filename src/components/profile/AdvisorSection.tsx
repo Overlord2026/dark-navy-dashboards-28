@@ -19,6 +19,11 @@ export const AdvisorSection = ({ onViewProfile, onBookSession, collapsed = false
   const { advisorInfo } = useAdvisor();
   const isLightTheme = theme === "light";
   
+  const handleBookSession = () => {
+    // Open Calendly directly like on the Client Advisor Profile page
+    window.open("https://meetings.hubspot.com/daniel-herrera1?uuid=55ab1315-5daa-4009-af29-f100ee7aae67", "_blank");
+  };
+  
   return (
     <div className="px-2 py-2">
       <Popover>
@@ -74,7 +79,7 @@ export const AdvisorSection = ({ onViewProfile, onBookSession, collapsed = false
               </Link>
               
               <button 
-                onClick={onBookSession}
+                onClick={handleBookSession}
                 className="w-full flex items-center justify-center py-2.5 px-4 bg-transparent hover:bg-white/10 border border-white/20 rounded-md transition-colors text-white"
               >
                 <Calendar className="h-5 w-5 mr-2" />
