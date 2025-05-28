@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -111,126 +112,128 @@ const AdvisorProfile = () => {
   return (
     <div className="bg-[#1B1B32] min-h-screen">
       <ThreeColumnLayout activeMainItem="home" title="">
-        {showDetailView ? (
-          <div className="mx-auto w-full max-w-4xl space-y-6 p-6 animate-fade-in">
-            <Button 
-              variant="ghost" 
-              className="mb-4 text-white"
-              onClick={() => setShowDetailView(false)}
-            >
-              <ArrowLeft className="h-5 w-5 mr-2" />
-              Back
-            </Button>
-            
-            <div className="bg-[#1B1B32] rounded-lg p-6 md:p-8">
-              <AdvisorDetailView advisorInfo={advisorInfo} />
+        <div className="bg-[#1B1B32] min-h-full">
+          {showDetailView ? (
+            <div className="mx-auto w-full max-w-4xl space-y-6 p-6 animate-fade-in">
+              <Button 
+                variant="ghost" 
+                className="mb-4 text-white"
+                onClick={() => setShowDetailView(false)}
+              >
+                <ArrowLeft className="h-5 w-5 mr-2" />
+                Back
+              </Button>
+              
+              <div className="bg-[#1B1B32] rounded-lg p-6 md:p-8">
+                <AdvisorDetailView advisorInfo={advisorInfo} />
+              </div>
             </div>
-          </div>
-        ) : isEditing ? (
-          <div className="mx-auto w-full max-w-4xl space-y-6 p-6 animate-fade-in">
-            <Button 
-              variant="ghost" 
-              className="mb-4 text-white"
-              onClick={() => setIsEditing(false)}
-            >
-              <ArrowLeft className="h-5 w-5 mr-2" />
-              Back
-            </Button>
-            
-            <div className="bg-[#1B1B32] rounded-lg p-6 md:p-8">
-              <h2 className="text-xl font-semibold text-white mb-6">Edit Advisor Profile</h2>
-              <AdvisorProfileEditForm 
-                advisorInfo={advisorInfo}
-                onSave={handleSaveAdvisorInfo}
-                onCancel={() => setIsEditing(false)}
-              />
+          ) : isEditing ? (
+            <div className="mx-auto w-full max-w-4xl space-y-6 p-6 animate-fade-in">
+              <Button 
+                variant="ghost" 
+                className="mb-4 text-white"
+                onClick={() => setIsEditing(false)}
+              >
+                <ArrowLeft className="h-5 w-5 mr-2" />
+                Back
+              </Button>
+              
+              <div className="bg-[#1B1B32] rounded-lg p-6 md:p-8">
+                <h2 className="text-xl font-semibold text-white mb-6">Edit Advisor Profile</h2>
+                <AdvisorProfileEditForm 
+                  advisorInfo={advisorInfo}
+                  onSave={handleSaveAdvisorInfo}
+                  onCancel={() => setIsEditing(false)}
+                />
+              </div>
             </div>
-          </div>
-        ) : (
-          <div className="mx-auto w-full max-w-4xl space-y-6 p-6 animate-fade-in">
-            <div className="bg-[#1B1B32] rounded-lg p-8">
-              <div className="flex flex-col lg:flex-row items-center lg:items-start justify-between gap-8">
-                <div className="flex flex-col lg:flex-row items-center lg:items-start gap-6 flex-1">
-                  <div className="rounded-full overflow-hidden w-32 h-32 flex-shrink-0">
-                    <img
-                      src="/lovable-uploads/b4df25d6-12d7-4c34-874e-804e72335904.png"
-                      alt="Daniel Zamora"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="text-center lg:text-left flex-1">
-                    <h2 className="text-3xl font-semibold text-white mb-2">{advisorInfo.name}</h2>
-                    <p className="text-white/70 text-lg mb-6">{advisorInfo.title}</p>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                      <a href={`mailto:${advisorInfo.email}`} className="flex items-center text-white/80 hover:text-white transition-colors">
-                        <MailIcon className="h-4 w-4 mr-3 flex-shrink-0" />
-                        <span>{advisorInfo.email}</span>
-                      </a>
-                      <a href={advisorInfo.linkedin || "https://linkedin.com"} target="_blank" rel="noopener noreferrer" className="flex items-center text-white/80 hover:text-white transition-colors">
-                        <LinkedinIcon className="h-4 w-4 mr-3 flex-shrink-0" />
-                        <span>LinkedIn</span>
-                      </a>
-                      <div className="flex items-center text-white/80">
-                        <PhoneIcon className="h-4 w-4 mr-3 flex-shrink-0" />
-                        <span>{advisorInfo.phone}</span>
-                      </div>
-                      <div className="flex items-center text-white/80">
-                        <HeadphonesIcon className="h-4 w-4 mr-3 flex-shrink-0" />
-                        <a href={`mailto:${advisorInfo.serviceEmail}`} className="hover:text-white transition-colors">
-                          {advisorInfo.serviceEmail}
+          ) : (
+            <div className="mx-auto w-full max-w-4xl space-y-6 p-6 animate-fade-in">
+              <div className="bg-[#1B1B32] rounded-lg p-8">
+                <div className="flex flex-col lg:flex-row items-center lg:items-start justify-between gap-8">
+                  <div className="flex flex-col lg:flex-row items-center lg:items-start gap-6 flex-1">
+                    <div className="rounded-full overflow-hidden w-32 h-32 flex-shrink-0">
+                      <img
+                        src="/lovable-uploads/b4df25d6-12d7-4c34-874e-804e72335904.png"
+                        alt="Daniel Zamora"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div className="text-center lg:text-left flex-1">
+                      <h2 className="text-3xl font-semibold text-white mb-2">{advisorInfo.name}</h2>
+                      <p className="text-white/70 text-lg mb-6">{advisorInfo.title}</p>
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                        <a href={`mailto:${advisorInfo.email}`} className="flex items-center text-white/80 hover:text-white transition-colors">
+                          <MailIcon className="h-4 w-4 mr-3 flex-shrink-0" />
+                          <span>{advisorInfo.email}</span>
                         </a>
+                        <a href={advisorInfo.linkedin || "https://linkedin.com"} target="_blank" rel="noopener noreferrer" className="flex items-center text-white/80 hover:text-white transition-colors">
+                          <LinkedinIcon className="h-4 w-4 mr-3 flex-shrink-0" />
+                          <span>LinkedIn</span>
+                        </a>
+                        <div className="flex items-center text-white/80">
+                          <PhoneIcon className="h-4 w-4 mr-3 flex-shrink-0" />
+                          <span>{advisorInfo.phone}</span>
+                        </div>
+                        <div className="flex items-center text-white/80">
+                          <HeadphonesIcon className="h-4 w-4 mr-3 flex-shrink-0" />
+                          <a href={`mailto:${advisorInfo.serviceEmail}`} className="hover:text-white transition-colors">
+                            {advisorInfo.serviceEmail}
+                          </a>
+                        </div>
                       </div>
                     </div>
                   </div>
+                  
+                  <div className="flex flex-col gap-3 lg:flex-shrink-0">
+                    <Button 
+                      onClick={() => setIsBookingDrawerOpen(true)}
+                      className="bg-white text-[#1B1B32] hover:bg-white/90 px-6 py-3 font-medium"
+                    >
+                      <Calendar className="h-4 w-4 mr-2" />
+                      Book a session
+                    </Button>
+                    <Button
+                      variant="outline"
+                      className="border-white/20 text-white hover:bg-white/10 px-6 py-3"
+                      onClick={() => setShowDetailView(true)}
+                    >
+                      View full profile
+                    </Button>
+                  </div>
                 </div>
                 
-                <div className="flex flex-col gap-3 lg:flex-shrink-0">
-                  <Button 
-                    onClick={() => setIsBookingDrawerOpen(true)}
-                    className="bg-white text-[#1B1B32] hover:bg-white/90 px-6 py-3 font-medium"
-                  >
-                    <Calendar className="h-4 w-4 mr-2" />
-                    Book a session
-                  </Button>
-                  <Button
-                    variant="outline"
-                    className="border-white/20 text-white hover:bg-white/10 px-6 py-3"
-                    onClick={() => setShowDetailView(true)}
-                  >
-                    View full profile
-                  </Button>
+                <div className="mt-8 pt-8 border-t border-white/10">
+                  <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+                    <TabsList className="bg-[#2A2A40] w-auto inline-flex mb-6">
+                      <TabsTrigger value="bio" className="data-[state=active]:bg-white/10">
+                        <UserIcon className="h-4 w-4 mr-2" />
+                        Bio
+                      </TabsTrigger>
+                      <TabsTrigger value="experience" className="data-[state=active]:bg-white/10">
+                        <BriefcaseIcon className="h-4 w-4 mr-2" />
+                        Experience
+                      </TabsTrigger>
+                      <TabsTrigger value="education" className="data-[state=active]:bg-white/10">
+                        <GraduationCapIcon className="h-4 w-4 mr-2" />
+                        Education
+                      </TabsTrigger>
+                      <TabsTrigger value="location" className="data-[state=active]:bg-white/10">
+                        <MapPinIcon className="h-4 w-4 mr-2" />
+                        Location
+                      </TabsTrigger>
+                    </TabsList>
+                    <TabsContent value={activeTab}>
+                      {renderTabContent()}
+                    </TabsContent>
+                  </Tabs>
                 </div>
               </div>
-              
-              <div className="mt-8 pt-8 border-t border-white/10">
-                <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                  <TabsList className="bg-[#2A2A40] w-auto inline-flex mb-6">
-                    <TabsTrigger value="bio" className="data-[state=active]:bg-white/10">
-                      <UserIcon className="h-4 w-4 mr-2" />
-                      Bio
-                    </TabsTrigger>
-                    <TabsTrigger value="experience" className="data-[state=active]:bg-white/10">
-                      <BriefcaseIcon className="h-4 w-4 mr-2" />
-                      Experience
-                    </TabsTrigger>
-                    <TabsTrigger value="education" className="data-[state=active]:bg-white/10">
-                      <GraduationCapIcon className="h-4 w-4 mr-2" />
-                      Education
-                    </TabsTrigger>
-                    <TabsTrigger value="location" className="data-[state=active]:bg-white/10">
-                      <MapPinIcon className="h-4 w-4 mr-2" />
-                      Location
-                    </TabsTrigger>
-                  </TabsList>
-                  <TabsContent value={activeTab}>
-                    {renderTabContent()}
-                  </TabsContent>
-                </Tabs>
-              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
         
         <Drawer open={isBookingDrawerOpen} onOpenChange={setIsBookingDrawerOpen}>
           <DrawerContent className="bg-white">
