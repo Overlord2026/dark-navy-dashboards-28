@@ -123,7 +123,7 @@ const AdvisorProfile = () => {
             Back
           </Button>
           
-          <div className="bg-[#0a1021] rounded-lg p-6 md:p-8">
+          <div className="bg-blue-900 rounded-lg p-6 md:p-8">
             <AdvisorDetailView advisorInfo={advisorInfo} />
           </div>
         </div>
@@ -138,7 +138,7 @@ const AdvisorProfile = () => {
             Back
           </Button>
           
-          <div className="bg-[#0a1021] rounded-lg p-6 md:p-8">
+          <div className="bg-blue-900 rounded-lg p-6 md:p-8">
             <h2 className="text-xl font-semibold text-white mb-6">Edit Advisor Profile</h2>
             <AdvisorProfileEditForm 
               advisorInfo={advisorInfo}
@@ -149,7 +149,7 @@ const AdvisorProfile = () => {
         </div>
       ) : (
         <div className="mx-auto w-full max-w-4xl space-y-6 p-6 animate-fade-in">
-          <div className="bg-[#0a1021] rounded-lg p-8">
+          <div className="bg-blue-900 rounded-lg p-8">
             <div className="flex flex-col lg:flex-row items-center lg:items-start justify-between gap-8">
               <div className="flex flex-col lg:flex-row items-center lg:items-start gap-6 flex-1">
                 <div className="rounded-full overflow-hidden w-32 h-32 flex-shrink-0">
@@ -189,7 +189,7 @@ const AdvisorProfile = () => {
               <div className="flex flex-col gap-3 lg:flex-shrink-0">
                 <Button 
                   onClick={() => setIsBookingDrawerOpen(true)}
-                  className="bg-white text-[#0a1021] hover:bg-white/90 px-6 py-3 font-medium"
+                  className="bg-white text-blue-900 hover:bg-white/90 px-6 py-3 font-medium"
                 >
                   <Calendar className="h-4 w-4 mr-2" />
                   Book a session
@@ -206,7 +206,7 @@ const AdvisorProfile = () => {
             
             <div className="mt-8 pt-8 border-t border-white/10">
               <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                <TabsList className="bg-[#1c2e4a] w-auto inline-flex mb-6">
+                <TabsList className="bg-blue-800 w-auto inline-flex mb-6">
                   <TabsTrigger value="bio" className="data-[state=active]:bg-white/10">
                     <UserIcon className="h-4 w-4 mr-2" />
                     Bio
@@ -244,7 +244,7 @@ const AdvisorProfile = () => {
             </DrawerHeader>
             
             <div className="flex flex-col md:flex-row gap-6 my-6">
-              <div className="flex-1 p-6 bg-[#0a1021] text-white rounded-lg">
+              <div className="flex-1 p-6 bg-blue-900 text-white rounded-lg">
                 <div className="text-center mb-6">
                   <div className="mx-auto w-24 h-24 rounded-full overflow-hidden mb-4">
                     <img
@@ -276,7 +276,7 @@ const AdvisorProfile = () => {
                       key={day}
                       className={`
                         aspect-square flex items-center justify-center rounded-full text-sm
-                        ${day === 15 ? 'bg-white text-[#0a1021] font-medium' : 'hover:bg-white/10 cursor-pointer'}
+                        ${day === 15 ? 'bg-white text-blue-900 font-medium' : 'hover:bg-white/10 cursor-pointer'}
                       `}
                     >
                       {day}
