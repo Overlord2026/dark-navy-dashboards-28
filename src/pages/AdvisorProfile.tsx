@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -155,7 +154,7 @@ const AdvisorProfile = () => {
                   <div className="flex flex-col lg:flex-row items-center lg:items-start gap-6 flex-1">
                     <div className="rounded-full overflow-hidden w-32 h-32 flex-shrink-0">
                       <img
-                        src="/lovable-uploads/b4df25d6-12d7-4c34-874e-804e72335904.png"
+                        src="/lovable-uploads/dc1ba115-9699-414c-b9d0-7521bf7e7224.png"
                         alt="Daniel Zamora"
                         className="w-full h-full object-cover"
                       />
@@ -250,7 +249,7 @@ const AdvisorProfile = () => {
                   <div className="text-center mb-6">
                     <div className="mx-auto w-24 h-24 rounded-full overflow-hidden mb-4">
                       <img
-                        src="/lovable-uploads/b4df25d6-12d7-4c34-874e-804e72335904.png"
+                        src="/lovable-uploads/dc1ba115-9699-414c-b9d0-7521bf7e7224.png"
                         alt={advisorInfo.name}
                         className="w-full h-full object-cover"
                       />
