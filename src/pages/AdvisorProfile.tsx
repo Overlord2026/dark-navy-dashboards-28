@@ -21,6 +21,10 @@ const AdvisorProfile = () => {
     setIsEditing(false);
   };
 
+  const handleBookSession = () => {
+    window.open("https://calendly.com/tonygomes/60min", "_blank");
+  };
+
   const renderTabContent = () => {
     switch (activeTab) {
       case "bio":
@@ -188,7 +192,7 @@ const AdvisorProfile = () => {
                   
                   <div className="flex flex-col gap-3 lg:flex-shrink-0">
                     <Button 
-                      onClick={() => setIsBookingDrawerOpen(true)}
+                      onClick={handleBookSession}
                       className="bg-white text-[#1B1B32] hover:bg-white/90 px-6 py-3 font-medium"
                     >
                       <Calendar className="h-4 w-4 mr-2" />
