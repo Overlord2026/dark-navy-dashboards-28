@@ -5,6 +5,8 @@ import { InsuranceOverview } from "@/components/insurance/InsuranceOverview";
 import { InsuranceDetailView } from "@/components/insurance/InsuranceDetailView";
 import { InsuranceType, InsuranceProvider, InsuranceTypeInfo } from "@/types/insuranceProvider";
 import { getInsuranceTitle } from "@/utils/insuranceUtils";
+import { useTheme } from "@/context/ThemeContext";
+import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
 const Insurance = () => {
@@ -12,6 +14,8 @@ const Insurance = () => {
   const [selectedProvider, setSelectedProvider] = useState<InsuranceProvider | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const { theme } = useTheme();
+  const isLightTheme = theme === "light";
 
   // Map insurance types to their available providers
   const insuranceTypeProviders: Record<InsuranceType, InsuranceTypeInfo> = {
@@ -84,28 +88,38 @@ const Insurance = () => {
   // Render the main insurance overview
   if (!selectedType) {
     return (
-      <ThreeColumnLayout activeMainItem="insurance" title="Insurance">
-        <InsuranceOverview onSelectType={handleSelectType} />
-      </ThreeColumnLayout>
+      <div className={cn(
+        "min-h-screen",
+        isLightTheme ? "bg-background" : "bg-background"
+      )}>
+        <ThreeColumnLayout activeMainItem="insurance" title="Insurance">
+          <InsuranceOverview onSelectType={handleSelectType} />
+        </ThreeColumnLayout>
+      </div>
     );
   }
 
   // Render the insurance type detail page
   return (
-    <ThreeColumnLayout activeMainItem="insurance" title={getInsuranceTitle(selectedType)}>
-      <InsuranceDetailView
-        selectedType={selectedType}
-        selectedProvider={selectedProvider}
-        currentPage={currentPage}
-        totalPages={totalPages}
-        insuranceTypeProviders={insuranceTypeProviders}
-        onBackToMain={handleBackToMain}
-        onNextProvider={handleNextProvider}
-        onPrevProvider={handlePrevProvider}
-        onSelectProvider={selectProvider}
-        onInterested={handleInterested}
-      />
-    </ThreeColumnLayout>
+    <div className={cn(
+      "min-h-screen",
+      isLightTheme ? "bg-background" : "bg-background"
+    )}>
+      <ThreeColumnLayout activeMainItem="insurance" title={getInsuranceTitle(selectedType)}>
+        <InsuranceDetailView
+          selectedType={selectedType}
+          selectedProvider={selectedProvider}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          insuranceTypeProviders={insuranceTypeProviders}
+          onBackToMain={handleBackToMain}
+          onNextProvider={handleNextProvider}
+          onPrevProvider={handlePrevProvider}
+          onSelectProvider={selectProvider}
+          onInterested={handleInterested}
+        />
+      </ThreeColumnLayout>
+    </div>
   );
 };
 
