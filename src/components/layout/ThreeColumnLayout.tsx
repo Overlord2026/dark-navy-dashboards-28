@@ -2,7 +2,6 @@
 import { ReactNode, useState } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
 import { UserProfileSection } from "@/components/sidebar/UserProfileSection";
 import { Header } from "@/components/ui/Header";
 import { useTheme } from "@/context/ThemeContext";
@@ -12,7 +11,6 @@ import { NavigationCategory } from "./NavigationCategory";
 import { SecondaryNavigation } from "./SecondaryNavigation";
 import { navigationCategories } from "@/components/navigation/NavigationRegistry";
 import { getSecondaryMenuItems } from "./navigationData";
-import { NavCategory } from "@/types/navigation";
 
 interface ThreeColumnLayoutProps {
   children: ReactNode;
@@ -35,19 +33,17 @@ export function ThreeColumnLayout({
   const [secondarySidebarCollapsed, setSecondarySidebarCollapsed] = useState(false);
   const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>(
     navigationCategories.reduce((acc, category) => {
-      acc[category.id] = category.defaultExpanded ?? true; // Always default to true
+      acc[category.id] = category.defaultExpanded ?? true;
       return acc;
     }, {} as Record<string, boolean>)
   );
 
   const handleBookSession = () => {
     console.log("Book session clicked");
-    // This would typically open a booking calendar or external link
   };
 
   const handleViewProfile = (tabId: string) => {
     console.log("View profile tab:", tabId);
-    // Navigate to advisor profile or open a modal
   };
 
   const { theme } = useTheme();
@@ -73,7 +69,6 @@ export function ThreeColumnLayout({
   const isMainInvestmentsPage = location.pathname === "/investments";
   const isEducationPage = location.pathname === "/client-education" || location.pathname.startsWith("/client-education");
   
-  // Don't show secondary menu for education pages or main investments page
   const hasSecondaryMenu = !isMainInvestmentsPage && !isEducationPage && menuItems.length > 0;
   
   const isLightTheme = theme === "light";
@@ -105,21 +100,23 @@ export function ThreeColumnLayout({
   };
 
   return (
-    <div className={`flex flex-col h-screen overflow-hidden ${isLightTheme ? 'bg-[#F9F7E8]' : 'bg-[#12121C]'}`}>
-      <div className="w-full flex justify-center items-center py-1 border-b z-50 bg-inherit sticky top-0" style={{ borderColor: isLightTheme ? '#DCD8C0' : 'rgba(255,255,255,0.1)' }}>
+    <div className={cn(
+      "flex flex-col h-screen overflow-hidden",
+      "bg-background text-foreground"
+    )}>
+      <div className="w-full flex justify-center items-center py-1 border-b border-border z-50 bg-background sticky top-0">
         <Header />
       </div>
       
       <div className="flex flex-1 overflow-hidden">
         <aside
           className={cn(
-            "flex flex-col transition-all duration-300 ease-in-out z-30",
-            mainSidebarCollapsed ? "w-[70px]" : "w-[280px]",
-            isLightTheme ? "bg-[#F9F7E8] border-r border-[#DCD8C0]" : "bg-[#1B1B32] border-r border-white/10"
+            "flex flex-col transition-all duration-300 ease-in-out z-30 bg-sidebar-background border-r border-sidebar-border",
+            mainSidebarCollapsed ? "w-[70px]" : "w-[280px]"
           )}
         >
           <div className="flex flex-col h-full">
-            <div className={`px-4 ${isLightTheme ? 'border-[#DCD8C0]' : 'border-white/10'} mt-2 mb-2`}>
+            <div className="px-4 border-sidebar-border mt-2 mb-2">
               <UserProfileSection onMenuItemClick={handleProfileMenuItemClick} showLogo={false} />
             </div>
             
@@ -139,7 +136,7 @@ export function ThreeColumnLayout({
               </nav>
             </div>
             
-            <div className={`px-4 mt-auto mb-3 ${isLightTheme ? 'border-[#DCD8C0]' : 'border-white/10'}`}>
+            <div className="px-4 mt-auto mb-3 border-sidebar-border">
               <AdvisorSection 
                 onViewProfile={handleViewProfile} 
                 onBookSession={handleBookSession} 
@@ -160,7 +157,7 @@ export function ThreeColumnLayout({
           />
         )}
 
-        <div className="flex-1 flex flex-col overflow-hidden">
+        <div className="flex-1 flex flex-col overflow-hidden bg-background">
           {isHomePage ? (
             <div className="flex flex-col items-center w-full">
             </div>
@@ -169,7 +166,7 @@ export function ThreeColumnLayout({
           <main className="flex-1 overflow-y-auto p-3 font-sans w-full">
             {!isDashboardPage && (
               <div className="flex justify-between items-center mb-4">
-                <h1 className="text-2xl font-bold">{title}</h1>
+                <h1 className="text-2xl font-bold text-foreground">{title}</h1>
               </div>
             )}
             {children}

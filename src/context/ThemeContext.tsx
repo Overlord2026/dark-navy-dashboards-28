@@ -1,7 +1,6 @@
 
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
-import { useTheme as useNextTheme } from "next-themes";
 
 type Theme = "dark" | "light";
 
@@ -18,46 +17,48 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     () => (localStorage.getItem("theme") as Theme) || "dark"
   );
 
-  // Set up next-themes provider
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  // Set theme in localStorage and update DOM
   useEffect(() => {
     localStorage.setItem("theme", theme);
     
-    // Apply theme class to document
     const root = document.documentElement;
+    const body = document.body;
+    
+    // Remove all theme classes first
+    root.classList.remove("light-theme", "dark-theme", "light", "dark");
+    body.classList.remove("light-theme", "dark-theme", "light", "dark");
     
     if (theme === "light") {
-      root.classList.add("light-theme");
-      root.classList.remove("dark-theme");
-      // Apply to body for full coverage
-      document.body.classList.add("light-theme");
-      document.body.classList.remove("dark-theme");
-      // Apply additional class for dialog backgrounds
-      document.body.classList.add("bg-[#F9F7E8]");
-      document.body.classList.remove("bg-[#12121C]");
+      // Add light theme classes
+      root.classList.add("light-theme", "light");
+      body.classList.add("light-theme", "light");
+      root.setAttribute("data-theme", "light");
     } else {
-      root.classList.add("dark-theme");
-      root.classList.remove("light-theme");
-      // Apply to body for full coverage
-      document.body.classList.add("dark-theme");
-      document.body.classList.remove("light-theme");
-      // Apply additional class for dialog backgrounds
-      document.body.classList.add("bg-[#12121C]");
-      document.body.classList.remove("bg-[#F9F7E8]");
+      // Add dark theme classes
+      root.classList.add("dark-theme", "dark");
+      body.classList.add("dark-theme", "dark");
+      root.setAttribute("data-theme", "dark");
     }
   }, [theme]);
 
-  // Custom setTheme function
   const setTheme = (newTheme: Theme) => {
     setThemeState(newTheme);
   };
 
   return (
-    <NextThemesProvider defaultTheme={theme} attribute="class">
+    <NextThemesProvider 
+      defaultTheme={theme} 
+      attribute="class" 
+      value={{
+        light: "light-theme",
+        dark: "dark-theme"
+      }}
+      enableSystem={false}
+      forcedTheme={theme}
+    >
       <ThemeContext.Provider value={{ theme, setTheme }}>
         {children}
       </ThemeContext.Provider>

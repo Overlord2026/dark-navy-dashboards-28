@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { ChevronDown, LogOut, UserIcon, PhoneIcon, FileTextIcon, UsersIcon, BuildingIcon, PaletteIcon } from "lucide-react";
 import { useUser } from "@/context/UserContext";
 import { useAuth } from "@/context/AuthContext";
+import { useTheme } from "@/context/ThemeContext";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -15,6 +16,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { toast } from "sonner";
 import { ProfileSlidePanel } from "@/components/profile/ProfileSlidePanel";
 import { ThemeDialog } from "@/components/ui/ThemeDialog";
+import { cn } from "@/lib/utils";
 
 interface UserProfileSectionProps {
   onMenuItemClick?: (itemId: string) => void;
@@ -24,11 +26,14 @@ interface UserProfileSectionProps {
 export const UserProfileSection = ({ onMenuItemClick, showLogo = true }: UserProfileSectionProps) => {
   const { userProfile } = useUser();
   const { logout } = useAuth();
+  const { theme } = useTheme();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [activeForm, setActiveForm] = useState<string | null>(null);
   const [isThemeDialogOpen, setIsThemeDialogOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const isLightTheme = theme === "light";
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
@@ -44,7 +49,6 @@ export const UserProfileSection = ({ onMenuItemClick, showLogo = true }: UserPro
   };
 
   const handleMenuItemClick = (itemId: string) => {
-    // Close dropdown immediately
     setIsDropdownOpen(false);
     
     if (itemId === "logout") {
@@ -57,11 +61,9 @@ export const UserProfileSection = ({ onMenuItemClick, showLogo = true }: UserPro
       return;
     }
     
-    // For profile forms, open the sliding panel
     setActiveForm(itemId);
     setIsPanelOpen(true);
     
-    // Call the original callback if provided
     if (onMenuItemClick) {
       onMenuItemClick(itemId);
     }
@@ -74,12 +76,10 @@ export const UserProfileSection = ({ onMenuItemClick, showLogo = true }: UserPro
     }
   };
 
-  // Get display name with fallback
   const displayName = userProfile?.displayName || userProfile?.name || 
     `${userProfile?.firstName || ''} ${userProfile?.lastName || ''}`.trim() || 
     'User';
 
-  // Generate initials from first and last name
   const getInitials = (): string => {
     const firstName = userProfile?.firstName || '';
     const lastName = userProfile?.lastName || '';
@@ -91,7 +91,6 @@ export const UserProfileSection = ({ onMenuItemClick, showLogo = true }: UserPro
     } else if (lastName) {
       return lastName.charAt(0).toUpperCase();
     } else if (displayName && displayName !== 'User') {
-      // Fallback to display name initials
       const nameParts = displayName.split(' ').filter(part => part.length > 0);
       if (nameParts.length >= 2) {
         return `${nameParts[0].charAt(0)}${nameParts[nameParts.length - 1].charAt(0)}`.toUpperCase();
@@ -100,20 +99,38 @@ export const UserProfileSection = ({ onMenuItemClick, showLogo = true }: UserPro
       }
     }
     
-    return 'U'; // Default fallback
+    return 'U';
   };
 
   return (
     <>
-      <div className="flex items-center justify-between p-3 bg-white/5 rounded-lg border border-white/10">
+      <div className={cn(
+        "flex items-center justify-between p-3 rounded-lg border",
+        isLightTheme 
+          ? "bg-sidebar-accent border-sidebar-border" 
+          : "bg-white/5 border-white/10"
+      )}>
         <div className="flex items-center flex-1 min-w-0 gap-3">
-          <Avatar className="h-8 w-8 bg-primary/20 border border-primary/30">
-            <AvatarFallback className="bg-primary/20 text-white text-sm font-medium">
+          <Avatar className={cn(
+            "h-8 w-8 border",
+            isLightTheme 
+              ? "bg-primary/20 border-primary/30" 
+              : "bg-primary/20 border-primary/30"
+          )}>
+            <AvatarFallback className={cn(
+              "text-sm font-medium",
+              isLightTheme 
+                ? "bg-primary/20 text-sidebar-foreground" 
+                : "bg-primary/20 text-white"
+            )}>
               {getInitials()}
             </AvatarFallback>
           </Avatar>
           <div className="flex-1 min-w-0">
-            <p className="text-white font-medium text-base truncate">
+            <p className={cn(
+              "font-medium text-base truncate",
+              isLightTheme ? "text-sidebar-foreground" : "text-white"
+            )}>
               {displayName}
             </p>
           </div>
@@ -121,77 +138,156 @@ export const UserProfileSection = ({ onMenuItemClick, showLogo = true }: UserPro
         
         <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="sm" className="h-8 w-8 p-0 hover:bg-white/10 flex-shrink-0">
-              <ChevronDown className="h-4 w-4 text-gray-300" />
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className={cn(
+                "h-8 w-8 p-0 flex-shrink-0",
+                isLightTheme ? "hover:bg-sidebar-accent" : "hover:bg-white/10"
+              )}
+            >
+              <ChevronDown className={cn(
+                "h-4 w-4",
+                isLightTheme ? "text-sidebar-foreground" : "text-gray-300"
+              )} />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent 
             align="end" 
-            className="w-64 bg-[#1B1B32] border-[#2A2A40] shadow-xl shadow-black/20 p-2 z-50"
+            className={cn(
+              "w-64 shadow-xl p-2 z-50",
+              isLightTheme 
+                ? "bg-background border-border" 
+                : "bg-[#1B1B32] border-[#2A2A40] shadow-black/20"
+            )}
             sideOffset={8}
           >
             <DropdownMenuItem 
               onClick={() => handleMenuItemClick('investor-profile')}
-              className="flex items-center px-3 py-3 rounded-md hover:bg-[#2A2A40] focus:bg-[#2A2A40] cursor-pointer transition-colors"
+              className={cn(
+                "flex items-center px-3 py-3 rounded-md cursor-pointer transition-colors",
+                isLightTheme 
+                  ? "hover:bg-muted focus:bg-muted" 
+                  : "hover:bg-[#2A2A40] focus:bg-[#2A2A40]"
+              )}
             >
               <UserIcon className="h-4 w-4 mr-3 text-blue-400" />
-              <span className="text-white font-medium">Investor Profile</span>
+              <span className={cn(
+                "font-medium",
+                isLightTheme ? "text-foreground" : "text-white"
+              )}>Investor Profile</span>
             </DropdownMenuItem>
             
             <DropdownMenuItem 
               onClick={() => handleMenuItemClick('contact-information')}
-              className="flex items-center px-3 py-3 rounded-md hover:bg-[#2A2A40] focus:bg-[#2A2A40] cursor-pointer transition-colors"
+              className={cn(
+                "flex items-center px-3 py-3 rounded-md cursor-pointer transition-colors",
+                isLightTheme 
+                  ? "hover:bg-muted focus:bg-muted" 
+                  : "hover:bg-[#2A2A40] focus:bg-[#2A2A40]"
+              )}
             >
               <PhoneIcon className="h-4 w-4 mr-3 text-green-400" />
-              <span className="text-white font-medium">Contact Information</span>
+              <span className={cn(
+                "font-medium",
+                isLightTheme ? "text-foreground" : "text-white"
+              )}>Contact Information</span>
             </DropdownMenuItem>
             
             <DropdownMenuItem 
               onClick={() => handleMenuItemClick('additional-information')}
-              className="flex items-center px-3 py-3 rounded-md hover:bg-[#2A2A40] focus:bg-[#2A2A40] cursor-pointer transition-colors"
+              className={cn(
+                "flex items-center px-3 py-3 rounded-md cursor-pointer transition-colors",
+                isLightTheme 
+                  ? "hover:bg-muted focus:bg-muted" 
+                  : "hover:bg-[#2A2A40] focus:bg-[#2A2A40]"
+              )}
             >
               <FileTextIcon className="h-4 w-4 mr-3 text-purple-400" />
-              <span className="text-white font-medium">Additional Information</span>
+              <span className={cn(
+                "font-medium",
+                isLightTheme ? "text-foreground" : "text-white"
+              )}>Additional Information</span>
             </DropdownMenuItem>
             
             <DropdownMenuItem 
               onClick={() => handleMenuItemClick('beneficiaries')}
-              className="flex items-center px-3 py-3 rounded-md hover:bg-[#2A2A40] focus:bg-[#2A2A40] cursor-pointer transition-colors"
+              className={cn(
+                "flex items-center px-3 py-3 rounded-md cursor-pointer transition-colors",
+                isLightTheme 
+                  ? "hover:bg-muted focus:bg-muted" 
+                  : "hover:bg-[#2A2A40] focus:bg-[#2A2A40]"
+              )}
             >
               <UsersIcon className="h-4 w-4 mr-3 text-orange-400" />
-              <span className="text-white font-medium">Beneficiaries</span>
+              <span className={cn(
+                "font-medium",
+                isLightTheme ? "text-foreground" : "text-white"
+              )}>Beneficiaries</span>
             </DropdownMenuItem>
             
             <DropdownMenuItem 
               onClick={() => handleMenuItemClick('affiliations')}
-              className="flex items-center px-3 py-3 rounded-md hover:bg-[#2A2A40] focus:bg-[#2A2A40] cursor-pointer transition-colors"
+              className={cn(
+                "flex items-center px-3 py-3 rounded-md cursor-pointer transition-colors",
+                isLightTheme 
+                  ? "hover:bg-muted focus:bg-muted" 
+                  : "hover:bg-[#2A2A40] focus:bg-[#2A2A40]"
+              )}
             >
               <BuildingIcon className="h-4 w-4 mr-3 text-cyan-400" />
-              <span className="text-white font-medium">Affiliations</span>
+              <span className={cn(
+                "font-medium",
+                isLightTheme ? "text-foreground" : "text-white"
+              )}>Affiliations</span>
             </DropdownMenuItem>
             
             <DropdownMenuItem 
               onClick={() => handleMenuItemClick('trusts')}
-              className="flex items-center px-3 py-3 rounded-md hover:bg-[#2A2A40] focus:bg-[#2A2A40] cursor-pointer transition-colors"
+              className={cn(
+                "flex items-center px-3 py-3 rounded-md cursor-pointer transition-colors",
+                isLightTheme 
+                  ? "hover:bg-muted focus:bg-muted" 
+                  : "hover:bg-[#2A2A40] focus:bg-[#2A2A40]"
+              )}
             >
               <BuildingIcon className="h-4 w-4 mr-3 text-teal-400" />
-              <span className="text-white font-medium">Trusts</span>
+              <span className={cn(
+                "font-medium",
+                isLightTheme ? "text-foreground" : "text-white"
+              )}>Trusts</span>
             </DropdownMenuItem>
             
-            <DropdownMenuSeparator className="bg-gray-700 my-2" />
+            <DropdownMenuSeparator className={cn(
+              "my-2",
+              isLightTheme ? "bg-border" : "bg-gray-700"
+            )} />
             
             <DropdownMenuItem 
               onClick={() => handleMenuItemClick('change-theme')}
-              className="flex items-center px-3 py-3 rounded-md hover:bg-[#2A2A40] focus:bg-[#2A2A40] cursor-pointer transition-colors"
+              className={cn(
+                "flex items-center px-3 py-3 rounded-md cursor-pointer transition-colors",
+                isLightTheme 
+                  ? "hover:bg-muted focus:bg-muted" 
+                  : "hover:bg-[#2A2A40] focus:bg-[#2A2A40]"
+              )}
             >
               <PaletteIcon className="h-4 w-4 mr-3 text-yellow-400" />
-              <span className="text-white font-medium">Change Theme</span>
+              <span className={cn(
+                "font-medium",
+                isLightTheme ? "text-foreground" : "text-white"
+              )}>Change Theme</span>
             </DropdownMenuItem>
             
             <DropdownMenuItem 
               onClick={() => handleMenuItemClick('logout')}
               disabled={isLoggingOut}
-              className="flex items-center px-3 py-3 rounded-md hover:bg-red-600/20 focus:bg-red-600/20 cursor-pointer transition-colors text-red-400 hover:text-red-300"
+              className={cn(
+                "flex items-center px-3 py-3 rounded-md cursor-pointer transition-colors text-red-400 hover:text-red-300",
+                isLightTheme 
+                  ? "hover:bg-red-600/20 focus:bg-red-600/20" 
+                  : "hover:bg-red-600/20 focus:bg-red-600/20"
+              )}
             >
               <LogOut className="h-4 w-4 mr-3" />
               <span className="font-medium">{isLoggingOut ? "Logging out..." : "Logout"}</span>

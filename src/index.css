@@ -1,3 +1,4 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
@@ -44,13 +45,19 @@
     --sidebar-accent-foreground: 45 100% 50%;
     --sidebar-border: 240 20% 20%;
     --sidebar-ring: 45 100% 50%;
+
+    --success: 142 76% 36%;
+    --success-foreground: 0 0% 98%;
+    
+    --warning: 45 93% 47%;
+    --warning-foreground: 0 0% 98%;
   }
 
   .light-theme {
-    --background: 48 33% 97%; /* Softer yellow-tinted white background #F9F7E8 */
-    --foreground: 240 10% 13%; /* Darker text for better contrast #222222 */
+    --background: 48 33% 97%; /* #F9F7E8 */
+    --foreground: 240 10% 13%; /* #222222 */
 
-    --card: 48 30% 95%; /* Softer yellow-tinted card background */
+    --card: 48 30% 95%; /* Light card background */
     --card-foreground: 240 10% 13%; /* #222222 */
 
     --popover: 48 30% 95%;
@@ -71,13 +78,13 @@
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 48 30% 86%; /* Light border */
+    --border: 48 30% 86%; /* Light border #DCD8C0 */
     --input: 48 30% 86%;
     --ring: 45 70% 50%;
 
     --radius: 0.5rem;
 
-    --sidebar-background: 48 33% 97%; /* Light sidebar with soft yellow tint #F9F7E8 */
+    --sidebar-background: 48 33% 97%; /* Light sidebar #F9F7E8 */
     --sidebar-foreground: 240 10% 13%; /* Dark text #222222 */
     --sidebar-primary: 45 70% 50%;
     --sidebar-primary-foreground: 240 10% 13%;
@@ -85,6 +92,12 @@
     --sidebar-accent-foreground: 240 10% 13%; /* Dark text on accent */
     --sidebar-border: 48 30% 86%; /* Light border */
     --sidebar-ring: 45 70% 50%;
+
+    --success: 142 76% 36%;
+    --success-foreground: 0 0% 98%;
+    
+    --warning: 45 93% 47%;
+    --warning-foreground: 0 0% 98%;
   }
 }
 
@@ -105,13 +118,13 @@
   }
 
   body.light-theme {
-    background-color: #F9F7E8;
-    color: #222222;
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
   }
 
   body.dark-theme {
-    background-color: #12121C;
-    color: #E2E2E2;
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -160,40 +173,46 @@
     text-wrap: balance;
   }
 
+  /* Light theme specific overrides */
   .light-theme .dialog-content,
-  .light-theme .popover-content {
-    @apply bg-[#F9F7E8] text-[#222222] border-[#DCD8C0];
+  .light-theme .popover-content,
+  .light-theme .select-content,
+  .light-theme .dropdown-content {
+    @apply bg-background text-foreground border-border;
   }
   
   .dark-theme .dialog-content,
-  .dark-theme .popover-content {
-    @apply bg-[#0F0F2D] text-[#E2E2E2] border-[#2A2A40];
-  }
-  
-  .light-theme .select-content,
-  .light-theme .dropdown-content {
-    @apply bg-[#F9F7E8] text-[#222222] border-[#DCD8C0];
-  }
-  
+  .dark-theme .popover-content,
   .dark-theme .select-content,
   .dark-theme .dropdown-content {
-    @apply bg-[#0F0F2D] text-[#E2E2E2] border-[#2A2A40];
+    @apply bg-background text-foreground border-border;
   }
   
-  .light-theme aside {
-    @apply text-[#222222];
-  }
-  
+  /* Sidebar theming */
+  .light-theme aside,
   .light-theme [data-sidebar="sidebar"] {
-    @apply bg-[#F9F7E8] text-[#222222] border-[#DCD8C0];
+    @apply bg-sidebar-background text-sidebar-foreground border-sidebar-border;
+  }
+  
+  .dark-theme aside,
+  .dark-theme [data-sidebar="sidebar"] {
+    @apply bg-sidebar-background text-sidebar-foreground border-sidebar-border;
   }
   
   .light-theme [data-sidebar="menu-button"] {
-    @apply text-[#222222] hover:bg-[#E9E7D8] hover:text-[#222222];
+    @apply text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground;
   }
   
   .light-theme [data-sidebar="menu-button"][data-active="true"] {
-    @apply bg-[#E9E7D8] text-[#222222];
+    @apply bg-sidebar-accent text-sidebar-accent-foreground;
+  }
+  
+  .dark-theme [data-sidebar="menu-button"] {
+    @apply text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground;
+  }
+  
+  .dark-theme [data-sidebar="menu-button"][data-active="true"] {
+    @apply bg-sidebar-accent text-sidebar-accent-foreground;
   }
   
   .animate-slide-in-right {
