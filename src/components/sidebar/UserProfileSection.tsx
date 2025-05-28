@@ -73,18 +73,35 @@ export const UserProfileSection = ({ onMenuItemClick, showLogo = true }: UserPro
     }
   };
 
+  // Get display name with fallback
+  const displayName = userProfile?.displayName || userProfile?.name || 
+    `${userProfile?.firstName || ''} ${userProfile?.lastName || ''}`.trim() || 
+    'User';
+
+  const userEmail = userProfile?.email || '';
+
   return (
     <>
       <div className="flex items-center justify-between p-3 bg-white/5 rounded-lg border border-white/10">
-        <div className="flex items-center space-x-3">
-          <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+        <div className="flex items-center space-x-3 flex-1 min-w-0">
+          <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
             <User className="h-4 w-4 text-white" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-white font-medium text-sm truncate">
+              {displayName}
+            </p>
+            {userEmail && (
+              <p className="text-gray-400 text-xs truncate">
+                {userEmail}
+              </p>
+            )}
           </div>
         </div>
         
         <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="sm" className="h-8 w-8 p-0 hover:bg-white/10">
+            <Button variant="ghost" size="sm" className="h-8 w-8 p-0 hover:bg-white/10 flex-shrink-0">
               <ChevronDown className="h-4 w-4 text-gray-300" />
             </Button>
           </DropdownMenuTrigger>
