@@ -191,28 +191,44 @@
   /* Sidebar theming */
   .light-theme aside,
   .light-theme [data-sidebar="sidebar"] {
-    @apply bg-sidebar-background text-sidebar-foreground border-sidebar-border;
+    background-color: hsl(var(--sidebar-background));
+    color: hsl(var(--sidebar-foreground));
+    border-color: hsl(var(--sidebar-border));
   }
   
   .dark-theme aside,
   .dark-theme [data-sidebar="sidebar"] {
-    @apply bg-sidebar-background text-sidebar-foreground border-sidebar-border;
+    background-color: hsl(var(--sidebar-background));
+    color: hsl(var(--sidebar-foreground));
+    border-color: hsl(var(--sidebar-border));
   }
   
   .light-theme [data-sidebar="menu-button"] {
-    @apply text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground;
+    color: hsl(var(--sidebar-foreground));
+  }
+  
+  .light-theme [data-sidebar="menu-button"]:hover {
+    background-color: hsl(var(--sidebar-accent));
+    color: hsl(var(--sidebar-accent-foreground));
   }
   
   .light-theme [data-sidebar="menu-button"][data-active="true"] {
-    @apply bg-sidebar-accent text-sidebar-accent-foreground;
+    background-color: hsl(var(--sidebar-accent));
+    color: hsl(var(--sidebar-accent-foreground));
   }
   
   .dark-theme [data-sidebar="menu-button"] {
-    @apply text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground;
+    color: hsl(var(--sidebar-foreground));
+  }
+  
+  .dark-theme [data-sidebar="menu-button"]:hover {
+    background-color: hsl(var(--sidebar-accent));
+    color: hsl(var(--sidebar-accent-foreground));
   }
   
   .dark-theme [data-sidebar="menu-button"][data-active="true"] {
-    @apply bg-sidebar-accent text-sidebar-accent-foreground;
+    background-color: hsl(var(--sidebar-accent));
+    color: hsl(var(--sidebar-accent-foreground));
   }
   
   .animate-slide-in-right {

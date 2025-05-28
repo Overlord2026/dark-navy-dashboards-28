@@ -6,8 +6,10 @@ import { Button } from "@/components/ui/button";
 import { useNetWorth } from "@/context/NetWorthContext";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "@/context/UserContext";
+import { useTheme } from "@/context/ThemeContext";
 import { formatCurrency } from "@/lib/formatters";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from "recharts";
+import { cn } from "@/lib/utils";
 
 export const NetWorthSummary = () => {
   console.log('NetWorthSummary rendering');
@@ -15,7 +17,10 @@ export const NetWorthSummary = () => {
     const { assets, getTotalNetWorth, getTotalAssetsByType, getAssetsByOwner } = useNetWorth();
     console.log('NetWorthSummary: useNetWorth hook loaded successfully', assets.length);
     const { userProfile } = useUser();
+    const { theme } = useTheme();
     const navigate = useNavigate();
+    
+    const isLightTheme = theme === "light";
     
     // Calculate asset allocation percentages
     const totalNetWorth = getTotalNetWorth();
@@ -49,10 +54,18 @@ export const NetWorthSummary = () => {
     ].filter(Boolean);
 
     return (
-      <div className="bg-[#121a2c]/80 rounded-lg p-4 border border-gray-800">
+      <div className={cn(
+        "rounded-lg p-4 border transition-all duration-300",
+        isLightTheme 
+          ? "bg-card border-border text-foreground" 
+          : "bg-[#121a2c]/80 border-gray-800"
+      )}>
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-semibold flex items-center">
-            <Wallet className="mr-2 h-5 w-5 text-blue-400" />
+            <Wallet className={cn(
+              "mr-2 h-5 w-5",
+              isLightTheme ? "text-blue-600" : "text-blue-400"
+            )} />
             Net Worth Summary
           </h2>
           <div className="flex items-center gap-2">
@@ -65,7 +78,10 @@ export const NetWorthSummary = () => {
               <Maximize2 className="h-4 w-4" />
               <span className="sr-only">View All Assets</span>
             </Button>
-            <span className="text-green-400 flex items-center text-sm">
+            <span className={cn(
+              "flex items-center text-sm",
+              isLightTheme ? "text-green-600" : "text-green-400"
+            )}>
               <ArrowUpRight className="mr-1 h-4 w-4" />
               +5.2%
             </span>
@@ -73,29 +89,70 @@ export const NetWorthSummary = () => {
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-          <div className="bg-[#1a2236] p-3 rounded-lg border border-gray-800">
-            <div className="text-sm text-gray-400 mb-1">Total Assets</div>
+          <div className={cn(
+            "p-3 rounded-lg border transition-colors",
+            isLightTheme 
+              ? "bg-card border-border" 
+              : "bg-[#1a2236] border-gray-800"
+          )}>
+            <div className={cn(
+              "text-sm mb-1",
+              isLightTheme ? "text-muted-foreground" : "text-gray-400"
+            )}>Total Assets</div>
             <div className="text-xl font-semibold">{formatCurrency(totalNetWorth)}</div>
-            <div className="text-xs text-green-400">+$124,500 (5.3%)</div>
+            <div className={cn(
+              "text-xs",
+              isLightTheme ? "text-green-600" : "text-green-400"
+            )}>+$124,500 (5.3%)</div>
           </div>
           
-          <div className="bg-[#1a2236] p-3 rounded-lg border border-gray-800">
-            <div className="text-sm text-gray-400 mb-1">Total Liabilities</div>
+          <div className={cn(
+            "p-3 rounded-lg border transition-colors",
+            isLightTheme 
+              ? "bg-card border-border" 
+              : "bg-[#1a2236] border-gray-800"
+          )}>
+            <div className={cn(
+              "text-sm mb-1",
+              isLightTheme ? "text-muted-foreground" : "text-gray-400"
+            )}>Total Liabilities</div>
             <div className="text-xl font-semibold">{formatCurrency(845210)}</div>
-            <div className="text-xs text-red-400">+$12,300 (1.5%)</div>
+            <div className={cn(
+              "text-xs",
+              isLightTheme ? "text-red-600" : "text-red-400"
+            )}>+$12,300 (1.5%)</div>
           </div>
           
-          <div className="bg-[#1a2236] p-3 rounded-lg border border-gray-800 relative">
-            <div className="text-sm text-gray-400 mb-1">Net Worth</div>
-            <div className="text-xl font-semibold text-blue-400">{formatCurrency(totalNetWorth - 845210)}</div>
-            <div className="text-xs text-green-400">+$112,200 (7.5%)</div>
+          <div className={cn(
+            "p-3 rounded-lg border relative transition-colors",
+            isLightTheme 
+              ? "bg-card border-border" 
+              : "bg-[#1a2236] border-gray-800"
+          )}>
+            <div className={cn(
+              "text-sm mb-1",
+              isLightTheme ? "text-muted-foreground" : "text-gray-400"
+            )}>Net Worth</div>
+            <div className={cn(
+              "text-xl font-semibold",
+              isLightTheme ? "text-blue-600" : "text-blue-400"
+            )}>{formatCurrency(totalNetWorth - 845210)}</div>
+            <div className={cn(
+              "text-xs",
+              isLightTheme ? "text-green-600" : "text-green-400"
+            )}>+$112,200 (7.5%)</div>
             
             <div className="flex gap-1 absolute top-1 right-1">
               {propertyCount > 0 && (
                 <Button 
                   variant="ghost" 
                   size="sm" 
-                  className="text-xs flex items-center text-blue-400 hover:text-blue-300 px-1"
+                  className={cn(
+                    "text-xs flex items-center px-1",
+                    isLightTheme 
+                      ? "text-blue-600 hover:text-blue-700" 
+                      : "text-blue-400 hover:text-blue-300"
+                  )}
                   onClick={() => navigate('properties')}
                 >
                   <Home className="h-3 w-3 mr-1" />
@@ -107,7 +164,12 @@ export const NetWorthSummary = () => {
                 <Button 
                   variant="ghost" 
                   size="sm" 
-                  className="text-xs flex items-center text-green-400 hover:text-green-300 px-1"
+                  className={cn(
+                    "text-xs flex items-center px-1",
+                    isLightTheme 
+                      ? "text-green-600 hover:text-green-700" 
+                      : "text-green-400 hover:text-green-300"
+                  )}
                   onClick={() => navigate('all-assets')}
                 >
                   <Car className="h-3 w-3 mr-1" />
@@ -143,12 +205,21 @@ export const NetWorthSummary = () => {
                       <Tooltip 
                         formatter={(value) => [formatCurrency(Number(value)), 'Value']}
                         labelFormatter={(label) => `${label}`}
+                        contentStyle={{
+                          backgroundColor: isLightTheme ? 'hsl(var(--card))' : '#1a2236',
+                          border: isLightTheme ? '1px solid hsl(var(--border))' : '1px solid #374151',
+                          borderRadius: '6px',
+                          color: isLightTheme ? 'hsl(var(--foreground))' : '#e5e7eb'
+                        }}
                       />
                       <Legend />
                     </PieChart>
                   </ResponsiveContainer>
                 ) : (
-                  <div className="text-gray-400 text-center">No asset data available</div>
+                  <div className={cn(
+                    "text-center",
+                    isLightTheme ? "text-muted-foreground" : "text-gray-400"
+                  )}>No asset data available</div>
                 )}
               </div>
               
@@ -160,7 +231,8 @@ export const NetWorthSummary = () => {
                     label={asset.name} 
                     value={formatCurrency(asset.value)} 
                     percentage={asset.percentage} 
-                    color={asset.color} 
+                    color={asset.color}
+                    isLightTheme={isLightTheme}
                   />
                 ))}
               </div>
@@ -168,10 +240,16 @@ export const NetWorthSummary = () => {
           </div>
         </div>
         
-        <div className="mt-4 pt-3 border-t border-gray-800 flex justify-end">
+        <div className={cn(
+          "mt-4 pt-3 border-t flex justify-end",
+          isLightTheme ? "border-border" : "border-gray-800"
+        )}>
           <Button 
             variant="link" 
-            className="text-blue-400 hover:text-blue-300 text-sm p-0" 
+            className={cn(
+              "text-sm p-0",
+              isLightTheme ? "text-blue-600 hover:text-blue-700" : "text-blue-400 hover:text-blue-300"
+            )}
             onClick={() => navigate('all-assets')}
           >
             View All Assets →
@@ -182,9 +260,17 @@ export const NetWorthSummary = () => {
   } catch (error) {
     console.error('Error in NetWorthSummary:', error);
     return (
-      <div className="bg-[#121a2c]/80 rounded-lg p-3 border border-gray-800">
+      <div className={cn(
+        "rounded-lg p-3 border",
+        isLightTheme 
+          ? "bg-card border-border" 
+          : "bg-[#121a2c]/80 border-gray-800"
+      )}>
         <h2 className="text-xl font-semibold">Net Worth Summary</h2>
-        <div className="p-4 text-center text-red-400">
+        <div className={cn(
+          "p-4 text-center",
+          isLightTheme ? "text-red-600" : "text-red-400"
+        )}>
           Unable to load net worth data. Please reload the page.
         </div>
       </div>
@@ -197,9 +283,10 @@ interface AssetItemProps {
   value: string;
   percentage: number;
   color: string;
+  isLightTheme?: boolean;
 }
 
-const AssetItem = ({ label, value, percentage, color }: AssetItemProps) => {
+const AssetItem = ({ label, value, percentage, color, isLightTheme }: AssetItemProps) => {
   return (
     <div>
       <div className="flex justify-between items-center mb-1">
@@ -213,7 +300,11 @@ const AssetItem = ({ label, value, percentage, color }: AssetItemProps) => {
         <span className="text-sm font-medium">{value}</span>
       </div>
       <div className="flex items-center">
-        <Progress value={percentage} className="h-2" style={{backgroundColor: `${color}20`}} />
+        <Progress 
+          value={percentage} 
+          className="h-2" 
+          style={{backgroundColor: `${color}20`}} 
+        />
         <span className="ml-2 text-xs">{percentage}%</span>
       </div>
     </div>
