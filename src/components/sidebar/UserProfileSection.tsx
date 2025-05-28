@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import { User, ChevronDown, LogOut, UserIcon, PhoneIcon, FileTextIcon, UsersIcon, BuildingIcon, PaletteIcon } from "lucide-react";
+import { ChevronDown, LogOut, UserIcon, PhoneIcon, FileTextIcon, UsersIcon, BuildingIcon, PaletteIcon } from "lucide-react";
 import { useUser } from "@/context/UserContext";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
@@ -78,24 +78,14 @@ export const UserProfileSection = ({ onMenuItemClick, showLogo = true }: UserPro
     `${userProfile?.firstName || ''} ${userProfile?.lastName || ''}`.trim() || 
     'User';
 
-  const userEmail = userProfile?.email || '';
-
   return (
     <>
       <div className="flex items-center justify-between p-3 bg-white/5 rounded-lg border border-white/10">
-        <div className="flex items-center space-x-3 flex-1 min-w-0">
-          <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
-            <User className="h-4 w-4 text-white" />
-          </div>
+        <div className="flex items-center flex-1 min-w-0">
           <div className="flex-1 min-w-0">
             <p className="text-white font-medium text-sm truncate">
               {displayName}
             </p>
-            {userEmail && (
-              <p className="text-gray-400 text-xs truncate">
-                {userEmail}
-              </p>
-            )}
           </div>
         </div>
         
