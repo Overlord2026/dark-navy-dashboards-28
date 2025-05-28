@@ -2,19 +2,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Eye, Edit, Trash2 } from "lucide-react";
-
-interface Trust {
-  id?: string;
-  trustName: string;
-  country: string;
-  documents?: Array<{
-    id: string;
-    file_name: string;
-    file_path: string;
-    file_size: number;
-    content_type: string;
-  }>;
-}
+import { Trust } from "./types";
 
 interface TrustsListProps {
   trusts: Trust[];
