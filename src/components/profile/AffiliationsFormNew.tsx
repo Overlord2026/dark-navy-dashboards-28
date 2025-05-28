@@ -30,6 +30,7 @@ const affiliationsSchema = z.object({
 export function AffiliationsFormNew({ onSave }: { onSave: () => void }) {
   const { user } = useAuth();
   const [isLoading, setIsLoading] = React.useState(false);
+  const [existingRecordId, setExistingRecordId] = React.useState<string | null>(null);
   
   const form = useForm<z.infer<typeof affiliationsSchema>>({
     resolver: zodResolver(affiliationsSchema),
@@ -67,6 +68,7 @@ export function AffiliationsFormNew({ onSave }: { onSave: () => void }) {
         
         if (data) {
           console.log('Loaded affiliations data:', data);
+          setExistingRecordId(data.id); // Store the existing record ID
           form.reset({
             stockExchangeOrFinra: data.stock_exchange_or_finra || false,
             publicCompany: data.public_company || false,
@@ -78,6 +80,7 @@ export function AffiliationsFormNew({ onSave }: { onSave: () => void }) {
           });
         } else {
           console.log('No existing affiliations data found');
+          setExistingRecordId(null);
         }
       } catch (error) {
         console.error('Error in loadExistingData:', error);
@@ -111,12 +114,24 @@ export function AffiliationsFormNew({ onSave }: { onSave: () => void }) {
       
       console.log('Submitting affiliations data:', affiliationData);
       
-      const { data, error } = await supabase
-        .from('user_affiliations')
-        .upsert(affiliationData, {
-          onConflict: 'user_id'
-        })
-        .select();
+      let result;
+      
+      if (existingRecordId) {
+        // Update existing record
+        result = await supabase
+          .from('user_affiliations')
+          .update(affiliationData)
+          .eq('id', existingRecordId)
+          .select();
+      } else {
+        // Insert new record
+        result = await supabase
+          .from('user_affiliations')
+          .insert(affiliationData)
+          .select();
+      }
+      
+      const { data, error } = result;
         
       if (error) {
         console.error('Supabase error saving affiliations:', error);
@@ -125,6 +140,12 @@ export function AffiliationsFormNew({ onSave }: { onSave: () => void }) {
       }
       
       console.log('Successfully saved affiliations:', data);
+      
+      // Update the existing record ID if we just created a new record
+      if (!existingRecordId && data && data.length > 0) {
+        setExistingRecordId(data[0].id);
+      }
+      
       toast.success("Affiliations saved successfully");
       onSave();
     } catch (error) {
