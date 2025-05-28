@@ -150,7 +150,7 @@ const routes = createBrowserRouter([
     element: <ProtectedRoute><AdvisorFeedback /></ProtectedRoute>
   },
   {
-    path: "/client-advisor-profile",
+    path: "/advisor-profile",
     element: <ProtectedRoute><AdvisorProfile /></ProtectedRoute>
   },
   {
