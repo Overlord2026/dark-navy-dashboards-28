@@ -1,5 +1,6 @@
 
 import React from "react";
+import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { ChevronDown, ChevronRight } from "lucide-react";
@@ -30,9 +31,18 @@ const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
   expandedSubmenus,
   toggleSubmenu
 }) => {
+  const location = useLocation();
+  
   // Helper to ensure consistent path handling
   const normalizePath = (path: string): string => {
     return path.startsWith("/") ? path : `/${path}`;
+  };
+
+  const handleNavClick = (href: string, e: React.MouseEvent) => {
+    // Prevent default scroll behavior when clicking the same route
+    if (location.pathname === href) {
+      e.preventDefault();
+    }
   };
 
   const renderNavItem = (item: NavItem) => {
@@ -40,8 +50,9 @@ const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
     const isItemActive = isActive(normalizedHref);
     
     return (
-      <a
-        href={normalizedHref}
+      <Link
+        to={normalizedHref}
+        onClick={(e) => handleNavClick(normalizedHref, e)}
         target={item.external ? "_blank" : undefined}
         rel={item.external ? "noreferrer" : undefined}
         className={cn(
@@ -55,12 +66,6 @@ const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
               : "bg-secondary text-secondary-foreground font-medium"),
           item.disabled && "cursor-not-allowed opacity-50"
         )}
-        onClick={(e) => {
-          if (item.items && item.items.length > 0) {
-            e.preventDefault();
-            toggleSubmenu(item.title);
-          }
-        }}
       >
         {item.icon && (
           <item.icon className="mr-2 h-4 w-4" />
@@ -71,7 +76,7 @@ const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
             {item.label}
           </span>
         )}
-      </a>
+      </Link>
     );
   };
   

@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
 interface NavigationItemProps {
@@ -22,14 +22,23 @@ export const NavigationItem = ({
   isLightTheme 
 }: NavigationItemProps) => {
   const Icon = item.icon;
+  const location = useLocation();
   
   // Normalize href to ensure it starts with a forward slash
   const normalizedHref = item.href.startsWith("/") ? item.href : `/${item.href}`;
+  
+  const handleClick = (e: React.MouseEvent) => {
+    // Prevent default scroll behavior when clicking the same route
+    if (location.pathname === normalizedHref) {
+      e.preventDefault();
+    }
+  };
   
   return (
     <Link
       key={item.id}
       to={normalizedHref}
+      onClick={handleClick}
       className={cn(
         "group flex items-center py-2 px-3 rounded-md transition-colors text-[14px] whitespace-nowrap border",
         isActive
