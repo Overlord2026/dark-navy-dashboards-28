@@ -5,9 +5,13 @@ import { Button } from "@/components/ui/button";
 import { Plus, Home, Car } from "lucide-react";
 import { useInsuranceStore } from "@/hooks/useInsuranceStore";
 import { InsurancePolicyCard } from "./InsurancePolicyCard";
+import { useTheme } from "@/context/ThemeContext";
+import { cn } from "@/lib/utils";
 
 export const PropertyInsuranceTab = () => {
   const { policies, removePolicy } = useInsuranceStore();
+  const { theme } = useTheme();
+  const isLightTheme = theme === "light";
   
   const propertyPolicies = policies.filter(
     policy => policy.type === "homeowners" || policy.type === "auto"
@@ -25,7 +29,10 @@ export const PropertyInsuranceTab = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-semibold">Property Insurance</h2>
+          <h2 className={cn(
+            "text-2xl font-semibold",
+            isLightTheme ? "text-foreground" : "text-foreground"
+          )}>Property Insurance</h2>
           <p className="text-muted-foreground">
             Manage your home, auto, and other property insurance policies
           </p>
@@ -36,9 +43,15 @@ export const PropertyInsuranceTab = () => {
       </div>
       
       {propertyPolicies.length === 0 ? (
-        <Card className="p-8 flex flex-col items-center justify-center text-center">
+        <Card className={cn(
+          "p-8 flex flex-col items-center justify-center text-center",
+          isLightTheme ? "bg-card border-border" : "bg-card border-border"
+        )}>
           <Home className="h-12 w-12 text-muted-foreground mb-4" />
-          <h3 className="text-xl font-medium mb-2">No Property Insurance Policies</h3>
+          <h3 className={cn(
+            "text-xl font-medium mb-2",
+            isLightTheme ? "text-foreground" : "text-foreground"
+          )}>No Property Insurance Policies</h3>
           <p className="text-muted-foreground mb-4 max-w-md">
             You haven't added any property insurance policies yet. Add your first policy to
             start tracking your coverage for your home and vehicles.

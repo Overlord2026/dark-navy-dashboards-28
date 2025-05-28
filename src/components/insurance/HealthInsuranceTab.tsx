@@ -5,9 +5,13 @@ import { Button } from "@/components/ui/button";
 import { Plus, ClipboardCheck } from "lucide-react";
 import { useInsuranceStore } from "@/hooks/useInsuranceStore";
 import { InsurancePolicyCard } from "./InsurancePolicyCard";
+import { useTheme } from "@/context/ThemeContext";
+import { cn } from "@/lib/utils";
 
 export const HealthInsuranceTab = () => {
   const { policies, removePolicy } = useInsuranceStore();
+  const { theme } = useTheme();
+  const isLightTheme = theme === "light";
   
   const healthPolicies = policies.filter(
     policy => policy.type === "health" || policy.type === "long-term-care"
@@ -25,7 +29,10 @@ export const HealthInsuranceTab = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-semibold">Health Insurance</h2>
+          <h2 className={cn(
+            "text-2xl font-semibold",
+            isLightTheme ? "text-foreground" : "text-foreground"
+          )}>Health Insurance</h2>
           <p className="text-muted-foreground">
             Manage your health and long-term care policies
           </p>
@@ -36,9 +43,15 @@ export const HealthInsuranceTab = () => {
       </div>
       
       {healthPolicies.length === 0 ? (
-        <Card className="p-8 flex flex-col items-center justify-center text-center">
+        <Card className={cn(
+          "p-8 flex flex-col items-center justify-center text-center",
+          isLightTheme ? "bg-card border-border" : "bg-card border-border"
+        )}>
           <ClipboardCheck className="h-12 w-12 text-muted-foreground mb-4" />
-          <h3 className="text-xl font-medium mb-2">No Health Insurance Policies</h3>
+          <h3 className={cn(
+            "text-xl font-medium mb-2",
+            isLightTheme ? "text-foreground" : "text-foreground"
+          )}>No Health Insurance Policies</h3>
           <p className="text-muted-foreground mb-4 max-w-md">
             You haven't added any health insurance policies yet. Add your first policy to
             start tracking your healthcare coverage.

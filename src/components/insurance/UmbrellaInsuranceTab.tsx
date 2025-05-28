@@ -5,9 +5,13 @@ import { Button } from "@/components/ui/button";
 import { Plus, Umbrella } from "lucide-react";
 import { useInsuranceStore } from "@/hooks/useInsuranceStore";
 import { InsurancePolicyCard } from "./InsurancePolicyCard";
+import { useTheme } from "@/context/ThemeContext";
+import { cn } from "@/lib/utils";
 
 export const UmbrellaInsuranceTab = () => {
   const { policies, removePolicy } = useInsuranceStore();
+  const { theme } = useTheme();
+  const isLightTheme = theme === "light";
   
   const umbrellaPolicies = policies.filter(policy => policy.type === "umbrella");
   
@@ -23,7 +27,10 @@ export const UmbrellaInsuranceTab = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-semibold">Umbrella Policies</h2>
+          <h2 className={cn(
+            "text-2xl font-semibold",
+            isLightTheme ? "text-foreground" : "text-foreground"
+          )}>Umbrella Policies</h2>
           <p className="text-muted-foreground">
             Manage your umbrella liability policies
           </p>
@@ -34,9 +41,15 @@ export const UmbrellaInsuranceTab = () => {
       </div>
       
       {umbrellaPolicies.length === 0 ? (
-        <Card className="p-8 flex flex-col items-center justify-center text-center">
+        <Card className={cn(
+          "p-8 flex flex-col items-center justify-center text-center",
+          isLightTheme ? "bg-card border-border" : "bg-card border-border"
+        )}>
           <Umbrella className="h-12 w-12 text-muted-foreground mb-4" />
-          <h3 className="text-xl font-medium mb-2">No Umbrella Policies</h3>
+          <h3 className={cn(
+            "text-xl font-medium mb-2",
+            isLightTheme ? "text-foreground" : "text-foreground"
+          )}>No Umbrella Policies</h3>
           <p className="text-muted-foreground mb-4 max-w-md">
             You haven't added any umbrella liability policies yet. Add your first policy to
             start tracking your additional liability coverage.
