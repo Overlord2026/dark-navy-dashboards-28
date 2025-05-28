@@ -20,11 +20,15 @@ export const BeneficiaryList = ({
   const [viewDialogOpen, setViewDialogOpen] = React.useState(false);
   const [selectedBeneficiary, setSelectedBeneficiary] = React.useState<z.infer<typeof beneficiarySchema> | null>(null);
   
+  console.log('BeneficiaryList rendering with beneficiaries:', beneficiaries?.length || 0);
+  
   if (beneficiaries.length === 0) {
+    console.log('No beneficiaries to display');
     return null;
   }
 
   const handleView = (beneficiary: z.infer<typeof beneficiarySchema>) => {
+    console.log('View button clicked for beneficiary:', beneficiary.firstName, beneficiary.lastName);
     setSelectedBeneficiary(beneficiary);
     setViewDialogOpen(true);
   };
@@ -40,10 +44,10 @@ export const BeneficiaryList = ({
           {beneficiaries.map((beneficiary, index) => (
             <div 
               key={index} 
-              className="flex items-center justify-between border rounded-md p-3"
+              className="flex items-center justify-between border rounded-md p-3 bg-card"
             >
               <div>
-                <p className="font-medium">{beneficiary.firstName} {beneficiary.lastName}</p>
+                <p className="font-medium text-foreground">{beneficiary.firstName} {beneficiary.lastName}</p>
                 <p className="text-sm text-muted-foreground">{beneficiary.relationship}</p>
               </div>
               <div className="flex gap-2">
@@ -51,8 +55,9 @@ export const BeneficiaryList = ({
                   variant="outline" 
                   size="sm"
                   onClick={() => handleView(beneficiary)}
+                  className="flex items-center gap-1"
                 >
-                  <Eye className="h-4 w-4 mr-1" />
+                  <Eye className="h-4 w-4" />
                   View
                 </Button>
                 <Button 
@@ -66,6 +71,7 @@ export const BeneficiaryList = ({
                   variant="outline" 
                   size="sm"
                   onClick={() => onRemove(beneficiary)}
+                  className="flex items-center"
                 >
                   <Minus className="h-4 w-4" />
                 </Button>
