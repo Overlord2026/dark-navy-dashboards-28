@@ -1,6 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -29,23 +28,6 @@ export function BeneficiariesForm({ onSave }: { onSave: () => void }) {
     resolver: zodResolver(beneficiarySchema),
     defaultValues: defaultBeneficiaryValues,
   });
-
-  function onSubmit(values: Beneficiary) {
-    if (currentBeneficiary) {
-      // Update existing beneficiary
-      setBeneficiaries(prev => 
-        prev.map(b => 
-          b === currentBeneficiary ? values : b
-        )
-      );
-      setCurrentBeneficiary(null);
-    } else {
-      // Add new beneficiary
-      setBeneficiaries(prev => [...prev, values]);
-    }
-    
-    form.reset(defaultBeneficiaryValues);
-  }
 
   function handleRemoveBeneficiary(beneficiary: Beneficiary) {
     setBeneficiaries(prev => prev.filter(b => b !== beneficiary));
