@@ -1,4 +1,3 @@
-
 import React from "react";
 import {
   Dialog,
@@ -25,20 +24,20 @@ export function TrustViewDialog({
 }: TrustViewDialogProps) {
   if (!trust) return null;
 
-  const handleDownloadDocument = async (document: TrustDocument) => {
+  const handleDownloadDocument = async (trustDocument: TrustDocument) => {
     try {
-      console.log('Starting download for document:', document.file_name);
+      console.log('Starting download for document:', trustDocument.file_name);
       
       // For now, we'll create a blob with some sample content since we don't have actual file storage
       // In a real implementation, you would fetch the file from Supabase Storage
-      const sampleContent = `This is a placeholder for ${document.file_name}`;
-      const blob = new Blob([sampleContent], { type: document.content_type || 'application/octet-stream' });
+      const sampleContent = `This is a placeholder for ${trustDocument.file_name}`;
+      const blob = new Blob([sampleContent], { type: trustDocument.content_type || 'application/octet-stream' });
       
       // Create a download link
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.download = document.file_name;
+      link.download = trustDocument.file_name;
       
       // Trigger the download
       document.body.appendChild(link);
@@ -48,10 +47,10 @@ export function TrustViewDialog({
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
       
-      toast.success(`Downloaded ${document.file_name}`);
+      toast.success(`Downloaded ${trustDocument.file_name}`);
     } catch (error) {
       console.error('Error downloading document:', error);
-      toast.error(`Failed to download ${document.file_name}`);
+      toast.error(`Failed to download ${trustDocument.file_name}`);
     }
   };
 
@@ -135,21 +134,21 @@ export function TrustViewDialog({
             <div>
               <h3 className="text-lg font-semibold mb-3 text-foreground">Documents</h3>
               <div className="space-y-2">
-                {trust.documents.map((document) => (
-                  <div key={document.id} className="flex items-center justify-between border rounded-md p-3 bg-muted/50">
+                {trust.documents.map((trustDocument) => (
+                  <div key={trustDocument.id} className="flex items-center justify-between border rounded-md p-3 bg-muted/50">
                     <div className="flex items-center gap-3">
                       <FileText className="h-5 w-5 text-blue-600" />
                       <div>
-                        <p className="font-medium text-foreground">{document.file_name}</p>
+                        <p className="font-medium text-foreground">{trustDocument.file_name}</p>
                         <p className="text-sm text-muted-foreground">
-                          {formatFileSize(document.file_size)} • {document.content_type}
+                          {formatFileSize(trustDocument.file_size)} • {trustDocument.content_type}
                         </p>
                       </div>
                     </div>
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => handleDownloadDocument(document)}
+                      onClick={() => handleDownloadDocument(trustDocument)}
                       className="flex items-center gap-2"
                     >
                       <Download className="h-4 w-4" />
