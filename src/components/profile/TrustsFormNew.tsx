@@ -85,7 +85,16 @@ const trustSchema = z.object({
   documentType: z.string().min(1, { message: "Document type is required." }),
 });
 
-type Trust = z.infer<typeof trustSchema> & { id?: string };
+type Trust = z.infer<typeof trustSchema> & { 
+  id?: string;
+  documents?: Array<{
+    id: string;
+    file_name: string;
+    file_path: string;
+    file_size: number;
+    content_type: string;
+  }>;
+};
 
 export function TrustsFormNew({ onSave }: { onSave: () => void }) {
   const { user } = useAuth();
@@ -117,7 +126,16 @@ export function TrustsFormNew({ onSave }: { onSave: () => void }) {
       
       const { data, error } = await supabase
         .from('user_trusts')
-        .select('*')
+        .select(`
+          *,
+          user_trust_documents (
+            id,
+            file_name,
+            file_path,
+            file_size,
+            content_type
+          )
+        `)
         .eq('user_id', user.id);
         
       if (data && !error) {
@@ -132,6 +150,7 @@ export function TrustsFormNew({ onSave }: { onSave: () => void }) {
           phoneNumber: t.phone_number || "",
           emailAddress: t.email_address || "",
           documentType: t.document_type || "Trust Formation Document",
+          documents: t.user_trust_documents || []
         })));
       }
     };
@@ -162,6 +181,38 @@ export function TrustsFormNew({ onSave }: { onSave: () => void }) {
       emailAddress: "",
       documentType: "Trust Formation Document",
     });
+  };
+
+  const uploadDocument = async (file: File, trustId: string) => {
+    try {
+      // Create a unique file path
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Date.now()}.${fileExt}`;
+      const filePath = `trust-documents/${user?.id}/${trustId}/${fileName}`;
+
+      // For now, we'll store the document reference in the database
+      // In a production app, you'd upload to Supabase Storage first
+      const { error: docError } = await supabase
+        .from('user_trust_documents')
+        .insert({
+          trust_id: trustId,
+          user_id: user?.id,
+          file_name: file.name,
+          file_path: filePath,
+          file_size: file.size,
+          content_type: file.type
+        });
+
+      if (docError) {
+        console.error('Error saving document:', docError);
+        toast.error("Failed to save document");
+      } else {
+        toast.success(`Document ${file.name} saved successfully`);
+      }
+    } catch (error) {
+      console.error('Error uploading document:', error);
+      toast.error("Failed to upload document");
+    }
   };
 
   async function onSubmit(values: z.infer<typeof trustSchema>) {
@@ -197,61 +248,34 @@ export function TrustsFormNew({ onSave }: { onSave: () => void }) {
           toast.error("Failed to update trust");
           console.error(error);
         } else {
+          // Upload document if one was selected
+          if (selectedFile && editingTrust.id) {
+            await uploadDocument(selectedFile, editingTrust.id);
+          }
+          
           toast.success("Trust updated successfully");
           setEditingTrust(null);
-          // Reload data
-          const { data } = await supabase
-            .from('user_trusts')
-            .select('*')
-            .eq('user_id', user.id);
-          if (data) {
-            setTrusts(data.map(t => ({
-              id: t.id,
-              trustName: t.trust_name || "",
-              country: t.country || "United States",
-              address: t.address || "",
-              city: t.city || "",
-              state: t.state || "",
-              zipCode: t.zip_code || "",
-              phoneNumber: t.phone_number || "",
-              emailAddress: t.email_address || "",
-              documentType: t.document_type || "Trust Formation Document",
-            })));
-          }
+          await reloadTrusts();
         }
       } else {
         // Add new trust
-        const { error } = await supabase
+        const { data: newTrust, error } = await supabase
           .from('user_trusts')
-          .insert(trustData);
+          .insert(trustData)
+          .select()
+          .single();
           
         if (error) {
           toast.error("Failed to add trust");
           console.error(error);
         } else {
+          // Upload document if one was selected
+          if (selectedFile && newTrust) {
+            await uploadDocument(selectedFile, newTrust.id);
+          }
+          
           toast.success("Trust added successfully");
-          if (selectedFile) {
-            toast.success(`Document ${selectedFile.name} uploaded with trust`);
-          }
-          // Reload data
-          const { data } = await supabase
-            .from('user_trusts')
-            .select('*')
-            .eq('user_id', user.id);
-          if (data) {
-            setTrusts(data.map(t => ({
-              id: t.id,
-              trustName: t.trust_name || "",
-              country: t.country || "United States",
-              address: t.address || "",
-              city: t.city || "",
-              state: t.state || "",
-              zipCode: t.zip_code || "",
-              phoneNumber: t.phone_number || "",
-              emailAddress: t.email_address || "",
-              documentType: t.document_type || "Trust Formation Document",
-            })));
-          }
+          await reloadTrusts();
         }
       }
       
@@ -276,6 +300,40 @@ export function TrustsFormNew({ onSave }: { onSave: () => void }) {
     }
   }
 
+  const reloadTrusts = async () => {
+    if (!user) return;
+    
+    const { data } = await supabase
+      .from('user_trusts')
+      .select(`
+        *,
+        user_trust_documents (
+          id,
+          file_name,
+          file_path,
+          file_size,
+          content_type
+        )
+      `)
+      .eq('user_id', user.id);
+      
+    if (data) {
+      setTrusts(data.map(t => ({
+        id: t.id,
+        trustName: t.trust_name || "",
+        country: t.country || "United States",
+        address: t.address || "",
+        city: t.city || "",
+        state: t.state || "",
+        zipCode: t.zip_code || "",
+        phoneNumber: t.phone_number || "",
+        emailAddress: t.email_address || "",
+        documentType: t.document_type || "Trust Formation Document",
+        documents: t.user_trust_documents || []
+      })));
+    }
+  };
+
   const removeTrust = async (id: string) => {
     const { error } = await supabase
       .from('user_trusts')
@@ -294,7 +352,7 @@ export function TrustsFormNew({ onSave }: { onSave: () => void }) {
     setSelectedFile(file);
     toast.success(`File ${file.name} selected for upload`);
   };
-
+  
   return (
     <div className="space-y-6">
       <div>
@@ -314,6 +372,9 @@ export function TrustsFormNew({ onSave }: { onSave: () => void }) {
                 <div>
                   <p className="font-medium text-foreground">{trust.trustName}</p>
                   <p className="text-sm text-muted-foreground">{trust.country}</p>
+                  {trust.documents && trust.documents.length > 0 && (
+                    <p className="text-xs text-blue-600">{trust.documents.length} document(s) attached</p>
+                  )}
                 </div>
                 <div className="flex items-center gap-2">
                   <Button
