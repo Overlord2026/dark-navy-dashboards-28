@@ -1,4 +1,3 @@
-
 import React from "react";
 import { UseFormReturn } from "react-hook-form";
 import { Button } from "@/components/ui/button";
@@ -13,14 +12,15 @@ import {
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { FileUpload } from "@/components/ui/file-upload";
+import { FileText, Download } from "lucide-react";
 import { US_STATES } from "./constants";
-import { TrustFormData } from "./types";
+import { TrustFormData, Trust } from "./types";
 
 interface TrustFormProps {
   form: UseFormReturn<TrustFormData>;
   onSubmit: (values: TrustFormData) => void;
   isLoading: boolean;
-  editingTrust: any;
+  editingTrust: Trust | null;
   onCancelEdit: () => void;
   selectedFile: File | null;
   onFileChange: (file: File) => void;
@@ -35,6 +35,41 @@ export function TrustForm({
   selectedFile, 
   onFileChange 
 }: TrustFormProps) {
+  const formatFileSize = (bytes: number) => {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  };
+
+  const handleDownloadExistingDocument = (trustDocument: any) => {
+    try {
+      console.log('Starting download for existing document:', trustDocument.file_name);
+      
+      // For now, we'll create a blob with some sample content since we don't have actual file storage
+      // In a real implementation, you would fetch the file from Supabase Storage
+      const sampleContent = `This is a placeholder for ${trustDocument.file_name}`;
+      const blob = new Blob([sampleContent], { type: trustDocument.content_type || 'application/octet-stream' });
+      
+      // Create a download link
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = trustDocument.file_name;
+      
+      // Trigger the download
+      document.body.appendChild(link);
+      link.click();
+      
+      // Clean up
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error downloading document:', error);
+    }
+  };
+
   return (
     <div className="border-t border-border pt-6">
       <div className="flex items-center justify-between mb-4">
@@ -55,6 +90,7 @@ export function TrustForm({
       
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormField
               control={form.control}
@@ -251,8 +287,42 @@ export function TrustForm({
             )}
           />
           
+          {/* Show existing documents when editing */}
+          {editingTrust && editingTrust.documents && editingTrust.documents.length > 0 && (
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-foreground">Existing Documents</label>
+              <div className="space-y-2">
+                {editingTrust.documents.map((trustDocument) => (
+                  <div key={trustDocument.id} className="flex items-center justify-between border rounded-md p-3 bg-muted/50">
+                    <div className="flex items-center gap-3">
+                      <FileText className="h-5 w-5 text-blue-600" />
+                      <div>
+                        <p className="font-medium text-foreground">{trustDocument.file_name}</p>
+                        <p className="text-sm text-muted-foreground">
+                          {formatFileSize(trustDocument.file_size)} • {trustDocument.content_type}
+                        </p>
+                      </div>
+                    </div>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleDownloadExistingDocument(trustDocument)}
+                      className="flex items-center gap-2"
+                    >
+                      <Download className="h-4 w-4" />
+                      Download
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+          
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Upload Document</label>
+            <label className="text-sm font-medium text-foreground">
+              {editingTrust ? "Upload Additional Document" : "Upload Document"}
+            </label>
             <FileUpload
               onFileChange={onFileChange}
               accept=".pdf,.doc,.docx"
