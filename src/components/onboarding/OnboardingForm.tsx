@@ -3,8 +3,8 @@ import React from "react";
 import { ProfileForm } from "@/components/profile/ProfileForm";
 import { ContactForm } from "@/components/profile/ContactForm";
 import { AdditionalInfoForm } from "@/components/profile/AdditionalInfoForm";
-import { BeneficiariesForm } from "@/components/profile/BeneficiariesForm";
-import { AffiliationsForm } from "@/components/profile/AffiliationsForm";
+import { BeneficiariesFormNew } from "@/components/profile/BeneficiariesFormNew";
+import { AffiliationsFormNew } from "@/components/profile/AffiliationsFormNew";
 import { TrustsForm } from "@/components/profile/TrustsForm";
 import { SecurityForm } from "@/components/profile/SecurityForm";
 import { toast } from "sonner";
@@ -33,9 +33,9 @@ export const OnboardingForm = ({ formId, onFormSave }: OnboardingFormProps) => {
     case "additional-information":
       return <AdditionalInfoForm onSave={handleFormSave} />;
     case "beneficiaries":
-      return <BeneficiariesForm onSave={handleFormSave} />;
+      return <BeneficiariesFormNew onSave={handleFormSave} />;
     case "affiliations":
-      return <AffiliationsForm onSave={handleFormSave} />;
+      return <AffiliationsFormNew onSave={handleFormSave} />;
     case "trusts":
       return <TrustsForm onSave={handleFormSave} />;
     case "security-access":
