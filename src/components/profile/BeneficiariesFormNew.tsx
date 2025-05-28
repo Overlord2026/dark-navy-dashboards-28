@@ -247,8 +247,8 @@ export function BeneficiariesFormNew({ onSave }: { onSave: () => void }) {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-semibold tracking-tight text-white mb-2">Beneficiaries</h2>
-        <p className="text-sm text-gray-400">Add and manage your beneficiaries information.</p>
+        <h2 className="text-2xl font-semibold tracking-tight text-foreground mb-2">Beneficiaries</h2>
+        <p className="text-sm text-muted-foreground">Add and manage your beneficiaries information.</p>
       </div>
       
       {beneficiaries.length > 0 && (
@@ -262,7 +262,7 @@ export function BeneficiariesFormNew({ onSave }: { onSave: () => void }) {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-medium text-white">
+            <h3 className="text-lg font-medium text-foreground">
               {editingBeneficiary ? "Edit Beneficiary" : "Add New Beneficiary"}
             </h3>
             {editingBeneficiary && (
@@ -270,7 +270,7 @@ export function BeneficiariesFormNew({ onSave }: { onSave: () => void }) {
                 type="button" 
                 variant="outline" 
                 onClick={cancelEdit}
-                className="text-gray-400 border-gray-600 hover:bg-gray-800"
+                className="text-muted-foreground border-border hover:bg-muted"
               >
                 Cancel Edit
               </Button>
@@ -283,12 +283,12 @@ export function BeneficiariesFormNew({ onSave }: { onSave: () => void }) {
               name="firstName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-white">First Name *</FormLabel>
+                  <FormLabel className="text-foreground">First Name *</FormLabel>
                   <FormControl>
                     <Input 
                       placeholder="First name" 
                       {...field} 
-                      className="bg-gray-800 border-gray-700 text-white"
+                      className="bg-background border-border text-foreground"
                     />
                   </FormControl>
                   <FormMessage />
@@ -301,12 +301,12 @@ export function BeneficiariesFormNew({ onSave }: { onSave: () => void }) {
               name="lastName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-white">Last Name *</FormLabel>
+                  <FormLabel className="text-foreground">Last Name *</FormLabel>
                   <FormControl>
                     <Input 
                       placeholder="Last name" 
                       {...field} 
-                      className="bg-gray-800 border-gray-700 text-white"
+                      className="bg-background border-border text-foreground"
                     />
                   </FormControl>
                   <FormMessage />
@@ -319,14 +319,14 @@ export function BeneficiariesFormNew({ onSave }: { onSave: () => void }) {
               name="relationship"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-white">Relationship *</FormLabel>
+                  <FormLabel className="text-foreground">Relationship *</FormLabel>
                   <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl>
-                      <SelectTrigger className="bg-gray-800 border-gray-700 text-white">
+                      <SelectTrigger className="bg-background border-border text-foreground">
                         <SelectValue placeholder="Select relationship" />
                       </SelectTrigger>
                     </FormControl>
-                    <SelectContent className="bg-gray-800 border-gray-700">
+                    <SelectContent className="bg-background border-border">
                       <SelectItem value="spouse">Spouse</SelectItem>
                       <SelectItem value="child">Child</SelectItem>
                       <SelectItem value="parent">Parent</SelectItem>
@@ -344,12 +344,12 @@ export function BeneficiariesFormNew({ onSave }: { onSave: () => void }) {
               name="dateOfBirth"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-white">Date of Birth *</FormLabel>
+                  <FormLabel className="text-foreground">Date of Birth *</FormLabel>
                   <FormControl>
                     <DatePicker
                       date={field.value}
                       onSelect={field.onChange}
-                      className="bg-gray-800 border-gray-700 text-white"
+                      className="bg-background border-border text-foreground"
                     />
                   </FormControl>
                   <FormMessage />
@@ -362,12 +362,12 @@ export function BeneficiariesFormNew({ onSave }: { onSave: () => void }) {
               name="ssn"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-white">SSN (Optional)</FormLabel>
+                  <FormLabel className="text-foreground">SSN (Optional)</FormLabel>
                   <FormControl>
                     <Input 
                       placeholder="XXX-XX-XXXX" 
                       {...field} 
-                      className="bg-gray-800 border-gray-700 text-white"
+                      className="bg-background border-border text-foreground"
                     />
                   </FormControl>
                   <FormMessage />
@@ -380,13 +380,13 @@ export function BeneficiariesFormNew({ onSave }: { onSave: () => void }) {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-white">Email (Optional)</FormLabel>
+                  <FormLabel className="text-foreground">Email (Optional)</FormLabel>
                   <FormControl>
                     <Input 
                       type="email"
                       placeholder="email@example.com" 
                       {...field} 
-                      className="bg-gray-800 border-gray-700 text-white"
+                      className="bg-background border-border text-foreground"
                     />
                   </FormControl>
                   <FormMessage />
@@ -399,12 +399,12 @@ export function BeneficiariesFormNew({ onSave }: { onSave: () => void }) {
               name="address"
               render={({ field }) => (
                 <FormItem className="md:col-span-2">
-                  <FormLabel className="text-white">Address *</FormLabel>
+                  <FormLabel className="text-foreground">Address *</FormLabel>
                   <FormControl>
                     <Input 
                       placeholder="Street address" 
                       {...field} 
-                      className="bg-gray-800 border-gray-700 text-white"
+                      className="bg-background border-border text-foreground"
                     />
                   </FormControl>
                   <FormMessage />
@@ -417,12 +417,12 @@ export function BeneficiariesFormNew({ onSave }: { onSave: () => void }) {
               name="address2"
               render={({ field }) => (
                 <FormItem className="md:col-span-2">
-                  <FormLabel className="text-white">Address Line 2 (Optional)</FormLabel>
+                  <FormLabel className="text-foreground">Address Line 2 (Optional)</FormLabel>
                   <FormControl>
                     <Input 
                       placeholder="Apartment, suite, etc." 
                       {...field} 
-                      className="bg-gray-800 border-gray-700 text-white"
+                      className="bg-background border-border text-foreground"
                     />
                   </FormControl>
                   <FormMessage />
@@ -435,12 +435,12 @@ export function BeneficiariesFormNew({ onSave }: { onSave: () => void }) {
               name="city"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-white">City *</FormLabel>
+                  <FormLabel className="text-foreground">City *</FormLabel>
                   <FormControl>
                     <Input 
                       placeholder="City" 
                       {...field} 
-                      className="bg-gray-800 border-gray-700 text-white"
+                      className="bg-background border-border text-foreground"
                     />
                   </FormControl>
                   <FormMessage />
@@ -453,12 +453,12 @@ export function BeneficiariesFormNew({ onSave }: { onSave: () => void }) {
               name="state"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-white">State *</FormLabel>
+                  <FormLabel className="text-foreground">State *</FormLabel>
                   <FormControl>
                     <Input 
                       placeholder="State" 
                       {...field} 
-                      className="bg-gray-800 border-gray-700 text-white"
+                      className="bg-background border-border text-foreground"
                     />
                   </FormControl>
                   <FormMessage />
@@ -471,12 +471,12 @@ export function BeneficiariesFormNew({ onSave }: { onSave: () => void }) {
               name="zipCode"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-white">ZIP Code (Optional)</FormLabel>
+                  <FormLabel className="text-foreground">ZIP Code (Optional)</FormLabel>
                   <FormControl>
                     <Input 
                       placeholder="ZIP code" 
                       {...field} 
-                      className="bg-gray-800 border-gray-700 text-white"
+                      className="bg-background border-border text-foreground"
                     />
                   </FormControl>
                   <FormMessage />

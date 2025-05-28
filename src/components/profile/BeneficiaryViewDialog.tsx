@@ -43,34 +43,34 @@ export function BeneficiaryViewDialog({
         <div className="space-y-6">
           {/* Personal Information */}
           <div>
-            <h3 className="text-lg font-semibold mb-3 text-white">Personal Information</h3>
+            <h3 className="text-lg font-semibold mb-3 text-foreground">Personal Information</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="text-sm font-medium text-gray-400">First Name</label>
-                <p className="text-white">{beneficiary.firstName}</p>
+                <label className="text-sm font-medium text-muted-foreground">First Name</label>
+                <p className="text-foreground">{beneficiary.firstName}</p>
               </div>
               <div>
-                <label className="text-sm font-medium text-gray-400">Last Name</label>
-                <p className="text-white">{beneficiary.lastName}</p>
+                <label className="text-sm font-medium text-muted-foreground">Last Name</label>
+                <p className="text-foreground">{beneficiary.lastName}</p>
               </div>
               <div>
-                <label className="text-sm font-medium text-gray-400">Relationship</label>
-                <p className="text-white">{beneficiary.relationship}</p>
+                <label className="text-sm font-medium text-muted-foreground">Relationship</label>
+                <p className="text-foreground">{beneficiary.relationship}</p>
               </div>
               <div>
-                <label className="text-sm font-medium text-gray-400">Date of Birth</label>
-                <p className="text-white">{formatDate(beneficiary.dateOfBirth)}</p>
+                <label className="text-sm font-medium text-muted-foreground">Date of Birth</label>
+                <p className="text-foreground">{formatDate(beneficiary.dateOfBirth)}</p>
               </div>
               {beneficiary.ssn && (
                 <div>
-                  <label className="text-sm font-medium text-gray-400">SSN</label>
-                  <p className="text-white">***-**-{beneficiary.ssn.slice(-4)}</p>
+                  <label className="text-sm font-medium text-muted-foreground">SSN</label>
+                  <p className="text-foreground">***-**-{beneficiary.ssn.slice(-4)}</p>
                 </div>
               )}
               {beneficiary.email && (
                 <div>
-                  <label className="text-sm font-medium text-gray-400">Email</label>
-                  <p className="text-white">{beneficiary.email}</p>
+                  <label className="text-sm font-medium text-muted-foreground">Email</label>
+                  <p className="text-foreground">{beneficiary.email}</p>
                 </div>
               )}
             </div>
@@ -78,30 +78,30 @@ export function BeneficiaryViewDialog({
 
           {/* Address Information */}
           <div>
-            <h3 className="text-lg font-semibold mb-3 text-white">Address Information</h3>
+            <h3 className="text-lg font-semibold mb-3 text-foreground">Address Information</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="md:col-span-2">
-                <label className="text-sm font-medium text-gray-400">Address</label>
-                <p className="text-white">{beneficiary.address}</p>
+                <label className="text-sm font-medium text-muted-foreground">Address</label>
+                <p className="text-foreground">{beneficiary.address}</p>
               </div>
               {beneficiary.address2 && (
                 <div className="md:col-span-2">
-                  <label className="text-sm font-medium text-gray-400">Address Line 2</label>
-                  <p className="text-white">{beneficiary.address2}</p>
+                  <label className="text-sm font-medium text-muted-foreground">Address Line 2</label>
+                  <p className="text-foreground">{beneficiary.address2}</p>
                 </div>
               )}
               <div>
-                <label className="text-sm font-medium text-gray-400">City</label>
-                <p className="text-white">{beneficiary.city}</p>
+                <label className="text-sm font-medium text-muted-foreground">City</label>
+                <p className="text-foreground">{beneficiary.city}</p>
               </div>
               <div>
-                <label className="text-sm font-medium text-gray-400">State</label>
-                <p className="text-white">{beneficiary.state}</p>
+                <label className="text-sm font-medium text-muted-foreground">State</label>
+                <p className="text-foreground">{beneficiary.state}</p>
               </div>
               {beneficiary.zipCode && (
                 <div>
-                  <label className="text-sm font-medium text-gray-400">ZIP Code</label>
-                  <p className="text-white">{beneficiary.zipCode}</p>
+                  <label className="text-sm font-medium text-muted-foreground">ZIP Code</label>
+                  <p className="text-foreground">{beneficiary.zipCode}</p>
                 </div>
               )}
             </div>
