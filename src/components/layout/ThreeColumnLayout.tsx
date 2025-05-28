@@ -114,7 +114,7 @@ export function ThreeColumnLayout({
         <aside
           className={cn(
             "flex flex-col transition-all duration-300 ease-in-out z-30",
-            mainSidebarCollapsed ? "w-[70px]" : "w-[220px]",
+            mainSidebarCollapsed ? "w-[70px]" : "w-[280px]",
             isLightTheme ? "bg-[#F9F7E8] border-r border-[#DCD8C0]" : "bg-[#1B1B32] border-r border-white/10"
           )}
         >
