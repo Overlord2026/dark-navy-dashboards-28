@@ -1,4 +1,5 @@
 
+import React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -6,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -14,31 +14,29 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Info } from "lucide-react";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { Checkbox } from "@/components/ui/checkbox";
+import { supabase } from "@/lib/supabase";
+import { useAuth } from "@/context/AuthContext";
+import { toast } from "sonner";
 
-const formSchema = z.object({
+const additionalInfoSchema = z.object({
   citizenshipStatus: z.string().min(1, { message: "Citizenship status is required." }),
-  ssn: z.string().min(1, { message: "SSN is required." }),
+  ssn: z.string().min(9, { message: "SSN must be at least 9 digits." }),
   incomeRange: z.string().min(1, { message: "Income range is required." }),
   netWorth: z.string().min(1, { message: "Net worth is required." }),
   investorType: z.string().min(1, { message: "Investor type is required." }),
   investingObjective: z.string().min(1, { message: "Investing objective is required." }),
-  taxBracketCapital: z.string().min(1, { message: "Tax bracket is required." }),
-  taxBracketIncome: z.string().min(1, { message: "Tax bracket is required." }),
-  iraContribution: z.enum(["Yes", "No"]),
+  taxBracketCapital: z.string().min(1, { message: "Tax bracket for capital gains is required." }),
+  taxBracketIncome: z.string().min(1, { message: "Tax bracket for income is required." }),
+  iraContribution: z.boolean().default(false),
   employmentStatus: z.string().min(1, { message: "Employment status is required." }),
 });
 
 export function AdditionalInfoForm({ onSave }: { onSave: () => void }) {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const { user } = useAuth();
+  
+  const form = useForm<z.infer<typeof additionalInfoSchema>>({
+    resolver: zodResolver(additionalInfoSchema),
     defaultValues: {
       citizenshipStatus: "",
       ssn: "",
@@ -48,41 +46,94 @@ export function AdditionalInfoForm({ onSave }: { onSave: () => void }) {
       investingObjective: "",
       taxBracketCapital: "",
       taxBracketIncome: "",
-      iraContribution: "No",
+      iraContribution: false,
       employmentStatus: "",
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-    onSave();
+  React.useEffect(() => {
+    const loadExistingData = async () => {
+      if (!user) return;
+      
+      const { data, error } = await supabase
+        .from('user_additional_info')
+        .select('*')
+        .eq('user_id', user.id)
+        .single();
+        
+      if (data && !error) {
+        form.reset({
+          citizenshipStatus: data.citizenship_status || "",
+          ssn: data.ssn || "",
+          incomeRange: data.income_range || "",
+          netWorth: data.net_worth || "",
+          investorType: data.investor_type || "",
+          investingObjective: data.investing_objective || "",
+          taxBracketCapital: data.tax_bracket_capital || "",
+          taxBracketIncome: data.tax_bracket_income || "",
+          iraContribution: data.ira_contribution || false,
+          employmentStatus: data.employment_status || "",
+        });
+      }
+    };
+    
+    loadExistingData();
+  }, [user, form]);
+
+  async function onSubmit(values: z.infer<typeof additionalInfoSchema>) {
+    if (!user) return;
+    
+    const { error } = await supabase
+      .from('user_additional_info')
+      .upsert({
+        user_id: user.id,
+        citizenship_status: values.citizenshipStatus,
+        ssn: values.ssn,
+        income_range: values.incomeRange,
+        net_worth: values.netWorth,
+        investor_type: values.investorType,
+        investing_objective: values.investingObjective,
+        tax_bracket_capital: values.taxBracketCapital,
+        tax_bracket_income: values.taxBracketIncome,
+        ira_contribution: values.iraContribution,
+        employment_status: values.employmentStatus,
+        updated_at: new Date().toISOString(),
+      });
+      
+    if (error) {
+      toast.error("Failed to save additional information");
+      console.error(error);
+    } else {
+      onSave();
+    }
   }
 
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-semibold tracking-tight text-white">Provide additional information</h2>
+        <h2 className="text-2xl font-semibold tracking-tight text-white mb-2">Additional Information</h2>
+        <p className="text-sm text-gray-400">Please provide additional details about your financial situation.</p>
       </div>
       
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormField
               control={form.control}
               name="citizenshipStatus"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-white">Citizenship Status</FormLabel>
+                  <FormLabel className="text-gray-400">Citizenship Status</FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
-                      <SelectTrigger className="bg-transparent border-gray-700 text-white focus:ring-0">
+                      <SelectTrigger className="bg-transparent border-gray-700 text-white">
                         <SelectValue placeholder="Select citizenship status" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent className="bg-[#0F0F2D] border-gray-700 text-white">
-                      <SelectItem value="US">US</SelectItem>
-                      <SelectItem value="Permanent Resident">Permanent Resident</SelectItem>
-                      <SelectItem value="Non-Resident Alien">Non-Resident Alien</SelectItem>
+                      <SelectItem value="us-citizen">US Citizen</SelectItem>
+                      <SelectItem value="permanent-resident">Permanent Resident</SelectItem>
+                      <SelectItem value="non-resident">Non-Resident</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage className="text-red-400" />
@@ -95,13 +146,13 @@ export function AdditionalInfoForm({ onSave }: { onSave: () => void }) {
               name="ssn"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-white">SSN (or ITIN)</FormLabel>
+                  <FormLabel className="text-gray-400">SSN</FormLabel>
                   <FormControl>
                     <Input 
-                      type="password" 
-                      placeholder="SSN or ITIN" 
-                      {...field}
-                      className="bg-transparent border-gray-700 text-white focus:border-blue-500" 
+                      type="password"
+                      placeholder="Social Security Number" 
+                      {...field} 
+                      className="bg-transparent border-gray-700 text-white focus:border-blue-500"
                     />
                   </FormControl>
                   <FormMessage className="text-red-400" />
@@ -114,20 +165,19 @@ export function AdditionalInfoForm({ onSave }: { onSave: () => void }) {
               name="incomeRange"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-white">Income Range</FormLabel>
+                  <FormLabel className="text-gray-400">Annual Income Range</FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
-                      <SelectTrigger className="bg-transparent border-gray-700 text-white focus:ring-0">
+                      <SelectTrigger className="bg-transparent border-gray-700 text-white">
                         <SelectValue placeholder="Select income range" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent className="bg-[#0F0F2D] border-gray-700 text-white">
-                      <SelectItem value="0 - 50K">$0 - $50,000</SelectItem>
-                      <SelectItem value="50K - 100K">$50,000 - $100,000</SelectItem>
-                      <SelectItem value="100K - 250K">$100,000 - $250,000</SelectItem>
-                      <SelectItem value="250K - 500K">$250,000 - $500,000</SelectItem>
-                      <SelectItem value="500 - 1MM">$500,000 - $1,000,000</SelectItem>
-                      <SelectItem value="1MM+">$1,000,000+</SelectItem>
+                      <SelectItem value="under-50k">Under $50,000</SelectItem>
+                      <SelectItem value="50k-100k">$50,000 - $100,000</SelectItem>
+                      <SelectItem value="100k-250k">$100,000 - $250,000</SelectItem>
+                      <SelectItem value="250k-500k">$250,000 - $500,000</SelectItem>
+                      <SelectItem value="over-500k">Over $500,000</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage className="text-red-400" />
@@ -140,40 +190,19 @@ export function AdditionalInfoForm({ onSave }: { onSave: () => void }) {
               name="netWorth"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-white">Net Worth</FormLabel>
-                  <FormControl>
-                    <div className="flex">
-                      <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-700 bg-muted text-muted-foreground">
-                        $
-                      </span>
-                      <Input 
-                        className="rounded-l-none bg-transparent border-gray-700 text-white focus:border-blue-500" 
-                        placeholder="Net worth" 
-                        {...field} 
-                      />
-                    </div>
-                  </FormControl>
-                  <FormMessage className="text-red-400" />
-                </FormItem>
-              )}
-            />
-            
-            <FormField
-              control={form.control}
-              name="investorType"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-white">Investor Type</FormLabel>
+                  <FormLabel className="text-gray-400">Net Worth</FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
-                      <SelectTrigger className="bg-transparent border-gray-700 text-white focus:ring-0">
-                        <SelectValue placeholder="Select investor type" />
+                      <SelectTrigger className="bg-transparent border-gray-700 text-white">
+                        <SelectValue placeholder="Select net worth range" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent className="bg-[#0F0F2D] border-gray-700 text-white">
-                      <SelectItem value="Conservative">Conservative</SelectItem>
-                      <SelectItem value="Moderate">Moderate</SelectItem>
-                      <SelectItem value="Aggressive">Aggressive</SelectItem>
+                      <SelectItem value="under-100k">Under $100,000</SelectItem>
+                      <SelectItem value="100k-500k">$100,000 - $500,000</SelectItem>
+                      <SelectItem value="500k-1m">$500,000 - $1,000,000</SelectItem>
+                      <SelectItem value="1m-5m">$1,000,000 - $5,000,000</SelectItem>
+                      <SelectItem value="over-5m">Over $5,000,000</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage className="text-red-400" />
@@ -183,92 +212,24 @@ export function AdditionalInfoForm({ onSave }: { onSave: () => void }) {
             
             <FormField
               control={form.control}
-              name="investingObjective"
+              name="employmentStatus"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-white">Investing Objective</FormLabel>
+                  <FormLabel className="text-gray-400">Employment Status</FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
-                      <SelectTrigger className="bg-transparent border-gray-700 text-white focus:ring-0">
-                        <SelectValue placeholder="Select investing objective" />
+                      <SelectTrigger className="bg-transparent border-gray-700 text-white">
+                        <SelectValue placeholder="Select employment status" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent className="bg-[#0F0F2D] border-gray-700 text-white">
-                      <SelectItem value="Growth">Growth</SelectItem>
-                      <SelectItem value="Income">Income</SelectItem>
-                      <SelectItem value="Both equally">Both equally</SelectItem>
+                      <SelectItem value="employed">Employed</SelectItem>
+                      <SelectItem value="self-employed">Self-Employed</SelectItem>
+                      <SelectItem value="retired">Retired</SelectItem>
+                      <SelectItem value="unemployed">Unemployed</SelectItem>
+                      <SelectItem value="student">Student</SelectItem>
                     </SelectContent>
                   </Select>
-                  <FormMessage className="text-red-400" />
-                </FormItem>
-              )}
-            />
-            
-            <FormField
-              control={form.control}
-              name="taxBracketCapital"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="flex items-center text-white">
-                    Tax Bracket (long-term capital gains)
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Info className="h-4 w-4 ml-2 text-muted-foreground" />
-                        </TooltipTrigger>
-                        <TooltipContent className="bg-gray-800 text-white border-gray-700">
-                          <p>Long-term capital gains tax rates are 0%, 15%, or 20% depending on your income.</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  </FormLabel>
-                  <FormControl>
-                    <div className="flex">
-                      <Input 
-                        className="rounded-r-none bg-transparent border-gray-700 text-white focus:border-blue-500" 
-                        placeholder="Tax bracket" 
-                        {...field} 
-                      />
-                      <span className="inline-flex items-center px-3 rounded-r-md border border-l-0 border-gray-700 bg-muted text-muted-foreground">
-                        %
-                      </span>
-                    </div>
-                  </FormControl>
-                  <FormMessage className="text-red-400" />
-                </FormItem>
-              )}
-            />
-            
-            <FormField
-              control={form.control}
-              name="taxBracketIncome"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="flex items-center text-white">
-                    Tax Bracket (ordinary income)
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Info className="h-4 w-4 ml-2 text-muted-foreground" />
-                        </TooltipTrigger>
-                        <TooltipContent className="bg-gray-800 text-white border-gray-700">
-                          <p>Ordinary income is taxed at rates from 10% to 37% depending on your income.</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  </FormLabel>
-                  <FormControl>
-                    <div className="flex">
-                      <Input 
-                        className="rounded-r-none bg-transparent border-gray-700 text-white focus:border-blue-500" 
-                        placeholder="Tax bracket" 
-                        {...field} 
-                      />
-                      <span className="inline-flex items-center px-3 rounded-r-md border border-l-0 border-gray-700 bg-muted text-muted-foreground">
-                        %
-                      </span>
-                    </div>
-                  </FormControl>
                   <FormMessage className="text-red-400" />
                 </FormItem>
               )}
@@ -279,54 +240,19 @@ export function AdditionalInfoForm({ onSave }: { onSave: () => void }) {
             control={form.control}
             name="iraContribution"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-white">Have you contributed to an IRA outside of Farther this year?</FormLabel>
+              <FormItem className="flex flex-row items-start space-x-3 space-y-0">
                 <FormControl>
-                  <RadioGroup
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                    className="flex space-x-4"
-                  >
-                    <FormItem className="flex items-center space-x-2 space-y-0">
-                      <FormControl>
-                        <RadioGroupItem value="Yes" className="text-white" />
-                      </FormControl>
-                      <FormLabel className="font-normal text-white">Yes</FormLabel>
-                    </FormItem>
-                    <FormItem className="flex items-center space-x-2 space-y-0">
-                      <FormControl>
-                        <RadioGroupItem value="No" className="text-white" />
-                      </FormControl>
-                      <FormLabel className="font-normal text-white">No</FormLabel>
-                    </FormItem>
-                  </RadioGroup>
+                  <Checkbox
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                    className="border-gray-700"
+                  />
                 </FormControl>
-                <FormMessage className="text-red-400" />
-              </FormItem>
-            )}
-          />
-          
-          <FormField
-            control={form.control}
-            name="employmentStatus"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-white">Employment Status</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                  <FormControl>
-                    <SelectTrigger className="bg-transparent border-gray-700 text-white focus:ring-0">
-                      <SelectValue placeholder="Select employment status" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent className="bg-[#0F0F2D] border-gray-700 text-white">
-                    <SelectItem value="Employed">Employed</SelectItem>
-                    <SelectItem value="Self-Employed">Self-Employed</SelectItem>
-                    <SelectItem value="Unemployed">Unemployed</SelectItem>
-                    <SelectItem value="Retired">Retired</SelectItem>
-                    <SelectItem value="Student">Student</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage className="text-red-400" />
+                <div className="space-y-1 leading-none">
+                  <FormLabel className="text-gray-400">
+                    I contribute to an IRA
+                  </FormLabel>
+                </div>
               </FormItem>
             )}
           />
@@ -334,9 +260,9 @@ export function AdditionalInfoForm({ onSave }: { onSave: () => void }) {
           <div className="flex justify-end">
             <Button 
               type="submit" 
-              className="bg-white text-[#0F0F2D] hover:bg-white/90"
+              className="bg-blue-600 text-white hover:bg-blue-700"
             >
-              Save
+              Save Additional Information
             </Button>
           </div>
         </form>
