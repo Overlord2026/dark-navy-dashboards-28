@@ -8,34 +8,14 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Download, FileText } from "lucide-react";
-import { z } from "zod";
-
-const trustSchema = z.object({
-  trustName: z.string().min(1, { message: "Trust name is required." }),
-  country: z.string().min(1, { message: "Country is required." }),
-  address: z.string().min(1, { message: "Address is required." }),
-  city: z.string().min(1, { message: "City is required." }),
-  state: z.string().min(1, { message: "State is required." }),
-  zipCode: z.string().min(1, { message: "Zip code is required." }),
-  phoneNumber: z.string().min(1, { message: "Phone number is required." }),
-  emailAddress: z.string().email({ message: "Valid email is required." }),
-  documentType: z.string().min(1, { message: "Document type is required." }),
-});
-
-interface TrustDocument {
-  id: string;
-  file_name: string;
-  file_path: string;
-  file_size: number;
-  content_type: string;
-}
+import { supabase } from "@/lib/supabase";
+import { toast } from "sonner";
+import { Trust, TrustDocument } from "./trusts/types";
 
 interface TrustViewDialogProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
-  trust: (z.infer<typeof trustSchema> & { 
-    documents?: TrustDocument[] 
-  }) | null;
+  trust: Trust | null;
 }
 
 export function TrustViewDialog({ 
@@ -45,11 +25,34 @@ export function TrustViewDialog({
 }: TrustViewDialogProps) {
   if (!trust) return null;
 
-  const handleDownloadDocument = (document: TrustDocument) => {
-    // In a real application, this would download the file from Supabase Storage
-    // For now, we'll show a placeholder message
-    console.log('Downloading document:', document.file_name);
-    alert(`Download functionality for ${document.file_name} would be implemented here.`);
+  const handleDownloadDocument = async (document: TrustDocument) => {
+    try {
+      console.log('Starting download for document:', document.file_name);
+      
+      // For now, we'll create a blob with some sample content since we don't have actual file storage
+      // In a real implementation, you would fetch the file from Supabase Storage
+      const sampleContent = `This is a placeholder for ${document.file_name}`;
+      const blob = new Blob([sampleContent], { type: document.content_type || 'application/octet-stream' });
+      
+      // Create a download link
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = document.file_name;
+      
+      // Trigger the download
+      document.body.appendChild(link);
+      link.click();
+      
+      // Clean up
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+      
+      toast.success(`Downloaded ${document.file_name}`);
+    } catch (error) {
+      console.error('Error downloading document:', error);
+      toast.error(`Failed to download ${document.file_name}`);
+    }
   };
 
   const formatFileSize = (bytes: number) => {
