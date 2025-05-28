@@ -1,18 +1,12 @@
 
-import React, { useEffect } from "react";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetClose } from "@/components/ui/sheet";
-import { X, ChevronDown } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { ProfileForm } from "@/components/profile/ProfileForm";
-import { ContactForm } from "@/components/profile/ContactForm";
-import { AdditionalInfoForm } from "@/components/profile/AdditionalInfoForm";
-import { BeneficiariesForm } from "@/components/profile/BeneficiariesForm";
-import { AffiliationsForm } from "@/components/profile/AffiliationsForm";
-import { TrustsForm } from "@/components/profile/TrustsForm";
-import { SecurityForm } from "@/components/profile/SecurityForm";
-import { DialogTitle } from "@/components/ui/dialog";
-import { toast } from "sonner";
-import { useUser } from "@/context/UserContext";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { ProfileForm } from "./ProfileForm";
+import { ContactForm } from "./ContactForm";
+import { AdditionalInfoForm } from "./AdditionalInfoForm";
+import { BeneficiariesFormNew } from "./BeneficiariesFormNew";
+import { AffiliationsFormNew } from "./AffiliationsFormNew";
+import { TrustsFormNew } from "./TrustsFormNew";
+import { SecurityForm } from "./SecurityForm";
 
 interface ProfileFormSheetProps {
   isOpen: boolean;
@@ -21,60 +15,63 @@ interface ProfileFormSheetProps {
   onFormSave: (formId: string) => void;
 }
 
-export const ProfileFormSheet = ({ 
+export function ProfileFormSheet({ 
   isOpen, 
   onOpenChange, 
   activeForm, 
   onFormSave 
-}: ProfileFormSheetProps) => {
-  const { userProfile } = useUser();
-  
-  // Force re-render when profile data changes
-  useEffect(() => {
-    if (isOpen) {
-      console.log("ProfileFormSheet: UserProfile changed", userProfile);
+}: ProfileFormSheetProps) {
+  const handleFormSave = () => {
+    if (activeForm) {
+      onFormSave(activeForm);
     }
-  }, [userProfile, isOpen]);
-  
-  // Handle saving the form data
-  const handleSave = (formId: string) => {
-    console.log(`Form ${formId} saved from ProfileFormSheet`);
-    if (onFormSave) {
-      onFormSave(formId);
-    }
-    
-    // Force close after saving
-    setTimeout(() => {
-      onOpenChange(false);
-    }, 300);
+    onOpenChange(false);
   };
 
-  const renderFormContent = () => {
-    if (!activeForm) return null;
-    
+  const renderForm = () => {
     switch (activeForm) {
       case "investor-profile":
-        return <ProfileForm onSave={() => handleSave("investor-profile")} />;
+        return <ProfileForm onSave={handleFormSave} />;
       case "contact-information":
-        return <ContactForm onSave={() => handleSave("contact-information")} />;
+        return <ContactForm onSave={handleFormSave} />;
       case "additional-information":
-        return <AdditionalInfoForm onSave={() => handleSave("additional-information")} />;
+        return <AdditionalInfoForm onSave={handleFormSave} />;
       case "beneficiaries":
-        return <BeneficiariesForm onSave={() => handleSave("beneficiaries")} />;
+        return <BeneficiariesFormNew onSave={handleFormSave} />;
       case "affiliations":
-        return <AffiliationsForm onSave={() => handleSave("affiliations")} />;
+        return <AffiliationsFormNew onSave={handleFormSave} />;
       case "trusts":
-        return <TrustsForm onSave={() => handleSave("trusts")} />;
+        return <TrustsFormNew onSave={handleFormSave} />;
       case "security-access":
-        return <SecurityForm onSave={() => handleSave("security-access")} />;
+        return <SecurityForm onSave={handleFormSave} />;
       case "investment-advisory-agreement":
-        return <div>Investment Advisory Agreement Form</div>;
+        return (
+          <div className="p-6">
+            <h2 className="text-2xl font-semibold mb-4">Investment Advisory Agreement</h2>
+            <p className="text-muted-foreground">Investment advisory agreement content will be displayed here.</p>
+          </div>
+        );
       case "disclosures":
-        return <div>Disclosures Form</div>;
+        return (
+          <div className="p-6">
+            <h2 className="text-2xl font-semibold mb-4">Disclosures</h2>
+            <p className="text-muted-foreground">Disclosure documents will be displayed here.</p>
+          </div>
+        );
       case "custodian-agreement":
-        return <div>Custodian Agreement Form</div>;
+        return (
+          <div className="p-6">
+            <h2 className="text-2xl font-semibold mb-4">Custodian Agreement</h2>
+            <p className="text-muted-foreground">Custodian agreement will be displayed here.</p>
+          </div>
+        );
       default:
-        return null;
+        return (
+          <div className="p-6">
+            <h2 className="text-2xl font-semibold mb-4">Form Not Found</h2>
+            <p className="text-muted-foreground">The requested form could not be found.</p>
+          </div>
+        );
     }
   };
 
@@ -101,29 +98,17 @@ export const ProfileFormSheet = ({
       case "custodian-agreement":
         return "Custodian Agreement";
       default:
-        return "";
+        return "Profile Form";
     }
   };
 
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
-      <SheetContent className="w-full sm:max-w-[540px] overflow-y-auto bg-[#0A0A23] text-white border-l border-gray-800" side="right">
-        <div className="flex items-center justify-between mb-2 py-2 px-4 border border-gray-700/20 rounded-md">
-          <div className="flex items-center">
-            <SheetTitle className="text-xl font-semibold text-white">
-              {getFormTitle()}
-            </SheetTitle>
-            <ChevronDown className="h-5 w-5 ml-2 text-white/70" />
-          </div>
-          <SheetClose asChild>
-            <Button variant="ghost" size="icon" className="h-8 w-8 p-0 text-white/70 hover:text-white">
-              <X className="h-5 w-5" />
-            </Button>
-          </SheetClose>
-        </div>
-        <div className="mt-4">
-          {renderFormContent()}
-        </div>
+      <SheetContent className="w-full max-w-4xl overflow-y-auto">
+        <SheetHeader>
+          <SheetTitle>{getFormTitle()}</SheetTitle>
+        </SheetHeader>
+        {renderForm()}
       </SheetContent>
     </Sheet>
   );
