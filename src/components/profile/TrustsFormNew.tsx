@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -17,8 +16,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "sonner";
-import { Trash2, Upload } from "lucide-react";
+import { Trash2, Eye, Edit } from "lucide-react";
 import { FileUpload } from "@/components/ui/file-upload";
+import { TrustViewDialog } from "./TrustViewDialog";
 
 const US_STATES = [
   { value: "AL", label: "Alabama" },
@@ -92,6 +92,9 @@ export function TrustsFormNew({ onSave }: { onSave: () => void }) {
   const [trusts, setTrusts] = useState<Trust[]>([]);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [editingTrust, setEditingTrust] = useState<Trust | null>(null);
+  const [viewingTrust, setViewingTrust] = useState<Trust | null>(null);
+  const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
   
   const form = useForm<z.infer<typeof trustSchema>>({
     resolver: zodResolver(trustSchema),
@@ -136,6 +139,31 @@ export function TrustsFormNew({ onSave }: { onSave: () => void }) {
     loadExistingData();
   }, [user]);
 
+  const handleView = (trust: Trust) => {
+    setViewingTrust(trust);
+    setIsViewDialogOpen(true);
+  };
+
+  const handleEdit = (trust: Trust) => {
+    setEditingTrust(trust);
+    form.reset(trust);
+  };
+
+  const cancelEdit = () => {
+    setEditingTrust(null);
+    form.reset({
+      trustName: "",
+      country: "United States",
+      address: "",
+      city: "",
+      state: "",
+      zipCode: "",
+      phoneNumber: "",
+      emailAddress: "",
+      documentType: "Trust Formation Document",
+    });
+  };
+
   async function onSubmit(values: z.infer<typeof trustSchema>) {
     if (!user) {
       toast.error("You must be logged in to save trusts");
@@ -145,62 +173,101 @@ export function TrustsFormNew({ onSave }: { onSave: () => void }) {
     setIsLoading(true);
     
     try {
-      const { error } = await supabase
-        .from('user_trusts')
-        .insert({
-          user_id: user.id,
-          trust_name: values.trustName,
-          country: values.country,
-          address: values.address,
-          city: values.city,
-          state: values.state,
-          zip_code: values.zipCode,
-          phone_number: values.phoneNumber,
-          email_address: values.emailAddress,
-          document_type: values.documentType,
-        });
-        
-      if (error) {
-        toast.error("Failed to add trust");
-        console.error(error);
-      } else {
-        toast.success("Trust added successfully");
-        if (selectedFile) {
-          toast.success(`Document ${selectedFile.name} uploaded with trust`);
-        }
-        form.reset({
-          trustName: "",
-          country: "United States",
-          address: "",
-          city: "",
-          state: "",
-          zipCode: "",
-          phoneNumber: "",
-          emailAddress: "",
-          documentType: "Trust Formation Document",
-        });
-        setSelectedFile(null);
-        // Reload data
-        const { data } = await supabase
+      const trustData = {
+        user_id: user.id,
+        trust_name: values.trustName,
+        country: values.country,
+        address: values.address,
+        city: values.city,
+        state: values.state,
+        zip_code: values.zipCode,
+        phone_number: values.phoneNumber,
+        email_address: values.emailAddress,
+        document_type: values.documentType,
+      };
+
+      if (editingTrust) {
+        // Update existing trust
+        const { error } = await supabase
           .from('user_trusts')
-          .select('*')
-          .eq('user_id', user.id);
-        if (data) {
-          setTrusts(data.map(t => ({
-            id: t.id,
-            trustName: t.trust_name || "",
-            country: t.country || "United States",
-            address: t.address || "",
-            city: t.city || "",
-            state: t.state || "",
-            zipCode: t.zip_code || "",
-            phoneNumber: t.phone_number || "",
-            emailAddress: t.email_address || "",
-            documentType: t.document_type || "Trust Formation Document",
-          })));
+          .update(trustData)
+          .eq('id', editingTrust.id);
+          
+        if (error) {
+          toast.error("Failed to update trust");
+          console.error(error);
+        } else {
+          toast.success("Trust updated successfully");
+          setEditingTrust(null);
+          // Reload data
+          const { data } = await supabase
+            .from('user_trusts')
+            .select('*')
+            .eq('user_id', user.id);
+          if (data) {
+            setTrusts(data.map(t => ({
+              id: t.id,
+              trustName: t.trust_name || "",
+              country: t.country || "United States",
+              address: t.address || "",
+              city: t.city || "",
+              state: t.state || "",
+              zipCode: t.zip_code || "",
+              phoneNumber: t.phone_number || "",
+              emailAddress: t.email_address || "",
+              documentType: t.document_type || "Trust Formation Document",
+            })));
+          }
         }
-        onSave();
+      } else {
+        // Add new trust
+        const { error } = await supabase
+          .from('user_trusts')
+          .insert(trustData);
+          
+        if (error) {
+          toast.error("Failed to add trust");
+          console.error(error);
+        } else {
+          toast.success("Trust added successfully");
+          if (selectedFile) {
+            toast.success(`Document ${selectedFile.name} uploaded with trust`);
+          }
+          // Reload data
+          const { data } = await supabase
+            .from('user_trusts')
+            .select('*')
+            .eq('user_id', user.id);
+          if (data) {
+            setTrusts(data.map(t => ({
+              id: t.id,
+              trustName: t.trust_name || "",
+              country: t.country || "United States",
+              address: t.address || "",
+              city: t.city || "",
+              state: t.state || "",
+              zipCode: t.zip_code || "",
+              phoneNumber: t.phone_number || "",
+              emailAddress: t.email_address || "",
+              documentType: t.document_type || "Trust Formation Document",
+            })));
+          }
+        }
       }
+      
+      form.reset({
+        trustName: "",
+        country: "United States",
+        address: "",
+        city: "",
+        state: "",
+        zipCode: "",
+        phoneNumber: "",
+        emailAddress: "",
+        documentType: "Trust Formation Document",
+      });
+      setSelectedFile(null);
+      onSave();
     } catch (error) {
       console.error('Unexpected error saving trust:', error);
       toast.error("An unexpected error occurred while saving trust");
@@ -248,14 +315,32 @@ export function TrustsFormNew({ onSave }: { onSave: () => void }) {
                   <p className="font-medium text-foreground">{trust.trustName}</p>
                   <p className="text-sm text-muted-foreground">{trust.country}</p>
                 </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => trust.id && removeTrust(trust.id)}
-                  className="flex items-center"
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleView(trust)}
+                    className="flex items-center"
+                  >
+                    <Eye className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleEdit(trust)}
+                    className="flex items-center"
+                  >
+                    <Edit className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => trust.id && removeTrust(trust.id)}
+                    className="flex items-center"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
               </div>
             ))}
           </div>
@@ -263,7 +348,21 @@ export function TrustsFormNew({ onSave }: { onSave: () => void }) {
       )}
       
       <div className="border-t border-border pt-6">
-        <h3 className="text-lg font-medium text-foreground mb-4">Add New Trust</h3>
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-lg font-medium text-foreground">
+            {editingTrust ? "Edit Trust" : "Add New Trust"}
+          </h3>
+          {editingTrust && (
+            <Button 
+              type="button" 
+              variant="outline" 
+              onClick={cancelEdit}
+              className="text-muted-foreground border-border hover:bg-muted"
+            >
+              Cancel Edit
+            </Button>
+          )}
+        </div>
         
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -483,12 +582,18 @@ export function TrustsFormNew({ onSave }: { onSave: () => void }) {
                 disabled={isLoading}
                 className="bg-blue-600 text-white hover:bg-blue-700"
               >
-                {isLoading ? "Saving..." : "Add Trust"}
+                {isLoading ? "Saving..." : editingTrust ? "Update Trust" : "Add Trust"}
               </Button>
             </div>
           </form>
         </Form>
       </div>
+      
+      <TrustViewDialog
+        isOpen={isViewDialogOpen}
+        onOpenChange={setIsViewDialogOpen}
+        trust={viewingTrust}
+      />
     </div>
   );
 }
