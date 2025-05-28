@@ -7,7 +7,7 @@ import { Drawer, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, D
 import { AdvisorDetailView } from "@/components/profile/AdvisorDetailView";
 import { AdvisorProfileEditForm } from "@/components/profile/AdvisorProfileEditForm";
 import { AdvisorProfileView } from "@/components/profile/AdvisorProfileView";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAdvisor } from "@/context/AdvisorContext";
 
 const AdvisorProfile = () => {
@@ -16,10 +16,15 @@ const AdvisorProfile = () => {
   const [showDetailView, setShowDetailView] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const { advisorInfo, updateAdvisorInfo } = useAdvisor();
+  const navigate = useNavigate();
 
   const handleSaveAdvisorInfo = (updatedInfo) => {
     updateAdvisorInfo(updatedInfo);
     setIsEditing(false);
+  };
+
+  const handleViewFullProfile = () => {
+    navigate('/client-advisor-profile');
   };
 
   const renderTabContent = () => {
@@ -197,7 +202,7 @@ const AdvisorProfile = () => {
                   <Button
                     variant="outline"
                     className="border-white/20 text-white hover:bg-white/10 px-6 py-3"
-                    onClick={() => setShowDetailView(true)}
+                    onClick={handleViewFullProfile}
                   >
                     View full profile
                   </Button>
