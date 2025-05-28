@@ -27,9 +27,9 @@ export const AdvisorSection = ({ onViewProfile, onBookSession, collapsed = false
             className={`flex items-center w-full py-4 px-4 rounded-lg transition-colors cursor-pointer min-h-[90px] ${isLightTheme ? 'bg-white text-[#222222] hover:bg-[#F5F5F5] border border-gray-200' : 'bg-[#2A2A40] text-white hover:bg-[#333350] border border-white/10'}`}
           >
             {!collapsed && (
-              <div className="flex flex-col overflow-hidden flex-1 space-y-1.5 min-w-0">
-                <span className={`text-[13px] ${isLightTheme ? 'text-[#666666]' : 'text-gray-400'} font-medium whitespace-nowrap`}>Advisor/CFO</span>
-                <span className={`text-[16px] ${isLightTheme ? 'text-[#222222]' : 'text-white'} whitespace-nowrap truncate font-semibold`}>{advisorInfo.name}</span>
+              <div className="flex flex-col overflow-hidden flex-1 space-y-1 min-w-0">
+                <span className={`text-[17px] ${isLightTheme ? 'text-[#222222]' : 'text-white'} whitespace-nowrap truncate font-semibold`}>{advisorInfo.name}</span>
+                <span className={`text-[12px] ${isLightTheme ? 'text-[#666666]' : 'text-gray-400'} font-medium whitespace-nowrap`}>Advisor/CFO</span>
               </div>
             )}
             {!collapsed && (
