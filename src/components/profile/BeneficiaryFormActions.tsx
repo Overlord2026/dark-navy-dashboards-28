@@ -24,9 +24,6 @@ export const BeneficiaryFormActions = ({
           No Beneficiaries to Add
         </Button>
       ) : null}
-      <Button type="submit">
-        {isEditing ? "Update Beneficiary" : "Add Beneficiary"}
-      </Button>
       {hasBeneficiaries && !isEditing ? (
         <Button 
           type="button"
