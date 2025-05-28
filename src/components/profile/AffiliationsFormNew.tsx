@@ -29,6 +29,7 @@ const affiliationsSchema = z.object({
 
 export function AffiliationsFormNew({ onSave }: { onSave: () => void }) {
   const { user } = useAuth();
+  const [isLoading, setIsLoading] = React.useState(false);
   
   const form = useForm<z.infer<typeof affiliationsSchema>>({
     resolver: zodResolver(affiliationsSchema),
@@ -45,24 +46,41 @@ export function AffiliationsFormNew({ onSave }: { onSave: () => void }) {
 
   React.useEffect(() => {
     const loadExistingData = async () => {
-      if (!user) return;
+      if (!user) {
+        console.log('No user found, skipping data load');
+        return;
+      }
       
-      const { data, error } = await supabase
-        .from('user_affiliations')
-        .select('*')
-        .eq('user_id', user.id)
-        .single();
+      console.log('Loading affiliations data for user:', user.id);
+      
+      try {
+        const { data, error } = await supabase
+          .from('user_affiliations')
+          .select('*')
+          .eq('user_id', user.id)
+          .maybeSingle();
+          
+        if (error) {
+          console.error('Error loading affiliations:', error);
+          return;
+        }
         
-      if (data && !error) {
-        form.reset({
-          stockExchangeOrFinra: data.stock_exchange_or_finra || false,
-          publicCompany: data.public_company || false,
-          usPoliticallyExposed: data.us_politically_exposed || false,
-          awmEmployee: data.awm_employee || false,
-          custodian: data.custodian || false,
-          brokerDealer: data.broker_dealer || false,
-          familyBrokerDealer: data.family_broker_dealer || false,
-        });
+        if (data) {
+          console.log('Loaded affiliations data:', data);
+          form.reset({
+            stockExchangeOrFinra: data.stock_exchange_or_finra || false,
+            publicCompany: data.public_company || false,
+            usPoliticallyExposed: data.us_politically_exposed || false,
+            awmEmployee: data.awm_employee || false,
+            custodian: data.custodian || false,
+            brokerDealer: data.broker_dealer || false,
+            familyBrokerDealer: data.family_broker_dealer || false,
+          });
+        } else {
+          console.log('No existing affiliations data found');
+        }
+      } catch (error) {
+        console.error('Error in loadExistingData:', error);
       }
     };
     
@@ -70,11 +88,16 @@ export function AffiliationsFormNew({ onSave }: { onSave: () => void }) {
   }, [user, form]);
 
   async function onSubmit(values: z.infer<typeof affiliationsSchema>) {
-    if (!user) return;
+    if (!user) {
+      toast.error("You must be logged in to save affiliations");
+      return;
+    }
     
-    const { error } = await supabase
-      .from('user_affiliations')
-      .upsert({
+    setIsLoading(true);
+    console.log('Saving affiliations data:', values);
+    
+    try {
+      const affiliationData = {
         user_id: user.id,
         stock_exchange_or_finra: values.stockExchangeOrFinra,
         public_company: values.publicCompany,
@@ -84,13 +107,31 @@ export function AffiliationsFormNew({ onSave }: { onSave: () => void }) {
         broker_dealer: values.brokerDealer,
         family_broker_dealer: values.familyBrokerDealer,
         updated_at: new Date().toISOString(),
-      });
+      };
       
-    if (error) {
-      toast.error("Failed to save affiliations");
-      console.error(error);
-    } else {
+      console.log('Submitting affiliations data:', affiliationData);
+      
+      const { data, error } = await supabase
+        .from('user_affiliations')
+        .upsert(affiliationData, {
+          onConflict: 'user_id'
+        })
+        .select();
+        
+      if (error) {
+        console.error('Supabase error saving affiliations:', error);
+        toast.error(`Failed to save affiliations: ${error.message}`);
+        return;
+      }
+      
+      console.log('Successfully saved affiliations:', data);
+      toast.success("Affiliations saved successfully");
       onSave();
+    } catch (error) {
+      console.error('Unexpected error saving affiliations:', error);
+      toast.error("An unexpected error occurred while saving affiliations");
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -276,9 +317,10 @@ export function AffiliationsFormNew({ onSave }: { onSave: () => void }) {
           <div className="flex justify-end">
             <Button 
               type="submit" 
+              disabled={isLoading}
               className="bg-blue-600 text-white hover:bg-blue-700"
             >
-              Save Affiliations
+              {isLoading ? "Saving..." : "Save Affiliations"}
             </Button>
           </div>
         </form>
