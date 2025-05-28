@@ -8,6 +8,7 @@ import { AdditionalInfoForm } from "./AdditionalInfoForm";
 import { BeneficiariesFormNew } from "./BeneficiariesFormNew";
 import { AffiliationsFormNew } from "./AffiliationsFormNew";
 import { TrustsFormNew } from "./TrustsFormNew";
+import { ProfileForm } from "./ProfileForm";
 import { toast } from "sonner";
 
 interface ProfileSlidePanelProps {
@@ -45,7 +46,7 @@ export const ProfileSlidePanel = ({
       case "trusts":
         return <TrustsFormNew onSave={() => handleFormSave("trusts")} />;
       case "investor-profile":
-        return <div className="text-white p-4">Investor Profile Form - Coming Soon</div>;
+        return <ProfileForm onSave={() => handleFormSave("investor-profile")} />;
       default:
         return <div className="text-white p-4">Form not available</div>;
     }
