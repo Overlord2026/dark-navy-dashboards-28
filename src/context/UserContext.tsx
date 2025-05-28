@@ -42,6 +42,8 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const loadUserProfile = async () => {
       if (user && session) {
         try {
+          console.log("Loading user profile for user:", user.id);
+          
           const { data: profile, error } = await supabase
             .from('profiles')
             .select('*')
@@ -52,9 +54,19 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
             console.error('Error loading profile:', error);
             setUserProfile(null);
           } else if (profile) {
+            console.log("Loaded profile from database:", profile);
+            
+            // Handle date conversion properly
+            let dateOfBirth: Date | undefined;
+            if (profile.date_of_birth_date) {
+              dateOfBirth = new Date(profile.date_of_birth_date);
+            } else if (profile.date_of_birth) {
+              dateOfBirth = new Date(profile.date_of_birth);
+            }
+
             setUserProfile({
               id: profile.id,
-              name: profile.display_name || `${profile.first_name} ${profile.last_name}`,
+              name: profile.display_name || `${profile.first_name || ''} ${profile.last_name || ''}`.trim(),
               displayName: profile.display_name,
               email: profile.email || user.email,
               firstName: profile.first_name,
@@ -64,7 +76,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
               suffix: profile.suffix,
               gender: profile.gender,
               maritalStatus: profile.marital_status,
-              dateOfBirth: profile.date_of_birth ? new Date(profile.date_of_birth) : undefined,
+              dateOfBirth: dateOfBirth,
               phone: profile.phone,
               investorType: profile.investor_type,
               role: profile.role || 'client',
@@ -72,12 +84,14 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
             });
           } else {
             // Create profile if it doesn't exist
+            console.log("Creating new profile for user:", user.id);
+            
             const newProfile = {
               id: user.id,
               email: user.email,
               first_name: user.user_metadata?.first_name || '',
               last_name: user.user_metadata?.last_name || '',
-              display_name: user.user_metadata?.display_name || `${user.user_metadata?.first_name || ''} ${user.user_metadata?.last_name || ''}`,
+              display_name: user.user_metadata?.display_name || `${user.user_metadata?.first_name || ''} ${user.user_metadata?.last_name || ''}`.trim(),
               role: 'client'
             };
             
@@ -123,30 +137,14 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const updateUserProfile = async (profile: Partial<UserProfile>) => {
     if (userProfile && user) {
       try {
-        const updateData = {
-          first_name: profile.firstName,
-          last_name: profile.lastName,
-          middle_name: profile.middleName,
-          display_name: profile.displayName,
-          title: profile.title,
-          suffix: profile.suffix,
-          gender: profile.gender,
-          marital_status: profile.maritalStatus,
-          phone: profile.phone,
-          investor_type: profile.investorType,
-          updated_at: new Date().toISOString()
-        };
-
-        const { error } = await supabase
-          .from('profiles')
-          .update(updateData)
-          .eq('id', user.id);
-
-        if (!error) {
-          setUserProfile({ ...userProfile, ...profile });
-        } else {
-          console.error('Error updating profile:', error);
-        }
+        console.log("Updating user profile locally:", profile);
+        
+        // Update local state immediately for better UX
+        const updatedProfile = { ...userProfile, ...profile };
+        setUserProfile(updatedProfile);
+        
+        // The database update is handled in the ProfileForm component
+        // This function is mainly for local state updates
       } catch (error) {
         console.error('Error in updateUserProfile:', error);
       }

@@ -11,6 +11,7 @@ import { PersonalInfoSection } from "./PersonalInfoSection";
 import { DemographicInfoSection } from "./DemographicInfoSection";
 import { ProfileDateOfBirthField } from "./ProfileDateOfBirthField";
 import { ProfileFormActions } from "./ProfileFormActions";
+import { supabase } from "@/lib/supabase";
 
 const formSchema = z.object({
   title: z.string().optional(),
@@ -31,7 +32,7 @@ export function ProfileForm({ onSave }: { onSave: () => void }) {
   
   // Convert date string to Date object if needed
   const getInitialDate = (): Date => {
-    if (!userProfile.dateOfBirth) {
+    if (!userProfile?.dateOfBirth) {
       return new Date("1985-05-03");
     }
     
@@ -45,13 +46,13 @@ export function ProfileForm({ onSave }: { onSave: () => void }) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: userProfile.title || "Mr",
-      firstName: "Tom", // Always set to Tom
-      middleName: userProfile.middleName || "",
-      lastName: "Brady", // Always set to Brady
-      suffix: userProfile.suffix || "none",
-      gender: userProfile.gender || "Male",
-      maritalStatus: userProfile.maritalStatus || "Single",
+      title: userProfile?.title || "Mr",
+      firstName: userProfile?.firstName || "",
+      middleName: userProfile?.middleName || "",
+      lastName: userProfile?.lastName || "",
+      suffix: userProfile?.suffix || "none",
+      gender: userProfile?.gender || "Male",
+      maritalStatus: userProfile?.maritalStatus || "Single",
       dateOfBirth: getInitialDate(),
     },
   });
@@ -61,9 +62,9 @@ export function ProfileForm({ onSave }: { onSave: () => void }) {
     if (userProfile) {
       form.reset({
         title: userProfile.title || "Mr",
-        firstName: "Tom", // Always reset to Tom
+        firstName: userProfile.firstName || "",
         middleName: userProfile.middleName || "",
-        lastName: "Brady", // Always reset to Brady
+        lastName: userProfile.lastName || "",
         suffix: userProfile.suffix || "none",
         gender: userProfile.gender || "Male",
         maritalStatus: userProfile.maritalStatus || "Single",
@@ -72,20 +73,60 @@ export function ProfileForm({ onSave }: { onSave: () => void }) {
     }
   }, [userProfile, form]);
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log("Form submitted with values:", values);
     setIsSubmitting(true);
     
     try {
-      // Ensure the first and last names are always Tom Brady
-      const updatedValues = {
-        ...values,
-        firstName: "Tom",
-        lastName: "Brady"
-      };
+      // Get current user
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
       
-      // Update global user profile state
-      updateUserProfile && updateUserProfile(updatedValues);
+      if (userError || !user) {
+        throw new Error("User not authenticated");
+      }
+
+      // Prepare update data for Supabase
+      const updateData = {
+        first_name: values.firstName,
+        last_name: values.lastName,
+        middle_name: values.middleName || null,
+        title: values.title || null,
+        suffix: values.suffix === "none" ? null : values.suffix,
+        gender: values.gender || null,
+        marital_status: values.maritalStatus || null,
+        date_of_birth: values.dateOfBirth.toISOString(),
+        date_of_birth_date: values.dateOfBirth.toISOString().split('T')[0], // Store as date
+        updated_at: new Date().toISOString()
+      };
+
+      console.log("Updating profile with data:", updateData);
+
+      // Update profile in Supabase
+      const { error: updateError } = await supabase
+        .from('profiles')
+        .update(updateData)
+        .eq('id', user.id);
+
+      if (updateError) {
+        console.error("Supabase update error:", updateError);
+        throw updateError;
+      }
+
+      // Update local user profile state
+      const profileUpdate = {
+        firstName: values.firstName,
+        lastName: values.lastName,
+        middleName: values.middleName,
+        title: values.title,
+        suffix: values.suffix === "none" ? undefined : values.suffix,
+        gender: values.gender,
+        maritalStatus: values.maritalStatus,
+        dateOfBirth: values.dateOfBirth,
+      };
+
+      if (updateUserProfile) {
+        updateUserProfile(profileUpdate);
+      }
       
       // Show success message
       toast.success("Profile information updated successfully", {
