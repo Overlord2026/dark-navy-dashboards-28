@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -17,7 +16,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "sonner";
-import { Trash2, Plus, Upload } from "lucide-react";
+import { Trash2, Upload } from "lucide-react";
 import { FileUpload } from "@/components/ui/file-upload";
 
 const US_STATES = [
@@ -462,14 +461,7 @@ export function TrustsFormNew({ onSave }: { onSave: () => void }) {
               )}
             </div>
             
-            <div className="flex justify-between">
-              <Button 
-                type="submit" 
-                className="bg-green-600 text-white hover:bg-green-700"
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                Add Trust
-              </Button>
+            <div className="flex justify-end">
               
               <Button 
                 type="button"

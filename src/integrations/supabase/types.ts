@@ -293,43 +293,67 @@ export type Database = {
       }
       user_trusts: {
         Row: {
+          address: string | null
           assets_value: string | null
           beneficiary_names: string | null
+          city: string | null
+          country: string | null
           created_at: string | null
+          document_type: string | null
+          email_address: string | null
           establishment_date: string | null
           id: string
+          phone_number: string | null
           purpose: string | null
+          state: string | null
           trust_name: string
           trust_type: string | null
           trustee_name: string | null
           updated_at: string | null
           user_id: string
+          zip_code: string | null
         }
         Insert: {
+          address?: string | null
           assets_value?: string | null
           beneficiary_names?: string | null
+          city?: string | null
+          country?: string | null
           created_at?: string | null
+          document_type?: string | null
+          email_address?: string | null
           establishment_date?: string | null
           id?: string
+          phone_number?: string | null
           purpose?: string | null
+          state?: string | null
           trust_name: string
           trust_type?: string | null
           trustee_name?: string | null
           updated_at?: string | null
           user_id: string
+          zip_code?: string | null
         }
         Update: {
+          address?: string | null
           assets_value?: string | null
           beneficiary_names?: string | null
+          city?: string | null
+          country?: string | null
           created_at?: string | null
+          document_type?: string | null
+          email_address?: string | null
           establishment_date?: string | null
           id?: string
+          phone_number?: string | null
           purpose?: string | null
+          state?: string | null
           trust_name?: string
           trust_type?: string | null
           trustee_name?: string | null
           updated_at?: string | null
           user_id?: string
+          zip_code?: string | null
         }
         Relationships: []
       }
