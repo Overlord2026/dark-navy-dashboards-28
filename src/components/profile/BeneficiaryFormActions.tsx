@@ -15,23 +15,7 @@ export const BeneficiaryFormActions = ({
 }: BeneficiaryFormActionsProps) => {
   return (
     <div className="flex justify-end gap-2">
-      {hasBeneficiaries === false ? (
-        <Button 
-          variant="outline" 
-          type="button"
-          onClick={onSave}
-        >
-          No Beneficiaries to Add
-        </Button>
-      ) : null}
-      {hasBeneficiaries && !isEditing ? (
-        <Button 
-          type="button"
-          onClick={onSave}
-        >
-          Save
-        </Button>
-      ) : null}
+      {/* All buttons removed as requested */}
     </div>
   );
 };
