@@ -1,4 +1,3 @@
-
 import React from "react";
 import { ChevronRight, UserRoundIcon, MailIcon, LinkedinIcon, Calendar, ExternalLinkIcon, MapPinIcon } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -21,7 +20,7 @@ export const AdvisorSection = ({ onViewProfile, onBookSession, collapsed = false
   
   const handleBookSession = () => {
     // Open Calendly directly like on the Client Advisor Profile page
-    window.open("https://meetings.hubspot.com/daniel-herrera1?uuid=55ab1315-5daa-4009-af29-f100ee7aae67", "_blank");
+    window.open("https://calendly.com/tonygomes/60min", "_blank");
   };
   
   return (
