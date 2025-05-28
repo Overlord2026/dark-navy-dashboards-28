@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import { User, ChevronDown, LogOut } from "lucide-react";
+import { User, ChevronDown, LogOut, UserIcon, PhoneIcon, FileTextIcon, UsersIcon, BuildingIcon, PaletteIcon } from "lucide-react";
 import { useUser } from "@/context/UserContext";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
@@ -36,7 +36,11 @@ export const UserProfileSection = ({ onMenuItemClick, showLogo = true }: UserPro
   };
 
   const handleMenuItemClick = (itemId: string) => {
-    onMenuItemClick?.(itemId);
+    if (itemId === "logout") {
+      handleLogout();
+    } else {
+      onMenuItemClick?.(itemId);
+    }
   };
 
   return (
@@ -62,20 +66,42 @@ export const UserProfileSection = ({ onMenuItemClick, showLogo = true }: UserPro
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-48">
-          <DropdownMenuItem onClick={() => handleMenuItemClick('profile')}>
-            Profile Settings
+          <DropdownMenuItem onClick={() => handleMenuItemClick('investor-profile')}>
+            <UserIcon className="h-4 w-4 mr-2" />
+            Investor Profile
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleMenuItemClick('account')}>
-            Account Settings
+          <DropdownMenuItem onClick={() => handleMenuItemClick('contact-information')}>
+            <PhoneIcon className="h-4 w-4 mr-2" />
+            Contact Information
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => handleMenuItemClick('additional-information')}>
+            <FileTextIcon className="h-4 w-4 mr-2" />
+            Additional Information
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => handleMenuItemClick('beneficiaries')}>
+            <UsersIcon className="h-4 w-4 mr-2" />
+            Beneficiaries
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => handleMenuItemClick('affiliations')}>
+            <BuildingIcon className="h-4 w-4 mr-2" />
+            Affiliations
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => handleMenuItemClick('trusts')}>
+            <BuildingIcon className="h-4 w-4 mr-2" />
+            Trusts
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => handleMenuItemClick('change-theme')}>
+            <PaletteIcon className="h-4 w-4 mr-2" />
+            Change Theme
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem 
-            onClick={handleLogout}
+            onClick={() => handleMenuItemClick('logout')}
             disabled={isLoggingOut}
             className="text-red-600 focus:text-red-600"
           >
             <LogOut className="h-4 w-4 mr-2" />
-            {isLoggingOut ? "Logging out..." : "Log out"}
+            {isLoggingOut ? "Logging out..." : "Logout"}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
