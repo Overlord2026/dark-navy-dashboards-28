@@ -26,8 +26,11 @@ export const SidebarBottomNav: React.FC<SidebarBottomNavProps> = ({
 
   const handleClick = (href: string, e: React.MouseEvent) => {
     // Prevent default scroll behavior when clicking the same route
-    if (location.pathname === href) {
+    const normalizedHref = normalizePath(href);
+    if (location.pathname === normalizedHref) {
       e.preventDefault();
+      e.stopPropagation();
+      console.log('Prevented navigation to current page:', normalizedHref);
     }
   };
 

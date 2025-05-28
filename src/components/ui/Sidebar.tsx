@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useCallback } from "react";
 import { useLocation, Link } from "react-router-dom";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { cn } from "@/lib/utils";
@@ -20,20 +20,26 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const location = useLocation();
   const pathname = location.pathname;
 
-  const isActive = (href: string) => {
+  const isActive = useCallback((href: string) => {
     return pathname === href || (href !== "/" && pathname.startsWith(href));
-  };
+  }, [pathname]);
 
-  const toggleCategory = (id: string) => {
+  const toggleCategory = useCallback((id: string) => {
     toggleSubmenu(id);
-  };
+  }, [toggleSubmenu]);
 
-  const handleLogoClick = (e: React.MouseEvent) => {
+  const handleLogoClick = useCallback((e: React.MouseEvent) => {
     // Prevent scroll behavior when clicking logo if already on dashboard
     if (location.pathname === "/dashboard") {
       e.preventDefault();
+      e.stopPropagation();
     }
-  };
+  }, [location.pathname]);
+
+  // Helper to prevent default behavior for button clicks
+  const handleButtonClick = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+  }, []);
 
   return (
     <div
@@ -69,7 +75,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
       </div>
       <div className="p-3 flex items-center justify-between">
         <button 
-          onClick={toggleTheme} 
+          type="button"
+          onClick={(e) => {
+            handleButtonClick(e);
+            toggleTheme();
+          }}
           className={cn(
             "text-sm transition-colors",
             isLightTheme ? "text-[#222222]" : "text-[#E2E2E2]"
@@ -80,7 +90,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
           {collapsed && <span className="sr-only">Toggle Theme</span>}
         </button>
         <button 
-          onClick={collapsed ? onExpand : onCollapse} 
+          type="button"
+          onClick={(e) => {
+            handleButtonClick(e);
+            collapsed ? onExpand() : onCollapse();
+          }}
           className={cn(
             "text-sm transition-colors",
             isLightTheme ? "text-[#222222]" : "text-[#E2E2E2]"

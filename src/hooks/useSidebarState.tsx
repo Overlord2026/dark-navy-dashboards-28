@@ -1,10 +1,11 @@
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { NavCategory, NavItem } from "@/types/navigation";
 import { useLocation } from "react-router-dom";
 
 export const useSidebarState = (navigationCategories: NavCategory[]) => {
   const location = useLocation();
+  const scrollPositionRef = useRef<number>(0);
   
   // Initialize with collapsed set to false for desktop view
   const [collapsed, setCollapsed] = useState(false);
@@ -20,9 +21,9 @@ export const useSidebarState = (navigationCategories: NavCategory[]) => {
   const [expandedSubmenus, setExpandedSubmenus] = useState<Record<string, boolean>>({});
   
   // Helper function to normalize paths
-  const normalizePath = (path: string): string => {
+  const normalizePath = useCallback((path: string): string => {
     return path.startsWith("/") ? path : `/${path}`;
-  };
+  }, []);
   
   // Check window width on mount and resize to set collapsed state
   useEffect(() => {
@@ -37,6 +38,25 @@ export const useSidebarState = (navigationCategories: NavCategory[]) => {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+  
+  // Save scroll position when navigating
+  useEffect(() => {
+    // Save the current scroll position for the sidebar when component mounts
+    const sidebarElement = document.querySelector('.overflow-y-auto');
+    if (sidebarElement) {
+      sidebarElement.scrollTop = scrollPositionRef.current;
+      
+      // Set up an event listener to save scroll position when user scrolls
+      const handleScroll = () => {
+        scrollPositionRef.current = sidebarElement.scrollTop;
+      };
+      
+      sidebarElement.addEventListener('scroll', handleScroll);
+      return () => {
+        sidebarElement.removeEventListener('scroll', handleScroll);
+      };
+    }
+  }, [location.pathname]); // Restore position when path changes
   
   // Use useCallback to prevent unnecessary re-renders
   const updateCategoriesForRoute = useCallback((path: string) => {
@@ -76,7 +96,7 @@ export const useSidebarState = (navigationCategories: NavCategory[]) => {
         [shouldExpandCategory]: true
       }));
     }
-  }, [navigationCategories]);
+  }, [navigationCategories, normalizePath]);
   
   useEffect(() => {
     updateCategoriesForRoute(location.pathname);
@@ -106,7 +126,7 @@ export const useSidebarState = (navigationCategories: NavCategory[]) => {
     
     return normalizedPathname === normalizedHref || 
            (normalizedHref !== "/" && normalizedPathname.startsWith(normalizedHref));
-  }, [location.pathname]);
+  }, [location.pathname, normalizePath]);
 
   return {
     collapsed,

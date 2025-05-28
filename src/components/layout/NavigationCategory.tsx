@@ -50,6 +50,7 @@ export const NavigationCategory = ({
     return normalizedPath === normalizedCurrentPath;
   };
 
+  // Prevent default and stop propagation on category toggle
   const handleCategoryToggle = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -65,6 +66,7 @@ export const NavigationCategory = ({
         >
           <CollapsibleTrigger asChild>
             <button 
+              type="button" // Explicitly set type to prevent form submission
               onClick={handleCategoryToggle}
               className={`flex items-center justify-between p-2 text-xs uppercase tracking-wider font-semibold ${isLightTheme ? 'text-[#222222]/70' : 'text-[#E2E2E2]/70'} cursor-pointer w-full`}
             >

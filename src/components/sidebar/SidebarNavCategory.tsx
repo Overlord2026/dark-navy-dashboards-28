@@ -38,20 +38,26 @@ const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
     return path.startsWith("/") ? path : `/${path}`;
   };
 
+  // Prevent scroll by using stopPropagation and preventDefault
   const handleNavClick = (href: string, e: React.MouseEvent) => {
-    // Prevent default scroll behavior when clicking the same route
+    // We're already on this page, no need to navigate
     const normalizedHref = normalizePath(href);
-    if (location.pathname === normalizedHref) {
+    const currentPath = location.pathname;
+
+    if (normalizedHref === currentPath) {
       e.preventDefault();
+      e.stopPropagation();
     }
   };
 
+  // Stop propagation AND prevent default for category toggle
   const handleCategoryToggle = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     onToggle(id);
   };
 
+  // Stop propagation AND prevent default for submenu toggle  
   const handleSubmenuToggle = (itemTitle: string, e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -102,6 +108,7 @@ const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
       >
         <CollapsibleTrigger asChild>
           <button
+            type="button" // Explicitly set type to prevent form submission
             onClick={handleCategoryToggle}
             className={cn(
               "flex w-full items-center justify-between rounded-md px-3 py-2 text-sm font-medium",
@@ -144,6 +151,7 @@ const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
                     >
                       <CollapsibleTrigger asChild>
                         <button 
+                          type="button" // Explicitly set type to prevent form submission
                           onClick={(e) => handleSubmenuToggle(item.title, e)}
                           className="flex items-center justify-between w-full px-3 py-2 text-sm font-medium rounded-md hover:bg-accent hover:text-accent-foreground"
                         >

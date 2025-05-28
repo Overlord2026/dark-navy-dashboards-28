@@ -14,6 +14,11 @@ const CollapsibleTrigger = React.forwardRef<
   <CollapsiblePrimitive.CollapsibleTrigger
     ref={ref}
     className={cn("flex w-full cursor-pointer", className)}
+    onClick={(e) => {
+      // Prevent scroll reset when clicking collapsible triggers
+      e.stopPropagation();
+      // Don't preventDefault here as it breaks the toggle functionality
+    }}
     {...props}
   >
     {children}

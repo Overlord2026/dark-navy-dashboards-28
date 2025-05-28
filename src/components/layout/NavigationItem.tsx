@@ -27,10 +27,13 @@ export const NavigationItem = ({
   // Normalize href to ensure it starts with a forward slash
   const normalizedHref = item.href.startsWith("/") ? item.href : `/${item.href}`;
   
+  // Prevent navigation and scroll reset when clicking current route
   const handleClick = (e: React.MouseEvent) => {
-    // Prevent default scroll behavior when clicking the same route
+    // If we're already on this page, prevent the default action and scroll reset
     if (location.pathname === normalizedHref) {
       e.preventDefault();
+      e.stopPropagation();
+      console.log('Prevented navigation to current page:', normalizedHref);
     }
   };
   
