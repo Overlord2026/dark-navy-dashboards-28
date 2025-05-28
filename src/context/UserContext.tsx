@@ -38,6 +38,25 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isLoading, setIsLoading] = useState(true);
   const { user, session, isAuthenticated, login: authLogin, logout: authLogout } = useAuth();
 
+  // Helper function to safely parse date from database
+  const parseDateSafely = (dateString: string): Date => {
+    if (!dateString) return new Date();
+    
+    // If it's a date-only string (YYYY-MM-DD), parse it in local timezone
+    if (dateString.match(/^\d{4}-\d{2}-\d{2}$/)) {
+      const [year, month, day] = dateString.split('-').map(Number);
+      return new Date(year, month - 1, day, 12, 0, 0, 0);
+    }
+    
+    // For datetime strings, create in local timezone at noon on that date
+    const date = new Date(dateString);
+    if (!isNaN(date.getTime())) {
+      return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 12, 0, 0, 0);
+    }
+    
+    return new Date();
+  };
+
   useEffect(() => {
     const loadUserProfile = async () => {
       if (user && session) {
@@ -59,9 +78,9 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
             // Handle date conversion properly
             let dateOfBirth: Date | undefined;
             if (profile.date_of_birth_date) {
-              dateOfBirth = new Date(profile.date_of_birth_date);
+              dateOfBirth = parseDateSafely(profile.date_of_birth_date);
             } else if (profile.date_of_birth) {
-              dateOfBirth = new Date(profile.date_of_birth);
+              dateOfBirth = parseDateSafely(profile.date_of_birth);
             }
 
             setUserProfile({

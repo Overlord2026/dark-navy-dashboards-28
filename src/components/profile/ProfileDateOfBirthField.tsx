@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { CalendarIcon } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { format, parse, isValid } from "date-fns";
+import { isValid } from "date-fns";
 import { cn } from "@/lib/utils";
 
 interface ProfileDateOfBirthFieldProps {
@@ -21,7 +21,7 @@ export const ProfileDateOfBirthField = ({
 }: ProfileDateOfBirthFieldProps) => {
   // Helper function to format date without timezone issues
   const formatDateSafely = (date: Date): string => {
-    if (!date) return "";
+    if (!date || !isValid(date)) return "";
     // Use local date parts to avoid timezone conversion
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -31,15 +31,15 @@ export const ProfileDateOfBirthField = ({
 
   // Helper function to create date from parts without timezone issues
   const createDateSafely = (month: number, day: number, year: number): Date => {
-    const date = new Date();
-    date.setFullYear(year, month - 1, day);
-    date.setHours(12, 0, 0, 0); // Set to noon to avoid DST issues
-    return date;
+    // Create date in local timezone at noon to avoid DST issues
+    return new Date(year, month - 1, day, 12, 0, 0, 0);
   };
 
-  const [dateInput, setDateInput] = useState(
-    initialDate && initialDate.getTime() !== new Date().setHours(0,0,0,0) ? formatDateSafely(initialDate) : ""
-  );
+  // Initialize dateInput with safely formatted initial date
+  const [dateInput, setDateInput] = useState(() => {
+    if (!initialDate || !isValid(initialDate)) return "";
+    return formatDateSafely(initialDate);
+  });
 
   // Handle manual date input
   const handleDateInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -95,9 +95,12 @@ export const ProfileDateOfBirthField = ({
                   selected={field.value}
                   onSelect={(date) => {
                     if (date) {
-                      // Ensure the selected date is set to noon to avoid timezone issues
-                      const safeDate = new Date(date);
-                      safeDate.setHours(12, 0, 0, 0);
+                      // Create a new date in local timezone at noon
+                      const safeDate = createDateSafely(
+                        date.getMonth() + 1,
+                        date.getDate(),
+                        date.getFullYear()
+                      );
                       field.onChange(safeDate);
                       setDateInput(formatDateSafely(safeDate));
                     }

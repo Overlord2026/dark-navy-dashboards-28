@@ -30,33 +30,34 @@ export function ProfileForm({ onSave }: { onSave: () => void }) {
   const { userProfile, updateUserProfile } = useUser();
   const [isSubmitting, setIsSubmitting] = useState(false);
   
-  // Helper function to create date safely from string
-  const createDateFromString = (dateString: string | Date): Date => {
-    if (dateString instanceof Date) {
-      return dateString;
+  // Helper function to create date safely from any input
+  const createSafeDate = (input: string | Date | null): Date => {
+    if (!input) {
+      return new Date();
     }
     
-    if (typeof dateString === 'string') {
-      // Handle both date-only strings and full datetime strings
-      const date = new Date(dateString);
-      if (isNaN(date.getTime())) {
-        return new Date();
+    if (input instanceof Date) {
+      // If it's already a Date, create a new one in local timezone at noon
+      return new Date(input.getFullYear(), input.getMonth(), input.getDate(), 12, 0, 0, 0);
+    }
+    
+    if (typeof input === 'string') {
+      // Parse the date string and create in local timezone
+      const date = new Date(input);
+      if (!isNaN(date.getTime())) {
+        return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 12, 0, 0, 0);
       }
-      // Set to noon to avoid timezone issues
-      date.setHours(12, 0, 0, 0);
-      return date;
     }
     
     return new Date();
   };
   
-  // Convert date string to Date object if needed, or use current date as fallback
+  // Get initial date safely
   const getInitialDate = (): Date => {
     if (!userProfile?.dateOfBirth) {
       return new Date();
     }
-    
-    return createDateFromString(userProfile.dateOfBirth);
+    return createSafeDate(userProfile.dateOfBirth);
   };
   
   const form = useForm<z.infer<typeof formSchema>>({
@@ -69,7 +70,7 @@ export function ProfileForm({ onSave }: { onSave: () => void }) {
       suffix: userProfile?.suffix || "",
       gender: userProfile?.gender || "",
       maritalStatus: userProfile?.maritalStatus || "",
-      dateOfBirth: userProfile?.dateOfBirth ? getInitialDate() : new Date(),
+      dateOfBirth: getInitialDate(),
     },
   });
 
@@ -84,7 +85,7 @@ export function ProfileForm({ onSave }: { onSave: () => void }) {
         suffix: userProfile.suffix || "",
         gender: userProfile.gender || "",
         maritalStatus: userProfile.maritalStatus || "",
-        dateOfBirth: userProfile.dateOfBirth ? getInitialDate() : new Date(),
+        dateOfBirth: getInitialDate(),
       });
     }
   }, [userProfile, form]);
@@ -101,12 +102,19 @@ export function ProfileForm({ onSave }: { onSave: () => void }) {
         throw new Error("User not authenticated");
       }
 
-      // Format date safely for database storage
+      // Format date safely for database storage using local date parts
       const formatDateForDB = (date: Date): string => {
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const day = String(date.getDate()).padStart(2, '0');
         return `${year}-${month}-${day}`;
+      };
+
+      // Create ISO string in a safe way
+      const createSafeISOString = (date: Date): string => {
+        // Create a date in UTC using the local date parts
+        const utcDate = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 12, 0, 0, 0));
+        return utcDate.toISOString();
       };
 
       // Prepare update data for Supabase
@@ -118,8 +126,8 @@ export function ProfileForm({ onSave }: { onSave: () => void }) {
         suffix: values.suffix || null,
         gender: values.gender || null,
         marital_status: values.maritalStatus || null,
-        date_of_birth: values.dateOfBirth.toISOString(),
-        date_of_birth_date: formatDateForDB(values.dateOfBirth), // Store as date without timezone
+        date_of_birth: createSafeISOString(values.dateOfBirth),
+        date_of_birth_date: formatDateForDB(values.dateOfBirth),
         updated_at: new Date().toISOString()
       };
 
@@ -186,7 +194,7 @@ export function ProfileForm({ onSave }: { onSave: () => void }) {
             <DemographicInfoSection form={form} />
             <ProfileDateOfBirthField 
               form={form} 
-              initialDate={userProfile?.dateOfBirth ? getInitialDate() : new Date()}
+              initialDate={getInitialDate()}
             />
           </div>
           
