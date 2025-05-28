@@ -20,7 +20,7 @@ export const ProfileDateOfBirthField = ({
   initialDate 
 }: ProfileDateOfBirthFieldProps) => {
   const [dateInput, setDateInput] = useState(
-    initialDate ? format(initialDate, "MM/dd/yyyy") : ""
+    initialDate && initialDate.getTime() !== new Date().setHours(0,0,0,0) ? format(initialDate, "MM/dd/yyyy") : ""
   );
 
   // Handle manual date input

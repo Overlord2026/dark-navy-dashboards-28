@@ -30,10 +30,10 @@ export function ProfileForm({ onSave }: { onSave: () => void }) {
   const { userProfile, updateUserProfile } = useUser();
   const [isSubmitting, setIsSubmitting] = useState(false);
   
-  // Convert date string to Date object if needed
+  // Convert date string to Date object if needed, or use current date as fallback
   const getInitialDate = (): Date => {
     if (!userProfile?.dateOfBirth) {
-      return new Date("1985-05-03");
+      return new Date();
     }
     
     if (userProfile.dateOfBirth instanceof Date) {
@@ -46,14 +46,14 @@ export function ProfileForm({ onSave }: { onSave: () => void }) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: userProfile?.title || "Mr",
+      title: userProfile?.title || "",
       firstName: userProfile?.firstName || "",
       middleName: userProfile?.middleName || "",
       lastName: userProfile?.lastName || "",
-      suffix: userProfile?.suffix || "none",
-      gender: userProfile?.gender || "Male",
-      maritalStatus: userProfile?.maritalStatus || "Single",
-      dateOfBirth: getInitialDate(),
+      suffix: userProfile?.suffix || "",
+      gender: userProfile?.gender || "",
+      maritalStatus: userProfile?.maritalStatus || "",
+      dateOfBirth: userProfile?.dateOfBirth ? getInitialDate() : new Date(),
     },
   });
 
@@ -61,14 +61,14 @@ export function ProfileForm({ onSave }: { onSave: () => void }) {
   useEffect(() => {
     if (userProfile) {
       form.reset({
-        title: userProfile.title || "Mr",
+        title: userProfile.title || "",
         firstName: userProfile.firstName || "",
         middleName: userProfile.middleName || "",
         lastName: userProfile.lastName || "",
-        suffix: userProfile.suffix || "none",
-        gender: userProfile.gender || "Male",
-        maritalStatus: userProfile.maritalStatus || "Single",
-        dateOfBirth: getInitialDate(),
+        suffix: userProfile.suffix || "",
+        gender: userProfile.gender || "",
+        maritalStatus: userProfile.maritalStatus || "",
+        dateOfBirth: userProfile.dateOfBirth ? getInitialDate() : new Date(),
       });
     }
   }, [userProfile, form]);
@@ -91,7 +91,7 @@ export function ProfileForm({ onSave }: { onSave: () => void }) {
         last_name: values.lastName,
         middle_name: values.middleName || null,
         title: values.title || null,
-        suffix: values.suffix === "none" ? null : values.suffix,
+        suffix: values.suffix || null,
         gender: values.gender || null,
         marital_status: values.maritalStatus || null,
         date_of_birth: values.dateOfBirth.toISOString(),
@@ -118,7 +118,7 @@ export function ProfileForm({ onSave }: { onSave: () => void }) {
         lastName: values.lastName,
         middleName: values.middleName,
         title: values.title,
-        suffix: values.suffix === "none" ? undefined : values.suffix,
+        suffix: values.suffix,
         gender: values.gender,
         maritalStatus: values.maritalStatus,
         dateOfBirth: values.dateOfBirth,
@@ -162,7 +162,7 @@ export function ProfileForm({ onSave }: { onSave: () => void }) {
             <DemographicInfoSection form={form} />
             <ProfileDateOfBirthField 
               form={form} 
-              initialDate={getInitialDate()}
+              initialDate={userProfile?.dateOfBirth ? getInitialDate() : new Date()}
             />
           </div>
           

@@ -26,7 +26,7 @@ export const PersonalInfoSection = ({ form }: PersonalInfoSectionProps) => {
         render={({ field }) => (
           <FormItem>
             <FormLabel>Title (Optional)</FormLabel>
-            <Select onValueChange={field.onChange} defaultValue={field.value}>
+            <Select onValueChange={field.onChange} value={field.value}>
               <FormControl>
                 <SelectTrigger>
                   <SelectValue placeholder="Select title" />
@@ -93,14 +93,14 @@ export const PersonalInfoSection = ({ form }: PersonalInfoSectionProps) => {
         render={({ field }) => (
           <FormItem>
             <FormLabel>Suffix (Optional)</FormLabel>
-            <Select onValueChange={field.onChange} defaultValue={field.value || "none"}>
+            <Select onValueChange={field.onChange} value={field.value}>
               <FormControl>
                 <SelectTrigger>
                   <SelectValue placeholder="Select suffix" />
                 </SelectTrigger>
               </FormControl>
               <SelectContent>
-                <SelectItem value="none">None</SelectItem>
+                <SelectItem value="">None</SelectItem>
                 <SelectItem value="Jr">Jr.</SelectItem>
                 <SelectItem value="Sr">Sr.</SelectItem>
                 <SelectItem value="II">II</SelectItem>
