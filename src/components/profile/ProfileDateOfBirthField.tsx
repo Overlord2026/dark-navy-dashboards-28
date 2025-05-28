@@ -19,8 +19,26 @@ export const ProfileDateOfBirthField = ({
   form, 
   initialDate 
 }: ProfileDateOfBirthFieldProps) => {
+  // Helper function to format date without timezone issues
+  const formatDateSafely = (date: Date): string => {
+    if (!date) return "";
+    // Use local date parts to avoid timezone conversion
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${month}/${day}/${year}`;
+  };
+
+  // Helper function to create date from parts without timezone issues
+  const createDateSafely = (month: number, day: number, year: number): Date => {
+    const date = new Date();
+    date.setFullYear(year, month - 1, day);
+    date.setHours(12, 0, 0, 0); // Set to noon to avoid DST issues
+    return date;
+  };
+
   const [dateInput, setDateInput] = useState(
-    initialDate && initialDate.getTime() !== new Date().setHours(0,0,0,0) ? format(initialDate, "MM/dd/yyyy") : ""
+    initialDate && initialDate.getTime() !== new Date().setHours(0,0,0,0) ? formatDateSafely(initialDate) : ""
   );
 
   // Handle manual date input
@@ -31,9 +49,12 @@ export const ProfileDateOfBirthField = ({
     try {
       // Validate MM/DD/YYYY format
       if (value.match(/^\d{2}\/\d{2}\/\d{4}$/)) {
-        const parsedDate = parse(value, "MM/dd/yyyy", new Date());
-        if (isValid(parsedDate)) {
-          form.setValue("dateOfBirth", parsedDate);
+        const [month, day, year] = value.split('/').map(Number);
+        if (month >= 1 && month <= 12 && day >= 1 && day <= 31 && year >= 1900 && year <= new Date().getFullYear()) {
+          const newDate = createDateSafely(month, day, year);
+          if (isValid(newDate)) {
+            form.setValue("dateOfBirth", newDate);
+          }
         }
       }
     } catch (error) {
@@ -73,9 +94,12 @@ export const ProfileDateOfBirthField = ({
                   mode="single"
                   selected={field.value}
                   onSelect={(date) => {
-                    field.onChange(date);
                     if (date) {
-                      setDateInput(format(date, "MM/dd/yyyy"));
+                      // Ensure the selected date is set to noon to avoid timezone issues
+                      const safeDate = new Date(date);
+                      safeDate.setHours(12, 0, 0, 0);
+                      field.onChange(safeDate);
+                      setDateInput(formatDateSafely(safeDate));
                     }
                   }}
                   disabled={(date) =>

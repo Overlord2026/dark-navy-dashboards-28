@@ -30,17 +30,33 @@ export function ProfileForm({ onSave }: { onSave: () => void }) {
   const { userProfile, updateUserProfile } = useUser();
   const [isSubmitting, setIsSubmitting] = useState(false);
   
+  // Helper function to create date safely from string
+  const createDateFromString = (dateString: string | Date): Date => {
+    if (dateString instanceof Date) {
+      return dateString;
+    }
+    
+    if (typeof dateString === 'string') {
+      // Handle both date-only strings and full datetime strings
+      const date = new Date(dateString);
+      if (isNaN(date.getTime())) {
+        return new Date();
+      }
+      // Set to noon to avoid timezone issues
+      date.setHours(12, 0, 0, 0);
+      return date;
+    }
+    
+    return new Date();
+  };
+  
   // Convert date string to Date object if needed, or use current date as fallback
   const getInitialDate = (): Date => {
     if (!userProfile?.dateOfBirth) {
       return new Date();
     }
     
-    if (userProfile.dateOfBirth instanceof Date) {
-      return userProfile.dateOfBirth;
-    }
-    
-    return new Date(userProfile.dateOfBirth);
+    return createDateFromString(userProfile.dateOfBirth);
   };
   
   const form = useForm<z.infer<typeof formSchema>>({
@@ -85,6 +101,14 @@ export function ProfileForm({ onSave }: { onSave: () => void }) {
         throw new Error("User not authenticated");
       }
 
+      // Format date safely for database storage
+      const formatDateForDB = (date: Date): string => {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+      };
+
       // Prepare update data for Supabase
       const updateData = {
         first_name: values.firstName,
@@ -95,7 +119,7 @@ export function ProfileForm({ onSave }: { onSave: () => void }) {
         gender: values.gender || null,
         marital_status: values.maritalStatus || null,
         date_of_birth: values.dateOfBirth.toISOString(),
-        date_of_birth_date: values.dateOfBirth.toISOString().split('T')[0], // Store as date
+        date_of_birth_date: formatDateForDB(values.dateOfBirth), // Store as date without timezone
         updated_at: new Date().toISOString()
       };
 
