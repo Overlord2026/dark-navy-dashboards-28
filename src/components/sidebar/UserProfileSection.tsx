@@ -83,7 +83,7 @@ export const UserProfileSection = ({ onMenuItemClick, showLogo = true }: UserPro
       <div className="flex items-center justify-between p-3 bg-white/5 rounded-lg border border-white/10">
         <div className="flex items-center flex-1 min-w-0">
           <div className="flex-1 min-w-0">
-            <p className="text-white font-medium text-sm truncate">
+            <p className="text-white font-medium text-base truncate">
               {displayName}
             </p>
           </div>
