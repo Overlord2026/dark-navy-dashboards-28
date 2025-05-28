@@ -11,6 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { toast } from "sonner";
 import { ProfileSlidePanel } from "@/components/profile/ProfileSlidePanel";
 import { ThemeDialog } from "@/components/ui/ThemeDialog";
@@ -78,10 +79,39 @@ export const UserProfileSection = ({ onMenuItemClick, showLogo = true }: UserPro
     `${userProfile?.firstName || ''} ${userProfile?.lastName || ''}`.trim() || 
     'User';
 
+  // Generate initials from first and last name
+  const getInitials = (): string => {
+    const firstName = userProfile?.firstName || '';
+    const lastName = userProfile?.lastName || '';
+    
+    if (firstName && lastName) {
+      return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
+    } else if (firstName) {
+      return firstName.charAt(0).toUpperCase();
+    } else if (lastName) {
+      return lastName.charAt(0).toUpperCase();
+    } else if (displayName && displayName !== 'User') {
+      // Fallback to display name initials
+      const nameParts = displayName.split(' ').filter(part => part.length > 0);
+      if (nameParts.length >= 2) {
+        return `${nameParts[0].charAt(0)}${nameParts[nameParts.length - 1].charAt(0)}`.toUpperCase();
+      } else if (nameParts.length === 1) {
+        return nameParts[0].charAt(0).toUpperCase();
+      }
+    }
+    
+    return 'U'; // Default fallback
+  };
+
   return (
     <>
       <div className="flex items-center justify-between p-3 bg-white/5 rounded-lg border border-white/10">
-        <div className="flex items-center flex-1 min-w-0">
+        <div className="flex items-center flex-1 min-w-0 gap-3">
+          <Avatar className="h-8 w-8 bg-primary/20 border border-primary/30">
+            <AvatarFallback className="bg-primary/20 text-white text-sm font-medium">
+              {getInitials()}
+            </AvatarFallback>
+          </Avatar>
           <div className="flex-1 min-w-0">
             <p className="text-white font-medium text-base truncate">
               {displayName}
