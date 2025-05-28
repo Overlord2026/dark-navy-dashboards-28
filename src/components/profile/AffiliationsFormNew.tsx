@@ -55,29 +55,52 @@ export function AffiliationsFormNew({ onSave }: { onSave: () => void }) {
       console.log('Loading affiliations data for user:', user.id);
       
       try {
+        // First, get all records for this user
         const { data, error } = await supabase
           .from('user_affiliations')
           .select('*')
           .eq('user_id', user.id)
-          .maybeSingle();
+          .order('created_at', { ascending: false });
           
         if (error) {
           console.error('Error loading affiliations:', error);
           return;
         }
         
-        if (data) {
+        if (data && data.length > 0) {
           console.log('Loaded affiliations data:', data);
-          setExistingRecordId(data.id); // Store the existing record ID
+          
+          // If we have multiple records, we'll use the most recent one and clean up the duplicates
+          const mostRecentRecord = data[0];
+          setExistingRecordId(mostRecentRecord.id);
+          
+          // Update form with the most recent data
           form.reset({
-            stockExchangeOrFinra: data.stock_exchange_or_finra || false,
-            publicCompany: data.public_company || false,
-            usPoliticallyExposed: data.us_politically_exposed || false,
-            awmEmployee: data.awm_employee || false,
-            custodian: data.custodian || false,
-            brokerDealer: data.broker_dealer || false,
-            familyBrokerDealer: data.family_broker_dealer || false,
+            stockExchangeOrFinra: mostRecentRecord.stock_exchange_or_finra || false,
+            publicCompany: mostRecentRecord.public_company || false,
+            usPoliticallyExposed: mostRecentRecord.us_politically_exposed || false,
+            awmEmployee: mostRecentRecord.awm_employee || false,
+            custodian: mostRecentRecord.custodian || false,
+            brokerDealer: mostRecentRecord.broker_dealer || false,
+            familyBrokerDealer: mostRecentRecord.family_broker_dealer || false,
           });
+          
+          // If there are duplicate records, clean them up
+          if (data.length > 1) {
+            console.log('Found duplicate records, cleaning up...');
+            const duplicateIds = data.slice(1).map(record => record.id);
+            
+            const { error: deleteError } = await supabase
+              .from('user_affiliations')
+              .delete()
+              .in('id', duplicateIds);
+              
+            if (deleteError) {
+              console.error('Error cleaning up duplicate records:', deleteError);
+            } else {
+              console.log('Successfully cleaned up duplicate records');
+            }
+          }
         } else {
           console.log('No existing affiliations data found');
           setExistingRecordId(null);
@@ -159,8 +182,8 @@ export function AffiliationsFormNew({ onSave }: { onSave: () => void }) {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-semibold tracking-tight text-white mb-2">Affiliations</h2>
-        <p className="text-sm text-gray-400">Please indicate any relevant affiliations or relationships.</p>
+        <h2 className="text-2xl font-semibold tracking-tight text-foreground mb-2">Affiliations</h2>
+        <p className="text-sm text-muted-foreground">Please indicate any relevant affiliations or relationships.</p>
       </div>
       
       <Form {...form}>
@@ -170,19 +193,19 @@ export function AffiliationsFormNew({ onSave }: { onSave: () => void }) {
               control={form.control}
               name="stockExchangeOrFinra"
               render={({ field }) => (
-                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border border-gray-700 p-4">
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border border-border p-4">
                   <FormControl>
                     <Checkbox
                       checked={field.value}
                       onCheckedChange={field.onChange}
-                      className="border-gray-700"
+                      className="border-border"
                     />
                   </FormControl>
                   <div className="space-y-1 leading-none">
-                    <FormLabel className="text-white">
+                    <FormLabel className="text-foreground">
                       Stock Exchange or FINRA Member
                     </FormLabel>
-                    <p className="text-sm text-gray-400">
+                    <p className="text-sm text-muted-foreground">
                       Are you associated with a stock exchange or FINRA member organization?
                     </p>
                   </div>
@@ -194,19 +217,19 @@ export function AffiliationsFormNew({ onSave }: { onSave: () => void }) {
               control={form.control}
               name="publicCompany"
               render={({ field }) => (
-                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border border-gray-700 p-4">
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border border-border p-4">
                   <FormControl>
                     <Checkbox
                       checked={field.value}
                       onCheckedChange={field.onChange}
-                      className="border-gray-700"
+                      className="border-border"
                     />
                   </FormControl>
                   <div className="space-y-1 leading-none">
-                    <FormLabel className="text-white">
+                    <FormLabel className="text-foreground">
                       Public Company Affiliation
                     </FormLabel>
-                    <p className="text-sm text-gray-400">
+                    <p className="text-sm text-muted-foreground">
                       Are you affiliated with a publicly traded company?
                     </p>
                   </div>
@@ -218,19 +241,19 @@ export function AffiliationsFormNew({ onSave }: { onSave: () => void }) {
               control={form.control}
               name="usPoliticallyExposed"
               render={({ field }) => (
-                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border border-gray-700 p-4">
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border border-border p-4">
                   <FormControl>
                     <Checkbox
                       checked={field.value}
                       onCheckedChange={field.onChange}
-                      className="border-gray-700"
+                      className="border-border"
                     />
                   </FormControl>
                   <div className="space-y-1 leading-none">
-                    <FormLabel className="text-white">
+                    <FormLabel className="text-foreground">
                       Politically Exposed Person (US)
                     </FormLabel>
-                    <p className="text-sm text-gray-400">
+                    <p className="text-sm text-muted-foreground">
                       Are you a politically exposed person in the United States?
                     </p>
                   </div>
@@ -242,19 +265,19 @@ export function AffiliationsFormNew({ onSave }: { onSave: () => void }) {
               control={form.control}
               name="awmEmployee"
               render={({ field }) => (
-                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border border-gray-700 p-4">
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border border-border p-4">
                   <FormControl>
                     <Checkbox
                       checked={field.value}
                       onCheckedChange={field.onChange}
-                      className="border-gray-700"
+                      className="border-border"
                     />
                   </FormControl>
                   <div className="space-y-1 leading-none">
-                    <FormLabel className="text-white">
+                    <FormLabel className="text-foreground">
                       Asset/Wealth Management Employee
                     </FormLabel>
-                    <p className="text-sm text-gray-400">
+                    <p className="text-sm text-muted-foreground">
                       Are you an employee of an asset or wealth management company?
                     </p>
                   </div>
@@ -266,19 +289,19 @@ export function AffiliationsFormNew({ onSave }: { onSave: () => void }) {
               control={form.control}
               name="custodian"
               render={({ field }) => (
-                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border border-gray-700 p-4">
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border border-border p-4">
                   <FormControl>
                     <Checkbox
                       checked={field.value}
                       onCheckedChange={field.onChange}
-                      className="border-gray-700"
+                      className="border-border"
                     />
                   </FormControl>
                   <div className="space-y-1 leading-none">
-                    <FormLabel className="text-white">
+                    <FormLabel className="text-foreground">
                       Custodian Affiliation
                     </FormLabel>
-                    <p className="text-sm text-gray-400">
+                    <p className="text-sm text-muted-foreground">
                       Are you affiliated with a custodial institution?
                     </p>
                   </div>
@@ -290,19 +313,19 @@ export function AffiliationsFormNew({ onSave }: { onSave: () => void }) {
               control={form.control}
               name="brokerDealer"
               render={({ field }) => (
-                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border border-gray-700 p-4">
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border border-border p-4">
                   <FormControl>
                     <Checkbox
                       checked={field.value}
                       onCheckedChange={field.onChange}
-                      className="border-gray-700"
+                      className="border-border"
                     />
                   </FormControl>
                   <div className="space-y-1 leading-none">
-                    <FormLabel className="text-white">
+                    <FormLabel className="text-foreground">
                       Broker-Dealer Affiliation
                     </FormLabel>
-                    <p className="text-sm text-gray-400">
+                    <p className="text-sm text-muted-foreground">
                       Are you affiliated with a broker-dealer?
                     </p>
                   </div>
@@ -314,19 +337,19 @@ export function AffiliationsFormNew({ onSave }: { onSave: () => void }) {
               control={form.control}
               name="familyBrokerDealer"
               render={({ field }) => (
-                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border border-gray-700 p-4">
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border border-border p-4">
                   <FormControl>
                     <Checkbox
                       checked={field.value}
                       onCheckedChange={field.onChange}
-                      className="border-gray-700"
+                      className="border-border"
                     />
                   </FormControl>
                   <div className="space-y-1 leading-none">
-                    <FormLabel className="text-white">
+                    <FormLabel className="text-foreground">
                       Family Member Broker-Dealer
                     </FormLabel>
-                    <p className="text-sm text-gray-400">
+                    <p className="text-sm text-muted-foreground">
                       Is any family member affiliated with a broker-dealer?
                     </p>
                   </div>
