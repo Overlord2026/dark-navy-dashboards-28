@@ -13,14 +13,14 @@ import { cn } from "@/lib/utils";
 
 export const NetWorthSummary = () => {
   console.log('NetWorthSummary rendering');
+  const { theme } = useTheme();
+  const isLightTheme = theme === "light";
+  
   try {
     const { assets, getTotalNetWorth, getTotalAssetsByType, getAssetsByOwner } = useNetWorth();
     console.log('NetWorthSummary: useNetWorth hook loaded successfully', assets.length);
     const { userProfile } = useUser();
-    const { theme } = useTheme();
     const navigate = useNavigate();
-    
-    const isLightTheme = theme === "light";
     
     // Calculate asset allocation percentages
     const totalNetWorth = getTotalNetWorth();
