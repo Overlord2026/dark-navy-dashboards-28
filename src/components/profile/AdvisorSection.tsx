@@ -3,7 +3,7 @@ import React from "react";
 import { ChevronRight, UserRoundIcon, MailIcon, LinkedinIcon, Calendar, ExternalLinkIcon, MapPinIcon } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useTheme } from "@/context/ThemeContext";
 import { Link } from "react-router-dom";
 import { useAdvisor } from "@/context/AdvisorContext";
@@ -20,24 +20,28 @@ export const AdvisorSection = ({ onViewProfile, onBookSession, collapsed = false
   const isLightTheme = theme === "light";
   
   return (
-    <div className={`px-0 mx-0 ${isLightTheme ? 'border-[#DCD8C0]' : 'border-white/10'}`}>
+    <div className="px-4 py-2">
       <Popover>
         <PopoverTrigger asChild>
           <div 
-            className={`flex items-center w-full py-4 px-4 rounded-none transition-colors cursor-pointer border-y-2 ${isLightTheme ? 'bg-white text-[#222222] border-gray-400 hover:bg-[#E9E7D8] shadow-lg' : 'bg-black border-gray-600 text-white hover:bg-white/5 shadow-lg'}`}
+            className={`flex items-center w-full py-3 px-3 rounded-lg transition-colors cursor-pointer ${isLightTheme ? 'bg-white text-[#222222] hover:bg-[#F5F5F5] border border-gray-200' : 'bg-[#2A2A40] text-white hover:bg-[#333350] border border-white/10'}`}
           >
-            <div className="relative h-[42px] w-[42px] mr-3">
-              <Avatar className="h-[42px] w-[42px] border-2 border-gray-600 rounded-full">
+            <div className="relative h-[40px] w-[40px] mr-3 flex-shrink-0">
+              <Avatar className="h-[40px] w-[40px] border-2 border-gray-300 rounded-full">
+                <AvatarImage src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" alt={advisorInfo.name} />
                 <AvatarFallback className="bg-[#9F9EA1] text-white">
                   {advisorInfo.name.split(' ').map(name => name[0]).join('')}
                 </AvatarFallback>
               </Avatar>
             </div>
             {!collapsed && (
-              <div className="flex flex-col overflow-hidden">
-                <span className={`text-[14px] ${isLightTheme ? 'text-[#222222]' : 'text-gray-200'} font-medium whitespace-nowrap`}>Advisor/CFO:</span>
-                <span className={`text-[14px] ${isLightTheme ? 'text-[#222222]/70' : 'text-gray-300'} whitespace-nowrap truncate max-w-[150px]`}>{advisorInfo.name}</span>
+              <div className="flex flex-col overflow-hidden flex-1">
+                <span className={`text-[12px] ${isLightTheme ? 'text-[#666666]' : 'text-gray-400'} font-medium whitespace-nowrap`}>Advisor/CFO</span>
+                <span className={`text-[14px] ${isLightTheme ? 'text-[#222222]' : 'text-white'} whitespace-nowrap truncate font-medium`}>{advisorInfo.name}</span>
               </div>
+            )}
+            {!collapsed && (
+              <ChevronRight className={`h-4 w-4 ${isLightTheme ? 'text-gray-400' : 'text-gray-500'} flex-shrink-0`} />
             )}
           </div>
         </PopoverTrigger>
@@ -49,6 +53,7 @@ export const AdvisorSection = ({ onViewProfile, onBookSession, collapsed = false
           <div className="bg-[#1B1B32] p-6 text-white">
             <div className="flex items-start space-x-4 mb-4">
               <Avatar className="h-[70px] w-[70px] border-2 border-gray-600">
+                <AvatarImage src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" alt={advisorInfo.name} />
                 <AvatarFallback className="bg-[#9F9EA1] text-white text-[24px]">
                   {advisorInfo.name.split(' ').map(name => name[0]).join('')}
                 </AvatarFallback>
@@ -77,16 +82,14 @@ export const AdvisorSection = ({ onViewProfile, onBookSession, collapsed = false
                 <span className="font-medium">View profile</span>
               </Link>
               
-              <a 
-                href="https://calendly.com/tonygomes/60min"
-                target="_blank"
-                rel="noopener noreferrer"
+              <button 
+                onClick={onBookSession}
                 className="w-full flex items-center justify-center py-2.5 px-4 bg-transparent hover:bg-white/10 border border-white/20 rounded-md transition-colors text-white"
               >
                 <Calendar className="h-5 w-5 mr-2" />
                 <span className="font-medium">Book a session</span>
                 <ExternalLinkIcon className="h-4 w-4 ml-2" />
-              </a>
+              </button>
             </div>
           </div>
         </PopoverContent>
