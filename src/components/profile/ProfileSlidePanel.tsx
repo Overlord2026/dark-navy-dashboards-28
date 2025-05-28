@@ -84,25 +84,25 @@ export const ProfileSlidePanel = ({
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
       <SheetContent className="w-full sm:max-w-[600px] overflow-y-auto bg-[#0A0A23] text-white border-l border-gray-800" side="right">
-        <SheetHeader className="mb-6 py-4 px-2 border border-gray-700/20 rounded-md">
+        <SheetHeader className="mb-6 py-3 px-3 border border-gray-700/20 rounded-xl bg-gradient-to-r from-gray-800/20 to-gray-700/10">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="flex items-center justify-between w-full h-auto p-0 hover:bg-transparent">
-                <SheetTitle className="text-xl font-semibold text-white">
+              <Button variant="ghost" className="flex items-center justify-between w-full h-10 px-3 py-2 rounded-lg hover:bg-white/5 transition-colors">
+                <SheetTitle className="text-lg font-medium text-white truncate">
                   {getFormTitle()}
                 </SheetTitle>
-                <ChevronDown className="h-5 w-5 ml-2 text-white/70" />
+                <ChevronDown className="h-4 w-4 ml-2 text-white/70 flex-shrink-0" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent 
               align="start" 
-              className="w-64 bg-[#1B1B32] border-[#2A2A40] shadow-xl shadow-black/20"
+              className="w-64 bg-[#1B1B32] border-[#2A2A40] shadow-xl shadow-black/20 rounded-xl"
             >
               {formOptions.map((option) => (
                 <DropdownMenuItem 
                   key={option.id}
                   onClick={() => handleFormChange(option.id)}
-                  className="text-white hover:bg-[#2A2A40] focus:bg-[#2A2A40] cursor-pointer"
+                  className="text-white hover:bg-[#2A2A40] focus:bg-[#2A2A40] cursor-pointer rounded-lg mx-1 my-0.5 transition-colors"
                 >
                   {option.label}
                 </DropdownMenuItem>
