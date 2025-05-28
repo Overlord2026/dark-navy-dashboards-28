@@ -2,12 +2,17 @@
 import React from "react";
 import { InsuranceTypeCard } from "./InsuranceTypeCard";
 import { InsuranceType } from "@/types/insuranceProvider";
+import { useTheme } from "@/context/ThemeContext";
+import { cn } from "@/lib/utils";
 
 interface InsuranceOverviewProps {
   onSelectType: (type: InsuranceType) => void;
 }
 
 export const InsuranceOverview = ({ onSelectType }: InsuranceOverviewProps) => {
+  const { theme } = useTheme();
+  const isLightTheme = theme === "light";
+
   const insuranceTypes = [
     {
       type: "term-life" as InsuranceType,
@@ -57,7 +62,10 @@ export const InsuranceOverview = ({ onSelectType }: InsuranceOverviewProps) => {
   ];
 
   return (
-    <div className="animate-fade-in min-h-screen p-4 text-white bg-[#121a2c]">
+    <div className={cn(
+      "animate-fade-in min-h-screen p-4",
+      isLightTheme ? "bg-background text-foreground" : "bg-background text-foreground"
+    )}>
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         {insuranceTypes.map((insurance) => (
           <InsuranceTypeCard

@@ -39,7 +39,7 @@ const PersonalInsurance = () => {
                 isLightTheme ? "text-foreground" : "text-foreground"
               )}>Insurance & Annuities</h1>
               <p className={cn(
-                isLightTheme ? "text-muted-foreground" : "text-muted-foreground"
+                "text-muted-foreground"
               )}>
                 Track and manage your personal insurance policies and annuities
               </p>
@@ -63,9 +63,7 @@ const PersonalInsurance = () => {
                 <TabsTrigger 
                   value="dashboard"
                   className={cn(
-                    isLightTheme 
-                      ? "data-[state=active]:bg-background data-[state=active]:text-foreground" 
-                      : "data-[state=active]:bg-background data-[state=active]:text-foreground"
+                    "data-[state=active]:bg-background data-[state=active]:text-foreground"
                   )}
                 >
                   Dashboard
@@ -73,9 +71,7 @@ const PersonalInsurance = () => {
                 <TabsTrigger 
                   value="life"
                   className={cn(
-                    isLightTheme 
-                      ? "data-[state=active]:bg-background data-[state=active]:text-foreground" 
-                      : "data-[state=active]:bg-background data-[state=active]:text-foreground"
+                    "data-[state=active]:bg-background data-[state=active]:text-foreground"
                   )}
                 >
                   Life
@@ -83,9 +79,7 @@ const PersonalInsurance = () => {
                 <TabsTrigger 
                   value="annuities"
                   className={cn(
-                    isLightTheme 
-                      ? "data-[state=active]:bg-background data-[state=active]:text-foreground" 
-                      : "data-[state=active]:bg-background data-[state=active]:text-foreground"
+                    "data-[state=active]:bg-background data-[state=active]:text-foreground"
                   )}
                 >
                   Annuities
@@ -93,9 +87,7 @@ const PersonalInsurance = () => {
                 <TabsTrigger 
                   value="health"
                   className={cn(
-                    isLightTheme 
-                      ? "data-[state=active]:bg-background data-[state=active]:text-foreground" 
-                      : "data-[state=active]:bg-background data-[state=active]:text-foreground"
+                    "data-[state=active]:bg-background data-[state=active]:text-foreground"
                   )}
                 >
                   Health
@@ -103,9 +95,7 @@ const PersonalInsurance = () => {
                 <TabsTrigger 
                   value="property"
                   className={cn(
-                    isLightTheme 
-                      ? "data-[state=active]:bg-background data-[state=active]:text-foreground" 
-                      : "data-[state=active]:bg-background data-[state=active]:text-foreground"
+                    "data-[state=active]:bg-background data-[state=active]:text-foreground"
                   )}
                 >
                   Property
@@ -113,9 +103,7 @@ const PersonalInsurance = () => {
                 <TabsTrigger 
                   value="umbrella"
                   className={cn(
-                    isLightTheme 
-                      ? "data-[state=active]:bg-background data-[state=active]:text-foreground" 
-                      : "data-[state=active]:bg-background data-[state=active]:text-foreground"
+                    "data-[state=active]:bg-background data-[state=active]:text-foreground"
                   )}
                 >
                   Umbrella
