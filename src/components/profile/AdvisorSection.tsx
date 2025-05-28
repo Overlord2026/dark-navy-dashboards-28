@@ -20,35 +20,36 @@ export const AdvisorSection = ({ onViewProfile, onBookSession, collapsed = false
   const isLightTheme = theme === "light";
   
   return (
-    <div className="px-4 py-2">
+    <div className="px-3 py-2">
       <Popover>
         <PopoverTrigger asChild>
           <div 
-            className={`flex items-center w-full py-3 px-3 rounded-lg transition-colors cursor-pointer ${isLightTheme ? 'bg-white text-[#222222] hover:bg-[#F5F5F5] border border-gray-200' : 'bg-[#2A2A40] text-white hover:bg-[#333350] border border-white/10'}`}
+            className={`flex items-center w-full py-4 px-4 rounded-lg transition-colors cursor-pointer ${isLightTheme ? 'bg-white text-[#222222] hover:bg-[#F5F5F5] border border-gray-200' : 'bg-[#2A2A40] text-white hover:bg-[#333350] border border-white/10'}`}
           >
-            <div className="relative h-[40px] w-[40px] mr-3 flex-shrink-0">
-              <Avatar className="h-[40px] w-[40px] border-2 border-gray-300 rounded-full">
+            <div className="relative h-[48px] w-[48px] mr-4 flex-shrink-0">
+              <Avatar className="h-[48px] w-[48px] border-2 border-gray-300 rounded-full">
                 <AvatarImage src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" alt={advisorInfo.name} />
-                <AvatarFallback className="bg-[#9F9EA1] text-white">
+                <AvatarFallback className="bg-[#9F9EA1] text-white text-lg">
                   {advisorInfo.name.split(' ').map(name => name[0]).join('')}
                 </AvatarFallback>
               </Avatar>
             </div>
             {!collapsed && (
-              <div className="flex flex-col overflow-hidden flex-1">
-                <span className={`text-[12px] ${isLightTheme ? 'text-[#666666]' : 'text-gray-400'} font-medium whitespace-nowrap`}>Advisor/CFO</span>
-                <span className={`text-[14px] ${isLightTheme ? 'text-[#222222]' : 'text-white'} whitespace-nowrap truncate font-medium`}>{advisorInfo.name}</span>
+              <div className="flex flex-col overflow-hidden flex-1 min-w-0">
+                <span className={`text-[13px] ${isLightTheme ? 'text-[#666666]' : 'text-gray-400'} font-medium whitespace-nowrap mb-1`}>Advisor/CFO</span>
+                <span className={`text-[15px] ${isLightTheme ? 'text-[#222222]' : 'text-white'} whitespace-nowrap truncate font-semibold`}>{advisorInfo.name}</span>
+                <span className={`text-[12px] ${isLightTheme ? 'text-[#888888]' : 'text-gray-500'} whitespace-nowrap truncate mt-0.5`}>{advisorInfo.title}</span>
               </div>
             )}
             {!collapsed && (
-              <ChevronRight className={`h-4 w-4 ${isLightTheme ? 'text-gray-400' : 'text-gray-500'} flex-shrink-0`} />
+              <ChevronRight className={`h-5 w-5 ${isLightTheme ? 'text-gray-400' : 'text-gray-500'} flex-shrink-0 ml-2`} />
             )}
           </div>
         </PopoverTrigger>
         <PopoverContent 
           align="start" 
           side={collapsed ? "right" : "bottom"} 
-          className={`w-[350px] p-0 overflow-hidden ${isLightTheme ? 'bg-[#F9F7E8] border-[#DCD8C0] text-[#222222]' : 'bg-[#1E1E30] border-gray-700 text-white'} shadow-md shadow-black/20 border`}
+          className={`w-[380px] p-0 overflow-hidden ${isLightTheme ? 'bg-[#F9F7E8] border-[#DCD8C0] text-[#222222]' : 'bg-[#1E1E30] border-gray-700 text-white'} shadow-md shadow-black/20 border`}
         >
           <div className="bg-[#1B1B32] p-6 text-white">
             <div className="flex items-start space-x-4 mb-4">
