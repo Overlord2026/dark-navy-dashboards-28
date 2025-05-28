@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { NavCategory, NavItem } from "@/types/navigation";
 import { useLocation } from "react-router-dom";
 
@@ -18,7 +18,6 @@ export const useSidebarState = (navigationCategories: NavCategory[]) => {
   );
   
   const [expandedSubmenus, setExpandedSubmenus] = useState<Record<string, boolean>>({});
-  const [forceUpdate, setForceUpdate] = useState(0);
   
   // Helper function to normalize paths
   const normalizePath = (path: string): string => {
@@ -39,9 +38,8 @@ export const useSidebarState = (navigationCategories: NavCategory[]) => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
   
-  useEffect(() => {
-    // Expand relevant category based on current route
-    const path = location.pathname;
+  // Use useCallback to prevent unnecessary re-renders
+  const updateCategoriesForRoute = useCallback((path: string) => {
     let shouldExpandCategory = '';
     
     // Find which category contains the current path
@@ -78,46 +76,42 @@ export const useSidebarState = (navigationCategories: NavCategory[]) => {
         [shouldExpandCategory]: true
       }));
     }
-    
-    // Force a re-render to ensure everything is up to date
-    setForceUpdate(prev => prev + 1);
-  }, [location.pathname, navigationCategories]);
+  }, [navigationCategories]);
+  
+  useEffect(() => {
+    updateCategoriesForRoute(location.pathname);
+  }, [location.pathname, updateCategoriesForRoute]);
 
-  const toggleSidebar = () => {
-    setCollapsed(!collapsed);
-  };
+  const toggleSidebar = useCallback(() => {
+    setCollapsed(prev => !prev);
+  }, []);
 
-  const toggleCategory = (categoryId: string) => {
+  const toggleCategory = useCallback((categoryId: string) => {
     setExpandedCategories(prev => ({
       ...prev,
       [categoryId]: !prev[categoryId]
     }));
-  };
+  }, []);
 
-  const toggleSubmenu = (itemTitle: string, e?: React.MouseEvent) => {
-    if (e) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
+  const toggleSubmenu = useCallback((itemTitle: string) => {
     setExpandedSubmenus(prev => ({
       ...prev,
       [itemTitle]: !prev[itemTitle]
     }));
-  };
+  }, []);
 
-  const isActive = (href: string) => {
+  const isActive = useCallback((href: string) => {
     const normalizedHref = normalizePath(href);
     const normalizedPathname = normalizePath(location.pathname);
     
     return normalizedPathname === normalizedHref || 
            (normalizedHref !== "/" && normalizedPathname.startsWith(normalizedHref));
-  };
+  }, [location.pathname]);
 
   return {
     collapsed,
     expandedCategories,
     expandedSubmenus,
-    forceUpdate,
     toggleSidebar,
     toggleCategory,
     toggleSubmenu,

@@ -50,12 +50,10 @@ export const NavigationCategory = ({
     return normalizedPath === normalizedCurrentPath;
   };
 
-  const handleNavClick = (href: string, e: React.MouseEvent) => {
-    // Prevent default scroll behavior when clicking the same route
-    const normalizedHref = href.startsWith("/") ? href : `/${href}`;
-    if (location.pathname === normalizedHref) {
-      e.preventDefault();
-    }
+  const handleCategoryToggle = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    toggleCategory(category.id);
   };
 
   return (
@@ -66,7 +64,10 @@ export const NavigationCategory = ({
           onOpenChange={() => toggleCategory(category.id)}
         >
           <CollapsibleTrigger asChild>
-            <div className={`flex items-center justify-between p-2 text-xs uppercase tracking-wider font-semibold ${isLightTheme ? 'text-[#222222]/70' : 'text-[#E2E2E2]/70'} cursor-pointer`}>
+            <button 
+              onClick={handleCategoryToggle}
+              className={`flex items-center justify-between p-2 text-xs uppercase tracking-wider font-semibold ${isLightTheme ? 'text-[#222222]/70' : 'text-[#E2E2E2]/70'} cursor-pointer w-full`}
+            >
               <span>{category.label}</span>
               <div>
                 {isExpanded ? (
@@ -75,7 +76,7 @@ export const NavigationCategory = ({
                   <ChevronRight className="h-4 w-4" />
                 )}
               </div>
-            </div>
+            </button>
           </CollapsibleTrigger>
           <CollapsibleContent className="space-y-1.5">
             {category.items.map((item: any) => (

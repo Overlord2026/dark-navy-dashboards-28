@@ -40,9 +40,22 @@ const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
 
   const handleNavClick = (href: string, e: React.MouseEvent) => {
     // Prevent default scroll behavior when clicking the same route
-    if (location.pathname === href) {
+    const normalizedHref = normalizePath(href);
+    if (location.pathname === normalizedHref) {
       e.preventDefault();
     }
+  };
+
+  const handleCategoryToggle = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onToggle(id);
+  };
+
+  const handleSubmenuToggle = (itemTitle: string, e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    toggleSubmenu(itemTitle);
   };
 
   const renderNavItem = (item: NavItem) => {
@@ -89,6 +102,7 @@ const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
       >
         <CollapsibleTrigger asChild>
           <button
+            onClick={handleCategoryToggle}
             className={cn(
               "flex w-full items-center justify-between rounded-md px-3 py-2 text-sm font-medium",
               isLightTheme
@@ -128,13 +142,18 @@ const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
                       open={!!expandedSubmenus[item.title]}
                       onOpenChange={() => toggleSubmenu(item.title)}
                     >
-                      <CollapsibleTrigger className="flex items-center justify-between w-full px-3 py-2 text-sm font-medium rounded-md hover:bg-accent hover:text-accent-foreground">
-                        <span>{item.title}</span>
-                        {expandedSubmenus[item.title] ? (
-                          <ChevronDown className="w-4 h-4" />
-                        ) : (
-                          <ChevronRight className="w-4 h-4" />
-                        )}
+                      <CollapsibleTrigger asChild>
+                        <button 
+                          onClick={(e) => handleSubmenuToggle(item.title, e)}
+                          className="flex items-center justify-between w-full px-3 py-2 text-sm font-medium rounded-md hover:bg-accent hover:text-accent-foreground"
+                        >
+                          <span>{item.title}</span>
+                          {expandedSubmenus[item.title] ? (
+                            <ChevronDown className="w-4 h-4" />
+                          ) : (
+                            <ChevronRight className="w-4 h-4" />
+                          )}
+                        </button>
                       </CollapsibleTrigger>
                       <CollapsibleContent className="space-y-1">
                         {item.items.map((subItem, subIndex) => (
