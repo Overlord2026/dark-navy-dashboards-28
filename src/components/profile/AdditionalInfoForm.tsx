@@ -1,4 +1,3 @@
-
 import React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -31,6 +30,8 @@ const additionalInfoSchema = z.object({
 
 export function AdditionalInfoForm({ onSave }: { onSave: () => void }) {
   const { user } = useAuth();
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(true);
   
   const form = useForm<z.infer<typeof additionalInfoSchema>>({
     resolver: zodResolver(additionalInfoSchema),
@@ -48,25 +49,43 @@ export function AdditionalInfoForm({ onSave }: { onSave: () => void }) {
 
   React.useEffect(() => {
     const loadExistingData = async () => {
-      if (!user) return;
+      if (!user) {
+        setIsLoading(false);
+        return;
+      }
       
-      const { data, error } = await supabase
-        .from('user_additional_info')
-        .select('*')
-        .eq('user_id', user.id)
-        .single();
+      try {
+        console.log("Loading additional info for user:", user.id);
         
-      if (data && !error) {
-        form.reset({
-          citizenshipStatus: data.citizenship_status || "",
-          ssn: data.ssn || "",
-          incomeRange: data.income_range || "",
-          netWorth: data.net_worth || "",
-          investorType: data.investor_type || "",
-          investingObjective: data.investing_objective || "",
-          taxBracketCapital: data.tax_bracket_capital || "",
-          taxBracketIncome: data.tax_bracket_income || "",
-        });
+        const { data, error } = await supabase
+          .from('user_additional_info')
+          .select('*')
+          .eq('user_id', user.id)
+          .maybeSingle();
+          
+        if (error) {
+          console.error("Error loading additional info:", error);
+          toast.error("Failed to load existing information");
+        } else if (data) {
+          console.log("Loaded additional info:", data);
+          form.reset({
+            citizenshipStatus: data.citizenship_status || "",
+            ssn: data.ssn || "",
+            incomeRange: data.income_range || "",
+            netWorth: data.net_worth || "",
+            investorType: data.investor_type || "",
+            investingObjective: data.investing_objective || "",
+            taxBracketCapital: data.tax_bracket_capital || "",
+            taxBracketIncome: data.tax_bracket_income || "",
+          });
+        } else {
+          console.log("No existing additional info found");
+        }
+      } catch (error) {
+        console.error("Unexpected error loading additional info:", error);
+        toast.error("Failed to load existing information");
+      } finally {
+        setIsLoading(false);
       }
     };
     
@@ -74,11 +93,24 @@ export function AdditionalInfoForm({ onSave }: { onSave: () => void }) {
   }, [user, form]);
 
   async function onSubmit(values: z.infer<typeof additionalInfoSchema>) {
-    if (!user) return;
+    if (!user) {
+      toast.error("User not authenticated");
+      return;
+    }
     
-    const { error } = await supabase
-      .from('user_additional_info')
-      .upsert({
+    setIsSubmitting(true);
+    
+    try {
+      console.log("Saving additional info:", values);
+      
+      // First, check if a record exists
+      const { data: existingData } = await supabase
+        .from('user_additional_info')
+        .select('id')
+        .eq('user_id', user.id)
+        .maybeSingle();
+
+      const additionalInfoData = {
         user_id: user.id,
         citizenship_status: values.citizenshipStatus,
         ssn: values.ssn,
@@ -89,14 +121,52 @@ export function AdditionalInfoForm({ onSave }: { onSave: () => void }) {
         tax_bracket_capital: values.taxBracketCapital,
         tax_bracket_income: values.taxBracketIncome,
         updated_at: new Date().toISOString(),
-      });
-      
-    if (error) {
-      toast.error("Failed to save additional information");
-      console.error(error);
-    } else {
-      onSave();
+      };
+
+      let error;
+
+      if (existingData) {
+        // Update existing record
+        console.log("Updating existing additional info record");
+        const { error: updateError } = await supabase
+          .from('user_additional_info')
+          .update(additionalInfoData)
+          .eq('user_id', user.id);
+        error = updateError;
+      } else {
+        // Insert new record
+        console.log("Creating new additional info record");
+        const { error: insertError } = await supabase
+          .from('user_additional_info')
+          .insert([additionalInfoData]);
+        error = insertError;
+      }
+
+      if (error) {
+        console.error("Database operation error:", error);
+        toast.error("Failed to save additional information");
+      } else {
+        console.log("Additional info saved successfully");
+        toast.success("Additional information saved successfully");
+        onSave();
+      }
+    } catch (error) {
+      console.error("Unexpected error saving additional info:", error);
+      toast.error("An unexpected error occurred");
+    } finally {
+      setIsSubmitting(false);
     }
+  }
+
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <div>
+          <h2 className="text-2xl font-semibold tracking-tight text-white mb-2">Additional Information</h2>
+          <p className="text-sm text-gray-400">Loading your information...</p>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -109,13 +179,14 @@ export function AdditionalInfoForm({ onSave }: { onSave: () => void }) {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            
             <FormField
               control={form.control}
               name="citizenshipStatus"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-gray-400">Citizenship Status</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl>
                       <SelectTrigger className="bg-transparent border-gray-700 text-white">
                         <SelectValue placeholder="Select citizenship status" />
@@ -158,7 +229,7 @@ export function AdditionalInfoForm({ onSave }: { onSave: () => void }) {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-gray-400">Income Range</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl>
                       <SelectTrigger className="bg-transparent border-gray-700 text-white">
                         <SelectValue placeholder="Select income range" />
@@ -205,7 +276,7 @@ export function AdditionalInfoForm({ onSave }: { onSave: () => void }) {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-gray-400">Investor Type</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl>
                       <SelectTrigger className="bg-transparent border-gray-700 text-white">
                         <SelectValue placeholder="Select investor type" />
@@ -230,7 +301,7 @@ export function AdditionalInfoForm({ onSave }: { onSave: () => void }) {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-gray-400">Investing Objective</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl>
                       <SelectTrigger className="bg-transparent border-gray-700 text-white">
                         <SelectValue placeholder="Select investing objective" />
@@ -295,9 +366,10 @@ export function AdditionalInfoForm({ onSave }: { onSave: () => void }) {
           <div className="flex justify-end">
             <Button 
               type="submit" 
+              disabled={isSubmitting}
               className="bg-blue-600 text-white hover:bg-blue-700"
             >
-              Save Additional Information
+              {isSubmitting ? "Saving..." : "Save Additional Information"}
             </Button>
           </div>
         </form>
