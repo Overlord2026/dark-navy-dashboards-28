@@ -24,20 +24,21 @@ export const AdvisorSection = ({ onViewProfile, onBookSession, collapsed = false
       <Popover>
         <PopoverTrigger asChild>
           <div 
-            className={`flex items-center w-full py-3 px-3 rounded-lg transition-colors cursor-pointer ${isLightTheme ? 'bg-white text-[#222222] hover:bg-[#F5F5F5] border border-gray-200' : 'bg-[#2A2A40] text-white hover:bg-[#333350] border border-white/10'}`}
+            className={`flex items-center w-full py-4 px-4 rounded-lg transition-colors cursor-pointer min-h-[80px] ${isLightTheme ? 'bg-white text-[#222222] hover:bg-[#F5F5F5] border border-gray-200' : 'bg-[#2A2A40] text-white hover:bg-[#333350] border border-white/10'}`}
           >
-            <div className="relative h-[40px] w-[40px] mr-3 flex-shrink-0">
-              <Avatar className="h-[40px] w-[40px] border-2 border-gray-300 rounded-full">
-                <AvatarImage src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" alt={advisorInfo.name} />
+            <div className="relative h-[50px] w-[50px] mr-4 flex-shrink-0">
+              <Avatar className="h-[50px] w-[50px] border-2 border-gray-300 rounded-full">
+                <AvatarImage src="/lovable-uploads/dc1ba115-9699-414c-b9d0-7521bf7e7224.png" alt={advisorInfo.name} />
                 <AvatarFallback className="bg-[#9F9EA1] text-white">
                   {advisorInfo.name.split(' ').map(name => name[0]).join('')}
                 </AvatarFallback>
               </Avatar>
             </div>
             {!collapsed && (
-              <div className="flex flex-col overflow-hidden flex-1">
-                <span className={`text-[12px] ${isLightTheme ? 'text-[#666666]' : 'text-gray-400'} font-medium whitespace-nowrap`}>Advisor/CFO</span>
-                <span className={`text-[14px] ${isLightTheme ? 'text-[#222222]' : 'text-white'} whitespace-nowrap truncate font-medium`}>{advisorInfo.name}</span>
+              <div className="flex flex-col overflow-hidden flex-1 space-y-1">
+                <span className={`text-[13px] ${isLightTheme ? 'text-[#666666]' : 'text-gray-400'} font-medium whitespace-nowrap`}>Advisor/CFO</span>
+                <span className={`text-[15px] ${isLightTheme ? 'text-[#222222]' : 'text-white'} whitespace-nowrap truncate font-semibold`}>{advisorInfo.name}</span>
+                <span className={`text-[12px] ${isLightTheme ? 'text-[#888888]' : 'text-gray-500'} whitespace-nowrap truncate`}>{advisorInfo.title}</span>
               </div>
             )}
             {!collapsed && (
@@ -53,7 +54,7 @@ export const AdvisorSection = ({ onViewProfile, onBookSession, collapsed = false
           <div className="bg-[#1B1B32] p-6 text-white">
             <div className="flex items-start space-x-4 mb-4">
               <Avatar className="h-[70px] w-[70px] border-2 border-gray-600">
-                <AvatarImage src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" alt={advisorInfo.name} />
+                <AvatarImage src="/lovable-uploads/dc1ba115-9699-414c-b9d0-7521bf7e7224.png" alt={advisorInfo.name} />
                 <AvatarFallback className="bg-[#9F9EA1] text-white text-[24px]">
                   {advisorInfo.name.split(' ').map(name => name[0]).join('')}
                 </AvatarFallback>
