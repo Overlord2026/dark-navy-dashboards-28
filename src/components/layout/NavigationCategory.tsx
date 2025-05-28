@@ -2,6 +2,7 @@
 import React from "react";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { NavigationItem } from "./NavigationItem";
+import { Link, useLocation } from "react-router-dom";
 import {
   Collapsible,
   CollapsibleContent,
@@ -38,6 +39,8 @@ export const NavigationCategory = ({
   isCollapsed,
   isLightTheme
 }: NavigationCategoryProps) => {
+  const location = useLocation();
+
   // Helper function to check if a path is active
   const isActivePath = (path: string): boolean => {
     // Normalize both paths for comparison
@@ -45,6 +48,14 @@ export const NavigationCategory = ({
     const normalizedCurrentPath = currentPath.startsWith("/") ? currentPath : `/${currentPath}`;
     
     return normalizedPath === normalizedCurrentPath;
+  };
+
+  const handleNavClick = (href: string, e: React.MouseEvent) => {
+    // Prevent default scroll behavior when clicking the same route
+    const normalizedHref = href.startsWith("/") ? href : `/${href}`;
+    if (location.pathname === normalizedHref) {
+      e.preventDefault();
+    }
   };
 
   return (

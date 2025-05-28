@@ -1,9 +1,8 @@
 
 import React from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { cn } from "@/lib/utils";
-import { Link } from "react-router-dom";
 import SidebarNavCategory from "@/components/sidebar/SidebarNavCategory";
 import { NavItem, SidebarProps } from "@/types/navigation";
 
@@ -29,6 +28,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
     toggleSubmenu(id);
   };
 
+  const handleLogoClick = (e: React.MouseEvent) => {
+    // Prevent scroll behavior when clicking logo if already on dashboard
+    if (location.pathname === "/dashboard") {
+      e.preventDefault();
+    }
+  };
+
   return (
     <div
       className={cn(
@@ -39,7 +45,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     >
       <div className="flex-1 flex flex-col gap-y-2 py-4">
         <div className="px-3 py-2 text-center">
-          <Link to="/dashboard">
+          <Link to="/dashboard" onClick={handleLogoClick}>
             <h1 className={cn("font-bold transition-all", collapsed ? "text-xl" : "text-2xl")}>LOV</h1>
           </Link>
         </div>
