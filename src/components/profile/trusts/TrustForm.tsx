@@ -12,7 +12,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { FileUpload } from "@/components/ui/file-upload";
-import { FileText, Download } from "lucide-react";
+import { FileText, Download, Trash2 } from "lucide-react";
 import { US_STATES } from "./constants";
 import { TrustFormData, Trust } from "./types";
 
@@ -24,6 +24,7 @@ interface TrustFormProps {
   onCancelEdit: () => void;
   selectedFile: File | null;
   onFileChange: (file: File) => void;
+  onDeleteDocument?: (documentId: string) => void;
 }
 
 export function TrustForm({ 
@@ -33,7 +34,8 @@ export function TrustForm({
   editingTrust, 
   onCancelEdit, 
   selectedFile, 
-  onFileChange 
+  onFileChange,
+  onDeleteDocument
 }: TrustFormProps) {
   const formatFileSize = (bytes: number) => {
     if (bytes === 0) return '0 Bytes';
@@ -67,6 +69,12 @@ export function TrustForm({
       window.URL.revokeObjectURL(url);
     } catch (error) {
       console.error('Error downloading document:', error);
+    }
+  };
+
+  const handleDeleteDocument = (documentId: string, fileName: string) => {
+    if (window.confirm(`Are you sure you want to delete "${fileName}"?`)) {
+      onDeleteDocument?.(documentId);
     }
   };
 
@@ -303,16 +311,28 @@ export function TrustForm({
                         </p>
                       </div>
                     </div>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleDownloadExistingDocument(trustDocument)}
-                      className="flex items-center gap-2"
-                    >
-                      <Download className="h-4 w-4" />
-                      Download
-                    </Button>
+                    <div className="flex items-center gap-2">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleDownloadExistingDocument(trustDocument)}
+                        className="flex items-center gap-2"
+                      >
+                        <Download className="h-4 w-4" />
+                        Download
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleDeleteDocument(trustDocument.id, trustDocument.file_name)}
+                        className="flex items-center gap-2 text-red-600 hover:text-red-700 hover:bg-red-50"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                        Delete
+                      </Button>
+                    </div>
                   </div>
                 ))}
               </div>

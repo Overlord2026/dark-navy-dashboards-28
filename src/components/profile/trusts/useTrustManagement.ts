@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -179,6 +178,26 @@ export function useTrustManagement(onSave: () => void) {
     }
   };
 
+  const deleteDocument = async (documentId: string) => {
+    try {
+      const { error } = await supabase
+        .from('user_trust_documents')
+        .delete()
+        .eq('id', documentId);
+
+      if (error) {
+        console.error('Error deleting document:', error);
+        toast.error("Failed to delete document");
+      } else {
+        toast.success("Document deleted successfully");
+        await loadTrusts();
+      }
+    } catch (error) {
+      console.error('Error deleting document:', error);
+      toast.error("Failed to delete document");
+    }
+  };
+
   const handleView = (trust: Trust) => {
     setViewingTrust(trust);
     setIsViewDialogOpen(true);
@@ -238,5 +257,6 @@ export function useTrustManagement(onSave: () => void) {
     removeTrust,
     handleFileChange,
     setIsViewDialogOpen,
+    deleteDocument,
   };
 }

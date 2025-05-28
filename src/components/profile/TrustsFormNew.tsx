@@ -21,6 +21,7 @@ export function TrustsFormNew({ onSave }: { onSave: () => void }) {
     removeTrust,
     handleFileChange,
     setIsViewDialogOpen,
+    deleteDocument,
   } = useTrustManagement(onSave);
   
   return (
@@ -45,6 +46,7 @@ export function TrustsFormNew({ onSave }: { onSave: () => void }) {
         onCancelEdit={cancelEdit}
         selectedFile={selectedFile}
         onFileChange={handleFileChange}
+        onDeleteDocument={deleteDocument}
       />
       
       <TrustViewDialog
