@@ -1,3 +1,4 @@
+
 import React from "react";
 import { createBrowserRouter } from "react-router-dom";
 import Dashboard from "@/pages/Dashboard";
@@ -31,6 +32,7 @@ import ModelPortfolios from "@/pages/investments/ModelPortfolios";
 import StockScreener from "@/pages/investments/StockScreener";
 import IPProtection from "@/pages/IPProtection";
 import AdvisorFeedback from "@/pages/AdvisorFeedback";
+import AdvisorProfile from "@/pages/AdvisorProfile";
 import NotFound from "@/pages/NotFound";
 import TaxPlanningEducation from "@/pages/TaxPlanningEducation";
 import NavigationDiagnostics from "@/pages/NavigationDiagnostics";
@@ -146,6 +148,10 @@ const routes = createBrowserRouter([
   {
     path: "/advisor-feedback",
     element: <ProtectedRoute><AdvisorFeedback /></ProtectedRoute>
+  },
+  {
+    path: "/client-advisor-profile",
+    element: <ProtectedRoute><AdvisorProfile /></ProtectedRoute>
   },
   {
     path: "/investments/alternative/private-equity",
