@@ -69,7 +69,7 @@ export const AdvisorSection = ({ onViewProfile, onBookSession, collapsed = false
             
             <div className="space-y-2 mt-4">
               <Link 
-                to="/advisor-profile"
+                to="/client-advisor-profile"
                 className="w-full flex items-center justify-center py-2.5 px-4 bg-transparent hover:bg-white/10 border border-white/20 rounded-md transition-colors"
                 onClick={() => onViewProfile("bio")}
               >
