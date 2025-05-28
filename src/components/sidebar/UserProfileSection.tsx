@@ -27,9 +27,11 @@ export const UserProfileSection = ({ onMenuItemClick, showLogo = true }: UserPro
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [activeForm, setActiveForm] = useState<string | null>(null);
   const [isThemeDialogOpen, setIsThemeDialogOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
+    setIsDropdownOpen(false);
     try {
       await logout();
       toast.success("Logged out successfully");
@@ -41,19 +43,33 @@ export const UserProfileSection = ({ onMenuItemClick, showLogo = true }: UserPro
   };
 
   const handleMenuItemClick = (itemId: string) => {
+    // Close dropdown immediately
+    setIsDropdownOpen(false);
+    
     if (itemId === "logout") {
       handleLogout();
-    } else if (itemId === "change-theme") {
-      setIsThemeDialogOpen(true);
-    } else {
-      // Open the sliding panel for profile forms
-      setActiveForm(itemId);
-      setIsPanelOpen(true);
+      return;
     }
+    
+    if (itemId === "change-theme") {
+      setIsThemeDialogOpen(true);
+      return;
+    }
+    
+    // For profile forms, open the sliding panel
+    setActiveForm(itemId);
+    setIsPanelOpen(true);
     
     // Call the original callback if provided
     if (onMenuItemClick) {
       onMenuItemClick(itemId);
+    }
+  };
+
+  const handlePanelOpenChange = (open: boolean) => {
+    setIsPanelOpen(open);
+    if (!open) {
+      setActiveForm(null);
     }
   };
 
@@ -66,7 +82,7 @@ export const UserProfileSection = ({ onMenuItemClick, showLogo = true }: UserPro
           </div>
         </div>
         
-        <DropdownMenu>
+        <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="sm" className="h-8 w-8 p-0 hover:bg-white/10">
               <ChevronDown className="h-4 w-4 text-gray-300" />
@@ -74,7 +90,7 @@ export const UserProfileSection = ({ onMenuItemClick, showLogo = true }: UserPro
           </DropdownMenuTrigger>
           <DropdownMenuContent 
             align="end" 
-            className="w-64 bg-[#1B1B32] border-[#2A2A40] shadow-xl shadow-black/20 p-2"
+            className="w-64 bg-[#1B1B32] border-[#2A2A40] shadow-xl shadow-black/20 p-2 z-50"
             sideOffset={8}
           >
             <DropdownMenuItem 
@@ -149,7 +165,7 @@ export const UserProfileSection = ({ onMenuItemClick, showLogo = true }: UserPro
 
       <ProfileSlidePanel 
         isOpen={isPanelOpen}
-        onOpenChange={setIsPanelOpen}
+        onOpenChange={handlePanelOpenChange}
         activeForm={activeForm}
       />
 

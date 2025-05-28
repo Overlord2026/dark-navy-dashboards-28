@@ -24,7 +24,10 @@ export const ProfileSlidePanel = ({
   
   const handleFormSave = (formType: string) => {
     toast.success(`${getFormTitle()} saved successfully`);
-    onOpenChange(false);
+    // Close the panel after successful save
+    setTimeout(() => {
+      onOpenChange(false);
+    }, 1000);
   };
 
   const renderFormContent = () => {
@@ -41,8 +44,10 @@ export const ProfileSlidePanel = ({
         return <AffiliationsFormNew onSave={() => handleFormSave("affiliations")} />;
       case "trusts":
         return <TrustsFormNew onSave={() => handleFormSave("trusts")} />;
+      case "investor-profile":
+        return <div className="text-white p-4">Investor Profile Form - Coming Soon</div>;
       default:
-        return <div className="text-white">Form not implemented yet</div>;
+        return <div className="text-white p-4">Form not available</div>;
     }
   };
 
@@ -58,6 +63,8 @@ export const ProfileSlidePanel = ({
         return "Affiliations";
       case "trusts":
         return "Trusts";
+      case "investor-profile":
+        return "Investor Profile";
       default:
         return "";
     }
