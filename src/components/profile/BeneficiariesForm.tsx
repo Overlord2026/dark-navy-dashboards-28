@@ -14,7 +14,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useState } from "react";
 import { BeneficiaryList } from "./BeneficiaryList";
 import { BeneficiaryFormHeader } from "./BeneficiaryFormHeader";
-import { BeneficiaryFormActions } from "./BeneficiaryFormActions";
 import { DateOfBirthField } from "./DateOfBirthField";
 import { 
   beneficiarySchema, 
@@ -263,12 +262,6 @@ export function BeneficiariesForm({ onSave }: { onSave: () => void }) {
               )}
             />
           </div>
-          
-          <BeneficiaryFormActions 
-            isEditing={currentBeneficiary !== null}
-            hasBeneficiaries={beneficiaries.length > 0}
-            onSave={onSave}
-          />
         </form>
       </Form>
     </div>
