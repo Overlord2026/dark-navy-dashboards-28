@@ -1,11 +1,10 @@
 
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect } from "react";
 import { NavCategory, NavItem } from "@/types/navigation";
 import { useLocation } from "react-router-dom";
 
 export const useSidebarState = (navigationCategories: NavCategory[]) => {
   const location = useLocation();
-  const scrollPositionRef = useRef<number>(0);
   
   // Initialize with collapsed set to false for desktop view
   const [collapsed, setCollapsed] = useState(false);
@@ -19,11 +18,12 @@ export const useSidebarState = (navigationCategories: NavCategory[]) => {
   );
   
   const [expandedSubmenus, setExpandedSubmenus] = useState<Record<string, boolean>>({});
+  const [forceUpdate, setForceUpdate] = useState(0);
   
   // Helper function to normalize paths
-  const normalizePath = useCallback((path: string): string => {
+  const normalizePath = (path: string): string => {
     return path.startsWith("/") ? path : `/${path}`;
-  }, []);
+  };
   
   // Check window width on mount and resize to set collapsed state
   useEffect(() => {
@@ -39,27 +39,9 @@ export const useSidebarState = (navigationCategories: NavCategory[]) => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
   
-  // Save scroll position when navigating
   useEffect(() => {
-    // Save the current scroll position for the sidebar when component mounts
-    const sidebarElement = document.querySelector('.overflow-y-auto');
-    if (sidebarElement) {
-      sidebarElement.scrollTop = scrollPositionRef.current;
-      
-      // Set up an event listener to save scroll position when user scrolls
-      const handleScroll = () => {
-        scrollPositionRef.current = sidebarElement.scrollTop;
-      };
-      
-      sidebarElement.addEventListener('scroll', handleScroll);
-      return () => {
-        sidebarElement.removeEventListener('scroll', handleScroll);
-      };
-    }
-  }, [location.pathname]); // Restore position when path changes
-  
-  // Use useCallback to prevent unnecessary re-renders
-  const updateCategoriesForRoute = useCallback((path: string) => {
+    // Expand relevant category based on current route
+    const path = location.pathname;
     let shouldExpandCategory = '';
     
     // Find which category contains the current path
@@ -96,42 +78,46 @@ export const useSidebarState = (navigationCategories: NavCategory[]) => {
         [shouldExpandCategory]: true
       }));
     }
-  }, [navigationCategories, normalizePath]);
-  
-  useEffect(() => {
-    updateCategoriesForRoute(location.pathname);
-  }, [location.pathname, updateCategoriesForRoute]);
+    
+    // Force a re-render to ensure everything is up to date
+    setForceUpdate(prev => prev + 1);
+  }, [location.pathname, navigationCategories]);
 
-  const toggleSidebar = useCallback(() => {
-    setCollapsed(prev => !prev);
-  }, []);
+  const toggleSidebar = () => {
+    setCollapsed(!collapsed);
+  };
 
-  const toggleCategory = useCallback((categoryId: string) => {
+  const toggleCategory = (categoryId: string) => {
     setExpandedCategories(prev => ({
       ...prev,
       [categoryId]: !prev[categoryId]
     }));
-  }, []);
+  };
 
-  const toggleSubmenu = useCallback((itemTitle: string) => {
+  const toggleSubmenu = (itemTitle: string, e?: React.MouseEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     setExpandedSubmenus(prev => ({
       ...prev,
       [itemTitle]: !prev[itemTitle]
     }));
-  }, []);
+  };
 
-  const isActive = useCallback((href: string) => {
+  const isActive = (href: string) => {
     const normalizedHref = normalizePath(href);
     const normalizedPathname = normalizePath(location.pathname);
     
     return normalizedPathname === normalizedHref || 
            (normalizedHref !== "/" && normalizedPathname.startsWith(normalizedHref));
-  }, [location.pathname, normalizePath]);
+  };
 
   return {
     collapsed,
     expandedCategories,
     expandedSubmenus,
+    forceUpdate,
     toggleSidebar,
     toggleCategory,
     toggleSubmenu,

@@ -1,8 +1,9 @@
 
-import React, { useCallback } from "react";
-import { useLocation, Link } from "react-router-dom";
+import React from "react";
+import { useLocation } from "react-router-dom";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { cn } from "@/lib/utils";
+import { Link } from "react-router-dom";
 import SidebarNavCategory from "@/components/sidebar/SidebarNavCategory";
 import { NavItem, SidebarProps } from "@/types/navigation";
 
@@ -20,26 +21,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const location = useLocation();
   const pathname = location.pathname;
 
-  const isActive = useCallback((href: string) => {
+  const isActive = (href: string) => {
     return pathname === href || (href !== "/" && pathname.startsWith(href));
-  }, [pathname]);
+  };
 
-  const toggleCategory = useCallback((id: string) => {
+  const toggleCategory = (id: string) => {
     toggleSubmenu(id);
-  }, [toggleSubmenu]);
-
-  const handleLogoClick = useCallback((e: React.MouseEvent) => {
-    // Prevent scroll behavior when clicking logo if already on dashboard
-    if (location.pathname === "/dashboard") {
-      e.preventDefault();
-      e.stopPropagation();
-    }
-  }, [location.pathname]);
-
-  // Helper to prevent default behavior for button clicks
-  const handleButtonClick = useCallback((e: React.MouseEvent) => {
-    e.stopPropagation();
-  }, []);
+  };
 
   return (
     <div
@@ -51,7 +39,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     >
       <div className="flex-1 flex flex-col gap-y-2 py-4">
         <div className="px-3 py-2 text-center">
-          <Link to="/dashboard" onClick={handleLogoClick}>
+          <Link to="/dashboard">
             <h1 className={cn("font-bold transition-all", collapsed ? "text-xl" : "text-2xl")}>LOV</h1>
           </Link>
         </div>
@@ -75,11 +63,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       </div>
       <div className="p-3 flex items-center justify-between">
         <button 
-          type="button"
-          onClick={(e) => {
-            handleButtonClick(e);
-            toggleTheme();
-          }}
+          onClick={toggleTheme} 
           className={cn(
             "text-sm transition-colors",
             isLightTheme ? "text-[#222222]" : "text-[#E2E2E2]"
@@ -90,11 +74,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           {collapsed && <span className="sr-only">Toggle Theme</span>}
         </button>
         <button 
-          type="button"
-          onClick={(e) => {
-            handleButtonClick(e);
-            collapsed ? onExpand() : onCollapse();
-          }}
+          onClick={collapsed ? onExpand : onCollapse} 
           className={cn(
             "text-sm transition-colors",
             isLightTheme ? "text-[#222222]" : "text-[#E2E2E2]"

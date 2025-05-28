@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { NavItem } from "@/types/navigation";
 
@@ -17,21 +17,9 @@ export const SidebarBottomNav: React.FC<SidebarBottomNavProps> = ({
   isActive,
   isLightTheme
 }) => {
-  const location = useLocation();
-  
   // Helper to ensure consistent path handling
   const normalizePath = (path: string): string => {
     return path.startsWith("/") ? path : `/${path}`;
-  };
-
-  const handleClick = (href: string, e: React.MouseEvent) => {
-    // Prevent default scroll behavior when clicking the same route
-    const normalizedHref = normalizePath(href);
-    if (location.pathname === normalizedHref) {
-      e.preventDefault();
-      e.stopPropagation();
-      console.log('Prevented navigation to current page:', normalizedHref);
-    }
   };
 
   return (
@@ -42,7 +30,6 @@ export const SidebarBottomNav: React.FC<SidebarBottomNavProps> = ({
           <Link
             key={item.title}
             to={normalizedHref}
-            onClick={(e) => handleClick(normalizedHref, e)}
             className={cn(
               "group flex items-center py-2 px-3 rounded-md transition-colors border",
               isActive(normalizedHref)

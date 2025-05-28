@@ -2,7 +2,6 @@
 import React from "react";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { NavigationItem } from "./NavigationItem";
-import { Link, useLocation } from "react-router-dom";
 import {
   Collapsible,
   CollapsibleContent,
@@ -39,8 +38,6 @@ export const NavigationCategory = ({
   isCollapsed,
   isLightTheme
 }: NavigationCategoryProps) => {
-  const location = useLocation();
-
   // Helper function to check if a path is active
   const isActivePath = (path: string): boolean => {
     // Normalize both paths for comparison
@@ -48,13 +45,6 @@ export const NavigationCategory = ({
     const normalizedCurrentPath = currentPath.startsWith("/") ? currentPath : `/${currentPath}`;
     
     return normalizedPath === normalizedCurrentPath;
-  };
-
-  // Prevent default and stop propagation on category toggle
-  const handleCategoryToggle = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    toggleCategory(category.id);
   };
 
   return (
@@ -65,11 +55,7 @@ export const NavigationCategory = ({
           onOpenChange={() => toggleCategory(category.id)}
         >
           <CollapsibleTrigger asChild>
-            <button 
-              type="button" // Explicitly set type to prevent form submission
-              onClick={handleCategoryToggle}
-              className={`flex items-center justify-between p-2 text-xs uppercase tracking-wider font-semibold ${isLightTheme ? 'text-[#222222]/70' : 'text-[#E2E2E2]/70'} cursor-pointer w-full`}
-            >
+            <div className={`flex items-center justify-between p-2 text-xs uppercase tracking-wider font-semibold ${isLightTheme ? 'text-[#222222]/70' : 'text-[#E2E2E2]/70'} cursor-pointer`}>
               <span>{category.label}</span>
               <div>
                 {isExpanded ? (
@@ -78,7 +64,7 @@ export const NavigationCategory = ({
                   <ChevronRight className="h-4 w-4" />
                 )}
               </div>
-            </button>
+            </div>
           </CollapsibleTrigger>
           <CollapsibleContent className="space-y-1.5">
             {category.items.map((item: any) => (

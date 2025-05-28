@@ -1,6 +1,5 @@
 
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { ChevronDown, ChevronRight } from "lucide-react";
@@ -31,37 +30,9 @@ const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
   expandedSubmenus,
   toggleSubmenu
 }) => {
-  const location = useLocation();
-  
   // Helper to ensure consistent path handling
   const normalizePath = (path: string): string => {
     return path.startsWith("/") ? path : `/${path}`;
-  };
-
-  // Prevent scroll by using stopPropagation and preventDefault
-  const handleNavClick = (href: string, e: React.MouseEvent) => {
-    // We're already on this page, no need to navigate
-    const normalizedHref = normalizePath(href);
-    const currentPath = location.pathname;
-
-    if (normalizedHref === currentPath) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
-  };
-
-  // Stop propagation AND prevent default for category toggle
-  const handleCategoryToggle = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    onToggle(id);
-  };
-
-  // Stop propagation AND prevent default for submenu toggle  
-  const handleSubmenuToggle = (itemTitle: string, e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    toggleSubmenu(itemTitle);
   };
 
   const renderNavItem = (item: NavItem) => {
@@ -69,9 +40,8 @@ const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
     const isItemActive = isActive(normalizedHref);
     
     return (
-      <Link
-        to={normalizedHref}
-        onClick={(e) => handleNavClick(normalizedHref, e)}
+      <a
+        href={normalizedHref}
         target={item.external ? "_blank" : undefined}
         rel={item.external ? "noreferrer" : undefined}
         className={cn(
@@ -85,6 +55,12 @@ const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
               : "bg-secondary text-secondary-foreground font-medium"),
           item.disabled && "cursor-not-allowed opacity-50"
         )}
+        onClick={(e) => {
+          if (item.items && item.items.length > 0) {
+            e.preventDefault();
+            toggleSubmenu(item.title);
+          }
+        }}
       >
         {item.icon && (
           <item.icon className="mr-2 h-4 w-4" />
@@ -95,7 +71,7 @@ const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
             {item.label}
           </span>
         )}
-      </Link>
+      </a>
     );
   };
   
@@ -108,8 +84,6 @@ const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
       >
         <CollapsibleTrigger asChild>
           <button
-            type="button" // Explicitly set type to prevent form submission
-            onClick={handleCategoryToggle}
             className={cn(
               "flex w-full items-center justify-between rounded-md px-3 py-2 text-sm font-medium",
               isLightTheme
@@ -149,19 +123,13 @@ const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
                       open={!!expandedSubmenus[item.title]}
                       onOpenChange={() => toggleSubmenu(item.title)}
                     >
-                      <CollapsibleTrigger asChild>
-                        <button 
-                          type="button" // Explicitly set type to prevent form submission
-                          onClick={(e) => handleSubmenuToggle(item.title, e)}
-                          className="flex items-center justify-between w-full px-3 py-2 text-sm font-medium rounded-md hover:bg-accent hover:text-accent-foreground"
-                        >
-                          <span>{item.title}</span>
-                          {expandedSubmenus[item.title] ? (
-                            <ChevronDown className="w-4 h-4" />
-                          ) : (
-                            <ChevronRight className="w-4 h-4" />
-                          )}
-                        </button>
+                      <CollapsibleTrigger className="flex items-center justify-between w-full px-3 py-2 text-sm font-medium rounded-md hover:bg-accent hover:text-accent-foreground">
+                        <span>{item.title}</span>
+                        {expandedSubmenus[item.title] ? (
+                          <ChevronDown className="w-4 h-4" />
+                        ) : (
+                          <ChevronRight className="w-4 h-4" />
+                        )}
                       </CollapsibleTrigger>
                       <CollapsibleContent className="space-y-1">
                         {item.items.map((subItem, subIndex) => (
