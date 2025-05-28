@@ -70,18 +70,9 @@ export const UserProfileSection = ({ onMenuItemClick, showLogo = true }: UserPro
           className="w-64 bg-[#1B1B32] border-[#2A2A40] shadow-xl shadow-black/20 p-2"
           sideOffset={8}
         >
-          <div className="px-2 py-3 border-b border-gray-700 mb-2">
-            <p className="text-sm font-medium text-white">
-              {userProfile?.displayName || userProfile?.name || 'User'}
-            </p>
-            <p className="text-xs text-gray-400 capitalize">
-              {userProfile?.role || 'Client'}
-            </p>
-          </div>
-          
           <DropdownMenuItem 
             onClick={() => handleMenuItemClick('investor-profile')}
-            className="flex items-center px-3 py-2.5 rounded-md hover:bg-[#2A2A40] focus:bg-[#2A2A40] cursor-pointer transition-colors"
+            className="flex items-center px-3 py-3 rounded-md hover:bg-[#2A2A40] focus:bg-[#2A2A40] cursor-pointer transition-colors"
           >
             <UserIcon className="h-4 w-4 mr-3 text-blue-400" />
             <span className="text-white font-medium">Investor Profile</span>
@@ -89,7 +80,7 @@ export const UserProfileSection = ({ onMenuItemClick, showLogo = true }: UserPro
           
           <DropdownMenuItem 
             onClick={() => handleMenuItemClick('contact-information')}
-            className="flex items-center px-3 py-2.5 rounded-md hover:bg-[#2A2A40] focus:bg-[#2A2A40] cursor-pointer transition-colors"
+            className="flex items-center px-3 py-3 rounded-md hover:bg-[#2A2A40] focus:bg-[#2A2A40] cursor-pointer transition-colors"
           >
             <PhoneIcon className="h-4 w-4 mr-3 text-green-400" />
             <span className="text-white font-medium">Contact Information</span>
@@ -97,7 +88,7 @@ export const UserProfileSection = ({ onMenuItemClick, showLogo = true }: UserPro
           
           <DropdownMenuItem 
             onClick={() => handleMenuItemClick('additional-information')}
-            className="flex items-center px-3 py-2.5 rounded-md hover:bg-[#2A2A40] focus:bg-[#2A2A40] cursor-pointer transition-colors"
+            className="flex items-center px-3 py-3 rounded-md hover:bg-[#2A2A40] focus:bg-[#2A2A40] cursor-pointer transition-colors"
           >
             <FileTextIcon className="h-4 w-4 mr-3 text-purple-400" />
             <span className="text-white font-medium">Additional Information</span>
@@ -105,7 +96,7 @@ export const UserProfileSection = ({ onMenuItemClick, showLogo = true }: UserPro
           
           <DropdownMenuItem 
             onClick={() => handleMenuItemClick('beneficiaries')}
-            className="flex items-center px-3 py-2.5 rounded-md hover:bg-[#2A2A40] focus:bg-[#2A2A40] cursor-pointer transition-colors"
+            className="flex items-center px-3 py-3 rounded-md hover:bg-[#2A2A40] focus:bg-[#2A2A40] cursor-pointer transition-colors"
           >
             <UsersIcon className="h-4 w-4 mr-3 text-orange-400" />
             <span className="text-white font-medium">Beneficiaries</span>
@@ -113,7 +104,7 @@ export const UserProfileSection = ({ onMenuItemClick, showLogo = true }: UserPro
           
           <DropdownMenuItem 
             onClick={() => handleMenuItemClick('affiliations')}
-            className="flex items-center px-3 py-2.5 rounded-md hover:bg-[#2A2A40] focus:bg-[#2A2A40] cursor-pointer transition-colors"
+            className="flex items-center px-3 py-3 rounded-md hover:bg-[#2A2A40] focus:bg-[#2A2A40] cursor-pointer transition-colors"
           >
             <BuildingIcon className="h-4 w-4 mr-3 text-cyan-400" />
             <span className="text-white font-medium">Affiliations</span>
@@ -121,7 +112,7 @@ export const UserProfileSection = ({ onMenuItemClick, showLogo = true }: UserPro
           
           <DropdownMenuItem 
             onClick={() => handleMenuItemClick('trusts')}
-            className="flex items-center px-3 py-2.5 rounded-md hover:bg-[#2A2A40] focus:bg-[#2A2A40] cursor-pointer transition-colors"
+            className="flex items-center px-3 py-3 rounded-md hover:bg-[#2A2A40] focus:bg-[#2A2A40] cursor-pointer transition-colors"
           >
             <BuildingIcon className="h-4 w-4 mr-3 text-teal-400" />
             <span className="text-white font-medium">Trusts</span>
@@ -131,7 +122,7 @@ export const UserProfileSection = ({ onMenuItemClick, showLogo = true }: UserPro
           
           <DropdownMenuItem 
             onClick={() => handleMenuItemClick('change-theme')}
-            className="flex items-center px-3 py-2.5 rounded-md hover:bg-[#2A2A40] focus:bg-[#2A2A40] cursor-pointer transition-colors"
+            className="flex items-center px-3 py-3 rounded-md hover:bg-[#2A2A40] focus:bg-[#2A2A40] cursor-pointer transition-colors"
           >
             <PaletteIcon className="h-4 w-4 mr-3 text-yellow-400" />
             <span className="text-white font-medium">Change Theme</span>
@@ -140,7 +131,7 @@ export const UserProfileSection = ({ onMenuItemClick, showLogo = true }: UserPro
           <DropdownMenuItem 
             onClick={() => handleMenuItemClick('logout')}
             disabled={isLoggingOut}
-            className="flex items-center px-3 py-2.5 rounded-md hover:bg-red-600/20 focus:bg-red-600/20 cursor-pointer transition-colors text-red-400 hover:text-red-300"
+            className="flex items-center px-3 py-3 rounded-md hover:bg-red-600/20 focus:bg-red-600/20 cursor-pointer transition-colors text-red-400 hover:text-red-300"
           >
             <LogOut className="h-4 w-4 mr-3" />
             <span className="font-medium">{isLoggingOut ? "Logging out..." : "Logout"}</span>
