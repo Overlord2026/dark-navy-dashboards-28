@@ -86,7 +86,7 @@ const routes = createBrowserRouter([
     element: <ProtectedRoute><FinancialPlans /></ProtectedRoute>
   },
   {
-    path: "/all-assets",
+    path: "/client-all-assets",
     element: <ProtectedRoute><AllAssets /></ProtectedRoute>
   },
   {
