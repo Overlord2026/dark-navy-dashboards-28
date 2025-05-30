@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Upload, FolderPlus, ChevronRight, File } from "lucide-react";
 import { ProfessionalsProvider } from "@/context/ProfessionalsContext";
 import { useState } from "react";
+import { cn } from "@/lib/utils";
 
 const Documents = () => {
   const {
@@ -37,7 +38,7 @@ const Documents = () => {
   return (
     <ThreeColumnLayout activeMainItem="documents" title="">
       <ProfessionalsProvider>
-        <div className="min-h-screen bg-background text-foreground flex">
+        <div className="min-h-screen bg-sidebar-background text-sidebar-foreground flex">
           {/* Left Sidebar - Categories */}
           <div className="w-80 bg-sidebar-background border-r border-sidebar-border">
             <div className="p-6">
@@ -55,13 +56,19 @@ const Documents = () => {
                     <button
                       key={category.id}
                       onClick={() => setActiveCategory(category.id)}
-                      className={`w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${
+                      className={cn(
+                        "w-full text-left px-4 py-3 rounded-lg text-sm transition-all duration-200 border",
                         activeCategory === category.id
-                          ? 'bg-sidebar-accent text-sidebar-accent-foreground'
-                          : 'text-sidebar-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground'
-                      }`}
+                          ? 'bg-primary text-primary-foreground border-primary shadow-md transform scale-[1.02]'
+                          : 'bg-sidebar-background text-sidebar-foreground border-sidebar-border hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:border-sidebar-accent/50 hover:shadow-sm'
+                      )}
                     >
-                      {category.name}
+                      <div className="flex items-center justify-between">
+                        <span className="font-medium">{category.name}</span>
+                        {activeCategory === category.id && (
+                          <div className="w-2 h-2 bg-primary-foreground rounded-full"></div>
+                        )}
+                      </div>
                     </button>
                   ))}
                 </div>
@@ -79,22 +86,13 @@ const Documents = () => {
                   {activeCategoryName && (
                     <>
                       <ChevronRight className="h-4 w-4 text-sidebar-muted-foreground" />
-                      <span className="text-sidebar-foreground">{activeCategoryName}</span>
+                      <span className="text-sidebar-foreground font-medium">{activeCategoryName}</span>
                     </>
                   )}
                 </div>
                 
                 {activeCategory && (
                   <div className="flex items-center gap-3">
-                    <Button
-                      onClick={() => setIsNewFolderDialogOpen(true)}
-                      variant="outline"
-                      size="sm"
-                      className="bg-transparent border-sidebar-border text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-                    >
-                      <FolderPlus className="h-4 w-4 mr-2" />
-                      New Folder
-                    </Button>
                     <Button
                       onClick={() => setIsUploadDialogOpen(true)}
                       size="sm"
@@ -109,16 +107,16 @@ const Documents = () => {
             </div>
 
             {/* Content Area */}
-            <div className="flex-1 bg-background">
+            <div className="flex-1 bg-sidebar-background">
               {!activeCategory ? (
                 /* Welcome State - No Category Selected */
                 <div className="flex items-center justify-center h-full">
                   <div className="text-center">
-                    <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
-                      <File className="h-8 w-8 text-muted-foreground" />
+                    <div className="w-16 h-16 bg-sidebar-accent rounded-full flex items-center justify-center mx-auto mb-4">
+                      <File className="h-8 w-8 text-sidebar-accent-foreground" />
                     </div>
-                    <h3 className="text-lg font-medium text-foreground mb-2">Select a Category</h3>
-                    <p className="text-muted-foreground max-w-sm">
+                    <h3 className="text-lg font-medium text-sidebar-foreground mb-2">Select a Category</h3>
+                    <p className="text-sidebar-muted-foreground max-w-sm">
                       Choose a document category from the sidebar to view and manage your documents.
                     </p>
                   </div>
@@ -127,7 +125,7 @@ const Documents = () => {
                 /* Documents Table */
                 <div className="p-6">
                   {filteredDocuments.length > 0 ? (
-                    <div className="bg-card rounded-lg border border-border overflow-hidden">
+                    <div className="bg-sidebar-background rounded-lg border border-sidebar-border overflow-hidden">
                       <DocumentsTable 
                         documents={filteredDocuments}
                         onViewDocument={(doc) => console.log('View:', doc)}
@@ -138,22 +136,14 @@ const Documents = () => {
                     /* Empty State for Selected Category */
                     <div className="flex items-center justify-center h-96">
                       <div className="text-center">
-                        <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
-                          <File className="h-8 w-8 text-muted-foreground" />
+                        <div className="w-16 h-16 bg-sidebar-accent rounded-full flex items-center justify-center mx-auto mb-4">
+                          <File className="h-8 w-8 text-sidebar-accent-foreground" />
                         </div>
-                        <h3 className="text-lg font-medium text-foreground mb-2">No Documents Yet</h3>
-                        <p className="text-muted-foreground mb-6 max-w-sm">
+                        <h3 className="text-lg font-medium text-sidebar-foreground mb-2">No Documents Yet</h3>
+                        <p className="text-sidebar-muted-foreground mb-6 max-w-sm">
                           Upload your first document to the {activeCategoryName} category to get started.
                         </p>
                         <div className="flex items-center justify-center gap-3">
-                          <Button
-                            onClick={() => setIsNewFolderDialogOpen(true)}
-                            variant="outline"
-                            className="bg-transparent border-border text-foreground hover:bg-accent hover:text-accent-foreground"
-                          >
-                            <FolderPlus className="h-4 w-4 mr-2" />
-                            Create Folder
-                          </Button>
                           <Button
                             onClick={() => setIsUploadDialogOpen(true)}
                             className="bg-primary hover:bg-primary/90 text-primary-foreground"
