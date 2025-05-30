@@ -1,28 +1,28 @@
-
 import { DocumentCategory } from "@/types/document";
 
 export const documentCategories: DocumentCategory[] = [
+  // Documents to Sign at the top
   { id: "documents-to-sign", name: "Documents to Sign" },
-  { id: "bfo-records", name: "BFO Records" },
+  // All other categories in alphabetical order
   { id: "alternative-investments", name: "Alternative Investments" },
+  { id: "bfo-records", name: "BFO Records" },
   { id: "business-ownership", name: "Business Ownership" },
   { id: "education", name: "Education" },
   { id: "employer-agreements", name: "Employer Agreements" },
   { id: "estate-planning", name: "Estate Planning" },
+  { id: "healthcare", name: "Healthcare" },
+  { id: "insurance-coverage", name: "Insurance Coverage" },
   { id: "leases", name: "Leases" },
-  { id: "other", name: "Other" },
+  { id: "medical-records", name: "Medical Records & Documents" },
+  { id: "physicians", name: "Physicians & Providers" },
+  { id: "prescriptions", name: "Prescriptions & Medications" },
   { id: "property-ownership", name: "Property Ownership" },
   { id: "statements", name: "Statements" },
   { id: "taxes", name: "Taxes" },
   { id: "trusts", name: "Trusts" },
   { id: "vehicles", name: "Vehicles" },
-  // Add Healthcare main category
-  { id: "healthcare", name: "Healthcare", description: "Medical and health-related documents" },
-  // Add Healthcare subcategories
-  { id: "insurance-coverage", name: "Insurance Coverage", description: "Medicare, supplements, private insurance" },
-  { id: "prescriptions", name: "Prescriptions & Medications", description: "Medication lists and prescription details" },
-  { id: "physicians", name: "Physicians & Providers", description: "Doctor and healthcare provider information" },
-  { id: "medical-records", name: "Medical Records & Documents", description: "Lab results, medical history, and documentation" },
+  // Other at the bottom
+  { id: "other", name: "Other" },
 ];
 
 // Healthcare-specific categories for filtering
