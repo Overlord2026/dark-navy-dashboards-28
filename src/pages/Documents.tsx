@@ -1,10 +1,9 @@
 
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
-import { DocumentsTable } from "@/components/documents/DocumentsTable";
+import { SupabaseDocumentsTable } from "@/components/documents/SupabaseDocumentsTable";
 import { NewFolderDialog } from "@/components/documents/NewFolderDialog";
-import { UploadDocumentDialog } from "@/components/documents/UploadDocumentDialog";
-import { useDocumentManagement } from "@/hooks/useDocumentManagement";
-import { documentCategories } from "@/data/documentCategories";
+import { SupabaseDocumentUploadDialog } from "@/components/documents/SupabaseDocumentUploadDialog";
+import { useSupabaseDocumentManagement } from "@/hooks/useSupabaseDocumentManagement";
 import { Button } from "@/components/ui/button";
 import { Upload, FolderPlus, ChevronRight, File } from "lucide-react";
 import { ProfessionalsProvider } from "@/context/ProfessionalsContext";
@@ -14,24 +13,23 @@ import { cn } from "@/lib/utils";
 const Documents = () => {
   const {
     documents,
+    categories,
     activeCategory,
     isUploadDialogOpen,
+    loading,
+    uploading,
     setActiveCategory,
     setIsUploadDialogOpen,
     handleCreateFolder,
     handleFileUpload,
-    filteredDocuments
-  } = useDocumentManagement();
+    handleDownloadDocument,
+    deleteDocument
+  } = useSupabaseDocumentManagement();
 
   const [isNewFolderDialogOpen, setIsNewFolderDialogOpen] = useState(false);
 
-  // Reorder categories to move "other" to the end
-  const reorderedCategories = documentCategories.filter(c => c.id !== "other").concat(
-    documentCategories.filter(c => c.id === "other")
-  );
-
   const activeCategoryName = activeCategory 
-    ? reorderedCategories.find(c => c.id === activeCategory)?.name 
+    ? categories.find(c => c.id === activeCategory)?.name 
     : null;
 
   const handleCreateFolderWithCategory = (folderName: string) => {
@@ -39,6 +37,12 @@ const Documents = () => {
       handleCreateFolder(folderName, activeCategory);
     }
     setIsNewFolderDialogOpen(false);
+  };
+
+  const handleDeleteDocument = async (document: any) => {
+    if (confirm(`Are you sure you want to delete "${document.name}"?`)) {
+      await deleteDocument(document.id);
+    }
   };
 
   return (
@@ -57,27 +61,31 @@ const Documents = () => {
               
               <div className="mb-6">
                 <h2 className="text-sm font-medium text-muted-foreground mb-3 uppercase tracking-wider">Categories</h2>
-                <div className="space-y-1">
-                  {reorderedCategories.map((category) => (
-                    <button
-                      key={category.id}
-                      onClick={() => setActiveCategory(category.id)}
-                      className={cn(
-                        "w-full text-left px-4 py-3 rounded-lg text-sm transition-all duration-200 border",
-                        activeCategory === category.id
-                          ? 'bg-primary text-primary-foreground border-primary shadow-md transform scale-[1.02]'
-                          : 'bg-background text-foreground border-border hover:bg-accent hover:text-accent-foreground hover:border-accent/50 hover:shadow-sm'
-                      )}
-                    >
-                      <div className="flex items-center justify-between">
-                        <span className="font-medium">{category.name}</span>
-                        {activeCategory === category.id && (
-                          <div className="w-2 h-2 bg-primary-foreground rounded-full"></div>
+                {loading ? (
+                  <div className="text-muted-foreground">Loading categories...</div>
+                ) : (
+                  <div className="space-y-1">
+                    {categories.map((category) => (
+                      <button
+                        key={category.id}
+                        onClick={() => setActiveCategory(category.id)}
+                        className={cn(
+                          "w-full text-left px-4 py-3 rounded-lg text-sm transition-all duration-200 border",
+                          activeCategory === category.id
+                            ? 'bg-primary text-primary-foreground border-primary shadow-md transform scale-[1.02]'
+                            : 'bg-background text-foreground border-border hover:bg-accent hover:text-accent-foreground hover:border-accent/50 hover:shadow-sm'
                         )}
-                      </div>
-                    </button>
-                  ))}
-                </div>
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="font-medium">{category.name}</span>
+                          {activeCategory === category.id && (
+                            <div className="w-2 h-2 bg-primary-foreground rounded-full"></div>
+                          )}
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -104,6 +112,7 @@ const Documents = () => {
                       size="sm"
                       variant="outline"
                       className="border-primary/20 hover:border-primary/40"
+                      disabled={loading}
                     >
                       <FolderPlus className="h-4 w-4 mr-2" />
                       New Folder
@@ -112,9 +121,10 @@ const Documents = () => {
                       onClick={() => setIsUploadDialogOpen(true)}
                       size="sm"
                       className="bg-primary hover:bg-primary/90 text-primary-foreground"
+                      disabled={loading || uploading}
                     >
                       <Upload className="h-4 w-4 mr-2" />
-                      Upload
+                      {uploading ? "Uploading..." : "Upload"}
                     </Button>
                   </div>
                 )}
@@ -139,12 +149,18 @@ const Documents = () => {
               ) : (
                 /* Documents Table */
                 <div className="p-6">
-                  {filteredDocuments.length > 0 ? (
+                  {documents.length > 0 ? (
                     <div className="bg-background rounded-lg border border-border overflow-hidden">
-                      <DocumentsTable 
-                        documents={filteredDocuments}
-                        onDownloadDocument={(doc) => console.log('Download:', doc)}
+                      <SupabaseDocumentsTable 
+                        documents={documents}
+                        onDownloadDocument={handleDownloadDocument}
+                        onDeleteDocument={handleDeleteDocument}
+                        loading={loading}
                       />
+                    </div>
+                  ) : loading ? (
+                    <div className="flex items-center justify-center h-96">
+                      <div className="text-muted-foreground">Loading documents...</div>
                     </div>
                   ) : (
                     /* Empty State for Selected Category */
@@ -184,13 +200,14 @@ const Documents = () => {
         </div>
 
         {/* Dialogs */}
-        <UploadDocumentDialog 
+        <SupabaseDocumentUploadDialog 
           open={isUploadDialogOpen}
           onOpenChange={setIsUploadDialogOpen}
           onClose={() => setIsUploadDialogOpen(false)}
           onFileUpload={handleFileUpload}
           activeCategory={activeCategory}
-          documentCategories={reorderedCategories}
+          categories={categories}
+          uploading={uploading}
         />
 
         <NewFolderDialog
