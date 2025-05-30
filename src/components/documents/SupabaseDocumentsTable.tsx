@@ -2,8 +2,14 @@
 import React from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Edit, Share2, Trash2, Download, FolderIcon, FileIcon } from "lucide-react";
+import { FolderIcon, FileIcon, MoreHorizontal } from "lucide-react";
 import { SupabaseDocument } from "@/hooks/useSupabaseDocuments";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export interface SupabaseDocumentsTableProps {
   documents: SupabaseDocument[];
@@ -11,6 +17,7 @@ export interface SupabaseDocumentsTableProps {
   onShareDocument?: (document: SupabaseDocument) => void;
   onDeleteDocument?: (document: SupabaseDocument) => void;
   onDownloadDocument?: (document: SupabaseDocument) => void;
+  onViewDocument?: (document: SupabaseDocument) => void;
   loading?: boolean;
 }
 
@@ -20,6 +27,7 @@ export const SupabaseDocumentsTable: React.FC<SupabaseDocumentsTableProps> = ({
   onShareDocument, 
   onDeleteDocument,
   onDownloadDocument,
+  onViewDocument,
   loading = false
 }) => {
   const getDocumentIcon = (type: string, isFolder: boolean) => {
@@ -96,52 +104,53 @@ export const SupabaseDocumentsTable: React.FC<SupabaseDocumentsTableProps> = ({
             <TableCell>{formatFileSize(document.size)}</TableCell>
             
             <TableCell className="text-right">
-              <div className="flex justify-end space-x-2">
-                {onDownloadDocument && !document.is_folder && (
-                  <Button 
-                    variant="ghost" 
-                    size="icon" 
-                    onClick={() => onDownloadDocument(document)}
-                    aria-label="Download Document"
-                  >
-                    <Download className="h-4 w-4" />
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon" aria-label="More actions">
+                    <MoreHorizontal className="h-4 w-4" />
                   </Button>
-                )}
-                
-                {onEditDocument && (
-                  <Button 
-                    variant="ghost" 
-                    size="icon" 
-                    onClick={() => onEditDocument(document)}
-                    aria-label="Edit Document"
-                  >
-                    <Edit className="h-4 w-4" />
-                  </Button>
-                )}
-                
-                {onShareDocument && (
-                  <Button 
-                    variant="ghost" 
-                    size="icon" 
-                    onClick={() => onShareDocument(document)}
-                    aria-label="Share Document"
-                  >
-                    <Share2 className="h-4 w-4" />
-                  </Button>
-                )}
-                
-                {onDeleteDocument && (
-                  <Button 
-                    variant="ghost" 
-                    size="icon" 
-                    onClick={() => onDeleteDocument(document)}
-                    aria-label="Delete Document"
-                    className="text-red-500 hover:text-red-700"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                )}
-              </div>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  {document.is_folder ? (
+                    <>
+                      {onViewDocument && (
+                        <DropdownMenuItem onClick={() => onViewDocument(document)}>
+                          View
+                        </DropdownMenuItem>
+                      )}
+                      {onDeleteDocument && (
+                        <DropdownMenuItem 
+                          onClick={() => onDeleteDocument(document)}
+                          className="text-red-600"
+                        >
+                          Delete
+                        </DropdownMenuItem>
+                      )}
+                    </>
+                  ) : (
+                    <>
+                      {onDeleteDocument && (
+                        <DropdownMenuItem 
+                          onClick={() => onDeleteDocument(document)}
+                          className="text-red-600"
+                        >
+                          Delete
+                        </DropdownMenuItem>
+                      )}
+                      {onDownloadDocument && (
+                        <DropdownMenuItem onClick={() => onDownloadDocument(document)}>
+                          Download
+                        </DropdownMenuItem>
+                      )}
+                      {onShareDocument && (
+                        <DropdownMenuItem onClick={() => onShareDocument(document)}>
+                          Share with Professional
+                        </DropdownMenuItem>
+                      )}
+                    </>
+                  )}
+                </DropdownMenuContent>
+              </DropdownMenu>
             </TableCell>
           </TableRow>
         ))}
