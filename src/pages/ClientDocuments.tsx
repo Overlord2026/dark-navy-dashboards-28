@@ -91,6 +91,10 @@ const ClientDocuments = () => {
     console.log('Share document:', document);
   };
 
+  const handleDownloadDocument = async (document: DocumentItem) => {
+    await downloadDocument(document.id);
+  };
+
   if (!isAuthenticated) {
     return (
       <ThreeColumnLayout activeMainItem="client-documents" title="Client Documents">
@@ -226,7 +230,7 @@ const ClientDocuments = () => {
                       onEditDocument={handleEditDocument}
                       onShareDocument={handleShareDocument}
                       onDeleteDocument={handleDeleteDialog}
-                      onDownloadDocument={downloadDocument}
+                      onDownloadDocument={handleDownloadDocument}
                     />
                   </div>
                 ) : (
