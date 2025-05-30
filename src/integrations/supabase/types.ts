@@ -120,6 +120,7 @@ export type Database = {
           is_private: boolean | null
           modified: string | null
           name: string
+          parent_folder_id: string | null
           shared: boolean | null
           size: number | null
           tags: string[] | null
@@ -140,6 +141,7 @@ export type Database = {
           is_private?: boolean | null
           modified?: string | null
           name: string
+          parent_folder_id?: string | null
           shared?: boolean | null
           size?: number | null
           tags?: string[] | null
@@ -160,6 +162,7 @@ export type Database = {
           is_private?: boolean | null
           modified?: string | null
           name?: string
+          parent_folder_id?: string | null
           shared?: boolean | null
           size?: number | null
           tags?: string[] | null
@@ -168,7 +171,15 @@ export type Database = {
           uploaded_by?: string | null
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "documents_parent_folder_id_fkey"
+            columns: ["parent_folder_id"]
+            isOneToOne: false
+            referencedRelation: "documents"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {

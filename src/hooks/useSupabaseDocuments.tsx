@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useToast } from '@/hooks/use-toast';
@@ -19,6 +18,7 @@ export interface SupabaseDocument {
   encrypted: boolean;
   shared: boolean;
   uploaded_by?: string;
+  parent_folder_id?: string | null;
   created_at: string;
   updated_at: string;
   modified?: string;
@@ -108,6 +108,7 @@ export const useSupabaseDocuments = () => {
     file: File, 
     name: string, 
     category: string, 
+    parentFolderId?: string | null,
     description?: string
   ): Promise<SupabaseDocument | null> => {
     setUploading(true);
@@ -162,6 +163,7 @@ export const useSupabaseDocuments = () => {
           description,
           size: file.size,
           is_folder: false,
+          parent_folder_id: parentFolderId,
           uploaded_by: user.email || 'Unknown'
         })
         .select()
@@ -202,7 +204,7 @@ export const useSupabaseDocuments = () => {
   };
 
   // Create folder
-  const createFolder = async (name: string, category: string): Promise<SupabaseDocument | null> => {
+  const createFolder = async (name: string, category: string, parentFolderId?: string | null): Promise<SupabaseDocument | null> => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
@@ -222,6 +224,7 @@ export const useSupabaseDocuments = () => {
           type: 'folder',
           category,
           is_folder: true,
+          parent_folder_id: parentFolderId,
           size: 0
         })
         .select()
