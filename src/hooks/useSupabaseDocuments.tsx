@@ -40,9 +40,17 @@ export const useSupabaseDocuments = () => {
   // Fetch documents
   const fetchDocuments = async () => {
     try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        console.log('No authenticated user found');
+        setDocuments([]);
+        return;
+      }
+
       const { data, error } = await supabase
         .from('documents')
         .select('*')
+        .eq('user_id', user.id)
         .order('created_at', { ascending: false });
 
       if (error) {
@@ -76,12 +84,22 @@ export const useSupabaseDocuments = () => {
 
       if (error) {
         console.error('Error fetching categories:', error);
+        toast({
+          title: "Error fetching categories",
+          description: error.message,
+          variant: "destructive"
+        });
         return;
       }
 
       setCategories(data || []);
     } catch (error) {
       console.error('Error fetching categories:', error);
+      toast({
+        title: "Error",
+        description: "Failed to fetch categories",
+        variant: "destructive"
+      });
     }
   };
 

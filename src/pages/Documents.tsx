@@ -45,6 +45,19 @@ const Documents = () => {
     }
   };
 
+  if (loading) {
+    return (
+      <ThreeColumnLayout activeMainItem="documents" title="">
+        <div className="min-h-screen bg-background text-foreground flex items-center justify-center">
+          <div className="text-center">
+            <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <p className="text-muted-foreground">Loading documents...</p>
+          </div>
+        </div>
+      </ThreeColumnLayout>
+    );
+  }
+
   return (
     <ThreeColumnLayout activeMainItem="documents" title="">
       <ProfessionalsProvider>
@@ -61,8 +74,8 @@ const Documents = () => {
               
               <div className="mb-6">
                 <h2 className="text-sm font-medium text-muted-foreground mb-3 uppercase tracking-wider">Categories</h2>
-                {loading ? (
-                  <div className="text-muted-foreground">Loading categories...</div>
+                {categories.length === 0 ? (
+                  <div className="text-muted-foreground text-sm">No categories available</div>
                 ) : (
                   <div className="space-y-1">
                     {categories.map((category) => (
@@ -77,7 +90,14 @@ const Documents = () => {
                         )}
                       >
                         <div className="flex items-center justify-between">
-                          <span className="font-medium">{category.name}</span>
+                          <div>
+                            <span className="font-medium">{category.name}</span>
+                            {category.description && (
+                              <div className="text-xs text-muted-foreground mt-1">
+                                {category.description}
+                              </div>
+                            )}
+                          </div>
                           {activeCategory === category.id && (
                             <div className="w-2 h-2 bg-primary-foreground rounded-full"></div>
                           )}
