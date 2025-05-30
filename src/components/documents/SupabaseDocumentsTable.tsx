@@ -55,6 +55,17 @@ export const SupabaseDocumentsTable: React.FC<SupabaseDocumentsTableProps> = ({
     }
   };
 
+  const handleRowClick = (document: SupabaseDocument, event: React.MouseEvent) => {
+    // Prevent row click when clicking on the actions dropdown
+    if ((event.target as HTMLElement).closest('[data-dropdown-trigger]')) {
+      return;
+    }
+    
+    if (document.is_folder && onViewDocument) {
+      onViewDocument(document);
+    }
+  };
+
   // Sort documents to show folders first, then files
   const sortedDocuments = [...documents].sort((a, b) => {
     // Folders come first
@@ -96,7 +107,11 @@ export const SupabaseDocumentsTable: React.FC<SupabaseDocumentsTableProps> = ({
       </TableHeader>
       <TableBody>
         {sortedDocuments.map(document => (
-          <TableRow key={document.id}>
+          <TableRow 
+            key={document.id}
+            className={document.is_folder ? "cursor-pointer hover:bg-accent/50" : ""}
+            onClick={(e) => handleRowClick(document, e)}
+          >
             <TableCell className="font-medium">
               <div className="flex items-center gap-2">
                 {getDocumentIcon(document.type, document.is_folder)}
@@ -115,7 +130,12 @@ export const SupabaseDocumentsTable: React.FC<SupabaseDocumentsTableProps> = ({
             <TableCell className="text-right">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" aria-label="More actions">
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    aria-label="More actions"
+                    data-dropdown-trigger
+                  >
                     <MoreHorizontal className="h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
