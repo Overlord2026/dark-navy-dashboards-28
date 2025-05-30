@@ -60,8 +60,8 @@ export const useSupabaseDocumentManagement = () => {
     return result;
   };
 
-  const handleDownloadDocument = async (document: SupabaseDocument) => {
-    if (!document.file_path || document.is_folder) {
+  const handleDownloadDocument = async (doc: SupabaseDocument) => {
+    if (!doc.file_path || doc.is_folder) {
       toast({
         title: "Cannot download",
         description: "This item cannot be downloaded",
@@ -70,19 +70,19 @@ export const useSupabaseDocumentManagement = () => {
       return;
     }
 
-    const url = await getDocumentUrl(document.file_path);
+    const url = await getDocumentUrl(doc.file_path);
     if (url) {
       // Create a temporary link and trigger download
-      const link = document.createElement('a');
+      const link = window.document.createElement('a');
       link.href = url;
-      link.download = document.name;
-      document.body.appendChild(link);
+      link.download = doc.name;
+      window.document.body.appendChild(link);
       link.click();
-      document.body.removeChild(link);
+      window.document.body.removeChild(link);
       
       toast({
         title: "Download started",
-        description: `Downloading ${document.name}`
+        description: `Downloading ${doc.name}`
       });
     } else {
       toast({
