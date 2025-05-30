@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { SupabaseDocumentsTable } from "@/components/documents/SupabaseDocumentsTable";
@@ -146,17 +147,13 @@ const Documents = () => {
             <div className="bg-background border-b border-border px-6 py-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2 text-sm">
-                  <span className="text-muted-foreground">Documents</span>
                   {activeCategoryName && (
-                    <>
-                      <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                      <button 
-                        onClick={() => handleNavigateBack(null)}
-                        className="text-foreground font-medium hover:underline"
-                      >
-                        {activeCategoryName}
-                      </button>
-                    </>
+                    <button 
+                      onClick={() => handleNavigateBack(null)}
+                      className="text-foreground font-medium hover:underline"
+                    >
+                      {activeCategoryName}
+                    </button>
                   )}
                   {breadcrumbs.map((crumb, index) => (
                     <React.Fragment key={crumb.id}>
