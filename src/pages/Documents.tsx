@@ -24,9 +24,14 @@ const Documents = () => {
 
   const [isNewFolderDialogOpen, setIsNewFolderDialogOpen] = useState(false);
 
+  // Reorder categories to move "other" to the end
+  const reorderedCategories = documentCategories.filter(c => c.id !== "other").concat(
+    documentCategories.filter(c => c.id === "other")
+  );
+
   // Find active category name
   const activeCategoryName = activeCategory 
-    ? documentCategories.find(c => c.id === activeCategory)?.name 
+    ? reorderedCategories.find(c => c.id === activeCategory)?.name 
     : null;
 
   return (
@@ -43,13 +48,13 @@ const Documents = () => {
                 <div className="w-8 h-8 bg-blue-600 rounded flex items-center justify-center">
                   <File className="h-5 w-5 text-white" />
                 </div>
-                <h1 className="text-xl font-semibold text-white">Farther Records</h1>
+                <h1 className="text-xl font-semibold text-white">Documents</h1>
               </div>
               
               <div className="mb-6">
-                <h2 className="text-sm font-medium text-gray-400 mb-3 uppercase tracking-wider">Sections</h2>
+                <h2 className="text-sm font-medium text-gray-400 mb-3 uppercase tracking-wider">Categories</h2>
                 <div className="space-y-1">
-                  {documentCategories.map((category) => (
+                  {reorderedCategories.map((category) => (
                     <button
                       key={category.id}
                       onClick={() => setActiveCategory(category.id)}
@@ -176,7 +181,7 @@ const Documents = () => {
           onClose={() => setIsUploadDialogOpen(false)}
           onFileUpload={handleFileUpload}
           activeCategory={activeCategory}
-          documentCategories={documentCategories}
+          documentCategories={reorderedCategories}
         />
 
         <NewFolderDialog
