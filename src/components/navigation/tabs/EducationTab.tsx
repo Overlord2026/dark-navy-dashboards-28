@@ -11,7 +11,7 @@ export const educationNavItems: NavItem[] = [
   },
   { 
     title: "Investments", 
-    href: "/investments", 
+    href: "/client-investments", 
     icon: BarChart3Icon 
   },
   { 

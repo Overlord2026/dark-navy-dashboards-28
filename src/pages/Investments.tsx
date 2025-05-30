@@ -139,20 +139,20 @@ const Investments = () => {
   ];
 
   const handlePortfolioClick = (model: PortfolioModel) => {
-    navigate(`/investments/models/${model.id}`);
+    navigate(`/client-investments/models/${model.id}`);
   };
 
   const handleViewAllModels = () => {
-    navigate("/investments/models/all");
+    navigate("/client-investments/models/all");
   };
 
   const handleStartBuildingClick = () => {
-    navigate("/investments/builder");
+    navigate("/client-investments/builder");
   };
 
   const handleViewDetails = (e: React.MouseEvent, model: PortfolioModel) => {
     e.stopPropagation();
-    navigate(`/investments/models/${model.id}`);
+    navigate(`/client-investments/models/${model.id}`);
   };
 
   const handleScheduleAppointment = (e: React.MouseEvent, assetName: string) => {
@@ -163,7 +163,7 @@ const Investments = () => {
 
   const handleTabChange = (value: string) => {
     setSelectedTab(value);
-    navigate(`/investments?tab=${value}`, { replace: true });
+    navigate(`/client-investments?tab=${value}`, { replace: true });
   };
 
   const handleAssetClick = (path: string) => {
@@ -189,7 +189,7 @@ const Investments = () => {
               <div className="flex justify-between items-center">
                 <h2 className="text-2xl font-semibold">Private Market Alpha</h2>
                 <Button variant="outline" asChild className="flex items-center gap-1">
-                  <Link to="/investments/alternative/all">
+                  <Link to="/client-investments/alternative/all">
                     View All <ChevronRight className="h-4 w-4" />
                   </Link>
                 </Button>
@@ -226,7 +226,7 @@ const Investments = () => {
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                   <div 
-                    onClick={() => handleAssetClick("/investments/alternative/private-equity")} 
+                    onClick={() => handleAssetClick("/client-investments/alternative/private-equity")} 
                     className="bg-card hover:bg-accent text-card-foreground rounded-lg border shadow-sm p-6 block cursor-pointer"
                   >
                     <div className="flex flex-col gap-4">
@@ -254,7 +254,7 @@ const Investments = () => {
                   </div>
                   
                   <div 
-                    onClick={() => handleAssetClick("/investments/alternative/private-debt")} 
+                    onClick={() => handleAssetClick("/client-investments/alternative/private-debt")} 
                     className="bg-card hover:bg-accent text-card-foreground rounded-lg border shadow-sm p-6 block cursor-pointer"
                   >
                     <div className="flex flex-col gap-4">
@@ -284,7 +284,7 @@ const Investments = () => {
                   </div>
                   
                   <div 
-                    onClick={() => handleAssetClick("/investments/alternative/digital-assets")} 
+                    onClick={() => handleAssetClick("/client-investments/alternative/digital-assets")} 
                     className="bg-card hover:bg-accent text-card-foreground rounded-lg border shadow-sm p-6 block cursor-pointer"
                   >
                     <div className="flex flex-col gap-4">
@@ -312,7 +312,7 @@ const Investments = () => {
                   </div>
                   
                   <div 
-                    onClick={() => handleAssetClick("/investments/alternative/real-assets")} 
+                    onClick={() => handleAssetClick("/client-investments/alternative/real-assets")} 
                     className="bg-card hover:bg-accent text-card-foreground rounded-lg border shadow-sm p-6 block cursor-pointer"
                   >
                     <div className="flex flex-col gap-4">

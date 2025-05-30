@@ -582,7 +582,7 @@ const AllAlternativeInvestments = () => {
             <h1 className="text-2xl font-bold">All Alternative Investments</h1>
             <p className="text-muted-foreground">Browse all available alternative investment offerings</p>
           </div>
-          <Button variant="outline" onClick={() => navigate("/investments")}>
+          <Button variant="outline" onClick={() => navigate("/client-investments")}>
             <ChevronLeft className="h-4 w-4 mr-2" />
             Back to Investments
           </Button>
@@ -713,7 +713,7 @@ const AllAlternativeInvestments = () => {
                   <Button 
                     variant="outline" 
                     className="w-full" 
-                    onClick={() => navigate(`/investments/alternative/${offering.category}?id=${offering.id}`)}
+                    onClick={() => navigate(`/client-investments/alternative/${offering.category}?id=${offering.id}`)}
                   >
                     View Details
                   </Button>

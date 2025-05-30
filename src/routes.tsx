@@ -1,3 +1,4 @@
+
 import React from "react";
 import { createBrowserRouter } from "react-router-dom";
 import Dashboard from "@/pages/Dashboard";
@@ -61,7 +62,7 @@ const routes = createBrowserRouter([
     element: <ProtectedRoute><Education /></ProtectedRoute>
   },
   {
-    path: "/investments",
+    path: "/client-investments",
     element: <ProtectedRoute><Investments /></ProtectedRoute>
   },
   {
@@ -153,27 +154,27 @@ const routes = createBrowserRouter([
     element: <ProtectedRoute><AdvisorProfile /></ProtectedRoute>
   },
   {
-    path: "/investments/alternative/private-equity",
+    path: "/client-investments/alternative/private-equity",
     element: <ProtectedRoute><PrivateEquity /></ProtectedRoute>
   },
   {
-    path: "/investments/alternative/private-debt",
+    path: "/client-investments/alternative/private-debt",
     element: <ProtectedRoute><PrivateDebt /></ProtectedRoute>
   },
   {
-    path: "/investments/alternative/digital-assets",
+    path: "/client-investments/alternative/digital-assets",
     element: <ProtectedRoute><DigitalAssets /></ProtectedRoute>
   },
   {
-    path: "/investments/alternative/real-assets",
+    path: "/client-investments/alternative/real-assets",
     element: <ProtectedRoute><RealAssets /></ProtectedRoute>
   },
   {
-    path: "/investments/model-portfolios",
+    path: "/client-investments/model-portfolios",
     element: <ProtectedRoute><ModelPortfolios /></ProtectedRoute>
   },
   {
-    path: "/investments/stock-screener",
+    path: "/client-investments/stock-screener",
     element: <ProtectedRoute><StockScreener /></ProtectedRoute>
   },
   {
