@@ -1,3 +1,5 @@
+
+import React, { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { SupabaseDocumentsTable } from "@/components/documents/SupabaseDocumentsTable";
 import { NewFolderDialog } from "@/components/documents/NewFolderDialog";
@@ -6,7 +8,6 @@ import { useSupabaseDocumentManagement } from "@/hooks/useSupabaseDocumentManage
 import { Button } from "@/components/ui/button";
 import { Upload, FolderPlus, ChevronRight, File } from "lucide-react";
 import { ProfessionalsProvider } from "@/context/ProfessionalsContext";
-import { useState } from "react";
 import { cn } from "@/lib/utils";
 
 const Documents = () => {
