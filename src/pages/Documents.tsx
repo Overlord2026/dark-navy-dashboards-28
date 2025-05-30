@@ -1,4 +1,3 @@
-
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { SupabaseDocumentsTable } from "@/components/documents/SupabaseDocumentsTable";
 import { NewFolderDialog } from "@/components/documents/NewFolderDialog";
@@ -27,6 +26,8 @@ const Documents = () => {
   } = useSupabaseDocumentManagement();
 
   const [isNewFolderDialogOpen, setIsNewFolderDialogOpen] = useState(false);
+  const [currentFolderId, setCurrentFolderId] = useState<string | null>(null);
+  const [breadcrumbs, setBreadcrumbs] = useState<Array<{id: string | null, name: string}>>([]);
 
   const activeCategoryName = activeCategory 
     ? categories.find(c => c.id === activeCategory)?.name 
@@ -44,6 +45,30 @@ const Documents = () => {
       await deleteDocument(document.id);
     }
   };
+
+  const handleViewFolder = (folder: any) => {
+    setCurrentFolderId(folder.id);
+    setBreadcrumbs(prev => [...prev, { id: folder.id, name: folder.name }]);
+  };
+
+  const handleNavigateBack = (targetId: string | null) => {
+    setCurrentFolderId(targetId);
+    const targetIndex = breadcrumbs.findIndex(b => b.id === targetId);
+    if (targetIndex >= 0) {
+      setBreadcrumbs(breadcrumbs.slice(0, targetIndex + 1));
+    } else {
+      setBreadcrumbs([]);
+    }
+  };
+
+  // Filter documents based on current folder and category
+  const filteredDocuments = documents.filter(doc => {
+    if (activeCategory && doc.category !== activeCategory) return false;
+    // If we're in a folder, show only documents in that folder
+    // For now, we'll simulate folder structure using document names/paths
+    // In a real implementation, you'd have a parent_folder_id field
+    return true;
+  });
 
   if (loading) {
     return (
@@ -113,9 +138,25 @@ const Documents = () => {
                   {activeCategoryName && (
                     <>
                       <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                      <span className="text-foreground font-medium">{activeCategoryName}</span>
+                      <button 
+                        onClick={() => handleNavigateBack(null)}
+                        className="text-foreground font-medium hover:underline"
+                      >
+                        {activeCategoryName}
+                      </button>
                     </>
                   )}
+                  {breadcrumbs.map((crumb, index) => (
+                    <React.Fragment key={crumb.id}>
+                      <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                      <button 
+                        onClick={() => handleNavigateBack(crumb.id)}
+                        className="text-foreground font-medium hover:underline"
+                      >
+                        {crumb.name}
+                      </button>
+                    </React.Fragment>
+                  ))}
                 </div>
                 
                 {activeCategory && (
@@ -162,12 +203,13 @@ const Documents = () => {
               ) : (
                 /* Documents Table */
                 <div className="p-6">
-                  {documents.length > 0 ? (
+                  {filteredDocuments.length > 0 ? (
                     <div className="bg-background rounded-lg border border-border overflow-hidden">
                       <SupabaseDocumentsTable 
-                        documents={documents}
+                        documents={filteredDocuments}
                         onDownloadDocument={handleDownloadDocument}
                         onDeleteDocument={handleDeleteDocument}
+                        onViewDocument={handleViewFolder}
                         loading={loading}
                       />
                     </div>
