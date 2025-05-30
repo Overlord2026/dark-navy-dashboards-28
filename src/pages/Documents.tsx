@@ -90,14 +90,7 @@ const Documents = () => {
                         )}
                       >
                         <div className="flex items-center justify-between">
-                          <div>
-                            <span className="font-medium">{category.name}</span>
-                            {category.description && (
-                              <div className="text-xs text-muted-foreground mt-1">
-                                {category.description}
-                              </div>
-                            )}
-                          </div>
+                          <span className="font-medium">{category.name}</span>
                           {activeCategory === category.id && (
                             <div className="w-2 h-2 bg-primary-foreground rounded-full"></div>
                           )}
