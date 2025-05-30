@@ -1,8 +1,8 @@
-
 import React, { useState, useEffect } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { ChevronRight, Briefcase, BarChart3, ArrowUpRight, ShieldCheck, CalendarClock, SearchIcon } from "lucide-react";
 import { IntelligentAllocationTab } from "@/components/investments/IntelligentAllocationTab";
@@ -10,6 +10,7 @@ import { StockScreener } from "@/components/investments/StockScreener";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { ScheduleMeetingDialog } from "@/components/investments/ScheduleMeetingDialog";
+import { PortfolioPickerDialog } from "@/components/investments/PortfolioPickerDialog";
 import { getAllInvestmentCategoryData } from "@/services/marketDataService";
 
 interface PortfolioModel {
@@ -25,6 +26,14 @@ interface PortfolioModel {
   };
 }
 
+interface ModelPortfolio {
+  name: string;
+  type: string;
+  taxStatus: string;
+  assignedAccounts: number;
+  tradingGroups: number;
+}
+
 const Investments = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -33,6 +42,7 @@ const Investments = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedAsset, setSelectedAsset] = useState("");
   const [scheduleMeetingOpen, setScheduleMeetingOpen] = useState(false);
+  const [portfolioPickerOpen, setPortfolioPickerOpen] = useState(false);
   
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -139,6 +149,30 @@ const Investments = () => {
     },
   ];
 
+  const modelPortfolios: ModelPortfolio[] = [
+    {
+      name: "Core Growth 60/40",
+      type: "Strategic",
+      taxStatus: "Tax-Aware",
+      assignedAccounts: 2,
+      tradingGroups: 1
+    },
+    {
+      name: "Income Focus 40/60",
+      type: "Income",
+      taxStatus: "Tax-Exempt",
+      assignedAccounts: 3,
+      tradingGroups: 2
+    },
+    {
+      name: "Aggressive Growth 80/20",
+      type: "Strategic",
+      taxStatus: "Taxable",
+      assignedAccounts: 1,
+      tradingGroups: 1
+    }
+  ];
+
   const handlePortfolioClick = (model: PortfolioModel) => {
     navigate(`/client-investments/models/${model.id}`);
   };
@@ -193,115 +227,38 @@ const Investments = () => {
           <TabsContent value="bfo-models" className="space-y-8">
             <div className="space-y-6">
               <div className="flex justify-between items-center">
-                <h2 className="text-2xl font-semibold">BFO Model Portfolios</h2>
-                <Button variant="outline" onClick={handleViewAllModels} className="flex items-center gap-1">
-                  View All <ChevronRight className="h-4 w-4" />
+                <h2 className="text-2xl font-semibold text-white">Your Model Portfolios</h2>
+                <Button 
+                  onClick={() => setPortfolioPickerOpen(true)}
+                  className="bg-yellow-500 hover:bg-yellow-600 text-black font-medium px-6"
+                >
+                  Pick a Model Portfolio
                 </Button>
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="bg-card text-card-foreground rounded-lg border shadow-sm p-6">
-                  <div className="flex flex-col gap-2">
-                    <div className="text-muted-foreground text-sm">Portfolios Available</div>
-                    <div className="text-3xl font-bold">12</div>
-                    <div className="text-muted-foreground text-sm">Strategically designed allocations</div>
-                  </div>
-                </div>
-                
-                <div className="bg-card text-card-foreground rounded-lg border shadow-sm p-6">
-                  <div className="flex flex-col gap-2">
-                    <div className="text-muted-foreground text-sm">Historical Performance</div>
-                    <div className="text-3xl font-bold text-emerald-500">+8.7%</div>
-                    <div className="text-muted-foreground text-sm">Average 5-year return</div>
-                  </div>
-                </div>
-                
-                <div className="bg-card text-card-foreground rounded-lg border shadow-sm p-6">
-                  <div className="flex flex-col gap-2">
-                    <div className="text-muted-foreground text-sm">Customization Options</div>
-                    <div className="text-3xl font-bold">6</div>
-                    <div className="text-muted-foreground text-sm">Risk profiles to choose from</div>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="space-y-4">
-                <h3 className="text-xl font-medium">Featured Model Portfolios</h3>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {portfolioModels.map((model) => (
-                    <div 
-                      key={model.id} 
-                      className="bg-card hover:bg-accent text-card-foreground rounded-lg border shadow-sm p-6 cursor-pointer"
-                      onClick={() => handlePortfolioClick(model)}
-                    >
-                      <div className="flex flex-col gap-4">
-                        <div className="flex justify-between items-center">
-                          <Briefcase className="h-10 w-10 text-blue-500" />
-                          <Badge 
-                            className={`bg-${model.badge.color}-50 text-${model.badge.color}-700 dark:bg-${model.badge.color}-900 dark:text-${model.badge.color}-300 border-${model.badge.color}-200 dark:border-${model.badge.color}-800`}
-                          >
-                            {model.badge.text}
-                          </Badge>
-                        </div>
-                        <div>
-                          <h4 className="text-lg font-medium">{model.name}</h4>
-                          <p className="text-muted-foreground text-sm mt-1">{model.description}</p>
-                          <p className="text-xs text-blue-600 mt-1">Provider: {model.provider}</p>
-                        </div>
-                        <div className="grid grid-cols-2 gap-2 text-sm mt-2">
-                          <div>
-                            <p className="text-muted-foreground">Return (5Y)</p>
-                            <p className="font-medium text-emerald-500">{model.returnRate}</p>
-                          </div>
-                          <div>
-                            <p className="text-muted-foreground">Risk Level</p>
-                            <p className="font-medium">{model.riskLevel}</p>
-                          </div>
-                        </div>
-                        <div className="grid grid-cols-2 gap-2">
-                          <Button 
-                            size="sm" 
-                            className="w-full mt-2"
-                            onClick={(e) => handleViewDetails(e, model)}
-                          >
-                            View Details
-                          </Button>
-                          <Button 
-                            variant="outline"
-                            size="sm" 
-                            className="w-full mt-2"
-                            onClick={(e) => handleScheduleAppointment(e, model.name)}
-                          >
-                            <CalendarClock className="h-3 w-3 mr-1" /> Consult
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              
-              <div className="mt-8">
-                <h3 className="text-xl font-medium mb-4">Portfolio Builder</h3>
-                <div className="bg-card border rounded-lg p-6">
-                  <p className="text-muted-foreground mb-4">Create a customized model portfolio based on your risk tolerance and investment goals.</p>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <Button className="w-full" onClick={handleStartBuildingClick}>Start Building</Button>
-                    <Button 
-                      variant="outline" 
-                      className="w-full flex items-center justify-center gap-2"
-                      onClick={(e) => {
-                        window.open("https://calendly.com/tonygomes/60min", "_blank");
-                        toast.success("Opening scheduling page", {
-                          description: "Schedule a consultation with an advisor to discuss portfolio options.",
-                        });
-                      }}
-                    >
-                      <CalendarClock className="h-4 w-4" /> Schedule Consultation
-                    </Button>
-                  </div>
-                </div>
+              <div className="bg-slate-900 rounded-lg border border-slate-700 overflow-hidden">
+                <Table>
+                  <TableHeader>
+                    <TableRow className="border-slate-700 hover:bg-slate-800">
+                      <TableHead className="text-white font-medium">Name</TableHead>
+                      <TableHead className="text-white font-medium">Type</TableHead>
+                      <TableHead className="text-white font-medium">Tax Status</TableHead>
+                      <TableHead className="text-white font-medium">Assigned to Accounts</TableHead>
+                      <TableHead className="text-white font-medium">Trading Groups Applied</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {modelPortfolios.map((portfolio, index) => (
+                      <TableRow key={index} className="border-slate-700 hover:bg-slate-800">
+                        <TableCell className="text-white font-medium">{portfolio.name}</TableCell>
+                        <TableCell className="text-slate-300">{portfolio.type}</TableCell>
+                        <TableCell className="text-slate-300">{portfolio.taxStatus}</TableCell>
+                        <TableCell className="text-slate-300">{portfolio.assignedAccounts}</TableCell>
+                        <TableCell className="text-slate-300">{portfolio.tradingGroups}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
               </div>
             </div>
           </TabsContent>
@@ -480,6 +437,11 @@ const Investments = () => {
             consultationType="investment"
           />
         )}
+
+        <PortfolioPickerDialog 
+          open={portfolioPickerOpen}
+          onOpenChange={setPortfolioPickerOpen}
+        />
       </div>
     </ThreeColumnLayout>
   );
