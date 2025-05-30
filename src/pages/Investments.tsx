@@ -206,7 +206,7 @@ const Investments = () => {
   };
 
   return (
-    <ThreeColumnLayout activeMainItem="investments" title="Investment Management">
+    <ThreeColumnLayout activeMainItem="investments">
       <div className="space-y-8">
         {/* Header Section */}
         <div className="space-y-2">
