@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useDocumentManagement } from "@/hooks/useDocumentManagement";
 import { useProfessionals } from "@/context/ProfessionalsContext";
@@ -79,7 +80,7 @@ export function SharedDocumentsList() {
                   {doc.created || new Date().toLocaleDateString()}
                 </TableCell>
                 <TableCell>
-                  <PermissionBadge permission={doc.permissions?.[0]?.accessLevel || "view"} />
+                  <PermissionBadge accessLevel={doc.permissions?.[0]?.accessLevel || "view"} />
                 </TableCell>
                 <TableCell className="text-right">
                   <DocumentActions 
@@ -111,6 +112,7 @@ function getSampleDocuments(): DocumentItem[] {
         {
           userId: "pro-1",
           userName: "Sarah Johnson",
+          userEmail: "sarah@example.com",
           userRole: "Tax Professional / Accountant",
           accessLevel: "view",
           grantedAt: new Date().toISOString()
@@ -129,6 +131,7 @@ function getSampleDocuments(): DocumentItem[] {
         {
           userId: "pro-3",
           userName: "Jennifer Williams",
+          userEmail: "jennifer@example.com",
           userRole: "Estate Planning Attorney",
           accessLevel: "view",
           grantedAt: new Date().toISOString()
@@ -147,6 +150,7 @@ function getSampleDocuments(): DocumentItem[] {
         {
           userId: "pro-2",
           userName: "Michael Chen",
+          userEmail: "michael@example.com",
           userRole: "Financial Advisor",
           accessLevel: "edit",
           grantedAt: new Date().toISOString()
