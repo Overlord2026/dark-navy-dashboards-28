@@ -6,6 +6,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom"
 import { AuthProvider } from "./context/AuthContext"
 import { UserProvider } from "./context/UserContext"
 import { SubscriptionProvider } from "./context/SubscriptionContext"
+import { ThemeProvider } from "./context/ThemeContext"
 import Dashboard from "./pages/Dashboard"
 import Documents from "./pages/Documents"
 import EstatePlanning from "./pages/EstatePlanning"
@@ -21,28 +22,30 @@ const queryClient = new QueryClient()
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <AuthProvider>
-            <UserProvider>
-              <SubscriptionProvider>
-                <Routes>
-                  <Route path="/" element={<Dashboard />} />
-                  <Route path="/settings" element={<Settings />} />
-                  <Route path="/estate-planning" element={<EstatePlanning />} />
-                  <Route path="/legacy-vault" element={<LegacyVault />} />
-                  <Route path="/professionals" element={<Professionals />} />
-                  <Route path="/documents" element={<Documents />} />
-                  <Route path="/client-documents" element={<ClientDocuments />} />
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </SubscriptionProvider>
-            </UserProvider>
-          </AuthProvider>
-        </BrowserRouter>
-      </TooltipProvider>
+      <ThemeProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <AuthProvider>
+              <UserProvider>
+                <SubscriptionProvider>
+                  <Routes>
+                    <Route path="/" element={<Dashboard />} />
+                    <Route path="/settings" element={<Settings />} />
+                    <Route path="/estate-planning" element={<EstatePlanning />} />
+                    <Route path="/legacy-vault" element={<LegacyVault />} />
+                    <Route path="/professionals" element={<Professionals />} />
+                    <Route path="/documents" element={<Documents />} />
+                    <Route path="/client-documents" element={<ClientDocuments />} />
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </SubscriptionProvider>
+              </UserProvider>
+            </AuthProvider>
+          </BrowserRouter>
+        </TooltipProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   );
 }
