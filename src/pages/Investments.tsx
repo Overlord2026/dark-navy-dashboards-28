@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { ChevronRight, Briefcase, BarChart3, ArrowUpRight, ShieldCheck, CalendarClock, SearchIcon } from "lucide-react";
 import { IntelligentAllocationTab } from "@/components/investments/IntelligentAllocationTab";
@@ -11,6 +10,8 @@ import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { ScheduleMeetingDialog } from "@/components/investments/ScheduleMeetingDialog";
 import { PortfolioPickerDialog } from "@/components/investments/PortfolioPickerDialog";
+import { BFOModelsTable } from "@/components/investments/BFOModelsTable";
+import { useBFOModels } from "@/hooks/useBFOModels";
 import { getAllInvestmentCategoryData } from "@/services/marketDataService";
 
 interface PortfolioModel {
@@ -44,6 +45,9 @@ const Investments = () => {
   const [scheduleMeetingOpen, setScheduleMeetingOpen] = useState(false);
   const [portfolioPickerOpen, setPortfolioPickerOpen] = useState(false);
   
+  // BFO Models hook
+  const { userAssignments, loading: bfoLoading, error: bfoError } = useBFOModels();
+  
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const tabParam = params.get("tab");
@@ -73,7 +77,7 @@ const Investments = () => {
     
     fetchMarketData();
   }, []);
-  
+
   const portfolioModels: PortfolioModel[] = [
     {
       id: "income-focus",
@@ -236,29 +240,14 @@ const Investments = () => {
                 </Button>
               </div>
               
+              {bfoError && (
+                <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-4">
+                  <p className="text-red-400">Error loading portfolio data: {bfoError}</p>
+                </div>
+              )}
+              
               <div className="bg-slate-900 rounded-lg border border-slate-700 overflow-hidden">
-                <Table>
-                  <TableHeader>
-                    <TableRow className="border-slate-700 hover:bg-slate-800">
-                      <TableHead className="text-white font-medium">Name</TableHead>
-                      <TableHead className="text-white font-medium">Type</TableHead>
-                      <TableHead className="text-white font-medium">Tax Status</TableHead>
-                      <TableHead className="text-white font-medium">Assigned to Accounts</TableHead>
-                      <TableHead className="text-white font-medium">Trading Groups Applied</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {modelPortfolios.map((portfolio, index) => (
-                      <TableRow key={index} className="border-slate-700 hover:bg-slate-800">
-                        <TableCell className="text-white font-medium">{portfolio.name}</TableCell>
-                        <TableCell className="text-slate-300">{portfolio.type}</TableCell>
-                        <TableCell className="text-slate-300">{portfolio.taxStatus}</TableCell>
-                        <TableCell className="text-slate-300">{portfolio.assignedAccounts}</TableCell>
-                        <TableCell className="text-slate-300">{portfolio.tradingGroups}</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
+                <BFOModelsTable assignments={userAssignments} loading={bfoLoading} />
               </div>
             </div>
           </TabsContent>

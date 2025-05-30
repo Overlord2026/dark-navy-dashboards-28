@@ -181,6 +181,57 @@ export type Database = {
           },
         ]
       }
+      model_portfolios: {
+        Row: {
+          asset_allocation: string | null
+          badge_color: string | null
+          badge_text: string | null
+          created_at: string
+          description: string | null
+          id: string
+          is_active: boolean | null
+          name: string
+          provider: string
+          return_rate: string | null
+          risk_level: string | null
+          series_type: string | null
+          tax_status: string | null
+          updated_at: string
+        }
+        Insert: {
+          asset_allocation?: string | null
+          badge_color?: string | null
+          badge_text?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          provider: string
+          return_rate?: string | null
+          risk_level?: string | null
+          series_type?: string | null
+          tax_status?: string | null
+          updated_at?: string
+        }
+        Update: {
+          asset_allocation?: string | null
+          badge_color?: string | null
+          badge_text?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          provider?: string
+          return_rate?: string | null
+          risk_level?: string | null
+          series_type?: string | null
+          tax_status?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -435,6 +486,50 @@ export type Database = {
           zip_code?: string | null
         }
         Relationships: []
+      }
+      user_portfolio_assignments: {
+        Row: {
+          assigned_accounts: number | null
+          assignment_date: string
+          created_at: string
+          id: string
+          is_active: boolean | null
+          model_portfolio_id: string
+          trading_groups: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          assigned_accounts?: number | null
+          assignment_date?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          model_portfolio_id: string
+          trading_groups?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          assigned_accounts?: number | null
+          assignment_date?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          model_portfolio_id?: string
+          trading_groups?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_portfolio_assignments_model_portfolio_id_fkey"
+            columns: ["model_portfolio_id"]
+            isOneToOne: false
+            referencedRelation: "model_portfolios"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_trust_documents: {
         Row: {
