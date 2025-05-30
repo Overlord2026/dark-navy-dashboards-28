@@ -54,6 +54,15 @@ export const SupabaseDocumentsTable: React.FC<SupabaseDocumentsTableProps> = ({
       return dateString;
     }
   };
+
+  // Sort documents to show folders first, then files
+  const sortedDocuments = [...documents].sort((a, b) => {
+    // Folders come first
+    if (a.is_folder && !b.is_folder) return -1;
+    if (!a.is_folder && b.is_folder) return 1;
+    // Within the same type (folder or file), sort alphabetically by name
+    return a.name.localeCompare(b.name);
+  });
   
   if (loading) {
     return (
@@ -86,7 +95,7 @@ export const SupabaseDocumentsTable: React.FC<SupabaseDocumentsTableProps> = ({
         </TableRow>
       </TableHeader>
       <TableBody>
-        {documents.map(document => (
+        {sortedDocuments.map(document => (
           <TableRow key={document.id}>
             <TableCell className="font-medium">
               <div className="flex items-center gap-2">
