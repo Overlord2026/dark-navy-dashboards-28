@@ -136,7 +136,6 @@ const Documents = () => {
                     <div className="bg-background rounded-lg border border-border overflow-hidden">
                       <DocumentsTable 
                         documents={filteredDocuments}
-                        onViewDocument={(doc) => console.log('View:', doc)}
                         onDownloadDocument={(doc) => console.log('Download:', doc)}
                       />
                     </div>

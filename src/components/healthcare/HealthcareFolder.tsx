@@ -537,7 +537,7 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
                     documents={filteredDocuments} 
                     onEditDocument={handleEditPermissions}
                     onShareDocument={handleShareDocument}
-                    onViewDocument={handleViewDocument}
+                    onDownloadDocument={handleViewDocument}
                     extraColumns={[
                       {
                         header: "Privacy",
