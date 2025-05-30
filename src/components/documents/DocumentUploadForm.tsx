@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { FileUpload } from "@/components/ui/file-upload";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { File } from "lucide-react";
 import { FileInfo } from "./types/documentDialog";
 
@@ -16,7 +15,6 @@ interface DocumentUploadFormProps {
 
 export function DocumentUploadForm({ initialDocumentName, onFileChange, fileInfo }: DocumentUploadFormProps) {
   const [documentName, setDocumentName] = useState(initialDocumentName || "");
-  const [description, setDescription] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   
   useEffect(() => {
@@ -26,9 +24,6 @@ export function DocumentUploadForm({ initialDocumentName, onFileChange, fileInfo
     if (fileInfo?.name !== documentName && fileInfo?.name) {
       setDocumentName(fileInfo.name);
     }
-    if (fileInfo?.description !== description && fileInfo?.description) {
-      setDescription(fileInfo.description);
-    }
   }, [fileInfo]);
 
   const handleFileChange = (file: File) => {
@@ -37,23 +32,16 @@ export function DocumentUploadForm({ initialDocumentName, onFileChange, fileInfo
       // Set a default document name based on the file name
       const newName = file.name.split('.')[0];
       setDocumentName(newName);
-      onFileChange({ file, name: newName, description });
+      onFileChange({ file, name: newName, description: "" });
     } else {
-      onFileChange({ file, name: documentName, description });
+      onFileChange({ file, name: documentName, description: "" });
     }
   };
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDocumentName(e.target.value);
     if (selectedFile) {
-      onFileChange({ file: selectedFile, name: e.target.value, description });
-    }
-  };
-
-  const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setDescription(e.target.value);
-    if (selectedFile) {
-      onFileChange({ file: selectedFile, name: documentName, description: e.target.value });
+      onFileChange({ file: selectedFile, name: e.target.value, description: "" });
     }
   };
 
@@ -71,17 +59,6 @@ export function DocumentUploadForm({ initialDocumentName, onFileChange, fileInfo
           value={documentName}
           onChange={handleNameChange}
           placeholder="e.g., Tax Return 2024"
-        />
-      </div>
-      
-      <div className="space-y-2">
-        <Label htmlFor="description">Description (Optional)</Label>
-        <Textarea
-          id="description"
-          value={description}
-          onChange={handleDescriptionChange}
-          placeholder="Add a brief description of this document"
-          rows={3}
         />
       </div>
       

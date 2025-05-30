@@ -3,14 +3,13 @@ import React from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { DocumentItem } from "@/types/document";
 import { Button } from "@/components/ui/button";
-import { Eye, Edit, Share2, Trash2, Download } from "lucide-react";
+import { Edit, Share2, Trash2, Download } from "lucide-react";
 
 export interface DocumentsTableProps {
   documents: DocumentItem[];
   onEditDocument?: (document: DocumentItem) => void;
   onShareDocument?: (document: DocumentItem) => void;
   onDeleteDocument?: (document: DocumentItem) => void;
-  onViewDocument?: (document: DocumentItem) => void;
   onDownloadDocument?: (document: DocumentItem) => void;
   extraColumns?: {
     header: string;
@@ -23,7 +22,6 @@ export const DocumentsTable: React.FC<DocumentsTableProps> = ({
   onEditDocument, 
   onShareDocument, 
   onDeleteDocument,
-  onViewDocument,
   onDownloadDocument,
   extraColumns = []
 }) => {
@@ -72,17 +70,6 @@ export const DocumentsTable: React.FC<DocumentsTableProps> = ({
             
             <TableCell className="text-right">
               <div className="flex justify-end space-x-2">
-                {onViewDocument && (
-                  <Button 
-                    variant="ghost" 
-                    size="icon" 
-                    onClick={() => onViewDocument(document)}
-                    aria-label="View Document"
-                  >
-                    <Eye className="h-4 w-4" />
-                  </Button>
-                )}
-                
                 {onDownloadDocument && (
                   <Button 
                     variant="ghost" 
