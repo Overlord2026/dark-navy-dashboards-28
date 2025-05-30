@@ -6,10 +6,9 @@ import { UploadDocumentDialog } from "@/components/documents/UploadDocumentDialo
 import { useDocumentManagement } from "@/hooks/useDocumentManagement";
 import { documentCategories } from "@/data/documentCategories";
 import { Button } from "@/components/ui/button";
-import { Upload, ChevronRight, File, Folder } from "lucide-react";
+import { Upload, FolderPlus, ChevronRight, File } from "lucide-react";
 import { ProfessionalsProvider } from "@/context/ProfessionalsContext";
 import { useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
 
 const Documents = () => {
   const {
@@ -50,44 +49,20 @@ const Documents = () => {
               </div>
               
               <div className="mb-6">
-                <h2 className="text-sm font-medium text-gray-400 mb-4 uppercase tracking-wider">Categories</h2>
-                <div className="grid gap-3">
+                <h2 className="text-sm font-medium text-gray-400 mb-3 uppercase tracking-wider">Categories</h2>
+                <div className="space-y-1">
                   {reorderedCategories.map((category) => (
-                    <Card
+                    <button
                       key={category.id}
-                      className={`cursor-pointer transition-all duration-200 border-2 hover:shadow-lg hover:scale-105 ${
-                        activeCategory === category.id
-                          ? 'bg-blue-600 border-blue-500 shadow-blue-500/20 shadow-lg'
-                          : 'bg-gray-800/50 border-gray-600 hover:bg-gray-700/70 hover:border-gray-500'
-                      }`}
                       onClick={() => setActiveCategory(category.id)}
+                      className={`w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${
+                        activeCategory === category.id
+                          ? 'bg-blue-600 text-white'
+                          : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                      }`}
                     >
-                      <CardContent className="p-4">
-                        <div className="flex items-center gap-3">
-                          <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                            activeCategory === category.id
-                              ? 'bg-blue-500'
-                              : 'bg-gray-700'
-                          }`}>
-                            <Folder className="h-5 w-5 text-white" />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <h3 className={`font-medium text-sm truncate ${
-                              activeCategory === category.id
-                                ? 'text-white'
-                                : 'text-gray-200'
-                            }`}>
-                              {category.name}
-                            </h3>
-                          </div>
-                          <ChevronRight className={`h-4 w-4 transition-transform ${
-                            activeCategory === category.id
-                              ? 'text-white transform rotate-90'
-                              : 'text-gray-400'
-                          }`} />
-                        </div>
-                      </CardContent>
-                    </Card>
+                      {category.name}
+                    </button>
                   ))}
                 </div>
               </div>
@@ -111,6 +86,15 @@ const Documents = () => {
                 
                 {activeCategory && (
                   <div className="flex items-center gap-3">
+                    <Button
+                      onClick={() => setIsNewFolderDialogOpen(true)}
+                      variant="outline"
+                      size="sm"
+                      className="bg-transparent border-gray-600 text-gray-300 hover:bg-gray-700 hover:text-white"
+                    >
+                      <FolderPlus className="h-4 w-4 mr-2" />
+                      New Folder
+                    </Button>
                     <Button
                       onClick={() => setIsUploadDialogOpen(true)}
                       size="sm"
@@ -161,13 +145,23 @@ const Documents = () => {
                         <p className="text-gray-400 mb-6 max-w-sm">
                           Upload your first document to the {activeCategoryName} category to get started.
                         </p>
-                        <Button
-                          onClick={() => setIsUploadDialogOpen(true)}
-                          className="bg-blue-600 hover:bg-blue-700 text-white"
-                        >
-                          <Upload className="h-4 w-4 mr-2" />
-                          Upload Document
-                        </Button>
+                        <div className="flex items-center justify-center gap-3">
+                          <Button
+                            onClick={() => setIsNewFolderDialogOpen(true)}
+                            variant="outline"
+                            className="bg-transparent border-gray-600 text-gray-300 hover:bg-gray-700 hover:text-white"
+                          >
+                            <FolderPlus className="h-4 w-4 mr-2" />
+                            Create Folder
+                          </Button>
+                          <Button
+                            onClick={() => setIsUploadDialogOpen(true)}
+                            className="bg-blue-600 hover:bg-blue-700 text-white"
+                          >
+                            <Upload className="h-4 w-4 mr-2" />
+                            Upload Document
+                          </Button>
+                        </div>
                       </div>
                     </div>
                   )}
