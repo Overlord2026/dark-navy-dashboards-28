@@ -1,50 +1,44 @@
 
-import { TooltipProvider } from "@/components/ui/tooltip"
-import { Toaster } from "@/components/ui/toaster"
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
-import { BrowserRouter, Route, Routes } from "react-router-dom"
-import { AuthProvider } from "./context/AuthContext"
-import { UserProvider } from "./context/UserContext"
-import { SubscriptionProvider } from "./context/SubscriptionContext"
-import { ThemeProvider } from "./context/ThemeContext"
-import Dashboard from "./pages/Dashboard"
-import Documents from "./pages/Documents"
-import EstatePlanning from "./pages/EstatePlanning"
-import LegacyVault from "./pages/LegacyVault"
-import NotFound from "./pages/NotFound"
-import Professionals from "./pages/Professionals"
-import Settings from "./pages/Settings"
-import { Toaster as Sonner } from "./components/ui/sonner"
-import ClientDocuments from "@/pages/ClientDocuments";
+import { RouterProvider } from "react-router-dom";
+import routes from "./routes";
+import { ThemeProvider } from "@/context/ThemeContext";
+import { AuthProvider } from "@/context/AuthContext";
+import { UserProvider } from "@/context/UserContext";
+import { NetWorthProvider } from "@/context/NetWorthContext";
+import { SubscriptionProvider } from "@/context/SubscriptionContext";
+import { Toaster } from "@/components/ui/sonner";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { DiagnosticsProvider } from "@/context/DiagnosticsContext";
+import { AdvisorProvider } from "@/context/AdvisorContext";
 
-const queryClient = new QueryClient()
+// Create a Query Client
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      retry: 1,
+    },
+  },
+});
 
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <AuthProvider>
-              <UserProvider>
-                <SubscriptionProvider>
-                  <Routes>
-                    <Route path="/" element={<Dashboard />} />
-                    <Route path="/settings" element={<Settings />} />
-                    <Route path="/estate-planning" element={<EstatePlanning />} />
-                    <Route path="/legacy-vault" element={<LegacyVault />} />
-                    <Route path="/professionals" element={<Professionals />} />
-                    <Route path="/documents" element={<Documents />} />
-                    <Route path="/client-documents" element={<ClientDocuments />} />
-                    <Route path="*" element={<NotFound />} />
-                  </Routes>
-                </SubscriptionProvider>
-              </UserProvider>
-            </AuthProvider>
-          </BrowserRouter>
-        </TooltipProvider>
+        <AuthProvider>
+          <UserProvider>
+            <SubscriptionProvider>
+              <NetWorthProvider>
+                <DiagnosticsProvider>
+                  <AdvisorProvider>
+                    <RouterProvider router={routes} />
+                    <Toaster position="top-right" richColors closeButton />
+                  </AdvisorProvider>
+                </DiagnosticsProvider>
+              </NetWorthProvider>
+            </SubscriptionProvider>
+          </UserProvider>
+        </AuthProvider>
       </ThemeProvider>
     </QueryClientProvider>
   );
