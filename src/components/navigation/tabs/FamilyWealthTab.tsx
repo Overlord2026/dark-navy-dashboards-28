@@ -33,7 +33,7 @@ export const familyWealthNavItems: NavItem[] = [
   },
   { 
     title: "Documents", 
-    href: "/documents", 
+    href: "/client-documents", 
     icon: BookIcon 
   },
   { 

@@ -55,7 +55,7 @@ export const navigationCategories: NavCategory[] = [
     defaultExpanded: true,
     items: [
       { id: "home", label: "Home", icon: CustomHomeIcon, href: "/" },
-      { id: "documents", label: "Documents", icon: BookIcon, href: "/documents" },
+      { id: "documents", label: "Documents", icon: BookIcon, href: "/client-documents" },
     ]
   },
   {
