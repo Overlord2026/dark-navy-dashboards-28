@@ -34,6 +34,13 @@ const Documents = () => {
     ? reorderedCategories.find(c => c.id === activeCategory)?.name 
     : null;
 
+  const handleCreateFolderWithCategory = (folderName: string) => {
+    if (activeCategory) {
+      handleCreateFolder(folderName, activeCategory);
+    }
+    setIsNewFolderDialogOpen(false);
+  };
+
   return (
     <ThreeColumnLayout activeMainItem="documents" title="">
       <ProfessionalsProvider>
@@ -189,7 +196,7 @@ const Documents = () => {
         <NewFolderDialog
           open={isNewFolderDialogOpen}
           onOpenChange={setIsNewFolderDialogOpen}
-          onCreateFolder={handleCreateFolder}
+          onCreateFolder={handleCreateFolderWithCategory}
         />
       </ProfessionalsProvider>
     </ThreeColumnLayout>

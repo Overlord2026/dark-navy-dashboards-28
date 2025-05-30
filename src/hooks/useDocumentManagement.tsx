@@ -18,7 +18,7 @@ export const useDocumentManagement = () => {
   const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
   const { toast } = useToast();
 
-  const handleCreateFolder = (folderName: string) => {
+  const handleCreateFolder = (folderName: string, category?: string) => {
     if (!folderName.trim()) {
       toast({
         title: "Please enter a folder name",
@@ -26,6 +26,30 @@ export const useDocumentManagement = () => {
       });
       return;
     }
+    
+    // Use the provided category or the active category
+    const documentCategory = category || activeCategory;
+    
+    if (!documentCategory) {
+      toast({
+        title: "Please select a category",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    // Create a new folder document item
+    const newFolder: DocumentItem = {
+      id: `folder-${Math.random().toString(36).substring(2, 9)}`,
+      name: folderName,
+      type: "folder" as DocumentType,
+      created: new Date().toLocaleDateString(),
+      category: documentCategory,
+      size: "—", // Folders don't have size
+      isFolder: true
+    };
+    
+    setDocuments(prevDocs => [...prevDocs, newFolder]);
     
     toast({
       title: "Folder created",
