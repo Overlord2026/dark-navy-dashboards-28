@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { BrowserRouter, Route, Routes } from "react-router-dom"
 import { AuthProvider } from "./context/AuthContext"
 import { UserProvider } from "./context/UserContext"
+import { SubscriptionProvider } from "./context/SubscriptionContext"
 import Dashboard from "./pages/Dashboard"
 import Documents from "./pages/Documents"
 import EstatePlanning from "./pages/EstatePlanning"
@@ -26,16 +27,18 @@ function App() {
         <BrowserRouter>
           <AuthProvider>
             <UserProvider>
-              <Routes>
-                <Route path="/" element={<Dashboard />} />
-                <Route path="/settings" element={<Settings />} />
-                <Route path="/estate-planning" element={<EstatePlanning />} />
-                <Route path="/legacy-vault" element={<LegacyVault />} />
-                <Route path="/professionals" element={<Professionals />} />
-                <Route path="/documents" element={<Documents />} />
-                <Route path="/client-documents" element={<ClientDocuments />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
+              <SubscriptionProvider>
+                <Routes>
+                  <Route path="/" element={<Dashboard />} />
+                  <Route path="/settings" element={<Settings />} />
+                  <Route path="/estate-planning" element={<EstatePlanning />} />
+                  <Route path="/legacy-vault" element={<LegacyVault />} />
+                  <Route path="/professionals" element={<Professionals />} />
+                  <Route path="/documents" element={<Documents />} />
+                  <Route path="/client-documents" element={<ClientDocuments />} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </SubscriptionProvider>
             </UserProvider>
           </AuthProvider>
         </BrowserRouter>
