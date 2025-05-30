@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
@@ -27,7 +28,7 @@ interface PortfolioModel {
 const Investments = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [selectedTab, setSelectedTab] = useState("private-market");
+  const [selectedTab, setSelectedTab] = useState("bfo-models");
   const [alternativeData, setAlternativeData] = useState<any>({});
   const [isLoading, setIsLoading] = useState(true);
   const [selectedAsset, setSelectedAsset] = useState("");
@@ -36,7 +37,7 @@ const Investments = () => {
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const tabParam = params.get("tab");
-    if (tabParam && ["private-market", "model-portfolios", "intelligent", "stock-screener"].includes(tabParam)) {
+    if (tabParam && ["bfo-models", "intelligent-alloc", "private-markets"].includes(tabParam)) {
       setSelectedTab(tabParam);
     }
   }, [location.search]);
@@ -171,20 +172,145 @@ const Investments = () => {
   };
 
   return (
-    <ThreeColumnLayout activeMainItem="investments" title="Investments">
+    <ThreeColumnLayout activeMainItem="investments" title="Investment Management">
       <div className="space-y-8">
+        {/* Header Section */}
+        <div className="space-y-2">
+          <h1 className="text-3xl font-bold">Investment Management</h1>
+          <p className="text-muted-foreground text-lg">
+            Explore a curated selection of investment options tailored to your financial goals. 
+            Our solutions range from model portfolios to exclusive alternative assets.
+          </p>
+        </div>
+
         <Tabs value={selectedTab} className="w-full" onValueChange={handleTabChange}>
           <TabsList className="w-full mb-6">
-            <TabsTrigger value="private-market" className="flex-1">Private Market Alpha</TabsTrigger>
-            <TabsTrigger value="model-portfolios" className="flex-1">Model Portfolios</TabsTrigger>
-            <TabsTrigger value="intelligent" className="flex-1">Intelligent Allocation</TabsTrigger>
-            <TabsTrigger value="stock-screener" className="flex-1">
-              <SearchIcon className="h-4 w-4 mr-2" />
-              Stock Screener
-            </TabsTrigger>
+            <TabsTrigger value="bfo-models" className="flex-1">BFO Models</TabsTrigger>
+            <TabsTrigger value="intelligent-alloc" className="flex-1">Intelligent Alloc.</TabsTrigger>
+            <TabsTrigger value="private-markets" className="flex-1">Private Markets</TabsTrigger>
           </TabsList>
           
-          <TabsContent value="private-market" className="space-y-8">
+          <TabsContent value="bfo-models" className="space-y-8">
+            <div className="space-y-6">
+              <div className="flex justify-between items-center">
+                <h2 className="text-2xl font-semibold">BFO Model Portfolios</h2>
+                <Button variant="outline" onClick={handleViewAllModels} className="flex items-center gap-1">
+                  View All <ChevronRight className="h-4 w-4" />
+                </Button>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="bg-card text-card-foreground rounded-lg border shadow-sm p-6">
+                  <div className="flex flex-col gap-2">
+                    <div className="text-muted-foreground text-sm">Portfolios Available</div>
+                    <div className="text-3xl font-bold">12</div>
+                    <div className="text-muted-foreground text-sm">Strategically designed allocations</div>
+                  </div>
+                </div>
+                
+                <div className="bg-card text-card-foreground rounded-lg border shadow-sm p-6">
+                  <div className="flex flex-col gap-2">
+                    <div className="text-muted-foreground text-sm">Historical Performance</div>
+                    <div className="text-3xl font-bold text-emerald-500">+8.7%</div>
+                    <div className="text-muted-foreground text-sm">Average 5-year return</div>
+                  </div>
+                </div>
+                
+                <div className="bg-card text-card-foreground rounded-lg border shadow-sm p-6">
+                  <div className="flex flex-col gap-2">
+                    <div className="text-muted-foreground text-sm">Customization Options</div>
+                    <div className="text-3xl font-bold">6</div>
+                    <div className="text-muted-foreground text-sm">Risk profiles to choose from</div>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="space-y-4">
+                <h3 className="text-xl font-medium">Featured Model Portfolios</h3>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {portfolioModels.map((model) => (
+                    <div 
+                      key={model.id} 
+                      className="bg-card hover:bg-accent text-card-foreground rounded-lg border shadow-sm p-6 cursor-pointer"
+                      onClick={() => handlePortfolioClick(model)}
+                    >
+                      <div className="flex flex-col gap-4">
+                        <div className="flex justify-between items-center">
+                          <Briefcase className="h-10 w-10 text-blue-500" />
+                          <Badge 
+                            className={`bg-${model.badge.color}-50 text-${model.badge.color}-700 dark:bg-${model.badge.color}-900 dark:text-${model.badge.color}-300 border-${model.badge.color}-200 dark:border-${model.badge.color}-800`}
+                          >
+                            {model.badge.text}
+                          </Badge>
+                        </div>
+                        <div>
+                          <h4 className="text-lg font-medium">{model.name}</h4>
+                          <p className="text-muted-foreground text-sm mt-1">{model.description}</p>
+                          <p className="text-xs text-blue-600 mt-1">Provider: {model.provider}</p>
+                        </div>
+                        <div className="grid grid-cols-2 gap-2 text-sm mt-2">
+                          <div>
+                            <p className="text-muted-foreground">Return (5Y)</p>
+                            <p className="font-medium text-emerald-500">{model.returnRate}</p>
+                          </div>
+                          <div>
+                            <p className="text-muted-foreground">Risk Level</p>
+                            <p className="font-medium">{model.riskLevel}</p>
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-2 gap-2">
+                          <Button 
+                            size="sm" 
+                            className="w-full mt-2"
+                            onClick={(e) => handleViewDetails(e, model)}
+                          >
+                            View Details
+                          </Button>
+                          <Button 
+                            variant="outline"
+                            size="sm" 
+                            className="w-full mt-2"
+                            onClick={(e) => handleScheduleAppointment(e, model.name)}
+                          >
+                            <CalendarClock className="h-3 w-3 mr-1" /> Consult
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              
+              <div className="mt-8">
+                <h3 className="text-xl font-medium mb-4">Portfolio Builder</h3>
+                <div className="bg-card border rounded-lg p-6">
+                  <p className="text-muted-foreground mb-4">Create a customized model portfolio based on your risk tolerance and investment goals.</p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <Button className="w-full" onClick={handleStartBuildingClick}>Start Building</Button>
+                    <Button 
+                      variant="outline" 
+                      className="w-full flex items-center justify-center gap-2"
+                      onClick={(e) => {
+                        window.open("https://calendly.com/tonygomes/60min", "_blank");
+                        toast.success("Opening scheduling page", {
+                          description: "Schedule a consultation with an advisor to discuss portfolio options.",
+                        });
+                      }}
+                    >
+                      <CalendarClock className="h-4 w-4" /> Schedule Consultation
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="intelligent-alloc">
+            <IntelligentAllocationTab />
+          </TabsContent>
+
+          <TabsContent value="private-markets" className="space-y-8">
             <div className="space-y-6">
               <div className="flex justify-between items-center">
                 <h2 className="text-2xl font-semibold">Private Market Alpha</h2>
@@ -345,130 +471,6 @@ const Investments = () => {
                 </div>
               </div>
             </div>
-          </TabsContent>
-          
-          <TabsContent value="model-portfolios" className="space-y-8">
-            <div className="space-y-6">
-              <div className="flex justify-between items-center">
-                <h2 className="text-2xl font-semibold">Model Portfolios</h2>
-                <Button variant="outline" onClick={handleViewAllModels} className="flex items-center gap-1">
-                  View All <ChevronRight className="h-4 w-4" />
-                </Button>
-              </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="bg-card text-card-foreground rounded-lg border shadow-sm p-6">
-                  <div className="flex flex-col gap-2">
-                    <div className="text-muted-foreground text-sm">Portfolios Available</div>
-                    <div className="text-3xl font-bold">12</div>
-                    <div className="text-muted-foreground text-sm">Strategically designed allocations</div>
-                  </div>
-                </div>
-                
-                <div className="bg-card text-card-foreground rounded-lg border shadow-sm p-6">
-                  <div className="flex flex-col gap-2">
-                    <div className="text-muted-foreground text-sm">Historical Performance</div>
-                    <div className="text-3xl font-bold text-emerald-500">+8.7%</div>
-                    <div className="text-muted-foreground text-sm">Average 5-year return</div>
-                  </div>
-                </div>
-                
-                <div className="bg-card text-card-foreground rounded-lg border shadow-sm p-6">
-                  <div className="flex flex-col gap-2">
-                    <div className="text-muted-foreground text-sm">Customization Options</div>
-                    <div className="text-3xl font-bold">6</div>
-                    <div className="text-muted-foreground text-sm">Risk profiles to choose from</div>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="space-y-4">
-                <h3 className="text-xl font-medium">Featured Model Portfolios</h3>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {portfolioModels.map((model) => (
-                    <div 
-                      key={model.id} 
-                      className="bg-card hover:bg-accent text-card-foreground rounded-lg border shadow-sm p-6 cursor-pointer"
-                      onClick={() => handlePortfolioClick(model)}
-                    >
-                      <div className="flex flex-col gap-4">
-                        <div className="flex justify-between items-center">
-                          <Briefcase className="h-10 w-10 text-blue-500" />
-                          <Badge 
-                            className={`bg-${model.badge.color}-50 text-${model.badge.color}-700 dark:bg-${model.badge.color}-900 dark:text-${model.badge.color}-300 border-${model.badge.color}-200 dark:border-${model.badge.color}-800`}
-                          >
-                            {model.badge.text}
-                          </Badge>
-                        </div>
-                        <div>
-                          <h4 className="text-lg font-medium">{model.name}</h4>
-                          <p className="text-muted-foreground text-sm mt-1">{model.description}</p>
-                          <p className="text-xs text-blue-600 mt-1">Provider: {model.provider}</p>
-                        </div>
-                        <div className="grid grid-cols-2 gap-2 text-sm mt-2">
-                          <div>
-                            <p className="text-muted-foreground">Return (5Y)</p>
-                            <p className="font-medium text-emerald-500">{model.returnRate}</p>
-                          </div>
-                          <div>
-                            <p className="text-muted-foreground">Risk Level</p>
-                            <p className="font-medium">{model.riskLevel}</p>
-                          </div>
-                        </div>
-                        <div className="grid grid-cols-2 gap-2">
-                          <Button 
-                            size="sm" 
-                            className="w-full mt-2"
-                            onClick={(e) => handleViewDetails(e, model)}
-                          >
-                            View Details
-                          </Button>
-                          <Button 
-                            variant="outline"
-                            size="sm" 
-                            className="w-full mt-2"
-                            onClick={(e) => handleScheduleAppointment(e, model.name)}
-                          >
-                            <CalendarClock className="h-3 w-3 mr-1" /> Consult
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              
-              <div className="mt-8">
-                <h3 className="text-xl font-medium mb-4">Portfolio Builder</h3>
-                <div className="bg-card border rounded-lg p-6">
-                  <p className="text-muted-foreground mb-4">Create a customized model portfolio based on your risk tolerance and investment goals.</p>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <Button className="w-full" onClick={handleStartBuildingClick}>Start Building</Button>
-                    <Button 
-                      variant="outline" 
-                      className="w-full flex items-center justify-center gap-2"
-                      onClick={(e) => {
-                        window.open("https://calendly.com/tonygomes/60min", "_blank");
-                        toast.success("Opening scheduling page", {
-                          description: "Schedule a consultation with an advisor to discuss portfolio options.",
-                        });
-                      }}
-                    >
-                      <CalendarClock className="h-4 w-4" /> Schedule Consultation
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </TabsContent>
-          
-          <TabsContent value="intelligent">
-            <IntelligentAllocationTab />
-          </TabsContent>
-
-          <TabsContent value="stock-screener">
-            <StockScreener />
           </TabsContent>
         </Tabs>
         
