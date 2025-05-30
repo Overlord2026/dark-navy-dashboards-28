@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { SupabaseDocumentsTable } from "@/components/documents/SupabaseDocumentsTable";
@@ -36,7 +35,7 @@ const Documents = () => {
 
   const handleCreateFolderWithCategory = (folderName: string) => {
     if (activeCategory) {
-      handleCreateFolder(folderName, activeCategory);
+      handleCreateFolder(folderName, activeCategory, currentFolderId);
     }
     setIsNewFolderDialogOpen(false);
   };
@@ -62,13 +61,21 @@ const Documents = () => {
     }
   };
 
+  const handleFileUploadWithFolder = async (file: File, name: string, category: string) => {
+    return await handleFileUpload(file, name, category, currentFolderId);
+  };
+
   // Filter documents based on current folder and category
   const filteredDocuments = documents.filter(doc => {
     if (activeCategory && doc.category !== activeCategory) return false;
-    // If we're in a folder, show only documents in that folder
-    // For now, we'll simulate folder structure using document names/paths
-    // In a real implementation, you'd have a parent_folder_id field
-    return true;
+    
+    // Show documents in the current folder
+    if (currentFolderId) {
+      return doc.parent_folder_id === currentFolderId;
+    } else {
+      // Show only root level documents (no parent folder)
+      return !doc.parent_folder_id;
+    }
   });
 
   if (loading) {
@@ -107,7 +114,11 @@ const Documents = () => {
                     {categories.map((category) => (
                       <button
                         key={category.id}
-                        onClick={() => setActiveCategory(category.id)}
+                        onClick={() => {
+                          setActiveCategory(category.id);
+                          setCurrentFolderId(null);
+                          setBreadcrumbs([]);
+                        }}
                         className={cn(
                           "w-full text-left px-4 py-3 rounded-lg text-sm transition-all duration-200 border",
                           activeCategory === category.id
@@ -225,9 +236,14 @@ const Documents = () => {
                         <div className="w-16 h-16 bg-accent rounded-full flex items-center justify-center mx-auto mb-4">
                           <File className="h-8 w-8 text-accent-foreground" />
                         </div>
-                        <h3 className="text-lg font-medium text-foreground mb-2">No Documents Yet</h3>
+                        <h3 className="text-lg font-medium text-foreground mb-2">
+                          {currentFolderId ? 'Folder is Empty' : 'No Documents Yet'}
+                        </h3>
                         <p className="text-muted-foreground mb-6 max-w-sm">
-                          Upload your first document to the {activeCategoryName} category to get started.
+                          {currentFolderId 
+                            ? 'This folder is empty. Add some files or create new folders to get started.'
+                            : `Upload your first document to the ${activeCategoryName} category to get started.`
+                          }
                         </p>
                         <div className="flex items-center justify-center gap-3">
                           <Button
@@ -260,7 +276,7 @@ const Documents = () => {
           open={isUploadDialogOpen}
           onOpenChange={setIsUploadDialogOpen}
           onClose={() => setIsUploadDialogOpen(false)}
-          onFileUpload={handleFileUpload}
+          onFileUpload={handleFileUploadWithFolder}
           activeCategory={activeCategory}
           categories={categories}
           uploading={uploading}

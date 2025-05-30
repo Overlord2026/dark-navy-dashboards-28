@@ -20,7 +20,7 @@ export const useSupabaseDocumentManagement = () => {
     refreshDocuments
   } = useSupabaseDocuments();
 
-  const handleCreateFolder = async (folderName: string, category?: string) => {
+  const handleCreateFolder = async (folderName: string, category?: string, parentFolderId?: string | null) => {
     if (!folderName.trim()) {
       toast({
         title: "Please enter a folder name",
@@ -39,10 +39,10 @@ export const useSupabaseDocumentManagement = () => {
       return;
     }
     
-    await createFolder(folderName, documentCategory);
+    await createFolder(folderName, documentCategory, parentFolderId);
   };
 
-  const handleFileUpload = async (file: File, customName: string, category: string = "documents") => {
+  const handleFileUpload = async (file: File, customName: string, category: string = "documents", parentFolderId?: string | null) => {
     const documentCategory = activeCategory || category;
     
     if (!documentCategory) {
@@ -53,7 +53,7 @@ export const useSupabaseDocumentManagement = () => {
       return null;
     }
     
-    const result = await uploadDocument(file, customName || file.name, documentCategory);
+    const result = await uploadDocument(file, customName || file.name, documentCategory, parentFolderId);
     if (result) {
       setIsUploadDialogOpen(false);
     }
