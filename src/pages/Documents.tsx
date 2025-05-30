@@ -6,7 +6,7 @@ import { UploadDocumentDialog } from "@/components/documents/UploadDocumentDialo
 import { useDocumentManagement } from "@/hooks/useDocumentManagement";
 import { documentCategories } from "@/data/documentCategories";
 import { Button } from "@/components/ui/button";
-import { Upload, ChevronRight, File } from "lucide-react";
+import { Upload, FolderPlus, ChevronRight, File } from "lucide-react";
 import { ProfessionalsProvider } from "@/context/ProfessionalsContext";
 import { useState } from "react";
 
@@ -87,6 +87,15 @@ const Documents = () => {
                 {activeCategory && (
                   <div className="flex items-center gap-3">
                     <Button
+                      onClick={() => setIsNewFolderDialogOpen(true)}
+                      variant="outline"
+                      size="sm"
+                      className="bg-transparent border-gray-600 text-gray-300 hover:bg-gray-700 hover:text-white"
+                    >
+                      <FolderPlus className="h-4 w-4 mr-2" />
+                      New Folder
+                    </Button>
+                    <Button
                       onClick={() => setIsUploadDialogOpen(true)}
                       size="sm"
                       className="bg-blue-600 hover:bg-blue-700 text-white"
@@ -137,6 +146,14 @@ const Documents = () => {
                           Upload your first document to the {activeCategoryName} category to get started.
                         </p>
                         <div className="flex items-center justify-center gap-3">
+                          <Button
+                            onClick={() => setIsNewFolderDialogOpen(true)}
+                            variant="outline"
+                            className="bg-transparent border-gray-600 text-gray-300 hover:bg-gray-700 hover:text-white"
+                          >
+                            <FolderPlus className="h-4 w-4 mr-2" />
+                            Create Folder
+                          </Button>
                           <Button
                             onClick={() => setIsUploadDialogOpen(true)}
                             className="bg-blue-600 hover:bg-blue-700 text-white"
