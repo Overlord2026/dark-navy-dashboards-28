@@ -35,10 +35,7 @@ const Documents = () => {
     : null;
 
   return (
-    <ThreeColumnLayout 
-      activeMainItem="documents" 
-      title="Document Management"
-    >
+    <ThreeColumnLayout activeMainItem="documents">
       <ProfessionalsProvider>
         <div className="min-h-screen bg-[#0f172a] text-white flex">
           {/* Left Sidebar - Categories */}
