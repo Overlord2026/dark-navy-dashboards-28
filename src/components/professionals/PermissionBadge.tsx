@@ -1,28 +1,31 @@
 
-import React from "react";
 import { Badge } from "@/components/ui/badge";
-import { PermissionBadgeProps } from "./types/sharedDocuments";
 import { HealthcareAccessLevel } from "@/types/document";
 
-export function PermissionBadge({ permission }: PermissionBadgeProps) {
-  // Cast the permission to HealthcareAccessLevel or default to "view" if invalid
-  const accessLevel = isValidAccessLevel(permission) ? permission as HealthcareAccessLevel : "view";
-  
-  switch (accessLevel) {
-    case "view":
-      return <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">View Only</Badge>;
-    case "edit":
-      return <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200">Edit</Badge>;
-    case "full":
-      return <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">Full Access</Badge>;
-    case "none":
-      return <Badge variant="outline" className="bg-gray-50 text-gray-700 border-gray-200">No Access</Badge>;
-    default:
-      return <Badge variant="outline">Unknown</Badge>;
-  }
+interface PermissionBadgeProps {
+  accessLevel: HealthcareAccessLevel;
+  className?: string;
 }
 
-// Helper function to validate permission values
-function isValidAccessLevel(permission: string): boolean {
-  return ["none", "view", "edit", "full"].includes(permission);
+export function PermissionBadge({ accessLevel, className }: PermissionBadgeProps) {
+  const getVariantAndText = (level: HealthcareAccessLevel) => {
+    switch (level) {
+      case "view":
+        return { variant: "secondary", text: "View Only" };
+      case "edit":
+        return { variant: "default", text: "Can Edit" };
+      case "full":
+        return { variant: "destructive", text: "Full Access" };
+      default:
+        return { variant: "outline", text: "Unknown" };
+    }
+  };
+
+  const { variant, text } = getVariantAndText(accessLevel);
+
+  return (
+    <Badge variant={variant as any} className={className}>
+      {text}
+    </Badge>
+  );
 }

@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -7,7 +6,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { TrashIcon, PlusCircle, ShieldAlert, Users, UserPlus } from "lucide-react";
 import { toast } from "sonner";
 import { auditLog } from "@/services/auditLog/auditLogService";
@@ -117,8 +116,6 @@ export function HealthcareDocumentPermissions({
 
   const getAccessLevelBadge = (accessLevel: HealthcareAccessLevel) => {
     switch (accessLevel) {
-      case "none":
-        return <Badge variant="outline" className="bg-gray-200 text-gray-800">No Access</Badge>;
       case "view":
         return <Badge variant="outline" className="bg-blue-100 text-blue-800">View Only</Badge>;
       case "edit":
@@ -188,7 +185,7 @@ export function HealthcareDocumentPermissions({
                           <Button 
                             variant="ghost" 
                             size="icon" 
-                            onClick={() => handleRemovePermission(permission.userEmail || "")}
+                            onClick={() => handleRemovePermission(permission.userEmail || permission.userId)}
                           >
                             <TrashIcon className="h-4 w-4 text-red-500" />
                           </Button>
@@ -260,7 +257,6 @@ export function HealthcareDocumentPermissions({
                       <SelectValue placeholder="Select access level" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="none">No Access</SelectItem>
                       <SelectItem value="view">View Only</SelectItem>
                       <SelectItem value="edit">Can Edit</SelectItem>
                     </SelectContent>

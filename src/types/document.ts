@@ -17,11 +17,13 @@ export interface DocumentItem {
   permissions?: DocumentPermission[];
   shared?: boolean;
   isFolder?: boolean;
+  lastAccessedBy?: string;
 }
 
 export interface DocumentPermission {
   userId: string;
   userName: string;
+  userEmail?: string;
   userRole?: string;
   accessLevel: HealthcareAccessLevel;
   grantedBy?: string;
@@ -37,6 +39,12 @@ export interface DocumentTag {
   category?: string;
 }
 
+export interface DocumentCategory {
+  id: string;
+  name: string;
+  description?: string;
+}
+
 export const healthcareTags: DocumentTag[] = [
   { id: "medical-records", name: "Medical Records", color: "blue", category: "healthcare" },
   { id: "insurance", name: "Insurance", color: "green", category: "healthcare" },
@@ -49,4 +57,20 @@ export const healthcareTags: DocumentTag[] = [
   { id: "dental", name: "Dental", color: "teal", category: "dental" },
   { id: "vision", name: "Vision", color: "cyan", category: "vision" },
   { id: "preventive-care", name: "Preventive Care", color: "lime", category: "preventive-care" }
+];
+
+export const healthcareProfessionalRoles = [
+  "Primary Care Physician",
+  "Specialist",
+  "Nurse Practitioner",
+  "Physician Assistant",
+  "Therapist",
+  "Pharmacist",
+  "Care Coordinator",
+  "Health Insurance Representative",
+  "Family Member",
+  "Legal Guardian",
+  "Power of Attorney",
+  "Emergency Contact",
+  "Other Healthcare Professional"
 ];

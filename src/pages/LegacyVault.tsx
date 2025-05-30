@@ -55,6 +55,7 @@ export default function LegacyVault() {
       type: "folder",
       category: "estate-planning",
       created: new Date().toISOString(),
+      size: "—",
     },
     {
       id: "2",
@@ -62,6 +63,7 @@ export default function LegacyVault() {
       type: "folder",
       category: "insurance",
       created: new Date().toISOString(),
+      size: "—",
     },
     {
       id: "3",
@@ -131,6 +133,7 @@ export default function LegacyVault() {
       type: "folder",
       category: category === "all" ? "general" : category,
       created: new Date().toISOString(),
+      size: "—",
     };
     
     setDocuments(prev => [...prev, newFolder]);

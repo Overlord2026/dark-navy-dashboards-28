@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useDocumentManagement } from "@/hooks/useDocumentManagement";
 import { useProfessionals } from "@/context/ProfessionalsContext";
@@ -113,7 +112,8 @@ function getSampleDocuments(): DocumentItem[] {
           userId: "pro-1",
           userName: "Sarah Johnson",
           userRole: "Tax Professional / Accountant",
-          accessLevel: "view"
+          accessLevel: "view",
+          grantedAt: new Date().toISOString()
         }
       ]
     },
@@ -130,7 +130,8 @@ function getSampleDocuments(): DocumentItem[] {
           userId: "pro-3",
           userName: "Jennifer Williams",
           userRole: "Estate Planning Attorney",
-          accessLevel: "view"
+          accessLevel: "view",
+          grantedAt: new Date().toISOString()
         }
       ]
     },
@@ -147,7 +148,8 @@ function getSampleDocuments(): DocumentItem[] {
           userId: "pro-2",
           userName: "Michael Chen",
           userRole: "Financial Advisor",
-          accessLevel: "edit"
+          accessLevel: "edit",
+          grantedAt: new Date().toISOString()
         }
       ]
     }
