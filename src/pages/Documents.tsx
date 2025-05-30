@@ -1,4 +1,5 @@
 
+
 import React, { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { SupabaseDocumentsTable } from "@/components/documents/SupabaseDocumentsTable";
@@ -6,7 +7,7 @@ import { NewFolderDialog } from "@/components/documents/NewFolderDialog";
 import { SupabaseDocumentUploadDialog } from "@/components/documents/SupabaseDocumentUploadDialog";
 import { useSupabaseDocumentManagement } from "@/hooks/useSupabaseDocumentManagement";
 import { Button } from "@/components/ui/button";
-import { Upload, FolderPlus, ChevronRight, File } from "lucide-react";
+import { Upload, ChevronRight, File } from "lucide-react";
 import { ProfessionalsProvider } from "@/context/ProfessionalsContext";
 import { cn } from "@/lib/utils";
 
@@ -171,16 +172,6 @@ const Documents = () => {
                 {activeCategory && (
                   <div className="flex items-center gap-3">
                     <Button
-                      onClick={() => setIsNewFolderDialogOpen(true)}
-                      size="sm"
-                      variant="outline"
-                      className="border-primary/20 hover:border-primary/40"
-                      disabled={loading}
-                    >
-                      <FolderPlus className="h-4 w-4 mr-2" />
-                      New Folder
-                    </Button>
-                    <Button
                       onClick={() => setIsUploadDialogOpen(true)}
                       size="sm"
                       className="bg-primary hover:bg-primary/90 text-primary-foreground"
@@ -238,19 +229,11 @@ const Documents = () => {
                         </h3>
                         <p className="text-muted-foreground mb-6 max-w-sm">
                           {currentFolderId 
-                            ? 'This folder is empty. Add some files or create new folders to get started.'
+                            ? 'This folder is empty. Add some files to get started.'
                             : `Upload your first document to the ${activeCategoryName} category to get started.`
                           }
                         </p>
                         <div className="flex items-center justify-center gap-3">
-                          <Button
-                            onClick={() => setIsNewFolderDialogOpen(true)}
-                            variant="outline"
-                            className="border-primary/20 hover:border-primary/40"
-                          >
-                            <FolderPlus className="h-4 w-4 mr-2" />
-                            New Folder
-                          </Button>
                           <Button
                             onClick={() => setIsUploadDialogOpen(true)}
                             className="bg-primary hover:bg-primary/90 text-primary-foreground"
@@ -290,3 +273,4 @@ const Documents = () => {
 };
 
 export default Documents;
+
