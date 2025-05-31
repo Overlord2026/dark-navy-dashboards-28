@@ -116,7 +116,7 @@ const PrivateEquity = () => {
                 >
                   <ArrowLeft className="h-4 w-4" />
                 </Button>
-                <h2 className="text-4xl font-bold">Private Equity Investments</h2>
+                <h2 className="text-2xl font-semibold">Private Equity Investments</h2>
               </div>
               <p className="text-muted-foreground text-base">
                 Investments in private companies or buyouts of public companies resulting in a delisting of public equity
