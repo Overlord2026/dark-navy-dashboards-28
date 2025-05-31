@@ -30,10 +30,8 @@ export const NetWorthAnalysis: React.FC = () => {
 
   const totalAssets = getTotalValue();
   const totalLiabilities = getTotalLiabilities();
-  const netWorth = totalAssets - totalLiabilities;
   
   // Calculate asset breakdown by type
-  
   const getAssetValueByType = (type: string) => {
     return assets
       .filter(asset => asset.type === type)
@@ -57,98 +55,100 @@ export const NetWorthAnalysis: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Assets and Liabilities Breakdown Side by Side */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Assets Breakdown */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <PieChart className="h-5 w-5 text-green-600" />
-              Assets Breakdown
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {assetBreakdown.length === 0 ? (
-              <div className="text-center py-8">
-                <p className="text-muted-foreground">No assets to display</p>
+      {/* Combined Assets and Liabilities Breakdown */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <PieChart className="h-5 w-5 text-blue-600" />
+            Assets & Liabilities Breakdown
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Assets Section */}
+            <div>
+              <div className="flex items-center gap-2 mb-4">
+                <PieChart className="h-4 w-4 text-green-600" />
+                <h3 className="text-lg font-semibold text-green-600">Assets</h3>
               </div>
-            ) : (
-              <div className="space-y-4">
-                {assetBreakdown.map((asset, index) => {
-                  const percentage = calculatePercentage(asset.value, totalAssets);
-                  return (
-                    <div key={index} className="space-y-2">
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm font-medium">{asset.name}</span>
-                        <div className="text-right">
-                          <div className="text-sm font-bold">{formatCurrency(asset.value)}</div>
-                          <div className="text-xs text-muted-foreground">{percentage}%</div>
+              {assetBreakdown.length === 0 ? (
+                <div className="text-center py-8">
+                  <p className="text-muted-foreground">No assets to display</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {assetBreakdown.map((asset, index) => {
+                    const percentage = calculatePercentage(asset.value, totalAssets);
+                    return (
+                      <div key={index} className="space-y-2">
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm font-medium">{asset.name}</span>
+                          <div className="text-right">
+                            <div className="text-sm font-bold">{formatCurrency(asset.value)}</div>
+                            <div className="text-xs text-muted-foreground">{percentage}%</div>
+                          </div>
                         </div>
+                        <Progress 
+                          value={percentage} 
+                          className="h-2" 
+                          style={{backgroundColor: `${asset.color}20`}}
+                        />
                       </div>
-                      <Progress 
-                        value={percentage} 
-                        className="h-2" 
-                        style={{backgroundColor: `${asset.color}20`}}
-                      />
+                    );
+                  })}
+                  <div className="pt-3 border-t border-border">
+                    <div className="flex justify-between items-center font-bold">
+                      <span>Total Assets</span>
+                      <span className="text-green-600">{formatCurrency(totalAssets)}</span>
                     </div>
-                  );
-                })}
-                <div className="pt-3 border-t border-border">
-                  <div className="flex justify-between items-center font-bold">
-                    <span>Total Assets</span>
-                    <span className="text-green-600">{formatCurrency(totalAssets)}</span>
                   </div>
                 </div>
-              </div>
-            )}
-          </CardContent>
-        </Card>
+              )}
+            </div>
 
-        {/* Liabilities Breakdown */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <TrendingDown className="h-5 w-5 text-red-600" />
-              Liabilities Breakdown
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {liabilities.length === 0 ? (
-              <div className="text-center py-8">
-                <p className="text-muted-foreground">No liabilities to display</p>
-                <p className="text-sm text-muted-foreground mt-2">Great! You have no recorded liabilities.</p>
+            {/* Liabilities Section */}
+            <div>
+              <div className="flex items-center gap-2 mb-4">
+                <TrendingDown className="h-4 w-4 text-red-600" />
+                <h3 className="text-lg font-semibold text-red-600">Liabilities</h3>
               </div>
-            ) : (
-              <div className="space-y-4">
-                {liabilities.map((liability) => {
-                  const percentage = calculatePercentage(Number(liability.amount), totalLiabilities);
-                  return (
-                    <div key={liability.id} className="space-y-2">
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm font-medium">{liability.name}</span>
-                        <div className="text-right">
-                          <div className="text-sm font-bold">{formatCurrency(Number(liability.amount))}</div>
-                          <div className="text-xs text-muted-foreground">{percentage}%</div>
+              {liabilities.length === 0 ? (
+                <div className="text-center py-8">
+                  <p className="text-muted-foreground">No liabilities to display</p>
+                  <p className="text-sm text-muted-foreground mt-2">Great! You have no recorded liabilities.</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {liabilities.map((liability) => {
+                    const percentage = calculatePercentage(Number(liability.amount), totalLiabilities);
+                    return (
+                      <div key={liability.id} className="space-y-2">
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm font-medium">{liability.name}</span>
+                          <div className="text-right">
+                            <div className="text-sm font-bold">{formatCurrency(Number(liability.amount))}</div>
+                            <div className="text-xs text-muted-foreground">{percentage}%</div>
+                          </div>
                         </div>
+                        <Progress 
+                          value={percentage} 
+                          className="h-2 bg-red-500/20" 
+                        />
                       </div>
-                      <Progress 
-                        value={percentage} 
-                        className="h-2 bg-red-500/20" 
-                      />
+                    );
+                  })}
+                  <div className="pt-3 border-t border-border">
+                    <div className="flex justify-between items-center font-bold">
+                      <span>Total Liabilities</span>
+                      <span className="text-red-600">{formatCurrency(totalLiabilities)}</span>
                     </div>
-                  );
-                })}
-                <div className="pt-3 border-t border-border">
-                  <div className="flex justify-between items-center font-bold">
-                    <span>Total Liabilities</span>
-                    <span className="text-red-600">{formatCurrency(totalLiabilities)}</span>
                   </div>
                 </div>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      </div>
+              )}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };
