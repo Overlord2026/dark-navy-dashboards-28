@@ -1,118 +1,131 @@
 
-import { TrendingUp, TrendingDown } from "lucide-react";
-import { DashboardCard } from "@/components/ui/DashboardCard";
-import { Progress } from "@/components/ui/progress";
+import React from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { TrendingUp, DollarSign, Target, PieChart } from "lucide-react";
+import { useSupabaseAssets } from "@/hooks/useSupabaseAssets";
+import { useSupabaseLiabilities } from "@/hooks/useSupabaseLiabilities";
+import { formatCurrency } from "@/lib/formatters";
+import { ReportsGenerator } from "./ReportsGenerator";
 
-interface FinancialOverviewProps {
-  showBusinessMetrics?: boolean;
-}
+export const FinancialOverview = () => {
+  const { assets, getTotalValue, loading: assetsLoading } = useSupabaseAssets();
+  const { getTotalLiabilities, loading: liabilitiesLoading } = useSupabaseLiabilities();
 
-export const FinancialOverview = ({ showBusinessMetrics = false }: FinancialOverviewProps) => {
+  const loading = assetsLoading || liabilitiesLoading;
+  
+  if (loading) {
+    return (
+      <div className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {[1, 2, 3, 4].map((i) => (
+            <Card key={i}>
+              <CardContent className="pt-6">
+                <div className="flex items-center justify-center py-8">
+                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  const totalAssets = getTotalValue();
+  const totalLiabilities = getTotalLiabilities();
+  const netWorth = totalAssets - totalLiabilities;
+  
+  // Calculate asset allocation
+  const getAssetValueByType = (type: string) => {
+    return assets
+      .filter(asset => asset.type === type)
+      .reduce((total, asset) => total + Number(asset.value), 0);
+  };
+
+  const realEstateValue = getAssetValueByType('property');
+  const investmentValue = getAssetValueByType('investment');
+  const cashValue = getAssetValueByType('cash');
+  const retirementValue = getAssetValueByType('retirement');
+  
+  // Calculate diversification score based on asset allocation
+  const calculateDiversificationScore = () => {
+    if (totalAssets === 0) return 0;
+    
+    const allocations = [
+      realEstateValue / totalAssets,
+      investmentValue / totalAssets,
+      cashValue / totalAssets,
+      retirementValue / totalAssets
+    ].filter(allocation => allocation > 0);
+    
+    // Simple diversification score: more balanced = higher score
+    const variance = allocations.reduce((sum, allocation) => {
+      const diff = allocation - (1 / allocations.length);
+      return sum + diff * diff;
+    }, 0);
+    
+    return Math.max(0, Math.min(100, 100 - (variance * 1000)));
+  };
+
+  const diversificationScore = calculateDiversificationScore();
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-      <DashboardCard
-        title={showBusinessMetrics ? "Revenue" : "Income"}
-        className="xl:col-span-1"
-        icon={<TrendingUp className="h-5 w-5" />}
-        footer={
-          <div className="flex items-center justify-between text-sm">
-            <span>Monthly Goal</span>
-            <span className="font-medium text-green-400">
-              {showBusinessMetrics ? "$124,000" : "$12,500"}
-            </span>
-          </div>
-        }
-      >
-        <div className="text-3xl font-semibold mb-1">
-          {showBusinessMetrics ? "$97,843" : "$9,650"}
-        </div>
-        <div className="flex items-center text-sm mb-3">
-          <span className="text-green-400 flex items-center mr-2">
-            <TrendingUp className="h-3 w-3 mr-1" />
-            {showBusinessMetrics ? "8.2%" : "4.5%"}
-          </span>
-          <span className="text-muted-foreground">vs last month</span>
-        </div>
-        <Progress value={showBusinessMetrics ? 78 : 77} className="h-2 bg-muted" />
-      </DashboardCard>
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Assets</CardTitle>
+            <DollarSign className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{formatCurrency(totalAssets)}</div>
+            <p className="text-xs text-muted-foreground">
+              {assets.length} asset{assets.length !== 1 ? 's' : ''} tracked
+            </p>
+          </CardContent>
+        </Card>
 
-      <DashboardCard
-        title="Expenses"
-        className="xl:col-span-1"
-        icon={<TrendingDown className="h-5 w-5" />}
-        footer={
-          <div className="flex items-center justify-between text-sm">
-            <span>Monthly Budget</span>
-            <span className="font-medium text-amber-400">
-              {showBusinessMetrics ? "$85,000" : "$8,500"}
-            </span>
-          </div>
-        }
-      >
-        <div className="text-3xl font-semibold mb-1">
-          {showBusinessMetrics ? "$64,973" : "$6,473"}
-        </div>
-        <div className="flex items-center text-sm mb-3">
-          <span className="text-amber-400 flex items-center mr-2">
-            <TrendingUp className="h-3 w-3 mr-1" />
-            {showBusinessMetrics ? "3.7%" : "2.9%"}
-          </span>
-          <span className="text-muted-foreground">vs last month</span>
-        </div>
-        <Progress value={showBusinessMetrics ? 76 : 76} className="h-2 bg-muted" />
-      </DashboardCard>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Net Worth</CardTitle>
+            <TrendingUp className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{formatCurrency(netWorth)}</div>
+            <p className="text-xs text-muted-foreground">
+              Assets minus liabilities
+            </p>
+          </CardContent>
+        </Card>
 
-      <DashboardCard
-        title="Cash Flow"
-        className="xl:col-span-1"
-        icon={<TrendingUp className="h-5 w-5" />}
-        footer={
-          <div className="flex items-center justify-between text-sm">
-            <span>Quarterly Avg</span>
-            <span className="font-medium text-blue-400">
-              {showBusinessMetrics ? "$29,750" : "$3,075"}
-            </span>
-          </div>
-        }
-      >
-        <div className="text-3xl font-semibold mb-1">
-          {showBusinessMetrics ? "$32,870" : "$3,177"}
-        </div>
-        <div className="flex items-center text-sm mb-3">
-          <span className="text-green-400 flex items-center mr-2">
-            <TrendingUp className="h-3 w-3 mr-1" />
-            {showBusinessMetrics ? "12.5%" : "5.8%"}
-          </span>
-          <span className="text-muted-foreground">vs last quarter</span>
-        </div>
-        <Progress value={showBusinessMetrics ? 82 : 78} className="h-2 bg-muted" />
-      </DashboardCard>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Liabilities</CardTitle>
+            <Target className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{formatCurrency(totalLiabilities)}</div>
+            <p className="text-xs text-muted-foreground">
+              Outstanding debts
+            </p>
+          </CardContent>
+        </Card>
 
-      <DashboardCard
-        title={showBusinessMetrics ? "Profit Margin" : "Savings Rate"}
-        className="xl:col-span-1"
-        icon={<TrendingUp className="h-5 w-5" />}
-        footer={
-          <div className="flex items-center justify-between text-sm">
-            <span>Target</span>
-            <span className="font-medium text-purple-400">
-              {showBusinessMetrics ? "35%" : "20%"}
-            </span>
-          </div>
-        }
-      >
-        <div className="text-3xl font-semibold mb-1">
-          {showBusinessMetrics ? "33.4%" : "18.5%"}
-        </div>
-        <div className="flex items-center text-sm mb-3">
-          <span className="text-green-400 flex items-center mr-2">
-            <TrendingUp className="h-3 w-3 mr-1" />
-            {showBusinessMetrics ? "2.3%" : "1.2%"}
-          </span>
-          <span className="text-muted-foreground">vs last month</span>
-        </div>
-        <Progress value={showBusinessMetrics ? 75 : 80} className="h-2 bg-muted" />
-      </DashboardCard>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Diversification</CardTitle>
+            <PieChart className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{diversificationScore.toFixed(0)}%</div>
+            <p className="text-xs text-muted-foreground">
+              Portfolio balance score
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+
+      <ReportsGenerator />
     </div>
   );
 };
