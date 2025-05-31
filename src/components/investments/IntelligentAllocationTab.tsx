@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -178,9 +179,13 @@ export const IntelligentAllocationTab = () => {
                 </Badge>
               ))}
             </div>
-            <div className="col-span-2 flex gap-2" onClick={(e) => e.stopPropagation()}>
-              <InterestedButton assetName={model.name} />
-              <ScheduleMeetingDialog assetName={model.name} />
+            <div className="col-span-2 flex flex-col gap-1" onClick={(e) => e.stopPropagation()}>
+              <div className="w-full">
+                <InterestedButton assetName={model.name} />
+              </div>
+              <div className="w-full">
+                <ScheduleMeetingDialog assetName={model.name} />
+              </div>
             </div>
           </div>
         ))}
@@ -232,8 +237,12 @@ export const IntelligentAllocationTab = () => {
               )}
             </div>
             <div className="col-span-2 flex flex-col gap-1" onClick={(e) => e.stopPropagation()}>
-              <InterestedButton assetName={model.name} />
-              <ScheduleMeetingDialog assetName={model.name} />
+              <div className="w-full">
+                <InterestedButton assetName={model.name} />
+              </div>
+              <div className="w-full">
+                <ScheduleMeetingDialog assetName={model.name} />
+              </div>
             </div>
           </div>
         ))}
@@ -284,13 +293,9 @@ export const IntelligentAllocationTab = () => {
                 </div>
 
                 {/* Actions */}
-                <div className="flex gap-2 pt-2" onClick={(e) => e.stopPropagation()}>
-                  <div className="flex-1">
-                    <InterestedButton assetName={model.name} />
-                  </div>
-                  <div className="flex-1">
-                    <ScheduleMeetingDialog assetName={model.name} />
-                  </div>
+                <div className="grid grid-cols-1 gap-2 pt-2" onClick={(e) => e.stopPropagation()}>
+                  <InterestedButton assetName={model.name} />
+                  <ScheduleMeetingDialog assetName={model.name} />
                 </div>
               </div>
             </CardContent>
