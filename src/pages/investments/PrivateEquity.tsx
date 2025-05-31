@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -113,8 +112,7 @@ const PrivateEquity = () => {
               <div className="mb-8">
                 <h2 className="text-2xl font-semibold mb-4">Private Equity Investments</h2>
                 <p className="text-muted-foreground text-lg">
-                  Explore exclusive private equity investment opportunities across various sectors and stages.
-                  Our carefully curated offerings provide access to institutional-quality investments.
+                  Investments in private companies or buyouts of public companies resulting in a delisting of public equity
                 </p>
               </div>
               
