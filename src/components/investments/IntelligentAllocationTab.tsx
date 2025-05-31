@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -134,7 +133,7 @@ export const IntelligentAllocationTab = () => {
 
       {/* Desktop Table View */}
       <div className="bg-card rounded-lg border shadow-md overflow-hidden hidden lg:block">
-        <div className="grid grid-cols-12 gap-2 p-4 bg-muted/50 text-sm font-medium">
+        <div className="grid grid-cols-12 gap-4 p-4 bg-muted/50 text-sm font-medium">
           <div className="col-span-4">NAME</div>
           <div className="col-span-1 text-center">TARGETS</div>
           <div className="col-span-2">UPDATED</div>
@@ -145,7 +144,7 @@ export const IntelligentAllocationTab = () => {
         {portfolioModels.map((model) => (
           <div 
             key={model.id} 
-            className={`grid grid-cols-12 gap-2 p-4 border-t items-center hover:bg-accent/10 transition-colors cursor-pointer ${selectedModels.includes(model.id) ? 'bg-primary/5' : ''}`}
+            className={`grid grid-cols-12 gap-4 p-4 border-t items-center hover:bg-accent/10 transition-colors cursor-pointer ${selectedModels.includes(model.id) ? 'bg-primary/5' : ''}`}
             onClick={() => handleModelRowClick(model.id)}
           >
             <div className="col-span-4">
@@ -191,7 +190,7 @@ export const IntelligentAllocationTab = () => {
 
       {/* Tablet View */}
       <div className="bg-card rounded-lg border shadow-md overflow-hidden hidden md:block lg:hidden">
-        <div className="grid grid-cols-10 gap-2 p-4 bg-muted/50 text-sm font-medium">
+        <div className="grid grid-cols-10 gap-3 p-4 bg-muted/50 text-sm font-medium">
           <div className="col-span-3">NAME</div>
           <div className="col-span-1">TARGETS</div>
           <div className="col-span-2">UPDATED</div>
@@ -202,7 +201,7 @@ export const IntelligentAllocationTab = () => {
         {portfolioModels.map((model) => (
           <div 
             key={model.id} 
-            className={`grid grid-cols-10 gap-2 p-4 border-t items-center hover:bg-accent/10 transition-colors cursor-pointer ${selectedModels.includes(model.id) ? 'bg-primary/5' : ''}`}
+            className={`grid grid-cols-10 gap-3 p-4 border-t items-center hover:bg-accent/10 transition-colors cursor-pointer ${selectedModels.includes(model.id) ? 'bg-primary/5' : ''}`}
             onClick={() => handleModelRowClick(model.id)}
           >
             <div className="col-span-3">
