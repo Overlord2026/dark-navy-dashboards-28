@@ -29,6 +29,7 @@ export default function AllAssets() {
   const [assetFilter, setAssetFilter] = useState("assets");
   const [isAddAssetDialogOpen, setIsAddAssetDialogOpen] = useState(false);
   const [isAddLiabilityDialogOpen, setIsAddLiabilityDialogOpen] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   const filterOptions = [
     { value: "assets", label: "All Assets" },
@@ -50,6 +51,11 @@ export default function AllAssets() {
   const getSelectedFilterLabel = () => {
     const selected = filterOptions.find(option => option.value === assetFilter);
     return selected ? selected.label : "All Assets";
+  };
+
+  const handleLiabilityAdded = () => {
+    // Trigger a refresh of the data by updating the refresh key
+    setRefreshKey(prev => prev + 1);
   };
 
   if (!isAuthenticated) {
@@ -161,7 +167,8 @@ export default function AllAssets() {
       
       <AddLiabilityDialog 
         open={isAddLiabilityDialogOpen} 
-        onOpenChange={setIsAddLiabilityDialogOpen} 
+        onOpenChange={setIsAddLiabilityDialogOpen}
+        onLiabilityAdded={handleLiabilityAdded}
       />
     </ThreeColumnLayout>
   );
