@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
@@ -271,7 +272,7 @@ const Investments = () => {
         {/* Header Section */}
         <div className="space-y-2">
           <h1 className="text-3xl font-bold">Investment Management</h1>
-          <p className="text-muted-foreground text-lg">
+          <p className="text-muted-foreground text-base">
             Explore a curated selection of investment options tailored to your financial goals. 
             Our solutions range from model portfolios to exclusive alternative assets.
           </p>
