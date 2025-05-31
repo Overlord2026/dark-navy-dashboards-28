@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
@@ -93,7 +92,7 @@ export default function EstatePlanning() {
   ];
 
   return (
-    <ThreeColumnLayout activeMainItem="estate-planning" title="Estate Planning">
+    <ThreeColumnLayout activeMainItem="estate-planning" title="Estate Planning Services">
       <div className="space-y-8">
         <div className="rounded-lg border bg-card text-card-foreground shadow-sm overflow-hidden">
           <div className="bg-muted/50 p-6 sm:p-10 flex flex-col sm:flex-row gap-6 items-center">
