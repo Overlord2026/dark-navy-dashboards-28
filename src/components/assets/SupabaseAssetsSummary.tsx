@@ -1,6 +1,7 @@
 
 import React from "react";
 import { useSupabaseAssets } from "@/hooks/useSupabaseAssets";
+import { useSupabaseLiabilities } from "@/hooks/useSupabaseLiabilities";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatCurrency } from "@/lib/formatters";
 import { 
@@ -9,9 +10,10 @@ import {
 } from "lucide-react";
 
 export const SupabaseAssetsSummary: React.FC = () => {
-  const { assets, getTotalValue, getAssetsByType, loading } = useSupabaseAssets();
+  const { assets, getTotalValue, getAssetsByType, loading: assetsLoading } = useSupabaseAssets();
+  const { getTotalLiabilities, loading: liabilitiesLoading } = useSupabaseLiabilities();
 
-  if (loading) {
+  if (assetsLoading || liabilitiesLoading) {
     return (
       <Card>
         <CardContent className="pt-6">
@@ -26,8 +28,7 @@ export const SupabaseAssetsSummary: React.FC = () => {
   const propertyCount = getAssetsByType('property').length;
   const vehicleCount = getAssetsByType('vehicle').length + getAssetsByType('boat').length;
   
-  // Sample liabilities value - you can replace this with actual data source
-  const totalLiabilities = 150000;
+  const totalLiabilities = getTotalLiabilities();
   const netWorth = totalValue - totalLiabilities;
 
   return (
