@@ -78,10 +78,10 @@ export default function AllAssets() {
     <ThreeColumnLayout title="All Assets">
       <div className="container mx-auto p-4 space-y-6">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
-          <div>
+          <div className="mb-4 md:mb-0">
             <p className="text-muted-foreground">Comprehensive view of all your assets and liabilities</p>
           </div>
-          <div className="flex gap-2 mt-4 md:mt-0">
+          <div className="flex gap-2">
             <Button
               onClick={() => setIsAddLiabilityDialogOpen(true)}
               variant="outline"
