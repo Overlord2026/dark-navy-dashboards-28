@@ -15,45 +15,57 @@ const DigitalAssets = () => {
   const digitalAssetsOfferings = [
     {
       id: 1,
-      name: "Institutional Crypto Fund",
-      description: "Diversified exposure to major cryptocurrencies with institutional-grade security and custody solutions.",
-      firm: "Digital Asset Capital",
-      minimumInvestment: "$250,000",
+      name: "Galaxy Bitcoin Fund LP",
+      description: "The Galaxy Bitcoin Fund / Galaxy Institutional Bitcoin Fund are low management fee, institutional grade vehicles for bitcoin exposure. They offer streamlined execution, secure third-party custody, familiar reporting, and dedicated client service. The Fund invests directly in bitcoin and is priced based on the Bloomberg Bitcoin Cryptocurrency Fixing Rate (\"XBT\"), aiming to mitigate the complexities of investing in digital assets.",
+      firm: "Galaxy Digital",
+      minimumInvestment: "$100,000",
       performance: "+67.4%",
       lockupPeriod: "1-3 years",
-      tags: ["Bitcoin", "Ethereum", "DeFi"],
+      tags: ["Bitcoin", "Cryptocurrency", "Institutional Grade"],
       featured: true
     },
     {
       id: 2,
-      name: "Blockchain Infrastructure Fund",
-      description: "Invests in companies building the infrastructure for the next generation of blockchain technology.",
-      firm: "Blockchain Ventures",
-      minimumInvestment: "$500,000",
+      name: "Galaxy Crypto Index Fund LP",
+      description: "The Galaxy Crypto Index Fund seeks to provide diversified, dynamic, institutionally-wrapped exposure to digital assets by tracking and rebalancing monthly to the rules-based Bloomberg Galaxy Crypto Index (ticker: BGCI). It offers institutional-grade exposure while mitigating many of the complexities of digital asset investing.",
+      firm: "Galaxy Digital",
+      minimumInvestment: "$250,000",
       performance: "+34.8%",
       lockupPeriod: "3-5 years",
-      tags: ["Infrastructure", "Layer 1", "Web3"]
+      tags: ["Diversified", "Crypto Index", "Monthly Rebalancing"],
+      featured: true
     },
     {
       id: 3,
-      name: "NFT and Gaming Assets Fund",
-      description: "Focuses on non-fungible tokens, gaming assets, and metaverse-related digital investments.",
-      firm: "Metaverse Capital Partners",
-      minimumInvestment: "$100,000",
+      name: "Galaxy Institutional Bitcoin Fund LP",
+      description: "The Galaxy Institutional Bitcoin Fund is designed to provide institutional-quality exposure to bitcoin by investing directly in bitcoin, with pricing based on the Bloomberg Galaxy Bitcoin Index (\"BTC\"). It aims to simplify digital asset investment with outsourced trading, operations, finance, and custody services.",
+      firm: "Galaxy Digital",
+      minimumInvestment: "$500,000",
       performance: "+28.6%",
       lockupPeriod: "2-4 years",
-      tags: ["NFT", "Gaming", "Metaverse"],
+      tags: ["Bitcoin", "Institutional", "Direct Exposure"],
       featured: true
     },
     {
       id: 4,
-      name: "DeFi Yield Strategies Fund",
-      description: "Systematic approach to decentralized finance yield farming and liquidity provision strategies.",
-      firm: "DeFi Investment Group",
+      name: "Galaxy Institutional Bitcoin Fund Ltd",
+      description: "Galaxy Institutional Bitcoin Fund Ltd provides institutional-quality bitcoin exposure by investing directly in bitcoin, priced based on the Bloomberg Galaxy Bitcoin Index (\"BTC\"). It offers a streamlined and secure approach to digital asset investment with dedicated services for trading and custody.",
+      firm: "Galaxy Digital",
       minimumInvestment: "$500,000",
       performance: "+42.1%",
       lockupPeriod: "1-2 years",
-      tags: ["DeFi", "Yield Farming", "Liquidity"]
+      tags: ["Bitcoin", "Offshore", "Institutional"]
+    },
+    {
+      id: 5,
+      name: "Galaxy Institutional Ethereum Fund LP",
+      description: "The Galaxy Institutional Ethereum Fund provides institutional-grade exposure to ETH by investing directly in Ethereum. It is priced using the Bloomberg Galaxy Ethereum Index, and the Fund is designed to mitigate digital asset investment complexities through outsourced services for trading, operations, and custody.",
+      firm: "Galaxy Digital",
+      minimumInvestment: "$250,000",
+      performance: "+31.2%",
+      lockupPeriod: "2-3 years",
+      tags: ["Ethereum", "Institutional", "Direct Exposure"],
+      featured: true
     }
   ];
   
