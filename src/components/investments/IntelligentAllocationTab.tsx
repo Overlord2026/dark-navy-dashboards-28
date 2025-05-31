@@ -401,23 +401,6 @@ export const IntelligentAllocationTab = () => {
           </CardContent>
         </Card>
       </div>
-
-      <div className="flex justify-between items-center p-4 bg-primary/5 rounded-lg border">
-        <div className="flex items-center gap-2">
-          <div className="text-sm font-medium">© 2024 INTELLIGENT ALLOCATION™</div>
-        </div>
-        <div className="flex gap-4 text-sm">
-          <a href="#" className="text-muted-foreground hover:text-foreground flex items-center gap-1">
-            Terms <ExternalLink className="h-3 w-3" />
-          </a>
-          <a href="#" className="text-muted-foreground hover:text-foreground flex items-center gap-1">
-            Privacy <ExternalLink className="h-3 w-3" />
-          </a>
-          <a href="#" className="text-muted-foreground hover:text-foreground flex items-center gap-1">
-            Support <ExternalLink className="h-3 w-3" />
-          </a>
-        </div>
-      </div>
     </div>
   );
 };
