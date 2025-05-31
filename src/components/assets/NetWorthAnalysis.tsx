@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { useSupabaseAssets } from "@/hooks/useSupabaseAssets";
 import { useSupabaseLiabilities } from "@/hooks/useSupabaseLiabilities";
 import { formatCurrency } from "@/lib/formatters";
@@ -55,15 +55,8 @@ export const NetWorthAnalysis: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Combined Assets and Liabilities Breakdown */}
       <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <PieChart className="h-5 w-5 text-blue-600" />
-            Assets & Liabilities Breakdown
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
+        <CardContent className="pt-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Assets Section */}
             <div>
