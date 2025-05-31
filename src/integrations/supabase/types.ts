@@ -644,6 +644,39 @@ export type Database = {
         }
         Relationships: []
       }
+      user_financial_snapshots: {
+        Row: {
+          created_at: string
+          id: string
+          net_worth: number
+          snapshot_date: string
+          total_assets: number
+          total_liabilities: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          net_worth?: number
+          snapshot_date?: string
+          total_assets?: number
+          total_liabilities?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          net_worth?: number
+          snapshot_date?: string
+          total_assets?: number
+          total_liabilities?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_investment_interests: {
         Row: {
           created_at: string | null
@@ -862,7 +895,15 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      upsert_daily_financial_snapshot: {
+        Args: {
+          p_user_id: string
+          p_total_assets: number
+          p_total_liabilities: number
+          p_net_worth: number
+        }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never

@@ -54,6 +54,57 @@ export const useDashboardData = () => {
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
 
+  const calculateGrowthPercentage = (current: number, previous: number): number => {
+    if (previous === 0) return current > 0 ? 100 : 0;
+    return Number(((current - previous) / previous * 100).toFixed(1));
+  };
+
+  const getPreviousSnapshot = async () => {
+    if (!user) return null;
+
+    try {
+      const { data, error } = await supabase
+        .from('user_financial_snapshots')
+        .select('*')
+        .eq('user_id', user.id)
+        .lt('snapshot_date', new Date().toISOString().split('T')[0]) // Previous days only
+        .order('snapshot_date', { ascending: false })
+        .limit(1)
+        .single();
+
+      if (error && error.code !== 'PGRST116') {
+        console.error('Error fetching previous snapshot:', error);
+        return null;
+      }
+
+      return data;
+    } catch (error) {
+      console.error('Error:', error);
+      return null;
+    }
+  };
+
+  const createDailySnapshot = async (totalAssets: number, totalLiabilities: number, netWorth: number) => {
+    if (!user) return;
+
+    try {
+      const { error } = await supabase.rpc('upsert_daily_financial_snapshot', {
+        p_user_id: user.id,
+        p_total_assets: totalAssets,
+        p_total_liabilities: totalLiabilities,
+        p_net_worth: netWorth
+      });
+
+      if (error) {
+        console.error('Error creating daily snapshot:', error);
+      } else {
+        console.log('Daily financial snapshot updated successfully');
+      }
+    } catch (error) {
+      console.error('Error creating snapshot:', error);
+    }
+  };
+
   const calculateMetrics = async () => {
     if (!user) {
       setMetrics({
@@ -111,6 +162,23 @@ export const useDashboardData = () => {
       const totalLiabilities = liabilities?.reduce((sum, liability) => sum + Number(liability.amount), 0) || 0;
       const netWorth = totalAssets - totalLiabilities;
 
+      // Get previous snapshot for growth calculation
+      const previousSnapshot = await getPreviousSnapshot();
+
+      // Calculate real growth percentages
+      let assetGrowth = 0;
+      let liabilityGrowth = 0;
+      let netWorthGrowth = 0;
+
+      if (previousSnapshot) {
+        assetGrowth = calculateGrowthPercentage(totalAssets, Number(previousSnapshot.total_assets));
+        liabilityGrowth = calculateGrowthPercentage(totalLiabilities, Number(previousSnapshot.total_liabilities));
+        netWorthGrowth = calculateGrowthPercentage(netWorth, Number(previousSnapshot.net_worth));
+      }
+
+      // Create/update today's snapshot for future calculations
+      await createDailySnapshot(totalAssets, totalLiabilities, netWorth);
+
       // Calculate asset breakdown
       const breakdown: AssetBreakdown = {
         realEstate: 0,
@@ -160,12 +228,6 @@ export const useDashboardData = () => {
       const assetCount = assets?.length || 0;
       const propertyCount = assets?.filter(asset => asset.type === 'property').length || 0;
       const vehicleCount = assets?.filter(asset => asset.type === 'vehicle' || asset.type === 'boat').length || 0;
-
-      // For demo purposes, calculate mock growth percentages
-      // In a real application, you'd compare with historical data
-      const assetGrowth = totalAssets > 0 ? 5.3 : 0; // Mock 5.3% growth
-      const liabilityGrowth = totalLiabilities > 0 ? 1.5 : 0; // Mock 1.5% growth
-      const netWorthGrowth = netWorth > 0 ? 7.5 : 0; // Mock 7.5% growth
 
       setMetrics({
         totalAssets,
