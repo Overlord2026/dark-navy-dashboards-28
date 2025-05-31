@@ -135,14 +135,14 @@ export default function AllAssets() {
           <TabsContent value="allocation">
             <div className="space-y-6">
               <h2 className="text-2xl font-semibold">Asset Allocation</h2>
-              <ComprehensiveAssetsSummary />
+              <ComprehensiveAssetsSummary showTabs={false} />
             </div>
           </TabsContent>
           
           <TabsContent value="networth">
             <div className="space-y-6">
               <h2 className="text-2xl font-semibold">Net Worth Analysis</h2>
-              <ComprehensiveAssetsSummary />
+              <ComprehensiveAssetsSummary showTabs={false} />
             </div>
           </TabsContent>
         </Tabs>
