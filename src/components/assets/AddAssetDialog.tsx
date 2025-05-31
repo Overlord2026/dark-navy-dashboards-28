@@ -19,6 +19,7 @@ export const AddAssetDialog: React.FC<AddAssetDialogProps> = ({ open, onOpenChan
   const [assetType, setAssetType] = useState("");
   const [assetOwner, setAssetOwner] = useState("");
   const [assetValue, setAssetValue] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   
   const resetForm = () => {
     setAssetName("");
@@ -34,6 +35,8 @@ export const AddAssetDialog: React.FC<AddAssetDialogProps> = ({ open, onOpenChan
       return;
     }
     
+    setIsSubmitting(true);
+    
     const result = await addAsset({
       name: assetName,
       type: assetType,
@@ -45,6 +48,8 @@ export const AddAssetDialog: React.FC<AddAssetDialogProps> = ({ open, onOpenChan
       resetForm();
       onOpenChange(false);
     }
+    
+    setIsSubmitting(false);
   };
   
   return (
@@ -63,12 +68,13 @@ export const AddAssetDialog: React.FC<AddAssetDialogProps> = ({ open, onOpenChan
               onChange={(e) => setAssetName(e.target.value)}
               placeholder="e.g., Family Car, Summer Home, etc."
               required
+              disabled={isSubmitting}
             />
           </div>
           
           <div>
             <Label htmlFor="assetType">Asset Type</Label>
-            <Select value={assetType} onValueChange={setAssetType} required>
+            <Select value={assetType} onValueChange={setAssetType} required disabled={isSubmitting}>
               <SelectTrigger>
                 <SelectValue placeholder="Select asset type" />
               </SelectTrigger>
@@ -97,6 +103,7 @@ export const AddAssetDialog: React.FC<AddAssetDialogProps> = ({ open, onOpenChan
               onChange={(e) => setAssetOwner(e.target.value)}
               placeholder="e.g., John Smith, Family Trust, etc."
               required
+              disabled={isSubmitting}
             />
           </div>
           
@@ -109,6 +116,7 @@ export const AddAssetDialog: React.FC<AddAssetDialogProps> = ({ open, onOpenChan
               onChange={(e) => setAssetValue(e.target.value)}
               placeholder="e.g., 25000"
               required
+              disabled={isSubmitting}
             />
           </div>
           
@@ -120,10 +128,13 @@ export const AddAssetDialog: React.FC<AddAssetDialogProps> = ({ open, onOpenChan
                 resetForm();
                 onOpenChange(false);
               }}
+              disabled={isSubmitting}
             >
               Cancel
             </Button>
-            <Button type="submit">Add Asset</Button>
+            <Button type="submit" disabled={isSubmitting}>
+              {isSubmitting ? "Adding..." : "Add Asset"}
+            </Button>
           </div>
         </form>
       </DialogContent>

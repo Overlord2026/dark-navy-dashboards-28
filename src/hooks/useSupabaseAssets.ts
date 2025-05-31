@@ -81,6 +81,9 @@ export const useSupabaseAssets = () => {
         return null;
       }
 
+      // Immediately update local state for instant UI feedback
+      setAssets(prevAssets => [data, ...prevAssets]);
+      
       toast.success('Asset added successfully');
       return data;
     } catch (error) {
@@ -111,6 +114,11 @@ export const useSupabaseAssets = () => {
         return null;
       }
 
+      // Immediately update local state for instant UI feedback
+      setAssets(prevAssets => 
+        prevAssets.map(asset => asset.id === id ? data : asset)
+      );
+
       toast.success('Asset updated successfully');
       return data;
     } catch (error) {
@@ -138,6 +146,9 @@ export const useSupabaseAssets = () => {
         toast.error('Failed to delete asset');
         return false;
       }
+
+      // Immediately update local state for instant UI feedback
+      setAssets(prevAssets => prevAssets.filter(asset => asset.id !== id));
 
       toast.success('Asset deleted successfully');
       return true;
@@ -187,8 +198,28 @@ export const useSupabaseAssets = () => {
           },
           (payload) => {
             console.log('Real-time asset change:', payload);
-            // Refetch assets when any change occurs
-            fetchAssets();
+            
+            // Handle different types of real-time events
+            if (payload.eventType === 'INSERT') {
+              setAssets(prevAssets => {
+                // Check if asset already exists to avoid duplicates
+                const existingAsset = prevAssets.find(asset => asset.id === payload.new.id);
+                if (!existingAsset) {
+                  return [payload.new as SupabaseAsset, ...prevAssets];
+                }
+                return prevAssets;
+              });
+            } else if (payload.eventType === 'UPDATE') {
+              setAssets(prevAssets => 
+                prevAssets.map(asset => 
+                  asset.id === payload.new.id ? payload.new as SupabaseAsset : asset
+                )
+              );
+            } else if (payload.eventType === 'DELETE') {
+              setAssets(prevAssets => 
+                prevAssets.filter(asset => asset.id !== payload.old.id)
+              );
+            }
           }
         )
         .subscribe();
