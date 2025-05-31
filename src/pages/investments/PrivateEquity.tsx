@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -127,25 +128,6 @@ const PrivateEquity = () => {
                   <OfferingCard key={offering.id} offering={offering} />
                 ))}
               </div>
-              
-              <Card className="mt-8">
-                <CardHeader>
-                  <CardTitle>Why Private Equity?</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground mb-4">
-                    Private equity investments offer the potential for attractive returns through direct ownership 
-                    in high-quality companies. Our platform provides access to top-tier fund managers and 
-                    exclusive investment opportunities typically reserved for institutional investors.
-                  </p>
-                  <ul className="list-disc list-inside space-y-2 text-sm text-muted-foreground">
-                    <li>Diversification beyond public markets</li>
-                    <li>Access to experienced fund managers</li>
-                    <li>Potential for enhanced returns over time</li>
-                    <li>Direct impact on company operations and strategy</li>
-                  </ul>
-                </CardContent>
-              </Card>
             </div>
           </TabsContent>
         </Tabs>
