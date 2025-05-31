@@ -123,7 +123,7 @@ const PrivateEquity = () => {
                 Investments in private companies or buyouts of public companies resulting in a delisting of public equity
               </p>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
+              <div className="grid grid-cols-1 gap-6 mb-8">
                 {privateEquityOfferings.map((offering) => (
                   <OfferingCard key={offering.id} offering={offering} />
                 ))}
