@@ -75,15 +75,11 @@ export const LiabilitiesList = () => {
   return (
     <div className="space-y-6">
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <CardHeader>
           <CardTitle className="text-lg font-semibold flex items-center gap-2">
             <CreditCard className="h-5 w-5 text-red-600" />
             Liabilities ({liabilities.length})
           </CardTitle>
-          <Button onClick={() => setIsAddDialogOpen(true)} size="sm">
-            <PlusCircle className="mr-2 h-4 w-4" />
-            Add Liability
-          </Button>
         </CardHeader>
         <CardContent>
           <div className="mb-4">
