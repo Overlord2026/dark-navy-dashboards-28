@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { SupabaseAssetList } from "@/components/assets/SupabaseAssetList";
 import { AddAssetDialog } from "@/components/assets/AddAssetDialog";
+import { AddLiabilityDialog } from "@/components/liabilities/AddLiabilityDialog";
 import { SupabaseAssetsSummary } from "@/components/assets/SupabaseAssetsSummary";
 import { LiabilitiesList } from "@/components/liabilities/LiabilitiesList";
 import { ComprehensiveAssetsSummary } from "@/components/assets/ComprehensiveAssetsSummary";
@@ -27,6 +28,7 @@ export default function AllAssets() {
   const [mainTab, setMainTab] = useState("summary");
   const [assetFilter, setAssetFilter] = useState("assets");
   const [isAddAssetDialogOpen, setIsAddAssetDialogOpen] = useState(false);
+  const [isAddLiabilityDialogOpen, setIsAddLiabilityDialogOpen] = useState(false);
 
   const filterOptions = [
     { value: "assets", label: "All Assets" },
@@ -72,13 +74,21 @@ export default function AllAssets() {
           <div>
             <p className="text-muted-foreground">Comprehensive view of all your assets and liabilities</p>
           </div>
-          <Button
-            onClick={() => setIsAddAssetDialogOpen(true)}
-            className="mt-4 md:mt-0"
-          >
-            <PlusCircle className="mr-2 h-4 w-4" />
-            Add Asset
-          </Button>
+          <div className="flex gap-2 mt-4 md:mt-0">
+            <Button
+              onClick={() => setIsAddLiabilityDialogOpen(true)}
+              variant="outline"
+            >
+              <PlusCircle className="mr-2 h-4 w-4" />
+              Add Liability
+            </Button>
+            <Button
+              onClick={() => setIsAddAssetDialogOpen(true)}
+            >
+              <PlusCircle className="mr-2 h-4 w-4" />
+              Add Asset
+            </Button>
+          </div>
         </div>
         
         <Tabs value={mainTab} onValueChange={setMainTab} className="w-full">
@@ -147,6 +157,11 @@ export default function AllAssets() {
       <AddAssetDialog 
         open={isAddAssetDialogOpen} 
         onOpenChange={setIsAddAssetDialogOpen} 
+      />
+      
+      <AddLiabilityDialog 
+        open={isAddLiabilityDialogOpen} 
+        onOpenChange={setIsAddLiabilityDialogOpen} 
       />
     </ThreeColumnLayout>
   );
