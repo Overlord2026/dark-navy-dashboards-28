@@ -1,4 +1,5 @@
 
+
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { useSupabaseAssets } from "@/hooks/useSupabaseAssets";
@@ -30,6 +31,7 @@ export const NetWorthAnalysis: React.FC = () => {
 
   const totalAssets = getTotalValue();
   const totalLiabilities = getTotalLiabilities();
+  const netWorth = totalAssets - totalLiabilities;
   
   // Calculate asset breakdown by type
   const getAssetValueByType = (type: string) => {
@@ -140,8 +142,19 @@ export const NetWorthAnalysis: React.FC = () => {
               )}
             </div>
           </div>
+          
+          {/* Net Worth Summary */}
+          <div className="mt-8 pt-6 border-t border-border">
+            <div className="flex justify-between items-center">
+              <span className="text-xl font-bold">Net Worth</span>
+              <span className={`text-xl font-bold ${netWorth >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                {formatCurrency(netWorth)}
+              </span>
+            </div>
+          </div>
         </CardContent>
       </Card>
     </div>
   );
 };
+
