@@ -9,51 +9,51 @@ import { OfferingCard } from "@/components/investments/OfferingCard";
 import { Badge } from "@/components/ui/badge";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 
-const RealAssets = () => {
+const HedgeFunds = () => {
   const navigate = useNavigate();
   
-  const realAssetsOfferings = [
+  const hedgeFundOfferings = [
     {
       id: 1,
-      name: "Commercial Real Estate Fund V",
-      description: "Diversified portfolio of commercial properties including office, retail, and industrial assets.",
-      firm: "Real Estate Capital Partners",
-      minimumInvestment: "$500,000",
-      performance: "+12.4%",
-      lockupPeriod: "5-7 years",
-      tags: ["Commercial", "Real Estate", "Income"],
+      name: "Global Macro Opportunities Fund",
+      description: "Systematic global macro strategy utilizing quantitative models and fundamental analysis across markets.",
+      firm: "Macro Capital Management",
+      minimumInvestment: "$1,000,000",
+      performance: "+16.8%",
+      lockupPeriod: "1-2 years",
+      tags: ["Global Macro", "Systematic", "Multi-Asset"],
       featured: true
     },
     {
       id: 2,
-      name: "Infrastructure Opportunities Fund",
-      description: "Investments in essential infrastructure assets including utilities, transportation, and energy.",
-      firm: "Infrastructure Investment Group",
-      minimumInvestment: "$1,000,000",
-      performance: "+9.8%",
-      lockupPeriod: "7-10 years",
-      tags: ["Infrastructure", "Utilities", "ESG"]
+      name: "Long/Short Equity Fund",
+      description: "Market-neutral equity strategy with long positions in undervalued stocks and short positions in overvalued securities.",
+      firm: "Equity Alpha Partners",
+      minimumInvestment: "$500,000",
+      performance: "+12.3%",
+      lockupPeriod: "6-12 months",
+      tags: ["Long/Short", "Market Neutral", "Equity"]
     },
     {
       id: 3,
-      name: "Natural Resources Fund III",
-      description: "Exposure to timberland, agricultural land, and natural resource extraction investments.",
-      firm: "Natural Capital Management",
+      name: "Event-Driven Strategies Fund",
+      description: "Focuses on corporate events including mergers, acquisitions, spin-offs, and special situations.",
+      firm: "Event Capital Group",
       minimumInvestment: "$250,000",
-      performance: "+8.6%",
-      lockupPeriod: "5-8 years",
-      tags: ["Timberland", "Agriculture", "Resources"],
+      performance: "+19.7%",
+      lockupPeriod: "1-3 years",
+      tags: ["Event Driven", "M&A", "Special Situations"],
       featured: true
     },
     {
       id: 4,
-      name: "Energy Transition Real Assets",
-      description: "Investments in renewable energy infrastructure and clean technology real assets.",
-      firm: "Green Energy Real Assets",
+      name: "Multi-Strategy Hedge Fund",
+      description: "Diversified approach combining multiple hedge fund strategies to optimize risk-adjusted returns.",
+      firm: "Multi-Strategy Capital",
       minimumInvestment: "$500,000",
-      performance: "+14.2%",
-      lockupPeriod: "6-9 years",
-      tags: ["Renewable Energy", "Clean Tech", "ESG"]
+      performance: "+14.5%",
+      lockupPeriod: "2-3 years",
+      tags: ["Multi-Strategy", "Diversified", "Risk Management"]
     }
   ];
   
@@ -97,14 +97,14 @@ const RealAssets = () => {
                 >
                   <ArrowLeft className="h-4 w-4" />
                 </Button>
-                <h2 className="text-2xl font-semibold">Real Assets</h2>
+                <h2 className="text-2xl font-semibold">Hedge Funds</h2>
               </div>
               <p className="text-muted-foreground text-base">
-                Tangible asset investments including real estate, infrastructure, and natural resources for portfolio diversification
+                Alternative investment strategies designed to generate alpha through sophisticated trading and risk management techniques
               </p>
               
               <div className="grid grid-cols-1 gap-6 mb-8">
-                {realAssetsOfferings.map((offering) => (
+                {hedgeFundOfferings.map((offering) => (
                   <OfferingCard key={offering.id} offering={offering} />
                 ))}
               </div>
@@ -116,4 +116,4 @@ const RealAssets = () => {
   );
 };
 
-export default RealAssets;
+export default HedgeFunds;

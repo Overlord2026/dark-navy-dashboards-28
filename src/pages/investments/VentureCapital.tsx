@@ -9,51 +9,51 @@ import { OfferingCard } from "@/components/investments/OfferingCard";
 import { Badge } from "@/components/ui/badge";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 
-const RealAssets = () => {
+const VentureCapital = () => {
   const navigate = useNavigate();
   
-  const realAssetsOfferings = [
+  const ventureCapitalOfferings = [
     {
       id: 1,
-      name: "Commercial Real Estate Fund V",
-      description: "Diversified portfolio of commercial properties including office, retail, and industrial assets.",
-      firm: "Real Estate Capital Partners",
+      name: "Early Stage Technology Fund IV",
+      description: "Invests in seed and Series A technology companies with disruptive potential and strong founding teams.",
+      firm: "Early Stage Ventures",
       minimumInvestment: "$500,000",
-      performance: "+12.4%",
-      lockupPeriod: "5-7 years",
-      tags: ["Commercial", "Real Estate", "Income"],
+      performance: "+32.8%",
+      lockupPeriod: "7-10 years",
+      tags: ["Early Stage", "Technology", "Seed"],
       featured: true
     },
     {
       id: 2,
-      name: "Infrastructure Opportunities Fund",
-      description: "Investments in essential infrastructure assets including utilities, transportation, and energy.",
-      firm: "Infrastructure Investment Group",
-      minimumInvestment: "$1,000,000",
-      performance: "+9.8%",
-      lockupPeriod: "7-10 years",
-      tags: ["Infrastructure", "Utilities", "ESG"]
+      name: "Healthcare Innovation Fund",
+      description: "Focuses on breakthrough healthcare technologies, biotech, and medical device innovations.",
+      firm: "HealthTech Ventures",
+      minimumInvestment: "$250,000",
+      performance: "+28.4%",
+      lockupPeriod: "8-12 years",
+      tags: ["Healthcare", "Biotech", "Innovation"]
     },
     {
       id: 3,
-      name: "Natural Resources Fund III",
-      description: "Exposure to timberland, agricultural land, and natural resource extraction investments.",
-      firm: "Natural Capital Management",
-      minimumInvestment: "$250,000",
-      performance: "+8.6%",
-      lockupPeriod: "5-8 years",
-      tags: ["Timberland", "Agriculture", "Resources"],
+      name: "Fintech Growth Capital Fund",
+      description: "Targets late-stage fintech companies with proven business models and scalable technology platforms.",
+      firm: "Fintech Growth Partners",
+      minimumInvestment: "$1,000,000",
+      performance: "+24.6%",
+      lockupPeriod: "5-7 years",
+      tags: ["Fintech", "Growth Stage", "B2B"],
       featured: true
     },
     {
       id: 4,
-      name: "Energy Transition Real Assets",
-      description: "Investments in renewable energy infrastructure and clean technology real assets.",
-      firm: "Green Energy Real Assets",
+      name: "Clean Energy Ventures Fund",
+      description: "Invests in early-stage companies developing clean energy solutions and sustainability technologies.",
+      firm: "Clean Energy VC",
       minimumInvestment: "$500,000",
-      performance: "+14.2%",
-      lockupPeriod: "6-9 years",
-      tags: ["Renewable Energy", "Clean Tech", "ESG"]
+      performance: "+36.2%",
+      lockupPeriod: "8-10 years",
+      tags: ["Clean Energy", "ESG", "Deep Tech"]
     }
   ];
   
@@ -97,14 +97,14 @@ const RealAssets = () => {
                 >
                   <ArrowLeft className="h-4 w-4" />
                 </Button>
-                <h2 className="text-2xl font-semibold">Real Assets</h2>
+                <h2 className="text-2xl font-semibold">Venture Capital</h2>
               </div>
               <p className="text-muted-foreground text-base">
-                Tangible asset investments including real estate, infrastructure, and natural resources for portfolio diversification
+                Investments in early-stage and growth companies with high potential for innovation and market disruption
               </p>
               
               <div className="grid grid-cols-1 gap-6 mb-8">
-                {realAssetsOfferings.map((offering) => (
+                {ventureCapitalOfferings.map((offering) => (
                   <OfferingCard key={offering.id} offering={offering} />
                 ))}
               </div>
@@ -116,4 +116,4 @@ const RealAssets = () => {
   );
 };
 
-export default RealAssets;
+export default VentureCapital;

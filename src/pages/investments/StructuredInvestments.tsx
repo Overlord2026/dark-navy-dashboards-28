@@ -9,51 +9,51 @@ import { OfferingCard } from "@/components/investments/OfferingCard";
 import { Badge } from "@/components/ui/badge";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 
-const RealAssets = () => {
+const StructuredInvestments = () => {
   const navigate = useNavigate();
   
-  const realAssetsOfferings = [
+  const structuredInvestmentsOfferings = [
     {
       id: 1,
-      name: "Commercial Real Estate Fund V",
-      description: "Diversified portfolio of commercial properties including office, retail, and industrial assets.",
-      firm: "Real Estate Capital Partners",
-      minimumInvestment: "$500,000",
-      performance: "+12.4%",
-      lockupPeriod: "5-7 years",
-      tags: ["Commercial", "Real Estate", "Income"],
+      name: "Market-Linked CD Portfolio",
+      description: "Principal-protected certificates of deposit linked to equity market performance with upside potential.",
+      firm: "Structured Products Capital",
+      minimumInvestment: "$100,000",
+      performance: "+8.4%",
+      lockupPeriod: "3-5 years",
+      tags: ["Principal Protected", "Market Linked", "CDs"],
       featured: true
     },
     {
       id: 2,
-      name: "Infrastructure Opportunities Fund",
-      description: "Investments in essential infrastructure assets including utilities, transportation, and energy.",
-      firm: "Infrastructure Investment Group",
-      minimumInvestment: "$1,000,000",
-      performance: "+9.8%",
-      lockupPeriod: "7-10 years",
-      tags: ["Infrastructure", "Utilities", "ESG"]
+      name: "Barrier Reverse Convertible Notes",
+      description: "Enhanced yield notes with barrier protection, offering higher income potential with defined risk parameters.",
+      firm: "Fixed Income Innovations",
+      minimumInvestment: "$250,000",
+      performance: "+12.6%",
+      lockupPeriod: "1-3 years",
+      tags: ["Enhanced Yield", "Barrier Protection", "Notes"]
     },
     {
       id: 3,
-      name: "Natural Resources Fund III",
-      description: "Exposure to timberland, agricultural land, and natural resource extraction investments.",
-      firm: "Natural Capital Management",
-      minimumInvestment: "$250,000",
-      performance: "+8.6%",
-      lockupPeriod: "5-8 years",
-      tags: ["Timberland", "Agriculture", "Resources"],
+      name: "Multi-Asset Autocallable Securities",
+      description: "Structured products with automatic early redemption features linked to a basket of underlying assets.",
+      firm: "Multi-Asset Structured Solutions",
+      minimumInvestment: "$500,000",
+      performance: "+10.8%",
+      lockupPeriod: "2-6 years",
+      tags: ["Autocallable", "Multi-Asset", "Structured"],
       featured: true
     },
     {
       id: 4,
-      name: "Energy Transition Real Assets",
-      description: "Investments in renewable energy infrastructure and clean technology real assets.",
-      firm: "Green Energy Real Assets",
-      minimumInvestment: "$500,000",
-      performance: "+14.2%",
-      lockupPeriod: "6-9 years",
-      tags: ["Renewable Energy", "Clean Tech", "ESG"]
+      name: "Commodity-Linked Structured Notes",
+      description: "Exposure to commodity markets through structured notes with built-in risk management features.",
+      firm: "Commodity Structured Partners",
+      minimumInvestment: "$250,000",
+      performance: "+14.3%",
+      lockupPeriod: "2-4 years",
+      tags: ["Commodities", "Structured Notes", "Risk Management"]
     }
   ];
   
@@ -97,14 +97,14 @@ const RealAssets = () => {
                 >
                   <ArrowLeft className="h-4 w-4" />
                 </Button>
-                <h2 className="text-2xl font-semibold">Real Assets</h2>
+                <h2 className="text-2xl font-semibold">Structured Investments</h2>
               </div>
               <p className="text-muted-foreground text-base">
-                Tangible asset investments including real estate, infrastructure, and natural resources for portfolio diversification
+                Sophisticated financial instruments combining traditional securities with derivatives to create customized risk-return profiles
               </p>
               
               <div className="grid grid-cols-1 gap-6 mb-8">
-                {realAssetsOfferings.map((offering) => (
+                {structuredInvestmentsOfferings.map((offering) => (
                   <OfferingCard key={offering.id} offering={offering} />
                 ))}
               </div>
@@ -116,4 +116,4 @@ const RealAssets = () => {
   );
 };
 
-export default RealAssets;
+export default StructuredInvestments;

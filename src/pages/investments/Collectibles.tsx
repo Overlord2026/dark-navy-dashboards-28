@@ -9,51 +9,51 @@ import { OfferingCard } from "@/components/investments/OfferingCard";
 import { Badge } from "@/components/ui/badge";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 
-const RealAssets = () => {
+const Collectibles = () => {
   const navigate = useNavigate();
   
-  const realAssetsOfferings = [
+  const collectiblesOfferings = [
     {
       id: 1,
-      name: "Commercial Real Estate Fund V",
-      description: "Diversified portfolio of commercial properties including office, retail, and industrial assets.",
-      firm: "Real Estate Capital Partners",
-      minimumInvestment: "$500,000",
-      performance: "+12.4%",
-      lockupPeriod: "5-7 years",
-      tags: ["Commercial", "Real Estate", "Income"],
+      name: "Fine Art Investment Fund",
+      description: "Curated portfolio of museum-quality artworks from established and emerging artists with strong market demand.",
+      firm: "Art Capital Partners",
+      minimumInvestment: "$250,000",
+      performance: "+13.7%",
+      lockupPeriod: "3-5 years",
+      tags: ["Fine Art", "Museum Quality", "Blue Chip"],
       featured: true
     },
     {
       id: 2,
-      name: "Infrastructure Opportunities Fund",
-      description: "Investments in essential infrastructure assets including utilities, transportation, and energy.",
-      firm: "Infrastructure Investment Group",
-      minimumInvestment: "$1,000,000",
-      performance: "+9.8%",
-      lockupPeriod: "7-10 years",
-      tags: ["Infrastructure", "Utilities", "ESG"]
+      name: "Vintage Wine Collection Fund",
+      description: "Investment in rare and collectible wines from premier vineyards with proven appreciation potential.",
+      firm: "Wine Investment Group",
+      minimumInvestment: "$100,000",
+      performance: "+11.2%",
+      lockupPeriod: "5-10 years",
+      tags: ["Wine", "Collectibles", "Vintage"]
     },
     {
       id: 3,
-      name: "Natural Resources Fund III",
-      description: "Exposure to timberland, agricultural land, and natural resource extraction investments.",
-      firm: "Natural Capital Management",
-      minimumInvestment: "$250,000",
-      performance: "+8.6%",
-      lockupPeriod: "5-8 years",
-      tags: ["Timberland", "Agriculture", "Resources"],
+      name: "Classic Automobiles Fund",
+      description: "Portfolio of classic and vintage automobiles with strong collector demand and historical significance.",
+      firm: "Classic Car Capital",
+      minimumInvestment: "$500,000",
+      performance: "+18.9%",
+      lockupPeriod: "3-7 years",
+      tags: ["Classic Cars", "Vintage", "Collectibles"],
       featured: true
     },
     {
       id: 4,
-      name: "Energy Transition Real Assets",
-      description: "Investments in renewable energy infrastructure and clean technology real assets.",
-      firm: "Green Energy Real Assets",
-      minimumInvestment: "$500,000",
-      performance: "+14.2%",
-      lockupPeriod: "6-9 years",
-      tags: ["Renewable Energy", "Clean Tech", "ESG"]
+      name: "Luxury Collectibles Fund",
+      description: "Diversified investments in luxury watches, jewelry, rare books, and other high-value collectibles.",
+      firm: "Luxury Assets Management",
+      minimumInvestment: "$250,000",
+      performance: "+15.4%",
+      lockupPeriod: "2-5 years",
+      tags: ["Luxury", "Watches", "Rare Items"]
     }
   ];
   
@@ -97,14 +97,14 @@ const RealAssets = () => {
                 >
                   <ArrowLeft className="h-4 w-4" />
                 </Button>
-                <h2 className="text-2xl font-semibold">Real Assets</h2>
+                <h2 className="text-2xl font-semibold">Collectibles</h2>
               </div>
               <p className="text-muted-foreground text-base">
-                Tangible asset investments including real estate, infrastructure, and natural resources for portfolio diversification
+                Alternative investments in tangible collectible assets including art, wine, classic cars, and luxury items
               </p>
               
               <div className="grid grid-cols-1 gap-6 mb-8">
-                {realAssetsOfferings.map((offering) => (
+                {collectiblesOfferings.map((offering) => (
                   <OfferingCard key={offering.id} offering={offering} />
                 ))}
               </div>
@@ -116,4 +116,4 @@ const RealAssets = () => {
   );
 };
 
-export default RealAssets;
+export default Collectibles;
