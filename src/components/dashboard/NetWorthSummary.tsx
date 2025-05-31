@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Progress } from "@/components/ui/progress";
 import { Wallet, Maximize2, Home, User, Car } from "lucide-react";
@@ -66,7 +65,7 @@ export const NetWorthSummary = () => {
               "mr-3 h-7 w-7",
               isLightTheme ? "text-blue-600" : "text-blue-400"
             )} />
-            Net Worth Summary
+            Dashboard
           </h2>
           <div className="flex items-center gap-3">
             <Button 
@@ -259,7 +258,7 @@ export const NetWorthSummary = () => {
           ? "bg-card border-border" 
           : "bg-[#121a2c]/80 border-gray-800"
       )}>
-        <h2 className="text-3xl font-semibold">Net Worth Summary</h2>
+        <h2 className="text-3xl font-semibold">Dashboard</h2>
         <div className={cn(
           "p-6 text-center",
           isLightTheme ? "text-red-600" : "text-red-400"
