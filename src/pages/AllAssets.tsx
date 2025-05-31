@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { useAuth } from "@/context/AuthContext";
@@ -40,7 +39,6 @@ export default function AllAssets() {
       <div className="container mx-auto p-4 space-y-6">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
           <div>
-            <h1 className="text-2xl font-bold mb-1">All Assets</h1>
             <p className="text-muted-foreground">Comprehensive view of all your assets</p>
           </div>
 
