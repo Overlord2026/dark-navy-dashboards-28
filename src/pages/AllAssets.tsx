@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { useAuth } from "@/context/AuthContext";
@@ -12,11 +13,12 @@ import { PlusCircle } from "lucide-react";
 import { SupabaseAssetList } from "@/components/assets/SupabaseAssetList";
 import { AddAssetDialog } from "@/components/assets/AddAssetDialog";
 import { SupabaseAssetsSummary } from "@/components/assets/SupabaseAssetsSummary";
+import { LiabilitiesList } from "@/components/liabilities/LiabilitiesList";
 import { Card, CardContent } from "@/components/ui/card";
 
 export default function AllAssets() {
   const { isAuthenticated } = useAuth();
-  const [activeTab, setActiveTab] = useState("all");
+  const [activeTab, setActiveTab] = useState("assets");
   const [isAddAssetDialogOpen, setIsAddAssetDialogOpen] = useState(false);
 
   if (!isAuthenticated) {
@@ -39,22 +41,26 @@ export default function AllAssets() {
       <div className="container mx-auto p-4 space-y-6">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
           <div>
-            <p className="text-muted-foreground">Comprehensive view of all your assets</p>
+            <p className="text-muted-foreground">Comprehensive view of all your assets and liabilities</p>
           </div>
 
-          <Button
-            onClick={() => setIsAddAssetDialogOpen(true)}
-            className="mt-4 md:mt-0"
-          >
-            <PlusCircle className="mr-2 h-4 w-4" />
-            Add Asset
-          </Button>
+          {activeTab === "assets" && (
+            <Button
+              onClick={() => setIsAddAssetDialogOpen(true)}
+              className="mt-4 md:mt-0"
+            >
+              <PlusCircle className="mr-2 h-4 w-4" />
+              Add Asset
+            </Button>
+          )}
         </div>
         
         <SupabaseAssetsSummary />
         
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid grid-cols-1 md:grid-cols-8 w-full mb-6 overflow-auto">
+          <TabsList className="grid grid-cols-2 md:grid-cols-10 w-full mb-6 overflow-auto">
+            <TabsTrigger value="assets" className="col-span-1">Assets</TabsTrigger>
+            <TabsTrigger value="liabilities" className="col-span-1">Liabilities</TabsTrigger>
             <TabsTrigger value="all">All</TabsTrigger>
             <TabsTrigger value="property">Real Estate</TabsTrigger>
             <TabsTrigger value="vehicles">Vehicles</TabsTrigger>
@@ -65,6 +71,14 @@ export default function AllAssets() {
             <TabsTrigger value="digital">Digital</TabsTrigger>
             <TabsTrigger value="other">Other</TabsTrigger>
           </TabsList>
+          
+          <TabsContent value="assets">
+            <SupabaseAssetList filter="all" />
+          </TabsContent>
+
+          <TabsContent value="liabilities">
+            <LiabilitiesList />
+          </TabsContent>
           
           <TabsContent value="all">
             <SupabaseAssetList filter="all" />

@@ -31,6 +31,7 @@ export const useSupabaseLiabilities = () => {
       const { data, error } = await supabase
         .from('user_liabilities')
         .select('*')
+        .eq('user_id', user.id)
         .order('created_at', { ascending: false });
 
       if (error) {
@@ -55,6 +56,30 @@ export const useSupabaseLiabilities = () => {
 
   useEffect(() => {
     fetchLiabilities();
+
+    // Set up real-time subscription for immediate updates
+    if (user) {
+      const channel = supabase
+        .channel('liability-changes')
+        .on(
+          'postgres_changes',
+          {
+            event: '*',
+            schema: 'public',
+            table: 'user_liabilities',
+            filter: `user_id=eq.${user.id}`
+          },
+          () => {
+            // Refetch liabilities when any change occurs
+            fetchLiabilities();
+          }
+        )
+        .subscribe();
+
+      return () => {
+        supabase.removeChannel(channel);
+      };
+    }
   }, [user]);
 
   return {
