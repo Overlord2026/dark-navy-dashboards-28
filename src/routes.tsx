@@ -1,3 +1,4 @@
+
 import React from "react";
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import Dashboard from "@/pages/Dashboard";
@@ -27,6 +28,10 @@ import PrivateEquity from "@/pages/investments/PrivateEquity";
 import PrivateDebt from "@/pages/investments/PrivateDebt";
 import DigitalAssets from "@/pages/investments/DigitalAssets";
 import RealAssets from "@/pages/investments/RealAssets";
+import HedgeFunds from "@/pages/investments/HedgeFunds";
+import VentureCapital from "@/pages/investments/VentureCapital";
+import Collectibles from "@/pages/investments/Collectibles";
+import StructuredInvestments from "@/pages/investments/StructuredInvestments";
 import ModelPortfolios from "@/pages/investments/ModelPortfolios";
 import StockScreener from "@/pages/investments/StockScreener";
 import IPProtection from "@/pages/IPProtection";
@@ -165,12 +170,28 @@ const routes = createBrowserRouter([
     element: <ProtectedRoute><PrivateDebt /></ProtectedRoute>
   },
   {
+    path: "/client-investments/alternative/hedge-fund",
+    element: <ProtectedRoute><HedgeFunds /></ProtectedRoute>
+  },
+  {
+    path: "/client-investments/alternative/venture-capital",
+    element: <ProtectedRoute><VentureCapital /></ProtectedRoute>
+  },
+  {
+    path: "/client-investments/alternative/collectibles",
+    element: <ProtectedRoute><Collectibles /></ProtectedRoute>
+  },
+  {
     path: "/client-investments/alternative/digital-assets",
     element: <ProtectedRoute><DigitalAssets /></ProtectedRoute>
   },
   {
     path: "/client-investments/alternative/real-assets",
     element: <ProtectedRoute><RealAssets /></ProtectedRoute>
+  },
+  {
+    path: "/client-investments/alternative/structured-investments",
+    element: <ProtectedRoute><StructuredInvestments /></ProtectedRoute>
   },
   {
     path: "/client-investments/model-portfolios",
