@@ -1,11 +1,11 @@
 
+
 import React, { useState } from "react";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { BarChart2, TrendingUp, Shield, ChevronRight, ExternalLink, Plus, Filter, Share } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { BarChart2, Filter, Share, Plus } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { PortfolioFilterDialog } from "./PortfolioFilterDialog";
 import { GroupManagementDialog } from "./GroupManagementDialog";
@@ -119,11 +119,6 @@ export const IntelligentAllocationTab = () => {
     setCreateDialogOpen(true);
   };
 
-  const handleCreateModelOfModels = () => {
-    toast.success("Starting new Model of Models creation");
-    // This would open the Model of Models creation wizard in a real implementation
-  };
-
   const handleModelRowClick = (modelId: string) => {
     if (selectedModels.includes(modelId)) {
       setSelectedModels(selectedModels.filter(id => id !== modelId));
@@ -159,172 +154,79 @@ export const IntelligentAllocationTab = () => {
         </div>
       </div>
 
-      <Tabs defaultValue="models" className="w-full">
-        <TabsList className="mb-4">
-          <TabsTrigger value="models">Models</TabsTrigger>
-          <TabsTrigger value="sleeves">Sleeves</TabsTrigger>
-          <TabsTrigger value="model-of-models">Model of Models</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="models" className="space-y-6">
-          <div className="bg-card rounded-lg border shadow-md overflow-hidden">
-            <div className="grid grid-cols-12 gap-2 p-4 bg-muted/50 text-sm font-medium">
-              <div className="col-span-4">NAME</div>
-              <div className="col-span-1">TYPE</div>
-              <div className="col-span-1 text-center">TARGETS</div>
-              <div className="col-span-1">CREATED</div>
-              <div className="col-span-1">UPDATED</div>
-              <div className="col-span-2">BENCHMARK</div>
-              <div className="col-span-2">TAGS</div>
-            </div>
-            
-            {portfolioModels.map((model) => (
-              <div 
-                key={model.id} 
-                className={`grid grid-cols-12 gap-2 p-4 border-t items-center hover:bg-accent/10 transition-colors cursor-pointer ${selectedModels.includes(model.id) ? 'bg-primary/5' : ''}`}
-                onClick={() => handleModelRowClick(model.id)}
-              >
-                <div className="col-span-4 flex items-center gap-3">
-                  <div className="text-primary">
-                    <BarChart2 className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <div className="font-medium">{model.name}</div>
-                    <div className="text-sm text-muted-foreground">{model.manager}</div>
-                  </div>
-                </div>
-                <div className="col-span-1">
-                  <Badge 
-                    variant="outline" 
-                    className={`${model.type === 'Model' ? 'bg-blue-500/10 text-blue-500 border-blue-500/20' : 'bg-red-500/10 text-red-500 border-red-500/20'}`}
-                  >
-                    {model.type}
-                  </Badge>
-                </div>
-                <div className="col-span-1 flex justify-center">
-                  <div className="h-8 w-8 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs font-medium">
-                    {model.allocation}
-                  </div>
-                </div>
-                <div className="col-span-1 text-sm">
-                  <div>{model.createdDate}</div>
-                  <div className="text-muted-foreground">{model.updatedDate}</div>
-                </div>
-                <div className="col-span-1 text-sm">
-                  <div>{model.createdDate}</div>
-                  <div className="text-muted-foreground">{model.updatedDate}</div>
-                </div>
-                <div className="col-span-2 flex items-center gap-2">
-                  <div className="bg-gray-200 dark:bg-gray-700 h-6 w-6 rounded flex items-center justify-center text-xs">
-                    S&P
-                  </div>
-                  <span className="text-sm">{model.benchmark}</span>
-                </div>
-                <div className="col-span-2 flex gap-1 flex-wrap">
-                  {model.tags.map((tag, index) => (
-                    <Badge key={index} variant="outline" className="bg-primary/5">
-                      {tag}
-                    </Badge>
-                  ))}
-                </div>
-                <div className="col-span-1 flex justify-end">
-                  <Button 
-                    variant="ghost" 
-                    size="sm"
-                    onClick={(e) => handleViewPortfolioDetails(model.id, e)}
-                    className="opacity-70 hover:opacity-100"
-                  >
-                    Details
-                  </Button>
-                </div>
+      <div className="bg-card rounded-lg border shadow-md overflow-hidden">
+        <div className="grid grid-cols-12 gap-2 p-4 bg-muted/50 text-sm font-medium">
+          <div className="col-span-4">NAME</div>
+          <div className="col-span-1">TYPE</div>
+          <div className="col-span-1 text-center">TARGETS</div>
+          <div className="col-span-1">CREATED</div>
+          <div className="col-span-1">UPDATED</div>
+          <div className="col-span-2">BENCHMARK</div>
+          <div className="col-span-2">TAGS</div>
+        </div>
+        
+        {portfolioModels.map((model) => (
+          <div 
+            key={model.id} 
+            className={`grid grid-cols-12 gap-2 p-4 border-t items-center hover:bg-accent/10 transition-colors cursor-pointer ${selectedModels.includes(model.id) ? 'bg-primary/5' : ''}`}
+            onClick={() => handleModelRowClick(model.id)}
+          >
+            <div className="col-span-4 flex items-center gap-3">
+              <div className="text-primary">
+                <BarChart2 className="h-5 w-5" />
               </div>
-            ))}
-          </div>
-        </TabsContent>
-
-        <TabsContent value="sleeves" className="space-y-6">
-          <div className="bg-card rounded-lg border shadow-md overflow-hidden">
-            <div className="grid grid-cols-12 gap-2 p-4 bg-muted/50 text-sm font-medium">
-              <div className="col-span-4">NAME</div>
-              <div className="col-span-1">TYPE</div>
-              <div className="col-span-1 text-center">TARGETS</div>
-              <div className="col-span-1">CREATED</div>
-              <div className="col-span-1">UPDATED</div>
-              <div className="col-span-2">BENCHMARK</div>
-              <div className="col-span-2">TAGS</div>
-            </div>
-            
-            {portfolioModels.filter(model => model.type === "Sleeve").map((model) => (
-              <div 
-                key={model.id} 
-                className={`grid grid-cols-12 gap-2 p-4 border-t items-center hover:bg-accent/10 transition-colors cursor-pointer ${selectedModels.includes(model.id) ? 'bg-primary/5' : ''}`}
-                onClick={() => handleModelRowClick(model.id)}
-              >
-                <div className="col-span-4 flex items-center gap-3">
-                  <div className="text-primary">
-                    <BarChart2 className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <div className="font-medium">{model.name}</div>
-                    <div className="text-sm text-muted-foreground">{model.manager}</div>
-                  </div>
-                </div>
-                <div className="col-span-1">
-                  <Badge variant="outline" className="bg-red-500/10 text-red-500 border-red-500/20">
-                    {model.type}
-                  </Badge>
-                </div>
-                <div className="col-span-1 flex justify-center">
-                  <div className="h-8 w-8 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs font-medium">
-                    {model.allocation}
-                  </div>
-                </div>
-                <div className="col-span-1 text-sm">
-                  <div>{model.createdDate}</div>
-                  <div className="text-muted-foreground">{model.updatedDate}</div>
-                </div>
-                <div className="col-span-1 text-sm">
-                  <div>{model.createdDate}</div>
-                  <div className="text-muted-foreground">{model.updatedDate}</div>
-                </div>
-                <div className="col-span-2 flex items-center gap-2">
-                  <div className="bg-gray-200 dark:bg-gray-700 h-6 w-6 rounded flex items-center justify-center text-xs">
-                    S&P
-                  </div>
-                  <span className="text-sm">{model.benchmark}</span>
-                </div>
-                <div className="col-span-2 flex gap-1 flex-wrap">
-                  {model.tags.map((tag, index) => (
-                    <Badge key={index} variant="outline" className="bg-primary/5">
-                      {tag}
-                    </Badge>
-                  ))}
-                </div>
-                <div className="col-span-1 flex justify-end">
-                  <Button 
-                    variant="ghost" 
-                    size="sm"
-                    onClick={(e) => handleViewPortfolioDetails(model.id, e)}
-                    className="opacity-70 hover:opacity-100"
-                  >
-                    Details
-                  </Button>
-                </div>
+              <div>
+                <div className="font-medium">{model.name}</div>
+                <div className="text-sm text-muted-foreground">{model.manager}</div>
               </div>
-            ))}
+            </div>
+            <div className="col-span-1">
+              <Badge 
+                variant="outline" 
+                className={`${model.type === 'Model' ? 'bg-blue-500/10 text-blue-500 border-blue-500/20' : 'bg-red-500/10 text-red-500 border-red-500/20'}`}
+              >
+                {model.type}
+              </Badge>
+            </div>
+            <div className="col-span-1 flex justify-center">
+              <div className="h-8 w-8 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs font-medium">
+                {model.allocation}
+              </div>
+            </div>
+            <div className="col-span-1 text-sm">
+              <div>{model.createdDate}</div>
+              <div className="text-muted-foreground">{model.updatedDate}</div>
+            </div>
+            <div className="col-span-1 text-sm">
+              <div>{model.createdDate}</div>
+              <div className="text-muted-foreground">{model.updatedDate}</div>
+            </div>
+            <div className="col-span-2 flex items-center gap-2">
+              <div className="bg-gray-200 dark:bg-gray-700 h-6 w-6 rounded flex items-center justify-center text-xs">
+                S&P
+              </div>
+              <span className="text-sm">{model.benchmark}</span>
+            </div>
+            <div className="col-span-2 flex gap-1 flex-wrap">
+              {model.tags.map((tag, index) => (
+                <Badge key={index} variant="outline" className="bg-primary/5">
+                  {tag}
+                </Badge>
+              ))}
+            </div>
+            <div className="col-span-1 flex justify-end">
+              <Button 
+                variant="ghost" 
+                size="sm"
+                onClick={(e) => handleViewPortfolioDetails(model.id, e)}
+                className="opacity-70 hover:opacity-100"
+              >
+                Details
+              </Button>
+            </div>
           </div>
-        </TabsContent>
-
-        <TabsContent value="model-of-models" className="space-y-6">
-          <div className="p-8 text-center border rounded-md">
-            <h3 className="font-medium text-lg">No Model of Models Defined</h3>
-            <p className="text-muted-foreground mt-2">You haven't created any Model of Models yet</p>
-            <Button className="mt-4" onClick={handleCreateModelOfModels}>
-              <Plus className="mr-1 h-4 w-4" /> Create Model of Models
-            </Button>
-          </div>
-        </TabsContent>
-      </Tabs>
+        ))}
+      </div>
 
       <PortfolioFilterDialog 
         open={filterDialogOpen} 
@@ -343,3 +245,4 @@ export const IntelligentAllocationTab = () => {
     </div>
   );
 };
+
