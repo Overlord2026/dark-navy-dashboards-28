@@ -79,6 +79,15 @@ const PrivateEquity = () => {
   return (
     <ThreeColumnLayout activeMainItem="investments" title="Investment Management" secondaryMenuItems={[]}>
       <div className="space-y-8">
+        {/* Header Section */}
+        <div className="space-y-2">
+          <h1 className="text-3xl font-bold">Investment Management</h1>
+          <p className="text-muted-foreground text-base">
+            Explore a curated selection of investment options tailored to your financial goals. 
+            Our solutions range from model portfolios to exclusive alternative assets.
+          </p>
+        </div>
+
         <Tabs value="private-markets" className="w-full">
           <TabsList className="w-full mb-6">
             <TabsTrigger value="intelligent-alloc" className="flex-1" onClick={() => navigate("/client-investments?tab=intelligent-alloc")}>
