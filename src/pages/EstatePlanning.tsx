@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
@@ -100,7 +101,6 @@ export default function EstatePlanning() {
               <ArchiveIcon className="h-10 w-10 text-primary" />
             </div>
             <div className="space-y-2 flex-1 text-center sm:text-left">
-              <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Estate Planning Services</h1>
               <p className="text-muted-foreground">Secure your legacy and protect what matters most with our comprehensive estate planning solutions.</p>
             </div>
           </div>
