@@ -1,154 +1,100 @@
 
 import React from "react";
-import { Link } from "react-router-dom";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ExternalLink, DollarSign, Heart } from "lucide-react";
+import { DollarSign, TrendingUp, Clock, Building } from "lucide-react";
 import { InterestedButton } from "./InterestedButton";
 import { ScheduleMeetingDialog } from "./ScheduleMeetingDialog";
-import { OfferingDetailsTabs } from "./OfferingDetailsTabs";
-
-interface Strategy {
-  overview: string;
-  approach: string;
-  target: string;
-  stage: string;
-  geography: string;
-  sectors: string[];
-  expectedReturn: string;
-  benchmarks: string[];
-}
-
-interface Offering {
-  id: number;
-  name: string;
-  description: string;
-  minimumInvestment: string;
-  performance: string;
-  lockupPeriod: string;
-  lockUp: string;
-  firm: string;
-  tags: string[];
-  strategy: Strategy;
-  platform?: string;
-  category?: string;
-  investorQualification?: string;
-  liquidity?: string;
-  subscriptions?: string;
-}
 
 interface OfferingCardProps {
-  offering: Offering;
-  categoryId: string;
-  onLike?: (assetName: string) => void;
+  offering: {
+    id: number;
+    name: string;
+    description: string;
+    firm: string;
+    minimumInvestment: string;
+    performance: string;
+    lockupPeriod: string;
+    tags: string[];
+    featured?: boolean;
+  };
 }
 
-export const OfferingCard: React.FC<OfferingCardProps> = ({ offering, categoryId, onLike }) => {
-  const [isLiked, setIsLiked] = React.useState(false);
-  
-  const handleLike = () => {
-    setIsLiked(!isLiked);
-    if (!isLiked && onLike) {
-      onLike(offering.name);
-    }
-  };
-
+export const OfferingCard: React.FC<OfferingCardProps> = ({ offering }) => {
   return (
-    <Card key={offering.id} className="overflow-hidden hover:shadow-md transition-shadow duration-300 border-gray-200">
-      <CardHeader className="pb-2">
+    <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300 border-gray-200">
+      <CardHeader className="pb-4">
         <div className="flex items-start justify-between gap-2">
-          <div>
-            <CardTitle className="text-xl mb-1">{offering.name}</CardTitle>
-            <CardDescription className="line-clamp-2">{offering.description}</CardDescription>
+          <div className="flex-1">
+            <div className="flex items-center gap-2 mb-2">
+              <CardTitle className="text-lg">{offering.name}</CardTitle>
+              {offering.featured && (
+                <Badge variant="secondary" className="bg-yellow-100 text-yellow-800 border-yellow-300">
+                  Featured
+                </Badge>
+              )}
+            </div>
+            <p className="text-sm text-muted-foreground line-clamp-2">
+              {offering.description}
+            </p>
           </div>
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            className={`${isLiked ? 'text-red-500' : 'text-muted-foreground'}`}
-            onClick={handleLike}
-          >
-            <Heart className={`h-5 w-5 ${isLiked ? 'fill-red-500' : ''}`} />
-            <span className="sr-only">Like</span>
-          </Button>
         </div>
       </CardHeader>
+      
       <CardContent className="space-y-4">
         <div className="flex flex-wrap gap-1">
           {offering.tags.map((tag, i) => (
-            <Badge key={i} variant="outline" className={`text-xs ${i === 0 ? "bg-blue-50" : i === 1 ? "bg-green-50" : "bg-purple-50"}`}>{tag}</Badge>
+            <Badge 
+              key={i} 
+              variant="outline" 
+              className="text-xs"
+            >
+              {tag}
+            </Badge>
           ))}
         </div>
         
-        <div className="bg-blue-50 p-3 rounded-md flex items-center">
-          <DollarSign className="h-5 w-5 text-blue-500 mr-2" />
-          <div>
-            <p className="text-sm font-semibold text-blue-700">Minimum Investment</p>
-            <p className="font-bold text-blue-900">{offering.minimumInvestment}</p>
+        <div className="bg-blue-50 p-3 rounded-md">
+          <div className="flex items-center gap-2 mb-1">
+            <DollarSign className="h-4 w-4 text-blue-600" />
+            <span className="text-sm font-medium text-blue-700">Minimum Investment</span>
           </div>
+          <p className="text-lg font-bold text-blue-900">{offering.minimumInvestment}</p>
         </div>
         
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <p className="text-sm text-muted-foreground">Performance</p>
-            <p className="font-medium text-green-500">{offering.performance}</p>
-          </div>
-          <div>
-            <p className="text-sm text-muted-foreground">Lock-up Period</p>
-            <p className="font-medium">{offering.lockupPeriod}</p>
-          </div>
-          <div>
-            <p className="text-sm text-muted-foreground">Firm</p>
-            <p className="font-medium">{offering.firm}</p>
-          </div>
-          {offering.investorQualification && (
+        <div className="grid grid-cols-3 gap-4 text-sm">
+          <div className="flex items-center gap-1">
+            <TrendingUp className="h-4 w-4 text-green-600" />
             <div>
-              <p className="text-sm text-muted-foreground">Investor Type</p>
-              <p className="font-medium">{offering.investorQualification}</p>
+              <p className="text-muted-foreground">Performance</p>
+              <p className="font-medium text-green-600">{offering.performance}</p>
             </div>
-          )}
-          {offering.platform && (
+          </div>
+          
+          <div className="flex items-center gap-1">
+            <Clock className="h-4 w-4 text-orange-600" />
             <div>
-              <p className="text-sm text-muted-foreground">Platform</p>
-              <p className="font-medium">{offering.platform}</p>
+              <p className="text-muted-foreground">Lock-up</p>
+              <p className="font-medium">{offering.lockupPeriod}</p>
             </div>
-          )}
-          {offering.liquidity && (
+          </div>
+          
+          <div className="flex items-center gap-1">
+            <Building className="h-4 w-4 text-purple-600" />
             <div>
-              <p className="text-sm text-muted-foreground">Liquidity</p>
-              <p className="font-medium">{offering.liquidity}</p>
+              <p className="text-muted-foreground">Firm</p>
+              <p className="font-medium">{offering.firm}</p>
             </div>
-          )}
+          </div>
         </div>
 
-        <div className="flex gap-3 pt-3">
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button variant="outline" className="flex-1">View Details</Button>
-            </SheetTrigger>
-            <SheetContent className="w-full sm:max-w-xl overflow-y-auto">
-              <SheetHeader className="mb-6">
-                <div className="flex items-center gap-2">
-                  <Button variant="ghost" size="icon" asChild>
-                    <Link to={`/investments/alternative/${categoryId}`}>
-                      <ChevronLeft className="h-4 w-4" />
-                    </Link>
-                  </Button>
-                  <SheetTitle className="text-xl">{offering.name}</SheetTitle>
-                </div>
-                <SheetDescription>
-                  {offering.description}
-                </SheetDescription>
-              </SheetHeader>
-              
-              <OfferingDetailsTabs offering={offering} />
-            </SheetContent>
-          </Sheet>
-          <ScheduleMeetingDialog assetName={offering.name} />
-          <InterestedButton assetName={offering.name} onInterested={() => {
-            if (onLike) onLike(offering.name);
-          }} />
+        <div className="flex gap-2 pt-3 border-t">
+          <Button variant="outline" className="flex-1" size="sm">
+            View Details
+          </Button>
+          <InterestedButton assetName={offering.name} />
+          <ScheduleMeetingDialog assetName={offering.name} consultationType="investment" />
         </div>
       </CardContent>
     </Card>
