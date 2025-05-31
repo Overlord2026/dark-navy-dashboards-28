@@ -41,10 +41,10 @@ export const ScheduleMeetingDialog: React.FC<ScheduleMeetingDialogProps> = ({
     setIsLoading(true);
 
     try {
-      // Log the scheduling action
+      // Log the scheduling action using a valid audit event type
       auditLog.log(
         user.id,
-        "meeting_schedule",
+        "user_action",
         "success",
         {
           resourceType: "investment_meeting",

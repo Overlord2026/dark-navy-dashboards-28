@@ -19,7 +19,7 @@ interface OfferingCardProps {
 
 export const OfferingCard: React.FC<OfferingCardProps> = ({ offering }) => {
   // Support both new database format and legacy format
-  const offeringId = typeof offering.id === 'string' ? offering.id : offering.id?.toString() || '';
+  const offeringId = offering.id ? String(offering.id) : '';
   const minimumInvestment = offering.minimum_investment || offering.minimumInvestment || '';
   const lockupPeriod = offering.lockup_period || offering.lockupPeriod || '';
 

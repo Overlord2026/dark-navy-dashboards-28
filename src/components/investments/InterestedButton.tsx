@@ -6,7 +6,7 @@ import { useInvestmentData } from "@/hooks/useInvestmentData";
 import { useAuth } from "@/context/AuthContext";
 
 interface InterestedButtonProps {
-  offeringId: string;
+  offeringId?: string;
   assetName: string;
   onInterested?: () => void;
 }
@@ -19,11 +19,24 @@ export const InterestedButton: React.FC<InterestedButtonProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const { addUserInterest, removeUserInterest, isUserInterested } = useInvestmentData();
   const { user } = useAuth();
-  const isInterested = isUserInterested(offeringId);
+  
+  // If no offeringId is provided, this is a legacy usage (portfolio models, etc.)
+  const isInterested = offeringId ? isUserInterested(offeringId) : false;
   
   const handleInterested = async () => {
     if (!user) {
       toast.error("Please log in to express interest in investments");
+      return;
+    }
+
+    // If no offeringId, just show a general message
+    if (!offeringId) {
+      toast.success(`Interest noted for ${assetName}`, {
+        description: "Your advisor will be notified about your interest.",
+      });
+      if (onInterested) {
+        onInterested();
+      }
       return;
     }
 

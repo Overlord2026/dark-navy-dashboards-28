@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -5,38 +6,14 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Filter, Search } from "lucide-react";
 import { OfferingCard } from "./OfferingCard";
-
-interface Strategy {
-  overview: string;
-  approach: string;
-  target: string;
-  stage: string;
-  geography: string;
-  sectors: string[];
-  expectedReturn: string;
-  benchmarks: string[];
-}
-
-interface Offering {
-  id: number;
-  name: string;
-  description: string;
-  minimumInvestment: string;
-  performance: string;
-  lockupPeriod: string;
-  lockUp: string;
-  firm: string;
-  tags: string[];
-  strategy: Strategy;
-  platform?: string;
-  category?: string;
-  investorQualification?: string;
-  liquidity?: string;
-  subscriptions?: string;
-}
+import type { InvestmentOffering } from "@/hooks/useInvestmentData";
 
 interface OfferingsListProps {
-  offerings: Offering[];
+  offerings: (InvestmentOffering & {
+    id?: string | number;
+    minimumInvestment?: string;
+    lockupPeriod?: string;
+  })[];
   categoryId: string;
   isFullView?: boolean;
   onLike?: (assetName: string) => void;
@@ -57,17 +34,16 @@ export const OfferingsList: React.FC<OfferingsListProps> = ({
   const filteredOfferings = offerings.filter(offering => {
     const matchesSearch = searchTerm === "" || 
       offering.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      offering.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      offering.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       offering.firm.toLowerCase().includes(searchTerm.toLowerCase());
     
     const matchesType = filterType === "all" || 
-      (filterType === "accredited" && offering.investorQualification?.includes("Accredited")) ||
-      (filterType === "qualified" && offering.investorQualification?.includes("Qualified")) ||
-      (filterType === "non-accredited" && offering.investorQualification?.includes("Non-Accredited"));
+      (filterType === "featured" && offering.featured);
     
     let matchesMinimum = true;
     if (minimumFilter !== "all") {
-      const amount = parseInt(offering.minimumInvestment.replace(/[^0-9]/g, ''));
+      const minimumInvestment = offering.minimum_investment || offering.minimumInvestment || "0";
+      const amount = parseInt(minimumInvestment.replace(/[^0-9]/g, ''));
       if (minimumFilter === "under25k" && amount > 25000) matchesMinimum = false;
       if (minimumFilter === "25k-100k" && (amount < 25000 || amount > 100000)) matchesMinimum = false;
       if (minimumFilter === "100k-250k" && (amount < 100000 || amount > 250000)) matchesMinimum = false;
@@ -82,16 +58,24 @@ export const OfferingsList: React.FC<OfferingsListProps> = ({
   const sortedOfferings = [...filteredOfferings].sort((a, b) => {
     if (sortBy === "name-asc") return a.name.localeCompare(b.name);
     if (sortBy === "name-desc") return b.name.localeCompare(a.name);
-    if (sortBy === "min-asc") return parseInt(a.minimumInvestment.replace(/[^0-9]/g, '')) - parseInt(b.minimumInvestment.replace(/[^0-9]/g, ''));
-    if (sortBy === "min-desc") return parseInt(b.minimumInvestment.replace(/[^0-9]/g, '')) - parseInt(a.minimumInvestment.replace(/[^0-9]/g, ''));
+    if (sortBy === "min-asc") {
+      const aMin = a.minimum_investment || a.minimumInvestment || "0";
+      const bMin = b.minimum_investment || b.minimumInvestment || "0";
+      return parseInt(aMin.replace(/[^0-9]/g, '')) - parseInt(bMin.replace(/[^0-9]/g, ''));
+    }
+    if (sortBy === "min-desc") {
+      const aMin = a.minimum_investment || a.minimumInvestment || "0";
+      const bMin = b.minimum_investment || b.minimumInvestment || "0";
+      return parseInt(bMin.replace(/[^0-9]/g, '')) - parseInt(aMin.replace(/[^0-9]/g, ''));
+    }
     if (sortBy === "perf-desc") {
-      const aPerf = parseFloat(a.performance.replace('%', '').replace(/[^0-9.-]/g, ''));
-      const bPerf = parseFloat(b.performance.replace('%', '').replace(/[^0-9.-]/g, ''));
+      const aPerf = parseFloat((a.performance || "0").replace('%', '').replace(/[^0-9.-]/g, ''));
+      const bPerf = parseFloat((b.performance || "0").replace('%', '').replace(/[^0-9.-]/g, ''));
       return bPerf - aPerf;
     }
     if (sortBy === "perf-asc") {
-      const aPerf = parseFloat(a.performance.replace('%', '').replace(/[^0-9.-]/g, ''));
-      const bPerf = parseFloat(b.performance.replace('%', '').replace(/[^0-9.-]/g, ''));
+      const aPerf = parseFloat((a.performance || "0").replace('%', '').replace(/[^0-9.-]/g, ''));
+      const bPerf = parseFloat((b.performance || "0").replace('%', '').replace(/[^0-9.-]/g, ''));
       return aPerf - bPerf;
     }
     return 0;
@@ -147,16 +131,14 @@ export const OfferingsList: React.FC<OfferingsListProps> = ({
               </div>
             </div>
             <div className="w-full md:w-64">
-              <p className="text-sm font-medium mb-2">Investor Type</p>
+              <p className="text-sm font-medium mb-2">Type</p>
               <Select value={filterType} onValueChange={setFilterType}>
                 <SelectTrigger>
-                  <SelectValue placeholder="All Investor Types" />
+                  <SelectValue placeholder="All Types" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Investor Types</SelectItem>
-                  <SelectItem value="accredited">Accredited Investor</SelectItem>
-                  <SelectItem value="qualified">Qualified Purchaser/Client</SelectItem>
-                  <SelectItem value="non-accredited">Non-Accredited</SelectItem>
+                  <SelectItem value="all">All Types</SelectItem>
+                  <SelectItem value="featured">Featured Only</SelectItem>
                 </SelectContent>
               </Select>
             </div>

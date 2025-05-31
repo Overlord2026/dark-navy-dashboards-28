@@ -1,18 +1,18 @@
 
-import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { useNavigate } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
-import { OfferingCard } from "@/components/investments/OfferingCard";
-import { Badge } from "@/components/ui/badge";
+import React, { useState, useEffect } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { CategoryOverview } from "@/components/investments/CategoryOverview";
+import { OfferingsList } from "@/components/investments/OfferingsList";
+import { useInvestmentData } from "@/hooks/useInvestmentData";
+import { adaptLegacyOffering, type LegacyOffering } from "@/utils/investmentDataAdapter";
 
 const StructuredInvestments = () => {
-  const navigate = useNavigate();
-  
-  const structuredInvestmentsOfferings = [
+  const { offerings: dbOfferings, loading } = useInvestmentData();
+  const [selectedTab, setSelectedTab] = useState("overview");
+
+  // Legacy static data for fallback
+  const staticOfferings: LegacyOffering[] = [
     {
       id: 1,
       name: "Goldman Sachs Structured Notes",
@@ -43,7 +43,8 @@ const StructuredInvestments = () => {
       minimumInvestment: "$15,000",
       performance: "+9.8%",
       lockupPeriod: "2-3 years",
-      tags: ["Buffered", "Enhanced Upside", "Market-Linked"]
+      tags: ["Buffered", "Enhanced Upside", "Market-Linked"],
+      featured: false
     },
     {
       id: 4,
@@ -53,7 +54,8 @@ const StructuredInvestments = () => {
       minimumInvestment: "$10,000",
       performance: "+6.5%",
       lockupPeriod: "1-2 years",
-      tags: ["Autocallable", "Early Redemption", "Enhanced Yield"]
+      tags: ["Autocallable", "Early Redemption", "Enhanced Yield"],
+      featured: false
     },
     {
       id: 5,
@@ -67,59 +69,72 @@ const StructuredInvestments = () => {
       featured: true
     }
   ];
-  
-  return (
-    <ThreeColumnLayout activeMainItem="investments" title="Investment Management" secondaryMenuItems={[]}>
-      <div className="space-y-8">
-        {/* Header Section */}
-        <div className="space-y-2">
-          <p className="text-muted-foreground text-base">
-            Explore a curated selection of investment options tailored to your financial goals. 
-            Our solutions range from model portfolios to exclusive alternative assets.
-          </p>
-        </div>
 
-        <Tabs value="private-markets" className="w-full">
-          <TabsList className="w-full mb-6">
-            <TabsTrigger value="intelligent-alloc" className="flex-1" onClick={() => navigate("/client-investments?tab=intelligent-alloc")}>
-              Intelligent Alloc.
-            </TabsTrigger>
-            <TabsTrigger value="private-markets" className="flex-1">
-              Private Markets
-            </TabsTrigger>
-            <TabsTrigger value="bfo-models" className="flex-1 relative cursor-not-allowed opacity-60" disabled>
-              <span className="flex items-center gap-2">
-                BFO Models
-                <Badge variant="secondary" className="text-xs px-2 py-0.5 bg-yellow-500/20 text-yellow-600 border-yellow-500/30">
-                  Coming Soon
-                </Badge>
-              </span>
-            </TabsTrigger>
+  // Use database offerings if available, otherwise use adapted static data
+  const offerings = dbOfferings.length > 0 
+    ? dbOfferings.filter(offering => offering.category_id === 'structured-investments')
+    : staticOfferings.map(offering => adaptLegacyOffering(offering, 'structured-investments'));
+
+  const categoryData = {
+    title: "Structured Investments",
+    description: "Customized investment products with specific risk/return profiles using derivatives and financial engineering.",
+    totalOfferings: offerings.length,
+    featuredOfferings: offerings.filter(o => o.featured).length,
+    avgMinimum: "$15,000",
+    ytdPerformance: 7.5
+  };
+
+  return (
+    <ThreeColumnLayout activeMainItem="investments" title="Structured Investments">
+      <div className="space-y-8">
+        <CategoryOverview 
+          category="structured-investments"
+          data={categoryData}
+        />
+        
+        <Tabs value={selectedTab} onValueChange={setSelectedTab} className="w-full">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="overview">Overview</TabsTrigger>
+            <TabsTrigger value="offerings">All Offerings</TabsTrigger>
           </TabsList>
           
-          <TabsContent value="private-markets" className="space-y-8">
-            <div className="space-y-6">
-              <div className="mb-8 flex items-center gap-3">
-                <Button 
-                  variant="ghost" 
-                  size="sm"
-                  onClick={() => navigate("/client-investments?tab=private-markets")}
-                  className="flex items-center gap-2"
-                >
-                  <ArrowLeft className="h-4 w-4" />
-                </Button>
-                <h2 className="text-2xl font-semibold">Structured Investments</h2>
+          <TabsContent value="overview" className="space-y-6">
+            <div className="grid gap-6">
+              <div className="space-y-4">
+                <h2 className="text-xl font-semibold">About Structured Investments</h2>
+                <p className="text-muted-foreground leading-relaxed">
+                  Structured investments are sophisticated financial products that combine traditional securities 
+                  with derivatives to create customized risk-return profiles. These products are designed to meet 
+                  specific investment objectives, such as principal protection, enhanced yield, or leveraged exposure 
+                  to underlying assets.
+                </p>
               </div>
-              <p className="text-muted-foreground text-base">
-                Sophisticated financial instruments combining traditional securities with derivatives to create customized risk-return profiles
-              </p>
               
-              <div className="grid grid-cols-1 gap-6 mb-8">
-                {structuredInvestmentsOfferings.map((offering) => (
-                  <OfferingCard key={offering.id} offering={offering} />
-                ))}
+              <div className="space-y-4">
+                <h3 className="text-lg font-medium">Key Features</h3>
+                <ul className="space-y-2 text-muted-foreground">
+                  <li>• Customized risk/return profiles tailored to specific market views</li>
+                  <li>• Principal protection options available</li>
+                  <li>• Enhanced yield potential through structured coupons</li>
+                  <li>• Exposure to various underlying assets (indices, commodities, currencies)</li>
+                  <li>• Defined outcome scenarios with predetermined payoff structures</li>
+                </ul>
               </div>
+
+              <OfferingsList 
+                offerings={offerings} 
+                categoryId="structured-investments"
+                isFullView={false}
+              />
             </div>
+          </TabsContent>
+          
+          <TabsContent value="offerings">
+            <OfferingsList 
+              offerings={offerings} 
+              categoryId="structured-investments"
+              isFullView={true}
+            />
           </TabsContent>
         </Tabs>
       </div>
