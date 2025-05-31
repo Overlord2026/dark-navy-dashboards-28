@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -339,68 +340,6 @@ export const IntelligentAllocationTab = () => {
         open={createDialogOpen} 
         onOpenChange={setCreateDialogOpen} 
       />
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-lg flex items-center gap-2">
-              <TrendingUp className="h-5 w-5 text-emerald-500" /> 
-              Performance Analysis
-            </CardTitle>
-            <CardDescription>Compare model performance</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-muted-foreground mb-4">
-              Track and analyze the performance of your portfolio models against benchmarks and peers with AI-powered insights.
-            </p>
-            <Button variant="outline" className="w-full" asChild>
-              <Link to="/investments/performance">
-                View Analysis <ChevronRight className="h-4 w-4 ml-1" />
-              </Link>
-            </Button>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-lg flex items-center gap-2">
-              <BarChart2 className="h-5 w-5 text-blue-500" /> 
-              Portfolio Builder
-            </CardTitle>
-            <CardDescription>Create custom portfolios</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-muted-foreground mb-4">
-              Design personalized investment portfolios using our intelligent allocation tools and AI-optimized models.
-            </p>
-            <Button variant="outline" className="w-full" asChild>
-              <Link to="/investments/builder">
-                Open Builder <ChevronRight className="h-4 w-4 ml-1" />
-              </Link>
-            </Button>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-lg flex items-center gap-2">
-              <Shield className="h-5 w-5 text-violet-500" /> 
-              Risk Assessment
-            </CardTitle>
-            <CardDescription>Evaluate portfolio risk</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-muted-foreground mb-4">
-              Analyze and understand the risk characteristics of your investment models with AI-powered risk assessment tools.
-            </p>
-            <Button variant="outline" className="w-full" asChild>
-              <Link to="/investments/risk">
-                View Risk Profile <ChevronRight className="h-4 w-4 ml-1" />
-              </Link>
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
     </div>
   );
 };
