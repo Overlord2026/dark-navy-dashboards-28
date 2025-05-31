@@ -109,12 +109,20 @@ const PrivateEquity = () => {
           
           <TabsContent value="private-markets" className="space-y-8">
             <div className="space-y-6">
-              <div className="mb-8">
-                <h2 className="text-2xl font-semibold mb-4">Private Equity Investments</h2>
-                <p className="text-muted-foreground text-base">
-                  Investments in private companies or buyouts of public companies resulting in a delisting of public equity
-                </p>
+              <div className="mb-8 flex items-center gap-3">
+                <Button 
+                  variant="ghost" 
+                  size="sm"
+                  onClick={() => navigate("/client-investments?tab=private-markets")}
+                  className="flex items-center gap-2"
+                >
+                  <ArrowLeft className="h-4 w-4" />
+                </Button>
+                <h2 className="text-2xl font-semibold">Private Equity Investments</h2>
               </div>
+              <p className="text-muted-foreground text-base">
+                Investments in private companies or buyouts of public companies resulting in a delisting of public equity
+              </p>
               
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
                 {privateEquityOfferings.map((offering) => (
