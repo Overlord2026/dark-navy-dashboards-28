@@ -75,20 +75,12 @@ const StructuredInvestments = () => {
     ? dbOfferings.filter(offering => offering.category_id === 'structured-investments')
     : staticOfferings.map(offering => adaptLegacyOffering(offering, 'structured-investments'));
 
-  const categoryData = {
-    title: "Structured Investments",
-    description: "Customized investment products with specific risk/return profiles using derivatives and financial engineering.",
-    totalOfferings: offerings.length,
-    featuredOfferings: offerings.filter(o => o.featured).length,
-    avgMinimum: "$15,000",
-    ytdPerformance: 7.5
-  };
-
   return (
     <ThreeColumnLayout activeMainItem="investments" title="Structured Investments">
       <div className="space-y-8">
         <CategoryOverview 
-          data={categoryData}
+          name="Structured Investments"
+          description="Customized investment products with specific risk/return profiles using derivatives and financial engineering."
         />
         
         <Tabs value={selectedTab} onValueChange={setSelectedTab} className="w-full">
