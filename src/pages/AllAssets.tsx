@@ -32,12 +32,16 @@ export default function AllAssets() {
     { value: "assets", label: "All Assets" },
     { value: "liabilities", label: "Liabilities" },
     { value: "property", label: "Real Estate" },
-    { value: "vehicles", label: "Vehicles" },
-    { value: "cash", label: "Cash" },
+    { value: "vehicle", label: "Vehicle (Car, RV, Camper)" },
+    { value: "boat", label: "Boat/Watercraft" },
+    { value: "cash", label: "Cash & Equivalents" },
     { value: "investment", label: "Investments" },
-    { value: "collectibles", label: "Collectibles" },
+    { value: "retirement", label: "Retirement Accounts" },
     { value: "art", label: "Art" },
-    { value: "digital", label: "Digital" },
+    { value: "antique", label: "Antiques" },
+    { value: "jewelry", label: "Jewelry" },
+    { value: "collectible", label: "Collectibles" },
+    { value: "digital", label: "Digital Assets" },
     { value: "other", label: "Other" }
   ];
 
