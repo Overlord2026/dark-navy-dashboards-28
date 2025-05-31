@@ -1,15 +1,12 @@
 
-
 import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { BarChart2, Filter, Share, Plus } from "lucide-react";
+import { BarChart2, Filter } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { PortfolioFilterDialog } from "./PortfolioFilterDialog";
-import { GroupManagementDialog } from "./GroupManagementDialog";
-import { CreatePortfolioDialog } from "./CreatePortfolioDialog";
 
 interface PortfolioModel {
   id: string;
@@ -104,19 +101,9 @@ export const IntelligentAllocationTab = () => {
   const navigate = useNavigate();
   
   const [filterDialogOpen, setFilterDialogOpen] = useState(false);
-  const [groupsDialogOpen, setGroupsDialogOpen] = useState(false);
-  const [createDialogOpen, setCreateDialogOpen] = useState(false);
 
   const handleFindPortfolios = () => {
     setFilterDialogOpen(true);
-  };
-
-  const handleManageGroups = () => {
-    setGroupsDialogOpen(true);
-  };
-
-  const handleCreatePortfolio = () => {
-    setCreateDialogOpen(true);
   };
 
   const handleModelRowClick = (modelId: string) => {
@@ -144,12 +131,6 @@ export const IntelligentAllocationTab = () => {
         <div className="flex gap-2">
           <Button variant="outline" onClick={handleFindPortfolios}>
             <Filter className="mr-1 h-4 w-4" /> Find Portfolios
-          </Button>
-          <Button variant="outline" onClick={handleManageGroups}>
-            <Share className="mr-1 h-4 w-4" /> Manage Groups
-          </Button>
-          <Button onClick={handleCreatePortfolio}>
-            <Plus className="mr-1 h-4 w-4" /> Create Portfolio
           </Button>
         </div>
       </div>
@@ -232,17 +213,6 @@ export const IntelligentAllocationTab = () => {
         open={filterDialogOpen} 
         onOpenChange={setFilterDialogOpen} 
       />
-      
-      <GroupManagementDialog 
-        open={groupsDialogOpen} 
-        onOpenChange={setGroupsDialogOpen} 
-      />
-      
-      <CreatePortfolioDialog 
-        open={createDialogOpen} 
-        onOpenChange={setCreateDialogOpen} 
-      />
     </div>
   );
 };
-
