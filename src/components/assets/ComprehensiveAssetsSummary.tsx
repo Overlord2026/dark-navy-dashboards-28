@@ -13,6 +13,8 @@ import {
   Tooltip,
   Legend
 } from "recharts";
+import { useSupabaseAssets } from "@/hooks/useSupabaseAssets";
+import { useSupabaseLiabilities } from "@/hooks/useSupabaseLiabilities";
 
 interface ComprehensiveAssetsSummaryProps {
   showTabs?: boolean;
@@ -24,14 +26,14 @@ export const ComprehensiveAssetsSummary: React.FC<ComprehensiveAssetsSummaryProp
   hideInternalTabs = false 
 }) => {
   const { 
-    getTotalNetWorth, 
-    getTotalAssetsByType, 
-    assets, 
     accounts, 
-    totalAssetValue,
-    totalLiabilityValue,
-    loading 
+    loading: contextLoading 
   } = useNetWorth();
+  
+  const { assets: supabaseAssets, loading: assetsLoading } = useSupabaseAssets();
+  const { getTotalLiabilities, loading: liabilitiesLoading } = useSupabaseLiabilities();
+  
+  const loading = contextLoading || assetsLoading || liabilitiesLoading;
   
   if (loading) {
     return (
@@ -48,19 +50,30 @@ export const ComprehensiveAssetsSummary: React.FC<ComprehensiveAssetsSummaryProp
     );
   }
   
-  const totalNetWorth = getTotalNetWorth();
-  const realEstateValue = getTotalAssetsByType('property');
-  const vehiclesValue = getTotalAssetsByType('vehicle') + getTotalAssetsByType('boat');
-  const investmentsValue = getTotalAssetsByType('investment');
-  const cashValue = getTotalAssetsByType('cash');
-  const retirementValue = getTotalAssetsByType('retirement');
+  // Calculate totals using real Supabase data
+  const totalAssetValue = supabaseAssets.reduce((total, asset) => total + Number(asset.value), 0);
+  const totalLiabilityValue = getTotalLiabilities();
+  const totalNetWorth = totalAssetValue - totalLiabilityValue;
+  
+  // Calculate asset values by type using Supabase data
+  const getAssetValueByType = (type: string) => {
+    return supabaseAssets
+      .filter(asset => asset.type === type)
+      .reduce((total, asset) => total + Number(asset.value), 0);
+  };
+
+  const realEstateValue = getAssetValueByType('property');
+  const vehiclesValue = getAssetValueByType('vehicle') + getAssetValueByType('boat');
+  const investmentsValue = getAssetValueByType('investment');
+  const cashValue = getAssetValueByType('cash');
+  const retirementValue = getAssetValueByType('retirement');
   const collectiblesValue = 
-    getTotalAssetsByType('art') + 
-    getTotalAssetsByType('antique') + 
-    getTotalAssetsByType('jewelry') + 
-    getTotalAssetsByType('collectible');
-  const digitalValue = getTotalAssetsByType('digital');
-  const otherValue = getTotalAssetsByType('other');
+    getAssetValueByType('art') + 
+    getAssetValueByType('antique') + 
+    getAssetValueByType('jewelry') + 
+    getAssetValueByType('collectible');
+  const digitalValue = getAssetValueByType('digital');
+  const otherValue = getAssetValueByType('other');
   
   // Calculate percentages
   const calculatePercentage = (value: number) => {
@@ -87,9 +100,9 @@ export const ComprehensiveAssetsSummary: React.FC<ComprehensiveAssetsSummaryProp
     { name: "Other", value: otherValue, percentage: otherPercentage, color: "#6b7280" }
   ].filter(category => category.value > 0);
   
-  // Financial overview stats
-  const propertyCount = assets.filter(asset => asset.type === 'property').length;
-  const vehicleCount = assets.filter(asset => asset.type === 'vehicle' || asset.type === 'boat').length;
+  // Financial overview stats using real data
+  const propertyCount = supabaseAssets.filter(asset => asset.type === 'property').length;
+  const vehicleCount = supabaseAssets.filter(asset => asset.type === 'vehicle' || asset.type === 'boat').length;
   const accountCount = accounts.length;
   
   // Prepare data for pie chart
@@ -110,7 +123,7 @@ export const ComprehensiveAssetsSummary: React.FC<ComprehensiveAssetsSummaryProp
             </div>
             <div>
               <p className="text-sm text-muted-foreground">Asset Count</p>
-              <p className="text-2xl font-bold">{assets.length}</p>
+              <p className="text-2xl font-bold">{supabaseAssets.length}</p>
             </div>
             <div>
               <p className="text-sm text-muted-foreground">Properties</p>
