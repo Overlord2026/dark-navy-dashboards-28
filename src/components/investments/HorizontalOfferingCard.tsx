@@ -69,12 +69,6 @@ export const HorizontalOfferingCard: React.FC<HorizontalOfferingCardProps> = ({
           <ScheduleMeetingDialog 
             assetName={title}
             consultationType="investment"
-            trigger={
-              <Button variant="outline" className="bg-transparent border-slate-600 text-white hover:bg-slate-800">
-                <CalendarClock className="mr-2 h-4 w-4" />
-                Schedule Meeting
-              </Button>
-            }
           />
         </div>
       </div>
