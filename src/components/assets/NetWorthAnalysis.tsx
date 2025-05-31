@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useSupabaseAssets } from "@/hooks/useSupabaseAssets";
@@ -56,7 +57,7 @@ export const NetWorthAnalysis: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Detailed Breakdown */}
+      {/* Assets and Liabilities Breakdown Side by Side */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Assets Breakdown */}
         <Card>
@@ -148,31 +149,6 @@ export const NetWorthAnalysis: React.FC = () => {
           </CardContent>
         </Card>
       </div>
-
-      {/* Net Worth Calculation */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Net Worth Calculation</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div className="flex justify-between items-center p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
-              <span className="text-lg font-medium">Total Assets</span>
-              <span className="text-xl font-bold text-green-600">+ {formatCurrency(totalAssets)}</span>
-            </div>
-            <div className="flex justify-between items-center p-4 bg-red-50 dark:bg-red-900/20 rounded-lg">
-              <span className="text-lg font-medium">Total Liabilities</span>
-              <span className="text-xl font-bold text-red-600">- {formatCurrency(totalLiabilities)}</span>
-            </div>
-            <div className="flex justify-between items-center p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border-2 border-blue-200 dark:border-blue-800">
-              <span className="text-xl font-bold">Net Worth</span>
-              <span className={`text-2xl font-bold ${netWorth >= 0 ? 'text-blue-600' : 'text-red-600'}`}>
-                {formatCurrency(netWorth)}
-              </span>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 };
