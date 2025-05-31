@@ -220,7 +220,9 @@ export const useBFOModels = () => {
   }, []);
 
   useEffect(() => {
-    getAvailablePortfolios();
+    if (modelPortfolios.length > 0 || userAssignments.length > 0) {
+      getAvailablePortfolios();
+    }
   }, [modelPortfolios, userAssignments]);
 
   return {
