@@ -87,18 +87,6 @@ export const PortfolioPickerDialog: React.FC<PortfolioPickerDialogProps> = ({
             <>
               {/* Filter Controls */}
               <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-medium text-white">Filter Portfolios</h3>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={clearFilters}
-                    className="bg-transparent border-slate-600 text-white hover:bg-slate-700"
-                  >
-                    Clear Filters
-                  </Button>
-                </div>
-                
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                   {/* Asset Management Firms */}
                   <div className="space-y-2">
@@ -195,9 +183,6 @@ export const PortfolioPickerDialog: React.FC<PortfolioPickerDialogProps> = ({
               ) : (
                 <>
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-white">
-                      Available Model Portfolios ({filteredPortfolios.length})
-                    </label>
                     <Select value={selectedPortfolio} onValueChange={setSelectedPortfolio}>
                       <SelectTrigger className="bg-slate-800 border-slate-600 text-white">
                         <SelectValue placeholder="Select a portfolio" />
