@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
@@ -261,7 +262,7 @@ const Investments = () => {
   ];
 
   return (
-    <ThreeColumnLayout activeMainItem="investments">
+    <ThreeColumnLayout activeMainItem="investments" title="">
       <div className="space-y-8">
         {/* Header Section */}
         <div className="space-y-2">
