@@ -78,7 +78,7 @@ const PrivateEquity = () => {
   ];
   
   return (
-    <ThreeColumnLayout activeMainItem="investments" title="Investment Management">
+    <ThreeColumnLayout activeMainItem="investments" title="Investment Management" secondaryMenuItems={[]}>
       <div className="space-y-8">
         <div className="mb-6">
           <Button 
