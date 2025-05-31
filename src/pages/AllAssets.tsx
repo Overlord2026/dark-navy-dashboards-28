@@ -76,7 +76,7 @@ export default function AllAssets() {
   
   return (
     <ThreeColumnLayout title="All Assets">
-      <div className="container mx-auto p-4">
+      <div className="container mx-auto p-4 mt-4">
         <div className="mb-6">
           <p className="text-muted-foreground mb-4">Comprehensive view of all your assets and liabilities</p>
           <div className="flex justify-end">
