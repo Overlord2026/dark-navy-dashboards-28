@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Progress } from "@/components/ui/progress";
 import { ArrowUpRight, Wallet, Maximize2, Home, User, Car } from "lucide-react";
@@ -55,15 +54,15 @@ export const NetWorthSummary = () => {
 
     return (
       <div className={cn(
-        "rounded-lg p-8 border transition-all duration-300 min-h-[800px]",
+        "rounded-lg p-6 border transition-all duration-300 min-h-[640px]",
         isLightTheme 
           ? "bg-card border-border text-foreground" 
           : "bg-[#121a2c]/80 border-gray-800"
       )}>
-        <div className="flex items-center justify-between mb-8">
-          <h2 className="text-3xl font-semibold flex items-center">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-2xl font-semibold flex items-center">
             <Wallet className={cn(
-              "mr-3 h-8 w-8",
+              "mr-3 h-7 w-7",
               isLightTheme ? "text-blue-600" : "text-blue-400"
             )} />
             Net Worth Summary
@@ -88,18 +87,18 @@ export const NetWorthSummary = () => {
           </div>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-6">
           <div className={cn(
-            "p-6 rounded-lg border transition-colors",
+            "p-5 rounded-lg border transition-colors",
             isLightTheme 
               ? "bg-card border-border" 
               : "bg-[#1a2236] border-gray-800"
           )}>
             <div className={cn(
-              "text-lg mb-3",
+              "text-base mb-2",
               isLightTheme ? "text-muted-foreground" : "text-gray-400"
             )}>Total Assets</div>
-            <div className="text-3xl font-semibold">{formatCurrency(totalNetWorth)}</div>
+            <div className="text-2xl font-semibold">{formatCurrency(totalNetWorth)}</div>
             <div className={cn(
               "text-sm mt-2",
               isLightTheme ? "text-green-600" : "text-green-400"
@@ -107,16 +106,16 @@ export const NetWorthSummary = () => {
           </div>
           
           <div className={cn(
-            "p-6 rounded-lg border transition-colors",
+            "p-5 rounded-lg border transition-colors",
             isLightTheme 
               ? "bg-card border-border" 
               : "bg-[#1a2236] border-gray-800"
           )}>
             <div className={cn(
-              "text-lg mb-3",
+              "text-base mb-2",
               isLightTheme ? "text-muted-foreground" : "text-gray-400"
             )}>Total Liabilities</div>
-            <div className="text-3xl font-semibold">{formatCurrency(845210)}</div>
+            <div className="text-2xl font-semibold">{formatCurrency(845210)}</div>
             <div className={cn(
               "text-sm mt-2",
               isLightTheme ? "text-red-600" : "text-red-400"
@@ -124,17 +123,17 @@ export const NetWorthSummary = () => {
           </div>
           
           <div className={cn(
-            "p-6 rounded-lg border relative transition-colors",
+            "p-5 rounded-lg border relative transition-colors",
             isLightTheme 
               ? "bg-card border-border" 
               : "bg-[#1a2236] border-gray-800"
           )}>
             <div className={cn(
-              "text-lg mb-3",
+              "text-base mb-2",
               isLightTheme ? "text-muted-foreground" : "text-gray-400"
             )}>Net Worth</div>
             <div className={cn(
-              "text-3xl font-semibold",
+              "text-2xl font-semibold",
               isLightTheme ? "text-blue-600" : "text-blue-400"
             )}>{formatCurrency(totalNetWorth - 845210)}</div>
             <div className={cn(
@@ -180,12 +179,12 @@ export const NetWorthSummary = () => {
           </div>
         </div>
         
-        <div className="grid grid-cols-1 gap-8">
+        <div className="grid grid-cols-1 gap-6">
           <div>
-            <h3 className="text-xl font-medium mb-6">Asset Allocation</h3>
-            <div className="flex flex-col md:flex-row gap-8">
+            <h3 className="text-lg font-medium mb-5">Asset Allocation</h3>
+            <div className="flex flex-col md:flex-row gap-6">
               {/* Pie Chart */}
-              <div className="md:w-1/2 h-[400px] flex items-center justify-center">
+              <div className="md:w-1/2 h-[320px] flex items-center justify-center">
                 {pieChartData.length > 0 ? (
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
@@ -193,8 +192,8 @@ export const NetWorthSummary = () => {
                         data={pieChartData}
                         cx="50%"
                         cy="50%"
-                        innerRadius={80}
-                        outerRadius={140}
+                        innerRadius={64}
+                        outerRadius={112}
                         paddingAngle={3}
                         dataKey="value"
                       >
@@ -224,7 +223,7 @@ export const NetWorthSummary = () => {
               </div>
               
               {/* Asset List */}
-              <div className="md:w-1/2 space-y-4">
+              <div className="md:w-1/2 space-y-3">
                 {pieChartData.map((asset, index) => (
                   <AssetItem 
                     key={index}
@@ -241,13 +240,13 @@ export const NetWorthSummary = () => {
         </div>
         
         <div className={cn(
-          "mt-8 pt-6 border-t flex justify-end",
+          "mt-6 pt-5 border-t flex justify-end",
           isLightTheme ? "border-border" : "border-gray-800"
         )}>
           <Button 
             variant="link" 
             className={cn(
-              "text-lg p-0",
+              "text-base p-0",
               isLightTheme ? "text-blue-600 hover:text-blue-700" : "text-blue-400 hover:text-blue-300"
             )}
             onClick={() => navigate('all-assets')}
@@ -289,20 +288,20 @@ interface AssetItemProps {
 const AssetItem = ({ label, value, percentage, color, isLightTheme }: AssetItemProps) => {
   return (
     <div className="py-2">
-      <div className="flex justify-between items-center mb-3">
-        <span className="text-lg flex items-center">
+      <div className="flex justify-between items-center mb-2">
+        <span className="text-base flex items-center">
           <div 
-            className="w-4 h-4 rounded-full mr-3" 
+            className="w-3 h-3 rounded-full mr-3" 
             style={{ backgroundColor: color }}
           />
           {label}
         </span>
-        <span className="text-lg font-medium">{value}</span>
+        <span className="text-base font-medium">{value}</span>
       </div>
       <div className="flex items-center">
         <Progress 
           value={percentage} 
-          className="h-3" 
+          className="h-2" 
           style={{backgroundColor: `${color}20`}} 
         />
         <span className="ml-3 text-sm">{percentage}%</span>
