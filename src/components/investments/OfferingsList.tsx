@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -187,8 +186,6 @@ export const OfferingsList: React.FC<OfferingsListProps> = ({
             <OfferingCard 
               key={offering.id} 
               offering={offering} 
-              categoryId={categoryId}
-              onLike={onLike}
             />
           ))
         ) : (
