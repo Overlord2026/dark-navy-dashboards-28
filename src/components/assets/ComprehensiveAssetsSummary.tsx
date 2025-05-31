@@ -1,4 +1,3 @@
-
 import React from "react";
 import { useNetWorth } from "@/context/NetWorthContext";
 import { Card, CardContent } from "@/components/ui/card";
@@ -111,6 +110,25 @@ export const ComprehensiveAssetsSummary: React.FC<ComprehensiveAssetsSummaryProp
     value: category.value
   }));
 
+  // Custom tooltip component with proper styling
+  const CustomTooltip = ({ active, payload }: any) => {
+    if (active && payload && payload.length) {
+      const data = payload[0];
+      return (
+        <div className="bg-background border border-border rounded-lg shadow-lg p-3 z-50">
+          <p className="font-medium text-foreground">{data.name}</p>
+          <p className="text-sm text-muted-foreground">
+            Value: <span className="font-medium text-foreground">{formatCurrency(data.value)}</span>
+          </p>
+          <p className="text-sm text-muted-foreground">
+            Percentage: <span className="font-medium text-foreground">{((data.value / totalAssetValue) * 100).toFixed(1)}%</span>
+          </p>
+        </div>
+      );
+    }
+    return null;
+  };
+
   const SummaryContent = () => (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
       <Card>
@@ -220,7 +238,7 @@ export const ComprehensiveAssetsSummary: React.FC<ComprehensiveAssetsSummaryProp
           </div>
           
           {assetCategories.length > 0 && (
-            <div className="md:w-1/2 h-[350px] mt-6 md:mt-0">
+            <div className="md:w-1/2 h-[350px] mt-6 md:mt-0 relative">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
@@ -241,7 +259,7 @@ export const ComprehensiveAssetsSummary: React.FC<ComprehensiveAssetsSummaryProp
                       />
                     ))}
                   </Pie>
-                  <Tooltip formatter={(value) => formatCurrency(Number(value))} />
+                  <Tooltip content={<CustomTooltip />} />
                 </PieChart>
               </ResponsiveContainer>
             </div>
