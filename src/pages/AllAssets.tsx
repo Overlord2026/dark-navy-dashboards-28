@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { useAuth } from "@/context/AuthContext";
@@ -33,7 +34,6 @@ export default function AllAssets() {
 
   const filterOptions = [
     { value: "assets", label: "All Assets" },
-    { value: "liabilities", label: "Liabilities" },
     { value: "property", label: "Real Estate" },
     { value: "vehicle", label: "Vehicle (Car, RV, Camper)" },
     { value: "boat", label: "Boat/Watercraft" },
@@ -131,9 +131,7 @@ export default function AllAssets() {
                 </DropdownMenu>
               </div>
               
-              {assetFilter === "liabilities" ? (
-                <LiabilitiesList />
-              ) : assetFilter === "assets" ? (
+              {assetFilter === "assets" ? (
                 <>
                   <SupabaseAssetList filter="all" />
                   <LiabilitiesList />
