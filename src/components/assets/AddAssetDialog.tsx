@@ -1,12 +1,11 @@
 
 import React, { useState } from "react";
-import { useNetWorth, Asset } from "@/context/NetWorthContext";
+import { useSupabaseAssets } from "@/hooks/useSupabaseAssets";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { toast } from "sonner";
 
 interface AddAssetDialogProps {
   open: boolean;
@@ -14,41 +13,38 @@ interface AddAssetDialogProps {
 }
 
 export const AddAssetDialog: React.FC<AddAssetDialogProps> = ({ open, onOpenChange }) => {
-  const { addAsset } = useNetWorth();
+  const { addAsset } = useSupabaseAssets();
   
   const [assetName, setAssetName] = useState("");
-  const [assetType, setAssetType] = useState<Asset["type"]>("other");
+  const [assetType, setAssetType] = useState("");
+  const [assetOwner, setAssetOwner] = useState("");
   const [assetValue, setAssetValue] = useState("");
-  const [assetOwner, setAssetOwner] = useState("Tom Brady");
   
   const resetForm = () => {
     setAssetName("");
-    setAssetType("other");
+    setAssetType("");
+    setAssetOwner("");
     setAssetValue("");
-    setAssetOwner("Tom Brady");
   };
   
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!assetName || !assetValue) {
-      toast.error("Please provide a name and value for the asset");
+    if (!assetName || !assetType || !assetOwner || !assetValue) {
       return;
     }
     
-    const newAsset: Asset = {
-      id: `asset-${Date.now()}`,
+    const result = await addAsset({
       name: assetName,
       type: assetType,
-      value: parseFloat(assetValue),
       owner: assetOwner,
-      lastUpdated: new Date().toISOString().split('T')[0]
-    };
+      value: parseFloat(assetValue)
+    });
     
-    addAsset(newAsset);
-    toast.success("Asset added successfully");
-    resetForm();
-    onOpenChange(false);
+    if (result) {
+      resetForm();
+      onOpenChange(false);
+    }
   };
   
   return (
@@ -66,12 +62,13 @@ export const AddAssetDialog: React.FC<AddAssetDialogProps> = ({ open, onOpenChan
               value={assetName}
               onChange={(e) => setAssetName(e.target.value)}
               placeholder="e.g., Family Car, Summer Home, etc."
+              required
             />
           </div>
           
           <div>
             <Label htmlFor="assetType">Asset Type</Label>
-            <Select value={assetType} onValueChange={(value: Asset["type"]) => setAssetType(value)}>
+            <Select value={assetType} onValueChange={setAssetType} required>
               <SelectTrigger>
                 <SelectValue placeholder="Select asset type" />
               </SelectTrigger>
@@ -99,6 +96,7 @@ export const AddAssetDialog: React.FC<AddAssetDialogProps> = ({ open, onOpenChan
               value={assetOwner}
               onChange={(e) => setAssetOwner(e.target.value)}
               placeholder="e.g., John Smith, Family Trust, etc."
+              required
             />
           </div>
           
@@ -110,6 +108,7 @@ export const AddAssetDialog: React.FC<AddAssetDialogProps> = ({ open, onOpenChan
               value={assetValue}
               onChange={(e) => setAssetValue(e.target.value)}
               placeholder="e.g., 25000"
+              required
             />
           </div>
           

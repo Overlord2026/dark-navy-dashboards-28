@@ -1,7 +1,7 @@
 
 import React, { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
-import { useNetWorth } from "@/context/NetWorthContext";
+import { useAuth } from "@/context/AuthContext";
 import { 
   Tabs, 
   TabsContent, 
@@ -10,16 +10,30 @@ import {
 } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
-import { AssetList } from "@/components/assets/AssetList";
+import { SupabaseAssetList } from "@/components/assets/SupabaseAssetList";
 import { AddAssetDialog } from "@/components/assets/AddAssetDialog";
-import { ComprehensiveAssetsSummary } from "@/components/assets/ComprehensiveAssetsSummary";
+import { SupabaseAssetsSummary } from "@/components/assets/SupabaseAssetsSummary";
+import { Card, CardContent } from "@/components/ui/card";
 
 export default function AllAssets() {
-  const { assets, getTotalNetWorth } = useNetWorth();
+  const { isAuthenticated } = useAuth();
   const [activeTab, setActiveTab] = useState("all");
   const [isAddAssetDialogOpen, setIsAddAssetDialogOpen] = useState(false);
-  
-  const totalNetWorth = getTotalNetWorth();
+
+  if (!isAuthenticated) {
+    return (
+      <ThreeColumnLayout title="All Assets">
+        <div className="container mx-auto p-4">
+          <Card>
+            <CardContent className="pt-6 text-center">
+              <h2 className="text-xl font-semibold mb-2">Authentication Required</h2>
+              <p className="text-muted-foreground">Please log in to view and manage your assets.</p>
+            </CardContent>
+          </Card>
+        </div>
+      </ThreeColumnLayout>
+    );
+  }
   
   return (
     <ThreeColumnLayout title="All Assets">
@@ -39,7 +53,7 @@ export default function AllAssets() {
           </Button>
         </div>
         
-        <ComprehensiveAssetsSummary />
+        <SupabaseAssetsSummary />
         
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid grid-cols-1 md:grid-cols-8 w-full mb-6 overflow-auto">
@@ -55,39 +69,39 @@ export default function AllAssets() {
           </TabsList>
           
           <TabsContent value="all">
-            <AssetList filter="all" />
+            <SupabaseAssetList filter="all" />
           </TabsContent>
           
           <TabsContent value="property">
-            <AssetList filter="property" />
+            <SupabaseAssetList filter="property" />
           </TabsContent>
           
           <TabsContent value="vehicles">
-            <AssetList filter="vehicles" />
+            <SupabaseAssetList filter="vehicles" />
           </TabsContent>
           
           <TabsContent value="cash">
-            <AssetList filter="cash" />
+            <SupabaseAssetList filter="cash" />
           </TabsContent>
           
           <TabsContent value="investment">
-            <AssetList filter="investment" />
+            <SupabaseAssetList filter="investment" />
           </TabsContent>
           
           <TabsContent value="collectibles">
-            <AssetList filter="collectibles" />
+            <SupabaseAssetList filter="collectibles" />
           </TabsContent>
           
           <TabsContent value="art">
-            <AssetList filter="art" />
+            <SupabaseAssetList filter="art" />
           </TabsContent>
           
           <TabsContent value="digital">
-            <AssetList filter="digital" />
+            <SupabaseAssetList filter="digital" />
           </TabsContent>
           
           <TabsContent value="other">
-            <AssetList filter="other" />
+            <SupabaseAssetList filter="other" />
           </TabsContent>
         </Tabs>
       </div>
