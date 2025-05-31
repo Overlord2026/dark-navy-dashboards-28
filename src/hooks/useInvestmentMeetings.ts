@@ -56,6 +56,12 @@ export const useInvestmentMeetings = () => {
   }) => {
     if (!user) throw new Error('User not authenticated');
 
+    // Validate that offering_id is a valid UUID format
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    if (!uuidRegex.test(meetingData.offering_id)) {
+      throw new Error('Invalid offering ID format');
+    }
+
     try {
       const { data, error } = await supabase
         .from('investment_meetings')
