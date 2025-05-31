@@ -15,65 +15,108 @@ const PrivateEquity = () => {
   const privateEquityOfferings = [
     {
       id: 1,
-      name: "Healthcare Growth Partners III",
-      description: "Focused on growth-stage healthcare companies with proven business models and strong management teams.",
-      firm: "Healthcare Growth Partners",
-      minimumInvestment: "$250,000",
+      name: "AMG Pantheon Fund, LLC",
+      description: "AMG Pantheon Fund, LLC provides Accredited Investors unique exposure to a diversified private equity portfolio sourced by Pantheon's Global Investment Team. The Fund offers diversification by manager, stage, vintage year, and industry through a single allocation.",
+      firm: "Pantheon Ventures",
+      minimumInvestment: "$50,000",
       performance: "+18.5%",
       lockupPeriod: "5-7 years",
-      tags: ["Healthcare", "Growth", "Mid-Market"],
+      tags: ["Private Equity", "Global", "Diversified"],
       featured: true
     },
     {
       id: 2,
-      name: "Technology Innovation Fund IV",
-      description: "Invests in B2B software companies with recurring revenue models and scalable platforms.",
-      firm: "TechVenture Capital",
-      minimumInvestment: "$500,000",
+      name: "Ares Private Markets Fund",
+      description: "Ares Private Markets Fund ('The Fund') seeks to build a diversified private equity investment solution that aims to deliver attractive, long-term capital appreciation. It features dynamic allocation, which aims to reduce the J-curve and vintage risk, and offers enhanced diversification across managers and investments.",
+      firm: "Ares Management",
+      minimumInvestment: "$100,000",
       performance: "+22.3%",
       lockupPeriod: "7-10 years",
-      tags: ["Technology", "B2B Software", "SaaS"]
+      tags: ["Private Equity", "Diversified", "Dynamic Allocation"],
+      featured: true
     },
     {
       id: 3,
-      name: "Consumer Brands Equity Fund",
-      description: "Partners with established consumer brands seeking capital for expansion and operational improvements.",
-      firm: "Brand Equity Partners",
-      minimumInvestment: "$100,000",
-      performance: "+14.7%",
-      lockupPeriod: "4-6 years",
-      tags: ["Consumer", "Brands", "Retail"],
+      name: "Blackstone Private Equity Strategies Fund, (TE) L.P. ('BXPE Tax-Exempt')",
+      description: "BXPE seeks to provide qualified individual investors broad exposure to Blackstone's private equity platform and its 15+ strategies through a single fund. Blackstone is the world's largest alternatives asset manager, and BXPE leverages its immense scale and expertise.",
+      firm: "Blackstone",
+      minimumInvestment: "$250,000",
+      performance: "+24.7%",
+      lockupPeriod: "8-12 years",
+      tags: ["Private Equity", "Multi-Strategy", "Tax-Exempt"],
       featured: true
     },
     {
       id: 4,
-      name: "Industrial Growth Partners II",
-      description: "Focuses on middle-market industrial companies with strong competitive positions.",
-      firm: "Industrial Capital Group",
-      minimumInvestment: "$1,000,000",
-      performance: "+16.9%",
-      lockupPeriod: "6-8 years",
-      tags: ["Industrial", "Manufacturing", "B2B"]
+      name: "CAIS Vista Foundation Fund V, L.P.",
+      description: "Vista Foundation Fund V, L.P. ('VFF V') was formed by Vista Equity Partners Management, LLC to acquire controlling interests in middle-market and 'Mid Cap' enterprise software, data, and technology-enabled solutions companies. It targets companies with enterprise values between $250 million and $750 million+.",
+      firm: "Vista Equity Partners",
+      minimumInvestment: "$500,000",
+      performance: "+26.9%",
+      lockupPeriod: "7-10 years",
+      tags: ["Private Equity", "Technology", "Middle Market"],
+      featured: true
     },
     {
       id: 5,
-      name: "Energy Transition Fund",
-      description: "Invests in companies driving the transition to clean energy and sustainable technologies.",
-      firm: "Green Energy Ventures",
+      name: "JP Morgan Private Markets Fund",
+      description: "JP Morgan Private Markets Fund has a small mid-market private equity focus, offering multi-manager exposure with simplified structure and terms, backed by the extensive resources of one of the largest financial institutions in the world.",
+      firm: "JP Morgan",
       minimumInvestment: "$250,000",
       performance: "+19.2%",
-      lockupPeriod: "8-12 years",
-      tags: ["Energy", "ESG", "Clean Tech"]
+      lockupPeriod: "6-8 years",
+      tags: ["Private Equity", "Mid Market", "Multi-Manager"],
+      featured: true
     },
     {
       id: 6,
-      name: "Financial Services Growth",
-      description: "Targets fintech and financial services companies with innovative business models.",
-      firm: "FinTech Capital Partners",
-      minimumInvestment: "$500,000",
-      performance: "+21.1%",
+      name: "AMG Pantheon Fund, LLC (Class 1)",
+      description: "AMG Pantheon Fund, LLC (Class 1) seeks to provide Accredited Investors exposure to a diversified private equity portfolio with diversification by manager, stage, vintage year, and industry. It features a lower investment minimum, a perpetual 'evergreen' strategy, and enhanced potential liquidity.",
+      firm: "Pantheon Ventures",
+      minimumInvestment: "$25,000",
+      performance: "+16.5%",
+      lockupPeriod: "Evergreen",
+      tags: ["Private Equity", "Global", "Evergreen"]
+    },
+    {
+      id: 7,
+      name: "Ares Private Markets Fund iCapital Offshore Access Fund SP 1",
+      description: "Ares Private Markets Fund (APMF) is a diversified private equity investment solution, anchored in secondary investments, designed to deliver attractive long-term capital appreciation through market cycles.",
+      firm: "Ares Management",
+      minimumInvestment: "$100,000",
+      performance: "+20.1%",
       lockupPeriod: "5-7 years",
-      tags: ["FinTech", "Financial Services", "Innovation"]
+      tags: ["Private Equity", "Secondaries", "Offshore"]
+    },
+    {
+      id: 8,
+      name: "BlackRock Private Investment Fund",
+      description: "BlackRock Private Investments Fund ('BPIF') provides access to private equity investments, especially during periods when public market returns are muted, and aims to amplify investor returns through continuous offering.",
+      firm: "BlackRock",
+      minimumInvestment: "$50,000",
+      performance: "+17.8%",
+      lockupPeriod: "Continuous",
+      tags: ["Private Equity", "Continuous Offering"]
+    },
+    {
+      id: 9,
+      name: "BlackRock Private Investments Fund iCapital Offshore Access Fund, L.P.",
+      description: "BlackRock Private Investments Fund offers access to institutional-quality private equity investments through a continuously offered fund structure, providing a robust private markets solution.",
+      firm: "BlackRock",
+      minimumInvestment: "$100,000",
+      performance: "+18.3%",
+      lockupPeriod: "Continuous",
+      tags: ["Private Equity", "Institutional", "Offshore"]
+    },
+    {
+      id: 10,
+      name: "Bonaccord Capital Partners Fund III",
+      description: "Bonaccord Capital Partners Fund III is a middle-market GP stakes fund focusing on growth capital investments in mid-market private sponsors across private equity, private credit, real estate, and real assets. It aims to deliver attractive risk-adjusted returns driven by both elevated yields and capital appreciation.",
+      firm: "Aberdeen Standard Investments",
+      minimumInvestment: "$500,000",
+      performance: "+21.4%",
+      lockupPeriod: "7-9 years",
+      tags: ["Private Equity", "GP Stakes", "Middle Market"]
     }
   ];
   
