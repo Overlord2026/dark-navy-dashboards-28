@@ -1,5 +1,3 @@
-
-
 import React, { useState, useEffect } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
@@ -53,7 +51,7 @@ const Investments = () => {
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const tabParam = params.get("tab");
-    if (tabParam && ["intelligent-alloc", "private-markets", "bfo-models"].includes(tabParam)) {
+    if (tabParam && ["intelligent-alloc", "private-markets"].includes(tabParam)) {
       setSelectedTab(tabParam);
     }
   }, [location.search]);
@@ -203,6 +201,11 @@ const Investments = () => {
   };
 
   const handleTabChange = (value: string) => {
+    // Prevent switching to bfo-models tab
+    if (value === "bfo-models") {
+      toast.info("BFO Models feature is coming soon!");
+      return;
+    }
     setSelectedTab(value);
     navigate(`/client-investments?tab=${value}`, { replace: true });
   };
@@ -278,7 +281,18 @@ const Investments = () => {
           <TabsList className="w-full mb-6">
             <TabsTrigger value="intelligent-alloc" className="flex-1">Intelligent Alloc.</TabsTrigger>
             <TabsTrigger value="private-markets" className="flex-1">Private Markets</TabsTrigger>
-            <TabsTrigger value="bfo-models" className="flex-1">BFO Models</TabsTrigger>
+            <TabsTrigger 
+              value="bfo-models" 
+              className="flex-1 relative cursor-not-allowed opacity-60" 
+              disabled
+            >
+              <span className="flex items-center gap-2">
+                BFO Models
+                <Badge variant="secondary" className="text-xs px-2 py-0.5 bg-yellow-500/20 text-yellow-600 border-yellow-500/30">
+                  Coming Soon
+                </Badge>
+              </span>
+            </TabsTrigger>
           </TabsList>
           
           <TabsContent value="intelligent-alloc">
@@ -371,4 +385,3 @@ const Investments = () => {
 };
 
 export default Investments;
-
