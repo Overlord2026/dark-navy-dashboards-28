@@ -270,68 +270,127 @@ export const ComprehensiveAssetsSummary: React.FC<ComprehensiveAssetsSummaryProp
   );
 
   const NetWorthContent = () => (
-    <Card>
-      <CardContent className="p-6">
-        <h3 className="text-lg font-semibold mb-4">Net Worth Breakdown</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div>
-            <h4 className="text-md font-medium mb-3">Assets: {formatCurrency(totalAssetValue)}</h4>
-            {assetCategories.length === 0 ? (
-              <div className="text-center py-8">
-                <p className="text-muted-foreground">No assets to display</p>
+    <div className="space-y-6">
+      {/* Net Worth Summary Card */}
+      <Card>
+        <CardContent className="p-6">
+          <div className="text-center mb-6">
+            <h3 className="text-2xl font-bold mb-2">Total Net Worth</h3>
+            <p className={`text-4xl font-bold ${totalNetWorth >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+              {formatCurrency(totalNetWorth)}
+            </p>
+            <div className="grid grid-cols-2 gap-8 mt-6">
+              <div className="text-center">
+                <p className="text-lg text-muted-foreground">Total Assets</p>
+                <p className="text-2xl font-semibold text-green-600">{formatCurrency(totalAssetValue)}</p>
               </div>
-            ) : (
-              <div className="space-y-4 max-h-[400px] overflow-y-auto pr-4">
-                {assetCategories.map((category, index) => (
-                  <div key={index}>
-                    <div className="flex justify-between mb-1">
-                      <span>{category.name}</span>
-                      <div className="text-right">
-                        <span className="font-medium">{formatCurrency(category.value)}</span>
-                      </div>
-                    </div>
-                    <Progress 
-                      value={category.value / totalAssetValue * 100} 
-                      className={`h-2`}
-                      style={{backgroundColor: `${category.color}20`}}
-                      indicatorClassName="bg-blue-500"
-                    />
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-          
-          <div>
-            <h4 className="text-md font-medium mb-3">Liabilities: {formatCurrency(totalLiabilityValue)}</h4>
-            {totalLiabilityValue === 0 ? (
-              <div className="text-center py-8">
-                <p className="text-muted-foreground">No liabilities to display</p>
-              </div>
-            ) : (
-              <div className="space-y-4">
-                <div>
-                  <div className="flex justify-between mb-1">
-                    <span>Total Liabilities</span>
-                    <div className="text-right">
-                      <span className="font-medium">{formatCurrency(totalLiabilityValue)}</span>
-                    </div>
-                  </div>
-                  <Progress value={100} className="h-2 bg-red-500/20" indicatorClassName="bg-red-500" />
-                </div>
-              </div>
-            )}
-            
-            <div className="mt-8 pt-4 border-t">
-              <div className="flex justify-between">
-                <span className="font-semibold">Net Worth</span>
-                <span className="font-bold text-xl">{formatCurrency(totalNetWorth)}</span>
+              <div className="text-center">
+                <p className="text-lg text-muted-foreground">Total Liabilities</p>
+                <p className="text-2xl font-semibold text-red-600">{formatCurrency(totalLiabilityValue)}</p>
               </div>
             </div>
           </div>
-        </div>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+
+      {/* Detailed Breakdown */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Assets Breakdown */}
+        <Card>
+          <CardContent className="p-6">
+            <h4 className="text-xl font-semibold mb-4 text-green-600">Assets Breakdown</h4>
+            {assetCategories.length === 0 ? (
+              <div className="text-center py-8">
+                <p className="text-muted-foreground">No assets to display</p>
+                <p className="text-sm text-muted-foreground mt-2">Add some assets to see your breakdown</p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {assetCategories.map((category, index) => (
+                  <div key={index} className="border-b border-border pb-3 last:border-b-0">
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="font-medium">{category.name}</span>
+                      <div className="text-right">
+                        <div className="font-bold">{formatCurrency(category.value)}</div>
+                        <div className="text-sm text-muted-foreground">{category.percentage}% of assets</div>
+                      </div>
+                    </div>
+                    <Progress 
+                      value={category.percentage} 
+                      className="h-2" 
+                      style={{backgroundColor: `${category.color}20`}}
+                    />
+                  </div>
+                ))}
+                <div className="pt-3 border-t border-border">
+                  <div className="flex justify-between items-center font-bold text-lg">
+                    <span>Total Assets</span>
+                    <span className="text-green-600">{formatCurrency(totalAssetValue)}</span>
+                  </div>
+                </div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Liabilities Breakdown */}
+        <Card>
+          <CardContent className="p-6">
+            <h4 className="text-xl font-semibold mb-4 text-red-600">Liabilities Breakdown</h4>
+            {totalLiabilityValue === 0 ? (
+              <div className="text-center py-8">
+                <p className="text-muted-foreground">No liabilities to display</p>
+                <p className="text-sm text-muted-foreground mt-2">You have no recorded liabilities</p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                <div className="border-b border-border pb-3">
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="font-medium">Total Liabilities</span>
+                    <div className="text-right">
+                      <div className="font-bold">{formatCurrency(totalLiabilityValue)}</div>
+                      <div className="text-sm text-muted-foreground">100% of liabilities</div>
+                    </div>
+                  </div>
+                  <Progress value={100} className="h-2 bg-red-500/20" />
+                </div>
+                <div className="pt-3 border-t border-border">
+                  <div className="flex justify-between items-center font-bold text-lg">
+                    <span>Total Liabilities</span>
+                    <span className="text-red-600">{formatCurrency(totalLiabilityValue)}</span>
+                  </div>
+                </div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Net Worth Calculation */}
+      <Card>
+        <CardContent className="p-6">
+          <h4 className="text-xl font-semibold mb-4">Net Worth Calculation</h4>
+          <div className="space-y-3">
+            <div className="flex justify-between items-center text-lg">
+              <span>Total Assets</span>
+              <span className="font-semibold text-green-600">+ {formatCurrency(totalAssetValue)}</span>
+            </div>
+            <div className="flex justify-between items-center text-lg">
+              <span>Total Liabilities</span>
+              <span className="font-semibold text-red-600">- {formatCurrency(totalLiabilityValue)}</span>
+            </div>
+            <div className="border-t border-border pt-3">
+              <div className="flex justify-between items-center text-xl font-bold">
+                <span>Net Worth</span>
+                <span className={totalNetWorth >= 0 ? 'text-green-600' : 'text-red-600'}>
+                  {formatCurrency(totalNetWorth)}
+                </span>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   );
 
   if (!showTabs || hideInternalTabs) {
