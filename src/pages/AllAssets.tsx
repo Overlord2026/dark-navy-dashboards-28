@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { useAuth } from "@/context/AuthContext";
@@ -26,11 +25,10 @@ import { Card, CardContent } from "@/components/ui/card";
 export default function AllAssets() {
   const { isAuthenticated } = useAuth();
   const [mainTab, setMainTab] = useState("summary");
-  const [assetFilter, setAssetFilter] = useState("all");
+  const [assetFilter, setAssetFilter] = useState("assets");
   const [isAddAssetDialogOpen, setIsAddAssetDialogOpen] = useState(false);
 
   const filterOptions = [
-    { value: "all", label: "All Items" },
     { value: "assets", label: "All Assets" },
     { value: "liabilities", label: "Liabilities" },
     { value: "property", label: "Real Estate" },
@@ -45,7 +43,7 @@ export default function AllAssets() {
 
   const getSelectedFilterLabel = () => {
     const selected = filterOptions.find(option => option.value === assetFilter);
-    return selected ? selected.label : "All Items";
+    return selected ? selected.label : "All Assets";
   };
 
   if (!isAuthenticated) {
@@ -115,6 +113,11 @@ export default function AllAssets() {
               
               {assetFilter === "liabilities" ? (
                 <LiabilitiesList />
+              ) : assetFilter === "assets" ? (
+                <>
+                  <SupabaseAssetList filter="all" />
+                  <LiabilitiesList />
+                </>
               ) : (
                 <SupabaseAssetList filter={assetFilter} />
               )}
