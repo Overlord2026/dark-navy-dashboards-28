@@ -75,7 +75,7 @@ export const ScheduleMeetingDialog: React.FC<ScheduleMeetingDialogProps> = ({
       <DialogTrigger asChild>
         <Button variant="secondary" className="gap-2">
           <CalendarClock className="h-4 w-4" />
-          Schedule Appointment
+          Schedule Meeting
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
