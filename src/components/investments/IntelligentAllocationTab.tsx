@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -170,9 +169,6 @@ export const IntelligentAllocationTab = () => {
               <div className="text-muted-foreground">{model.updatedDate}</div>
             </div>
             <div className="col-span-2 flex items-center gap-2">
-              <div className="bg-gray-200 dark:bg-gray-700 h-6 w-6 rounded flex items-center justify-center text-xs">
-                S&P
-              </div>
               <span className="text-sm">{model.benchmark}</span>
             </div>
             <div className="col-span-1 flex gap-1 flex-wrap">
@@ -225,9 +221,6 @@ export const IntelligentAllocationTab = () => {
               </div>
             </div>
             <div className="col-span-2 flex items-center gap-1">
-              <div className="bg-gray-200 dark:bg-gray-700 h-5 w-5 rounded flex items-center justify-center text-xs">
-                S&P
-              </div>
               <span className="text-xs truncate">{model.benchmark}</span>
             </div>
             <div className="col-span-1">
@@ -277,9 +270,6 @@ export const IntelligentAllocationTab = () => {
 
                 {/* Benchmark */}
                 <div className="flex items-center gap-2">
-                  <div className="bg-gray-200 dark:bg-gray-700 h-5 w-5 rounded flex items-center justify-center text-xs">
-                    S&P
-                  </div>
                   <span className="text-xs text-muted-foreground">Benchmark:</span>
                   <span className="text-xs">{model.benchmark}</span>
                 </div>
