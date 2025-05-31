@@ -32,6 +32,7 @@ export const useSupabaseAssets = () => {
       const { data, error } = await supabase
         .from('user_assets')
         .select('*')
+        .eq('user_id', user.id)
         .order('created_at', { ascending: false });
 
       if (error) {
@@ -81,7 +82,6 @@ export const useSupabaseAssets = () => {
       }
 
       toast.success('Asset added successfully');
-      await fetchAssets(); // Refresh the list
       return data;
     } catch (error) {
       console.error('Error:', error);
@@ -112,7 +112,6 @@ export const useSupabaseAssets = () => {
       }
 
       toast.success('Asset updated successfully');
-      await fetchAssets(); // Refresh the list
       return data;
     } catch (error) {
       console.error('Error:', error);
@@ -141,7 +140,6 @@ export const useSupabaseAssets = () => {
       }
 
       toast.success('Asset deleted successfully');
-      await fetchAssets(); // Refresh the list
       return true;
     } catch (error) {
       console.error('Error:', error);
@@ -174,6 +172,31 @@ export const useSupabaseAssets = () => {
 
   useEffect(() => {
     fetchAssets();
+
+    // Set up real-time subscription for immediate updates
+    if (user) {
+      const channel = supabase
+        .channel('asset-changes')
+        .on(
+          'postgres_changes',
+          {
+            event: '*',
+            schema: 'public',
+            table: 'user_assets',
+            filter: `user_id=eq.${user.id}`
+          },
+          (payload) => {
+            console.log('Real-time asset change:', payload);
+            // Refetch assets when any change occurs
+            fetchAssets();
+          }
+        )
+        .subscribe();
+
+      return () => {
+        supabase.removeChannel(channel);
+      };
+    }
   }, [user]);
 
   return {

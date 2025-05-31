@@ -69,7 +69,8 @@ export const useSupabaseLiabilities = () => {
             table: 'user_liabilities',
             filter: `user_id=eq.${user.id}`
           },
-          () => {
+          (payload) => {
+            console.log('Real-time liability change:', payload);
             // Refetch liabilities when any change occurs
             fetchLiabilities();
           }
