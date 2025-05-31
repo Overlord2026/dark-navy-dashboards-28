@@ -20,8 +20,14 @@ export const InterestedButton: React.FC<InterestedButtonProps> = ({
   const { addUserInterest, removeUserInterest, isUserInterested } = useInvestmentData();
   const { user } = useAuth();
   
-  // If no offeringId is provided, this is a legacy usage (portfolio models, etc.)
-  const isInterested = offeringId ? isUserInterested(offeringId) : false;
+  // Helper function to check if string is a valid UUID
+  const isValidUUID = (str: string) => {
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    return uuidRegex.test(str);
+  };
+  
+  // Only check database interest if offeringId is a valid UUID
+  const isInterested = offeringId && isValidUUID(offeringId) ? isUserInterested(offeringId) : false;
   
   const handleInterested = async () => {
     if (!user) {
@@ -29,8 +35,8 @@ export const InterestedButton: React.FC<InterestedButtonProps> = ({
       return;
     }
 
-    // If no offeringId, just show a general message
-    if (!offeringId) {
+    // If no offeringId or invalid UUID, just show a general message
+    if (!offeringId || !isValidUUID(offeringId)) {
       toast.success(`Interest noted for ${assetName}`, {
         description: "Your advisor will be notified about your interest.",
       });
