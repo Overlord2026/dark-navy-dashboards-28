@@ -10,6 +10,7 @@ interface FinancialOverviewProps {
 export const FinancialOverview = ({ showBusinessMetrics = false }: FinancialOverviewProps) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+      {/* Commented out Income/Revenue card
       <DashboardCard
         title={showBusinessMetrics ? "Revenue" : "Income"}
         className="xl:col-span-1"
@@ -35,7 +36,9 @@ export const FinancialOverview = ({ showBusinessMetrics = false }: FinancialOver
         </div>
         <Progress value={showBusinessMetrics ? 78 : 77} className="h-2 bg-muted" />
       </DashboardCard>
+      */}
 
+      {/* Commented out Expenses card
       <DashboardCard
         title="Expenses"
         className="xl:col-span-1"
@@ -61,7 +64,9 @@ export const FinancialOverview = ({ showBusinessMetrics = false }: FinancialOver
         </div>
         <Progress value={showBusinessMetrics ? 76 : 76} className="h-2 bg-muted" />
       </DashboardCard>
+      */}
 
+      {/* Commented out Cash Flow card
       <DashboardCard
         title="Cash Flow"
         className="xl:col-span-1"
@@ -87,7 +92,9 @@ export const FinancialOverview = ({ showBusinessMetrics = false }: FinancialOver
         </div>
         <Progress value={showBusinessMetrics ? 82 : 78} className="h-2 bg-muted" />
       </DashboardCard>
+      */}
 
+      {/* Commented out Profit Margin/Savings Rate card
       <DashboardCard
         title={showBusinessMetrics ? "Profit Margin" : "Savings Rate"}
         className="xl:col-span-1"
@@ -113,6 +120,7 @@ export const FinancialOverview = ({ showBusinessMetrics = false }: FinancialOver
         </div>
         <Progress value={showBusinessMetrics ? 75 : 80} className="h-2 bg-muted" />
       </DashboardCard>
+      */}
     </div>
   );
 };
