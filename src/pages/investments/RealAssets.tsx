@@ -15,45 +15,109 @@ const RealAssets = () => {
   const realAssetsOfferings = [
     {
       id: 1,
-      name: "Commercial Real Estate Fund V",
-      description: "Diversified portfolio of commercial properties including office, retail, and industrial assets.",
-      firm: "Real Estate Capital Partners",
-      minimumInvestment: "$500,000",
+      name: "Blue Owl Real Estate Net Lease Trust",
+      description: "Blue Owl Real Estate Net Lease Trust (ORENT) aims to deliver a resilient real estate strategy by acquiring and managing a diversified portfolio of single-tenant commercial properties that are net leased on long-term contracts to creditworthy tenants. The structure provides tax-advantaged, predictable income distributions.",
+      firm: "Blue Owl",
+      minimumInvestment: "$50,000",
       performance: "+12.4%",
       lockupPeriod: "5-7 years",
-      tags: ["Commercial", "Real Estate", "Income"],
+      tags: ["Real Estate", "Net Lease", "Income"],
       featured: true
     },
     {
       id: 2,
-      name: "Infrastructure Opportunities Fund",
-      description: "Investments in essential infrastructure assets including utilities, transportation, and energy.",
-      firm: "Infrastructure Investment Group",
-      minimumInvestment: "$1,000,000",
+      name: "CIM Opportunity Zone Fund, L.P.",
+      description: "CIM Opportunity Zone Fund is a low-leverage, open-ended 'develop-to-core' vehicle designed for infrastructure and real estate investments in designated Opportunity Zones. The fund leverages CIM's twenty-year experience in Opportunity Zones and focuses on investments in urban areas.",
+      firm: "CIM Group",
+      minimumInvestment: "$100,000",
       performance: "+9.8%",
       lockupPeriod: "7-10 years",
-      tags: ["Infrastructure", "Utilities", "ESG"]
-    },
-    {
-      id: 3,
-      name: "Natural Resources Fund III",
-      description: "Exposure to timberland, agricultural land, and natural resource extraction investments.",
-      firm: "Natural Capital Management",
-      minimumInvestment: "$250,000",
-      performance: "+8.6%",
-      lockupPeriod: "5-8 years",
-      tags: ["Timberland", "Agriculture", "Resources"],
+      tags: ["Opportunity Zones", "Urban Development", "Tax-Advantaged"],
       featured: true
     },
     {
+      id: 3,
+      name: "Clarion Ventures Qualified Opportunity Zone Partners",
+      description: "Clarion Ventures Qualified Opportunity Zone Partners focuses on real estate investments through a 'Create-to-Core' strategy in designated Qualified Opportunity Zones, leveraging Clarion's expertise in value-add and opportunistic investments.",
+      firm: "Clarion Partners",
+      minimumInvestment: "$250,000",
+      performance: "+8.6%",
+      lockupPeriod: "5-8 years",
+      tags: ["Opportunity Zones", "Create-to-Core", "Value-Add"]
+    },
+    {
       id: 4,
-      name: "Energy Transition Real Assets",
-      description: "Investments in renewable energy infrastructure and clean technology real assets.",
-      firm: "Green Energy Real Assets",
+      name: "KKR Infrastructure Conglomerate LLC ('K-INFRA')",
+      description: "K-INFRA offers investors exposure to private infrastructure opportunities alongside an institutional manager, with a diversified strategy spanning different sectors, geographies, and asset allocations.",
+      firm: "KKR",
       minimumInvestment: "$500,000",
       performance: "+14.2%",
       lockupPeriod: "6-9 years",
-      tags: ["Renewable Energy", "Clean Tech", "ESG"]
+      tags: ["Infrastructure", "Diversified", "Global"],
+      featured: true
+    },
+    {
+      id: 5,
+      name: "iCapital Infrastructure Investments Access Fund, L.P.",
+      description: "iCapital Infrastructure Investments Access Fund is a diversified portfolio focused on essential services, holding private companies and assets across multiple sectors, providing robust and stable returns.",
+      firm: "iCapital",
+      minimumInvestment: "$100,000",
+      performance: "+11.3%",
+      lockupPeriod: "5-8 years",
+      tags: ["Infrastructure", "Essential Services", "Stable Returns"]
+    },
+    {
+      id: 6,
+      name: "1031 Exchange DSTs",
+      description: "1031 Exchange DSTs allow investors who have appreciated real estate to defer taxes by exchanging into like-kind properties, offering a streamlined mechanism to access high-quality commercial real estate investments.",
+      firm: "Various Sponsors",
+      minimumInvestment: "$25,000",
+      performance: "+9.5%",
+      lockupPeriod: "3-5 years",
+      tags: ["1031 Exchange", "Tax Deferral", "Commercial Real Estate"],
+      featured: true
+    },
+    {
+      id: 7,
+      name: "Apollo Realty Income Solutions, Inc.",
+      description: "Apollo Realty Income Solutions is Apollo's flagship direct real estate income product, designed as a perpetually-offered, non-traded REIT that provides individual investors access to a diversified, income-generating portfolio of commercial properties.",
+      firm: "Apollo Global Management",
+      minimumInvestment: "$50,000",
+      performance: "+10.7%",
+      lockupPeriod: "3-5 years",
+      tags: ["REIT", "Commercial Real Estate", "Income"],
+      featured: true
+    },
+    {
+      id: 8,
+      name: "Ares Diversified Real Estate Exchange - Diversified V DST",
+      description: "Ares Diversified Real Estate Exchange is a 1031 exchange program enabling investors to transition appreciated real estate into a diversified portfolio of high-quality commercial properties.",
+      firm: "Ares Management",
+      minimumInvestment: "$100,000",
+      performance: "+8.9%",
+      lockupPeriod: "4-6 years",
+      tags: ["1031 Exchange", "Diversified Portfolio", "Commercial Real Estate"]
+    },
+    {
+      id: 9,
+      name: "Ares Industrial Real Estate Exchange - Portfolio 7 DST",
+      description: "Ares Industrial Real Estate Exchange is a 1031 exchange option focused on providing investors with access to high-quality industrial properties through a diversified portfolio structure.",
+      firm: "Ares Management",
+      minimumInvestment: "$100,000",
+      performance: "+9.2%",
+      lockupPeriod: "4-6 years",
+      tags: ["1031 Exchange", "Industrial Real Estate", "Portfolio"]
+    },
+    {
+      id: 10,
+      name: "Ares Industrial Real Estate Income Trust Inc.",
+      description: "Ares Industrial Real Estate Income Trust is a non-exchange traded REIT offering investors exposure to industrial real estate, focusing on well-leased distribution warehouses and aiming to deliver consistent monthly income distributions.",
+      firm: "Ares Management",
+      minimumInvestment: "$50,000",
+      performance: "+10.1%",
+      lockupPeriod: "3-5 years",
+      tags: ["REIT", "Industrial Real Estate", "Monthly Income"],
+      featured: true
     }
   ];
   
