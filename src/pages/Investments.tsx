@@ -1,4 +1,5 @@
 
+
 import React, { useState, useEffect } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
@@ -39,7 +40,7 @@ interface ModelPortfolio {
 const Investments = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [selectedTab, setSelectedTab] = useState("bfo-models");
+  const [selectedTab, setSelectedTab] = useState("intelligent-alloc");
   const [alternativeData, setAlternativeData] = useState<any>({});
   const [isLoading, setIsLoading] = useState(true);
   const [selectedAsset, setSelectedAsset] = useState("");
@@ -52,7 +53,7 @@ const Investments = () => {
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const tabParam = params.get("tab");
-    if (tabParam && ["bfo-models", "intelligent-alloc", "private-markets"].includes(tabParam)) {
+    if (tabParam && ["intelligent-alloc", "private-markets", "bfo-models"].includes(tabParam)) {
       setSelectedTab(tabParam);
     }
   }, [location.search]);
@@ -275,34 +276,10 @@ const Investments = () => {
 
         <Tabs value={selectedTab} className="w-full" onValueChange={handleTabChange}>
           <TabsList className="w-full mb-6">
-            <TabsTrigger value="bfo-models" className="flex-1">BFO Models</TabsTrigger>
             <TabsTrigger value="intelligent-alloc" className="flex-1">Intelligent Alloc.</TabsTrigger>
             <TabsTrigger value="private-markets" className="flex-1">Private Markets</TabsTrigger>
+            <TabsTrigger value="bfo-models" className="flex-1">BFO Models</TabsTrigger>
           </TabsList>
-          
-          <TabsContent value="bfo-models" className="space-y-8">
-            <div className="space-y-6">
-              <div className="flex justify-between items-center">
-                <h2 className="text-2xl font-semibold text-white">Your Model Portfolios</h2>
-                <Button 
-                  onClick={() => setPortfolioPickerOpen(true)}
-                  className="bg-yellow-500 hover:bg-yellow-600 text-black font-medium px-6"
-                >
-                  Pick a Model Portfolio
-                </Button>
-              </div>
-              
-              {bfoError && (
-                <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-4">
-                  <p className="text-red-400">Error loading portfolio data: {bfoError}</p>
-                </div>
-              )}
-              
-              <div className="bg-slate-900 rounded-lg border border-slate-700 overflow-hidden">
-                <BFOModelsTable assignments={userAssignments} loading={bfoLoading} />
-              </div>
-            </div>
-          </TabsContent>
           
           <TabsContent value="intelligent-alloc">
             <IntelligentAllocationTab />
@@ -351,6 +328,30 @@ const Investments = () => {
               </div>
             </div>
           </TabsContent>
+          
+          <TabsContent value="bfo-models" className="space-y-8">
+            <div className="space-y-6">
+              <div className="flex justify-between items-center">
+                <h2 className="text-2xl font-semibold text-white">Your Model Portfolios</h2>
+                <Button 
+                  onClick={() => setPortfolioPickerOpen(true)}
+                  className="bg-yellow-500 hover:bg-yellow-600 text-black font-medium px-6"
+                >
+                  Pick a Model Portfolio
+                </Button>
+              </div>
+              
+              {bfoError && (
+                <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-4">
+                  <p className="text-red-400">Error loading portfolio data: {bfoError}</p>
+                </div>
+              )}
+              
+              <div className="bg-slate-900 rounded-lg border border-slate-700 overflow-hidden">
+                <BFOModelsTable assignments={userAssignments} loading={bfoLoading} />
+              </div>
+            </div>
+          </TabsContent>
         </Tabs>
         
         {scheduleMeetingOpen && (
@@ -370,3 +371,4 @@ const Investments = () => {
 };
 
 export default Investments;
+
