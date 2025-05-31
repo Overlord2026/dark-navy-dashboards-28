@@ -15,45 +15,118 @@ const PrivateDebt = () => {
   const privateDebtOfferings = [
     {
       id: 1,
-      name: "Senior Credit Opportunities Fund III",
-      description: "Focused on senior secured credit investments in middle-market companies with strong cash flows.",
-      firm: "Credit Partners Capital",
-      minimumInvestment: "$500,000",
-      performance: "+9.2%",
+      name: "Blackstone Private Credit Fund (\"BCRED\")",
+      description: "Blackstone Private Credit Fund (\"BCRED\") is a non-exchange traded business development company (BDC) that expects to invest at least 80% of its total assets in private credit investments, including loans, bonds, and other credit instruments issued in private offerings or by private companies.",
+      firm: "Blackstone",
+      minimumInvestment: "$25,000",
+      performance: "+8.5%",
       lockupPeriod: "3-5 years",
-      tags: ["Senior Secured", "Credit", "Middle Market"],
+      tags: ["BDC", "Private Credit", "Fixed Income"],
       featured: true
     },
     {
       id: 2,
-      name: "Direct Lending Fund IV",
-      description: "Provides direct lending solutions to small and mid-cap companies across various industries.",
-      firm: "Direct Capital Management",
-      minimumInvestment: "$250,000",
-      performance: "+8.7%",
-      lockupPeriod: "4-6 years",
-      tags: ["Direct Lending", "Mid-Cap", "Diversified"]
+      name: "Blue Owl Credit Income Corp. (OCIC)",
+      description: "OCIC is an income-focused private credit strategy that invests primarily in senior secured, floating rate debt of upper middle market companies throughout the United States.",
+      firm: "Blue Owl",
+      minimumInvestment: "$50,000",
+      performance: "+9.2%",
+      lockupPeriod: "3-5 years",
+      tags: ["Senior Secured", "Floating Rate", "Middle Market"],
+      featured: true
     },
     {
       id: 3,
-      name: "Distressed Debt Recovery Fund",
-      description: "Specializes in distressed debt investments with active workout strategies and value creation.",
-      firm: "Distressed Solutions Group",
-      minimumInvestment: "$1,000,000",
-      performance: "+15.3%",
-      lockupPeriod: "2-4 years",
-      tags: ["Distressed", "Special Situations", "High Yield"],
+      name: "Blue Owl Technology Income Corp. (OTIC)",
+      description: "OTIC seeks to provide an efficient, risk-adjusted approach to investing in the rapidly growing software and technology sector, constructing a diversified portfolio of senior secured floating rate loans and, to a lesser extent, equity investments.",
+      firm: "Blue Owl",
+      minimumInvestment: "$50,000",
+      performance: "+10.1%",
+      lockupPeriod: "4-6 years",
+      tags: ["Technology", "Software", "Senior Secured"],
       featured: true
     },
     {
       id: 4,
-      name: "Mezzanine Capital Fund II",
-      description: "Provides mezzanine financing to support growth, acquisitions, and management buyouts.",
-      firm: "Mezzanine Investment Partners",
-      minimumInvestment: "$500,000",
-      performance: "+11.8%",
+      name: "CAIS Monroe PCF V (Onshore), L.P.",
+      description: "CAIS Monroe PCF V (Onshore), L.P. will invest substantially all of its assets into Monroe Capital Private Credit Fund V, focusing on senior secured loans, unitranche, and opportunistic investments in lower middle market companies based in North America.",
+      firm: "Monroe Capital",
+      minimumInvestment: "$100,000",
+      performance: "+8.8%",
       lockupPeriod: "5-7 years",
-      tags: ["Mezzanine", "Growth Capital", "Hybrid"]
+      tags: ["Lower Middle Market", "Unitranche", "North America"],
+      featured: true
+    },
+    {
+      id: 5,
+      name: "KKR FS Income Trust (\"K-FIT\")",
+      description: "K-FIT is a privately offered BDC that provides direct access to KKR's extensive Private Credit Platform, targeting allocations to both corporate direct lending and asset-based finance.",
+      firm: "KKR",
+      minimumInvestment: "$50,000",
+      performance: "+9.5%",
+      lockupPeriod: "3-5 years",
+      tags: ["BDC", "Direct Lending", "Asset-Based Finance"],
+      featured: true
+    },
+    {
+      id: 6,
+      name: "ACRE Credit II Offshore LP",
+      description: "ACRE Credit Offshore II is an investment fund based in the Cayman Islands, raised from multiple investors with a focus on providing credit solutions with a minimum investment requirement.",
+      firm: "Asia Capital Real Estate",
+      minimumInvestment: "$250,000",
+      performance: "+7.9%",
+      lockupPeriod: "4-6 years",
+      tags: ["Offshore", "Cayman Islands", "Credit Solutions"]
+    },
+    {
+      id: 7,
+      name: "ACRE Credit Partners II LP",
+      description: "ACRE Credit Partners II is a real estate debt fund managed by Asia Capital Real Estate, focused on delivering credit solutions in the real estate sector.",
+      firm: "Asia Capital Real Estate",
+      minimumInvestment: "$250,000",
+      performance: "+8.3%",
+      lockupPeriod: "5-7 years",
+      tags: ["Real Estate Debt", "Credit Solutions"]
+    },
+    {
+      id: 8,
+      name: "AG Twin Brook Capital Income Fund (\"TCAP\")",
+      description: "TCAP's objective is to generate consistent total returns through investments in private debt opportunities, targeting attractive risk-adjusted returns primarily via current income.",
+      firm: "Angelo Gordon",
+      minimumInvestment: "$100,000",
+      performance: "+8.1%",
+      lockupPeriod: "3-5 years",
+      tags: ["Current Income", "Consistent Returns", "Private Debt"]
+    },
+    {
+      id: 9,
+      name: "Apollo Asset Backed Credit Company LLC",
+      description: "Apollo Asset Backed Credit Company is a turnkey solution offering access to high-quality, asset-backed instruments across diverse sectors to generate yield in excess of publicly traded credit.",
+      firm: "Apollo Global Management",
+      minimumInvestment: "$100,000",
+      performance: "+9.7%",
+      lockupPeriod: "4-6 years",
+      tags: ["Asset-Backed", "High Yield", "Diverse Sectors"]
+    },
+    {
+      id: 10,
+      name: "Apollo Debt Solutions BDC",
+      description: "Apollo Debt Solutions BDC is a registered, non-listed business development company that provides access to exclusive private debt investments, emphasizing senior secured loans and broadly syndicated deals for individual investors.",
+      firm: "Apollo Global Management",
+      minimumInvestment: "$50,000",
+      performance: "+8.9%",
+      lockupPeriod: "3-5 years",
+      tags: ["BDC", "Senior Secured", "Broadly Syndicated"]
+    },
+    {
+      id: 11,
+      name: "Cliffwater Corporate Lending Fund",
+      description: "Focused on direct lending to middle market companies, providing income generation and capital preservation.",
+      firm: "Cliffwater LLC",
+      minimumInvestment: "$25,000",
+      performance: "+7.8%",
+      lockupPeriod: "3-5 years",
+      tags: ["Direct Lending", "Middle Market", "Income"]
     }
   ];
   
