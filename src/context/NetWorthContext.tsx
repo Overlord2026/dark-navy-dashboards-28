@@ -1,7 +1,6 @@
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, ReactNode } from 'react';
 import { Asset, Account, Property } from '@/types/assets';
-import { useAssetManagement } from '@/hooks/useAssetManagement';
 import { useSupabaseAssets } from '@/hooks/useSupabaseAssets';
 import { useSupabaseLiabilities } from '@/hooks/useSupabaseLiabilities';
 
@@ -27,25 +26,22 @@ const NetWorthContext = createContext<NetWorthContextType | undefined>(undefined
 export { type Asset }; // Export Asset type to be used by components
 
 export const NetWorthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  console.log('NetWorthProvider rendering');
+  console.log('NetWorthProvider rendering with real-time Supabase data');
   
   // Use Supabase hooks for real-time data
-  const { assets: supabaseAssets, getTotalValue, loading: assetsLoading } = useSupabaseAssets();
-  const { getTotalLiabilities, loading: liabilitiesLoading } = useSupabaseLiabilities();
-  
-  // Use our custom hook for asset management logic
   const { 
-    assets: localAssets, 
-    accounts,
-    addAsset, 
-    updateAsset, 
-    removeAsset, 
-    getTotalNetWorth: getLocalTotalNetWorth,
-    getTotalAssetsByType: getLocalTotalAssetsByType,
-    getAssetsByOwner,
-    getAssetsByCategory,
-    syncPropertiesToAssets
-  } = useAssetManagement();
+    assets: supabaseAssets, 
+    getTotalValue, 
+    loading: assetsLoading,
+    addAsset: addSupabaseAsset,
+    updateAsset: updateSupabaseAsset,
+    deleteAsset: deleteSupabaseAsset
+  } = useSupabaseAssets();
+  
+  const { 
+    getTotalLiabilities, 
+    loading: liabilitiesLoading 
+  } = useSupabaseLiabilities();
 
   // Convert Supabase assets to Asset format
   const convertedAssets: Asset[] = supabaseAssets.map(asset => ({
@@ -58,11 +54,8 @@ export const NetWorthProvider: React.FC<{ children: ReactNode }> = ({ children }
     source: 'manual'
   }));
 
-  // Combine local and Supabase assets
-  const allAssets = [...localAssets, ...convertedAssets];
-  
-  // Calculate totals using real Supabase data
-  const totalAssetValue = getTotalValue() + localAssets.reduce((total, asset) => total + asset.value, 0);
+  // Use real Supabase data
+  const totalAssetValue = getTotalValue();
   const totalLiabilityValue = getTotalLiabilities();
   const loading = assetsLoading || liabilitiesLoading;
 
@@ -72,20 +65,58 @@ export const NetWorthProvider: React.FC<{ children: ReactNode }> = ({ children }
   };
 
   const getTotalAssetsByType = (type: Asset['type']) => {
-    // Get from Supabase assets
-    const supabaseValue = supabaseAssets
+    return supabaseAssets
       .filter(asset => asset.type === type)
       .reduce((total, asset) => total + Number(asset.value), 0);
-    
-    // Get from local assets
-    const localValue = getLocalTotalAssetsByType(type);
-    
-    return supabaseValue + localValue;
+  };
+
+  const getAssetsByOwner = (owner: string) => {
+    return convertedAssets.filter(asset => asset.owner === owner);
+  };
+
+  const getAssetsByCategory = (category: string) => {
+    if (category === 'vehicles') {
+      return convertedAssets.filter(asset => ['vehicle', 'boat'].includes(asset.type));
+    }
+    if (category === 'collectibles') {
+      return convertedAssets.filter(asset => ['antique', 'collectible', 'jewelry', 'art'].includes(asset.type));
+    }
+    if (category === 'all') {
+      return convertedAssets;
+    }
+    return convertedAssets.filter(asset => asset.type === category);
+  };
+
+  const addAsset = async (asset: Asset) => {
+    await addSupabaseAsset({
+      name: asset.name,
+      type: asset.type,
+      owner: asset.owner,
+      value: asset.value,
+    });
+  };
+
+  const updateAsset = async (id: string, updates: Partial<Asset>) => {
+    await updateSupabaseAsset(id, {
+      name: updates.name,
+      type: updates.type,
+      owner: updates.owner,
+      value: updates.value,
+    });
+  };
+
+  const removeAsset = async (id: string) => {
+    await deleteSupabaseAsset(id);
+  };
+
+  const syncPropertiesToAssets = (properties: Property[]) => {
+    // This function could sync property data with assets if needed
+    console.log('Syncing properties to assets:', properties.length);
   };
 
   const contextValue = {
-    assets: allAssets, 
-    accounts,
+    assets: convertedAssets, 
+    accounts: [], // Empty for now, could be populated from another Supabase table
     totalAssetValue,
     totalLiabilityValue,
     addAsset, 
@@ -99,7 +130,7 @@ export const NetWorthProvider: React.FC<{ children: ReactNode }> = ({ children }
     loading
   };
 
-  console.log('NetWorthProvider context created with assets:', allAssets.length, 'total value:', totalAssetValue);
+  console.log('NetWorthProvider context created with Supabase assets:', convertedAssets.length, 'total value:', totalAssetValue);
 
   return (
     <NetWorthContext.Provider value={contextValue}>
