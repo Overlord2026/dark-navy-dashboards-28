@@ -8,11 +8,12 @@ import { ArrowLeft } from "lucide-react";
 import { OfferingCard } from "@/components/investments/OfferingCard";
 import { Badge } from "@/components/ui/badge";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
+import { adaptLegacyOffering, type LegacyOffering } from "@/utils/investmentDataAdapter";
 
 const HedgeFunds = () => {
   const navigate = useNavigate();
   
-  const hedgeFundOfferings = [
+  const hedgeFundOfferings: LegacyOffering[] = [
     {
       id: 1,
       name: "Brevan Howard PT Fund LP",
@@ -97,6 +98,11 @@ const HedgeFunds = () => {
       tags: ["BDC", "Senior Secured", "Broadly Syndicated"]
     }
   ];
+
+  // Convert legacy offerings to new format
+  const adaptedOfferings = hedgeFundOfferings.map(offering => 
+    adaptLegacyOffering(offering, 'hedge-fund')
+  );
   
   return (
     <ThreeColumnLayout activeMainItem="investments" title="Investment Management" secondaryMenuItems={[]}>
@@ -145,7 +151,7 @@ const HedgeFunds = () => {
               </p>
               
               <div className="grid grid-cols-1 gap-6 mb-8">
-                {hedgeFundOfferings.map((offering) => (
+                {adaptedOfferings.map((offering) => (
                   <OfferingCard key={offering.id} offering={offering} />
                 ))}
               </div>

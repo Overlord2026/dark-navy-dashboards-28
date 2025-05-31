@@ -8,11 +8,12 @@ import { ArrowLeft } from "lucide-react";
 import { OfferingCard } from "@/components/investments/OfferingCard";
 import { Badge } from "@/components/ui/badge";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
+import { adaptLegacyOffering, type LegacyOffering } from "@/utils/investmentDataAdapter";
 
 const PrivateDebt = () => {
   const navigate = useNavigate();
   
-  const privateDebtOfferings = [
+  const privateDebtOfferings: LegacyOffering[] = [
     {
       id: 1,
       name: "Blackstone Private Credit Fund (\"BCRED\")",
@@ -129,6 +130,11 @@ const PrivateDebt = () => {
       tags: ["Direct Lending", "Middle Market", "Income"]
     }
   ];
+
+  // Convert legacy offerings to new format
+  const adaptedOfferings = privateDebtOfferings.map(offering => 
+    adaptLegacyOffering(offering, 'private-debt')
+  );
   
   return (
     <ThreeColumnLayout activeMainItem="investments" title="Investment Management" secondaryMenuItems={[]}>
@@ -177,7 +183,7 @@ const PrivateDebt = () => {
               </p>
               
               <div className="grid grid-cols-1 gap-6 mb-8">
-                {privateDebtOfferings.map((offering) => (
+                {adaptedOfferings.map((offering) => (
                   <OfferingCard key={offering.id} offering={offering} />
                 ))}
               </div>

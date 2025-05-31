@@ -8,11 +8,12 @@ import { ArrowLeft } from "lucide-react";
 import { OfferingCard } from "@/components/investments/OfferingCard";
 import { Badge } from "@/components/ui/badge";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
+import { adaptLegacyOffering, type LegacyOffering } from "@/utils/investmentDataAdapter";
 
 const RealAssets = () => {
   const navigate = useNavigate();
   
-  const realAssetsOfferings = [
+  const realAssetsOfferings: LegacyOffering[] = [
     {
       id: 1,
       name: "Blue Owl Real Estate Net Lease Trust",
@@ -120,6 +121,11 @@ const RealAssets = () => {
       featured: true
     }
   ];
+
+  // Convert legacy offerings to new format
+  const adaptedOfferings = realAssetsOfferings.map(offering => 
+    adaptLegacyOffering(offering, 'real-assets')
+  );
   
   return (
     <ThreeColumnLayout activeMainItem="investments" title="Investment Management" secondaryMenuItems={[]}>
@@ -168,7 +174,7 @@ const RealAssets = () => {
               </p>
               
               <div className="grid grid-cols-1 gap-6 mb-8">
-                {realAssetsOfferings.map((offering) => (
+                {adaptedOfferings.map((offering) => (
                   <OfferingCard key={offering.id} offering={offering} />
                 ))}
               </div>

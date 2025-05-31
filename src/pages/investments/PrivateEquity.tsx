@@ -8,11 +8,12 @@ import { ArrowLeft } from "lucide-react";
 import { OfferingCard } from "@/components/investments/OfferingCard";
 import { Badge } from "@/components/ui/badge";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
+import { adaptLegacyOffering, type LegacyOffering } from "@/utils/investmentDataAdapter";
 
 const PrivateEquity = () => {
   const navigate = useNavigate();
   
-  const privateEquityOfferings = [
+  const privateEquityOfferings: LegacyOffering[] = [
     {
       id: 1,
       name: "AMG Pantheon Fund, LLC",
@@ -119,6 +120,11 @@ const PrivateEquity = () => {
       tags: ["Private Equity", "GP Stakes", "Middle Market"]
     }
   ];
+
+  // Convert legacy offerings to new format
+  const adaptedOfferings = privateEquityOfferings.map(offering => 
+    adaptLegacyOffering(offering, 'private-equity')
+  );
   
   return (
     <ThreeColumnLayout activeMainItem="investments" title="Investment Management" secondaryMenuItems={[]}>
@@ -167,7 +173,7 @@ const PrivateEquity = () => {
               </p>
               
               <div className="grid grid-cols-1 gap-6 mb-8">
-                {privateEquityOfferings.map((offering) => (
+                {adaptedOfferings.map((offering) => (
                   <OfferingCard key={offering.id} offering={offering} />
                 ))}
               </div>

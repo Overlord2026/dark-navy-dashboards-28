@@ -8,11 +8,12 @@ import { ArrowLeft } from "lucide-react";
 import { OfferingCard } from "@/components/investments/OfferingCard";
 import { Badge } from "@/components/ui/badge";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
+import { adaptLegacyOffering, type LegacyOffering } from "@/utils/investmentDataAdapter";
 
 const Collectibles = () => {
   const navigate = useNavigate();
   
-  const collectiblesOfferings = [
+  const collectiblesOfferings: LegacyOffering[] = [
     {
       id: 1,
       name: "Masterworks",
@@ -36,6 +37,11 @@ const Collectibles = () => {
       featured: true
     }
   ];
+
+  // Convert legacy offerings to new format
+  const adaptedOfferings = collectiblesOfferings.map(offering => 
+    adaptLegacyOffering(offering, 'collectibles')
+  );
   
   return (
     <ThreeColumnLayout activeMainItem="investments" title="Investment Management" secondaryMenuItems={[]}>
@@ -84,7 +90,7 @@ const Collectibles = () => {
               </p>
               
               <div className="grid grid-cols-1 gap-6 mb-8">
-                {collectiblesOfferings.map((offering) => (
+                {adaptedOfferings.map((offering) => (
                   <OfferingCard key={offering.id} offering={offering} />
                 ))}
               </div>

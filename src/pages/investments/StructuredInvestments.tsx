@@ -88,7 +88,6 @@ const StructuredInvestments = () => {
     <ThreeColumnLayout activeMainItem="investments" title="Structured Investments">
       <div className="space-y-8">
         <CategoryOverview 
-          category="structured-investments"
           data={categoryData}
         />
         

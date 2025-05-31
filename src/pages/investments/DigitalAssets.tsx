@@ -8,11 +8,12 @@ import { ArrowLeft } from "lucide-react";
 import { OfferingCard } from "@/components/investments/OfferingCard";
 import { Badge } from "@/components/ui/badge";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
+import { adaptLegacyOffering, type LegacyOffering } from "@/utils/investmentDataAdapter";
 
 const DigitalAssets = () => {
   const navigate = useNavigate();
   
-  const digitalAssetsOfferings = [
+  const digitalAssetsOfferings: LegacyOffering[] = [
     {
       id: 1,
       name: "Galaxy Bitcoin Fund LP",
@@ -68,6 +69,11 @@ const DigitalAssets = () => {
       featured: true
     }
   ];
+
+  // Convert legacy offerings to new format
+  const adaptedOfferings = digitalAssetsOfferings.map(offering => 
+    adaptLegacyOffering(offering, 'digital-assets')
+  );
   
   return (
     <ThreeColumnLayout activeMainItem="investments" title="Investment Management" secondaryMenuItems={[]}>
@@ -116,7 +122,7 @@ const DigitalAssets = () => {
               </p>
               
               <div className="grid grid-cols-1 gap-6 mb-8">
-                {digitalAssetsOfferings.map((offering) => (
+                {adaptedOfferings.map((offering) => (
                   <OfferingCard key={offering.id} offering={offering} />
                 ))}
               </div>
