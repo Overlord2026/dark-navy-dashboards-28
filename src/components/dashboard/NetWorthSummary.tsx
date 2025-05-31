@@ -55,107 +55,107 @@ export const NetWorthSummary = () => {
 
     return (
       <div className={cn(
-        "rounded-lg p-4 border transition-all duration-300",
+        "rounded-lg p-8 border transition-all duration-300 min-h-[800px]",
         isLightTheme 
           ? "bg-card border-border text-foreground" 
           : "bg-[#121a2c]/80 border-gray-800"
       )}>
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold flex items-center">
+        <div className="flex items-center justify-between mb-8">
+          <h2 className="text-3xl font-semibold flex items-center">
             <Wallet className={cn(
-              "mr-2 h-5 w-5",
+              "mr-3 h-8 w-8",
               isLightTheme ? "text-blue-600" : "text-blue-400"
             )} />
             Net Worth Summary
           </h2>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             <Button 
               variant="ghost" 
               size="icon" 
-              className="h-6 w-6"
+              className="h-8 w-8"
               onClick={() => navigate('all-assets')}
             >
-              <Maximize2 className="h-4 w-4" />
+              <Maximize2 className="h-5 w-5" />
               <span className="sr-only">View All Assets</span>
             </Button>
             <span className={cn(
-              "flex items-center text-sm",
+              "flex items-center text-lg",
               isLightTheme ? "text-green-600" : "text-green-400"
             )}>
-              <ArrowUpRight className="mr-1 h-4 w-4" />
+              <ArrowUpRight className="mr-2 h-5 w-5" />
               +5.2%
             </span>
           </div>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <div className={cn(
-            "p-3 rounded-lg border transition-colors",
+            "p-6 rounded-lg border transition-colors",
             isLightTheme 
               ? "bg-card border-border" 
               : "bg-[#1a2236] border-gray-800"
           )}>
             <div className={cn(
-              "text-sm mb-1",
+              "text-lg mb-3",
               isLightTheme ? "text-muted-foreground" : "text-gray-400"
             )}>Total Assets</div>
-            <div className="text-xl font-semibold">{formatCurrency(totalNetWorth)}</div>
+            <div className="text-3xl font-semibold">{formatCurrency(totalNetWorth)}</div>
             <div className={cn(
-              "text-xs",
+              "text-sm mt-2",
               isLightTheme ? "text-green-600" : "text-green-400"
             )}>+$124,500 (5.3%)</div>
           </div>
           
           <div className={cn(
-            "p-3 rounded-lg border transition-colors",
+            "p-6 rounded-lg border transition-colors",
             isLightTheme 
               ? "bg-card border-border" 
               : "bg-[#1a2236] border-gray-800"
           )}>
             <div className={cn(
-              "text-sm mb-1",
+              "text-lg mb-3",
               isLightTheme ? "text-muted-foreground" : "text-gray-400"
             )}>Total Liabilities</div>
-            <div className="text-xl font-semibold">{formatCurrency(845210)}</div>
+            <div className="text-3xl font-semibold">{formatCurrency(845210)}</div>
             <div className={cn(
-              "text-xs",
+              "text-sm mt-2",
               isLightTheme ? "text-red-600" : "text-red-400"
             )}>+$12,300 (1.5%)</div>
           </div>
           
           <div className={cn(
-            "p-3 rounded-lg border relative transition-colors",
+            "p-6 rounded-lg border relative transition-colors",
             isLightTheme 
               ? "bg-card border-border" 
               : "bg-[#1a2236] border-gray-800"
           )}>
             <div className={cn(
-              "text-sm mb-1",
+              "text-lg mb-3",
               isLightTheme ? "text-muted-foreground" : "text-gray-400"
             )}>Net Worth</div>
             <div className={cn(
-              "text-xl font-semibold",
+              "text-3xl font-semibold",
               isLightTheme ? "text-blue-600" : "text-blue-400"
             )}>{formatCurrency(totalNetWorth - 845210)}</div>
             <div className={cn(
-              "text-xs",
+              "text-sm mt-2",
               isLightTheme ? "text-green-600" : "text-green-400"
             )}>+$112,200 (7.5%)</div>
             
-            <div className="flex gap-1 absolute top-1 right-1">
+            <div className="flex gap-2 absolute top-3 right-3">
               {propertyCount > 0 && (
                 <Button 
                   variant="ghost" 
                   size="sm" 
                   className={cn(
-                    "text-xs flex items-center px-1",
+                    "text-sm flex items-center px-2",
                     isLightTheme 
                       ? "text-blue-600 hover:text-blue-700" 
                       : "text-blue-400 hover:text-blue-300"
                   )}
                   onClick={() => navigate('properties')}
                 >
-                  <Home className="h-3 w-3 mr-1" />
+                  <Home className="h-4 w-4 mr-1" />
                   {propertyCount}
                 </Button>
               )}
@@ -165,14 +165,14 @@ export const NetWorthSummary = () => {
                   variant="ghost" 
                   size="sm" 
                   className={cn(
-                    "text-xs flex items-center px-1",
+                    "text-sm flex items-center px-2",
                     isLightTheme 
                       ? "text-green-600 hover:text-green-700" 
                       : "text-green-400 hover:text-green-300"
                   )}
                   onClick={() => navigate('all-assets')}
                 >
-                  <Car className="h-3 w-3 mr-1" />
+                  <Car className="h-4 w-4 mr-1" />
                   {vehicleCount}
                 </Button>
               )}
@@ -180,12 +180,12 @@ export const NetWorthSummary = () => {
           </div>
         </div>
         
-        <div className="grid grid-cols-1 gap-6">
+        <div className="grid grid-cols-1 gap-8">
           <div>
-            <h3 className="text-sm font-medium mb-3">Asset Allocation</h3>
-            <div className="flex flex-col md:flex-row gap-6">
+            <h3 className="text-xl font-medium mb-6">Asset Allocation</h3>
+            <div className="flex flex-col md:flex-row gap-8">
               {/* Pie Chart */}
-              <div className="md:w-1/2 h-[300px] flex items-center justify-center">
+              <div className="md:w-1/2 h-[400px] flex items-center justify-center">
                 {pieChartData.length > 0 ? (
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
@@ -193,9 +193,9 @@ export const NetWorthSummary = () => {
                         data={pieChartData}
                         cx="50%"
                         cy="50%"
-                        innerRadius={60}
-                        outerRadius={100}
-                        paddingAngle={2}
+                        innerRadius={80}
+                        outerRadius={140}
+                        paddingAngle={3}
                         dataKey="value"
                       >
                         {pieChartData.map((entry, index) => (
@@ -224,7 +224,7 @@ export const NetWorthSummary = () => {
               </div>
               
               {/* Asset List */}
-              <div className="md:w-1/2 space-y-2">
+              <div className="md:w-1/2 space-y-4">
                 {pieChartData.map((asset, index) => (
                   <AssetItem 
                     key={index}
@@ -241,13 +241,13 @@ export const NetWorthSummary = () => {
         </div>
         
         <div className={cn(
-          "mt-4 pt-3 border-t flex justify-end",
+          "mt-8 pt-6 border-t flex justify-end",
           isLightTheme ? "border-border" : "border-gray-800"
         )}>
           <Button 
             variant="link" 
             className={cn(
-              "text-sm p-0",
+              "text-lg p-0",
               isLightTheme ? "text-blue-600 hover:text-blue-700" : "text-blue-400 hover:text-blue-300"
             )}
             onClick={() => navigate('all-assets')}
@@ -261,14 +261,14 @@ export const NetWorthSummary = () => {
     console.error('Error in NetWorthSummary:', error);
     return (
       <div className={cn(
-        "rounded-lg p-3 border",
+        "rounded-lg p-6 border",
         isLightTheme 
           ? "bg-card border-border" 
           : "bg-[#121a2c]/80 border-gray-800"
       )}>
-        <h2 className="text-xl font-semibold">Net Worth Summary</h2>
+        <h2 className="text-3xl font-semibold">Net Worth Summary</h2>
         <div className={cn(
-          "p-4 text-center",
+          "p-6 text-center",
           isLightTheme ? "text-red-600" : "text-red-400"
         )}>
           Unable to load net worth data. Please reload the page.
@@ -288,24 +288,24 @@ interface AssetItemProps {
 
 const AssetItem = ({ label, value, percentage, color, isLightTheme }: AssetItemProps) => {
   return (
-    <div>
-      <div className="flex justify-between items-center mb-1">
-        <span className="text-sm flex items-center">
+    <div className="py-2">
+      <div className="flex justify-between items-center mb-3">
+        <span className="text-lg flex items-center">
           <div 
-            className="w-3 h-3 rounded-full mr-2" 
+            className="w-4 h-4 rounded-full mr-3" 
             style={{ backgroundColor: color }}
           />
           {label}
         </span>
-        <span className="text-sm font-medium">{value}</span>
+        <span className="text-lg font-medium">{value}</span>
       </div>
       <div className="flex items-center">
         <Progress 
           value={percentage} 
-          className="h-2" 
+          className="h-3" 
           style={{backgroundColor: `${color}20`}} 
         />
-        <span className="ml-2 text-xs">{percentage}%</span>
+        <span className="ml-3 text-sm">{percentage}%</span>
       </div>
     </div>
   );
