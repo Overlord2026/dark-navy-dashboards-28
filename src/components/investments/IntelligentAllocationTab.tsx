@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -134,9 +133,8 @@ export const IntelligentAllocationTab = () => {
 
       {/* Desktop Table View */}
       <div className="bg-card rounded-lg border shadow-md overflow-hidden hidden lg:block">
-        <div className="grid grid-cols-12 gap-2 p-4 bg-muted/50 text-sm font-medium">
+        <div className="grid grid-cols-11 gap-2 p-4 bg-muted/50 text-sm font-medium">
           <div className="col-span-4">NAME</div>
-          <div className="col-span-1">TYPE</div>
           <div className="col-span-1 text-center">TARGETS</div>
           <div className="col-span-1">UPDATED</div>
           <div className="col-span-2">BENCHMARK</div>
@@ -147,16 +145,14 @@ export const IntelligentAllocationTab = () => {
         {portfolioModels.map((model) => (
           <div 
             key={model.id} 
-            className={`grid grid-cols-12 gap-2 p-4 border-t items-center hover:bg-accent/10 transition-colors cursor-pointer ${selectedModels.includes(model.id) ? 'bg-primary/5' : ''}`}
+            className={`grid grid-cols-11 gap-2 p-4 border-t items-center hover:bg-accent/10 transition-colors cursor-pointer ${selectedModels.includes(model.id) ? 'bg-primary/5' : ''}`}
             onClick={() => handleModelRowClick(model.id)}
           >
             <div className="col-span-4">
               <div className="font-medium">{model.name}</div>
-            </div>
-            <div className="col-span-1">
               <Badge 
                 variant="outline" 
-                className={`${model.type === 'Model' ? 'bg-blue-500/10 text-blue-500 border-blue-500/20' : 'bg-red-500/10 text-red-500 border-red-500/20'}`}
+                className={`mt-1 text-xs ${model.type === 'Model' ? 'bg-blue-500/10 text-blue-500 border-blue-500/20' : 'bg-red-500/10 text-red-500 border-red-500/20'}`}
               >
                 {model.type}
               </Badge>
@@ -193,9 +189,8 @@ export const IntelligentAllocationTab = () => {
 
       {/* Tablet View */}
       <div className="bg-card rounded-lg border shadow-md overflow-hidden hidden md:block lg:hidden">
-        <div className="grid grid-cols-10 gap-2 p-4 bg-muted/50 text-sm font-medium">
+        <div className="grid grid-cols-9 gap-2 p-4 bg-muted/50 text-sm font-medium">
           <div className="col-span-3">NAME</div>
-          <div className="col-span-1">TYPE</div>
           <div className="col-span-1">TARGETS</div>
           <div className="col-span-2">BENCHMARK</div>
           <div className="col-span-1">TAGS</div>
@@ -205,20 +200,20 @@ export const IntelligentAllocationTab = () => {
         {portfolioModels.map((model) => (
           <div 
             key={model.id} 
-            className={`grid grid-cols-10 gap-2 p-4 border-t items-center hover:bg-accent/10 transition-colors cursor-pointer ${selectedModels.includes(model.id) ? 'bg-primary/5' : ''}`}
+            className={`grid grid-cols-9 gap-2 p-4 border-t items-center hover:bg-accent/10 transition-colors cursor-pointer ${selectedModels.includes(model.id) ? 'bg-primary/5' : ''}`}
             onClick={() => handleModelRowClick(model.id)}
           >
             <div className="col-span-3">
               <div className="font-medium text-sm">{model.name}</div>
-              <div className="text-xs text-muted-foreground mt-1">{model.updatedDate}</div>
-            </div>
-            <div className="col-span-1">
-              <Badge 
-                variant="outline" 
-                className={`text-xs ${model.type === 'Model' ? 'bg-blue-500/10 text-blue-500 border-blue-500/20' : 'bg-red-500/10 text-red-500 border-red-500/20'}`}
-              >
-                {model.type}
-              </Badge>
+              <div className="flex items-center gap-2 mt-1">
+                <Badge 
+                  variant="outline" 
+                  className={`text-xs ${model.type === 'Model' ? 'bg-blue-500/10 text-blue-500 border-blue-500/20' : 'bg-red-500/10 text-red-500 border-red-500/20'}`}
+                >
+                  {model.type}
+                </Badge>
+                <div className="text-xs text-muted-foreground">{model.updatedDate}</div>
+              </div>
             </div>
             <div className="col-span-1 flex justify-center">
               <div className="h-7 w-7 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs font-medium">
@@ -262,18 +257,18 @@ export const IntelligentAllocationTab = () => {
                 <div className="flex justify-between items-start">
                   <div className="flex-1 min-w-0">
                     <h3 className="font-medium text-sm leading-tight">{model.name}</h3>
-                    <p className="text-xs text-muted-foreground mt-1">{model.updatedDate}</p>
-                  </div>
-                  <div className="flex items-center gap-2 ml-2">
-                    <Badge 
-                      variant="outline" 
-                      className={`text-xs ${model.type === 'Model' ? 'bg-blue-500/10 text-blue-500 border-blue-500/20' : 'bg-red-500/10 text-red-500 border-red-500/20'}`}
-                    >
-                      {model.type}
-                    </Badge>
-                    <div className="h-6 w-6 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs font-medium">
-                      {model.allocation}
+                    <div className="flex items-center gap-2 mt-1">
+                      <Badge 
+                        variant="outline" 
+                        className={`text-xs ${model.type === 'Model' ? 'bg-blue-500/10 text-blue-500 border-blue-500/20' : 'bg-red-500/10 text-red-500 border-red-500/20'}`}
+                      >
+                        {model.type}
+                      </Badge>
+                      <p className="text-xs text-muted-foreground">{model.updatedDate}</p>
                     </div>
+                  </div>
+                  <div className="h-6 w-6 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs font-medium ml-2">
+                    {model.allocation}
                   </div>
                 </div>
 
