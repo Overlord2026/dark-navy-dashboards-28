@@ -77,10 +77,11 @@ const PrivateEquity = () => {
   ];
   
   return (
-    <ThreeColumnLayout activeMainItem="investments" title="Investment Management" secondaryMenuItems={[]}>
+    <ThreeColumnLayout activeMainItem="investments" title="" secondaryMenuItems={[]}>
       <div className="space-y-8">
-        {/* Header Section */}
+        {/* Header Section with larger title */}
         <div className="space-y-2">
+          <h1 className="text-4xl font-bold">Investment Management</h1>
           <p className="text-muted-foreground text-base">
             Explore a curated selection of investment options tailored to your financial goals. 
             Our solutions range from model portfolios to exclusive alternative assets.
