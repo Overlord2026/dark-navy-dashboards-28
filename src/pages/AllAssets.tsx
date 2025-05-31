@@ -77,24 +77,24 @@ export default function AllAssets() {
   return (
     <ThreeColumnLayout title="All Assets">
       <div className="container mx-auto p-4 space-y-6">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
-          <div className="mb-4 md:mb-0">
-            <p className="text-muted-foreground">Comprehensive view of all your assets and liabilities</p>
-          </div>
-          <div className="flex gap-2">
-            <Button
-              onClick={() => setIsAddLiabilityDialogOpen(true)}
-              variant="outline"
-            >
-              <PlusCircle className="mr-2 h-4 w-4" />
-              Add Liability
-            </Button>
-            <Button
-              onClick={() => setIsAddAssetDialogOpen(true)}
-            >
-              <PlusCircle className="mr-2 h-4 w-4" />
-              Add Asset
-            </Button>
+        <div className="space-y-2">
+          <p className="text-muted-foreground">Comprehensive view of all your assets and liabilities</p>
+          <div className="flex justify-end">
+            <div className="flex gap-2">
+              <Button
+                onClick={() => setIsAddLiabilityDialogOpen(true)}
+                variant="outline"
+              >
+                <PlusCircle className="mr-2 h-4 w-4" />
+                Add Liability
+              </Button>
+              <Button
+                onClick={() => setIsAddAssetDialogOpen(true)}
+              >
+                <PlusCircle className="mr-2 h-4 w-4" />
+                Add Asset
+              </Button>
+            </div>
           </div>
         </div>
         
