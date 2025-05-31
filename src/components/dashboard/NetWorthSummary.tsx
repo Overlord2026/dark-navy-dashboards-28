@@ -60,8 +60,8 @@ export const NetWorthSummary = () => {
         netWorthGrowth={metrics.netWorthGrowth}
         propertyCount={metrics.propertyCount}
         vehicleCount={metrics.vehicleCount}
-        onNavigateToProperties={() => navigate('properties')}
-        onNavigateToAssets={() => navigate('client-all-assets')}
+        onNavigateToProperties={() => navigate('/properties')}
+        onNavigateToAssets={() => navigate('/client-all-assets')}
       />
       
       <div className="grid grid-cols-1 gap-6">
@@ -90,7 +90,7 @@ export const NetWorthSummary = () => {
             "text-base p-0",
             isLightTheme ? "text-blue-600 hover:text-blue-700" : "text-blue-400 hover:text-blue-300"
           )}
-          onClick={() => navigate('client-all-assets')}
+          onClick={() => navigate('/client-all-assets')}
         >
           View All Assets →
         </Button>
