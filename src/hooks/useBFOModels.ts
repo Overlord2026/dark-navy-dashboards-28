@@ -31,10 +31,18 @@ export interface UserPortfolioAssignment {
   model_portfolio: ModelPortfolio;
 }
 
+export interface PortfolioFilters {
+  provider?: string;
+  series_type?: string;
+  asset_allocation?: string;
+  tax_status?: string;
+}
+
 export const useBFOModels = () => {
   const [modelPortfolios, setModelPortfolios] = useState<ModelPortfolio[]>([]);
   const [userAssignments, setUserAssignments] = useState<UserPortfolioAssignment[]>([]);
   const [availablePortfolios, setAvailablePortfolios] = useState<ModelPortfolio[]>([]);
+  const [filteredPortfolios, setFilteredPortfolios] = useState<ModelPortfolio[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -84,6 +92,42 @@ export const useBFOModels = () => {
     const assignedIds = userAssignments.map(assignment => assignment.model_portfolio_id);
     const available = modelPortfolios.filter(portfolio => !assignedIds.includes(portfolio.id));
     setAvailablePortfolios(available);
+    setFilteredPortfolios(available);
+  };
+
+  // Filter portfolios based on criteria
+  const filterPortfolios = (filters: PortfolioFilters) => {
+    let filtered = [...availablePortfolios];
+
+    if (filters.provider) {
+      filtered = filtered.filter(p => p.provider === filters.provider);
+    }
+    if (filters.series_type) {
+      filtered = filtered.filter(p => p.series_type === filters.series_type);
+    }
+    if (filters.asset_allocation) {
+      filtered = filtered.filter(p => p.asset_allocation === filters.asset_allocation);
+    }
+    if (filters.tax_status) {
+      filtered = filtered.filter(p => p.tax_status === filters.tax_status);
+    }
+
+    setFilteredPortfolios(filtered);
+  };
+
+  // Get unique filter options
+  const getFilterOptions = () => {
+    const providers = [...new Set(availablePortfolios.map(p => p.provider))].filter(Boolean);
+    const seriesTypes = [...new Set(availablePortfolios.map(p => p.series_type))].filter(Boolean);
+    const assetAllocations = [...new Set(availablePortfolios.map(p => p.asset_allocation))].filter(Boolean);
+    const taxStatuses = [...new Set(availablePortfolios.map(p => p.tax_status))].filter(Boolean);
+
+    return {
+      providers,
+      seriesTypes,
+      assetAllocations,
+      taxStatuses
+    };
   };
 
   // Assign a portfolio to user
@@ -183,11 +227,14 @@ export const useBFOModels = () => {
     modelPortfolios,
     userAssignments,
     availablePortfolios,
+    filteredPortfolios,
     loading,
     error,
     assignPortfolio,
     removePortfolioAssignment,
     updatePortfolioAssignment,
+    filterPortfolios,
+    getFilterOptions,
     refetch: () => {
       fetchModelPortfolios();
       fetchUserAssignments();

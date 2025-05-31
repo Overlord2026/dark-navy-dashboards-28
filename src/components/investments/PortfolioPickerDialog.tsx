@@ -1,10 +1,10 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { X } from "lucide-react";
-import { useBFOModels } from "@/hooks/useBFOModels";
+import { useBFOModels, PortfolioFilters } from "@/hooks/useBFOModels";
 import { Badge } from "@/components/ui/badge";
 
 interface PortfolioPickerDialogProps {
@@ -16,9 +16,26 @@ export const PortfolioPickerDialog: React.FC<PortfolioPickerDialogProps> = ({
   open,
   onOpenChange,
 }) => {
-  const { availablePortfolios, assignPortfolio, loading } = useBFOModels();
+  const { filteredPortfolios, assignPortfolio, loading, filterPortfolios, getFilterOptions } = useBFOModels();
   const [selectedPortfolio, setSelectedPortfolio] = useState("");
   const [isAssigning, setIsAssigning] = useState(false);
+  const [filters, setFilters] = useState<PortfolioFilters>({});
+
+  const filterOptions = getFilterOptions();
+
+  const handleFilterChange = (key: keyof PortfolioFilters, value: string) => {
+    const newFilters = { ...filters, [key]: value === "all" ? undefined : value };
+    setFilters(newFilters);
+    filterPortfolios(newFilters);
+    setSelectedPortfolio(""); // Reset selection when filters change
+  };
+
+  const clearFilters = () => {
+    const emptyFilters = {};
+    setFilters(emptyFilters);
+    filterPortfolios(emptyFilters);
+    setSelectedPortfolio("");
+  };
 
   const handleAssignPortfolio = async () => {
     if (!selectedPortfolio) return;
@@ -28,16 +45,26 @@ export const PortfolioPickerDialog: React.FC<PortfolioPickerDialogProps> = ({
     
     if (success) {
       setSelectedPortfolio("");
+      setFilters({});
       onOpenChange(false);
     }
     setIsAssigning(false);
   };
 
-  const selectedPortfolioData = availablePortfolios.find(p => p.id === selectedPortfolio);
+  const selectedPortfolioData = filteredPortfolios.find(p => p.id === selectedPortfolio);
+
+  useEffect(() => {
+    if (open) {
+      // Reset filters when dialog opens
+      setFilters({});
+      setSelectedPortfolio("");
+      filterPortfolios({});
+    }
+  }, [open]);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-2xl bg-slate-900 text-white border-slate-700">
+      <DialogContent className="sm:max-w-4xl bg-slate-900 text-white border-slate-700">
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold text-white">Pick a Model Portfolio</DialogTitle>
           <button
@@ -56,71 +83,179 @@ export const PortfolioPickerDialog: React.FC<PortfolioPickerDialogProps> = ({
                 <p className="text-slate-300">Loading portfolios...</p>
               </div>
             </div>
-          ) : availablePortfolios.length === 0 ? (
-            <div className="text-center p-8">
-              <p className="text-slate-300 mb-2">All available portfolios have been assigned.</p>
-              <p className="text-sm text-slate-400">You can manage your existing portfolios from the main page.</p>
-            </div>
           ) : (
             <>
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-white">Available Model Portfolios</label>
-                <Select value={selectedPortfolio} onValueChange={setSelectedPortfolio}>
-                  <SelectTrigger className="bg-slate-800 border-slate-600 text-white">
-                    <SelectValue placeholder="Select a portfolio" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-slate-800 border-slate-600">
-                    {availablePortfolios.map((portfolio) => (
-                      <SelectItem key={portfolio.id} value={portfolio.id}>
-                        <div className="flex items-center justify-between w-full">
-                          <span>{portfolio.name}</span>
-                          <span className="text-xs text-slate-400 ml-2">({portfolio.provider})</span>
-                        </div>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {selectedPortfolioData && (
-                <div className="bg-slate-800 rounded-lg p-4 space-y-3">
-                  <div className="flex items-center justify-between">
-                    <h3 className="font-medium text-white">{selectedPortfolioData.name}</h3>
-                    <Badge 
-                      variant="outline" 
-                      className={`border-${selectedPortfolioData.badge_color}-500 text-${selectedPortfolioData.badge_color}-300`}
+              {/* Filter Controls */}
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-medium text-white">Filter Portfolios</h3>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={clearFilters}
+                    className="bg-transparent border-slate-600 text-white hover:bg-slate-700"
+                  >
+                    Clear Filters
+                  </Button>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                  {/* Asset Management Firms */}
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-white">Asset Management Firms</label>
+                    <Select 
+                      value={filters.provider || "all"} 
+                      onValueChange={(value) => handleFilterChange('provider', value)}
                     >
-                      {selectedPortfolioData.badge_text}
-                    </Badge>
+                      <SelectTrigger className="bg-slate-800 border-slate-600 text-white">
+                        <SelectValue placeholder="All Firms" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-slate-800 border-slate-600">
+                        <SelectItem value="all">All Firms</SelectItem>
+                        {filterOptions.providers.map((provider) => (
+                          <SelectItem key={provider} value={provider}>
+                            {provider}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
-                  
-                  <p className="text-sm text-slate-300">{selectedPortfolioData.description}</p>
-                  
-                  <div className="grid grid-cols-2 gap-4 text-sm">
-                    <div>
-                      <span className="text-slate-400">Provider:</span>
-                      <span className="text-white ml-2">{selectedPortfolioData.provider}</span>
-                    </div>
-                    <div>
-                      <span className="text-slate-400">Return Rate:</span>
-                      <span className="text-emerald-400 ml-2">{selectedPortfolioData.return_rate}</span>
-                    </div>
-                    <div>
-                      <span className="text-slate-400">Risk Level:</span>
-                      <span className="text-white ml-2">{selectedPortfolioData.risk_level}</span>
-                    </div>
-                    <div>
-                      <span className="text-slate-400">Allocation:</span>
-                      <span className="text-white ml-2">{selectedPortfolioData.asset_allocation}</span>
-                    </div>
+
+                  {/* Model Series */}
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-white">Model Series</label>
+                    <Select 
+                      value={filters.series_type || "all"} 
+                      onValueChange={(value) => handleFilterChange('series_type', value)}
+                    >
+                      <SelectTrigger className="bg-slate-800 border-slate-600 text-white">
+                        <SelectValue placeholder="All Series" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-slate-800 border-slate-600">
+                        <SelectItem value="all">All Series</SelectItem>
+                        {filterOptions.seriesTypes.map((series) => (
+                          <SelectItem key={series} value={series}>
+                            {series}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {/* Asset Allocation */}
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-white">Asset Allocation</label>
+                    <Select 
+                      value={filters.asset_allocation || "all"} 
+                      onValueChange={(value) => handleFilterChange('asset_allocation', value)}
+                    >
+                      <SelectTrigger className="bg-slate-800 border-slate-600 text-white">
+                        <SelectValue placeholder="All Allocations" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-slate-800 border-slate-600">
+                        <SelectItem value="all">All Allocations</SelectItem>
+                        {filterOptions.assetAllocations.map((allocation) => (
+                          <SelectItem key={allocation} value={allocation}>
+                            {allocation}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {/* Tax Status */}
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-white">Tax Status</label>
+                    <Select 
+                      value={filters.tax_status || "all"} 
+                      onValueChange={(value) => handleFilterChange('tax_status', value)}
+                    >
+                      <SelectTrigger className="bg-slate-800 border-slate-600 text-white">
+                        <SelectValue placeholder="All Tax Status" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-slate-800 border-slate-600">
+                        <SelectItem value="all">All Tax Status</SelectItem>
+                        {filterOptions.taxStatuses.map((status) => (
+                          <SelectItem key={status} value={status}>
+                            {status}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
+              </div>
+
+              {/* Portfolio Selection */}
+              {filteredPortfolios.length === 0 ? (
+                <div className="text-center p-8">
+                  <p className="text-slate-300 mb-2">No portfolios match the selected filters.</p>
+                  <p className="text-sm text-slate-400">Try adjusting your filter criteria or clearing all filters.</p>
+                </div>
+              ) : (
+                <>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-white">
+                      Available Model Portfolios ({filteredPortfolios.length})
+                    </label>
+                    <Select value={selectedPortfolio} onValueChange={setSelectedPortfolio}>
+                      <SelectTrigger className="bg-slate-800 border-slate-600 text-white">
+                        <SelectValue placeholder="Select a portfolio" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-slate-800 border-slate-600">
+                        {filteredPortfolios.map((portfolio) => (
+                          <SelectItem key={portfolio.id} value={portfolio.id}>
+                            <div className="flex items-center justify-between w-full">
+                              <span>{portfolio.name}</span>
+                              <span className="text-xs text-slate-400 ml-2">({portfolio.provider})</span>
+                            </div>
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {selectedPortfolioData && (
+                    <div className="bg-slate-800 rounded-lg p-4 space-y-3">
+                      <div className="flex items-center justify-between">
+                        <h3 className="font-medium text-white">{selectedPortfolioData.name}</h3>
+                        <Badge 
+                          variant="outline" 
+                          className={`border-${selectedPortfolioData.badge_color}-500 text-${selectedPortfolioData.badge_color}-300`}
+                        >
+                          {selectedPortfolioData.badge_text}
+                        </Badge>
+                      </div>
+                      
+                      <p className="text-sm text-slate-300">{selectedPortfolioData.description}</p>
+                      
+                      <div className="grid grid-cols-2 gap-4 text-sm">
+                        <div>
+                          <span className="text-slate-400">Provider:</span>
+                          <span className="text-white ml-2">{selectedPortfolioData.provider}</span>
+                        </div>
+                        <div>
+                          <span className="text-slate-400">Return Rate:</span>
+                          <span className="text-emerald-400 ml-2">{selectedPortfolioData.return_rate}</span>
+                        </div>
+                        <div>
+                          <span className="text-slate-400">Risk Level:</span>
+                          <span className="text-white ml-2">{selectedPortfolioData.risk_level}</span>
+                        </div>
+                        <div>
+                          <span className="text-slate-400">Allocation:</span>
+                          <span className="text-white ml-2">{selectedPortfolioData.asset_allocation}</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </>
               )}
             </>
           )}
         </div>
 
-        {!loading && availablePortfolios.length > 0 && (
+        {!loading && filteredPortfolios.length > 0 && (
           <div className="flex justify-between pt-4">
             <Button 
               variant="outline" 
