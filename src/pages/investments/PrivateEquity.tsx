@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { OfferingCard } from "@/components/investments/OfferingCard";
 import { Badge } from "@/components/ui/badge";
+import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 
 const PrivateEquity = () => {
   const navigate = useNavigate();
@@ -77,81 +78,75 @@ const PrivateEquity = () => {
   ];
   
   return (
-    <div className="container mx-auto py-8">
-      <div className="mb-6">
-        <Button 
-          variant="ghost" 
-          onClick={() => navigate("/client-investments?tab=private-markets")}
-          className="flex items-center gap-2"
-        >
-          <ArrowLeft className="h-4 w-4" /> Back to Investments
-        </Button>
-      </div>
-      
-      <div className="space-y-2 mb-8">
-        <h1 className="text-3xl font-bold">Investment Management</h1>
-        <p className="text-muted-foreground text-lg">
-          Explore a curated selection of investment options tailored to your financial goals. 
-          Our solutions range from model portfolios to exclusive alternative assets.
-        </p>
-      </div>
+    <ThreeColumnLayout activeMainItem="investments" title="Investment Management">
+      <div className="space-y-8">
+        <div className="mb-6">
+          <Button 
+            variant="ghost" 
+            onClick={() => navigate("/client-investments?tab=private-markets")}
+            className="flex items-center gap-2"
+          >
+            <ArrowLeft className="h-4 w-4" /> Back to Investments
+          </Button>
+        </div>
 
-      <Tabs value="private-markets" className="w-full">
-        <TabsList className="w-full mb-6">
-          <TabsTrigger value="intelligent-alloc" className="flex-1" onClick={() => navigate("/client-investments?tab=intelligent-alloc")}>
-            Intelligent Alloc.
-          </TabsTrigger>
-          <TabsTrigger value="private-markets" className="flex-1">
-            Private Markets
-          </TabsTrigger>
-          <TabsTrigger value="bfo-models" className="flex-1 relative cursor-not-allowed opacity-60" disabled>
-            <span className="flex items-center gap-2">
-              BFO Models
-              <Badge variant="secondary" className="text-xs px-2 py-0.5 bg-yellow-500/20 text-yellow-600 border-yellow-500/30">
-                Coming Soon
-              </Badge>
-            </span>
-          </TabsTrigger>
-        </TabsList>
-        
-        <TabsContent value="private-markets" className="space-y-8">
-          <div className="space-y-6">
-            <div className="mb-8">
-              <h2 className="text-2xl font-semibold mb-4">Private Equity Investments</h2>
-              <p className="text-muted-foreground text-lg">
-                Explore exclusive private equity investment opportunities across various sectors and stages.
-                Our carefully curated offerings provide access to institutional-quality investments.
-              </p>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
-              {privateEquityOfferings.map((offering) => (
-                <OfferingCard key={offering.id} offering={offering} />
-              ))}
-            </div>
-            
-            <Card className="mt-8">
-              <CardHeader>
-                <CardTitle>Why Private Equity?</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground mb-4">
-                  Private equity investments offer the potential for attractive returns through direct ownership 
-                  in high-quality companies. Our platform provides access to top-tier fund managers and 
-                  exclusive investment opportunities typically reserved for institutional investors.
+        <Tabs value="private-markets" className="w-full">
+          <TabsList className="w-full mb-6">
+            <TabsTrigger value="intelligent-alloc" className="flex-1" onClick={() => navigate("/client-investments?tab=intelligent-alloc")}>
+              Intelligent Alloc.
+            </TabsTrigger>
+            <TabsTrigger value="private-markets" className="flex-1">
+              Private Markets
+            </TabsTrigger>
+            <TabsTrigger value="bfo-models" className="flex-1 relative cursor-not-allowed opacity-60" disabled>
+              <span className="flex items-center gap-2">
+                BFO Models
+                <Badge variant="secondary" className="text-xs px-2 py-0.5 bg-yellow-500/20 text-yellow-600 border-yellow-500/30">
+                  Coming Soon
+                </Badge>
+              </span>
+            </TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="private-markets" className="space-y-8">
+            <div className="space-y-6">
+              <div className="mb-8">
+                <h2 className="text-2xl font-semibold mb-4">Private Equity Investments</h2>
+                <p className="text-muted-foreground text-lg">
+                  Explore exclusive private equity investment opportunities across various sectors and stages.
+                  Our carefully curated offerings provide access to institutional-quality investments.
                 </p>
-                <ul className="list-disc list-inside space-y-2 text-sm text-muted-foreground">
-                  <li>Diversification beyond public markets</li>
-                  <li>Access to experienced fund managers</li>
-                  <li>Potential for enhanced returns over time</li>
-                  <li>Direct impact on company operations and strategy</li>
-                </ul>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-      </Tabs>
-    </div>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
+                {privateEquityOfferings.map((offering) => (
+                  <OfferingCard key={offering.id} offering={offering} />
+                ))}
+              </div>
+              
+              <Card className="mt-8">
+                <CardHeader>
+                  <CardTitle>Why Private Equity?</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground mb-4">
+                    Private equity investments offer the potential for attractive returns through direct ownership 
+                    in high-quality companies. Our platform provides access to top-tier fund managers and 
+                    exclusive investment opportunities typically reserved for institutional investors.
+                  </p>
+                  <ul className="list-disc list-inside space-y-2 text-sm text-muted-foreground">
+                    <li>Diversification beyond public markets</li>
+                    <li>Access to experienced fund managers</li>
+                    <li>Potential for enhanced returns over time</li>
+                    <li>Direct impact on company operations and strategy</li>
+                  </ul>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+        </Tabs>
+      </div>
+    </ThreeColumnLayout>
   );
 };
 
