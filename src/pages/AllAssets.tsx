@@ -9,7 +9,13 @@ import {
   TabsTrigger 
 } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { PlusCircle } from "lucide-react";
+import { PlusCircle, Filter } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { SupabaseAssetList } from "@/components/assets/SupabaseAssetList";
 import { AddAssetDialog } from "@/components/assets/AddAssetDialog";
 import { SupabaseAssetsSummary } from "@/components/assets/SupabaseAssetsSummary";
@@ -20,8 +26,27 @@ import { Card, CardContent } from "@/components/ui/card";
 export default function AllAssets() {
   const { isAuthenticated } = useAuth();
   const [mainTab, setMainTab] = useState("summary");
-  const [assetTab, setAssetTab] = useState("assets");
+  const [assetFilter, setAssetFilter] = useState("assets");
   const [isAddAssetDialogOpen, setIsAddAssetDialogOpen] = useState(false);
+
+  const filterOptions = [
+    { value: "assets", label: "All Assets" },
+    { value: "liabilities", label: "Liabilities" },
+    { value: "all", label: "All Items" },
+    { value: "property", label: "Real Estate" },
+    { value: "vehicles", label: "Vehicles" },
+    { value: "cash", label: "Cash" },
+    { value: "investment", label: "Investments" },
+    { value: "collectibles", label: "Collectibles" },
+    { value: "art", label: "Art" },
+    { value: "digital", label: "Digital" },
+    { value: "other", label: "Other" }
+  ];
+
+  const getSelectedFilterLabel = () => {
+    const selected = filterOptions.find(option => option.value === assetFilter);
+    return selected ? selected.label : "All Assets";
+  };
 
   if (!isAuthenticated) {
     return (
@@ -65,65 +90,34 @@ export default function AllAssets() {
             <div className="space-y-6">
               <SupabaseAssetsSummary />
               
-              <Tabs value={assetTab} onValueChange={setAssetTab} className="w-full">
-                <TabsList className="grid grid-cols-2 md:grid-cols-10 w-full mb-6 overflow-auto">
-                  <TabsTrigger value="assets" className="col-span-1">Assets</TabsTrigger>
-                  <TabsTrigger value="liabilities" className="col-span-1">Liabilities</TabsTrigger>
-                  <TabsTrigger value="all">All</TabsTrigger>
-                  <TabsTrigger value="property">Real Estate</TabsTrigger>
-                  <TabsTrigger value="vehicles">Vehicles</TabsTrigger>
-                  <TabsTrigger value="cash">Cash</TabsTrigger>
-                  <TabsTrigger value="investment">Investments</TabsTrigger>
-                  <TabsTrigger value="collectibles">Collectibles</TabsTrigger>
-                  <TabsTrigger value="art">Art</TabsTrigger>
-                  <TabsTrigger value="digital">Digital</TabsTrigger>
-                  <TabsTrigger value="other">Other</TabsTrigger>
-                </TabsList>
-                
-                <TabsContent value="assets">
-                  <SupabaseAssetList filter="all" />
-                </TabsContent>
-
-                <TabsContent value="liabilities">
-                  <LiabilitiesList />
-                </TabsContent>
-                
-                <TabsContent value="all">
-                  <SupabaseAssetList filter="all" />
-                </TabsContent>
-                
-                <TabsContent value="property">
-                  <SupabaseAssetList filter="property" />
-                </TabsContent>
-                
-                <TabsContent value="vehicles">
-                  <SupabaseAssetList filter="vehicles" />
-                </TabsContent>
-                
-                <TabsContent value="cash">
-                  <SupabaseAssetList filter="cash" />
-                </TabsContent>
-                
-                <TabsContent value="investment">
-                  <SupabaseAssetList filter="investment" />
-                </TabsContent>
-                
-                <TabsContent value="collectibles">
-                  <SupabaseAssetList filter="collectibles" />
-                </TabsContent>
-                
-                <TabsContent value="art">
-                  <SupabaseAssetList filter="art" />
-                </TabsContent>
-                
-                <TabsContent value="digital">
-                  <SupabaseAssetList filter="digital" />
-                </TabsContent>
-                
-                <TabsContent value="other">
-                  <SupabaseAssetList filter="other" />
-                </TabsContent>
-              </Tabs>
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="text-lg font-semibold">Asset Details</h3>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" className="flex items-center gap-2">
+                      <Filter className="h-4 w-4" />
+                      {getSelectedFilterLabel()}
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-48">
+                    {filterOptions.map((option) => (
+                      <DropdownMenuItem
+                        key={option.value}
+                        onClick={() => setAssetFilter(option.value)}
+                        className={assetFilter === option.value ? "bg-accent" : ""}
+                      >
+                        {option.label}
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+              
+              {assetFilter === "liabilities" ? (
+                <LiabilitiesList />
+              ) : (
+                <SupabaseAssetList filter={assetFilter} />
+              )}
             </div>
           </TabsContent>
           
