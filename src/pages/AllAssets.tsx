@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { useAuth } from "@/context/AuthContext";
@@ -85,6 +84,7 @@ export default function AllAssets() {
                   <TabsTrigger value="other">Other</TabsTrigger>
                 </TabsList>
                 
+                
                 <TabsContent value="assets">
                   <SupabaseAssetList filter="all" />
                 </TabsContent>
@@ -133,11 +133,17 @@ export default function AllAssets() {
           </TabsContent>
           
           <TabsContent value="allocation">
-            <ComprehensiveAssetsSummary />
+            <div className="space-y-6">
+              <h2 className="text-2xl font-semibold">Asset Allocation</h2>
+              <ComprehensiveAssetsSummary />
+            </div>
           </TabsContent>
           
           <TabsContent value="networth">
-            <ComprehensiveAssetsSummary />
+            <div className="space-y-6">
+              <h2 className="text-2xl font-semibold">Net Worth Analysis</h2>
+              <ComprehensiveAssetsSummary />
+            </div>
           </TabsContent>
         </Tabs>
       </div>
