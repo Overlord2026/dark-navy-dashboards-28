@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
@@ -109,12 +108,6 @@ export default function EstatePlanning() {
 
         <div className="space-y-4">
           <div className="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
-            <div>
-              <h2 className="text-2xl font-semibold">Our Estate Planning Expertise</h2>
-              <p className="text-muted-foreground mt-1">
-                Meet with our estate planning guru to create a comprehensive plan tailored to your needs.
-              </p>
-            </div>
             <div className="flex gap-3 w-full sm:w-auto">
               <Dialog open={showAdvisorDialog} onOpenChange={setShowAdvisorDialog}>
                 <DialogTrigger asChild>
