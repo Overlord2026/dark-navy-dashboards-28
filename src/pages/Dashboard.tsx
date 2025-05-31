@@ -31,22 +31,20 @@ export default function Dashboard() {
   }, []);
 
   return (
-    <div className="bg-black min-h-screen">
-      <ThreeColumnLayout>
-        <div className="space-y-4 px-4 py-2 max-w-7xl mx-auto">
-          {isInFreeTrial && showWelcomeBanner && (
-            <WelcomeTrialBanner onDismiss={handleDismissBanner} />
-          )}
-          
-          <div id="financial-overview-section">
-            <FinancialOverview />
-          </div>
-          
-          <div>
-            <NetWorthSummary />
-          </div>
+    <ThreeColumnLayout>
+      <div className="space-y-4 px-4 py-2 max-w-7xl mx-auto">
+        {isInFreeTrial && showWelcomeBanner && (
+          <WelcomeTrialBanner onDismiss={handleDismissBanner} />
+        )}
+        
+        <div id="financial-overview-section">
+          <FinancialOverview />
         </div>
-      </ThreeColumnLayout>
-    </div>
+        
+        <div>
+          <NetWorthSummary />
+        </div>
+      </div>
+    </ThreeColumnLayout>
   );
 }
