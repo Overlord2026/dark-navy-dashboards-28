@@ -79,16 +79,6 @@ const PrivateEquity = () => {
   return (
     <ThreeColumnLayout activeMainItem="investments" title="Investment Management" secondaryMenuItems={[]}>
       <div className="space-y-8">
-        <div className="mb-6">
-          <Button 
-            variant="ghost" 
-            onClick={() => navigate("/client-investments?tab=private-markets")}
-            className="flex items-center gap-2"
-          >
-            <ArrowLeft className="h-4 w-4" /> Back to Investments
-          </Button>
-        </div>
-
         <Tabs value="private-markets" className="w-full">
           <TabsList className="w-full mb-6">
             <TabsTrigger value="intelligent-alloc" className="flex-1" onClick={() => navigate("/client-investments?tab=intelligent-alloc")}>
