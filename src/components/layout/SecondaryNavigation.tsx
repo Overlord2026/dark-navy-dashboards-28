@@ -29,14 +29,17 @@ export const SecondaryNavigation = ({
 }: SecondaryNavigationProps) => {
   if (!hasSecondaryMenu) return null;
 
-  // We'll update this condition to make sure the secondary nav still appears for other investment pages
-  // but skips only for the specific alternative investment routes
+  // Skip rendering for specific alternative investment routes
   const skipRendering = [
     "private-equity",
-    "private-debt",
+    "private-debt", 
     "real-assets",
-    "digital-assets"
-  ].includes(sectionId) && activeMainItem === "investments";
+    "digital-assets",
+    "hedge-fund",
+    "venture-capital",
+    "collectibles",
+    "structured-investments"
+  ].includes(sectionId);
   
   if (skipRendering) return null;
   
