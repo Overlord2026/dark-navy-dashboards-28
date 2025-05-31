@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
@@ -318,20 +319,20 @@ const Investments = () => {
                   >
                     <div className="flex flex-col gap-4 h-full">
                       <div className="flex justify-between items-start">
-                        <h3 className="text-lg font-semibold text-black group-hover:text-yellow-400 transition-colors">
+                        <h3 className="text-lg font-semibold text-white group-hover:text-black transition-colors">
                           {category.title}
                         </h3>
                         <ChevronRight className="h-5 w-5 text-slate-400 group-hover:text-yellow-400 transition-colors" />
                       </div>
                       
-                      <p className="text-slate-300 text-sm leading-relaxed flex-1">
+                      <p className="text-slate-300 group-hover:text-black text-sm leading-relaxed flex-1 transition-colors">
                         {category.description}
                       </p>
                       
                       <div className="flex justify-start">
                         <Badge 
                           variant="outline" 
-                          className="bg-yellow-500/20 text-yellow-400 border-yellow-500/30 text-xs font-medium px-3 py-1"
+                          className="bg-yellow-500/20 text-yellow-400 border-yellow-500/30 text-xs font-medium px-3 py-1 group-hover:bg-yellow-400 group-hover:text-black transition-colors"
                         >
                           Private Market Alpha
                         </Badge>
