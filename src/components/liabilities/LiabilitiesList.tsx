@@ -82,7 +82,7 @@ export const LiabilitiesList = () => {
           </CardTitle>
           <div className="text-right">
             <p className="text-sm text-muted-foreground">Total Liabilities</p>
-            <p className="text-2xl font-bold text-red-600">{formatCurrency(getTotalLiabilities())}</p>
+            <p className="text-lg font-bold text-red-600">{formatCurrency(getTotalLiabilities())}</p>
           </div>
         </CardHeader>
         <CardContent>
