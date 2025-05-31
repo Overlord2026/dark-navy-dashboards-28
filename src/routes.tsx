@@ -1,4 +1,3 @@
-
 import React from "react";
 import { createBrowserRouter } from "react-router-dom";
 import Dashboard from "@/pages/Dashboard";
@@ -78,7 +77,7 @@ const routes = createBrowserRouter([
     element: <ProtectedRoute><Lending /></ProtectedRoute>
   },
   {
-    path: "/estate-planning",
+    path: "/client-estate-planning",
     element: <ProtectedRoute><EstatePlanning /></ProtectedRoute>
   },
   {

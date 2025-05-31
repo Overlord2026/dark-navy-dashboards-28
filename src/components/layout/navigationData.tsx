@@ -68,7 +68,7 @@ export const navigationCategories: NavCategory[] = [
       { id: "tax-planning", label: "Tax Planning", icon: PieChart, href: "/tax-planning" },
       { id: "insurance", label: "Insurance", icon: ShieldIcon, href: "/client-insurance" },
       { id: "lending", label: "Lending", icon: BanknoteIcon, href: "/client-lending" },
-      { id: "estate-planning", label: "Estate Planning", icon: ArchiveIcon, href: "/estate-planning" },
+      { id: "estate-planning", label: "Estate Planning", icon: ArchiveIcon, href: "/client-estate-planning" },
     ]
   },
   {
