@@ -4,12 +4,8 @@ import { useSupabaseAssets } from "@/hooks/useSupabaseAssets";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatCurrency } from "@/lib/formatters";
 import { 
-  Home, 
-  Car, 
-  Wallet, 
   BarChart3, 
-  Archive, 
-  Palette 
+  Package
 } from "lucide-react";
 
 export const SupabaseAssetsSummary: React.FC = () => {
@@ -26,70 +22,67 @@ export const SupabaseAssetsSummary: React.FC = () => {
   }
 
   const totalValue = getTotalValue();
-  const propertyValue = getAssetsByType('property').reduce((sum, asset) => sum + Number(asset.value), 0);
-  const vehicleValue = getAssetsByType('vehicle').reduce((sum, asset) => sum + Number(asset.value), 0);
-  const cashValue = getAssetsByType('cash').reduce((sum, asset) => sum + Number(asset.value), 0);
-  const investmentValue = getAssetsByType('investment').reduce((sum, asset) => sum + Number(asset.value), 0);
-  const retirementValue = getAssetsByType('retirement').reduce((sum, asset) => sum + Number(asset.value), 0);
-  const artValue = getAssetsByType('art').reduce((sum, asset) => sum + Number(asset.value), 0);
-
-  const summaryCards = [
-    {
-      title: "Total Assets",
-      value: totalValue,
-      icon: <BarChart3 className="h-5 w-5" />,
-      color: "text-blue-600"
-    },
-    {
-      title: "Real Estate",
-      value: propertyValue,
-      icon: <Home className="h-5 w-5" />,
-      color: "text-green-600"
-    },
-    {
-      title: "Vehicles",
-      value: vehicleValue,
-      icon: <Car className="h-5 w-5" />,
-      color: "text-orange-600"
-    },
-    {
-      title: "Cash & Investments",
-      value: cashValue + investmentValue,
-      icon: <Wallet className="h-5 w-5" />,
-      color: "text-purple-600"
-    },
-    {
-      title: "Retirement",
-      value: retirementValue,
-      icon: <Archive className="h-5 w-5" />,
-      color: "text-red-600"
-    },
-    {
-      title: "Art & Collectibles",
-      value: artValue,
-      icon: <Palette className="h-5 w-5" />,
-      color: "text-pink-600"
-    }
-  ];
+  const assetCount = assets.length;
+  const propertyCount = getAssetsByType('property').length;
+  const vehicleCount = getAssetsByType('vehicle').length + getAssetsByType('boat').length;
+  
+  // Sample liabilities value - you can replace this with actual data source
+  const totalLiabilities = 150000;
+  const netWorth = totalValue - totalLiabilities;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-      {summaryCards.map((card, index) => (
-        <Card key={index}>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{card.title}</CardTitle>
-            <div className={card.color}>{card.icon}</div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {formatCurrency(card.value)}
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+      {/* Asset Overview Card */}
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardTitle className="text-lg font-semibold">Asset Overview</CardTitle>
+          <BarChart3 className="h-5 w-5 text-blue-600" />
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <p className="text-sm text-muted-foreground">Total Value</p>
+              <p className="text-xl font-bold">{formatCurrency(totalValue)}</p>
             </div>
-            <p className="text-xs text-muted-foreground">
-              {assets.length} total assets
-            </p>
-          </CardContent>
-        </Card>
-      ))}
+            <div>
+              <p className="text-sm text-muted-foreground">Asset Count</p>
+              <p className="text-xl font-bold">{assetCount}</p>
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground">Properties</p>
+              <p className="text-xl font-bold">{propertyCount}</p>
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground">Vehicles</p>
+              <p className="text-xl font-bold">{vehicleCount}</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Net Worth Card */}
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardTitle className="text-lg font-semibold">Net Worth</CardTitle>
+          <Package className="h-5 w-5 text-green-600" />
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div>
+            <p className="text-sm text-muted-foreground">Total Net Worth</p>
+            <p className="text-2xl font-bold">{formatCurrency(netWorth)}</p>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <p className="text-sm text-muted-foreground">Assets</p>
+              <p className="text-lg font-semibold text-green-600">{formatCurrency(totalValue)}</p>
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground">Liabilities</p>
+              <p className="text-lg font-semibold text-red-600">{formatCurrency(totalLiabilities)}</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };
