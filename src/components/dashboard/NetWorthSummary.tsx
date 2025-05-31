@@ -1,4 +1,5 @@
 
+
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Wallet } from "lucide-react";
@@ -60,7 +61,7 @@ export const NetWorthSummary = () => {
         propertyCount={metrics.propertyCount}
         vehicleCount={metrics.vehicleCount}
         onNavigateToProperties={() => navigate('properties')}
-        onNavigateToAssets={() => navigate('all-assets')}
+        onNavigateToAssets={() => navigate('client-all-assets')}
       />
       
       <div className="grid grid-cols-1 gap-6">
@@ -89,7 +90,7 @@ export const NetWorthSummary = () => {
             "text-base p-0",
             isLightTheme ? "text-blue-600 hover:text-blue-700" : "text-blue-400 hover:text-blue-300"
           )}
-          onClick={() => navigate('all-assets')}
+          onClick={() => navigate('client-all-assets')}
         >
           View All Assets →
         </Button>
@@ -97,3 +98,4 @@ export const NetWorthSummary = () => {
     </div>
   );
 };
+
