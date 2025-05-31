@@ -1,6 +1,7 @@
+
 import React from "react";
 import { Progress } from "@/components/ui/progress";
-import { ArrowUpRight, Wallet, Maximize2, Home, User, Car } from "lucide-react";
+import { Wallet, Maximize2, Home, User, Car } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNetWorth } from "@/context/NetWorthContext";
 import { useNavigate } from "react-router-dom";
