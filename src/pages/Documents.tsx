@@ -123,14 +123,14 @@ const Documents = () => {
                         className={cn(
                           "w-full text-left px-4 py-3 rounded-lg text-sm transition-all duration-200 border",
                           activeCategory === category.id
-                            ? 'bg-primary text-black border-primary shadow-md transform scale-[1.02]'
+                            ? 'bg-primary text-primary-foreground border-primary shadow-md transform scale-[1.02]'
                             : 'bg-background text-foreground border-border hover:bg-accent hover:text-accent-foreground hover:border-accent/50 hover:shadow-sm'
                         )}
                       >
                         <div className="flex items-center justify-between">
                           <span className="font-medium">{category.name}</span>
                           {activeCategory === category.id && (
-                            <div className="w-2 h-2 bg-black rounded-full"></div>
+                            <div className="w-2 h-2 bg-primary-foreground rounded-full"></div>
                           )}
                         </div>
                       </button>
