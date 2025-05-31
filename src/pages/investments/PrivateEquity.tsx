@@ -109,6 +109,16 @@ const PrivateEquity = () => {
           
           <TabsContent value="private-markets" className="space-y-8">
             <div className="space-y-6">
+              <div className="mb-6">
+                <Button 
+                  variant="ghost" 
+                  onClick={() => navigate("/client-investments?tab=private-markets")}
+                  className="flex items-center gap-2 mb-4"
+                >
+                  <ArrowLeft className="h-4 w-4" /> Back
+                </Button>
+              </div>
+              
               <div className="mb-8">
                 <h2 className="text-2xl font-semibold mb-4">Private Equity Investments</h2>
                 <p className="text-muted-foreground text-base">
