@@ -15,45 +15,25 @@ const Collectibles = () => {
   const collectiblesOfferings = [
     {
       id: 1,
-      name: "Fine Art Investment Fund",
-      description: "Curated portfolio of museum-quality artworks from established and emerging artists with strong market demand.",
-      firm: "Art Capital Partners",
-      minimumInvestment: "$250,000",
-      performance: "+13.7%",
-      lockupPeriod: "3-5 years",
-      tags: ["Fine Art", "Museum Quality", "Blue Chip"],
+      name: "Masterworks",
+      description: "Masterworks is the first and only platform providing investment products to gain exposure to Contemporary art. Headquartered in New York City, the firm employs over 180 individuals to research, source, and manage a portfolio of blue-chip art. Masterworks has reviewed more than $20 billion of art for its investment vehicles.",
+      firm: "Masterworks",
+      minimumInvestment: "$15,000",
+      performance: "+18.5%",
+      lockupPeriod: "3-7 years",
+      tags: ["Art", "Contemporary Art", "Blue Chip"],
       featured: true
     },
     {
       id: 2,
-      name: "Vintage Wine Collection Fund",
-      description: "Investment in rare and collectible wines from premier vineyards with proven appreciation potential.",
-      firm: "Wine Investment Group",
-      minimumInvestment: "$100,000",
-      performance: "+11.2%",
-      lockupPeriod: "5-10 years",
-      tags: ["Wine", "Collectibles", "Vintage"]
-    },
-    {
-      id: 3,
-      name: "Classic Automobiles Fund",
-      description: "Portfolio of classic and vintage automobiles with strong collector demand and historical significance.",
-      firm: "Classic Car Capital",
-      minimumInvestment: "$500,000",
-      performance: "+18.9%",
-      lockupPeriod: "3-7 years",
-      tags: ["Classic Cars", "Vintage", "Collectibles"],
+      name: "Wine and Spirits Arbitrage Fund \"Vint Diversified Offering II\"",
+      description: "Vint runs a tax-advantaged wine and spirits fund, sourcing investment-grade bottles from Europe at a 20-40% discount to US market value, importing them into the US, and selling them in the US market. The fund has historically generated around 24% net returns for investors and is expected to qualify under IRS code section 1202 (QSBS) for a federal income tax exemption on returns after 5 years.",
+      firm: "Vint",
+      minimumInvestment: "$25,000",
+      performance: "+24.0%",
+      lockupPeriod: "5+ years",
+      tags: ["Wine", "Spirits", "Tax-Advantaged", "Arbitrage"],
       featured: true
-    },
-    {
-      id: 4,
-      name: "Luxury Collectibles Fund",
-      description: "Diversified investments in luxury watches, jewelry, rare books, and other high-value collectibles.",
-      firm: "Luxury Assets Management",
-      minimumInvestment: "$250,000",
-      performance: "+15.4%",
-      lockupPeriod: "2-5 years",
-      tags: ["Luxury", "Watches", "Rare Items"]
     }
   ];
   
