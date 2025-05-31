@@ -109,30 +109,11 @@ const PrivateEquity = () => {
           
           <TabsContent value="private-markets" className="space-y-8">
             <div className="space-y-6">
-              <div className="mb-6">
-                <Button 
-                  variant="ghost" 
-                  onClick={() => navigate("/client-investments?tab=private-markets")}
-                  className="flex items-center gap-2 mb-4"
-                >
-                  <ArrowLeft className="h-4 w-4" /> Back
-                </Button>
-              </div>
-              
-              <div className="mb-8 flex items-center gap-4">
-                <Button 
-                  variant="ghost" 
-                  onClick={() => navigate("/client-investments?tab=private-markets")}
-                  className="flex items-center gap-2 p-0 hover:bg-transparent"
-                >
-                  <ArrowLeft className="h-4 w-4" />
-                </Button>
-                <div>
-                  <h2 className="text-2xl font-semibold mb-4">Private Equity Investments</h2>
-                  <p className="text-muted-foreground text-base">
-                    Investments in private companies or buyouts of public companies resulting in a delisting of public equity
-                  </p>
-                </div>
+              <div className="mb-8">
+                <h2 className="text-2xl font-semibold mb-4">Private Equity Investments</h2>
+                <p className="text-muted-foreground text-base">
+                  Investments in private companies or buyouts of public companies resulting in a delisting of public equity
+                </p>
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
