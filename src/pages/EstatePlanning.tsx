@@ -94,17 +94,6 @@ export default function EstatePlanning() {
   return (
     <ThreeColumnLayout activeMainItem="estate-planning" title="Estate Planning Services">
       <div className="space-y-8">
-        <div className="rounded-lg border bg-card text-card-foreground shadow-sm overflow-hidden">
-          <div className="bg-muted/50 p-6 sm:p-10 flex flex-col sm:flex-row gap-6 items-center">
-            <div className="bg-primary/10 p-3 rounded-full">
-              <ArchiveIcon className="h-10 w-10 text-primary" />
-            </div>
-            <div className="space-y-2 flex-1 text-center sm:text-left">
-              <p className="text-muted-foreground">Secure your legacy and protect what matters most with our comprehensive estate planning solutions.</p>
-            </div>
-          </div>
-        </div>
-
         <div className="space-y-4">
           <div className="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
             <div className="flex gap-3 w-full sm:w-auto">
