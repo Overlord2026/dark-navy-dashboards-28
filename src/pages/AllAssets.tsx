@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { useAuth } from "@/context/AuthContext";
@@ -44,6 +45,13 @@ export default function AllAssets() {
           <div>
             <p className="text-muted-foreground">Comprehensive view of all your assets and liabilities</p>
           </div>
+          <Button
+            onClick={() => setIsAddAssetDialogOpen(true)}
+            className="mt-4 md:mt-0"
+          >
+            <PlusCircle className="mr-2 h-4 w-4" />
+            Add Asset
+          </Button>
         </div>
         
         <Tabs value={mainTab} onValueChange={setMainTab} className="w-full">
@@ -55,18 +63,6 @@ export default function AllAssets() {
           
           <TabsContent value="summary">
             <div className="space-y-6">
-              <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
-                {assetTab === "assets" && (
-                  <Button
-                    onClick={() => setIsAddAssetDialogOpen(true)}
-                    className="mt-4 md:mt-0"
-                  >
-                    <PlusCircle className="mr-2 h-4 w-4" />
-                    Add Asset
-                  </Button>
-                )}
-              </div>
-              
               <SupabaseAssetsSummary />
               
               <Tabs value={assetTab} onValueChange={setAssetTab} className="w-full">
@@ -83,7 +79,6 @@ export default function AllAssets() {
                   <TabsTrigger value="digital">Digital</TabsTrigger>
                   <TabsTrigger value="other">Other</TabsTrigger>
                 </TabsList>
-                
                 
                 <TabsContent value="assets">
                   <SupabaseAssetList filter="all" />
