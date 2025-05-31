@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
@@ -319,7 +318,7 @@ const Investments = () => {
                   >
                     <div className="flex flex-col gap-4 h-full">
                       <div className="flex justify-between items-start">
-                        <h3 className="text-lg font-semibold text-white group-hover:text-yellow-400 transition-colors">
+                        <h3 className="text-lg font-semibold text-black group-hover:text-yellow-400 transition-colors">
                           {category.title}
                         </h3>
                         <ChevronRight className="h-5 w-5 text-slate-400 group-hover:text-yellow-400 transition-colors" />
