@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -13,47 +13,76 @@ import {
 import { CalendarClock, ExternalLink } from "lucide-react";
 import { toast } from "sonner";
 import { auditLog } from "@/services/auditLog/auditLogService";
+import { useInvestmentMeetings } from "@/hooks/useInvestmentMeetings";
+import { useAuth } from "@/context/AuthContext";
 
 interface ScheduleMeetingDialogProps {
+  offeringId?: string;
   assetName: string;
   consultationType?: "investment" | "estate" | "tax" | "general";
 }
 
 export const ScheduleMeetingDialog: React.FC<ScheduleMeetingDialogProps> = ({ 
+  offeringId,
   assetName,
   consultationType = "investment" 
 }) => {
-  const [isOpen, setIsOpen] = React.useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const { scheduleMeeting } = useInvestmentMeetings();
+  const { user } = useAuth();
 
-  const handleSchedule = () => {
-    // Log the scheduling action
-    const userId = "current-user"; // In a real app, this would come from auth context
-    
-    auditLog.log(
-      userId,
-      "document_access",
-      "success",
-      {
-        resourceType: "investment_scheduling",
-        resourceId: assetName,
-        details: {
-          action: "schedule_consultation",
-          assetName,
-          consultationType
+  const handleSchedule = async () => {
+    if (!user) {
+      toast.error("Please log in to schedule a meeting");
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      // Log the scheduling action
+      auditLog.log(
+        user.id,
+        "meeting_schedule",
+        "success",
+        {
+          resourceType: "investment_meeting",
+          resourceId: offeringId || assetName,
+          details: {
+            action: "schedule_consultation",
+            assetName,
+            consultationType,
+            offeringId
+          }
         }
+      );
+
+      // Save meeting request to database if offeringId is provided
+      if (offeringId) {
+        await scheduleMeeting({
+          offering_id: offeringId,
+          consultation_type: consultationType,
+          notes: `Meeting request for ${assetName}`
+        });
       }
-    );
-    
-    // Open Calendly in a new tab
-    window.open("https://calendly.com/tonygomes/60min", "_blank");
-    
-    // Show success toast
-    toast.success("Opening scheduling page", {
-      description: `Schedule a consultation about ${assetName} with your advisor.`,
-    });
-    
-    // Close the dialog
-    setIsOpen(false);
+      
+      // Open Calendly in a new tab
+      window.open("https://calendly.com/tonygomes/60min", "_blank");
+      
+      // Show success toast
+      toast.success("Meeting request saved and scheduling page opened", {
+        description: `Schedule a consultation about ${assetName} with your advisor.`,
+      });
+      
+      // Close the dialog
+      setIsOpen(false);
+    } catch (error) {
+      console.error('Error scheduling meeting:', error);
+      toast.error("Failed to save meeting request. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   };
   
   const handleOpenChange = (open: boolean) => {
@@ -102,10 +131,12 @@ export const ScheduleMeetingDialog: React.FC<ScheduleMeetingDialogProps> = ({
           </div>
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={() => setIsOpen(false)}>Cancel</Button>
-          <Button onClick={handleSchedule} className="gap-2">
+          <Button variant="outline" onClick={() => setIsOpen(false)} disabled={isLoading}>
+            Cancel
+          </Button>
+          <Button onClick={handleSchedule} className="gap-2" disabled={isLoading}>
             <CalendarClock className="h-4 w-4" />
-            Schedule Meeting
+            {isLoading ? "Scheduling..." : "Schedule Meeting"}
           </Button>
         </DialogFooter>
       </DialogContent>

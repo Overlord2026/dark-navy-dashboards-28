@@ -6,22 +6,23 @@ import { Button } from "@/components/ui/button";
 import { DollarSign, Building } from "lucide-react";
 import { InterestedButton } from "./InterestedButton";
 import { ScheduleMeetingDialog } from "./ScheduleMeetingDialog";
+import type { InvestmentOffering } from "@/hooks/useInvestmentData";
 
 interface OfferingCardProps {
-  offering: {
-    id: number;
-    name: string;
-    description: string;
-    firm: string;
-    minimumInvestment: string;
-    performance: string;
-    lockupPeriod: string;
-    tags: string[];
-    featured?: boolean;
+  offering: InvestmentOffering & {
+    // Legacy support for old format
+    id?: number | string;
+    minimumInvestment?: string;
+    lockupPeriod?: string;
   };
 }
 
 export const OfferingCard: React.FC<OfferingCardProps> = ({ offering }) => {
+  // Support both new database format and legacy format
+  const offeringId = typeof offering.id === 'string' ? offering.id : offering.id?.toString() || '';
+  const minimumInvestment = offering.minimum_investment || offering.minimumInvestment || '';
+  const lockupPeriod = offering.lockup_period || offering.lockupPeriod || '';
+
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300 border-gray-200">
       <div className="flex">
@@ -47,7 +48,7 @@ export const OfferingCard: React.FC<OfferingCardProps> = ({ offering }) => {
           
           <CardContent className="space-y-4">
             <div className="flex flex-wrap gap-1">
-              {offering.tags.map((tag, i) => (
+              {offering.tags?.map((tag, i) => (
                 <Badge 
                   key={i} 
                   variant="outline" 
@@ -71,7 +72,7 @@ export const OfferingCard: React.FC<OfferingCardProps> = ({ offering }) => {
                 <DollarSign className="h-4 w-4 text-blue-600" />
                 <div>
                   <p className="text-muted-foreground text-sm">Minimum Investment</p>
-                  <p className="font-medium">{offering.minimumInvestment}</p>
+                  <p className="font-medium">{minimumInvestment}</p>
                 </div>
               </div>
             </div>
@@ -80,8 +81,15 @@ export const OfferingCard: React.FC<OfferingCardProps> = ({ offering }) => {
 
         {/* Right side - Action buttons */}
         <div className="flex flex-col justify-center gap-3 p-6 border-l border-gray-100">
-          <InterestedButton assetName={offering.name} />
-          <ScheduleMeetingDialog assetName={offering.name} consultationType="investment" />
+          <InterestedButton 
+            offeringId={offeringId} 
+            assetName={offering.name} 
+          />
+          <ScheduleMeetingDialog 
+            offeringId={offeringId}
+            assetName={offering.name} 
+            consultationType="investment" 
+          />
         </div>
       </div>
     </Card>

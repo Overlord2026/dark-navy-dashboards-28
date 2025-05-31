@@ -181,6 +181,130 @@ export type Database = {
           },
         ]
       }
+      investment_categories: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          id: string
+          name: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          id: string
+          name: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      investment_meetings: {
+        Row: {
+          consultation_type: string
+          created_at: string | null
+          id: string
+          notes: string | null
+          offering_id: string | null
+          preferred_date: string | null
+          preferred_time: string | null
+          status: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          consultation_type: string
+          created_at?: string | null
+          id?: string
+          notes?: string | null
+          offering_id?: string | null
+          preferred_date?: string | null
+          preferred_time?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          consultation_type?: string
+          created_at?: string | null
+          id?: string
+          notes?: string | null
+          offering_id?: string | null
+          preferred_date?: string | null
+          preferred_time?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "investment_meetings_offering_id_fkey"
+            columns: ["offering_id"]
+            isOneToOne: false
+            referencedRelation: "investment_offerings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      investment_offerings: {
+        Row: {
+          category_id: string | null
+          created_at: string | null
+          description: string | null
+          featured: boolean | null
+          firm: string
+          id: string
+          lockup_period: string | null
+          minimum_investment: string
+          name: string
+          performance: string | null
+          tags: string[] | null
+          updated_at: string | null
+        }
+        Insert: {
+          category_id?: string | null
+          created_at?: string | null
+          description?: string | null
+          featured?: boolean | null
+          firm: string
+          id?: string
+          lockup_period?: string | null
+          minimum_investment: string
+          name: string
+          performance?: string | null
+          tags?: string[] | null
+          updated_at?: string | null
+        }
+        Update: {
+          category_id?: string | null
+          created_at?: string | null
+          description?: string | null
+          featured?: boolean | null
+          firm?: string
+          id?: string
+          lockup_period?: string | null
+          minimum_investment?: string
+          name?: string
+          performance?: string | null
+          tags?: string[] | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "investment_offerings_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "investment_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       model_portfolios: {
         Row: {
           asset_allocation: string | null
@@ -519,6 +643,35 @@ export type Database = {
           zip_code?: string | null
         }
         Relationships: []
+      }
+      user_investment_interests: {
+        Row: {
+          created_at: string | null
+          id: string
+          offering_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          offering_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          offering_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_investment_interests_offering_id_fkey"
+            columns: ["offering_id"]
+            isOneToOne: false
+            referencedRelation: "investment_offerings"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_liabilities: {
         Row: {
