@@ -76,9 +76,9 @@ export default function AllAssets() {
   
   return (
     <ThreeColumnLayout title="All Assets">
-      <div className="container mx-auto p-4 space-y-6">
-        <div className="space-y-2">
-          <p className="text-muted-foreground">Comprehensive view of all your assets and liabilities</p>
+      <div className="container mx-auto p-4">
+        <div className="mb-6">
+          <p className="text-muted-foreground mb-4">Comprehensive view of all your assets and liabilities</p>
           <div className="flex justify-end">
             <div className="flex gap-2">
               <Button
@@ -105,56 +105,50 @@ export default function AllAssets() {
             <TabsTrigger value="networth">Net Worth</TabsTrigger>
           </TabsList>
           
-          <TabsContent value="summary">
-            <div className="space-y-6">
-              <SupabaseAssetsSummary />
-              
-              <div className="flex justify-between items-center mb-6">
-                <h3 className="text-lg font-semibold">Asset Details</h3>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="outline" className="flex items-center gap-2">
-                      <Filter className="h-4 w-4" />
-                      {getSelectedFilterLabel()}
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-48">
-                    {filterOptions.map((option) => (
-                      <DropdownMenuItem
-                        key={option.value}
-                        onClick={() => setAssetFilter(option.value)}
-                        className={assetFilter === option.value ? "bg-accent" : ""}
-                      >
-                        {option.label}
-                      </DropdownMenuItem>
-                    ))}
-                  </DropdownMenuContent>
-                </DropdownMenu>
+          <TabsContent value="summary" className="space-y-6">
+            <SupabaseAssetsSummary />
+            
+            <div className="flex justify-between items-center">
+              <h3 className="text-lg font-semibold">Asset Details</h3>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" className="flex items-center gap-2">
+                    <Filter className="h-4 w-4" />
+                    {getSelectedFilterLabel()}
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48">
+                  {filterOptions.map((option) => (
+                    <DropdownMenuItem
+                      key={option.value}
+                      onClick={() => setAssetFilter(option.value)}
+                      className={assetFilter === option.value ? "bg-accent" : ""}
+                    >
+                      {option.label}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+            
+            {assetFilter === "assets" ? (
+              <div className="space-y-6">
+                <SupabaseAssetList filter="all" />
+                <LiabilitiesList />
               </div>
-              
-              {assetFilter === "assets" ? (
-                <>
-                  <SupabaseAssetList filter="all" />
-                  <LiabilitiesList />
-                </>
-              ) : (
-                <SupabaseAssetList filter={assetFilter} />
-              )}
-            </div>
+            ) : (
+              <SupabaseAssetList filter={assetFilter} />
+            )}
           </TabsContent>
           
-          <TabsContent value="allocation">
-            <div className="space-y-6">
-              <h2 className="text-2xl font-semibold">Asset Allocation</h2>
-              <ComprehensiveAssetsSummary showTabs={false} />
-            </div>
+          <TabsContent value="allocation" className="space-y-6">
+            <h2 className="text-2xl font-semibold">Asset Allocation</h2>
+            <ComprehensiveAssetsSummary showTabs={false} />
           </TabsContent>
           
-          <TabsContent value="networth">
-            <div className="space-y-6">
-              <h2 className="text-2xl font-semibold">Net Worth Analysis</h2>
-              <NetWorthAnalysis />
-            </div>
+          <TabsContent value="networth" className="space-y-6">
+            <h2 className="text-2xl font-semibold">Net Worth Analysis</h2>
+            <NetWorthAnalysis />
           </TabsContent>
         </Tabs>
       </div>
