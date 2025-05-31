@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -151,11 +152,8 @@ export const IntelligentAllocationTab = () => {
             className={`grid grid-cols-12 gap-2 p-4 border-t items-center hover:bg-accent/10 transition-colors cursor-pointer ${selectedModels.includes(model.id) ? 'bg-primary/5' : ''}`}
             onClick={() => handleModelRowClick(model.id)}
           >
-            <div className="col-span-4 flex items-center gap-3">
-              <div>
-                <div className="font-medium">{model.name}</div>
-                <div className="text-sm text-muted-foreground">{model.manager}</div>
-              </div>
+            <div className="col-span-4">
+              <div className="font-medium">{model.name}</div>
             </div>
             <div className="col-span-1">
               <Badge 
