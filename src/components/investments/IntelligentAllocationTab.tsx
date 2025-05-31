@@ -191,16 +191,6 @@ export const IntelligentAllocationTab = () => {
                 </Badge>
               ))}
             </div>
-            <div className="col-span-1 flex justify-end">
-              <Button 
-                variant="ghost" 
-                size="sm"
-                onClick={(e) => handleViewPortfolioDetails(model.id, e)}
-                className="opacity-70 hover:opacity-100"
-              >
-                Details
-              </Button>
-            </div>
           </div>
         ))}
       </div>
