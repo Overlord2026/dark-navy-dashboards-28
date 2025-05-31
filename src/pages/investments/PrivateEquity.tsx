@@ -111,7 +111,7 @@ const PrivateEquity = () => {
             <div className="space-y-6">
               <div className="mb-8">
                 <h2 className="text-2xl font-semibold mb-4">Private Equity Investments</h2>
-                <p className="text-muted-foreground text-lg">
+                <p className="text-muted-foreground text-base">
                   Investments in private companies or buyouts of public companies resulting in a delisting of public equity
                 </p>
               </div>
