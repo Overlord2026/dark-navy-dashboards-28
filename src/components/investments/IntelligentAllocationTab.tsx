@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -119,19 +120,20 @@ export const IntelligentAllocationTab = () => {
 
   return (
     <div className="space-y-8">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h2 className="text-2xl font-semibold">Intelligent Allocation™</h2>
           <p className="text-muted-foreground">Professionally managed portfolio models</p>
         </div>
-        <div className="flex gap-2">
-          <Button variant="outline" onClick={handleFindPortfolios}>
+        <div className="flex gap-2 w-full sm:w-auto">
+          <Button variant="outline" onClick={handleFindPortfolios} className="flex-1 sm:flex-none">
             <Filter className="mr-1 h-4 w-4" /> Find Portfolios
           </Button>
         </div>
       </div>
 
-      <div className="bg-card rounded-lg border shadow-md overflow-hidden">
+      {/* Desktop Table View */}
+      <div className="bg-card rounded-lg border shadow-md overflow-hidden hidden lg:block">
         <div className="grid grid-cols-12 gap-2 p-4 bg-muted/50 text-sm font-medium">
           <div className="col-span-4">NAME</div>
           <div className="col-span-1">TYPE</div>
@@ -185,6 +187,124 @@ export const IntelligentAllocationTab = () => {
               <ScheduleMeetingDialog assetName={model.name} />
             </div>
           </div>
+        ))}
+      </div>
+
+      {/* Tablet View */}
+      <div className="bg-card rounded-lg border shadow-md overflow-hidden hidden md:block lg:hidden">
+        <div className="grid grid-cols-10 gap-2 p-4 bg-muted/50 text-sm font-medium">
+          <div className="col-span-3">NAME</div>
+          <div className="col-span-1">TYPE</div>
+          <div className="col-span-1">TARGETS</div>
+          <div className="col-span-2">BENCHMARK</div>
+          <div className="col-span-1">TAGS</div>
+          <div className="col-span-2">ACTION</div>
+        </div>
+        
+        {portfolioModels.map((model) => (
+          <div 
+            key={model.id} 
+            className={`grid grid-cols-10 gap-2 p-4 border-t items-center hover:bg-accent/10 transition-colors cursor-pointer ${selectedModels.includes(model.id) ? 'bg-primary/5' : ''}`}
+            onClick={() => handleModelRowClick(model.id)}
+          >
+            <div className="col-span-3">
+              <div className="font-medium text-sm">{model.name}</div>
+              <div className="text-xs text-muted-foreground mt-1">{model.updatedDate}</div>
+            </div>
+            <div className="col-span-1">
+              <Badge 
+                variant="outline" 
+                className={`text-xs ${model.type === 'Model' ? 'bg-blue-500/10 text-blue-500 border-blue-500/20' : 'bg-red-500/10 text-red-500 border-red-500/20'}`}
+              >
+                {model.type}
+              </Badge>
+            </div>
+            <div className="col-span-1 flex justify-center">
+              <div className="h-7 w-7 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs font-medium">
+                {model.allocation}
+              </div>
+            </div>
+            <div className="col-span-2 flex items-center gap-1">
+              <div className="bg-gray-200 dark:bg-gray-700 h-5 w-5 rounded flex items-center justify-center text-xs">
+                S&P
+              </div>
+              <span className="text-xs truncate">{model.benchmark}</span>
+            </div>
+            <div className="col-span-1">
+              <Badge variant="outline" className="bg-primary/5 text-xs">
+                {model.tags[0]}
+              </Badge>
+              {model.tags.length > 1 && (
+                <div className="text-xs text-muted-foreground mt-1">+{model.tags.length - 1}</div>
+              )}
+            </div>
+            <div className="col-span-2 flex flex-col gap-1" onClick={(e) => e.stopPropagation()}>
+              <InterestedButton assetName={model.name} />
+              <ScheduleMeetingDialog assetName={model.name} />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Mobile Card View */}
+      <div className="space-y-4 md:hidden">
+        {portfolioModels.map((model) => (
+          <Card 
+            key={model.id} 
+            className={`cursor-pointer transition-colors hover:bg-accent/10 ${selectedModels.includes(model.id) ? 'bg-primary/5 border-primary/20' : ''}`}
+            onClick={() => handleModelRowClick(model.id)}
+          >
+            <CardContent className="p-4">
+              <div className="space-y-3">
+                {/* Header */}
+                <div className="flex justify-between items-start">
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-medium text-sm leading-tight">{model.name}</h3>
+                    <p className="text-xs text-muted-foreground mt-1">{model.updatedDate}</p>
+                  </div>
+                  <div className="flex items-center gap-2 ml-2">
+                    <Badge 
+                      variant="outline" 
+                      className={`text-xs ${model.type === 'Model' ? 'bg-blue-500/10 text-blue-500 border-blue-500/20' : 'bg-red-500/10 text-red-500 border-red-500/20'}`}
+                    >
+                      {model.type}
+                    </Badge>
+                    <div className="h-6 w-6 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs font-medium">
+                      {model.allocation}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Benchmark */}
+                <div className="flex items-center gap-2">
+                  <div className="bg-gray-200 dark:bg-gray-700 h-5 w-5 rounded flex items-center justify-center text-xs">
+                    S&P
+                  </div>
+                  <span className="text-xs text-muted-foreground">Benchmark:</span>
+                  <span className="text-xs">{model.benchmark}</span>
+                </div>
+
+                {/* Tags */}
+                <div className="flex gap-1 flex-wrap">
+                  {model.tags.map((tag, index) => (
+                    <Badge key={index} variant="outline" className="bg-primary/5 text-xs">
+                      {tag}
+                    </Badge>
+                  ))}
+                </div>
+
+                {/* Actions */}
+                <div className="flex gap-2 pt-2" onClick={(e) => e.stopPropagation()}>
+                  <div className="flex-1">
+                    <InterestedButton assetName={model.name} />
+                  </div>
+                  <div className="flex-1">
+                    <ScheduleMeetingDialog assetName={model.name} />
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         ))}
       </div>
 
