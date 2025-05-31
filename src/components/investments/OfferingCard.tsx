@@ -74,9 +74,6 @@ export const OfferingCard: React.FC<OfferingCardProps> = ({ offering }) => {
         </div>
         
         <div className="flex flex-col gap-2 pt-4">
-          <Button variant="outline" className="w-full" size="sm">
-            View Details
-          </Button>
           <InterestedButton assetName={offering.name} />
           <ScheduleMeetingDialog assetName={offering.name} consultationType="investment" />
         </div>
