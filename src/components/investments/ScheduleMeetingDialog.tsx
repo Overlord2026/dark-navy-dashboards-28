@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -50,7 +49,7 @@ export const ScheduleMeetingDialog: React.FC<ScheduleMeetingDialogProps> = ({
       // Log the scheduling action using a valid audit event type
       auditLog.log(
         user.id,
-        "user_action",
+        "system_change",
         "success",
         {
           resourceType: "investment_meeting",
