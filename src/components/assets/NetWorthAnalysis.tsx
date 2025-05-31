@@ -1,11 +1,10 @@
-
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useSupabaseAssets } from "@/hooks/useSupabaseAssets";
 import { useSupabaseLiabilities } from "@/hooks/useSupabaseLiabilities";
 import { formatCurrency } from "@/lib/formatters";
 import { Progress } from "@/components/ui/progress";
-import { TrendingUp, TrendingDown, DollarSign, PieChart } from "lucide-react";
+import { TrendingDown, PieChart } from "lucide-react";
 
 export const NetWorthAnalysis: React.FC = () => {
   const { assets, loading: assetsLoading, getTotalValue } = useSupabaseAssets();
@@ -33,6 +32,7 @@ export const NetWorthAnalysis: React.FC = () => {
   const netWorth = totalAssets - totalLiabilities;
   
   // Calculate asset breakdown by type
+  
   const getAssetValueByType = (type: string) => {
     return assets
       .filter(asset => asset.type === type)
@@ -56,50 +56,6 @@ export const NetWorthAnalysis: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Net Worth Summary */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Assets</CardTitle>
-            <TrendingUp className="h-4 w-4 text-green-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-green-600">{formatCurrency(totalAssets)}</div>
-            <p className="text-xs text-muted-foreground">
-              {assets.length} asset{assets.length !== 1 ? 's' : ''}
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Liabilities</CardTitle>
-            <TrendingDown className="h-4 w-4 text-red-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-red-600">{formatCurrency(totalLiabilities)}</div>
-            <p className="text-xs text-muted-foreground">
-              {liabilities.length} liabilit{liabilities.length !== 1 ? 'ies' : 'y'}
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Net Worth</CardTitle>
-            <DollarSign className="h-4 w-4 text-blue-600" />
-          </CardHeader>
-          <CardContent>
-            <div className={`text-2xl font-bold ${netWorth >= 0 ? 'text-blue-600' : 'text-red-600'}`}>
-              {formatCurrency(netWorth)}
-            </div>
-            <p className="text-xs text-muted-foreground">
-              Assets - Liabilities
-            </p>
-          </CardContent>
-        </Card>
-      </div>
-
       {/* Detailed Breakdown */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Assets Breakdown */}
