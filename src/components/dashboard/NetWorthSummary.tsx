@@ -77,13 +77,6 @@ export const NetWorthSummary = () => {
               <Maximize2 className="h-5 w-5" />
               <span className="sr-only">View All Assets</span>
             </Button>
-            <span className={cn(
-              "flex items-center text-lg",
-              isLightTheme ? "text-green-600" : "text-green-400"
-            )}>
-              <ArrowUpRight className="mr-2 h-5 w-5" />
-              +5.2%
-            </span>
           </div>
         </div>
         
