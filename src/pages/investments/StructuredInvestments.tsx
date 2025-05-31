@@ -15,45 +15,56 @@ const StructuredInvestments = () => {
   const structuredInvestmentsOfferings = [
     {
       id: 1,
-      name: "Market-Linked CD Portfolio",
-      description: "Principal-protected certificates of deposit linked to equity market performance with upside potential.",
-      firm: "Structured Products Capital",
-      minimumInvestment: "$100,000",
+      name: "Goldman Sachs Structured Notes",
+      description: "Customized structured products with defined risk/return profiles based on underlying assets.",
+      firm: "Goldman Sachs",
+      minimumInvestment: "$10,000",
       performance: "+8.4%",
       lockupPeriod: "3-5 years",
-      tags: ["Principal Protected", "Market Linked", "CDs"],
+      tags: ["Structured Notes", "Tailored", "Defined Outcome"],
       featured: true
     },
     {
       id: 2,
-      name: "Barrier Reverse Convertible Notes",
-      description: "Enhanced yield notes with barrier protection, offering higher income potential with defined risk parameters.",
-      firm: "Fixed Income Innovations",
-      minimumInvestment: "$250,000",
-      performance: "+12.6%",
-      lockupPeriod: "1-3 years",
-      tags: ["Enhanced Yield", "Barrier Protection", "Notes"]
-    },
-    {
-      id: 3,
-      name: "Multi-Asset Autocallable Securities",
-      description: "Structured products with automatic early redemption features linked to a basket of underlying assets.",
-      firm: "Multi-Asset Structured Solutions",
-      minimumInvestment: "$500,000",
-      performance: "+10.8%",
-      lockupPeriod: "2-6 years",
-      tags: ["Autocallable", "Multi-Asset", "Structured"],
+      name: "JPMorgan Principal Protected Notes",
+      description: "Principal-protected structured notes that provide downside protection while participating in market upside. These investments combine the security of principal protection with exposure to various market indices.",
+      firm: "JPMorgan Chase",
+      minimumInvestment: "$25,000",
+      performance: "+7.2%",
+      lockupPeriod: "2-4 years",
+      tags: ["Principal Protection", "Market-Linked", "Downside Buffer"],
       featured: true
     },
     {
+      id: 3,
+      name: "Morgan Stanley Buffered PLUS",
+      description: "Buffered Performance Leveraged Upside Securities (PLUS) offering enhanced returns on the upside with limited downside risk through a buffer zone that protects against moderate market declines.",
+      firm: "Morgan Stanley",
+      minimumInvestment: "$15,000",
+      performance: "+9.8%",
+      lockupPeriod: "2-3 years",
+      tags: ["Buffered", "Enhanced Upside", "Market-Linked"]
+    },
+    {
       id: 4,
-      name: "Commodity-Linked Structured Notes",
-      description: "Exposure to commodity markets through structured notes with built-in risk management features.",
-      firm: "Commodity Structured Partners",
-      minimumInvestment: "$250,000",
-      performance: "+14.3%",
-      lockupPeriod: "2-4 years",
-      tags: ["Commodities", "Structured Notes", "Risk Management"]
+      name: "Barclays Autocallable Notes",
+      description: "Structured investments that automatically call (redeem) if the underlying asset reaches a predetermined level on specified observation dates, potentially providing above-market returns for sideways or slightly bullish markets.",
+      firm: "Barclays",
+      minimumInvestment: "$10,000",
+      performance: "+6.5%",
+      lockupPeriod: "1-2 years",
+      tags: ["Autocallable", "Early Redemption", "Enhanced Yield"]
+    },
+    {
+      id: 5,
+      name: "Citigroup Callable Yield Notes",
+      description: "Income-focused structured products that offer above-market coupon rates with issuer call features, providing investors with enhanced yield potential in exchange for giving the issuer redemption flexibility.",
+      firm: "Citigroup",
+      minimumInvestment: "$10,000",
+      performance: "+5.8%",
+      lockupPeriod: "1-3 years",
+      tags: ["Income", "Callable", "Enhanced Yield"],
+      featured: true
     }
   ];
   
