@@ -75,18 +75,17 @@ export const LiabilitiesList = () => {
   return (
     <div className="space-y-6">
       <Card>
-        <CardHeader>
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-lg font-semibold flex items-center gap-2">
             <CreditCard className="h-5 w-5 text-red-600" />
             Liabilities ({liabilities.length})
           </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="mb-4">
+          <div className="text-right">
             <p className="text-sm text-muted-foreground">Total Liabilities</p>
             <p className="text-2xl font-bold text-red-600">{formatCurrency(getTotalLiabilities())}</p>
           </div>
-          
+        </CardHeader>
+        <CardContent>
           {liabilities.length === 0 ? (
             <div className="text-center py-8">
               <CreditCard className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
