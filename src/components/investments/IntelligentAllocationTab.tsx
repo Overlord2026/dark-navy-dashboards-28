@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -153,9 +152,6 @@ export const IntelligentAllocationTab = () => {
             onClick={() => handleModelRowClick(model.id)}
           >
             <div className="col-span-4 flex items-center gap-3">
-              <div className="text-primary">
-                <BarChart2 className="h-5 w-5" />
-              </div>
               <div>
                 <div className="font-medium">{model.name}</div>
                 <div className="text-sm text-muted-foreground">{model.manager}</div>
