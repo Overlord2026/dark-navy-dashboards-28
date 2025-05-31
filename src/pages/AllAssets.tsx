@@ -22,6 +22,7 @@ import { AddLiabilityDialog } from "@/components/liabilities/AddLiabilityDialog"
 import { SupabaseAssetsSummary } from "@/components/assets/SupabaseAssetsSummary";
 import { LiabilitiesList } from "@/components/liabilities/LiabilitiesList";
 import { ComprehensiveAssetsSummary } from "@/components/assets/ComprehensiveAssetsSummary";
+import { NetWorthAnalysis } from "@/components/assets/NetWorthAnalysis";
 import { Card, CardContent } from "@/components/ui/card";
 
 export default function AllAssets() {
@@ -152,7 +153,7 @@ export default function AllAssets() {
           <TabsContent value="networth">
             <div className="space-y-6">
               <h2 className="text-2xl font-semibold">Net Worth Analysis</h2>
-              <ComprehensiveAssetsSummary showTabs={false} />
+              <NetWorthAnalysis />
             </div>
           </TabsContent>
         </Tabs>
