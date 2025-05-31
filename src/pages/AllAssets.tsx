@@ -26,13 +26,13 @@ import { Card, CardContent } from "@/components/ui/card";
 export default function AllAssets() {
   const { isAuthenticated } = useAuth();
   const [mainTab, setMainTab] = useState("summary");
-  const [assetFilter, setAssetFilter] = useState("assets");
+  const [assetFilter, setAssetFilter] = useState("all");
   const [isAddAssetDialogOpen, setIsAddAssetDialogOpen] = useState(false);
 
   const filterOptions = [
+    { value: "all", label: "All Items" },
     { value: "assets", label: "All Assets" },
     { value: "liabilities", label: "Liabilities" },
-    { value: "all", label: "All Items" },
     { value: "property", label: "Real Estate" },
     { value: "vehicles", label: "Vehicles" },
     { value: "cash", label: "Cash" },
@@ -45,7 +45,7 @@ export default function AllAssets() {
 
   const getSelectedFilterLabel = () => {
     const selected = filterOptions.find(option => option.value === assetFilter);
-    return selected ? selected.label : "All Assets";
+    return selected ? selected.label : "All Items";
   };
 
   if (!isAuthenticated) {
