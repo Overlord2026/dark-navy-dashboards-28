@@ -3,7 +3,7 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { DollarSign, TrendingUp, Clock, Building } from "lucide-react";
+import { DollarSign, Building } from "lucide-react";
 import { InterestedButton } from "./InterestedButton";
 import { ScheduleMeetingDialog } from "./ScheduleMeetingDialog";
 
@@ -63,23 +63,7 @@ export const OfferingCard: React.FC<OfferingCardProps> = ({ offering }) => {
           <p className="text-lg font-bold text-blue-900">{offering.minimumInvestment}</p>
         </div>
         
-        <div className="grid grid-cols-3 gap-4 text-sm">
-          <div className="flex items-center gap-1">
-            <TrendingUp className="h-4 w-4 text-green-600" />
-            <div>
-              <p className="text-muted-foreground">Performance</p>
-              <p className="font-medium text-green-600">{offering.performance}</p>
-            </div>
-          </div>
-          
-          <div className="flex items-center gap-1">
-            <Clock className="h-4 w-4 text-orange-600" />
-            <div>
-              <p className="text-muted-foreground">Lock-up</p>
-              <p className="font-medium">{offering.lockupPeriod}</p>
-            </div>
-          </div>
-          
+        <div className="grid grid-cols-1 gap-4 text-sm">
           <div className="flex items-center gap-1">
             <Building className="h-4 w-4 text-purple-600" />
             <div>
