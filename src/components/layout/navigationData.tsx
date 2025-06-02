@@ -69,7 +69,7 @@ export const navigationCategories: NavCategory[] = [
       },
       {
         title: "Transfers",
-        href: "/transfers",
+        href: "/client-transfers",
         icon: ArrowLeftRight,
         items: []
       }

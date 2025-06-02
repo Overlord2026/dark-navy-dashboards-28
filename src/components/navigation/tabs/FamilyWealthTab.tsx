@@ -43,7 +43,7 @@ export const familyWealthNavItems: NavItem[] = [
   },
   { 
     title: "Transfers", 
-    href: "/transfers", 
+    href: "/client-transfers", 
     icon: ArrowRightLeft 
   },
   { 

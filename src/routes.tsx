@@ -106,7 +106,7 @@ const routes = createBrowserRouter([
     element: <ProtectedRoute><TaxBudgets /></ProtectedRoute>
   },
   {
-    path: "/transfers",
+    path: "/client-transfers",
     element: <ProtectedRoute><Transfers /></ProtectedRoute>
   },
   {
