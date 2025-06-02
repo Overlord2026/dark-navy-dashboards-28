@@ -1,3 +1,4 @@
+
 import {
   Home,
   CreditCard,
@@ -31,6 +32,7 @@ import { NavCategory, NavItem } from "@/types/navigation";
 export const navigationCategories: NavCategory[] = [
   {
     id: "Home",
+    title: "Home",
     label: "Home",
     defaultExpanded: true,
     items: [
@@ -44,6 +46,7 @@ export const navigationCategories: NavCategory[] = [
   },
   {
     id: "Accounts",
+    title: "Accounts",
     label: "Accounts", 
     defaultExpanded: true,
     items: [
@@ -75,6 +78,7 @@ export const navigationCategories: NavCategory[] = [
   },
   {
     id: "Family Wealth",
+    title: "Family Wealth",
     label: "Family Wealth",
     defaultExpanded: true,
     items: [
@@ -216,6 +220,7 @@ export const navigationCategories: NavCategory[] = [
   },
   {
     id: "Education",
+    title: "Education",
     label: "Education",
     defaultExpanded: true,
     items: [
@@ -229,6 +234,7 @@ export const navigationCategories: NavCategory[] = [
   },
   {
     id: "Collaboration",
+    title: "Collaboration",
     label: "Collaboration",
     defaultExpanded: true,
     items: [
@@ -254,6 +260,7 @@ export const navigationCategories: NavCategory[] = [
   },
   {
     id: "Integration",
+    title: "Integration",
     label: "Integration",
     defaultExpanded: true,
     items: [
@@ -267,6 +274,7 @@ export const navigationCategories: NavCategory[] = [
   },
   {
     id: "Settings",
+    title: "Settings",
     label: "Settings",
     defaultExpanded: true,
     items: [
@@ -290,3 +298,9 @@ export const navItems: { [key: string]: NavItem[] } = navigationCategories.reduc
   acc[category.label] = category.items;
   return acc;
 }, {});
+
+// Add the missing getSecondaryMenuItems function
+export const getSecondaryMenuItems = (activeMainItem: string): { id: string; label?: string; name?: string; active?: boolean }[] => {
+  // Return empty array for now - this function can be implemented based on specific requirements
+  return [];
+};
