@@ -1,33 +1,37 @@
 
 import React from "react";
-import { Button } from "@/components/ui/button";
-import { Upload } from "lucide-react";
 import { SharedDocumentsList } from "@/components/professionals/SharedDocumentsList";
+import { Button } from "@/components/ui/button";
+import { Share, Upload } from "lucide-react";
 
 interface DocumentsTabContentProps {
-  onUpload: () => void;
-  onShare: () => void;
+  onUpload?: () => void;
+  onShare?: () => void;
 }
 
 export function DocumentsTabContent({ onUpload, onShare }: DocumentsTabContentProps) {
   return (
-    <div className="bg-card p-6 rounded-lg border border-border space-y-4">
-      <div className="flex items-center justify-between mb-4">
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-xl font-medium">Shared Documents</h2>
-          <p className="text-muted-foreground">
-            Manage documents shared with your service professionals. Control access and track document viewing.
+          <h3 className="text-lg font-medium">Shared Documents</h3>
+          <p className="text-sm text-muted-foreground">
+            Manage documents you've shared with professionals
           </p>
         </div>
         <div className="flex gap-2">
-          <Button 
-            variant="outline" 
-            onClick={onUpload}
-            className="flex items-center gap-2"
-          >
-            <Upload size={16} />
-            Upload New
-          </Button>
+          {onUpload && (
+            <Button variant="outline" onClick={onUpload}>
+              <Upload className="h-4 w-4 mr-2" />
+              Upload Document
+            </Button>
+          )}
+          {onShare && (
+            <Button onClick={onShare}>
+              <Share className="h-4 w-4 mr-2" />
+              Share Document
+            </Button>
+          )}
         </div>
       </div>
       
