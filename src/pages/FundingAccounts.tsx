@@ -156,7 +156,7 @@ const FundingAccounts = () => {
                 
                 <p className="text-sm text-muted-foreground">
                   If you need to add a new account, go to the{" "}
-                  <Link to="/accounts" className="text-primary hover:underline">
+                  <Link to="/client-accounts" className="text-primary hover:underline">
                     Accounts section
                   </Link>{" "}
                   and click Add Account.

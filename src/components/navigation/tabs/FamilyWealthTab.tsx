@@ -1,3 +1,4 @@
+
 import React from "react";
 import { 
   LineChartIcon, 
@@ -23,7 +24,7 @@ export const familyWealthNavItems: NavItem[] = [
   },
   { 
     title: "Accounts Overview", 
-    href: "/accounts", 
+    href: "/client-accounts", 
     icon: WalletIcon 
   },
   { 

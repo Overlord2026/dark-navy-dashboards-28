@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 export const accountsNavItems: NavItem[] = [
   { 
     title: "Accounts Overview", 
-    href: "/accounts", 
+    href: "/client-accounts", 
     icon: WalletIcon 
   },
   { 

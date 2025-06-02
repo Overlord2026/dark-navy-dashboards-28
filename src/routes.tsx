@@ -1,3 +1,4 @@
+
 import React from "react";
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import Dashboard from "@/pages/Dashboard";
@@ -58,8 +59,12 @@ const routes = createBrowserRouter([
     element: <ProtectedRoute><Dashboard /></ProtectedRoute>
   },
   {
-    path: "/accounts",
+    path: "/client-accounts",
     element: <ProtectedRoute><Accounts /></ProtectedRoute>
+  },
+  {
+    path: "/accounts",
+    element: <Navigate to="/client-accounts" replace />
   },
   {
     path: "/client-education",
