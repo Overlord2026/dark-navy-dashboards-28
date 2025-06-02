@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { PropertyList } from "./PropertyList";
 import { PropertyForm } from "./PropertyForm";
 import { PropertySummary } from "./PropertySummary";
-import { PropertyLookupTool } from "./PropertyLookupTool";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { Property, PropertyValuation } from "@/types/property";
@@ -214,12 +213,6 @@ export const PropertyManager: React.FC<PropertyManagerProps> = ({ initialFilter 
     );
   };
 
-  const handlePropertyLookup = (address: string, valuation: PropertyValuation) => {
-    setNewPropertyData({ address, valuation });
-    setEditingProperty(null);
-    setShowForm(true);
-  };
-
   const filteredProperties = getFilteredProperties();
   
   const getFilterTitle = () => {
@@ -251,8 +244,6 @@ export const PropertyManager: React.FC<PropertyManagerProps> = ({ initialFilter 
           {showForm ? "Cancel" : <><Plus className="mr-2 h-4 w-4" /> Add Property</>}
         </Button>
       </div>
-
-      {!showForm && <PropertyLookupTool onAddProperty={handlePropertyLookup} />}
 
       <PropertySummary properties={filteredProperties} />
 
