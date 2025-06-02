@@ -31,6 +31,7 @@ export const useSupabaseSharedDocuments = () => {
   // Fetch shared documents with professional and document details
   const fetchSharedDocumentsData = async () => {
     try {
+      console.log('Fetching shared documents...');
       const user = await getCurrentUser();
       if (!user) {
         console.log('No authenticated user found');
@@ -39,9 +40,10 @@ export const useSupabaseSharedDocuments = () => {
       }
 
       const documents = await fetchSharedDocuments(user.id);
+      console.log('Fetched shared documents:', documents);
       setSharedDocuments(documents);
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Error fetching shared documents:', error);
       toast({
         title: "Error fetching shared documents",
         description: error instanceof Error ? error.message : "Failed to fetch shared documents",
@@ -59,6 +61,8 @@ export const useSupabaseSharedDocuments = () => {
   ) => {
     setSharing(true);
     try {
+      console.log('Sharing document - Professional ID:', professionalId, 'Document ID:', documentId);
+      
       const user = await getCurrentUser();
       validateUserAuthentication(user);
 
@@ -70,16 +74,18 @@ export const useSupabaseSharedDocuments = () => {
         expiresAt
       );
 
+      console.log('Share document result:', data);
+
       toast({
         title: "Document shared",
         description: "Document has been shared successfully"
       });
 
       // Refresh the list
-      fetchSharedDocumentsData();
+      await fetchSharedDocumentsData();
       return data;
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Error sharing document:', error);
       const errorMessage = error instanceof Error ? error.message : "Failed to share document";
       
       if (errorMessage.includes('Authentication required')) {
@@ -104,6 +110,8 @@ export const useSupabaseSharedDocuments = () => {
   // Remove shared document
   const removeSharedDocument = async (id: string) => {
     try {
+      console.log('Removing shared document:', id);
+      
       const user = await getCurrentUser();
       validateUserAuthentication(user);
 
@@ -115,9 +123,9 @@ export const useSupabaseSharedDocuments = () => {
       });
 
       // Refresh the list
-      fetchSharedDocumentsData();
+      await fetchSharedDocumentsData();
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Error removing shared document:', error);
       const errorMessage = error instanceof Error ? error.message : "Failed to remove shared document";
       
       if (errorMessage.includes('Authentication required')) {

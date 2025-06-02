@@ -25,7 +25,7 @@ export const SupabaseDocumentsTable: React.FC<SupabaseDocumentsTableProps> = ({
   loading = false
 }) => {
   const { professionals } = useProfessionals();
-  const { shareDocument } = useSupabaseSharedDocuments();
+  const { shareDocument, sharing } = useSupabaseSharedDocuments();
 
   const getDocumentIcon = (type: string) => {
     switch (type) {
@@ -43,9 +43,12 @@ export const SupabaseDocumentsTable: React.FC<SupabaseDocumentsTableProps> = ({
   };
 
   const handleShareDocument = async (document: SupabaseDocument) => {
+    console.log('Sharing document:', document.name);
+    console.log('Available professionals:', professionals);
+    
     if (professionals.length === 0) {
+      console.log('No professionals available, creating placeholder share');
       // Create a placeholder professional ID for documents shared when no professionals exist
-      // This will allow the document to appear in shared documents list
       const placeholderProfessionalId = "00000000-0000-0000-0000-000000000000";
       
       const result = await shareDocument(
@@ -63,6 +66,8 @@ export const SupabaseDocumentsTable: React.FC<SupabaseDocumentsTableProps> = ({
 
     // Use the first available professional and default to 'view' permission
     const firstProfessional = professionals[0];
+    console.log('Sharing with first professional:', firstProfessional);
+    
     const result = await shareDocument(
       firstProfessional.id,
       document.id,
@@ -71,6 +76,8 @@ export const SupabaseDocumentsTable: React.FC<SupabaseDocumentsTableProps> = ({
 
     if (result) {
       toast.success(`Document "${document.name}" shared with ${firstProfessional.name}`);
+    } else {
+      toast.error('Failed to share document');
     }
   };
   
@@ -137,9 +144,12 @@ export const SupabaseDocumentsTable: React.FC<SupabaseDocumentsTableProps> = ({
                         </DropdownMenuItem>
                       )}
                       
-                      <DropdownMenuItem onClick={() => handleShareDocument(document)}>
+                      <DropdownMenuItem 
+                        onClick={() => handleShareDocument(document)}
+                        disabled={sharing}
+                      >
                         <Share className="mr-2 h-4 w-4" />
-                        Share with Professional
+                        {sharing ? 'Sharing...' : 'Share with Professional'}
                       </DropdownMenuItem>
                     </>
                   )}

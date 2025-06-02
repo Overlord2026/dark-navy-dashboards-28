@@ -3,6 +3,8 @@ import { supabase } from '@/lib/supabase';
 import { SharedDocument } from '@/hooks/useSupabaseSharedDocuments';
 
 export const fetchSharedDocuments = async (userId: string): Promise<SharedDocument[]> => {
+  console.log('Fetching shared documents for user:', userId);
+  
   // First get shared documents with document details
   const { data: sharedDocsWithDocuments, error: sharedDocsError } = await supabase
     .from('shared_documents')
@@ -17,6 +19,8 @@ export const fetchSharedDocuments = async (userId: string): Promise<SharedDocume
     console.error('Error fetching shared documents:', sharedDocsError);
     throw new Error(sharedDocsError.message);
   }
+
+  console.log('Raw shared documents data:', sharedDocsWithDocuments);
 
   // Then get professional details for non-placeholder professional IDs
   const professionalIds = sharedDocsWithDocuments
@@ -36,6 +40,8 @@ export const fetchSharedDocuments = async (userId: string): Promise<SharedDocume
       professionalsData = professionals || [];
     }
   }
+
+  console.log('Professionals data:', professionalsData);
 
   // Transform the data to flatten the joined fields
   const transformedData: SharedDocument[] = (sharedDocsWithDocuments || []).map(item => {
@@ -59,6 +65,7 @@ export const fetchSharedDocuments = async (userId: string): Promise<SharedDocume
     };
   });
 
+  console.log('Transformed shared documents:', transformedData);
   return transformedData;
 };
 
@@ -69,6 +76,14 @@ export const createSharedDocument = async (
   permissionLevel: 'view' | 'download' | 'edit' = 'view',
   expiresAt?: string
 ) => {
+  console.log('Creating shared document:', {
+    userId,
+    professionalId,
+    documentId,
+    permissionLevel,
+    expiresAt
+  });
+
   const { data, error } = await supabase
     .from('shared_documents')
     .insert({
@@ -86,10 +101,13 @@ export const createSharedDocument = async (
     throw new Error(error.message);
   }
 
+  console.log('Created shared document:', data);
   return data;
 };
 
 export const deleteSharedDocument = async (id: string, userId: string) => {
+  console.log('Deleting shared document:', id, 'for user:', userId);
+  
   const { error } = await supabase
     .from('shared_documents')
     .delete()
@@ -100,4 +118,6 @@ export const deleteSharedDocument = async (id: string, userId: string) => {
     console.error('Error removing shared document:', error);
     throw new Error(error.message);
   }
+
+  console.log('Successfully deleted shared document:', id);
 };
