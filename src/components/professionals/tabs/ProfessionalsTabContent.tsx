@@ -15,7 +15,7 @@ export function ProfessionalsTabContent({
 }: ProfessionalsTabContentProps) {
   return (
     <div className="space-y-6">
-      <ConsultationsPrompt />
+      {/* <ConsultationsPrompt /> */}
       
       <ProfessionalsDirectory />
     </div>
