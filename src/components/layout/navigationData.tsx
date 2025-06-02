@@ -208,7 +208,7 @@ export const navigationCategories: NavCategory[] = [
       },
       {
         title: "Properties",
-        href: "/properties",
+        href: "/client-properties",
         icon: Building,
         items: []
       },

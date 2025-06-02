@@ -118,7 +118,7 @@ const routes = createBrowserRouter([
     element: <ProtectedRoute><SocialSecurity /></ProtectedRoute>
   },
   {
-    path: "/properties",
+    path: "/client-properties",
     element: <ProtectedRoute><Properties /></ProtectedRoute>
   },
   {

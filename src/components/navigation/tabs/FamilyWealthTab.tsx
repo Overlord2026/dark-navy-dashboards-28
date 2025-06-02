@@ -1,4 +1,3 @@
-
 import React from "react";
 import { 
   LineChartIcon, 
@@ -51,7 +50,7 @@ export const familyWealthNavItems: NavItem[] = [
   },
   { 
     title: "Properties", 
-    href: "/properties", 
+    href: "/client-properties", 
     icon: BuildingIcon 
   },
   { 
