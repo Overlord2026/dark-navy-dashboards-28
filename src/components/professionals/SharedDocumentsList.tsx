@@ -56,6 +56,7 @@ export function SharedDocumentsList() {
         <TableBody>
           {sharedDocuments.map((sharedDoc) => {
             const professional = professionals.find(p => p.id === sharedDoc.professional_id);
+            const isPlaceholderShare = sharedDoc.professional_id === "00000000-0000-0000-0000-000000000000";
             
             return (
               <TableRow key={sharedDoc.id}>
@@ -66,7 +67,9 @@ export function SharedDocumentsList() {
                   </div>
                 </TableCell>
                 <TableCell>
-                  {professional ? (
+                  {isPlaceholderShare ? (
+                    <span className="text-muted-foreground italic">Ready to share (add professionals)</span>
+                  ) : professional ? (
                     <div className="flex items-center gap-1">
                       <User className="h-3.5 w-3.5 text-muted-foreground" />
                       <span>{professional.name}</span>

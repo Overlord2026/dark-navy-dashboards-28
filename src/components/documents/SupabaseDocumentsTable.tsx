@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
@@ -44,9 +43,20 @@ export const SupabaseDocumentsTable: React.FC<SupabaseDocumentsTableProps> = ({
 
   const handleShareDocument = async (document: SupabaseDocument) => {
     if (professionals.length === 0) {
-      // Create a dummy professional entry for sharing when no professionals exist
-      console.log(`Document "${document.name}" marked for sharing - will be available when professionals are added`);
-      toast.success(`Document "${document.name}" has been shared successfully`);
+      // Create a placeholder professional ID for documents shared when no professionals exist
+      // This will allow the document to appear in shared documents list
+      const placeholderProfessionalId = "00000000-0000-0000-0000-000000000000";
+      
+      const result = await shareDocument(
+        placeholderProfessionalId,
+        document.id,
+        'view'
+      );
+
+      if (result) {
+        console.log(`Document "${document.name}" marked for sharing - will be available when professionals are added`);
+        toast.success(`Document "${document.name}" has been shared successfully`);
+      }
       return;
     }
 
