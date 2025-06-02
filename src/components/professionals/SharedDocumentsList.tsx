@@ -1,8 +1,8 @@
 
-import React, { useState } from "react";
-import { useDocumentManagement } from "@/hooks/useDocumentManagement";
+import React from "react";
+import { useSupabaseSharedDocuments } from "@/hooks/useSupabaseSharedDocuments";
 import { useProfessionals } from "@/context/ProfessionalsContext";
-import { User } from "lucide-react";
+import { User, Loader2 } from "lucide-react";
 import { 
   Table, 
   TableBody, 
@@ -11,32 +11,33 @@ import {
   TableHeader, 
   TableRow 
 } from "@/components/ui/table";
-import { DocumentItem } from "@/types/document";
+import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { DocumentIcon } from "./DocumentIcon";
 import { PermissionBadge } from "./PermissionBadge";
-import { DocumentActions } from "./DocumentActions";
 import { EmptySharedDocuments } from "./EmptySharedDocuments";
 
 export function SharedDocumentsList() {
   const { professionals } = useProfessionals();
-  const { sharedDocuments, deleteSharedDocument, updateDocumentPermissions } = useDocumentManagement();
-  const [selectedDocument, setSelectedDocument] = useState<DocumentItem | null>(null);
+  const { sharedDocuments, loading, removeSharedDocument } = useSupabaseSharedDocuments();
 
-  // Get sample shared documents if sharedDocuments is empty
-  const documents = sharedDocuments.length > 0 ? sharedDocuments : getSampleDocuments();
-
-  const handleDownload = (document: DocumentItem) => {
-    // In a real app, this would initiate a download
-    toast.success(`Downloading ${document.name}`);
+  const handleRemoveAccess = async (sharedDocumentId: string, documentName: string) => {
+    if (confirm(`Remove access to "${documentName}"?`)) {
+      await removeSharedDocument(sharedDocumentId);
+      toast.success("Document access removed");
+    }
   };
 
-  const handleDelete = (document: DocumentItem) => {
-    deleteSharedDocument(document.id);
-    toast.success(`Document ${document.name} has been removed from sharing`);
-  };
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-10">
+        <Loader2 className="h-8 w-8 animate-spin" />
+        <span className="ml-2">Loading shared documents...</span>
+      </div>
+    );
+  }
 
-  if (documents.length === 0) {
+  if (sharedDocuments.length === 0) {
     return <EmptySharedDocuments />;
   }
 
@@ -53,41 +54,42 @@ export function SharedDocumentsList() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {documents.map((doc) => {
-            const sharedWith = professionals.find(p => 
-              doc.sharedWith?.includes(p.id)
-            );
+          {sharedDocuments.map((sharedDoc) => {
+            const professional = professionals.find(p => p.id === sharedDoc.professional_id);
             
             return (
-              <TableRow key={doc.id}>
+              <TableRow key={sharedDoc.id}>
                 <TableCell>
                   <div className="flex items-center gap-2">
-                    <DocumentIcon type={doc.type} />
-                    <span className="font-medium">{doc.name}</span>
+                    <DocumentIcon type={sharedDoc.document_type || 'document'} />
+                    <span className="font-medium">{sharedDoc.document_name}</span>
                   </div>
                 </TableCell>
                 <TableCell>
-                  {sharedWith ? (
+                  {professional ? (
                     <div className="flex items-center gap-1">
                       <User className="h-3.5 w-3.5 text-muted-foreground" />
-                      <span>{sharedWith.name}</span>
+                      <span>{professional.name}</span>
                     </div>
                   ) : (
-                    <span className="text-muted-foreground">Multiple</span>
+                    <span className="text-muted-foreground">Unknown Professional</span>
                   )}
                 </TableCell>
                 <TableCell>
-                  {doc.created || new Date().toLocaleDateString()}
+                  {new Date(sharedDoc.shared_at).toLocaleDateString()}
                 </TableCell>
                 <TableCell>
-                  <PermissionBadge accessLevel={doc.permissions?.[0]?.accessLevel || "view"} />
+                  <PermissionBadge accessLevel={sharedDoc.permission_level} />
                 </TableCell>
                 <TableCell className="text-right">
-                  <DocumentActions 
-                    document={doc}
-                    onDelete={handleDelete}
-                    onDownload={handleDownload}
-                  />
+                  <Button 
+                    variant="ghost" 
+                    size="sm"
+                    onClick={() => handleRemoveAccess(sharedDoc.id, sharedDoc.document_name || 'Document')}
+                    className="text-destructive hover:text-destructive"
+                  >
+                    Remove Access
+                  </Button>
                 </TableCell>
               </TableRow>
             );
@@ -96,66 +98,4 @@ export function SharedDocumentsList() {
       </Table>
     </div>
   );
-}
-
-function getSampleDocuments(): DocumentItem[] {
-  return [
-    {
-      id: "doc-1",
-      name: "Tax Return 2024.pdf",
-      type: "pdf",
-      created: "04/02/2025",
-      category: "professional-documents",
-      size: "2.4 MB",
-      sharedWith: ["pro-1"],
-      permissions: [
-        {
-          userId: "pro-1",
-          userName: "Sarah Johnson",
-          userEmail: "sarah@example.com",
-          userRole: "Tax Professional / Accountant",
-          accessLevel: "view",
-          grantedAt: new Date().toISOString()
-        }
-      ]
-    },
-    {
-      id: "doc-2",
-      name: "Estate Plan Draft.docx",
-      type: "document",
-      created: "03/28/2025",
-      category: "professional-documents",
-      size: "1.2 MB",
-      sharedWith: ["pro-3"],
-      permissions: [
-        {
-          userId: "pro-3",
-          userName: "Jennifer Williams",
-          userEmail: "jennifer@example.com",
-          userRole: "Estate Planning Attorney",
-          accessLevel: "view",
-          grantedAt: new Date().toISOString()
-        }
-      ]
-    },
-    {
-      id: "doc-3",
-      name: "Investment Portfolio Analysis.xlsx",
-      type: "spreadsheet",
-      created: "03/15/2025",
-      category: "professional-documents",
-      size: "3.7 MB",
-      sharedWith: ["pro-2"],
-      permissions: [
-        {
-          userId: "pro-2",
-          userName: "Michael Chen",
-          userEmail: "michael@example.com",
-          userRole: "Financial Advisor",
-          accessLevel: "edit",
-          grantedAt: new Date().toISOString()
-        }
-      ]
-    }
-  ];
 }

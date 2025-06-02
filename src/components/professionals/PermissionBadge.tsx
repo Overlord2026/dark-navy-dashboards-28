@@ -1,31 +1,41 @@
 
+import React from "react";
 import { Badge } from "@/components/ui/badge";
-import { HealthcareAccessLevel } from "@/types/document";
 
 interface PermissionBadgeProps {
-  accessLevel: HealthcareAccessLevel;
-  className?: string;
+  accessLevel: string;
 }
 
-export function PermissionBadge({ accessLevel, className }: PermissionBadgeProps) {
-  const getVariantAndText = (level: HealthcareAccessLevel) => {
+export function PermissionBadge({ accessLevel }: PermissionBadgeProps) {
+  const getBadgeVariant = (level: string) => {
     switch (level) {
       case "view":
-        return { variant: "secondary", text: "View Only" };
+        return "secondary";
+      case "download":
+        return "default";
       case "edit":
-        return { variant: "default", text: "Can Edit" };
-      case "full":
-        return { variant: "destructive", text: "Full Access" };
+        return "destructive";
       default:
-        return { variant: "outline", text: "Unknown" };
+        return "secondary";
     }
   };
 
-  const { variant, text } = getVariantAndText(accessLevel);
+  const getDisplayText = (level: string) => {
+    switch (level) {
+      case "view":
+        return "View Only";
+      case "download":
+        return "View & Download";
+      case "edit":
+        return "Full Access";
+      default:
+        return level;
+    }
+  };
 
   return (
-    <Badge variant={variant as any} className={className}>
-      {text}
+    <Badge variant={getBadgeVariant(accessLevel)}>
+      {getDisplayText(accessLevel)}
     </Badge>
   );
 }

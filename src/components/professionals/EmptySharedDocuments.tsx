@@ -1,18 +1,14 @@
 
 import React from "react";
-import { FileText } from "lucide-react";
-import { EmptyDocumentsProps } from "./types/sharedDocuments";
+import { Share } from "lucide-react";
 
-export function EmptySharedDocuments({ 
-  message = "No documents shared yet",
-  description = "Share documents with your service professionals to collaborate securely. You can control who can view, download, or edit your documents."
-}: EmptyDocumentsProps) {
+export function EmptySharedDocuments() {
   return (
-    <div className="p-8 border border-dashed border-border rounded-lg flex flex-col items-center justify-center">
-      <FileText size={48} className="text-muted-foreground mb-4" />
-      <p className="text-center mb-2">{message}</p>
-      <p className="text-sm text-muted-foreground text-center max-w-md mb-4">
-        {description}
+    <div className="text-center py-12">
+      <Share className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
+      <h3 className="text-lg font-medium mb-2">No Shared Documents</h3>
+      <p className="text-sm text-muted-foreground">
+        You haven't shared any documents with professionals yet. Share documents from the Documents page to see them here.
       </p>
     </div>
   );

@@ -1,17 +1,21 @@
 
 import React from "react";
-import { FileText, FileImage, FileSpreadsheet, File } from "lucide-react";
-import { DocumentIconProps } from "./types/sharedDocuments";
+import { FileText, Image, FileSpreadsheet, File } from "lucide-react";
 
-export function DocumentIcon({ type, className = "" }: DocumentIconProps) {
+interface DocumentIconProps {
+  type: string;
+}
+
+export function DocumentIcon({ type }: DocumentIconProps) {
   switch (type) {
     case "pdf":
-      return <FileText className={`h-5 w-5 text-red-500 ${className}`} />;
+    case "document":
+      return <FileText className="h-4 w-4 text-blue-500" />;
     case "image":
-      return <FileImage className={`h-5 w-5 text-blue-500 ${className}`} />;
+      return <Image className="h-4 w-4 text-green-500" />;
     case "spreadsheet":
-      return <FileSpreadsheet className={`h-5 w-5 text-green-500 ${className}`} />;
+      return <FileSpreadsheet className="h-4 w-4 text-emerald-500" />;
     default:
-      return <File className={`h-5 w-5 text-gray-500 ${className}`} />;
+      return <File className="h-4 w-4 text-gray-500" />;
   }
 }
