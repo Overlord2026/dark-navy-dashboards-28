@@ -47,20 +47,8 @@ export const SupabaseDocumentsTable: React.FC<SupabaseDocumentsTableProps> = ({
     console.log('Available professionals:', professionals);
     
     if (professionals.length === 0) {
-      console.log('No professionals available, creating placeholder share');
-      // Create a placeholder professional ID for documents shared when no professionals exist
-      const placeholderProfessionalId = "00000000-0000-0000-0000-000000000000";
-      
-      const result = await shareDocument(
-        placeholderProfessionalId,
-        document.id,
-        'view'
-      );
-
-      if (result) {
-        console.log(`Document "${document.name}" marked for sharing - will be available when professionals are added`);
-        toast.success(`Document "${document.name}" has been shared successfully`);
-      }
+      console.log('No professionals available - cannot share document');
+      toast.error('No professionals available. Please add a professional first before sharing documents.');
       return;
     }
 
@@ -146,10 +134,10 @@ export const SupabaseDocumentsTable: React.FC<SupabaseDocumentsTableProps> = ({
                       
                       <DropdownMenuItem 
                         onClick={() => handleShareDocument(document)}
-                        disabled={sharing}
+                        disabled={sharing || professionals.length === 0}
                       >
                         <Share className="mr-2 h-4 w-4" />
-                        {sharing ? 'Sharing...' : 'Share with Professional'}
+                        {sharing ? 'Sharing...' : professionals.length === 0 ? 'No Professionals Available' : 'Share with Professional'}
                       </DropdownMenuItem>
                     </>
                   )}

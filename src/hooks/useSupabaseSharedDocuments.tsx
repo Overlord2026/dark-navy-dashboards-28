@@ -94,6 +94,12 @@ export const useSupabaseSharedDocuments = () => {
           description: "Please log in to share documents",
           variant: "destructive"
         });
+      } else if (errorMessage.includes('foreign key constraint')) {
+        toast({
+          title: "Professional not found",
+          description: "The selected professional is no longer available. Please try again.",
+          variant: "destructive"
+        });
       } else {
         toast({
           title: "Error sharing document",
