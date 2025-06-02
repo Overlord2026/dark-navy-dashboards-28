@@ -103,11 +103,14 @@ export function ProfessionalCategories({ activeCategory, onCategoryChange }: Pro
     });
   };
 
+  // Filter out the "all" category from being displayed
+  const displayCategories = categories.filter(category => category.id !== "all");
+
   return (
     <div className="space-y-4">
       <h2 className="text-lg font-medium">Professional Categories</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-        {categories.map((category) => (
+        {displayCategories.map((category) => (
           <Card 
             key={category.id}
             className={`cursor-pointer transition-all hover:border-primary min-h-[120px] ${
