@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Upload, Share2 } from "lucide-react";
+import { Upload } from "lucide-react";
 import { SharedDocumentsList } from "@/components/professionals/SharedDocumentsList";
 
 interface DocumentsTabContentProps {
@@ -27,13 +27,6 @@ export function DocumentsTabContent({ onUpload, onShare }: DocumentsTabContentPr
           >
             <Upload size={16} />
             Upload New
-          </Button>
-          <Button 
-            onClick={onShare}
-            className="flex items-center gap-2"
-          >
-            <Share2 size={16} />
-            Share Document
           </Button>
         </div>
       </div>
