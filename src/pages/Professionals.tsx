@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
 import { FileText, ShieldCheck, Users2 } from "lucide-react";
 import { ProfessionalType } from "@/types/professional";
 import { ProfessionalsProvider } from "@/context/ProfessionalsContext";
@@ -36,9 +37,16 @@ export default function Professionals() {
                 <FileText size={16} />
                 <span>Shared Documents</span>
               </TabsTrigger>
-              <TabsTrigger value="permissions" className="flex gap-2 items-center">
+              <TabsTrigger 
+                value="permissions" 
+                className="flex gap-2 items-center opacity-50 cursor-not-allowed"
+                disabled
+              >
                 <ShieldCheck size={16} />
                 <span>Permissions</span>
+                <Badge variant="secondary" className="ml-1 text-xs">
+                  Coming Soon
+                </Badge>
               </TabsTrigger>
             </TabsList>
             
