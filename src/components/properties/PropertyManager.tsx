@@ -7,6 +7,12 @@ import { Plus } from "lucide-react";
 import { Property, PropertyValuation } from "@/types/property";
 import { useToast } from "@/components/ui/use-toast";
 import { useNetWorth } from "@/context/NetWorthContext";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 interface PropertyManagerProps {
   initialFilter?: string | null;
@@ -239,28 +245,35 @@ export const PropertyManager: React.FC<PropertyManagerProps> = ({ initialFilter 
         <Button onClick={() => {
           setEditingProperty(null);
           setNewPropertyData({});
-          setShowForm(!showForm);
+          setShowForm(true);
         }} className="bg-yellow-500 hover:bg-yellow-600 text-black">
-          {showForm ? "Cancel" : <><Plus className="mr-2 h-4 w-4" /> Add Property</>}
+          <Plus className="mr-2 h-4 w-4" /> Add Property
         </Button>
       </div>
 
       <PropertySummary properties={filteredProperties} />
 
-      {showForm ? (
-        <PropertyForm 
-          onSubmit={editingProperty ? handleUpdateProperty : handleAddProperty} 
-          property={editingProperty}
-          initialData={newPropertyData}
-        />
-      ) : (
-        <PropertyList 
-          properties={filteredProperties}
-          onEdit={handleEditProperty}
-          onDelete={handleDeleteProperty}
-          onPropertyUpdate={handlePropertyUpdate}
-        />
-      )}
+      <PropertyList 
+        properties={filteredProperties}
+        onEdit={handleEditProperty}
+        onDelete={handleDeleteProperty}
+        onPropertyUpdate={handlePropertyUpdate}
+      />
+
+      <Dialog open={showForm} onOpenChange={setShowForm}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>
+              {editingProperty ? "Edit Property" : "Add New Property"}
+            </DialogTitle>
+          </DialogHeader>
+          <PropertyForm 
+            onSubmit={editingProperty ? handleUpdateProperty : handleAddProperty} 
+            property={editingProperty}
+            initialData={newPropertyData}
+          />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
