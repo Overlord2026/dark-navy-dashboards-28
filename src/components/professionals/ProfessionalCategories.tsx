@@ -87,40 +87,42 @@ export function ProfessionalCategories({ activeCategory, onCategoryChange }: Pro
   return (
     <div className="space-y-4">
       <h2 className="text-lg font-medium">Professional Categories</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {categories.map((category) => (
           <Card 
             key={category.id}
-            className={`cursor-pointer transition-all hover:border-primary ${
+            className={`cursor-pointer transition-all hover:border-primary min-h-[120px] ${
               activeCategory === category.id ? "border-primary bg-primary/5" : ""
             }`}
             onClick={() => onCategoryChange(category.id)}
           >
-            <CardContent className="p-4">
-              <div className="flex items-start gap-3">
-                <div className={`p-2 rounded-md ${
+            <CardContent className="p-4 h-full flex flex-col">
+              <div className="flex items-start gap-3 flex-1">
+                <div className={`p-2 rounded-md flex-shrink-0 ${
                   activeCategory === category.id 
                     ? "bg-primary/10 text-primary" 
                     : "bg-muted text-muted-foreground"
                 }`}>
                   {category.icon}
                 </div>
-                <div>
-                  <h3 className="font-medium">{category.name}</h3>
-                  <p className="text-sm text-muted-foreground line-clamp-1">
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-medium text-sm leading-tight mb-1">{category.name}</h3>
+                  <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
                     {category.description}
                   </p>
-                  {category.specialRequirements && activeCategory === category.id && (
-                    <div className="mt-2 flex flex-wrap gap-1">
-                      {category.specialRequirements.map((req, index) => (
-                        <Badge key={index} variant="outline" className="text-xs">
-                          {req}
-                        </Badge>
-                      ))}
-                    </div>
-                  )}
                 </div>
               </div>
+              {category.specialRequirements && activeCategory === category.id && (
+                <div className="mt-3 pt-3 border-t border-border/50">
+                  <div className="flex flex-wrap gap-1">
+                    {category.specialRequirements.map((req, index) => (
+                      <Badge key={index} variant="outline" className="text-xs py-0.5 px-2">
+                        {req}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              )}
             </CardContent>
           </Card>
         ))}
