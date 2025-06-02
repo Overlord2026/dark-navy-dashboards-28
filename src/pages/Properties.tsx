@@ -11,7 +11,7 @@ const Properties = () => {
   const filter = searchParams.get("filter");
 
   return (
-    <ThreeColumnLayout title="Real Estate" activeMainItem="family-wealth">
+    <ThreeColumnLayout title="" activeMainItem="family-wealth">
       <PropertyManager initialFilter={filter} />
     </ThreeColumnLayout>
   );
