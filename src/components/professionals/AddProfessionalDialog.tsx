@@ -13,7 +13,7 @@ interface AddProfessionalDialogProps {
 }
 
 export function AddProfessionalDialog({ isOpen, onOpenChange }: AddProfessionalDialogProps) {
-  const { addProfessional } = useProfessionals();
+  const { addProfessional, saving } = useProfessionals();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -24,7 +24,7 @@ export function AddProfessionalDialog({ isOpen, onOpenChange }: AddProfessionalD
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     // Validation for required fields
@@ -38,25 +38,26 @@ export function AddProfessionalDialog({ isOpen, onOpenChange }: AddProfessionalD
       return;
     }
 
-    // Create new professional with a random ID
+    // Create new professional
     const newProfessional = {
-      id: `pro-${Math.random().toString(36).substring(2, 9)}`,
       name: formData.name,
       type: "Other" as const,
       email: formData.email,
     };
 
-    addProfessional(newProfessional);
+    const result = await addProfessional(newProfessional);
     
-    toast.success("Professional added successfully");
-    
-    // Reset form and close dialog
-    setFormData({
-      name: "",
-      email: "",
-    });
-    
-    onOpenChange(false);
+    if (result) {
+      toast.success("Professional added successfully");
+      
+      // Reset form and close dialog
+      setFormData({
+        name: "",
+        email: "",
+      });
+      
+      onOpenChange(false);
+    }
   };
 
   return (
@@ -79,6 +80,7 @@ export function AddProfessionalDialog({ isOpen, onOpenChange }: AddProfessionalD
               value={formData.name}
               onChange={handleChange}
               required
+              disabled={saving}
             />
           </div>
           
@@ -92,14 +94,22 @@ export function AddProfessionalDialog({ isOpen, onOpenChange }: AddProfessionalD
               onChange={handleChange}
               type="email"
               required
+              disabled={saving}
             />
           </div>
           
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+            <Button 
+              type="button" 
+              variant="outline" 
+              onClick={() => onOpenChange(false)}
+              disabled={saving}
+            >
               Cancel
             </Button>
-            <Button type="submit">Add Professional</Button>
+            <Button type="submit" disabled={saving}>
+              {saving ? "Adding..." : "Add Professional"}
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

@@ -1,16 +1,16 @@
 
 import React, { useState, useMemo } from "react";
-import { useProfessionals } from "@/hooks/useProfessionals";
+import { useProfessionals } from "@/context/ProfessionalsContext";
 import { ProfessionalDetailsSheet } from "./ProfessionalDetailsSheet";
 import { ProfessionalCategories } from "./ProfessionalCategories";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Phone, Mail, Building, User } from "lucide-react";
+import { Phone, Mail, Building, User, Loader2 } from "lucide-react";
 import { Professional } from "@/types/professional";
 
 export function ProfessionalsDirectory() {
-  const { professionals } = useProfessionals();
+  const { professionals, loading } = useProfessionals();
   const [selectedProfessional, setSelectedProfessional] = useState<Professional | null>(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState<string>("all");
@@ -30,6 +30,15 @@ export function ProfessionalsDirectory() {
   const handleCategoryChange = (categoryId: string) => {
     setActiveCategory(categoryId);
   };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-10">
+        <Loader2 className="h-8 w-8 animate-spin" />
+        <span className="ml-2">Loading professionals...</span>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -113,7 +122,10 @@ export function ProfessionalsDirectory() {
             <User className="h-12 w-12 text-muted-foreground mb-4" />
             <h3 className="text-lg font-medium">No professionals found</h3>
             <p className="text-muted-foreground mt-1">
-              Add professionals to start building your directory
+              {activeCategory === "all" 
+                ? "Add professionals to start building your directory"
+                : `No professionals found in the ${activeCategory} category`
+              }
             </p>
           </div>
         )}
