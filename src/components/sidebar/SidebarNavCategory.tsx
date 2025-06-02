@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { NavItem } from "@/types/navigation";
+import { Badge } from "@/components/ui/badge";
 
 interface SidebarNavCategoryProps {
   id: string;
@@ -38,6 +39,30 @@ const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
   const renderNavItem = (item: NavItem) => {
     const normalizedHref = normalizePath(item.href);
     const isItemActive = isActive(normalizedHref);
+    
+    // If coming soon, render as non-clickable
+    if (item.comingSoon) {
+      return (
+        <div
+          className={cn(
+            "group flex w-full items-center rounded-md px-3 py-2 text-sm outline-none cursor-not-allowed opacity-60",
+            isLightTheme
+              ? "text-[#222222]"
+              : "text-white"
+          )}
+        >
+          {item.icon && (
+            <item.icon className="mr-2 h-4 w-4" />
+          )}
+          <span className="whitespace-nowrap overflow-hidden text-ellipsis flex-1">{item.title}</span>
+          {!collapsed && (
+            <Badge variant="secondary" className="ml-2 text-xs">
+              Coming Soon
+            </Badge>
+          )}
+        </div>
+      );
+    }
     
     return (
       <a

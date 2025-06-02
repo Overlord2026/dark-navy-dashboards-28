@@ -11,6 +11,7 @@ export interface NavItem {
   label?: string;
   items?: NavItem[];
   submenu?: NavItem[]; // Adding this for compatibility with existing code
+  comingSoon?: boolean; // Adding this for coming soon functionality
 }
 
 export interface NavCategory {

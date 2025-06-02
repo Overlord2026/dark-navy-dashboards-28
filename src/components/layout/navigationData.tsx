@@ -65,13 +65,15 @@ export const navigationCategories: NavCategory[] = [
         title: "Cash Management",
         href: "/client-cash-management", 
         icon: DollarSign,
-        items: []
+        items: [],
+        comingSoon: true
       },
       {
         title: "Transfers",
         href: "/client-transfers",
         icon: ArrowLeftRight,
-        items: []
+        items: [],
+        comingSoon: true
       }
     ]
   },
@@ -189,7 +191,8 @@ export const navigationCategories: NavCategory[] = [
         title: "Tax Budgets",
         href: "/client-tax-budgets",
         icon: Calculator,
-        items: []
+        items: [],
+        comingSoon: true
       },
       {
         title: "Legacy Vault",
@@ -213,7 +216,8 @@ export const navigationCategories: NavCategory[] = [
         title: "Bill Pay",
         href: "/client-billpay",
         icon: CreditCard,
-        items: []
+        items: [],
+        comingSoon: true
       }
     ]
   },

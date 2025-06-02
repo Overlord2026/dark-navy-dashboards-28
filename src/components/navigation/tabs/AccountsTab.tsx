@@ -12,12 +12,14 @@ export const accountsNavItems: NavItem[] = [
   { 
     title: "Cash Management", 
     href: "/client-cash-management", 
-    icon: BanknoteIcon
+    icon: BanknoteIcon,
+    comingSoon: true
   },
   { 
     title: "Transfers", 
     href: "/client-transfers", 
-    icon: ArrowRightLeft 
+    icon: ArrowRightLeft,
+    comingSoon: true
   },
   { 
     title: "Funding Accounts", 
