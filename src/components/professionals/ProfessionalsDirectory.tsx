@@ -3,33 +3,24 @@ import React, { useState, useMemo } from "react";
 import { useProfessionals } from "@/hooks/useProfessionals";
 import { ProfessionalDetailsSheet } from "./ProfessionalDetailsSheet";
 import { ProfessionalCategories } from "./ProfessionalCategories";
-import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Search, Phone, Mail, Building, User } from "lucide-react";
+import { Phone, Mail, Building, User } from "lucide-react";
 import { Professional } from "@/types/professional";
 
 export function ProfessionalsDirectory() {
   const { professionals } = useProfessionals();
   const [selectedProfessional, setSelectedProfessional] = useState<Professional | null>(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState<string>("all");
 
   const filteredProfessionals = useMemo(() => {
     return professionals.filter(pro => {
-      const matchesSearch = 
-        searchQuery === "" || 
-        pro.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (pro.company && pro.company.toLowerCase().includes(searchQuery.toLowerCase())) ||
-        pro.type.toLowerCase().includes(searchQuery.toLowerCase());
-      
       const matchesCategory = activeCategory === "all" || pro.type === activeCategory;
-      
-      return matchesSearch && matchesCategory;
+      return matchesCategory;
     });
-  }, [professionals, searchQuery, activeCategory]);
+  }, [professionals, activeCategory]);
 
   const handleOpenDetails = (professional: Professional) => {
     setSelectedProfessional(professional);
@@ -42,18 +33,6 @@ export function ProfessionalsDirectory() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center space-x-4">
-        <div className="relative flex-1">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Search professionals..."
-            className="pl-9"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </div>
-      </div>
-
       <ProfessionalCategories 
         activeCategory={activeCategory}
         onCategoryChange={handleCategoryChange}
@@ -134,9 +113,7 @@ export function ProfessionalsDirectory() {
             <User className="h-12 w-12 text-muted-foreground mb-4" />
             <h3 className="text-lg font-medium">No professionals found</h3>
             <p className="text-muted-foreground mt-1">
-              {searchQuery 
-                ? "Try adjusting your search terms" 
-                : "Add professionals to start building your directory"}
+              Add professionals to start building your directory
             </p>
           </div>
         )}
