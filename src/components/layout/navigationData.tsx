@@ -298,6 +298,8 @@ export const navigationCategories: NavCategory[] = [
   }
 ];
 
+console.log("Navigation categories loaded:", navigationCategories.find(cat => cat.id === "Accounts")?.items.find(item => item.title === "Accounts"));
+
 export const navItems: { [key: string]: NavItem[] } = navigationCategories.reduce((acc: { [key: string]: NavItem[] }, category) => {
   acc[category.label] = category.items;
   return acc;

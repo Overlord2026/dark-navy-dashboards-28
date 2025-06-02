@@ -55,11 +55,9 @@ const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
             <item.icon className="mr-2 h-4 w-4" />
           )}
           <span className="whitespace-nowrap overflow-hidden text-ellipsis flex-1">{item.title}</span>
-          {!collapsed && (
-            <Badge variant="secondary" className="ml-2 text-xs">
-              Coming Soon
-            </Badge>
-          )}
+          <Badge variant="secondary" className="ml-2 text-xs">
+            Coming Soon
+          </Badge>
         </div>
       );
     }
@@ -121,11 +119,9 @@ const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
             <subItem.icon className="mr-2 h-4 w-4" />
           )}
           <span className="whitespace-nowrap overflow-hidden text-ellipsis flex-1">{subItem.title}</span>
-          {!collapsed && (
-            <Badge variant="secondary" className="ml-2 text-xs">
-              Coming Soon
-            </Badge>
-          )}
+          <Badge variant="secondary" className="ml-2 text-xs">
+            Coming Soon
+          </Badge>
         </div>
       );
     }
