@@ -63,7 +63,7 @@ export const navigationCategories: NavCategory[] = [
       },
       {
         title: "Cash Management",
-        href: "/cash-management", 
+        href: "/client-cash-management", 
         icon: DollarSign,
         items: []
       },

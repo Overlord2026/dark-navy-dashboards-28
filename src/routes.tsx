@@ -98,7 +98,7 @@ const routes = createBrowserRouter([
     element: <ProtectedRoute><AllAssets /></ProtectedRoute>
   },
   {
-    path: "/cash-management",
+    path: "/client-cash-management",
     element: <ProtectedRoute><CashManagement /></ProtectedRoute>
   },
   {
