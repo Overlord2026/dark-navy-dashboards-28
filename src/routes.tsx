@@ -122,7 +122,7 @@ const routes = createBrowserRouter([
     element: <ProtectedRoute><Properties /></ProtectedRoute>
   },
   {
-    path: "/billpay",
+    path: "/client-billpay",
     element: <ProtectedRoute><BillPay /></ProtectedRoute>
   },
   {
