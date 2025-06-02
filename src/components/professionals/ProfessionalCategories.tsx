@@ -2,6 +2,7 @@
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { 
   Briefcase, 
   FileText, 
@@ -12,6 +13,7 @@ import {
   Users,
   User
 } from "lucide-react";
+import { toast } from "sonner";
 
 interface ProfessionalCategoryProps {
   activeCategory: string;
@@ -84,6 +86,23 @@ export function ProfessionalCategories({ activeCategory, onCategoryChange }: Pro
     }
   ];
 
+  const handleInterested = (categoryName: string) => {
+    toast.success("Interest Recorded", {
+      description: `We've noted your interest in ${categoryName}. A professional will reach out soon.`,
+      duration: 3000,
+    });
+  };
+
+  const handleScheduleMeeting = (categoryName: string) => {
+    // Open Calendly with scheduling link
+    window.open("https://calendly.com/tonygomes/60min", "_blank");
+    
+    toast.success("Opening scheduling page", {
+      description: `Schedule a consultation about ${categoryName} services.`,
+      duration: 3000,
+    });
+  };
+
   return (
     <div className="space-y-4">
       <h2 className="text-lg font-medium">Professional Categories</h2>
@@ -112,8 +131,40 @@ export function ProfessionalCategories({ activeCategory, onCategoryChange }: Pro
                   </p>
                 </div>
               </div>
+              
+              {/* CTA Buttons - Show when category is active and not "all" */}
+              {activeCategory === category.id && category.id !== "all" && (
+                <div className="mt-3 pt-3 border-t border-border/50 space-y-2">
+                  <div className="flex flex-col gap-2">
+                    <Button 
+                      variant="interested" 
+                      size="sm" 
+                      className="w-full text-xs"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleInterested(category.name);
+                      }}
+                    >
+                      I'M Interested
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="w-full text-xs"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleScheduleMeeting(category.name);
+                      }}
+                    >
+                      Schedule Meeting
+                    </Button>
+                  </div>
+                </div>
+              )}
+              
+              {/* Special Requirements - Show when category is active */}
               {category.specialRequirements && activeCategory === category.id && (
-                <div className="mt-3 pt-3 border-t border-border/50">
+                <div className={`mt-3 pt-3 border-t border-border/50 ${category.id !== "all" ? "mt-1 pt-2" : ""}`}>
                   <div className="flex flex-wrap gap-1">
                     {category.specialRequirements.map((req, index) => (
                       <Badge key={index} variant="outline" className="text-xs py-0.5 px-2">
