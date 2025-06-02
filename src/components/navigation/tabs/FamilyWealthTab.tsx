@@ -53,7 +53,7 @@ export const familyWealthNavItems: NavItem[] = [
   },
   { 
     title: "Tax & Budgets", 
-    href: "/tax-budgets", 
+    href: "/client-tax-budgets", 
     icon: Calculator 
   },
   { 
@@ -68,7 +68,7 @@ export const familyWealthNavItems: NavItem[] = [
   },
   { 
     title: "Bill Pay", 
-    href: "/billpay", 
+    href: "/client-billpay", 
     icon: Receipt 
   }
 ];

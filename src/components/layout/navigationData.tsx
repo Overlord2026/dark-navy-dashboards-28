@@ -1,4 +1,3 @@
-
 import {
   Home,
   CreditCard,
@@ -188,7 +187,7 @@ export const navigationCategories: NavCategory[] = [
       },
       {
         title: "Tax Budgets",
-        href: "/tax-budgets",
+        href: "/client-tax-budgets",
         icon: Calculator,
         items: []
       },
