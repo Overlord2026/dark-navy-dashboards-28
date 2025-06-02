@@ -53,7 +53,8 @@ export const navigationCategories: NavCategory[] = [
         title: "Accounts",
         href: "/client-accounts",
         icon: CreditCard,
-        items: []
+        items: [],
+        comingSoon: true
       },
       {
         title: "All Assets",
