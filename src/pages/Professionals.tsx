@@ -39,12 +39,12 @@ export default function Professionals() {
               </TabsTrigger>
               <TabsTrigger 
                 value="permissions" 
-                className="flex gap-2 items-center opacity-50 cursor-not-allowed"
+                className="flex gap-2 items-center opacity-50 cursor-not-allowed relative"
                 disabled
               >
                 <ShieldCheck size={16} />
                 <span>Permissions</span>
-                <Badge variant="secondary" className="ml-1 text-xs">
+                <Badge variant="warning" className="ml-2 text-xs px-2 py-0.5 bg-yellow-500 text-black">
                   Coming Soon
                 </Badge>
               </TabsTrigger>
