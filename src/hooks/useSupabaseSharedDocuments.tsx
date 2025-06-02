@@ -1,7 +1,8 @@
 
 import { useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabase';
 import { useToast } from '@/hooks/use-toast';
+import { fetchSharedDocuments, createSharedDocument, deleteSharedDocument } from '@/services/sharedDocuments/sharedDocumentsService';
+import { getCurrentUser, validateUserAuthentication } from '@/services/sharedDocuments/sharedDocumentsAuth';
 
 export interface SharedDocument {
   id: string;
@@ -28,82 +29,22 @@ export const useSupabaseSharedDocuments = () => {
   const { toast } = useToast();
 
   // Fetch shared documents with professional and document details
-  const fetchSharedDocuments = async () => {
+  const fetchSharedDocumentsData = async () => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      const user = await getCurrentUser();
       if (!user) {
         console.log('No authenticated user found');
         setSharedDocuments([]);
         return;
       }
 
-      // First get shared documents with document details
-      const { data: sharedDocsWithDocuments, error: sharedDocsError } = await supabase
-        .from('shared_documents')
-        .select(`
-          *,
-          documents!inner(name, type, size)
-        `)
-        .eq('user_id', user.id)
-        .order('shared_at', { ascending: false });
-
-      if (sharedDocsError) {
-        console.error('Error fetching shared documents:', sharedDocsError);
-        toast({
-          title: "Error fetching shared documents",
-          description: sharedDocsError.message,
-          variant: "destructive"
-        });
-        return;
-      }
-
-      // Then get professional details for non-placeholder professional IDs
-      const professionalIds = sharedDocsWithDocuments
-        ?.filter(item => item.professional_id !== "00000000-0000-0000-0000-000000000000")
-        .map(item => item.professional_id) || [];
-
-      let professionalsData: any[] = [];
-      if (professionalIds.length > 0) {
-        const { data: professionals, error: profError } = await supabase
-          .from('professionals')
-          .select('id, name, email')
-          .in('id', professionalIds);
-
-        if (profError) {
-          console.error('Error fetching professionals:', profError);
-        } else {
-          professionalsData = professionals || [];
-        }
-      }
-
-      // Transform the data to flatten the joined fields
-      const transformedData: SharedDocument[] = (sharedDocsWithDocuments || []).map(item => {
-        const professional = professionalsData.find(p => p.id === item.professional_id);
-        
-        return {
-          id: item.id,
-          user_id: item.user_id,
-          professional_id: item.professional_id,
-          document_id: item.document_id,
-          permission_level: item.permission_level,
-          shared_at: item.shared_at,
-          expires_at: item.expires_at,
-          created_at: item.created_at,
-          updated_at: item.updated_at,
-          professional_name: professional?.name,
-          professional_email: professional?.email,
-          document_name: item.documents?.name,
-          document_type: item.documents?.type,
-          document_size: item.documents?.size
-        };
-      });
-
-      setSharedDocuments(transformedData);
+      const documents = await fetchSharedDocuments(user.id);
+      setSharedDocuments(documents);
     } catch (error) {
       console.error('Error:', error);
       toast({
-        title: "Error",
-        description: "Failed to fetch shared documents",
+        title: "Error fetching shared documents",
+        description: error instanceof Error ? error.message : "Failed to fetch shared documents",
         variant: "destructive"
       });
     }
@@ -118,37 +59,16 @@ export const useSupabaseSharedDocuments = () => {
   ) => {
     setSharing(true);
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        toast({
-          title: "Authentication required",
-          description: "Please log in to share documents",
-          variant: "destructive"
-        });
-        return null;
-      }
+      const user = await getCurrentUser();
+      validateUserAuthentication(user);
 
-      const { data, error } = await supabase
-        .from('shared_documents')
-        .insert({
-          user_id: user.id,
-          professional_id: professionalId,
-          document_id: documentId,
-          permission_level: permissionLevel,
-          expires_at: expiresAt
-        })
-        .select()
-        .single();
-
-      if (error) {
-        console.error('Error sharing document:', error);
-        toast({
-          title: "Error sharing document",
-          description: error.message,
-          variant: "destructive"
-        });
-        return null;
-      }
+      const data = await createSharedDocument(
+        user!.id,
+        professionalId,
+        documentId,
+        permissionLevel,
+        expiresAt
+      );
 
       toast({
         title: "Document shared",
@@ -156,15 +76,25 @@ export const useSupabaseSharedDocuments = () => {
       });
 
       // Refresh the list
-      fetchSharedDocuments();
+      fetchSharedDocumentsData();
       return data;
     } catch (error) {
       console.error('Error:', error);
-      toast({
-        title: "Error",
-        description: "Failed to share document",
-        variant: "destructive"
-      });
+      const errorMessage = error instanceof Error ? error.message : "Failed to share document";
+      
+      if (errorMessage.includes('Authentication required')) {
+        toast({
+          title: "Authentication required",
+          description: "Please log in to share documents",
+          variant: "destructive"
+        });
+      } else {
+        toast({
+          title: "Error sharing document",
+          description: errorMessage,
+          variant: "destructive"
+        });
+      }
       return null;
     } finally {
       setSharing(false);
@@ -174,31 +104,10 @@ export const useSupabaseSharedDocuments = () => {
   // Remove shared document
   const removeSharedDocument = async (id: string) => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        toast({
-          title: "Authentication required",
-          description: "Please log in to remove shared documents",
-          variant: "destructive"
-        });
-        return;
-      }
+      const user = await getCurrentUser();
+      validateUserAuthentication(user);
 
-      const { error } = await supabase
-        .from('shared_documents')
-        .delete()
-        .eq('id', id)
-        .eq('user_id', user.id);
-
-      if (error) {
-        console.error('Error removing shared document:', error);
-        toast({
-          title: "Error removing shared document",
-          description: error.message,
-          variant: "destructive"
-        });
-        return;
-      }
+      await deleteSharedDocument(id, user!.id);
 
       toast({
         title: "Document access removed",
@@ -206,21 +115,31 @@ export const useSupabaseSharedDocuments = () => {
       });
 
       // Refresh the list
-      fetchSharedDocuments();
+      fetchSharedDocumentsData();
     } catch (error) {
       console.error('Error:', error);
-      toast({
-        title: "Error",
-        description: "Failed to remove shared document",
-        variant: "destructive"
-      });
+      const errorMessage = error instanceof Error ? error.message : "Failed to remove shared document";
+      
+      if (errorMessage.includes('Authentication required')) {
+        toast({
+          title: "Authentication required",
+          description: "Please log in to remove shared documents",
+          variant: "destructive"
+        });
+      } else {
+        toast({
+          title: "Error removing shared document",
+          description: errorMessage,
+          variant: "destructive"
+        });
+      }
     }
   };
 
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
-      await fetchSharedDocuments();
+      await fetchSharedDocumentsData();
       setLoading(false);
     };
 
@@ -233,6 +152,6 @@ export const useSupabaseSharedDocuments = () => {
     sharing,
     shareDocument,
     removeSharedDocument,
-    refreshSharedDocuments: fetchSharedDocuments
+    refreshSharedDocuments: fetchSharedDocumentsData
   };
 };
