@@ -37,43 +37,66 @@ export const useSupabaseSharedDocuments = () => {
         return;
       }
 
-      const { data, error } = await supabase
+      // First get shared documents with document details
+      const { data: sharedDocsWithDocuments, error: sharedDocsError } = await supabase
         .from('shared_documents')
         .select(`
           *,
-          professionals!inner(name, email),
           documents!inner(name, type, size)
         `)
         .eq('user_id', user.id)
         .order('shared_at', { ascending: false });
 
-      if (error) {
-        console.error('Error fetching shared documents:', error);
+      if (sharedDocsError) {
+        console.error('Error fetching shared documents:', sharedDocsError);
         toast({
           title: "Error fetching shared documents",
-          description: error.message,
+          description: sharedDocsError.message,
           variant: "destructive"
         });
         return;
       }
 
+      // Then get professional details for non-placeholder professional IDs
+      const professionalIds = sharedDocsWithDocuments
+        ?.filter(item => item.professional_id !== "00000000-0000-0000-0000-000000000000")
+        .map(item => item.professional_id) || [];
+
+      let professionalsData: any[] = [];
+      if (professionalIds.length > 0) {
+        const { data: professionals, error: profError } = await supabase
+          .from('professionals')
+          .select('id, name, email')
+          .in('id', professionalIds);
+
+        if (profError) {
+          console.error('Error fetching professionals:', profError);
+        } else {
+          professionalsData = professionals || [];
+        }
+      }
+
       // Transform the data to flatten the joined fields
-      const transformedData: SharedDocument[] = (data || []).map(item => ({
-        id: item.id,
-        user_id: item.user_id,
-        professional_id: item.professional_id,
-        document_id: item.document_id,
-        permission_level: item.permission_level,
-        shared_at: item.shared_at,
-        expires_at: item.expires_at,
-        created_at: item.created_at,
-        updated_at: item.updated_at,
-        professional_name: item.professionals?.name,
-        professional_email: item.professionals?.email,
-        document_name: item.documents?.name,
-        document_type: item.documents?.type,
-        document_size: item.documents?.size
-      }));
+      const transformedData: SharedDocument[] = (sharedDocsWithDocuments || []).map(item => {
+        const professional = professionalsData.find(p => p.id === item.professional_id);
+        
+        return {
+          id: item.id,
+          user_id: item.user_id,
+          professional_id: item.professional_id,
+          document_id: item.document_id,
+          permission_level: item.permission_level,
+          shared_at: item.shared_at,
+          expires_at: item.expires_at,
+          created_at: item.created_at,
+          updated_at: item.updated_at,
+          professional_name: professional?.name,
+          professional_email: professional?.email,
+          document_name: item.documents?.name,
+          document_type: item.documents?.type,
+          document_size: item.documents?.size
+        };
+      });
 
       setSharedDocuments(transformedData);
     } catch (error) {
