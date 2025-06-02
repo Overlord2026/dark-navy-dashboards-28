@@ -24,6 +24,7 @@ import ProfessionalSignup from "@/pages/ProfessionalSignup";
 import Sharing from "@/pages/Sharing";
 import Help from "@/pages/Help";
 import Settings from "@/pages/Settings";
+import ProjectIntegration from "@/pages/ProjectIntegration";
 import PrivateEquity from "@/pages/investments/PrivateEquity";
 import PrivateDebt from "@/pages/investments/PrivateDebt";
 import DigitalAssets from "@/pages/investments/DigitalAssets";
@@ -148,6 +149,10 @@ const routes = createBrowserRouter([
   {
     path: "/settings",
     element: <ProtectedRoute><Settings /></ProtectedRoute>
+  },
+  {
+    path: "/project-integration",
+    element: <ProtectedRoute><ProjectIntegration /></ProtectedRoute>
   },
   {
     path: "/ip-protection",
