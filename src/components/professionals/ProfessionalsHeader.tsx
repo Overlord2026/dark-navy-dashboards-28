@@ -11,7 +11,6 @@ export function ProfessionalsHeader({ onAddProfessional }: ProfessionalsHeaderPr
   return (
     <div className="flex justify-between items-center">
       <div>
-        <h1 className="text-2xl font-bold">Service Professionals</h1>
         <p className="text-muted-foreground mt-1">
           Manage your professional service providers and share documents securely
         </p>
