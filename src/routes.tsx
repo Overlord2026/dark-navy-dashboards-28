@@ -1,4 +1,3 @@
-
 import React from "react";
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import Dashboard from "@/pages/Dashboard";
@@ -135,8 +134,12 @@ const routes = createBrowserRouter([
     element: <ProtectedRoute><ProfessionalsRouteWrapper><Documents /></ProfessionalsRouteWrapper></ProtectedRoute>
   },
   {
-    path: "/professionals",
+    path: "/client-professionals",
     element: <ProtectedRoute><ProfessionalsRouteWrapper><Professionals /></ProfessionalsRouteWrapper></ProtectedRoute>
+  },
+  {
+    path: "/professionals",
+    element: <Navigate to="/client-professionals" replace />
   },
   {
     path: "/professional-signup",

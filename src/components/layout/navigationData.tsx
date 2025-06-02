@@ -250,7 +250,7 @@ export const navigationCategories: NavCategory[] = [
       },
       {
         title: "Professionals",
-        href: "/professionals", 
+        href: "/client-professionals", 
         icon: Users,
         items: []
       },
