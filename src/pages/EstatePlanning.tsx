@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -31,6 +31,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 // import { SecureTaxReturnAnalysis } from "@/components/estate-planning/SecureTaxReturnAnalysis";
+import { useEstatePlanning } from "@/hooks/useEstatePlanning";
 
 export default function EstatePlanning() {
   const [showInterestDialog, setShowInterestDialog] = useState(false);
@@ -42,25 +43,44 @@ export default function EstatePlanning() {
     message: ""
   });
 
+  const { createInterest, createConsultation } = useEstatePlanning();
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleShowInterest = () => {
-    // Send email to advisor
-    console.log("Sending email to advisor with form data:", formData);
-    
-    // Alert advisor in real-time
-    console.log("Alerting advisor about interest:", formData);
-    
-    toast.success("Thank you for your interest! An advisor will contact you soon.");
-    setShowInterestDialog(false);
+  const handleShowInterest = async () => {
+    try {
+      await createInterest({
+        service_type: "General Interest",
+        message: formData.message,
+        contact_name: formData.name,
+        contact_email: formData.email,
+        contact_phone: formData.phone,
+      });
+      
+      setShowInterestDialog(false);
+      setFormData({ name: "", email: "", phone: "", message: "" });
+    } catch (error) {
+      console.error('Error submitting interest:', error);
+    }
   };
 
-  const handleScheduleAppointment = () => {
-    window.open("https://calendly.com/tonygomes/60min", "_blank");
-    toast.success("Opening scheduling page");
+  const handleScheduleAppointment = async () => {
+    try {
+      await createConsultation({
+        consultation_type: "Initial Consultation",
+        contact_name: formData.name,
+        contact_email: formData.email,
+        contact_phone: formData.phone,
+      });
+      
+      setShowAdvisorDialog(false);
+      setFormData({ name: "", email: "", phone: "", message: "" });
+    } catch (error) {
+      console.error('Error scheduling consultation:', error);
+    }
   };
 
   const services = [

@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -17,6 +16,12 @@ export interface DocumentDialogProps {
 
 export interface ShareDocumentDialogProps extends DocumentDialogProps {
   documentId: string;
+  onShare?: (documentId: string, sharedWith: string[]) => void;
+}
+
+export interface UploadDocumentDialogProps extends DocumentDialogProps {
+  documentType: string;
+  onUpload?: (documentType: string, data: any) => void;
 }
 
 export function TaxReturnUploadDialog({ open, onClose }: DocumentDialogProps) {
@@ -116,7 +121,7 @@ export function TaxReturnUploadDialog({ open, onClose }: DocumentDialogProps) {
   );
 }
 
-export function UploadDocumentDialog({ open, onClose }: DocumentDialogProps) {
+export function UploadDocumentDialog({ open, onClose, documentType, onUpload }: UploadDocumentDialogProps) {
   const [documentName, setDocumentName] = useState("");
   const [description, setDescription] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -125,12 +130,11 @@ export function UploadDocumentDialog({ open, onClose }: DocumentDialogProps) {
   const handleFileChange = (file: File) => {
     setSelectedFile(file);
     if (!documentName) {
-      // Set a default document name based on the file name
       setDocumentName(file.name.split('.')[0]);
     }
   };
   
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!selectedFile) {
       toast.error("Please select a file to upload");
       return;
@@ -143,18 +147,25 @@ export function UploadDocumentDialog({ open, onClose }: DocumentDialogProps) {
     
     setIsUploading(true);
     
-    // Simulate upload process
-    setTimeout(() => {
-      toast.success("Document uploaded successfully", {
-        description: `"${documentName}" has been added to your documents.`
-      });
-      setIsUploading(false);
+    try {
+      if (onUpload) {
+        await onUpload(documentType, {
+          documentName,
+          description,
+          file: selectedFile,
+        });
+      }
+      
       // Reset form
       setDocumentName("");
       setDescription("");
       setSelectedFile(null);
       onClose();
-    }, 1500);
+    } catch (error) {
+      console.error('Upload error:', error);
+    } finally {
+      setIsUploading(false);
+    }
   };
   
   return (
@@ -236,7 +247,7 @@ export function UploadDocumentDialog({ open, onClose }: DocumentDialogProps) {
   );
 }
 
-export function ShareDocumentDialog({ open, onClose, documentId }: ShareDocumentDialogProps) {
+export function ShareDocumentDialog({ open, onClose, documentId, onShare }: ShareDocumentDialogProps) {
   const [selectedContacts, setSelectedContacts] = useState<string[]>([]);
   const [isSharing, setIsSharing] = useState(false);
   
@@ -260,7 +271,7 @@ export function ShareDocumentDialog({ open, onClose, documentId }: ShareDocument
     );
   };
   
-  const handleShare = () => {
+  const handleShare = async () => {
     if (selectedContacts.length === 0) {
       toast.error("Please select at least one contact to share with");
       return;
@@ -268,19 +279,22 @@ export function ShareDocumentDialog({ open, onClose, documentId }: ShareDocument
     
     setIsSharing(true);
     
-    // Simulate sharing process
-    setTimeout(() => {
+    try {
       const contactNames = selectedContacts.map(id => 
-        contactOptions.find(c => c.id === id)?.name
+        contactOptions.find(c => c.id === id)?.name + " (" + contactOptions.find(c => c.id === id)?.role + ")"
       ).filter(Boolean);
       
-      toast.success(`Document shared successfully`, {
-        description: `Document shared with ${contactNames.join(", ")}`
-      });
-      setIsSharing(false);
+      if (onShare) {
+        await onShare(documentId, contactNames);
+      }
+      
       setSelectedContacts([]);
       onClose();
-    }, 1500);
+    } catch (error) {
+      console.error('Share error:', error);
+    } finally {
+      setIsSharing(false);
+    }
   };
   
   return (
