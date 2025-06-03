@@ -1,5 +1,3 @@
-
-
 import React, { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
@@ -154,106 +152,6 @@ export default function EstatePlanning() {
             <p className="text-sm text-muted-foreground max-w-3xl">
               Secure your legacy and protect what matters most with our comprehensive estate planning solutions
             </p>
-          </div>
-
-          {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-            <Dialog open={showAdvisorDialog} onOpenChange={setShowAdvisorDialog}>
-              <DialogTrigger asChild>
-                <Button className="w-full sm:w-auto">
-                  <Calendar className="mr-2 h-4 w-4" />
-                  Schedule Appointment
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px]">
-                <DialogHeader>
-                  <DialogTitle>Schedule a Meeting</DialogTitle>
-                  <DialogDescription>
-                    Schedule a meeting with our estate planning expert to discuss your needs.
-                  </DialogDescription>
-                </DialogHeader>
-                <div className="space-y-4 py-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="name">Full Name</Label>
-                    <Input id="name" name="name" value={formData.name} onChange={handleInputChange} placeholder="John Doe" />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
-                    <Input id="email" name="email" type="email" value={formData.email} onChange={handleInputChange} placeholder="john@example.com" />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="phone">Phone Number</Label>
-                    <Input id="phone" name="phone" value={formData.phone} onChange={handleInputChange} placeholder="(555) 123-4567" />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="preferred-time">Preferred Time</Label>
-                    <div className="flex flex-wrap gap-2">
-                      {["Morning", "Afternoon", "Evening"].map((time) => (
-                        <Button key={time} variant="outline" size="sm" onClick={() => toast.info(`${time} selected`)}>
-                          {time}
-                        </Button>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-                <DialogFooter className="flex-col sm:flex-row gap-2">
-                  <Button variant="outline" onClick={() => setShowAdvisorDialog(false)} className="w-full sm:w-auto">
-                    Cancel
-                  </Button>
-                  <Button onClick={handleScheduleAppointment} className="w-full sm:w-auto">
-                    Schedule
-                  </Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
-
-            <Dialog open={showInterestDialog} onOpenChange={setShowInterestDialog}>
-              <DialogTrigger asChild>
-                <Button variant="outline" className="w-full sm:w-auto">
-                  I'm Interested
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px]">
-                <DialogHeader>
-                  <DialogTitle>Express Interest</DialogTitle>
-                  <DialogDescription>
-                    Let us know what estate planning services you're interested in.
-                  </DialogDescription>
-                </DialogHeader>
-                <div className="space-y-4 py-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="interest-name">Full Name</Label>
-                    <Input id="interest-name" name="name" value={formData.name} onChange={handleInputChange} placeholder="John Doe" />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="interest-email">Email</Label>
-                    <Input id="interest-email" name="email" type="email" value={formData.email} onChange={handleInputChange} placeholder="john@example.com" />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="interest-services">Services of Interest</Label>
-                    <div className="flex flex-wrap gap-2">
-                      {services.slice(0, 3).map((service) => (
-                        <Button key={service.title} variant="outline" size="sm" onClick={() => toast.info(`${service.title} selected`)}>
-                          {service.title}
-                        </Button>
-                      ))}
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="message">Message</Label>
-                    <Textarea id="message" name="message" value={formData.message} onChange={handleInputChange} placeholder="Tell us about your estate planning needs..." className="min-h-[80px]" />
-                  </div>
-                </div>
-                <DialogFooter className="flex-col sm:flex-row gap-2">
-                  <Button variant="outline" onClick={() => setShowInterestDialog(false)} className="w-full sm:w-auto">
-                    Cancel
-                  </Button>
-                  <Button onClick={handleShowInterest} className="w-full sm:w-auto">
-                    Submit
-                  </Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
           </div>
         </div>
 
@@ -504,6 +402,93 @@ export default function EstatePlanning() {
             </div>
           </TabsContent>
         </Tabs>
+
+        {/* Hidden Dialogs */}
+        <Dialog open={showAdvisorDialog} onOpenChange={setShowAdvisorDialog}>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Schedule a Meeting</DialogTitle>
+              <DialogDescription>
+                Schedule a meeting with our estate planning expert to discuss your needs.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4 py-4">
+              <div className="space-y-2">
+                <Label htmlFor="name">Full Name</Label>
+                <Input id="name" name="name" value={formData.name} onChange={handleInputChange} placeholder="John Doe" />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <Input id="email" name="email" type="email" value={formData.email} onChange={handleInputChange} placeholder="john@example.com" />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="phone">Phone Number</Label>
+                <Input id="phone" name="phone" value={formData.phone} onChange={handleInputChange} placeholder="(555) 123-4567" />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="preferred-time">Preferred Time</Label>
+                <div className="flex flex-wrap gap-2">
+                  {["Morning", "Afternoon", "Evening"].map((time) => (
+                    <Button key={time} variant="outline" size="sm" onClick={() => toast.info(`${time} selected`)}>
+                      {time}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <DialogFooter className="flex-col sm:flex-row gap-2">
+              <Button variant="outline" onClick={() => setShowAdvisorDialog(false)} className="w-full sm:w-auto">
+                Cancel
+              </Button>
+              <Button onClick={handleScheduleAppointment} className="w-full sm:w-auto">
+                Schedule
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        <Dialog open={showInterestDialog} onOpenChange={setShowInterestDialog}>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Express Interest</DialogTitle>
+              <DialogDescription>
+                Let us know what estate planning services you're interested in.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4 py-4">
+              <div className="space-y-2">
+                <Label htmlFor="interest-name">Full Name</Label>
+                <Input id="interest-name" name="name" value={formData.name} onChange={handleInputChange} placeholder="John Doe" />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="interest-email">Email</Label>
+                <Input id="interest-email" name="email" type="email" value={formData.email} onChange={handleInputChange} placeholder="john@example.com" />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="interest-services">Services of Interest</Label>
+                <div className="flex flex-wrap gap-2">
+                  {services.slice(0, 3).map((service) => (
+                    <Button key={service.title} variant="outline" size="sm" onClick={() => toast.info(`${service.title} selected`)}>
+                      {service.title}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="message">Message</Label>
+                <Textarea id="message" name="message" value={formData.message} onChange={handleInputChange} placeholder="Tell us about your estate planning needs..." className="min-h-[80px]" />
+              </div>
+            </div>
+            <DialogFooter className="flex-col sm:flex-row gap-2">
+              <Button variant="outline" onClick={() => setShowInterestDialog(false)} className="w-full sm:w-auto">
+                Cancel
+              </Button>
+              <Button onClick={handleShowInterest} className="w-full sm:w-auto">
+                Submit
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </ThreeColumnLayout>
   );
