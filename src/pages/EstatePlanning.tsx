@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
@@ -476,7 +477,7 @@ export default function EstatePlanning() {
                           <div className={`w-16 h-16 rounded-full ${step.color} text-white flex items-center justify-center font-bold text-lg shadow-xl border-4 border-background`}>
                             {step.step}
                           </div>
-                        )}
+                        </div>
 
                         {/* Right side content (even steps) */}
                         {index % 2 === 1 && (
@@ -544,6 +545,22 @@ export default function EstatePlanning() {
                     </div>
                   ))}
                 </div>
+              </div>
+
+              {/* Call to Action */}
+              <div className="text-center pt-8">
+                <Card className="bg-gradient-to-r from-primary/5 to-primary/10 border-primary/20 max-w-2xl mx-auto">
+                  <CardContent className="p-8">
+                    <h3 className="text-2xl font-bold mb-4">Ready to Begin Your Estate Planning Journey?</h3>
+                    <p className="text-muted-foreground mb-6">
+                      Let our experienced team guide you through each step of securing your legacy and protecting your family's future.
+                    </p>
+                    <Button size="lg" onClick={() => setShowInterestDialog(true)} className="shadow-lg">
+                      Start Your Plan Today
+                      <ArrowRight className="ml-2 h-5 w-5" />
+                    </Button>
+                  </CardContent>
+                </Card>
               </div>
             </div>
           </TabsContent>
