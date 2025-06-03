@@ -3,6 +3,7 @@ import { PropertyList } from "./PropertyList";
 import { PropertyForm } from "./PropertyForm";
 import { PropertySummary } from "./PropertySummary";
 import { PropertyManagerHeader } from "./PropertyManagerHeader";
+import { PropertyTypeHeader } from "./PropertyTypeHeader";
 import { Property, PropertyValuation } from "@/types/property";
 import { toast } from "sonner";
 import { useNetWorth } from "@/context/NetWorthContext";
@@ -148,6 +149,8 @@ export const PropertyManager: React.FC<PropertyManagerProps> = ({ initialFilter 
         return properties.filter(p => p.type === 'business');
       case 'rentals':
         return properties.filter(p => p.type === 'rental');
+      case 'vacation':
+        return properties.filter(p => p.type === 'vacation');
       case 'locations':
         return properties; // All properties have locations
       case 'investments':
@@ -166,10 +169,7 @@ export const PropertyManager: React.FC<PropertyManagerProps> = ({ initialFilter 
     setProperties([...properties, newProperty]);
     setShowForm(false);
     
-    toast({
-      title: "Property Added",
-      description: `${property.name} has been added to your portfolio.`,
-    });
+    toast(`${property.name} has been added to your portfolio.`);
   };
 
   const handleUpdateProperty = (updatedProperty: Property) => {
@@ -181,10 +181,7 @@ export const PropertyManager: React.FC<PropertyManagerProps> = ({ initialFilter 
     setEditingProperty(null);
     setShowForm(false);
     
-    toast({
-      title: "Property Updated",
-      description: `${updatedProperty.name} has been updated successfully.`,
-    });
+    toast(`${updatedProperty.name} has been updated successfully.`);
   };
 
   const handleDeleteProperty = (id: string) => {
@@ -192,10 +189,7 @@ export const PropertyManager: React.FC<PropertyManagerProps> = ({ initialFilter 
     
     setProperties(properties.filter(prop => prop.id !== id));
     
-    toast({
-      title: "Property Removed",
-      description: `${propertyToDelete?.name} has been removed from your portfolio.`,
-    });
+    toast(`${propertyToDelete?.name} has been removed from your portfolio.`);
   };
 
   const handleEditProperty = (property: Property) => {
@@ -227,6 +221,8 @@ export const PropertyManager: React.FC<PropertyManagerProps> = ({ initialFilter 
         return "Business Properties";
       case 'rentals':
         return "Rental Properties"; 
+      case 'vacation':
+        return "Vacation Properties";
       case 'locations':
         return "Property Locations";
       case 'investments':
