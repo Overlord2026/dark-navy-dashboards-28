@@ -44,15 +44,20 @@ export const useSidebarState = (navigationCategories: NavCategory[]) => {
     const path = location.pathname;
     let shouldExpandCategory = '';
     
+    console.log("Current path for category expansion:", path);
+    
     // Find which category contains the current path
     navigationCategories.forEach(category => {
       const matchingItem = category.items.find(item => {
         const itemPath = normalizePath(item.href);
-        return path === itemPath || path.startsWith(`${itemPath}/`);
+        const isMatch = path === itemPath || path.startsWith(`${itemPath}/`);
+        console.log(`Checking category ${category.id}, item ${item.title}: ${itemPath} vs ${path} = ${isMatch}`);
+        return isMatch;
       });
       
       if (matchingItem) {
         shouldExpandCategory = category.id;
+        console.log(`Found matching item: ${matchingItem.title} in category: ${category.id}`);
         
         // If the item has submenus, expand the relevant submenu too
         if (matchingItem.items?.length) {
@@ -73,6 +78,7 @@ export const useSidebarState = (navigationCategories: NavCategory[]) => {
     
     // Expand the relevant category if found
     if (shouldExpandCategory) {
+      console.log(`Expanding category: ${shouldExpandCategory}`);
       setExpandedCategories(prev => ({
         ...prev,
         [shouldExpandCategory]: true
@@ -113,14 +119,17 @@ export const useSidebarState = (navigationCategories: NavCategory[]) => {
     
     // Exact match takes priority
     if (normalizedPathname === normalizedHref) {
+      console.log("Exact match found for:", normalizedHref);
       return true;
     }
     
     // Prefix matching for sub-routes, but avoid false positives
     if (normalizedHref !== "/" && normalizedPathname.startsWith(normalizedHref + "/")) {
+      console.log("Prefix match found for:", normalizedHref);
       return true;
     }
     
+    console.log("No match for:", normalizedHref);
     return false;
   };
 
