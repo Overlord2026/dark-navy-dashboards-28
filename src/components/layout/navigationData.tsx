@@ -255,6 +255,12 @@ export const navigationCategories: NavCategory[] = [
         items: []
       },
       {
+        title: "Family Members",
+        href: "/client-family",
+        icon: Users,
+        items: []
+      },
+      {
         title: "Sharing",
         href: "/sharing",
         icon: Share2,

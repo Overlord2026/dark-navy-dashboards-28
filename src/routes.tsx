@@ -24,6 +24,7 @@ import Sharing from "@/pages/Sharing";
 import Help from "@/pages/Help";
 import Settings from "@/pages/Settings";
 import ProjectIntegration from "@/pages/ProjectIntegration";
+import ClientFamily from "@/pages/ClientFamily";
 import PrivateEquity from "@/pages/investments/PrivateEquity";
 import PrivateDebt from "@/pages/investments/PrivateDebt";
 import DigitalAssets from "@/pages/investments/DigitalAssets";
@@ -140,6 +141,10 @@ const routes = createBrowserRouter([
   {
     path: "/professionals",
     element: <Navigate to="/client-professionals" replace />
+  },
+  {
+    path: "/client-family",
+    element: <ProtectedRoute><ClientFamily /></ProtectedRoute>
   },
   {
     path: "/professional-signup",
