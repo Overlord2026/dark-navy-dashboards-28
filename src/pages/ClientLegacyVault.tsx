@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { CategoryList } from "@/components/documents/CategoryList";
@@ -178,7 +177,7 @@ export default function ClientLegacyVault() {
   };
 
   return (
-    <ThreeColumnLayout activeMainItem="client-legacy-vault" title="Secure Family Vault">
+    <ThreeColumnLayout activeMainItem="client-legacy-vault">
       <ProfessionalsProvider>
         <div className="container mx-auto p-4 lg:p-6 space-y-6 max-w-7xl">
           {/* Header Section */}
