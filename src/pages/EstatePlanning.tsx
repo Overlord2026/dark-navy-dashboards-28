@@ -317,12 +317,6 @@ export default function EstatePlanning() {
                   ))}
                 </div>
               </CardContent>
-              <CardFooter>
-                <Button onClick={handleScheduleAppointment} className="w-full sm:w-auto">
-                  <Calendar className="mr-2 h-4 w-4" />
-                  Schedule Appointment
-                </Button>
-              </CardFooter>
             </Card>
           </TabsContent>
 
