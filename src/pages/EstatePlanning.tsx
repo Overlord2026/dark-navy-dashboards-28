@@ -1,5 +1,3 @@
-
-
 import React, { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
@@ -236,6 +234,36 @@ export default function EstatePlanning() {
                 </Card>
               ))}
             </div>
+
+            {/* Why Choose Section - Only in Services Tab */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-xl">Why Choose Our Estate Planning Services</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {[
+                    {
+                      title: "Personalized Approach",
+                      description: "We take the time to understand your unique situation and create customized solutions."
+                    },
+                    {
+                      title: "Comprehensive Protection",
+                      description: "Our holistic approach ensures all aspects of your estate and legacy are protected."
+                    },
+                    {
+                      title: "Expert Guidance",
+                      description: "Work with experienced professionals who specialize in estate planning and wealth preservation."
+                    }
+                  ].map((item, i) => (
+                    <div key={i} className="space-y-3">
+                      <h3 className="font-semibold text-base">{item.title}</h3>
+                      <p className="text-sm text-muted-foreground leading-relaxed">{item.description}</p>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
           </TabsContent>
 
           <TabsContent value="process" className="space-y-6">
@@ -360,36 +388,6 @@ export default function EstatePlanning() {
             </div>
           </TabsContent>
         </Tabs>
-
-        {/* Why Choose Section */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-xl">Why Choose Our Estate Planning Services</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {[
-                {
-                  title: "Personalized Approach",
-                  description: "We take the time to understand your unique situation and create customized solutions."
-                },
-                {
-                  title: "Comprehensive Protection",
-                  description: "Our holistic approach ensures all aspects of your estate and legacy are protected."
-                },
-                {
-                  title: "Expert Guidance",
-                  description: "Work with experienced professionals who specialize in estate planning and wealth preservation."
-                }
-              ].map((item, i) => (
-                <div key={i} className="space-y-3">
-                  <h3 className="font-semibold text-base">{item.title}</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{item.description}</p>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
       </div>
     </ThreeColumnLayout>
   );
