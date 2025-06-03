@@ -14,7 +14,7 @@ export const PropertyManagerHeader: React.FC<PropertyManagerHeaderProps> = ({
 }) => {
   return (
     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-      <h1 className="text-2xl font-bold text-fore">{filterTitle}</h1>
+      <div></div>
       <Button 
         onClick={onAddProperty} 
         className="bg-yellow-500 hover:bg-yellow-600 text-black w-full sm:w-auto"
