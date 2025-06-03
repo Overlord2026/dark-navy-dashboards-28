@@ -67,10 +67,34 @@ export const useEstatePlanning = () => {
   const [interests, setInterests] = useState<EstateInterest[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // Check if tables exist
+  const checkTablesExist = async () => {
+    try {
+      const { error } = await supabase
+        .from('estate_planning_documents')
+        .select('count')
+        .limit(1);
+      
+      return !error;
+    } catch (error) {
+      console.log('Estate planning tables not yet created');
+      return false;
+    }
+  };
+
   // Fetch all estate planning data
   const fetchEstateData = async () => {
     try {
       setLoading(true);
+      
+      // Check if tables exist first
+      const tablesExist = await checkTablesExist();
+      if (!tablesExist) {
+        console.log('Estate planning database tables not yet created. Please run the SQL migration first.');
+        setLoading(false);
+        return;
+      }
+
       const { data: { user } } = await supabase.auth.getUser();
       
       if (!user) {
@@ -84,7 +108,9 @@ export const useEstatePlanning = () => {
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });
 
-      if (documentsError) throw documentsError;
+      if (documentsError && !documentsError.message.includes('does not exist')) {
+        throw documentsError;
+      }
 
       // Fetch professionals
       const { data: professionalsData, error: professionalsError } = await supabase
@@ -93,7 +119,9 @@ export const useEstatePlanning = () => {
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });
 
-      if (professionalsError) throw professionalsError;
+      if (professionalsError && !professionalsError.message.includes('does not exist')) {
+        throw professionalsError;
+      }
 
       // Fetch consultations
       const { data: consultationsData, error: consultationsError } = await supabase
@@ -102,7 +130,9 @@ export const useEstatePlanning = () => {
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });
 
-      if (consultationsError) throw consultationsError;
+      if (consultationsError && !consultationsError.message.includes('does not exist')) {
+        throw consultationsError;
+      }
 
       // Fetch interests
       const { data: interestsData, error: interestsError } = await supabase
@@ -111,7 +141,9 @@ export const useEstatePlanning = () => {
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });
 
-      if (interestsError) throw interestsError;
+      if (interestsError && !interestsError.message.includes('does not exist')) {
+        throw interestsError;
+      }
 
       setDocuments(documentsData || []);
       setProfessionals(professionalsData || []);
@@ -128,6 +160,12 @@ export const useEstatePlanning = () => {
   // Create document
   const createDocument = async (documentData: Partial<EstateDocument>) => {
     try {
+      const tablesExist = await checkTablesExist();
+      if (!tablesExist) {
+        toast.error('Database not yet set up. Please contact support.');
+        return;
+      }
+
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('User not authenticated');
 
@@ -196,6 +234,12 @@ export const useEstatePlanning = () => {
   // Create consultation request
   const createConsultation = async (consultationData: Partial<EstateConsultation>) => {
     try {
+      const tablesExist = await checkTablesExist();
+      if (!tablesExist) {
+        toast.error('Database not yet set up. Please contact support.');
+        return;
+      }
+
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('User not authenticated');
 
@@ -223,6 +267,12 @@ export const useEstatePlanning = () => {
   // Create interest
   const createInterest = async (interestData: Partial<EstateInterest>) => {
     try {
+      const tablesExist = await checkTablesExist();
+      if (!tablesExist) {
+        toast.error('Database not yet set up. Please contact support.');
+        return;
+      }
+
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('User not authenticated');
 
