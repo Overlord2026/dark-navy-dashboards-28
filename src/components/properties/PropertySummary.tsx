@@ -2,7 +2,7 @@
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Property } from "@/types/property";
-import { Building, ArrowUp, Home } from "lucide-react";
+import { Building, ArrowUp, Home, DollarSign } from "lucide-react";
 
 interface PropertySummaryProps {
   properties: Property[];
@@ -35,8 +35,14 @@ export const PropertySummary: React.FC<PropertySummaryProps> = ({ properties }) 
     return properties.filter(property => property.type === type).length;
   };
 
+  const getMonthlyRentalIncome = (): number => {
+    return properties
+      .filter(property => property.type === 'rental' && property.rental)
+      .reduce((total, property) => total + (property.rental?.monthlyIncome || 0), 0);
+  };
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
       <Card className="bg-card">
         <CardContent className="p-4 flex flex-col">
           <div className="flex justify-between items-start">
@@ -86,6 +92,24 @@ export const PropertySummary: React.FC<PropertySummaryProps> = ({ properties }) 
               <span className="text-muted-foreground">Business: </span>
               <span className="font-medium">{getPropertyCount('business')}</span>
             </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card className="bg-card">
+        <CardContent className="p-4 flex flex-col">
+          <div className="flex justify-between items-start">
+            <div>
+              <p className="text-sm font-medium text-muted-foreground">Monthly Rental Income</p>
+              <h3 className="text-2xl font-bold mt-1">{formatCurrency(getMonthlyRentalIncome())}</h3>
+            </div>
+            <div className="p-2 rounded-md bg-green-500/10">
+              <DollarSign className="h-5 w-5 text-green-500" />
+            </div>
+          </div>
+          <div className="mt-4 flex items-center gap-1 text-sm">
+            <span className="text-muted-foreground">Annual:</span>
+            <span className="font-medium">{formatCurrency(getMonthlyRentalIncome() * 12)}</span>
           </div>
         </CardContent>
       </Card>
