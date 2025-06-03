@@ -197,7 +197,7 @@ export const navigationCategories: NavCategory[] = [
       },
       {
         title: "Legacy Vault",
-        href: "/legacy-vault",
+        href: "/client-legacy-vault",
         icon: Archive,
         items: []
       },

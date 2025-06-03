@@ -1,3 +1,4 @@
+
 import React from "react";
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import Dashboard from "@/pages/Dashboard";
@@ -13,7 +14,7 @@ import AllAssets from "@/pages/AllAssets";
 import CashManagement from "@/pages/CashManagement";
 import TaxBudgets from "@/pages/TaxBudgets";
 import Transfers from "@/pages/Transfers";
-import LegacyVault from "@/pages/LegacyVault";
+import ClientLegacyVault from "@/pages/ClientLegacyVault";
 import SocialSecurity from "@/pages/SocialSecurity";
 import Properties from "@/pages/Properties";
 import BillPay from "@/pages/BillPay";
@@ -115,8 +116,12 @@ const routes = createBrowserRouter([
     element: <ProtectedRoute><Transfers /></ProtectedRoute>
   },
   {
+    path: "/client-legacy-vault",
+    element: <ProtectedRoute><ClientLegacyVault /></ProtectedRoute>
+  },
+  {
     path: "/legacy-vault",
-    element: <ProtectedRoute><LegacyVault /></ProtectedRoute>
+    element: <Navigate to="/client-legacy-vault" replace />
   },
   {
     path: "/social-security",
