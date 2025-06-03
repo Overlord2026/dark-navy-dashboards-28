@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { CategoryList } from "@/components/documents/CategoryList";
@@ -179,99 +180,126 @@ export default function ClientLegacyVault() {
   return (
     <ThreeColumnLayout activeMainItem="client-legacy-vault" title="Secure Family Vault">
       <ProfessionalsProvider>
-        <div className="container mx-auto p-4 space-y-6">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
-            <div>
-              <h1 className="text-2xl font-bold mb-1">Secure Family Vault</h1>
-              <p className="text-muted-foreground">Store and organize your important documents securely</p>
+        <div className="container mx-auto p-4 lg:p-6 space-y-6 max-w-7xl">
+          {/* Header Section */}
+          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+            <div className="space-y-1">
+              <h1 className="text-2xl lg:text-3xl font-bold">Secure Family Vault</h1>
+              <p className="text-muted-foreground text-sm lg:text-base">
+                Store and organize your important documents securely
+              </p>
             </div>
 
             <Button
               onClick={() => window.open('https://trustandwill.com', '_blank')}
               variant="outline"
-              className="flex items-center mt-4 md:mt-0 bg-white border-primary text-primary hover:bg-primary hover:text-white transition-colors"
+              className="flex items-center gap-2 bg-white border-primary text-primary hover:bg-primary hover:text-white transition-colors shrink-0"
             >
-              <ExternalLink className="mr-2 h-4 w-4" />
-              DIY with Trust & Will
+              <ExternalLink className="h-4 w-4" />
+              <span className="hidden sm:inline">DIY with Trust & Will</span>
+              <span className="sm:hidden">Trust & Will</span>
             </Button>
           </div>
           
+          {/* Tabs Section */}
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-3 mb-6">
-              <TabsTrigger value="documents" className="flex items-center gap-2">
+            <TabsList className="grid w-full grid-cols-3 mb-6 h-auto">
+              <TabsTrigger value="documents" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 p-2 sm:p-3">
                 <VaultIcon className="h-4 w-4" />
-                Important Documents
+                <span className="text-xs sm:text-sm">Important Documents</span>
               </TabsTrigger>
-              <TabsTrigger value="legacy-box" className="flex items-center gap-2">
+              <TabsTrigger value="legacy-box" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 p-2 sm:p-3">
                 <ArchiveIcon className="h-4 w-4" />
-                Family Legacy Box
+                <span className="text-xs sm:text-sm">Family Legacy Box</span>
               </TabsTrigger>
-              <TabsTrigger value="healthcare" className="flex items-center gap-2">
+              <TabsTrigger value="healthcare" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 p-2 sm:p-3">
                 <HeartPulseIcon className="h-4 w-4" />
-                Healthcare
+                <span className="text-xs sm:text-sm">Healthcare</span>
               </TabsTrigger>
             </TabsList>
             
-            <TabsContent value="documents" className="space-y-4">
-              <div className="flex justify-end space-x-4">
+            {/* Documents Tab */}
+            <TabsContent value="documents" className="space-y-6">
+              {/* Action Buttons */}
+              <div className="flex flex-col sm:flex-row justify-end gap-3">
                 <Button 
                   onClick={() => setIsNewFolderDialogOpen(true)}
                   variant="outline"
-                  className="flex items-center"
+                  className="flex items-center gap-2 order-2 sm:order-1"
                 >
-                  <FolderPlus className="mr-2 h-4 w-4" />
+                  <FolderPlus className="h-4 w-4" />
                   New Folder
                 </Button>
                 
                 <Button 
                   onClick={() => setIsUploadDialogOpen(true)} 
-                  className="flex items-center"
+                  className="flex items-center gap-2 order-1 sm:order-2"
                 >
-                  <Upload className="mr-2 h-4 w-4" />
-                  Upload
+                  <Upload className="h-4 w-4" />
+                  Upload Document
                 </Button>
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                <div className="md:col-span-1">
-                  <CategoryList 
-                    categories={importantDocumentCategories as DocumentCategory[]} 
-                    activeCategory={activeCategory} 
-                    onCategorySelect={setActiveCategory} 
-                  />
+              {/* Documents Grid */}
+              <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
+                {/* Categories Sidebar */}
+                <div className="xl:col-span-1 order-2 xl:order-1">
+                  <Card className="sticky top-4">
+                    <CardHeader className="pb-3">
+                      <CardTitle className="text-lg">Categories</CardTitle>
+                    </CardHeader>
+                    <CardContent className="pt-0">
+                      <CategoryList 
+                        categories={importantDocumentCategories as DocumentCategory[]} 
+                        activeCategory={activeCategory} 
+                        onCategorySelect={setActiveCategory} 
+                      />
+                    </CardContent>
+                  </Card>
                 </div>
                 
-                <div className="md:col-span-3">
-                  {isLoading ? (
-                    <div className="flex justify-center items-center h-64">
-                      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
-                    </div>
-                  ) : filteredDocuments.length > 0 ? (
-                    <DocumentsTable 
-                      documents={filteredDocuments}
-                      onEditDocument={handleEditDocument}
-                      onShareDocument={handleShareDocument}
-                      onDeleteDocument={handleDeleteDialog}
-                    />
-                  ) : (
-                    activeCategory === "all" ? (
-                      <NoCategorySelectedState />
-                    ) : (
-                      <NoDocumentsState 
-                        onUploadClick={() => setIsUploadDialogOpen(true)}
-                        categoryName={documentCategories.find(cat => cat.id === activeCategory)?.name || activeCategory}
-                      />
-                    )
-                  )}
+                {/* Documents Table */}
+                <div className="xl:col-span-3 order-1 xl:order-2">
+                  <Card>
+                    <CardContent className="p-0">
+                      {isLoading ? (
+                        <div className="flex justify-center items-center h-64">
+                          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+                        </div>
+                      ) : filteredDocuments.length > 0 ? (
+                        <div className="overflow-x-auto">
+                          <DocumentsTable 
+                            documents={filteredDocuments}
+                            onEditDocument={handleEditDocument}
+                            onShareDocument={handleShareDocument}
+                            onDeleteDocument={handleDeleteDialog}
+                          />
+                        </div>
+                      ) : (
+                        <div className="p-6">
+                          {activeCategory === "all" ? (
+                            <NoCategorySelectedState />
+                          ) : (
+                            <NoDocumentsState 
+                              onUploadClick={() => setIsUploadDialogOpen(true)}
+                              categoryName={documentCategories.find(cat => cat.id === activeCategory)?.name || activeCategory}
+                            />
+                          )}
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
                 </div>
               </div>
             </TabsContent>
             
-            <TabsContent value="legacy-box">
+            {/* Legacy Box Tab */}
+            <TabsContent value="legacy-box" className="space-y-6">
               <FamilyLegacyBox />
             </TabsContent>
 
-            <TabsContent value="healthcare">
+            {/* Healthcare Tab */}
+            <TabsContent value="healthcare" className="space-y-6">
               <HealthcareFolder 
                 documents={documents} 
                 onAddDocument={handleAddDocument}
@@ -281,6 +309,7 @@ export default function ClientLegacyVault() {
           </Tabs>
         </div>
         
+        {/* Dialogs */}
         <UploadDocumentDialog 
           open={isUploadDialogOpen}
           onOpenChange={setIsUploadDialogOpen}
