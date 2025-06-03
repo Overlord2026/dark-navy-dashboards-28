@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { AddFamilyMemberDialog } from "@/components/family/AddFamilyMemberDialog";
 import { FamilyMembersList } from "@/components/family/FamilyMembersList";
-import { EmailJSSetup } from "@/components/family/EmailJSSetup";
 
 export default function ClientFamily() {
   const [activeTab, setActiveTab] = useState("members");
@@ -30,8 +29,6 @@ export default function ClientFamily() {
             </Button>
           </AddFamilyMemberDialog>
         </div>
-
-        <EmailJSSetup />
 
         <Tabs defaultValue="members" onValueChange={setActiveTab} className="w-full">
           <TabsList className="mb-4">

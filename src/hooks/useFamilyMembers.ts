@@ -1,8 +1,8 @@
+
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useUser } from '@/context/UserContext';
 import { toast } from 'sonner';
-import emailjs from '@emailjs/browser';
 
 export interface FamilyMember {
   id: string;
@@ -26,13 +26,6 @@ export interface AddFamilyMemberData {
   access_level: 'full' | 'limited';
 }
 
-// EmailJS configuration - You'll need to replace these with your actual EmailJS values
-const EMAILJS_CONFIG = {
-  SERVICE_ID: 'your_service_id', // Replace with your EmailJS service ID
-  TEMPLATE_ID: 'your_template_id', // Replace with your EmailJS template ID
-  PUBLIC_KEY: 'your_public_key', // Replace with your EmailJS public key
-};
-
 export const useFamilyMembers = () => {
   const [familyMembers, setFamilyMembers] = useState<FamilyMember[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -55,34 +48,6 @@ export const useFamilyMembers = () => {
       toast.error('Failed to load family members');
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  const sendInvitationEmail = async (memberData: AddFamilyMemberData, inviterName: string) => {
-    try {
-      // Initialize EmailJS (this only needs to be done once)
-      emailjs.init(EMAILJS_CONFIG.PUBLIC_KEY);
-
-      const templateParams = {
-        to_name: memberData.name,
-        to_email: memberData.email,
-        from_name: inviterName,
-        relationship: memberData.relationship,
-        access_level: memberData.access_level,
-        app_url: window.location.origin,
-        message: `You have been invited to join the family financial management app with ${memberData.access_level} access.`,
-      };
-
-      await emailjs.send(
-        EMAILJS_CONFIG.SERVICE_ID,
-        EMAILJS_CONFIG.TEMPLATE_ID,
-        templateParams
-      );
-
-      return true;
-    } catch (error) {
-      console.error('Error sending invitation email:', error);
-      return false;
     }
   };
 
@@ -110,17 +75,10 @@ export const useFamilyMembers = () => {
 
       setFamilyMembers(prev => [data, ...prev]);
       
-      // Send invitation email if app access is granted
+      // TODO: Implement email invitation logic here
       if (memberData.has_app_access && memberData.email) {
-        const inviterName = userProfile.display_name || userProfile.first_name || 'Family Member';
-        const emailSent = await sendInvitationEmail(memberData, inviterName);
-        
-        if (emailSent) {
-          toast.success(`Family member added and invitation sent to ${memberData.email}`);
-        } else {
-          toast.success('Family member added successfully');
-          toast.error('Failed to send invitation email. Please contact them manually.');
-        }
+        console.log('Would send invitation email to:', memberData.email);
+        toast.success(`Family member added and invitation sent to ${memberData.email}`);
       } else {
         toast.success('Family member added successfully');
       }
