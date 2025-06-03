@@ -3,11 +3,11 @@ import React from "react";
 
 export const FinancialPlansHeader = () => {
   return (
-    <section className="flex flex-col space-y-2">
-      <h1 className="text-2xl font-semibold">Financial Plans</h1>
-      <p className="text-muted-foreground text-sm">
-        Identify your goals and create a plan to achieve them.
+    <div className="space-y-2">
+      <h1 className="text-2xl sm:text-3xl font-semibold text-foreground">Financial Plans</h1>
+      <p className="text-sm sm:text-base text-muted-foreground max-w-3xl">
+        Create and manage comprehensive financial plans to track your goals, assets, and retirement projections.
       </p>
-    </section>
+    </div>
   );
 };
