@@ -6,6 +6,8 @@ import { Badge } from "@/components/ui/badge";
 import { Users, UserPlus, Settings, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { AddFamilyMemberDialog } from "@/components/family/AddFamilyMemberDialog";
+import { FamilyMembersList } from "@/components/family/FamilyMembersList";
 
 export default function ClientFamily() {
   const [activeTab, setActiveTab] = useState("members");
@@ -20,10 +22,12 @@ export default function ClientFamily() {
               Manage your family members and their access to your financial information
             </p>
           </div>
-          <Button>
-            <UserPlus className="mr-2 h-4 w-4" />
-            Add Family Member
-          </Button>
+          <AddFamilyMemberDialog>
+            <Button>
+              <UserPlus className="mr-2 h-4 w-4" />
+              Add Family Member
+            </Button>
+          </AddFamilyMemberDialog>
         </div>
 
         <Tabs defaultValue="members" onValueChange={setActiveTab} className="w-full">
@@ -50,28 +54,8 @@ export default function ClientFamily() {
           </TabsList>
           
           <TabsContent value="members">
-            <div className="grid gap-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Family Members Overview</CardTitle>
-                  <CardDescription>
-                    Manage family members who have access to your financial information
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-center py-8">
-                    <Users className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-                    <h3 className="text-lg font-semibold mb-2">No Family Members Added</h3>
-                    <p className="text-muted-foreground mb-4">
-                      Start by adding family members who should have access to your financial information.
-                    </p>
-                    <Button>
-                      <UserPlus className="mr-2 h-4 w-4" />
-                      Add First Family Member
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
+            <div className="space-y-6">
+              <FamilyMembersList />
             </div>
           </TabsContent>
           
@@ -87,9 +71,9 @@ export default function ClientFamily() {
                 <CardContent>
                   <div className="text-center py-8">
                     <Shield className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-                    <h3 className="text-lg font-semibold mb-2">No Permissions Set</h3>
+                    <h3 className="text-lg font-semibold mb-2">Advanced Permissions</h3>
                     <p className="text-muted-foreground">
-                      Add family members first to configure their access permissions.
+                      Detailed permission management for family members will be available soon.
                     </p>
                   </div>
                 </CardContent>

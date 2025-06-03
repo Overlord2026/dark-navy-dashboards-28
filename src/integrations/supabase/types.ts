@@ -181,6 +181,48 @@ export type Database = {
           },
         ]
       }
+      family_members: {
+        Row: {
+          access_level: string | null
+          created_at: string
+          email: string | null
+          has_app_access: boolean
+          id: string
+          invitation_sent_at: string | null
+          invited_user_id: string | null
+          name: string
+          relationship: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          access_level?: string | null
+          created_at?: string
+          email?: string | null
+          has_app_access?: boolean
+          id?: string
+          invitation_sent_at?: string | null
+          invited_user_id?: string | null
+          name: string
+          relationship: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          access_level?: string | null
+          created_at?: string
+          email?: string | null
+          has_app_access?: boolean
+          id?: string
+          invitation_sent_at?: string | null
+          invited_user_id?: string | null
+          name?: string
+          relationship?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       investment_categories: {
         Row: {
           created_at: string | null
