@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
@@ -30,7 +31,7 @@ import {
   RefreshCw
 } from "lucide-react";
 import { toast } from "sonner";
-import { SecureTaxReturnAnalysis } from "@/components/estate-planning/SecureTaxReturnAnalysis";
+// import { SecureTaxReturnAnalysis } from "@/components/estate-planning/SecureTaxReturnAnalysis";
 
 export default function EstatePlanning() {
   const [showInterestDialog, setShowInterestDialog] = useState(false);
@@ -263,10 +264,10 @@ export default function EstatePlanning() {
           </TabsList>
 
           <TabsContent value="services" className="space-y-6">
-            {/* Secure Tax Return Analysis */}
-            <div className="mb-8">
+            {/* Secure Tax Return Analysis - COMMENTED OUT */}
+            {/* <div className="mb-8">
               <SecureTaxReturnAnalysis />
-            </div>
+            </div> */}
             
             {/* Services Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
