@@ -10,7 +10,7 @@ const Properties = () => {
 
   return (
     <ThreeColumnLayout title="Property Management" activeMainItem="family-wealth">
-      <div className="w-full max-w-7xl mx-auto mt-8">
+      <div className="w-full max-w-7xl mx-auto mt-2">
         <PropertyManager initialFilter={filter} />
       </div>
     </ThreeColumnLayout>
