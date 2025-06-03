@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
@@ -343,8 +342,8 @@ export default function EstatePlanning() {
                     <div key={step.step} className="relative">
                       {/* Desktop Layout */}
                       <div className="hidden lg:flex items-center">
-                        {/* Left side content (odd steps) */}
-                        {index % 2 === 0 && (
+                        {/* Left side content (odd indexes: 0, 2, 4) */}
+                        {index % 2 === 0 ? (
                           <div className="w-1/2 pr-8 text-right">
                             <Card className="ml-auto max-w-md hover:shadow-lg transition-shadow">
                               <CardContent className="p-6">
@@ -361,6 +360,8 @@ export default function EstatePlanning() {
                               </CardContent>
                             </Card>
                           </div>
+                        ) : (
+                          <div className="w-1/2 pl-8"></div>
                         )}
 
                         {/* Center timeline node */}
@@ -370,8 +371,8 @@ export default function EstatePlanning() {
                           </div>
                         </div>
 
-                        {/* Right side content (even steps) */}
-                        {index % 2 === 1 && (
+                        {/* Right side content (even indexes: 1, 3, 5) */}
+                        {index % 2 === 1 ? (
                           <div className="w-1/2 pl-8">
                             <Card className="mr-auto max-w-md hover:shadow-lg transition-shadow">
                               <CardContent className="p-6">
@@ -388,11 +389,9 @@ export default function EstatePlanning() {
                               </CardContent>
                             </Card>
                           </div>
+                        ) : (
+                          <div className="w-1/2 pr-8"></div>
                         )}
-
-                        {/* Empty space for alternating layout */}
-                        {index % 2 === 0 && <div className="w-1/2 pl-8"></div>}
-                        {index % 2 === 1 && <div className="w-1/2 pr-8"></div>}
                       </div>
 
                       {/* Mobile Layout */}
