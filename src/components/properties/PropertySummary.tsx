@@ -1,171 +1,137 @@
 
 import React from "react";
-import { Property } from "@/types/property";
 import { Card, CardContent } from "@/components/ui/card";
-import { useTheme } from "@/context/ThemeContext";
-import { 
-  Home,
-  Building, 
-  DollarSign, 
-  TrendingUp,
-  ArrowUpRight,
-  Umbrella,
-  Briefcase
-} from "lucide-react";
+import { Property } from "@/types/property";
+import { Building, DollarSign, ArrowUp, Home } from "lucide-react";
 
 interface PropertySummaryProps {
   properties: Property[];
 }
 
 export const PropertySummary: React.FC<PropertySummaryProps> = ({ properties }) => {
-  const { theme } = useTheme();
-  const isLightTheme = theme === "light";
-
-  if (properties.length === 0) {
-    return null;
-  }
-
-  const formatCurrency = (amount: number) => {
+  const formatCurrency = (amount: number): string => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',
       maximumFractionDigits: 0
     }).format(amount);
   };
-  
-  const getTotalValue = () => {
+
+  const getTotalValue = (): number => {
     return properties.reduce((total, property) => total + property.currentValue, 0);
   };
-  
-  const getTotalInvestment = () => {
-    return properties.reduce((total, property) => {
-      const improvements = property.improvements.reduce((sum, imp) => sum + imp.cost, 0);
-      return total + property.originalCost + improvements;
-    }, 0);
+
+  const getOriginalCost = (): number => {
+    return properties.reduce((total, property) => total + property.originalCost, 0);
   };
-  
-  const getTotalAppreciation = () => {
-    return getTotalValue() - getTotalInvestment();
+
+  const getTotalAppreciation = (): number => {
+    const totalValue = getTotalValue();
+    const originalCost = getOriginalCost();
+    return originalCost > 0 ? ((totalValue - originalCost) / originalCost) * 100 : 0;
   };
-  
-  const getAppreciationPercentage = () => {
-    const investment = getTotalInvestment();
-    if (investment === 0) return 0;
-    return (getTotalAppreciation() / investment) * 100;
-  };
-  
-  const getMonthlyRentalIncome = () => {
-    return properties
-      .filter(property => property.type === "rental" && property.rental)
-      .reduce((total, property) => total + (property.rental?.monthlyIncome || 0), 0);
-  };
-  
-  const getMonthlyRentalExpenses = () => {
-    return properties
-      .filter(property => property.type === "rental" && property.rental)
-      .reduce((total, property) => total + (property.rental?.monthlyExpenses || 0), 0);
-  };
-  
-  const getNetRentalIncome = () => {
-    return getMonthlyRentalIncome() - getMonthlyRentalExpenses();
-  };
-  
-  const countPropertiesByType = (type: Property["type"]) => {
+
+  const getPropertyCount = (type: string): number => {
     return properties.filter(property => property.type === type).length;
   };
 
+  const getRentalIncome = (): number => {
+    return properties
+      .filter(property => property.rental)
+      .reduce((total, property) => total + (property.rental?.monthlyIncome || 0), 0);
+  };
+
   return (
-    <div className="w-full">
-      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-4">
-        <Card className="bg-gray-900 border-gray-800 shadow-inner shadow-blue-900/20">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-blue-300">Portfolio Value</p>
-                <p className="text-2xl font-bold">{formatCurrency(getTotalValue())}</p>
-                <div className="flex items-center mt-1 text-xs text-green-500">
-                  <ArrowUpRight className="h-3 w-3 mr-1" />
-                  <span>{formatCurrency(getTotalAppreciation())}</span>
-                  <span className="ml-1">({getAppreciationPercentage().toFixed(1)}%)</span>
-                </div>
-              </div>
-              <div className="h-10 w-10 rounded-full bg-blue-900/30 flex items-center justify-center text-blue-400">
-                <TrendingUp className="h-5 w-5" />
-              </div>
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <Card className="bg-card">
+        <CardContent className="p-4 flex flex-col">
+          <div className="flex justify-between items-start">
+            <div>
+              <p className="text-sm font-medium text-muted-foreground">Total Portfolio Value</p>
+              <h3 className="text-2xl font-bold mt-1">{formatCurrency(getTotalValue())}</h3>
             </div>
-          </CardContent>
-        </Card>
-        
-        <Card className="bg-gray-900 border-gray-800 shadow-inner shadow-purple-900/20">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-purple-300">Monthly Rental Income</p>
-                <p className="text-2xl font-bold">{formatCurrency(getNetRentalIncome())}</p>
-                <div className="flex items-center mt-1 text-xs">
-                  <span className="text-gray-400">
-                    Income: {formatCurrency(getMonthlyRentalIncome())}
-                  </span>
-                </div>
-              </div>
-              <div className="h-10 w-10 rounded-full bg-purple-900/30 flex items-center justify-center text-purple-400">
-                <DollarSign className="h-5 w-5" />
-              </div>
+            <div className="p-2 rounded-md bg-primary/10">
+              <Building className="h-5 w-5 text-primary" />
             </div>
-          </CardContent>
-        </Card>
-        
-        <Card className="bg-gray-900 border-gray-800 shadow-inner shadow-teal-900/20">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-teal-300">Properties</p>
-                <p className="text-2xl font-bold">{properties.length}</p>
-                <div className="flex items-center mt-1 text-xs text-gray-400 space-x-2">
-                  <div className="flex items-center">
-                    <Home className="h-3 w-3 mr-1 text-blue-400" />
-                    <span>{countPropertiesByType("primary")}</span>
-                  </div>
-                  <div className="flex items-center">
-                    <Umbrella className="h-3 w-3 mr-1 text-teal-400" />
-                    <span>{countPropertiesByType("vacation")}</span>
-                  </div>
-                  <div className="flex items-center">
-                    <Building className="h-3 w-3 mr-1 text-purple-400" />
-                    <span>{countPropertiesByType("rental")}</span>
-                  </div>
-                  <div className="flex items-center">
-                    <Briefcase className="h-3 w-3 mr-1 text-amber-400" />
-                    <span>{countPropertiesByType("business")}</span>
-                  </div>
-                </div>
-              </div>
-              <div className="h-10 w-10 rounded-full bg-teal-900/30 flex items-center justify-center text-teal-400">
-                <Building className="h-5 w-5" />
-              </div>
+          </div>
+          <div className="mt-4 flex items-center gap-1 text-sm">
+            <ArrowUp className={`h-4 w-4 ${getTotalAppreciation() >= 0 ? 'text-green-500' : 'text-red-500 rotate-180'}`} />
+            <span className={getTotalAppreciation() >= 0 ? 'text-green-500' : 'text-red-500'}>
+              {Math.abs(getTotalAppreciation()).toFixed(2)}%
+            </span>
+            <span className="text-muted-foreground ml-1">from original cost</span>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card className="bg-card">
+        <CardContent className="p-4 flex flex-col">
+          <div className="flex justify-between items-start">
+            <div>
+              <p className="text-sm font-medium text-muted-foreground">Monthly Rental Income</p>
+              <h3 className="text-2xl font-bold mt-1">{formatCurrency(getRentalIncome())}</h3>
             </div>
-          </CardContent>
-        </Card>
-        
-        <Card className="bg-gray-900 border-gray-800 shadow-inner shadow-amber-900/20">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-amber-300">Total Investment</p>
-                <p className="text-2xl font-bold">{formatCurrency(getTotalInvestment())}</p>
-                <div className="flex items-center mt-1 text-xs text-gray-400">
-                  <span>
-                    Across {properties.length} properties
-                  </span>
-                </div>
-              </div>
-              <div className="h-10 w-10 rounded-full bg-amber-900/30 flex items-center justify-center text-amber-400">
-                <Briefcase className="h-5 w-5" />
-              </div>
+            <div className="p-2 rounded-md bg-green-500/10">
+              <DollarSign className="h-5 w-5 text-green-500" />
             </div>
-          </CardContent>
-        </Card>
-      </div>
+          </div>
+          <div className="mt-4 flex items-center gap-1 text-sm">
+            <span className="text-muted-foreground">From</span>
+            <span className="font-medium">{getPropertyCount('rental')}</span>
+            <span className="text-muted-foreground">rental properties</span>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card className="bg-card">
+        <CardContent className="p-4 flex flex-col">
+          <div className="flex justify-between items-start">
+            <div>
+              <p className="text-sm font-medium text-muted-foreground">Properties</p>
+              <h3 className="text-2xl font-bold mt-1">{properties.length}</h3>
+            </div>
+            <div className="p-2 rounded-md bg-blue-500/10">
+              <Home className="h-5 w-5 text-blue-500" />
+            </div>
+          </div>
+          <div className="mt-4 grid grid-cols-2 gap-2 text-sm">
+            <div>
+              <span className="text-muted-foreground">Primary: </span>
+              <span className="font-medium">{getPropertyCount('primary')}</span>
+            </div>
+            <div>
+              <span className="text-muted-foreground">Vacation: </span>
+              <span className="font-medium">{getPropertyCount('vacation')}</span>
+            </div>
+            <div>
+              <span className="text-muted-foreground">Rental: </span>
+              <span className="font-medium">{getPropertyCount('rental')}</span>
+            </div>
+            <div>
+              <span className="text-muted-foreground">Business: </span>
+              <span className="font-medium">{getPropertyCount('business')}</span>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card className="bg-card">
+        <CardContent className="p-4 flex flex-col">
+          <div className="flex justify-between items-start">
+            <div>
+              <p className="text-sm font-medium text-muted-foreground">Appreciation</p>
+              <h3 className="text-2xl font-bold mt-1">{formatCurrency(getTotalValue() - getOriginalCost())}</h3>
+            </div>
+            <div className="p-2 rounded-md bg-yellow-500/10">
+              <ArrowUp className="h-5 w-5 text-yellow-500" />
+            </div>
+          </div>
+          <div className="mt-4 flex items-center gap-1 text-sm">
+            <span className="text-muted-foreground">Original cost:</span>
+            <span className="font-medium">{formatCurrency(getOriginalCost())}</span>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };

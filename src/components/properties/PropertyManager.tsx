@@ -2,10 +2,9 @@ import React, { useState, useEffect } from "react";
 import { PropertyList } from "./PropertyList";
 import { PropertyForm } from "./PropertyForm";
 import { PropertySummary } from "./PropertySummary";
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { PropertyManagerHeader } from "./PropertyManagerHeader";
 import { Property, PropertyValuation } from "@/types/property";
-import { useToast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 import { useNetWorth } from "@/context/NetWorthContext";
 import {
   Dialog,
@@ -19,7 +18,6 @@ interface PropertyManagerProps {
 }
 
 export const PropertyManager: React.FC<PropertyManagerProps> = ({ initialFilter = null }) => {
-  const { toast } = useToast();
   const { syncPropertiesToAssets } = useNetWorth();
   const [showForm, setShowForm] = useState(false);
   const [editingProperty, setEditingProperty] = useState<Property | null>(null);
@@ -131,7 +129,7 @@ export const PropertyManager: React.FC<PropertyManagerProps> = ({ initialFilter 
       }
     }
   ]);
-
+  
   useEffect(() => {
     if (initialFilter) {
       setActiveFilter(initialFilter);
@@ -238,18 +236,18 @@ export const PropertyManager: React.FC<PropertyManagerProps> = ({ initialFilter 
     }
   };
 
+  const handleAddPropertyClick = () => {
+    setEditingProperty(null);
+    setNewPropertyData({});
+    setShowForm(true);
+  };
+
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">{getFilterTitle()}</h1>
-        <Button onClick={() => {
-          setEditingProperty(null);
-          setNewPropertyData({});
-          setShowForm(true);
-        }} className="bg-yellow-500 hover:bg-yellow-600 text-black">
-          <Plus className="mr-2 h-4 w-4" /> Add Property
-        </Button>
-      </div>
+    <div className="space-y-6 max-w-full px-2 sm:px-4 md:px-6">
+      <PropertyManagerHeader 
+        filterTitle={getFilterTitle()} 
+        onAddProperty={handleAddPropertyClick} 
+      />
 
       <PropertySummary properties={filteredProperties} />
 
@@ -261,7 +259,7 @@ export const PropertyManager: React.FC<PropertyManagerProps> = ({ initialFilter 
       />
 
       <Dialog open={showForm} onOpenChange={setShowForm}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto p-4 md:p-6">
           <DialogHeader>
             <DialogTitle>
               {editingProperty ? "Edit Property" : "Add New Property"}
