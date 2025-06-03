@@ -1,3 +1,4 @@
+
 import {
   Home,
   CreditCard,
@@ -249,7 +250,7 @@ export const navigationCategories: NavCategory[] = [
         items: []
       },
       {
-        title: "Professionals",
+        title: "Service Professionals",
         href: "/client-professionals", 
         icon: Users,
         items: []

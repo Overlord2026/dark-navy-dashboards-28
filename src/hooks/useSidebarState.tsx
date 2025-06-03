@@ -109,8 +109,19 @@ export const useSidebarState = (navigationCategories: NavCategory[]) => {
     const normalizedHref = normalizePath(href);
     const normalizedPathname = normalizePath(location.pathname);
     
-    return normalizedPathname === normalizedHref || 
-           (normalizedHref !== "/" && normalizedPathname.startsWith(normalizedHref));
+    console.log("Checking isActive - href:", normalizedHref, "pathname:", normalizedPathname);
+    
+    // Exact match takes priority
+    if (normalizedPathname === normalizedHref) {
+      return true;
+    }
+    
+    // Prefix matching for sub-routes, but avoid false positives
+    if (normalizedHref !== "/" && normalizedPathname.startsWith(normalizedHref + "/")) {
+      return true;
+    }
+    
+    return false;
   };
 
   return {

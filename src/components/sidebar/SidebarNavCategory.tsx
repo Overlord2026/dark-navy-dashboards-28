@@ -1,3 +1,4 @@
+
 import React from "react";
 import { cn } from "@/lib/utils";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -40,7 +41,7 @@ const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
     const isItemActive = isActive(normalizedHref);
     
     // Debug log to see what items we're rendering
-    console.log("Rendering nav item:", item.title, "comingSoon:", item.comingSoon);
+    console.log("Rendering nav item:", item.title, "href:", normalizedHref, "isActive:", isItemActive, "comingSoon:", item.comingSoon);
     
     // If coming soon, render as non-clickable
     if (item.comingSoon) {
