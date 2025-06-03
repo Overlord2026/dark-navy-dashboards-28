@@ -22,7 +22,7 @@ export default function Professionals() {
   const [activeTab, setActiveTab] = useState("professionals");
 
   return (
-    <ThreeColumnLayout activeMainItem="professionals" title="Service Professionals">
+    <ThreeColumnLayout activeMainItem="client-professionals" title="Service Professionals">
       <ProfessionalsProvider>
         <div className="space-y-6 animate-fade-in">
           <ProfessionalsHeader onAddProfessional={() => setIsAddDialogOpen(true)} />
