@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
@@ -21,7 +22,13 @@ import {
   FileCheck,
   CheckCircle,
   Circle,
-  Calendar
+  Calendar,
+  ArrowRight,
+  MessageSquare,
+  PenTool,
+  FileSignature,
+  Settings,
+  RefreshCw
 } from "lucide-react";
 import { toast } from "sonner";
 import { SecureTaxReturnAnalysis } from "@/components/estate-planning/SecureTaxReturnAnalysis";
@@ -82,6 +89,57 @@ export default function EstatePlanning() {
       title: "Regular Review Services",
       icon: Clock,
       description: "Scheduled reviews of your estate plan to ensure it remains aligned with your goals as laws and circumstances change."
+    }
+  ];
+
+  const processSteps = [
+    {
+      step: 1,
+      title: "Initial Consultation",
+      description: "Meet with our estate planning expert to discuss your goals, concerns, and family situation.",
+      icon: MessageSquare,
+      duration: "1-2 hours",
+      color: "bg-blue-500"
+    },
+    {
+      step: 2,
+      title: "Plan Design",
+      description: "Our team creates a tailored estate plan addressing your specific needs and objectives.",
+      icon: PenTool,
+      duration: "1-2 weeks",
+      color: "bg-purple-500"
+    },
+    {
+      step: 3,
+      title: "Document Preparation",
+      description: "Legal documents are drafted, including wills, trusts, powers of attorney, and healthcare directives.",
+      icon: FileText,
+      duration: "2-3 weeks",
+      color: "bg-green-500"
+    },
+    {
+      step: 4,
+      title: "Review & Execution",
+      description: "Review all documents, make necessary adjustments, and formally execute the estate plan.",
+      icon: FileSignature,
+      duration: "1 week",
+      color: "bg-orange-500"
+    },
+    {
+      step: 5,
+      title: "Implementation & Funding",
+      description: "Transfer assets to trusts and update beneficiary designations as needed.",
+      icon: Settings,
+      duration: "2-4 weeks",
+      color: "bg-red-500"
+    },
+    {
+      step: 6,
+      title: "Ongoing Support",
+      description: "Regular reviews to keep your plan current with life changes and law updates.",
+      icon: RefreshCw,
+      duration: "Annual",
+      color: "bg-indigo-500"
     }
   ];
 
@@ -267,57 +325,119 @@ export default function EstatePlanning() {
           </TabsContent>
 
           <TabsContent value="process" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-xl">Our Estate Planning Process</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-6">
-                  {[
-                    {
-                      step: 1,
-                      title: "Initial Consultation",
-                      description: "Meet with our estate planning expert to discuss your goals, concerns, and family situation."
-                    },
-                    {
-                      step: 2,
-                      title: "Plan Design",
-                      description: "Our team creates a tailored estate plan addressing your specific needs and objectives."
-                    },
-                    {
-                      step: 3,
-                      title: "Document Preparation",
-                      description: "Legal documents are drafted, including wills, trusts, powers of attorney, and healthcare directives."
-                    },
-                    {
-                      step: 4,
-                      title: "Review & Execution",
-                      description: "Review all documents, make necessary adjustments, and formally execute the estate plan."
-                    },
-                    {
-                      step: 5,
-                      title: "Implementation & Funding",
-                      description: "Transfer assets to trusts and update beneficiary designations as needed."
-                    },
-                    {
-                      step: 6,
-                      title: "Ongoing Support",
-                      description: "Regular reviews to keep your plan current with life changes and law updates."
-                    }
-                  ].map((item) => (
-                    <div key={item.step} className="flex gap-4 items-start">
-                      <div className="bg-primary/10 rounded-full p-3 flex-shrink-0 w-12 h-12 flex items-center justify-center">
-                        <span className="font-bold text-primary text-sm">{item.step}</span>
+            <div className="space-y-8">
+              <div className="text-center space-y-4">
+                <h2 className="text-3xl font-bold">Our Estate Planning Process</h2>
+                <p className="text-muted-foreground max-w-2xl mx-auto">
+                  A comprehensive, step-by-step approach to securing your legacy and protecting what matters most
+                </p>
+              </div>
+
+              {/* Timeline Layout */}
+              <div className="relative">
+                {/* Vertical line for desktop */}
+                <div className="hidden lg:block absolute left-1/2 transform -translate-x-1/2 w-0.5 bg-gradient-to-b from-primary/20 via-primary/60 to-primary/20 h-full"></div>
+                
+                <div className="space-y-8">
+                  {processSteps.map((step, index) => (
+                    <div key={step.step} className="relative">
+                      {/* Desktop Layout */}
+                      <div className="hidden lg:flex items-center">
+                        {/* Left side content (odd steps) */}
+                        {index % 2 === 0 && (
+                          <div className="w-1/2 pr-8 text-right">
+                            <Card className="ml-auto max-w-md hover:shadow-lg transition-shadow">
+                              <CardContent className="p-6">
+                                <div className="flex items-center justify-end gap-3 mb-3">
+                                  <div>
+                                    <h3 className="font-semibold text-lg">{step.title}</h3>
+                                    <p className="text-sm text-muted-foreground">{step.duration}</p>
+                                  </div>
+                                  <div className={`p-3 rounded-full ${step.color} text-white`}>
+                                    <step.icon className="h-5 w-5" />
+                                  </div>
+                                </div>
+                                <p className="text-sm text-muted-foreground leading-relaxed">{step.description}</p>
+                              </CardContent>
+                            </Card>
+                          </div>
+                        )}
+
+                        {/* Center timeline node */}
+                        <div className="relative z-10 flex items-center justify-center">
+                          <div className={`w-12 h-12 rounded-full ${step.color} text-white flex items-center justify-center font-bold shadow-lg`}>
+                            {step.step}
+                          </div>
+                        </div>
+
+                        {/* Right side content (even steps) */}
+                        {index % 2 === 1 && (
+                          <div className="w-1/2 pl-8">
+                            <Card className="mr-auto max-w-md hover:shadow-lg transition-shadow">
+                              <CardContent className="p-6">
+                                <div className="flex items-center gap-3 mb-3">
+                                  <div className={`p-3 rounded-full ${step.color} text-white`}>
+                                    <step.icon className="h-5 w-5" />
+                                  </div>
+                                  <div>
+                                    <h3 className="font-semibold text-lg">{step.title}</h3>
+                                    <p className="text-sm text-muted-foreground">{step.duration}</p>
+                                  </div>
+                                </div>
+                                <p className="text-sm text-muted-foreground leading-relaxed">{step.description}</p>
+                              </CardContent>
+                            </Card>
+                          </div>
+                        )}
+
+                        {/* Empty space for alternating layout */}
+                        {index % 2 === 0 && <div className="w-1/2 pl-8"></div>}
+                        {index % 2 === 1 && <div className="w-1/2 pr-8"></div>}
                       </div>
-                      <div className="flex-1 min-w-0">
-                        <h4 className="font-semibold text-base mb-1">{item.title}</h4>
-                        <p className="text-sm text-muted-foreground leading-relaxed">{item.description}</p>
+
+                      {/* Mobile Layout */}
+                      <div className="lg:hidden">
+                        <Card className="hover:shadow-lg transition-shadow">
+                          <CardContent className="p-6">
+                            <div className="flex items-start gap-4">
+                              <div className={`p-3 rounded-full ${step.color} text-white flex-shrink-0`}>
+                                <step.icon className="h-5 w-5" />
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center gap-2 mb-2">
+                                  <span className={`w-6 h-6 rounded-full ${step.color} text-white text-xs flex items-center justify-center font-bold`}>
+                                    {step.step}
+                                  </span>
+                                  <h3 className="font-semibold text-lg">{step.title}</h3>
+                                </div>
+                                <p className="text-sm text-muted-foreground mb-2">{step.duration}</p>
+                                <p className="text-sm text-muted-foreground leading-relaxed">{step.description}</p>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
                       </div>
                     </div>
                   ))}
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+
+              {/* Call to Action */}
+              <div className="text-center pt-8">
+                <Card className="max-w-2xl mx-auto">
+                  <CardContent className="p-8">
+                    <h3 className="text-xl font-semibold mb-4">Ready to Start Your Estate Planning Journey?</h3>
+                    <p className="text-muted-foreground mb-6">
+                      Our experienced team is here to guide you through every step of the process
+                    </p>
+                    <Button onClick={() => setShowAdvisorDialog(true)} size="lg">
+                      <Calendar className="mr-2 h-5 w-5" />
+                      Schedule Your Consultation
+                    </Button>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
           </TabsContent>
 
           <TabsContent value="resources" className="space-y-6">
