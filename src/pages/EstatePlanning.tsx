@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
@@ -95,8 +94,8 @@ export default function EstatePlanning() {
   return (
     <ThreeColumnLayout activeMainItem="estate-planning" title="Estate Planning Services">
       <div className="space-y-8">
-        <div className="text-center">
-          <p className="text-lg text-muted-foreground">
+        <div className="text-left">
+          <p className="text-base text-muted-foreground">
             Secure your legacy and protect what matters most with our comprehensive estate planning solutions
           </p>
         </div>
