@@ -1,4 +1,5 @@
 
+
 import { useState, useEffect } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { CategoryList } from "@/components/documents/CategoryList";
@@ -192,8 +193,7 @@ export default function ClientLegacyVault() {
 
             <Button
               onClick={() => window.open('https://trustandwill.com', '_blank')}
-              variant="outline"
-              className="flex items-center gap-2 bg-blue-50 border-blue-600 text-blue-700 hover:bg-blue-100 hover:text-blue-800 hover:border-blue-700 transition-colors shrink-0 font-medium shadow-sm"
+              className="flex items-center gap-2 bg-blue-600 text-white border-blue-600 hover:bg-blue-700 hover:border-blue-700 transition-colors shrink-0 font-medium shadow-lg"
             >
               <ExternalLink className="h-4 w-4" />
               <span className="hidden sm:inline">DIY with Trust & Will</span>
@@ -348,3 +348,4 @@ export default function ClientLegacyVault() {
     </ThreeColumnLayout>
   );
 }
+
