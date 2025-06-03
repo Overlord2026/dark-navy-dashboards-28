@@ -518,6 +518,209 @@ export type Database = {
         }
         Relationships: []
       }
+      properties: {
+        Row: {
+          address: string
+          created_at: string
+          current_value: number
+          id: string
+          name: string
+          notes: string | null
+          original_cost: number
+          owner: string
+          ownership: string
+          purchase_date: string
+          type: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          address: string
+          created_at?: string
+          current_value?: number
+          id?: string
+          name: string
+          notes?: string | null
+          original_cost?: number
+          owner: string
+          ownership: string
+          purchase_date: string
+          type: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          address?: string
+          created_at?: string
+          current_value?: number
+          id?: string
+          name?: string
+          notes?: string | null
+          original_cost?: number
+          owner?: string
+          ownership?: string
+          purchase_date?: string
+          type?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      property_business_details: {
+        Row: {
+          annual_expenses: number
+          company_name: string
+          created_at: string
+          id: string
+          property_id: string
+          updated_at: string
+          usage_type: string
+        }
+        Insert: {
+          annual_expenses?: number
+          company_name: string
+          created_at?: string
+          id?: string
+          property_id: string
+          updated_at?: string
+          usage_type: string
+        }
+        Update: {
+          annual_expenses?: number
+          company_name?: string
+          created_at?: string
+          id?: string
+          property_id?: string
+          updated_at?: string
+          usage_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "property_business_details_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      property_improvements: {
+        Row: {
+          cost: number
+          created_at: string
+          date: string
+          description: string
+          id: string
+          property_id: string
+        }
+        Insert: {
+          cost?: number
+          created_at?: string
+          date: string
+          description: string
+          id?: string
+          property_id: string
+        }
+        Update: {
+          cost?: number
+          created_at?: string
+          date?: string
+          description?: string
+          id?: string
+          property_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "property_improvements_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      property_rental_details: {
+        Row: {
+          created_at: string
+          id: string
+          lease_end: string | null
+          monthly_expenses: number
+          monthly_income: number
+          occupied_since: string | null
+          property_id: string
+          tenant_name: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          lease_end?: string | null
+          monthly_expenses?: number
+          monthly_income?: number
+          occupied_since?: string | null
+          property_id: string
+          tenant_name?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          lease_end?: string | null
+          monthly_expenses?: number
+          monthly_income?: number
+          occupied_since?: string | null
+          property_id?: string
+          tenant_name?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "property_rental_details_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      property_valuations: {
+        Row: {
+          confidence: string | null
+          created_at: string
+          estimated_value: number
+          id: string
+          last_updated: string
+          property_id: string
+          source: string
+        }
+        Insert: {
+          confidence?: string | null
+          created_at?: string
+          estimated_value: number
+          id?: string
+          last_updated?: string
+          property_id: string
+          source: string
+        }
+        Update: {
+          confidence?: string | null
+          created_at?: string
+          estimated_value?: number
+          id?: string
+          last_updated?: string
+          property_id?: string
+          source?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "property_valuations_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       shared_documents: {
         Row: {
           created_at: string
