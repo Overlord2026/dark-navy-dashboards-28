@@ -149,7 +149,7 @@ export default function EstatePlanning() {
       <div className="space-y-6 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header Section */}
         <div className="space-y-4">
-          <div className="text-left ml-8">
+          <div className="text-left ml-2">
             <h1 className="text-2xl font-bold text-foreground mb-2">Estate Planning Services</h1>
             <p className="text-sm text-muted-foreground max-w-3xl">
               Secure your legacy and protect what matters most with our comprehensive estate planning solutions
