@@ -36,24 +36,12 @@ import { useFamilyMembers, AddFamilyMemberData } from '@/hooks/useFamilyMembers'
 const formSchema = z.object({
   name: z.string().min(1, 'Name is required'),
   relationship: z.enum(['spouse', 'parent', 'child', 'sibling', 'other']),
-  email: z.string().email('Invalid email').optional().or(z.literal('')),
-  has_app_access: z.boolean().default(false),
-  access_level: z.enum(['full', 'limited']).optional(),
-}).refine(
-  (data) => {
-    if (data.has_app_access && !data.email) {
-      return false;
-    }
-    if (data.has_app_access && !data.access_level) {
-      return false;
-    }
-    return true;
-  },
-  {
-    message: "Email and access level are required when granting app access",
-    path: ["email"],
-  }
-);
+  email: z.string().email('Invalid email').min(1, 'Email is required'),
+  has_app_access: z.boolean().refine((val) => val === true, {
+    message: "App access must be granted",
+  }),
+  access_level: z.enum(['full', 'limited']),
+});
 
 type FormData = z.infer<typeof formSchema>;
 
@@ -72,19 +60,17 @@ export const AddFamilyMemberDialog: React.FC<AddFamilyMemberDialogProps> = ({ ch
       relationship: 'spouse',
       email: '',
       has_app_access: false,
-      access_level: undefined,
+      access_level: 'limited',
     },
   });
-
-  const watchHasAppAccess = form.watch('has_app_access');
 
   const onSubmit = async (data: FormData) => {
     const memberData: AddFamilyMemberData = {
       name: data.name,
       relationship: data.relationship,
-      email: data.email || undefined,
+      email: data.email,
       has_app_access: data.has_app_access,
-      access_level: data.has_app_access ? data.access_level : undefined,
+      access_level: data.access_level,
     };
 
     const success = await addFamilyMember(memberData);
@@ -103,7 +89,7 @@ export const AddFamilyMemberDialog: React.FC<AddFamilyMemberDialogProps> = ({ ch
         <DialogHeader>
           <DialogTitle>Add Family Member</DialogTitle>
           <DialogDescription>
-            Add a family member to your account. You can optionally grant them access to the app.
+            Add a family member to your account. Email and app access are required.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -152,9 +138,7 @@ export const AddFamilyMemberDialog: React.FC<AddFamilyMemberDialogProps> = ({ ch
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>
-                    Email {watchHasAppAccess && '*'}
-                  </FormLabel>
+                  <FormLabel>Email *</FormLabel>
                   <FormControl>
                     <Input 
                       type="email" 
@@ -163,7 +147,7 @@ export const AddFamilyMemberDialog: React.FC<AddFamilyMemberDialogProps> = ({ ch
                     />
                   </FormControl>
                   <FormDescription>
-                    {watchHasAppAccess ? 'Required for app access' : 'Optional'}
+                    Required for account setup and access
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -183,43 +167,42 @@ export const AddFamilyMemberDialog: React.FC<AddFamilyMemberDialogProps> = ({ ch
                   </FormControl>
                   <div className="space-y-1 leading-none">
                     <FormLabel>
-                      Allow login access to this family member
+                      Allow login access to this family member *
                     </FormLabel>
                     <FormDescription>
-                      Grant this family member the ability to log in and access the app
+                      Required: Grant this family member the ability to log in and access the app
                     </FormDescription>
+                    <FormMessage />
                   </div>
                 </FormItem>
               )}
             />
 
-            {watchHasAppAccess && (
-              <FormField
-                control={form.control}
-                name="access_level"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Access Level *</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select access level" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="full">Full Access</SelectItem>
-                        <SelectItem value="limited">Limited Access</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormDescription>
-                      Full Access: Can view and edit family data<br />
-                      Limited Access: Can only view assigned tasks/events/records
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            )}
+            <FormField
+              control={form.control}
+              name="access_level"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Access Level *</FormLabel>
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select access level" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="full">Full Access</SelectItem>
+                      <SelectItem value="limited">Limited Access</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormDescription>
+                    Full Access: Can view and edit family data<br />
+                    Limited Access: Can only view assigned tasks/events/records
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
             <div className="flex justify-end space-x-2 pt-4">
               <Button

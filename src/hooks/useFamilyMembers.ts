@@ -9,9 +9,9 @@ export interface FamilyMember {
   user_id: string;
   name: string;
   relationship: 'spouse' | 'parent' | 'child' | 'sibling' | 'other';
-  email?: string;
+  email: string;
   has_app_access: boolean;
-  access_level?: 'full' | 'limited';
+  access_level: 'full' | 'limited';
   invited_user_id?: string;
   invitation_sent_at?: string;
   created_at: string;
@@ -21,9 +21,9 @@ export interface FamilyMember {
 export interface AddFamilyMemberData {
   name: string;
   relationship: 'spouse' | 'parent' | 'child' | 'sibling' | 'other';
-  email?: string;
+  email: string;
   has_app_access: boolean;
-  access_level?: 'full' | 'limited';
+  access_level: 'full' | 'limited';
 }
 
 export const useFamilyMembers = () => {
@@ -58,12 +58,6 @@ export const useFamilyMembers = () => {
     }
 
     try {
-      // Validate email if app access is granted
-      if (memberData.has_app_access && !memberData.email) {
-        toast.error('Email is required for family members with app access');
-        return false;
-      }
-
       const { data, error } = await supabase
         .from('family_members')
         .insert([{
@@ -72,7 +66,7 @@ export const useFamilyMembers = () => {
           relationship: memberData.relationship,
           email: memberData.email,
           has_app_access: memberData.has_app_access,
-          access_level: memberData.has_app_access ? memberData.access_level : null,
+          access_level: memberData.access_level,
         }])
         .select()
         .single();
