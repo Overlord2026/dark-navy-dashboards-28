@@ -454,49 +454,6 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
                 activeCategory={activeSubcategory}
                 onCategorySelect={setActiveSubcategory}
               />
-              
-              <Card className="mt-6 bg-[#0a1629] border-none shadow-lg">
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-medium text-white">Privacy Options</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="flex items-center space-x-2">
-                    <Switch 
-                      id="encryption-filter" 
-                      checked={showOnlyEncrypted}
-                      onCheckedChange={setShowOnlyEncrypted}
-                    />
-                    <Label htmlFor="encryption-filter" className="flex items-center gap-1">
-                      <Lock className="h-3.5 w-3.5" />
-                      <span>Show only encrypted</span>
-                    </Label>
-                  </div>
-                </CardContent>
-              </Card>
-              
-              {relevantTags.length > 0 && (
-                <Card className="mt-6 bg-[#0a1629] border-none shadow-lg">
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-sm font-medium text-white">Tags</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex flex-wrap gap-2">
-                      {relevantTags.map(tag => (
-                        <Button
-                          key={tag.id}
-                          variant={selectedTags.includes(tag.id) ? "default" : "outline"}
-                          size="sm"
-                          className="flex items-center gap-1"
-                          onClick={() => toggleTag(tag.id)}
-                        >
-                          <Tag className="h-3 w-3" />
-                          <span className="text-xs">{tag.name}</span>
-                        </Button>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
             </div>
             
             <div className="md:col-span-3">
