@@ -1,4 +1,5 @@
 
+
 import { EducationalResources } from "@/types/education";
 
 export const educationalResources: EducationalResources = {
@@ -169,28 +170,61 @@ export const educationalResources: EducationalResources = {
   ],
   "resources": [
     {
-      id: "resource-calculator-retirement",
-      title: "Retirement Planning Calculator",
-      description: "Interactive tool to calculate your retirement needs and plan accordingly.",
+      id: "resource-book-review",
+      title: "Book Review - Read Here",
+      description: "Read the comprehensive review of 'Life Integrated Financial Freedom' on Amazon.",
       isPaid: false,
       level: "All Levels",
-      ghlUrl: "https://ghl.example.com/tools/retirement-calculator"
+      ghlUrl: "https://www.amazon.com/Life-Integrated-Financial-Freedom-Retirement/dp/B0BVSXBBXW"
     },
     {
-      id: "resource-tax-forms",
-      title: "Tax Planning Forms & Templates",
-      description: "Essential forms and templates for effective tax planning and preparation.",
+      id: "resource-client-testimonial",
+      title: "Client Testimonial - Click Here",
+      description: "Hear from our satisfied clients about their experience with our services.",
       isPaid: false,
       level: "All Levels",
-      ghlUrl: "https://ghl.example.com/resources/tax-forms"
+      ghlUrl: "https://planning.bfocfo.com/learning-vault-page"
     },
     {
-      id: "resource-estate-checklist",
-      title: "Estate Planning Checklist",
-      description: "Comprehensive checklist to ensure all estate planning documents are in order.",
+      id: "resource-2025-outlook",
+      title: "2025 Outlook Video - Click Here",
+      description: "Watch our exclusive 2025 market outlook and financial planning insights.",
       isPaid: false,
       level: "All Levels",
-      ghlUrl: "https://ghl.example.com/resources/estate-checklist"
+      ghlUrl: "https://planning.bfocfo.com/2025-exclusive-outlook-page"
+    },
+    {
+      id: "resource-youtube-video-1",
+      title: "YouTube Video 1 - Click Here",
+      description: "Educational video content to enhance your financial knowledge.",
+      isPaid: false,
+      level: "All Levels",
+      ghlUrl: "https://www.youtube.com/watch?v=vHxEScjieWQ"
+    },
+    {
+      id: "resource-fiduciary-duty",
+      title: "Fiduciary Duty Principal - Read Here",
+      description: "Understanding the principles of fiduciary duty in financial planning.",
+      isPaid: false,
+      level: "All Levels",
+      ghlUrl: "https://boutiquefamilyofficecfo.com/fiduciary-duty-principles/"
+    },
+    {
+      id: "resource-fees-portfolio",
+      title: "1% Fees Could Devour 25% of Your Portfolio - Watch Here",
+      description: "Learn how seemingly small fees can have a massive impact on your investment returns.",
+      isPaid: false,
+      level: "All Levels",
+      ghlUrl: "https://www.youtube.com/watch?v=oV9mtiQAZ0Q"
+    },
+    {
+      id: "resource-orange-tail-video",
+      title: "Orange Tail Video - Watch Here",
+      description: "Educational video content about investment strategies and market insights.",
+      isPaid: false,
+      level: "All Levels",
+      ghlUrl: "https://vimeo.com/999395033"
     }
   ]
 };
+
