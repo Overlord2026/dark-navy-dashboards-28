@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Card, CardContent } from "@/components/ui/card";
@@ -13,6 +12,8 @@ import { FinancialPlansHeader } from "@/components/financial-plans/FinancialPlan
 import { FinancialPlansQuickActions } from "@/components/financial-plans/FinancialPlansQuickActions";
 import { useSupabaseFinancialPlans } from "@/hooks/useSupabaseFinancialPlans";
 import { FinancialPlanProvider } from "@/context/FinancialPlanContext";
+import { FinancialGoal } from "@/types/financial-plan";
+import { AddGoalDialog } from "@/components/financial-plans/AddGoalDialog";
 
 const FinancialPlansContent = () => {
   const {
@@ -32,6 +33,7 @@ const FinancialPlansContent = () => {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isManagePlansOpen, setIsManagePlansOpen] = useState(false);
   const [currentDraftData, setCurrentDraftData] = useState<any>(null);
+  const [isAddGoalDialogOpen, setIsAddGoalDialogOpen] = useState(false);
 
   // Derive goals from active plan
   const goals = activePlan?.goals?.map(goal => ({
@@ -120,6 +122,15 @@ const FinancialPlansContent = () => {
     await updateGoal(activePlan.id, financialGoal);
   };
 
+  const handleAddGoal = async (newGoal: FinancialGoal) => {
+    if (!activePlan) {
+      console.warn("No active plan to add goal to.");
+      return;
+    }
+
+    await updateGoal(activePlan.id, newGoal);
+  };
+
   if (loading) {
     return (
       <ThreeColumnLayout activeMainItem="financial-plans" title="Financial Plans">
@@ -197,7 +208,13 @@ const FinancialPlansContent = () => {
                           <h3 className="text-lg font-semibold text-foreground">Goals</h3>
                           <div className="flex items-center gap-2">
                             <span className="text-sm text-muted-foreground">{goals.length} Goals</span>
-                            <Button variant="ghost" size="sm">Add</Button>
+                            <Button 
+                              variant="ghost" 
+                              size="sm"
+                              onClick={() => setIsAddGoalDialogOpen(true)}
+                            >
+                              Add
+                            </Button>
                           </div>
                         </div>
                         <GoalsList 
@@ -303,6 +320,12 @@ const FinancialPlansContent = () => {
             setActivePlan(planId);
             setIsManagePlansOpen(false);
           }}
+        />
+
+        <AddGoalDialog
+          isOpen={isAddGoalDialogOpen}
+          onClose={() => setIsAddGoalDialogOpen(false)}
+          onAddGoal={handleAddGoal}
         />
       </div>
     </ThreeColumnLayout>
