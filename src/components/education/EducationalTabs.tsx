@@ -52,6 +52,10 @@ export const EducationalTabs: React.FC<EducationalTabsProps> = ({
     toast.success("Books list updated");
   };
 
+  const handleWhitepaperAccess = (whitepaper: EducationalResource) => {
+    window.open(whitepaper.ghlUrl, '_blank');
+  };
+
   return (
     <Tabs value={activeSection} onValueChange={handleTabChange} className="w-full mt-6">
       <div className="flex justify-between items-center mb-4">
@@ -106,8 +110,28 @@ export const EducationalTabs: React.FC<EducationalTabsProps> = ({
       </TabsContent>
       
       <TabsContent value="whitepapers" className="py-4">
-        <div className="text-center py-8">
-          <p className="text-muted-foreground">Whitepapers coming soon.</p>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {educationalResources.whitepapers.map(whitepaper => (
+            <div
+              key={whitepaper.id}
+              className="border rounded-lg p-6 hover:shadow-md transition-shadow"
+            >
+              <h3 className="font-semibold text-lg mb-2">{whitepaper.title}</h3>
+              <p className="text-sm text-muted-foreground mb-4">
+                {whitepaper.description}
+              </p>
+              <div className="flex justify-between items-center text-xs text-muted-foreground mt-2 mb-4">
+                <span>{whitepaper.level}</span>
+                <span>PDF Document</span>
+              </div>
+              <button
+                onClick={() => handleWhitepaperAccess(whitepaper)}
+                className="w-full py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
+              >
+                View Whitepaper
+              </button>
+            </div>
+          ))}
         </div>
       </TabsContent>
     </Tabs>
