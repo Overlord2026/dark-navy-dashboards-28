@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback } from 'react';
 import { FinancialPlan, FinancialGoal, FinancialPlansSummary } from '@/types/financial-plan';
 import { getFinancialPlanService } from '@/services/financial-plans/FinancialPlanServiceFactory';
@@ -10,7 +9,7 @@ import { useUser } from '@/context/UserContext';
  * This provides real-time data persistence and user authentication.
  */
 export const useSupabaseFinancialPlans = () => {
-  const { user } = useUser();
+  const { userProfile, isAuthenticated } = useUser();
   const [plans, setPlans] = useState<FinancialPlan[]>([]);
   const [activePlan, setActivePlan] = useState<FinancialPlan | null>(null);
   const [summary, setSummary] = useState<FinancialPlansSummary>({
@@ -26,7 +25,7 @@ export const useSupabaseFinancialPlans = () => {
 
   // Load all plans
   const loadPlans = useCallback(async () => {
-    if (!user) {
+    if (!isAuthenticated || !userProfile) {
       setPlans([]);
       setActivePlan(null);
       setLoading(false);
@@ -54,7 +53,7 @@ export const useSupabaseFinancialPlans = () => {
     } finally {
       setLoading(false);
     }
-  }, [service, user]);
+  }, [service, isAuthenticated, userProfile]);
 
   // Initialize on component mount or when user changes
   useEffect(() => {
@@ -63,7 +62,7 @@ export const useSupabaseFinancialPlans = () => {
 
   // Create a plan
   const createPlan = async (planData: Partial<FinancialPlan>) => {
-    if (!user) {
+    if (!isAuthenticated || !userProfile) {
       toast.error('Please log in to create a financial plan');
       throw new Error('User not authenticated');
     }
@@ -122,7 +121,7 @@ export const useSupabaseFinancialPlans = () => {
 
   // Save a draft
   const saveDraft = async (draftData: any) => {
-    if (!user) {
+    if (!isAuthenticated || !userProfile) {
       toast.error('Please log in to save a draft');
       throw new Error('User not authenticated');
     }

@@ -1,4 +1,3 @@
-
 import { supabase } from "@/lib/supabase";
 import { 
   FinancialPlan, 
@@ -115,7 +114,6 @@ export class SupabaseFinancialPlanService implements FinancialPlanService {
         plan_savings (
           id,
           account_id,
-          amount,
           frequency
         ),
         plan_insurance (
@@ -146,7 +144,7 @@ export class SupabaseFinancialPlanService implements FinancialPlanService {
       .insert({
         user_id: user.id,
         name: planData.name || 'Untitled Plan',
-        status: planData.status || 'draft',
+        status: planData.status?.toLowerCase() || 'draft',
         is_favorite: planData.isFavorite || false,
         success_rate: planData.successRate || 0
       })
@@ -181,7 +179,7 @@ export class SupabaseFinancialPlanService implements FinancialPlanService {
       .from('financial_plans')
       .update({
         name: planData.name,
-        status: planData.status,
+        status: planData.status?.toLowerCase(),
         is_favorite: planData.isFavorite,
         success_rate: planData.successRate
       })
@@ -391,7 +389,7 @@ export class SupabaseFinancialPlanService implements FinancialPlanService {
       ...originalPlan,
       name: `${originalPlan.name} (Copy)`,
       isFavorite: false,
-      status: 'draft'
+      status: 'Draft'
     });
 
     return duplicatedPlan;
@@ -408,7 +406,7 @@ export class SupabaseFinancialPlanService implements FinancialPlanService {
       isActive: dbPlan.status === 'active',
       isFavorite: dbPlan.is_favorite,
       successRate: dbPlan.success_rate || 0,
-      status: dbPlan.status === 'active' ? 'Active' : dbPlan.status === 'archived' ? 'Archived' : 'Draft',
+      status: this.mapStatusFromDatabase(dbPlan.status),
       goals: (dbPlan.financial_goals || []).map(this.mapGoalFromDatabase),
       accounts: (dbPlan.financial_accounts || []).map(this.mapAccountFromDatabase),
       expenses: (dbPlan.plan_expenses || []).map(this.mapExpenseFromDatabase),
@@ -416,6 +414,17 @@ export class SupabaseFinancialPlanService implements FinancialPlanService {
       savings: (dbPlan.plan_savings || []).map(this.mapSavingFromDatabase),
       insurance: (dbPlan.plan_insurance || []).map(this.mapInsuranceFromDatabase)
     };
+  }
+
+  private mapStatusFromDatabase(dbStatus: string): 'Draft' | 'Active' | 'Archived' {
+    switch (dbStatus) {
+      case 'active':
+        return 'Active';
+      case 'archived':
+        return 'Archived';
+      default:
+        return 'Draft';
+    }
   }
 
   private mapGoalFromDatabase(dbGoal: any): FinancialGoal {
