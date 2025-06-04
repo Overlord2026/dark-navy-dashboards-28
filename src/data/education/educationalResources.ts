@@ -1,5 +1,3 @@
-
-
 import { EducationalResources } from "@/types/education";
 
 export const educationalResources: EducationalResources = {
@@ -226,6 +224,14 @@ export const educationalResources: EducationalResources = {
       ghlUrl: "https://vimeo.com/999395033"
     }
   ],
-  "funnel": []
+  "funnel": [
+    {
+      id: "funnel-florida-residency",
+      title: "Moving your money to florida",
+      description: "Learn about the benefits and process of establishing Florida residency for your financial planning.",
+      isPaid: false,
+      level: "All Levels",
+      ghlUrl: "https://planning.bfocfo.com/florida-residency"
+    }
+  ]
 };
-
