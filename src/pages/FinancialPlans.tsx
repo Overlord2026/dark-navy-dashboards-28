@@ -141,7 +141,7 @@ const FinancialPlansContent = () => {
           <div className="space-y-6">
             <FinancialPlansHeader />
             
-            {/* Create Plan Button */}
+            {/* Create Plan Button - aligned to the left */}
             <div className="flex justify-start">
               <Button 
                 onClick={onCreatePlan}
