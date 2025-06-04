@@ -429,10 +429,6 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
             <Pill className="h-4 w-4" />
             Prescriptions
           </TabsTrigger>
-          <TabsTrigger value="reminders" className="flex items-center gap-1">
-            <Bell className="h-4 w-4" />
-            Reminders
-          </TabsTrigger>
           <TabsTrigger value="templates" className="flex items-center gap-1">
             <FileText className="h-4 w-4" />
             Templates
@@ -672,61 +668,6 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
               </Card>
             )}
           </div>
-        </TabsContent>
-        
-        <TabsContent value="reminders">
-          <HealthcareNotifications 
-            upcomingAppointments={[
-              {
-                id: "apt1",
-                title: "Annual Physical",
-                doctor: "Dr. Sarah Smith",
-                date: new Date(new Date().setDate(new Date().getDate() + 14)),
-                time: "10:00 AM",
-                notes: "Fasting required",
-                location: "City Medical Group"
-              },
-              {
-                id: "apt2",
-                title: "Cardiology Follow-up",
-                doctor: "Dr. James Johnson",
-                date: new Date(new Date().setDate(new Date().getDate() + 7)),
-                time: "2:30 PM",
-                notes: "Bring medication list",
-                location: "Specialty Care Associates"
-              },
-              {
-                id: "apt3",
-                title: "Lab Work",
-                doctor: "Metro Health Partners",
-                date: new Date(new Date().setDate(new Date().getDate() + 3)),
-                time: "8:15 AM",
-                notes: "Fasting required",
-                location: "Metro Health Lab"
-              }
-            ]} 
-            medications={prescriptions.map(p => ({
-              id: p.name,
-              name: p.name,
-              nextRefill: p.nextRefill,
-              dosage: p.dosage,
-              frequency: p.frequency,
-              doctor: p.doctor,
-              pharmacy: p.pharmacy
-            }))}
-            policies={[
-              {
-                id: "health-policy-1",
-                name: "Medicare Supplement Plan F",
-                endDate: new Date(new Date().setDate(new Date().getDate() + 25)).toISOString()
-              },
-              {
-                id: "health-policy-2",
-                name: "Dental Insurance",
-                endDate: new Date(new Date().setDate(new Date().getDate() + 5)).toISOString()
-              }
-            ]}
-          />
         </TabsContent>
         
         <TabsContent value="templates">
