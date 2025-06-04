@@ -437,10 +437,6 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
             <FileText className="h-4 w-4" />
             Templates
           </TabsTrigger>
-          <TabsTrigger value="version-history" className="flex items-center gap-1">
-            <History className="h-4 w-4" />
-            Version History
-          </TabsTrigger>
         </TabsList>
         
         <TabsContent value="dashboard">
@@ -735,13 +731,6 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
         
         <TabsContent value="templates">
           <HealthcareTemplates onAddDocument={onAddDocument} />
-        </TabsContent>
-        
-        <TabsContent value="version-history">
-          <DocumentVersionControl 
-            documents={documents} 
-            onViewDocument={handleViewDocument} 
-          />
         </TabsContent>
       </Tabs>
 
