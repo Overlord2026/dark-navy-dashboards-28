@@ -66,11 +66,17 @@ export const FamilyLegacyBox: React.FC = () => {
     }
   };
 
-  const handleShareDocument = (documentId: string) => {
-    setSelectedDocument(documentId);
-    const document = convertedDocuments.find((doc) => doc.id === documentId);
-    setSelectedDocumentDetails(document);
-    setShareDialogOpen(true);
+  const handleDeleteDocument = async (documentId: string) => {
+    try {
+      const backendDoc = documents.find(doc => doc.document_type === documentId);
+      if (backendDoc) {
+        await deleteDocument(backendDoc.id);
+        toast.success("Document deleted successfully");
+      }
+    } catch (error) {
+      console.error('Error deleting document:', error);
+      toast.error("Failed to delete document");
+    }
   };
 
   const handleViewDocument = (documentId: string) => {
@@ -78,6 +84,13 @@ export const FamilyLegacyBox: React.FC = () => {
     setSelectedDocument(documentId);
     setSelectedDocumentDetails(document);
     toast.info("Document viewer would open here");
+  };
+
+  const handleShareDocument = (documentId: string) => {
+    setSelectedDocument(documentId);
+    const document = convertedDocuments.find((doc) => doc.id === documentId);
+    setSelectedDocumentDetails(document);
+    setShareDialogOpen(true);
   };
 
   const handleDocumentShare = async (documentId: string, sharedWith: string[]) => {
@@ -135,6 +148,8 @@ export const FamilyLegacyBox: React.FC = () => {
               <TabsContent value="overview" className="mt-0">
                 <DocumentChecklist
                   onDirectFileUpload={handleDirectFileUpload}
+                  onDeleteDocument={handleDeleteDocument}
+                  onViewDocument={handleViewDocument}
                   documents={convertedDocuments}
                 />
               </TabsContent>

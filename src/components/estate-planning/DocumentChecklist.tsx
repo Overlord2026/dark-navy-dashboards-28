@@ -1,6 +1,6 @@
 
 import React, { useState, useRef } from "react";
-import { CheckCircle, Upload, Info, FileText } from "lucide-react";
+import { CheckCircle, Upload, Info, FileText, Trash2, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Tooltip,
@@ -23,11 +23,15 @@ interface DocumentItem {
 
 interface DocumentChecklistProps {
   onDirectFileUpload: (file: File, documentType: string) => void;
+  onDeleteDocument: (documentId: string) => void;
+  onViewDocument: (documentId: string) => void;
   documents: DocumentItem[];
 }
 
 export const DocumentChecklist: React.FC<DocumentChecklistProps> = ({
   onDirectFileUpload,
+  onDeleteDocument,
+  onViewDocument,
   documents,
 }) => {
   const [expandedGroups, setExpandedGroups] = useState<string[]>([
@@ -60,6 +64,14 @@ export const DocumentChecklist: React.FC<DocumentChecklistProps> = ({
     }
     // Reset the input so the same file can be selected again if needed
     event.target.value = '';
+  };
+
+  const handleViewDocument = (documentId: string) => {
+    onViewDocument(documentId);
+  };
+
+  const handleDeleteDocument = (documentId: string) => {
+    onDeleteDocument(documentId);
   };
 
   const documentGroups = [
@@ -206,11 +218,26 @@ export const DocumentChecklist: React.FC<DocumentChecklistProps> = ({
                           </p>
                         )}
                       </div>
-                      <div>
+                      <div className="flex items-center gap-2">
                         {status === "completed" ? (
-                          <Button variant="outline" size="sm" className="ml-2">
-                            View
-                          </Button>
+                          <>
+                            <Button 
+                              variant="outline" 
+                              size="sm" 
+                              onClick={() => handleViewDocument(item.id)}
+                            >
+                              <Eye className="h-4 w-4 mr-1" />
+                              View
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleDeleteDocument(item.id)}
+                              className="text-destructive hover:text-destructive"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </>
                         ) : (
                           <>
                             <input
@@ -223,7 +250,6 @@ export const DocumentChecklist: React.FC<DocumentChecklistProps> = ({
                             <Button
                               variant="outline"
                               size="sm"
-                              className="ml-2"
                               onClick={() => handleUploadClick(item.id)}
                             >
                               <Upload className="h-4 w-4 mr-1" />
