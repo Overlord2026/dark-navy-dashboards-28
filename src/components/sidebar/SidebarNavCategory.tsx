@@ -1,9 +1,14 @@
+
 import React from "react";
-import { cn } from "@/lib/utils";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Link } from "react-router-dom";
 import { ChevronDown, ChevronRight } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { NavItem } from "@/types/navigation";
-import { Badge } from "@/components/ui/badge";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 
 interface SidebarNavCategoryProps {
   id: string;
@@ -15,7 +20,7 @@ interface SidebarNavCategoryProps {
   isActive: (href: string) => boolean;
   isLightTheme: boolean;
   expandedSubmenus: Record<string, boolean>;
-  toggleSubmenu: (id: string) => void;
+  toggleSubmenu: (itemTitle: string, e?: React.MouseEvent) => void;
 }
 
 const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
@@ -30,236 +35,147 @@ const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
   expandedSubmenus,
   toggleSubmenu
 }) => {
-  // Helper to ensure consistent path handling
   const normalizePath = (path: string): string => {
     return path.startsWith("/") ? path : `/${path}`;
   };
 
   const renderNavItem = (item: NavItem) => {
     const normalizedHref = normalizePath(item.href);
-    const isItemActive = isActive(normalizedHref);
     
-    // Debug log to see what items we're rendering
-    console.log("Rendering nav item:", item.title, "href:", normalizedHref, "isActive:", isItemActive, "comingSoon:", item.comingSoon);
-    
-    // If coming soon, render as non-clickable
+    const baseClasses = cn(
+      "group flex items-center py-2 px-3 rounded-md transition-colors text-[14px] whitespace-nowrap border",
+      isActive(normalizedHref)
+        ? isLightTheme 
+          ? "bg-[#E9E7D8] text-[#222222] font-medium border-primary" 
+          : "bg-black text-[#E2E2E2] font-medium border-primary"
+        : isLightTheme ? "text-[#222222] border-transparent" : "text-[#E2E2E2] border-transparent",
+      isLightTheme ? "hover:bg-[#E9E7D8] hover:border-primary" : "hover:bg-sidebar-accent hover:border-primary",
+      collapsed ? "justify-center px-2 my-2" : "justify-start",
+      item.comingSoon ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
+    );
+
+    const content = (
+      <>
+        {item.icon && (
+          <div className={cn("flex-shrink-0", !collapsed && "mr-3")}>
+            <item.icon className="h-5 w-5" />
+          </div>
+        )}
+        
+        {!collapsed && (
+          <span className="whitespace-nowrap overflow-hidden text-ellipsis">
+            {item.title}
+            {item.comingSoon && (
+              <span className="ml-2 text-xs text-muted-foreground">(Coming Soon)</span>
+            )}
+          </span>
+        )}
+        {collapsed && <span className="sr-only">{item.title}</span>}
+      </>
+    );
+
     if (item.comingSoon) {
       return (
         <div
-          className={cn(
-            "group flex w-full items-center rounded-md px-3 py-2 text-sm outline-none cursor-not-allowed opacity-60",
-            isLightTheme
-              ? "text-[#222222] bg-muted/30"
-              : "text-white bg-muted/20"
-          )}
+          key={item.title}
+          className={baseClasses}
+          title={collapsed ? `${item.title} (Coming Soon)` : undefined}
         >
-          {item.icon && (
-            <item.icon className="mr-2 h-4 w-4" />
-          )}
-          <span className="whitespace-nowrap overflow-hidden text-ellipsis flex-1">{item.title}</span>
-          <Badge variant="secondary" className="ml-2 text-xs">
-            Coming Soon
-          </Badge>
+          {content}
         </div>
       );
     }
-    
-    return (
-      <a
-        href={normalizedHref}
-        target={item.external ? "_blank" : undefined}
-        rel={item.external ? "noreferrer" : undefined}
-        className={cn(
-          "group flex w-full items-center rounded-md px-3 py-2 text-sm outline-none transition-colors",
-          isLightTheme
-            ? "hover:bg-[#E5E5E5] text-[#222222]"
-            : "hover:bg-accent hover:text-accent-foreground",
-          isItemActive &&
-            (isLightTheme
-              ? "bg-[#D8D8D8] text-foreground font-medium"
-              : "bg-secondary text-secondary-foreground font-medium"),
-          item.disabled && "cursor-not-allowed opacity-50"
-        )}
-        onClick={(e) => {
-          if (item.items && item.items.length > 0) {
-            e.preventDefault();
-            toggleSubmenu(item.title);
-          }
-        }}
-      >
-        {item.icon && (
-          <item.icon className="mr-2 h-4 w-4" />
-        )}
-        <span className="whitespace-nowrap overflow-hidden text-ellipsis">{item.title}</span>
-        {item.label && (
-          <span className="ml-auto rounded-sm bg-secondary px-2 text-xs font-semibold text-secondary-foreground">
-            {item.label}
-          </span>
-        )}
-      </a>
-    );
-  };
 
-  const renderSubNavItem = (subItem: NavItem, depth: number = 1) => {
-    const normalizedHref = normalizePath(subItem.href);
-    const isItemActive = isActive(normalizedHref);
-    const paddingLeft = `${(depth + 1) * 1}rem`;
-
-    // If coming soon, render as non-clickable
-    if (subItem.comingSoon) {
+    // Handle items with subitems
+    if (item.items && item.items.length > 0) {
+      const hasExpandedSubmenu = expandedSubmenus[item.title];
+      
       return (
-        <div
-          style={{ paddingLeft }}
-          className={cn(
-            "group flex w-full items-center rounded-md py-2 pr-3 text-sm outline-none cursor-not-allowed opacity-60",
-            isLightTheme
-              ? "text-[#222222] bg-muted/30"
-              : "text-white bg-muted/20"
-          )}
-        >
-          {subItem.icon && (
-            <subItem.icon className="mr-2 h-4 w-4" />
-          )}
-          <span className="whitespace-nowrap overflow-hidden text-ellipsis flex-1">{subItem.title}</span>
-          <Badge variant="secondary" className="ml-2 text-xs">
-            Coming Soon
-          </Badge>
+        <div key={item.title}>
+          <Collapsible
+            open={hasExpandedSubmenu}
+            onOpenChange={() => toggleSubmenu(item.title)}
+          >
+            <CollapsibleTrigger asChild>
+              <div className={cn(baseClasses, "cursor-pointer")}>
+                {content}
+                {!collapsed && (
+                  hasExpandedSubmenu ? (
+                    <ChevronDown className="h-4 w-4 ml-auto" />
+                  ) : (
+                    <ChevronRight className="h-4 w-4 ml-auto" />
+                  )
+                )}
+              </div>
+            </CollapsibleTrigger>
+            <CollapsibleContent className="space-y-1 ml-6">
+              {item.items.map((subItem) => (
+                <Link
+                  key={subItem.href}
+                  to={normalizePath(subItem.href)}
+                  className={cn(
+                    "group flex items-center py-1 px-3 rounded-md transition-colors text-[13px] border",
+                    isActive(normalizePath(subItem.href))
+                      ? isLightTheme 
+                        ? "bg-[#E9E7D8] text-[#222222] font-medium border-primary" 
+                        : "bg-black text-[#E2E2E2] font-medium border-primary"
+                      : isLightTheme ? "text-[#222222] border-transparent" : "text-[#E2E2E2] border-transparent",
+                    isLightTheme ? "hover:bg-[#E9E7D8] hover:border-primary" : "hover:bg-sidebar-accent hover:border-primary"
+                  )}
+                >
+                  {subItem.icon && <subItem.icon className="h-4 w-4 mr-2" />}
+                  <span>{subItem.title}</span>
+                </Link>
+              ))}
+            </CollapsibleContent>
+          </Collapsible>
         </div>
       );
     }
 
+    // Regular nav item without subitems
     return (
-      <a
-        href={normalizedHref}
-        target={subItem.external ? "_blank" : undefined}
-        rel={subItem.external ? "noreferrer" : undefined}
-        style={{ paddingLeft }}
-        className={cn(
-          "group flex w-full items-center rounded-md py-2 pr-3 text-sm outline-none transition-colors",
-          isLightTheme
-            ? "hover:bg-[#E5E5E5] text-[#222222]"
-            : "hover:bg-accent hover:text-accent-foreground",
-          isItemActive &&
-            (isLightTheme
-              ? "bg-[#D8D8D8] text-foreground font-medium"
-              : "bg-secondary text-secondary-foreground font-medium"),
-          subItem.disabled && "cursor-not-allowed opacity-50"
-        )}
+      <Link
+        key={item.title}
+        to={normalizedHref}
+        className={baseClasses}
+        title={collapsed ? item.title : undefined}
       >
-        {subItem.icon && (
-          <subItem.icon className="mr-2 h-4 w-4" />
-        )}
-        <span className="whitespace-nowrap overflow-hidden text-ellipsis">{subItem.title}</span>
-        {subItem.label && (
-          <span className="ml-auto rounded-sm bg-secondary px-2 text-xs font-semibold text-secondary-foreground">
-            {subItem.label}
-          </span>
-        )}
-      </a>
+        {content}
+      </Link>
     );
   };
-  
+
   return (
-    <div className="px-3 py-2">
-      <Collapsible
-        open={isExpanded}
-        onOpenChange={() => onToggle(id)}
-        className="space-y-1"
-      >
-        <CollapsibleTrigger asChild>
-          <button
-            className={cn(
-              "flex w-full items-center justify-between rounded-md px-3 py-2 text-sm font-medium",
-              isLightTheme
-                ? "hover:bg-[#E5E5E5] text-[#222222]"
-                : "hover:bg-accent hover:text-accent-foreground"
-            )}
-          >
-            {!collapsed ? (
-              <>
-                <span>{label}</span>
-                <div className="ml-auto">
-                  {isExpanded ? (
-                    <ChevronDown className="h-4 w-4" />
-                  ) : (
-                    <ChevronRight className="h-4 w-4" />
-                  )}
-                </div>
-              </>
-            ) : (
-              // When collapsed, still show a minimal indicator
-              <div className="flex justify-center w-full">
-                <span className="sr-only">{label}</span>
-                <ChevronRight className="h-4 w-4" />
+    <div className="mb-2">
+      {!collapsed && (
+        <Collapsible
+          open={isExpanded}
+          onOpenChange={() => onToggle(id)}
+        >
+          <CollapsibleTrigger asChild>
+            <div className={`flex items-center justify-between p-2 text-xs uppercase tracking-wider font-semibold ${isLightTheme ? 'text-[#222222]/70' : 'text-[#E2E2E2]/70'} cursor-pointer`}>
+              <span>{label}</span>
+              <div>
+                {isExpanded ? (
+                  <ChevronDown className="h-4 w-4" />
+                ) : (
+                  <ChevronRight className="h-4 w-4" />
+                )}
               </div>
-            )}
-          </button>
-        </CollapsibleTrigger>
-        <CollapsibleContent className="space-y-1">
-          {items.map((item, index) => (
-            <React.Fragment key={index}>
-              {item.href ? (
-                renderNavItem(item)
-              ) : (
-                item.items && item.items.length > 0 ? (
-                  <div className="space-y-1">
-                    <Collapsible
-                      open={!!expandedSubmenus[item.title]}
-                      onOpenChange={() => toggleSubmenu(item.title)}
-                    >
-                      <CollapsibleTrigger className="flex items-center justify-between w-full px-3 py-2 text-sm font-medium rounded-md hover:bg-accent hover:text-accent-foreground">
-                        <div className="flex items-center">
-                          {item.icon && <item.icon className="mr-2 h-4 w-4" />}
-                          <span>{item.title}</span>
-                        </div>
-                        {expandedSubmenus[item.title] ? (
-                          <ChevronDown className="w-4 h-4" />
-                        ) : (
-                          <ChevronRight className="w-4 h-4" />
-                        )}
-                      </CollapsibleTrigger>
-                      <CollapsibleContent className="space-y-1">
-                        {item.items.map((subItem, subIndex) => (
-                          <React.Fragment key={subIndex}>
-                            {subItem.href && renderSubNavItem(subItem)}
-                            {subItem.items && subItem.items.length > 0 && (
-                              <div className="space-y-1">
-                                <Collapsible
-                                  open={!!expandedSubmenus[subItem.title]}
-                                  onOpenChange={() => toggleSubmenu(subItem.title)}
-                                >
-                                  <CollapsibleTrigger className="flex items-center justify-between w-full py-2 pr-3 text-sm font-medium rounded-md hover:bg-accent hover:text-accent-foreground" style={{ paddingLeft: '2rem' }}>
-                                    <div className="flex items-center">
-                                      {subItem.icon && <subItem.icon className="mr-2 h-4 w-4" />}
-                                      <span>{subItem.title}</span>
-                                    </div>
-                                    {expandedSubmenus[subItem.title] ? (
-                                      <ChevronDown className="w-4 h-4" />
-                                    ) : (
-                                      <ChevronRight className="w-4 h-4" />
-                                    )}
-                                  </CollapsibleTrigger>
-                                  <CollapsibleContent className="space-y-1">
-                                    {subItem.items.map((nestedItem, nestedIndex) => (
-                                      <React.Fragment key={nestedIndex}>
-                                        {nestedItem.href && renderSubNavItem(nestedItem, 2)}
-                                      </React.Fragment>
-                                    ))}
-                                  </CollapsibleContent>
-                                </Collapsible>
-                              </div>
-                            )}
-                          </React.Fragment>
-                        ))}
-                      </CollapsibleContent>
-                    </Collapsible>
-                  </div>
-                ) : null
-              )}
-            </React.Fragment>
-          ))}
-        </CollapsibleContent>
-      </Collapsible>
+            </div>
+          </CollapsibleTrigger>
+          <CollapsibleContent className="space-y-1.5">
+            {items.map(renderNavItem)}
+          </CollapsibleContent>
+        </Collapsible>
+      )}
+      
+      {collapsed && (
+        <div className="flex flex-col items-center space-y-1">
+          {items.map(renderNavItem)}
+        </div>
+      )}
     </div>
   );
 };
