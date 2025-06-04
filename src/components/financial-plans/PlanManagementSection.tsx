@@ -22,11 +22,11 @@ export const PlanManagementSection = ({
   }
 
   return (
-    <div className="bg-card border border-border/30 rounded-lg p-4 sm:p-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div className="space-y-1">
+    <div className="bg-card border border-border/30 rounded-lg p-6">
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+        <div className="space-y-2">
           <div className="flex flex-wrap items-center gap-2">
-            <h2 className="text-lg sm:text-xl font-semibold text-foreground">{activePlan.name}</h2>
+            <h2 className="text-xl font-semibold text-foreground">{activePlan.name}</h2>
             {activePlan.isDraft && (
               <Badge variant="secondary" className="text-xs">Draft</Badge>
             )}
@@ -44,28 +44,28 @@ export const PlanManagementSection = ({
             variant="outline"
             size="sm"
             onClick={() => onEditPlan(activePlan.id)}
-            className="flex-1 sm:flex-none"
+            className="flex-1 lg:flex-none"
           >
-            <Edit2 className="h-4 w-4 mr-1 sm:mr-2" />
-            <span className="hidden sm:inline">Edit</span>
+            <Edit2 className="h-4 w-4 mr-2" />
+            Edit
           </Button>
           <Button
             variant="outline"
             size="sm"
             onClick={() => onDuplicatePlan(activePlan.id)}
-            className="flex-1 sm:flex-none"
+            className="flex-1 lg:flex-none"
           >
-            <Copy className="h-4 w-4 mr-1 sm:mr-2" />
-            <span className="hidden sm:inline">Copy</span>
+            <Copy className="h-4 w-4 mr-2" />
+            Copy
           </Button>
           <Button
             variant="outline"
             size="sm"
             onClick={() => onDeletePlan(activePlan.id)}
-            className="flex-1 sm:flex-none text-destructive hover:text-destructive"
+            className="flex-1 lg:flex-none text-destructive hover:text-destructive"
           >
-            <Trash2 className="h-4 w-4 mr-1 sm:mr-2" />
-            <span className="hidden sm:inline">Delete</span>
+            <Trash2 className="h-4 w-4 mr-2" />
+            Delete
           </Button>
         </div>
       </div>

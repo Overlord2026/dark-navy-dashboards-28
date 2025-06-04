@@ -91,17 +91,20 @@ const FinancialPlansContent = () => {
 
   return (
     <ThreeColumnLayout activeMainItem="financial-plans" title="Financial Plans">
-      <div className="animate-fade-in space-y-4 sm:space-y-6 p-4 sm:p-6 max-w-full overflow-hidden">
-        <div className="space-y-4">
-          <FinancialPlansHeader />
+      <div className="animate-fade-in w-full max-w-none">
+        <div className="p-4 sm:p-6 space-y-6">
+          {/* Header Section */}
+          <div className="space-y-4">
+            <FinancialPlansHeader />
+            <FinancialPlansActions
+              activePlan={activePlan}
+              plans={plans}
+              onCreatePlan={onCreatePlan}
+              onSelectPlan={onSelectPlan}
+            />
+          </div>
 
-          <FinancialPlansActions
-            activePlan={activePlan}
-            plans={plans}
-            onCreatePlan={onCreatePlan}
-            onSelectPlan={onSelectPlan}
-          />
-
+          {/* Plan Management Section */}
           {activePlan && (
             <PlanManagementSection
               activePlan={activePlan}
@@ -110,94 +113,102 @@ const FinancialPlansContent = () => {
               onDeletePlan={onDeletePlan}
             />
           )}
-        </div>
 
-        {activePlan && (
-          <>
+          {/* Goals Section */}
+          {activePlan && (
             <div className="bg-card border border-border/30 rounded-lg p-4 sm:p-6">
               <GoalsList 
                 goals={goals} 
                 onGoalUpdate={handleGoalUpdate}
               />
             </div>
+          )}
 
-            <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6">
+          {/* Charts Section */}
+          {activePlan && (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <Card className="border border-border/30 bg-card">
-                <CardContent className="p-4 sm:p-6">
-                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 sm:mb-6 space-y-2 sm:space-y-0">
-                    <h3 className="text-base sm:text-lg font-medium text-foreground">Projected Plan Success</h3>
-                    <div className="flex items-center text-muted-foreground text-xs sm:text-sm">
-                      <span className="hidden sm:inline">What is chance of success?</span>
-                      <span className="sm:hidden">Success chance?</span>
-                      <InfoIcon className="h-3 w-3 sm:h-4 sm:w-4 ml-1" />
+                <CardContent className="p-6">
+                  <div className="flex flex-col space-y-4">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-lg font-medium text-foreground">Projected Plan Success</h3>
+                      <div className="flex items-center text-muted-foreground text-sm">
+                        <span>Success chance</span>
+                        <InfoIcon className="h-4 w-4 ml-1" />
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex justify-center">
-                    <PlanSuccessGauge successRate={activePlan.successRate || 0} />
+                    <div className="flex justify-center">
+                      <PlanSuccessGauge successRate={activePlan.successRate || 0} />
+                    </div>
                   </div>
                 </CardContent>
               </Card>
 
               <Card className="border border-border/30 bg-card">
-                <CardContent className="p-4 sm:p-6">
-                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 sm:mb-6 space-y-2 sm:space-y-0">
-                    <h3 className="text-base sm:text-lg font-medium text-foreground">Projected Net Worth</h3>
-                    <div className="flex items-center text-muted-foreground text-xs sm:text-sm">
-                      <span className="hidden sm:inline">How is this chart calculated?</span>
-                      <span className="sm:hidden">Chart info?</span>
-                      <InfoIcon className="h-3 w-3 sm:h-4 sm:w-4 ml-1" />
+                <CardContent className="p-6">
+                  <div className="flex flex-col space-y-4">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-lg font-medium text-foreground">Projected Net Worth</h3>
+                      <div className="flex items-center text-muted-foreground text-sm">
+                        <span>Chart info</span>
+                        <InfoIcon className="h-4 w-4 ml-1" />
+                      </div>
                     </div>
-                  </div>
-                  <div className="w-full overflow-hidden">
-                    <NetWorthChart />
+                    <div className="w-full">
+                      <NetWorthChart />
+                    </div>
                   </div>
                 </CardContent>
               </Card>
             </div>
-            
+          )}
+          
+          {/* Financial Cards Section */}
+          {activePlan && (
             <div className="w-full">
               <FinancialPlansCards />
             </div>
-          </>
-        )}
+          )}
 
-        {!activePlan && !loading && (
-          <div className="text-center py-12">
-            <h3 className="text-lg font-medium text-foreground mb-2">No Financial Plans Yet</h3>
-            <p className="text-muted-foreground mb-4">
-              Create your first financial plan to start tracking your goals and projections.
-            </p>
-            <button 
-              onClick={onCreatePlan}
-              className="bg-primary text-primary-foreground px-6 py-2 rounded-lg hover:bg-primary/90 transition-colors"
-            >
-              Create Your First Plan
-            </button>
-          </div>
-        )}
+          {/* Empty State */}
+          {!activePlan && !loading && (
+            <div className="text-center py-16">
+              <h3 className="text-xl font-medium text-foreground mb-4">No Financial Plans Yet</h3>
+              <p className="text-muted-foreground mb-6 max-w-md mx-auto">
+                Create your first financial plan to start tracking your goals and projections.
+              </p>
+              <button 
+                onClick={onCreatePlan}
+                className="bg-primary text-primary-foreground px-6 py-3 rounded-lg hover:bg-primary/90 transition-colors font-medium"
+              >
+                Create Your First Plan
+              </button>
+            </div>
+          )}
+        </div>
+
+        <CreatePlanDialog 
+          isOpen={isCreateDialogOpen}
+          onClose={() => setIsCreateDialogOpen(false)}
+          onCreatePlan={handleCreatePlan}
+          onSaveDraft={handleSaveDraft}
+          draftData={currentDraftData}
+        />
+
+        <ManagePlansDialog
+          isOpen={isManagePlansOpen}
+          onClose={() => setIsManagePlansOpen(false)}
+          plans={plans}
+          onEditPlan={onEditPlan}
+          onDeletePlan={onDeletePlan}
+          onDuplicatePlan={onDuplicatePlan}
+          onToggleFavorite={handleToggleFavorite}
+          onSelectPlan={(planId) => {
+            handleSelectPlan(planId);
+            setIsManagePlansOpen(false);
+          }}
+        />
       </div>
-
-      <CreatePlanDialog 
-        isOpen={isCreateDialogOpen}
-        onClose={() => setIsCreateDialogOpen(false)}
-        onCreatePlan={handleCreatePlan}
-        onSaveDraft={handleSaveDraft}
-        draftData={currentDraftData}
-      />
-
-      <ManagePlansDialog
-        isOpen={isManagePlansOpen}
-        onClose={() => setIsManagePlansOpen(false)}
-        plans={plans}
-        onEditPlan={onEditPlan}
-        onDeletePlan={onDeletePlan}
-        onDuplicatePlan={onDuplicatePlan}
-        onToggleFavorite={handleToggleFavorite}
-        onSelectPlan={(planId) => {
-          handleSelectPlan(planId);
-          setIsManagePlansOpen(false);
-        }}
-      />
     </ThreeColumnLayout>
   );
 };
