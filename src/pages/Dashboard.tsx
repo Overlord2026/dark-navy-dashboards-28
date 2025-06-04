@@ -1,66 +1,48 @@
 
-import { DashboardMetricsCards } from "@/components/dashboard/DashboardMetricsCards";
-import { RecentActivity } from "@/components/dashboard/RecentActivity";
-import { AssetAllocationChart } from "@/components/dashboard/AssetAllocationChart";
-import { NetWorthSummary } from "@/components/dashboard/NetWorthSummary";
-import { TaxPlanningSummary } from "@/components/dashboard/TaxPlanningSummary";
-import { FinancialOverview } from "@/components/dashboard/FinancialOverview";
-import { QuickActionsMenu } from "@/components/dashboard/QuickActionsMenu";
+import React, { useState, useEffect } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
-import { useDashboardData } from "@/hooks/useDashboardData";
+import { FinancialOverview } from "@/components/dashboard/FinancialOverview";
+import { NetWorthSummary } from "@/components/dashboard/NetWorthSummary";
+import { useUser } from "@/context/UserContext";
+import { useSubscription } from "@/context/SubscriptionContext";
+import { WelcomeTrialBanner } from "@/components/dashboard/WelcomeTrialBanner";
+import { usePagePerformance } from "@/hooks/usePagePerformance";
 
 export default function Dashboard() {
-  const { metrics, assetBreakdown, loading } = useDashboardData();
+  const { userProfile } = useUser();
+  const { isInFreeTrial } = useSubscription();
+  const [showWelcomeBanner, setShowWelcomeBanner] = useState(true);
+  
+  usePagePerformance('/client-dashboard');
+  
+  console.log('Dashboard: AdminActions component completely removed');
 
-  if (loading) {
-    return (
-      <ThreeColumnLayout activeMainItem="dashboard">
-        <div className="container mx-auto p-6 space-y-6 max-w-7xl">
-          <div className="flex items-center justify-center h-64">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-            <span className="ml-3">Loading dashboard...</span>
-          </div>
-        </div>
-      </ThreeColumnLayout>
-    );
-  }
+  const handleDismissBanner = () => {
+    setShowWelcomeBanner(false);
+  };
+
+  useEffect(() => {
+    console.log('Dashboard component rendered:', new Date().toISOString());
+    console.log('Dashboard: NO AdminActions component rendered');
+    
+    return () => {
+      console.log('Dashboard component unmounted:', new Date().toISOString());
+    };
+  }, []);
 
   return (
-    <ThreeColumnLayout activeMainItem="dashboard">
-      <div className="container mx-auto p-6 space-y-6 max-w-7xl">
-        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
-          <div className="space-y-1">
-            <h1 className="text-2xl lg:text-3xl font-bold">Dashboard</h1>
-            <p className="text-muted-foreground text-sm lg:text-base">
-              Welcome back! Here's an overview of your portfolio.
-            </p>
-          </div>
-          <QuickActionsMenu />
+    <ThreeColumnLayout>
+      <div className="space-y-4 px-4 py-2 max-w-7xl mx-auto">
+        {isInFreeTrial && showWelcomeBanner && (
+          <WelcomeTrialBanner onDismiss={handleDismissBanner} />
+        )}
+        
+        <div id="financial-overview-section">
+          <FinancialOverview />
         </div>
-
-        <DashboardMetricsCards />
-
-        <div className="grid gap-6 lg:grid-cols-7">
-          <div className="lg:col-span-4 space-y-6">
-            <FinancialOverview />
-            <AssetAllocationChart
-              realEstate={assetBreakdown.realEstate}
-              vehicles={assetBreakdown.vehicles}
-              investments={assetBreakdown.investments}
-              cash={assetBreakdown.cash}
-              retirement={assetBreakdown.retirement}
-              collectibles={assetBreakdown.collectibles}
-              digital={assetBreakdown.digital}
-              other={assetBreakdown.other}
-              totalValue={metrics.totalAssets}
-            />
-          </div>
-          
-          <div className="lg:col-span-3 space-y-6">
-            <NetWorthSummary />
-            <TaxPlanningSummary />
-            <RecentActivity />
-          </div>
+        
+        <div>
+          <NetWorthSummary />
         </div>
       </div>
     </ThreeColumnLayout>

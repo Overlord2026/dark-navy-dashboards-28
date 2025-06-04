@@ -1,4 +1,5 @@
 
+
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Wallet } from "lucide-react";
@@ -50,7 +51,18 @@ export const NetWorthSummary = () => {
         </h2>
       </div>
       
-      <DashboardMetricsCards />
+      <DashboardMetricsCards
+        totalAssets={metrics.totalAssets}
+        totalLiabilities={metrics.totalLiabilities}
+        netWorth={metrics.netWorth}
+        assetGrowth={metrics.assetGrowth}
+        liabilityGrowth={metrics.liabilityGrowth}
+        netWorthGrowth={metrics.netWorthGrowth}
+        propertyCount={metrics.propertyCount}
+        vehicleCount={metrics.vehicleCount}
+        onNavigateToProperties={() => navigate('/properties')}
+        onNavigateToAssets={() => navigate('/client-all-assets')}
+      />
       
       <div className="grid grid-cols-1 gap-6">
         <div>
@@ -86,3 +98,4 @@ export const NetWorthSummary = () => {
     </div>
   );
 };
+
