@@ -1,3 +1,4 @@
+
 import React from "react";
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import Dashboard from "@/pages/Dashboard";
@@ -75,8 +76,12 @@ const routes = createBrowserRouter([
     element: <ProtectedRoute><Investments /></ProtectedRoute>
   },
   {
-    path: "/tax-planning",
+    path: "/client-tax-planning",
     element: <ProtectedRoute><TaxPlanning /></ProtectedRoute>
+  },
+  {
+    path: "/tax-planning",
+    element: <Navigate to="/client-tax-planning" replace />
   },
   {
     path: "/client-insurance",
