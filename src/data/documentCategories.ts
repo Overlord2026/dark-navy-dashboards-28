@@ -1,3 +1,4 @@
+
 import { DocumentCategory } from "@/types/document";
 
 export const documentCategories: DocumentCategory[] = [
@@ -10,12 +11,7 @@ export const documentCategories: DocumentCategory[] = [
   { id: "education", name: "Education" },
   { id: "employer-agreements", name: "Employer Agreements" },
   { id: "estate-planning", name: "Estate Planning" },
-  { id: "healthcare", name: "Healthcare" },
-  { id: "insurance-coverage", name: "Insurance Coverage" },
   { id: "leases", name: "Leases" },
-  { id: "medical-records", name: "Medical Records & Documents" },
-  { id: "physicians", name: "Physicians & Providers" },
-  { id: "prescriptions", name: "Prescriptions & Medications" },
   { id: "property-ownership", name: "Property Ownership" },
   { id: "statements", name: "Statements" },
   { id: "taxes", name: "Taxes" },
@@ -25,7 +21,11 @@ export const documentCategories: DocumentCategory[] = [
   { id: "other", name: "Other" },
 ];
 
-// Healthcare-specific categories for filtering
-export const healthcareCategories: DocumentCategory[] = documentCategories.filter(cat => 
-  ["healthcare", "insurance-coverage", "prescriptions", "physicians", "medical-records"].includes(cat.id)
-);
+// Healthcare-specific categories for filtering (kept for legacy vault and other uses)
+export const healthcareCategories: DocumentCategory[] = [
+  { id: "healthcare", name: "Healthcare" },
+  { id: "insurance-coverage", name: "Insurance Coverage" },
+  { id: "prescriptions", name: "Prescriptions & Medications" },
+  { id: "physicians", name: "Physicians & Providers" },
+  { id: "medical-records", name: "Medical Records & Documents" },
+];
