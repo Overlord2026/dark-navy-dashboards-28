@@ -7,13 +7,6 @@ import { EducationalTabs } from "@/components/education/EducationalTabs";
 import { courseCategories } from "@/data/education";
 import { handleCourseAccess } from "@/components/education/courseUtils";
 import { motion } from "framer-motion";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
 export default function Education() {
   const [searchParams] = useSearchParams();
@@ -84,23 +77,6 @@ export default function Education() {
         animate="visible"
       >
         <motion.div variants={itemVariants}>
-          <div className="flex justify-end items-start mb-4">
-            <div className="flex items-center gap-2">
-              <Select value={activeCategory} onValueChange={handleCategoryChange}>
-                <SelectTrigger className="w-[200px]">
-                  <SelectValue placeholder="Select a category" />
-                </SelectTrigger>
-                <SelectContent>
-                  {courseCategories.map((category) => (
-                    <SelectItem key={category.id} value={category.id}>
-                      {category.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-          
           <EducationalTabs 
             activeSection={activeSection}
             activeCategory={activeCategory}
