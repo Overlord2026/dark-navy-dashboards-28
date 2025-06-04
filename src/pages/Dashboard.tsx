@@ -1,48 +1,39 @@
-
-import React, { useState, useEffect } from "react";
-import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
-import { FinancialOverview } from "@/components/dashboard/FinancialOverview";
+import { DashboardMetricsCards } from "@/components/dashboard/DashboardMetricsCards";
+import { RecentActivity } from "@/components/dashboard/RecentActivity";
+import { AssetAllocationChart } from "@/components/dashboard/AssetAllocationChart";
 import { NetWorthSummary } from "@/components/dashboard/NetWorthSummary";
-import { useUser } from "@/context/UserContext";
-import { useSubscription } from "@/context/SubscriptionContext";
-import { WelcomeTrialBanner } from "@/components/dashboard/WelcomeTrialBanner";
-import { usePagePerformance } from "@/hooks/usePagePerformance";
+import { TaxPlanningSummary } from "@/components/dashboard/TaxPlanningSummary";
+import { FinancialOverview } from "@/components/dashboard/FinancialOverview";
+import { QuickActionsMenu } from "@/components/dashboard/QuickActionsMenu";
+import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 
 export default function Dashboard() {
-  const { userProfile } = useUser();
-  const { isInFreeTrial } = useSubscription();
-  const [showWelcomeBanner, setShowWelcomeBanner] = useState(true);
-  
-  usePagePerformance('/client-dashboard');
-  
-  console.log('Dashboard: AdminActions component completely removed');
-
-  const handleDismissBanner = () => {
-    setShowWelcomeBanner(false);
-  };
-
-  useEffect(() => {
-    console.log('Dashboard component rendered:', new Date().toISOString());
-    console.log('Dashboard: NO AdminActions component rendered');
-    
-    return () => {
-      console.log('Dashboard component unmounted:', new Date().toISOString());
-    };
-  }, []);
-
   return (
-    <ThreeColumnLayout>
-      <div className="space-y-4 px-4 py-2 max-w-7xl mx-auto">
-        {isInFreeTrial && showWelcomeBanner && (
-          <WelcomeTrialBanner onDismiss={handleDismissBanner} />
-        )}
-        
-        <div id="financial-overview-section">
-          <FinancialOverview />
+    <ThreeColumnLayout activeMainItem="dashboard">
+      <div className="container mx-auto p-6 space-y-6 max-w-7xl">
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+          <div className="space-y-1">
+            <h1 className="text-2xl lg:text-3xl font-bold">Dashboard</h1>
+            <p className="text-muted-foreground text-sm lg:text-base">
+              Welcome back! Here's an overview of your portfolio.
+            </p>
+          </div>
+          <QuickActionsMenu />
         </div>
-        
-        <div>
-          <NetWorthSummary />
+
+        <DashboardMetricsCards />
+
+        <div className="grid gap-6 lg:grid-cols-7">
+          <div className="lg:col-span-4 space-y-6">
+            <FinancialOverview />
+            <AssetAllocationChart />
+          </div>
+          
+          <div className="lg:col-span-3 space-y-6">
+            <NetWorthSummary />
+            <TaxPlanningSummary />
+            <RecentActivity />
+          </div>
         </div>
       </div>
     </ThreeColumnLayout>
