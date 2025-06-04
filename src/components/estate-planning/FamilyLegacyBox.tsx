@@ -6,7 +6,6 @@ import { UploadedDocuments } from "./UploadedDocuments";
 import { SharedDocuments } from "./SharedDocuments";
 import { ResourcesCard } from "./ResourcesCard";
 import { UploadDocumentDialog, ShareDocumentDialog, TaxReturnUploadDialog } from "@/components/estate-planning/DocumentDialogs";
-import { CompletionProgress } from "./CompletionProgress";
 import { AdvancedTaxStrategies } from "./AdvancedTaxStrategies";
 import { useEstatePlanning } from "@/hooks/useEstatePlanning";
 import { toast } from "sonner";
@@ -158,8 +157,6 @@ export const FamilyLegacyBox: React.FC = () => {
         </Card>
         
         <AdvancedTaxStrategies />
-        
-        <CompletionProgress completedItems={completedDocuments} totalItems={totalDocuments} />
       </div>
       
       <div className="xl:col-span-1">
