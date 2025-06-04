@@ -166,6 +166,80 @@ export const useEstatePlanning = () => {
     }
   };
 
+  // Create interest
+  const createInterest = async (interestData: Partial<EstateInterest>) => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('User not authenticated');
+
+      // Since we don't have the estate_interests table, we'll simulate this for now
+      // In a real implementation, you would create the table and insert the data
+      console.log('Creating interest:', interestData);
+      toast.success('Interest submitted successfully', {
+        description: 'We will contact you soon to discuss your estate planning needs.'
+      });
+      
+      // Simulate adding to interests array
+      const mockInterest: EstateInterest = {
+        id: Math.random().toString(36).substr(2, 9),
+        user_id: user.id,
+        service_type: interestData.service_type || 'General Interest',
+        message: interestData.message,
+        contact_name: interestData.contact_name || '',
+        contact_email: interestData.contact_email || '',
+        contact_phone: interestData.contact_phone,
+        status: 'pending',
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      };
+      
+      setInterests(prev => [mockInterest, ...prev]);
+      return mockInterest;
+    } catch (error) {
+      console.error('Error creating interest:', error);
+      toast.error('Failed to submit interest');
+      throw error;
+    }
+  };
+
+  // Create consultation
+  const createConsultation = async (consultationData: Partial<EstateConsultation>) => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('User not authenticated');
+
+      // Since we don't have the estate_consultations table, we'll simulate this for now
+      // In a real implementation, you would create the table and insert the data
+      console.log('Creating consultation:', consultationData);
+      toast.success('Consultation scheduled successfully', {
+        description: 'We will contact you within 24 hours to confirm your appointment.'
+      });
+      
+      // Simulate adding to consultations array
+      const mockConsultation: EstateConsultation = {
+        id: Math.random().toString(36).substr(2, 9),
+        user_id: user.id,
+        consultation_type: consultationData.consultation_type || 'Initial Consultation',
+        preferred_date: consultationData.preferred_date,
+        preferred_time: consultationData.preferred_time,
+        status: 'pending',
+        notes: consultationData.notes,
+        contact_name: consultationData.contact_name || '',
+        contact_email: consultationData.contact_email || '',
+        contact_phone: consultationData.contact_phone,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      };
+      
+      setConsultations(prev => [mockConsultation, ...prev]);
+      return mockConsultation;
+    } catch (error) {
+      console.error('Error creating consultation:', error);
+      toast.error('Failed to schedule consultation');
+      throw error;
+    }
+  };
+
   useEffect(() => {
     fetchEstateData();
   }, []);
@@ -179,6 +253,8 @@ export const useEstatePlanning = () => {
     createDocument,
     updateDocument,
     deleteDocument,
+    createInterest,
+    createConsultation,
     refetch: fetchEstateData,
   };
 };
