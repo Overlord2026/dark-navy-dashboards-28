@@ -11,29 +11,41 @@ import { ManagePlansDialog } from "@/components/financial-plans/ManagePlansDialo
 import { Loader2, Plus } from "lucide-react";
 import { FinancialPlansHeader } from "@/components/financial-plans/FinancialPlansHeader";
 import { FinancialPlansQuickActions } from "@/components/financial-plans/FinancialPlansQuickActions";
-import { useFinancialPlansState } from "@/hooks/useFinancialPlansState";
+import { useSupabaseFinancialPlans } from "@/hooks/useSupabaseFinancialPlans";
 import { FinancialPlanProvider } from "@/context/FinancialPlanContext";
 
 const FinancialPlansContent = () => {
   const {
-    goals,
     plans,
-    currentDraftData,
     activePlan,
     loading,
-    setCurrentDraftData,
-    handleCreatePlan,
-    handleSelectPlan,
-    handleSaveDraft,
-    handleEditPlan,
-    handleDeletePlan,
-    handleDuplicatePlan,
-    handleToggleFavorite,
-    handleGoalUpdate
-  } = useFinancialPlansState();
+    createPlan,
+    updatePlan,
+    deletePlan,
+    saveDraft,
+    setActivePlan,
+    updateGoal,
+    toggleFavorite,
+    duplicatePlan
+  } = useSupabaseFinancialPlans();
 
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isManagePlansOpen, setIsManagePlansOpen] = useState(false);
+  const [currentDraftData, setCurrentDraftData] = useState<any>(null);
+
+  // Derive goals from active plan
+  const goals = activePlan?.goals?.map(goal => ({
+    id: goal.id,
+    title: goal.title,
+    name: goal.title,
+    type: goal.priority,
+    owner: 'Current User',
+    targetAmount: goal.targetAmount,
+    currentAmount: goal.currentAmount,
+    targetDate: goal.targetDate,
+    priority: goal.priority,
+    description: goal.description,
+  })) || [];
 
   const onCreatePlan = () => {
     setCurrentDraftData(null);
@@ -52,27 +64,60 @@ const FinancialPlansContent = () => {
       return;
     }
     
-    const result = handleSelectPlan(planId);
-    if (result.openCreateDialog) {
-      setIsCreateDialogOpen(true);
-    }
+    setActivePlan(planId);
   };
 
   const onEditPlan = (planId: string) => {
-    const result = handleEditPlan(planId);
-    if (result.openCreateDialog) {
+    const planToEdit = plans.find(plan => plan.id === planId);
+    if (planToEdit) {
+      setCurrentDraftData(planToEdit.draftData);
       setIsCreateDialogOpen(true);
     }
     setIsManagePlansOpen(false);
   };
 
   const onDeletePlan = (planId: string) => {
-    handleDeletePlan(planId);
+    deletePlan(planId);
     setIsManagePlansOpen(false);
   };
 
   const onDuplicatePlan = (planId: string) => {
-    handleDuplicatePlan(planId);
+    duplicatePlan(planId);
+  };
+
+  const handleCreatePlan = async (planName: string, planData: any) => {
+    const fullPlanData = {
+      name: planName,
+      ...planData
+    };
+    await createPlan(fullPlanData);
+    setIsCreateDialogOpen(false);
+  };
+
+  const handleSaveDraft = async (draftData: any) => {
+    await saveDraft(draftData);
+    setIsCreateDialogOpen(false);
+  };
+
+  const handleGoalUpdate = async (goal: any) => {
+    if (!activePlan) {
+      console.warn("No active plan to update goal.");
+      return;
+    }
+
+    // Convert Goal to FinancialGoal for the handler
+    const financialGoal = {
+      id: goal.id,
+      title: goal.title,
+      targetAmount: goal.targetAmount,
+      currentAmount: goal.currentAmount,
+      targetDate: goal.targetDate,
+      priority: goal.priority,
+      description: goal.description,
+      isComplete: false
+    };
+    
+    await updateGoal(activePlan.id, financialGoal);
   };
 
   if (loading) {
@@ -157,20 +202,7 @@ const FinancialPlansContent = () => {
                         </div>
                         <GoalsList 
                           goals={goals} 
-                          onGoalUpdate={(goal) => {
-                            // Convert Goal to FinancialGoal for the handler
-                            const financialGoal = {
-                              id: goal.id,
-                              title: goal.title,
-                              targetAmount: goal.targetAmount,
-                              currentAmount: goal.currentAmount,
-                              targetDate: goal.targetDate,
-                              priority: goal.priority,
-                              description: goal.description,
-                              isComplete: false
-                            };
-                            handleGoalUpdate(financialGoal);
-                          }}
+                          onGoalUpdate={handleGoalUpdate}
                           compact={true}
                         />
                       </div>
@@ -250,14 +282,7 @@ const FinancialPlansContent = () => {
         <CreatePlanDialog 
           isOpen={isCreateDialogOpen}
           onClose={() => setIsCreateDialogOpen(false)}
-          onCreatePlan={(planName: string, planData: any) => {
-            // Convert the parameters to match the expected format
-            const fullPlanData = {
-              name: planName,
-              ...planData
-            };
-            handleCreatePlan(fullPlanData);
-          }}
+          onCreatePlan={handleCreatePlan}
           onSaveDraft={handleSaveDraft}
           draftData={currentDraftData}
         />
@@ -273,9 +298,9 @@ const FinancialPlansContent = () => {
           onEditPlan={onEditPlan}
           onDeletePlan={onDeletePlan}
           onDuplicatePlan={onDuplicatePlan}
-          onToggleFavorite={handleToggleFavorite}
+          onToggleFavorite={toggleFavorite}
           onSelectPlan={(planId) => {
-            handleSelectPlan(planId);
+            setActivePlan(planId);
             setIsManagePlansOpen(false);
           }}
         />
