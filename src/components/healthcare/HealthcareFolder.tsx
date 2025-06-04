@@ -402,397 +402,423 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <div>
-          <h2 className="text-2xl font-bold flex items-center gap-2">
-            <Shield className="h-5 w-5 text-blue-500" />
-            Healthcare Documents
-          </h2>
-          <p className="text-sm text-muted-foreground">
-            Securely store and share your sensitive health information
-          </p>
-        </div>
-      </div>
-
-      <Tabs defaultValue="dashboard" className="w-full">
-        <TabsList className="mb-4">
-          <TabsTrigger value="dashboard" className="flex items-center gap-1">
-            <LayoutDashboard className="h-4 w-4" />
-            Dashboard
-          </TabsTrigger>
-          <TabsTrigger value="documents" className="flex items-center gap-1">
-            <FileEdit className="h-4 w-4" />
-            Documents
-          </TabsTrigger>
-          <TabsTrigger value="prescriptions" className="flex items-center gap-1">
-            <Pill className="h-4 w-4" />
-            Prescriptions
-          </TabsTrigger>
-          <TabsTrigger 
-            value="templates" 
-            className="flex items-center gap-1 opacity-50 cursor-not-allowed relative" 
-            disabled
-          >
-            <FileText className="h-4 w-4" />
-            Templates
-            <Badge variant="secondary" className="ml-1 text-[10px] px-1 py-0.5 h-4 bg-muted text-muted-foreground">
-              Coming Soon
-            </Badge>
-          </TabsTrigger>
-        </TabsList>
-        
-        <TabsContent value="dashboard">
-          <HealthcareDashboard documents={documents} />
-        </TabsContent>
-      
-        <TabsContent value="documents">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <div className="md:col-span-1">
-              <CategoryList
-                categories={healthcareCategories}
-                activeCategory={activeSubcategory}
-                onCategorySelect={setActiveSubcategory}
-              />
-            </div>
-            
-            <div className="md:col-span-3">
-              {filteredDocuments.length > 0 ? (
-                <div className="space-y-6">
-                  <DocumentsTable 
-                    documents={filteredDocuments} 
-                    onEditDocument={handleEditPermissions}
-                    onShareDocument={handleShareDocument}
-                    onDownloadDocument={handleViewDocument}
-                    extraColumns={[
-                      {
-                        header: "Privacy",
-                        cell: (document) => (
-                          <div className="flex items-center space-x-1">
-                            <TooltipProvider>
-                              {document.encrypted && (
-                                <Tooltip>
-                                  <TooltipTrigger asChild>
-                                    <div>
-                                      <Lock className="h-4 w-4 text-green-500" />
-                                    </div>
-                                  </TooltipTrigger>
-                                  <TooltipContent>Encrypted</TooltipContent>
-                                </Tooltip>
-                              )}
-                              {document.isPrivate && (
-                                <Tooltip>
-                                  <TooltipTrigger asChild>
-                                    <div>
-                                      <Eye className="h-4 w-4 text-amber-500" />
-                                    </div>
-                                  </TooltipTrigger>
-                                  <TooltipContent>Private</TooltipContent>
-                                </Tooltip>
-                              )}
-                            </TooltipProvider>
-                          </div>
-                        )
-                      },
-                      {
-                        header: "Shared With",
-                        cell: (document) => (
-                          <div className="flex items-center space-x-1">
-                            {document.permissions && document.permissions.length > 1 ? (
-                              <Badge variant="outline" className="flex items-center gap-1">
-                                <Users className="h-3 w-3" />
-                                <span>{document.permissions.length - 1}</span>
-                              </Badge>
-                            ) : (
-                              <span className="text-xs text-muted-foreground">Only you</span>
-                            )}
-                          </div>
-                        )
-                      }
-                    ]}
-                  />
-                  <p className="text-sm text-muted-foreground">
-                    <Lock className="h-3.5 w-3.5 inline mr-1" />
-                    All healthcare documents are encrypted and have individual access controls
-                  </p>
-                </div>
-              ) : (
-                <NoDocumentsState
-                  onUploadClick={() => setIsUploadDialogOpen(true)}
-                  categoryName={activeSubcategoryName}
-                />
-              )}
-            </div>
+    <div className="min-h-screen bg-background">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div>
+            <h2 className="text-2xl font-bold flex items-center gap-2">
+              <Shield className="h-5 w-5 text-blue-500" />
+              Healthcare Documents
+            </h2>
+            <p className="text-sm text-muted-foreground mt-1">
+              Securely store and share your sensitive health information
+            </p>
           </div>
-        </TabsContent>
+        </div>
 
-        <TabsContent value="prescriptions">
-          <div className="space-y-6">
-            <div className="flex justify-between items-center">
-              <h3 className="text-xl font-medium">Manage Prescriptions</h3>
-              <Button 
-                onClick={() => {
-                  form.reset();
-                  setIsEditMode(false);
-                  setSelectedPrescription(null);
-                  setIsPrescriptionDialogOpen(true);
-                }}
-                className="flex items-center gap-2"
-              >
-                <Pill className="h-4 w-4" />
-                Add Prescription
-              </Button>
-            </div>
-
-            {prescriptions.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {prescriptions.map((prescription, index) => (
-                  <Card key={index} className="overflow-hidden">
-                    <CardHeader className="pb-2 flex flex-row justify-between items-start">
-                      <div>
-                        <CardTitle className="text-lg">{prescription.name}</CardTitle>
-                        <p className="text-sm text-muted-foreground">{prescription.dosage}</p>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
-                          onClick={() => handleEditPrescription(prescription)}
-                          className="h-8 w-8 p-0"
-                        >
-                          <Edit className="h-4 w-4" />
-                        </Button>
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
-                          onClick={() => handleDeletePrescription(prescription)}
-                          className="h-8 w-8 p-0 text-red-500 hover:text-red-600"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </CardHeader>
-                    <CardContent className="space-y-2">
-                      <div className="text-sm">
-                        <div className="flex items-center">
-                          <Label className="w-24 font-medium">Frequency:</Label>
-                          <span>{prescription.frequency}</span>
-                        </div>
-                        <div className="flex items-center">
-                          <Label className="w-24 font-medium">Next Refill:</Label>
-                          <span className={getUrgencyColor(getDaysRemaining(prescription.nextRefill))}>
-                            {formatDate(prescription.nextRefill)} ({getDaysRemaining(prescription.nextRefill) < 0 
-                              ? `${Math.abs(getDaysRemaining(prescription.nextRefill))} days ago` 
-                              : getDaysRemaining(prescription.nextRefill) === 0 
-                                ? "Today" 
-                                : `in ${getDaysRemaining(prescription.nextRefill)} days`})
-                          </span>
-                        </div>
-                        {prescription.doctor && (
-                          <div className="flex items-center">
-                            <Label className="w-24 font-medium">Doctor:</Label>
-                            <span>{prescription.doctor}</span>
-                          </div>
-                        )}
-                        {prescription.pharmacy && (
-                          <div className="flex items-center">
-                            <Label className="w-24 font-medium">Pharmacy:</Label>
-                            <span>{prescription.pharmacy}</span>
-                          </div>
-                        )}
-                        {prescription.notes && (
-                          <div className="mt-2">
-                            <Label className="font-medium">Notes:</Label>
-                            <p className="text-muted-foreground">{prescription.notes}</p>
-                          </div>
-                        )}
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
+        <Tabs defaultValue="dashboard" className="w-full">
+          <TabsList className="mb-6 grid w-full grid-cols-3 lg:w-auto lg:grid-cols-3">
+            <TabsTrigger value="dashboard" className="flex items-center gap-1 text-xs sm:text-sm">
+              <LayoutDashboard className="h-4 w-4" />
+              <span className="hidden sm:inline">Dashboard</span>
+            </TabsTrigger>
+            <TabsTrigger value="documents" className="flex items-center gap-1 text-xs sm:text-sm">
+              <FileEdit className="h-4 w-4" />
+              <span className="hidden sm:inline">Documents</span>
+            </TabsTrigger>
+            <TabsTrigger value="prescriptions" className="flex items-center gap-1 text-xs sm:text-sm">
+              <Pill className="h-4 w-4" />
+              <span className="hidden sm:inline">Prescriptions</span>
+            </TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="dashboard">
+            <HealthcareDashboard documents={documents} />
+          </TabsContent>
+        
+          <TabsContent value="documents">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+              {/* Category Sidebar */}
+              <div className="lg:col-span-3">
+                <Card className="h-fit">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-sm font-medium">Categories</CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-3">
+                    <CategoryList
+                      categories={healthcareCategories}
+                      activeCategory={activeSubcategory}
+                      onCategorySelect={setActiveSubcategory}
+                    />
+                  </CardContent>
+                </Card>
               </div>
-            ) : (
-              <Card className="p-8 text-center">
-                <div className="mx-auto bg-muted rounded-full w-12 h-12 flex items-center justify-center mb-4">
-                  <Pill className="h-6 w-6 text-muted-foreground" />
+              
+              {/* Main Content */}
+              <div className="lg:col-span-9">
+                <div className="space-y-6">
+                  {/* Action Buttons */}
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    <Button 
+                      onClick={() => setIsUploadDialogOpen(true)}
+                      className="flex items-center gap-2"
+                    >
+                      <Upload className="h-4 w-4" />
+                      Upload Document
+                    </Button>
+                    <Button 
+                      variant="outline"
+                      onClick={() => setIsNewFolderDialogOpen(true)}
+                      className="flex items-center gap-2"
+                    >
+                      <FolderPlus className="h-4 w-4" />
+                      Create Folder
+                    </Button>
+                  </div>
+
+                  {/* Documents Table */}
+                  {filteredDocuments.length > 0 ? (
+                    <Card>
+                      <CardContent className="p-0">
+                        <div className="overflow-x-auto">
+                          <DocumentsTable 
+                            documents={filteredDocuments} 
+                            onEditDocument={handleEditPermissions}
+                            onShareDocument={handleShareDocument}
+                            onDownloadDocument={handleViewDocument}
+                            extraColumns={[
+                              {
+                                header: "Privacy",
+                                cell: (document) => (
+                                  <div className="flex items-center space-x-1">
+                                    <TooltipProvider>
+                                      {document.encrypted && (
+                                        <Tooltip>
+                                          <TooltipTrigger asChild>
+                                            <div>
+                                              <Lock className="h-4 w-4 text-green-500" />
+                                            </div>
+                                          </TooltipTrigger>
+                                          <TooltipContent>Encrypted</TooltipContent>
+                                        </Tooltip>
+                                      )}
+                                      {document.isPrivate && (
+                                        <Tooltip>
+                                          <TooltipTrigger asChild>
+                                            <div>
+                                              <Eye className="h-4 w-4 text-amber-500" />
+                                            </div>
+                                          </TooltipTrigger>
+                                          <TooltipContent>Private</TooltipContent>
+                                        </Tooltip>
+                                      )}
+                                    </TooltipProvider>
+                                  </div>
+                                )
+                              },
+                              {
+                                header: "Shared With",
+                                cell: (document) => (
+                                  <div className="flex items-center space-x-1">
+                                    {document.permissions && document.permissions.length > 1 ? (
+                                      <Badge variant="outline" className="flex items-center gap-1">
+                                        <Users className="h-3 w-3" />
+                                        <span>{document.permissions.length - 1}</span>
+                                      </Badge>
+                                    ) : (
+                                      <span className="text-xs text-muted-foreground">Only you</span>
+                                    )}
+                                  </div>
+                                )
+                              }
+                            ]}
+                          />
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ) : (
+                    <NoDocumentsState
+                      onUploadClick={() => setIsUploadDialogOpen(true)}
+                      categoryName={activeSubcategoryName}
+                    />
+                  )}
+
+                  {/* Security Notice */}
+                  <div className="bg-muted/50 rounded-lg p-4">
+                    <p className="text-sm text-muted-foreground flex items-center gap-2">
+                      <Lock className="h-4 w-4 text-green-500" />
+                      All healthcare documents are encrypted and have individual access controls
+                    </p>
+                  </div>
                 </div>
-                <h3 className="text-lg font-medium mb-2">No Prescriptions Added</h3>
-                <p className="text-muted-foreground mb-4">
-                  Add your medication prescriptions to keep track of refills and important information.
-                </p>
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="prescriptions">
+            <div className="space-y-6">
+              <div className="flex justify-between items-center">
+                <h3 className="text-xl font-medium">Manage Prescriptions</h3>
                 <Button 
                   onClick={() => {
                     form.reset();
+                    setIsEditMode(false);
+                    setSelectedPrescription(null);
                     setIsPrescriptionDialogOpen(true);
                   }}
-                  className="mx-auto"
+                  className="flex items-center gap-2"
                 >
-                  Add Your First Prescription
+                  <Pill className="h-4 w-4" />
+                  Add Prescription
                 </Button>
-              </Card>
-            )}
-          </div>
-        </TabsContent>
+              </div>
+
+              {prescriptions.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {prescriptions.map((prescription, index) => (
+                    <Card key={index} className="overflow-hidden">
+                      <CardHeader className="pb-2 flex flex-row justify-between items-start">
+                        <div>
+                          <CardTitle className="text-lg">{prescription.name}</CardTitle>
+                          <p className="text-sm text-muted-foreground">{prescription.dosage}</p>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            onClick={() => handleEditPrescription(prescription)}
+                            className="h-8 w-8 p-0"
+                          >
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                          <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            onClick={() => handleDeletePrescription(prescription)}
+                            className="h-8 w-8 p-0 text-red-500 hover:text-red-600"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </CardHeader>
+                      <CardContent className="space-y-2">
+                        <div className="text-sm">
+                          <div className="flex items-center">
+                            <Label className="w-24 font-medium">Frequency:</Label>
+                            <span>{prescription.frequency}</span>
+                          </div>
+                          <div className="flex items-center">
+                            <Label className="w-24 font-medium">Next Refill:</Label>
+                            <span className={getUrgencyColor(getDaysRemaining(prescription.nextRefill))}>
+                              {formatDate(prescription.nextRefill)} ({getDaysRemaining(prescription.nextRefill) < 0 
+                                ? `${Math.abs(getDaysRemaining(prescription.nextRefill))} days ago` 
+                                : getDaysRemaining(prescription.nextRefill) === 0 
+                                  ? "Today" 
+                                  : `in ${getDaysRemaining(prescription.nextRefill)} days`})
+                            </span>
+                          </div>
+                          {prescription.doctor && (
+                            <div className="flex items-center">
+                              <Label className="w-24 font-medium">Doctor:</Label>
+                              <span>{prescription.doctor}</span>
+                            </div>
+                          )}
+                          {prescription.pharmacy && (
+                            <div className="flex items-center">
+                              <Label className="w-24 font-medium">Pharmacy:</Label>
+                              <span>{prescription.pharmacy}</span>
+                            </div>
+                          )}
+                          {prescription.notes && (
+                            <div className="mt-2">
+                              <Label className="font-medium">Notes:</Label>
+                              <p className="text-muted-foreground">{prescription.notes}</p>
+                            </div>
+                          )}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              ) : (
+                <Card className="p-8 text-center">
+                  <div className="mx-auto bg-muted rounded-full w-12 h-12 flex items-center justify-center mb-4">
+                    <Pill className="h-6 w-6 text-muted-foreground" />
+                  </div>
+                  <h3 className="text-lg font-medium mb-2">No Prescriptions Added</h3>
+                  <p className="text-muted-foreground mb-4">
+                    Add your medication prescriptions to keep track of refills and important information.
+                  </p>
+                  <Button 
+                    onClick={() => {
+                      form.reset();
+                      setIsPrescriptionDialogOpen(true);
+                    }}
+                    className="mx-auto"
+                  >
+                    Add Your First Prescription
+                  </Button>
+                </Card>
+              )}
+            </div>
+          </TabsContent>
+        </Tabs>
+
+        <Dialog open={isPrescriptionDialogOpen} onOpenChange={setIsPrescriptionDialogOpen}>
+          <DialogContent className="sm:max-w-[500px]">
+            <DialogHeader>
+              <DialogTitle>{isEditMode ? 'Edit Prescription' : 'Add New Prescription'}</DialogTitle>
+              <DialogDescription>
+                {isEditMode
+                  ? "Update the prescription details below."
+                  : "Enter the details about your medication prescription."}
+              </DialogDescription>
+            </DialogHeader>
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(handleAddPrescription)} className="space-y-4">
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Medication Name</FormLabel>
+                      <FormControl>
+                        <Input {...field} placeholder="e.g., Lisinopril" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <div className="grid grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="dosage"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Dosage</FormLabel>
+                        <FormControl>
+                          <Input {...field} placeholder="e.g., 20mg" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="frequency"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Frequency</FormLabel>
+                        <FormControl>
+                          <Input {...field} placeholder="e.g., Once daily" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <FormField
+                  control={form.control}
+                  name="nextRefill"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Next Refill Date</FormLabel>
+                      <FormControl>
+                        <Input type="date" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <div className="grid grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="doctor"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Prescribing Doctor</FormLabel>
+                        <FormControl>
+                          <Input {...field} placeholder="e.g., Dr. Smith" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="pharmacy"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Pharmacy</FormLabel>
+                        <FormControl>
+                          <Input {...field} placeholder="e.g., CVS Pharmacy" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <FormField
+                  control={form.control}
+                  name="notes"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Notes (Optional)</FormLabel>
+                      <FormControl>
+                        <Input {...field} placeholder="Additional information" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <DialogFooter>
+                  <Button type="submit">{isEditMode ? 'Update Prescription' : 'Add Prescription'}</Button>
+                </DialogFooter>
+              </form>
+            </Form>
+          </DialogContent>
+        </Dialog>
+
+        <AlertDialog open={isDeleteAlertOpen} onOpenChange={setIsDeleteAlertOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This will permanently delete the prescription "{prescriptionToDelete?.name}". 
+                This action cannot be undone.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction className="bg-red-500 hover:bg-red-600" onClick={confirmDeletePrescription}>
+                Delete
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+
+        <UploadDocumentDialog
+          open={isUploadDialogOpen}
+          onOpenChange={setIsUploadDialogOpen}
+          onClose={() => setIsUploadDialogOpen(false)}
+          onFileUpload={handleUploadDocument}
+          activeCategory={activeSubcategory}
+          documentCategories={healthcareCategories}
+        />
         
-        <TabsContent value="templates">
-          <HealthcareTemplates onAddDocument={onAddDocument} />
-        </TabsContent>
-      </Tabs>
-
-      <Dialog open={isPrescriptionDialogOpen} onOpenChange={setIsPrescriptionDialogOpen}>
-        <DialogContent className="sm:max-w-[500px]">
-          <DialogHeader>
-            <DialogTitle>{isEditMode ? 'Edit Prescription' : 'Add New Prescription'}</DialogTitle>
-            <DialogDescription>
-              {isEditMode
-                ? "Update the prescription details below."
-                : "Enter the details about your medication prescription."}
-            </DialogDescription>
-          </DialogHeader>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(handleAddPrescription)} className="space-y-4">
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Medication Name</FormLabel>
-                    <FormControl>
-                      <Input {...field} placeholder="e.g., Lisinopril" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <div className="grid grid-cols-2 gap-4">
-                <FormField
-                  control={form.control}
-                  name="dosage"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Dosage</FormLabel>
-                      <FormControl>
-                        <Input {...field} placeholder="e.g., 20mg" />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="frequency"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Frequency</FormLabel>
-                      <FormControl>
-                        <Input {...field} placeholder="e.g., Once daily" />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-              <FormField
-                control={form.control}
-                name="nextRefill"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Next Refill Date</FormLabel>
-                    <FormControl>
-                      <Input type="date" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <div className="grid grid-cols-2 gap-4">
-                <FormField
-                  control={form.control}
-                  name="doctor"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Prescribing Doctor</FormLabel>
-                      <FormControl>
-                        <Input {...field} placeholder="e.g., Dr. Smith" />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="pharmacy"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Pharmacy</FormLabel>
-                      <FormControl>
-                        <Input {...field} placeholder="e.g., CVS Pharmacy" />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-              <FormField
-                control={form.control}
-                name="notes"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Notes (Optional)</FormLabel>
-                    <FormControl>
-                      <Input {...field} placeholder="Additional information" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <DialogFooter>
-                <Button type="submit">{isEditMode ? 'Update Prescription' : 'Add Prescription'}</Button>
-              </DialogFooter>
-            </form>
-          </Form>
-        </DialogContent>
-      </Dialog>
-
-      <AlertDialog open={isDeleteAlertOpen} onOpenChange={setIsDeleteAlertOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This will permanently delete the prescription "{prescriptionToDelete?.name}". 
-              This action cannot be undone.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction className="bg-red-500 hover:bg-red-600" onClick={confirmDeletePrescription}>
-              Delete
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-
-      <UploadDocumentDialog
-        open={isUploadDialogOpen}
-        onOpenChange={setIsUploadDialogOpen}
-        onClose={() => setIsUploadDialogOpen(false)}
-        onFileUpload={handleUploadDocument}
-        activeCategory={activeSubcategory}
-        documentCategories={healthcareCategories}
-      />
-      
-      <NewFolderDialog
-        open={isNewFolderDialogOpen}
-        onOpenChange={setIsNewFolderDialogOpen}
-        onCreateFolder={handleCreateFolder}
-      />
-      
-      <HealthcareShareDialog
-        open={isShareDialogOpen}
-        onOpenChange={setIsShareDialogOpen}
-        document={selectedDocument}
-        onShareComplete={handleDocumentShare}
-      />
+        <NewFolderDialog
+          open={isNewFolderDialogOpen}
+          onOpenChange={setIsNewFolderDialogOpen}
+          onCreateFolder={handleCreateFolder}
+        />
+        
+        <HealthcareShareDialog
+          open={isShareDialogOpen}
+          onOpenChange={setIsShareDialogOpen}
+          document={selectedDocument}
+          onShareComplete={handleDocumentShare}
+        />
+      </div>
     </div>
   );
 };
