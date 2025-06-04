@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { format } from "date-fns";
 import { 
@@ -42,7 +43,7 @@ export interface Plan {
   isFavorite: boolean;
   isActive?: boolean;
   successRate?: number;
-  status: 'Active' | 'Draft';
+  status: 'Active' | 'Draft' | 'Archived';
   draftData?: any;
 }
 

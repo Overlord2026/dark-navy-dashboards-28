@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useCallback } from "react";
 import { v4 as uuidv4 } from 'uuid';
 import {
@@ -383,7 +384,7 @@ export const useFinancialPlansState = (): UseFinancialPlansState => {
     loading,
     error,
     currentDraftData,
-    goals, // Add goals to return
+    goals,
     setCurrentDraftData,
     handleCreatePlan,
     handleSelectPlan,
