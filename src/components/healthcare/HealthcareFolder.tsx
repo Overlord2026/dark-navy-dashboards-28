@@ -4,11 +4,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DocumentsTable } from "@/components/documents/DocumentsTable";
 import { NoDocumentsState } from "@/components/documents/EmptyStates";
 import { Button } from "@/components/ui/button";
-import { NewFolderDialog } from "@/components/documents/NewFolderDialog";
 import { UploadDocumentDialog } from "@/components/documents/UploadDocumentDialog";
 import { healthcareCategories } from "@/data/documentCategories";
 import { healthcareTags, DocumentItem, DocumentTag, HealthcareAccessLevel, DocumentPermission } from "@/types/document";
-import { Upload, FolderPlus, Tag, Lock, Shield, Users, Eye, FileEdit, History, LayoutDashboard, Bell, FileText, ArrowLeft, Pill, Trash2, Edit } from "lucide-react";
+import { Upload, Tag, Lock, Shield, Users, Eye, FileEdit, History, LayoutDashboard, Bell, FileText, ArrowLeft, Pill, Trash2, Edit } from "lucide-react";
 import { CategoryList } from "@/components/documents/CategoryList";
 import { toast } from "sonner";
 import { auditLog } from "@/services/auditLog/auditLogService";
@@ -57,7 +56,6 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
   const navigate = useNavigate();
   const [activeSubcategory, setActiveSubcategory] = useState<string>("healthcare");
   const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
-  const [isNewFolderDialogOpen, setIsNewFolderDialogOpen] = useState(false);
   const [isPermissionDialogOpen, setIsPermissionDialogOpen] = useState(false);
   const [isShareDialogOpen, setIsShareDialogOpen] = useState(false);
   const [isPrescriptionDialogOpen, setIsPrescriptionDialogOpen] = useState(false);
@@ -170,26 +168,6 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
     toast.success("Healthcare document uploaded successfully", {
       description: "Document is encrypted and set to private by default"
     });
-  };
-
-  const handleCreateFolder = (folderName: string) => {
-    onCreateFolder(folderName, activeSubcategory);
-    setIsNewFolderDialogOpen(false);
-    
-    auditLog.log(
-      userId,
-      "document_creation",
-      "success",
-      {
-        userName: userId,
-        resourceType: "healthcare_folder",
-        details: {
-          action: "create_folder",
-          folderName: folderName,
-          category: activeSubcategory
-        }
-      }
-    );
   };
 
   const toggleTag = (tagId: string) => {
@@ -438,7 +416,7 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
         
           <TabsContent value="documents">
             <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-              {/* Category Sidebar - Increased from lg:col-span-3 to lg:col-span-2 */}
+              {/* Category Sidebar */}
               <div className="lg:col-span-2">
                 <Card className="h-fit">
                   <CardHeader className="pb-3">
@@ -454,10 +432,10 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
                 </Card>
               </div>
               
-              {/* Main Content - Adjusted from lg:col-span-9 to lg:col-span-3 */}
+              {/* Main Content */}
               <div className="lg:col-span-3">
                 <div className="space-y-6">
-                  {/* Action Buttons */}
+                  {/* Action Buttons - Only Upload Document */}
                   <div className="flex flex-col sm:flex-row gap-3">
                     <Button 
                       onClick={() => setIsUploadDialogOpen(true)}
@@ -465,14 +443,6 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
                     >
                       <Upload className="h-4 w-4" />
                       Upload Document
-                    </Button>
-                    <Button 
-                      variant="outline"
-                      onClick={() => setIsNewFolderDialogOpen(true)}
-                      className="flex items-center gap-2"
-                    >
-                      <FolderPlus className="h-4 w-4" />
-                      Create Folder
                     </Button>
                   </div>
 
@@ -804,12 +774,6 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
           onFileUpload={handleUploadDocument}
           activeCategory={activeSubcategory}
           documentCategories={healthcareCategories}
-        />
-        
-        <NewFolderDialog
-          open={isNewFolderDialogOpen}
-          onOpenChange={setIsNewFolderDialogOpen}
-          onCreateFolder={handleCreateFolder}
         />
         
         <HealthcareShareDialog
