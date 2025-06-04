@@ -1,8 +1,8 @@
+
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DocumentChecklist } from "./DocumentChecklist";
-import { UploadedDocuments } from "./UploadedDocuments";
 import { SharedDocuments } from "./SharedDocuments";
 import { ResourcesCard } from "./ResourcesCard";
 import { UploadDocumentDialog, ShareDocumentDialog, TaxReturnUploadDialog } from "@/components/estate-planning/DocumentDialogs";
@@ -128,22 +128,14 @@ export const FamilyLegacyBox: React.FC = () => {
           </CardHeader>
           <CardContent className="p-6 pt-0">
             <Tabs defaultValue="overview" value={activeTab} onValueChange={setActiveTab}>
-              <TabsList className="grid w-full grid-cols-3 mb-6">
+              <TabsList className="grid w-full grid-cols-2 mb-6">
                 <TabsTrigger value="overview" className="text-sm">Document Overview</TabsTrigger>
-                <TabsTrigger value="uploaded" className="text-sm">My Documents</TabsTrigger>
                 <TabsTrigger value="shared" className="text-sm">Shared Documents</TabsTrigger>
               </TabsList>
               <TabsContent value="overview" className="mt-0">
                 <DocumentChecklist
                   onUploadDocument={handleUploadDocument}
                   documents={convertedDocuments}
-                />
-              </TabsContent>
-              <TabsContent value="uploaded" className="mt-0">
-                <UploadedDocuments
-                  documents={convertedDocuments}
-                  onViewDocument={handleViewDocument}
-                  onShareDocument={handleShareDocument}
                 />
               </TabsContent>
               <TabsContent value="shared" className="mt-0">
