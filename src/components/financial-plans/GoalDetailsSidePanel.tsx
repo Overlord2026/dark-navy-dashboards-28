@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
@@ -13,7 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { DatePicker } from "@/components/ui/date-picker";
-import { Goal } from "@/hooks/useFinancialPlansState";
+import { Goal } from "./GoalsList";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 export interface GoalFormData {

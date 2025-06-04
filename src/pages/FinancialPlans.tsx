@@ -1,53 +1,38 @@
+
 import { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { PlanSuccessGauge } from "@/components/financial-plans/PlanSuccessGauge";
 import { NetWorthChart } from "@/components/financial-plans/NetWorthChart";
 import { GoalsList } from "@/components/financial-plans/GoalsList";
 import { CreatePlanDialog } from "@/components/financial-plans/CreatePlanDialog";
 import { ManagePlansDialog } from "@/components/financial-plans/ManagePlansDialog";
-import { Loader2, Plus } from "lucide-react";
+import { InfoIcon } from "lucide-react";
 import { FinancialPlansHeader } from "@/components/financial-plans/FinancialPlansHeader";
-import { FinancialPlansQuickActions } from "@/components/financial-plans/FinancialPlansQuickActions";
-import { useSupabaseFinancialPlans } from "@/hooks/useSupabaseFinancialPlans";
-import { FinancialPlanProvider } from "@/context/FinancialPlanContext";
-import { FinancialGoal } from "@/types/financial-plan";
-import { AddGoalDialog } from "@/components/financial-plans/AddGoalDialog";
+import { FinancialPlansActions } from "@/components/financial-plans/FinancialPlansActions";
+import { PlanManagementSection } from "@/components/financial-plans/PlanManagementSection";
+import { FinancialPlansCards } from "@/components/financial-plans/FinancialPlansCards";
+import { useFinancialPlansState } from "@/hooks/useFinancialPlansState";
 
-const FinancialPlansContent = () => {
+const FinancialPlans = () => {
   const {
+    goals,
     plans,
+    currentDraftData,
     activePlan,
-    loading,
-    createPlan,
-    updatePlan,
-    deletePlan,
-    saveDraft,
-    setActivePlan,
-    updateGoal,
-    toggleFavorite,
-    duplicatePlan
-  } = useSupabaseFinancialPlans();
+    setCurrentDraftData,
+    handleCreatePlan,
+    handleSelectPlan,
+    handleSaveDraft,
+    handleEditPlan,
+    handleDeletePlan,
+    handleDuplicatePlan,
+    handleToggleFavorite,
+    handleGoalUpdate
+  } = useFinancialPlansState();
 
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isManagePlansOpen, setIsManagePlansOpen] = useState(false);
-  const [currentDraftData, setCurrentDraftData] = useState<any>(null);
-  const [isAddGoalDialogOpen, setIsAddGoalDialogOpen] = useState(false);
-
-  // Derive goals from active plan
-  const goals = activePlan?.goals?.map(goal => ({
-    id: goal.id,
-    title: goal.title,
-    name: goal.title,
-    type: goal.priority,
-    owner: 'Current User',
-    targetAmount: goal.targetAmount,
-    currentAmount: goal.currentAmount,
-    targetDate: goal.targetDate,
-    priority: goal.priority,
-    description: goal.description,
-  })) || [];
 
   const onCreatePlan = () => {
     setCurrentDraftData(null);
@@ -66,277 +51,108 @@ const FinancialPlansContent = () => {
       return;
     }
     
-    setActivePlan(planId);
+    const result = handleSelectPlan(planId);
+    if (result.openCreateDialog) {
+      setIsCreateDialogOpen(true);
+    }
   };
 
   const onEditPlan = (planId: string) => {
-    const planToEdit = plans.find(plan => plan.id === planId);
-    if (planToEdit) {
-      setCurrentDraftData(planToEdit.draftData);
+    const result = handleEditPlan(planId);
+    if (result.openCreateDialog) {
       setIsCreateDialogOpen(true);
     }
     setIsManagePlansOpen(false);
   };
 
   const onDeletePlan = (planId: string) => {
-    deletePlan(planId);
+    handleDeletePlan(planId);
     setIsManagePlansOpen(false);
   };
 
   const onDuplicatePlan = (planId: string) => {
-    duplicatePlan(planId);
+    handleDuplicatePlan(planId);
   };
-
-  const handleCreatePlan = async (planName: string, planData: any) => {
-    const fullPlanData = {
-      name: planName,
-      ...planData
-    };
-    await createPlan(fullPlanData);
-    setIsCreateDialogOpen(false);
-  };
-
-  const handleSaveDraft = async (draftData: any) => {
-    await saveDraft(draftData);
-    setIsCreateDialogOpen(false);
-  };
-
-  const handleGoalUpdate = async (goal: any) => {
-    if (!activePlan) {
-      console.warn("No active plan to update goal.");
-      return;
-    }
-
-    // Convert Goal to FinancialGoal for the handler
-    const financialGoal = {
-      id: goal.id,
-      title: goal.title,
-      targetAmount: goal.targetAmount,
-      currentAmount: goal.currentAmount,
-      targetDate: goal.targetDate,
-      priority: goal.priority,
-      description: goal.description,
-      isComplete: false
-    };
-    
-    await updateGoal(activePlan.id, financialGoal);
-  };
-
-  const handleAddGoal = async (newGoal: FinancialGoal) => {
-    if (!activePlan) {
-      console.warn("No active plan to add goal to.");
-      return;
-    }
-
-    await updateGoal(activePlan.id, newGoal);
-  };
-
-  if (loading) {
-    return (
-      <ThreeColumnLayout activeMainItem="financial-plans" title="Financial Plans">
-        <div className="flex items-center justify-center min-h-[400px]">
-          <div className="flex flex-col items-center gap-4">
-            <Loader2 className="h-8 w-8 animate-spin text-primary" />
-            <p className="text-muted-foreground">Loading your financial plans...</p>
-          </div>
-        </div>
-      </ThreeColumnLayout>
-    );
-  }
 
   return (
-    <ThreeColumnLayout activeMainItem="financial-plans" title="Financial Plans">
-      <div className="animate-fade-in w-full">
-        <div className="p-6 space-y-8 max-w-7xl mx-auto">
-          {/* Header Section */}
-          <div className="space-y-6">
-            <FinancialPlansHeader />
-            
-            {/* Create Plan Button - aligned to the left */}
-            <div className="flex justify-start">
-              <Button 
-                onClick={onCreatePlan}
-                className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-3 rounded-lg font-medium"
-                size="lg"
-              >
-                Create Plan
-              </Button>
-            </div>
-          </div>
+    <ThreeColumnLayout activeMainItem="financial-plans" title="">
+      <div className="animate-fade-in space-y-6">
+        <FinancialPlansHeader />
 
-          {/* Quick Actions Cards - Only show if no active plan */}
-          {!activePlan && (
-            <FinancialPlansQuickActions onCreatePlan={onCreatePlan} />
-          )}
-
-          {/* Active Plan Section */}
-          {activePlan && (
-            <>
-              {/* Plan Header */}
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-2xl font-semibold text-foreground">Your Financial Plan</h2>
-                  <Button variant="ghost" size="sm">•••</Button>
-                </div>
-              </div>
-
-              {/* Main Content Grid */}
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                {/* Left Column - Plan Success */}
-                <div className="space-y-6">
-                  <Card className="border border-border/30 bg-card">
-                    <CardContent className="p-6">
-                      <div className="space-y-4">
-                        <div className="flex items-center justify-between">
-                          <h3 className="text-lg font-semibold text-foreground">Projected Plan Success</h3>
-                          <span className="text-sm text-muted-foreground">What is chance of success?</span>
-                        </div>
-                        <div className="flex justify-center py-8">
-                          <PlanSuccessGauge successRate={activePlan.successRate || 0} />
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-
-                {/* Middle Column - Goals */}
-                <div className="space-y-6">
-                  <Card className="border border-border/30 bg-card">
-                    <CardContent className="p-6">
-                      <div className="space-y-4">
-                        <div className="flex items-center justify-between">
-                          <h3 className="text-lg font-semibold text-foreground">Goals</h3>
-                          <div className="flex items-center gap-2">
-                            <span className="text-sm text-muted-foreground">{goals.length} Goals</span>
-                            <Button 
-                              variant="ghost" 
-                              size="sm"
-                              onClick={() => setIsAddGoalDialogOpen(true)}
-                            >
-                              Add
-                            </Button>
-                          </div>
-                        </div>
-                        <GoalsList 
-                          goals={goals} 
-                          onGoalUpdate={handleGoalUpdate}
-                          compact={true}
-                        />
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  {/* Retirement Ages */}
-                  <div className="space-y-4">
-                    <Card className="border border-border/30 bg-card">
-                      <CardContent className="p-4">
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm font-medium text-muted-foreground">Your Retirement Age</span>
-                          <span className="text-lg font-semibold">--</span>
-                        </div>
-                      </CardContent>
-                    </Card>
-                    
-                    <Card className="border border-border/30 bg-card">
-                      <CardContent className="p-4">
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm font-medium text-muted-foreground">Spouse's Retirement Age</span>
-                          <span className="text-lg font-semibold">--</span>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </div>
-                </div>
-
-                {/* Right Column - Track Income */}
-                <div className="space-y-6">
-                  <Card className="border border-border/30 bg-card">
-                    <CardContent className="p-6">
-                      <div className="space-y-4">
-                        <h3 className="text-lg font-semibold text-foreground">Track income and expenses into your plan</h3>
-                        <p className="text-sm text-muted-foreground">
-                          Track your income, expenses, and make sure you're on track.
-                        </p>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-              </div>
-
-              {/* Net Worth Chart */}
-              <Card className="border border-border/30 bg-card">
-                <CardContent className="p-6">
-                  <div className="space-y-4">
-                    <h3 className="text-lg font-semibold text-foreground">Projected Net Worth</h3>
-                    <div className="w-full h-64">
-                      <NetWorthChart />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </>
-          )}
-
-          {/* Empty State */}
-          {!activePlan && !loading && (
-            <div className="text-center py-16 px-4">
-              <div className="max-w-md mx-auto">
-                <h3 className="text-xl font-semibold text-foreground mb-4">No Financial Plans Yet</h3>
-                <p className="text-muted-foreground mb-6">
-                  Create your first financial plan to start tracking your goals and projections.
-                </p>
-                <Button 
-                  onClick={onCreatePlan}
-                  className="bg-primary text-primary-foreground px-6 py-3 rounded-lg hover:bg-primary/90 transition-colors font-medium"
-                >
-                  Create Your First Plan
-                </Button>
-              </div>
-            </div>
-          )}
-        </div>
-
-        <CreatePlanDialog 
-          isOpen={isCreateDialogOpen}
-          onClose={() => setIsCreateDialogOpen(false)}
-          onCreatePlan={handleCreatePlan}
-          onSaveDraft={handleSaveDraft}
-          draftData={currentDraftData}
+        <FinancialPlansActions
+          activePlan={activePlan}
+          plans={plans}
+          onCreatePlan={onCreatePlan}
+          onSelectPlan={onSelectPlan}
         />
 
-        <ManagePlansDialog
-          isOpen={isManagePlansOpen}
-          onClose={() => setIsManagePlansOpen(false)}
-          plans={plans.map(plan => ({
-            ...plan,
-            isDraft: plan.status === 'Draft',
-            isActive: plan.status === 'Active'
-          }))}
+        <PlanManagementSection
+          activePlan={activePlan}
           onEditPlan={onEditPlan}
-          onDeletePlan={onDeletePlan}
           onDuplicatePlan={onDuplicatePlan}
-          onToggleFavorite={toggleFavorite}
-          onSelectPlan={(planId) => {
-            setActivePlan(planId);
-            setIsManagePlansOpen(false);
-          }}
+          onDeletePlan={onDeletePlan}
         />
 
-        <AddGoalDialog
-          isOpen={isAddGoalDialogOpen}
-          onClose={() => setIsAddGoalDialogOpen(false)}
-          onAddGoal={handleAddGoal}
-        />
+        <div className="bg-[#0D1426] border border-blue-900/30 rounded-lg p-6">
+          <GoalsList 
+            goals={goals} 
+            onGoalUpdate={handleGoalUpdate}
+          />
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <Card className="border border-border/30 bg-[#0D1426]">
+            <CardContent className="p-6">
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="text-md font-medium">Projected Plan Success</h3>
+                <div className="flex items-center text-muted-foreground text-xs">
+                  <span>What is chance of success?</span>
+                  <InfoIcon className="h-4 w-4 ml-1" />
+                </div>
+              </div>
+              <PlanSuccessGauge successRate={activePlan.successRate || 0} />
+            </CardContent>
+          </Card>
+
+          <Card className="border border-border/30 bg-[#0D1426]">
+            <CardContent className="p-6">
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="text-md font-medium">Projected Net Worth</h3>
+                <div className="flex items-center text-muted-foreground text-xs">
+                  <span>How is this chart calculated?</span>
+                  <InfoIcon className="h-4 w-4 ml-1" />
+                </div>
+              </div>
+              <NetWorthChart />
+            </CardContent>
+          </Card>
+        </div>
+        
+        <FinancialPlansCards />
       </div>
-    </ThreeColumnLayout>
-  );
-};
 
-const FinancialPlans = () => {
-  return (
-    <FinancialPlanProvider>
-      <FinancialPlansContent />
-    </FinancialPlanProvider>
+      <CreatePlanDialog 
+        isOpen={isCreateDialogOpen}
+        onClose={() => setIsCreateDialogOpen(false)}
+        onCreatePlan={handleCreatePlan}
+        onSaveDraft={handleSaveDraft}
+        draftData={currentDraftData}
+      />
+
+      <ManagePlansDialog
+        isOpen={isManagePlansOpen}
+        onClose={() => setIsManagePlansOpen(false)}
+        plans={plans}
+        onEditPlan={onEditPlan}
+        onDeletePlan={onDeletePlan}
+        onDuplicatePlan={onDuplicatePlan}
+        onToggleFavorite={handleToggleFavorite}
+        onSelectPlan={(planId) => {
+          handleSelectPlan(planId);
+          setIsManagePlansOpen(false);
+        }}
+      />
+    </ThreeColumnLayout>
   );
 };
 
