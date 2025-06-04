@@ -3,6 +3,7 @@ import React from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { 
   Calendar, 
   FileText, 
@@ -60,11 +61,6 @@ export default function TaxPlanning() {
           <p className="text-muted-foreground mt-2">
             Optimize your tax strategy and minimize your tax burden through proactive planning.
           </p>
-        </motion.div>
-
-        {/* Accounting Software Integration */}
-        <motion.div variants={itemVariants}>
-          <AccountingSoftwareIntegration />
         </motion.div>
 
         {/* Roth IRA Conversion */}
@@ -300,6 +296,18 @@ export default function TaxPlanning() {
               </div>
             </CardContent>
           </Card>
+        </motion.div>
+
+        {/* Accounting Software Integration - Moved to bottom with Coming Soon badge */}
+        <motion.div variants={itemVariants}>
+          <div className="relative">
+            <div className="absolute top-4 right-4 z-10">
+              <Badge variant="warning">Coming Soon</Badge>
+            </div>
+            <div className="opacity-60 pointer-events-none">
+              <AccountingSoftwareIntegration />
+            </div>
+          </div>
         </motion.div>
       </motion.div>
     </ThreeColumnLayout>
