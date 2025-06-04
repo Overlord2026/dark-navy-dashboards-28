@@ -31,7 +31,7 @@ export const educationalResources: EducationalResources = {
       level: "All Levels",
       author: "Tony Gomes",
       coverImage: "https://m.media-amazon.com/images/I/61k1ea7TrwL._SY466_.jpg",
-      ghlUrl: "https://www.amazon.com/Life-Integrated-Financial-Freedom-Retirement/dp/B0BVSXBBXW"
+      ghlUrl: "https://www.amazon.com/dp/B0BVSXBBXW/ref=sr_1_fkmr3_1?crid=2259RAWCJ16EH&keywords=life+integrated+toney+gomes&qid=1676472181&sprefix=life+integrated+toney+gomes%2Caps%2C145&sr=8-1-fkmr3"
     }
   ]
 };
