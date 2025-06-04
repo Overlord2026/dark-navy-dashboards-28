@@ -30,7 +30,7 @@ export const educationalResources: EducationalResources = {
       isPaid: false,
       level: "All Levels",
       author: "Tony Gomes",
-      coverImage: "https://m.media-amazon.com/images/I/61k1ea7TrwL._SY466_.jpg",
+      coverImage: "/lovable-uploads/290d88b2-f2a5-4de6-af7c-5b69a764664f.png",
       ghlUrl: "https://www.amazon.com/dp/B0BVSXBBXW/ref=sr_1_fkmr3_1?crid=2259RAWCJ16EH&keywords=life+integrated+toney+gomes&qid=1676472181&sprefix=life+integrated+toney+gomes%2Caps%2C145&sr=8-1-fkmr3"
     }
   ]
