@@ -1,3 +1,4 @@
+
 import { 
   HomeIcon, 
   GraduationCapIcon,
@@ -103,7 +104,8 @@ export const familyWealthNavItems: NavItem[] = [
   { 
     title: "Cash Management", 
     href: "/cash-management", 
-    icon: BanknoteIcon
+    icon: BanknoteIcon,
+    comingSoon: true
   },
   { 
     title: "Tax & Budgets", 
