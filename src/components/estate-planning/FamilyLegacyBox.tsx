@@ -59,6 +59,7 @@ export const FamilyLegacyBox: React.FC = () => {
         status: 'completed',
         file_size: file.size,
         content_type: file.type,
+        file_path: URL.createObjectURL(file), // Create a temporary URL for viewing
       });
       
       toast.success("Document uploaded successfully", {

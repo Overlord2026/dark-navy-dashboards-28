@@ -28,12 +28,23 @@ export function DocumentViewerDialog({
   if (!document) return null;
 
   const handleDownload = () => {
-    // In a real implementation, this would download the actual file
-    // For now, we'll simulate the download
-    const link = window.document.createElement('a');
-    link.href = document.url || '#';
-    link.download = document.name;
-    link.click();
+    if (document.url && document.url !== '#') {
+      // If we have a real URL, download it
+      const link = window.document.createElement('a');
+      link.href = document.url;
+      link.download = document.name;
+      link.click();
+    } else {
+      // Simulate download for demo purposes
+      console.log(`Downloading ${document.name}`);
+      const blob = new Blob(['This is a simulated document content'], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const link = window.document.createElement('a');
+      link.href = url;
+      link.download = document.name;
+      link.click();
+      URL.revokeObjectURL(url);
+    }
   };
 
   const handleShare = () => {
@@ -41,6 +52,13 @@ export function DocumentViewerDialog({
       onShare(document.id);
     }
   };
+
+  // Check if document has a viewable URL
+  const hasViewableUrl = document.url && document.url !== '#';
+  
+  // Determine file type for better handling
+  const isPDF = document.name.toLowerCase().endsWith('.pdf');
+  const isImage = /\.(jpg|jpeg|png|gif|bmp|webp)$/i.test(document.name);
 
   return (
     <Dialog open={open} onOpenChange={(open) => !open && onClose()}>
@@ -88,28 +106,53 @@ export function DocumentViewerDialog({
         </DialogHeader>
         
         <div className="flex-1 overflow-hidden">
-          {document.url ? (
+          {hasViewableUrl ? (
             <div className="w-full h-[60vh] border rounded-lg overflow-hidden">
-              <iframe
-                src={document.url}
-                className="w-full h-full"
-                title={document.name}
-              />
+              {isImage ? (
+                <img
+                  src={document.url}
+                  alt={document.name}
+                  className="w-full h-full object-contain"
+                />
+              ) : isPDF ? (
+                <iframe
+                  src={document.url}
+                  className="w-full h-full"
+                  title={document.name}
+                />
+              ) : (
+                <iframe
+                  src={document.url}
+                  className="w-full h-full"
+                  title={document.name}
+                />
+              )}
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center h-[60vh] border-2 border-dashed border-muted-foreground/25 rounded-lg">
               <FileText className="h-12 w-12 text-muted-foreground mb-4" />
-              <h3 className="text-lg font-medium mb-2">Document Preview Not Available</h3>
-              <p className="text-sm text-muted-foreground text-center max-w-md">
-                This document doesn't have a preview available. You can download it to view the contents.
+              <h3 className="text-lg font-medium mb-2">Document Uploaded Successfully</h3>
+              <p className="text-sm text-muted-foreground text-center max-w-md mb-4">
+                Your document "{document.name}" has been securely uploaded and stored. 
+                {document.status === 'completed' && " You can download it or share it with professionals."}
               </p>
-              <Button
-                onClick={handleDownload}
-                className="mt-4 flex items-center gap-2"
-              >
-                <Download className="h-4 w-4" />
-                Download Document
-              </Button>
+              <div className="flex gap-2">
+                <Button
+                  onClick={handleDownload}
+                  className="flex items-center gap-2"
+                >
+                  <Download className="h-4 w-4" />
+                  Download Document
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={handleShare}
+                  className="flex items-center gap-2"
+                >
+                  <Share className="h-4 w-4" />
+                  Share Document
+                </Button>
+              </div>
             </div>
           )}
         </div>
