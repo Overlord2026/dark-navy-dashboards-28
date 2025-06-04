@@ -101,6 +101,7 @@ const FinancialPlans = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Projected Plan Success - Left Side */}
           <Card className="border border-border/30 bg-[#0D1426]">
             <CardContent className="p-6">
               <div className="flex justify-between items-center mb-6">
@@ -114,6 +115,7 @@ const FinancialPlans = () => {
             </CardContent>
           </Card>
 
+          {/* Projected Net Worth - Right Side */}
           <Card className="border border-border/30 bg-[#0D1426]">
             <CardContent className="p-6">
               <div className="flex justify-between items-center mb-6">
