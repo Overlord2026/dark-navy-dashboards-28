@@ -123,7 +123,6 @@ export function TaxReturnUploadDialog({ open, onClose }: DocumentDialogProps) {
 
 export function UploadDocumentDialog({ open, onClose, documentType, onUpload }: UploadDocumentDialogProps) {
   const [documentName, setDocumentName] = useState("");
-  const [description, setDescription] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   
@@ -151,14 +150,12 @@ export function UploadDocumentDialog({ open, onClose, documentType, onUpload }: 
       if (onUpload) {
         await onUpload(documentType, {
           documentName,
-          description,
           file: selectedFile,
         });
       }
       
       // Reset form
       setDocumentName("");
-      setDescription("");
       setSelectedFile(null);
       onClose();
     } catch (error) {
@@ -186,17 +183,6 @@ export function UploadDocumentDialog({ open, onClose, documentType, onUpload }: 
               value={documentName}
               onChange={(e) => setDocumentName(e.target.value)}
               placeholder="e.g., Last Will and Testament"
-            />
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="description">Description (Optional)</Label>
-            <Textarea
-              id="description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="Add a brief description of this document"
-              rows={3}
             />
           </div>
           
