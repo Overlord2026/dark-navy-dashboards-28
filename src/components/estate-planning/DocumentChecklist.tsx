@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { CheckCircle, Upload, Info, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -22,12 +22,12 @@ interface DocumentItem {
 }
 
 interface DocumentChecklistProps {
-  onUploadDocument: (documentType: string) => void;
+  onDirectFileUpload: (file: File, documentType: string) => void;
   documents: DocumentItem[];
 }
 
 export const DocumentChecklist: React.FC<DocumentChecklistProps> = ({
-  onUploadDocument,
+  onDirectFileUpload,
   documents,
 }) => {
   const [expandedGroups, setExpandedGroups] = useState<string[]>([
@@ -35,6 +35,8 @@ export const DocumentChecklist: React.FC<DocumentChecklistProps> = ({
     "advancedDirectives",
     "insuranceDocuments",
   ]);
+  
+  const fileInputRefs = useRef<{[key: string]: HTMLInputElement | null}>({});
 
   const toggleGroup = (group: string) => {
     if (expandedGroups.includes(group)) {
@@ -42,6 +44,22 @@ export const DocumentChecklist: React.FC<DocumentChecklistProps> = ({
     } else {
       setExpandedGroups([...expandedGroups, group]);
     }
+  };
+
+  const handleUploadClick = (documentType: string) => {
+    const fileInput = fileInputRefs.current[documentType];
+    if (fileInput) {
+      fileInput.click();
+    }
+  };
+
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>, documentType: string) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      onDirectFileUpload(file, documentType);
+    }
+    // Reset the input so the same file can be selected again if needed
+    event.target.value = '';
   };
 
   const documentGroups = [
@@ -194,15 +212,24 @@ export const DocumentChecklist: React.FC<DocumentChecklistProps> = ({
                             View
                           </Button>
                         ) : (
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="ml-2"
-                            onClick={() => onUploadDocument(item.id)}
-                          >
-                            <Upload className="h-4 w-4 mr-1" />
-                            Upload
-                          </Button>
+                          <>
+                            <input
+                              type="file"
+                              ref={(el) => fileInputRefs.current[item.id] = el}
+                              onChange={(e) => handleFileSelect(e, item.id)}
+                              style={{ display: 'none' }}
+                              accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png"
+                            />
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="ml-2"
+                              onClick={() => handleUploadClick(item.id)}
+                            >
+                              <Upload className="h-4 w-4 mr-1" />
+                              Upload
+                            </Button>
+                          </>
                         )}
                       </div>
                     </div>
