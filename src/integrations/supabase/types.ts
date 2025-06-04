@@ -392,6 +392,170 @@ export type Database = {
         }
         Relationships: []
       }
+      healthcare_document_permissions: {
+        Row: {
+          access_level: string
+          created_at: string
+          document_id: string
+          granted_at: string
+          granted_by_user_id: string
+          id: string
+          user_email: string | null
+          user_id: string
+          user_name: string | null
+          user_role: string | null
+        }
+        Insert: {
+          access_level: string
+          created_at?: string
+          document_id: string
+          granted_at?: string
+          granted_by_user_id: string
+          id?: string
+          user_email?: string | null
+          user_id: string
+          user_name?: string | null
+          user_role?: string | null
+        }
+        Update: {
+          access_level?: string
+          created_at?: string
+          document_id?: string
+          granted_at?: string
+          granted_by_user_id?: string
+          id?: string
+          user_email?: string | null
+          user_id?: string
+          user_name?: string | null
+          user_role?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "healthcare_document_permissions_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "healthcare_documents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      healthcare_documents: {
+        Row: {
+          category: string
+          content_type: string | null
+          created_at: string
+          description: string | null
+          encrypted: boolean | null
+          file_path: string | null
+          id: string
+          is_folder: boolean | null
+          is_private: boolean | null
+          modified: string | null
+          name: string
+          parent_folder_id: string | null
+          shared: boolean | null
+          size: number | null
+          tags: string[] | null
+          type: string
+          updated_at: string
+          uploaded_by: string | null
+          user_id: string
+        }
+        Insert: {
+          category?: string
+          content_type?: string | null
+          created_at?: string
+          description?: string | null
+          encrypted?: boolean | null
+          file_path?: string | null
+          id?: string
+          is_folder?: boolean | null
+          is_private?: boolean | null
+          modified?: string | null
+          name: string
+          parent_folder_id?: string | null
+          shared?: boolean | null
+          size?: number | null
+          tags?: string[] | null
+          type?: string
+          updated_at?: string
+          uploaded_by?: string | null
+          user_id: string
+        }
+        Update: {
+          category?: string
+          content_type?: string | null
+          created_at?: string
+          description?: string | null
+          encrypted?: boolean | null
+          file_path?: string | null
+          id?: string
+          is_folder?: boolean | null
+          is_private?: boolean | null
+          modified?: string | null
+          name?: string
+          parent_folder_id?: string | null
+          shared?: boolean | null
+          size?: number | null
+          tags?: string[] | null
+          type?: string
+          updated_at?: string
+          uploaded_by?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      healthcare_shared_documents: {
+        Row: {
+          created_at: string
+          document_id: string
+          expires_at: string | null
+          id: string
+          permission_level: string
+          professional_id: string
+          shared_at: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          document_id: string
+          expires_at?: string | null
+          id?: string
+          permission_level?: string
+          professional_id: string
+          shared_at?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          document_id?: string
+          expires_at?: string | null
+          id?: string
+          permission_level?: string
+          professional_id?: string
+          shared_at?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "healthcare_shared_documents_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "healthcare_documents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "healthcare_shared_documents_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "professionals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       investment_categories: {
         Row: {
           created_at: string | null
@@ -737,6 +901,48 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      prescriptions: {
+        Row: {
+          created_at: string
+          doctor: string | null
+          dosage: string
+          frequency: string
+          id: string
+          name: string
+          next_refill: string
+          notes: string | null
+          pharmacy: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          doctor?: string | null
+          dosage: string
+          frequency: string
+          id?: string
+          name: string
+          next_refill: string
+          notes?: string | null
+          pharmacy?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          doctor?: string | null
+          dosage?: string
+          frequency?: string
+          id?: string
+          name?: string
+          next_refill?: string
+          notes?: string | null
+          pharmacy?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       professionals: {
         Row: {
