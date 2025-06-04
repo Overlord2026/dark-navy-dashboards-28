@@ -225,6 +225,7 @@ export const educationalResources: EducationalResources = {
       level: "All Levels",
       ghlUrl: "https://vimeo.com/999395033"
     }
-  ]
+  ],
+  "funnel": []
 };
 

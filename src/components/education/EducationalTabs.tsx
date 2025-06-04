@@ -60,6 +60,10 @@ export const EducationalTabs: React.FC<EducationalTabsProps> = ({
     window.open(resource.ghlUrl, '_blank');
   };
 
+  const handleFunnelAccess = (funnel: EducationalResource) => {
+    window.open(funnel.ghlUrl, '_blank');
+  };
+
   return (
     <Tabs value={activeSection} onValueChange={handleTabChange} className="w-full mt-6">
       <div className="flex justify-between items-center mb-4">
@@ -70,6 +74,7 @@ export const EducationalTabs: React.FC<EducationalTabsProps> = ({
           <TabsTrigger value="ebooks">E-Books</TabsTrigger>
           <TabsTrigger value="whitepapers">Whitepapers</TabsTrigger>
           <TabsTrigger value="resources">Resources</TabsTrigger>
+          <TabsTrigger value="funnel">Funnel</TabsTrigger>
         </TabsList>
       </div>
       
@@ -190,6 +195,36 @@ export const EducationalTabs: React.FC<EducationalTabsProps> = ({
               </button>
             </div>
           ))}
+        </div>
+      </TabsContent>
+
+      <TabsContent value="funnel" className="py-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {educationalResources.funnel?.map(funnel => (
+            <div
+              key={funnel.id}
+              className="border rounded-lg p-6 hover:shadow-md transition-shadow"
+            >
+              <h3 className="font-semibold text-lg mb-2">{funnel.title}</h3>
+              <p className="text-sm text-muted-foreground mb-4">
+                {funnel.description}
+              </p>
+              <div className="flex justify-between items-center text-xs text-muted-foreground mt-2 mb-4">
+                <span>{funnel.level}</span>
+                <span>Funnel</span>
+              </div>
+              <button
+                onClick={() => handleFunnelAccess(funnel)}
+                className="w-full py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
+              >
+                Access Funnel
+              </button>
+            </div>
+          )) || (
+            <div className="col-span-full text-center py-8">
+              <p className="text-muted-foreground">No funnel content available yet.</p>
+            </div>
+          )}
         </div>
       </TabsContent>
     </Tabs>

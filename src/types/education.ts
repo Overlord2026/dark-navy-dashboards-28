@@ -36,4 +36,5 @@ export interface EducationalResources {
   whitepapers: EducationalResource[];
   ebooks: EducationalResource[];
   resources: EducationalResource[];
+  funnel?: EducationalResource[];
 }
