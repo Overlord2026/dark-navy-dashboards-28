@@ -1,203 +1,374 @@
+import { useState, useEffect, useCallback } from "react";
+import { v4 as uuidv4 } from 'uuid';
+import {
+  FinancialPlan,
+  FinancialGoal,
+  FinancialPlansSummary
+} from "@/types/financial-plan";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
 
-import { useState, useEffect } from "react";
-import { useUser } from "@/context/UserContext";
-import { useFinancialPlans } from "@/context/FinancialPlanContext";
-import { toast } from "sonner";
+export interface UseFinancialPlansState {
+  plans: FinancialPlan[];
+  activePlan: FinancialPlan | null;
+  summary: FinancialPlansSummary;
+  loading: boolean;
+  error: Error | null;
+  currentDraftData: any;
+  setCurrentDraftData: (data: any) => void;
+  handleCreatePlan: (planData: Partial<FinancialPlan>) => Promise<void>;
+  handleSelectPlan: (planId: string) => { success: boolean; openCreateDialog?: boolean };
+  handleSaveDraft: (draftData: any) => Promise<void>;
+  handleEditPlan: (planId: string) => { success: boolean; openCreateDialog?: boolean };
+  handleDeletePlan: (planId: string) => Promise<void>;
+  handleDuplicatePlan: (planId: string) => Promise<void>;
+  handleToggleFavorite: (planId: string) => Promise<void>;
+  handleGoalUpdate: (goal: FinancialGoal) => Promise<void>;
+}
 
 export interface Goal {
   id: string;
   title: string;
-  targetDate: Date;
+  name?: string; // Alternative name field
+  type?: string;
+  owner?: string;
   targetAmount: number;
   currentAmount: number;
-  priority: "High" | "Medium" | "Low";
+  targetDate: Date;
+  priority: "Low" | "Medium" | "High";
+  description?: string;
+  dateOfBirth?: Date;
+  targetRetirementAge?: number;
+  planningHorizonAge?: number;
+  purchasePrice?: number;
+  financingMethod?: string;
+  annualAppreciation?: string;
+  studentName?: string;
+  startYear?: number;
+  endYear?: number;
+  tuitionEstimate?: number;
+  destination?: string;
+  estimatedCost?: number;
+  amountDesired?: number;
+  repeats?: string;
+  annualInflationType?: string;
+  annualInflationRate?: number;
 }
 
-export interface Plan {
-  id: string;
-  name: string;
-  isFavorite: boolean;
-  isActive?: boolean;
-  successRate: number;
-  status: 'Active' | 'Draft';
-  createdAt: Date;
-  goals?: Goal[];
-  draftData?: any;
-}
-
-export const useFinancialPlansState = () => {
-  const { userProfile } = useUser();
-  const {
-    plans: contextPlans,
-    activePlan: contextActivePlan,
-    loading,
-    createPlan: contextCreatePlan,
-    updatePlan: contextUpdatePlan,
-    deletePlan: contextDeletePlan,
-    saveDraft: contextSaveDraft,
-    setActivePlan: contextSetActivePlan,
-    updateGoal: contextUpdateGoal,
-    toggleFavorite: contextToggleFavorite,
-    duplicatePlan: contextDuplicatePlan
-  } = useFinancialPlans();
-
-  const [goals, setGoals] = useState<Goal[]>([]);
+export const useFinancialPlansState = (): UseFinancialPlansState => {
+  const [plans, setPlans] = useState<FinancialPlan[]>([]);
+  const [activePlan, setActivePlan] = useState<FinancialPlan | null>(null);
+  const [summary, setSummary] = useState<FinancialPlansSummary>({
+    activePlans: 0,
+    draftPlans: 0,
+    totalGoals: 0,
+    averageSuccessRate: 0,
+  });
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<Error | null>(null);
   const [currentDraftData, setCurrentDraftData] = useState<any>(null);
+	const supabase = useSupabaseClient();
 
-  // Convert context plans to local format
-  const plans = contextPlans.map(plan => ({
-    id: plan.id,
-    name: plan.name,
-    isFavorite: plan.isFavorite,
-    isActive: plan.isActive,
-    successRate: plan.successRate,
-    status: plan.status as 'Active' | 'Draft',
-    createdAt: plan.createdAt,
-    goals: plan.goals?.map(goal => ({
-      id: goal.id,
-      title: goal.title,
-      targetDate: goal.targetDate,
-      targetAmount: goal.targetAmount,
-      currentAmount: goal.currentAmount,
-      priority: goal.priority as "High" | "Medium" | "Low"
-    })),
-    draftData: plan.draftData
-  }));
+  const calculateSummary = useCallback((plans: FinancialPlan[]) => {
+    const activePlans = plans.filter(plan => plan.status === 'Active').length;
+    const draftPlans = plans.filter(plan => plan.status === 'Draft').length;
+    const totalGoals = plans.reduce((acc, plan) => acc + (plan.goals?.length || 0), 0);
+    const successRates = plans.filter(plan => plan.successRate !== null && plan.successRate !== undefined).map(plan => plan.successRate);
+    const averageSuccessRate = successRates.length > 0 ? successRates.reduce((acc, rate) => acc + rate, 0) / successRates.length : 0;
 
-  const activePlan = contextActivePlan ? {
-    id: contextActivePlan.id,
-    name: contextActivePlan.name,
-    isFavorite: contextActivePlan.isFavorite,
-    isActive: contextActivePlan.isActive,
-    successRate: contextActivePlan.successRate,
-    status: contextActivePlan.status as 'Active' | 'Draft',
-    createdAt: contextActivePlan.createdAt,
-    goals: contextActivePlan.goals?.map(goal => ({
-      id: goal.id,
-      title: goal.title,
-      targetDate: goal.targetDate,
-      targetAmount: goal.targetAmount,
-      currentAmount: goal.currentAmount,
-      priority: goal.priority as "High" | "Medium" | "Low"
-    })),
-    draftData: contextActivePlan.draftData
-  } : (plans.length > 0 ? plans[0] : null);
+    return {
+      activePlans,
+      draftPlans,
+      totalGoals,
+      averageSuccessRate,
+    };
+  }, []);
 
-  const selectedPlan = activePlan?.id || '';
+  const fetchPlans = useCallback(async () => {
+    setLoading(true);
+    try {
+			const { data, error } = await supabase
+				.from('financial_plans')
+				.select('*');
+
+      if (error) {
+        throw error;
+      }
+
+      const fetchedPlans = data as FinancialPlan[];
+      setPlans(fetchedPlans);
+      setSummary(calculateSummary(fetchedPlans));
+
+      // If there's no activePlan in state but there are plans, set the first one as active
+      if (!activePlan && fetchedPlans.length > 0) {
+        setActivePlan(fetchedPlans[0]);
+      }
+    } catch (err: any) {
+      setError(err);
+    } finally {
+      setLoading(false);
+    }
+  }, [supabase, calculateSummary, activePlan]);
 
   useEffect(() => {
-    if (activePlan?.goals) {
-      setGoals(activePlan.goals);
-    }
-  }, [activePlan]);
+    fetchPlans();
+  }, [fetchPlans]);
 
-  const handleCreatePlan = async (planName: string, planData: any) => {
-    const isDraft = planData?.isDraft || false;
-    
+  const handleCreatePlan = async (planData: Partial<FinancialPlan>) => {
+    setLoading(true);
     try {
-      await contextCreatePlan({
-        name: planName,
-        status: isDraft ? 'Draft' : 'Active',
-        isFavorite: false,
-        successRate: isDraft ? 0 : Math.floor(Math.random() * 60) + 40,
-        goals: planData?.goals || [],
-        accounts: planData?.accounts || [],
-        expenses: planData?.expenses || []
-      });
-    } catch (error) {
-      console.error('Error creating plan:', error);
+      const newPlan: FinancialPlan = {
+        id: uuidv4(),
+        name: planData.name || 'New Financial Plan',
+        owner: planData.owner || 'Current User',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        isDraft: planData.isDraft !== undefined ? planData.isDraft : true,
+        isActive: planData.isActive !== undefined ? planData.isActive : false,
+        isFavorite: planData.isFavorite !== undefined ? planData.isFavorite : false,
+        successRate: planData.successRate || 75,
+        status: planData.status || 'Draft',
+        goals: [],
+        accounts: [],
+        expenses: [],
+        draftData: planData.draftData,
+        step: planData.step,
+      };
+
+			const { error } = await supabase
+				.from('financial_plans')
+				.insert([newPlan]);
+
+      if (error) {
+        throw error;
+      }
+
+      setPlans(prevPlans => [...prevPlans, newPlan]);
+      setSummary(calculateSummary([...plans, newPlan]));
+    } catch (err: any) {
+      setError(err);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleSelectPlan = (planId: string) => {
-    const selectedPlanObj = plans.find(plan => plan.id === planId);
-    
-    if (selectedPlanObj?.status === 'Draft' && selectedPlanObj.draftData) {
-      setCurrentDraftData(selectedPlanObj.draftData);
-      return { openCreateDialog: true };
+    if (planId === "new-plan") {
+      return { success: true, openCreateDialog: true };
     }
-    
-    contextSetActivePlan(planId);
-    return { openCreateDialog: false };
+
+    if (planId === "manage-plans") {
+      return { success: true };
+    }
+
+    const selectedPlan = plans.find(plan => plan.id === planId);
+    if (selectedPlan) {
+      setActivePlan(selectedPlan);
+      return { success: true };
+    } else {
+      console.warn(`Plan with id ${planId} not found.`);
+      return { success: false };
+    }
   };
 
   const handleSaveDraft = async (draftData: any) => {
+    setLoading(true);
     try {
-      if (currentDraftData && draftData.draftId) {
-        // Update existing draft
-        await contextUpdatePlan(draftData.draftId, {
-          name: draftData.name,
-          draftData: { ...draftData, step: draftData.currentStep || 1 }
-        });
-      } else {
-        // Create new draft
-        await contextSaveDraft(draftData);
+      const updatedPlan: FinancialPlan = {
+        id: uuidv4(),
+        name: draftData.name || 'Draft Financial Plan',
+        owner: draftData.owner || 'Current User',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        isDraft: true,
+        isActive: false,
+        isFavorite: false,
+        successRate: 50,
+        status: 'Draft',
+        goals: [],
+        accounts: [],
+        expenses: [],
+        draftData: draftData,
+        step: draftData.step,
+      };
+
+			const { error } = await supabase
+				.from('financial_plans')
+				.insert([updatedPlan]);
+
+      if (error) {
+        throw error;
       }
-    } catch (error) {
-      console.error('Error saving draft:', error);
+
+      setPlans(prevPlans => [...prevPlans, updatedPlan]);
+      setSummary(calculateSummary([...plans, updatedPlan]));
+    } catch (err: any) {
+      setError(err);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleEditPlan = (planId: string) => {
     const planToEdit = plans.find(plan => plan.id === planId);
-    
-    if (planToEdit?.status === 'Draft' && planToEdit.draftData) {
-      setCurrentDraftData({...planToEdit.draftData, draftId: planId});
-      return { openCreateDialog: true };
+    if (planToEdit) {
+      setCurrentDraftData(planToEdit.draftData);
+      return { success: true, openCreateDialog: true };
+    } else {
+      console.warn(`Plan with id ${planId} not found for editing.`);
+      return { success: false };
     }
-    
-    return { openCreateDialog: false };
   };
 
   const handleDeletePlan = async (planId: string) => {
+    setLoading(true);
     try {
-      await contextDeletePlan(planId);
-    } catch (error) {
-      console.error('Error deleting plan:', error);
+			const { error } = await supabase
+				.from('financial_plans')
+				.delete()
+				.eq('id', planId);
+
+      if (error) {
+        throw error;
+      }
+
+      setPlans(prevPlans => {
+        const updatedPlans = prevPlans.filter(plan => plan.id !== planId);
+        setSummary(calculateSummary(updatedPlans));
+        return updatedPlans;
+      });
+
+      if (activePlan?.id === planId) {
+        setActivePlan(null);
+      }
+    } catch (err: any) {
+      setError(err);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleDuplicatePlan = async (planId: string) => {
+    setLoading(true);
     try {
-      await contextDuplicatePlan(planId);
-    } catch (error) {
-      console.error('Error duplicating plan:', error);
+      const planToDuplicate = plans.find(plan => plan.id === planId);
+
+      if (planToDuplicate) {
+        const duplicatedPlan: FinancialPlan = {
+          id: uuidv4(),
+          name: `${planToDuplicate.name} (Duplicated)`,
+          owner: planToDuplicate.owner,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          isDraft: true,
+          isActive: false,
+          isFavorite: false,
+          successRate: planToDuplicate.successRate,
+          status: 'Draft',
+          goals: planToDuplicate.goals,
+          accounts: planToDuplicate.accounts,
+          expenses: planToDuplicate.expenses,
+          draftData: planToDuplicate.draftData,
+          step: planToDuplicate.step,
+        };
+
+				const { error } = await supabase
+					.from('financial_plans')
+					.insert([duplicatedPlan]);
+
+        if (error) {
+          throw error;
+        }
+
+        setPlans(prevPlans => [...prevPlans, duplicatedPlan]);
+        setSummary(calculateSummary([...plans, duplicatedPlan]));
+      }
+    } catch (err: any) {
+      setError(err);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleToggleFavorite = async (planId: string) => {
+    setLoading(true);
     try {
-      await contextToggleFavorite(planId);
-    } catch (error) {
-      console.error('Error toggling favorite:', error);
+      const planToUpdate = plans.find(plan => plan.id === planId);
+
+      if (planToUpdate) {
+        const updatedPlan = { ...planToUpdate, isFavorite: !planToUpdate.isFavorite };
+
+				const { error } = await supabase
+					.from('financial_plans')
+					.update({ is_favorite: updatedPlan.isFavorite })
+					.eq('id', planId);
+
+        if (error) {
+          throw error;
+        }
+
+        setPlans(prevPlans =>
+          prevPlans.map(plan => (plan.id === planId ? updatedPlan : plan))
+        );
+      }
+    } catch (err: any) {
+      setError(err);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleGoalUpdate = async (updatedGoal: Goal) => {
-    if (!activePlan) return;
-
+  const handleGoalUpdate = async (goal: FinancialGoal) => {
+    setLoading(true);
     try {
-      await contextUpdateGoal(activePlan.id, {
-        id: updatedGoal.id,
-        title: updatedGoal.title,
-        targetAmount: updatedGoal.targetAmount,
-        currentAmount: updatedGoal.currentAmount,
-        targetDate: updatedGoal.targetDate,
-        priority: updatedGoal.priority,
-        isComplete: false
+      if (!activePlan) {
+        console.warn("No active plan to update goal.");
+        return;
+      }
+
+      // Optimistically update the local state
+      setPlans(prevPlans => {
+        const updatedPlans = prevPlans.map(plan => {
+          if (plan.id === activePlan.id) {
+            const updatedGoals = plan.goals.map(g => (g.id === goal.id ? goal : g));
+            return { ...plan, goals: updatedGoals };
+          }
+          return plan;
+        });
+        return updatedPlans;
       });
-    } catch (error) {
-      console.error('Error updating goal:', error);
+
+      // Update the goal in the database
+			const { error } = await supabase
+				.from('financial_plans')
+				.update({ goals: activePlan.goals })
+				.eq('id', activePlan.id);
+
+      if (error) {
+        throw error;
+      }
+
+      // Update the active plan in local state
+      setActivePlan(prevPlan => {
+        if (prevPlan && prevPlan.id === activePlan.id) {
+          const updatedGoals = prevPlan.goals.map(g => (g.id === goal.id ? goal : g));
+          return { ...prevPlan, goals: updatedGoals };
+        }
+        return prevPlan;
+      });
+    } catch (err: any) {
+      setError(err);
+    } finally {
+      setLoading(false);
     }
   };
 
   return {
-    goals,
     plans,
-    selectedPlan,
-    currentDraftData,
     activePlan,
+    summary,
     loading,
+    error,
+    currentDraftData,
     setCurrentDraftData,
     handleCreatePlan,
     handleSelectPlan,
@@ -206,6 +377,6 @@ export const useFinancialPlansState = () => {
     handleDeletePlan,
     handleDuplicatePlan,
     handleToggleFavorite,
-    handleGoalUpdate
+    handleGoalUpdate,
   };
 };
