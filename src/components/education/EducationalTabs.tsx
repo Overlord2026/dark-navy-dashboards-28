@@ -56,6 +56,10 @@ export const EducationalTabs: React.FC<EducationalTabsProps> = ({
     window.open(whitepaper.ghlUrl, '_blank');
   };
 
+  const handleResourceAccess = (resource: EducationalResource) => {
+    window.open(resource.ghlUrl, '_blank');
+  };
+
   return (
     <Tabs value={activeSection} onValueChange={handleTabChange} className="w-full mt-6">
       <div className="flex justify-between items-center mb-4">
@@ -63,7 +67,9 @@ export const EducationalTabs: React.FC<EducationalTabsProps> = ({
           <TabsTrigger value="courses">Courses</TabsTrigger>
           <TabsTrigger value="guides">Guides</TabsTrigger>
           <TabsTrigger value="books">Books</TabsTrigger>
+          <TabsTrigger value="ebooks">E-Books</TabsTrigger>
           <TabsTrigger value="whitepapers">Whitepapers</TabsTrigger>
+          <TabsTrigger value="resources">Resources</TabsTrigger>
         </TabsList>
       </div>
       
@@ -108,6 +114,32 @@ export const EducationalTabs: React.FC<EducationalTabsProps> = ({
       <TabsContent value="books" className="py-4">
         <BookList books={books} />
       </TabsContent>
+
+      <TabsContent value="ebooks" className="py-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {educationalResources.ebooks.map(ebook => (
+            <div
+              key={ebook.id}
+              className="border rounded-lg p-6 hover:shadow-md transition-shadow"
+            >
+              <h3 className="font-semibold text-lg mb-2">{ebook.title}</h3>
+              <p className="text-sm text-muted-foreground mb-4">
+                {ebook.description}
+              </p>
+              <div className="flex justify-between items-center text-xs text-muted-foreground mt-2 mb-4">
+                <span>{ebook.level}</span>
+                <span>{ebook.author}</span>
+              </div>
+              <button
+                onClick={() => handleCourseEnrollment(ebook.id, ebook.title, ebook.isPaid, ebook.ghlUrl)}
+                className="w-full py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
+              >
+                {ebook.isPaid ? 'Purchase E-Book' : 'Download E-Book'}
+              </button>
+            </div>
+          ))}
+        </div>
+      </TabsContent>
       
       <TabsContent value="whitepapers" className="py-4">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -129,6 +161,32 @@ export const EducationalTabs: React.FC<EducationalTabsProps> = ({
                 className="w-full py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
               >
                 View Whitepaper
+              </button>
+            </div>
+          ))}
+        </div>
+      </TabsContent>
+
+      <TabsContent value="resources" className="py-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {educationalResources.resources.map(resource => (
+            <div
+              key={resource.id}
+              className="border rounded-lg p-6 hover:shadow-md transition-shadow"
+            >
+              <h3 className="font-semibold text-lg mb-2">{resource.title}</h3>
+              <p className="text-sm text-muted-foreground mb-4">
+                {resource.description}
+              </p>
+              <div className="flex justify-between items-center text-xs text-muted-foreground mt-2 mb-4">
+                <span>{resource.level}</span>
+                <span>Tool/Resource</span>
+              </div>
+              <button
+                onClick={() => handleResourceAccess(resource)}
+                className="w-full py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
+              >
+                Access Resource
               </button>
             </div>
           ))}

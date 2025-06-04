@@ -34,4 +34,6 @@ export interface EducationalResources {
   guides: EducationalResource[];
   books: EducationalResource[];
   whitepapers: EducationalResource[];
+  ebooks: EducationalResource[];
+  resources: EducationalResource[];
 }

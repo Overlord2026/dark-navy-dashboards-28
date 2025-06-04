@@ -83,5 +83,51 @@ export const educationalResources: EducationalResources = {
       level: "All Levels",
       ghlUrl: "https://boutiquefamilyofficecfo.com/wp-content/uploads/2024/12/Bitcoin-Whitepaper-10.31.2008.pdf"
     }
+  ],
+  "ebooks": [
+    {
+      id: "ebook-wealth-management",
+      title: "Digital Wealth Management Guide",
+      description: "A comprehensive digital guide to modern wealth management strategies and tools.",
+      isPaid: false,
+      level: "All Levels",
+      author: "Financial Experts",
+      ghlUrl: "https://ghl.example.com/ebooks/wealth-management"
+    },
+    {
+      id: "ebook-investment-basics",
+      title: "Investment Fundamentals E-Book",
+      description: "Learn the basics of investing with this comprehensive digital resource.",
+      isPaid: true,
+      level: "Beginner",
+      author: "Investment Team",
+      ghlUrl: "https://ghl.example.com/ebooks/investment-basics"
+    }
+  ],
+  "resources": [
+    {
+      id: "resource-calculator-retirement",
+      title: "Retirement Planning Calculator",
+      description: "Interactive tool to calculate your retirement needs and plan accordingly.",
+      isPaid: false,
+      level: "All Levels",
+      ghlUrl: "https://ghl.example.com/tools/retirement-calculator"
+    },
+    {
+      id: "resource-tax-forms",
+      title: "Tax Planning Forms & Templates",
+      description: "Essential forms and templates for effective tax planning and preparation.",
+      isPaid: false,
+      level: "All Levels",
+      ghlUrl: "https://ghl.example.com/resources/tax-forms"
+    },
+    {
+      id: "resource-estate-checklist",
+      title: "Estate Planning Checklist",
+      description: "Comprehensive checklist to ensure all estate planning documents are in order.",
+      isPaid: false,
+      level: "All Levels",
+      ghlUrl: "https://ghl.example.com/resources/estate-checklist"
+    }
   ]
 };
