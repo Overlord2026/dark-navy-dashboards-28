@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Calendar, FileText, Share, User } from "lucide-react";
+import { Calendar, FileText, Share, User, Download } from "lucide-react";
 import { format } from "date-fns";
 
 interface SharedDocument {
@@ -22,6 +22,21 @@ export const SharedDocuments: React.FC<SharedDocumentsProps> = ({
   sharedDocuments,
   onViewDocument,
 }) => {
+  const handleDownloadDocument = (documentId: string) => {
+    // Simulate download for shared documents
+    const document = sharedDocuments.find(doc => doc.id === documentId);
+    if (document) {
+      console.log(`Downloading shared document: ${document.name}`);
+      const blob = new Blob(['This is a simulated shared document content'], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const link = window.document.createElement('a');
+      link.href = url;
+      link.download = document.name;
+      link.click();
+      URL.revokeObjectURL(url);
+    }
+  };
+
   if (sharedDocuments.length === 0) {
     return (
       <div className="text-center py-12">
@@ -83,9 +98,10 @@ export const SharedDocuments: React.FC<SharedDocumentsProps> = ({
                 variant="outline"
                 size="sm"
                 className="w-full"
-                onClick={() => onViewDocument(document.id)}
+                onClick={() => handleDownloadDocument(document.id)}
               >
-                View
+                <Download className="h-4 w-4 mr-1" />
+                Download
               </Button>
             </div>
           </div>

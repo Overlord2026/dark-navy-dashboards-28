@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Calendar, FileText, Share } from "lucide-react";
+import { Calendar, FileText, Share, Download } from "lucide-react";
 import { format } from "date-fns";
 
 interface DocumentItem {
@@ -26,6 +26,29 @@ export const UploadedDocuments: React.FC<UploadedDocumentsProps> = ({
   onViewDocument,
   onShareDocument,
 }) => {
+  const handleDownloadDocument = (documentId: string) => {
+    const document = documents.find(doc => doc.id === documentId);
+    if (document) {
+      if (document.url && document.url !== '#') {
+        // If we have a real URL, download it
+        const link = window.document.createElement('a');
+        link.href = document.url;
+        link.download = document.name;
+        link.click();
+      } else {
+        // Simulate download for demo purposes
+        console.log(`Downloading ${document.name}`);
+        const blob = new Blob(['This is a simulated document content'], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const link = window.document.createElement('a');
+        link.href = url;
+        link.download = document.name;
+        link.click();
+        URL.revokeObjectURL(url);
+      }
+    }
+  };
+
   if (documents.length === 0) {
     return (
       <div className="text-center py-12">
@@ -71,9 +94,10 @@ export const UploadedDocuments: React.FC<UploadedDocumentsProps> = ({
                 variant="outline"
                 size="sm"
                 className="flex-1"
-                onClick={() => onViewDocument(document.id)}
+                onClick={() => handleDownloadDocument(document.id)}
               >
-                View
+                <Download className="h-4 w-4 mr-1" />
+                Download
               </Button>
               <Button
                 variant="outline"

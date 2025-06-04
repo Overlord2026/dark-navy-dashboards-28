@@ -1,6 +1,5 @@
-
 import React, { useState, useRef } from "react";
-import { CheckCircle, Upload, Info, FileText, Trash2, Eye } from "lucide-react";
+import { CheckCircle, Upload, Info, FileText, Trash2, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Tooltip,
@@ -72,6 +71,29 @@ export const DocumentChecklist: React.FC<DocumentChecklistProps> = ({
 
   const handleDeleteDocument = (documentId: string) => {
     onDeleteDocument(documentId);
+  };
+
+  const handleDownloadDocument = (documentId: string) => {
+    const document = documents.find(doc => doc.id === documentId);
+    if (document) {
+      if (document.url && document.url !== '#') {
+        // If we have a real URL, download it
+        const link = window.document.createElement('a');
+        link.href = document.url;
+        link.download = document.name;
+        link.click();
+      } else {
+        // Simulate download for demo purposes
+        console.log(`Downloading ${document.name}`);
+        const blob = new Blob(['This is a simulated document content'], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const link = window.document.createElement('a');
+        link.href = url;
+        link.download = document.name;
+        link.click();
+        URL.revokeObjectURL(url);
+      }
+    }
   };
 
   const documentGroups = [
@@ -224,10 +246,10 @@ export const DocumentChecklist: React.FC<DocumentChecklistProps> = ({
                             <Button 
                               variant="outline" 
                               size="sm" 
-                              onClick={() => handleViewDocument(item.id)}
+                              onClick={() => handleDownloadDocument(item.id)}
                             >
-                              <Eye className="h-4 w-4 mr-1" />
-                              View
+                              <Download className="h-4 w-4 mr-1" />
+                              Download
                             </Button>
                             <Button
                               variant="outline"
