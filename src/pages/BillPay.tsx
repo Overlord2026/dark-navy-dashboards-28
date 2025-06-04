@@ -1,4 +1,10 @@
 
+import React from "react";
+import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
+import { Card, CardContent } from "@/components/ui/card";
+import { Clock } from "lucide-react";
+
+/*
 import React, { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
@@ -41,8 +47,10 @@ const frequentBills = [
   { id: 202, name: "Water Services", accountNumber: "****5678", lastAmount: 42.50 },
   { id: 203, name: "Internet Provider", accountNumber: "****9012", lastAmount: 69.99 }
 ];
+*/
 
 const BillPay = () => {
+  /*
   const { toast } = useToast();
   const [upcomingBills, setUpcomingBills] = useState<Bill[]>(initialUpcomingBills);
   const [selectedBill, setSelectedBill] = useState<number | null>(null);
@@ -121,9 +129,23 @@ const BillPay = () => {
   const handleRemovePaymentMethod = (id: string) => {
     setPaymentMethods(prev => prev.filter(method => method.id !== id));
   };
+  */
 
   return (
     <ThreeColumnLayout title="Bill Pay">
+      <div className="flex items-center justify-center min-h-[80vh] px-4 py-6">
+        <Card className="max-w-md w-full">
+          <CardContent className="flex flex-col items-center justify-center text-center py-12">
+            <Clock className="h-16 w-16 text-muted-foreground mb-6" />
+            <h2 className="text-2xl font-bold mb-2">Coming Soon</h2>
+            <p className="text-muted-foreground">
+              Bill Pay functionality is currently under development and will be available soon.
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/*
       <div className="space-y-6 px-4 py-6 max-w-7xl mx-auto">
         <DashboardHeader 
           heading="Bill Payment Center" 
@@ -390,7 +412,6 @@ const BillPay = () => {
           </Card>
         </div>
 
-        {/* Dialogs */}
         <AddBillDialog 
           isOpen={showAddBillDialog} 
           onClose={() => setShowAddBillDialog(false)} 
@@ -426,6 +447,7 @@ const BillPay = () => {
           onClose={() => setShowAdvancedProvidersDialog(false)}
         />
       </div>
+      */}
     </ThreeColumnLayout>
   );
 };
