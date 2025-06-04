@@ -5,13 +5,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DocumentChecklist } from "./DocumentChecklist";
 import { SharedDocuments } from "./SharedDocuments";
 import { ResourcesCard } from "./ResourcesCard";
-import { ShareDocumentDialog, TaxReturnUploadDialog } from "@/components/estate-planning/DocumentDialogs";
+import { UploadDocumentDialog, ShareDocumentDialog, TaxReturnUploadDialog } from "@/components/estate-planning/DocumentDialogs";
 import { AdvancedTaxStrategies } from "./AdvancedTaxStrategies";
 import { useEstatePlanning } from "@/hooks/useEstatePlanning";
 import { toast } from "sonner";
 
 export const FamilyLegacyBox: React.FC = () => {
   const [activeTab, setActiveTab] = useState("overview");
+  const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
   const [selectedDocument, setSelectedDocument] = useState<string | null>(null);
   const [selectedDocumentDetails, setSelectedDocumentDetails] = useState<any | null>(null);
@@ -45,20 +46,9 @@ export const FamilyLegacyBox: React.FC = () => {
     status: "active" as const
   }));
 
-  const handleUploadDocument = async (documentType: string) => {
-    try {
-      await createDocument({
-        document_type: documentType,
-        document_name: `${documentType} Document`,
-        description: '',
-        status: 'completed',
-      });
-      
-      toast.success("Document uploaded successfully");
-    } catch (error) {
-      console.error('Error uploading document:', error);
-      toast.error("Failed to upload document");
-    }
+  const handleUploadDocument = (documentType: string) => {
+    setSelectedDocument(documentType);
+    setUploadDialogOpen(true);
   };
 
   const handleShareDocument = (documentId: string) => {
@@ -73,6 +63,21 @@ export const FamilyLegacyBox: React.FC = () => {
     setSelectedDocument(documentId);
     setSelectedDocumentDetails(document);
     toast.info("Document viewer would open here");
+  };
+
+  const handleDocumentUpload = async (documentType: string, data: any) => {
+    try {
+      await createDocument({
+        document_type: documentType,
+        document_name: data.documentName,
+        description: data.description,
+        status: 'completed',
+      });
+      
+      setUploadDialogOpen(false);
+    } catch (error) {
+      console.error('Error uploading document:', error);
+    }
   };
 
   const handleDocumentShare = async (documentId: string, sharedWith: string[]) => {
@@ -151,6 +156,13 @@ export const FamilyLegacyBox: React.FC = () => {
       </div>
       
       {/* Dialogs */}
+      <UploadDocumentDialog 
+        open={uploadDialogOpen} 
+        onClose={() => setUploadDialogOpen(false)}
+        onUpload={handleDocumentUpload}
+        documentType={selectedDocument || ""}
+      />
+      
       <ShareDocumentDialog 
         open={shareDialogOpen} 
         onClose={() => setShareDialogOpen(false)} 

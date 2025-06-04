@@ -1,23 +1,20 @@
 
-import React from "react";
+import React, { useState } from "react";
+import { CheckCircle, Upload, Info, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { 
-  FileText, 
-  Upload, 
-  Share2, 
-  Eye, 
-  CheckCircle2, 
-  Clock,
-  Plus
-} from "lucide-react";
-import { toast } from "sonner";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { format } from "date-fns";
 
-interface Document {
+interface DocumentItem {
   id: string;
   name: string;
   description: string;
-  status: 'completed' | 'notStarted';
+  status: "notStarted" | "inProgress" | "completed";
   url?: string;
   date?: Date;
   uploadedBy?: string;
@@ -25,190 +22,197 @@ interface Document {
 }
 
 interface DocumentChecklistProps {
-  onUploadDocument?: (documentType: string) => void;
-  documents: Document[];
+  onUploadDocument: (documentType: string) => void;
+  documents: DocumentItem[];
 }
-
-const documentTypes = [
-  {
-    id: "will",
-    name: "Last Will and Testament",
-    description: "Legal document specifying how assets should be distributed"
-  },
-  {
-    id: "trust",
-    name: "Living Trust",
-    description: "Trust document for asset management during lifetime"
-  },
-  {
-    id: "power-of-attorney",
-    name: "Power of Attorney",
-    description: "Legal authority for financial and legal decisions"
-  },
-  {
-    id: "healthcare-directive",
-    name: "Healthcare Directive",
-    description: "Medical care preferences and healthcare proxy"
-  },
-  {
-    id: "beneficiary-designations",
-    name: "Beneficiary Designations",
-    description: "Updated beneficiaries for all accounts and policies"
-  },
-  {
-    id: "insurance-policies",
-    name: "Insurance Policies",
-    description: "Life, disability, and long-term care insurance documents"
-  },
-  {
-    id: "financial-statements",
-    name: "Financial Statements",
-    description: "Recent bank, investment, and retirement account statements"
-  },
-  {
-    id: "property-deeds",
-    name: "Property Deeds",
-    description: "Real estate ownership and title documents"
-  },
-  {
-    id: "business-documents",
-    name: "Business Documents",
-    description: "Business ownership, partnership agreements, and succession plans"
-  }
-];
 
 export const DocumentChecklist: React.FC<DocumentChecklistProps> = ({
   onUploadDocument,
-  documents
+  documents,
 }) => {
-  const handleDirectUpload = (documentType: string) => {
-    // Create a hidden file input
-    const fileInput = document.createElement('input');
-    fileInput.type = 'file';
-    fileInput.accept = '.pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png';
-    fileInput.style.display = 'none';
-    
-    fileInput.onchange = (event) => {
-      const file = (event.target as HTMLInputElement).files?.[0];
-      if (file) {
-        // Simulate upload process
-        toast.success("Document uploaded successfully", {
-          description: `"${file.name}" has been added to your documents.`
-        });
-        
-        // Call the upload handler if provided
-        if (onUploadDocument) {
-          onUploadDocument(documentType);
-        }
-      }
-    };
-    
-    // Trigger file selector
-    document.body.appendChild(fileInput);
-    fileInput.click();
-    document.body.removeChild(fileInput);
+  const [expandedGroups, setExpandedGroups] = useState<string[]>([
+    "estatePlanning",
+    "advancedDirectives",
+    "insuranceDocuments",
+  ]);
+
+  const toggleGroup = (group: string) => {
+    if (expandedGroups.includes(group)) {
+      setExpandedGroups(expandedGroups.filter((g) => g !== group));
+    } else {
+      setExpandedGroups([...expandedGroups, group]);
+    }
   };
 
-  const handleShare = (documentId: string) => {
-    toast.info("Share functionality would open here");
+  const documentGroups = [
+    {
+      id: "estatePlanning",
+      title: "Estate Planning Documents",
+      items: [
+        {
+          id: "will",
+          name: "Last Will and Testament",
+          description:
+            "A legal document that communicates a person's final wishes.",
+        },
+        {
+          id: "trust",
+          name: "Trust Documents",
+          description:
+            "Legal agreements that hold property for beneficiaries.",
+        },
+        {
+          id: "powerOfAttorney",
+          name: "Power of Attorney",
+          description:
+            "Legal authorization for someone to act on your behalf.",
+        },
+      ],
+    },
+    {
+      id: "advancedDirectives",
+      title: "Advanced Directives",
+      items: [
+        {
+          id: "livingWill",
+          name: "Living Will",
+          description:
+            "Document specifying medical treatments you would or would not want.",
+        },
+        {
+          id: "healthcareProxy",
+          name: "Healthcare Proxy",
+          description:
+            "A person designated to make health decisions if you cannot.",
+        },
+        {
+          id: "dnr",
+          name: "Do Not Resuscitate (DNR) Order",
+          description: "Instructs healthcare providers not to perform CPR.",
+        },
+      ],
+    },
+    {
+      id: "insuranceDocuments",
+      title: "Insurance Documents",
+      items: [
+        {
+          id: "lifeInsurance",
+          name: "Life Insurance Policies",
+          description:
+            "Documentation of life insurance coverage and beneficiaries.",
+        },
+        {
+          id: "healthInsurance",
+          name: "Health Insurance Policies",
+          description: "Documentation of health insurance coverage.",
+        },
+        {
+          id: "disabilityInsurance",
+          name: "Disability Insurance",
+          description: "Documentation of disability insurance coverage.",
+        },
+      ],
+    },
+  ];
+
+  const getDocumentStatus = (documentId: string) => {
+    const document = documents.find((doc) => doc.id === documentId);
+    return document ? document.status : "notStarted";
   };
 
-  const handleView = (documentId: string) => {
-    toast.info("Document viewer would open here");
+  const getDocumentDate = (documentId: string) => {
+    const document = documents.find((doc) => doc.id === documentId);
+    return document && document.date
+      ? format(new Date(document.date), "MMM d, yyyy")
+      : null;
   };
 
   return (
-    <div className="space-y-4">
-      <div className="grid gap-4">
-        {documentTypes.map((docType) => {
-          const document = documents.find(doc => doc.id === docType.id);
-          const isCompleted = document?.status === 'completed';
-          
-          return (
+    <>
+      <div className="mt-6 space-y-4">
+        {documentGroups.map((group) => (
+          <div key={group.id} className="border rounded-lg overflow-hidden">
             <div
-              key={docType.id}
-              className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors"
+              className="flex items-center justify-between p-4 bg-muted cursor-pointer"
+              onClick={() => toggleGroup(group.id)}
             >
-              <div className="flex items-start gap-3 flex-1 min-w-0">
-                <div className="flex-shrink-0 mt-1">
-                  {isCompleted ? (
-                    <CheckCircle2 className="h-5 w-5 text-green-600" />
-                  ) : (
-                    <Clock className="h-5 w-5 text-muted-foreground" />
-                  )}
-                </div>
-                
-                <div className="flex-1 min-w-0 space-y-1">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <h3 className="font-medium text-sm sm:text-base leading-tight">
-                      {docType.name}
-                    </h3>
-                    <Badge 
-                      variant={isCompleted ? "default" : "secondary"} 
-                      className="text-xs flex-shrink-0"
-                    >
-                      {isCompleted ? "Complete" : "Pending"}
-                    </Badge>
-                  </div>
-                  
-                  <p className="text-sm text-muted-foreground leading-relaxed break-words">
-                    {docType.description}
-                  </p>
-                  
-                  {document && isCompleted && (
-                    <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground mt-2">
-                      {document.uploadedBy && (
-                        <span>Uploaded by {document.uploadedBy}</span>
-                      )}
-                      {document.date && (
-                        <span>• {document.date.toLocaleDateString()}</span>
-                      )}
-                      {document.sharedWith && document.sharedWith.length > 0 && (
-                        <span>• Shared with {document.sharedWith.length} contact{document.sharedWith.length > 1 ? 's' : ''}</span>
-                      )}
-                    </div>
-                  )}
-                </div>
-              </div>
-              
-              <div className="flex items-center gap-2 flex-shrink-0 ml-4">
-                {isCompleted ? (
-                  <>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => handleView(document!.id)}
-                      className="h-8 w-8 p-0"
-                      title="View document"
-                    >
-                      <Eye className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => handleShare(document!.id)}
-                      className="h-8 w-8 p-0"
-                      title="Share document"
-                    >
-                      <Share2 className="h-4 w-4" />
-                    </Button>
-                  </>
+              <h3 className="text-lg font-medium">{group.title}</h3>
+              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                {expandedGroups.includes(group.id) ? (
+                  <CheckCircle className="h-5 w-5" />
                 ) : (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleDirectUpload(docType.id)}
-                    className="flex items-center gap-1 text-xs px-3 py-1.5"
-                  >
-                    <Upload className="h-3 w-3" />
-                    <span className="hidden sm:inline">Upload</span>
-                  </Button>
+                  <Info className="h-5 w-5" />
                 )}
-              </div>
+              </Button>
             </div>
-          );
-        })}
+
+            {expandedGroups.includes(group.id) && (
+              <div className="divide-y">
+                {group.items.map((item) => {
+                  const status = getDocumentStatus(item.id);
+                  const date = getDocumentDate(item.id);
+
+                  return (
+                    <div
+                      key={item.id}
+                      className="p-4 flex items-center justify-between"
+                    >
+                      <div className="flex-1">
+                        <div className="flex items-center">
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <span className="mr-2">
+                                  <FileText className="h-5 w-5 text-primary" />
+                                </span>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p>{item.description}</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                          <span
+                            className={
+                              status === "completed"
+                                ? "text-primary font-medium"
+                                : ""
+                            }
+                          >
+                            {item.name}
+                          </span>
+                        </div>
+                        {date && (
+                          <p className="text-sm text-muted-foreground mt-1">
+                            Last updated: {date}
+                          </p>
+                        )}
+                      </div>
+                      <div>
+                        {status === "completed" ? (
+                          <Button variant="outline" size="sm" className="ml-2">
+                            View
+                          </Button>
+                        ) : (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="ml-2"
+                            onClick={() => onUploadDocument(item.id)}
+                          >
+                            <Upload className="h-4 w-4 mr-1" />
+                            Upload
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        ))}
       </div>
-    </div>
+    </>
   );
 };
