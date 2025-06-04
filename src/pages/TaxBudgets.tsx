@@ -1,4 +1,10 @@
 
+import React from "react";
+import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
+import { Card, CardContent } from "@/components/ui/card";
+import { Clock } from "lucide-react";
+
+/*
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
@@ -9,8 +15,10 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { Info, ArrowLeft } from "lucide-react";
 import { TaxBudgetWizard } from "@/components/tax-budgets/TaxBudgetWizard";
 import { HypotheticalScenarioWizard } from "@/components/tax-budgets/HypotheticalScenarioWizard";
+*/
 
 const TaxBudgets = () => {
+  /*
   const [showNewBudgetWizard, setShowNewBudgetWizard] = useState(false);
   const [showScenarioWizard, setShowScenarioWizard] = useState(false);
   const navigate = useNavigate();
@@ -47,13 +55,26 @@ const TaxBudgets = () => {
   if (showScenarioWizard) {
     return <HypotheticalScenarioWizard onClose={handleCloseWizard} />;
   }
+  */
 
   return (
     <ThreeColumnLayout title="Tax Budgets" activeMainItem="tax-budgets">
+      <div className="flex items-center justify-center min-h-[80vh] px-4 py-6">
+        <Card className="max-w-md w-full">
+          <CardContent className="flex flex-col items-center justify-center text-center py-12">
+            <Clock className="h-16 w-16 text-muted-foreground mb-6" />
+            <h2 className="text-2xl font-bold mb-2">Coming Soon</h2>
+            <p className="text-muted-foreground">
+              Tax Budgets functionality is currently under development and will be available soon.
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/*
       <div className="max-w-5xl mx-auto w-full space-y-6">
         <h1 className="text-3xl font-bold">Tax Budgets</h1>
 
-        {/* Capital Gains Tax Tracker */}
         <Card className="bg-[#0D1428] text-white border-none">
           <CardContent className="pt-6">
             <div className="flex justify-between items-center mb-2">
@@ -76,7 +97,6 @@ const TaxBudgets = () => {
           </CardContent>
         </Card>
 
-        {/* Realized Capital Gains */}
         <Card className="bg-[#0D1428] text-white border-none">
           <CardContent className="pt-6">
             <div className="flex items-center gap-2 mb-4">
@@ -106,7 +126,6 @@ const TaxBudgets = () => {
           </CardContent>
         </Card>
 
-        {/* Set a Tax Budget Card */}
         <Card className="bg-[#0D1428] text-white border-none">
           <CardContent className="pt-6">
             <div className="flex flex-col">
@@ -121,7 +140,6 @@ const TaxBudgets = () => {
           </CardContent>
         </Card>
 
-        {/* Test Hypothetical Scenarios */}
         <Card className="bg-[#0D1428] text-white border-none">
           <CardContent className="pt-6">
             <div className="flex flex-col">
@@ -136,6 +154,7 @@ const TaxBudgets = () => {
           </CardContent>
         </Card>
       </div>
+      */}
     </ThreeColumnLayout>
   );
 };

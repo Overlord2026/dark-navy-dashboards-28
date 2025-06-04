@@ -1,3 +1,10 @@
+
+import React from "react";
+import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
+import { Card, CardContent } from "@/components/ui/card";
+import { Clock } from "lucide-react";
+
+/*
 import React, { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -17,8 +24,10 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { ManageFundingDialog } from "@/components/accounts/ManageFundingDialog";
+*/
 
 const CashManagement = () => {
+  /*
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const tabFromUrl = queryParams.get('tab');
@@ -81,9 +90,23 @@ const CashManagement = () => {
     { id: "fa1", name: "Chase Checking ****4582", type: "checking" },
     { id: "fa2", name: "Bank of America Savings ****7839", type: "savings" },
   ];
+  */
 
   return (
     <ThreeColumnLayout title="Cash Management">
+      <div className="flex items-center justify-center min-h-[80vh] px-4 py-6">
+        <Card className="max-w-md w-full">
+          <CardContent className="flex flex-col items-center justify-center text-center py-12">
+            <Clock className="h-16 w-16 text-muted-foreground mb-6" />
+            <h2 className="text-2xl font-bold mb-2">Coming Soon</h2>
+            <p className="text-muted-foreground">
+              Cash Management functionality is currently under development and will be available soon.
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/*
       <div className="container mx-auto px-4 py-8 max-w-6xl">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-foreground">Cash Management</h1>
@@ -108,7 +131,6 @@ const CashManagement = () => {
             </TabsTrigger>
           </TabsList>
 
-          {/* Overview Tab */}
           <TabsContent value="overview">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               <div className="lg:col-span-2">
@@ -253,7 +275,6 @@ const CashManagement = () => {
             </div>
           </TabsContent>
 
-          {/* Transfers Tab */}
           <TabsContent value="transfers">
             <div className="space-y-6">
               <Card>
@@ -302,7 +323,6 @@ const CashManagement = () => {
             </div>
           </TabsContent>
 
-          {/* Funding Accounts Tab */}
           <TabsContent value="funding">
             <div className="space-y-6">
               <Card>
@@ -330,7 +350,6 @@ const CashManagement = () => {
                 </CardContent>
               </Card>
 
-              {/* Show current funding accounts */}
               <Card>
                 <CardHeader>
                   <CardTitle>Current Funding Sources</CardTitle>
@@ -371,13 +390,13 @@ const CashManagement = () => {
           </TabsContent>
         </Tabs>
 
-        {/* Manage Funding Dialog */}
         <ManageFundingDialog
           isOpen={showManageFundingDialog}
           onClose={() => setShowManageFundingDialog(false)}
           accounts={fundingAccounts}
         />
       </div>
+      */}
     </ThreeColumnLayout>
   );
 };

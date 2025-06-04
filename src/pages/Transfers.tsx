@@ -1,4 +1,10 @@
 
+import React from "react";
+import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
+import { Card, CardContent } from "@/components/ui/card";
+import { Clock } from "lucide-react";
+
+/*
 import React, { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Plus } from "lucide-react";
@@ -8,8 +14,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
+*/
 
 const Transfers = () => {
+  /*
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [fromAccount, setFromAccount] = useState("");
   const [toAccount, setToAccount] = useState("");
@@ -49,9 +57,23 @@ const Transfers = () => {
     setIsDialogOpen(false);
     resetForm();
   };
+  */
   
   return (
     <ThreeColumnLayout title="Transfers">
+      <div className="flex items-center justify-center min-h-[80vh] px-4 py-6">
+        <Card className="max-w-md w-full">
+          <CardContent className="flex flex-col items-center justify-center text-center py-12">
+            <Clock className="h-16 w-16 text-muted-foreground mb-6" />
+            <h2 className="text-2xl font-bold mb-2">Coming Soon</h2>
+            <p className="text-muted-foreground">
+              Transfers functionality is currently under development and will be available soon.
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/*
       <div className="space-y-4 px-4 py-2 max-w-7xl mx-auto">
         <h1 className="text-3xl font-bold">Transfers</h1>
         <p className="text-muted-foreground">
@@ -81,7 +103,6 @@ const Transfers = () => {
           </Button>
         </div>
         
-        {/* Add Transfer Dialog */}
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogContent className="sm:max-w-[500px]">
             <DialogHeader>
@@ -174,6 +195,7 @@ const Transfers = () => {
           </DialogContent>
         </Dialog>
       </div>
+      */}
     </ThreeColumnLayout>
   );
 };
