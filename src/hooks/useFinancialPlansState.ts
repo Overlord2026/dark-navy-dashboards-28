@@ -5,7 +5,7 @@ import {
   FinancialGoal,
   FinancialPlansSummary
 } from "@/types/financial-plan";
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { supabase } from "@/integrations/supabase/client";
 
 export interface UseFinancialPlansState {
   plans: FinancialPlan[];
@@ -14,6 +14,7 @@ export interface UseFinancialPlansState {
   loading: boolean;
   error: Error | null;
   currentDraftData: any;
+  goals: Goal[]; // Add goals property
   setCurrentDraftData: (data: any) => void;
   handleCreatePlan: (planData: Partial<FinancialPlan>) => Promise<void>;
   handleSelectPlan: (planId: string) => { success: boolean; openCreateDialog?: boolean };
@@ -28,7 +29,7 @@ export interface UseFinancialPlansState {
 export interface Goal {
   id: string;
   title: string;
-  name?: string; // Alternative name field
+  name?: string;
   type?: string;
   owner?: string;
   targetAmount: number;
@@ -66,7 +67,20 @@ export const useFinancialPlansState = (): UseFinancialPlansState => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
   const [currentDraftData, setCurrentDraftData] = useState<any>(null);
-	const supabase = useSupabaseClient();
+
+  // Derive goals from active plan
+  const goals: Goal[] = activePlan?.goals?.map(goal => ({
+    id: goal.id,
+    title: goal.title,
+    name: goal.title,
+    type: goal.priority,
+    owner: 'Current User',
+    targetAmount: goal.targetAmount,
+    currentAmount: goal.currentAmount,
+    targetDate: goal.targetDate,
+    priority: goal.priority,
+    description: goal.description,
+  })) || [];
 
   const calculateSummary = useCallback((plans: FinancialPlan[]) => {
     const activePlans = plans.filter(plan => plan.status === 'Active').length;
@@ -107,7 +121,7 @@ export const useFinancialPlansState = (): UseFinancialPlansState => {
     } finally {
       setLoading(false);
     }
-  }, [supabase, calculateSummary, activePlan]);
+  }, [calculateSummary, activePlan]);
 
   useEffect(() => {
     fetchPlans();
@@ -369,6 +383,7 @@ export const useFinancialPlansState = (): UseFinancialPlansState => {
     loading,
     error,
     currentDraftData,
+    goals, // Add goals to return
     setCurrentDraftData,
     handleCreatePlan,
     handleSelectPlan,

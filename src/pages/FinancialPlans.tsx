@@ -157,7 +157,20 @@ const FinancialPlansContent = () => {
                         </div>
                         <GoalsList 
                           goals={goals} 
-                          onGoalUpdate={handleGoalUpdate}
+                          onGoalUpdate={(goal) => {
+                            // Convert Goal to FinancialGoal for the handler
+                            const financialGoal = {
+                              id: goal.id,
+                              title: goal.title,
+                              targetAmount: goal.targetAmount,
+                              currentAmount: goal.currentAmount,
+                              targetDate: goal.targetDate,
+                              priority: goal.priority,
+                              description: goal.description,
+                              isComplete: false
+                            };
+                            handleGoalUpdate(financialGoal);
+                          }}
                           compact={true}
                         />
                       </div>
@@ -237,7 +250,14 @@ const FinancialPlansContent = () => {
         <CreatePlanDialog 
           isOpen={isCreateDialogOpen}
           onClose={() => setIsCreateDialogOpen(false)}
-          onCreatePlan={handleCreatePlan}
+          onCreatePlan={(planName: string, planData: any) => {
+            // Convert the parameters to match the expected format
+            const fullPlanData = {
+              name: planName,
+              ...planData
+            };
+            handleCreatePlan(fullPlanData);
+          }}
           onSaveDraft={handleSaveDraft}
           draftData={currentDraftData}
         />
@@ -245,7 +265,11 @@ const FinancialPlansContent = () => {
         <ManagePlansDialog
           isOpen={isManagePlansOpen}
           onClose={() => setIsManagePlansOpen(false)}
-          plans={plans}
+          plans={plans.map(plan => ({
+            ...plan,
+            isDraft: plan.status === 'Draft',
+            isActive: plan.status === 'Active'
+          }))}
           onEditPlan={onEditPlan}
           onDeletePlan={onDeletePlan}
           onDuplicatePlan={onDuplicatePlan}
