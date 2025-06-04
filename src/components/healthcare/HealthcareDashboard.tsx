@@ -64,7 +64,6 @@ export function HealthcareDashboard({ documents }: HealthcareDashboardProps) {
   const [physicians, setPhysicians] = useLocalStorage<Physician[]>("healthcare-physicians", []);
   const [appointments, setAppointments] = useLocalStorage<HealthcareAppointment[]>("healthcare-appointments", []);
   
-  // Ensure we have sample data if none exists
   useEffect(() => {
     if (insurancePolicies.length === 0) {
       setInsurancePolicies([
@@ -253,342 +252,219 @@ export function HealthcareDashboard({ documents }: HealthcareDashboardProps) {
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <div className="md:col-span-2 space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-md font-medium flex items-center gap-2">
-                <Shield className="h-5 w-5 text-blue-600" />
-                Insurance Coverage
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {insurancePolicies.length > 0 ? (
-                <div className="space-y-3">
-                  {insurancePolicies.map(policy => (
-                    <div key={policy.id} className="p-3 border rounded-lg">
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <h3 className="font-medium">{policy.name}</h3>
-                          <p className="text-sm text-muted-foreground">{policy.provider}</p>
-                        </div>
-                        <Badge variant="outline">{policy.type}</Badge>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="space-y-6">
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-md font-medium flex items-center gap-2">
+              <Shield className="h-5 w-5 text-blue-600" />
+              Insurance Coverage
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {insurancePolicies.length > 0 ? (
+              <div className="space-y-3">
+                {insurancePolicies.map(policy => (
+                  <div key={policy.id} className="p-3 border rounded-lg">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <h3 className="font-medium">{policy.name}</h3>
+                        <p className="text-sm text-muted-foreground">{policy.provider}</p>
                       </div>
-                      <div className="grid grid-cols-2 gap-x-4 gap-y-1 mt-2">
-                        <div className="text-xs">
-                          <span className="text-muted-foreground">Policy #:</span> {policy.policyNumber}
-                        </div>
-                        <div className="text-xs">
-                          <span className="text-muted-foreground">Coverage:</span> {policy.coverageAmount}
-                        </div>
-                        <div className="text-xs">
-                          <span className="text-muted-foreground">Expires:</span> {new Date(policy.endDate).toLocaleDateString()}
-                        </div>
-                        <div className="text-xs flex items-center gap-1">
-                          <span className="text-muted-foreground">Renewal:</span> {new Date(policy.renewalDate).toLocaleDateString()}
-                          
-                          {new Date(policy.renewalDate) > new Date() && 
-                            new Date(policy.renewalDate) < new Date(new Date().setDate(new Date().getDate() + 30)) && (
-                            <Badge variant={getUrgencyBadge(getDaysFromNow(policy.renewalDate))} className="text-[10px] px-1 py-0">
-                              Soon
-                            </Badge>
-                          )}
-                        </div>
-                      </div>
+                      <Badge variant="outline">{policy.type}</Badge>
                     </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center py-6 text-muted-foreground">
-                  <p>No insurance policies added yet</p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-md font-medium flex items-center gap-2">
-                <Pill className="h-5 w-5 text-green-600" />
-                Prescriptions & Refills
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {medications.length > 0 ? (
-                <div className="space-y-3">
-                  {medications.map(medication => (
-                    <div key={medication.id} className="p-3 border rounded-lg">
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <h3 className="font-medium">{medication.name}</h3>
-                          <p className="text-sm text-muted-foreground">
-                            {medication.dosage}, {medication.frequency}
-                          </p>
-                        </div>
+                    <div className="grid grid-cols-2 gap-x-4 gap-y-1 mt-2">
+                      <div className="text-xs">
+                        <span className="text-muted-foreground">Policy #:</span> {policy.policyNumber}
+                      </div>
+                      <div className="text-xs">
+                        <span className="text-muted-foreground">Coverage:</span> {policy.coverageAmount}
+                      </div>
+                      <div className="text-xs">
+                        <span className="text-muted-foreground">Expires:</span> {new Date(policy.endDate).toLocaleDateString()}
+                      </div>
+                      <div className="text-xs flex items-center gap-1">
+                        <span className="text-muted-foreground">Renewal:</span> {new Date(policy.renewalDate).toLocaleDateString()}
                         
-                        {getDaysFromNow(medication.nextRefill) <= 7 && (
-                          <Badge variant={getUrgencyBadge(getDaysFromNow(medication.nextRefill))}>
-                            Refill soon
+                        {new Date(policy.renewalDate) > new Date() && 
+                          new Date(policy.renewalDate) < new Date(new Date().setDate(new Date().getDate() + 30)) && (
+                          <Badge variant={getUrgencyBadge(getDaysFromNow(policy.renewalDate))} className="text-[10px] px-1 py-0">
+                            Soon
                           </Badge>
                         )}
                       </div>
-                      <div className="mt-2 text-xs">
-                        <div className="flex items-center justify-between">
-                          <span className="text-muted-foreground">Next refill:</span>
-                          <span>{new Date(medication.nextRefill).toLocaleDateString()}</span>
-                        </div>
-                        <div className="flex items-center justify-between mt-1">
-                          <span className="text-muted-foreground">Prescribed by:</span>
-                          <span>{medication.doctor}</span>
-                        </div>
-                        <div className="flex items-center justify-between mt-1">
-                          <span className="text-muted-foreground">Pharmacy:</span>
-                          <span>{medication.pharmacy}</span>
-                        </div>
-                      </div>
                     </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center py-6 text-muted-foreground">
-                  <p>No medications added yet</p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-6 text-muted-foreground">
+                <p>No insurance policies added yet</p>
+              </div>
+            )}
+          </CardContent>
+        </Card>
         
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-md font-medium flex items-center gap-2">
-              <CalendarClock className="h-5 w-5 text-amber-600" />
-              Upcoming Reminders
+              <Pill className="h-5 w-5 text-green-600" />
+              Prescriptions & Refills
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <Tabs defaultValue="appointments">
-              <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger value="appointments" className="text-xs">Appointments</TabsTrigger>
-                <TabsTrigger value="renewals" className="text-xs">Policy Renewals</TabsTrigger>
-                <TabsTrigger value="refills" className="text-xs">Medication Refills</TabsTrigger>
-              </TabsList>
-              
-              <TabsContent value="appointments" className="pt-4">
-                {upcomingAppointments.length > 0 ? (
-                  <div className="space-y-3">
-                    {upcomingAppointments.slice(0, 3).map(appointment => (
-                      <div key={appointment.id} className="flex items-center gap-3 p-3 border rounded-lg">
-                        <div className="bg-accent rounded-md w-12 h-12 flex flex-col items-center justify-center flex-shrink-0">
-                          <span className="text-xs font-medium">{format(new Date(appointment.date), 'MMM')}</span>
-                          <span className="text-lg font-bold">{format(new Date(appointment.date), 'd')}</span>
-                        </div>
-                        
-                        <div className="flex-1 min-w-0">
-                          <h3 className="font-medium">{appointment.title}</h3>
-                          <div className="flex flex-wrap gap-x-3 gap-y-1 mt-1">
-                            <p className="text-xs text-muted-foreground flex items-center gap-1">
-                              <Users className="h-3 w-3" />
-                              {appointment.doctor}
-                            </p>
-                            <p className="text-xs text-muted-foreground flex items-center gap-1">
-                              <Clock className="h-3 w-3" />
-                              {appointment.time}
-                            </p>
-                          </div>
-                        </div>
-                        
-                        <Badge variant={getUrgencyBadge(getDaysFromNow(appointment.date))}>
-                          {getDaysFromNow(appointment.date) === 0 ? 'Today' : 
-                           getDaysFromNow(appointment.date) === 1 ? 'Tomorrow' : 
-                           `${getDaysFromNow(appointment.date)} days`}
-                        </Badge>
+            {medications.length > 0 ? (
+              <div className="space-y-3">
+                {medications.map(medication => (
+                  <div key={medication.id} className="p-3 border rounded-lg">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <h3 className="font-medium">{medication.name}</h3>
+                        <p className="text-sm text-muted-foreground">
+                          {medication.dosage}, {medication.frequency}
+                        </p>
                       </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="text-center py-6 text-muted-foreground">
-                    <p>No upcoming appointments</p>
-                  </div>
-                )}
-              </TabsContent>
-              
-              <TabsContent value="renewals" className="pt-4">
-                {upcomingRenewals.length > 0 ? (
-                  <div className="space-y-3">
-                    {upcomingRenewals.slice(0, 3).map(policy => (
-                      <div key={policy.id} className="flex items-center gap-3 p-3 border rounded-lg">
-                        <div className="bg-accent rounded-md w-12 h-12 flex flex-col items-center justify-center flex-shrink-0">
-                          <span className="text-xs font-medium">{format(new Date(policy.renewalDate), 'MMM')}</span>
-                          <span className="text-lg font-bold">{format(new Date(policy.renewalDate), 'd')}</span>
-                        </div>
-                        
-                        <div className="flex-1 min-w-0">
-                          <h3 className="font-medium">{policy.name}</h3>
-                          <p className="text-xs text-muted-foreground">{policy.provider}</p>
-                        </div>
-                        
-                        <Badge variant={getUrgencyBadge(getDaysFromNow(policy.renewalDate))}>
-                          {getDaysFromNow(policy.renewalDate) <= 30 ? 
-                            `${getDaysFromNow(policy.renewalDate)} days` : 
-                            format(new Date(policy.renewalDate), 'MMM d, yyyy')}
-                        </Badge>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="text-center py-6 text-muted-foreground">
-                    <p>No upcoming policy renewals</p>
-                  </div>
-                )}
-              </TabsContent>
-              
-              <TabsContent value="refills" className="pt-4">
-                {upcomingRefills.length > 0 ? (
-                  <div className="space-y-3">
-                    {upcomingRefills.slice(0, 3).map(medication => (
-                      <div key={medication.id} className="flex items-center gap-3 p-3 border rounded-lg">
-                        <div className="bg-accent rounded-md w-12 h-12 flex flex-col items-center justify-center flex-shrink-0">
-                          <span className="text-xs font-medium">{format(new Date(medication.nextRefill), 'MMM')}</span>
-                          <span className="text-lg font-bold">{format(new Date(medication.nextRefill), 'd')}</span>
-                        </div>
-                        
-                        <div className="flex-1 min-w-0">
-                          <h3 className="font-medium">{medication.name}</h3>
-                          <p className="text-xs text-muted-foreground">{medication.dosage}, {medication.frequency}</p>
-                        </div>
-                        
+                      
+                      {getDaysFromNow(medication.nextRefill) <= 7 && (
                         <Badge variant={getUrgencyBadge(getDaysFromNow(medication.nextRefill))}>
-                          {getDaysFromNow(medication.nextRefill) === 0 ? 'Today' : 
-                           getDaysFromNow(medication.nextRefill) === 1 ? 'Tomorrow' : 
-                           `${getDaysFromNow(medication.nextRefill)} days`}
+                          Refill soon
                         </Badge>
+                      )}
+                    </div>
+                    <div className="mt-2 text-xs">
+                      <div className="flex items-center justify-between">
+                        <span className="text-muted-foreground">Next refill:</span>
+                        <span>{new Date(medication.nextRefill).toLocaleDateString()}</span>
                       </div>
-                    ))}
+                      <div className="flex items-center justify-between mt-1">
+                        <span className="text-muted-foreground">Prescribed by:</span>
+                        <span>{medication.doctor}</span>
+                      </div>
+                      <div className="flex items-center justify-between mt-1">
+                        <span className="text-muted-foreground">Pharmacy:</span>
+                        <span>{medication.pharmacy}</span>
+                      </div>
+                    </div>
                   </div>
-                ) : (
-                  <div className="text-center py-6 text-muted-foreground">
-                    <p>No upcoming medication refills</p>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-6 text-muted-foreground">
+                <p>No medications added yet</p>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+      
+      <div className="space-y-6">
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-md font-medium flex items-center gap-2">
+              <Heart className="h-5 w-5 text-red-600" />
+              Physicians & Contacts
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {physicians.length > 0 ? (
+              <div className="space-y-3">
+                {physicians.map(physician => (
+                  <div key={physician.id} className="p-3 border rounded-lg">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <h3 className="font-medium">{physician.name}</h3>
+                        <p className="text-sm text-muted-foreground">{physician.specialty}</p>
+                      </div>
+                    </div>
+                    <div className="mt-2 space-y-1">
+                      <p className="text-xs text-muted-foreground">
+                        <span className="inline-block w-20">Facility:</span> {physician.facility}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        <span className="inline-block w-20">Phone:</span> {physician.phone}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        <span className="inline-block w-20">Email:</span> {physician.email}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        <span className="inline-block w-20">Last visit:</span> {new Date(physician.lastVisit).toLocaleDateString()}
+                      </p>
+                      {physician.nextAppointment && (
+                        <p className="text-xs flex items-center">
+                          <span className="inline-block w-20 text-muted-foreground">Next visit:</span> 
+                          {new Date(physician.nextAppointment).toLocaleDateString()}
+                          {new Date(physician.nextAppointment) > new Date() && 
+                            new Date(physician.nextAppointment) < new Date(new Date().setDate(new Date().getDate() + 30)) && (
+                            <Badge variant="outline" className="ml-2 text-[10px] px-1 py-0">
+                              Upcoming
+                            </Badge>
+                          )}
+                        </p>
+                      )}
+                    </div>
                   </div>
-                )}
-              </TabsContent>
-            </Tabs>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-6 text-muted-foreground">
+                <p>No physicians added yet</p>
+              </div>
+            )}
           </CardContent>
         </Card>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-md font-medium flex items-center gap-2">
-                <Heart className="h-5 w-5 text-red-600" />
-                Physicians & Contacts
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {physicians.length > 0 ? (
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-md font-medium flex items-center gap-2">
+              <Users className="h-5 w-5 text-indigo-600" />
+              Shared Access Overview
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <h3 className="text-sm font-medium">Document completion</h3>
+              
+              <div className="space-y-4">
+                {documentCategories.map(category => (
+                  <div key={category.id} className="space-y-1">
+                    <div className="flex justify-between text-xs">
+                      <span>{category.name}</span>
+                      <span className="text-muted-foreground">
+                        {healthDocumentsByCategory.filter(doc => doc.category === category.id).length} of {category.expected}
+                      </span>
+                    </div>
+                    <Progress value={calculateCompletion(category.id)} className="h-2" />
+                  </div>
+                ))}
+              </div>
+              
+              <h3 className="text-sm font-medium pt-2">Documents shared with</h3>
+              
+              {healthDocumentsByCategory.some(doc => doc.permissions && doc.permissions.length > 1) ? (
                 <div className="space-y-3">
-                  {physicians.map(physician => (
-                    <div key={physician.id} className="p-3 border rounded-lg">
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <h3 className="font-medium">{physician.name}</h3>
-                          <p className="text-sm text-muted-foreground">{physician.specialty}</p>
-                        </div>
-                      </div>
-                      <div className="mt-2 space-y-1">
-                        <p className="text-xs text-muted-foreground">
-                          <span className="inline-block w-20">Facility:</span> {physician.facility}
-                        </p>
-                        <p className="text-xs text-muted-foreground">
-                          <span className="inline-block w-20">Phone:</span> {physician.phone}
-                        </p>
-                        <p className="text-xs text-muted-foreground">
-                          <span className="inline-block w-20">Email:</span> {physician.email}
-                        </p>
-                        <p className="text-xs text-muted-foreground">
-                          <span className="inline-block w-20">Last visit:</span> {new Date(physician.lastVisit).toLocaleDateString()}
-                        </p>
-                        {physician.nextAppointment && (
-                          <p className="text-xs flex items-center">
-                            <span className="inline-block w-20 text-muted-foreground">Next visit:</span> 
-                            {new Date(physician.nextAppointment).toLocaleDateString()}
-                            {new Date(physician.nextAppointment) > new Date() && 
-                              new Date(physician.nextAppointment) < new Date(new Date().setDate(new Date().getDate() + 30)) && (
-                              <Badge variant="outline" className="ml-2 text-[10px] px-1 py-0">
-                                Upcoming
-                              </Badge>
-                            )}
-                          </p>
-                        )}
-                      </div>
+                  {['physician', 'family', 'advisor'].map(role => (
+                    <div key={role} className="flex items-center justify-between text-sm border-b pb-2">
+                      <span className="capitalize">{role}s</span>
+                      <span className="text-sm">
+                        {role === 'physician' ? 3 : role === 'family' ? 2 : 1} documents
+                      </span>
                     </div>
                   ))}
+                  <Button variant="outline" className="w-full text-sm mt-2">
+                    Manage shared access
+                  </Button>
                 </div>
               ) : (
-                <div className="text-center py-6 text-muted-foreground">
-                  <p>No physicians added yet</p>
+                <div className="text-center py-3 text-muted-foreground text-sm">
+                  <p>No documents have been shared yet</p>
+                  <Button variant="outline" className="mt-2 text-xs">
+                    Share healthcare documents
+                  </Button>
                 </div>
               )}
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-md font-medium flex items-center gap-2">
-                <Users className="h-5 w-5 text-indigo-600" />
-                Shared Access Overview
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <h3 className="text-sm font-medium">Document completion</h3>
-                
-                <div className="space-y-4">
-                  {documentCategories.map(category => (
-                    <div key={category.id} className="space-y-1">
-                      <div className="flex justify-between text-xs">
-                        <span>{category.name}</span>
-                        <span className="text-muted-foreground">
-                          {healthDocumentsByCategory.filter(doc => doc.category === category.id).length} of {category.expected}
-                        </span>
-                      </div>
-                      <Progress value={calculateCompletion(category.id)} className="h-2" />
-                    </div>
-                  ))}
-                </div>
-                
-                <h3 className="text-sm font-medium pt-2">Documents shared with</h3>
-                
-                {healthDocumentsByCategory.some(doc => doc.permissions && doc.permissions.length > 1) ? (
-                  <div className="space-y-3">
-                    {['physician', 'family', 'advisor'].map(role => (
-                      <div key={role} className="flex items-center justify-between text-sm border-b pb-2">
-                        <span className="capitalize">{role}s</span>
-                        <span className="text-sm">
-                          {role === 'physician' ? 3 : role === 'family' ? 2 : 1} documents
-                        </span>
-                      </div>
-                    ))}
-                    <Button variant="outline" className="w-full text-sm mt-2">
-                      Manage shared access
-                    </Button>
-                  </div>
-                ) : (
-                  <div className="text-center py-3 text-muted-foreground text-sm">
-                    <p>No documents have been shared yet</p>
-                    <Button variant="outline" className="mt-2 text-xs">
-                      Share healthcare documents
-                    </Button>
-                  </div>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-      
-      <div className="md:col-span-1">
-        <HealthcareNotificationCenter documents={documents} />
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
