@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { CategoryList } from "@/components/documents/CategoryList";
@@ -15,7 +16,7 @@ import { toast } from "sonner";
 import { DocumentType, DocumentItem, DocumentCategory } from "@/types/document";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { FamilyLegacyBox } from "@/components/estate-planning/FamilyLegacyBox";
-import { HealthcareDashboardUpdated } from "@/components/healthcare/HealthcareDashboardUpdated";
+import { HealthcareFolder } from "@/components/healthcare/HealthcareFolder";
 import { ProfessionalsProvider } from "@/context/ProfessionalsContext";
 import { 
   Card, 
@@ -219,7 +220,11 @@ export default function ClientLegacyVault() {
 
             {/* Healthcare Tab */}
             <TabsContent value="healthcare" className="space-y-6">
-              <HealthcareDashboardUpdated />
+              <HealthcareFolder 
+                documents={documents} 
+                onAddDocument={handleAddDocument}
+                onCreateFolder={handleCreateFolder}
+              />
             </TabsContent>
           </Tabs>
         </div>
