@@ -21,7 +21,6 @@ import BillPay from "@/pages/BillPay";
 import Documents from "@/pages/Documents";
 import Professionals from "@/pages/Professionals";
 import ProfessionalSignup from "@/pages/ProfessionalSignup";
-import Sharing from "@/pages/Sharing";
 import Help from "@/pages/Help";
 import Settings from "@/pages/Settings";
 import ProjectIntegration from "@/pages/ProjectIntegration";
@@ -162,10 +161,6 @@ const routes = createBrowserRouter([
   {
     path: "/professional-signup",
     element: <ProtectedRoute><ProfessionalSignup /></ProtectedRoute>
-  },
-  {
-    path: "/sharing",
-    element: <ProtectedRoute><Sharing /></ProtectedRoute>
   },
   {
     path: "/help",

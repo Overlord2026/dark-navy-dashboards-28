@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { BriefcaseIcon, Users2, UsersIcon, InfoIcon } from "lucide-react";
 import { NavItem } from "@/types/navigation";
@@ -19,7 +20,7 @@ export const collaborationNavItems: NavItem[] = [
   },
   { 
     title: "Family Members", 
-    href: "/sharing", 
+    href: "/client-family", 
     icon: UsersIcon 
   }
 ];
@@ -157,7 +158,7 @@ const CollaborationTab = () => {
                 Share access with your family members by inviting them to collaborate on financial planning, document access, and more.
               </p>
               <Link 
-                to="/sharing?add=family"
+                to="/client-family"
                 className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg inline-flex"
               >
                 Get Started
@@ -173,7 +174,7 @@ const CollaborationTab = () => {
                 Connect with your financial advisors, tax professionals, attorneys, and other service providers for seamless collaboration.
               </p>
               <Link 
-                to="/sharing?add=professional"
+                to="/client-professionals"
                 className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg inline-flex"
               >
                 Get Started
