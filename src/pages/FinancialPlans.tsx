@@ -91,8 +91,8 @@ const FinancialPlansContent = () => {
 
   return (
     <ThreeColumnLayout activeMainItem="financial-plans" title="Financial Plans">
-      <div className="animate-fade-in w-full max-w-none">
-        <div className="p-4 sm:p-6 space-y-6">
+      <div className="animate-fade-in w-full">
+        <div className="p-4 lg:p-6 space-y-6 max-w-7xl mx-auto">
           {/* Header Section */}
           <div className="space-y-4">
             <FinancialPlansHeader />
@@ -116,28 +116,30 @@ const FinancialPlansContent = () => {
 
           {/* Goals Section */}
           {activePlan && (
-            <div className="bg-card border border-border/30 rounded-lg p-4 sm:p-6">
-              <GoalsList 
-                goals={goals} 
-                onGoalUpdate={handleGoalUpdate}
-              />
-            </div>
+            <Card className="border border-border/30 bg-card">
+              <CardContent className="p-4 lg:p-6">
+                <GoalsList 
+                  goals={goals} 
+                  onGoalUpdate={handleGoalUpdate}
+                />
+              </CardContent>
+            </Card>
           )}
 
           {/* Charts Section */}
           {activePlan && (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
               <Card className="border border-border/30 bg-card">
-                <CardContent className="p-6">
-                  <div className="flex flex-col space-y-4">
+                <CardContent className="p-4 lg:p-6">
+                  <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                      <h3 className="text-lg font-medium text-foreground">Projected Plan Success</h3>
+                      <h3 className="text-lg font-semibold text-foreground">Projected Plan Success</h3>
                       <div className="flex items-center text-muted-foreground text-sm">
                         <span>Success chance</span>
                         <InfoIcon className="h-4 w-4 ml-1" />
                       </div>
                     </div>
-                    <div className="flex justify-center">
+                    <div className="flex justify-center py-4">
                       <PlanSuccessGauge successRate={activePlan.successRate || 0} />
                     </div>
                   </div>
@@ -145,16 +147,16 @@ const FinancialPlansContent = () => {
               </Card>
 
               <Card className="border border-border/30 bg-card">
-                <CardContent className="p-6">
-                  <div className="flex flex-col space-y-4">
+                <CardContent className="p-4 lg:p-6">
+                  <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                      <h3 className="text-lg font-medium text-foreground">Projected Net Worth</h3>
+                      <h3 className="text-lg font-semibold text-foreground">Projected Net Worth</h3>
                       <div className="flex items-center text-muted-foreground text-sm">
                         <span>Chart info</span>
                         <InfoIcon className="h-4 w-4 ml-1" />
                       </div>
                     </div>
-                    <div className="w-full">
+                    <div className="w-full h-64">
                       <NetWorthChart />
                     </div>
                   </div>
@@ -172,17 +174,19 @@ const FinancialPlansContent = () => {
 
           {/* Empty State */}
           {!activePlan && !loading && (
-            <div className="text-center py-16">
-              <h3 className="text-xl font-medium text-foreground mb-4">No Financial Plans Yet</h3>
-              <p className="text-muted-foreground mb-6 max-w-md mx-auto">
-                Create your first financial plan to start tracking your goals and projections.
-              </p>
-              <button 
-                onClick={onCreatePlan}
-                className="bg-primary text-primary-foreground px-6 py-3 rounded-lg hover:bg-primary/90 transition-colors font-medium"
-              >
-                Create Your First Plan
-              </button>
+            <div className="text-center py-16 px-4">
+              <div className="max-w-md mx-auto">
+                <h3 className="text-xl font-semibold text-foreground mb-4">No Financial Plans Yet</h3>
+                <p className="text-muted-foreground mb-6">
+                  Create your first financial plan to start tracking your goals and projections.
+                </p>
+                <button 
+                  onClick={onCreatePlan}
+                  className="bg-primary text-primary-foreground px-6 py-3 rounded-lg hover:bg-primary/90 transition-colors font-medium"
+                >
+                  Create Your First Plan
+                </button>
+              </div>
             </div>
           )}
         </div>

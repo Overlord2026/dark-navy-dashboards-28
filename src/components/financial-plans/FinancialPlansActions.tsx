@@ -18,8 +18,8 @@ export const FinancialPlansActions = ({
   onSelectPlan 
 }: FinancialPlansActionsProps) => {
   return (
-    <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
-      <div className="w-full sm:w-auto sm:min-w-[300px]">
+    <div className="flex flex-col lg:flex-row gap-4 items-stretch lg:items-center justify-between">
+      <div className="flex-1 lg:max-w-sm">
         <Select 
           value={activePlan?.id || ""} 
           onValueChange={onSelectPlan}
@@ -56,7 +56,7 @@ export const FinancialPlansActions = ({
       
       <Button 
         onClick={onCreatePlan}
-        className="w-full sm:w-auto bg-primary hover:bg-primary/90 text-primary-foreground whitespace-nowrap"
+        className="bg-primary hover:bg-primary/90 text-primary-foreground shrink-0"
       >
         <Plus className="h-4 w-4 mr-2" />
         Create New Plan
