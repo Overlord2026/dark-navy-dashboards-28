@@ -437,9 +437,9 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
           </TabsContent>
         
           <TabsContent value="documents">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-              {/* Category Sidebar */}
-              <div className="lg:col-span-3">
+            <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+              {/* Category Sidebar - Increased from lg:col-span-3 to lg:col-span-2 */}
+              <div className="lg:col-span-2">
                 <Card className="h-fit">
                   <CardHeader className="pb-3">
                     <CardTitle className="text-sm font-medium">Categories</CardTitle>
@@ -454,8 +454,8 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
                 </Card>
               </div>
               
-              {/* Main Content */}
-              <div className="lg:col-span-9">
+              {/* Main Content - Adjusted from lg:col-span-9 to lg:col-span-3 */}
+              <div className="lg:col-span-3">
                 <div className="space-y-6">
                   {/* Action Buttons */}
                   <div className="flex flex-col sm:flex-row gap-3">
