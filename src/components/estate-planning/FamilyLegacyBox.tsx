@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -103,8 +102,8 @@ export const FamilyLegacyBox: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        <div className="lg:col-span-3 space-y-6">
+      <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
+        <div className="xl:col-span-3 space-y-6">
           <Card>
             <CardContent className="flex items-center justify-center h-48">
               <div className="text-center">
@@ -114,38 +113,41 @@ export const FamilyLegacyBox: React.FC = () => {
             </CardContent>
           </Card>
         </div>
+        <div className="xl:col-span-1">
+          <div className="h-32 bg-muted rounded-lg animate-pulse"></div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-      <div className="lg:col-span-3 space-y-6">
+    <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
+      <div className="xl:col-span-3 space-y-6">
         <Card>
-          <CardHeader>
-            <CardTitle>Family Legacy Box</CardTitle>
+          <CardHeader className="pb-4">
+            <CardTitle className="text-xl font-semibold">Family Legacy Box</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-6 pt-0">
             <Tabs defaultValue="overview" value={activeTab} onValueChange={setActiveTab}>
-              <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger value="overview">Document Overview</TabsTrigger>
-                <TabsTrigger value="uploaded">My Documents</TabsTrigger>
-                <TabsTrigger value="shared">Shared Documents</TabsTrigger>
+              <TabsList className="grid w-full grid-cols-3 mb-6">
+                <TabsTrigger value="overview" className="text-sm">Document Overview</TabsTrigger>
+                <TabsTrigger value="uploaded" className="text-sm">My Documents</TabsTrigger>
+                <TabsTrigger value="shared" className="text-sm">Shared Documents</TabsTrigger>
               </TabsList>
-              <TabsContent value="overview">
+              <TabsContent value="overview" className="mt-0">
                 <DocumentChecklist
                   onUploadDocument={handleUploadDocument}
                   documents={convertedDocuments}
                 />
               </TabsContent>
-              <TabsContent value="uploaded">
+              <TabsContent value="uploaded" className="mt-0">
                 <UploadedDocuments
                   documents={convertedDocuments}
                   onViewDocument={handleViewDocument}
                   onShareDocument={handleShareDocument}
                 />
               </TabsContent>
-              <TabsContent value="shared">
+              <TabsContent value="shared" className="mt-0">
                 <SharedDocuments
                   sharedDocuments={sharedDocuments}
                   onViewDocument={handleViewDocument}
@@ -160,7 +162,9 @@ export const FamilyLegacyBox: React.FC = () => {
         <CompletionProgress completedItems={completedDocuments} totalItems={totalDocuments} />
       </div>
       
-      <ResourcesCard />
+      <div className="xl:col-span-1">
+        <ResourcesCard />
+      </div>
       
       {/* Dialogs */}
       <UploadDocumentDialog 
