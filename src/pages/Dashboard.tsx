@@ -1,3 +1,4 @@
+
 import { DashboardMetricsCards } from "@/components/dashboard/DashboardMetricsCards";
 import { RecentActivity } from "@/components/dashboard/RecentActivity";
 import { AssetAllocationChart } from "@/components/dashboard/AssetAllocationChart";
@@ -6,8 +7,24 @@ import { TaxPlanningSummary } from "@/components/dashboard/TaxPlanningSummary";
 import { FinancialOverview } from "@/components/dashboard/FinancialOverview";
 import { QuickActionsMenu } from "@/components/dashboard/QuickActionsMenu";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
+import { useDashboardData } from "@/hooks/useDashboardData";
 
 export default function Dashboard() {
+  const { metrics, assetBreakdown, loading } = useDashboardData();
+
+  if (loading) {
+    return (
+      <ThreeColumnLayout activeMainItem="dashboard">
+        <div className="container mx-auto p-6 space-y-6 max-w-7xl">
+          <div className="flex items-center justify-center h-64">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+            <span className="ml-3">Loading dashboard...</span>
+          </div>
+        </div>
+      </ThreeColumnLayout>
+    );
+  }
+
   return (
     <ThreeColumnLayout activeMainItem="dashboard">
       <div className="container mx-auto p-6 space-y-6 max-w-7xl">
@@ -26,7 +43,17 @@ export default function Dashboard() {
         <div className="grid gap-6 lg:grid-cols-7">
           <div className="lg:col-span-4 space-y-6">
             <FinancialOverview />
-            <AssetAllocationChart />
+            <AssetAllocationChart
+              realEstate={assetBreakdown.realEstate}
+              vehicles={assetBreakdown.vehicles}
+              investments={assetBreakdown.investments}
+              cash={assetBreakdown.cash}
+              retirement={assetBreakdown.retirement}
+              collectibles={assetBreakdown.collectibles}
+              digital={assetBreakdown.digital}
+              other={assetBreakdown.other}
+              totalValue={metrics.totalAssets}
+            />
           </div>
           
           <div className="lg:col-span-3 space-y-6">

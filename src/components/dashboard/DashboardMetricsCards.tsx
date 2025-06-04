@@ -4,7 +4,31 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { DollarSign, CreditCard, Activity, Users } from 'lucide-react';
 import { HealthcarePrescriptionsCard } from './HealthcarePrescriptionsCard';
 
-export const DashboardMetricsCards: React.FC = () => {
+interface DashboardMetricsCardsProps {
+  totalAssets?: number;
+  totalLiabilities?: number;
+  netWorth?: number;
+  assetGrowth?: number;
+  liabilityGrowth?: number;
+  netWorthGrowth?: number;
+  propertyCount?: number;
+  vehicleCount?: number;
+  onNavigateToProperties?: () => void;
+  onNavigateToAssets?: () => void;
+}
+
+export const DashboardMetricsCards: React.FC<DashboardMetricsCardsProps> = ({
+  totalAssets,
+  totalLiabilities,
+  netWorth,
+  assetGrowth,
+  liabilityGrowth,
+  netWorthGrowth,
+  propertyCount,
+  vehicleCount,
+  onNavigateToProperties,
+  onNavigateToAssets
+}) => {
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       <Card>
