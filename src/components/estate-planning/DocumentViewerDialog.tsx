@@ -30,7 +30,7 @@ export function DocumentViewerDialog({
   const handleDownload = () => {
     // In a real implementation, this would download the actual file
     // For now, we'll simulate the download
-    const link = document.createElement('a');
+    const link = window.document.createElement('a');
     link.href = document.url || '#';
     link.download = document.name;
     link.click();
