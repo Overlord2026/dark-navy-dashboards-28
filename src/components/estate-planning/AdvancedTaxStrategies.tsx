@@ -139,14 +139,16 @@ export const AdvancedTaxStrategies: React.FC = () => {
           {advancedTaxStrategies.map((strategy) => (
             <div key={strategy.id} className="border rounded-lg overflow-hidden">
               <div 
-                className="p-4 bg-muted/50 flex justify-between items-center cursor-pointer"
+                className="p-4 bg-muted/50 flex justify-between items-center cursor-pointer hover:bg-muted/70 transition-colors"
                 onClick={() => toggleStrategyExpanded(strategy.id)}
               >
-                <div className="flex items-center gap-2">
-                  {strategy.icon}
-                  <h3 className="font-medium">{strategy.title}</h3>
+                <div className="flex items-center gap-3 flex-1 min-w-0">
+                  <div className="flex-shrink-0">
+                    {strategy.icon}
+                  </div>
+                  <h3 className="font-medium text-sm sm:text-base truncate">{strategy.title}</h3>
                 </div>
-                <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                <Button variant="ghost" size="sm" className="h-8 w-8 p-0 flex-shrink-0 ml-2">
                   {advancedStrategyExpanded === strategy.id ? 
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-chevron-up"><path d="m18 15-6-6-6 6"/></svg> :
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-chevron-down"><path d="m6 9 6 6 6-6"/></svg>
@@ -155,60 +157,62 @@ export const AdvancedTaxStrategies: React.FC = () => {
               </div>
               
               {advancedStrategyExpanded === strategy.id && (
-                <div className="p-4 border-t">
-                  <p className="text-sm text-muted-foreground mb-4">
+                <div className="p-4 border-t space-y-4">
+                  <p className="text-sm text-muted-foreground leading-relaxed">
                     {strategy.description}
                   </p>
                   
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                      <h4 className="text-sm font-medium flex items-center mb-2">
-                        <GraduationCap className="h-4 w-4 mr-1 text-blue-500" />
-                        Educational Resources
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    <div className="space-y-3">
+                      <h4 className="text-sm font-medium flex items-center gap-2">
+                        <GraduationCap className="h-4 w-4 text-blue-500 flex-shrink-0" />
+                        <span>Educational Resources</span>
                       </h4>
-                      <ul className="space-y-1">
+                      <div className="space-y-2">
                         {strategy.educationalLinks.map((link, idx) => (
-                          <li key={idx} className="text-sm">
+                          <div key={idx} className="flex items-start gap-2">
                             <a 
                               href={link.url} 
-                              className="text-primary hover:underline flex items-center"
+                              className="text-primary hover:underline flex items-center gap-1 text-sm leading-relaxed break-words"
                               target={link.isExternal ? "_blank" : "_self"}
                               rel={link.isExternal ? "noopener noreferrer" : ""}
                             >
-                              {link.title}
-                              {link.isExternal && <ExternalLink className="h-3 w-3 ml-1" />}
+                              <span className="break-words">{link.title}</span>
+                              {link.isExternal && <ExternalLink className="h-3 w-3 flex-shrink-0" />}
                             </a>
-                          </li>
+                          </div>
                         ))}
-                      </ul>
+                      </div>
                     </div>
                     
-                    <div>
-                      <h4 className="text-sm font-medium flex items-center mb-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-purple-500 mr-1"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
-                        Professional Help
+                    <div className="space-y-3">
+                      <h4 className="text-sm font-medium flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-purple-500 flex-shrink-0"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+                        <span>Professional Help</span>
                       </h4>
-                      <ul className="space-y-2">
+                      <div className="space-y-2">
                         {strategy.professionalLinks.map((link, idx) => (
-                          <li key={idx} className="text-sm flex">
+                          <div key={idx} className="space-y-1">
                             <a 
                               href={link.url} 
-                              className="text-primary hover:underline mr-1"
+                              className="text-primary hover:underline text-sm font-medium block break-words"
                             >
                               {link.title}
                             </a>
-                            <span className="text-muted-foreground">- {link.description}</span>
-                          </li>
+                            <p className="text-muted-foreground text-xs pl-0 break-words">
+                              {link.description}
+                            </p>
+                          </div>
                         ))}
-                      </ul>
+                      </div>
                     </div>
                   </div>
                   
-                  <div className="flex justify-end">
+                  <div className="flex justify-end pt-2">
                     <Button 
                       variant="outline" 
                       size="sm" 
-                      className="text-xs"
+                      className="text-xs px-4 py-2"
                       onClick={() => toast.info(`Request sent for more information about ${strategy.title}`)}
                     >
                       Request Consultation
