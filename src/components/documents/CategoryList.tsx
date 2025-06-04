@@ -64,7 +64,7 @@ export const CategoryList = ({
                 variant="ghost" 
                 className={cn(
                   "w-full justify-start p-3 h-auto rounded-none text-left transition-colors hover:bg-muted/50",
-                  activeCategory === category.id && "bg-blue-50 text-blue-700 border-r-2 border-blue-500"
+                  activeCategory === category.id && "bg-blue-500 text-white border-r-2 border-blue-600 hover:bg-blue-600"
                 )}
                 onClick={() => onCategorySelect(category.id)}
               >
@@ -75,7 +75,10 @@ export const CategoryList = ({
                     </div>
                     <span className="text-sm font-medium truncate">{category.name}</span>
                   </div>
-                  <ChevronRight className="h-4 w-4 text-muted-foreground flex-shrink-0 ml-2" />
+                  <ChevronRight className={cn(
+                    "h-4 w-4 flex-shrink-0 ml-2",
+                    activeCategory === category.id ? "text-white" : "text-muted-foreground"
+                  )} />
                 </div>
               </Button>
               {index < categories.length - 1 && (
