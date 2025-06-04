@@ -1,8 +1,7 @@
 
-import React, { createContext, useContext, useEffect, useState } from "react";
-import { FinancialPlan, FinancialGoal, FinancialAccount, Expense, FinancialPlansSummary } from "@/types/financial-plan";
-import { toast } from "sonner";
-import { useFinancialPlans as useFinancialPlansHook } from "@/hooks/useFinancialPlans";
+import React, { createContext, useContext } from "react";
+import { FinancialPlan, FinancialGoal, FinancialPlansSummary } from "@/types/financial-plan";
+import { useSupabaseFinancialPlans } from "@/hooks/useSupabaseFinancialPlans";
 
 interface FinancialPlanContextType {
   plans: FinancialPlan[];
@@ -24,7 +23,7 @@ interface FinancialPlanContextType {
 const FinancialPlanContext = createContext<FinancialPlanContextType | undefined>(undefined);
 
 export const FinancialPlanProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // Use the new hook which handles service interactions
+  // Use the Supabase hook which handles real database interactions
   const {
     plans,
     activePlan,
@@ -40,7 +39,7 @@ export const FinancialPlanProvider: React.FC<{ children: React.ReactNode }> = ({
     toggleFavorite,
     duplicatePlan,
     refreshPlans
-  } = useFinancialPlansHook();
+  } = useSupabaseFinancialPlans();
 
   return (
     <FinancialPlanContext.Provider

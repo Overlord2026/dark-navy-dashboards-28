@@ -7,19 +7,21 @@ import { NetWorthChart } from "@/components/financial-plans/NetWorthChart";
 import { GoalsList } from "@/components/financial-plans/GoalsList";
 import { CreatePlanDialog } from "@/components/financial-plans/CreatePlanDialog";
 import { ManagePlansDialog } from "@/components/financial-plans/ManagePlansDialog";
-import { InfoIcon } from "lucide-react";
+import { InfoIcon, Loader2 } from "lucide-react";
 import { FinancialPlansHeader } from "@/components/financial-plans/FinancialPlansHeader";
 import { FinancialPlansActions } from "@/components/financial-plans/FinancialPlansActions";
 import { PlanManagementSection } from "@/components/financial-plans/PlanManagementSection";
 import { FinancialPlansCards } from "@/components/financial-plans/FinancialPlansCards";
 import { useFinancialPlansState } from "@/hooks/useFinancialPlansState";
+import { FinancialPlanProvider } from "@/context/FinancialPlanContext";
 
-const FinancialPlans = () => {
+const FinancialPlansContent = () => {
   const {
     goals,
     plans,
     currentDraftData,
     activePlan,
+    loading,
     setCurrentDraftData,
     handleCreatePlan,
     handleSelectPlan,
@@ -74,6 +76,19 @@ const FinancialPlans = () => {
     handleDuplicatePlan(planId);
   };
 
+  if (loading) {
+    return (
+      <ThreeColumnLayout activeMainItem="financial-plans" title="Financial Plans">
+        <div className="flex items-center justify-center min-h-[400px]">
+          <div className="flex flex-col items-center gap-4">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            <p className="text-muted-foreground">Loading your financial plans...</p>
+          </div>
+        </div>
+      </ThreeColumnLayout>
+    );
+  }
+
   return (
     <ThreeColumnLayout activeMainItem="financial-plans" title="Financial Plans">
       <div className="animate-fade-in space-y-4 sm:space-y-6 p-4 sm:p-6 max-w-full overflow-hidden">
@@ -87,58 +102,79 @@ const FinancialPlans = () => {
             onSelectPlan={onSelectPlan}
           />
 
-          <PlanManagementSection
-            activePlan={activePlan}
-            onEditPlan={onEditPlan}
-            onDuplicatePlan={onDuplicatePlan}
-            onDeletePlan={onDeletePlan}
-          />
+          {activePlan && (
+            <PlanManagementSection
+              activePlan={activePlan}
+              onEditPlan={onEditPlan}
+              onDuplicatePlan={onDuplicatePlan}
+              onDeletePlan={onDeletePlan}
+            />
+          )}
         </div>
 
-        <div className="bg-card border border-border/30 rounded-lg p-4 sm:p-6">
-          <GoalsList 
-            goals={goals} 
-            onGoalUpdate={handleGoalUpdate}
-          />
-        </div>
+        {activePlan && (
+          <>
+            <div className="bg-card border border-border/30 rounded-lg p-4 sm:p-6">
+              <GoalsList 
+                goals={goals} 
+                onGoalUpdate={handleGoalUpdate}
+              />
+            </div>
 
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6">
-          <Card className="border border-border/30 bg-card">
-            <CardContent className="p-4 sm:p-6">
-              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 sm:mb-6 space-y-2 sm:space-y-0">
-                <h3 className="text-base sm:text-lg font-medium text-foreground">Projected Plan Success</h3>
-                <div className="flex items-center text-muted-foreground text-xs sm:text-sm">
-                  <span className="hidden sm:inline">What is chance of success?</span>
-                  <span className="sm:hidden">Success chance?</span>
-                  <InfoIcon className="h-3 w-3 sm:h-4 sm:w-4 ml-1" />
-                </div>
-              </div>
-              <div className="flex justify-center">
-                <PlanSuccessGauge successRate={activePlan.successRate || 0} />
-              </div>
-            </CardContent>
-          </Card>
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6">
+              <Card className="border border-border/30 bg-card">
+                <CardContent className="p-4 sm:p-6">
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 sm:mb-6 space-y-2 sm:space-y-0">
+                    <h3 className="text-base sm:text-lg font-medium text-foreground">Projected Plan Success</h3>
+                    <div className="flex items-center text-muted-foreground text-xs sm:text-sm">
+                      <span className="hidden sm:inline">What is chance of success?</span>
+                      <span className="sm:hidden">Success chance?</span>
+                      <InfoIcon className="h-3 w-3 sm:h-4 sm:w-4 ml-1" />
+                    </div>
+                  </div>
+                  <div className="flex justify-center">
+                    <PlanSuccessGauge successRate={activePlan.successRate || 0} />
+                  </div>
+                </CardContent>
+              </Card>
 
-          <Card className="border border-border/30 bg-card">
-            <CardContent className="p-4 sm:p-6">
-              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 sm:mb-6 space-y-2 sm:space-y-0">
-                <h3 className="text-base sm:text-lg font-medium text-foreground">Projected Net Worth</h3>
-                <div className="flex items-center text-muted-foreground text-xs sm:text-sm">
-                  <span className="hidden sm:inline">How is this chart calculated?</span>
-                  <span className="sm:hidden">Chart info?</span>
-                  <InfoIcon className="h-3 w-3 sm:h-4 sm:w-4 ml-1" />
-                </div>
-              </div>
-              <div className="w-full overflow-hidden">
-                <NetWorthChart />
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-        
-        <div className="w-full">
-          <FinancialPlansCards />
-        </div>
+              <Card className="border border-border/30 bg-card">
+                <CardContent className="p-4 sm:p-6">
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 sm:mb-6 space-y-2 sm:space-y-0">
+                    <h3 className="text-base sm:text-lg font-medium text-foreground">Projected Net Worth</h3>
+                    <div className="flex items-center text-muted-foreground text-xs sm:text-sm">
+                      <span className="hidden sm:inline">How is this chart calculated?</span>
+                      <span className="sm:hidden">Chart info?</span>
+                      <InfoIcon className="h-3 w-3 sm:h-4 sm:w-4 ml-1" />
+                    </div>
+                  </div>
+                  <div className="w-full overflow-hidden">
+                    <NetWorthChart />
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+            
+            <div className="w-full">
+              <FinancialPlansCards />
+            </div>
+          </>
+        )}
+
+        {!activePlan && !loading && (
+          <div className="text-center py-12">
+            <h3 className="text-lg font-medium text-foreground mb-2">No Financial Plans Yet</h3>
+            <p className="text-muted-foreground mb-4">
+              Create your first financial plan to start tracking your goals and projections.
+            </p>
+            <button 
+              onClick={onCreatePlan}
+              className="bg-primary text-primary-foreground px-6 py-2 rounded-lg hover:bg-primary/90 transition-colors"
+            >
+              Create Your First Plan
+            </button>
+          </div>
+        )}
       </div>
 
       <CreatePlanDialog 
@@ -163,6 +199,14 @@ const FinancialPlans = () => {
         }}
       />
     </ThreeColumnLayout>
+  );
+};
+
+const FinancialPlans = () => {
+  return (
+    <FinancialPlanProvider>
+      <FinancialPlansContent />
+    </FinancialPlanProvider>
   );
 };
 

@@ -1,22 +1,23 @@
 
 import { FinancialPlanService } from "./FinancialPlanService";
 import { LocalFinancialPlanService } from "./LocalFinancialPlanService";
+import { SupabaseFinancialPlanService } from "./SupabaseFinancialPlanService";
 
 /**
  * Service implementation type.
  * LOCAL: Uses localStorage for persistence (development/testing)
- * API: Uses external API (production) - to be implemented later
+ * SUPABASE: Uses Supabase backend (production)
  */
-export type ServiceImplementation = 'LOCAL' | 'API';
+export type ServiceImplementation = 'LOCAL' | 'SUPABASE';
 
 /**
  * Factory to get the appropriate implementation of FinancialPlanService.
- * This allows switching between different implementations (local storage vs API)
+ * This allows switching between different implementations (local storage vs Supabase)
  * with minimal changes to the consuming code.
  */
 export class FinancialPlanServiceFactory {
   private static instance: FinancialPlanService;
-  private static implementation: ServiceImplementation = 'LOCAL';
+  private static implementation: ServiceImplementation = 'SUPABASE';
 
   /**
    * Get the current service implementation
@@ -44,18 +45,15 @@ export class FinancialPlanServiceFactory {
       case 'LOCAL':
         this.instance = new LocalFinancialPlanService();
         break;
-      case 'API':
-        // To be implemented when API integration is ready
-        // this.instance = new ApiFinancialPlanService();
-        this.instance = new LocalFinancialPlanService(); // Fallback until API implementation is ready
-        console.warn('API implementation is not yet available, using local implementation as fallback');
+      case 'SUPABASE':
+        this.instance = new SupabaseFinancialPlanService();
         break;
     }
   }
 }
 
 /**
- * Convenience hook to get the current financial plan service
+ * Convenience function to get the current financial plan service
  */
 export const getFinancialPlanService = (): FinancialPlanService => {
   return FinancialPlanServiceFactory.getService();
