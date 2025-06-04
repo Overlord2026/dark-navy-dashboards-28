@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -429,9 +430,16 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
             <Pill className="h-4 w-4" />
             Prescriptions
           </TabsTrigger>
-          <TabsTrigger value="templates" className="flex items-center gap-1">
+          <TabsTrigger 
+            value="templates" 
+            className="flex items-center gap-1 opacity-50 cursor-not-allowed" 
+            disabled
+          >
             <FileText className="h-4 w-4" />
             Templates
+            <Badge variant="secondary" className="ml-1 text-xs">
+              Coming Soon
+            </Badge>
           </TabsTrigger>
         </TabsList>
         
