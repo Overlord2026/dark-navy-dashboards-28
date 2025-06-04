@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Goal } from "@/hooks/useFinancialPlansState";
-import { GoalDetailsSidePanel } from "./GoalDetailsSidePanel";
+import { GoalDetailsSidePanel, GoalFormData } from "./GoalDetailsSidePanel";
 import { Target, Plus } from "lucide-react";
 
 interface GoalsListProps {
@@ -22,7 +22,19 @@ export const GoalsList = ({ goals, onGoalUpdate, compact = false }: GoalsListPro
     setIsPanelOpen(true);
   };
 
-  const handleGoalUpdate = (updatedGoal: Goal) => {
+  const handleGoalUpdate = (goalFormData: GoalFormData) => {
+    if (!selectedGoal) return;
+    
+    // Convert GoalFormData back to Goal format
+    const updatedGoal: Goal = {
+      id: selectedGoal.id,
+      title: goalFormData.name,
+      targetDate: goalFormData.targetDate || selectedGoal.targetDate,
+      targetAmount: goalFormData.targetAmount || selectedGoal.targetAmount,
+      currentAmount: selectedGoal.currentAmount, // Keep existing current amount
+      priority: (goalFormData.priority as "High" | "Medium" | "Low") || selectedGoal.priority
+    };
+    
     onGoalUpdate(updatedGoal);
     setIsPanelOpen(false);
   };
@@ -121,7 +133,9 @@ export const GoalsList = ({ goals, onGoalUpdate, compact = false }: GoalsListPro
         goal={selectedGoal}
         isOpen={isPanelOpen}
         onClose={() => setIsPanelOpen(false)}
+        onCancel={() => setIsPanelOpen(false)}
         onSave={handleGoalUpdate}
+        title={selectedGoal ? "Edit Goal" : "Add Goal"}
       />
     </div>
   );
