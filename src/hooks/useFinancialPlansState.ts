@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback } from "react";
 import { v4 as uuidv4 } from 'uuid';
 import {
@@ -6,7 +5,7 @@ import {
   FinancialGoal,
   FinancialPlansSummary
 } from "@/types/financial-plan";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/lib/supabase";
 
 export interface UseFinancialPlansState {
   plans: FinancialPlan[];
