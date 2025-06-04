@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { CategoryList } from "@/components/documents/CategoryList";
@@ -17,6 +16,7 @@ import { DocumentType, DocumentItem, DocumentCategory } from "@/types/document";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { FamilyLegacyBox } from "@/components/estate-planning/FamilyLegacyBox";
 import { HealthcareFolder } from "@/components/healthcare/HealthcareFolder";
+import { HealthcareDashboardUpdated } from "@/components/healthcare/HealthcareDashboardUpdated";
 import { ProfessionalsProvider } from "@/context/ProfessionalsContext";
 import { 
   Card, 
@@ -218,13 +218,9 @@ export default function ClientLegacyVault() {
               <FamilyLegacyBox />
             </TabsContent>
 
-            {/* Healthcare Tab */}
+            {/* Healthcare Tab - Now using the updated dashboard */}
             <TabsContent value="healthcare" className="space-y-6">
-              <HealthcareFolder 
-                documents={documents} 
-                onAddDocument={handleAddDocument}
-                onCreateFolder={handleCreateFolder}
-              />
+              <HealthcareDashboardUpdated />
             </TabsContent>
           </Tabs>
         </div>
