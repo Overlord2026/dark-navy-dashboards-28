@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -274,10 +275,15 @@ export function ShareDocumentDialog({ open, onClose, documentId, onShare }: Shar
         await onShare(documentId, contactNames);
       }
       
+      toast.success("Document shared successfully", {
+        description: `Shared with ${contactNames.length} contact(s)`
+      });
+      
       setSelectedContacts([]);
       onClose();
     } catch (error) {
       console.error('Share error:', error);
+      toast.error("Failed to share document");
     } finally {
       setIsSharing(false);
     }

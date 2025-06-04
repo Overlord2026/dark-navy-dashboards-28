@@ -181,6 +181,51 @@ export type Database = {
           },
         ]
       }
+      estate_planning_documents: {
+        Row: {
+          content_type: string | null
+          created_at: string
+          description: string | null
+          document_name: string
+          document_type: string
+          file_path: string | null
+          file_size: number | null
+          id: string
+          shared_with: string[] | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          content_type?: string | null
+          created_at?: string
+          description?: string | null
+          document_name: string
+          document_type: string
+          file_path?: string | null
+          file_size?: number | null
+          id?: string
+          shared_with?: string[] | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          content_type?: string | null
+          created_at?: string
+          description?: string | null
+          document_name?: string
+          document_type?: string
+          file_path?: string | null
+          file_size?: number | null
+          id?: string
+          shared_with?: string[] | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       family_members: {
         Row: {
           access_level: string | null

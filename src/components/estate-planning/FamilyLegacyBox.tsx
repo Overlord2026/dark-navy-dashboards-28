@@ -55,6 +55,8 @@ export const FamilyLegacyBox: React.FC = () => {
         document_name: documentName,
         description: '',
         status: 'completed',
+        file_size: file.size,
+        content_type: file.type,
       });
       
       toast.success("Document uploaded successfully", {

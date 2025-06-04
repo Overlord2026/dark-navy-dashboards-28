@@ -12,7 +12,7 @@ export interface EstateDocument {
   file_path?: string;
   file_size?: number;
   content_type?: string;
-  status: 'pending' | 'completed' | 'in_progress';
+  status: 'not_started' | 'completed' | 'in_progress';
   shared_with?: string[];
   created_at: string;
   updated_at: string;
@@ -67,34 +67,11 @@ export const useEstatePlanning = () => {
   const [interests, setInterests] = useState<EstateInterest[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Check if tables exist
-  const checkTablesExist = async () => {
-    try {
-      const { error } = await supabase
-        .from('estate_planning_documents')
-        .select('count')
-        .limit(1);
-      
-      return !error;
-    } catch (error) {
-      console.log('Estate planning tables not yet created');
-      return false;
-    }
-  };
-
   // Fetch all estate planning data
   const fetchEstateData = async () => {
     try {
       setLoading(true);
       
-      // Check if tables exist first
-      const tablesExist = await checkTablesExist();
-      if (!tablesExist) {
-        console.log('Estate planning database tables not yet created. Please run the SQL migration first.');
-        setLoading(false);
-        return;
-      }
-
       const { data: { user } } = await supabase.auth.getUser();
       
       if (!user) {
@@ -108,47 +85,11 @@ export const useEstatePlanning = () => {
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });
 
-      if (documentsError && !documentsError.message.includes('does not exist')) {
+      if (documentsError) {
         throw documentsError;
       }
 
-      // Fetch professionals
-      const { data: professionalsData, error: professionalsError } = await supabase
-        .from('estate_planning_professionals')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false });
-
-      if (professionalsError && !professionalsError.message.includes('does not exist')) {
-        throw professionalsError;
-      }
-
-      // Fetch consultations
-      const { data: consultationsData, error: consultationsError } = await supabase
-        .from('estate_planning_consultations')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false });
-
-      if (consultationsError && !consultationsError.message.includes('does not exist')) {
-        throw consultationsError;
-      }
-
-      // Fetch interests
-      const { data: interestsData, error: interestsError } = await supabase
-        .from('estate_planning_interests')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false });
-
-      if (interestsError && !interestsError.message.includes('does not exist')) {
-        throw interestsError;
-      }
-
       setDocuments(documentsData || []);
-      setProfessionals(professionalsData || []);
-      setConsultations(consultationsData || []);
-      setInterests(interestsData || []);
     } catch (error) {
       console.error('Error fetching estate planning data:', error);
       toast.error('Failed to load estate planning data');
@@ -160,12 +101,6 @@ export const useEstatePlanning = () => {
   // Create document
   const createDocument = async (documentData: Partial<EstateDocument>) => {
     try {
-      const tablesExist = await checkTablesExist();
-      if (!tablesExist) {
-        toast.error('Database not yet set up. Please contact support.');
-        return;
-      }
-
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('User not authenticated');
 
@@ -231,72 +166,6 @@ export const useEstatePlanning = () => {
     }
   };
 
-  // Create consultation request
-  const createConsultation = async (consultationData: Partial<EstateConsultation>) => {
-    try {
-      const tablesExist = await checkTablesExist();
-      if (!tablesExist) {
-        toast.error('Database not yet set up. Please contact support.');
-        return;
-      }
-
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error('User not authenticated');
-
-      const { data, error } = await supabase
-        .from('estate_planning_consultations')
-        .insert({
-          ...consultationData,
-          user_id: user.id,
-        })
-        .select()
-        .single();
-
-      if (error) throw error;
-
-      setConsultations(prev => [data, ...prev]);
-      toast.success('Consultation request submitted successfully');
-      return data;
-    } catch (error) {
-      console.error('Error creating consultation:', error);
-      toast.error('Failed to submit consultation request');
-      throw error;
-    }
-  };
-
-  // Create interest
-  const createInterest = async (interestData: Partial<EstateInterest>) => {
-    try {
-      const tablesExist = await checkTablesExist();
-      if (!tablesExist) {
-        toast.error('Database not yet set up. Please contact support.');
-        return;
-      }
-
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error('User not authenticated');
-
-      const { data, error } = await supabase
-        .from('estate_planning_interests')
-        .insert({
-          ...interestData,
-          user_id: user.id,
-        })
-        .select()
-        .single();
-
-      if (error) throw error;
-
-      setInterests(prev => [data, ...prev]);
-      toast.success('Interest submitted successfully');
-      return data;
-    } catch (error) {
-      console.error('Error creating interest:', error);
-      toast.error('Failed to submit interest');
-      throw error;
-    }
-  };
-
   useEffect(() => {
     fetchEstateData();
   }, []);
@@ -310,8 +179,6 @@ export const useEstatePlanning = () => {
     createDocument,
     updateDocument,
     deleteDocument,
-    createConsultation,
-    createInterest,
     refetch: fetchEstateData,
   };
 };
