@@ -6,6 +6,7 @@ import { DocumentChecklist } from "./DocumentChecklist";
 import { SharedDocuments } from "./SharedDocuments";
 import { ResourcesCard } from "./ResourcesCard";
 import { ShareDocumentDialog, TaxReturnUploadDialog } from "@/components/estate-planning/DocumentDialogs";
+import { DocumentViewerDialog } from "./DocumentViewerDialog";
 import { AdvancedTaxStrategies } from "./AdvancedTaxStrategies";
 import { useEstatePlanning } from "@/hooks/useEstatePlanning";
 import { toast } from "sonner";
@@ -13,6 +14,7 @@ import { toast } from "sonner";
 export const FamilyLegacyBox: React.FC = () => {
   const [activeTab, setActiveTab] = useState("overview");
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
+  const [viewerDialogOpen, setViewerDialogOpen] = useState(false);
   const [selectedDocument, setSelectedDocument] = useState<string | null>(null);
   const [selectedDocumentDetails, setSelectedDocumentDetails] = useState<any | null>(null);
   
@@ -83,9 +85,11 @@ export const FamilyLegacyBox: React.FC = () => {
 
   const handleViewDocument = (documentId: string) => {
     const document = convertedDocuments.find((doc) => doc.id === documentId);
-    setSelectedDocument(documentId);
-    setSelectedDocumentDetails(document);
-    toast.info("Document viewer would open here");
+    if (document) {
+      setSelectedDocument(documentId);
+      setSelectedDocumentDetails(document);
+      setViewerDialogOpen(true);
+    }
   };
 
   const handleShareDocument = (documentId: string) => {
@@ -178,6 +182,13 @@ export const FamilyLegacyBox: React.FC = () => {
         onClose={() => setShareDialogOpen(false)} 
         documentId={selectedDocument || ""} 
         onShare={handleDocumentShare}
+      />
+      
+      <DocumentViewerDialog
+        open={viewerDialogOpen}
+        onClose={() => setViewerDialogOpen(false)}
+        document={selectedDocumentDetails}
+        onShare={handleShareDocument}
       />
       
       <TaxReturnUploadDialog 
