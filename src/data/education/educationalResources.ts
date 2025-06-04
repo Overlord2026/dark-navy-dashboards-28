@@ -86,22 +86,85 @@ export const educationalResources: EducationalResources = {
   ],
   "ebooks": [
     {
-      id: "ebook-wealth-management",
-      title: "Digital Wealth Management Guide",
-      description: "A comprehensive digital guide to modern wealth management strategies and tools.",
+      id: "ebook-estate-planning",
+      title: "Estate Planning",
+      description: "Comprehensive guide to estate planning strategies and best practices.",
       isPaid: false,
       level: "All Levels",
       author: "Financial Experts",
-      ghlUrl: "https://ghl.example.com/ebooks/wealth-management"
+      ghlUrl: "https://designrr.page/?id=421221&token=3489244185&type=FP&h=7325"
     },
     {
-      id: "ebook-investment-basics",
-      title: "Investment Fundamentals E-Book",
-      description: "Learn the basics of investing with this comprehensive digital resource.",
-      isPaid: true,
-      level: "Beginner",
-      author: "Investment Team",
-      ghlUrl: "https://ghl.example.com/ebooks/investment-basics"
+      id: "ebook-social-security-guide",
+      title: "Social Security Guide",
+      description: "Complete guide to understanding and maximizing your Social Security benefits.",
+      isPaid: false,
+      level: "All Levels",
+      author: "Financial Experts",
+      ghlUrl: "https://designrr.page/?id=421232&token=2644925433&type=FP&h=5341"
+    },
+    {
+      id: "ebook-when-to-retire",
+      title: "When to Retire",
+      description: "Essential guide to help you determine the optimal timing for your retirement.",
+      isPaid: false,
+      level: "All Levels",
+      author: "Financial Experts",
+      ghlUrl: "https://designrr.page/?id=421496&token=3223578452&type=FP&h=3153"
+    },
+    {
+      id: "ebook-15-retirement-risks",
+      title: "15 Risks That Can Derail Your Retirement",
+      description: "Identify and mitigate the most common risks that threaten retirement security.",
+      isPaid: false,
+      level: "All Levels",
+      author: "Financial Experts",
+      ghlUrl: "https://designrr.page/?id=421495&token=2446712157&type=FP&h=5015"
+    },
+    {
+      id: "ebook-13-investment-blunders",
+      title: "13 Retirement Investment Blunders",
+      description: "Avoid common investment mistakes that can damage your retirement savings.",
+      isPaid: false,
+      level: "All Levels",
+      author: "Financial Experts",
+      ghlUrl: "https://designrr.page/?id=421497&token=1423331746&type=FP&h=4447"
+    },
+    {
+      id: "ebook-physicians-retirement",
+      title: "Retirement Guide for Physicians",
+      description: "Specialized retirement planning strategies for medical professionals.",
+      isPaid: false,
+      level: "All Levels",
+      author: "Financial Experts",
+      ghlUrl: "https://designrr.page/?id=422894&token=840011724&type=FP&h=2693"
+    },
+    {
+      id: "ebook-fees",
+      title: "Fees",
+      description: "Understanding and minimizing investment fees to maximize your returns.",
+      isPaid: false,
+      level: "All Levels",
+      author: "Financial Experts",
+      ghlUrl: "https://designrr.page/?id=422905&token=1112294897&type=FP&h=9731"
+    },
+    {
+      id: "ebook-gps-retirement-income",
+      title: "GPS to Retirement Income Planning",
+      description: "Navigate your way to sustainable retirement income with this comprehensive guide.",
+      isPaid: false,
+      level: "All Levels",
+      author: "Financial Experts",
+      ghlUrl: "https://designrr.page/?id=425954&token=1041938451&type=FP&h=6915"
+    },
+    {
+      id: "ebook-retirement-guide-women",
+      title: "Retirement Guide for Women",
+      description: "Tailored retirement planning strategies addressing the unique challenges women face.",
+      isPaid: false,
+      level: "All Levels",
+      author: "Financial Experts",
+      ghlUrl: "https://designrr.page/?id=425955&token=4063210481&type=FP&h=9519"
     }
   ],
   "resources": [
