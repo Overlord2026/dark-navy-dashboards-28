@@ -362,13 +362,13 @@ function RetirementAgeCard({ goal, onClick, onEdit, onDelete, isNew = false }: {
   
   return (
     <Card 
-      className={`bg-[#0D1426] border border-blue-900 p-6 cursor-pointer hover:border-blue-600 transition-all relative group ${
+      className={`bg-[#0D1426] border border-blue-900 p-6 cursor-pointer hover:border-blue-600 transition-all relative ${
         isNew ? 'animate-in slide-in-from-bottom-5 fade-in-100 duration-500' : 'animate-in fade-in-80 duration-200'
       }`}
       onClick={onClick}
     >
-      {/* Action Buttons */}
-      <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
+      {/* Action Buttons - Always Visible */}
+      <div className="absolute top-3 right-3 flex gap-2">
         <Button
           variant="ghost"
           size="sm"
@@ -419,7 +419,7 @@ function GoalCard({ goal, isExpanded, onToggle, onClick, onEdit, onDelete, isNew
 
   return (
     <Card 
-      className={`bg-[#0D1426] border border-blue-900 p-4 cursor-pointer hover:border-blue-600 transition-all relative group ${
+      className={`bg-[#0D1426] border border-blue-900 p-4 cursor-pointer hover:border-blue-600 transition-all relative ${
         isNew ? 'animate-in slide-in-from-bottom-5 fade-in-100 duration-500' : 'animate-in fade-in-80 duration-200'
       }`}
       onClick={onClick}
@@ -433,8 +433,8 @@ function GoalCard({ goal, isExpanded, onToggle, onClick, onEdit, onDelete, isNew
         </div>
         
         <div className="flex items-center gap-2">
-          {/* Action Buttons */}
-          <div className="opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
+          {/* Action Buttons - Always Visible */}
+          <div className="flex gap-1">
             <Button
               variant="ghost"
               size="sm"
