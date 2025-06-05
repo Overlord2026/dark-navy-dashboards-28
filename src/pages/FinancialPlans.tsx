@@ -8,128 +8,29 @@ import { ManagePlansDialog } from "@/components/financial-plans/ManagePlansDialo
 import { Target, TrendingUp, DollarSign, PieChart, Clock, Plus, Settings } from "lucide-react";
 import { FinancialPlansActions } from "@/components/financial-plans/FinancialPlansActions";
 import { PlanManagementSection } from "@/components/financial-plans/PlanManagementSection";
-import { useFinancialPlans } from "@/context/FinancialPlanContext";
+import { useFinancialPlansState } from "@/hooks/useFinancialPlansState";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
 const FinancialPlans = () => {
   const {
+    goals,
     plans,
+    currentDraftData,
     activePlan,
-    createPlan,
-    updatePlan,
-    deletePlan,
-    saveDraft,
-    setActivePlan,
-    updateGoal,
-    toggleFavorite,
-    duplicatePlan,
-    loading
-  } = useFinancialPlans();
+    setCurrentDraftData,
+    handleCreatePlan,
+    handleSelectPlan,
+    handleSaveDraft,
+    handleEditPlan,
+    handleDeletePlan,
+    handleDuplicatePlan,
+    handleToggleFavorite,
+    handleGoalUpdate
+  } = useFinancialPlansState();
 
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isManagePlansOpen, setIsManagePlansOpen] = useState(false);
-  const [currentDraftData, setCurrentDraftData] = useState(null);
-
-  // Extract goals from all plans for display
-  const goals = plans.flatMap(plan => plan.goals || []);
-
-  const handleCreatePlan = async (planData: any) => {
-    try {
-      await createPlan(planData);
-      setIsCreateDialogOpen(false);
-    } catch (error) {
-      console.error('Error creating plan:', error);
-    }
-  };
-
-  const handleSelectPlan = (planId: string) => {
-    if (planId === "new-plan") {
-      setIsCreateDialogOpen(true);
-      setCurrentDraftData(null);
-      return { openCreateDialog: false };
-    }
-    
-    if (planId === "manage-plans") {
-      setIsManagePlansOpen(true);
-      return { openCreateDialog: false };
-    }
-    
-    try {
-      setActivePlan(planId);
-      return { openCreateDialog: false };
-    } catch (error) {
-      console.error('Error selecting plan:', error);
-      return { openCreateDialog: true };
-    }
-  };
-
-  const handleSaveDraft = async (draftData: any) => {
-    try {
-      await saveDraft(draftData);
-      setIsCreateDialogOpen(false);
-    } catch (error) {
-      console.error('Error saving draft:', error);
-    }
-  };
-
-  const handleEditPlan = (planId: string) => {
-    const plan = plans.find(p => p.id === planId);
-    if (plan) {
-      setCurrentDraftData(plan.draftData);
-      setIsCreateDialogOpen(true);
-      return { openCreateDialog: false };
-    }
-    return { openCreateDialog: true };
-  };
-
-  const handleDeletePlan = async (planId: string) => {
-    try {
-      await deletePlan(planId);
-    } catch (error) {
-      console.error('Error deleting plan:', error);
-    }
-  };
-
-  const handleDuplicatePlan = async (planId: string) => {
-    try {
-      await duplicatePlan(planId);
-    } catch (error) {
-      console.error('Error duplicating plan:', error);
-    }
-  };
-
-  const handleToggleFavorite = async (planId: string) => {
-    try {
-      await toggleFavorite(planId);
-    } catch (error) {
-      console.error('Error toggling favorite:', error);
-    }
-  };
-
-  const handleGoalUpdate = async (updatedGoal: any) => {
-    try {
-      // Find which plan this goal belongs to
-      const planWithGoal = plans.find(plan => 
-        plan.goals?.some(goal => goal.id === updatedGoal.id)
-      );
-      
-      if (planWithGoal) {
-        await updateGoal(planWithGoal.id, updatedGoal);
-      } else if (activePlan) {
-        // If no existing plan found, add to active plan
-        await updateGoal(activePlan.id, updatedGoal);
-      } else {
-        // Create a new plan for the goal
-        const newPlan = await createPlan({
-          name: 'My Financial Plan',
-          goals: [updatedGoal]
-        });
-      }
-    } catch (error) {
-      console.error('Error updating goal:', error);
-    }
-  };
 
   const onCreatePlan = () => {
     // Disabled - Coming Soon
@@ -171,20 +72,6 @@ const FinancialPlans = () => {
     handleDuplicatePlan(planId);
   };
 
-  if (loading) {
-    return (
-      <ThreeColumnLayout activeMainItem="financial-plans" title="">
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
-          <div className="container mx-auto px-6 py-8">
-            <div className="flex items-center justify-center h-64">
-              <div className="text-lg">Loading financial plans...</div>
-            </div>
-          </div>
-        </div>
-      </ThreeColumnLayout>
-    );
-  }
-
   return (
     <ThreeColumnLayout activeMainItem="financial-plans" title="">
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
@@ -207,6 +94,35 @@ const FinancialPlans = () => {
                   </div>
                 </div>
               </div>
+              
+              {/* Quick Actions - COMMENTED OUT */}
+              {/* <div className="lg:w-80">
+                <Card className="border-0 shadow-xl bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm">
+                  <CardContent className="p-6">
+                    <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                      <Plus className="h-5 w-5 text-blue-600" />
+                      Quick Actions
+                    </h3>
+                    <div className="space-y-3">
+                      <Button 
+                        onClick={onCreatePlan}
+                        className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white shadow-lg"
+                      >
+                        <Plus className="h-4 w-4 mr-2" />
+                        Create New Plan
+                      </Button>
+                      <Button 
+                        onClick={() => setIsManagePlansOpen(true)}
+                        variant="outline"
+                        className="w-full"
+                      >
+                        <Settings className="h-4 w-4 mr-2" />
+                        Manage Plans
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div> */}
             </div>
           </div>
 
@@ -245,6 +161,35 @@ const FinancialPlans = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Left Column - Current Plan & Goals */}
             <div className="lg:col-span-2 space-y-8">
+              {/* Current Plan Section - COMMENTED OUT */}
+              {/* {activePlan && (
+                <Card className="border-0 shadow-xl bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm">
+                  <CardContent className="p-8">
+                    <div className="flex items-center justify-between mb-6">
+                      <div className="flex items-center gap-3">
+                        <div className="p-3 bg-green-500/20 rounded-xl">
+                          <Target className="h-6 w-6 text-green-600" />
+                        </div>
+                        <div>
+                          <h2 className="text-2xl font-bold">Current Plan</h2>
+                          <p className="text-muted-foreground">Your active financial strategy</p>
+                        </div>
+                      </div>
+                      <Badge variant="secondary" className="bg-green-100 text-green-700 border-green-200">
+                        Active
+                      </Badge>
+                    </div>
+                    
+                    <PlanManagementSection
+                      activePlan={activePlan}
+                      onEditPlan={onEditPlan}
+                      onDuplicatePlan={onDuplicatePlan}
+                      onDeletePlan={onDeletePlan}
+                    />
+                  </CardContent>
+                </Card>
+              )} */}
+
               {/* Goals Section */}
               <Card className="border-0 shadow-xl bg-gradient-to-br from-blue-500/10 to-purple-500/10 backdrop-blur-sm">
                 <CardContent className="p-8">
