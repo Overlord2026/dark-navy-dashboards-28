@@ -46,9 +46,12 @@ export default function Dashboard() {
           <div>
             <NetWorthSummary />
           </div>
-          <div>
-            <PropertySummaryCard />
-          </div>
+        </div>
+
+        {/* Card Section */}
+        <div className="space-y-4">
+          <h2 className="text-xl font-semibold text-foreground">Card</h2>
+          <PropertySummaryCard />
         </div>
       </div>
     </ThreeColumnLayout>
