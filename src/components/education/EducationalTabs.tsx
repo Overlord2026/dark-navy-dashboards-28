@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CourseList } from "./CourseList";
@@ -68,27 +67,15 @@ export const EducationalTabs: React.FC<EducationalTabsProps> = ({
     <Tabs value={activeSection} onValueChange={handleTabChange} className="w-full mt-6">
       <div className="flex justify-between items-center mb-4">
         <TabsList>
-          <TabsTrigger value="courses">Courses</TabsTrigger>
           <TabsTrigger value="guides">Guides</TabsTrigger>
           <TabsTrigger value="books">Books</TabsTrigger>
           <TabsTrigger value="ebooks">E-Books</TabsTrigger>
           <TabsTrigger value="whitepapers">Whitepapers</TabsTrigger>
           <TabsTrigger value="resources">Resources</TabsTrigger>
           <TabsTrigger value="funnel">Funnel</TabsTrigger>
+          <TabsTrigger value="courses">Courses</TabsTrigger>
         </TabsList>
       </div>
-      
-      <TabsContent value="courses" className="py-4">
-        <CourseList
-          title={activeCategory === "all-courses" ? "All Courses" : "Category Courses"}
-          courses={
-            activeCategory === "all-courses"
-              ? Object.values(coursesByCategory).flat()
-              : coursesByCategory[activeCategory] || []
-          }
-          onCourseEnrollment={handleCourseEnrollment}
-        />
-      </TabsContent>
       
       <TabsContent value="guides" className="py-4">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -226,6 +213,18 @@ export const EducationalTabs: React.FC<EducationalTabsProps> = ({
             </div>
           )}
         </div>
+      </TabsContent>
+
+      <TabsContent value="courses" className="py-4">
+        <CourseList
+          title={activeCategory === "all-courses" ? "All Courses" : "Category Courses"}
+          courses={
+            activeCategory === "all-courses"
+              ? Object.values(coursesByCategory).flat()
+              : coursesByCategory[activeCategory] || []
+          }
+          onCourseEnrollment={handleCourseEnrollment}
+        />
       </TabsContent>
     </Tabs>
   );
