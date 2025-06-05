@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
@@ -5,12 +6,6 @@ import { PlusIcon, ChevronUpIcon, ChevronDownIcon } from "lucide-react";
 import { GoalDetailsSidePanel, GoalFormData } from "./GoalDetailsSidePanel";
 import { Card } from "@/components/ui/card";
 import { format } from "date-fns";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 
 export interface Goal {
   id: string;
@@ -55,7 +50,6 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
   const [detailsPanelTitle, setDetailsPanelTitle] = useState<string>("");
   const [localGoals, setLocalGoals] = useState<Goal[]>(goals);
   const [newGoalId, setNewGoalId] = useState<string | null>(null);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   
   if (JSON.stringify(goals) !== JSON.stringify(localGoals)) {
     setLocalGoals(goals);
@@ -99,36 +93,10 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
     setIsDetailsPanelOpen(true);
   };
 
-  const handleAddGoalClick = (goalType?: string) => {
-    if (!goalType) {
-      setSelectedGoal(undefined);
-      setDetailsPanelTitle("New Goal");
-      setIsDetailsPanelOpen(true);
-      return;
-    }
-    
-    const owner = "Tom Brady";
-    const newGoal: Goal = {
-      id: `temp-goal-${Date.now()}`,
-      title: goalType,
-      name: goalType,
-      type: goalType,
-      priority: goalType,
-      owner: owner,
-      isNew: true,
-      financingMethod: goalType === "Asset Purchase" || goalType === "Home Purchase" || goalType === "Vehicle" ? "Cash" : undefined,
-      annualAppreciation: goalType === "Asset Purchase" || goalType === "Home Purchase" ? "None" : undefined,
-    };
-    
-    setLocalGoals(prev => [...prev, newGoal]);
-    
-    const ownerPossessive = owner.endsWith('s') ? `${owner}'` : `${owner}'s`;
-    const detailsTitle = `${ownerPossessive} ${goalType}`;
-    
-    setSelectedGoal(newGoal);
-    setDetailsPanelTitle(detailsTitle);
+  const handleAddGoalClick = () => {
+    setSelectedGoal(undefined);
+    setDetailsPanelTitle("New Goal");
     setIsDetailsPanelOpen(true);
-    setIsDropdownOpen(false);
   };
 
   const handleTitleUpdate = (name: string, owner: string) => {
@@ -225,23 +193,6 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
     
     setIsDetailsPanelOpen(false);
   };
-  
-  const goalTypes = [
-    "Asset Purchase",
-    "Cash Reserves",
-    "Education",
-    "Gift",
-    "Home Improvement",
-    "Home Purchase",
-    "Investment Property",
-    "Land",
-    "Legacy",
-    "Other",
-    "Vacation",
-    "Vacation Home",
-    "Vehicle",
-    "Wedding"
-  ];
 
   // Separate retirement goals from other goals
   const retirementGoals = localGoals.filter(goal => 
@@ -260,27 +211,12 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
     <div className="space-y-8">
       <div className="flex justify-between items-center">
         <h2 className="text-xl font-semibold">Goals</h2>
-        <div className="relative">
-          <Button 
-            className="bg-blue-600 hover:bg-blue-700 text-white"
-            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-          >
-            Add Goal
-          </Button>
-          {isDropdownOpen && (
-            <div className="absolute right-0 mt-2 w-48 bg-[#0D1426] border border-blue-900 rounded-md shadow-lg z-50">
-              {goalTypes.map((type) => (
-                <div 
-                  key={type} 
-                  className="px-4 py-2 text-white hover:bg-blue-800 cursor-pointer"
-                  onClick={() => handleAddGoalClick(type)}
-                >
-                  {type}
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+        <Button 
+          className="bg-blue-600 hover:bg-blue-700 text-white"
+          onClick={handleAddGoalClick}
+        >
+          Add Goal
+        </Button>
       </div>
       
       <p className="text-gray-400 text-sm -mt-4">
@@ -338,7 +274,7 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
         ) : (
           <Card 
             className="bg-[#0D1426] border border-blue-900 p-6 text-center hover:border-blue-600 transition-all cursor-pointer"
-            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+            onClick={handleAddGoalClick}
           >
             <p className="text-gray-400">
               Add other goals for education, cars, vacations, homes, and more.
@@ -564,30 +500,6 @@ function GoalCard({ goal, isExpanded, onToggle, onClick, isNew = false }: {
                   currency: 'USD',
                 }).format(goal.targetAmount)}
               </span>
-            </div>
-          )}
-          
-          {goal.currentAmount !== undefined && 
-            (goal.targetAmount || goal.purchasePrice || goal.estimatedCost || goal.tuitionEstimate || goal.amountDesired) && (
-            <div className="mt-2">
-              <div className="flex justify-between text-xs mb-1">
-                <span>Progress</span>
-                <span>
-                  {Math.round((goal.currentAmount / 
-                    (goal.targetAmount || goal.purchasePrice || goal.estimatedCost || 
-                     goal.tuitionEstimate || goal.amountDesired || 1)) * 100)}%
-                </span>
-              </div>
-              <div className="w-full bg-gray-700 h-2 rounded-full">
-                <div 
-                  className="bg-[#33C3F0] h-2 rounded-full" 
-                  style={{ 
-                    width: `${Math.min(100, (goal.currentAmount / 
-                      (goal.targetAmount || goal.purchasePrice || goal.estimatedCost || 
-                       goal.tuitionEstimate || goal.amountDesired || 1)) * 100)}%` 
-                  }}
-                ></div>
-              </div>
             </div>
           )}
           
