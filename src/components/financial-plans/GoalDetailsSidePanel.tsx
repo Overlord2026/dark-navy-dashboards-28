@@ -244,334 +244,320 @@ export function GoalDetailsSidePanel({
   };
 
   const FormContent = () => (
-    <div className="space-y-8 max-h-[80vh] overflow-y-auto p-1">
-      {/* Header Card */}
-      <Card className="border-2 border-blue-100 bg-gradient-to-r from-blue-50 to-indigo-50">
-        <CardHeader className="pb-4">
-          <CardTitle className="flex items-center gap-2 text-xl text-blue-900">
-            <Target className="h-6 w-6" />
-            Goal Information
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <Label htmlFor="name" className="text-sm font-medium flex items-center gap-2">
-                <Target className="h-4 w-4" />
-                Goal Name
-              </Label>
-              <Input 
-                id="name" 
-                value={name} 
-                onChange={handleNameChange} 
-                placeholder="e.g. Retirement, New Home, Vacation"
-                className="h-11 border-2 focus:border-blue-500 transition-colors"
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="owner" className="text-sm font-medium flex items-center gap-2">
-                <User className="h-4 w-4" />
-                Owner
-              </Label>
-              <Input 
-                id="owner" 
-                value={owner} 
-                onChange={handleOwnerChange} 
-                placeholder="e.g. Antonio, Maria"
-                className="h-11 border-2 focus:border-blue-500 transition-colors"
-              />
-            </div>
+    <div className="space-y-6 max-h-[80vh] overflow-y-auto p-1">
+      {/* Basic Information Section */}
+      <div className="space-y-4">
+        <div className="flex items-center gap-2 pb-2 border-b">
+          <Target className="h-5 w-5 text-blue-600" />
+          <h3 className="text-lg font-semibold text-gray-900">Goal Information</h3>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label htmlFor="name" className="text-sm font-medium text-gray-700">
+              Goal Name
+            </Label>
+            <Input 
+              id="name" 
+              value={name} 
+              onChange={handleNameChange} 
+              placeholder="e.g. Retirement, New Home, Vacation"
+              className="h-10 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="type" className="text-sm font-medium">Goal Type</Label>
-            <Select value={type} onValueChange={handleTypeChange}>
-              <SelectTrigger className="h-11 border-2 focus:border-blue-500">
-                <SelectValue placeholder="Select a goal type" />
-              </SelectTrigger>
-              <SelectContent className="bg-white border-2">
-                <SelectItem value="Retirement">🏖️ Retirement</SelectItem>
-                <SelectItem value="Asset Purchase">📈 Asset Purchase</SelectItem>
-                <SelectItem value="Home Purchase">🏠 Home Purchase</SelectItem>
-                <SelectItem value="Vehicle">🚗 Vehicle</SelectItem>
-                <SelectItem value="Education">🎓 Education</SelectItem>
-                <SelectItem value="Vacation">✈️ Vacation</SelectItem>
-                <SelectItem value="Cash Reserve">💰 Cash Reserve</SelectItem>
-                <SelectItem value="Other">📋 Other</SelectItem>
-              </SelectContent>
-            </Select>
+            <Label htmlFor="owner" className="text-sm font-medium text-gray-700">
+              Owner
+            </Label>
+            <Input 
+              id="owner" 
+              value={owner} 
+              onChange={handleOwnerChange} 
+              placeholder="e.g. Antonio, Maria"
+              className="h-10 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
           </div>
-        </CardContent>
-      </Card>
+        </div>
+        
+        <div className="space-y-2">
+          <Label htmlFor="type" className="text-sm font-medium text-gray-700">Goal Type</Label>
+          <Select value={type} onValueChange={handleTypeChange}>
+            <SelectTrigger className="h-10 focus:ring-2 focus:ring-blue-500">
+              <SelectValue placeholder="Select a goal type" />
+            </SelectTrigger>
+            <SelectContent className="bg-white border shadow-lg">
+              <SelectItem value="Retirement">🏖️ Retirement</SelectItem>
+              <SelectItem value="Asset Purchase">📈 Asset Purchase</SelectItem>
+              <SelectItem value="Home Purchase">🏠 Home Purchase</SelectItem>
+              <SelectItem value="Vehicle">🚗 Vehicle</SelectItem>
+              <SelectItem value="Education">🎓 Education</SelectItem>
+              <SelectItem value="Vacation">✈️ Vacation</SelectItem>
+              <SelectItem value="Cash Reserve">💰 Cash Reserve</SelectItem>
+              <SelectItem value="Other">📋 Other</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
 
-      {/* Financial Details Card */}
+      {/* Financial Details Section */}
       {type && type !== "Retirement" && (
-        <Card className="border-2 border-green-100 bg-gradient-to-r from-green-50 to-emerald-50">
-          <CardHeader className="pb-4">
-            <CardTitle className="flex items-center gap-2 text-xl text-green-900">
-              <DollarSign className="h-6 w-6" />
-              Financial Details
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <Label className="text-sm font-medium flex items-center gap-2">
-                  <Clock className="h-4 w-4" />
-                  Target Date
-                </Label>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant={"outline"}
-                      className={cn(
-                        "w-full h-11 pl-3 text-left font-normal border-2 hover:border-green-500",
-                        !targetDate && "text-muted-foreground"
-                      )}
-                    >
-                      {targetDate ? (
-                        format(targetDate, "PPP")
-                      ) : (
-                        <span>Pick a date</span>
-                      )}
-                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0 bg-white border-2" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={targetDate}
-                      onSelect={handleTargetDateChange}
-                      disabled={(date) =>
-                        date < new Date(new Date().setHours(0, 0, 0, 0))
-                      }
-                      initialFocus
-                      className="p-3 pointer-events-auto"
-                    />
-                  </PopoverContent>
-                </Popover>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="targetAmount" className="text-sm font-medium flex items-center gap-2">
-                  <DollarSign className="h-4 w-4" />
-                  Target Amount
-                </Label>
-                <Input
-                  id="targetAmount"
-                  type="number"
-                  placeholder="e.g. 100,000"
-                  value={targetAmount.toString()}
-                  onChange={handleTargetAmountChange}
-                  className="h-11 border-2 focus:border-green-500 transition-colors"
-                />
-              </div>
+        <div className="space-y-4">
+          <div className="flex items-center gap-2 pb-2 border-b">
+            <DollarSign className="h-5 w-5 text-green-600" />
+            <h3 className="text-lg font-semibold text-gray-900">Financial Details</h3>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label className="text-sm font-medium text-gray-700">
+                Target Date
+              </Label>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant={"outline"}
+                    className={cn(
+                      "w-full h-10 pl-3 text-left font-normal",
+                      !targetDate && "text-muted-foreground"
+                    )}
+                  >
+                    {targetDate ? (
+                      format(targetDate, "PPP")
+                    ) : (
+                      <span>Pick a date</span>
+                    )}
+                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0 bg-white border shadow-lg" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={targetDate}
+                    onSelect={handleTargetDateChange}
+                    disabled={(date) =>
+                      date < new Date(new Date().setHours(0, 0, 0, 0))
+                    }
+                    initialFocus
+                    className="p-3"
+                  />
+                </PopoverContent>
+              </Popover>
             </div>
-          </CardContent>
-        </Card>
+
+            <div className="space-y-2">
+              <Label htmlFor="targetAmount" className="text-sm font-medium text-gray-700">
+                Target Amount
+              </Label>
+              <Input
+                id="targetAmount"
+                type="number"
+                placeholder="e.g. 100,000"
+                value={targetAmount.toString()}
+                onChange={handleTargetAmountChange}
+                className="h-10 focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              />
+            </div>
+          </div>
+        </div>
       )}
 
       {/* Type-specific Details */}
       {(type === "Asset Purchase" || type === "Home Purchase" || type === "Vehicle") && (
-        <Card className="border-2 border-purple-100 bg-gradient-to-r from-purple-50 to-pink-50">
-          <CardHeader className="pb-4">
-            <CardTitle className="text-xl text-purple-900">Purchase Details</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <Label htmlFor="purchasePrice" className="text-sm font-medium">Purchase Price</Label>
-                <Input
-                  id="purchasePrice"
-                  type="number"
-                  placeholder="e.g. 500,000"
-                  value={purchasePrice.toString()}
-                  onChange={handlePurchasePriceChange}
-                  className="h-11 border-2 focus:border-purple-500"
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="financingMethod" className="text-sm font-medium">Financing Method</Label>
-                <Select value={financingMethod} onValueChange={handleFinancingMethodChange}>
-                  <SelectTrigger className="h-11 border-2 focus:border-purple-500">
-                    <SelectValue placeholder="Select financing" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-white border-2">
-                    <SelectItem value="Cash">💵 Cash</SelectItem>
-                    {type === "Home Purchase" ? (
-                      <SelectItem value="Mortgage">🏦 Mortgage</SelectItem>
-                    ) : type === "Vehicle" ? (
-                      <>
-                        <SelectItem value="Loan">💳 Loan</SelectItem>
-                        <SelectItem value="Lease">📄 Lease</SelectItem>
-                      </>
-                    ) : (
-                      <SelectItem value="Loan">💳 Loan</SelectItem>
-                    )}
-                    <SelectItem value="Other">📋 Other</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+        <div className="space-y-4">
+          <div className="flex items-center gap-2 pb-2 border-b">
+            <h3 className="text-lg font-semibold text-gray-900">Purchase Details</h3>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="purchasePrice" className="text-sm font-medium text-gray-700">Purchase Price</Label>
+              <Input
+                id="purchasePrice"
+                type="number"
+                placeholder="e.g. 500,000"
+                value={purchasePrice.toString()}
+                onChange={handlePurchasePriceChange}
+                className="h-10"
+              />
             </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="financingMethod" className="text-sm font-medium text-gray-700">Financing Method</Label>
+              <Select value={financingMethod} onValueChange={handleFinancingMethodChange}>
+                <SelectTrigger className="h-10">
+                  <SelectValue placeholder="Select financing" />
+                </SelectTrigger>
+                <SelectContent className="bg-white border shadow-lg">
+                  <SelectItem value="Cash">💵 Cash</SelectItem>
+                  {type === "Home Purchase" ? (
+                    <SelectItem value="Mortgage">🏦 Mortgage</SelectItem>
+                  ) : type === "Vehicle" ? (
+                    <>
+                      <SelectItem value="Loan">💳 Loan</SelectItem>
+                      <SelectItem value="Lease">📄 Lease</SelectItem>
+                    </>
+                  ) : (
+                    <SelectItem value="Loan">💳 Loan</SelectItem>
+                  )}
+                  <SelectItem value="Other">📋 Other</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
 
-            {(type === "Asset Purchase" || type === "Home Purchase" || type === "Cash Reserve") && (
-              <div className="space-y-2">
-                <Label htmlFor="annualAppreciation" className="text-sm font-medium">Annual Appreciation</Label>
-                <Select value={annualAppreciation} onValueChange={handleAnnualAppreciationChange}>
-                  <SelectTrigger className="h-11 border-2 focus:border-purple-500">
-                    <SelectValue placeholder="Select appreciation rate" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-white border-2">
-                    <SelectItem value="None">📊 None</SelectItem>
-                    {type === "Cash Reserve" ? (
-                      <>
-                        <SelectItem value="Low">📈 Low (1%)</SelectItem>
-                        <SelectItem value="Medium">📈 Medium (2%)</SelectItem>
-                        <SelectItem value="High">📈 High (3%)</SelectItem>
-                      </>
-                    ) : type === "Home Purchase" ? (
-                      <>
-                        <SelectItem value="Low">📈 Low (3%)</SelectItem>
-                        <SelectItem value="Medium">📈 Medium (6%)</SelectItem>
-                        <SelectItem value="High">📈 High (9%)</SelectItem>
-                      </>
-                    ) : (
-                      <>
-                        <SelectItem value="Low">📈 Low (2%)</SelectItem>
-                        <SelectItem value="Medium">📈 Medium (5%)</SelectItem>
-                        <SelectItem value="High">📈 High (8%)</SelectItem>
-                      </>
-                    )}
-                  </SelectContent>
-                </Select>
-              </div>
-            )}
-          </CardContent>
-        </Card>
+          {(type === "Asset Purchase" || type === "Home Purchase") && (
+            <div className="space-y-2">
+              <Label htmlFor="annualAppreciation" className="text-sm font-medium text-gray-700">Annual Appreciation</Label>
+              <Select value={annualAppreciation} onValueChange={handleAnnualAppreciationChange}>
+                <SelectTrigger className="h-10">
+                  <SelectValue placeholder="Select appreciation rate" />
+                </SelectTrigger>
+                <SelectContent className="bg-white border shadow-lg">
+                  <SelectItem value="None">📊 None</SelectItem>
+                  {type === "Home Purchase" ? (
+                    <>
+                      <SelectItem value="Low">📈 Low (3%)</SelectItem>
+                      <SelectItem value="Medium">📈 Medium (6%)</SelectItem>
+                      <SelectItem value="High">📈 High (9%)</SelectItem>
+                    </>
+                  ) : (
+                    <>
+                      <SelectItem value="Low">📈 Low (2%)</SelectItem>
+                      <SelectItem value="Medium">📈 Medium (5%)</SelectItem>
+                      <SelectItem value="High">📈 High (8%)</SelectItem>
+                    </>
+                  )}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
+        </div>
       )}
 
       {/* Education Details */}
       {type === "Education" && (
-        <Card className="border-2 border-yellow-100 bg-gradient-to-r from-yellow-50 to-orange-50">
-          <CardHeader className="pb-4">
-            <CardTitle className="text-xl text-yellow-900">🎓 Education Details</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-6">
+        <div className="space-y-4">
+          <div className="flex items-center gap-2 pb-2 border-b">
+            <h3 className="text-lg font-semibold text-gray-900">🎓 Education Details</h3>
+          </div>
+          
+          <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="studentName" className="text-sm font-medium">Student Name</Label>
+              <Label htmlFor="studentName" className="text-sm font-medium text-gray-700">Student Name</Label>
               <Input
                 id="studentName"
                 type="text"
                 placeholder="e.g. John Doe"
                 value={studentName}
                 onChange={handleStudentNameChange}
-                className="h-11 border-2 focus:border-yellow-500"
+                className="h-10"
               />
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="tuitionEstimate" className="text-sm font-medium">Annual Tuition Estimate</Label>
+              <Label htmlFor="tuitionEstimate" className="text-sm font-medium text-gray-700">Annual Tuition Estimate</Label>
               <Input
                 id="tuitionEstimate"
                 type="number"
                 placeholder="e.g. 20,000"
                 value={tuitionEstimate.toString()}
                 onChange={handleTuitionEstimateChange}
-                className="h-11 border-2 focus:border-yellow-500"
+                className="h-10"
               />
             </div>
             
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="startYear" className="text-sm font-medium">Start Year</Label>
+                <Label htmlFor="startYear" className="text-sm font-medium text-gray-700">Start Year</Label>
                 <Input
                   id="startYear"
                   type="number"
                   placeholder="e.g. 2024"
                   value={startYear.toString()}
                   onChange={handleStartYearChange}
-                  className="h-11 border-2 focus:border-yellow-500"
+                  className="h-10"
                 />
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="endYear" className="text-sm font-medium">End Year</Label>
+                <Label htmlFor="endYear" className="text-sm font-medium text-gray-700">End Year</Label>
                 <Input
                   id="endYear"
                   type="number"
                   placeholder="e.g. 2028"
                   value={endYear.toString()}
                   onChange={handleEndYearChange}
-                  className="h-11 border-2 focus:border-yellow-500"
+                  className="h-10"
                 />
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       )}
 
       {/* Vacation Details */}
       {type === "Vacation" && (
-        <Card className="border-2 border-cyan-100 bg-gradient-to-r from-cyan-50 to-blue-50">
-          <CardHeader className="pb-4">
-            <CardTitle className="text-xl text-cyan-900">✈️ Vacation Details</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-6">
+        <div className="space-y-4">
+          <div className="flex items-center gap-2 pb-2 border-b">
+            <h3 className="text-lg font-semibold text-gray-900">✈️ Vacation Details</h3>
+          </div>
+          
+          <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="destination" className="text-sm font-medium">Destination</Label>
+              <Label htmlFor="destination" className="text-sm font-medium text-gray-700">Destination</Label>
               <Input
                 id="destination"
                 type="text"
                 placeholder="e.g. Paris, Tokyo, Maldives"
                 value={destination}
                 onChange={handleDestinationChange}
-                className="h-11 border-2 focus:border-cyan-500"
+                className="h-10"
               />
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="estimatedCost" className="text-sm font-medium">Estimated Cost</Label>
+              <Label htmlFor="estimatedCost" className="text-sm font-medium text-gray-700">Estimated Cost</Label>
               <Input
                 id="estimatedCost"
                 type="number"
                 placeholder="e.g. 5,000"
                 value={estimatedCost.toString()}
                 onChange={handleEstimatedCostChange}
-                className="h-11 border-2 focus:border-cyan-500"
+                className="h-10"
               />
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       )}
 
       {/* Cash Reserve Details */}
       {type === "Cash Reserve" && (
-        <Card className="border-2 border-emerald-100 bg-gradient-to-r from-emerald-50 to-green-50">
-          <CardHeader className="pb-4">
-            <CardTitle className="text-xl text-emerald-900">💰 Cash Reserve Details</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-6">
+        <div className="space-y-4">
+          <div className="flex items-center gap-2 pb-2 border-b">
+            <h3 className="text-lg font-semibold text-gray-900">💰 Cash Reserve Details</h3>
+          </div>
+          
+          <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="amountDesired" className="text-sm font-medium">Amount Desired</Label>
+              <Label htmlFor="amountDesired" className="text-sm font-medium text-gray-700">Amount Desired</Label>
               <Input
                 id="amountDesired"
                 type="number"
                 placeholder="e.g. 10,000"
                 value={amountDesired.toString()}
                 onChange={handleAmountDesiredChange}
-                className="h-11 border-2 focus:border-emerald-500"
+                className="h-10"
               />
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="repeats" className="text-sm font-medium">Contribution Frequency</Label>
+              <Label htmlFor="repeats" className="text-sm font-medium text-gray-700">Contribution Frequency</Label>
               <Select value={repeats} onValueChange={handleRepeatsChange}>
-                <SelectTrigger className="h-11 border-2 focus:border-emerald-500">
+                <SelectTrigger className="h-10">
                   <SelectValue placeholder="Select frequency" />
                 </SelectTrigger>
-                <SelectContent className="bg-white border-2">
+                <SelectContent className="bg-white border shadow-lg">
                   <SelectItem value="Monthly">📅 Monthly</SelectItem>
                   <SelectItem value="Quarterly">📅 Quarterly</SelectItem>
                   <SelectItem value="Annually">📅 Annually</SelectItem>
@@ -579,25 +565,41 @@ export function GoalDetailsSidePanel({
                 </SelectContent>
               </Select>
             </div>
-          </CardContent>
-        </Card>
+
+            <div className="space-y-2">
+              <Label htmlFor="annualAppreciation" className="text-sm font-medium text-gray-700">Annual Appreciation</Label>
+              <Select value={annualAppreciation} onValueChange={handleAnnualAppreciationChange}>
+                <SelectTrigger className="h-10">
+                  <SelectValue placeholder="Select appreciation rate" />
+                </SelectTrigger>
+                <SelectContent className="bg-white border shadow-lg">
+                  <SelectItem value="None">📊 None</SelectItem>
+                  <SelectItem value="Low">📈 Low (1%)</SelectItem>
+                  <SelectItem value="Medium">📈 Medium (2%)</SelectItem>
+                  <SelectItem value="High">📈 High (3%)</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        </div>
       )}
 
       {/* Retirement Details */}
       {type === "Retirement" && (
-        <Card className="border-2 border-orange-100 bg-gradient-to-r from-orange-50 to-red-50">
-          <CardHeader className="pb-4">
-            <CardTitle className="text-xl text-orange-900">🏖️ Retirement Planning</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-6">
+        <div className="space-y-4">
+          <div className="flex items-center gap-2 pb-2 border-b">
+            <h3 className="text-lg font-semibold text-gray-900">🏖️ Retirement Planning</h3>
+          </div>
+          
+          <div className="space-y-4">
             <div className="space-y-2">
-              <Label className="text-sm font-medium">Date of Birth</Label>
+              <Label className="text-sm font-medium text-gray-700">Date of Birth</Label>
               <Popover>
                 <PopoverTrigger asChild>
                   <Button
                     variant={"outline"}
                     className={cn(
-                      "w-full h-11 pl-3 text-left font-normal border-2 hover:border-orange-500",
+                      "w-full h-10 pl-3 text-left font-normal",
                       !dateOfBirth && "text-muted-foreground"
                     )}
                   >
@@ -609,72 +611,73 @@ export function GoalDetailsSidePanel({
                     <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent className="w-auto p-0 bg-white border-2" align="start">
+                <PopoverContent className="w-auto p-0 bg-white border shadow-lg" align="start">
                   <Calendar
                     mode="single"
                     selected={dateOfBirth}
                     onSelect={handleDateOfBirthChange}
                     disabled={(date) => date > new Date()}
                     initialFocus
-                    className="p-3 pointer-events-auto"
+                    className="p-3"
                   />
                 </PopoverContent>
               </Popover>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="targetRetirementAge" className="text-sm font-medium">Target Retirement Age</Label>
+                <Label htmlFor="targetRetirementAge" className="text-sm font-medium text-gray-700">Target Retirement Age</Label>
                 <Input
                   id="targetRetirementAge"
                   type="number"
                   placeholder="e.g. 65"
                   value={targetRetirementAge.toString()}
                   onChange={handleRetirementAgeChange}
-                  className="h-11 border-2 focus:border-orange-500"
+                  className="h-10"
                 />
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="planningHorizonAge" className="text-sm font-medium">Planning Horizon (Years)</Label>
+                <Label htmlFor="planningHorizonAge" className="text-sm font-medium text-gray-700">Planning Horizon (Years)</Label>
                 <Input
                   id="planningHorizonAge"
                   type="number"
                   placeholder="e.g. 30"
                   value={planningHorizonAge.toString()}
                   onChange={handlePlanningHorizonAgeChange}
-                  className="h-11 border-2 focus:border-orange-500"
+                  className="h-10"
                 />
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       )}
 
-      {/* Additional Information Card */}
-      <Card className="border-2 border-gray-100 bg-gradient-to-r from-gray-50 to-slate-50">
-        <CardHeader className="pb-4">
-          <CardTitle className="text-xl text-gray-900">📝 Additional Information</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-6">
+      {/* Additional Information Section */}
+      <div className="space-y-4">
+        <div className="flex items-center gap-2 pb-2 border-b">
+          <h3 className="text-lg font-semibold text-gray-900">📝 Additional Information</h3>
+        </div>
+        
+        <div className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="description" className="text-sm font-medium">Description</Label>
+            <Label htmlFor="description" className="text-sm font-medium text-gray-700">Description</Label>
             <Textarea
               id="description"
               placeholder="Describe your goal in more detail..."
               value={description}
               onChange={handleDescriptionChange}
-              className="min-h-[100px] border-2 focus:border-gray-500 resize-none"
+              className="min-h-[100px] resize-none"
             />
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="annualInflationType" className="text-sm font-medium">Annual Inflation</Label>
+            <Label htmlFor="annualInflationType" className="text-sm font-medium text-gray-700">Annual Inflation</Label>
             <Select value={annualInflationType} onValueChange={handleAnnualInflationTypeChange}>
-              <SelectTrigger className="h-11 border-2 focus:border-gray-500">
+              <SelectTrigger className="h-10">
                 <SelectValue placeholder="Select inflation type" />
               </SelectTrigger>
-              <SelectContent className="bg-white border-2">
+              <SelectContent className="bg-white border shadow-lg">
                 <SelectItem value="None">❌ None</SelectItem>
                 <SelectItem value="General">📊 General (2%)</SelectItem>
                 <SelectItem value="Custom">⚙️ Custom</SelectItem>
@@ -684,36 +687,36 @@ export function GoalDetailsSidePanel({
           
           {annualInflationType === "Custom" && (
             <div className="space-y-2">
-              <Label htmlFor="annualInflationRate" className="text-sm font-medium">Custom Inflation Rate (%)</Label>
+              <Label htmlFor="annualInflationRate" className="text-sm font-medium text-gray-700">Custom Inflation Rate (%)</Label>
               <Input
                 id="annualInflationRate"
                 type="number"
                 placeholder="e.g. 3"
                 value={annualInflationRate.toString()}
                 onChange={handleAnnualInflationRateChange}
-                className="h-11 border-2 focus:border-gray-500"
+                className="h-10"
               />
             </div>
           )}
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
-      <Separator />
+      <Separator className="my-6" />
 
       {/* Action Buttons */}
-      <div className="flex justify-end space-x-4 pt-4 pb-6">
+      <div className="flex justify-end space-x-3 pt-4 pb-6">
         <Button 
           type="button" 
           variant="outline" 
           onClick={onCancel}
-          className="px-8 py-3 h-12 border-2 hover:bg-gray-50"
+          className="px-6 py-2 h-10"
         >
           Cancel
         </Button>
         <Button 
           type="button" 
           onClick={handleSave}
-          className="px-8 py-3 h-12 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-medium"
+          className="px-6 py-2 h-10 bg-blue-600 hover:bg-blue-700 text-white"
         >
           Save Goal
         </Button>
