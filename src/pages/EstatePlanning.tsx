@@ -162,6 +162,10 @@ export default function EstatePlanning() {
     }
   ];
 
+  const handleDownloadGuides = () => {
+    window.open('https://designrr.page/?id=421221&token=3489244185&type=FP&h=7325', '_blank');
+  };
+
   return (
     <ThreeColumnLayout activeMainItem="estate-planning" title="">
       <div className="space-y-6 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -382,7 +386,7 @@ export default function EstatePlanning() {
                   ))}
                 </CardContent>
                 <CardFooter>
-                  <Button variant="outline" className="w-full" onClick={() => toast.info("Downloading resources...")}>
+                  <Button variant="outline" className="w-full" onClick={handleDownloadGuides}>
                     Download Guides
                   </Button>
                 </CardFooter>
