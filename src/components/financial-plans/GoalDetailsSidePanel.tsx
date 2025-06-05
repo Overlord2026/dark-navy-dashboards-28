@@ -123,8 +123,8 @@ export function GoalDetailsSidePanel({
     onTitleUpdate?.(name, e.target.value);
   };
 
-  const handleTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setType(e.target.value);
+  const handleTypeChange = (value: string) => {
+    setType(value);
   };
 
   const handleTargetDateChange = (date: Date | undefined) => {
@@ -159,12 +159,12 @@ export function GoalDetailsSidePanel({
     setPurchasePrice(isNaN(value) ? 0 : value);
   };
   
-  const handleFinancingMethodChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setFinancingMethod(e.target.value);
+  const handleFinancingMethodChange = (value: string) => {
+    setFinancingMethod(value);
   };
   
-  const handleAnnualAppreciationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setAnnualAppreciation(e.target.value);
+  const handleAnnualAppreciationChange = (value: string) => {
+    setAnnualAppreciation(value);
   };
   
   const handleStudentNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -200,12 +200,12 @@ export function GoalDetailsSidePanel({
     setAmountDesired(isNaN(value) ? 0 : value);
   };
   
-  const handleRepeatsChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setRepeats(e.target.value);
+  const handleRepeatsChange = (value: string) => {
+    setRepeats(value);
   };
   
-  const handleAnnualInflationTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setAnnualInflationType(e.target.value);
+  const handleAnnualInflationTypeChange = (value: string) => {
+    setAnnualInflationType(value);
   };
   
   const handleAnnualInflationRateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
