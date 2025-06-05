@@ -11,7 +11,7 @@ import { motion } from "framer-motion";
 export default function Education() {
   const [searchParams] = useSearchParams();
   const [activeCategory, setActiveCategory] = useState("all-courses");
-  const [activeSection, setActiveSection] = useState("courses");
+  const [activeSection, setActiveSection] = useState("books");
   
   useEffect(() => {
     const category = searchParams.get("category");

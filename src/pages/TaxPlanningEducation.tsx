@@ -11,7 +11,7 @@ import { ArrowLeft } from "lucide-react";
 
 export default function TaxPlanningEducation() {
   const [activeCategory] = useState("tax-planning");
-  const [activeSection, setActiveSection] = useState("courses");
+  const [activeSection, setActiveSection] = useState("books");
   
   const handleCourseEnrollment = (courseId: string | number, title: string, isPaid: boolean, ghlUrl?: string) => {
     if (ghlUrl) {
