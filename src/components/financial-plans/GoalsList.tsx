@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
@@ -100,6 +101,8 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
   };
 
   const handleAddGoalClick = () => {
+    setSelectedGoal(undefined);
+    setDetailsPanelTitle("Add New Goal");
     setIsAddGoalDialogOpen(true);
   };
 
@@ -324,20 +327,20 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
         onTitleUpdate={handleTitleUpdate}
       />
 
-      {/* Add Goal Dialog */}
+      {/* Add Goal Dialog - Fixed Implementation */}
       <Dialog open={isAddGoalDialogOpen} onOpenChange={setIsAddGoalDialogOpen}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>Add New Goal</DialogTitle>
+        <DialogContent className="max-w-4xl h-[90vh] p-0 overflow-hidden">
+          <DialogHeader className="px-6 py-4 border-b">
+            <DialogTitle>{detailsPanelTitle}</DialogTitle>
           </DialogHeader>
-          <div className="mt-4">
+          <div className="flex-1 overflow-y-auto px-6 py-4">
             <GoalDetailsSidePanel
               isOpen={true}
               onClose={() => setIsAddGoalDialogOpen(false)}
               onCancel={handleCancelGoal}
               goal={undefined}
               onSave={handleSaveGoal}
-              title="New Goal"
+              title=""
               onTitleUpdate={handleTitleUpdate}
               isDialog={true}
             />

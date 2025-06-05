@@ -1,32 +1,62 @@
-import React, { useState, useEffect } from "react";
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { CalendarIcon, X, Target, User, DollarSign, Clock } from "lucide-react";
-import { format } from "date-fns";
-import { cn } from "@/lib/utils";
-import { Goal } from "./GoalsList";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
+import React, { useState, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { X, Calendar as CalendarIcon } from 'lucide-react';
+import { Calendar } from '@/components/ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { format } from 'date-fns';
+import { cn } from '@/lib/utils';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
-export interface GoalFormData {
-  name: string;
-  owner: string;
-  type: string;
+export interface Goal {
+  id: string;
+  title?: string;
+  name?: string;
+  type?: string;
+  priority?: string;
   targetDate?: Date;
   targetAmount?: number;
+  currentAmount?: number;
+  owner?: string;
   description?: string;
-  dateOfBirth?: Date;
-  targetRetirementAge?: number;
-  planningHorizonAge?: number;
   purchasePrice?: number;
   financingMethod?: string;
   annualAppreciation?: string;
+  dateOfBirth?: Date;
+  targetRetirementAge?: number;
+  planningHorizonAge?: number;
+  studentName?: string;
+  startYear?: number;
+  endYear?: number;
+  tuitionEstimate?: number;
+  destination?: string;
+  estimatedCost?: number;
+  amountDesired?: number;
+  repeats?: string;
+  annualInflationType?: string;
+  annualInflationRate?: number;
+  isNew?: boolean;
+}
+
+export interface GoalFormData {
+  name: string;
+  type: string;
+  priority: string;
+  targetDate?: Date | undefined;
+  targetAmount?: number;
+  currentAmount?: number;
+  owner: string;
+  description?: string;
+  purchasePrice?: number;
+  financingMethod?: string;
+  annualAppreciation?: string;
+  dateOfBirth?: Date;
+  targetRetirementAge?: number;
+  planningHorizonAge?: number;
   studentName?: string;
   startYear?: number;
   endYear?: number;
@@ -60,728 +90,583 @@ export function GoalDetailsSidePanel({
   onTitleUpdate,
   isDialog = false
 }: GoalDetailsSidePanelProps) {
-  const [name, setName] = useState(goal?.name || "");
-  const [owner, setOwner] = useState(goal?.owner || "");
-  const [type, setType] = useState(goal?.type || "");
-  const [targetDate, setTargetDate] = useState<Date | undefined>(goal?.targetDate);
-  const [targetAmount, setTargetAmount] = useState(goal?.targetAmount || 0);
-  const [description, setDescription] = useState(goal?.description || "");
-  const [dateOfBirth, setDateOfBirth] = useState<Date | undefined>(goal?.dateOfBirth);
-  const [targetRetirementAge, setTargetRetirementAge] = useState(goal?.targetRetirementAge || 0);
-  const [planningHorizonAge, setPlanningHorizonAge] = useState(goal?.planningHorizonAge || 0);
-  
-  const [purchasePrice, setPurchasePrice] = useState(goal?.purchasePrice || 0);
-  const [financingMethod, setFinancingMethod] = useState(goal?.financingMethod || "Cash");
-  const [annualAppreciation, setAnnualAppreciation] = useState(goal?.annualAppreciation || "None");
-  
-  const [studentName, setStudentName] = useState(goal?.studentName || "");
-  const [startYear, setStartYear] = useState(goal?.startYear || new Date().getFullYear());
-  const [endYear, setEndYear] = useState(goal?.endYear || new Date().getFullYear() + 4);
-  const [tuitionEstimate, setTuitionEstimate] = useState(goal?.tuitionEstimate || 0);
-  
-  const [destination, setDestination] = useState(goal?.destination || "");
-  const [estimatedCost, setEstimatedCost] = useState(goal?.estimatedCost || 0);
-  
-  const [amountDesired, setAmountDesired] = useState(goal?.amountDesired || 0);
-  const [repeats, setRepeats] = useState(goal?.repeats || "Monthly");
-  
-  const [annualInflationType, setAnnualInflationType] = useState(goal?.annualInflationType || "None");
-  const [annualInflationRate, setAnnualInflationRate] = useState(goal?.annualInflationRate || 2);
+  const [formData, setFormData] = useState<GoalFormData>({
+    name: goal?.name || '',
+    type: goal?.type || 'Retirement',
+    priority: goal?.priority || 'Medium',
+    targetDate: goal?.targetDate || undefined,
+    targetAmount: goal?.targetAmount || undefined,
+    currentAmount: goal?.currentAmount || undefined,
+    owner: goal?.owner || '',
+    description: goal?.description || '',
+    purchasePrice: goal?.purchasePrice || undefined,
+    financingMethod: goal?.financingMethod || '',
+    annualAppreciation: goal?.annualAppreciation || '',
+    dateOfBirth: goal?.dateOfBirth || undefined,
+    targetRetirementAge: goal?.targetRetirementAge || undefined,
+    planningHorizonAge: goal?.planningHorizonAge || undefined,
+    studentName: goal?.studentName || '',
+    startYear: goal?.startYear || undefined,
+    endYear: goal?.endYear || undefined,
+    tuitionEstimate: goal?.tuitionEstimate || undefined,
+    destination: goal?.destination || '',
+    estimatedCost: goal?.estimatedCost || undefined,
+    amountDesired: goal?.amountDesired || undefined,
+    repeats: goal?.repeats || '',
+    annualInflationType: goal?.annualInflationType || '',
+    annualInflationRate: goal?.annualInflationRate || undefined,
+  });
 
   useEffect(() => {
     if (goal) {
-      setName(goal.name || "");
-      setOwner(goal.owner || "");
-      setType(goal.type || "");
-      setTargetDate(goal.targetDate);
-      setTargetAmount(goal.targetAmount || 0);
-      setDescription(goal.description || "");
-      setDateOfBirth(goal.dateOfBirth);
-      setTargetRetirementAge(goal.targetRetirementAge || 0);
-      setPlanningHorizonAge(goal.planningHorizonAge || 0);
-      setPurchasePrice(goal.purchasePrice || 0);
-      setFinancingMethod(goal.financingMethod || "Cash");
-      setAnnualAppreciation(goal.annualAppreciation || "None");
-      setStudentName(goal.studentName || "");
-      setStartYear(goal.startYear || new Date().getFullYear());
-      setEndYear(goal.endYear || new Date().getFullYear() + 4);
-      setTuitionEstimate(goal.tuitionEstimate || 0);
-      setDestination(goal.destination || "");
-      setEstimatedCost(goal.estimatedCost || 0);
-      setAmountDesired(goal.amountDesired || 0);
-      setRepeats(goal.repeats || "Monthly");
-      setAnnualInflationType(goal.annualInflationType || "None");
-      setAnnualInflationRate(goal.annualInflationRate || 2);
+      setFormData({
+        name: goal.name || '',
+        type: goal.type || 'Retirement',
+        priority: goal.priority || 'Medium',
+        targetDate: goal.targetDate || undefined,
+        targetAmount: goal.targetAmount || undefined,
+        currentAmount: goal.currentAmount || undefined,
+        owner: goal.owner || '',
+        description: goal.description || '',
+        purchasePrice: goal.purchasePrice || undefined,
+        financingMethod: goal.financingMethod || '',
+        annualAppreciation: goal.annualAppreciation || '',
+        dateOfBirth: goal.dateOfBirth || undefined,
+        targetRetirementAge: goal.targetRetirementAge || undefined,
+        planningHorizonAge: goal.planningHorizonAge || undefined,
+        studentName: goal.studentName || '',
+        startYear: goal.startYear || undefined,
+        endYear: goal.endYear || undefined,
+        tuitionEstimate: goal.tuitionEstimate || undefined,
+        destination: goal.destination || '',
+        estimatedCost: goal.estimatedCost || undefined,
+        amountDesired: goal.amountDesired || undefined,
+        repeats: goal.repeats || '',
+        annualInflationType: goal.annualInflationType || '',
+        annualInflationRate: goal.annualInflationRate || undefined,
+      });
     }
   }, [goal]);
 
-  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setName(e.target.value);
-    onTitleUpdate?.(e.target.value, owner);
-  };
-
-  const handleOwnerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setOwner(e.target.value);
-    onTitleUpdate?.(name, e.target.value);
-  };
-
   const handleTypeChange = (value: string) => {
-    setType(value);
+    setFormData(prev => ({ ...prev, type: value }));
   };
 
-  const handleTargetDateChange = (date: Date | undefined) => {
-    setTargetDate(date);
+  const handlePriorityChange = (value: string) => {
+    setFormData(prev => ({ ...prev, priority: value }));
   };
 
-  const handleTargetAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseFloat(e.target.value);
-    setTargetAmount(isNaN(value) ? 0 : value);
-  };
-
-  const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setDescription(e.target.value);
-  };
-
-  const handleDateOfBirthChange = (date: Date | undefined) => {
-    setDateOfBirth(date);
-  };
-
-  const handleRetirementAgeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(e.target.value);
-    setTargetRetirementAge(isNaN(value) ? 0 : value);
-  };
-
-  const handlePlanningHorizonAgeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(e.target.value);
-    setPlanningHorizonAge(isNaN(value) ? 0 : value);
-  };
-  
-  const handlePurchasePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseFloat(e.target.value);
-    setPurchasePrice(isNaN(value) ? 0 : value);
-  };
-  
-  const handleFinancingMethodChange = (value: string) => {
-    setFinancingMethod(value);
-  };
-  
-  const handleAnnualAppreciationChange = (value: string) => {
-    setAnnualAppreciation(value);
-  };
-  
-  const handleStudentNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setStudentName(e.target.value);
-  };
-  
-  const handleStartYearChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(e.target.value);
-    setStartYear(isNaN(value) ? new Date().getFullYear() : value);
-  };
-  
-  const handleEndYearChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(e.target.value);
-    setEndYear(isNaN(value) ? new Date().getFullYear() + 4 : value);
-  };
-  
-  const handleTuitionEstimateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseFloat(e.target.value);
-    setTuitionEstimate(isNaN(value) ? 0 : value);
-  };
-  
-  const handleDestinationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setDestination(e.target.value);
-  };
-  
-  const handleEstimatedCostChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseFloat(e.target.value);
-    setEstimatedCost(isNaN(value) ? 0 : value);
-  };
-  
-  const handleAmountDesiredChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseFloat(e.target.value);
-    setAmountDesired(isNaN(value) ? 0 : value);
-  };
-  
-  const handleRepeatsChange = (value: string) => {
-    setRepeats(value);
-  };
-  
-  const handleAnnualInflationTypeChange = (value: string) => {
-    setAnnualInflationType(value);
-  };
-  
-  const handleAnnualInflationRateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseFloat(e.target.value);
-    setAnnualInflationRate(isNaN(value) ? 2 : value);
+  const handleDateChange = (date: Date | undefined) => {
+    setFormData(prev => ({ ...prev, targetDate: date }));
   };
 
   const handleSave = () => {
-    const goalData: GoalFormData = {
-      name,
-      owner,
-      type,
-      targetDate,
-      targetAmount,
-      description,
-      dateOfBirth,
-      targetRetirementAge,
-      planningHorizonAge,
-      purchasePrice,
-      financingMethod,
-      annualAppreciation,
-      studentName,
-      startYear,
-      endYear,
-      tuitionEstimate,
-      destination,
-      estimatedCost,
-      amountDesired,
-      repeats,
-      annualInflationType,
-      annualInflationRate,
-    };
-    onSave(goalData);
+    onSave(formData);
   };
 
-  const FormContent = () => (
-    <div className="space-y-8 max-h-[80vh] overflow-y-auto p-1">
-      {/* Basic Information Section */}
+  if (!isOpen && !isDialog) return null;
+
+  const content = (
+    <div className={cn(
+      "space-y-6",
+      isDialog ? "h-full" : "h-full overflow-y-auto"
+    )}>
+      {!isDialog && (
+        <div className="flex items-center justify-between border-b pb-4">
+          <h2 className="text-xl font-semibold">{title}</h2>
+          <Button variant="ghost" size="sm" onClick={onClose}>
+            <X className="h-4 w-4" />
+          </Button>
+        </div>
+      )}
+
       <div className="space-y-6">
-        <div className="flex items-center gap-3 pb-3 border-b border-purple-200">
-          <div className="p-2 bg-gradient-to-r from-purple-500 to-indigo-600 rounded-xl shadow-lg">
-            <Target className="h-6 w-6 text-white" />
-          </div>
-          <h3 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-indigo-700 bg-clip-text text-transparent">
-            Goal Information
-          </h3>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-2">
-            <Label htmlFor="name" className="text-sm font-medium text-gray-700">
-              Goal Name
-            </Label>
-            <Input 
-              id="name" 
-              value={name} 
-              onChange={handleNameChange} 
-              placeholder="e.g. Retirement, New Home, Vacation"
-              className="h-10 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-            />
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="owner" className="text-sm font-medium text-gray-700">
-              Owner
-            </Label>
-            <Input 
-              id="owner" 
-              value={owner} 
-              onChange={handleOwnerChange} 
-              placeholder="e.g. Antonio, Maria"
-              className="h-10 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-            />
-          </div>
-        </div>
-        
-        <div className="space-y-2">
-          <Label htmlFor="type" className="text-sm font-medium text-gray-700">Goal Type</Label>
-          <Select value={type} onValueChange={handleTypeChange}>
-            <SelectTrigger className="h-10 focus:ring-2 focus:ring-purple-500">
-              <SelectValue placeholder="Select a goal type" />
-            </SelectTrigger>
-            <SelectContent className="bg-white border shadow-lg">
-              <SelectItem value="Retirement">🏖️ Retirement</SelectItem>
-              <SelectItem value="Asset Purchase">📈 Asset Purchase</SelectItem>
-              <SelectItem value="Home Purchase">🏠 Home Purchase</SelectItem>
-              <SelectItem value="Vehicle">🚗 Vehicle</SelectItem>
-              <SelectItem value="Education">🎓 Education</SelectItem>
-              <SelectItem value="Vacation">✈️ Vacation</SelectItem>
-              <SelectItem value="Cash Reserve">💰 Cash Reserve</SelectItem>
-              <SelectItem value="Other">📋 Other</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
-
-      {/* Financial Details Section */}
-      {type && type !== "Retirement" && (
-        <div className="space-y-6">
-          <div className="flex items-center gap-3 pb-3 border-b border-emerald-200">
-            <div className="p-2 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-xl shadow-lg">
-              <DollarSign className="h-6 w-6 text-white" />
-            </div>
-            <h3 className="text-2xl font-bold bg-gradient-to-r from-emerald-600 to-teal-700 bg-clip-text text-transparent">
-              Financial Details
-            </h3>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <Label className="text-sm font-medium text-gray-700">
-                Target Date
-              </Label>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant={"outline"}
-                    className={cn(
-                      "w-full h-10 pl-3 text-left font-normal",
-                      !targetDate && "text-muted-foreground"
-                    )}
-                  >
-                    {targetDate ? (
-                      format(targetDate, "PPP")
-                    ) : (
-                      <span>Pick a date</span>
-                    )}
-                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0 bg-white border shadow-lg" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={targetDate}
-                    onSelect={handleTargetDateChange}
-                    disabled={(date) =>
-                      date < new Date(new Date().setHours(0, 0, 0, 0))
-                    }
-                    initialFocus
-                    className="p-3"
-                  />
-                </PopoverContent>
-              </Popover>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="targetAmount" className="text-sm font-medium text-gray-700">
-                Target Amount
-              </Label>
-              <Input
-                id="targetAmount"
-                type="number"
-                placeholder="e.g. 100,000"
-                value={targetAmount.toString()}
-                onChange={handleTargetAmountChange}
-                className="h-10 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
-              />
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Type-specific Details */}
-      {(type === "Asset Purchase" || type === "Home Purchase" || type === "Vehicle") && (
-        <div className="space-y-6">
-          <div className="flex items-center gap-3 pb-3 border-b border-blue-200">
-            <div className="p-2 bg-gradient-to-r from-blue-500 to-cyan-600 rounded-xl shadow-lg">
-              <DollarSign className="h-6 w-6 text-white" />
-            </div>
-            <h3 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-cyan-700 bg-clip-text text-transparent">
-              Purchase Details
-            </h3>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="purchasePrice" className="text-sm font-medium text-gray-700">Purchase Price</Label>
-              <Input
-                id="purchasePrice"
-                type="number"
-                placeholder="e.g. 500,000"
-                value={purchasePrice.toString()}
-                onChange={handlePurchasePriceChange}
-                className="h-10"
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="financingMethod" className="text-sm font-medium text-gray-700">Financing Method</Label>
-              <Select value={financingMethod} onValueChange={handleFinancingMethodChange}>
-                <SelectTrigger className="h-10">
-                  <SelectValue placeholder="Select financing" />
-                </SelectTrigger>
-                <SelectContent className="bg-white border shadow-lg">
-                  <SelectItem value="Cash">💵 Cash</SelectItem>
-                  {type === "Home Purchase" ? (
-                    <SelectItem value="Mortgage">🏦 Mortgage</SelectItem>
-                  ) : type === "Vehicle" ? (
-                    <>
-                      <SelectItem value="Loan">💳 Loan</SelectItem>
-                      <SelectItem value="Lease">📄 Lease</SelectItem>
-                    </>
-                  ) : (
-                    <SelectItem value="Loan">💳 Loan</SelectItem>
-                  )}
-                  <SelectItem value="Other">📋 Other</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-
-          {(type === "Asset Purchase" || type === "Home Purchase") && (
-            <div className="space-y-2">
-              <Label htmlFor="annualAppreciation" className="text-sm font-medium text-gray-700">Annual Appreciation</Label>
-              <Select value={annualAppreciation} onValueChange={handleAnnualAppreciationChange}>
-                <SelectTrigger className="h-10">
-                  <SelectValue placeholder="Select appreciation rate" />
-                </SelectTrigger>
-                <SelectContent className="bg-white border shadow-lg">
-                  <SelectItem value="None">📊 None</SelectItem>
-                  {type === "Home Purchase" ? (
-                    <>
-                      <SelectItem value="Low">📈 Low (3%)</SelectItem>
-                      <SelectItem value="Medium">📈 Medium (6%)</SelectItem>
-                      <SelectItem value="High">📈 High (9%)</SelectItem>
-                    </>
-                  ) : (
-                    <>
-                      <SelectItem value="Low">📈 Low (2%)</SelectItem>
-                      <SelectItem value="Medium">📈 Medium (5%)</SelectItem>
-                      <SelectItem value="High">📈 High (8%)</SelectItem>
-                    </>
-                  )}
-                </SelectContent>
-              </Select>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Education Details */}
-      {type === "Education" && (
-        <div className="space-y-6">
-          <div className="flex items-center gap-3 pb-3 border-b border-amber-200">
-            <div className="p-2 bg-gradient-to-r from-amber-500 to-orange-600 rounded-xl shadow-lg">
-              <Target className="h-6 w-6 text-white" />
-            </div>
-            <h3 className="text-2xl font-bold bg-gradient-to-r from-amber-600 to-orange-700 bg-clip-text text-transparent">
-              🎓 Education Details
-            </h3>
-          </div>
-          
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="studentName" className="text-sm font-medium text-gray-700">Student Name</Label>
-              <Input
-                id="studentName"
-                type="text"
-                placeholder="e.g. John Doe"
-                value={studentName}
-                onChange={handleStudentNameChange}
-                className="h-10"
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="tuitionEstimate" className="text-sm font-medium text-gray-700">Annual Tuition Estimate</Label>
-              <Input
-                id="tuitionEstimate"
-                type="number"
-                placeholder="e.g. 20,000"
-                value={tuitionEstimate.toString()}
-                onChange={handleTuitionEstimateChange}
-                className="h-10"
-              />
-            </div>
-            
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="startYear" className="text-sm font-medium text-gray-700">Start Year</Label>
-                <Input
-                  id="startYear"
-                  type="number"
-                  placeholder="e.g. 2024"
-                  value={startYear.toString()}
-                  onChange={handleStartYearChange}
-                  className="h-10"
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="endYear" className="text-sm font-medium text-gray-700">End Year</Label>
-                <Input
-                  id="endYear"
-                  type="number"
-                  placeholder="e.g. 2028"
-                  value={endYear.toString()}
-                  onChange={handleEndYearChange}
-                  className="h-10"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Vacation Details */}
-      {type === "Vacation" && (
-        <div className="space-y-6">
-          <div className="flex items-center gap-3 pb-3 border-b border-sky-200">
-            <div className="p-2 bg-gradient-to-r from-sky-500 to-blue-600 rounded-xl shadow-lg">
-              <Target className="h-6 w-6 text-white" />
-            </div>
-            <h3 className="text-2xl font-bold bg-gradient-to-r from-sky-600 to-blue-700 bg-clip-text text-transparent">
-              ✈️ Vacation Details
-            </h3>
-          </div>
-          
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="destination" className="text-sm font-medium text-gray-700">Destination</Label>
-              <Input
-                id="destination"
-                type="text"
-                placeholder="e.g. Paris, Tokyo, Maldives"
-                value={destination}
-                onChange={handleDestinationChange}
-                className="h-10"
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="estimatedCost" className="text-sm font-medium text-gray-700">Estimated Cost</Label>
-              <Input
-                id="estimatedCost"
-                type="number"
-                placeholder="e.g. 5,000"
-                value={estimatedCost.toString()}
-                onChange={handleEstimatedCostChange}
-                className="h-10"
-              />
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Cash Reserve Details */}
-      {type === "Cash Reserve" && (
-        <div className="space-y-6">
-          <div className="flex items-center gap-3 pb-3 border-b border-green-200">
-            <div className="p-2 bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl shadow-lg">
-              <DollarSign className="h-6 w-6 text-white" />
-            </div>
-            <h3 className="text-2xl font-bold bg-gradient-to-r from-green-600 to-emerald-700 bg-clip-text text-transparent">
-              💰 Cash Reserve Details
-            </h3>
-          </div>
-          
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="amountDesired" className="text-sm font-medium text-gray-700">Amount Desired</Label>
-              <Input
-                id="amountDesired"
-                type="number"
-                placeholder="e.g. 10,000"
-                value={amountDesired.toString()}
-                onChange={handleAmountDesiredChange}
-                className="h-10"
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="repeats" className="text-sm font-medium text-gray-700">Contribution Frequency</Label>
-              <Select value={repeats} onValueChange={handleRepeatsChange}>
-                <SelectTrigger className="h-10">
-                  <SelectValue placeholder="Select frequency" />
-                </SelectTrigger>
-                <SelectContent className="bg-white border shadow-lg">
-                  <SelectItem value="Monthly">📅 Monthly</SelectItem>
-                  <SelectItem value="Quarterly">📅 Quarterly</SelectItem>
-                  <SelectItem value="Annually">📅 Annually</SelectItem>
-                  <SelectItem value="None">❌ None</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="annualAppreciation" className="text-sm font-medium text-gray-700">Annual Appreciation</Label>
-              <Select value={annualAppreciation} onValueChange={handleAnnualAppreciationChange}>
-                <SelectTrigger className="h-10">
-                  <SelectValue placeholder="Select appreciation rate" />
-                </SelectTrigger>
-                <SelectContent className="bg-white border shadow-lg">
-                  <SelectItem value="None">📊 None</SelectItem>
-                  <SelectItem value="Low">📈 Low (1%)</SelectItem>
-                  <SelectItem value="Medium">📈 Medium (2%)</SelectItem>
-                  <SelectItem value="High">📈 High (3%)</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Retirement Details */}
-      {type === "Retirement" && (
-        <div className="space-y-6">
-          <div className="flex items-center gap-3 pb-3 border-b border-rose-200">
-            <div className="p-2 bg-gradient-to-r from-rose-500 to-pink-600 rounded-xl shadow-lg">
-              <Target className="h-6 w-6 text-white" />
-            </div>
-            <h3 className="text-2xl font-bold bg-gradient-to-r from-rose-600 to-pink-700 bg-clip-text text-transparent">
-              🏖️ Retirement Planning
-            </h3>
-          </div>
-          
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label className="text-sm font-medium text-gray-700">Date of Birth</Label>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant={"outline"}
-                    className={cn(
-                      "w-full h-10 pl-3 text-left font-normal",
-                      !dateOfBirth && "text-muted-foreground"
-                    )}
-                  >
-                    {dateOfBirth ? (
-                      format(dateOfBirth, "PPP")
-                    ) : (
-                      <span>Pick a date</span>
-                    )}
-                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0 bg-white border shadow-lg" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={dateOfBirth}
-                    onSelect={handleDateOfBirthChange}
-                    disabled={(date) => date > new Date()}
-                    initialFocus
-                    className="p-3"
-                  />
-                </PopoverContent>
-              </Popover>
-            </div>
-            
+        {/* Basic Information */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg">Basic Information</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="targetRetirementAge" className="text-sm font-medium text-gray-700">Target Retirement Age</Label>
+                <Label htmlFor="goal-name">Goal Name *</Label>
                 <Input
-                  id="targetRetirementAge"
-                  type="number"
-                  placeholder="e.g. 65"
-                  value={targetRetirementAge.toString()}
-                  onChange={handleRetirementAgeChange}
-                  className="h-10"
+                  id="goal-name"
+                  value={formData.name}
+                  onChange={(e) => {
+                    setFormData(prev => ({ ...prev, name: e.target.value }));
+                    onTitleUpdate?.(e.target.value, formData.owner);
+                  }}
+                  placeholder="Enter goal name"
+                  className="w-full"
                 />
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="planningHorizonAge" className="text-sm font-medium text-gray-700">Planning Horizon (Years)</Label>
+                <Label htmlFor="goal-owner">Owner</Label>
                 <Input
-                  id="planningHorizonAge"
-                  type="number"
-                  placeholder="e.g. 30"
-                  value={planningHorizonAge.toString()}
-                  onChange={handlePlanningHorizonAgeChange}
-                  className="h-10"
+                  id="goal-owner"
+                  value={formData.owner}
+                  onChange={(e) => {
+                    setFormData(prev => ({ ...prev, owner: e.target.value }));
+                    onTitleUpdate?.(formData.name, e.target.value);
+                  }}
+                  placeholder="Goal owner"
+                  className="w-full"
                 />
               </div>
             </div>
-          </div>
-        </div>
-      )}
 
-      {/* Additional Information Section */}
-      <div className="space-y-6">
-        <div className="flex items-center gap-3 pb-3 border-b border-slate-200">
-          <div className="p-2 bg-gradient-to-r from-slate-500 to-gray-600 rounded-xl shadow-lg">
-            <Target className="h-6 w-6 text-white" />
-          </div>
-          <h3 className="text-2xl font-bold bg-gradient-to-r from-slate-600 to-gray-700 bg-clip-text text-transparent">
-            📝 Additional Information
-          </h3>
-        </div>
-        
-        <div className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="description" className="text-sm font-medium text-gray-700">Description</Label>
-            <Textarea
-              id="description"
-              placeholder="Describe your goal in more detail..."
-              value={description}
-              onChange={handleDescriptionChange}
-              className="min-h-[100px] resize-none"
-            />
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="annualInflationType" className="text-sm font-medium text-gray-700">Annual Inflation</Label>
-            <Select value={annualInflationType} onValueChange={handleAnnualInflationTypeChange}>
-              <SelectTrigger className="h-10">
-                <SelectValue placeholder="Select inflation type" />
-              </SelectTrigger>
-              <SelectContent className="bg-white border shadow-lg">
-                <SelectItem value="None">❌ None</SelectItem>
-                <SelectItem value="General">📊 General (2%)</SelectItem>
-                <SelectItem value="Custom">⚙️ Custom</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          
-          {annualInflationType === "Custom" && (
             <div className="space-y-2">
-              <Label htmlFor="annualInflationRate" className="text-sm font-medium text-gray-700">Custom Inflation Rate (%)</Label>
+              <Label htmlFor="goal-type">Goal Type *</Label>
+              <Select value={formData.type} onValueChange={handleTypeChange}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select goal type" />
+                </SelectTrigger>
+                <SelectContent className="bg-white dark:bg-slate-800 border border-gray-200 dark:border-gray-700 max-h-60 overflow-y-auto z-50">
+                  <SelectItem value="Retirement">Retirement</SelectItem>
+                  <SelectItem value="Asset Purchase">Asset Purchase</SelectItem>
+                  <SelectItem value="Home Purchase">Home Purchase</SelectItem>
+                  <SelectItem value="Vehicle">Vehicle</SelectItem>
+                  <SelectItem value="Education">Education</SelectItem>
+                  <SelectItem value="Vacation">Vacation</SelectItem>
+                  <SelectItem value="Cash Reserve">Cash Reserve</SelectItem>
+                  <SelectItem value="Other">Other</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Retirement Goal */}
+        {formData.type === 'Retirement' && (
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Retirement Details</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="date-of-birth">Date of Birth</Label>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant={"outline"}
+                        className={cn(
+                          "w-full justify-start text-left font-normal",
+                          !formData.dateOfBirth && "text-muted-foreground"
+                        )}
+                      >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {formData.dateOfBirth ? format(formData.dateOfBirth, "PPP") : <span>Pick a date</span>}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={formData.dateOfBirth}
+                        onSelect={(date) => handleDateChange(date)}
+                        disabled={(date) =>
+                          date > new Date()
+                        }
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="target-retirement-age">Target Retirement Age</Label>
+                  <Input
+                    id="target-retirement-age"
+                    type="number"
+                    value={formData.targetRetirementAge || ''}
+                    onChange={(e) => setFormData(prev => ({ ...prev, targetRetirementAge: parseInt(e.target.value) }))}
+                    placeholder="Enter target age"
+                    className="w-full"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="planning-horizon">Planning Horizon (Years)</Label>
+                <Input
+                  id="planning-horizon"
+                  type="number"
+                  value={formData.planningHorizonAge || ''}
+                  onChange={(e) => setFormData(prev => ({ ...prev, planningHorizonAge: parseInt(e.target.value) }))}
+                  placeholder="Enter planning horizon"
+                  className="w-full"
+                />
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Asset Purchase Goal */}
+        {formData.type === 'Asset Purchase' && (
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Asset Details</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="purchase-price">Purchase Price</Label>
+                <Input
+                  id="purchase-price"
+                  type="number"
+                  value={formData.purchasePrice || ''}
+                  onChange={(e) => setFormData(prev => ({ ...prev, purchasePrice: parseFloat(e.target.value) }))}
+                  placeholder="Enter purchase price"
+                  className="w-full"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="financing-method">Financing Method</Label>
+                <Input
+                  id="financing-method"
+                  type="text"
+                  value={formData.financingMethod || ''}
+                  onChange={(e) => setFormData(prev => ({ ...prev, financingMethod: e.target.value }))}
+                  placeholder="Enter financing method"
+                  className="w-full"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="annual-appreciation">Annual Appreciation</Label>
+                <Select value={formData.annualAppreciation} onValueChange={(value) => setFormData(prev => ({ ...prev, annualAppreciation: value }))}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select appreciation rate" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-white dark:bg-slate-800 border border-gray-200 dark:border-gray-700 max-h-60 overflow-y-auto z-50">
+                    <SelectItem value="None">None</SelectItem>
+                    <SelectItem value="3%">3%</SelectItem>
+                    <SelectItem value="5%">5%</SelectItem>
+                    <SelectItem value="7%">7%</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Home Purchase Goal */}
+        {formData.type === 'Home Purchase' && (
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Home Details</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="purchase-price">Purchase Price</Label>
+                <Input
+                  id="purchase-price"
+                  type="number"
+                  value={formData.purchasePrice || ''}
+                  onChange={(e) => setFormData(prev => ({ ...prev, purchasePrice: parseFloat(e.target.value) }))}
+                  placeholder="Enter purchase price"
+                  className="w-full"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="financing-method">Financing Method</Label>
+                <Input
+                  id="financing-method"
+                  type="text"
+                  value={formData.financingMethod || ''}
+                  onChange={(e) => setFormData(prev => ({ ...prev, financingMethod: e.target.value }))}
+                  placeholder="Enter financing method"
+                  className="w-full"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="annual-appreciation">Annual Appreciation</Label>
+                <Select value={formData.annualAppreciation} onValueChange={(value) => setFormData(prev => ({ ...prev, annualAppreciation: value }))}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select appreciation rate" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-white dark:bg-slate-800 border border-gray-200 dark:border-gray-700 max-h-60 overflow-y-auto z-50">
+                    <SelectItem value="None">None</SelectItem>
+                    <SelectItem value="3%">3%</SelectItem>
+                    <SelectItem value="5%">5%</SelectItem>
+                    <SelectItem value="7%">7%</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Vehicle Goal */}
+        {formData.type === 'Vehicle' && (
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Vehicle Details</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="purchase-price">Purchase Price</Label>
+                <Input
+                  id="purchase-price"
+                  type="number"
+                  value={formData.purchasePrice || ''}
+                  onChange={(e) => setFormData(prev => ({ ...prev, purchasePrice: parseFloat(e.target.value) }))}
+                  placeholder="Enter purchase price"
+                  className="w-full"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="financing-method">Financing Method</Label>
+                <Input
+                  id="financing-method"
+                  type="text"
+                  value={formData.financingMethod || ''}
+                  onChange={(e) => setFormData(prev => ({ ...prev, financingMethod: e.target.value }))}
+                  placeholder="Enter financing method"
+                  className="w-full"
+                />
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Education Goal */}
+        {formData.type === 'Education' && (
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Education Details</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="student-name">Student Name</Label>
+                <Input
+                  id="student-name"
+                  type="text"
+                  value={formData.studentName || ''}
+                  onChange={(e) => setFormData(prev => ({ ...prev, studentName: e.target.value }))}
+                  placeholder="Enter student name"
+                  className="w-full"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="start-year">Start Year</Label>
+                  <Input
+                    id="start-year"
+                    type="number"
+                    value={formData.startYear || ''}
+                    onChange={(e) => setFormData(prev => ({ ...prev, startYear: parseInt(e.target.value) }))}
+                    placeholder="Enter start year"
+                    className="w-full"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="end-year">End Year</Label>
+                  <Input
+                    id="end-year"
+                    type="number"
+                    value={formData.endYear || ''}
+                    onChange={(e) => setFormData(prev => ({ ...prev, endYear: parseInt(e.target.value) }))}
+                    placeholder="Enter end year"
+                    className="w-full"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="tuition-estimate">Tuition Estimate</Label>
+                <Input
+                  id="tuition-estimate"
+                  type="number"
+                  value={formData.tuitionEstimate || ''}
+                  onChange={(e) => setFormData(prev => ({ ...prev, tuitionEstimate: parseFloat(e.target.value) }))}
+                  placeholder="Enter tuition estimate"
+                  className="w-full"
+                />
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Vacation Goal */}
+        {formData.type === 'Vacation' && (
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Vacation Details</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="destination">Destination</Label>
+                <Input
+                  id="destination"
+                  type="text"
+                  value={formData.destination || ''}
+                  onChange={(e) => setFormData(prev => ({ ...prev, destination: e.target.value }))}
+                  placeholder="Enter destination"
+                  className="w-full"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="estimated-cost">Estimated Cost</Label>
+                <Input
+                  id="estimated-cost"
+                  type="number"
+                  value={formData.estimatedCost || ''}
+                  onChange={(e) => setFormData(prev => ({ ...prev, estimatedCost: parseFloat(e.target.value) }))}
+                  placeholder="Enter estimated cost"
+                  className="w-full"
+                />
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Cash Reserve Goal */}
+        {formData.type === 'Cash Reserve' && (
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Cash Reserve Details</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="amount-desired">Amount Desired</Label>
+                <Input
+                  id="amount-desired"
+                  type="number"
+                  value={formData.amountDesired || ''}
+                  onChange={(e) => setFormData(prev => ({ ...prev, amountDesired: parseFloat(e.target.value) }))}
+                  placeholder="Enter amount desired"
+                  className="w-full"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="annual-appreciation">Annual Appreciation</Label>
+                <Select value={formData.annualAppreciation} onValueChange={(value) => setFormData(prev => ({ ...prev, annualAppreciation: value }))}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select appreciation rate" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-white dark:bg-slate-800 border border-gray-200 dark:border-gray-700 max-h-60 overflow-y-auto z-50">
+                    <SelectItem value="None">None</SelectItem>
+                    <SelectItem value="3%">3%</SelectItem>
+                    <SelectItem value="5%">5%</SelectItem>
+                    <SelectItem value="7%">7%</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="repeats">Repeats</Label>
+                <Select value={formData.repeats} onValueChange={(value) => setFormData(prev => ({ ...prev, repeats: value }))}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select repeat frequency" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-white dark:bg-slate-800 border border-gray-200 dark:border-gray-700 max-h-60 overflow-y-auto z-50">
+                    <SelectItem value="None">None</SelectItem>
+                    <SelectItem value="Monthly">Monthly</SelectItem>
+                    <SelectItem value="Annually">Annually</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Common Goal Properties */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg">Goal Details</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="target-amount">Target Amount</Label>
               <Input
-                id="annualInflationRate"
+                id="target-amount"
                 type="number"
-                placeholder="e.g. 3"
-                value={annualInflationRate.toString()}
-                onChange={handleAnnualInflationRateChange}
-                className="h-10"
+                value={formData.targetAmount || ''}
+                onChange={(e) => setFormData(prev => ({ ...prev, targetAmount: parseFloat(e.target.value) }))}
+                placeholder="Enter target amount"
+                className="w-full"
               />
             </div>
-          )}
+
+            <div className="space-y-2">
+              <Label htmlFor="description">Description</Label>
+              <Textarea
+                id="description"
+                value={formData.description}
+                onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+                placeholder="Enter goal description"
+                className="w-full"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="annual-inflation">Annual Inflation</Label>
+              <Select value={formData.annualInflationType} onValueChange={(value) => setFormData(prev => ({ ...prev, annualInflationType: value }))}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select inflation type" />
+                </SelectTrigger>
+                <SelectContent className="bg-white dark:bg-slate-800 border border-gray-200 dark:border-gray-700 max-h-60 overflow-y-auto z-50">
+                  <SelectItem value="None">None</SelectItem>
+                  <SelectItem value="General">General (2%)</SelectItem>
+                  <SelectItem value="Custom">Custom</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {formData.annualInflationType === "Custom" && (
+              <div className="space-y-2">
+                <Label htmlFor="annual-inflation-rate">Annual Inflation Rate (%)</Label>
+                <Input
+                  id="annual-inflation-rate"
+                  type="number"
+                  value={formData.annualInflationRate || ''}
+                  onChange={(e) => setFormData(prev => ({ ...prev, annualInflationRate: parseFloat(e.target.value) }))}
+                  placeholder="Enter custom inflation rate"
+                  className="w-full"
+                />
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        <div className="flex gap-3 pt-4 border-t">
+          <Button onClick={handleSave} className="flex-1 bg-blue-600 hover:bg-blue-700">
+            {goal ? 'Update Goal' : 'Add Goal'}
+          </Button>
+          <Button variant="outline" onClick={onCancel} className="flex-1">
+            Cancel
+          </Button>
         </div>
-      </div>
-
-      <Separator className="my-6" />
-
-      {/* Action Buttons */}
-      <div className="flex justify-end space-x-3 pt-4 pb-6">
-        <Button 
-          type="button" 
-          variant="outline" 
-          onClick={onCancel}
-          className="px-6 py-2 h-10"
-        >
-          Cancel
-        </Button>
-        <Button 
-          type="button" 
-          onClick={handleSave}
-          className="px-6 py-2 h-10 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white shadow-lg"
-        >
-          Save Goal
-        </Button>
       </div>
     </div>
   );
 
   if (isDialog) {
-    return <FormContent />;
+    return content;
   }
 
   return (
-    <Sheet open={isOpen} onOpenChange={onClose}>
-      <SheetContent side="right" className="w-full max-w-4xl overflow-y-auto">
-        <SheetHeader className="flex flex-row items-center justify-between space-y-0 pb-6">
-          <SheetTitle className="text-2xl font-bold">{title}</SheetTitle>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onClose}
-            className="h-8 w-8 p-0"
-          >
-            <X className="h-4 w-4" />
-          </Button>
-        </SheetHeader>
-        <FormContent />
-      </SheetContent>
-    </Sheet>
+    <div
+      className={cn(
+        "fixed inset-y-0 right-0 z-50 w-96 bg-white dark:bg-gray-900 shadow-xl transform transition-transform duration-300 ease-in-out border-l",
+        isOpen ? "translate-x-0" : "translate-x-full"
+      )}
+    >
+      <ScrollArea className="h-full">
+        <div className="p-6">
+          {content}
+        </div>
+      </ScrollArea>
+    </div>
   );
 }
