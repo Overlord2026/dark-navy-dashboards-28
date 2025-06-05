@@ -1,7 +1,6 @@
 
 import React, { useState, useEffect } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
-import { FinancialOverview } from "@/components/dashboard/FinancialOverview";
 import { NetWorthSummary } from "@/components/dashboard/NetWorthSummary";
 import { useUser } from "@/context/UserContext";
 import { useSubscription } from "@/context/SubscriptionContext";
@@ -36,10 +35,6 @@ export default function Dashboard() {
         {isInFreeTrial && showWelcomeBanner && (
           <WelcomeTrialBanner onDismiss={handleDismissBanner} />
         )}
-        
-        <div id="financial-overview-section">
-          <FinancialOverview />
-        </div>
         
         <div>
           <NetWorthSummary />
