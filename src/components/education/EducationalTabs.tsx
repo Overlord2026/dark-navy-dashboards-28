@@ -75,7 +75,7 @@ export const EducationalTabs: React.FC<EducationalTabsProps> = ({
       <div className="flex justify-between items-center mb-4">
         <TabsList>
           <TabsTrigger value="books">Books</TabsTrigger>
-          <TabsTrigger value="ebooks">E-Books</TabsTrigger>
+          <TabsTrigger value="ebooks">Guides</TabsTrigger>
           <TabsTrigger value="whitepapers">Whitepapers</TabsTrigger>
           <TabsTrigger value="resources">Resources</TabsTrigger>
           <TabsTrigger value="funnel">Funnel</TabsTrigger>
@@ -116,7 +116,7 @@ export const EducationalTabs: React.FC<EducationalTabsProps> = ({
                 onClick={() => handleCourseEnrollment(ebook.id, ebook.title, ebook.isPaid, ebook.ghlUrl)}
                 className="w-full py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
               >
-                {ebook.isPaid ? 'Purchase E-Book' : 'Download E-Book'}
+                {ebook.isPaid ? 'Purchase Guide' : 'Download Guide'}
               </button>
             </div>
           ))}
