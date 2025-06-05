@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
@@ -6,6 +5,12 @@ import { PlusIcon, ChevronUpIcon, ChevronDownIcon } from "lucide-react";
 import { GoalDetailsSidePanel, GoalFormData } from "./GoalDetailsSidePanel";
 import { Card } from "@/components/ui/card";
 import { format } from "date-fns";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 export interface Goal {
   id: string;
@@ -47,6 +52,7 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
   const [expandedGoals, setExpandedGoals] = useState<string[]>([]);
   const [selectedGoal, setSelectedGoal] = useState<Goal | undefined>(undefined);
   const [isDetailsPanelOpen, setIsDetailsPanelOpen] = useState(false);
+  const [isAddGoalDialogOpen, setIsAddGoalDialogOpen] = useState(false);
   const [detailsPanelTitle, setDetailsPanelTitle] = useState<string>("");
   const [localGoals, setLocalGoals] = useState<Goal[]>(goals);
   const [newGoalId, setNewGoalId] = useState<string | null>(null);
@@ -94,9 +100,7 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
   };
 
   const handleAddGoalClick = () => {
-    setSelectedGoal(undefined);
-    setDetailsPanelTitle("New Goal");
-    setIsDetailsPanelOpen(true);
+    setIsAddGoalDialogOpen(true);
   };
 
   const handleTitleUpdate = (name: string, owner: string) => {
@@ -184,6 +188,7 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
     }
     
     setIsDetailsPanelOpen(false);
+    setIsAddGoalDialogOpen(false);
   };
 
   const handleCancelGoal = () => {
@@ -192,9 +197,9 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
     }
     
     setIsDetailsPanelOpen(false);
+    setIsAddGoalDialogOpen(false);
   };
 
-  // Separate retirement goals from other goals
   const retirementGoals = localGoals.filter(goal => 
     goal.targetRetirementAge !== undefined || 
     goal.type === "Retirement" || 
@@ -283,6 +288,7 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
         )}
       </div>
       
+      {/* Edit Goal Sidebar */}
       <GoalDetailsSidePanel
         isOpen={isDetailsPanelOpen}
         onClose={() => setIsDetailsPanelOpen(false)}
@@ -292,6 +298,27 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
         title={detailsPanelTitle}
         onTitleUpdate={handleTitleUpdate}
       />
+
+      {/* Add Goal Dialog */}
+      <Dialog open={isAddGoalDialogOpen} onOpenChange={setIsAddGoalDialogOpen}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Add New Goal</DialogTitle>
+          </DialogHeader>
+          <div className="mt-4">
+            <GoalDetailsSidePanel
+              isOpen={true}
+              onClose={() => setIsAddGoalDialogOpen(false)}
+              onCancel={handleCancelGoal}
+              goal={undefined}
+              onSave={handleSaveGoal}
+              title="New Goal"
+              onTitleUpdate={handleTitleUpdate}
+              isDialog={true}
+            />
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
