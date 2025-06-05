@@ -11,6 +11,7 @@ import { InfoIcon, Target, TrendingUp, DollarSign, PieChart, Clock } from "lucid
 import { FinancialPlansHeader } from "@/components/financial-plans/FinancialPlansHeader";
 import { FinancialPlansActions } from "@/components/financial-plans/FinancialPlansActions";
 import { PlanManagementSection } from "@/components/financial-plans/PlanManagementSection";
+import { FinancialPlansCards } from "@/components/financial-plans/FinancialPlansCards";
 import { useFinancialPlansState } from "@/hooks/useFinancialPlansState";
 import { Badge } from "@/components/ui/badge";
 
@@ -78,147 +79,25 @@ const FinancialPlans = () => {
     <ThreeColumnLayout activeMainItem="financial-plans" title="">
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800">
         <div className="container mx-auto px-6 py-8 space-y-8">
-          {/* Hero Section */}
-          <div className="text-center space-y-4 mb-12">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full mb-4">
-              <Target className="h-8 w-8 text-white" />
-            </div>
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              Financial Plans
-            </h1>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Create comprehensive financial plans to achieve your goals. Track progress, manage assets, and build your financial future.
-            </p>
-          </div>
-
-          {/* Action Section */}
-          <Card className="border-0 shadow-lg bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm">
-            <CardContent className="p-6">
-              <FinancialPlansActions
-                activePlan={activePlan}
-                plans={plans}
-                onCreatePlan={onCreatePlan}
-                onSelectPlan={onSelectPlan}
-              />
-            </CardContent>
-          </Card>
-
-          {/* Plan Management */}
-          {activePlan && (
-            <Card className="border-0 shadow-lg bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm">
-              <CardContent className="p-6">
-                <PlanManagementSection
-                  activePlan={activePlan}
-                  onEditPlan={onEditPlan}
-                  onDuplicatePlan={onDuplicatePlan}
-                  onDeletePlan={onDeletePlan}
-                />
-              </CardContent>
-            </Card>
-          )}
-
-          {/* Goals Section */}
-          <Card className="border-0 shadow-lg bg-gradient-to-r from-blue-500/10 to-purple-500/10 backdrop-blur-sm">
-            <CardContent className="p-6">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="p-2 bg-blue-500/20 rounded-lg">
-                  <Target className="h-5 w-5 text-blue-600" />
-                </div>
-                <h2 className="text-xl font-semibold">Your Financial Goals</h2>
+          {/* Hero Section with Feature Cards on the Right */}
+          <div className="flex items-start justify-between gap-8 mb-12">
+            {/* Left Side - Hero Content */}
+            <div className="flex-1">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full mb-4">
+                <Target className="h-8 w-8 text-white" />
               </div>
-              <GoalsList 
-                goals={goals} 
-                onGoalUpdate={handleGoalUpdate}
-              />
-            </CardContent>
-          </Card>
-
-          {/* Analytics Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Plan Success Gauge - Coming Soon */}
-            <Card className="border-0 shadow-lg bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between mb-6">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 bg-green-500/20 rounded-lg">
-                      <TrendingUp className="h-5 w-5 text-green-600" />
-                    </div>
-                    <h3 className="text-lg font-semibold">Plan Success Rate</h3>
-                  </div>
-                  <Badge variant="secondary" className="flex items-center gap-1">
-                    <Clock className="h-3 w-3" />
-                    Coming Soon
-                  </Badge>
-                </div>
-                <div className="flex flex-col items-center justify-center h-64 text-center">
-                  <div className="p-4 bg-muted/50 rounded-full mb-4">
-                    <Clock className="h-8 w-8 text-muted-foreground" />
-                  </div>
-                  <h4 className="text-lg font-medium mb-2">Success Rate Analysis</h4>
-                  <p className="text-muted-foreground text-sm max-w-xs">
-                    Advanced plan success probability calculations are coming soon. This will help you understand the likelihood of achieving your financial goals.
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Net Worth Chart - Coming Soon */}
-            <Card className="border-0 shadow-lg bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between mb-6">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 bg-purple-500/20 rounded-lg">
-                      <PieChart className="h-5 w-5 text-purple-600" />
-                    </div>
-                    <h3 className="text-lg font-semibold">Net Worth Projection</h3>
-                  </div>
-                  <Badge variant="secondary" className="flex items-center gap-1">
-                    <Clock className="h-3 w-3" />
-                    Coming Soon
-                  </Badge>
-                </div>
-                <div className="flex flex-col items-center justify-center h-64 text-center">
-                  <div className="p-4 bg-muted/50 rounded-full mb-4">
-                    <Clock className="h-8 w-8 text-muted-foreground" />
-                  </div>
-                  <h4 className="text-lg font-medium mb-2">Net Worth Projections</h4>
-                  <p className="text-muted-foreground text-sm max-w-xs">
-                    Interactive net worth projection charts are in development. You'll soon be able to visualize your wealth growth over time.
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-          
-          {/* Feature Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card className="border-0 shadow-lg bg-gradient-to-br from-blue-500/10 to-blue-600/10 backdrop-blur-sm hover:shadow-xl transition-all duration-300">
-              <CardContent className="p-8">
-                <div className="flex items-center gap-4 mb-4">
-                  <div className="p-3 bg-blue-500/20 rounded-xl">
-                    <Target className="h-6 w-6 text-blue-600" />
-                  </div>
-                  <h3 className="text-xl font-semibold">Set Financial Goals</h3>
-                </div>
-                <p className="text-muted-foreground leading-relaxed">
-                  Define and track your financial objectives — from retirement planning to major purchases like homes and vacations.
-                </p>
-              </CardContent>
-            </Card>
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4">
+                Financial Plans
+              </h1>
+              <p className="text-lg text-muted-foreground max-w-2xl">
+                Create comprehensive financial plans to achieve your goals. Track progress, manage assets, and build your financial future.
+              </p>
+            </div>
             
-            <Card className="border-0 shadow-lg bg-gradient-to-br from-purple-500/10 to-purple-600/10 backdrop-blur-sm hover:shadow-xl transition-all duration-300">
-              <CardContent className="p-8">
-                <div className="flex items-center gap-4 mb-4">
-                  <div className="p-3 bg-purple-500/20 rounded-xl">
-                    <DollarSign className="h-6 w-6 text-purple-600" />
-                  </div>
-                  <h3 className="text-xl font-semibold">Track Income & Expenses</h3>
-                </div>
-                <p className="text-muted-foreground leading-relaxed">
-                  Monitor your income streams, expenses, and savings to ensure you're on track for retirement and beyond.
-                </p>
-              </CardContent>
-            </Card>
+            {/* Right Side - Feature Cards */}
+            <div className="flex-shrink-0">
+              <FinancialPlansCards />
+            </div>
           </div>
         </div>
       </div>
