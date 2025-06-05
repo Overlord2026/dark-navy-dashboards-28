@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Card, CardContent } from "@/components/ui/card";
@@ -235,7 +234,7 @@ const FinancialPlans = () => {
                         <div className="p-2 bg-green-500/20 rounded-lg">
                           <TrendingUp className="h-5 w-5 text-green-600" />
                         </div>
-                        <h3 className="font-semibold">Success Rate</h3>
+                        <h3 className="font-semibold">Projected Plan Success</h3>
                       </div>
                       <Badge variant="secondary" className="flex items-center gap-1">
                         <Clock className="h-3 w-3" />
@@ -261,7 +260,7 @@ const FinancialPlans = () => {
                         <div className="p-2 bg-purple-500/20 rounded-lg">
                           <PieChart className="h-5 w-5 text-purple-600" />
                         </div>
-                        <h3 className="font-semibold">Net Worth</h3>
+                        <h3 className="font-semibold">Projected Networth</h3>
                       </div>
                       <Badge variant="secondary" className="flex items-center gap-1">
                         <Clock className="h-3 w-3" />
