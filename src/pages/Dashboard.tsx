@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { FinancialOverview } from "@/components/dashboard/FinancialOverview";
 import { NetWorthSummary } from "@/components/dashboard/NetWorthSummary";
+import { PropertySummaryCard } from "@/components/dashboard/PropertySummaryCard";
 import { useUser } from "@/context/UserContext";
 import { useSubscription } from "@/context/SubscriptionContext";
 import { WelcomeTrialBanner } from "@/components/dashboard/WelcomeTrialBanner";
@@ -41,8 +42,13 @@ export default function Dashboard() {
           <FinancialOverview />
         </div>
         
-        <div>
-          <NetWorthSummary />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div>
+            <NetWorthSummary />
+          </div>
+          <div>
+            <PropertySummaryCard />
+          </div>
         </div>
       </div>
     </ThreeColumnLayout>
