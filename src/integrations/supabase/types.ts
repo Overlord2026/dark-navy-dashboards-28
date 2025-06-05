@@ -362,30 +362,42 @@ export type Database = {
       financial_plans: {
         Row: {
           created_at: string
+          draft_data: Json | null
           id: string
+          is_active: boolean | null
+          is_draft: boolean | null
           is_favorite: boolean
           name: string
           status: string
+          step: number | null
           success_rate: number | null
           updated_at: string
           user_id: string
         }
         Insert: {
           created_at?: string
+          draft_data?: Json | null
           id?: string
+          is_active?: boolean | null
+          is_draft?: boolean | null
           is_favorite?: boolean
           name: string
           status?: string
+          step?: number | null
           success_rate?: number | null
           updated_at?: string
           user_id: string
         }
         Update: {
           created_at?: string
+          draft_data?: Json | null
           id?: string
+          is_active?: boolean | null
+          is_draft?: boolean | null
           is_favorite?: boolean
           name?: string
           status?: string
+          step?: number | null
           success_rate?: number | null
           updated_at?: string
           user_id?: string
