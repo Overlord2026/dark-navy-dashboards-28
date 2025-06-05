@@ -1,7 +1,7 @@
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { TaxReturnUploadDialog } from "./DocumentDialogs";
 import { FileText, Calendar, Upload, Check } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
@@ -56,12 +56,19 @@ export function SecureTaxReturnAnalysis() {
                 </p>
               </div>
             </div>
-            <Button 
-              onClick={() => setIsUploadDialogOpen(true)}
-              className="whitespace-nowrap"
-            >
-              Upload Documents
-            </Button>
+            <div className="relative">
+              <div className="absolute -top-2 -right-2 z-10">
+                <Badge variant="warning">Coming Soon</Badge>
+              </div>
+              <div className="opacity-60 pointer-events-none">
+                <Button 
+                  onClick={() => setIsUploadDialogOpen(true)}
+                  className="whitespace-nowrap"
+                >
+                  Upload Documents
+                </Button>
+              </div>
+            </div>
           </div>
           
           <div className="text-sm space-y-2 border-b pb-4">
@@ -80,9 +87,16 @@ export function SecureTaxReturnAnalysis() {
           </div>
           
           <div className="flex flex-col sm:flex-row gap-2 pt-2">
-            <Button onClick={handleRequestAnalysis} variant="default" className="flex-1">
-              Request Analysis
-            </Button>
+            <div className="relative flex-1">
+              <div className="absolute -top-2 -right-2 z-10">
+                <Badge variant="warning">Coming Soon</Badge>
+              </div>
+              <div className="opacity-60 pointer-events-none">
+                <Button onClick={handleRequestAnalysis} variant="default" className="w-full">
+                  Request Analysis
+                </Button>
+              </div>
+            </div>
             <Button onClick={handleShowInterest} variant="outline" className="flex-1">
               I'm Interested
             </Button>
