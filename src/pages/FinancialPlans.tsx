@@ -95,8 +95,8 @@ const FinancialPlans = () => {
                 </div>
               </div>
               
-              {/* Quick Actions */}
-              <div className="lg:w-80">
+              {/* Quick Actions - COMMENTED OUT */}
+              {/* <div className="lg:w-80">
                 <Card className="border-0 shadow-xl bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm">
                   <CardContent className="p-6">
                     <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
@@ -122,7 +122,7 @@ const FinancialPlans = () => {
                     </div>
                   </CardContent>
                 </Card>
-              </div>
+              </div> */}
             </div>
           </div>
 
@@ -130,8 +130,8 @@ const FinancialPlans = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Left Column - Current Plan & Goals */}
             <div className="lg:col-span-2 space-y-8">
-              {/* Current Plan Section */}
-              {activePlan && (
+              {/* Current Plan Section - COMMENTED OUT */}
+              {/* {activePlan && (
                 <Card className="border-0 shadow-xl bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm">
                   <CardContent className="p-8">
                     <div className="flex items-center justify-between mb-6">
@@ -157,7 +157,7 @@ const FinancialPlans = () => {
                     />
                   </CardContent>
                 </Card>
-              )}
+              )} */}
 
               {/* Goals Section */}
               <Card className="border-0 shadow-xl bg-gradient-to-br from-blue-500/10 to-purple-500/10 backdrop-blur-sm">
