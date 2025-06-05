@@ -12,18 +12,11 @@ import {
 } from "@/components/ui/select";
 import { DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
 import { CheckCircle, FileIcon, PlusIcon } from "lucide-react";
-
-interface Plan {
-  id: string;
-  name: string;
-  status: 'Active' | 'Draft';
-  isActive?: boolean;
-  draftData?: any;
-}
+import { FinancialPlan } from "@/types/financial-plan";
 
 interface FinancialPlansActionsProps {
-  activePlan: Plan;
-  plans: Plan[];
+  activePlan: FinancialPlan;
+  plans: FinancialPlan[];
   onCreatePlan: () => void;
   onSelectPlan: (planId: string) => void;
 }
@@ -34,8 +27,9 @@ export const FinancialPlansActions = ({
   onCreatePlan, 
   onSelectPlan 
 }: FinancialPlansActionsProps) => {
-  const draftPlans = plans.filter(plan => plan.status === 'Draft');
+  // Filter out archived plans and map to the expected format
   const activePlans = plans.filter(plan => plan.status === 'Active');
+  const draftPlans = plans.filter(plan => plan.status === 'Draft');
 
   return (
     <div className="flex justify-between items-center">
@@ -90,7 +84,7 @@ export const FinancialPlansActions = ({
                       <FileIcon className="h-4 w-4 text-blue-400" />
                       <span>{plan.name}</span>
                       <span className="text-xs text-muted-foreground ml-1">
-                        (Step {plan.draftData?.step || 1})
+                        (Step {plan.draftData?.step || plan.step || 1})
                       </span>
                     </div>
                   </SelectItem>
