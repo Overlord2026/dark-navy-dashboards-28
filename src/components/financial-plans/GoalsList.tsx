@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
@@ -12,6 +11,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { useFinancialPlans } from "@/context/FinancialPlanContext";
+import { toast } from "sonner";
 
 export interface Goal {
   id: string;
@@ -57,6 +58,8 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
   const [detailsPanelTitle, setDetailsPanelTitle] = useState<string>("");
   const [localGoals, setLocalGoals] = useState<Goal[]>(goals);
   const [newGoalId, setNewGoalId] = useState<string | null>(null);
+  
+  const { activePlan, updateGoal } = useFinancialPlans();
   
   if (JSON.stringify(goals) !== JSON.stringify(localGoals)) {
     setLocalGoals(goals);
@@ -115,83 +118,122 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
     }
   };
 
-  const handleSaveGoal = (goalData: GoalFormData) => {
-    if (selectedGoal) {
-      const updatedGoal: Goal = {
-        ...selectedGoal,
-        title: goalData.name,
-        name: goalData.name,
-        owner: goalData.owner,
-        dateOfBirth: goalData.dateOfBirth,
-        targetRetirementAge: goalData.targetRetirementAge,
-        planningHorizonAge: goalData.planningHorizonAge,
-        priority: goalData.type,
-        type: goalData.type,
-        targetDate: goalData.targetDate,
-        targetAmount: goalData.targetAmount,
-        description: goalData.description,
-        isNew: false,
-        purchasePrice: goalData.purchasePrice,
-        financingMethod: goalData.financingMethod,
-        annualAppreciation: goalData.annualAppreciation,
-        studentName: goalData.studentName,
-        startYear: goalData.startYear,
-        endYear: goalData.endYear,
-        tuitionEstimate: goalData.tuitionEstimate,
-        destination: goalData.destination,
-        estimatedCost: goalData.estimatedCost,
-        amountDesired: goalData.amountDesired,
-        repeats: goalData.repeats,
-        annualInflationType: goalData.annualInflationType,
-        annualInflationRate: goalData.annualInflationRate,
-      };
-      
-      setLocalGoals(prev => 
-        prev.map(g => g.id === updatedGoal.id ? updatedGoal : g)
-      );
-      
-      setNewGoalId(updatedGoal.id);
-      
-      onGoalUpdate?.(updatedGoal);
-    } else {
-      const newGoalId = `goal-${Date.now()}`;
-      const newGoal: Goal = {
-        id: newGoalId,
-        title: goalData.name,
-        name: goalData.name,
-        owner: goalData.owner,
-        dateOfBirth: goalData.dateOfBirth,
-        targetRetirementAge: goalData.targetRetirementAge,
-        planningHorizonAge: goalData.planningHorizonAge,
-        priority: goalData.type,
-        type: goalData.type,
-        targetDate: goalData.targetDate,
-        targetAmount: goalData.targetAmount,
-        description: goalData.description,
-        purchasePrice: goalData.purchasePrice,
-        financingMethod: goalData.financingMethod,
-        annualAppreciation: goalData.annualAppreciation,
-        studentName: goalData.studentName,
-        startYear: goalData.startYear,
-        endYear: goalData.endYear,
-        tuitionEstimate: goalData.tuitionEstimate,
-        destination: goalData.destination,
-        estimatedCost: goalData.estimatedCost,
-        amountDesired: goalData.amountDesired,
-        repeats: goalData.repeats,
-        annualInflationType: goalData.annualInflationType,
-        annualInflationRate: goalData.annualInflationRate,
-      };
-      
-      setLocalGoals(prev => [...prev, newGoal]);
-      
-      setNewGoalId(newGoalId);
-      
-      onGoalUpdate?.(newGoal);
+  const handleSaveGoal = async (goalData: GoalFormData) => {
+    if (!activePlan) {
+      toast.error("No active plan found. Please create a plan first.");
+      return;
     }
-    
-    setIsDetailsPanelOpen(false);
-    setIsAddGoalDialogOpen(false);
+
+    try {
+      if (selectedGoal) {
+        // Update existing goal
+        const updatedGoal: Goal = {
+          ...selectedGoal,
+          title: goalData.name,
+          name: goalData.name,
+          owner: goalData.owner,
+          dateOfBirth: goalData.dateOfBirth,
+          targetRetirementAge: goalData.targetRetirementAge,
+          planningHorizonAge: goalData.planningHorizonAge,
+          priority: goalData.type,
+          type: goalData.type,
+          targetDate: goalData.targetDate,
+          targetAmount: goalData.targetAmount,
+          description: goalData.description,
+          isNew: false,
+          purchasePrice: goalData.purchasePrice,
+          financingMethod: goalData.financingMethod,
+          annualAppreciation: goalData.annualAppreciation,
+          studentName: goalData.studentName,
+          startYear: goalData.startYear,
+          endYear: goalData.endYear,
+          tuitionEstimate: goalData.tuitionEstimate,
+          destination: goalData.destination,
+          estimatedCost: goalData.estimatedCost,
+          amountDesired: goalData.amountDesired,
+          repeats: goalData.repeats,
+          annualInflationType: goalData.annualInflationType,
+          annualInflationRate: goalData.annualInflationRate,
+        };
+        
+        // Convert Goal to FinancialGoal format for the service
+        const financialGoal = {
+          id: updatedGoal.id,
+          title: updatedGoal.title || '',
+          description: updatedGoal.description || '',
+          targetAmount: updatedGoal.targetAmount || 0,
+          currentAmount: updatedGoal.currentAmount || 0,
+          targetDate: updatedGoal.targetDate || new Date(),
+          priority: (updatedGoal.priority || 'Medium') as 'Low' | 'Medium' | 'High',
+          isComplete: false
+        };
+        
+        await updateGoal(activePlan.id, financialGoal);
+        
+        setLocalGoals(prev => 
+          prev.map(g => g.id === updatedGoal.id ? updatedGoal : g)
+        );
+        
+        setNewGoalId(updatedGoal.id);
+        onGoalUpdate?.(updatedGoal);
+        toast.success("Goal updated successfully!");
+      } else {
+        // Create new goal
+        const newGoalId = `goal-${Date.now()}`;
+        const newGoal: Goal = {
+          id: newGoalId,
+          title: goalData.name,
+          name: goalData.name,
+          owner: goalData.owner,
+          dateOfBirth: goalData.dateOfBirth,
+          targetRetirementAge: goalData.targetRetirementAge,
+          planningHorizonAge: goalData.planningHorizonAge,
+          priority: goalData.type,
+          type: goalData.type,
+          targetDate: goalData.targetDate,
+          targetAmount: goalData.targetAmount,
+          description: goalData.description,
+          purchasePrice: goalData.purchasePrice,
+          financingMethod: goalData.financingMethod,
+          annualAppreciation: goalData.annualAppreciation,
+          studentName: goalData.studentName,
+          startYear: goalData.startYear,
+          endYear: goalData.endYear,
+          tuitionEstimate: goalData.tuitionEstimate,
+          destination: goalData.destination,
+          estimatedCost: goalData.estimatedCost,
+          amountDesired: goalData.amountDesired,
+          repeats: goalData.repeats,
+          annualInflationType: goalData.annualInflationType,
+          annualInflationRate: goalData.annualInflationRate,
+        };
+        
+        // Convert Goal to FinancialGoal format for the service
+        const financialGoal = {
+          id: newGoalId,
+          title: newGoal.title || '',
+          description: newGoal.description || '',
+          targetAmount: newGoal.targetAmount || 0,
+          currentAmount: newGoal.currentAmount || 0,
+          targetDate: newGoal.targetDate || new Date(),
+          priority: (newGoal.priority || 'Medium') as 'Low' | 'Medium' | 'High',
+          isComplete: false
+        };
+        
+        await updateGoal(activePlan.id, financialGoal);
+        
+        setLocalGoals(prev => [...prev, newGoal]);
+        setNewGoalId(newGoalId);
+        onGoalUpdate?.(newGoal);
+        toast.success("Goal created successfully!");
+      }
+      
+      setIsDetailsPanelOpen(false);
+      setIsAddGoalDialogOpen(false);
+    } catch (error) {
+      console.error('Error saving goal:', error);
+      toast.error("Failed to save goal. Please try again.");
+    }
   };
 
   const handleCancelGoal = () => {
@@ -218,10 +260,19 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
     setIsDetailsPanelOpen(true);
   };
 
-  const handleDeleteGoal = (goalId: string, event: React.MouseEvent) => {
+  const handleDeleteGoal = async (goalId: string, event: React.MouseEvent) => {
     event.stopPropagation();
-    setLocalGoals(prev => prev.filter(g => g.id !== goalId));
-    onGoalDelete?.(goalId);
+    
+    try {
+      // Note: The current service doesn't have a deleteGoal method, 
+      // so we'll just remove from local state for now
+      setLocalGoals(prev => prev.filter(g => g.id !== goalId));
+      onGoalDelete?.(goalId);
+      toast.success("Goal deleted successfully!");
+    } catch (error) {
+      console.error('Error deleting goal:', error);
+      toast.error("Failed to delete goal. Please try again.");
+    }
   };
 
   const retirementGoals = localGoals.filter(goal => 
@@ -327,7 +378,7 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
         onTitleUpdate={handleTitleUpdate}
       />
 
-      {/* Add Goal Dialog - Fixed Implementation */}
+      {/* Add Goal Dialog */}
       <Dialog open={isAddGoalDialogOpen} onOpenChange={setIsAddGoalDialogOpen}>
         <DialogContent className="max-w-4xl h-[90vh] p-0 overflow-hidden">
           <DialogHeader className="px-6 py-4 border-b">
