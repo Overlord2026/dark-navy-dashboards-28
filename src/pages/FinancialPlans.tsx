@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Card, CardContent } from "@/components/ui/card";
@@ -32,8 +33,8 @@ const FinancialPlans = () => {
   const [isManagePlansOpen, setIsManagePlansOpen] = useState(false);
 
   const onCreatePlan = () => {
-    setCurrentDraftData(null);
-    setIsCreateDialogOpen(true);
+    // Disabled - Coming Soon
+    return;
   };
 
   const onSelectPlan = (planId: string) => {
@@ -211,16 +212,32 @@ const FinancialPlans = () => {
 
             {/* Right Column - Analytics & Features */}
             <div className="space-y-8">
-              {/* Plan Selector */}
+              {/* Plan Selector - Coming Soon */}
               <Card className="border-0 shadow-xl bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm">
                 <CardContent className="p-6">
-                  <h3 className="text-lg font-semibold mb-4">Plan Selection</h3>
-                  <FinancialPlansActions
-                    activePlan={activePlan}
-                    plans={plans}
-                    onCreatePlan={onCreatePlan}
-                    onSelectPlan={onSelectPlan}
-                  />
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-lg font-semibold">Plan Selection</h3>
+                    <Badge variant="secondary" className="flex items-center gap-1">
+                      <Clock className="h-3 w-3" />
+                      Coming Soon
+                    </Badge>
+                  </div>
+                  <div className="flex flex-col items-center justify-center h-32 text-center">
+                    <div className="p-3 bg-muted/50 rounded-full mb-3">
+                      <Clock className="h-6 w-6 text-muted-foreground" />
+                    </div>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      Plan selection and management features coming soon
+                    </p>
+                    <Button 
+                      onClick={onCreatePlan}
+                      disabled
+                      className="bg-gradient-to-r from-blue-500 to-purple-600 text-white opacity-50 cursor-not-allowed"
+                    >
+                      <Plus className="h-4 w-4 mr-2" />
+                      Create Plan
+                    </Button>
+                  </div>
                 </CardContent>
               </Card>
 
