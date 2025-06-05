@@ -232,70 +232,77 @@ export default function TaxPlanning() {
           </Card>
         </motion.div>
 
-        {/* Tax Planning Professionals Marketplace - Moved down */}
+        {/* Tax Planning Professionals Marketplace - Coming Soon */}
         <motion.div variants={itemVariants}>
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <UserSquare className="mr-2 h-5 w-5 text-primary" />
-                Tax Planning Professionals
-              </CardTitle>
-              <CardDescription>
-                Connect with certified tax professionals in our network
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid gap-6 md:grid-cols-3">
-                <Card className="border shadow-sm">
-                  <CardHeader className="p-4">
-                    <CardTitle className="text-lg">CPAs</CardTitle>
-                    <CardDescription>Certified Public Accountants</CardDescription>
-                  </CardHeader>
-                  <CardContent className="p-4 pt-0">
-                    <p className="text-sm text-muted-foreground">
-                      Experts in tax preparation, planning, and compliance who can handle complex tax situations.
-                    </p>
-                  </CardContent>
-                  <CardFooter className="p-4 pt-0">
-                    <Button variant="outline" size="sm" className="w-full">Find a CPA</Button>
-                  </CardFooter>
-                </Card>
-                
-                <Card className="border shadow-sm">
-                  <CardHeader className="p-4">
-                    <CardTitle className="text-lg">Tax Attorneys</CardTitle>
-                    <CardDescription>Legal Tax Experts</CardDescription>
-                  </CardHeader>
-                  <CardContent className="p-4 pt-0">
-                    <p className="text-sm text-muted-foreground">
-                      Specialized attorneys who can handle complex tax matters, disputes, and legal tax planning.
-                    </p>
-                  </CardContent>
-                  <CardFooter className="p-4 pt-0">
-                    <Button variant="outline" size="sm" className="w-full">Find a Tax Attorney</Button>
-                  </CardFooter>
-                </Card>
-                
-                <Card className="border shadow-sm">
-                  <CardHeader className="p-4">
-                    <CardTitle className="text-lg">Enrolled Agents</CardTitle>
-                    <CardDescription>IRS-Certified Specialists</CardDescription>
-                  </CardHeader>
-                  <CardContent className="p-4 pt-0">
-                    <p className="text-sm text-muted-foreground">
-                      Federally-licensed tax practitioners who can represent taxpayers before the IRS.
-                    </p>
-                  </CardContent>
-                  <CardFooter className="p-4 pt-0">
-                    <Button variant="outline" size="sm" className="w-full">Find an Enrolled Agent</Button>
-                  </CardFooter>
-                </Card>
-              </div>
-              <div className="mt-6 flex justify-center">
-                <Button>View All Tax Professionals</Button>
-              </div>
-            </CardContent>
-          </Card>
+          <div className="relative">
+            <div className="absolute top-4 right-4 z-10">
+              <Badge variant="warning">Coming Soon</Badge>
+            </div>
+            <div className="opacity-60 pointer-events-none">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <UserSquare className="mr-2 h-5 w-5 text-primary" />
+                    Tax Planning Professionals
+                  </CardTitle>
+                  <CardDescription>
+                    Connect with certified tax professionals in our network
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid gap-6 md:grid-cols-3">
+                    <Card className="border shadow-sm">
+                      <CardHeader className="p-4">
+                        <CardTitle className="text-lg">CPAs</CardTitle>
+                        <CardDescription>Certified Public Accountants</CardDescription>
+                      </CardHeader>
+                      <CardContent className="p-4 pt-0">
+                        <p className="text-sm text-muted-foreground">
+                          Experts in tax preparation, planning, and compliance who can handle complex tax situations.
+                        </p>
+                      </CardContent>
+                      <CardFooter className="p-4 pt-0">
+                        <Button variant="outline" size="sm" className="w-full">Find a CPA</Button>
+                      </CardFooter>
+                    </Card>
+                    
+                    <Card className="border shadow-sm">
+                      <CardHeader className="p-4">
+                        <CardTitle className="text-lg">Tax Attorneys</CardTitle>
+                        <CardDescription>Legal Tax Experts</CardDescription>
+                      </CardHeader>
+                      <CardContent className="p-4 pt-0">
+                        <p className="text-sm text-muted-foreground">
+                          Specialized attorneys who can handle complex tax matters, disputes, and legal tax planning.
+                        </p>
+                      </CardContent>
+                      <CardFooter className="p-4 pt-0">
+                        <Button variant="outline" size="sm" className="w-full">Find a Tax Attorney</Button>
+                      </CardFooter>
+                    </Card>
+                    
+                    <Card className="border shadow-sm">
+                      <CardHeader className="p-4">
+                        <CardTitle className="text-lg">Enrolled Agents</CardTitle>
+                        <CardDescription>IRS-Certified Specialists</CardDescription>
+                      </CardHeader>
+                      <CardContent className="p-4 pt-0">
+                        <p className="text-sm text-muted-foreground">
+                          Federally-licensed tax practitioners who can represent taxpayers before the IRS.
+                        </p>
+                      </CardContent>
+                      <CardFooter className="p-4 pt-0">
+                        <Button variant="outline" size="sm" className="w-full">Find an Enrolled Agent</Button>
+                      </CardFooter>
+                    </Card>
+                  </div>
+                  <div className="mt-6 flex justify-center">
+                    <Button>View All Tax Professionals</Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
         </motion.div>
 
         {/* Accounting Software Integration - Moved to bottom with Coming Soon badge */}
