@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Card, CardContent } from "@/components/ui/card";
@@ -6,11 +7,12 @@ import { NetWorthChart } from "@/components/financial-plans/NetWorthChart";
 import { GoalsList } from "@/components/financial-plans/GoalsList";
 import { CreatePlanDialog } from "@/components/financial-plans/CreatePlanDialog";
 import { ManagePlansDialog } from "@/components/financial-plans/ManagePlansDialog";
-import { InfoIcon, Target, TrendingUp, DollarSign, PieChart } from "lucide-react";
+import { InfoIcon, Target, TrendingUp, DollarSign, PieChart, Clock } from "lucide-react";
 import { FinancialPlansHeader } from "@/components/financial-plans/FinancialPlansHeader";
 import { FinancialPlansActions } from "@/components/financial-plans/FinancialPlansActions";
 import { PlanManagementSection } from "@/components/financial-plans/PlanManagementSection";
 import { useFinancialPlansState } from "@/hooks/useFinancialPlansState";
+import { Badge } from "@/components/ui/badge";
 
 const FinancialPlans = () => {
   const {
@@ -133,7 +135,7 @@ const FinancialPlans = () => {
 
           {/* Analytics Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Plan Success Gauge */}
+            {/* Plan Success Gauge - Coming Soon */}
             <Card className="border-0 shadow-lg bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-6">
@@ -143,16 +145,24 @@ const FinancialPlans = () => {
                     </div>
                     <h3 className="text-lg font-semibold">Plan Success Rate</h3>
                   </div>
-                  <div className="flex items-center text-muted-foreground text-sm">
-                    <span>Success probability</span>
-                    <InfoIcon className="h-4 w-4 ml-1" />
-                  </div>
+                  <Badge variant="secondary" className="flex items-center gap-1">
+                    <Clock className="h-3 w-3" />
+                    Coming Soon
+                  </Badge>
                 </div>
-                <PlanSuccessGauge successRate={activePlan.successRate || 0} />
+                <div className="flex flex-col items-center justify-center h-64 text-center">
+                  <div className="p-4 bg-muted/50 rounded-full mb-4">
+                    <Clock className="h-8 w-8 text-muted-foreground" />
+                  </div>
+                  <h4 className="text-lg font-medium mb-2">Success Rate Analysis</h4>
+                  <p className="text-muted-foreground text-sm max-w-xs">
+                    Advanced plan success probability calculations are coming soon. This will help you understand the likelihood of achieving your financial goals.
+                  </p>
+                </div>
               </CardContent>
             </Card>
 
-            {/* Net Worth Chart */}
+            {/* Net Worth Chart - Coming Soon */}
             <Card className="border-0 shadow-lg bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-6">
@@ -162,12 +172,20 @@ const FinancialPlans = () => {
                     </div>
                     <h3 className="text-lg font-semibold">Net Worth Projection</h3>
                   </div>
-                  <div className="flex items-center text-muted-foreground text-sm">
-                    <span>Growth over time</span>
-                    <InfoIcon className="h-4 w-4 ml-1" />
-                  </div>
+                  <Badge variant="secondary" className="flex items-center gap-1">
+                    <Clock className="h-3 w-3" />
+                    Coming Soon
+                  </Badge>
                 </div>
-                <NetWorthChart />
+                <div className="flex flex-col items-center justify-center h-64 text-center">
+                  <div className="p-4 bg-muted/50 rounded-full mb-4">
+                    <Clock className="h-8 w-8 text-muted-foreground" />
+                  </div>
+                  <h4 className="text-lg font-medium mb-2">Net Worth Projections</h4>
+                  <p className="text-muted-foreground text-sm max-w-xs">
+                    Interactive net worth projection charts are in development. You'll soon be able to visualize your wealth growth over time.
+                  </p>
+                </div>
               </CardContent>
             </Card>
           </div>
