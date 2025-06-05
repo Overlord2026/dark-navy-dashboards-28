@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
-import { PlusIcon, ChevronUpIcon, ChevronDownIcon } from "lucide-react";
+import { PlusIcon, ChevronUpIcon, ChevronDownIcon, Edit, Trash2 } from "lucide-react";
 import { GoalDetailsSidePanel, GoalFormData } from "./GoalDetailsSidePanel";
 import { Card } from "@/components/ui/card";
 import { format } from "date-fns";
@@ -200,6 +200,27 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
     setIsAddGoalDialogOpen(false);
   };
 
+  const handleEditGoal = (goal: Goal, event: React.MouseEvent) => {
+    event.stopPropagation();
+    setSelectedGoal(goal);
+    const goalTitle = goal.title || goal.name || "";
+    
+    let panelTitle = goalTitle;
+    if (goal.owner) {
+      const ownerPossessive = goal.owner.endsWith('s') ? `${goal.owner}'` : `${goal.owner}'s`;
+      panelTitle = `${ownerPossessive} ${goalTitle}`;
+    }
+    
+    setDetailsPanelTitle(panelTitle);
+    setIsDetailsPanelOpen(true);
+  };
+
+  const handleDeleteGoal = (goalId: string, event: React.MouseEvent) => {
+    event.stopPropagation();
+    setLocalGoals(prev => prev.filter(g => g.id !== goalId));
+    onGoalDelete?.(goalId);
+  };
+
   const retirementGoals = localGoals.filter(goal => 
     goal.targetRetirementAge !== undefined || 
     goal.type === "Retirement" || 
@@ -236,6 +257,8 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
               key={goal.id || `retirement-goal-${index}`}
               goal={goal}
               onClick={() => handleGoalClick(goal)}
+              onEdit={(e) => handleEditGoal(goal, e)}
+              onDelete={(e) => handleDeleteGoal(goal.id, e)}
               isNew={goal.id === newGoalId}
             />
           ))
@@ -272,6 +295,8 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
                 isExpanded={expandedGoals.includes(goal.id || `other-goal-${index}`)} 
                 onToggle={() => toggleGoalExpansion(goal.id || `other-goal-${index}`)}
                 onClick={() => handleGoalClick(goal)}
+                onEdit={(e) => handleEditGoal(goal, e)}
+                onDelete={(e) => handleDeleteGoal(goal.id, e)}
                 isNew={goal.id === newGoalId}
               />
             ))}
@@ -323,9 +348,11 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
   );
 }
 
-function RetirementAgeCard({ goal, onClick, isNew = false }: { 
+function RetirementAgeCard({ goal, onClick, onEdit, onDelete, isNew = false }: { 
   goal: Goal;
   onClick: () => void;
+  onEdit: (event: React.MouseEvent) => void;
+  onDelete: (event: React.MouseEvent) => void;
   isNew?: boolean;
 }) {
   const age = goal.targetRetirementAge || 70;
@@ -335,11 +362,31 @@ function RetirementAgeCard({ goal, onClick, isNew = false }: {
   
   return (
     <Card 
-      className={`bg-[#0D1426] border border-blue-900 p-6 cursor-pointer hover:border-blue-600 transition-all ${
+      className={`bg-[#0D1426] border border-blue-900 p-6 cursor-pointer hover:border-blue-600 transition-all relative group ${
         isNew ? 'animate-in slide-in-from-bottom-5 fade-in-100 duration-500' : 'animate-in fade-in-80 duration-200'
       }`}
       onClick={onClick}
     >
+      {/* Action Buttons */}
+      <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={onEdit}
+          className="h-8 w-8 p-0 hover:bg-blue-600/20 text-blue-400 hover:text-blue-300"
+        >
+          <Edit className="h-4 w-4" />
+        </Button>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={onDelete}
+          className="h-8 w-8 p-0 hover:bg-red-600/20 text-red-400 hover:text-red-300"
+        >
+          <Trash2 className="h-4 w-4" />
+        </Button>
+      </div>
+
       <div className="flex items-center justify-between">
         <div>
           <div className="text-3xl font-bold">{age}</div>
@@ -357,11 +404,13 @@ function RetirementAgeCard({ goal, onClick, isNew = false }: {
   );
 }
 
-function GoalCard({ goal, isExpanded, onToggle, onClick, isNew = false }: { 
+function GoalCard({ goal, isExpanded, onToggle, onClick, onEdit, onDelete, isNew = false }: { 
   goal: Goal;
   isExpanded: boolean;
   onToggle: () => void;
   onClick: () => void;
+  onEdit: (event: React.MouseEvent) => void;
+  onDelete: (event: React.MouseEvent) => void;
   isNew?: boolean;
 }) {
   const goalTitle = goal.title || goal.name || "Unnamed Goal";
@@ -370,28 +419,51 @@ function GoalCard({ goal, isExpanded, onToggle, onClick, isNew = false }: {
 
   return (
     <Card 
-      className={`bg-[#0D1426] border border-blue-900 p-4 cursor-pointer hover:border-blue-600 transition-all ${
+      className={`bg-[#0D1426] border border-blue-900 p-4 cursor-pointer hover:border-blue-600 transition-all relative group ${
         isNew ? 'animate-in slide-in-from-bottom-5 fade-in-100 duration-500' : 'animate-in fade-in-80 duration-200'
       }`}
       onClick={onClick}
     >
       <div className="flex items-center justify-between">
-        <div>
+        <div className="flex-1">
           <h4 className="font-medium">
             {goalTitle} {inflationText && <span className="text-xs text-gray-400 ml-1">{inflationText}</span>}
           </h4>
           <p className="text-xs text-gray-400">{goalType}</p>
         </div>
-        <Button 
-          variant="ghost" 
-          size="sm" 
-          onClick={(e) => {
-            e.stopPropagation();
-            onToggle();
-          }}
-        >
-          {isExpanded ? <ChevronUpIcon className="h-5 w-5" /> : <ChevronDownIcon className="h-5 w-5" />}
-        </Button>
+        
+        <div className="flex items-center gap-2">
+          {/* Action Buttons */}
+          <div className="opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onEdit}
+              className="h-8 w-8 p-0 hover:bg-blue-600/20 text-blue-400 hover:text-blue-300"
+            >
+              <Edit className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onDelete}
+              className="h-8 w-8 p-0 hover:bg-red-600/20 text-red-400 hover:text-red-300"
+            >
+              <Trash2 className="h-4 w-4" />
+            </Button>
+          </div>
+          
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={(e) => {
+              e.stopPropagation();
+              onToggle();
+            }}
+          >
+            {isExpanded ? <ChevronUpIcon className="h-5 w-5" /> : <ChevronDownIcon className="h-5 w-5" />}
+          </Button>
+        </div>
       </div>
       
       {isExpanded && (
