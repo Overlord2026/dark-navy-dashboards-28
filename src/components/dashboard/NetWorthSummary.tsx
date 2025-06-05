@@ -1,6 +1,5 @@
 
 import React from "react";
-import { Button } from "@/components/ui/button";
 import { Wallet } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "@/context/ThemeContext";
@@ -22,45 +21,17 @@ export const NetWorthSummary = () => {
 
   if (loading) {
     return (
-      <DashboardCard 
-        title="Dashboard" 
-        icon={<Wallet className="h-5 w-5" />}
-        className="min-h-[640px]"
-      >
+      <div className="dashboard-card animate-fade-in min-h-[640px]">
         <div className="flex items-center justify-center h-full">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
           <span className="ml-3">Loading dashboard data...</span>
         </div>
-      </DashboardCard>
+      </div>
     );
   }
 
   return (
-    <DashboardCard 
-      title="Dashboard" 
-      icon={<Wallet className={cn(
-        "h-5 w-5",
-        isLightTheme ? "text-blue-600" : "text-blue-400"
-      )} />}
-      className="min-h-[640px]"
-      footer={
-        <div className={cn(
-          "pt-5 border-t flex justify-end",
-          isLightTheme ? "border-border" : "border-gray-800"
-        )}>
-          <Button 
-            variant="link" 
-            className={cn(
-              "text-base p-0",
-              isLightTheme ? "text-blue-600 hover:text-blue-700" : "text-blue-400 hover:text-blue-300"
-            )}
-            onClick={() => navigate('/client-all-assets')}
-          >
-            View All Assets →
-          </Button>
-        </div>
-      }
-    >
+    <div className="dashboard-card animate-fade-in min-h-[640px]">
       <div className="space-y-8">
         {/* Net Worth Metrics Section */}
         <div>
@@ -106,6 +77,6 @@ export const NetWorthSummary = () => {
           </div>
         </div>
       </div>
-    </DashboardCard>
+    </div>
   );
 };
