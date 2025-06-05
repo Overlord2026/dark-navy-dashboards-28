@@ -1,5 +1,4 @@
 
-
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Wallet } from "lucide-react";
@@ -9,6 +8,7 @@ import { cn } from "@/lib/utils";
 import { useDashboardData } from "@/hooks/useDashboardData";
 import { DashboardMetricsCards } from "./DashboardMetricsCards";
 import { AssetAllocationChart } from "./AssetAllocationChart";
+import { DashboardCard } from "@/components/ui/DashboardCard";
 
 export const NetWorthSummary = () => {
   console.log('NetWorthSummary rendering with real-time data');
@@ -20,37 +20,45 @@ export const NetWorthSummary = () => {
 
   if (loading) {
     return (
-      <div className={cn(
-        "rounded-lg p-6 border transition-all duration-300 min-h-[640px]",
-        isLightTheme 
-          ? "bg-card border-border text-foreground" 
-          : "bg-[#121a2c]/80 border-gray-800"
-      )}>
+      <DashboardCard 
+        title="Dashboard" 
+        icon={<Wallet className="h-5 w-5" />}
+        className="min-h-[640px]"
+      >
         <div className="flex items-center justify-center h-full">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
           <span className="ml-3">Loading dashboard data...</span>
         </div>
-      </div>
+      </DashboardCard>
     );
   }
 
   return (
-    <div className={cn(
-      "rounded-lg p-6 border transition-all duration-300 min-h-[640px]",
-      isLightTheme 
-        ? "bg-card border-border text-foreground" 
-        : "bg-[#121a2c]/80 border-gray-800"
-    )}>
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-semibold flex items-center">
-          <Wallet className={cn(
-            "mr-3 h-7 w-7",
-            isLightTheme ? "text-blue-600" : "text-blue-400"
-          )} />
-          Dashboard
-        </h2>
-      </div>
-      
+    <DashboardCard 
+      title="Dashboard" 
+      icon={<Wallet className={cn(
+        "h-5 w-5",
+        isLightTheme ? "text-blue-600" : "text-blue-400"
+      )} />}
+      className="min-h-[640px]"
+      footer={
+        <div className={cn(
+          "pt-5 border-t flex justify-end",
+          isLightTheme ? "border-border" : "border-gray-800"
+        )}>
+          <Button 
+            variant="link" 
+            className={cn(
+              "text-base p-0",
+              isLightTheme ? "text-blue-600 hover:text-blue-700" : "text-blue-400 hover:text-blue-300"
+            )}
+            onClick={() => navigate('/client-all-assets')}
+          >
+            View All Assets →
+          </Button>
+        </div>
+      }
+    >
       <DashboardMetricsCards
         totalAssets={metrics.totalAssets}
         totalLiabilities={metrics.totalLiabilities}
@@ -79,23 +87,6 @@ export const NetWorthSummary = () => {
           />
         </div>
       </div>
-      
-      <div className={cn(
-        "mt-6 pt-5 border-t flex justify-end",
-        isLightTheme ? "border-border" : "border-gray-800"
-      )}>
-        <Button 
-          variant="link" 
-          className={cn(
-            "text-base p-0",
-            isLightTheme ? "text-blue-600 hover:text-blue-700" : "text-blue-400 hover:text-blue-300"
-          )}
-          onClick={() => navigate('/client-all-assets')}
-        >
-          View All Assets →
-        </Button>
-      </div>
-    </div>
+    </DashboardCard>
   );
 };
-
