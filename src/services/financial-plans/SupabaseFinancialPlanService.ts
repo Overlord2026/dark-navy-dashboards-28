@@ -1,5 +1,4 @@
 
-import { supabase } from "@/lib/supabase";
 import { 
   FinancialPlan, 
   FinancialGoal, 
@@ -11,427 +10,465 @@ import {
   FinancialPlansSummary
 } from "@/types/financial-plan";
 import { FinancialPlanService } from "./FinancialPlanService";
-import { toast } from "sonner";
+import { supabase } from "@/lib/supabase";
 
 export class SupabaseFinancialPlanService implements FinancialPlanService {
   
   async getPlans(): Promise<FinancialPlan[]> {
-    const { data: plans, error } = await supabase
-      .from('financial_plans')
-      .select(`
-        *,
-        financial_goals(*),
-        financial_accounts(*),
-        plan_expenses(*),
-        plan_income(*),
-        plan_savings(*),
-        plan_insurance(*)
-      `)
-      .order('created_at', { ascending: false });
+    try {
+      const { data: plans, error } = await supabase
+        .from('financial_plans')
+        .select(`
+          *,
+          financial_goals(*),
+          financial_accounts(*),
+          plan_expenses(*),
+          plan_income(*),
+          plan_savings(*),
+          plan_insurance(*)
+        `)
+        .order('created_at', { ascending: false });
 
-    if (error) {
+      if (error) throw error;
+
+      return (plans || []).map(this.mapSupabasePlanToFinancialPlan);
+    } catch (error) {
       console.error('Error fetching financial plans:', error);
-      throw new Error(`Failed to fetch financial plans: ${error.message}`);
+      return [];
     }
-
-    return (plans || []).map(this.mapPlanFromDatabase);
   }
 
   async getPlanById(id: string): Promise<FinancialPlan | null> {
-    const { data: plan, error } = await supabase
-      .from('financial_plans')
-      .select(`
-        *,
-        financial_goals(*),
-        financial_accounts(*),
-        plan_expenses(*),
-        plan_income(*),
-        plan_savings(*),
-        plan_insurance(*)
-      `)
-      .eq('id', id)
-      .single();
+    try {
+      const { data: plan, error } = await supabase
+        .from('financial_plans')
+        .select(`
+          *,
+          financial_goals(*),
+          financial_accounts(*),
+          plan_expenses(*),
+          plan_income(*),
+          plan_savings(*),
+          plan_insurance(*)
+        `)
+        .eq('id', id)
+        .single();
 
-    if (error) {
-      if (error.code === 'PGRST116') return null;
+      if (error) throw error;
+      if (!plan) return null;
+
+      return this.mapSupabasePlanToFinancialPlan(plan);
+    } catch (error) {
       console.error('Error fetching financial plan:', error);
-      throw new Error(`Failed to fetch financial plan: ${error.message}`);
+      return null;
     }
-
-    return plan ? this.mapPlanFromDatabase(plan) : null;
   }
 
   async createPlan(planData: Partial<FinancialPlan>): Promise<FinancialPlan> {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) throw new Error('User not authenticated');
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('User not authenticated');
 
-    const { data: plan, error } = await supabase
-      .from('financial_plans')
-      .insert({
-        user_id: user.id,
-        name: planData.name || 'Untitled Plan',
-        status: planData.isDraft ? 'draft' : 'active',
-        is_favorite: planData.isFavorite || false,
-        success_rate: planData.successRate || 0,
-        is_active: planData.isActive || false,
-        is_draft: planData.isDraft || true,
-        draft_data: planData.draftData || null,
-        step: planData.step || 1
-      })
-      .select()
-      .single();
+      const { data: plan, error } = await supabase
+        .from('financial_plans')
+        .insert({
+          user_id: user.id,
+          name: planData.name || 'New Plan',
+          status: planData.status || 'draft',
+          is_draft: planData.isDraft ?? true,
+          is_active: planData.isActive ?? false,
+          is_favorite: planData.isFavorite ?? false,
+          success_rate: planData.successRate ?? 0,
+          draft_data: planData.draftData || {},
+          step: planData.step ?? 1
+        })
+        .select()
+        .single();
 
-    if (error) {
+      if (error) throw error;
+
+      return this.mapSupabasePlanToFinancialPlan(plan);
+    } catch (error) {
       console.error('Error creating financial plan:', error);
-      throw new Error(`Failed to create financial plan: ${error.message}`);
+      throw error;
     }
-
-    // Create goals if provided
-    if (planData.goals && planData.goals.length > 0) {
-      await this.createGoalsForPlan(plan.id, planData.goals);
-    }
-
-    return this.mapPlanFromDatabase({ ...plan, financial_goals: planData.goals || [] });
   }
 
   async updatePlan(id: string, planData: Partial<FinancialPlan>): Promise<FinancialPlan | null> {
-    const updateData: any = {};
-    
-    if (planData.name !== undefined) updateData.name = planData.name;
-    if (planData.status !== undefined) updateData.status = planData.status;
-    if (planData.isFavorite !== undefined) updateData.is_favorite = planData.isFavorite;
-    if (planData.successRate !== undefined) updateData.success_rate = planData.successRate;
-    if (planData.isActive !== undefined) updateData.is_active = planData.isActive;
-    if (planData.isDraft !== undefined) updateData.is_draft = planData.isDraft;
-    if (planData.draftData !== undefined) updateData.draft_data = planData.draftData;
-    if (planData.step !== undefined) updateData.step = planData.step;
+    try {
+      const { data: plan, error } = await supabase
+        .from('financial_plans')
+        .update({
+          name: planData.name,
+          status: planData.status,
+          is_draft: planData.isDraft,
+          is_active: planData.isActive,
+          is_favorite: planData.isFavorite,
+          success_rate: planData.successRate,
+          draft_data: planData.draftData,
+          step: planData.step,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', id)
+        .select()
+        .single();
 
-    const { data: plan, error } = await supabase
-      .from('financial_plans')
-      .update(updateData)
-      .eq('id', id)
-      .select()
-      .single();
+      if (error) throw error;
+      if (!plan) return null;
 
-    if (error) {
+      return this.mapSupabasePlanToFinancialPlan(plan);
+    } catch (error) {
       console.error('Error updating financial plan:', error);
-      throw new Error(`Failed to update financial plan: ${error.message}`);
+      throw error;
     }
-
-    return plan ? this.mapPlanFromDatabase(plan) : null;
   }
 
   async deletePlan(id: string): Promise<boolean> {
-    const { error } = await supabase
-      .from('financial_plans')
-      .delete()
-      .eq('id', id);
+    try {
+      const { error } = await supabase
+        .from('financial_plans')
+        .delete()
+        .eq('id', id);
 
-    if (error) {
+      if (error) throw error;
+      return true;
+    } catch (error) {
       console.error('Error deleting financial plan:', error);
-      throw new Error(`Failed to delete financial plan: ${error.message}`);
+      return false;
     }
-
-    return true;
   }
 
   async saveDraft(draftData: any): Promise<FinancialPlan> {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) throw new Error('User not authenticated');
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('User not authenticated');
 
-    const { data: plan, error } = await supabase
-      .from('financial_plans')
-      .insert({
-        user_id: user.id,
-        name: draftData.name || 'Draft Plan',
-        status: 'draft',
-        is_draft: true,
-        draft_data: draftData,
-        step: draftData.currentStep || 1
-      })
-      .select()
-      .single();
+      const { data: plan, error } = await supabase
+        .from('financial_plans')
+        .insert({
+          user_id: user.id,
+          name: draftData.name || 'Draft Plan',
+          status: 'draft',
+          is_draft: true,
+          is_active: false,
+          draft_data: draftData,
+          step: draftData.step || 1
+        })
+        .select()
+        .single();
 
-    if (error) {
+      if (error) throw error;
+
+      return this.mapSupabasePlanToFinancialPlan(plan);
+    } catch (error) {
       console.error('Error saving draft:', error);
-      throw new Error(`Failed to save draft: ${error.message}`);
+      throw error;
     }
-
-    return this.mapPlanFromDatabase(plan);
   }
 
   async getPlansSummary(): Promise<FinancialPlansSummary> {
-    const { data: plans, error } = await supabase
-      .from('financial_plans')
-      .select('status, success_rate, financial_goals(*)');
+    try {
+      const { data: plans, error } = await supabase
+        .from('financial_plans')
+        .select('status, success_rate, financial_goals(*)');
 
-    if (error) {
+      if (error) throw error;
+
+      const activePlans = (plans || []).filter(p => p.status === 'active').length;
+      const draftPlans = (plans || []).filter(p => p.status === 'draft').length;
+      const totalGoals = (plans || []).reduce((acc, plan) => acc + (plan.financial_goals?.length || 0), 0);
+      const averageSuccessRate = (plans || []).reduce((acc, plan) => acc + (plan.success_rate || 0), 0) / Math.max(plans?.length || 1, 1);
+
+      return {
+        activePlans,
+        draftPlans,
+        totalGoals,
+        averageSuccessRate
+      };
+    } catch (error) {
       console.error('Error fetching plans summary:', error);
-      throw new Error(`Failed to fetch plans summary: ${error.message}`);
+      return {
+        activePlans: 0,
+        draftPlans: 0,
+        totalGoals: 0,
+        averageSuccessRate: 0
+      };
     }
-
-    const activePlans = plans?.filter(p => p.status === 'active').length || 0;
-    const draftPlans = plans?.filter(p => p.status === 'draft').length || 0;
-    const totalGoals = plans?.reduce((acc, plan) => acc + (plan.financial_goals?.length || 0), 0) || 0;
-    const averageSuccessRate = plans?.length > 0 
-      ? plans.reduce((acc, plan) => acc + (plan.success_rate || 0), 0) / plans.length 
-      : 0;
-
-    return {
-      activePlans,
-      draftPlans,
-      totalGoals,
-      averageSuccessRate
-    };
   }
 
   async updateGoal(planId: string, goal: FinancialGoal): Promise<boolean> {
-    const { error } = await supabase
-      .from('financial_goals')
-      .upsert({
-        id: goal.id,
-        plan_id: planId,
-        title: goal.title,
-        description: goal.description,
-        target_amount: goal.targetAmount,
-        current_amount: goal.currentAmount,
-        target_date: goal.targetDate.toISOString().split('T')[0],
-        priority: goal.priority.toLowerCase(),
-        is_complete: goal.isComplete
-      });
+    try {
+      const { data: existingGoal } = await supabase
+        .from('financial_goals')
+        .select('id')
+        .eq('id', goal.id)
+        .eq('plan_id', planId)
+        .single();
 
-    if (error) {
+      if (existingGoal) {
+        // Update existing goal
+        const { error } = await supabase
+          .from('financial_goals')
+          .update({
+            title: goal.title,
+            description: goal.description,
+            target_amount: goal.targetAmount,
+            current_amount: goal.currentAmount,
+            target_date: goal.targetDate.toISOString(),
+            priority: goal.priority,
+            is_complete: goal.isComplete || false,
+            updated_at: new Date().toISOString()
+          })
+          .eq('id', goal.id)
+          .eq('plan_id', planId);
+
+        if (error) throw error;
+      } else {
+        // Create new goal
+        const { error } = await supabase
+          .from('financial_goals')
+          .insert({
+            id: goal.id,
+            plan_id: planId,
+            title: goal.title,
+            description: goal.description,
+            target_amount: goal.targetAmount,
+            current_amount: goal.currentAmount,
+            target_date: goal.targetDate.toISOString(),
+            priority: goal.priority,
+            is_complete: goal.isComplete || false
+          });
+
+        if (error) throw error;
+      }
+
+      return true;
+    } catch (error) {
       console.error('Error updating goal:', error);
-      throw new Error(`Failed to update goal: ${error.message}`);
+      return false;
     }
-
-    return true;
   }
 
   async setActivePlan(id: string): Promise<void> {
-    // First, set all plans to inactive
-    await supabase
-      .from('financial_plans')
-      .update({ is_active: false })
-      .neq('id', '00000000-0000-0000-0000-000000000000'); // Update all
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('User not authenticated');
 
-    // Then set the specific plan to active
-    const { error } = await supabase
-      .from('financial_plans')
-      .update({ is_active: true })
-      .eq('id', id);
+      // First, set all plans for this user to inactive
+      await supabase
+        .from('financial_plans')
+        .update({ is_active: false })
+        .eq('user_id', user.id);
 
-    if (error) {
+      // Then set the specified plan to active
+      const { error } = await supabase
+        .from('financial_plans')
+        .update({ is_active: true })
+        .eq('id', id)
+        .eq('user_id', user.id);
+
+      if (error) throw error;
+    } catch (error) {
       console.error('Error setting active plan:', error);
-      throw new Error(`Failed to set active plan: ${error.message}`);
+      throw error;
     }
   }
 
   async addExpense(planId: string, expense: Omit<Expense, "id">): Promise<Expense> {
-    const { data, error } = await supabase
-      .from('plan_expenses')
-      .insert({
-        plan_id: planId,
-        name: expense.name,
-        amount: expense.amount,
-        expense_type: expense.type,
-        period: expense.period,
-        owner: expense.owner
-      })
-      .select()
-      .single();
+    try {
+      const { data, error } = await supabase
+        .from('plan_expenses')
+        .insert({
+          plan_id: planId,
+          name: expense.name,
+          amount: expense.amount,
+          expense_type: expense.type,
+          period: expense.period,
+          owner: expense.owner
+        })
+        .select()
+        .single();
 
-    if (error) {
+      if (error) throw error;
+
+      return {
+        id: data.id,
+        name: data.name,
+        amount: data.amount,
+        type: data.expense_type,
+        period: data.period,
+        owner: data.owner
+      };
+    } catch (error) {
       console.error('Error adding expense:', error);
-      throw new Error(`Failed to add expense: ${error.message}`);
+      throw error;
     }
-
-    return this.mapExpenseFromDatabase(data);
   }
 
   async updateExpense(planId: string, expenseId: string, data: Partial<Expense>): Promise<Expense | null> {
-    const updateData: any = {};
-    if (data.name !== undefined) updateData.name = data.name;
-    if (data.amount !== undefined) updateData.amount = data.amount;
-    if (data.type !== undefined) updateData.expense_type = data.type;
-    if (data.period !== undefined) updateData.period = data.period;
-    if (data.owner !== undefined) updateData.owner = data.owner;
+    try {
+      const { data: expense, error } = await supabase
+        .from('plan_expenses')
+        .update({
+          name: data.name,
+          amount: data.amount,
+          expense_type: data.type,
+          period: data.period,
+          owner: data.owner,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', expenseId)
+        .eq('plan_id', planId)
+        .select()
+        .single();
 
-    const { data: expense, error } = await supabase
-      .from('plan_expenses')
-      .update(updateData)
-      .eq('id', expenseId)
-      .eq('plan_id', planId)
-      .select()
-      .single();
+      if (error) throw error;
+      if (!expense) return null;
 
-    if (error) {
+      return {
+        id: expense.id,
+        name: expense.name,
+        amount: expense.amount,
+        type: expense.expense_type,
+        period: expense.period,
+        owner: expense.owner
+      };
+    } catch (error) {
       console.error('Error updating expense:', error);
-      throw new Error(`Failed to update expense: ${error.message}`);
+      return null;
     }
-
-    return expense ? this.mapExpenseFromDatabase(expense) : null;
   }
 
   async deleteExpense(planId: string, expenseId: string): Promise<boolean> {
-    const { error } = await supabase
-      .from('plan_expenses')
-      .delete()
-      .eq('id', expenseId)
-      .eq('plan_id', planId);
+    try {
+      const { error } = await supabase
+        .from('plan_expenses')
+        .delete()
+        .eq('id', expenseId)
+        .eq('plan_id', planId);
 
-    if (error) {
+      if (error) throw error;
+      return true;
+    } catch (error) {
       console.error('Error deleting expense:', error);
-      throw new Error(`Failed to delete expense: ${error.message}`);
+      return false;
     }
-
-    return true;
   }
 
   async toggleFavorite(id: string): Promise<void> {
-    // First get the current state
-    const { data: plan, error: fetchError } = await supabase
-      .from('financial_plans')
-      .select('is_favorite')
-      .eq('id', id)
-      .single();
+    try {
+      const { data: plan } = await supabase
+        .from('financial_plans')
+        .select('is_favorite')
+        .eq('id', id)
+        .single();
 
-    if (fetchError) {
-      console.error('Error fetching plan for favorite toggle:', fetchError);
-      throw new Error(`Failed to toggle favorite: ${fetchError.message}`);
-    }
+      if (plan) {
+        const { error } = await supabase
+          .from('financial_plans')
+          .update({ is_favorite: !plan.is_favorite })
+          .eq('id', id);
 
-    // Toggle the favorite status
-    const { error } = await supabase
-      .from('financial_plans')
-      .update({ is_favorite: !plan.is_favorite })
-      .eq('id', id);
-
-    if (error) {
+        if (error) throw error;
+      }
+    } catch (error) {
       console.error('Error toggling favorite:', error);
-      throw new Error(`Failed to toggle favorite: ${error.message}`);
+      throw error;
     }
   }
 
   async duplicatePlan(id: string): Promise<FinancialPlan | null> {
-    const originalPlan = await this.getPlanById(id);
-    if (!originalPlan) return null;
+    try {
+      const originalPlan = await this.getPlanById(id);
+      if (!originalPlan) return null;
 
-    const duplicatedPlan = await this.createPlan({
-      ...originalPlan,
-      name: `${originalPlan.name} (Copy)`,
-      isActive: false,
-      isFavorite: false
-    });
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('User not authenticated');
 
-    return duplicatedPlan;
-  }
+      const { data: newPlan, error } = await supabase
+        .from('financial_plans')
+        .insert({
+          user_id: user.id,
+          name: `${originalPlan.name} (Copy)`,
+          status: 'draft',
+          is_draft: true,
+          is_active: false,
+          is_favorite: false,
+          success_rate: originalPlan.successRate,
+          draft_data: originalPlan.draftData,
+          step: originalPlan.step
+        })
+        .select()
+        .single();
 
-  private async createGoalsForPlan(planId: string, goals: FinancialGoal[]): Promise<void> {
-    const goalsData = goals.map(goal => ({
-      plan_id: planId,
-      title: goal.title,
-      description: goal.description,
-      target_amount: goal.targetAmount,
-      current_amount: goal.currentAmount,
-      target_date: goal.targetDate.toISOString().split('T')[0],
-      priority: goal.priority.toLowerCase(),
-      is_complete: goal.isComplete || false
-    }));
+      if (error) throw error;
 
-    const { error } = await supabase
-      .from('financial_goals')
-      .insert(goalsData);
-
-    if (error) {
-      console.error('Error creating goals:', error);
-      throw new Error(`Failed to create goals: ${error.message}`);
+      return this.mapSupabasePlanToFinancialPlan(newPlan);
+    } catch (error) {
+      console.error('Error duplicating plan:', error);
+      return null;
     }
   }
 
-  private mapPlanFromDatabase(dbPlan: any): FinancialPlan {
+  private mapSupabasePlanToFinancialPlan(plan: any): FinancialPlan {
     return {
-      id: dbPlan.id,
-      name: dbPlan.name,
-      owner: 'User', // This could be fetched from profiles table if needed
-      createdAt: new Date(dbPlan.created_at),
-      updatedAt: new Date(dbPlan.updated_at),
-      isDraft: dbPlan.is_draft,
-      isActive: dbPlan.is_active,
-      isFavorite: dbPlan.is_favorite,
-      successRate: dbPlan.success_rate || 0,
-      status: dbPlan.status === 'active' ? 'Active' : 'Draft',
-      goals: (dbPlan.financial_goals || []).map(this.mapGoalFromDatabase),
-      accounts: (dbPlan.financial_accounts || []).map(this.mapAccountFromDatabase),
-      expenses: (dbPlan.plan_expenses || []).map(this.mapExpenseFromDatabase),
-      income: (dbPlan.plan_income || []).map(this.mapIncomeFromDatabase),
-      savings: (dbPlan.plan_savings || []).map(this.mapSavingFromDatabase),
-      insurance: (dbPlan.plan_insurance || []).map(this.mapInsuranceFromDatabase),
-      draftData: dbPlan.draft_data,
-      step: dbPlan.step
-    };
-  }
-
-  private mapGoalFromDatabase(dbGoal: any): FinancialGoal {
-    return {
-      id: dbGoal.id,
-      title: dbGoal.title,
-      description: dbGoal.description,
-      targetAmount: Number(dbGoal.target_amount),
-      currentAmount: Number(dbGoal.current_amount),
-      targetDate: new Date(dbGoal.target_date),
-      priority: dbGoal.priority.charAt(0).toUpperCase() + dbGoal.priority.slice(1) as 'Low' | 'Medium' | 'High',
-      isComplete: dbGoal.is_complete
-    };
-  }
-
-  private mapAccountFromDatabase(dbAccount: any): FinancialAccount {
-    return {
-      id: dbAccount.id,
-      name: dbAccount.name,
-      type: dbAccount.account_type as any,
-      balance: Number(dbAccount.balance),
-      isSelected: dbAccount.is_selected
-    };
-  }
-
-  private mapExpenseFromDatabase(dbExpense: any): Expense {
-    return {
-      id: dbExpense.id,
-      name: dbExpense.name,
-      amount: Number(dbExpense.amount),
-      type: dbExpense.expense_type as any,
-      period: dbExpense.period as any,
-      owner: dbExpense.owner
-    };
-  }
-
-  private mapIncomeFromDatabase(dbIncome: any): Income {
-    return {
-      id: dbIncome.id,
-      source: dbIncome.source,
-      amount: Number(dbIncome.amount),
-      frequency: dbIncome.frequency as any,
-      isPassive: dbIncome.is_passive
-    };
-  }
-
-  private mapSavingFromDatabase(dbSaving: any): Saving {
-    return {
-      id: dbSaving.id,
-      accountId: dbSaving.account_id,
-      amount: Number(dbSaving.amount),
-      frequency: dbSaving.frequency as any
-    };
-  }
-
-  private mapInsuranceFromDatabase(dbInsurance: any): Insurance {
-    return {
-      id: dbInsurance.id,
-      type: dbInsurance.insurance_type,
-      provider: dbInsurance.provider,
-      premium: Number(dbInsurance.premium),
-      coverage: Number(dbInsurance.coverage)
+      id: plan.id,
+      name: plan.name,
+      owner: '', // This might need to be fetched from profiles table
+      createdAt: new Date(plan.created_at),
+      updatedAt: new Date(plan.updated_at),
+      isDraft: plan.is_draft,
+      isActive: plan.is_active,
+      isFavorite: plan.is_favorite,
+      successRate: plan.success_rate || 0,
+      status: plan.status as 'Draft' | 'Active' | 'Archived',
+      goals: (plan.financial_goals || []).map((goal: any) => ({
+        id: goal.id,
+        title: goal.title,
+        description: goal.description,
+        targetAmount: goal.target_amount,
+        currentAmount: goal.current_amount,
+        targetDate: new Date(goal.target_date),
+        priority: goal.priority as 'Low' | 'Medium' | 'High',
+        isComplete: goal.is_complete
+      })),
+      accounts: (plan.financial_accounts || []).map((account: any) => ({
+        id: account.id,
+        name: account.name,
+        type: account.account_type as 'Checking' | 'Savings' | 'Investment' | 'Retirement' | 'Other',
+        balance: account.balance,
+        isSelected: account.is_selected
+      })),
+      expenses: (plan.plan_expenses || []).map((expense: any) => ({
+        id: expense.id,
+        name: expense.name,
+        amount: expense.amount,
+        type: expense.expense_type,
+        period: expense.period,
+        owner: expense.owner
+      })),
+      income: (plan.plan_income || []).map((income: any) => ({
+        id: income.id,
+        source: income.source,
+        amount: income.amount,
+        frequency: income.frequency as 'Monthly' | 'Annual',
+        isPassive: income.is_passive
+      })),
+      savings: (plan.plan_savings || []).map((saving: any) => ({
+        id: saving.id,
+        accountId: saving.account_id,
+        amount: saving.amount,
+        frequency: saving.frequency as 'Monthly' | 'Annual'
+      })),
+      insurance: (plan.plan_insurance || []).map((insurance: any) => ({
+        id: insurance.id,
+        type: insurance.insurance_type,
+        provider: insurance.provider,
+        premium: insurance.premium,
+        coverage: insurance.coverage
+      })),
+      draftData: plan.draft_data,
+      step: plan.step
     };
   }
 }
