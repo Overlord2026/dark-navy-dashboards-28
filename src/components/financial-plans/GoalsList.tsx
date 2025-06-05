@@ -388,7 +388,7 @@ function RetirementAgeCard({ goal, onClick, isNew = false }: {
       </div>
       <div className="flex justify-between items-center mt-6">
         <div className="text-sm font-medium">{shortName}'s Retirement Age</div>
-        <div className="text-sm text-gray-400">{owner}</div>
+        <div className="text-sm text-gray-400">Antonio Gomez</div>
       </div>
     </Card>
   );
@@ -568,7 +568,9 @@ function GoalCard({ goal, isExpanded, onToggle, onClick, isNew = false }: {
           )}
           
           {goal.currentAmount !== undefined && 
-            (goal.targetAmount || goal.purchasePrice || goal.estimatedCost || goal.tuitionEstimate || goal.amountDesired) && (
+            (goal.targetAmount || goal.purchasePrice || goal.estimatedCost || goal.tuitionEstimate || goal.amountDesired) &&
+            !goal.targetRetirementAge && 
+            goal.type !== "Education" && (
             <div className="mt-2">
               <div className="flex justify-between text-xs mb-1">
                 <span>Progress</span>
