@@ -126,6 +126,37 @@ const FinancialPlans = () => {
             </div>
           </div>
 
+          {/* Feature Highlights Cards - Moved to top */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+            <Card className="border-0 shadow-lg bg-gradient-to-br from-blue-500/10 to-blue-600/10 backdrop-blur-sm hover:shadow-xl transition-all duration-300">
+              <CardContent className="p-6">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="p-2 bg-blue-500/20 rounded-lg">
+                    <Target className="h-5 w-5 text-blue-600" />
+                  </div>
+                  <h4 className="font-semibold">Goal Setting</h4>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  Define and track financial objectives from retirement to major purchases.
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card className="border-0 shadow-lg bg-gradient-to-br from-purple-500/10 to-purple-600/10 backdrop-blur-sm hover:shadow-xl transition-all duration-300">
+              <CardContent className="p-6">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="p-2 bg-purple-500/20 rounded-lg">
+                    <DollarSign className="h-5 w-5 text-purple-600" />
+                  </div>
+                  <h4 className="font-semibold">Expense Tracking</h4>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  Monitor income streams and expenses to stay on track for your goals.
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+
           {/* Main Content Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Left Column - Current Plan & Goals */}
@@ -247,37 +278,6 @@ const FinancialPlans = () => {
                     </div>
                   </CardContent>
                 </Card>
-
-                {/* Feature Highlights */}
-                <div className="space-y-4">
-                  <Card className="border-0 shadow-lg bg-gradient-to-br from-blue-500/10 to-blue-600/10 backdrop-blur-sm hover:shadow-xl transition-all duration-300">
-                    <CardContent className="p-6">
-                      <div className="flex items-center gap-3 mb-3">
-                        <div className="p-2 bg-blue-500/20 rounded-lg">
-                          <Target className="h-5 w-5 text-blue-600" />
-                        </div>
-                        <h4 className="font-semibold">Goal Setting</h4>
-                      </div>
-                      <p className="text-sm text-muted-foreground">
-                        Define and track financial objectives from retirement to major purchases.
-                      </p>
-                    </CardContent>
-                  </Card>
-                  
-                  <Card className="border-0 shadow-lg bg-gradient-to-br from-purple-500/10 to-purple-600/10 backdrop-blur-sm hover:shadow-xl transition-all duration-300">
-                    <CardContent className="p-6">
-                      <div className="flex items-center gap-3 mb-3">
-                        <div className="p-2 bg-purple-500/20 rounded-lg">
-                          <DollarSign className="h-5 w-5 text-purple-600" />
-                        </div>
-                        <h4 className="font-semibold">Expense Tracking</h4>
-                      </div>
-                      <p className="text-sm text-muted-foreground">
-                        Monitor income streams and expenses to stay on track for your goals.
-                      </p>
-                    </CardContent>
-                  </Card>
-                </div>
               </div>
             </div>
           </div>
