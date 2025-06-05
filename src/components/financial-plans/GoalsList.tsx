@@ -59,7 +59,7 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
   const [localGoals, setLocalGoals] = useState<Goal[]>(goals);
   const [newGoalId, setNewGoalId] = useState<string | null>(null);
   
-  const { activePlan, updateGoal } = useFinancialPlans();
+  const { activePlan, updateGoal, createPlan } = useFinancialPlans();
   
   if (JSON.stringify(goals) !== JSON.stringify(localGoals)) {
     setLocalGoals(goals);
@@ -118,13 +118,34 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
     }
   };
 
-  const handleSaveGoal = async (goalData: GoalFormData) => {
+  const ensureActivePlan = async () => {
     if (!activePlan) {
-      toast.error("No active plan found. Please create a plan first.");
-      return;
+      try {
+        // Create a default plan for goals
+        const defaultPlan = await createPlan({
+          name: "My Financial Plan",
+          status: "Active",
+          isDraft: false,
+          isActive: true
+        });
+        return defaultPlan;
+      } catch (error) {
+        console.error('Error creating default plan:', error);
+        toast.error("Failed to create plan. Please try again.");
+        return null;
+      }
     }
+    return activePlan;
+  };
 
+  const handleSaveGoal = async (goalData: GoalFormData) => {
     try {
+      // Ensure we have an active plan
+      const plan = await ensureActivePlan();
+      if (!plan) {
+        return;
+      }
+
       if (selectedGoal) {
         // Update existing goal
         const updatedGoal: Goal = {
@@ -168,7 +189,7 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
           isComplete: false
         };
         
-        await updateGoal(activePlan.id, financialGoal);
+        await updateGoal(plan.id, financialGoal);
         
         setLocalGoals(prev => 
           prev.map(g => g.id === updatedGoal.id ? updatedGoal : g)
@@ -220,7 +241,7 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
           isComplete: false
         };
         
-        await updateGoal(activePlan.id, financialGoal);
+        await updateGoal(plan.id, financialGoal);
         
         setLocalGoals(prev => [...prev, newGoal]);
         setNewGoalId(newGoalId);
