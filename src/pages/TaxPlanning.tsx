@@ -1,4 +1,3 @@
-
 import React from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
@@ -23,8 +22,22 @@ import { ScheduleMeetingDialog } from "@/components/investments/ScheduleMeetingD
 import { Link } from "react-router-dom";
 import { SecureTaxReturnAnalysis } from "@/components/estate-planning/SecureTaxReturnAnalysis";
 import { AccountingSoftwareIntegration } from "@/components/tax-planning/AccountingSoftwareIntegration";
+import { useTaxPlanning } from "@/hooks/useTaxPlanning";
 
 export default function TaxPlanning() {
+  const { createConsultation } = useTaxPlanning();
+
+  const handleTaxStrategyConsultation = async () => {
+    try {
+      await createConsultation({
+        consultation_type: 'tax_strategy',
+        notes: 'Requested consultation for advanced tax planning strategies'
+      });
+    } catch (error) {
+      console.error('Error scheduling consultation:', error);
+    }
+  };
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: { 
@@ -176,7 +189,9 @@ export default function TaxPlanning() {
                 </div>
               </div>
               <div className="flex justify-center mt-6">
-                <Button>Schedule Tax Strategy Consultation</Button>
+                <Button onClick={handleTaxStrategyConsultation}>
+                  Schedule Tax Strategy Consultation
+                </Button>
               </div>
             </CardContent>
           </Card>

@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -5,9 +6,12 @@ import { Badge } from "@/components/ui/badge";
 import { TaxReturnUploadDialog } from "./DocumentDialogs";
 import { FileText, Calendar, Upload, Check } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
+import { useTaxPlanning } from "@/hooks/useTaxPlanning";
 
 export function SecureTaxReturnAnalysis() {
   const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
+  const [isSubmittingInterest, setIsSubmittingInterest] = useState(false);
+  const { createInterest, scheduleMeeting } = useTaxPlanning();
   
   const handleRequestAnalysis = () => {
     toast({
@@ -16,19 +20,23 @@ export function SecureTaxReturnAnalysis() {
     });
   };
   
-  const handleShowInterest = () => {
-    toast({
-      title: "Interest Noted",
-      description: "Your interest in tax return analysis has been noted. An advisor will contact you."
-    });
+  const handleShowInterest = async () => {
+    setIsSubmittingInterest(true);
+    try {
+      await createInterest({
+        interest_type: 'tax_return_analysis',
+        asset_name: 'Secure Tax Return Analysis',
+        notes: 'Expressed interest in tax return analysis service'
+      });
+    } catch (error) {
+      console.error('Error submitting interest:', error);
+    } finally {
+      setIsSubmittingInterest(false);
+    }
   };
   
   const handleScheduleAppointment = () => {
-    window.open("https://calendly.com/tonygomes/60min", "_blank");
-    toast({
-      title: "Opening Scheduling Page",
-      description: "Schedule a meeting to discuss tax return analysis with your advisor."
-    });
+    scheduleMeeting('Tax Return Analysis');
   };
 
   return (
@@ -97,8 +105,13 @@ export function SecureTaxReturnAnalysis() {
                 </Button>
               </div>
             </div>
-            <Button onClick={handleShowInterest} variant="outline" className="flex-1">
-              I'm Interested
+            <Button 
+              onClick={handleShowInterest} 
+              variant="outline" 
+              className="flex-1"
+              disabled={isSubmittingInterest}
+            >
+              {isSubmittingInterest ? "Submitting..." : "I'm Interested"}
             </Button>
             <Button onClick={handleScheduleAppointment} className="flex-1 bg-[#1B1B32] text-white hover:bg-[#2D2D4A]">
               <Calendar className="mr-2 h-4 w-4" />

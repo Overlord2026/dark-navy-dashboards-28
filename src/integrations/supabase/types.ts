@@ -1330,6 +1330,117 @@ export type Database = {
           },
         ]
       }
+      tax_planning_consultations: {
+        Row: {
+          advisor_notes: string | null
+          consultation_type: string
+          created_at: string
+          id: string
+          notes: string | null
+          preferred_date: string | null
+          preferred_time: string | null
+          scheduled_at: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          advisor_notes?: string | null
+          consultation_type: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          preferred_date?: string | null
+          preferred_time?: string | null
+          scheduled_at?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          advisor_notes?: string | null
+          consultation_type?: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          preferred_date?: string | null
+          preferred_time?: string | null
+          scheduled_at?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      tax_planning_interests: {
+        Row: {
+          asset_name: string
+          created_at: string
+          id: string
+          interest_type: string
+          notes: string | null
+          user_id: string
+        }
+        Insert: {
+          asset_name: string
+          created_at?: string
+          id?: string
+          interest_type: string
+          notes?: string | null
+          user_id: string
+        }
+        Update: {
+          asset_name?: string
+          created_at?: string
+          id?: string
+          interest_type?: string
+          notes?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      tax_planning_strategies: {
+        Row: {
+          created_at: string
+          description: string | null
+          estimated_savings: number | null
+          id: string
+          implementation_date: string | null
+          notes: string | null
+          status: string
+          strategy_type: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          estimated_savings?: number | null
+          id?: string
+          implementation_date?: string | null
+          notes?: string | null
+          status?: string
+          strategy_type: string
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          estimated_savings?: number | null
+          id?: string
+          implementation_date?: string | null
+          notes?: string | null
+          status?: string
+          strategy_type?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_additional_info: {
         Row: {
           citizenship_status: string | null
