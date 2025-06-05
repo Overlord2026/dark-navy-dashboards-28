@@ -12,6 +12,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
+import { useFinancialPlans } from "@/context/FinancialPlanContext";
+import { FinancialGoal } from "@/types/financial-plan";
 
 export interface Goal {
   id: string;
@@ -58,10 +60,19 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
   const [localGoals, setLocalGoals] = useState<Goal[]>(goals);
   const [newGoalId, setNewGoalId] = useState<string | null>(null);
   
+  // Get financial plans context for persistence
+  const { 
+    plans, 
+    activePlan, 
+    createPlan, 
+    updateGoal: updatePlanGoal,
+    refreshPlans 
+  } = useFinancialPlans();
+  
   // Update local goals when props change
-  if (JSON.stringify(goals) !== JSON.stringify(localGoals)) {
+  useEffect(() => {
     setLocalGoals(goals);
-  }
+  }, [goals]);
   
   useEffect(() => {
     if (newGoalId) {
@@ -116,12 +127,47 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
     }
   };
 
-  // Independent goal saving - no plan dependency
+  // Helper function to convert Goal to FinancialGoal
+  const convertToFinancialGoal = (goalData: GoalFormData, goalId?: string): FinancialGoal => {
+    return {
+      id: goalId || `goal-${Date.now()}`,
+      title: goalData.name,
+      description: goalData.description || '',
+      targetAmount: goalData.targetAmount || goalData.purchasePrice || goalData.tuitionEstimate || goalData.estimatedCost || goalData.amountDesired || 0,
+      currentAmount: 0,
+      targetDate: goalData.targetDate || new Date(),
+      priority: (goalData.type === 'Retirement' ? 'High' : goalData.type === 'Education' ? 'Medium' : 'Low') as 'Low' | 'Medium' | 'High',
+      isComplete: false
+    };
+  };
+
+  // Ensure we have a plan to save goals to
+  const ensurePlanExists = async () => {
+    if (activePlan) {
+      return activePlan;
+    }
+
+    // Create a default plan if none exists
+    const defaultPlan = await createPlan({
+      name: "My Financial Plan",
+      isDraft: false,
+      isActive: true,
+      goals: [],
+      accounts: [],
+      expenses: []
+    });
+
+    await refreshPlans();
+    return defaultPlan;
+  };
+
   const handleSaveGoal = async (goalData: GoalFormData) => {
     try {
+      let updatedGoal: Goal;
+      
       if (selectedGoal) {
         // Update existing goal
-        const updatedGoal: Goal = {
+        updatedGoal = {
           ...selectedGoal,
           title: goalData.name,
           name: goalData.name,
@@ -156,9 +202,15 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
         
         setNewGoalId(updatedGoal.id);
         onGoalUpdate?.(updatedGoal);
+        
+        // Save to database
+        const plan = await ensurePlanExists();
+        const financialGoal = convertToFinancialGoal(goalData, updatedGoal.id);
+        await updatePlanGoal(plan.id, financialGoal);
+        
         toast.success("Goal updated successfully!");
       } else {
-        // Create new goal - completely independent of plans
+        // Create new goal
         const newGoalId = `goal-${Date.now()}`;
         const newGoal: Goal = {
           id: newGoalId,
@@ -191,6 +243,12 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
         setLocalGoals(prev => [...prev, newGoal]);
         setNewGoalId(newGoalId);
         onGoalUpdate?.(newGoal);
+        
+        // Save to database
+        const plan = await ensurePlanExists();
+        const financialGoal = convertToFinancialGoal(goalData, newGoalId);
+        await updatePlanGoal(plan.id, financialGoal);
+        
         toast.success("Goal created successfully!");
       }
       
@@ -232,6 +290,15 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
     try {
       setLocalGoals(prev => prev.filter(g => g.id !== goalId));
       onGoalDelete?.(goalId);
+      
+      // Delete from database if we have a plan
+      if (activePlan) {
+        // Note: We'd need a deleteGoal method in the service
+        // For now, we'll update the plan to remove the goal
+        const updatedGoals = activePlan.goals.filter(g => g.id !== goalId);
+        // This would need to be implemented in the service
+      }
+      
       toast.success("Goal deleted successfully!");
     } catch (error) {
       console.error('Error deleting goal:', error);
@@ -331,7 +398,6 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
         )}
       </div>
       
-      {/* Edit Goal Sidebar */}
       <GoalDetailsSidePanel
         isOpen={isDetailsPanelOpen}
         onClose={() => setIsDetailsPanelOpen(false)}
@@ -342,7 +408,6 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
         onTitleUpdate={handleTitleUpdate}
       />
 
-      {/* Add Goal Dialog */}
       <Dialog open={isAddGoalDialogOpen} onOpenChange={setIsAddGoalDialogOpen}>
         <DialogContent className="max-w-4xl h-[90vh] p-0 overflow-hidden">
           <DialogHeader className="px-6 py-4 border-b">
