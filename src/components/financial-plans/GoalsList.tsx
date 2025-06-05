@@ -11,7 +11,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { useFinancialPlans } from "@/context/FinancialPlanContext";
 import { toast } from "sonner";
 
 export interface Goal {
@@ -59,8 +58,7 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
   const [localGoals, setLocalGoals] = useState<Goal[]>(goals);
   const [newGoalId, setNewGoalId] = useState<string | null>(null);
   
-  const { activePlan, updateGoal, createPlan } = useFinancialPlans();
-  
+  // Update local goals when props change
   if (JSON.stringify(goals) !== JSON.stringify(localGoals)) {
     setLocalGoals(goals);
   }
@@ -118,34 +116,9 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
     }
   };
 
-  const ensureActivePlan = async () => {
-    if (!activePlan) {
-      try {
-        // Create a default plan for goals
-        const defaultPlan = await createPlan({
-          name: "My Financial Plan",
-          status: "Active",
-          isDraft: false,
-          isActive: true
-        });
-        return defaultPlan;
-      } catch (error) {
-        console.error('Error creating default plan:', error);
-        toast.error("Failed to create plan. Please try again.");
-        return null;
-      }
-    }
-    return activePlan;
-  };
-
+  // Independent goal saving - no plan dependency
   const handleSaveGoal = async (goalData: GoalFormData) => {
     try {
-      // Ensure we have an active plan
-      const plan = await ensureActivePlan();
-      if (!plan) {
-        return;
-      }
-
       if (selectedGoal) {
         // Update existing goal
         const updatedGoal: Goal = {
@@ -177,20 +150,6 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
           annualInflationRate: goalData.annualInflationRate,
         };
         
-        // Convert Goal to FinancialGoal format for the service
-        const financialGoal = {
-          id: updatedGoal.id,
-          title: updatedGoal.title || '',
-          description: updatedGoal.description || '',
-          targetAmount: updatedGoal.targetAmount || 0,
-          currentAmount: updatedGoal.currentAmount || 0,
-          targetDate: updatedGoal.targetDate || new Date(),
-          priority: (updatedGoal.priority || 'Medium') as 'Low' | 'Medium' | 'High',
-          isComplete: false
-        };
-        
-        await updateGoal(plan.id, financialGoal);
-        
         setLocalGoals(prev => 
           prev.map(g => g.id === updatedGoal.id ? updatedGoal : g)
         );
@@ -199,7 +158,7 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
         onGoalUpdate?.(updatedGoal);
         toast.success("Goal updated successfully!");
       } else {
-        // Create new goal
+        // Create new goal - completely independent of plans
         const newGoalId = `goal-${Date.now()}`;
         const newGoal: Goal = {
           id: newGoalId,
@@ -228,20 +187,6 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
           annualInflationType: goalData.annualInflationType,
           annualInflationRate: goalData.annualInflationRate,
         };
-        
-        // Convert Goal to FinancialGoal format for the service
-        const financialGoal = {
-          id: newGoalId,
-          title: newGoal.title || '',
-          description: newGoal.description || '',
-          targetAmount: newGoal.targetAmount || 0,
-          currentAmount: newGoal.currentAmount || 0,
-          targetDate: newGoal.targetDate || new Date(),
-          priority: (newGoal.priority || 'Medium') as 'Low' | 'Medium' | 'High',
-          isComplete: false
-        };
-        
-        await updateGoal(plan.id, financialGoal);
         
         setLocalGoals(prev => [...prev, newGoal]);
         setNewGoalId(newGoalId);
@@ -285,8 +230,6 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
     event.stopPropagation();
     
     try {
-      // Note: The current service doesn't have a deleteGoal method, 
-      // so we'll just remove from local state for now
       setLocalGoals(prev => prev.filter(g => g.id !== goalId));
       onGoalDelete?.(goalId);
       toast.success("Goal deleted successfully!");

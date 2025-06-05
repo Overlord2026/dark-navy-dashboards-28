@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useUser } from "@/context/UserContext";
 import { toast } from "sonner";
@@ -100,6 +99,7 @@ export const useFinancialPlansState = () => {
     }
   }, [selectedPlan, plans]);
 
+  // Independent plan creation - no dependency on goals
   const handleCreatePlan = (planName: string, planData: any) => {
     const isDraft = planData?.isDraft || false;
     const projections = planData?.projections || {};
@@ -235,34 +235,46 @@ export const useFinancialPlansState = () => {
     );
   };
 
+  // Independent goal handling - works without active plan requirement
   const handleGoalUpdate = (updatedGoal: Goal) => {
-    const planIndex = plans.findIndex(p => p.id === selectedPlan);
-    if (planIndex === -1) return;
-    
-    const plan = plans[planIndex];
-    const existingGoals = plan.goals || [];
-    const goalIndex = existingGoals.findIndex(g => g.id === updatedGoal.id);
-    
-    let updatedGoals;
-    if (goalIndex >= 0) {
-      updatedGoals = [...existingGoals];
-      updatedGoals[goalIndex] = updatedGoal;
-    } else {
-      updatedGoals = [...existingGoals, updatedGoal];
-    }
-    
-    const updatedPlan = {
-      ...plan,
-      goals: updatedGoals
-    };
-    
-    setPlans(prevPlans => {
-      const newPlans = [...prevPlans];
-      newPlans[planIndex] = updatedPlan;
-      return newPlans;
+    // Update goals directly - independent of plan selection
+    setGoals(prevGoals => {
+      const existingGoalIndex = prevGoals.findIndex(g => g.id === updatedGoal.id);
+      if (existingGoalIndex >= 0) {
+        const newGoals = [...prevGoals];
+        newGoals[existingGoalIndex] = updatedGoal;
+        return newGoals;
+      } else {
+        return [...prevGoals, updatedGoal];
+      }
     });
     
-    setGoals(updatedGoals);
+    // Also update the plan if there's an active one (but don't require it)
+    const planIndex = plans.findIndex(p => p.id === selectedPlan);
+    if (planIndex >= 0) {
+      const plan = plans[planIndex];
+      const existingGoals = plan.goals || [];
+      const goalIndex = existingGoals.findIndex(g => g.id === updatedGoal.id);
+      
+      let updatedGoals;
+      if (goalIndex >= 0) {
+        updatedGoals = [...existingGoals];
+        updatedGoals[goalIndex] = updatedGoal;
+      } else {
+        updatedGoals = [...existingGoals, updatedGoal];
+      }
+      
+      const updatedPlan = {
+        ...plan,
+        goals: updatedGoals
+      };
+      
+      setPlans(prevPlans => {
+        const newPlans = [...prevPlans];
+        newPlans[planIndex] = updatedPlan;
+        return newPlans;
+      });
+    }
     
     toast.success("Goal updated successfully");
   };
