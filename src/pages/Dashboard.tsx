@@ -3,13 +3,10 @@ import React, { useState, useEffect } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { FinancialOverview } from "@/components/dashboard/FinancialOverview";
 import { NetWorthSummary } from "@/components/dashboard/NetWorthSummary";
-import { PropertySection } from "@/components/dashboard/PropertySection";
-import { DashboardCard } from "@/components/ui/DashboardCard";
 import { useUser } from "@/context/UserContext";
 import { useSubscription } from "@/context/SubscriptionContext";
 import { WelcomeTrialBanner } from "@/components/dashboard/WelcomeTrialBanner";
 import { usePagePerformance } from "@/hooks/usePagePerformance";
-import { Building } from "lucide-react";
 
 export default function Dashboard() {
   const { userProfile } = useUser();
@@ -46,16 +43,6 @@ export default function Dashboard() {
         
         <div>
           <NetWorthSummary />
-        </div>
-
-        <div>
-          <DashboardCard 
-            title="Properties Overview" 
-            icon={<Building className="h-5 w-5" />}
-            className="col-span-1"
-          >
-            <PropertySection />
-          </DashboardCard>
         </div>
       </div>
     </ThreeColumnLayout>
