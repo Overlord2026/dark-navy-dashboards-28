@@ -1,5 +1,7 @@
+
 import React, { useState, useEffect } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
 import { CourseList } from "./CourseList";
 import { coursesByCategory } from "@/data/education/coursesByCategory";
 import { educationalResources } from "@/data/education/educationalResources";
@@ -42,6 +44,11 @@ export const EducationalTabs: React.FC<EducationalTabsProps> = ({
   }, [activeSection, activeCategory, setSearchParams]);
 
   const handleTabChange = (value: string) => {
+    // Prevent switching to courses tab
+    if (value === 'courses') {
+      toast.info("Courses section is coming soon!");
+      return;
+    }
     setActiveSection(value);
   };
 
@@ -73,7 +80,17 @@ export const EducationalTabs: React.FC<EducationalTabsProps> = ({
           <TabsTrigger value="whitepapers">Whitepapers</TabsTrigger>
           <TabsTrigger value="resources">Resources</TabsTrigger>
           <TabsTrigger value="funnel">Funnel</TabsTrigger>
-          <TabsTrigger value="courses">Courses</TabsTrigger>
+          <TabsTrigger 
+            value="courses" 
+            className="relative cursor-not-allowed opacity-60 pointer-events-none"
+          >
+            <span className="flex items-center gap-2">
+              Courses
+              <Badge variant="warning" className="text-xs px-1.5 py-0.5">
+                Coming Soon
+              </Badge>
+            </span>
+          </TabsTrigger>
         </TabsList>
       </div>
       
