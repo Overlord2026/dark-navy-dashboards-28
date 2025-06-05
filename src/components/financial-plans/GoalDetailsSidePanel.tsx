@@ -244,15 +244,19 @@ export function GoalDetailsSidePanel({
   };
 
   const FormContent = () => (
-    <div className="space-y-6 max-h-[80vh] overflow-y-auto p-1">
+    <div className="space-y-8 max-h-[80vh] overflow-y-auto p-1">
       {/* Basic Information Section */}
-      <div className="space-y-4">
-        <div className="flex items-center gap-2 pb-2 border-b">
-          <Target className="h-5 w-5 text-blue-600" />
-          <h3 className="text-lg font-semibold text-gray-900">Goal Information</h3>
+      <div className="space-y-6">
+        <div className="flex items-center gap-3 pb-3 border-b border-purple-200">
+          <div className="p-2 bg-gradient-to-r from-purple-500 to-indigo-600 rounded-xl shadow-lg">
+            <Target className="h-6 w-6 text-white" />
+          </div>
+          <h3 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-indigo-700 bg-clip-text text-transparent">
+            Goal Information
+          </h3>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
             <Label htmlFor="name" className="text-sm font-medium text-gray-700">
               Goal Name
@@ -262,7 +266,7 @@ export function GoalDetailsSidePanel({
               value={name} 
               onChange={handleNameChange} 
               placeholder="e.g. Retirement, New Home, Vacation"
-              className="h-10 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="h-10 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
             />
           </div>
           
@@ -275,7 +279,7 @@ export function GoalDetailsSidePanel({
               value={owner} 
               onChange={handleOwnerChange} 
               placeholder="e.g. Antonio, Maria"
-              className="h-10 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="h-10 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
             />
           </div>
         </div>
@@ -283,7 +287,7 @@ export function GoalDetailsSidePanel({
         <div className="space-y-2">
           <Label htmlFor="type" className="text-sm font-medium text-gray-700">Goal Type</Label>
           <Select value={type} onValueChange={handleTypeChange}>
-            <SelectTrigger className="h-10 focus:ring-2 focus:ring-blue-500">
+            <SelectTrigger className="h-10 focus:ring-2 focus:ring-purple-500">
               <SelectValue placeholder="Select a goal type" />
             </SelectTrigger>
             <SelectContent className="bg-white border shadow-lg">
@@ -302,13 +306,17 @@ export function GoalDetailsSidePanel({
 
       {/* Financial Details Section */}
       {type && type !== "Retirement" && (
-        <div className="space-y-4">
-          <div className="flex items-center gap-2 pb-2 border-b">
-            <DollarSign className="h-5 w-5 text-green-600" />
-            <h3 className="text-lg font-semibold text-gray-900">Financial Details</h3>
+        <div className="space-y-6">
+          <div className="flex items-center gap-3 pb-3 border-b border-emerald-200">
+            <div className="p-2 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-xl shadow-lg">
+              <DollarSign className="h-6 w-6 text-white" />
+            </div>
+            <h3 className="text-2xl font-bold bg-gradient-to-r from-emerald-600 to-teal-700 bg-clip-text text-transparent">
+              Financial Details
+            </h3>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
               <Label className="text-sm font-medium text-gray-700">
                 Target Date
@@ -355,7 +363,7 @@ export function GoalDetailsSidePanel({
                 placeholder="e.g. 100,000"
                 value={targetAmount.toString()}
                 onChange={handleTargetAmountChange}
-                className="h-10 focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                className="h-10 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
               />
             </div>
           </div>
@@ -364,9 +372,14 @@ export function GoalDetailsSidePanel({
 
       {/* Type-specific Details */}
       {(type === "Asset Purchase" || type === "Home Purchase" || type === "Vehicle") && (
-        <div className="space-y-4">
-          <div className="flex items-center gap-2 pb-2 border-b">
-            <h3 className="text-lg font-semibold text-gray-900">Purchase Details</h3>
+        <div className="space-y-6">
+          <div className="flex items-center gap-3 pb-3 border-b border-blue-200">
+            <div className="p-2 bg-gradient-to-r from-blue-500 to-cyan-600 rounded-xl shadow-lg">
+              <DollarSign className="h-6 w-6 text-white" />
+            </div>
+            <h3 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-cyan-700 bg-clip-text text-transparent">
+              Purchase Details
+            </h3>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -437,9 +450,14 @@ export function GoalDetailsSidePanel({
 
       {/* Education Details */}
       {type === "Education" && (
-        <div className="space-y-4">
-          <div className="flex items-center gap-2 pb-2 border-b">
-            <h3 className="text-lg font-semibold text-gray-900">🎓 Education Details</h3>
+        <div className="space-y-6">
+          <div className="flex items-center gap-3 pb-3 border-b border-amber-200">
+            <div className="p-2 bg-gradient-to-r from-amber-500 to-orange-600 rounded-xl shadow-lg">
+              <Target className="h-6 w-6 text-white" />
+            </div>
+            <h3 className="text-2xl font-bold bg-gradient-to-r from-amber-600 to-orange-700 bg-clip-text text-transparent">
+              🎓 Education Details
+            </h3>
           </div>
           
           <div className="space-y-4">
@@ -498,9 +516,14 @@ export function GoalDetailsSidePanel({
 
       {/* Vacation Details */}
       {type === "Vacation" && (
-        <div className="space-y-4">
-          <div className="flex items-center gap-2 pb-2 border-b">
-            <h3 className="text-lg font-semibold text-gray-900">✈️ Vacation Details</h3>
+        <div className="space-y-6">
+          <div className="flex items-center gap-3 pb-3 border-b border-sky-200">
+            <div className="p-2 bg-gradient-to-r from-sky-500 to-blue-600 rounded-xl shadow-lg">
+              <Target className="h-6 w-6 text-white" />
+            </div>
+            <h3 className="text-2xl font-bold bg-gradient-to-r from-sky-600 to-blue-700 bg-clip-text text-transparent">
+              ✈️ Vacation Details
+            </h3>
           </div>
           
           <div className="space-y-4">
@@ -533,9 +556,14 @@ export function GoalDetailsSidePanel({
 
       {/* Cash Reserve Details */}
       {type === "Cash Reserve" && (
-        <div className="space-y-4">
-          <div className="flex items-center gap-2 pb-2 border-b">
-            <h3 className="text-lg font-semibold text-gray-900">💰 Cash Reserve Details</h3>
+        <div className="space-y-6">
+          <div className="flex items-center gap-3 pb-3 border-b border-green-200">
+            <div className="p-2 bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl shadow-lg">
+              <DollarSign className="h-6 w-6 text-white" />
+            </div>
+            <h3 className="text-2xl font-bold bg-gradient-to-r from-green-600 to-emerald-700 bg-clip-text text-transparent">
+              💰 Cash Reserve Details
+            </h3>
           </div>
           
           <div className="space-y-4">
@@ -586,9 +614,14 @@ export function GoalDetailsSidePanel({
 
       {/* Retirement Details */}
       {type === "Retirement" && (
-        <div className="space-y-4">
-          <div className="flex items-center gap-2 pb-2 border-b">
-            <h3 className="text-lg font-semibold text-gray-900">🏖️ Retirement Planning</h3>
+        <div className="space-y-6">
+          <div className="flex items-center gap-3 pb-3 border-b border-rose-200">
+            <div className="p-2 bg-gradient-to-r from-rose-500 to-pink-600 rounded-xl shadow-lg">
+              <Target className="h-6 w-6 text-white" />
+            </div>
+            <h3 className="text-2xl font-bold bg-gradient-to-r from-rose-600 to-pink-700 bg-clip-text text-transparent">
+              🏖️ Retirement Planning
+            </h3>
           </div>
           
           <div className="space-y-4">
@@ -654,9 +687,14 @@ export function GoalDetailsSidePanel({
       )}
 
       {/* Additional Information Section */}
-      <div className="space-y-4">
-        <div className="flex items-center gap-2 pb-2 border-b">
-          <h3 className="text-lg font-semibold text-gray-900">📝 Additional Information</h3>
+      <div className="space-y-6">
+        <div className="flex items-center gap-3 pb-3 border-b border-slate-200">
+          <div className="p-2 bg-gradient-to-r from-slate-500 to-gray-600 rounded-xl shadow-lg">
+            <Target className="h-6 w-6 text-white" />
+          </div>
+          <h3 className="text-2xl font-bold bg-gradient-to-r from-slate-600 to-gray-700 bg-clip-text text-transparent">
+            📝 Additional Information
+          </h3>
         </div>
         
         <div className="space-y-4">
@@ -716,7 +754,7 @@ export function GoalDetailsSidePanel({
         <Button 
           type="button" 
           onClick={handleSave}
-          className="px-6 py-2 h-10 bg-blue-600 hover:bg-blue-700 text-white"
+          className="px-6 py-2 h-10 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white shadow-lg"
         >
           Save Goal
         </Button>
