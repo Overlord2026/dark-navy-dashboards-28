@@ -93,12 +93,19 @@ export default function TaxPlanning() {
                   </ul>
                 </div>
                 <div>
-                  <div className="border rounded-lg p-4 mb-4">
-                    <h4 className="font-medium text-center mb-4">Roth Conversion Analysis Tool</h4>
-                    <Button variant="outline" className="w-full flex items-center justify-center">
-                      <Calculator className="mr-2 h-4 w-4" />
-                      Open Roth Conversion Calculator
-                    </Button>
+                  <div className="relative">
+                    <div className="absolute top-2 right-2 z-10">
+                      <Badge variant="warning">Coming Soon</Badge>
+                    </div>
+                    <div className="opacity-60 pointer-events-none">
+                      <div className="border rounded-lg p-4 mb-4">
+                        <h4 className="font-medium text-center mb-4">Roth Conversion Analysis Tool</h4>
+                        <Button variant="outline" className="w-full flex items-center justify-center">
+                          <Calculator className="mr-2 h-4 w-4" />
+                          Open Roth Conversion Calculator
+                        </Button>
+                      </div>
+                    </div>
                   </div>
                   <div className="space-y-3">
                     <InterestedButton assetName="Roth IRA Conversion" />
