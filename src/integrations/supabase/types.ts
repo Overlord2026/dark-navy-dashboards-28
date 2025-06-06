@@ -1378,6 +1378,77 @@ export type Database = {
           },
         ]
       }
+      social_security_estimates: {
+        Row: {
+          age_62_estimate: number
+          age_67_estimate: number
+          age_70_estimate: number
+          created_at: string
+          id: string
+          member_id: string
+          updated_at: string
+        }
+        Insert: {
+          age_62_estimate?: number
+          age_67_estimate?: number
+          age_70_estimate?: number
+          created_at?: string
+          id?: string
+          member_id: string
+          updated_at?: string
+        }
+        Update: {
+          age_62_estimate?: number
+          age_67_estimate?: number
+          age_70_estimate?: number
+          created_at?: string
+          id?: string
+          member_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "social_security_estimates_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "social_security_members"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      social_security_members: {
+        Row: {
+          account_linked: boolean
+          created_at: string
+          id: string
+          name: string
+          preferred_retirement_age: number
+          relationship: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          account_linked?: boolean
+          created_at?: string
+          id?: string
+          name: string
+          preferred_retirement_age?: number
+          relationship: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          account_linked?: boolean
+          created_at?: string
+          id?: string
+          name?: string
+          preferred_retirement_age?: number
+          relationship?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       tax_planning_consultations: {
         Row: {
           advisor_notes: string | null

@@ -1,113 +1,70 @@
+
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ExternalLinkIcon, PlusCircleIcon, TrashIcon, UserIcon, CalendarIcon, BellRingIcon } from "lucide-react";
+import { ExternalLinkIcon, PlusCircleIcon, TrashIcon, UserIcon, CalendarIcon, BellRingIcon, Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import { useUser } from "@/context/UserContext";
-
-type EstimatesByAge = {
-  age62: number;
-  age67: number;
-  age70: number;
-};
-
-type FamilyMemberAccount = {
-  id: string;
-  name: string;
-  relationship: string;
-  estimates: EstimatesByAge;
-  preferredRetirementAge: number;
-  accountLinked: boolean;
-};
+import { useSocialSecurityMembers } from "@/hooks/useSocialSecurityMembers";
 
 export const SocialSecurityTracker = () => {
-  const { userProfile } = useUser();
-  const [familyMembers, setFamilyMembers] = useState<FamilyMemberAccount[]>([
-    {
-      id: "1",
-      name: userProfile?.firstName && userProfile?.lastName 
-        ? `${userProfile.firstName} ${userProfile.lastName}` 
-        : "Primary User",
-      relationship: "Self",
-      estimates: {
-        age62: 2100,
-        age67: 2800,
-        age70: 3500
-      },
-      preferredRetirementAge: 67,
-      accountLinked: true
-    }
-  ]);
+  const { members, isLoading, addMember, deleteMember, linkAccount } = useSocialSecurityMembers();
   
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
-  const [newMember, setNewMember] = useState<Omit<FamilyMemberAccount, "id" | "accountLinked" | "estimates">>({
+  const [newMember, setNewMember] = useState({
     name: "",
     relationship: "",
-    preferredRetirementAge: 67
+    preferred_retirement_age: 67
   });
 
-  const handleAddMember = () => {
+  const handleAddMember = async () => {
     if (!newMember.name || !newMember.relationship) {
       toast.error("Please fill out all required fields");
       return;
     }
     
-    const id = Date.now().toString();
-    setFamilyMembers([...familyMembers, {
-      ...newMember,
-      id,
-      estimates: {
-        age62: 0,
-        age67: 0,
-        age70: 0
-      },
-      accountLinked: false
-    }]);
-    
-    setNewMember({
-      name: "",
-      relationship: "",
-      preferredRetirementAge: 67
-    });
-    
-    setIsAddDialogOpen(false);
-    toast.success("Family member added successfully");
+    try {
+      await addMember({
+        name: newMember.name,
+        relationship: newMember.relationship,
+        preferred_retirement_age: newMember.preferred_retirement_age,
+        account_linked: false
+      });
+      
+      setNewMember({
+        name: "",
+        relationship: "",
+        preferred_retirement_age: 67
+      });
+      
+      setIsAddDialogOpen(false);
+    } catch (error) {
+      // Error is already handled in the hook
+    }
   };
 
-  const handleLinkAccount = (id: string) => {
+  const handleLinkAccount = async (id: string) => {
     // In a real implementation, this would open SSA.gov authentication
     window.open("https://www.ssa.gov/myaccount/", "_blank");
     
-    // For demo purposes, we'll just update the state with estimated values
-    setTimeout(() => {
-      setFamilyMembers(members => 
-        members.map(member => {
-          if (member.id === id) {
-            // Generate realistic estimates based on age
-            const baseEstimate = 2000 + Math.floor(Math.random() * 1000);
-            return { 
-              ...member, 
-              accountLinked: true,
-              estimates: {
-                age62: Math.floor(baseEstimate * 0.75),
-                age67: baseEstimate,
-                age70: Math.floor(baseEstimate * 1.25)
-              }
-            };
-          }
-          return member;
-        })
-      );
-      toast.success("Account linked successfully - benefit estimates updated");
+    // Simulate the linking process
+    setTimeout(async () => {
+      try {
+        await linkAccount(id);
+      } catch (error) {
+        // Error is already handled in the hook
+      }
     }, 1000);
   };
 
-  const handleRemoveMember = (id: string) => {
-    setFamilyMembers(familyMembers.filter(member => member.id !== id));
-    toast.success("Family member removed");
+  const handleRemoveMember = async (id: string) => {
+    try {
+      await deleteMember(id);
+    } catch (error) {
+      // Error is already handled in the hook
+    }
   };
 
   const calculateAnnualBenefit = (monthlyEstimate: number) => {
@@ -118,6 +75,14 @@ export const SocialSecurityTracker = () => {
     toast.success("Your request for assistance has been sent to your advisor");
     // In a real app, this would send a notification to the advisor
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -169,8 +134,8 @@ export const SocialSecurityTracker = () => {
                   <Input 
                     id="retirement-age" 
                     type="number" 
-                    value={newMember.preferredRetirementAge}
-                    onChange={(e) => setNewMember({...newMember, preferredRetirementAge: Number(e.target.value)})}
+                    value={newMember.preferred_retirement_age}
+                    onChange={(e) => setNewMember({...newMember, preferred_retirement_age: Number(e.target.value)})}
                   />
                   <p className="text-xs text-muted-foreground">After linking to SSA.gov, we'll show estimates for various retirement ages</p>
                 </div>
@@ -185,7 +150,7 @@ export const SocialSecurityTracker = () => {
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {familyMembers.map((member) => (
+        {members.map((member) => (
           <Card key={member.id} className="border border-primary">
             <CardHeader className="pb-2">
               <div className="flex justify-between items-start">
@@ -196,7 +161,7 @@ export const SocialSecurityTracker = () => {
                   </CardTitle>
                   <CardDescription>{member.relationship}</CardDescription>
                 </div>
-                {member.id !== "1" && (
+                {member.relationship !== "Self" && (
                   <Button 
                     variant="ghost" 
                     size="icon" 
@@ -209,7 +174,7 @@ export const SocialSecurityTracker = () => {
               </div>
             </CardHeader>
             <CardContent>
-              {member.accountLinked ? (
+              {member.account_linked && member.estimates ? (
                 <div className="space-y-3">
                   <div className="bg-muted p-3 rounded-md space-y-2">
                     <h4 className="font-medium text-sm flex items-center">
@@ -219,32 +184,32 @@ export const SocialSecurityTracker = () => {
                     <div className="grid grid-cols-3 gap-2 text-center">
                       <div className="bg-card p-2 rounded border">
                         <div className="text-xs text-muted-foreground">Age 62</div>
-                        <div className="font-medium">${member.estimates.age62}</div>
+                        <div className="font-medium">${member.estimates.age_62_estimate}</div>
                         <div className="text-xs text-muted-foreground">per month</div>
                       </div>
                       <div className="bg-card p-2 rounded border border-primary">
                         <div className="text-xs text-muted-foreground">Age 67</div>
-                        <div className="font-medium">${member.estimates.age67}</div>
+                        <div className="font-medium">${member.estimates.age_67_estimate}</div>
                         <div className="text-xs text-muted-foreground">per month</div>
                       </div>
                       <div className="bg-card p-2 rounded border">
                         <div className="text-xs text-muted-foreground">Age 70</div>
-                        <div className="font-medium">${member.estimates.age70}</div>
+                        <div className="font-medium">${member.estimates.age_70_estimate}</div>
                         <div className="text-xs text-muted-foreground">per month</div>
                       </div>
                     </div>
                   </div>
                   <div className="flex justify-between pt-1">
                     <span className="text-sm text-muted-foreground">Preferred Retirement Age:</span>
-                    <span className="text-sm font-medium">{member.preferredRetirementAge}</span>
+                    <span className="text-sm font-medium">{member.preferred_retirement_age}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-sm text-muted-foreground">Annual at preferred age:</span>
                     <span className="text-sm font-medium">
                       ${calculateAnnualBenefit(
-                        member.preferredRetirementAge <= 62 ? member.estimates.age62 : 
-                        member.preferredRetirementAge >= 70 ? member.estimates.age70 : 
-                        member.estimates.age67
+                        member.preferred_retirement_age <= 62 ? member.estimates.age_62_estimate : 
+                        member.preferred_retirement_age >= 70 ? member.estimates.age_70_estimate : 
+                        member.estimates.age_67_estimate
                       ).toLocaleString()}
                     </span>
                   </div>
@@ -258,19 +223,19 @@ export const SocialSecurityTracker = () => {
                   </div>
                   <div className="flex justify-between pt-1">
                     <span className="text-sm text-muted-foreground">Preferred Retirement Age:</span>
-                    <span className="text-sm font-medium">{member.preferredRetirementAge}</span>
+                    <span className="text-sm font-medium">{member.preferred_retirement_age}</span>
                   </div>
                 </div>
               )}
               <div className="flex items-center justify-between mt-3">
                 <span className="text-sm text-muted-foreground">Account Status:</span>
-                <span className={`text-sm font-medium ${member.accountLinked ? 'text-green-500' : 'text-yellow-500'}`}>
-                  {member.accountLinked ? 'Linked' : 'Not Linked'}
+                <span className={`text-sm font-medium ${member.account_linked ? 'text-green-500' : 'text-yellow-500'}`}>
+                  {member.account_linked ? 'Linked' : 'Not Linked'}
                 </span>
               </div>
             </CardContent>
             <CardFooter>
-              {member.accountLinked ? (
+              {member.account_linked ? (
                 <Button variant="outline" className="w-full" onClick={() => window.open("https://www.ssa.gov/myaccount/", "_blank")}>
                   View on SSA.gov
                   <ExternalLinkIcon className="h-4 w-4 ml-2" />
