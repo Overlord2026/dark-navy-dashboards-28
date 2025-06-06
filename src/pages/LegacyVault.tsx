@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { CategoryList } from "@/components/documents/CategoryList";
@@ -17,6 +18,8 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { FamilyLegacyBox } from "@/components/estate-planning/FamilyLegacyBox";
 import { HealthcareFolder } from "@/components/healthcare/HealthcareFolder";
 import { ProfessionalsProvider } from "@/context/ProfessionalsContext";
+import { RequestAssistanceButton } from "@/components/ui/request-assistance-button";
+import { ConsultantRequestButton } from "@/components/ui/consultant-request-button";
 import { 
   Card, 
   CardContent, 
@@ -186,14 +189,28 @@ export default function LegacyVault() {
               <p className="text-muted-foreground">Store and organize your important documents securely</p>
             </div>
 
-            <Button
-              onClick={() => window.open('https://trustandwill.com', '_blank')}
-              variant="outline"
-              className="flex items-center mt-4 md:mt-0 bg-white border-primary text-primary hover:bg-primary hover:text-white transition-colors"
-            >
-              <ExternalLink className="mr-2 h-4 w-4" />
-              DIY with Trust & Will
-            </Button>
+            <div className="flex flex-col sm:flex-row gap-2 mt-4 md:mt-0">
+              <RequestAssistanceButton 
+                itemName="Document Management" 
+                itemType="Document Service"
+                pageContext="Legacy Vault"
+                className="text-sm"
+              />
+              <ConsultantRequestButton 
+                itemName="Estate Document Planning" 
+                itemType="Document Service"
+                pageContext="Legacy Vault"
+                className="text-sm"
+              />
+              <Button
+                onClick={() => window.open('https://trustandwill.com', '_blank')}
+                variant="outline"
+                className="flex items-center bg-white border-primary text-primary hover:bg-primary hover:text-white transition-colors"
+              >
+                <ExternalLink className="mr-2 h-4 w-4" />
+                DIY with Trust & Will
+              </Button>
+            </div>
           </div>
           
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
