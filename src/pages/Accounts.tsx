@@ -59,16 +59,6 @@ const Accounts = () => {
             <h1 className="text-3xl font-bold tracking-tight">Accounts</h1>
             <p className="text-muted-foreground">Manage all your financial accounts in one place</p>
           </div>
-          <div className="flex flex-col sm:flex-row gap-3">
-            <Button onClick={handleManageFunding} variant="outline" className="w-full sm:w-auto">
-              <Wallet className="mr-2 h-4 w-4" />
-              Manage Funding
-            </Button>
-            <Button onClick={handleAddAccount} className="w-full sm:w-auto">
-              <PlusCircle className="mr-2 h-4 w-4" />
-              Add Account
-            </Button>
-          </div>
         </div>
         
         <div className="space-y-6">
