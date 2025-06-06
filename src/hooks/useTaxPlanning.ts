@@ -41,18 +41,14 @@ export const useTaxPlanning = () => {
     notes: string;
   }) => {
     try {
+      // Only send interest email, no toast here as it's handled in useInterestNotification
       const success = await sendInterestEmail(
         interestData.asset_name,
-        'Tax Strategy',
+        'Investment',
         'Tax Planning'
       );
 
-      if (success) {
-        return true;
-      } else {
-        toast.error('Failed to register interest. Please try again.');
-        return false;
-      }
+      return success;
     } catch (error) {
       console.error('Error registering interest:', error);
       toast.error('Failed to register interest. Please try again.');

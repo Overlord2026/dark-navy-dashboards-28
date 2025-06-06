@@ -23,7 +23,7 @@ export function InterestedButton({
   const handleInterest = async () => {
     setIsSubmitting(true);
     try {
-      // Only call createInterest which handles both email and database operations
+      // Only call createInterest which handles the email sending
       await createInterest({
         interest_type: 'investment',
         asset_name: assetName,
