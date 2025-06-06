@@ -4,7 +4,8 @@ import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { PlusCircle, Shield, TrendingUp, CreditCard, Building, Banknote, DollarSign } from "lucide-react";
+import { PlusCircle, Shield, TrendingUp, CreditCard, Building, Banknote } from "lucide-react";
+import { RetirementAccountTracker } from "@/components/social-security/RetirementAccountTracker";
 
 const Accounts = () => {
   const handleCompleteSetup = () => {
@@ -56,13 +57,10 @@ const Accounts = () => {
                 </div>
                 <span className="text-lg font-medium">$0.00</span>
               </CardTitle>
-              <CardDescription>No retirement plans linked.</CardDescription>
+              <CardDescription>Track and manage your retirement accounts</CardDescription>
             </CardHeader>
             <CardContent>
-              <Button onClick={() => handleAddAccount('Retirement Plan')} variant="outline" className="w-full sm:w-auto">
-                <PlusCircle className="mr-2 h-4 w-4" />
-                Add Retirement Plan
-              </Button>
+              <RetirementAccountTracker />
             </CardContent>
           </Card>
 
