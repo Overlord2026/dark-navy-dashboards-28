@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { CategoryList } from "@/components/documents/CategoryList";
@@ -193,18 +192,6 @@ export default function ClientLegacyVault() {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-2">
-              <RequestAssistanceButton 
-                itemName="Document Management" 
-                itemType="Document Service"
-                pageContext="Legacy Vault"
-                className="text-sm"
-              />
-              <ConsultantRequestButton 
-                itemName="Estate Document Planning" 
-                itemType="Document Service"
-                pageContext="Legacy Vault"
-                className="text-sm"
-              />
               <Button
                 onClick={() => window.open('https://trustandwill.com', '_blank')}
                 className="flex items-center gap-2 bg-blue-600 text-white border-blue-600 hover:bg-blue-700 hover:border-blue-700 transition-colors shrink-0 font-medium shadow-lg"
