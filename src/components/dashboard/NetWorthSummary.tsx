@@ -35,6 +35,7 @@ export const NetWorthSummary = () => {
       <div className="space-y-8">
         {/* Net Worth Metrics Section */}
         <div>
+          <h3 className="text-lg font-semibold text-foreground mb-4">Net Worth Summary</h3>
           <DashboardMetricsCards
             totalAssets={metrics.totalAssets}
             totalLiabilities={metrics.totalLiabilities}
@@ -52,6 +53,7 @@ export const NetWorthSummary = () => {
         {/* Asset Allocation Chart */}
         <div className="grid grid-cols-1 gap-6">
           <div>
+            <h3 className="text-lg font-semibold text-foreground mb-4">Asset Allocation</h3>
             <AssetAllocationChart
               realEstate={assetBreakdown.realEstate}
               vehicles={assetBreakdown.vehicles}
