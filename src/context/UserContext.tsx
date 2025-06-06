@@ -26,7 +26,7 @@ interface UserContextType {
   userProfile: UserProfile | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  login: (email: string, password: string) => Promise<boolean>;
+  login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
   logout: () => void;
   updateUserProfile: (profile: Partial<UserProfile>) => void;
 }
@@ -36,7 +36,7 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const { user, session, isAuthenticated, login: authLogin, logout: authLogout } = useAuth();
+  const { user, session, isAuthenticated, login: authLogin, logout: authLogout, userProfile: authUserProfile } = useAuth();
 
   // Helper function to safely parse date from database
   const parseDateSafely = (dateString: string): Date => {
@@ -58,8 +58,12 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   useEffect(() => {
-    const loadUserProfile = async () => {
-      if (user && session) {
+    // Use the profile from AuthContext when available
+    if (authUserProfile) {
+      setUserProfile(authUserProfile);
+      setIsLoading(false);
+    } else if (user && session) {
+      const loadUserProfile = async () => {
         try {
           console.log("Loading user profile for user:", user.id);
           
@@ -101,50 +105,22 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
               role: profile.role || 'client',
               permissions: profile.permissions || []
             });
-          } else {
-            // Create profile if it doesn't exist
-            console.log("Creating new profile for user:", user.id);
-            
-            const newProfile = {
-              id: user.id,
-              email: user.email,
-              first_name: user.user_metadata?.first_name || '',
-              last_name: user.user_metadata?.last_name || '',
-              display_name: user.user_metadata?.display_name || `${user.user_metadata?.first_name || ''} ${user.user_metadata?.last_name || ''}`.trim(),
-              role: 'client'
-            };
-            
-            const { error: insertError } = await supabase
-              .from('profiles')
-              .insert([newProfile]);
-              
-            if (!insertError) {
-              setUserProfile({
-                id: user.id,
-                name: newProfile.display_name,
-                displayName: newProfile.display_name,
-                email: newProfile.email,
-                firstName: newProfile.first_name,
-                lastName: newProfile.last_name,
-                role: 'client',
-                permissions: []
-              });
-            }
           }
         } catch (error) {
           console.error('Error in loadUserProfile:', error);
           setUserProfile(null);
         }
-      } else {
-        setUserProfile(null);
-      }
+        setIsLoading(false);
+      };
+
+      loadUserProfile();
+    } else {
+      setUserProfile(null);
       setIsLoading(false);
-    };
+    }
+  }, [user, session, authUserProfile]);
 
-    loadUserProfile();
-  }, [user, session]);
-
-  const login = async (email: string, password: string): Promise<boolean> => {
+  const login = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
     return await authLogin(email, password);
   };
 
