@@ -1,5 +1,7 @@
+
 import { useState, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
+import { useFinancialPlans } from "@/context/FinancialPlanContext";
 import { toast } from "sonner";
 
 export interface Goal {
@@ -21,118 +23,116 @@ export interface Plan {
   createdAt: Date;
   goals?: Goal[];
   draftData?: any;
+  targetRetirementAge?: number;
 }
 
 export const useFinancialPlansState = () => {
   const { userProfile } = useAuth();
+  const { 
+    plans: contextPlans, 
+    activePlan: contextActivePlan, 
+    updatePlan, 
+    createPlan: contextCreatePlan,
+    deletePlan: contextDeletePlan,
+    duplicatePlan: contextDuplicatePlan,
+    toggleFavorite: contextToggleFavorite,
+    updateGoal: contextUpdateGoal,
+    saveDraft: contextSaveDraft,
+    setActivePlan: contextSetActivePlan
+  } = useFinancialPlans();
+
   const [goals, setGoals] = useState<Goal[]>([]);
-  const name = userProfile?.firstName || "Pedro";
-  const fullName = userProfile?.firstName && userProfile?.lastName 
-    ? `${userProfile.firstName} ${userProfile.lastName}` 
-    : "Pedro Gomez";
-  
-  const [plans, setPlans] = useState<Plan[]>([
-    { 
-      id: "1", 
-      name: fullName, 
-      isFavorite: true, 
-      isActive: true, 
-      successRate: 78, 
-      status: 'Active',
-      createdAt: new Date(2023, 4, 15),
-      goals: [
-        { 
-          id: "goal-1", 
-          title: "Retirement", 
-          targetDate: new Date(2045, 0, 1), 
-          targetAmount: 1500000, 
-          currentAmount: 350000,
-          priority: "High" 
-        },
-        { 
-          id: "goal-2", 
-          title: "College Fund", 
-          targetDate: new Date(2030, 0, 1), 
-          targetAmount: 120000, 
-          currentAmount: 25000,
-          priority: "Medium" 
-        }
-      ]
-    },
-    { 
-      id: "2", 
-      name: "Draft Plan 1", 
-      isFavorite: false, 
-      successRate: 45, 
-      status: 'Draft',
-      createdAt: new Date(2023, 5, 22),
-      draftData: {
-        step: 2,
-        name: "Draft Plan 1",
-        goals: [{ name: "Retirement", priority: "High" }]
-      }
-    },
-    { 
-      id: "3", 
-      name: "Draft Plan 2", 
-      isFavorite: false, 
-      successRate: 62,
-      status: 'Draft',
-      createdAt: new Date(2023, 6, 10),
-      draftData: {
-        step: 3,
-        name: "Draft Plan 2",
-        goals: [{ name: "Buy a house", priority: "Medium" }],
-        income: { monthly: 5000 }
-      }
-    },
-  ]);
-  
-  const [selectedPlan, setSelectedPlan] = useState<string>(plans[0].id);
+  const [selectedPlan, setSelectedPlan] = useState<string>("");
   const [currentDraftData, setCurrentDraftData] = useState<any>(null);
 
-  useEffect(() => {
-    const plan = plans.find(p => p.id === selectedPlan);
-    if (plan) {
-      const planGoals = plan.goals || [];
-      setGoals(planGoals);
-    }
-  }, [selectedPlan, plans]);
+  // Convert context plans to local format
+  const plans: Plan[] = contextPlans.map(plan => ({
+    id: plan.id,
+    name: plan.name,
+    isFavorite: plan.isFavorite || false,
+    isActive: plan.isActive || false,
+    successRate: plan.successRate || 0,
+    status: plan.status === 'Active' ? 'Active' as const : 'Draft' as const,
+    createdAt: plan.createdAt,
+    goals: plan.goals?.map(goal => ({
+      id: goal.id,
+      title: goal.title,
+      targetDate: goal.targetDate,
+      targetAmount: goal.targetAmount,
+      currentAmount: goal.currentAmount,
+      priority: goal.priority as "High" | "Medium" | "Low"
+    })) || [],
+    draftData: plan.draftData,
+    targetRetirementAge: plan.draftData?.targetRetirementAge || 67
+  }));
 
-  const handleCreatePlan = (planName: string, planData: any) => {
-    const isDraft = planData?.isDraft || false;
-    const projections = planData?.projections || {};
-    const planGoals = planData?.goals || [];
-    
-    const calculatedSuccessRate = planData?.successRate !== undefined 
-      ? planData.successRate 
-      : (isDraft ? 0 : Math.floor(Math.random() * 60) + 40);
-    
-    const newPlan = {
-      id: `plan-${Date.now()}`,
-      name: planName,
-      isFavorite: false,
-      isActive: !isDraft,
-      successRate: calculatedSuccessRate,
-      status: isDraft ? 'Draft' as const : 'Active' as const,
-      createdAt: new Date(),
-      goals: planGoals,
-      projections: projections,
-    };
-    
-    setPlans(prevPlans => {
-      if (!isDraft) {
-        const updatedPlans = prevPlans.map(plan => ({ ...plan, isActive: false }));
-        return [...updatedPlans, newPlan];
-      } else {
-        return [...prevPlans, newPlan];
-      }
-    });
-    
-    if (!isDraft) {
-      setSelectedPlan(newPlan.id);
-      setGoals(planGoals);
-      toast.success("Your new plan is created!");
+  const activePlan = contextActivePlan ? {
+    id: contextActivePlan.id,
+    name: contextActivePlan.name,
+    isFavorite: contextActivePlan.isFavorite || false,
+    isActive: contextActivePlan.isActive || false,
+    successRate: contextActivePlan.successRate || 0,
+    status: contextActivePlan.status === 'Active' ? 'Active' as const : 'Draft' as const,
+    createdAt: contextActivePlan.createdAt,
+    goals: contextActivePlan.goals?.map(goal => ({
+      id: goal.id,
+      title: goal.title,
+      targetDate: goal.targetDate,
+      targetAmount: goal.targetAmount,
+      currentAmount: goal.currentAmount,
+      priority: goal.priority as "High" | "Medium" | "Low"
+    })) || [],
+    draftData: contextActivePlan.draftData,
+    targetRetirementAge: contextActivePlan.draftData?.targetRetirementAge || 67
+  } : null;
+
+  useEffect(() => {
+    if (contextActivePlan) {
+      setSelectedPlan(contextActivePlan.id);
+      const planGoals = contextActivePlan.goals || [];
+      setGoals(planGoals.map(goal => ({
+        id: goal.id,
+        title: goal.title,
+        targetDate: goal.targetDate,
+        targetAmount: goal.targetAmount,
+        currentAmount: goal.currentAmount,
+        priority: goal.priority as "High" | "Medium" | "Low"
+      })));
+    } else if (plans.length > 0) {
+      setSelectedPlan(plans[0].id);
+      setGoals(plans[0].goals || []);
+    }
+  }, [contextActivePlan, contextPlans]);
+
+  const handleUpdateTargetRetirementAge = async (age: number) => {
+    if (!activePlan) return;
+
+    try {
+      const updatedDraftData = {
+        ...activePlan.draftData,
+        targetRetirementAge: age
+      };
+
+      await updatePlan(activePlan.id, {
+        draftData: updatedDraftData
+      });
+
+      toast.success("Target retirement age updated successfully");
+    } catch (error) {
+      toast.error("Failed to update target retirement age");
+      console.error("Error updating target retirement age:", error);
+    }
+  };
+
+  const handleCreatePlan = async (planName: string, planData: any) => {
+    try {
+      await contextCreatePlan({
+        name: planName,
+        ...planData
+      });
+    } catch (error) {
+      toast.error("Failed to create plan");
+      console.error("Error creating plan:", error);
     }
   };
 
@@ -145,42 +145,24 @@ export const useFinancialPlansState = () => {
     }
     
     setSelectedPlan(planId);
-    setPlans(prevPlans => 
-      prevPlans.map(plan => ({
-        ...plan,
-        isActive: plan.id === planId
-      }))
-    );
+    contextSetActivePlan(planId);
     
     return { openCreateDialog: false };
   };
 
-  const handleSaveDraft = (draftData: any) => {
-    if (currentDraftData && draftData.draftId) {
-      setPlans(prevPlans => 
-        prevPlans.map(plan => 
-          plan.id === draftData.draftId 
-            ? { 
-                ...plan, 
-                draftData: { ...draftData, step: draftData.currentStep || 1 } 
-              } 
-            : plan
-        )
-      );
-      toast.info("Draft plan updated");
-    } else {
-      const newDraft: Plan = {
-        id: `draft-${Date.now()}`,
-        name: draftData.name || "Untitled Draft",
-        isFavorite: false,
-        successRate: 0,
-        status: 'Draft',
-        createdAt: new Date(),
-        draftData: { ...draftData, step: draftData.currentStep || 1 }
-      };
-      
-      setPlans(prevPlans => [...prevPlans, newDraft]);
-      toast.info("Draft plan saved");
+  const handleSaveDraft = async (draftData: any) => {
+    try {
+      if (currentDraftData && draftData.draftId) {
+        await updatePlan(draftData.draftId, {
+          draftData: { ...draftData, step: draftData.currentStep || 1 }
+        });
+        toast.info("Draft plan updated");
+      } else {
+        await contextSaveDraft(draftData);
+      }
+    } catch (error) {
+      toast.error("Failed to save draft");
+      console.error("Error saving draft:", error);
     }
   };
 
@@ -197,85 +179,62 @@ export const useFinancialPlansState = () => {
     return { openCreateDialog: false };
   };
 
-  const handleDeletePlan = (planId: string) => {
-    setPlans(prevPlans => prevPlans.filter(plan => plan.id !== planId));
-    
-    if (selectedPlan === planId && plans.length > 1) {
-      const remainingPlans = plans.filter(plan => plan.id !== planId);
-      setSelectedPlan(remainingPlans[0].id);
+  const handleDeletePlan = async (planId: string) => {
+    try {
+      await contextDeletePlan(planId);
+      toast.success("Plan deleted successfully");
+    } catch (error) {
+      toast.error("Failed to delete plan");
+      console.error("Error deleting plan:", error);
     }
   };
 
-  const handleDuplicatePlan = (planId: string) => {
-    const planToDuplicate = plans.find(plan => plan.id === planId);
-    
-    if (planToDuplicate) {
-      const duplicatedPlan = {
-        ...planToDuplicate,
-        id: `plan-${Date.now()}`,
-        name: `${planToDuplicate.name} (Copy)`,
-        createdAt: new Date(),
-        isFavorite: false,
-        isActive: false
-      };
-      
-      setPlans(prevPlans => [...prevPlans, duplicatedPlan]);
-      toast.success(`Plan "${duplicatedPlan.name}" created successfully`);
+  const handleDuplicatePlan = async (planId: string) => {
+    try {
+      await contextDuplicatePlan(planId);
+    } catch (error) {
+      toast.error("Failed to duplicate plan");
+      console.error("Error duplicating plan:", error);
     }
   };
 
-  const handleToggleFavorite = (planId: string) => {
-    setPlans(prevPlans => 
-      prevPlans.map(plan => 
-        plan.id === planId 
-          ? { ...plan, isFavorite: !plan.isFavorite } 
-          : plan
-      )
-    );
+  const handleToggleFavorite = async (planId: string) => {
+    try {
+      await contextToggleFavorite(planId);
+    } catch (error) {
+      toast.error("Failed to update favorite status");
+      console.error("Error toggling favorite:", error);
+    }
   };
 
-  const handleGoalUpdate = (updatedGoal: Goal) => {
-    setGoals(prevGoals => {
-      const existingGoalIndex = prevGoals.findIndex(g => g.id === updatedGoal.id);
-      if (existingGoalIndex >= 0) {
-        const newGoals = [...prevGoals];
-        newGoals[existingGoalIndex] = updatedGoal;
-        return newGoals;
-      } else {
-        return [...prevGoals, updatedGoal];
-      }
-    });
-    
-    const planIndex = plans.findIndex(p => p.id === selectedPlan);
-    if (planIndex >= 0) {
-      const plan = plans[planIndex];
-      const existingGoals = plan.goals || [];
-      const goalIndex = existingGoals.findIndex(g => g.id === updatedGoal.id);
-      
-      let updatedGoals;
-      if (goalIndex >= 0) {
-        updatedGoals = [...existingGoals];
-        updatedGoals[goalIndex] = updatedGoal;
-      } else {
-        updatedGoals = [...existingGoals, updatedGoal];
-      }
-      
-      const updatedPlan = {
-        ...plan,
-        goals: updatedGoals
-      };
-      
-      setPlans(prevPlans => {
-        const newPlans = [...prevPlans];
-        newPlans[planIndex] = updatedPlan;
-        return newPlans;
+  const handleGoalUpdate = async (updatedGoal: Goal) => {
+    try {
+      await contextUpdateGoal(selectedPlan, {
+        id: updatedGoal.id,
+        title: updatedGoal.title,
+        description: "",
+        targetAmount: updatedGoal.targetAmount,
+        currentAmount: updatedGoal.currentAmount,
+        targetDate: updatedGoal.targetDate,
+        priority: updatedGoal.priority,
+        isComplete: false
       });
+      
+      setGoals(prevGoals => {
+        const existingGoalIndex = prevGoals.findIndex(g => g.id === updatedGoal.id);
+        if (existingGoalIndex >= 0) {
+          const newGoals = [...prevGoals];
+          newGoals[existingGoalIndex] = updatedGoal;
+          return newGoals;
+        } else {
+          return [...prevGoals, updatedGoal];
+        }
+      });
+    } catch (error) {
+      toast.error("Failed to update goal");
+      console.error("Error updating goal:", error);
     }
-    
-    toast.success("Goal updated successfully");
   };
-
-  const activePlan = plans.find(plan => plan.id === selectedPlan) || plans[0];
 
   return {
     goals,
@@ -291,6 +250,7 @@ export const useFinancialPlansState = () => {
     handleDeletePlan,
     handleDuplicatePlan,
     handleToggleFavorite,
-    handleGoalUpdate
+    handleGoalUpdate,
+    handleUpdateTargetRetirementAge
   };
 };
