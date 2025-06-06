@@ -138,7 +138,7 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
 
   // Helper function to convert Goal to FinancialGoal with proper priority mapping
   const convertToFinancialGoal = (goalData: GoalFormData, goalId: string): FinancialGoal => {
-    // Map goal types to database-accepted priority values
+    // Map goal types to database-accepted priority values (lowercase)
     let priority: 'Low' | 'Medium' | 'High' = 'Medium'; // Default
     
     if (goalData.type === 'Retirement') {
@@ -156,7 +156,7 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
       targetAmount: goalData.targetAmount || goalData.purchasePrice || goalData.tuitionEstimate || goalData.estimatedCost || goalData.amountDesired || 0,
       currentAmount: 0,
       targetDate: goalData.targetDate || new Date(),
-      priority: priority,
+      priority: priority.toLowerCase() as 'Low' | 'Medium' | 'High',
       isComplete: false
     };
   };
