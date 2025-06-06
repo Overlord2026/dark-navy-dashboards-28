@@ -12,7 +12,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { useFinancialPlans } from "@/context/FinancialPlanContext";
+import { useFinancialPlans } from "@/hooks/useFinancialPlans";
 import { FinancialGoal } from "@/types/financial-plan";
 
 export interface Goal {
@@ -75,13 +75,32 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
     activePlan, 
     createPlan, 
     updateGoal: updatePlanGoal,
-    refreshPlans 
+    refreshPlans,
+    loading,
+    error
   } = useFinancialPlans();
   
-  // Update local goals when props change
+  // Update local goals when props change or when activePlan changes
   useEffect(() => {
-    setLocalGoals(goals);
-  }, [goals]);
+    if (activePlan && activePlan.goals) {
+      // Convert FinancialGoal to Goal format
+      const convertedGoals: Goal[] = activePlan.goals.map((goal: FinancialGoal) => ({
+        id: goal.id,
+        title: goal.title,
+        name: goal.title,
+        type: goal.priority, // Map priority to type for display
+        priority: goal.priority,
+        targetDate: goal.targetDate,
+        targetAmount: goal.targetAmount,
+        currentAmount: goal.currentAmount,
+        description: goal.description,
+        owner: 'User' // Default owner
+      }));
+      setLocalGoals(convertedGoals);
+    } else {
+      setLocalGoals(goals);
+    }
+  }, [goals, activePlan]);
   
   useEffect(() => {
     if (newGoalId) {
@@ -92,6 +111,49 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
       return () => clearTimeout(timer);
     }
   }, [newGoalId]);
+
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="space-y-8">
+        <div className="flex justify-between items-center">
+          <h2 className="text-xl font-semibold">Goals</h2>
+          <Button 
+            className="bg-blue-600 hover:bg-blue-700 text-white"
+            disabled
+          >
+            Add Goal
+          </Button>
+        </div>
+        <div className="text-center py-8">
+          <p className="text-gray-400">Loading goals...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <div className="space-y-8">
+        <div className="flex justify-between items-center">
+          <h2 className="text-xl font-semibold">Goals</h2>
+          <Button 
+            className="bg-blue-600 hover:bg-blue-700 text-white"
+            onClick={handleAddGoalClick}
+          >
+            Add Goal
+          </Button>
+        </div>
+        <div className="text-center py-8">
+          <p className="text-red-400">Error loading goals: {error.message}</p>
+          <Button onClick={refreshPlans} className="mt-4">
+            Retry
+          </Button>
+        </div>
+      </div>
+    );
+  }
   
   const toggleGoalExpansion = (goalId: string) => {
     setExpandedGoals(prev => 
@@ -167,17 +229,22 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
     }
 
     // Create a default plan if none exists
-    const defaultPlan = await createPlan({
-      name: "My Financial Plan",
-      isDraft: false,
-      isActive: true,
-      goals: [],
-      accounts: [],
-      expenses: []
-    });
+    try {
+      const defaultPlan = await createPlan({
+        name: "My Financial Plan",
+        isDraft: false,
+        isActive: true,
+        goals: [],
+        accounts: [],
+        expenses: []
+      });
 
-    await refreshPlans();
-    return defaultPlan;
+      await refreshPlans();
+      return defaultPlan;
+    } catch (error) {
+      console.error('Error creating default plan:', error);
+      throw error;
+    }
   };
 
   const handleSaveGoal = async (goalData: GoalFormData) => {
