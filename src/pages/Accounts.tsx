@@ -4,7 +4,7 @@ import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useAccountManagement } from "@/hooks/useAccountManagement";
-import { AccountTypeSelector } from "@/components/accounts/AccountLinkTypeSelector";
+import { AccountLinkTypeSelector } from "@/components/accounts/AccountLinkTypeSelector";
 import { AddAccountDialog } from "@/components/accounts/AddAccountDialog";
 import { PlaidLinkDialog } from "@/components/accounts/PlaidLinkDialog";
 import { ManageFundingDialog } from "@/components/accounts/ManageFundingDialog";
@@ -52,128 +52,139 @@ const Accounts = () => {
       title="Accounts"
     >
       <div className="container mx-auto px-4 py-8 max-w-6xl">
-        <AccountsHeader onAddAccount={handleAddAccount} />
+        <AccountsHeader 
+          onAddAccount={handleAddAccount} 
+          onManageFunding={handleManageFunding}
+        />
         
         <div className="grid gap-6">
           {/* Funding Accounts Overview */}
           <FundingAccountsOverview 
-            fundingAccounts={fundingAccounts}
+            accounts={fundingAccounts}
             onManageFunding={handleManageFunding}
           />
 
           {/* Managed Accounts */}
           {accountsByType.managed.length > 0 ? (
             <AccountSection
+              icon={<div className="w-6 h-6 bg-primary rounded" />}
               title="Managed Accounts"
-              description="Accounts managed by your advisor"
-              accounts={accountsByType.managed}
-              type="managed"
-            />
+              amount="$0.00"
+            >
+              <div className="p-4">
+                <p className="text-muted-foreground">Accounts managed by your advisor</p>
+              </div>
+            </AccountSection>
           ) : (
             <EmptyAccountSection
-              title="Managed Accounts"
-              description="Talk to your advisor about adding managed accounts"
-              onAction={handleCompleteSetup}
-              actionText="Complete Setup"
+              message="Talk to your advisor about adding managed accounts"
+              buttonText="Complete Setup"
+              onAddAccount={handleCompleteSetup}
             />
           )}
 
           {/* Investment Accounts */}
           {accountsByType.investments.length > 0 ? (
             <AccountSection
+              icon={<div className="w-6 h-6 bg-primary rounded" />}
               title="Investment Accounts"
-              description="Your investment and brokerage accounts"
-              accounts={accountsByType.investments}
-              type="investment"
-            />
+              amount="$0.00"
+            >
+              <div className="p-4">
+                <p className="text-muted-foreground">Your investment and brokerage accounts</p>
+              </div>
+            </AccountSection>
           ) : (
             <EmptyAccountSection
-              title="Investment Accounts"
-              description="To track your investments, add a new account by clicking the + button above"
-              onAction={handleAddAccount}
-              actionText="Add Investment Account"
+              message="To track your investments, add a new account by clicking the + button above"
+              buttonText="Add Investment Account"
+              onAddAccount={handleAddAccount}
             />
           )}
 
           {/* Manual Accounts */}
           {accountsByType.manual.length > 0 ? (
             <AccountSection
+              icon={<div className="w-6 h-6 bg-primary rounded" />}
               title="Manually-Tracked Accounts"
-              description="Accounts you track manually"
-              accounts={accountsByType.manual}
-              type="manual"
-            />
+              amount="$0.00"
+            >
+              <div className="p-4">
+                <p className="text-muted-foreground">Accounts you track manually</p>
+              </div>
+            </AccountSection>
           ) : (
             <EmptyAccountSection
-              title="Manually-Tracked Accounts"
-              description="Add a manually-tracked account to keep tabs on accounts that can't be linked automatically"
-              onAction={handleAddAccount}
-              actionText="Add Manual Account"
+              message="Add a manually-tracked account to keep tabs on accounts that can't be linked automatically"
+              buttonText="Add Manual Account"
+              onAddAccount={handleAddAccount}
             />
           )}
 
           {/* Loan Accounts */}
           {accountsByType.loans.length > 0 ? (
             <AccountSection
+              icon={<div className="w-6 h-6 bg-primary rounded" />}
               title="Loans"
-              description="Your loan and debt accounts"
-              accounts={accountsByType.loans}
-              type="loan"
-            />
+              amount="$0.00"
+            >
+              <div className="p-4">
+                <p className="text-muted-foreground">Your loan and debt accounts</p>
+              </div>
+            </AccountSection>
           ) : (
             <EmptyAccountSection
-              title="Loans"
-              description="To track your loans, add a new account by clicking the + button above"
-              onAction={handleAddAccount}
-              actionText="Add Loan Account"
+              message="To track your loans, add a new account by clicking the + button above"
+              buttonText="Add Loan Account"
+              onAddAccount={handleAddAccount}
             />
           )}
 
           {/* Banking Accounts */}
           {accountsByType.banking.length > 0 ? (
             <AccountSection
+              icon={<div className="w-6 h-6 bg-primary rounded" />}
               title="Banking Accounts"
-              description="Your checking, savings, and other banking accounts"
-              accounts={accountsByType.banking}
-              type="banking"
-            />
+              amount="$0.00"
+            >
+              <div className="p-4">
+                <p className="text-muted-foreground">Your checking, savings, and other banking accounts</p>
+              </div>
+            </AccountSection>
           ) : (
             <EmptyAccountSection
-              title="Banking Accounts"
-              description="To track your banking accounts, add a new account by clicking the + button above"
-              onAction={handleAddAccount}
-              actionText="Add Banking Account"
+              message="To track your banking accounts, add a new account by clicking the + button above"
+              buttonText="Add Banking Account"
+              onAddAccount={handleAddAccount}
             />
           )}
         </div>
 
         {/* Dialogs */}
-        <AccountTypeSelector
-          open={showAccountTypeSelector}
-          onClose={handleBackToAccounts}
-          onPlaidSelected={handlePlaidSelected}
-          onManualSelected={handleManualSelected}
-          onTypeSelected={handleAccountTypeSelected}
+        <AccountLinkTypeSelector
+          onSelectPlaid={handlePlaidSelected}
+          onSelectManual={handleManualSelected}
+          onBack={handleBackToAccounts}
         />
 
         <AddAccountDialog
-          open={showAddAccountDialog}
+          isOpen={showAddAccountDialog}
           onClose={() => setShowAddAccountDialog(false)}
+          onAddAccount={(accountData) => console.log('Account added:', accountData)}
           accountType={selectedAccountType}
-          onBack={handleBackToAccounts}
+          sectionType="manual"
         />
 
         <PlaidLinkDialog
-          open={showPlaidDialog}
+          isOpen={showPlaidDialog}
           onClose={() => setShowPlaidDialog(false)}
           onSuccess={handlePlaidSuccess}
-          onBack={handleBackToAccounts}
         />
 
         <ManageFundingDialog
-          open={showManageFundingDialog}
+          isOpen={showManageFundingDialog}
           onClose={() => setShowManageFundingDialog(false)}
-          fundingAccounts={fundingAccounts}
+          accounts={fundingAccounts}
         />
       </div>
     </ThreeColumnLayout>
