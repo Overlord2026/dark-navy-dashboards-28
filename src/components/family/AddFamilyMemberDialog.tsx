@@ -26,8 +26,6 @@ import {
 } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Checkbox } from '@/components/ui/checkbox';
-import { UserPlus } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -37,10 +35,6 @@ const formSchema = z.object({
   name: z.string().min(1, 'Name is required'),
   relationship: z.enum(['spouse', 'parent', 'child', 'sibling', 'other']),
   email: z.string().email('Invalid email').min(1, 'Email is required'),
-  has_app_access: z.boolean().refine((val) => val === true, {
-    message: "App access must be granted",
-  }),
-  access_level: z.enum(['full', 'limited']),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -59,8 +53,6 @@ export const AddFamilyMemberDialog: React.FC<AddFamilyMemberDialogProps> = ({ ch
       name: '',
       relationship: 'spouse',
       email: '',
-      has_app_access: false,
-      access_level: 'limited',
     },
   });
 
@@ -69,8 +61,8 @@ export const AddFamilyMemberDialog: React.FC<AddFamilyMemberDialogProps> = ({ ch
       name: data.name,
       relationship: data.relationship,
       email: data.email,
-      has_app_access: data.has_app_access,
-      access_level: data.access_level,
+      has_app_access: true,
+      access_level: 'full',
     };
 
     const success = await addFamilyMember(memberData);
@@ -89,7 +81,7 @@ export const AddFamilyMemberDialog: React.FC<AddFamilyMemberDialogProps> = ({ ch
         <DialogHeader>
           <DialogTitle>Add Family Member</DialogTitle>
           <DialogDescription>
-            Add a family member to your account. Email and app access are required.
+            Add a family member to your account.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -148,56 +140,6 @@ export const AddFamilyMemberDialog: React.FC<AddFamilyMemberDialogProps> = ({ ch
                   </FormControl>
                   <FormDescription>
                     Required for account setup and access
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="has_app_access"
-              render={({ field }) => (
-                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
-                  <FormControl>
-                    <Checkbox
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-                  <div className="space-y-1 leading-none">
-                    <FormLabel>
-                      Allow login access to this family member *
-                    </FormLabel>
-                    <FormDescription>
-                      Required: Grant this family member the ability to log in and access the app
-                    </FormDescription>
-                    <FormMessage />
-                  </div>
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="access_level"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Access Level *</FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select access level" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="full">Full Access</SelectItem>
-                      <SelectItem value="limited">Limited Access</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormDescription>
-                    Full Access: Can view and edit family data<br />
-                    Limited Access: Can only view assigned tasks/events/records
                   </FormDescription>
                   <FormMessage />
                 </FormItem>

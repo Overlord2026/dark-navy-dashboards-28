@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { BriefcaseIcon, Users2, UsersIcon, InfoIcon } from "lucide-react";
 import { NavItem } from "@/types/navigation";

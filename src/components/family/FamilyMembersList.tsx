@@ -25,37 +25,12 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { MoreHorizontal, Edit, Trash2, Mail, Shield, ShieldCheck } from 'lucide-react';
+import { MoreHorizontal, Edit, Trash2, Mail } from 'lucide-react';
 import { useFamilyMembers, FamilyMember } from '@/hooks/useFamilyMembers';
 
 const formatRelationship = (relationship: string) => {
   return relationship.charAt(0).toUpperCase() + relationship.slice(1);
-};
-
-const getAccessBadge = (member: FamilyMember) => {
-  if (!member.has_app_access) {
-    return <Badge variant="secondary">No App Access</Badge>;
-  }
-  
-  return (
-    <div className="flex items-center gap-2">
-      <Badge variant={member.access_level === 'full' ? 'default' : 'outline'}>
-        {member.access_level === 'full' ? (
-          <>
-            <ShieldCheck className="w-3 h-3 mr-1" />
-            Full Access
-          </>
-        ) : (
-          <>
-            <Shield className="w-3 h-3 mr-1" />
-            Limited Access
-          </>
-        )}
-      </Badge>
-    </div>
-  );
 };
 
 export const FamilyMembersList: React.FC = () => {
@@ -109,7 +84,6 @@ export const FamilyMembersList: React.FC = () => {
                 <TableHead>Name</TableHead>
                 <TableHead>Relationship</TableHead>
                 <TableHead>Email</TableHead>
-                <TableHead>Access Level</TableHead>
                 <TableHead>Added</TableHead>
                 <TableHead className="w-[70px]"></TableHead>
               </TableRow>
@@ -129,7 +103,6 @@ export const FamilyMembersList: React.FC = () => {
                       <span className="text-muted-foreground">No email</span>
                     )}
                   </TableCell>
-                  <TableCell>{getAccessBadge(member)}</TableCell>
                   <TableCell>
                     {new Date(member.created_at).toLocaleDateString()}
                   </TableCell>
