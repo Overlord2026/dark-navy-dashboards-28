@@ -12,6 +12,7 @@ interface LearnMoreButtonProps {
   pageContext?: string;
   variant?: "default" | "outline" | "ghost" | "link" | "destructive" | "secondary";
   size?: "default" | "sm" | "lg" | "icon";
+  children?: React.ReactNode;
 }
 
 export function LearnMoreButton({ 
@@ -20,7 +21,8 @@ export function LearnMoreButton({
   itemType = "Investment",
   pageContext = "Investments",
   variant = "outline",
-  size = "default"
+  size = "default",
+  children
 }: LearnMoreButtonProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -46,8 +48,14 @@ export function LearnMoreButton({
         disabled={isSubmitting}
         className={`flex items-center justify-center ${className}`}
       >
-        <BookOpen className="mr-2 h-4 w-4" />
-        Learn More
+        {children ? (
+          children
+        ) : (
+          <>
+            <BookOpen className="mr-2 h-4 w-4" />
+            Learn More
+          </>
+        )}
       </Button>
 
       <LearnMoreDialog
