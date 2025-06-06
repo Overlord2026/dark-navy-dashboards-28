@@ -211,6 +211,37 @@ export const useFinancialPlans = () => {
     }
   };
 
+  // New delete goal method
+  const deleteGoal = async (planId: string, goalId: string) => {
+    try {
+      const success = await service.deleteGoal(planId, goalId);
+      if (success) {
+        // Update local state efficiently
+        const updatedPlans = plans.map(p => {
+          if (p.id === planId) {
+            const updatedGoals = p.goals.filter(g => g.id !== goalId);
+            return { ...p, goals: updatedGoals };
+          }
+          return p;
+        });
+        
+        setPlans(updatedPlans);
+        setSummary(calculateSummary(updatedPlans));
+        
+        // Update active plan if it's the one being modified
+        if (activePlan?.id === planId) {
+          const updatedActivePlan = updatedPlans.find(p => p.id === planId);
+          if (updatedActivePlan) {
+            setActivePlan(updatedActivePlan);
+          }
+        }
+      }
+      return success;
+    } catch (err) {
+      throw err;
+    }
+  };
+
   // Optimized favorite toggle
   const toggleFavorite = async (id: string) => {
     try {
@@ -269,6 +300,7 @@ export const useFinancialPlans = () => {
     saveDraft,
     setActivePlan: setActiveFinancialPlan,
     updateGoal,
+    deleteGoal,
     toggleFavorite,
     duplicatePlan,
     refreshPlans

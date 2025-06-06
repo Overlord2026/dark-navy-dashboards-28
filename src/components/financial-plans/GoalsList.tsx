@@ -75,6 +75,7 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
     activePlan, 
     createPlan, 
     updateGoal: updatePlanGoal,
+    deleteGoal: deletePlanGoal,
     refreshPlans,
     loading,
     error
@@ -218,9 +219,13 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
         // Save to database
         const plan = await ensurePlanExists();
         const financialGoal = convertToFinancialGoal(goalData, updatedGoal.id);
-        await updatePlanGoal(plan.id, financialGoal);
+        const success = await updatePlanGoal(plan.id, financialGoal);
         
-        toast.success("Goal updated successfully!");
+        if (success) {
+          toast.success("Goal updated successfully!");
+        } else {
+          throw new Error("Failed to update goal in database");
+        }
       } else {
         // Create new goal with proper UUID
         const newGoalId = generateUUID();
@@ -259,9 +264,13 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
         // Save to database
         const plan = await ensurePlanExists();
         const financialGoal = convertToFinancialGoal(goalData, newGoalId);
-        await updatePlanGoal(plan.id, financialGoal);
+        const success = await updatePlanGoal(plan.id, financialGoal);
         
-        toast.success("Goal created successfully!");
+        if (success) {
+          toast.success("Goal created successfully!");
+        } else {
+          throw new Error("Failed to create goal in database");
+        }
       }
       
       setIsDetailsPanelOpen(false);
@@ -300,21 +309,28 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
     event.stopPropagation();
     
     try {
+      // Update local state immediately for better UX
       setLocalGoals(prev => prev.filter(g => g.id !== goalId));
       onGoalDelete?.(goalId);
       
       // Delete from database if we have a plan
       if (activePlan) {
-        // Note: We'd need a deleteGoal method in the service
-        // For now, we'll update the plan to remove the goal
-        const updatedGoals = activePlan.goals.filter(g => g.id !== goalId);
-        // This would need to be implemented in the service
+        const success = await deletePlanGoal(activePlan.id, goalId);
+        if (success) {
+          toast.success("Goal deleted successfully!");
+        } else {
+          // Revert local changes if database operation failed
+          setLocalGoals(localGoals);
+          throw new Error("Failed to delete goal from database");
+        }
+      } else {
+        toast.success("Goal deleted successfully!");
       }
-      
-      toast.success("Goal deleted successfully!");
     } catch (error) {
       console.error('Error deleting goal:', error);
       toast.error("Failed to delete goal. Please try again.");
+      // Revert local changes
+      setLocalGoals(localGoals);
     }
   };
   

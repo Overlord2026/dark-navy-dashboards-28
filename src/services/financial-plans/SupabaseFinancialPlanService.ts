@@ -255,6 +255,16 @@ export class SupabaseFinancialPlanService implements FinancialPlanService {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('User not authenticated');
 
+      // First verify the plan belongs to the user
+      const { data: plan } = await supabase
+        .from('financial_plans')
+        .select('id')
+        .eq('id', planId)
+        .eq('user_id', user.id)
+        .single();
+
+      if (!plan) throw new Error('Plan not found or access denied');
+
       const { data: existingGoal } = await supabase
         .from('financial_goals')
         .select('id')
@@ -263,6 +273,7 @@ export class SupabaseFinancialPlanService implements FinancialPlanService {
         .single();
 
       if (existingGoal) {
+        // Update existing goal
         const { error } = await supabase
           .from('financial_goals')
           .update({
@@ -270,8 +281,8 @@ export class SupabaseFinancialPlanService implements FinancialPlanService {
             description: goal.description,
             target_amount: goal.targetAmount,
             current_amount: goal.currentAmount,
-            target_date: goal.targetDate.toISOString(),
-            priority: goal.priority,
+            target_date: goal.targetDate.toISOString().split('T')[0], // Convert to date string
+            priority: goal.priority.toLowerCase(), // Ensure lowercase for DB
             is_complete: goal.isComplete || false,
             updated_at: new Date().toISOString()
           })
@@ -280,6 +291,7 @@ export class SupabaseFinancialPlanService implements FinancialPlanService {
 
         if (error) throw error;
       } else {
+        // Insert new goal
         const { error } = await supabase
           .from('financial_goals')
           .insert({
@@ -289,8 +301,8 @@ export class SupabaseFinancialPlanService implements FinancialPlanService {
             description: goal.description,
             target_amount: goal.targetAmount,
             current_amount: goal.currentAmount,
-            target_date: goal.targetDate.toISOString(),
-            priority: goal.priority,
+            target_date: goal.targetDate.toISOString().split('T')[0], // Convert to date string
+            priority: goal.priority.toLowerCase(), // Ensure lowercase for DB
             is_complete: goal.isComplete || false
           });
 
@@ -300,6 +312,35 @@ export class SupabaseFinancialPlanService implements FinancialPlanService {
       return true;
     } catch (error) {
       console.error('Error updating goal:', error);
+      return false;
+    }
+  }
+
+  async deleteGoal(planId: string, goalId: string): Promise<boolean> {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('User not authenticated');
+
+      // First verify the plan belongs to the user
+      const { data: plan } = await supabase
+        .from('financial_plans')
+        .select('id')
+        .eq('id', planId)
+        .eq('user_id', user.id)
+        .single();
+
+      if (!plan) throw new Error('Plan not found or access denied');
+
+      const { error } = await supabase
+        .from('financial_goals')
+        .delete()
+        .eq('id', goalId)
+        .eq('plan_id', planId);
+
+      if (error) throw error;
+      return true;
+    } catch (error) {
+      console.error('Error deleting goal:', error);
       return false;
     }
   }
