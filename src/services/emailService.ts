@@ -22,7 +22,7 @@ export const sendInterestNotification = async (data: InterestEmailData): Promise
     const templateParams = {
       to_email: 'namandevops44@gmail.com',
       from_name: 'Family Office Platform',
-      from_email: 'noreply@familyoffice.com',
+      from_email: 'namandevops44@gmail.com',
       subject: `Interest Expressed: ${data.itemName}`,
       message: `${data.userName} (${data.userEmail}) has expressed interest in "${data.itemName}" in the ${data.itemType} section on the ${data.pageContext} page.
 
