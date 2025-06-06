@@ -13,6 +13,7 @@ import {
   getProviderTopCarriers 
 } from "@/utils/insuranceProviderUtils";
 import { useInterestNotification } from "@/hooks/useInterestNotification";
+import { useLearnMoreNotification } from "@/hooks/useLearnMoreNotification";
 
 interface InsuranceDetailViewProps {
   selectedType: InsuranceType;
@@ -40,12 +41,18 @@ export const InsuranceDetailView = ({
   onInterested
 }: InsuranceDetailViewProps) => {
   const { sendInterestEmail } = useInterestNotification();
+  const { sendLearnMoreEmail } = useLearnMoreNotification();
   const providers = insuranceTypeProviders[selectedType].providers;
 
   const handleInterested = async () => {
     const itemName = `${getInsuranceTitle(selectedType)} Insurance by ${getProviderName(selectedProvider)}`;
     await sendInterestEmail(itemName, "Insurance", "Insurance");
     onInterested();
+  };
+
+  const handleLearnMore = async () => {
+    const itemName = `${getInsuranceTitle(selectedType)} Insurance by ${getProviderName(selectedProvider)}`;
+    await sendLearnMoreEmail(itemName, "Insurance", "Insurance");
   };
 
   return (
@@ -160,6 +167,13 @@ export const InsuranceDetailView = ({
               onClick={handleInterested}
             >
               I'm Interested
+            </Button>
+            <Button 
+              variant="outline" 
+              className="border-gray-700 text-white hover:bg-[#1c2e4a]"
+              onClick={handleLearnMore}
+            >
+              Learn More
             </Button>
             <ScheduleMeetingDialog 
               assetName={`${getInsuranceTitle(selectedType)} Insurance by ${getProviderName(selectedProvider)}`} 
