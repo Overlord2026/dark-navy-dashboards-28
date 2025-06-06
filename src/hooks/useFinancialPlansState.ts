@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useUser } from "@/context/UserContext";
+import { useAuth } from "@/context/AuthContext";
 import { toast } from "sonner";
 
 export interface Goal {
@@ -24,7 +24,7 @@ export interface Plan {
 }
 
 export const useFinancialPlansState = () => {
-  const { userProfile } = useUser();
+  const { userProfile } = useAuth();
   const [goals, setGoals] = useState<Goal[]>([]);
   const name = userProfile?.firstName || "Pedro";
   const fullName = userProfile?.firstName && userProfile?.lastName 
@@ -99,7 +99,6 @@ export const useFinancialPlansState = () => {
     }
   }, [selectedPlan, plans]);
 
-  // Independent plan creation - no dependency on goals
   const handleCreatePlan = (planName: string, planData: any) => {
     const isDraft = planData?.isDraft || false;
     const projections = planData?.projections || {};
@@ -235,9 +234,7 @@ export const useFinancialPlansState = () => {
     );
   };
 
-  // Independent goal handling - works without active plan requirement
   const handleGoalUpdate = (updatedGoal: Goal) => {
-    // Update goals directly - independent of plan selection
     setGoals(prevGoals => {
       const existingGoalIndex = prevGoals.findIndex(g => g.id === updatedGoal.id);
       if (existingGoalIndex >= 0) {
@@ -249,7 +246,6 @@ export const useFinancialPlansState = () => {
       }
     });
     
-    // Also update the plan if there's an active one (but don't require it)
     const planIndex = plans.findIndex(p => p.id === selectedPlan);
     if (planIndex >= 0) {
       const plan = plans[planIndex];
