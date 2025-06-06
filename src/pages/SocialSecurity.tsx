@@ -7,7 +7,6 @@ const SocialSecurity = () => {
   return (
     <ThreeColumnLayout activeMainItem="client-social-security" title="Social Security & Retirement">
       <div className="w-full space-y-6 animate-fade-in">
-        <h1 className="text-2xl font-bold">Social Security Benefits</h1>
         <p className="text-muted-foreground">
           Track social security benefits for your family.
         </p>
