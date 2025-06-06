@@ -1,11 +1,11 @@
 
 import React from 'react';
-import { useDiagnosticsContext } from '@/context/DiagnosticsContext';
-import { useUser } from "@/context/UserContext";
+import { useDiagnostics } from '@/context/DiagnosticsContext';
+import { useAuth } from "@/context/AuthContext";
 
 export function DiagnosticsTrigger() {
-  const { isDiagnosticsModeEnabled } = useDiagnosticsContext();
-  const { userProfile } = useUser();
+  const { isRunning } = useDiagnostics();
+  const { userProfile } = useAuth();
   
   // Only enable diagnostics for administrators
   const userRole = userProfile?.role || "client";
