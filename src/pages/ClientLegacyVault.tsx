@@ -10,7 +10,7 @@ import { ShareDocumentDialog } from "@/components/documents/ShareDocumentDialog"
 import { DeleteDocumentDialog } from "@/components/documents/DeleteDocumentDialog";
 import { NewFolderDialog } from "@/components/documents/NewFolderDialog";
 import { Button } from "@/components/ui/button";
-import { FolderPlus, Upload, ExternalLink, ArchiveIcon, HeartPulseIcon } from "lucide-react";
+import { FolderPlus, Upload, ExternalLink, ArchiveIcon, HeartPulseIcon, Activity, FileText, Pill } from "lucide-react";
 import { documentCategories, healthcareCategories } from "@/data/documentCategories";
 import { toast } from "sonner";
 import { DocumentType, DocumentItem, DocumentCategory } from "@/types/document";
@@ -61,6 +61,7 @@ export default function ClientLegacyVault() {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [selectedDocument, setSelectedDocument] = useState<DocumentItem | null>(null);
   const [activeTab, setActiveTab] = useState("legacy-box");
+  const [healthcareActiveTab, setHealthcareActiveTab] = useState("dashboard");
   
   const legacyBoxDocuments: DocumentItem[] = [
     {
@@ -205,13 +206,157 @@ export default function ClientLegacyVault() {
               <FamilyLegacyBox />
             </TabsContent>
 
-            {/* Healthcare Tab - Restored to original functionality */}
+            {/* Healthcare Tab with Sub-tabs */}
             <TabsContent value="healthcare" className="space-y-6">
-              <HealthcareFolder 
-                documents={[]} 
-                onAddDocument={handleAddDocument}
-                onCreateFolder={handleCreateFolder}
-              />
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <HeartPulseIcon className="h-5 w-5" />
+                    Healthcare Management
+                  </CardTitle>
+                  <CardDescription>
+                    Manage your healthcare documents, prescriptions, and medical information
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Tabs value={healthcareActiveTab} onValueChange={setHealthcareActiveTab} className="w-full">
+                    <TabsList className="grid w-full grid-cols-3 mb-6">
+                      <TabsTrigger value="dashboard" className="flex items-center gap-2">
+                        <Activity className="h-4 w-4" />
+                        Dashboard
+                      </TabsTrigger>
+                      <TabsTrigger value="documents" className="flex items-center gap-2">
+                        <FileText className="h-4 w-4" />
+                        Documents
+                      </TabsTrigger>
+                      <TabsTrigger value="prescriptions" className="flex items-center gap-2">
+                        <Pill className="h-4 w-4" />
+                        Prescriptions
+                      </TabsTrigger>
+                    </TabsList>
+                    
+                    {/* Dashboard Tab */}
+                    <TabsContent value="dashboard" className="space-y-6">
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <Card>
+                          <CardHeader>
+                            <CardTitle className="text-lg">Healthcare Overview</CardTitle>
+                          </CardHeader>
+                          <CardContent>
+                            <p className="text-muted-foreground">
+                              Quick overview of your healthcare status and recent activities.
+                            </p>
+                          </CardContent>
+                        </Card>
+                        
+                        <Card>
+                          <CardHeader>
+                            <CardTitle className="text-lg">Recent Documents</CardTitle>
+                          </CardHeader>
+                          <CardContent>
+                            <p className="text-muted-foreground">
+                              Your most recently uploaded healthcare documents.
+                            </p>
+                          </CardContent>
+                        </Card>
+                        
+                        <Card>
+                          <CardHeader>
+                            <CardTitle className="text-lg">Prescription Status</CardTitle>
+                          </CardHeader>
+                          <CardContent>
+                            <p className="text-muted-foreground">
+                              Current prescriptions and medication reminders.
+                            </p>
+                          </CardContent>
+                        </Card>
+                      </div>
+                    </TabsContent>
+                    
+                    {/* Documents Tab */}
+                    <TabsContent value="documents" className="space-y-6">
+                      <div className="space-y-4">
+                        <div className="flex justify-between items-center">
+                          <h3 className="text-lg font-semibold">Healthcare Documents</h3>
+                          <div className="flex gap-2">
+                            <Button 
+                              onClick={() => setIsNewFolderDialogOpen(true)}
+                              variant="outline"
+                              size="sm"
+                            >
+                              <FolderPlus className="mr-2 h-4 w-4" />
+                              New Folder
+                            </Button>
+                            <Button 
+                              onClick={() => setIsUploadDialogOpen(true)}
+                              size="sm"
+                            >
+                              <Upload className="mr-2 h-4 w-4" />
+                              Upload
+                            </Button>
+                          </div>
+                        </div>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+                          <div className="md:col-span-1">
+                            <CategoryList 
+                              categories={healthcareCategories as DocumentCategory[]} 
+                              activeCategory={activeCategory || ""} 
+                              onCategorySelect={setActiveCategory} 
+                            />
+                          </div>
+                          
+                          <div className="md:col-span-4">
+                            <Card>
+                              <CardHeader>
+                                <CardTitle className="text-sm">Document Categories</CardTitle>
+                                <CardDescription className="text-xs">
+                                  Healthcare, Insurance Coverage, Prescriptions & Medications, Physicians & Providers, Medical Records & Documents
+                                </CardDescription>
+                              </CardHeader>
+                              <CardContent>
+                                <HealthcareFolder 
+                                  documents={[]} 
+                                  onAddDocument={handleAddDocument}
+                                  onCreateFolder={handleCreateFolder}
+                                />
+                              </CardContent>
+                            </Card>
+                          </div>
+                        </div>
+                      </div>
+                    </TabsContent>
+                    
+                    {/* Prescriptions Tab */}
+                    <TabsContent value="prescriptions" className="space-y-6">
+                      <Card>
+                        <CardHeader>
+                          <CardTitle className="flex items-center gap-2">
+                            <Pill className="h-5 w-5" />
+                            Prescription Management
+                          </CardTitle>
+                          <CardDescription>
+                            Manage your prescriptions and medication schedules
+                          </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="text-center py-8">
+                            <Pill className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                            <h3 className="text-lg font-semibold mb-2">Prescription Management</h3>
+                            <p className="text-muted-foreground mb-4">
+                              Track your medications, dosages, and refill schedules
+                            </p>
+                            <Button>
+                              <Pill className="mr-2 h-4 w-4" />
+                              Add Prescription
+                            </Button>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </TabsContent>
+                  </Tabs>
+                </CardContent>
+              </Card>
             </TabsContent>
           </Tabs>
         </div>
