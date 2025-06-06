@@ -1,7 +1,5 @@
-
 import React, { useState } from "react";
 import { ChevronDown, LogOut, UserIcon, PhoneIcon, FileTextIcon, UsersIcon, BuildingIcon, PaletteIcon } from "lucide-react";
-import { useUser } from "@/context/UserContext";
 import { useAuth } from "@/context/AuthContext";
 import { useTheme } from "@/context/ThemeContext";
 import { Button } from "@/components/ui/button";
@@ -24,8 +22,7 @@ interface UserProfileSectionProps {
 }
 
 export const UserProfileSection = ({ onMenuItemClick, showLogo = true }: UserProfileSectionProps) => {
-  const { userProfile } = useUser();
-  const { logout } = useAuth();
+  const { userProfile, logout } = useAuth();
   const { theme } = useTheme();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [isPanelOpen, setIsPanelOpen] = useState(false);
@@ -100,6 +97,12 @@ export const UserProfileSection = ({ onMenuItemClick, showLogo = true }: UserPro
     }
     
     return 'U';
+  };
+
+  const updateUserProfile = async (profile: any) => {
+    // This function would be implemented to update the user profile
+    // For now, we'll just log the update
+    console.log("Updating user profile:", profile);
   };
 
   return (
