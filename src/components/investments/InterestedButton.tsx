@@ -25,7 +25,7 @@ export function InterestedButton({
   const handleInterest = async () => {
     setIsSubmitting(true);
     try {
-      // Send email notification
+      // Send interest email notification
       await sendInterestEmail(assetName, itemType, pageContext);
       
       // Also create interest in database
