@@ -6,10 +6,10 @@ import { NoDocumentsState, NoCategorySelectedState } from "@/components/document
 import { UploadDocumentDialog } from "@/components/documents/UploadDocumentDialog";
 import { EditDocumentDialog } from "@/components/documents/EditDocumentDialog";
 import { ShareDocumentDialog } from "@/components/documents/ShareDocumentDialog";
-import { DeleteDocumentDialog } from "@/components/documents/DeleteDocumentDialog";
-import { NewFolderDialog } from "@/components/documents/NewFolderDialog";
+import { DeleteDocumentDialog } from "@/components/DeleteDocumentDialog";
+import { NewFolderDialog } from "@/components/NewFolderDialog";
 import { Button } from "@/components/ui/button";
-import { FolderPlus, Upload, ExternalLink, ArchiveIcon, HeartPulseIcon, Activity, FileText, Pill } from "lucide-react";
+import { FolderPlus, Upload, ExternalLink, ArchiveIcon, HeartPulseIcon, Activity, FileText, Pill, Users } from "lucide-react";
 import { documentCategories, healthcareCategories } from "@/data/documentCategories";
 import { toast } from "sonner";
 import { DocumentType, DocumentItem, DocumentCategory } from "@/types/document";
@@ -220,7 +220,7 @@ export default function ClientLegacyVault() {
                 </CardHeader>
                 <CardContent>
                   <Tabs value={healthcareActiveTab} onValueChange={setHealthcareActiveTab} className="w-full">
-                    <TabsList className="grid w-full grid-cols-3 mb-6">
+                    <TabsList className="grid w-full grid-cols-4 mb-6">
                       <TabsTrigger value="dashboard" className="flex items-center gap-2">
                         <Activity className="h-4 w-4" />
                         Dashboard
@@ -232,6 +232,10 @@ export default function ClientLegacyVault() {
                       <TabsTrigger value="prescriptions" className="flex items-center gap-2">
                         <Pill className="h-4 w-4" />
                         Prescriptions
+                      </TabsTrigger>
+                      <TabsTrigger value="physicians" className="flex items-center gap-2">
+                        <Users className="h-4 w-4" />
+                        Physicians & Contacts
                       </TabsTrigger>
                     </TabsList>
                     
@@ -330,6 +334,33 @@ export default function ClientLegacyVault() {
                     {/* Prescriptions Tab */}
                     <TabsContent value="prescriptions" className="space-y-6">
                       <PrescriptionManager />
+                    </TabsContent>
+                    
+                    {/* Physicians & Contacts Tab */}
+                    <TabsContent value="physicians" className="space-y-6">
+                      <Card>
+                        <CardHeader>
+                          <CardTitle className="flex items-center gap-2">
+                            <Users className="h-5 w-5" />
+                            Physicians & Contacts
+                          </CardTitle>
+                          <CardDescription>
+                            Manage your healthcare providers and emergency contacts
+                          </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="text-center py-12">
+                            <Users className="mx-auto h-12 w-12 text-muted-foreground" />
+                            <h3 className="mt-4 text-lg font-medium">No Physicians Added</h3>
+                            <p className="mt-2 text-sm text-muted-foreground">
+                              Add your healthcare providers and emergency contacts to keep them organized.
+                            </p>
+                            <Button className="mt-4">
+                              Add Physician
+                            </Button>
+                          </div>
+                        </CardContent>
+                      </Card>
                     </TabsContent>
                   </Tabs>
                 </CardContent>
