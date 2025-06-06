@@ -105,7 +105,10 @@ export const useFinancialPlansState = () => {
   }, [contextActivePlan, contextPlans]);
 
   const handleUpdateTargetRetirementAge = async (age: number) => {
-    if (!activePlan) return;
+    if (!activePlan) {
+      toast.error("No active plan found");
+      return;
+    }
 
     try {
       const updatedDraftData = {

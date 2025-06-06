@@ -18,9 +18,9 @@ export const TargetRetirementAgeSection: React.FC<TargetRetirementAgeSectionProp
   const [editingAge, setEditingAge] = useState<number>(targetRetirementAge);
   const [isEditing, setIsEditing] = useState(false);
 
-  const handleSaveAge = () => {
+  const handleSaveAge = async () => {
     if (editingAge >= 50 && editingAge <= 85) {
-      onUpdateAge(editingAge);
+      await onUpdateAge(editingAge);
       setIsEditing(false);
     }
   };
