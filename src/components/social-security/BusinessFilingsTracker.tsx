@@ -39,75 +39,27 @@ import { Button } from "@/components/ui/button";
 import { DatePicker } from "@/components/ui/date-picker";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
-import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { format, addDays, isBefore, isAfter } from "date-fns";
 import { AlertTriangle, Calendar, CheckCircle, Clock, FileText, Plus, Trash2 } from "lucide-react";
+import { useBusinessFilings, BusinessFiling } from "@/hooks/useBusinessFilings";
 
 // Define the form schema for business filing
 const businessFilingSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters" }),
   description: z.string().optional(),
-  businessName: z.string().min(1, { message: "Business name is required" }),
-  dueDate: z.date({ required_error: "Due date is required" }),
-  reminderDays: z.number().min(0).max(90),
-  filingType: z.string().min(1, { message: "Filing type is required" }),
+  business_name: z.string().min(1, { message: "Business name is required" }),
+  due_date: z.date({ required_error: "Due date is required" }),
+  reminder_days: z.number().min(0).max(90),
+  filing_type: z.string().min(1, { message: "Filing type is required" }),
   recurring: z.boolean().default(false),
-  recurringPeriod: z.string().optional(),
+  recurring_period: z.string().optional(),
   completed: z.boolean().default(false),
 });
 
-type BusinessFiling = z.infer<typeof businessFilingSchema>;
-
-// Default business filings for demonstration
-const defaultBusinessFilings: BusinessFiling[] = [
-  {
-    name: "Annual Report",
-    description: "Annual corporation report filing",
-    businessName: "Acme Inc",
-    dueDate: addDays(new Date(), 15),
-    reminderDays: 30,
-    filingType: "State Filing",
-    recurring: true,
-    recurringPeriod: "Annual",
-    completed: false
-  },
-  {
-    name: "Quarterly Tax Payment",
-    description: "Estimated tax payment - Q2",
-    businessName: "Smith Consulting LLC",
-    dueDate: addDays(new Date(), 45),
-    reminderDays: 14,
-    filingType: "Tax Payment",
-    recurring: true,
-    recurringPeriod: "Quarterly",
-    completed: false
-  },
-  {
-    name: "Business License Renewal",
-    description: "City business license renewal",
-    businessName: "Main Street Retail",
-    dueDate: addDays(new Date(), -5),
-    reminderDays: 30,
-    filingType: "License",
-    recurring: true,
-    recurringPeriod: "Annual",
-    completed: false
-  },
-  {
-    name: "Form 1099 Filing",
-    description: "Contractor payment reporting",
-    businessName: "Tech Innovations LLC",
-    dueDate: addDays(new Date(), 75),
-    reminderDays: 30,
-    filingType: "Tax Filing",
-    recurring: true,
-    recurringPeriod: "Annual",
-    completed: true
-  }
-];
+type BusinessFilingForm = z.infer<typeof businessFilingSchema>;
 
 const filingTypes = [
   "State Filing", 
@@ -131,46 +83,41 @@ const recurringPeriods = [
 ];
 
 export const BusinessFilingsTracker = () => {
-  const [filings, setFilings] = useState<BusinessFiling[]>(defaultBusinessFilings);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [filterStatus, setFilterStatus] = useState<"all" | "upcoming" | "overdue" | "completed">("all");
+  const { filings, isLoading, addFiling, deleteFiling, toggleComplete } = useBusinessFilings();
   
-  const form = useForm<BusinessFiling>({
+  const form = useForm<BusinessFilingForm>({
     resolver: zodResolver(businessFilingSchema),
     defaultValues: {
       name: "",
       description: "",
-      businessName: "",
-      dueDate: undefined,
-      reminderDays: 30,
-      filingType: "",
+      business_name: "",
+      due_date: undefined,
+      reminder_days: 30,
+      filing_type: "",
       recurring: false,
-      recurringPeriod: "",
+      recurring_period: "",
       completed: false
     }
   });
 
-  const onSubmit = (data: BusinessFiling) => {
-    setFilings([...filings, data]);
-    setIsAddDialogOpen(false);
-    form.reset();
-    toast.success("Business filing added successfully!");
+  const onSubmit = async (data: BusinessFilingForm) => {
+    try {
+      await addFiling(data);
+      setIsAddDialogOpen(false);
+      form.reset();
+    } catch (error) {
+      // Error is handled in the hook
+    }
   };
 
-  const handleDeleteFiling = (index: number) => {
-    const updatedFilings = [...filings];
-    updatedFilings.splice(index, 1);
-    setFilings(updatedFilings);
-    toast.success("Filing removed successfully");
+  const handleDeleteFiling = async (id: string) => {
+    await deleteFiling(id);
   };
 
-  const handleToggleComplete = (index: number) => {
-    const updatedFilings = [...filings];
-    updatedFilings[index].completed = !updatedFilings[index].completed;
-    setFilings(updatedFilings);
-    
-    const actionText = updatedFilings[index].completed ? "completed" : "marked as incomplete";
-    toast.success(`Filing ${actionText} successfully`);
+  const handleToggleComplete = async (id: string) => {
+    await toggleComplete(id);
   };
 
   // Filter filings based on selected status
@@ -179,9 +126,9 @@ export const BusinessFilingsTracker = () => {
     
     switch(filterStatus) {
       case "upcoming":
-        return !filing.completed && isAfter(filing.dueDate, today);
+        return !filing.completed && isAfter(filing.due_date, today);
       case "overdue":
-        return !filing.completed && isBefore(filing.dueDate, today);
+        return !filing.completed && isBefore(filing.due_date, today);
       case "completed":
         return filing.completed;
       default:
@@ -193,14 +140,25 @@ export const BusinessFilingsTracker = () => {
   const getFilingStatus = (filing: BusinessFiling) => {
     const today = new Date();
     if (filing.completed) return "completed";
-    if (isBefore(filing.dueDate, today)) return "overdue";
+    if (isBefore(filing.due_date, today)) return "overdue";
     
     // Calculate if within reminder period
-    const reminderDate = addDays(filing.dueDate, -filing.reminderDays);
+    const reminderDate = addDays(filing.due_date, -filing.reminder_days);
     if (isAfter(today, reminderDate)) return "upcoming";
     
     return "scheduled";
   };
+
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <div className="text-center py-8">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+          <p className="mt-2 text-muted-foreground">Loading business filings...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -252,7 +210,7 @@ export const BusinessFilingsTracker = () => {
                 
                 <FormField
                   control={form.control}
-                  name="businessName"
+                  name="business_name"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Business Name</FormLabel>
@@ -267,7 +225,7 @@ export const BusinessFilingsTracker = () => {
                 <div className="grid grid-cols-2 gap-4">
                   <FormField
                     control={form.control}
-                    name="filingType"
+                    name="filing_type"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Filing Type</FormLabel>
@@ -289,7 +247,7 @@ export const BusinessFilingsTracker = () => {
                   
                   <FormField
                     control={form.control}
-                    name="dueDate"
+                    name="due_date"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Due Date</FormLabel>
@@ -307,7 +265,7 @@ export const BusinessFilingsTracker = () => {
                 
                 <FormField
                   control={form.control}
-                  name="reminderDays"
+                  name="reminder_days"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Reminder (Days Before)</FormLabel>
@@ -352,7 +310,7 @@ export const BusinessFilingsTracker = () => {
                 {form.watch("recurring") && (
                   <FormField
                     control={form.control}
-                    name="recurringPeriod"
+                    name="recurring_period"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Recurrence Period</FormLabel>
@@ -452,16 +410,16 @@ export const BusinessFilingsTracker = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {filteredFilings.map((filing, index) => {
+                  {filteredFilings.map((filing) => {
                     const status = getFilingStatus(filing);
                     return (
-                      <TableRow key={`${filing.name}-${index}`}>
+                      <TableRow key={filing.id}>
                         <TableCell className="font-medium">
                           <div>
                             {filing.name}
                             {filing.recurring && (
                               <Badge variant="outline" className="ml-2">
-                                {filing.recurringPeriod}
+                                {filing.recurring_period}
                               </Badge>
                             )}
                           </div>
@@ -471,16 +429,16 @@ export const BusinessFilingsTracker = () => {
                             </div>
                           )}
                         </TableCell>
-                        <TableCell>{filing.businessName}</TableCell>
-                        <TableCell>{filing.filingType}</TableCell>
+                        <TableCell>{filing.business_name}</TableCell>
+                        <TableCell>{filing.filing_type}</TableCell>
                         <TableCell>
                           <div className="flex items-center">
                             <Calendar className="h-4 w-4 mr-2 text-muted-foreground" />
-                            {format(filing.dueDate, "MMM d, yyyy")}
+                            {format(filing.due_date, "MMM d, yyyy")}
                           </div>
                           <div className="text-xs text-muted-foreground mt-1">
                             <Clock className="h-3 w-3 inline mr-1" />
-                            Reminder: {filing.reminderDays} days before
+                            Reminder: {filing.reminder_days} days before
                           </div>
                         </TableCell>
                         <TableCell>
@@ -510,7 +468,7 @@ export const BusinessFilingsTracker = () => {
                             <Button
                               variant="ghost"
                               size="icon"
-                              onClick={() => handleToggleComplete(index)}
+                              onClick={() => handleToggleComplete(filing.id!)}
                               title={filing.completed ? "Mark as incomplete" : "Mark as completed"}
                             >
                               <CheckCircle className={`h-4 w-4 ${filing.completed ? "text-green-500" : "text-muted-foreground"}`} />
@@ -518,7 +476,7 @@ export const BusinessFilingsTracker = () => {
                             <Button
                               variant="ghost"
                               size="icon"
-                              onClick={() => handleDeleteFiling(index)}
+                              onClick={() => handleDeleteFiling(filing.id!)}
                               title="Delete filing"
                             >
                               <Trash2 className="h-4 w-4 text-muted-foreground" />
@@ -551,18 +509,18 @@ export const BusinessFilingsTracker = () => {
           <div className="space-y-4">
             {filings
               .filter(filing => !filing.completed)
-              .sort((a, b) => a.dueDate.getTime() - b.dueDate.getTime())
+              .sort((a, b) => a.due_date.getTime() - b.due_date.getTime())
               .slice(0, 5)
-              .map((filing, index) => {
+              .map((filing) => {
                 const today = new Date();
-                const daysUntilDue = Math.ceil((filing.dueDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+                const daysUntilDue = Math.ceil((filing.due_date.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
                 const isOverdue = daysUntilDue < 0;
-                const reminderDate = addDays(filing.dueDate, -filing.reminderDays);
+                const reminderDate = addDays(filing.due_date, -filing.reminder_days);
                 const isWithinReminder = isAfter(today, reminderDate);
                 
                 return (
                   <div 
-                    key={index} 
+                    key={filing.id} 
                     className={`p-4 rounded-lg border flex items-center space-x-4 ${
                       isOverdue 
                         ? "bg-red-500/10 border-red-500/30" 
@@ -589,7 +547,7 @@ export const BusinessFilingsTracker = () => {
                       <h4 className="font-medium">
                         {filing.name}
                         <span className="text-sm font-normal ml-2 opacity-70">
-                          ({filing.businessName})
+                          ({filing.business_name})
                         </span>
                       </h4>
                       <div className="text-sm mt-1">
@@ -598,21 +556,13 @@ export const BusinessFilingsTracker = () => {
                           : `Due in ${daysUntilDue} days`
                         }
                         <span className="mx-2">•</span>
-                        {format(filing.dueDate, "MMMM d, yyyy")}
+                        {format(filing.due_date, "MMMM d, yyyy")}
                       </div>
                     </div>
                     <Button 
                       variant="outline" 
                       size="sm"
-                      onClick={() => {
-                        const index = filings.findIndex(f => 
-                          f.name === filing.name && 
-                          f.dueDate.getTime() === filing.dueDate.getTime()
-                        );
-                        if (index !== -1) {
-                          handleToggleComplete(index);
-                        }
-                      }}
+                      onClick={() => handleToggleComplete(filing.id!)}
                     >
                       Mark Complete
                     </Button>

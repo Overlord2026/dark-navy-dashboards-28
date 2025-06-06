@@ -36,6 +36,54 @@ export type Database = {
         }
         Relationships: []
       }
+      business_filings: {
+        Row: {
+          business_name: string
+          completed: boolean
+          created_at: string
+          description: string | null
+          due_date: string
+          filing_type: string
+          id: string
+          name: string
+          recurring: boolean
+          recurring_period: string | null
+          reminder_days: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          business_name: string
+          completed?: boolean
+          created_at?: string
+          description?: string | null
+          due_date: string
+          filing_type: string
+          id?: string
+          name: string
+          recurring?: boolean
+          recurring_period?: string | null
+          reminder_days?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          business_name?: string
+          completed?: boolean
+          created_at?: string
+          description?: string | null
+          due_date?: string
+          filing_type?: string
+          id?: string
+          name?: string
+          recurring?: boolean
+          recurring_period?: string | null
+          reminder_days?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       document_categories: {
         Row: {
           created_at: string | null
