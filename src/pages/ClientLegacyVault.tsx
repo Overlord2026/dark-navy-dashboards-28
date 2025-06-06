@@ -8,6 +8,7 @@ import { ShareDocumentDialog } from "@/components/documents/ShareDocumentDialog"
 import { DeleteDocumentDialog } from "@/components/documents/DeleteDocumentDialog";
 import { NewFolderDialog } from "@/components/documents/NewFolderDialog";
 import { SupabaseDocumentsTable } from "@/components/documents/SupabaseDocumentsTable";
+import { HealthcareDocumentsList } from "@/components/healthcare/HealthcareDocumentsList";
 import { Button } from "@/components/ui/button";
 import { FolderPlus, Upload, ExternalLink, ArchiveIcon, HeartPulseIcon, Activity, FileText, Pill, Users, Edit, Trash2, Plus, Calendar, Clock, User } from "lucide-react";
 import { documentCategories, healthcareCategories } from "@/data/documentCategories";
@@ -67,6 +68,13 @@ export default function ClientLegacyVault() {
   const {
     prescriptions,
     loading: prescriptionsLoading,
+    documents: healthcareDocuments,
+    loading: healthcareLoading,
+    uploading: healthcareUploading,
+    uploadDocument: uploadHealthcareDocument,
+    deleteDocument: deleteHealthcareDocument,
+    getDocumentUrl: getHealthcareDocumentUrl,
+    refreshData: refreshHealthcareData
   } = useHealthcare();
 
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
@@ -234,6 +242,16 @@ export default function ClientLegacyVault() {
       return;
     }
     setIsUploadDialogOpen(true);
+  };
+
+  // Handler for healthcare document upload
+  const handleHealthcareDocumentUpload = async (file: File, name: string, description?: string) => {
+    const result = await uploadHealthcareDocument(file, name, description);
+    if (result) {
+      toast.success("Healthcare document uploaded successfully");
+      refreshHealthcareData();
+    }
+    return result;
   };
 
   const getRefillStatus = (nextRefillDate: string) => {
@@ -596,65 +614,7 @@ export default function ClientLegacyVault() {
                     
                     {/* Documents Tab */}
                     <TabsContent value="documents" className="space-y-6">
-                      <div className="space-y-4">
-                        <div className="flex justify-between items-center">
-                          <div className="flex gap-2">
-                            <Button 
-                              onClick={() => setIsNewFolderDialogOpen(true)}
-                              variant="outline"
-                              size="sm"
-                              disabled={!activeCategory}
-                            >
-                              <FolderPlus className="mr-2 h-4 w-4" />
-                              New Folder
-                            </Button>
-                            <Button 
-                              onClick={handleUploadForCategory}
-                              size="sm"
-                              disabled={!activeCategory}
-                            >
-                              <Upload className="mr-2 h-4 w-4" />
-                              Upload
-                            </Button>
-                          </div>
-                          {!activeCategory && (
-                            <p className="text-sm text-muted-foreground">
-                              Select a category to upload documents
-                            </p>
-                          )}
-                        </div>
-                        
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                          <div className="md:col-span-1">
-                            <CategoryList 
-                              categories={healthcareCategories as DocumentCategory[]} 
-                              activeCategory={activeCategory || ""} 
-                              onCategorySelect={setActiveCategory} 
-                            />
-                          </div>
-                          
-                          <div className="md:col-span-2">
-                            <Card>
-                              <CardHeader>
-                                <CardTitle className="flex items-center gap-2">
-                                  <FileText className="h-5 w-5" />
-                                  {getCategoryContent(activeCategory).title}
-                                </CardTitle>
-                                <CardDescription>
-                                  {getCategoryContent(activeCategory).description}
-                                </CardDescription>
-                              </CardHeader>
-                              <CardContent>
-                                <HealthcareFolder 
-                                  documents={[]} 
-                                  onAddDocument={() => {}}
-                                  onCreateFolder={handleCreateFolder}
-                                />
-                              </CardContent>
-                            </Card>
-                          </div>
-                        </div>
-                      </div>
+                      <HealthcareDocumentsList />
                     </TabsContent>
                     
                     {/* Prescriptions Tab */}
