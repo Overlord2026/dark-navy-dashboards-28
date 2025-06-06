@@ -1,4 +1,3 @@
-
 import React from "react";
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import Dashboard from "@/pages/Dashboard";
@@ -16,6 +15,7 @@ import TaxBudgets from "@/pages/TaxBudgets";
 import Transfers from "@/pages/Transfers";
 import ClientLegacyVault from "@/pages/ClientLegacyVault";
 import SocialSecurity from "@/pages/SocialSecurity";
+import BusinessFilings from "@/pages/BusinessFilings";
 import Properties from "@/pages/Properties";
 import BillPay from "@/pages/BillPay";
 import Documents from "@/pages/Documents";
@@ -137,6 +137,10 @@ const routes = createBrowserRouter([
   {
     path: "/social-security",
     element: <Navigate to="/client-social-security" replace />
+  },
+  {
+    path: "/client-business-filings",
+    element: <ProtectedRoute><BusinessFilings /></ProtectedRoute>
   },
   {
     path: "/client-properties",
