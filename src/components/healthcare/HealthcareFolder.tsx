@@ -28,10 +28,10 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
     doc.category === 'healthcare' || doc.category === 'medical-records'
   );
 
-  const handleUpload = (file: File) => {
+  const handleUpload = async (file: File, name: string, category: string): Promise<any> => {
     const newDocument: DocumentItem = {
       id: Math.random().toString(36).substring(2, 9),
-      name: file.name,
+      name: name || file.name,
       type: file.type.includes("pdf") ? "pdf" : 
             file.type.includes("image") ? "image" : "document",
       category: "healthcare",
@@ -44,6 +44,7 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
     onAddDocument(newDocument);
     toast.success("Healthcare document uploaded successfully");
     setIsUploadDialogOpen(false);
+    return newDocument;
   };
 
   const handleCreateFolder = () => {
@@ -133,9 +134,13 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
 
       <SupabaseDocumentUploadDialog
         open={isUploadDialogOpen}
+        onClose={() => setIsUploadDialogOpen(false)}
         onOpenChange={setIsUploadDialogOpen}
         onFileUpload={handleUpload}
         category="healthcare"
+        activeCategory="healthcare"
+        categories={[{ id: "healthcare", name: "Healthcare" }]}
+        uploading={false}
       />
 
       <ShareDocumentWithProfessionalsDialog
