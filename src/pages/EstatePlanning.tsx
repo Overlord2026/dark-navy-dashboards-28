@@ -7,6 +7,8 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { LearnMoreDialog } from "@/components/ui/learn-more-dialog";
+import { useLearnMoreNotification } from "@/hooks/useLearnMoreNotification";
 import { 
   ArchiveIcon, 
   CheckCircle2, 
@@ -34,8 +36,9 @@ import { toast } from "sonner";
 import { useEstatePlanning } from "@/hooks/useEstatePlanning";
 
 export default function EstatePlanning() {
-  const [showInterestDialog, setShowInterestDialog] = useState(false);
   const [showAdvisorDialog, setShowAdvisorDialog] = useState(false);
+  const [showLearnMoreDialog, setShowLearnMoreDialog] = useState(false);
+  const [selectedService, setSelectedService] = useState("");
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -44,27 +47,20 @@ export default function EstatePlanning() {
   });
 
   const { createInterest, createConsultation } = useEstatePlanning();
+  const { sendLearnMoreEmail } = useLearnMoreNotification();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleShowInterest = async () => {
-    try {
-      await createInterest({
-        service_type: "General Interest",
-        message: formData.message,
-        contact_name: formData.name,
-        contact_email: formData.email,
-        contact_phone: formData.phone,
-      });
-      
-      setShowInterestDialog(false);
-      setFormData({ name: "", email: "", phone: "", message: "" });
-    } catch (error) {
-      console.error('Error submitting interest:', error);
-    }
+  const handleLearnMoreClick = (serviceName: string) => {
+    setSelectedService(serviceName);
+    setShowLearnMoreDialog(true);
+  };
+
+  const handleLearnMoreConfirm = async () => {
+    await sendLearnMoreEmail(selectedService, "Estate Planning Service", "Estate Planning");
   };
 
   const handleScheduleAppointment = async () => {
@@ -209,7 +205,11 @@ export default function EstatePlanning() {
                     <p className="text-sm text-muted-foreground leading-relaxed">{service.description}</p>
                   </CardContent>
                   <CardFooter className="pt-4">
-                    <Button variant="outline" className="w-full" onClick={() => setShowInterestDialog(true)}>
+                    <Button 
+                      variant="outline" 
+                      className="w-full" 
+                      onClick={() => handleLearnMoreClick(service.title)}
+                    >
                       Learn More
                     </Button>
                   </CardFooter>
@@ -418,7 +418,10 @@ export default function EstatePlanning() {
                   </ul>
                 </CardContent>
                 <CardFooter>
-                  <Button className="w-full" onClick={() => setShowInterestDialog(true)}>
+                  <Button 
+                    className="w-full" 
+                    onClick={() => handleLearnMoreClick("Family Legacy Box")}
+                  >
                     Learn More About Legacy Box
                   </Button>
                 </CardFooter>
@@ -427,7 +430,7 @@ export default function EstatePlanning() {
           </TabsContent>
         </Tabs>
 
-        {/* Hidden Dialogs */}
+        {/* Dialogs */}
         <Dialog open={showAdvisorDialog} onOpenChange={setShowAdvisorDialog}>
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
@@ -471,48 +474,12 @@ export default function EstatePlanning() {
           </DialogContent>
         </Dialog>
 
-        <Dialog open={showInterestDialog} onOpenChange={setShowInterestDialog}>
-          <DialogContent className="sm:max-w-[425px]">
-            <DialogHeader>
-              <DialogTitle>Express Interest</DialogTitle>
-              <DialogDescription>
-                Let us know what estate planning services you're interested in.
-              </DialogDescription>
-            </DialogHeader>
-            <div className="space-y-4 py-4">
-              <div className="space-y-2">
-                <Label htmlFor="interest-name">Full Name</Label>
-                <Input id="interest-name" name="name" value={formData.name} onChange={handleInputChange} placeholder="John Doe" />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="interest-email">Email</Label>
-                <Input id="interest-email" name="email" type="email" value={formData.email} onChange={handleInputChange} placeholder="john@example.com" />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="interest-services">Services of Interest</Label>
-                <div className="flex flex-wrap gap-2">
-                  {services.slice(0, 3).map((service) => (
-                    <Button key={service.title} variant="outline" size="sm" onClick={() => toast.info(`${service.title} selected`)}>
-                      {service.title}
-                    </Button>
-                  ))}
-                </div>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="message">Message</Label>
-                <Textarea id="message" name="message" value={formData.message} onChange={handleInputChange} placeholder="Tell us about your estate planning needs..." className="min-h-[80px]" />
-              </div>
-            </div>
-            <DialogFooter className="flex-col sm:flex-row gap-2">
-              <Button variant="outline" onClick={() => setShowInterestDialog(false)} className="w-full sm:w-auto">
-                Cancel
-              </Button>
-              <Button onClick={handleShowInterest} className="w-full sm:w-auto">
-                Submit
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+        <LearnMoreDialog
+          open={showLearnMoreDialog}
+          onOpenChange={setShowLearnMoreDialog}
+          itemName={selectedService}
+          onConfirm={handleLearnMoreConfirm}
+        />
       </div>
     </ThreeColumnLayout>
   );

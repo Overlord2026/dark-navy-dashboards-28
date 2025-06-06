@@ -1,8 +1,10 @@
-import React from "react";
+
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ArrowLeft, ArrowRight, ChevronRight } from "lucide-react";
 import { ScheduleMeetingDialog } from "@/components/investments/ScheduleMeetingDialog";
+import { LearnMoreDialog } from "@/components/ui/learn-more-dialog";
 import { InsuranceType, InsuranceProvider, InsuranceTypeInfo } from "@/types/insuranceProvider";
 import { getInsuranceTitle, getInsuranceDescription } from "@/utils/insuranceUtils";
 import { 
@@ -40,6 +42,7 @@ export const InsuranceDetailView = ({
   onSelectProvider,
   onInterested
 }: InsuranceDetailViewProps) => {
+  const [showLearnMoreDialog, setShowLearnMoreDialog] = useState(false);
   const { sendInterestEmail } = useInterestNotification();
   const { sendLearnMoreEmail } = useLearnMoreNotification();
   const providers = insuranceTypeProviders[selectedType].providers;
@@ -50,7 +53,7 @@ export const InsuranceDetailView = ({
     onInterested();
   };
 
-  const handleLearnMore = async () => {
+  const handleLearnMoreConfirm = async () => {
     const itemName = `${getInsuranceTitle(selectedType)} Insurance by ${getProviderName(selectedProvider)}`;
     await sendLearnMoreEmail(itemName, "Insurance", "Insurance");
   };
@@ -171,7 +174,7 @@ export const InsuranceDetailView = ({
             <Button 
               variant="outline" 
               className="border-gray-700 text-white hover:bg-[#1c2e4a]"
-              onClick={handleLearnMore}
+              onClick={() => setShowLearnMoreDialog(true)}
             >
               Learn More
             </Button>
@@ -203,6 +206,13 @@ export const InsuranceDetailView = ({
           </div>
         </div>
       </Card>
+
+      <LearnMoreDialog
+        open={showLearnMoreDialog}
+        onOpenChange={setShowLearnMoreDialog}
+        itemName={`${getInsuranceTitle(selectedType)} Insurance by ${getProviderName(selectedProvider)}`}
+        onConfirm={handleLearnMoreConfirm}
+      />
     </div>
   );
 };

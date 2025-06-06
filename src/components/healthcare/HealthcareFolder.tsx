@@ -141,6 +141,10 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
         activeCategory="healthcare"
         categories={[{ id: "healthcare", name: "Healthcare" }]}
         uploading={false}
+        bucketName="documents"
+        userId="current-user"
+        isFolder={false}
+        isPrivate={false}
       />
 
       <ShareDocumentWithProfessionalsDialog
