@@ -136,8 +136,19 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
     }
   };
 
-  // Helper function to convert Goal to FinancialGoal
+  // Helper function to convert Goal to FinancialGoal with proper priority mapping
   const convertToFinancialGoal = (goalData: GoalFormData, goalId: string): FinancialGoal => {
+    // Map goal types to database-accepted priority values
+    let priority: 'Low' | 'Medium' | 'High' = 'Medium'; // Default
+    
+    if (goalData.type === 'Retirement') {
+      priority = 'High';
+    } else if (goalData.type === 'Education' || goalData.type === 'Home Purchase') {
+      priority = 'Medium';
+    } else {
+      priority = 'Low';
+    }
+
     return {
       id: goalId,
       title: goalData.name,
@@ -145,12 +156,11 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
       targetAmount: goalData.targetAmount || goalData.purchasePrice || goalData.tuitionEstimate || goalData.estimatedCost || goalData.amountDesired || 0,
       currentAmount: 0,
       targetDate: goalData.targetDate || new Date(),
-      priority: (goalData.type === 'Retirement' ? 'High' : goalData.type === 'Education' ? 'Medium' : 'Low') as 'Low' | 'Medium' | 'High',
+      priority: priority,
       isComplete: false
     };
   };
 
-  // Ensure we have a plan to save goals to
   const ensurePlanExists = async () => {
     if (activePlan) {
       return activePlan;
