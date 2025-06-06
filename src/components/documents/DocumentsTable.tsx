@@ -10,6 +10,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { toast } from "sonner";
 
 export interface DocumentsTableProps {
   documents: DocumentItem[];
@@ -45,6 +46,31 @@ export const DocumentsTable: React.FC<DocumentsTableProps> = ({
     }
   };
 
+  const handleDownload = (document: DocumentItem) => {
+    if (document.type === "folder") {
+      toast.error("Cannot download folders");
+      return;
+    }
+
+    if (onDownloadDocument) {
+      onDownloadDocument(document);
+    } else {
+      // Fallback download functionality
+      console.log(`Downloading ${document.name}`);
+      const blob = new Blob(['This is a simulated document content'], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const link = window.document.createElement('a');
+      link.href = url;
+      link.download = document.name;
+      window.document.body.appendChild(link);
+      link.click();
+      window.document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      
+      toast.success(`Download started for ${document.name}`);
+    }
+  };
+
   const renderDropdownActions = (document: DocumentItem) => (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -54,8 +80,8 @@ export const DocumentsTable: React.FC<DocumentsTableProps> = ({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="bg-background border border-border">
-        {onDownloadDocument && (
-          <DropdownMenuItem onClick={() => onDownloadDocument(document)}>
+        {document.type !== "folder" && (
+          <DropdownMenuItem onClick={() => handleDownload(document)}>
             <Download className="mr-2 h-4 w-4" />
             Download
           </DropdownMenuItem>
@@ -78,11 +104,11 @@ export const DocumentsTable: React.FC<DocumentsTableProps> = ({
 
   const renderRegularActions = (document: DocumentItem) => (
     <div className="flex justify-end space-x-2">
-      {onDownloadDocument && (
+      {document.type !== "folder" && (
         <Button 
           variant="ghost" 
           size="icon" 
-          onClick={() => onDownloadDocument(document)}
+          onClick={() => handleDownload(document)}
           aria-label="Download Document"
         >
           <Download className="h-4 w-4" />

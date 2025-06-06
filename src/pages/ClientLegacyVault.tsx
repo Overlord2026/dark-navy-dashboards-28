@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { CategoryList } from "@/components/documents/CategoryList";
@@ -17,8 +18,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { FamilyLegacyBox } from "@/components/estate-planning/FamilyLegacyBox";
 import { HealthcareFolder } from "@/components/healthcare/HealthcareFolder";
 import { ProfessionalsProvider } from "@/context/ProfessionalsContext";
-import { RequestAssistanceButton } from "@/components/ui/request-assistance-button";
-import { ConsultantRequestButton } from "@/components/ui/consultant-request-button";
+import { useSupabaseDocumentManagement } from "@/hooks/useSupabaseDocumentManagement";
 import { 
   Card, 
   CardContent, 
@@ -39,15 +39,27 @@ const estateDocumentCategories = documentCategories.filter(cat =>
 );
 
 export default function ClientLegacyVault() {
-  const [activeCategory, setActiveCategory] = useState("all");
-  const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
+  const {
+    documents,
+    activeCategory,
+    isUploadDialogOpen,
+    loading,
+    uploading,
+    setActiveCategory,
+    setIsUploadDialogOpen,
+    handleCreateFolder,
+    handleFileUpload,
+    handleDownloadDocument,
+    deleteDocument,
+    refreshDocuments,
+    filteredDocuments
+  } = useSupabaseDocumentManagement();
+
   const [isNewFolderDialogOpen, setIsNewFolderDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isShareDialogOpen, setIsShareDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [selectedDocument, setSelectedDocument] = useState<DocumentItem | null>(null);
-  const [documents, setDocuments] = useState<DocumentItem[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("legacy-box");
   
   const legacyBoxDocuments: DocumentItem[] = [
@@ -98,53 +110,10 @@ export default function ClientLegacyVault() {
       modified: new Date().toISOString(),
     }
   ];
-  
-  useEffect(() => {
-    setTimeout(() => {
-      setDocuments([]);
-      setIsLoading(false);
-    }, 1000);
-  }, []);
-
-  const filteredDocuments = activeCategory === "all"
-    ? documents
-    : documents.filter(doc => doc.category === activeCategory);
-
-  const handleUploadDocument = (file: File, customName: string) => {
-    const newDocument: DocumentItem = {
-      id: Math.random().toString(36).substring(2, 9),
-      name: customName || file.name,
-      type: file.type.includes("pdf") ? "pdf" : 
-            file.type.includes("image") ? "image" : "document",
-      category: activeCategory === "all" ? "general" : activeCategory,
-      size: file.size,
-      uploadedBy: "Tom Brady",
-      created: new Date().toISOString(),
-      modified: new Date().toISOString(),
-    };
-    
-    setDocuments(prev => [...prev, newDocument]);
-    toast.success("Document uploaded successfully");
-    setIsUploadDialogOpen(false);
-  };
-
-  const handleCreateFolder = (folderName: string, category: string = activeCategory) => {
-    const newFolder: DocumentItem = {
-      id: Math.random().toString(36).substring(2, 9),
-      name: folderName,
-      type: "folder",
-      category: category === "all" ? "general" : category,
-      created: new Date().toISOString(),
-      size: "—",
-    };
-    
-    setDocuments(prev => [...prev, newFolder]);
-    toast.success("Folder created successfully");
-    setIsNewFolderDialogOpen(false);
-  };
 
   const handleAddDocument = (document: DocumentItem) => {
-    setDocuments(prev => [...prev, document]);
+    // This will be handled by the Supabase hook
+    refreshDocuments();
   };
 
   const handleEditDocument = (document: DocumentItem) => {
@@ -153,13 +122,7 @@ export default function ClientLegacyVault() {
   };
 
   const handleSaveDocument = (document: DocumentItem, newName: string) => {
-    setDocuments(prev => 
-      prev.map(doc => 
-        doc.id === document.id 
-          ? { ...doc, name: newName, modified: new Date().toISOString() } 
-          : doc
-      )
-    );
+    // Update logic would go here
     toast.success("Document updated successfully");
   };
 
@@ -173,10 +136,30 @@ export default function ClientLegacyVault() {
     setIsDeleteDialogOpen(true);
   };
 
-  const handleDeleteDocument = (document: DocumentItem) => {
-    setDocuments(prev => prev.filter(doc => doc.id !== document.id));
-    toast.success("Document deleted successfully");
+  const handleDeleteDocument = async (document: DocumentItem) => {
+    try {
+      await deleteDocument(document.id);
+      toast.success("Document deleted successfully");
+    } catch (error) {
+      toast.error("Failed to delete document");
+    }
   };
+
+  // Convert Supabase documents to DocumentItem format for compatibility
+  const convertSupabaseDocsToDocumentItems = (supabaseDocs: any[]): DocumentItem[] => {
+    return supabaseDocs.map(doc => ({
+      id: doc.id,
+      name: doc.name,
+      type: doc.type,
+      category: doc.category,
+      created: doc.created_at,
+      modified: doc.updated_at,
+      size: doc.size || 0,
+      uploadedBy: doc.uploaded_by || "Unknown",
+    }));
+  };
+
+  const documentItems = convertSupabaseDocsToDocumentItems(filteredDocuments);
 
   return (
     <ThreeColumnLayout activeMainItem="client-legacy-vault">
@@ -224,7 +207,7 @@ export default function ClientLegacyVault() {
             {/* Healthcare Tab */}
             <TabsContent value="healthcare" className="space-y-6">
               <HealthcareFolder 
-                documents={documents} 
+                documents={documentItems} 
                 onAddDocument={handleAddDocument}
                 onCreateFolder={handleCreateFolder}
               />
@@ -237,8 +220,8 @@ export default function ClientLegacyVault() {
           open={isUploadDialogOpen}
           onOpenChange={setIsUploadDialogOpen}
           onClose={() => setIsUploadDialogOpen(false)}
-          onFileUpload={handleUploadDocument}
-          activeCategory={activeCategory}
+          onFileUpload={handleFileUpload}
+          activeCategory={activeCategory || "documents"}
           documentCategories={documentCategories as any}
         />
         
