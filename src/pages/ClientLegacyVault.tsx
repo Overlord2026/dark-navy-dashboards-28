@@ -316,7 +316,7 @@ export default function ClientLegacyVault() {
                     
                     {/* Dashboard Tab */}
                     <TabsContent value="dashboard" className="space-y-6">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         {/* Prescriptions Card */}
                         <Card className="hover:shadow-md transition-shadow">
                           <CardHeader className="pb-3">
@@ -335,7 +335,7 @@ export default function ClientLegacyVault() {
                               </Button>
                             </CardTitle>
                             <CardDescription>
-                              Current medications and refill status
+                              Current medications and detailed information
                             </CardDescription>
                           </CardHeader>
                           <CardContent>
@@ -357,49 +357,75 @@ export default function ClientLegacyVault() {
                                 </Button>
                               </div>
                             ) : (
-                              <div className="space-y-3">
-                                <div className="flex items-center justify-between text-sm">
-                                  <span className="font-medium">Total: {prescriptions.length}</span>
-                                  <div className="flex gap-2">
-                                    {prescriptions.filter(p => {
-                                      const status = getRefillStatus(p.next_refill);
-                                      return status.status === 'overdue' || status.status === 'due-soon';
-                                    }).length > 0 && (
-                                      <Badge variant="secondary" className="text-xs">
-                                        {prescriptions.filter(p => {
-                                          const status = getRefillStatus(p.next_refill);
-                                          return status.status === 'overdue' || status.status === 'due-soon';
-                                        }).length} need attention
-                                      </Badge>
-                                    )}
-                                  </div>
+                              <div className="space-y-4">
+                                <div className="flex items-center justify-between text-sm font-medium">
+                                  <span>Total Prescriptions: {prescriptions.length}</span>
+                                  {prescriptions.filter(p => {
+                                    const status = getRefillStatus(p.next_refill);
+                                    return status.status === 'overdue' || status.status === 'due-soon';
+                                  }).length > 0 && (
+                                    <Badge variant="secondary" className="text-xs">
+                                      {prescriptions.filter(p => {
+                                        const status = getRefillStatus(p.next_refill);
+                                        return status.status === 'overdue' || status.status === 'due-soon';
+                                      }).length} need attention
+                                    </Badge>
+                                  )}
                                 </div>
                                 
-                                {/* Show recent prescriptions */}
-                                <div className="space-y-2 max-h-40 overflow-y-auto">
-                                  {prescriptions.slice(0, 3).map((prescription) => {
+                                {/* Show all prescriptions with full details */}
+                                <div className="space-y-3 max-h-96 overflow-y-auto">
+                                  {prescriptions.map((prescription) => {
                                     const refillStatus = getRefillStatus(prescription.next_refill);
                                     return (
-                                      <div key={prescription.id} className="flex items-center justify-between p-2 border rounded-md bg-muted/30">
-                                        <div className="flex-1 min-w-0">
-                                          <p className="text-sm font-medium truncate">{prescription.name}</p>
-                                          <p className="text-xs text-muted-foreground">{prescription.dosage}</p>
-                                        </div>
-                                        <div className="flex items-center gap-2">
-                                          <Badge variant={refillStatus.variant} className="text-xs">
+                                      <div key={prescription.id} className="border rounded-lg p-4 bg-muted/20">
+                                        <div className="flex items-start justify-between mb-3">
+                                          <div className="flex-1">
+                                            <h4 className="font-semibold text-base">{prescription.name}</h4>
+                                            <p className="text-sm text-muted-foreground font-medium">{prescription.dosage}</p>
+                                          </div>
+                                          <Badge variant={refillStatus.variant} className="ml-2">
                                             {refillStatus.label}
                                           </Badge>
                                         </div>
+                                        
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                                          <div className="flex items-center gap-2">
+                                            <Clock className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                                            <span><strong>Frequency:</strong> {prescription.frequency}</span>
+                                          </div>
+                                          
+                                          <div className="flex items-center gap-2">
+                                            <Calendar className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                                            <span><strong>Next Refill:</strong> {format(new Date(prescription.next_refill), 'MMM d, yyyy')}</span>
+                                          </div>
+                                          
+                                          {prescription.doctor && (
+                                            <div className="flex items-center gap-2">
+                                              <User className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                                              <span><strong>Doctor:</strong> Dr. {prescription.doctor}</span>
+                                            </div>
+                                          )}
+                                          
+                                          {prescription.pharmacy && (
+                                            <div className="flex items-center gap-2">
+                                              <Users className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                                              <span><strong>Pharmacy:</strong> {prescription.pharmacy}</span>
+                                            </div>
+                                          )}
+                                        </div>
+                                        
+                                        {prescription.notes && (
+                                          <div className="mt-3 pt-3 border-t border-border/30">
+                                            <p className="text-xs text-muted-foreground">
+                                              <strong>Notes:</strong> {prescription.notes}
+                                            </p>
+                                          </div>
+                                        )}
                                       </div>
                                     );
                                   })}
                                 </div>
-                                
-                                {prescriptions.length > 3 && (
-                                  <p className="text-xs text-muted-foreground text-center pt-2">
-                                    +{prescriptions.length - 3} more prescriptions
-                                  </p>
-                                )}
                               </div>
                             )}
                           </CardContent>
@@ -423,7 +449,7 @@ export default function ClientLegacyVault() {
                               </Button>
                             </CardTitle>
                             <CardDescription>
-                              Your healthcare providers and contacts
+                              Healthcare providers and contact details
                             </CardDescription>
                           </CardHeader>
                           <CardContent>
@@ -445,41 +471,65 @@ export default function ClientLegacyVault() {
                                 </Button>
                               </div>
                             ) : (
-                              <div className="space-y-3">
-                                <div className="flex items-center justify-between text-sm">
-                                  <span className="font-medium">Total: {physicians.length}</span>
+                              <div className="space-y-4">
+                                <div className="flex items-center justify-between text-sm font-medium">
+                                  <span>Total Physicians: {physicians.length}</span>
                                   <Badge variant="outline" className="text-xs">
                                     {physicians.filter(p => p.specialty).length} specialists
                                   </Badge>
                                 </div>
                                 
-                                {/* Show recent physicians */}
-                                <div className="space-y-2 max-h-40 overflow-y-auto">
-                                  {physicians.slice(0, 3).map((physician) => (
-                                    <div key={physician.id} className="flex items-center justify-between p-2 border rounded-md bg-muted/30">
-                                      <div className="flex-1 min-w-0">
-                                        <p className="text-sm font-medium truncate">{physician.name}</p>
-                                        <p className="text-xs text-muted-foreground">
-                                          {physician.specialty || 'General Practitioner'}
-                                        </p>
-                                      </div>
-                                      <div className="flex items-center gap-2">
+                                {/* Show all physicians with full details */}
+                                <div className="space-y-3 max-h-96 overflow-y-auto">
+                                  {physicians.map((physician) => (
+                                    <div key={physician.id} className="border rounded-lg p-4 bg-muted/20">
+                                      <div className="flex items-start justify-between mb-3">
+                                        <div className="flex-1">
+                                          <h4 className="font-semibold text-base">{physician.name}</h4>
+                                          <p className="text-sm text-muted-foreground font-medium">
+                                            {physician.specialty || 'General Practitioner'}
+                                          </p>
+                                        </div>
                                         {physician.last_visit && (
-                                          <div className="text-xs text-muted-foreground">
-                                            <Calendar className="h-3 w-3 inline mr-1" />
-                                            {format(new Date(physician.last_visit), 'MMM d')}
+                                          <Badge variant="outline" className="text-xs">
+                                            Last visit: {format(new Date(physician.last_visit), 'MMM d, yyyy')}
+                                          </Badge>
+                                        )}
+                                      </div>
+                                      
+                                      <div className="space-y-2 text-sm">
+                                        {physician.facility && (
+                                          <div className="flex items-center gap-2">
+                                            <Users className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                                            <span><strong>Facility:</strong> {physician.facility}</span>
+                                          </div>
+                                        )}
+                                        
+                                        {physician.phone && (
+                                          <div className="flex items-center gap-2">
+                                            <Calendar className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                                            <span><strong>Phone:</strong> {physician.phone}</span>
+                                          </div>
+                                        )}
+                                        
+                                        {physician.email && (
+                                          <div className="flex items-center gap-2">
+                                            <User className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                                            <span><strong>Email:</strong> {physician.email}</span>
                                           </div>
                                         )}
                                       </div>
+                                      
+                                      {physician.notes && (
+                                        <div className="mt-3 pt-3 border-t border-border/30">
+                                          <p className="text-xs text-muted-foreground">
+                                            <strong>Notes:</strong> {physician.notes}
+                                          </p>
+                                        </div>
+                                      )}
                                     </div>
                                   ))}
                                 </div>
-                                
-                                {physicians.length > 3 && (
-                                  <p className="text-xs text-muted-foreground text-center pt-2">
-                                    +{physicians.length - 3} more physicians
-                                  </p>
-                                )}
                               </div>
                             )}
                           </CardContent>
