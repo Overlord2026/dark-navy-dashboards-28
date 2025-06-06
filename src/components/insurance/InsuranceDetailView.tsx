@@ -13,6 +13,7 @@ import {
   getProviderOtherOfferings, 
   getProviderTopCarriers 
 } from "@/utils/insuranceProviderUtils";
+import { useInterestNotification } from "@/hooks/useInterestNotification";
 
 interface InsuranceDetailViewProps {
   selectedType: InsuranceType;
@@ -40,6 +41,13 @@ export const InsuranceDetailView = ({
   onInterested
 }: InsuranceDetailViewProps) => {
   const providers = insuranceTypeProviders[selectedType].providers;
+  const { sendInterestNotification, isSubmitting } = useInterestNotification();
+
+  const handleInterested = async () => {
+    const assetName = `${getInsuranceTitle(selectedType)} Insurance by ${getProviderName(selectedProvider)}`;
+    await sendInterestNotification(assetName);
+    onInterested(); // Call the original handler for any additional logic
+  };
 
   return (
     <div className="animate-fade-in min-h-screen p-4 text-white bg-[#121a2c]">
@@ -150,9 +158,10 @@ export const InsuranceDetailView = ({
             <Button 
               variant="outline" 
               className="border-gray-700 text-white hover:bg-[#1c2e4a]"
-              onClick={onInterested}
+              onClick={handleInterested}
+              disabled={isSubmitting}
             >
-              I'm Interested
+              {isSubmitting ? "Submitting..." : "I'm Interested"}
             </Button>
             <ScheduleMeetingDialog 
               assetName={`${getInsuranceTitle(selectedType)} Insurance by ${getProviderName(selectedProvider)}`} 
