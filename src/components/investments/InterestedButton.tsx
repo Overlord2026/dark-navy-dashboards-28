@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Heart } from "lucide-react";
 import { useTaxPlanning } from "@/hooks/useTaxPlanning";
-import { useInterestNotification } from "@/hooks/useInterestNotification";
 
 interface InterestedButtonProps {
   assetName: string;
@@ -20,15 +19,11 @@ export function InterestedButton({
 }: InterestedButtonProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { createInterest } = useTaxPlanning();
-  const { sendInterestEmail } = useInterestNotification();
 
   const handleInterest = async () => {
     setIsSubmitting(true);
     try {
-      // Send interest email notification
-      await sendInterestEmail(assetName, itemType, pageContext);
-      
-      // Also create interest in database
+      // Only call createInterest which handles both email and database operations
       await createInterest({
         interest_type: 'investment',
         asset_name: assetName,
