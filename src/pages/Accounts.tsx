@@ -1,4 +1,3 @@
-
 import React from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
@@ -69,7 +68,6 @@ const Accounts = () => {
             title="401K/457/403B Plans"
             amount="$0.00"
             description="Track and manage your retirement accounts"
-            defaultExpanded={true}
           >
             <RetirementAccountTracker />
           </CollapsibleCard>
