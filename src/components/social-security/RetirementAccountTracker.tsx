@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,7 +8,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@radix-ui/react-select";
 import { PlusCircleIcon, TrashIcon, UserIcon, PiggyBankIcon, BellRingIcon, LineChartIcon } from "lucide-react";
 import { toast } from "sonner";
-import { useUser } from "@/context/UserContext";
+import { useAuth } from "@/context/AuthContext";
 
 type RetirementAccountType = "401K" | "457" | "403B" | "TSP" | "Other";
 
@@ -29,7 +28,7 @@ type RetirementAccount = {
 };
 
 export const RetirementAccountTracker = () => {
-  const { userProfile } = useUser();
+  const { userProfile } = useAuth();
   
   const [familyAccounts, setFamilyAccounts] = useState<RetirementAccount[]>([
     {
