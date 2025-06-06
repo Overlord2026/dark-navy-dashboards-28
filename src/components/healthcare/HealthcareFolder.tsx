@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -140,7 +141,6 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
         activeCategory="healthcare"
         categories={[{ id: "healthcare", name: "Healthcare" }]}
         uploading={false}
-        bucketName="documents"
         userId="current-user"
         isFolder={false}
         isPrivate={false}

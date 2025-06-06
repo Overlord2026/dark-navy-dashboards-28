@@ -20,6 +20,9 @@ import {
 import { motion } from "framer-motion";
 import { InterestedButton } from "@/components/investments/InterestedButton";
 import { ScheduleMeetingDialog } from "@/components/investments/ScheduleMeetingDialog";
+import { RequestAssistanceButton } from "@/components/ui/request-assistance-button";
+import { ConsultantRequestButton } from "@/components/ui/consultant-request-button";
+import { LearnMoreButton } from "@/components/investments/LearnMoreButton";
 import { Link } from "react-router-dom";
 import { SecureTaxReturnAnalysis } from "@/components/estate-planning/SecureTaxReturnAnalysis";
 import { AccountingSoftwareIntegration } from "@/components/tax-planning/AccountingSoftwareIntegration";
@@ -128,6 +131,16 @@ export default function TaxPlanning() {
                       pageContext="Tax Planning"
                     />
                     <ScheduleMeetingDialog assetName="Roth IRA Conversion" />
+                    <LearnMoreButton 
+                      assetName="Roth IRA Conversion" 
+                      itemType="Tax Strategy"
+                      pageContext="Tax Planning"
+                    />
+                    <RequestAssistanceButton 
+                      itemName="Roth IRA Conversion" 
+                      itemType="Tax Strategy"
+                      pageContext="Tax Planning"
+                    />
                   </div>
                 </div>
               </div>
@@ -193,10 +206,17 @@ export default function TaxPlanning() {
                   </ul>
                 </div>
               </div>
-              <div className="flex justify-center mt-6">
-                <Button onClick={handleTaxStrategyConsultation}>
-                  Schedule Tax Strategy Consultation
-                </Button>
+              <div className="flex justify-center mt-6 space-x-3">
+                <ConsultantRequestButton 
+                  itemName="Advanced Tax Planning Strategies" 
+                  itemType="Tax Strategy"
+                  pageContext="Tax Planning"
+                />
+                <RequestAssistanceButton 
+                  itemName="Advanced Tax Planning Strategies" 
+                  itemType="Tax Strategy"
+                  pageContext="Tax Planning"
+                />
               </div>
             </CardContent>
           </Card>
@@ -223,9 +243,14 @@ export default function TaxPlanning() {
                   <p className="text-sm text-muted-foreground mt-2">
                     Stay informed about tax law changes and receive personalized annual tax planning recommendations.
                   </p>
-                  <Button variant="link" className="p-0 h-auto mt-3 text-primary text-sm">
-                    Learn More <ArrowRight className="h-3 w-3 ml-1" />
-                  </Button>
+                  <div className="mt-3">
+                    <LearnMoreButton 
+                      assetName="Annual Tax Updates" 
+                      itemType="Tax Service"
+                      pageContext="Tax Planning"
+                      className="text-sm p-0 h-auto"
+                    />
+                  </div>
                 </div>
                 
                 <div className="border rounded-lg p-4">
@@ -236,9 +261,14 @@ export default function TaxPlanning() {
                   <p className="text-sm text-muted-foreground mt-2">
                     Long-term tax planning with multi-year projections to optimize your tax situation over time.
                   </p>
-                  <Button variant="link" className="p-0 h-auto mt-3 text-primary text-sm">
-                    Learn More <ArrowRight className="h-3 w-3 ml-1" />
-                  </Button>
+                  <div className="mt-3">
+                    <LearnMoreButton 
+                      assetName="Multi-Year Tax Projection" 
+                      itemType="Tax Service"
+                      pageContext="Tax Planning"
+                      className="text-sm p-0 h-auto"
+                    />
+                  </div>
                 </div>
                 
                 <div className="border rounded-lg p-4">
@@ -249,9 +279,14 @@ export default function TaxPlanning() {
                   <p className="text-sm text-muted-foreground mt-2">
                     Strategic planning for state tax optimization, including residency changes and domicile considerations.
                   </p>
-                  <Button variant="link" className="p-0 h-auto mt-3 text-primary text-sm">
-                    Learn More <ArrowRight className="h-3 w-3 ml-1" />
-                  </Button>
+                  <div className="mt-3">
+                    <LearnMoreButton 
+                      assetName="State Residency Planning" 
+                      itemType="Tax Service"
+                      pageContext="Tax Planning"
+                      className="text-sm p-0 h-auto"
+                    />
+                  </div>
                 </div>
               </div>
             </CardContent>

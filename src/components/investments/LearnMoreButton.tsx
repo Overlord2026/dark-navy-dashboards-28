@@ -10,13 +10,17 @@ interface LearnMoreButtonProps {
   className?: string;
   itemType?: string;
   pageContext?: string;
+  variant?: "default" | "outline" | "ghost" | "link" | "destructive" | "secondary";
+  size?: "default" | "sm" | "lg" | "icon";
 }
 
 export function LearnMoreButton({ 
   assetName, 
   className = "",
   itemType = "Investment",
-  pageContext = "Investments"
+  pageContext = "Investments",
+  variant = "outline",
+  size = "default"
 }: LearnMoreButtonProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -36,10 +40,11 @@ export function LearnMoreButton({
   return (
     <>
       <Button 
-        variant="outline" 
+        variant={variant}
+        size={size}
         onClick={() => setIsDialogOpen(true)}
         disabled={isSubmitting}
-        className={`w-full flex items-center justify-center ${className}`}
+        className={`flex items-center justify-center ${className}`}
       >
         <BookOpen className="mr-2 h-4 w-4" />
         Learn More
