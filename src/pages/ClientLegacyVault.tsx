@@ -10,7 +10,7 @@ import { ShareDocumentDialog } from "@/components/documents/ShareDocumentDialog"
 import { DeleteDocumentDialog } from "@/components/documents/DeleteDocumentDialog";
 import { NewFolderDialog } from "@/components/documents/NewFolderDialog";
 import { Button } from "@/components/ui/button";
-import { FolderPlus, Upload, ExternalLink, ArchiveIcon, HeartPulseIcon } from "lucide-react";
+import { FolderPlus, Upload, ExternalLink, LayoutDashboard, FileText, Pill } from "lucide-react";
 import { documentCategories, healthcareCategories } from "@/data/documentCategories";
 import { toast } from "sonner";
 import { DocumentType, DocumentItem, DocumentCategory } from "@/types/document";
@@ -60,7 +60,7 @@ export default function ClientLegacyVault() {
   const [isShareDialogOpen, setIsShareDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [selectedDocument, setSelectedDocument] = useState<DocumentItem | null>(null);
-  const [activeTab, setActiveTab] = useState("legacy-box");
+  const [activeTab, setActiveTab] = useState("dashboard");
   
   const legacyBoxDocuments: DocumentItem[] = [
     {
@@ -159,7 +159,6 @@ export default function ClientLegacyVault() {
     }));
   };
 
-  // Restore the original documents list for Healthcare tab - don't filter by Supabase documents
   const documentItems = convertSupabaseDocsToDocumentItems(filteredDocuments);
 
   return (
@@ -189,29 +188,87 @@ export default function ClientLegacyVault() {
           
           {/* Tabs Section */}
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-2 mb-6 h-auto">
-              <TabsTrigger value="legacy-box" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 p-2 sm:p-3">
-                <ArchiveIcon className="h-4 w-4" />
-                <span className="text-xs sm:text-sm">Family Legacy Box</span>
+            <TabsList className="grid w-full grid-cols-3 mb-6 h-auto">
+              <TabsTrigger value="dashboard" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 p-2 sm:p-3">
+                <LayoutDashboard className="h-4 w-4" />
+                <span className="text-xs sm:text-sm">Dashboard</span>
               </TabsTrigger>
-              <TabsTrigger value="healthcare" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 p-2 sm:p-3">
-                <HeartPulseIcon className="h-4 w-4" />
-                <span className="text-xs sm:text-sm">Healthcare</span>
+              <TabsTrigger value="document" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 p-2 sm:p-3">
+                <FileText className="h-4 w-4" />
+                <span className="text-xs sm:text-sm">Document</span>
+              </TabsTrigger>
+              <TabsTrigger value="prescriptions" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 p-2 sm:p-3">
+                <Pill className="h-4 w-4" />
+                <span className="text-xs sm:text-sm">Prescriptions</span>
               </TabsTrigger>
             </TabsList>
             
-            {/* Legacy Box Tab */}
-            <TabsContent value="legacy-box" className="space-y-6">
+            {/* Dashboard Tab */}
+            <TabsContent value="dashboard" className="space-y-6">
               <FamilyLegacyBox />
             </TabsContent>
 
-            {/* Healthcare Tab - Restored to original functionality */}
-            <TabsContent value="healthcare" className="space-y-6">
-              <HealthcareFolder 
-                documents={[]} 
-                onAddDocument={handleAddDocument}
-                onCreateFolder={handleCreateFolder}
-              />
+            {/* Document Tab - Contains Healthcare, Insurance Coverage, etc. */}
+            <TabsContent value="document" className="space-y-6">
+              <div className="space-y-4">
+                <div className="flex justify-between items-center">
+                  <div>
+                    <h2 className="text-xl font-semibold">Document Management</h2>
+                    <p className="text-muted-foreground">Healthcare, Insurance Coverage, Prescriptions & Medications, Physicians & Providers, Medical Records & Documents</p>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button 
+                      onClick={() => setIsNewFolderDialogOpen(true)}
+                      variant="outline"
+                      className="flex items-center"
+                    >
+                      <FolderPlus className="mr-2 h-4 w-4" />
+                      New Folder
+                    </Button>
+                    <Button 
+                      onClick={() => setIsUploadDialogOpen(true)} 
+                      className="flex items-center"
+                    >
+                      <Upload className="mr-2 h-4 w-4" />
+                      Upload
+                    </Button>
+                  </div>
+                </div>
+                
+                <HealthcareFolder 
+                  documents={[]} 
+                  onAddDocument={handleAddDocument}
+                  onCreateFolder={handleCreateFolder}
+                />
+              </div>
+            </TabsContent>
+
+            {/* Prescriptions Tab */}
+            <TabsContent value="prescriptions" className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Pill className="h-5 w-5" />
+                    Prescriptions & Medications
+                  </CardTitle>
+                  <CardDescription>
+                    Manage your prescription medications and medical documents
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-center py-8">
+                    <Pill className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                    <h3 className="text-lg font-medium mb-2">No Prescriptions Added</h3>
+                    <p className="text-muted-foreground mb-4">
+                      Add your prescription medications and related documents here.
+                    </p>
+                    <Button onClick={() => setIsUploadDialogOpen(true)}>
+                      <Upload className="mr-2 h-4 w-4" />
+                      Upload Prescription Document
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
             </TabsContent>
           </Tabs>
         </div>
