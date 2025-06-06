@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { CategoryList } from "@/components/documents/CategoryList";
@@ -9,7 +10,7 @@ import { ShareDocumentDialog } from "@/components/documents/ShareDocumentDialog"
 import { DeleteDocumentDialog } from "@/components/documents/DeleteDocumentDialog";
 import { NewFolderDialog } from "@/components/documents/NewFolderDialog";
 import { Button } from "@/components/ui/button";
-import { FolderPlus, Upload, ExternalLink, ArchiveIcon, HeartPulseIcon, Activity, FileText, Pill, Users, Edit, Trash2, Plus, Calendar } from "lucide-react";
+import { FolderPlus, Upload, ExternalLink, ArchiveIcon, HeartPulseIcon, Activity, FileText, Pill, Users, Edit, Trash2, Plus, Calendar, Clock, User } from "lucide-react";
 import { documentCategories, healthcareCategories } from "@/data/documentCategories";
 import { toast } from "sonner";
 import { DocumentType, DocumentItem, DocumentCategory } from "@/types/document";
