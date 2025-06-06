@@ -159,6 +159,7 @@ export default function ClientLegacyVault() {
     }));
   };
 
+  // Restore the original documents list for Healthcare tab - don't filter by Supabase documents
   const documentItems = convertSupabaseDocsToDocumentItems(filteredDocuments);
 
   return (
@@ -204,10 +205,10 @@ export default function ClientLegacyVault() {
               <FamilyLegacyBox />
             </TabsContent>
 
-            {/* Healthcare Tab */}
+            {/* Healthcare Tab - Restored to original functionality */}
             <TabsContent value="healthcare" className="space-y-6">
               <HealthcareFolder 
-                documents={documentItems} 
+                documents={[]} 
                 onAddDocument={handleAddDocument}
                 onCreateFolder={handleCreateFolder}
               />
