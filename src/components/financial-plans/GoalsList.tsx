@@ -79,82 +79,8 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
     loading,
     error
   } = useFinancialPlans();
-  
-  // Update local goals when props change or when activePlan changes
-  useEffect(() => {
-    if (activePlan && activePlan.goals) {
-      // Convert FinancialGoal to Goal format
-      const convertedGoals: Goal[] = activePlan.goals.map((goal: FinancialGoal) => ({
-        id: goal.id,
-        title: goal.title,
-        name: goal.title,
-        type: goal.priority, // Map priority to type for display
-        priority: goal.priority,
-        targetDate: goal.targetDate,
-        targetAmount: goal.targetAmount,
-        currentAmount: goal.currentAmount,
-        description: goal.description,
-        owner: 'User' // Default owner
-      }));
-      setLocalGoals(convertedGoals);
-    } else {
-      setLocalGoals(goals);
-    }
-  }, [goals, activePlan]);
-  
-  useEffect(() => {
-    if (newGoalId) {
-      const timer = setTimeout(() => {
-        setNewGoalId(null);
-      }, 1500);
-      
-      return () => clearTimeout(timer);
-    }
-  }, [newGoalId]);
 
-  // Show loading state
-  if (loading) {
-    return (
-      <div className="space-y-8">
-        <div className="flex justify-between items-center">
-          <h2 className="text-xl font-semibold">Goals</h2>
-          <Button 
-            className="bg-blue-600 hover:bg-blue-700 text-white"
-            disabled
-          >
-            Add Goal
-          </Button>
-        </div>
-        <div className="text-center py-8">
-          <p className="text-gray-400">Loading goals...</p>
-        </div>
-      </div>
-    );
-  }
-
-  // Show error state
-  if (error) {
-    return (
-      <div className="space-y-8">
-        <div className="flex justify-between items-center">
-          <h2 className="text-xl font-semibold">Goals</h2>
-          <Button 
-            className="bg-blue-600 hover:bg-blue-700 text-white"
-            onClick={handleAddGoalClick}
-          >
-            Add Goal
-          </Button>
-        </div>
-        <div className="text-center py-8">
-          <p className="text-red-400">Error loading goals: {error.message}</p>
-          <Button onClick={refreshPlans} className="mt-4">
-            Retry
-          </Button>
-        </div>
-      </div>
-    );
-  }
-  
+  // Function declarations - moved before early returns to fix scoping
   const toggleGoalExpansion = (goalId: string) => {
     setExpandedGoals(prev => 
       prev.includes(goalId)
@@ -391,6 +317,81 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
       toast.error("Failed to delete goal. Please try again.");
     }
   };
+  
+  // Update local goals when props change or when activePlan changes
+  useEffect(() => {
+    if (activePlan && activePlan.goals) {
+      // Convert FinancialGoal to Goal format
+      const convertedGoals: Goal[] = activePlan.goals.map((goal: FinancialGoal) => ({
+        id: goal.id,
+        title: goal.title,
+        name: goal.title,
+        type: goal.priority, // Map priority to type for display
+        priority: goal.priority,
+        targetDate: goal.targetDate,
+        targetAmount: goal.targetAmount,
+        currentAmount: goal.currentAmount,
+        description: goal.description,
+        owner: 'User' // Default owner
+      }));
+      setLocalGoals(convertedGoals);
+    } else {
+      setLocalGoals(goals);
+    }
+  }, [goals, activePlan]);
+  
+  useEffect(() => {
+    if (newGoalId) {
+      const timer = setTimeout(() => {
+        setNewGoalId(null);
+      }, 1500);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [newGoalId]);
+
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="space-y-8">
+        <div className="flex justify-between items-center">
+          <h2 className="text-xl font-semibold">Goals</h2>
+          <Button 
+            className="bg-blue-600 hover:bg-blue-700 text-white"
+            disabled
+          >
+            Add Goal
+          </Button>
+        </div>
+        <div className="text-center py-8">
+          <p className="text-gray-400">Loading goals...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <div className="space-y-8">
+        <div className="flex justify-between items-center">
+          <h2 className="text-xl font-semibold">Goals</h2>
+          <Button 
+            className="bg-blue-600 hover:bg-blue-700 text-white"
+            onClick={handleAddGoalClick}
+          >
+            Add Goal
+          </Button>
+        </div>
+        <div className="text-center py-8">
+          <p className="text-red-400">Error loading goals: {error.message}</p>
+          <Button onClick={refreshPlans} className="mt-4">
+            Retry
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   const retirementGoals = localGoals.filter(goal => 
     goal.targetRetirementAge !== undefined || 
