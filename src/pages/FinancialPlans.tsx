@@ -5,7 +5,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { GoalsList } from "@/components/financial-plans/GoalsList";
 import { CreatePlanDialog } from "@/components/financial-plans/CreatePlanDialog";
 import { ManagePlansDialog } from "@/components/financial-plans/ManagePlansDialog";
-import { TargetRetirementAgeSection } from "@/components/financial-plans/TargetRetirementAgeSection";
 import { Target, TrendingUp, DollarSign, PieChart, Clock, Plus, Settings } from "lucide-react";
 import { FinancialPlansActions } from "@/components/financial-plans/FinancialPlansActions";
 import { PlanManagementSection } from "@/components/financial-plans/PlanManagementSection";
@@ -156,12 +155,6 @@ const FinancialPlans = () => {
 
             {/* Right Column - Analytics & Features */}
             <div className="space-y-8">
-              {/* Target Retirement Age Section */}
-              <TargetRetirementAgeSection
-                targetRetirementAge={activePlan?.targetRetirementAge}
-                onUpdateAge={handleUpdateTargetRetirementAge}
-              />
-
               {/* Plan Selector - Coming Soon */}
               <Card className="border border-border bg-card shadow-lg">
                 <CardContent className="p-6">
