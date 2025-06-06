@@ -2,6 +2,7 @@
 import React from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { PlusCircle, Shield, TrendingUp, CreditCard, Building, Banknote, Wallet } from "lucide-react";
 import { RetirementAccountTracker } from "@/components/social-security/RetirementAccountTracker";
@@ -25,7 +26,10 @@ const Accounts = () => {
         {/* Header Section */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 border-b border-border">
           <div className="space-y-1">
-            <h1 className="text-3xl font-bold tracking-tight">Accounts</h1>
+            <div className="flex items-center gap-3">
+              <h1 className="text-3xl font-bold tracking-tight">Accounts</h1>
+              <Badge variant="secondary" className="text-xs">Coming soon</Badge>
+            </div>
             <p className="text-muted-foreground">Manage all your financial accounts in one place</p>
           </div>
           <div className="flex gap-3">
