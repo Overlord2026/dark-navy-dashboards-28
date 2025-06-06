@@ -6,8 +6,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Calendar, Plus, Pill, Clock, User, Building2, Edit, Trash2, UserPlus, Phone, Mail } from 'lucide-react';
+import { Calendar, Plus, Pill, Clock, User, Building2, Edit, Trash2 } from 'lucide-react';
 import { useHealthcare, Prescription } from '@/hooks/useHealthcare';
 import { format, isAfter, isBefore, addDays } from 'date-fns';
 
@@ -16,7 +15,6 @@ export const PrescriptionManager: React.FC = () => {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [editingPrescription, setEditingPrescription] = useState<Prescription | null>(null);
-  const [activeTab, setActiveTab] = useState("prescriptions");
   const [formData, setFormData] = useState({
     name: '',
     dosage: '',
@@ -110,137 +108,98 @@ export const PrescriptionManager: React.FC = () => {
   return (
     <>
       <Card>
-        <CardHeader>
+        <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle className="flex items-center gap-2">
             <Pill className="h-5 w-5" />
-            Healthcare Management
+            Prescription Manager
           </CardTitle>
+          <Button onClick={() => setIsAddDialogOpen(true)}>
+            <Plus className="h-4 w-4 mr-2" />
+            Add Prescription
+          </Button>
         </CardHeader>
         <CardContent>
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-2 mb-6">
-              <TabsTrigger value="prescriptions" className="flex items-center gap-2">
-                <Pill className="h-4 w-4" />
-                Prescriptions
-              </TabsTrigger>
-              <TabsTrigger value="physicians" className="flex items-center gap-2">
-                <UserPlus className="h-4 w-4" />
-                Physicians & Contacts
-              </TabsTrigger>
-            </TabsList>
-            
-            {/* Prescriptions Tab */}
-            <TabsContent value="prescriptions" className="space-y-6">
-              <div className="flex justify-between items-center">
-                <h3 className="text-lg font-semibold">Prescription Manager</h3>
-                <Button onClick={() => setIsAddDialogOpen(true)}>
-                  <Plus className="h-4 w-4 mr-2" />
-                  Add Prescription
-                </Button>
-              </div>
-              
-              {prescriptions.length === 0 ? (
-                <div className="text-center py-12">
-                  <Pill className="mx-auto h-12 w-12 text-muted-foreground" />
-                  <h3 className="mt-4 text-lg font-medium">No Prescriptions</h3>
-                  <p className="mt-2 text-sm text-muted-foreground">
-                    Add your first prescription to start tracking your medications.
-                  </p>
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {prescriptions.map((prescription) => {
-                    const refillStatus = getRefillStatus(prescription.next_refill);
-                    
-                    return (
-                      <div key={prescription.id} className="border rounded-lg p-4 space-y-3">
-                        <div className="flex items-start justify-between">
-                          <div>
-                            <h4 className="font-medium">{prescription.name}</h4>
-                            <p className="text-sm text-muted-foreground">{prescription.dosage}</p>
-                          </div>
-                          <Badge variant={refillStatus.variant}>
-                            {refillStatus.label}
-                          </Badge>
-                        </div>
-                        
-                        <div className="space-y-2 text-sm">
-                          <div className="flex items-center gap-2">
-                            <Clock className="h-4 w-4 text-muted-foreground" />
-                            <span>{prescription.frequency}</span>
-                          </div>
-                          
-                          {prescription.next_refill && (
-                            <div className="flex items-center gap-2">
-                              <Calendar className="h-4 w-4 text-muted-foreground" />
-                              <span>Refill by {format(new Date(prescription.next_refill), 'MMM d, yyyy')}</span>
-                            </div>
-                          )}
-                          
-                          {prescription.doctor && (
-                            <div className="flex items-center gap-2">
-                              <User className="h-4 w-4 text-muted-foreground" />
-                              <span>Dr. {prescription.doctor}</span>
-                            </div>
-                          )}
-                          
-                          {prescription.pharmacy && (
-                            <div className="flex items-center gap-2">
-                              <Building2 className="h-4 w-4 text-muted-foreground" />
-                              <span>{prescription.pharmacy}</span>
-                            </div>
-                          )}
-                        </div>
-                        
-                        {prescription.notes && (
-                          <p className="text-xs text-muted-foreground">{prescription.notes}</p>
-                        )}
-                        
-                        <div className="flex gap-2 pt-2">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => openEditDialog(prescription)}
-                            className="flex-1"
-                          >
-                            <Edit className="h-4 w-4 mr-1" />
-                            Edit
-                          </Button>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handleDeletePrescription(prescription.id)}
-                            className="text-destructive hover:text-destructive"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </div>
+          {prescriptions.length === 0 ? (
+            <div className="text-center py-12">
+              <Pill className="mx-auto h-12 w-12 text-muted-foreground" />
+              <h3 className="mt-4 text-lg font-medium">No Prescriptions</h3>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Add your first prescription to start tracking your medications.
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {prescriptions.map((prescription) => {
+                const refillStatus = getRefillStatus(prescription.next_refill);
+                
+                return (
+                  <div key={prescription.id} className="border rounded-lg p-4 space-y-3">
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <h4 className="font-medium">{prescription.name}</h4>
+                        <p className="text-sm text-muted-foreground">{prescription.dosage}</p>
                       </div>
-                    );
-                  })}
-                </div>
-              )}
-            </TabsContent>
-            
-            {/* Physicians & Contacts Tab */}
-            <TabsContent value="physicians" className="space-y-6">
-              <div className="flex justify-between items-center">
-                <h3 className="text-lg font-semibold">Physicians & Contacts</h3>
-                <Button>
-                  <UserPlus className="h-4 w-4 mr-2" />
-                  Add Contact
-                </Button>
-              </div>
-              
-              <div className="text-center py-12">
-                <UserPlus className="mx-auto h-12 w-12 text-muted-foreground" />
-                <h3 className="mt-4 text-lg font-medium">No Contacts</h3>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  Add your healthcare providers and emergency contacts.
-                </p>
-              </div>
-            </TabsContent>
-          </Tabs>
+                      <Badge variant={refillStatus.variant}>
+                        {refillStatus.label}
+                      </Badge>
+                    </div>
+                    
+                    <div className="space-y-2 text-sm">
+                      <div className="flex items-center gap-2">
+                        <Clock className="h-4 w-4 text-muted-foreground" />
+                        <span>{prescription.frequency}</span>
+                      </div>
+                      
+                      {prescription.next_refill && (
+                        <div className="flex items-center gap-2">
+                          <Calendar className="h-4 w-4 text-muted-foreground" />
+                          <span>Refill by {format(new Date(prescription.next_refill), 'MMM d, yyyy')}</span>
+                        </div>
+                      )}
+                      
+                      {prescription.doctor && (
+                        <div className="flex items-center gap-2">
+                          <User className="h-4 w-4 text-muted-foreground" />
+                          <span>Dr. {prescription.doctor}</span>
+                        </div>
+                      )}
+                      
+                      {prescription.pharmacy && (
+                        <div className="flex items-center gap-2">
+                          <Building2 className="h-4 w-4 text-muted-foreground" />
+                          <span>{prescription.pharmacy}</span>
+                        </div>
+                      )}
+                    </div>
+                    
+                    {prescription.notes && (
+                      <p className="text-xs text-muted-foreground">{prescription.notes}</p>
+                    )}
+                    
+                    <div className="flex gap-2 pt-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => openEditDialog(prescription)}
+                        className="flex-1"
+                      >
+                        <Edit className="h-4 w-4 mr-1" />
+                        Edit
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleDeletePrescription(prescription.id)}
+                        className="text-destructive hover:text-destructive"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </CardContent>
       </Card>
 
