@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
-import { useUser } from '@/context/UserContext';
+import { useAuth } from '@/context/AuthContext';
 import { toast } from 'sonner';
 
 export interface FamilyMember {
@@ -29,7 +29,7 @@ export interface AddFamilyMemberData {
 export const useFamilyMembers = () => {
   const [familyMembers, setFamilyMembers] = useState<FamilyMember[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const { userProfile } = useUser();
+  const { userProfile } = useAuth();
 
   const fetchFamilyMembers = async () => {
     if (!userProfile?.id) return;
