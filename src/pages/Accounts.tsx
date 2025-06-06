@@ -4,7 +4,7 @@ import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { PlusCircle, Shield, TrendingUp, CreditCard, Building, Banknote } from "lucide-react";
+import { PlusCircle, Shield, TrendingUp, CreditCard, Building, Banknote, Wallet } from "lucide-react";
 import { RetirementAccountTracker } from "@/components/social-security/RetirementAccountTracker";
 import { FundingAccountsOverview } from "@/components/accounts/FundingAccountsOverview";
 import { useAccountManagement } from "@/hooks/useAccountManagement";
@@ -27,6 +27,16 @@ const Accounts = () => {
           <div className="space-y-1">
             <h1 className="text-3xl font-bold tracking-tight">Accounts</h1>
             <p className="text-muted-foreground">Manage all your financial accounts in one place</p>
+          </div>
+          <div className="flex gap-3">
+            <Button onClick={handleManageFunding} variant="outline">
+              <Wallet className="mr-2 h-4 w-4" />
+              Manage Funding
+            </Button>
+            <Button onClick={() => handleAddAccount('General')}>
+              <PlusCircle className="mr-2 h-4 w-4" />
+              Add Account
+            </Button>
           </div>
         </div>
         
