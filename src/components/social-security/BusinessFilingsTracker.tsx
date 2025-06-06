@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { 
   Table, 
@@ -104,7 +103,20 @@ export const BusinessFilingsTracker = () => {
 
   const onSubmit = async (data: BusinessFilingForm) => {
     try {
-      await addFiling(data);
+      // Transform the form data to match the expected type
+      const filingData: Omit<BusinessFiling, 'id' | 'user_id' | 'created_at' | 'updated_at'> = {
+        name: data.name,
+        description: data.description || undefined,
+        business_name: data.business_name,
+        due_date: data.due_date,
+        reminder_days: data.reminder_days,
+        filing_type: data.filing_type,
+        recurring: data.recurring,
+        recurring_period: data.recurring_period || undefined,
+        completed: data.completed
+      };
+      
+      await addFiling(filingData);
       setIsAddDialogOpen(false);
       form.reset();
     } catch (error) {
