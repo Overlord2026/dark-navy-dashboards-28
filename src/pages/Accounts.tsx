@@ -6,11 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { PlusCircle, Shield, TrendingUp, CreditCard, Building, Banknote } from "lucide-react";
 import { RetirementAccountTracker } from "@/components/social-security/RetirementAccountTracker";
+import { FundingAccountsOverview } from "@/components/accounts/FundingAccountsOverview";
+import { useAccountManagement } from "@/hooks/useAccountManagement";
 
 const Accounts = () => {
-  const handleCompleteSetup = () => {
-    console.log('Complete Setup clicked');
-  };
+  const { fundingAccounts, handleManageFunding, handleCompleteSetup } = useAccountManagement();
 
   const handleAddAccount = (type: string) => {
     console.log(`Add ${type} clicked`);
@@ -31,6 +31,12 @@ const Accounts = () => {
         </div>
         
         <div className="grid gap-6">
+          {/* Funding Accounts Section */}
+          <FundingAccountsOverview 
+            accounts={fundingAccounts} 
+            onManageFunding={handleManageFunding} 
+          />
+
           {/* BFO Managed */}
           <Card>
             <CardHeader>
