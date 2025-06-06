@@ -4,6 +4,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 
 interface AddPhysicianDialogProps {
@@ -20,7 +21,8 @@ interface PhysicianData {
   facility: string;
   phone: string;
   email: string;
-  lastVisit: string;
+  last_visit: string;
+  notes?: string;
 }
 
 export const AddPhysicianDialog: React.FC<AddPhysicianDialogProps> = ({
@@ -36,7 +38,8 @@ export const AddPhysicianDialog: React.FC<AddPhysicianDialogProps> = ({
     facility: '',
     phone: '',
     email: '',
-    lastVisit: ''
+    last_visit: '',
+    notes: ''
   });
 
   useEffect(() => {
@@ -54,7 +57,8 @@ export const AddPhysicianDialog: React.FC<AddPhysicianDialogProps> = ({
       facility: '',
       phone: '',
       email: '',
-      lastVisit: ''
+      last_visit: '',
+      notes: ''
     });
   };
 
@@ -66,10 +70,8 @@ export const AddPhysicianDialog: React.FC<AddPhysicianDialogProps> = ({
 
     onAddPhysician(formData);
     if (!isEdit) {
-      toast.success('Physician added successfully');
       resetForm();
     }
-    onOpenChange(false);
   };
 
   const handleCancel = () => {
@@ -146,8 +148,19 @@ export const AddPhysicianDialog: React.FC<AddPhysicianDialogProps> = ({
             <Input
               id="last-visit"
               type="date"
-              value={formData.lastVisit}
-              onChange={(e) => setFormData({ ...formData, lastVisit: e.target.value })}
+              value={formData.last_visit}
+              onChange={(e) => setFormData({ ...formData, last_visit: e.target.value })}
+            />
+          </div>
+          
+          <div className="grid gap-2">
+            <Label htmlFor="notes">Notes</Label>
+            <Textarea
+              id="notes"
+              value={formData.notes || ''}
+              onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+              placeholder="Additional notes about this physician"
+              rows={3}
             />
           </div>
         </div>

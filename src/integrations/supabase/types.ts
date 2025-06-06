@@ -791,6 +791,48 @@ export type Database = {
         }
         Relationships: []
       }
+      physicians: {
+        Row: {
+          created_at: string
+          email: string | null
+          facility: string | null
+          id: string
+          last_visit: string | null
+          name: string
+          notes: string | null
+          phone: string | null
+          specialty: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          facility?: string | null
+          id?: string
+          last_visit?: string | null
+          name: string
+          notes?: string | null
+          phone?: string | null
+          specialty?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          facility?: string | null
+          id?: string
+          last_visit?: string | null
+          name?: string
+          notes?: string | null
+          phone?: string | null
+          specialty?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       plan_expenses: {
         Row: {
           amount: number

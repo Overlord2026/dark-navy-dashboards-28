@@ -27,6 +27,7 @@ import {
   CardTitle 
 } from "@/components/ui/card";
 import { AddPhysicianDialog } from "@/components/healthcare/AddPhysicianDialog";
+import { usePhysicians, type PhysicianData } from "@/hooks/usePhysicians";
 
 const importantDocumentCategories = documentCategories.filter(cat => 
   ["documents-to-sign", "bfo-records", "alternative-investments", 
@@ -56,6 +57,16 @@ export default function ClientLegacyVault() {
     filteredDocuments
   } = useSupabaseDocumentManagement();
 
+  // Replace local physician state with Supabase hook
+  const {
+    physicians,
+    loading: physiciansLoading,
+    saving: physiciansSaving,
+    addPhysician,
+    updatePhysician,
+    deletePhysician
+  } = usePhysicians();
+
   const [isNewFolderDialogOpen, setIsNewFolderDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isShareDialogOpen, setIsShareDialogOpen] = useState(false);
@@ -66,7 +77,6 @@ export default function ClientLegacyVault() {
   
   const [isAddPhysicianDialogOpen, setIsAddPhysicianDialogOpen] = useState(false);
   const [isEditPhysicianDialogOpen, setIsEditPhysicianDialogOpen] = useState(false);
-  const [physicians, setPhysicians] = useState<any[]>([]);
   const [editingPhysician, setEditingPhysician] = useState<any | null>(null);
   
   const legacyBoxDocuments: DocumentItem[] = [
@@ -152,14 +162,11 @@ export default function ClientLegacyVault() {
     }
   };
 
-  const handleAddPhysician = (physicianData: any) => {
-    // Add the physician to the list
-    const newPhysician = {
-      id: Date.now().toString(),
-      ...physicianData
-    };
-    setPhysicians([...physicians, newPhysician]);
-    toast.success("Physician added successfully");
+  const handleAddPhysician = async (physicianData: PhysicianData) => {
+    const result = await addPhysician(physicianData);
+    if (result) {
+      setIsAddPhysicianDialogOpen(false);
+    }
   };
 
   const handleEditPhysician = (physician: any) => {
@@ -167,22 +174,19 @@ export default function ClientLegacyVault() {
     setIsEditPhysicianDialogOpen(true);
   };
 
-  const handleUpdatePhysician = (updatedPhysicianData: any) => {
+  const handleUpdatePhysician = async (updatedPhysicianData: PhysicianData) => {
     if (editingPhysician) {
-      setPhysicians(physicians.map(physician => 
-        physician.id === editingPhysician.id 
-          ? { ...physician, ...updatedPhysicianData }
-          : physician
-      ));
-      setEditingPhysician(null);
-      toast.success("Physician updated successfully");
+      const result = await updatePhysician(editingPhysician.id, updatedPhysicianData);
+      if (result) {
+        setEditingPhysician(null);
+        setIsEditPhysicianDialogOpen(false);
+      }
     }
   };
 
-  const handleDeletePhysician = (physicianId: string) => {
+  const handleDeletePhysician = async (physicianId: string) => {
     if (window.confirm("Are you sure you want to delete this physician?")) {
-      setPhysicians(physicians.filter(physician => physician.id !== physicianId));
-      toast.success("Physician deleted successfully");
+      await deletePhysician(physicianId);
     }
   };
 
@@ -389,7 +393,12 @@ export default function ClientLegacyVault() {
                           </CardDescription>
                         </CardHeader>
                         <CardContent>
-                          {physicians.length === 0 ? (
+                          {physiciansLoading ? (
+                            <div className="text-center py-12">
+                              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+                              <p className="mt-2 text-sm text-muted-foreground">Loading physicians...</p>
+                            </div>
+                          ) : physicians.length === 0 ? (
                             <div className="text-center py-12">
                               <Users className="mx-auto h-12 w-12 text-muted-foreground" />
                               <h3 className="mt-4 text-lg font-medium">No Physicians Added</h3>
@@ -399,6 +408,7 @@ export default function ClientLegacyVault() {
                               <Button 
                                 className="mt-4"
                                 onClick={() => setIsAddPhysicianDialogOpen(true)}
+                                disabled={physiciansSaving}
                               >
                                 Add Physician
                               </Button>
@@ -407,7 +417,10 @@ export default function ClientLegacyVault() {
                             <div className="space-y-4">
                               <div className="flex justify-between items-center">
                                 <h3 className="text-lg font-semibold">Your Healthcare Providers</h3>
-                                <Button onClick={() => setIsAddPhysicianDialogOpen(true)}>
+                                <Button 
+                                  onClick={() => setIsAddPhysicianDialogOpen(true)}
+                                  disabled={physiciansSaving}
+                                >
                                   Add Physician
                                 </Button>
                               </div>
@@ -429,6 +442,7 @@ export default function ClientLegacyVault() {
                                           variant="outline"
                                           size="sm"
                                           onClick={() => handleEditPhysician(physician)}
+                                          disabled={physiciansSaving}
                                         >
                                           <Edit className="h-4 w-4" />
                                         </Button>
@@ -437,6 +451,7 @@ export default function ClientLegacyVault() {
                                           size="sm"
                                           onClick={() => handleDeletePhysician(physician.id)}
                                           className="text-destructive hover:text-destructive"
+                                          disabled={physiciansSaving}
                                         >
                                           <Trash2 className="h-4 w-4" />
                                         </Button>
@@ -448,8 +463,11 @@ export default function ClientLegacyVault() {
                                     {physician.email && (
                                       <p className="text-sm">Email: {physician.email}</p>
                                     )}
-                                    {physician.lastVisit && (
-                                      <p className="text-sm">Last visit: {new Date(physician.lastVisit).toLocaleDateString()}</p>
+                                    {physician.last_visit && (
+                                      <p className="text-sm">Last visit: {new Date(physician.last_visit).toLocaleDateString()}</p>
+                                    )}
+                                    {physician.notes && (
+                                      <p className="text-sm mt-2 text-muted-foreground">{physician.notes}</p>
                                     )}
                                   </div>
                                 ))}
