@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { CategoryList } from "@/components/documents/CategoryList";
-import { DocumentsTable } from "@/components/documents/DocumentsTable";
 import { NoDocumentsState, NoCategorySelectedState } from "@/components/documents/EmptyStates";
-import { UploadDocumentDialog } from "@/components/documents/UploadDocumentDialog";
+import { SupabaseDocumentUploadDialog } from "@/components/documents/SupabaseDocumentUploadDialog";
 import { EditDocumentDialog } from "@/components/documents/EditDocumentDialog";
 import { ShareDocumentDialog } from "@/components/documents/ShareDocumentDialog";
 import { DeleteDocumentDialog } from "@/components/documents/DeleteDocumentDialog";
 import { NewFolderDialog } from "@/components/documents/NewFolderDialog";
+import { SupabaseDocumentsTable } from "@/components/documents/SupabaseDocumentsTable";
 import { Button } from "@/components/ui/button";
 import { FolderPlus, Upload, ExternalLink, ArchiveIcon, HeartPulseIcon, Activity, FileText, Pill, Users, Edit, Trash2, Plus, Calendar, Clock, User } from "lucide-react";
 import { documentCategories, healthcareCategories } from "@/data/documentCategories";
@@ -18,7 +18,7 @@ import { FamilyLegacyBox } from "@/components/estate-planning/FamilyLegacyBox";
 import { HealthcareFolder } from "@/components/healthcare/HealthcareFolder";
 import { PrescriptionManager } from "@/components/healthcare/PrescriptionManager";
 import { ProfessionalsProvider } from "@/context/ProfessionalsContext";
-import { useSupabaseDocumentManagement } from "@/hooks/useSupabaseDocumentManagement";
+import { useSupabaseDocuments } from "@/hooks/useSupabaseDocuments";
 import { 
   Card, 
   CardContent, 
@@ -46,21 +46,15 @@ const estateDocumentCategories = documentCategories.filter(cat =>
 export default function ClientLegacyVault() {
   const {
     documents,
-    activeCategory,
-    isUploadDialogOpen,
     loading,
     uploading,
-    setActiveCategory,
-    setIsUploadDialogOpen,
-    handleCreateFolder,
-    handleFileUpload,
-    handleDownloadDocument,
+    uploadDocument,
+    createFolder,
     deleteDocument,
-    refreshDocuments,
-    filteredDocuments
-  } = useSupabaseDocumentManagement();
+    getDocumentUrl,
+    refreshDocuments
+  } = useSupabaseDocuments();
 
-  // Replace local physician state with Supabase hook
   const {
     physicians,
     loading: physiciansLoading,
@@ -75,11 +69,13 @@ export default function ClientLegacyVault() {
     loading: prescriptionsLoading,
   } = useHealthcare();
 
+  const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
   const [isNewFolderDialogOpen, setIsNewFolderDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isShareDialogOpen, setIsShareDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [selectedDocument, setSelectedDocument] = useState<DocumentItem | null>(null);
+  const [selectedDocument, setSelectedDocument] = useState<any | null>(null);
   const [activeTab, setActiveTab] = useState("legacy-box");
   const [healthcareActiveTab, setHealthcareActiveTab] = useState("dashboard");
   
@@ -136,38 +132,71 @@ export default function ClientLegacyVault() {
     }
   ];
 
-  const handleAddDocument = (document: DocumentItem) => {
-    // This will be handled by the Supabase hook
-    refreshDocuments();
+  // Filter documents by category
+  const filteredDocuments = activeCategory 
+    ? documents.filter(doc => doc.category === activeCategory)
+    : [];
+
+  const handleFileUpload = async (file: File, name: string, category: string) => {
+    const result = await uploadDocument(file, name, category, null, `Document in ${category} category`);
+    if (result) {
+      setIsUploadDialogOpen(false);
+      refreshDocuments();
+    }
+    return result;
   };
 
-  const handleEditDocument = (document: DocumentItem) => {
+  const handleCreateFolder = async (folderName: string, category: string = activeCategory || "documents") => {
+    const result = await createFolder(folderName, category);
+    if (result) {
+      setIsNewFolderDialogOpen(false);
+      refreshDocuments();
+    }
+  };
+
+  const handleDownloadDocument = async (document: any) => {
+    if (!document.file_path) {
+      toast.error('No file path available for download');
+      return;
+    }
+
+    const url = await getDocumentUrl(document.file_path);
+    if (url) {
+      const link = window.document.createElement('a');
+      link.href = url;
+      link.download = document.name;
+      window.document.body.appendChild(link);
+      link.click();
+      window.document.body.removeChild(link);
+    }
+  };
+
+  const handleDeleteDocument = async (document: any) => {
+    const result = await deleteDocument(document.id);
+    if (result !== null) {
+      setIsDeleteDialogOpen(false);
+      refreshDocuments();
+    }
+  };
+
+  const handleEditDocument = (document: any) => {
     setSelectedDocument(document);
     setIsEditDialogOpen(true);
   };
 
-  const handleSaveDocument = (document: DocumentItem, newName: string) => {
+  const handleSaveDocument = (document: any, newName: string) => {
     // Update logic would go here
     toast.success("Document updated successfully");
   };
 
-  const handleShareDocument = (document: DocumentItem) => {
+  const handleShareDocument = (document: any) => {
     setSelectedDocument(document);
     setIsShareDialogOpen(true);
   };
 
-  const handleDeleteDialog = (document: DocumentItem) => {
+  const handleDeleteDialog = (document: any) => {
     setSelectedDocument(document);
     setIsDeleteDialogOpen(true);
-  };
-
-  const handleDeleteDocument = async (document: DocumentItem) => {
-    try {
-      await deleteDocument(document.id);
-      toast.success("Document deleted successfully");
-    } catch (error) {
-      toast.error("Failed to delete document");
-    }
   };
 
   const handleAddPhysician = async (physicianData: PhysicianData) => {
@@ -205,20 +234,6 @@ export default function ClientLegacyVault() {
       return;
     }
     setIsUploadDialogOpen(true);
-  };
-
-  // Convert Supabase documents to DocumentItem format for compatibility
-  const convertSupabaseDocsToDocumentItems = (supabaseDocs: any[]): DocumentItem[] => {
-    return supabaseDocs.map(doc => ({
-      id: doc.id,
-      name: doc.name,
-      type: doc.type,
-      category: doc.category,
-      created: doc.created_at,
-      modified: doc.updated_at,
-      size: doc.size || 0,
-      uploadedBy: doc.uploaded_by || "Unknown",
-    }));
   };
 
   const getRefillStatus = (nextRefillDate: string) => {
@@ -280,9 +295,6 @@ export default function ClientLegacyVault() {
     }
   };
 
-  // Restore the original documents list for Healthcare tab - don't filter by Supabase documents
-  const documentItems = convertSupabaseDocsToDocumentItems(filteredDocuments);
-
   return (
     <ThreeColumnLayout activeMainItem="client-legacy-vault">
       <ProfessionalsProvider>
@@ -310,7 +322,11 @@ export default function ClientLegacyVault() {
           
           {/* Tabs Section */}
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-2 mb-6 h-auto">
+            <TabsList className="grid w-full grid-cols-3 mb-6 h-auto">
+              <TabsTrigger value="documents" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 p-2 sm:p-3">
+                <FileText className="h-4 w-4" />
+                <span className="text-xs sm:text-sm">Documents</span>
+              </TabsTrigger>
               <TabsTrigger value="legacy-box" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 p-2 sm:p-3">
                 <ArchiveIcon className="h-4 w-4" />
                 <span className="text-xs sm:text-sm">Family Legacy Box</span>
@@ -320,6 +336,70 @@ export default function ClientLegacyVault() {
                 <span className="text-xs sm:text-sm">Healthcare</span>
               </TabsTrigger>
             </TabsList>
+            
+            {/* Documents Tab */}
+            <TabsContent value="documents" className="space-y-6">
+              <div className="space-y-4">
+                <div className="flex justify-between items-center">
+                  <div className="flex gap-2">
+                    <Button 
+                      onClick={() => setIsNewFolderDialogOpen(true)}
+                      variant="outline"
+                      size="sm"
+                      disabled={!activeCategory}
+                    >
+                      <FolderPlus className="mr-2 h-4 w-4" />
+                      New Folder
+                    </Button>
+                    <Button 
+                      onClick={handleUploadForCategory}
+                      size="sm"
+                      disabled={!activeCategory || uploading}
+                    >
+                      <Upload className="mr-2 h-4 w-4" />
+                      {uploading ? "Uploading..." : "Upload"}
+                    </Button>
+                  </div>
+                  {!activeCategory && (
+                    <p className="text-sm text-muted-foreground">
+                      Select a category to upload documents
+                    </p>
+                  )}
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                  <div className="md:col-span-1">
+                    <CategoryList 
+                      categories={importantDocumentCategories as DocumentCategory[]} 
+                      activeCategory={activeCategory || ""} 
+                      onCategorySelect={setActiveCategory} 
+                    />
+                  </div>
+                  
+                  <div className="md:col-span-3">
+                    {loading ? (
+                      <div className="flex justify-center items-center h-64">
+                        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+                      </div>
+                    ) : !activeCategory ? (
+                      <NoCategorySelectedState />
+                    ) : filteredDocuments.length > 0 ? (
+                      <SupabaseDocumentsTable 
+                        documents={filteredDocuments}
+                        onDownloadDocument={handleDownloadDocument}
+                        onDeleteDocument={handleDeleteDialog}
+                        loading={loading}
+                      />
+                    ) : (
+                      <NoDocumentsState 
+                        onUploadClick={handleUploadForCategory}
+                        categoryName={importantDocumentCategories.find(cat => cat.id === activeCategory)?.name || activeCategory}
+                      />
+                    )}
+                  </div>
+                </div>
+              </div>
+            </TabsContent>
             
             {/* Legacy Box Tab */}
             <TabsContent value="legacy-box" className="space-y-6">
@@ -635,7 +715,7 @@ export default function ClientLegacyVault() {
                               <CardContent>
                                 <HealthcareFolder 
                                   documents={[]} 
-                                  onAddDocument={handleAddDocument}
+                                  onAddDocument={() => {}}
                                   onCreateFolder={handleCreateFolder}
                                 />
                               </CardContent>
@@ -755,13 +835,14 @@ export default function ClientLegacyVault() {
         </div>
         
         {/* Dialogs */}
-        <UploadDocumentDialog 
+        <SupabaseDocumentUploadDialog 
           open={isUploadDialogOpen}
-          onOpenChange={setIsUploadDialogOpen}
           onClose={() => setIsUploadDialogOpen(false)}
+          onOpenChange={setIsUploadDialogOpen}
+          activeCategory={activeCategory}
+          categories={importantDocumentCategories}
           onFileUpload={handleFileUpload}
-          activeCategory={activeCategory || "documents"}
-          documentCategories={documentCategories as any}
+          uploading={uploading}
         />
         
         <NewFolderDialog 
