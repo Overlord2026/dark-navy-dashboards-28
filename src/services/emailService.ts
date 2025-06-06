@@ -21,15 +21,24 @@ export const sendInterestNotification = async (data: InterestEmailData): Promise
   try {
     const templateParams = {
       to_email: 'namandevops44@gmail.com',
-      from_name: data.userName,
-      from_email: data.userEmail,
+      from_name: 'Family Office Platform',
+      from_email: 'noreply@familyoffice.com',
       subject: `Interest Expressed: ${data.itemName}`,
-      message: `${data.userName} (${data.userEmail}) has expressed interest in "${data.itemName}" in the ${data.itemType} section on the ${data.pageContext} page.`,
+      message: `${data.userName} (${data.userEmail}) has expressed interest in "${data.itemName}" in the ${data.itemType} section on the ${data.pageContext} page.
+
+User Details:
+- Name: ${data.userName}
+- Email: ${data.userEmail}
+- Item of Interest: ${data.itemName}
+- Category: ${data.itemType}
+- Page: ${data.pageContext}
+
+Please follow up with this client regarding their interest.`,
+      user_name: data.userName,
+      user_email: data.userEmail,
       item_name: data.itemName,
       item_type: data.itemType,
-      page_context: data.pageContext,
-      user_name: data.userName,
-      user_email: data.userEmail
+      page_context: data.pageContext
     };
 
     console.log('Sending email with params:', templateParams);
