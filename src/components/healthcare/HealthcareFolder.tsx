@@ -72,6 +72,33 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
     setIsShareDialogOpen(true);
   };
 
+  // Convert DocumentItem to the format expected by ShareDocumentWithProfessionalsDialog
+  const convertToSupabaseDocument = (doc: DocumentItem | null) => {
+    if (!doc) return null;
+    
+    return {
+      id: doc.id,
+      user_id: "current-user", // This would normally come from auth
+      name: doc.name,
+      type: doc.type,
+      category: doc.category,
+      file_path: null,
+      content_type: null,
+      description: null,
+      tags: doc.tags || null,
+      size: typeof doc.size === 'number' ? doc.size : null,
+      is_folder: doc.type === 'folder',
+      is_private: doc.isPrivate || true,
+      encrypted: doc.encrypted || true,
+      shared: doc.shared || false,
+      uploaded_by: doc.uploadedBy || null,
+      parent_folder_id: null,
+      created_at: doc.created,
+      updated_at: doc.modified || doc.created,
+      modified: doc.modified || null,
+    };
+  };
+
   return (
     <div className="space-y-6">
       <Card>
@@ -146,7 +173,7 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
       <ShareDocumentWithProfessionalsDialog
         open={isShareDialogOpen}
         onOpenChange={setIsShareDialogOpen}
-        document={selectedDocument}
+        document={convertToSupabaseDocument(selectedDocument)}
       />
     </div>
   );
