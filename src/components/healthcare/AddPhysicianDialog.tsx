@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -10,6 +10,8 @@ interface AddPhysicianDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onAddPhysician: (physician: PhysicianData) => void;
+  initialData?: PhysicianData;
+  isEdit?: boolean;
 }
 
 interface PhysicianData {
@@ -23,7 +25,9 @@ interface PhysicianData {
 export const AddPhysicianDialog: React.FC<AddPhysicianDialogProps> = ({
   open,
   onOpenChange,
-  onAddPhysician
+  onAddPhysician,
+  initialData,
+  isEdit = false
 }) => {
   const [formData, setFormData] = useState<PhysicianData>({
     name: '',
@@ -32,6 +36,14 @@ export const AddPhysicianDialog: React.FC<AddPhysicianDialogProps> = ({
     email: '',
     lastVisit: ''
   });
+
+  useEffect(() => {
+    if (initialData && isEdit) {
+      setFormData(initialData);
+    } else {
+      resetForm();
+    }
+  }, [initialData, isEdit, open]);
 
   const resetForm = () => {
     setFormData({
@@ -50,13 +62,17 @@ export const AddPhysicianDialog: React.FC<AddPhysicianDialogProps> = ({
     }
 
     onAddPhysician(formData);
-    toast.success('Physician added successfully');
-    resetForm();
+    if (!isEdit) {
+      toast.success('Physician added successfully');
+      resetForm();
+    }
     onOpenChange(false);
   };
 
   const handleCancel = () => {
-    resetForm();
+    if (!isEdit) {
+      resetForm();
+    }
     onOpenChange(false);
   };
 
@@ -64,9 +80,9 @@ export const AddPhysicianDialog: React.FC<AddPhysicianDialogProps> = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Add New Physician</DialogTitle>
+          <DialogTitle>{isEdit ? 'Edit Physician' : 'Add New Physician'}</DialogTitle>
           <DialogDescription>
-            Add a new physician to your healthcare contacts.
+            {isEdit ? 'Update physician information.' : 'Add a new physician to your healthcare contacts.'}
           </DialogDescription>
         </DialogHeader>
         
@@ -131,7 +147,7 @@ export const AddPhysicianDialog: React.FC<AddPhysicianDialogProps> = ({
             onClick={handleSubmit}
             disabled={!formData.name.trim()}
           >
-            Add Physician
+            {isEdit ? 'Update Physician' : 'Add Physician'}
           </Button>
         </DialogFooter>
       </DialogContent>

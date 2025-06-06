@@ -6,10 +6,10 @@ import { NoDocumentsState, NoCategorySelectedState } from "@/components/document
 import { UploadDocumentDialog } from "@/components/documents/UploadDocumentDialog";
 import { EditDocumentDialog } from "@/components/documents/EditDocumentDialog";
 import { ShareDocumentDialog } from "@/components/documents/ShareDocumentDialog";
-import { DeleteDocumentDialog } from "@/components/documents/DeleteDocumentDialog";
-import { NewFolderDialog } from "@/components/documents/NewFolderDialog";
+import { DeleteDocumentDialog } from "@/components/DeleteDocumentDialog";
+import { NewFolderDialog } from "@/components/NewFolderDialog";
 import { Button } from "@/components/ui/button";
-import { FolderPlus, Upload, ExternalLink, ArchiveIcon, HeartPulseIcon, Activity, FileText, Pill, Users } from "lucide-react";
+import { FolderPlus, Upload, ExternalLink, ArchiveIcon, HeartPulseIcon, Activity, FileText, Pill, Users, Edit, Trash2 } from "lucide-react";
 import { documentCategories, healthcareCategories } from "@/data/documentCategories";
 import { toast } from "sonner";
 import { DocumentType, DocumentItem, DocumentCategory } from "@/types/document";
@@ -63,8 +63,11 @@ export default function ClientLegacyVault() {
   const [selectedDocument, setSelectedDocument] = useState<DocumentItem | null>(null);
   const [activeTab, setActiveTab] = useState("legacy-box");
   const [healthcareActiveTab, setHealthcareActiveTab] = useState("dashboard");
+  
   const [isAddPhysicianDialogOpen, setIsAddPhysicianDialogOpen] = useState(false);
+  const [isEditPhysicianDialogOpen, setIsEditPhysicianDialogOpen] = useState(false);
   const [physicians, setPhysicians] = useState<any[]>([]);
+  const [editingPhysician, setEditingPhysician] = useState<any | null>(null);
   
   const legacyBoxDocuments: DocumentItem[] = [
     {
@@ -156,6 +159,31 @@ export default function ClientLegacyVault() {
       ...physicianData
     };
     setPhysicians([...physicians, newPhysician]);
+    toast.success("Physician added successfully");
+  };
+
+  const handleEditPhysician = (physician: any) => {
+    setEditingPhysician(physician);
+    setIsEditPhysicianDialogOpen(true);
+  };
+
+  const handleUpdatePhysician = (updatedPhysicianData: any) => {
+    if (editingPhysician) {
+      setPhysicians(physicians.map(physician => 
+        physician.id === editingPhysician.id 
+          ? { ...physician, ...updatedPhysicianData }
+          : physician
+      ));
+      setEditingPhysician(null);
+      toast.success("Physician updated successfully");
+    }
+  };
+
+  const handleDeletePhysician = (physicianId: string) => {
+    if (window.confirm("Are you sure you want to delete this physician?")) {
+      setPhysicians(physicians.filter(physician => physician.id !== physicianId));
+      toast.success("Physician deleted successfully");
+    }
   };
 
   // Convert Supabase documents to DocumentItem format for compatibility
@@ -386,10 +414,31 @@ export default function ClientLegacyVault() {
                               <div className="grid gap-4">
                                 {physicians.map((physician) => (
                                   <div key={physician.id} className="border rounded-lg p-4">
-                                    <h4 className="font-medium">{physician.name}</h4>
-                                    {physician.facility && (
-                                      <p className="text-sm text-muted-foreground">{physician.facility}</p>
-                                    )}
+                                    <div className="flex justify-between items-start mb-3">
+                                      <div>
+                                        <h4 className="font-medium">{physician.name}</h4>
+                                        {physician.facility && (
+                                          <p className="text-sm text-muted-foreground">{physician.facility}</p>
+                                        )}
+                                      </div>
+                                      <div className="flex gap-2">
+                                        <Button
+                                          variant="outline"
+                                          size="sm"
+                                          onClick={() => handleEditPhysician(physician)}
+                                        >
+                                          <Edit className="h-4 w-4" />
+                                        </Button>
+                                        <Button
+                                          variant="outline"
+                                          size="sm"
+                                          onClick={() => handleDeletePhysician(physician.id)}
+                                          className="text-destructive hover:text-destructive"
+                                        >
+                                          <Trash2 className="h-4 w-4" />
+                                        </Button>
+                                      </div>
+                                    </div>
                                     {physician.phone && (
                                       <p className="text-sm">Phone: {physician.phone}</p>
                                     )}
@@ -455,6 +504,15 @@ export default function ClientLegacyVault() {
           open={isAddPhysicianDialogOpen}
           onOpenChange={setIsAddPhysicianDialogOpen}
           onAddPhysician={handleAddPhysician}
+        />
+
+        {/* Edit Physician Dialog */}
+        <AddPhysicianDialog
+          open={isEditPhysicianDialogOpen}
+          onOpenChange={setIsEditPhysicianDialogOpen}
+          onAddPhysician={handleUpdatePhysician}
+          initialData={editingPhysician}
+          isEdit={true}
         />
       </ProfessionalsProvider>
     </ThreeColumnLayout>
