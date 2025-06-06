@@ -1,12 +1,12 @@
 
 import React from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { PlusCircle, Shield, TrendingUp, CreditCard, Building, Banknote, Wallet } from "lucide-react";
 import { RetirementAccountTracker } from "@/components/social-security/RetirementAccountTracker";
 import { FundingAccountsOverview } from "@/components/accounts/FundingAccountsOverview";
+import { CollapsibleCard } from "@/components/accounts/CollapsibleCard";
 import { useAccountManagement } from "@/hooks/useAccountManagement";
 
 const Accounts = () => {
@@ -48,91 +48,62 @@ const Accounts = () => {
           />
 
           {/* BFO Managed */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <Shield className="mr-2 h-5 w-5 text-primary" />
-                BFO Managed
-              </CardTitle>
-              <CardDescription>Complete your account setup to view managed accounts.</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Button onClick={handleCompleteSetup} className="w-full sm:w-auto">
-                Complete Setup
-              </Button>
-            </CardContent>
-          </Card>
+          <CollapsibleCard
+            icon={<Shield className="mr-2 h-5 w-5 text-primary" />}
+            title="BFO Managed"
+            amount="$0.00"
+            description="Complete your account setup to view managed accounts."
+          >
+            <Button onClick={handleCompleteSetup} className="w-full sm:w-auto">
+              Complete Setup
+            </Button>
+          </CollapsibleCard>
 
           {/* 401K/457/403B Plans */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center justify-between">
-                <div className="flex items-center">
-                  <TrendingUp className="mr-2 h-5 w-5 text-primary" />
-                  401K/457/403B Plans
-                </div>
-                <span className="text-lg font-medium">$0.00</span>
-              </CardTitle>
-              <CardDescription>Track and manage your retirement accounts</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <RetirementAccountTracker />
-            </CardContent>
-          </Card>
+          <CollapsibleCard
+            icon={<TrendingUp className="mr-2 h-5 w-5 text-primary" />}
+            title="401K/457/403B Plans"
+            amount="$0.00"
+            description="Track and manage your retirement accounts"
+            defaultExpanded={true}
+          >
+            <RetirementAccountTracker />
+          </CollapsibleCard>
 
           {/* External Investment */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center justify-between">
-                <div className="flex items-center">
-                  <TrendingUp className="mr-2 h-5 w-5 text-primary" />
-                  External Investment
-                </div>
-                <span className="text-lg font-medium">$0.00</span>
-              </CardTitle>
-              <CardDescription>No external investment accounts linked.</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Button onClick={() => handleAddAccount('Investment Account')} variant="outline" className="w-full sm:w-auto">
-                <PlusCircle className="mr-2 h-4 w-4" />
-                Add Investment Account
-              </Button>
-            </CardContent>
-          </Card>
+          <CollapsibleCard
+            icon={<TrendingUp className="mr-2 h-5 w-5 text-primary" />}
+            title="External Investment"
+            amount="$0.00"
+            description="No external investment accounts linked."
+          >
+            <Button onClick={() => handleAddAccount('Investment Account')} variant="outline" className="w-full sm:w-auto">
+              <PlusCircle className="mr-2 h-4 w-4" />
+              Add Investment Account
+            </Button>
+          </CollapsibleCard>
 
           {/* External Manually-Tracked */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center justify-between">
-                <div className="flex items-center">
-                  <CreditCard className="mr-2 h-5 w-5 text-primary" />
-                  External Manually-Tracked
-                </div>
-                <span className="text-lg font-medium">$0.00</span>
-              </CardTitle>
-              <CardDescription>No manually tracked accounts added.</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Button onClick={() => handleAddAccount('Manual Account')} variant="outline" className="w-full sm:w-auto">
-                <PlusCircle className="mr-2 h-4 w-4" />
-                Add Manual Account
-              </Button>
-            </CardContent>
-          </Card>
+          <CollapsibleCard
+            icon={<CreditCard className="mr-2 h-5 w-5 text-primary" />}
+            title="External Manually-Tracked"
+            amount="$0.00"
+            description="No manually tracked accounts added."
+          >
+            <Button onClick={() => handleAddAccount('Manual Account')} variant="outline" className="w-full sm:w-auto">
+              <PlusCircle className="mr-2 h-4 w-4" />
+              Add Manual Account
+            </Button>
+          </CollapsibleCard>
 
           {/* External Loans */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center justify-between">
-                <div className="flex items-center">
-                  <Building className="mr-2 h-5 w-5 text-primary" />
-                  External Loans
-                </div>
-                <span className="text-lg font-medium">$0.00</span>
-              </CardTitle>
-              <CardDescription>No loan accounts linked.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
+          <CollapsibleCard
+            icon={<Building className="mr-2 h-5 w-5 text-primary" />}
+            title="External Loans"
+            amount="$0.00"
+            description="No loan accounts linked."
+          >
+            <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium mb-2">Loan Type</label>
                 <Select defaultValue="mortgage">
@@ -152,48 +123,34 @@ const Accounts = () => {
                 <PlusCircle className="mr-2 h-4 w-4" />
                 Add Loan
               </Button>
-            </CardContent>
-          </Card>
+            </div>
+          </CollapsibleCard>
 
           {/* External Banking */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center justify-between">
-                <div className="flex items-center">
-                  <Banknote className="mr-2 h-5 w-5 text-primary" />
-                  External Banking
-                </div>
-                <span className="text-lg font-medium">$0.00</span>
-              </CardTitle>
-              <CardDescription>No banking accounts linked.</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Button onClick={() => handleAddAccount('Bank Account')} variant="outline" className="w-full sm:w-auto">
-                <PlusCircle className="mr-2 h-4 w-4" />
-                Add Bank Account
-              </Button>
-            </CardContent>
-          </Card>
+          <CollapsibleCard
+            icon={<Banknote className="mr-2 h-5 w-5 text-primary" />}
+            title="External Banking"
+            amount="$0.00"
+            description="No banking accounts linked."
+          >
+            <Button onClick={() => handleAddAccount('Bank Account')} variant="outline" className="w-full sm:w-auto">
+              <PlusCircle className="mr-2 h-4 w-4" />
+              Add Bank Account
+            </Button>
+          </CollapsibleCard>
 
           {/* External Credit Cards */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center justify-between">
-                <div className="flex items-center">
-                  <CreditCard className="mr-2 h-5 w-5 text-primary" />
-                  External Credit Cards
-                </div>
-                <span className="text-lg font-medium">$0.00</span>
-              </CardTitle>
-              <CardDescription>No credit card accounts linked.</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Button onClick={() => handleAddAccount('Credit Card')} variant="outline" className="w-full sm:w-auto">
-                <PlusCircle className="mr-2 h-4 w-4" />
-                Add Credit Card
-              </Button>
-            </CardContent>
-          </Card>
+          <CollapsibleCard
+            icon={<CreditCard className="mr-2 h-5 w-5 text-primary" />}
+            title="External Credit Cards"
+            amount="$0.00"
+            description="No credit card accounts linked."
+          >
+            <Button onClick={() => handleAddAccount('Credit Card')} variant="outline" className="w-full sm:w-auto">
+              <PlusCircle className="mr-2 h-4 w-4" />
+              Add Credit Card
+            </Button>
+          </CollapsibleCard>
         </div>
       </div>
     </ThreeColumnLayout>
