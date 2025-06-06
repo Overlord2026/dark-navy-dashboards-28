@@ -322,11 +322,7 @@ export default function ClientLegacyVault() {
           
           {/* Tabs Section */}
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-3 mb-6 h-auto">
-              <TabsTrigger value="documents" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 p-2 sm:p-3">
-                <FileText className="h-4 w-4" />
-                <span className="text-xs sm:text-sm">Documents</span>
-              </TabsTrigger>
+            <TabsList className="grid w-full grid-cols-2 mb-6 h-auto">
               <TabsTrigger value="legacy-box" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 p-2 sm:p-3">
                 <ArchiveIcon className="h-4 w-4" />
                 <span className="text-xs sm:text-sm">Family Legacy Box</span>
@@ -336,70 +332,6 @@ export default function ClientLegacyVault() {
                 <span className="text-xs sm:text-sm">Healthcare</span>
               </TabsTrigger>
             </TabsList>
-            
-            {/* Documents Tab */}
-            <TabsContent value="documents" className="space-y-6">
-              <div className="space-y-4">
-                <div className="flex justify-between items-center">
-                  <div className="flex gap-2">
-                    <Button 
-                      onClick={() => setIsNewFolderDialogOpen(true)}
-                      variant="outline"
-                      size="sm"
-                      disabled={!activeCategory}
-                    >
-                      <FolderPlus className="mr-2 h-4 w-4" />
-                      New Folder
-                    </Button>
-                    <Button 
-                      onClick={handleUploadForCategory}
-                      size="sm"
-                      disabled={!activeCategory || uploading}
-                    >
-                      <Upload className="mr-2 h-4 w-4" />
-                      {uploading ? "Uploading..." : "Upload"}
-                    </Button>
-                  </div>
-                  {!activeCategory && (
-                    <p className="text-sm text-muted-foreground">
-                      Select a category to upload documents
-                    </p>
-                  )}
-                </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                  <div className="md:col-span-1">
-                    <CategoryList 
-                      categories={importantDocumentCategories as DocumentCategory[]} 
-                      activeCategory={activeCategory || ""} 
-                      onCategorySelect={setActiveCategory} 
-                    />
-                  </div>
-                  
-                  <div className="md:col-span-3">
-                    {loading ? (
-                      <div className="flex justify-center items-center h-64">
-                        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
-                      </div>
-                    ) : !activeCategory ? (
-                      <NoCategorySelectedState />
-                    ) : filteredDocuments.length > 0 ? (
-                      <SupabaseDocumentsTable 
-                        documents={filteredDocuments}
-                        onDownloadDocument={handleDownloadDocument}
-                        onDeleteDocument={handleDeleteDialog}
-                        loading={loading}
-                      />
-                    ) : (
-                      <NoDocumentsState 
-                        onUploadClick={handleUploadForCategory}
-                        categoryName={importantDocumentCategories.find(cat => cat.id === activeCategory)?.name || activeCategory}
-                      />
-                    )}
-                  </div>
-                </div>
-              </div>
-            </TabsContent>
             
             {/* Legacy Box Tab */}
             <TabsContent value="legacy-box" className="space-y-6">
