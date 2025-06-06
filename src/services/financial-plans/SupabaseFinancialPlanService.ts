@@ -1,4 +1,3 @@
-
 import { 
   FinancialPlan, 
   FinancialGoal, 
@@ -16,6 +15,9 @@ export class SupabaseFinancialPlanService implements FinancialPlanService {
   
   async getPlans(): Promise<FinancialPlan[]> {
     try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return [];
+
       const { data: plans, error } = await supabase
         .from('financial_plans')
         .select(`
@@ -27,6 +29,7 @@ export class SupabaseFinancialPlanService implements FinancialPlanService {
           plan_savings(*),
           plan_insurance(*)
         `)
+        .eq('user_id', user.id)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
@@ -40,6 +43,9 @@ export class SupabaseFinancialPlanService implements FinancialPlanService {
 
   async getPlanById(id: string): Promise<FinancialPlan | null> {
     try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return null;
+
       const { data: plan, error } = await supabase
         .from('financial_plans')
         .select(`
@@ -52,6 +58,7 @@ export class SupabaseFinancialPlanService implements FinancialPlanService {
           plan_insurance(*)
         `)
         .eq('id', id)
+        .eq('user_id', user.id)
         .single();
 
       if (error) throw error;
@@ -82,7 +89,15 @@ export class SupabaseFinancialPlanService implements FinancialPlanService {
           draft_data: planData.draftData || {},
           step: planData.step ?? 1
         })
-        .select()
+        .select(`
+          *,
+          financial_goals(*),
+          financial_accounts(*),
+          plan_expenses(*),
+          plan_income(*),
+          plan_savings(*),
+          plan_insurance(*)
+        `)
         .single();
 
       if (error) throw error;
@@ -96,21 +111,36 @@ export class SupabaseFinancialPlanService implements FinancialPlanService {
 
   async updatePlan(id: string, planData: Partial<FinancialPlan>): Promise<FinancialPlan | null> {
     try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('User not authenticated');
+
+      const updateData: any = {
+        updated_at: new Date().toISOString()
+      };
+
+      if (planData.name !== undefined) updateData.name = planData.name;
+      if (planData.status !== undefined) updateData.status = planData.status;
+      if (planData.isDraft !== undefined) updateData.is_draft = planData.isDraft;
+      if (planData.isActive !== undefined) updateData.is_active = planData.isActive;
+      if (planData.isFavorite !== undefined) updateData.is_favorite = planData.isFavorite;
+      if (planData.successRate !== undefined) updateData.success_rate = planData.successRate;
+      if (planData.draftData !== undefined) updateData.draft_data = planData.draftData;
+      if (planData.step !== undefined) updateData.step = planData.step;
+
       const { data: plan, error } = await supabase
         .from('financial_plans')
-        .update({
-          name: planData.name,
-          status: planData.status,
-          is_draft: planData.isDraft,
-          is_active: planData.isActive,
-          is_favorite: planData.isFavorite,
-          success_rate: planData.successRate,
-          draft_data: planData.draftData,
-          step: planData.step,
-          updated_at: new Date().toISOString()
-        })
+        .update(updateData)
         .eq('id', id)
-        .select()
+        .eq('user_id', user.id)
+        .select(`
+          *,
+          financial_goals(*),
+          financial_accounts(*),
+          plan_expenses(*),
+          plan_income(*),
+          plan_savings(*),
+          plan_insurance(*)
+        `)
         .single();
 
       if (error) throw error;
@@ -125,10 +155,14 @@ export class SupabaseFinancialPlanService implements FinancialPlanService {
 
   async deletePlan(id: string): Promise<boolean> {
     try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('User not authenticated');
+
       const { error } = await supabase
         .from('financial_plans')
         .delete()
-        .eq('id', id);
+        .eq('id', id)
+        .eq('user_id', user.id);
 
       if (error) throw error;
       return true;
@@ -154,7 +188,15 @@ export class SupabaseFinancialPlanService implements FinancialPlanService {
           draft_data: draftData,
           step: draftData.step || 1
         })
-        .select()
+        .select(`
+          *,
+          financial_goals(*),
+          financial_accounts(*),
+          plan_expenses(*),
+          plan_income(*),
+          plan_savings(*),
+          plan_insurance(*)
+        `)
         .single();
 
       if (error) throw error;
@@ -168,9 +210,20 @@ export class SupabaseFinancialPlanService implements FinancialPlanService {
 
   async getPlansSummary(): Promise<FinancialPlansSummary> {
     try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        return {
+          activePlans: 0,
+          draftPlans: 0,
+          totalGoals: 0,
+          averageSuccessRate: 0
+        };
+      }
+
       const { data: plans, error } = await supabase
         .from('financial_plans')
-        .select('status, success_rate, financial_goals(*)');
+        .select('status, success_rate, financial_goals(*)')
+        .eq('user_id', user.id);
 
       if (error) throw error;
 
@@ -196,8 +249,12 @@ export class SupabaseFinancialPlanService implements FinancialPlanService {
     }
   }
 
+  
   async updateGoal(planId: string, goal: FinancialGoal): Promise<boolean> {
     try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('User not authenticated');
+
       const { data: existingGoal } = await supabase
         .from('financial_goals')
         .select('id')
@@ -206,7 +263,6 @@ export class SupabaseFinancialPlanService implements FinancialPlanService {
         .single();
 
       if (existingGoal) {
-        // Update existing goal
         const { error } = await supabase
           .from('financial_goals')
           .update({
@@ -224,7 +280,6 @@ export class SupabaseFinancialPlanService implements FinancialPlanService {
 
         if (error) throw error;
       } else {
-        // Create new goal
         const { error } = await supabase
           .from('financial_goals')
           .insert({
@@ -254,13 +309,11 @@ export class SupabaseFinancialPlanService implements FinancialPlanService {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('User not authenticated');
 
-      // First, set all plans for this user to inactive
       await supabase
         .from('financial_plans')
         .update({ is_active: false })
         .eq('user_id', user.id);
 
-      // Then set the specified plan to active
       const { error } = await supabase
         .from('financial_plans')
         .update({ is_active: true })
@@ -357,17 +410,22 @@ export class SupabaseFinancialPlanService implements FinancialPlanService {
 
   async toggleFavorite(id: string): Promise<void> {
     try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('User not authenticated');
+
       const { data: plan } = await supabase
         .from('financial_plans')
         .select('is_favorite')
         .eq('id', id)
+        .eq('user_id', user.id)
         .single();
 
       if (plan) {
         const { error } = await supabase
           .from('financial_plans')
           .update({ is_favorite: !plan.is_favorite })
-          .eq('id', id);
+          .eq('id', id)
+          .eq('user_id', user.id);
 
         if (error) throw error;
       }
@@ -398,7 +456,15 @@ export class SupabaseFinancialPlanService implements FinancialPlanService {
           draft_data: originalPlan.draftData,
           step: originalPlan.step
         })
-        .select()
+        .select(`
+          *,
+          financial_goals(*),
+          financial_accounts(*),
+          plan_expenses(*),
+          plan_income(*),
+          plan_savings(*),
+          plan_insurance(*)
+        `)
         .single();
 
       if (error) throw error;
@@ -414,7 +480,7 @@ export class SupabaseFinancialPlanService implements FinancialPlanService {
     return {
       id: plan.id,
       name: plan.name,
-      owner: '', // This might need to be fetched from profiles table
+      owner: '',
       createdAt: new Date(plan.created_at),
       updatedAt: new Date(plan.updated_at),
       isDraft: plan.is_draft,

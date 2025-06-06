@@ -1,11 +1,12 @@
+
 import { useState, useEffect, useCallback } from 'react';
 import { FinancialPlan, FinancialGoal, FinancialPlansSummary } from '@/types/financial-plan';
 import { getFinancialPlanService } from '@/services/financial-plans/FinancialPlanServiceFactory';
 import { toast } from 'sonner';
 
 /**
- * Hook for interacting with financial plans through the service layer.
- * This decouples the UI from the data source implementation.
+ * Optimized hook for financial plans with single fetch per page load
+ * and efficient state management for CRUD operations
  */
 export const useFinancialPlans = () => {
   const [plans, setPlans] = useState<FinancialPlan[]>([]);
@@ -18,11 +19,31 @@ export const useFinancialPlans = () => {
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
+  const [hasInitialized, setHasInitialized] = useState(false);
 
   const service = getFinancialPlanService();
 
-  // Load all plans
-  const loadPlans = useCallback(async () => {
+  // Calculate summary from local state instead of re-fetching
+  const calculateSummary = useCallback((plansList: FinancialPlan[]): FinancialPlansSummary => {
+    const activePlans = plansList.filter(p => p.status === 'Active').length;
+    const draftPlans = plansList.filter(p => p.status === 'Draft').length;
+    const totalGoals = plansList.reduce((acc, plan) => acc + (plan.goals?.length || 0), 0);
+    const averageSuccessRate = plansList.length > 0 
+      ? plansList.reduce((acc, plan) => acc + (plan.successRate || 0), 0) / plansList.length 
+      : 0;
+
+    return {
+      activePlans,
+      draftPlans,
+      totalGoals,
+      averageSuccessRate
+    };
+  }, []);
+
+  // Single fetch on mount - no unnecessary re-fetches
+  const loadPlansOnce = useCallback(async () => {
+    if (hasInitialized) return;
+
     try {
       setLoading(true);
       setError(null);
@@ -30,50 +51,57 @@ export const useFinancialPlans = () => {
       const fetchedPlans = await service.getPlans();
       setPlans(fetchedPlans);
       
-      // Find active plan
+      // Find active plan from fetched data
       const active = fetchedPlans.find(p => p.isActive) || 
                      (fetchedPlans.length > 0 ? fetchedPlans[0] : null);
       setActivePlan(active);
       
-      // Get summary
-      const plansSummary = await service.getPlansSummary();
+      // Calculate summary from fetched data
+      const plansSummary = calculateSummary(fetchedPlans);
       setSummary(plansSummary);
+      
+      setHasInitialized(true);
     } catch (err) {
       setError(err instanceof Error ? err : new Error('Unknown error loading plans'));
-      // Only keep this critical error toast
       toast.error('Error loading financial plans');
     } finally {
       setLoading(false);
     }
-  }, [service]);
+  }, [service, hasInitialized, calculateSummary]);
 
-  // Initialize on component mount
+  // Initialize once on mount
   useEffect(() => {
-    loadPlans();
-  }, [loadPlans]);
+    loadPlansOnce();
+  }, [loadPlansOnce]);
 
-  // Create a plan
+  // Optimized create with local state update
   const createPlan = async (planData: Partial<FinancialPlan>) => {
     try {
       const newPlan = await service.createPlan(planData);
-      await loadPlans(); // Reload plans to ensure consistency
+      
+      // Update local state immediately for better UX
+      const updatedPlans = [...plans, newPlan];
+      setPlans(updatedPlans);
+      setSummary(calculateSummary(updatedPlans));
+      
+      toast.success('Financial plan created successfully');
       return newPlan;
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Unknown error creating plan';
-      // Only keep this critical error toast
       toast.error(errorMessage);
       throw err;
     }
   };
 
-  // Update a plan
+  // Optimized update with local state management
   const updatePlan = async (id: string, planData: Partial<FinancialPlan>) => {
     try {
       const updatedPlan = await service.updatePlan(id, planData);
       if (updatedPlan) {
-        setPlans(prevPlans => 
-          prevPlans.map(p => p.id === id ? updatedPlan : p)
-        );
+        // Update local state efficiently
+        const updatedPlans = plans.map(p => p.id === id ? updatedPlan : p);
+        setPlans(updatedPlans);
+        setSummary(calculateSummary(updatedPlans));
         
         // Update active plan if needed
         if (activePlan?.id === id) {
@@ -82,101 +110,151 @@ export const useFinancialPlans = () => {
       }
       return updatedPlan;
     } catch (err) {
-      // Disable toast for plan updates to prevent ghost toasts
-      // const errorMessage = err instanceof Error ? err.message : 'Unknown error updating plan';
-      // toast.error(errorMessage);
       throw err;
     }
   };
 
-  // Delete a plan
+  // Optimized delete with local state update
   const deletePlan = async (id: string) => {
     try {
       const success = await service.deletePlan(id);
       if (success) {
-        await loadPlans(); // Reload plans to ensure consistency
+        // Update local state immediately
+        const updatedPlans = plans.filter(p => p.id !== id);
+        setPlans(updatedPlans);
+        setSummary(calculateSummary(updatedPlans));
+        
+        // Handle active plan deletion
+        if (activePlan?.id === id) {
+          const newActive = updatedPlans.find(p => p.isActive) || 
+                           (updatedPlans.length > 0 ? updatedPlans[0] : null);
+          setActivePlan(newActive);
+        }
+        
+        toast.success('Financial plan deleted successfully');
       }
       return success;
     } catch (err) {
-      // Intentionally not showing toast for deleted plans
+      toast.error('Failed to delete financial plan');
       throw err;
     }
   };
 
-  // Save a draft
+  // Optimized draft save
   const saveDraft = async (draftData: any) => {
     try {
       const savedDraft = await service.saveDraft(draftData);
-      await loadPlans(); // Reload plans to ensure consistency
+      
+      // Add to local state
+      const updatedPlans = [...plans, savedDraft];
+      setPlans(updatedPlans);
+      setSummary(calculateSummary(updatedPlans));
+      
+      toast.success('Draft saved successfully');
       return savedDraft;
     } catch (err) {
-      // Disable toast for drafts to prevent ghost toasts
-      // const errorMessage = err instanceof Error ? err.message : 'Unknown error saving draft';
-      // toast.error(errorMessage);
+      toast.error('Failed to save draft');
       throw err;
     }
   };
 
-  // Set active plan
+  // Optimized active plan setting
   const setActiveFinancialPlan = async (id: string) => {
     try {
       await service.setActivePlan(id);
-      await loadPlans(); // Reload plans to ensure consistency
+      
+      // Update local state efficiently
+      const updatedPlans = plans.map(p => ({ 
+        ...p, 
+        isActive: p.id === id 
+      }));
+      setPlans(updatedPlans);
+      
+      const newActivePlan = updatedPlans.find(p => p.id === id) || null;
+      setActivePlan(newActivePlan);
     } catch (err) {
-      // Disable toast for active plan changes to prevent ghost toasts
-      // const errorMessage = err instanceof Error ? err.message : 'Unknown error setting active plan';
-      // toast.error(errorMessage);
+      toast.error('Failed to set active plan');
       throw err;
     }
   };
 
-  // Update a goal
+  // Optimized goal update
   const updateGoal = async (planId: string, goal: FinancialGoal) => {
     try {
       const success = await service.updateGoal(planId, goal);
       if (success) {
-        await loadPlans(); // Reload plans to ensure consistency
+        // Update local state efficiently
+        const updatedPlans = plans.map(p => {
+          if (p.id === planId) {
+            const updatedGoals = p.goals.some(g => g.id === goal.id)
+              ? p.goals.map(g => g.id === goal.id ? goal : g)
+              : [...p.goals, goal];
+            return { ...p, goals: updatedGoals };
+          }
+          return p;
+        });
+        
+        setPlans(updatedPlans);
+        setSummary(calculateSummary(updatedPlans));
+        
+        // Update active plan if it's the one being modified
+        if (activePlan?.id === planId) {
+          const updatedActivePlan = updatedPlans.find(p => p.id === planId);
+          if (updatedActivePlan) {
+            setActivePlan(updatedActivePlan);
+          }
+        }
       }
       return success;
     } catch (err) {
-      // Disable toast notifications for goals to prevent ghost toasts
-      // const errorMessage = err instanceof Error ? err.message : 'Unknown error updating goal';
-      // toast.error(errorMessage);
       throw err;
     }
   };
 
-  // Toggle favorite status
+  // Optimized favorite toggle
   const toggleFavorite = async (id: string) => {
     try {
       await service.toggleFavorite(id);
-      setPlans(prevPlans => 
-        prevPlans.map(p => 
-          p.id === id ? { ...p, isFavorite: !p.isFavorite } : p
-        )
+      
+      // Update local state immediately
+      const updatedPlans = plans.map(p => 
+        p.id === id ? { ...p, isFavorite: !p.isFavorite } : p
       );
+      setPlans(updatedPlans);
+      
+      // Update active plan if needed
+      if (activePlan?.id === id) {
+        setActivePlan({ ...activePlan, isFavorite: !activePlan.isFavorite });
+      }
     } catch (err) {
-      // Disable toast for favorite toggling to prevent ghost toasts
-      // const errorMessage = err instanceof Error ? err.message : 'Unknown error toggling favorite';
-      // toast.error(errorMessage);
+      toast.error('Failed to update favorite status');
       throw err;
     }
   };
 
-  // Duplicate a plan
+  // Optimized duplicate
   const duplicatePlan = async (id: string) => {
     try {
       const duplicatedPlan = await service.duplicatePlan(id);
       if (duplicatedPlan) {
-        await loadPlans(); // Reload plans to ensure consistency
+        // Add to local state
+        const updatedPlans = [...plans, duplicatedPlan];
+        setPlans(updatedPlans);
+        setSummary(calculateSummary(updatedPlans));
+        
+        toast.success('Plan duplicated successfully');
       }
       return duplicatedPlan;
     } catch (err) {
-      // Disable toast for plan duplication to prevent ghost toasts
-      // const errorMessage = err instanceof Error ? err.message : 'Unknown error duplicating plan';
-      // toast.error(errorMessage);
+      toast.error('Failed to duplicate plan');
       throw err;
     }
+  };
+
+  // Manual refresh for edge cases only
+  const refreshPlans = async () => {
+    setHasInitialized(false);
+    await loadPlansOnce();
   };
 
   return {
@@ -193,6 +271,6 @@ export const useFinancialPlans = () => {
     updateGoal,
     toggleFavorite,
     duplicatePlan,
-    refreshPlans: loadPlans
+    refreshPlans
   };
 };
