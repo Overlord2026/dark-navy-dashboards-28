@@ -248,8 +248,12 @@ export default function TaxPlanning() {
                       assetName="Annual Tax Updates" 
                       itemType="Tax Service"
                       pageContext="Tax Planning"
-                      className="text-sm p-0 h-auto"
-                    />
+                      variant="ghost"
+                      className="text-yellow-500 hover:text-yellow-600 p-0 h-auto font-medium flex items-center gap-1"
+                    >
+                      <span>Learn More</span>
+                      <ArrowRight className="h-4 w-4" />
+                    </LearnMoreButton>
                   </div>
                 </div>
                 
@@ -266,8 +270,12 @@ export default function TaxPlanning() {
                       assetName="Multi-Year Tax Projection" 
                       itemType="Tax Service"
                       pageContext="Tax Planning"
-                      className="text-sm p-0 h-auto"
-                    />
+                      variant="ghost"
+                      className="text-yellow-500 hover:text-yellow-600 p-0 h-auto font-medium flex items-center gap-1"
+                    >
+                      <span>Learn More</span>
+                      <ArrowRight className="h-4 w-4" />
+                    </LearnMoreButton>
                   </div>
                 </div>
                 
@@ -284,8 +292,12 @@ export default function TaxPlanning() {
                       assetName="State Residency Planning" 
                       itemType="Tax Service"
                       pageContext="Tax Planning"
-                      className="text-sm p-0 h-auto"
-                    />
+                      variant="ghost"
+                      className="text-yellow-500 hover:text-yellow-600 p-0 h-auto font-medium flex items-center gap-1"
+                    >
+                      <span>Learn More</span>
+                      <ArrowRight className="h-4 w-4" />
+                    </LearnMoreButton>
                   </div>
                 </div>
               </div>

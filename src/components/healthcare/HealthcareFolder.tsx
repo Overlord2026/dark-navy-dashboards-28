@@ -141,7 +141,6 @@ export const HealthcareFolder: React.FC<HealthcareFolderProps> = ({
         activeCategory="healthcare"
         categories={[{ id: "healthcare", name: "Healthcare" }]}
         uploading={false}
-        isFolder={false}
         isPrivate={false}
       />
 
