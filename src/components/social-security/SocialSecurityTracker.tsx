@@ -123,7 +123,6 @@ export const SocialSecurityTracker = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-xl font-semibold">Family Social Security Estimates</h2>
           <p className="text-muted-foreground">Track and manage social security benefits for your family members</p>
         </div>
         <div className="flex gap-3">
