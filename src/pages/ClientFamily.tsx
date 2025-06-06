@@ -36,10 +36,19 @@ export default function ClientFamily() {
               <Users size={16} />
               <span>Family Members</span>
             </TabsTrigger>
-            <TabsTrigger value="permissions" className="flex gap-2 items-center">
-              <Shield size={16} />
-              <span>Permissions</span>
-            </TabsTrigger>
+            <div className="relative">
+              <TabsTrigger 
+                value="permissions" 
+                className="flex gap-2 items-center opacity-70 cursor-not-allowed"
+                disabled={true}
+              >
+                <Shield size={16} />
+                <span>Permissions</span>
+                <Badge variant="warning" className="ml-1 text-xs">
+                  Coming Soon
+                </Badge>
+              </TabsTrigger>
+            </div>
           </TabsList>
           
           <TabsContent value="members">
