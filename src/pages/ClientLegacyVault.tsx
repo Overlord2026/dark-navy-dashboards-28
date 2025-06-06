@@ -190,6 +190,15 @@ export default function ClientLegacyVault() {
     }
   };
 
+  // New handler for category-specific uploads
+  const handleUploadForCategory = () => {
+    if (!activeCategory) {
+      toast.error("Please select a category first");
+      return;
+    }
+    setIsUploadDialogOpen(true);
+  };
+
   // Convert Supabase documents to DocumentItem format for compatibility
   const convertSupabaseDocsToDocumentItems = (supabaseDocs: any[]): DocumentItem[] => {
     return supabaseDocs.map(doc => ({
@@ -330,18 +339,25 @@ export default function ClientLegacyVault() {
                               onClick={() => setIsNewFolderDialogOpen(true)}
                               variant="outline"
                               size="sm"
+                              disabled={!activeCategory}
                             >
                               <FolderPlus className="mr-2 h-4 w-4" />
                               New Folder
                             </Button>
                             <Button 
-                              onClick={() => setIsUploadDialogOpen(true)}
+                              onClick={handleUploadForCategory}
                               size="sm"
+                              disabled={!activeCategory}
                             >
                               <Upload className="mr-2 h-4 w-4" />
                               Upload
                             </Button>
                           </div>
+                          {!activeCategory && (
+                            <p className="text-sm text-muted-foreground">
+                              Select a category to upload documents
+                            </p>
+                          )}
                         </div>
                         
                         <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
