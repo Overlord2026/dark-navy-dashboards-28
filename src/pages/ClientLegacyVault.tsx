@@ -355,21 +355,11 @@ export default function ClientLegacyVault() {
                           </div>
                           
                           <div className="md:col-span-4">
-                            <Card>
-                              <CardHeader>
-                                <CardTitle className="text-sm">Document Categories</CardTitle>
-                                <CardDescription className="text-xs">
-                                  Healthcare, Insurance Coverage, Prescriptions & Medications, Physicians & Providers, Medical Records & Documents
-                                </CardDescription>
-                              </CardHeader>
-                              <CardContent>
-                                <HealthcareFolder 
-                                  documents={[]} 
-                                  onAddDocument={handleAddDocument}
-                                  onCreateFolder={handleCreateFolder}
-                                />
-                              </CardContent>
-                            </Card>
+                            <HealthcareFolder 
+                              documents={[]} 
+                              onAddDocument={handleAddDocument}
+                              onCreateFolder={handleCreateFolder}
+                            />
                           </div>
                         </div>
                       </div>
