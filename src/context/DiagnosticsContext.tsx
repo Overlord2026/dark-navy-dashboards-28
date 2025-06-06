@@ -1,87 +1,54 @@
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { useUser } from "@/context/UserContext";
+import React, { createContext, useContext, useState, ReactNode } from 'react';
+import { useAuth } from './AuthContext';
 
-type DiagnosticsContextType = {
-  isDiagnosticsModeEnabled: boolean;
-  toggleDiagnosticsMode: () => void;
-  isDevelopmentMode: boolean;
-  isCiMode: boolean;
-};
+interface DiagnosticsContextType {
+  isRunning: boolean;
+  results: any[];
+  startDiagnostics: () => void;
+  stopDiagnostics: () => void;
+  clearResults: () => void;
+}
 
 const DiagnosticsContext = createContext<DiagnosticsContextType | undefined>(undefined);
 
-export function DiagnosticsProvider({ children }: { children: React.ReactNode }) {
-  const [isDiagnosticsModeEnabled, setIsDiagnosticsModeEnabled] = useState(false);
-  const [isDevelopmentMode, setIsDevelopmentMode] = useState(false);
-  const [isCiMode, setIsCiMode] = useState(false);
-  const { userProfile } = useUser();
-  
-  // Only allow enabling diagnostics for administrators
-  const userRole = userProfile?.role || "client";
-  const isAdmin = userRole === "admin" || userRole === "system_administrator";
-  
-  useEffect(() => {
-    // Check if in development mode
-    const isDev = import.meta.env.DEV || 
-                  window.location.hostname === 'localhost' ||
-                  window.location.hostname.includes('lovableproject.com');
-    setIsDevelopmentMode(isDev);
-    
-    // Check if in CI mode
-    const isCI = import.meta.env.CI === 'true' || 
-                 import.meta.env.CI === '1' || 
-                 import.meta.env.GITHUB_ACTIONS === 'true';
-    setIsCiMode(isCI);
-    
-    // Check if URL has a diagnostics parameter
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.has('diagnostics') && isAdmin) {
-      setIsDiagnosticsModeEnabled(true);
-    }
-    
-    // Enable diagnostics automatically in CI mode
-    if (isCI && isAdmin) {
-      setIsDiagnosticsModeEnabled(true);
-    }
-    
-    // Set up keyboard shortcut: Alt+Shift+D
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (isDev && e.altKey && e.shiftKey && e.key === 'D' && isAdmin) {
-        setIsDiagnosticsModeEnabled(prev => !prev);
-      }
-    };
-    
-    document.addEventListener('keydown', handleKeyDown);
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [isAdmin]);
-  
-  const toggleDiagnosticsMode = () => {
-    if (isAdmin) {
-      setIsDiagnosticsModeEnabled(prev => !prev);
-    }
+export const DiagnosticsProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const [isRunning, setIsRunning] = useState(false);
+  const [results, setResults] = useState<any[]>([]);
+  const { userProfile } = useAuth(); // Changed from useUser to useAuth
+
+  const startDiagnostics = () => {
+    setIsRunning(true);
+    console.log('Starting diagnostics for user:', userProfile?.id);
   };
-  
+
+  const stopDiagnostics = () => {
+    setIsRunning(false);
+  };
+
+  const clearResults = () => {
+    setResults([]);
+  };
+
   return (
     <DiagnosticsContext.Provider
       value={{
-        isDiagnosticsModeEnabled,
-        toggleDiagnosticsMode,
-        isDevelopmentMode,
-        isCiMode
+        isRunning,
+        results,
+        startDiagnostics,
+        stopDiagnostics,
+        clearResults
       }}
     >
       {children}
     </DiagnosticsContext.Provider>
   );
-}
+};
 
-export function useDiagnosticsContext() {
+export const useDiagnostics = (): DiagnosticsContextType => {
   const context = useContext(DiagnosticsContext);
   if (context === undefined) {
-    throw new Error('useDiagnosticsContext must be used within a DiagnosticsProvider');
+    throw new Error('useDiagnostics must be used within a DiagnosticsProvider');
   }
   return context;
-}
+};

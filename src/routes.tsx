@@ -48,7 +48,7 @@ import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 const routes = createBrowserRouter([
   {
     path: "/",
-    element: <Auth />
+    element: <Navigate to="/client-dashboard" replace />
   },
   {
     path: "/auth",

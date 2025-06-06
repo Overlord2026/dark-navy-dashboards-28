@@ -1,11 +1,10 @@
-
 import { ReactNode, useState } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { UserProfileSection } from "@/components/sidebar/UserProfileSection";
 import { Header } from "@/components/ui/Header";
 import { useTheme } from "@/context/ThemeContext";
-import { useUser } from "@/context/UserContext";
+import { useAuth } from "@/context/AuthContext";
 import { AdvisorSection } from "@/components/profile/AdvisorSection";
 import { NavigationCategory } from "./NavigationCategory";
 import { SecondaryNavigation } from "./SecondaryNavigation";
@@ -47,7 +46,7 @@ export function ThreeColumnLayout({
   };
 
   const { theme } = useTheme();
-  const { userProfile } = useUser();
+  const { userProfile } = useAuth();
   
   const params = useParams();
   const location = useLocation();
