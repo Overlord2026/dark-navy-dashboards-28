@@ -8,13 +8,16 @@ import { ExternalLinkIcon, PlusCircleIcon, TrashIcon, UserIcon, CalendarIcon, Be
 import { toast } from "sonner";
 import { useSocialSecurityMembers } from "@/hooks/useSocialSecurityMembers";
 import { useAuth } from "@/context/AuthContext";
+import { useLearnMoreNotification } from "@/hooks/useLearnMoreNotification";
 
 export const SocialSecurityTracker = () => {
   const { members, isLoading, addMember, deleteMember, linkAccount } = useSocialSecurityMembers();
   const { isAuthenticated, user } = useAuth();
+  const { sendLearnMoreEmail } = useLearnMoreNotification();
   
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isAssistanceLoading, setIsAssistanceLoading] = useState(false);
   const [newMember, setNewMember] = useState({
     name: "",
     relationship: "",
@@ -94,9 +97,25 @@ export const SocialSecurityTracker = () => {
     return monthlyEstimate * 12;
   };
 
-  const handleGetAssistance = () => {
-    toast.success("Your request for assistance has been sent to your advisor");
-    // In a real app, this would send a notification to the advisor
+  const handleGetAssistance = async () => {
+    if (!isAuthenticated) {
+      toast.error("Please log in to request assistance");
+      return;
+    }
+
+    setIsAssistanceLoading(true);
+    try {
+      await sendLearnMoreEmail(
+        "Social Security Planning",
+        "Retirement Service",
+        "Social Security",
+        "request_assistance"
+      );
+    } catch (error) {
+      console.error('Failed to send assistance request:', error);
+    } finally {
+      setIsAssistanceLoading(false);
+    }
   };
 
   if (!isAuthenticated) {
@@ -122,9 +141,22 @@ export const SocialSecurityTracker = () => {
     <div className="space-y-6">
       <div className="flex justify-end items-center">
         <div className="flex gap-3">
-          <Button variant="outline" onClick={handleGetAssistance}>
-            <BellRingIcon className="h-4 w-4 mr-2" />
-            Get Assistance
+          <Button 
+            variant="outline" 
+            onClick={handleGetAssistance}
+            disabled={isAssistanceLoading}
+          >
+            {isAssistanceLoading ? (
+              <>
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                Sending...
+              </>
+            ) : (
+              <>
+                <BellRingIcon className="h-4 w-4 mr-2" />
+                Get Assistance
+              </>
+            )}
           </Button>
           <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
             <DialogTrigger asChild>
