@@ -9,7 +9,7 @@ import { ShareDocumentDialog } from "@/components/documents/ShareDocumentDialog"
 import { DeleteDocumentDialog } from "@/components/documents/DeleteDocumentDialog";
 import { NewFolderDialog } from "@/components/documents/NewFolderDialog";
 import { Button } from "@/components/ui/button";
-import { FolderPlus, Upload, ExternalLink, ArchiveIcon, HeartPulseIcon, Activity, FileText, Pill, Users, Edit, Trash2 } from "lucide-react";
+import { FolderPlus, Upload, ExternalLink, ArchiveIcon, HeartPulseIcon, Activity, FileText, Pill, Users, Edit, Trash2, Plus, Calendar } from "lucide-react";
 import { documentCategories, healthcareCategories } from "@/data/documentCategories";
 import { toast } from "sonner";
 import { DocumentType, DocumentItem, DocumentCategory } from "@/types/document";
@@ -28,6 +28,9 @@ import {
 } from "@/components/ui/card";
 import { AddPhysicianDialog } from "@/components/healthcare/AddPhysicianDialog";
 import { usePhysicians, type PhysicianData } from "@/hooks/usePhysicians";
+import { useHealthcare } from "@/hooks/useHealthcare";
+import { Badge } from "@/components/ui/badge";
+import { format, isAfter, isBefore, addDays } from 'date-fns';
 
 const importantDocumentCategories = documentCategories.filter(cat => 
   ["documents-to-sign", "bfo-records", "alternative-investments", 
@@ -66,6 +69,11 @@ export default function ClientLegacyVault() {
     updatePhysician,
     deletePhysician
   } = usePhysicians();
+
+  const {
+    prescriptions,
+    loading: prescriptionsLoading,
+  } = useHealthcare();
 
   const [isNewFolderDialogOpen, setIsNewFolderDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
@@ -213,6 +221,20 @@ export default function ClientLegacyVault() {
     }));
   };
 
+  const getRefillStatus = (nextRefillDate: string) => {
+    const refillDate = new Date(nextRefillDate);
+    const today = new Date();
+    const weekFromNow = addDays(today, 7);
+
+    if (isBefore(refillDate, today)) {
+      return { status: 'overdue', label: 'Overdue', variant: 'destructive' as const };
+    } else if (isBefore(refillDate, weekFromNow)) {
+      return { status: 'due-soon', label: 'Due Soon', variant: 'secondary' as const };
+    } else {
+      return { status: 'good', label: 'Good', variant: 'default' as const };
+    }
+  };
+
   // Restore the original documents list for Healthcare tab - don't filter by Supabase documents
   const documentItems = convertSupabaseDocsToDocumentItems(filteredDocuments);
 
@@ -294,37 +316,172 @@ export default function ClientLegacyVault() {
                     
                     {/* Dashboard Tab */}
                     <TabsContent value="dashboard" className="space-y-6">
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <Card>
-                          <CardHeader>
-                            <CardTitle className="text-lg">Healthcare Overview</CardTitle>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {/* Prescriptions Card */}
+                        <Card className="hover:shadow-md transition-shadow">
+                          <CardHeader className="pb-3">
+                            <CardTitle className="flex items-center justify-between text-lg">
+                              <div className="flex items-center gap-2">
+                                <Pill className="h-5 w-5 text-blue-600" />
+                                Prescriptions
+                              </div>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => setHealthcareActiveTab("prescriptions")}
+                                className="text-xs"
+                              >
+                                View All
+                              </Button>
+                            </CardTitle>
+                            <CardDescription>
+                              Current medications and refill status
+                            </CardDescription>
                           </CardHeader>
                           <CardContent>
-                            <p className="text-muted-foreground">
-                              Quick overview of your healthcare status and recent activities.
-                            </p>
+                            {prescriptionsLoading ? (
+                              <div className="flex items-center justify-center py-8">
+                                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
+                              </div>
+                            ) : prescriptions.length === 0 ? (
+                              <div className="text-center py-8">
+                                <Pill className="mx-auto h-8 w-8 text-muted-foreground mb-2" />
+                                <p className="text-sm text-muted-foreground mb-3">No prescriptions added yet</p>
+                                <Button
+                                  size="sm"
+                                  onClick={() => setHealthcareActiveTab("prescriptions")}
+                                  className="text-xs"
+                                >
+                                  <Plus className="h-3 w-3 mr-1" />
+                                  Add Prescription
+                                </Button>
+                              </div>
+                            ) : (
+                              <div className="space-y-3">
+                                <div className="flex items-center justify-between text-sm">
+                                  <span className="font-medium">Total: {prescriptions.length}</span>
+                                  <div className="flex gap-2">
+                                    {prescriptions.filter(p => {
+                                      const status = getRefillStatus(p.next_refill);
+                                      return status.status === 'overdue' || status.status === 'due-soon';
+                                    }).length > 0 && (
+                                      <Badge variant="secondary" className="text-xs">
+                                        {prescriptions.filter(p => {
+                                          const status = getRefillStatus(p.next_refill);
+                                          return status.status === 'overdue' || status.status === 'due-soon';
+                                        }).length} need attention
+                                      </Badge>
+                                    )}
+                                  </div>
+                                </div>
+                                
+                                {/* Show recent prescriptions */}
+                                <div className="space-y-2 max-h-40 overflow-y-auto">
+                                  {prescriptions.slice(0, 3).map((prescription) => {
+                                    const refillStatus = getRefillStatus(prescription.next_refill);
+                                    return (
+                                      <div key={prescription.id} className="flex items-center justify-between p-2 border rounded-md bg-muted/30">
+                                        <div className="flex-1 min-w-0">
+                                          <p className="text-sm font-medium truncate">{prescription.name}</p>
+                                          <p className="text-xs text-muted-foreground">{prescription.dosage}</p>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                          <Badge variant={refillStatus.variant} className="text-xs">
+                                            {refillStatus.label}
+                                          </Badge>
+                                        </div>
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+                                
+                                {prescriptions.length > 3 && (
+                                  <p className="text-xs text-muted-foreground text-center pt-2">
+                                    +{prescriptions.length - 3} more prescriptions
+                                  </p>
+                                )}
+                              </div>
+                            )}
                           </CardContent>
                         </Card>
-                        
-                        <Card>
-                          <CardHeader>
-                            <CardTitle className="text-lg">Recent Documents</CardTitle>
+
+                        {/* Physicians & Contacts Card */}
+                        <Card className="hover:shadow-md transition-shadow">
+                          <CardHeader className="pb-3">
+                            <CardTitle className="flex items-center justify-between text-lg">
+                              <div className="flex items-center gap-2">
+                                <Users className="h-5 w-5 text-green-600" />
+                                Physicians & Contacts
+                              </div>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => setHealthcareActiveTab("physicians")}
+                                className="text-xs"
+                              >
+                                View All
+                              </Button>
+                            </CardTitle>
+                            <CardDescription>
+                              Your healthcare providers and contacts
+                            </CardDescription>
                           </CardHeader>
                           <CardContent>
-                            <p className="text-muted-foreground">
-                              Your most recently uploaded healthcare documents.
-                            </p>
-                          </CardContent>
-                        </Card>
-                        
-                        <Card>
-                          <CardHeader>
-                            <CardTitle className="text-lg">Prescription Status</CardTitle>
-                          </CardHeader>
-                          <CardContent>
-                            <p className="text-muted-foreground">
-                              Current prescriptions and medication reminders.
-                            </p>
+                            {physiciansLoading ? (
+                              <div className="flex items-center justify-center py-8">
+                                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
+                              </div>
+                            ) : physicians.length === 0 ? (
+                              <div className="text-center py-8">
+                                <Users className="mx-auto h-8 w-8 text-muted-foreground mb-2" />
+                                <p className="text-sm text-muted-foreground mb-3">No physicians added yet</p>
+                                <Button
+                                  size="sm"
+                                  onClick={() => setIsAddPhysicianDialogOpen(true)}
+                                  className="text-xs"
+                                >
+                                  <Plus className="h-3 w-3 mr-1" />
+                                  Add Physician
+                                </Button>
+                              </div>
+                            ) : (
+                              <div className="space-y-3">
+                                <div className="flex items-center justify-between text-sm">
+                                  <span className="font-medium">Total: {physicians.length}</span>
+                                  <Badge variant="outline" className="text-xs">
+                                    {physicians.filter(p => p.specialty).length} specialists
+                                  </Badge>
+                                </div>
+                                
+                                {/* Show recent physicians */}
+                                <div className="space-y-2 max-h-40 overflow-y-auto">
+                                  {physicians.slice(0, 3).map((physician) => (
+                                    <div key={physician.id} className="flex items-center justify-between p-2 border rounded-md bg-muted/30">
+                                      <div className="flex-1 min-w-0">
+                                        <p className="text-sm font-medium truncate">{physician.name}</p>
+                                        <p className="text-xs text-muted-foreground">
+                                          {physician.specialty || 'General Practitioner'}
+                                        </p>
+                                      </div>
+                                      <div className="flex items-center gap-2">
+                                        {physician.last_visit && (
+                                          <div className="text-xs text-muted-foreground">
+                                            <Calendar className="h-3 w-3 inline mr-1" />
+                                            {format(new Date(physician.last_visit), 'MMM d')}
+                                          </div>
+                                        )}
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                                
+                                {physicians.length > 3 && (
+                                  <p className="text-xs text-muted-foreground text-center pt-2">
+                                    +{physicians.length - 3} more physicians
+                                  </p>
+                                )}
+                              </div>
+                            )}
                           </CardContent>
                         </Card>
                       </div>
