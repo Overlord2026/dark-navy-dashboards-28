@@ -325,7 +325,6 @@ export default function ClientLegacyVault() {
                     <TabsContent value="documents" className="space-y-6">
                       <div className="space-y-4">
                         <div className="flex justify-between items-center">
-                          <h3 className="text-lg font-semibold">Healthcare Documents</h3>
                           <div className="flex gap-2">
                             <Button 
                               onClick={() => setIsNewFolderDialogOpen(true)}
