@@ -8,11 +8,14 @@ import { Label } from "@/components/ui/label";
 import { ExternalLinkIcon, PlusCircleIcon, TrashIcon, UserIcon, CalendarIcon, BellRingIcon, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { useSocialSecurityMembers } from "@/hooks/useSocialSecurityMembers";
+import { useAuth } from "@/context/AuthContext";
 
 export const SocialSecurityTracker = () => {
   const { members, isLoading, addMember, deleteMember, linkAccount } = useSocialSecurityMembers();
+  const { isAuthenticated, user } = useAuth();
   
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [newMember, setNewMember] = useState({
     name: "",
     relationship: "",
@@ -20,15 +23,23 @@ export const SocialSecurityTracker = () => {
   });
 
   const handleAddMember = async () => {
-    if (!newMember.name || !newMember.relationship) {
+    if (!isAuthenticated || !user) {
+      toast.error("Please log in to add family members");
+      return;
+    }
+
+    if (!newMember.name.trim() || !newMember.relationship.trim()) {
       toast.error("Please fill out all required fields");
       return;
     }
+
+    setIsSubmitting(true);
     
     try {
+      console.log('Attempting to add member:', newMember);
       await addMember({
-        name: newMember.name,
-        relationship: newMember.relationship,
+        name: newMember.name.trim(),
+        relationship: newMember.relationship.trim(),
         preferred_retirement_age: newMember.preferred_retirement_age,
         account_linked: false
       });
@@ -41,11 +52,19 @@ export const SocialSecurityTracker = () => {
       
       setIsAddDialogOpen(false);
     } catch (error) {
+      console.error('Failed to add member:', error);
       // Error is already handled in the hook
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   const handleLinkAccount = async (id: string) => {
+    if (!isAuthenticated) {
+      toast.error("Please log in to link accounts");
+      return;
+    }
+
     // In a real implementation, this would open SSA.gov authentication
     window.open("https://www.ssa.gov/myaccount/", "_blank");
     
@@ -60,6 +79,11 @@ export const SocialSecurityTracker = () => {
   };
 
   const handleRemoveMember = async (id: string) => {
+    if (!isAuthenticated) {
+      toast.error("Please log in to remove members");
+      return;
+    }
+
     try {
       await deleteMember(id);
     } catch (error) {
@@ -75,6 +99,17 @@ export const SocialSecurityTracker = () => {
     toast.success("Your request for assistance has been sent to your advisor");
     // In a real app, this would send a notification to the advisor
   };
+
+  if (!isAuthenticated) {
+    return (
+      <div className="flex flex-col items-center justify-center h-64 space-y-4">
+        <h3 className="text-lg font-semibold">Authentication Required</h3>
+        <p className="text-muted-foreground text-center">
+          Please log in to access social security tracking features.
+        </p>
+      </div>
+    );
+  }
 
   if (isLoading) {
     return (
@@ -112,21 +147,23 @@ export const SocialSecurityTracker = () => {
               </DialogHeader>
               <div className="space-y-4 py-4">
                 <div className="space-y-2">
-                  <Label htmlFor="name">Name</Label>
+                  <Label htmlFor="name">Name *</Label>
                   <Input 
                     id="name" 
                     placeholder="Enter name" 
                     value={newMember.name}
                     onChange={(e) => setNewMember({...newMember, name: e.target.value})}
+                    disabled={isSubmitting}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="relationship">Relationship</Label>
+                  <Label htmlFor="relationship">Relationship *</Label>
                   <Input 
                     id="relationship" 
                     placeholder="E.g., Spouse, Child, Parent" 
                     value={newMember.relationship}
                     onChange={(e) => setNewMember({...newMember, relationship: e.target.value})}
+                    disabled={isSubmitting}
                   />
                 </div>
                 <div className="space-y-2">
@@ -134,15 +171,36 @@ export const SocialSecurityTracker = () => {
                   <Input 
                     id="retirement-age" 
                     type="number" 
+                    min="62"
+                    max="70"
                     value={newMember.preferred_retirement_age}
                     onChange={(e) => setNewMember({...newMember, preferred_retirement_age: Number(e.target.value)})}
+                    disabled={isSubmitting}
                   />
                   <p className="text-xs text-muted-foreground">After linking to SSA.gov, we'll show estimates for various retirement ages</p>
                 </div>
               </div>
               <DialogFooter>
-                <Button variant="outline" onClick={() => setIsAddDialogOpen(false)}>Cancel</Button>
-                <Button onClick={handleAddMember}>Add Member</Button>
+                <Button 
+                  variant="outline" 
+                  onClick={() => setIsAddDialogOpen(false)}
+                  disabled={isSubmitting}
+                >
+                  Cancel
+                </Button>
+                <Button 
+                  onClick={handleAddMember}
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      Adding...
+                    </>
+                  ) : (
+                    'Add Member'
+                  )}
+                </Button>
               </DialogFooter>
             </DialogContent>
           </Dialog>

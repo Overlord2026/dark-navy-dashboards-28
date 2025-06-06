@@ -32,10 +32,14 @@ export interface MemberWithEstimates extends SocialSecurityMember {
 export const useSocialSecurityMembers = () => {
   const [members, setMembers] = useState<MemberWithEstimates[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
 
   const fetchMembers = async () => {
-    if (!user) return;
+    if (!user || !isAuthenticated) {
+      console.log('No authenticated user found');
+      setIsLoading(false);
+      return;
+    }
 
     try {
       setIsLoading(true);
@@ -50,7 +54,10 @@ export const useSocialSecurityMembers = () => {
         .eq('user_id', user.id)
         .order('created_at', { ascending: true });
 
-      if (membersError) throw membersError;
+      if (membersError) {
+        console.error('Error fetching members:', membersError);
+        throw membersError;
+      }
 
       // Transform the data to match our interface
       const transformedMembers = membersData?.map(member => ({
@@ -68,9 +75,19 @@ export const useSocialSecurityMembers = () => {
   };
 
   const addMember = async (memberData: Omit<SocialSecurityMember, 'id' | 'user_id' | 'created_at' | 'updated_at'>) => {
-    if (!user) return;
+    if (!user || !isAuthenticated) {
+      toast.error('You must be logged in to add family members');
+      return;
+    }
+
+    if (!memberData.name || !memberData.relationship) {
+      toast.error('Name and relationship are required');
+      return;
+    }
 
     try {
+      console.log('Adding member with data:', { ...memberData, user_id: user.id });
+      
       const { data, error } = await supabase
         .from('social_security_members')
         .insert([{
@@ -80,7 +97,14 @@ export const useSocialSecurityMembers = () => {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error inserting member:', error);
+        throw error;
+      }
+
+      if (!data) {
+        throw new Error('No data returned from insert');
+      }
 
       const newMember: MemberWithEstimates = {
         ...data,
@@ -92,13 +116,20 @@ export const useSocialSecurityMembers = () => {
       return newMember;
     } catch (error) {
       console.error('Error adding social security member:', error);
-      toast.error('Failed to add family member');
+      if (error instanceof Error) {
+        toast.error(`Failed to add family member: ${error.message}`);
+      } else {
+        toast.error('Failed to add family member');
+      }
       throw error;
     }
   };
 
   const updateMember = async (id: string, updates: Partial<SocialSecurityMember>) => {
-    if (!user) return;
+    if (!user || !isAuthenticated) {
+      toast.error('You must be logged in to update members');
+      return;
+    }
 
     try {
       const { data, error } = await supabase
@@ -125,7 +156,10 @@ export const useSocialSecurityMembers = () => {
   };
 
   const deleteMember = async (id: string) => {
-    if (!user) return;
+    if (!user || !isAuthenticated) {
+      toast.error('You must be logged in to delete members');
+      return;
+    }
 
     try {
       const { error } = await supabase
@@ -146,7 +180,10 @@ export const useSocialSecurityMembers = () => {
   };
 
   const linkAccount = async (memberId: string) => {
-    if (!user) return;
+    if (!user || !isAuthenticated) {
+      toast.error('You must be logged in to link accounts');
+      return;
+    }
 
     try {
       // First update the member to mark account as linked
@@ -188,8 +225,13 @@ export const useSocialSecurityMembers = () => {
   };
 
   useEffect(() => {
-    fetchMembers();
-  }, [user]);
+    if (isAuthenticated) {
+      fetchMembers();
+    } else {
+      setMembers([]);
+      setIsLoading(false);
+    }
+  }, [user, isAuthenticated]);
 
   return {
     members,
