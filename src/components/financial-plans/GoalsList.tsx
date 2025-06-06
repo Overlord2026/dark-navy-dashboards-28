@@ -294,7 +294,7 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
     
     let panelTitle = goalTitle;
     if (goal.owner) {
-      const ownerPossessive = owner.endsWith('s') ? `${goal.owner}'` : `${goal.owner}'s`;
+      const ownerPossessive = goal.owner.endsWith('s') ? `${goal.owner}'` : `${goal.owner}'s`;
       panelTitle = `${ownerPossessive} ${goalTitle}`;
     }
     
