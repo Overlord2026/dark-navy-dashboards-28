@@ -130,6 +130,13 @@ export class ApiFinancialPlanService implements FinancialPlanService {
     throw new Error("API implementation not yet available");
   }
 
+  async deleteGoal(planId: string, goalId: string): Promise<boolean> {
+    // TODO: Implement actual API call
+    // await this.apiRequest(`/plans/${planId}/goals/${goalId}`, 'DELETE');
+    // return true;
+    throw new Error("API implementation not yet available");
+  }
+
   async setActivePlan(id: string): Promise<void> {
     // TODO: Implement actual API call
     // await this.apiRequest(`/plans/${id}/activate`, 'PUT');

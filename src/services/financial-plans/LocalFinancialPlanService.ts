@@ -282,6 +282,34 @@ export class LocalFinancialPlanService implements FinancialPlanService {
     return true;
   }
 
+  async deleteGoal(planId: string, goalId: string): Promise<boolean> {
+    const planIndex = this.plans.findIndex(p => p.id === planId);
+    if (planIndex === -1) {
+      toast.error("Plan not found");
+      return false;
+    }
+    
+    const plan = { ...this.plans[planIndex] };
+    const goals = [...(plan.goals || [])];
+    
+    // Filter out the goal to delete
+    const updatedGoals = goals.filter(g => g.id !== goalId);
+    
+    if (updatedGoals.length === goals.length) {
+      toast.error("Goal not found");
+      return false;
+    }
+    
+    plan.goals = updatedGoals;
+    plan.updatedAt = new Date();
+    
+    this.plans[planIndex] = plan;
+    this.savePlans();
+    
+    toast.success("Goal deleted");
+    return true;
+  }
+
   async setActivePlan(id: string): Promise<void> {
     const plan = this.plans.find(p => p.id === id);
     if (!plan) {
