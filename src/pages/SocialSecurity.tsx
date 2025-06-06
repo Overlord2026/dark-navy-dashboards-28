@@ -8,7 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const SocialSecurity = () => {
   return (
-    <ThreeColumnLayout activeMainItem="social-security" title="Social Security & Retirement">
+    <ThreeColumnLayout activeMainItem="client-social-security" title="Social Security & Retirement">
       <div className="w-full space-y-6 animate-fade-in">
         <h1 className="text-2xl font-bold">Retirement Benefits</h1>
         <p className="text-muted-foreground">

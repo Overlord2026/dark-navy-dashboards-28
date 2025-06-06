@@ -131,8 +131,12 @@ const routes = createBrowserRouter([
     element: <Navigate to="/client-legacy-vault" replace />
   },
   {
-    path: "/social-security",
+    path: "/client-social-security",
     element: <ProtectedRoute><SocialSecurity /></ProtectedRoute>
+  },
+  {
+    path: "/social-security",
+    element: <Navigate to="/client-social-security" replace />
   },
   {
     path: "/client-properties",
