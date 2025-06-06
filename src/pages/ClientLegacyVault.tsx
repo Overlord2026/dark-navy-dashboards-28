@@ -284,34 +284,32 @@ export default function ClientLegacyVault() {
 
             {/* Healthcare Tab with Sub-tabs */}
             <TabsContent value="healthcare" className="space-y-6">
-              <Card className="shadow-lg border-0 bg-gradient-to-br from-background to-muted/20">
-                <CardHeader className="pb-4">
-                  <CardTitle className="flex items-center gap-3 text-xl">
-                    <div className="p-2 bg-primary/10 rounded-lg">
-                      <HeartPulseIcon className="h-6 w-6 text-primary" />
-                    </div>
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <HeartPulseIcon className="h-5 w-5" />
                     Healthcare Management
                   </CardTitle>
-                  <CardDescription className="text-base">
+                  <CardDescription>
                     Manage your healthcare documents, prescriptions, and medical information
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <Tabs value={healthcareActiveTab} onValueChange={setHealthcareActiveTab} className="w-full">
-                    <TabsList className="grid w-full grid-cols-4 mb-6 bg-muted/50">
-                      <TabsTrigger value="dashboard" className="flex items-center gap-2 data-[state=active]:bg-background">
+                    <TabsList className="grid w-full grid-cols-4 mb-6">
+                      <TabsTrigger value="dashboard" className="flex items-center gap-2">
                         <Activity className="h-4 w-4" />
                         Dashboard
                       </TabsTrigger>
-                      <TabsTrigger value="documents" className="flex items-center gap-2 data-[state=active]:bg-background">
+                      <TabsTrigger value="documents" className="flex items-center gap-2">
                         <FileText className="h-4 w-4" />
                         Documents
                       </TabsTrigger>
-                      <TabsTrigger value="prescriptions" className="flex items-center gap-2 data-[state=active]:bg-background">
+                      <TabsTrigger value="prescriptions" className="flex items-center gap-2">
                         <Pill className="h-4 w-4" />
                         Prescriptions
                       </TabsTrigger>
-                      <TabsTrigger value="physicians" className="flex items-center gap-2 data-[state=active]:bg-background">
+                      <TabsTrigger value="physicians" className="flex items-center gap-2">
                         <Users className="h-4 w-4" />
                         Physicians & Contacts
                       </TabsTrigger>
@@ -321,61 +319,53 @@ export default function ClientLegacyVault() {
                     <TabsContent value="dashboard" className="space-y-6">
                       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         {/* Prescriptions Card */}
-                        <Card className="hover:shadow-xl transition-all duration-300 border-0 bg-gradient-to-br from-blue-50/50 to-blue-100/30 dark:from-blue-950/20 dark:to-blue-900/10">
-                          <CardHeader className="pb-4 border-b border-blue-200/30 dark:border-blue-800/30">
-                            <CardTitle className="flex items-center justify-between">
-                              <div className="flex items-center gap-3">
-                                <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-xl">
-                                  <Pill className="h-6 w-6 text-blue-600 dark:text-blue-400" />
-                                </div>
-                                <div>
-                                  <h3 className="text-lg font-semibold text-blue-900 dark:text-blue-100">Prescriptions</h3>
-                                  <p className="text-sm text-blue-600 dark:text-blue-300">Current medications & refills</p>
-                                </div>
+                        <Card className="hover:shadow-md transition-shadow">
+                          <CardHeader className="pb-3">
+                            <CardTitle className="flex items-center justify-between text-lg">
+                              <div className="flex items-center gap-2">
+                                <Pill className="h-5 w-5 text-blue-600" />
+                                Prescriptions
                               </div>
                               <Button
                                 variant="outline"
                                 size="sm"
                                 onClick={() => setHealthcareActiveTab("prescriptions")}
-                                className="border-blue-200 text-blue-700 hover:bg-blue-50 dark:border-blue-700 dark:text-blue-300 dark:hover:bg-blue-900/20"
+                                className="text-xs"
                               >
                                 View All
                               </Button>
                             </CardTitle>
+                            <CardDescription>
+                              Current medications and detailed information
+                            </CardDescription>
                           </CardHeader>
-                          <CardContent className="pt-4">
+                          <CardContent>
                             {prescriptionsLoading ? (
-                              <div className="flex items-center justify-center py-12">
-                                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                              <div className="flex items-center justify-center py-8">
+                                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
                               </div>
                             ) : prescriptions.length === 0 ? (
-                              <div className="text-center py-12">
-                                <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-                                  <Pill className="h-8 w-8 text-blue-400" />
-                                </div>
-                                <h4 className="text-lg font-medium text-blue-900 dark:text-blue-100 mb-2">No Prescriptions</h4>
-                                <p className="text-sm text-blue-600 dark:text-blue-300 mb-4">Add your medications to track refills and dosages</p>
+                              <div className="text-center py-8">
+                                <Pill className="mx-auto h-8 w-8 text-muted-foreground mb-2" />
+                                <p className="text-sm text-muted-foreground mb-3">No prescriptions added yet</p>
                                 <Button
                                   size="sm"
                                   onClick={() => setHealthcareActiveTab("prescriptions")}
-                                  className="bg-blue-600 hover:bg-blue-700 text-white"
+                                  className="text-xs"
                                 >
-                                  <Plus className="h-4 w-4 mr-2" />
+                                  <Plus className="h-3 w-3 mr-1" />
                                   Add Prescription
                                 </Button>
                               </div>
                             ) : (
                               <div className="space-y-4">
-                                <div className="flex items-center justify-between p-3 bg-blue-50/50 dark:bg-blue-900/10 rounded-lg">
-                                  <div className="flex items-center gap-2">
-                                    <Pill className="h-4 w-4 text-blue-600" />
-                                    <span className="font-medium text-blue-900 dark:text-blue-100">Total: {prescriptions.length}</span>
-                                  </div>
+                                <div className="flex items-center justify-between text-sm font-medium">
+                                  <span>Total Prescriptions: {prescriptions.length}</span>
                                   {prescriptions.filter(p => {
                                     const status = getRefillStatus(p.next_refill);
                                     return status.status === 'overdue' || status.status === 'due-soon';
                                   }).length > 0 && (
-                                    <Badge variant="secondary" className="bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300">
+                                    <Badge variant="secondary" className="text-xs">
                                       {prescriptions.filter(p => {
                                         const status = getRefillStatus(p.next_refill);
                                         return status.status === 'overdue' || status.status === 'due-soon';
@@ -384,58 +374,52 @@ export default function ClientLegacyVault() {
                                   )}
                                 </div>
                                 
-                                <div className="space-y-4 max-h-96 overflow-y-auto custom-scrollbar">
+                                {/* Show all prescriptions with full details */}
+                                <div className="space-y-3 max-h-96 overflow-y-auto">
                                   {prescriptions.map((prescription) => {
                                     const refillStatus = getRefillStatus(prescription.next_refill);
                                     return (
-                                      <div key={prescription.id} className="bg-white dark:bg-gray-800/50 rounded-xl p-4 shadow-sm border border-blue-100 dark:border-blue-800/30 hover:shadow-md transition-shadow">
+                                      <div key={prescription.id} className="border rounded-lg p-4 bg-muted/20">
                                         <div className="flex items-start justify-between mb-3">
                                           <div className="flex-1">
-                                            <h4 className="font-semibold text-gray-900 dark:text-gray-100 text-base">{prescription.name}</h4>
-                                            <p className="text-sm text-blue-600 dark:text-blue-400 font-medium">{prescription.dosage}</p>
+                                            <h4 className="font-semibold text-base">{prescription.name}</h4>
+                                            <p className="text-sm text-muted-foreground font-medium">{prescription.dosage}</p>
                                           </div>
-                                          <Badge 
-                                            variant={refillStatus.variant} 
-                                            className={`ml-2 ${
-                                              refillStatus.status === 'overdue' ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300' :
-                                              refillStatus.status === 'due-soon' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300' :
-                                              'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'
-                                            }`}
-                                          >
+                                          <Badge variant={refillStatus.variant} className="ml-2">
                                             {refillStatus.label}
                                           </Badge>
                                         </div>
                                         
                                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-                                          <div className="flex items-center gap-2 p-2 bg-gray-50 dark:bg-gray-700/30 rounded-lg">
-                                            <Clock className="h-4 w-4 text-gray-500 flex-shrink-0" />
-                                            <span><strong className="text-gray-700 dark:text-gray-300">Frequency:</strong> <span className="text-gray-600 dark:text-gray-400">{prescription.frequency}</span></span>
+                                          <div className="flex items-center gap-2">
+                                            <Clock className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                                            <span><strong>Frequency:</strong> {prescription.frequency}</span>
                                           </div>
                                           
-                                          <div className="flex items-center gap-2 p-2 bg-gray-50 dark:bg-gray-700/30 rounded-lg">
-                                            <Calendar className="h-4 w-4 text-gray-500 flex-shrink-0" />
-                                            <span><strong className="text-gray-700 dark:text-gray-300">Next Refill:</strong> <span className="text-gray-600 dark:text-gray-400">{format(new Date(prescription.next_refill), 'MMM d, yyyy')}</span></span>
+                                          <div className="flex items-center gap-2">
+                                            <Calendar className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                                            <span><strong>Next Refill:</strong> {format(new Date(prescription.next_refill), 'MMM d, yyyy')}</span>
                                           </div>
                                           
                                           {prescription.doctor && (
-                                            <div className="flex items-center gap-2 p-2 bg-gray-50 dark:bg-gray-700/30 rounded-lg">
-                                              <User className="h-4 w-4 text-gray-500 flex-shrink-0" />
-                                              <span><strong className="text-gray-700 dark:text-gray-300">Doctor:</strong> <span className="text-gray-600 dark:text-gray-400">Dr. {prescription.doctor}</span></span>
+                                            <div className="flex items-center gap-2">
+                                              <User className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                                              <span><strong>Doctor:</strong> Dr. {prescription.doctor}</span>
                                             </div>
                                           )}
                                           
                                           {prescription.pharmacy && (
-                                            <div className="flex items-center gap-2 p-2 bg-gray-50 dark:bg-gray-700/30 rounded-lg">
-                                              <Users className="h-4 w-4 text-gray-500 flex-shrink-0" />
-                                              <span><strong className="text-gray-700 dark:text-gray-300">Pharmacy:</strong> <span className="text-gray-600 dark:text-gray-400">{prescription.pharmacy}</span></span>
+                                            <div className="flex items-center gap-2">
+                                              <Users className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                                              <span><strong>Pharmacy:</strong> {prescription.pharmacy}</span>
                                             </div>
                                           )}
                                         </div>
                                         
                                         {prescription.notes && (
-                                          <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-600">
-                                            <p className="text-xs text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-700/30 p-2 rounded-lg">
-                                              <strong className="text-gray-700 dark:text-gray-300">Notes:</strong> {prescription.notes}
+                                          <div className="mt-3 pt-3 border-t border-border/30">
+                                            <p className="text-xs text-muted-foreground">
+                                              <strong>Notes:</strong> {prescription.notes}
                                             </p>
                                           </div>
                                         )}
@@ -449,105 +433,98 @@ export default function ClientLegacyVault() {
                         </Card>
 
                         {/* Physicians & Contacts Card */}
-                        <Card className="hover:shadow-xl transition-all duration-300 border-0 bg-gradient-to-br from-green-50/50 to-green-100/30 dark:from-green-950/20 dark:to-green-900/10">
-                          <CardHeader className="pb-4 border-b border-green-200/30 dark:border-green-800/30">
-                            <CardTitle className="flex items-center justify-between">
-                              <div className="flex items-center gap-3">
-                                <div className="p-3 bg-green-100 dark:bg-green-900/30 rounded-xl">
-                                  <Users className="h-6 w-6 text-green-600 dark:text-green-400" />
-                                </div>
-                                <div>
-                                  <h3 className="text-lg font-semibold text-green-900 dark:text-green-100">Physicians & Contacts</h3>
-                                  <p className="text-sm text-green-600 dark:text-green-300">Healthcare providers & contacts</p>
-                                </div>
+                        <Card className="hover:shadow-md transition-shadow">
+                          <CardHeader className="pb-3">
+                            <CardTitle className="flex items-center justify-between text-lg">
+                              <div className="flex items-center gap-2">
+                                <Users className="h-5 w-5 text-green-600" />
+                                Physicians & Contacts
                               </div>
                               <Button
                                 variant="outline"
                                 size="sm"
                                 onClick={() => setHealthcareActiveTab("physicians")}
-                                className="border-green-200 text-green-700 hover:bg-green-50 dark:border-green-700 dark:text-green-300 dark:hover:bg-green-900/20"
+                                className="text-xs"
                               >
                                 View All
                               </Button>
                             </CardTitle>
+                            <CardDescription>
+                              Healthcare providers and contact details
+                            </CardDescription>
                           </CardHeader>
-                          <CardContent className="pt-4">
+                          <CardContent>
                             {physiciansLoading ? (
-                              <div className="flex items-center justify-center py-12">
-                                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
+                              <div className="flex items-center justify-center py-8">
+                                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
                               </div>
                             ) : physicians.length === 0 ? (
-                              <div className="text-center py-12">
-                                <div className="p-4 bg-green-50 dark:bg-green-900/20 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-                                  <Users className="h-8 w-8 text-green-400" />
-                                </div>
-                                <h4 className="text-lg font-medium text-green-900 dark:text-green-100 mb-2">No Physicians</h4>
-                                <p className="text-sm text-green-600 dark:text-green-300 mb-4">Add your healthcare providers and contacts</p>
+                              <div className="text-center py-8">
+                                <Users className="mx-auto h-8 w-8 text-muted-foreground mb-2" />
+                                <p className="text-sm text-muted-foreground mb-3">No physicians added yet</p>
                                 <Button
                                   size="sm"
                                   onClick={() => setIsAddPhysicianDialogOpen(true)}
-                                  className="bg-green-600 hover:bg-green-700 text-white"
+                                  className="text-xs"
                                 >
-                                  <Plus className="h-4 w-4 mr-2" />
+                                  <Plus className="h-3 w-3 mr-1" />
                                   Add Physician
                                 </Button>
                               </div>
                             ) : (
                               <div className="space-y-4">
-                                <div className="flex items-center justify-between p-3 bg-green-50/50 dark:bg-green-900/10 rounded-lg">
-                                  <div className="flex items-center gap-2">
-                                    <Users className="h-4 w-4 text-green-600" />
-                                    <span className="font-medium text-green-900 dark:text-green-100">Total: {physicians.length}</span>
-                                  </div>
-                                  <Badge variant="outline" className="bg-green-100 text-green-800 border-green-300 dark:bg-green-900/30 dark:text-green-300 dark:border-green-700">
+                                <div className="flex items-center justify-between text-sm font-medium">
+                                  <span>Total Physicians: {physicians.length}</span>
+                                  <Badge variant="outline" className="text-xs">
                                     {physicians.filter(p => p.specialty).length} specialists
                                   </Badge>
                                 </div>
                                 
-                                <div className="space-y-4 max-h-96 overflow-y-auto custom-scrollbar">
+                                {/* Show all physicians with full details */}
+                                <div className="space-y-3 max-h-96 overflow-y-auto">
                                   {physicians.map((physician) => (
-                                    <div key={physician.id} className="bg-white dark:bg-gray-800/50 rounded-xl p-4 shadow-sm border border-green-100 dark:border-green-800/30 hover:shadow-md transition-shadow">
+                                    <div key={physician.id} className="border rounded-lg p-4 bg-muted/20">
                                       <div className="flex items-start justify-between mb-3">
                                         <div className="flex-1">
-                                          <h4 className="font-semibold text-gray-900 dark:text-gray-100 text-base">{physician.name}</h4>
-                                          <p className="text-sm text-green-600 dark:text-green-400 font-medium">
+                                          <h4 className="font-semibold text-base">{physician.name}</h4>
+                                          <p className="text-sm text-muted-foreground font-medium">
                                             {physician.specialty || 'General Practitioner'}
                                           </p>
                                         </div>
                                         {physician.last_visit && (
-                                          <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-700">
-                                            {format(new Date(physician.last_visit), 'MMM d, yyyy')}
+                                          <Badge variant="outline" className="text-xs">
+                                            Last visit: {format(new Date(physician.last_visit), 'MMM d, yyyy')}
                                           </Badge>
                                         )}
                                       </div>
                                       
-                                      <div className="space-y-2">
+                                      <div className="space-y-2 text-sm">
                                         {physician.facility && (
-                                          <div className="flex items-center gap-2 p-2 bg-gray-50 dark:bg-gray-700/30 rounded-lg">
-                                            <Users className="h-4 w-4 text-gray-500 flex-shrink-0" />
-                                            <span><strong className="text-gray-700 dark:text-gray-300">Facility:</strong> <span className="text-gray-600 dark:text-gray-400">{physician.facility}</span></span>
+                                          <div className="flex items-center gap-2">
+                                            <Users className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                                            <span><strong>Facility:</strong> {physician.facility}</span>
                                           </div>
                                         )}
                                         
                                         {physician.phone && (
-                                          <div className="flex items-center gap-2 p-2 bg-gray-50 dark:bg-gray-700/30 rounded-lg">
-                                            <Calendar className="h-4 w-4 text-gray-500 flex-shrink-0" />
-                                            <span><strong className="text-gray-700 dark:text-gray-300">Phone:</strong> <span className="text-gray-600 dark:text-gray-400">{physician.phone}</span></span>
+                                          <div className="flex items-center gap-2">
+                                            <Calendar className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                                            <span><strong>Phone:</strong> {physician.phone}</span>
                                           </div>
                                         )}
                                         
                                         {physician.email && (
-                                          <div className="flex items-center gap-2 p-2 bg-gray-50 dark:bg-gray-700/30 rounded-lg">
-                                            <User className="h-4 w-4 text-gray-500 flex-shrink-0" />
-                                            <span><strong className="text-gray-700 dark:text-gray-300">Email:</strong> <span className="text-gray-600 dark:text-gray-400">{physician.email}</span></span>
+                                          <div className="flex items-center gap-2">
+                                            <User className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                                            <span><strong>Email:</strong> {physician.email}</span>
                                           </div>
                                         )}
                                       </div>
                                       
                                       {physician.notes && (
-                                        <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-600">
-                                          <p className="text-xs text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-700/30 p-2 rounded-lg">
-                                            <strong className="text-gray-700 dark:text-gray-300">Notes:</strong> {physician.notes}
+                                        <div className="mt-3 pt-3 border-t border-border/30">
+                                          <p className="text-xs text-muted-foreground">
+                                            <strong>Notes:</strong> {physician.notes}
                                           </p>
                                         </div>
                                       )}
