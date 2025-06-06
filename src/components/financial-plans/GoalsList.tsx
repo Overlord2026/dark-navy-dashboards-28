@@ -51,6 +51,15 @@ interface GoalsListProps {
   onGoalDelete?: (goalId: string) => void;
 }
 
+// Helper function to generate a proper UUID
+const generateUUID = (): string => {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    const r = Math.random() * 16 | 0;
+    const v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+};
+
 export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps) {
   const [expandedGoals, setExpandedGoals] = useState<string[]>([]);
   const [selectedGoal, setSelectedGoal] = useState<Goal | undefined>(undefined);
@@ -128,9 +137,9 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
   };
 
   // Helper function to convert Goal to FinancialGoal
-  const convertToFinancialGoal = (goalData: GoalFormData, goalId?: string): FinancialGoal => {
+  const convertToFinancialGoal = (goalData: GoalFormData, goalId: string): FinancialGoal => {
     return {
-      id: goalId || `goal-${Date.now()}`,
+      id: goalId,
       title: goalData.name,
       description: goalData.description || '',
       targetAmount: goalData.targetAmount || goalData.purchasePrice || goalData.tuitionEstimate || goalData.estimatedCost || goalData.amountDesired || 0,
@@ -210,8 +219,8 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
         
         toast.success("Goal updated successfully!");
       } else {
-        // Create new goal
-        const newGoalId = `goal-${Date.now()}`;
+        // Create new goal with proper UUID
+        const newGoalId = generateUUID();
         const newGoal: Goal = {
           id: newGoalId,
           title: goalData.name,
