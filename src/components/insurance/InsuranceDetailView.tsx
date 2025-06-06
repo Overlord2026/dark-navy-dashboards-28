@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -13,6 +12,7 @@ import {
   getProviderOtherOfferings, 
   getProviderTopCarriers 
 } from "@/utils/insuranceProviderUtils";
+import { useInterestNotification } from "@/hooks/useInterestNotification";
 
 interface InsuranceDetailViewProps {
   selectedType: InsuranceType;
@@ -39,7 +39,14 @@ export const InsuranceDetailView = ({
   onSelectProvider,
   onInterested
 }: InsuranceDetailViewProps) => {
+  const { sendInterestEmail } = useInterestNotification();
   const providers = insuranceTypeProviders[selectedType].providers;
+
+  const handleInterested = async () => {
+    const itemName = `${getInsuranceTitle(selectedType)} Insurance by ${getProviderName(selectedProvider)}`;
+    await sendInterestEmail(itemName, "Insurance", "Insurance");
+    onInterested();
+  };
 
   return (
     <div className="animate-fade-in min-h-screen p-4 text-white bg-[#121a2c]">
@@ -150,7 +157,7 @@ export const InsuranceDetailView = ({
             <Button 
               variant="outline" 
               className="border-gray-700 text-white hover:bg-[#1c2e4a]"
-              onClick={onInterested}
+              onClick={handleInterested}
             >
               I'm Interested
             </Button>

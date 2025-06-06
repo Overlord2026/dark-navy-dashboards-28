@@ -82,7 +82,9 @@ export const OfferingCard: React.FC<OfferingCardProps> = ({ offering }) => {
         {/* Right side - Action buttons */}
         <div className="flex flex-col justify-center gap-3 p-6 border-l border-gray-100">
           <InterestedButton 
-            assetName={offering.name} 
+            assetName={offering.name}
+            itemType="Investment Offering" 
+            pageContext="Investments"
           />
           <ScheduleMeetingDialog 
             assetName={offering.name} 

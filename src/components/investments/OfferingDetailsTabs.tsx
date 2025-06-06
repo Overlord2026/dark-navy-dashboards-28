@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -6,6 +5,7 @@ import { ScheduleMeetingDialog } from "./ScheduleMeetingDialog";
 import { CalendarClock, Download, File, Heart } from "lucide-react";
 import { toast } from "sonner";
 import { auditLog } from "@/services/auditLog/auditLogService";
+import { useInterestNotification } from "@/hooks/useInterestNotification";
 
 interface Strategy {
   overview: string;
@@ -42,6 +42,7 @@ interface OfferingDetailsTabsProps {
 
 export const OfferingDetailsTabs: React.FC<OfferingDetailsTabsProps> = ({ offering }) => {
   const [isLiked, setIsLiked] = React.useState(false);
+  const { sendInterestEmail } = useInterestNotification();
   
   const handleDownloadPPM = () => {
     const userId = "current-user"; // In a real app, get from auth context
@@ -65,10 +66,11 @@ export const OfferingDetailsTabs: React.FC<OfferingDetailsTabsProps> = ({ offeri
     });
   };
   
-  const handleLike = () => {
-    setIsLiked(!isLiked);
-    
+  const handleLike = async () => {
     if (!isLiked) {
+      // Send email notification
+      await sendInterestEmail(offering.name, "Investment Offering", "Investment Details");
+      
       const userId = "current-user"; // In a real app, get from auth context
       
       auditLog.log(
@@ -84,11 +86,9 @@ export const OfferingDetailsTabs: React.FC<OfferingDetailsTabsProps> = ({ offeri
           }
         }
       );
-      
-      toast.success(`You've expressed interest in ${offering.name}`, {
-        description: "Your advisor will be notified about your interest.",
-      });
     }
+    
+    setIsLiked(!isLiked);
   };
 
   return (

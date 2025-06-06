@@ -1,3 +1,4 @@
+
 import React from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
@@ -121,7 +122,11 @@ export default function TaxPlanning() {
                     </div>
                   </div>
                   <div className="space-y-3">
-                    <InterestedButton assetName="Roth IRA Conversion" />
+                    <InterestedButton 
+                      assetName="Roth IRA Conversion" 
+                      itemType="Tax Strategy"
+                      pageContext="Tax Planning"
+                    />
                     <ScheduleMeetingDialog assetName="Roth IRA Conversion" />
                   </div>
                 </div>
@@ -197,7 +202,6 @@ export default function TaxPlanning() {
           </Card>
         </motion.div>
 
-        {/* Additional Tax Planning Services - Moved up */}
         <motion.div variants={itemVariants}>
           <Card>
             <CardHeader>
@@ -254,7 +258,6 @@ export default function TaxPlanning() {
           </Card>
         </motion.div>
 
-        {/* Tax Planning Professionals Marketplace - Coming Soon */}
         <motion.div variants={itemVariants}>
           <div className="relative">
             <div className="absolute top-4 right-4 z-10">
@@ -327,7 +330,6 @@ export default function TaxPlanning() {
           </div>
         </motion.div>
 
-        {/* Accounting Software Integration - Moved to bottom with Coming Soon badge */}
         <motion.div variants={itemVariants}>
           <div className="relative">
             <div className="absolute top-4 right-4 z-10">
