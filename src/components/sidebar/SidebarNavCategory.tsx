@@ -20,7 +20,7 @@ interface SidebarNavCategoryProps {
   isActive: (href: string) => boolean;
   isLightTheme: boolean;
   expandedSubmenus: Record<string, boolean>;
-  toggleSubmenu: (itemTitle: string, e?: React.MouseEvent) => void;
+  toggleSubmenu: (id: string) => void;
 }
 
 const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
@@ -35,148 +35,172 @@ const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
   expandedSubmenus,
   toggleSubmenu
 }) => {
-  const normalizePath = (path: string): string => {
-    return path.startsWith("/") ? path : `/${path}`;
-  };
-
-  const renderNavItem = (item: NavItem) => {
-    const normalizedHref = normalizePath(item.href);
-    
-    const baseClasses = cn(
-      "group flex items-center py-2 px-3 rounded-md transition-colors text-[14px] whitespace-nowrap border",
-      isActive(normalizedHref)
-        ? isLightTheme 
-          ? "bg-[#E9E7D8] text-[#222222] font-medium border-primary" 
-          : "bg-black text-[#E2E2E2] font-medium border-primary"
-        : isLightTheme ? "text-[#222222] border-transparent" : "text-[#E2E2E2] border-transparent",
-      isLightTheme ? "hover:bg-[#E9E7D8] hover:border-primary" : "hover:bg-sidebar-accent hover:border-primary",
-      collapsed ? "justify-center px-2 my-2" : "justify-start",
-      item.comingSoon ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
-    );
-
-    const content = (
-      <>
-        {item.icon && (
-          <div className={cn("flex-shrink-0", !collapsed && "mr-3")}>
-            <item.icon className="h-5 w-5" />
-          </div>
-        )}
-        
-        {!collapsed && (
-          <span className="whitespace-nowrap overflow-hidden text-ellipsis">
-            {item.title}
-            {item.comingSoon && (
-              <span className="ml-2 text-xs text-muted-foreground">(Coming Soon)</span>
-            )}
-          </span>
-        )}
-        {collapsed && <span className="sr-only">{item.title}</span>}
-      </>
-    );
-
-    if (item.comingSoon) {
-      return (
-        <div
-          key={item.title}
-          className={baseClasses}
-          title={collapsed ? `${item.title} (Coming Soon)` : undefined}
-        >
-          {content}
-        </div>
-      );
-    }
-
-    // Handle items with subitems
-    if (item.items && item.items.length > 0) {
-      const hasExpandedSubmenu = expandedSubmenus[item.title];
-      
-      return (
-        <div key={item.title}>
-          <Collapsible
-            open={hasExpandedSubmenu}
-            onOpenChange={() => toggleSubmenu(item.title)}
-          >
-            <CollapsibleTrigger asChild>
-              <div className={cn(baseClasses, "cursor-pointer")}>
-                {content}
-                {!collapsed && (
-                  hasExpandedSubmenu ? (
-                    <ChevronDown className="h-4 w-4 ml-auto" />
-                  ) : (
-                    <ChevronRight className="h-4 w-4 ml-auto" />
-                  )
-                )}
-              </div>
-            </CollapsibleTrigger>
-            <CollapsibleContent className="space-y-1 ml-6">
-              {item.items.map((subItem) => (
-                <Link
-                  key={subItem.href}
-                  to={normalizePath(subItem.href)}
-                  className={cn(
-                    "group flex items-center py-1 px-3 rounded-md transition-colors text-[13px] border",
-                    isActive(normalizePath(subItem.href))
-                      ? isLightTheme 
-                        ? "bg-[#E9E7D8] text-[#222222] font-medium border-primary" 
-                        : "bg-black text-[#E2E2E2] font-medium border-primary"
-                      : isLightTheme ? "text-[#222222] border-transparent" : "text-[#E2E2E2] border-transparent",
-                    isLightTheme ? "hover:bg-[#E9E7D8] hover:border-primary" : "hover:bg-sidebar-accent hover:border-primary"
-                  )}
-                >
-                  {subItem.icon && <subItem.icon className="h-4 w-4 mr-2" />}
-                  <span>{subItem.title}</span>
-                </Link>
-              ))}
-            </CollapsibleContent>
-          </Collapsible>
-        </div>
-      );
-    }
-
-    // Regular nav item without subitems
+  if (collapsed) {
     return (
-      <Link
-        key={item.title}
-        to={normalizedHref}
-        className={baseClasses}
-        title={collapsed ? item.title : undefined}
-      >
-        {content}
-      </Link>
+      <div className="flex flex-col items-center space-y-1">
+        {items.map((item) => {
+          const Icon = item.icon;
+          const normalizedHref = item.href.startsWith("/") ? item.href : `/${item.href}`;
+          
+          if (item.comingSoon) {
+            return (
+              <div
+                key={item.title}
+                className={cn(
+                  "group flex items-center justify-center w-8 h-8 p-2 rounded-md transition-colors opacity-50 cursor-not-allowed",
+                  isLightTheme ? "text-[#222222]" : "text-[#E2E2E2]"
+                )}
+                title={`${item.title} (Coming Soon)`}
+              >
+                {Icon && <Icon className="h-4 w-4" />}
+                <span className="sr-only">{item.title}</span>
+              </div>
+            );
+          }
+
+          return (
+            <Link
+              key={item.title}
+              to={normalizedHref}
+              className={cn(
+                "group flex items-center justify-center w-8 h-8 p-2 rounded-md transition-colors border",
+                isActive(normalizedHref)
+                  ? isLightTheme 
+                    ? "bg-[#E9E7D8] text-[#222222] border-primary" 
+                    : "bg-black text-white border-primary"
+                  : isLightTheme ? "text-[#222222] border-transparent hover:bg-[#E9E7D8] hover:border-primary" 
+                    : "text-[#E2E2E2] border-transparent hover:bg-sidebar-accent"
+              )}
+              title={item.title}
+            >
+              {Icon && <Icon className="h-4 w-4" />}
+              <span className="sr-only">{item.title}</span>
+            </Link>
+          );
+        })}
+      </div>
     );
-  };
+  }
 
   return (
-    <div className="mb-2">
-      {!collapsed && (
-        <Collapsible
-          open={isExpanded}
-          onOpenChange={() => onToggle(id)}
-        >
-          <CollapsibleTrigger asChild>
-            <div className={`flex items-center justify-between p-2 text-xs uppercase tracking-wider font-semibold ${isLightTheme ? 'text-[#222222]/70' : 'text-[#E2E2E2]/70'} cursor-pointer`}>
-              <span>{label}</span>
-              <div>
-                {isExpanded ? (
-                  <ChevronDown className="h-4 w-4" />
-                ) : (
-                  <ChevronRight className="h-4 w-4" />
-                )}
-              </div>
-            </div>
-          </CollapsibleTrigger>
-          <CollapsibleContent className="space-y-1.5">
-            {items.map(renderNavItem)}
-          </CollapsibleContent>
-        </Collapsible>
-      )}
-      
-      {collapsed && (
-        <div className="flex flex-col items-center space-y-1">
-          {items.map(renderNavItem)}
+    <Collapsible
+      open={isExpanded}
+      onOpenChange={() => onToggle(id)}
+    >
+      <CollapsibleTrigger asChild>
+        <div className={cn(
+          "flex items-center justify-between w-full p-2 text-xs uppercase tracking-wider font-semibold cursor-pointer transition-colors",
+          isLightTheme ? "text-[#222222]/70 hover:text-[#222222]" : "text-[#E2E2E2]/70 hover:text-[#E2E2E2]"
+        )}>
+          <span>{label}</span>
+          {isExpanded ? (
+            <ChevronDown className="h-4 w-4" />
+          ) : (
+            <ChevronRight className="h-4 w-4" />
+          )}
         </div>
-      )}
-    </div>
+      </CollapsibleTrigger>
+      <CollapsibleContent className="space-y-1">
+        {items.map((item) => {
+          const Icon = item.icon;
+          const normalizedHref = item.href.startsWith("/") ? item.href : `/${item.href}`;
+          const hasSubmenu = item.submenu && item.submenu.length > 0;
+          const submenuExpanded = expandedSubmenus[item.title] || false;
+
+          if (hasSubmenu) {
+            return (
+              <div key={item.title} className="space-y-1">
+                <Collapsible
+                  open={submenuExpanded}
+                  onOpenChange={() => toggleSubmenu(item.title)}
+                >
+                  <CollapsibleTrigger asChild>
+                    <div className={cn(
+                      "group flex items-center w-full py-2 px-3 rounded-md transition-colors cursor-pointer border",
+                      isActive(normalizedHref)
+                        ? isLightTheme 
+                          ? "bg-[#E9E7D8] text-[#222222] font-medium border-primary" 
+                          : "bg-black text-white border-primary"
+                        : isLightTheme ? "text-[#222222] border-transparent hover:bg-[#E9E7D8] hover:border-primary" 
+                          : "text-[#E2E2E2] border-transparent hover:bg-sidebar-accent"
+                    )}>
+                      {Icon && <Icon className="h-5 w-5 mr-3 flex-shrink-0" />}
+                      <span className="flex-1">{item.title}</span>
+                      {submenuExpanded ? (
+                        <ChevronDown className="h-4 w-4 ml-2" />
+                      ) : (
+                        <ChevronRight className="h-4 w-4 ml-2" />
+                      )}
+                    </div>
+                  </CollapsibleTrigger>
+                  <CollapsibleContent className="ml-6 space-y-1 mt-1">
+                    {item.submenu!.map((subItem) => {
+                      const SubIcon = subItem.icon;
+                      const subNormalizedHref = subItem.href.startsWith("/") ? subItem.href : `/${subItem.href}`;
+                      
+                      return (
+                        <Link
+                          key={subItem.title}
+                          to={subNormalizedHref}
+                          className={cn(
+                            "group flex items-center py-2 px-3 rounded-md transition-colors text-sm border",
+                            isActive(subNormalizedHref)
+                              ? isLightTheme 
+                                ? "bg-[#E9E7D8] text-[#222222] font-medium border-primary" 
+                                : "bg-black text-white border-primary"
+                              : isLightTheme ? "text-[#222222] border-transparent hover:bg-[#E9E7D8] hover:border-primary" 
+                                : "text-[#E2E2E2] border-transparent hover:bg-sidebar-accent"
+                          )}
+                        >
+                          {SubIcon && <SubIcon className="h-4 w-4 mr-3 flex-shrink-0" />}
+                          <span>{subItem.title}</span>
+                        </Link>
+                      );
+                    })}
+                  </CollapsibleContent>
+                </Collapsible>
+              </div>
+            );
+          }
+
+          if (item.comingSoon) {
+            return (
+              <div
+                key={item.title}
+                className={cn(
+                  "group flex items-center py-2 px-3 rounded-md transition-colors opacity-50 cursor-not-allowed border",
+                  isLightTheme ? "text-[#222222] border-transparent" : "text-[#E2E2E2] border-transparent"
+                )}
+                title={`${item.title} (Coming Soon)`}
+              >
+                {Icon && <Icon className="h-5 w-5 mr-3 flex-shrink-0" />}
+                <span className="flex-1">{item.title}</span>
+                <span className="text-xs text-muted-foreground">(Coming Soon)</span>
+              </div>
+            );
+          }
+
+          return (
+            <Link
+              key={item.title}
+              to={normalizedHref}
+              className={cn(
+                "group flex items-center py-2 px-3 rounded-md transition-colors border",
+                isActive(normalizedHref)
+                  ? isLightTheme 
+                    ? "bg-[#E9E7D8] text-[#222222] font-medium border-primary" 
+                    : "bg-black text-white border-primary"
+                  : isLightTheme ? "text-[#222222] border-transparent hover:bg-[#E9E7D8] hover:border-primary" 
+                    : "text-[#E2E2E2] border-transparent hover:bg-sidebar-accent"
+              )}
+            >
+              {Icon && <Icon className="h-5 w-5 mr-3 flex-shrink-0" />}
+              <span>{item.title}</span>
+            </Link>
+          );
+        })}
+      </CollapsibleContent>
+    </Collapsible>
   );
 };
 
