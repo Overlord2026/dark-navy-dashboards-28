@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { CategoryList } from "@/components/documents/CategoryList";
@@ -27,6 +26,7 @@ import {
   CardHeader, 
   CardTitle 
 } from "@/components/ui/card";
+import { AddPhysicianDialog } from "@/components/healthcare/AddPhysicianDialog";
 
 const importantDocumentCategories = documentCategories.filter(cat => 
   ["documents-to-sign", "bfo-records", "alternative-investments", 
@@ -63,6 +63,8 @@ export default function ClientLegacyVault() {
   const [selectedDocument, setSelectedDocument] = useState<DocumentItem | null>(null);
   const [activeTab, setActiveTab] = useState("legacy-box");
   const [healthcareActiveTab, setHealthcareActiveTab] = useState("dashboard");
+  const [isAddPhysicianDialogOpen, setIsAddPhysicianDialogOpen] = useState(false);
+  const [physicians, setPhysicians] = useState<any[]>([]);
   
   const legacyBoxDocuments: DocumentItem[] = [
     {
@@ -145,6 +147,15 @@ export default function ClientLegacyVault() {
     } catch (error) {
       toast.error("Failed to delete document");
     }
+  };
+
+  const handleAddPhysician = (physicianData: any) => {
+    // Add the physician to the list
+    const newPhysician = {
+      id: Date.now().toString(),
+      ...physicianData
+    };
+    setPhysicians([...physicians, newPhysician]);
   };
 
   // Convert Supabase documents to DocumentItem format for compatibility
@@ -350,16 +361,49 @@ export default function ClientLegacyVault() {
                           </CardDescription>
                         </CardHeader>
                         <CardContent>
-                          <div className="text-center py-12">
-                            <Users className="mx-auto h-12 w-12 text-muted-foreground" />
-                            <h3 className="mt-4 text-lg font-medium">No Physicians Added</h3>
-                            <p className="mt-2 text-sm text-muted-foreground">
-                              Add your healthcare providers and emergency contacts to keep them organized.
-                            </p>
-                            <Button className="mt-4">
-                              Add Physician
-                            </Button>
-                          </div>
+                          {physicians.length === 0 ? (
+                            <div className="text-center py-12">
+                              <Users className="mx-auto h-12 w-12 text-muted-foreground" />
+                              <h3 className="mt-4 text-lg font-medium">No Physicians Added</h3>
+                              <p className="mt-2 text-sm text-muted-foreground">
+                                Add your healthcare providers and emergency contacts to keep them organized.
+                              </p>
+                              <Button 
+                                className="mt-4"
+                                onClick={() => setIsAddPhysicianDialogOpen(true)}
+                              >
+                                Add Physician
+                              </Button>
+                            </div>
+                          ) : (
+                            <div className="space-y-4">
+                              <div className="flex justify-between items-center">
+                                <h3 className="text-lg font-semibold">Your Healthcare Providers</h3>
+                                <Button onClick={() => setIsAddPhysicianDialogOpen(true)}>
+                                  Add Physician
+                                </Button>
+                              </div>
+                              <div className="grid gap-4">
+                                {physicians.map((physician) => (
+                                  <div key={physician.id} className="border rounded-lg p-4">
+                                    <h4 className="font-medium">{physician.name}</h4>
+                                    {physician.facility && (
+                                      <p className="text-sm text-muted-foreground">{physician.facility}</p>
+                                    )}
+                                    {physician.phone && (
+                                      <p className="text-sm">Phone: {physician.phone}</p>
+                                    )}
+                                    {physician.email && (
+                                      <p className="text-sm">Email: {physician.email}</p>
+                                    )}
+                                    {physician.lastVisit && (
+                                      <p className="text-sm">Last visit: {new Date(physician.lastVisit).toLocaleDateString()}</p>
+                                    )}
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
                         </CardContent>
                       </Card>
                     </TabsContent>
@@ -404,6 +448,13 @@ export default function ClientLegacyVault() {
           onOpenChange={setIsDeleteDialogOpen}
           document={selectedDocument}
           onConfirm={handleDeleteDocument}
+        />
+        
+        {/* Add Physician Dialog */}
+        <AddPhysicianDialog
+          open={isAddPhysicianDialogOpen}
+          onOpenChange={setIsAddPhysicianDialogOpen}
+          onAddPhysician={handleAddPhysician}
         />
       </ProfessionalsProvider>
     </ThreeColumnLayout>
