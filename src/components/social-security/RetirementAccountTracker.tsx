@@ -30,10 +30,11 @@ type RetirementAccount = {
 
 export const RetirementAccountTracker = () => {
   const { userProfile } = useUser();
+  
   const [familyAccounts, setFamilyAccounts] = useState<RetirementAccount[]>([
     {
       id: "1",
-      memberName: `${userProfile.firstName} ${userProfile.lastName}`,
+      memberName: userProfile ? `${userProfile.firstName} ${userProfile.lastName}` : "User",
       memberId: "1",
       accountType: "401K",
       employerSponsored: true,
@@ -114,6 +115,17 @@ export const RetirementAccountTracker = () => {
     const futureValue = currentValue * Math.pow(1.07, 20) + (annualContribution * ((Math.pow(1.07, 20) - 1) / 0.07));
     return Math.round(futureValue * 0.04 / 12);
   };
+
+  // Show loading state if userProfile is not loaded yet
+  if (!userProfile) {
+    return (
+      <div className="space-y-6">
+        <div className="flex justify-center items-center h-32">
+          <div className="text-muted-foreground">Loading...</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
