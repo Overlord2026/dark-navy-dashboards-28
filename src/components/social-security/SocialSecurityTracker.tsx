@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -121,10 +120,7 @@ export const SocialSecurityTracker = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <div>
-          <p className="text-muted-foreground">Track and manage social security benefits for your family members</p>
-        </div>
+      <div className="flex justify-end items-center">
         <div className="flex gap-3">
           <Button variant="outline" onClick={handleGetAssistance}>
             <BellRingIcon className="h-4 w-4 mr-2" />
