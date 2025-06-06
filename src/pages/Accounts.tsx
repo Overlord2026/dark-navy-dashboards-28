@@ -3,48 +3,16 @@ import React from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useAccountManagement } from "@/hooks/useAccountManagement";
-import { AccountLinkTypeSelector } from "@/components/accounts/AccountLinkTypeSelector";
-import { AddAccountDialog } from "@/components/accounts/AddAccountDialog";
-import { PlaidLinkDialog } from "@/components/accounts/PlaidLinkDialog";
-import { ManageFundingDialog } from "@/components/accounts/ManageFundingDialog";
-import { AccountsHeader } from "@/components/accounts/AccountsHeader";
-import { FundingAccountsOverview } from "@/components/accounts/FundingAccountsOverview";
-import { AccountSection } from "@/components/accounts/AccountSection";
-import { EmptyAccountSection } from "@/components/accounts/EmptyAccountSection";
-import { useNetWorth } from "@/context/NetWorthContext";
-import { PlusCircle, Wallet, TrendingUp, CreditCard, Building, Banknote, Shield } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { PlusCircle, Shield, TrendingUp, CreditCard, Building, Banknote, DollarSign } from "lucide-react";
 
 const Accounts = () => {
-  const {
-    selectedAccountType,
-    showAccountTypeSelector,
-    showAddAccountDialog,
-    showPlaidDialog,
-    showManageFundingDialog,
-    fundingAccounts,
-    handleAddAccount,
-    handleAccountTypeSelected,
-    handlePlaidSelected,
-    handleManualSelected,
-    handlePlaidSuccess,
-    handleBackToAccounts,
-    handleManageFunding,
-    handleCompleteSetup,
-    setShowAddAccountDialog,
-    setShowPlaidDialog,
-    setShowManageFundingDialog
-  } = useAccountManagement();
+  const handleCompleteSetup = () => {
+    console.log('Complete Setup clicked');
+  };
 
-  const { accounts = [] } = useNetWorth();
-
-  // Group accounts by type
-  const accountsByType = {
-    managed: accounts.filter(acc => acc.type === 'managed') || [],
-    investments: accounts.filter(acc => acc.type === 'investment') || [],
-    manual: accounts.filter(acc => acc.type === 'manual') || [],
-    loans: accounts.filter(acc => acc.type === 'loan') || [],
-    banking: accounts.filter(acc => acc.type === 'banking') || [],
+  const handleAddAccount = (type: string) => {
+    console.log(`Add ${type} clicked`);
   };
 
   return (
@@ -61,234 +29,158 @@ const Accounts = () => {
           </div>
         </div>
         
-        <div className="space-y-6">
-          {/* Funding Accounts Overview */}
-          {fundingAccounts.length > 0 && (
-            <Card className="border-primary/20 bg-primary/5">
-              <CardHeader className="pb-3">
-                <div className="flex items-center justify-between">
-                  <CardTitle className="flex items-center text-lg">
-                    <Wallet className="mr-2 h-5 w-5 text-primary" />
-                    Funding Accounts
-                  </CardTitle>
-                  <div className="flex flex-col sm:flex-row gap-2">
-                    <Button variant="outline" size="sm" className="text-xs">
-                      View Transfers
-                    </Button>
-                    <Button variant="outline" size="sm" onClick={handleManageFunding} className="text-xs">
-                      Edit Accounts
-                    </Button>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                {fundingAccounts.map(account => (
-                  <div key={account.id} className="flex items-center justify-between p-3 bg-background rounded-lg border">
-                    <div className="flex items-center space-x-3">
-                      <div className="p-2 bg-primary/10 rounded-full">
-                        {account.type === 'checking' ? 
-                          <Banknote className="h-4 w-4 text-primary" /> : 
-                          <Wallet className="h-4 w-4 text-primary" />
-                        }
-                      </div>
-                      <span className="font-medium">{account.name}</span>
-                    </div>
-                    <Button variant="ghost" size="sm" onClick={handleManageFunding}>
-                      Edit
-                    </Button>
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
-          )}
+        <div className="grid gap-6">
+          {/* BFO Managed */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center">
+                <Shield className="mr-2 h-5 w-5 text-primary" />
+                BFO Managed
+              </CardTitle>
+              <CardDescription>Complete your account setup to view managed accounts.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button onClick={handleCompleteSetup} className="w-full sm:w-auto">
+                Complete Setup
+              </Button>
+            </CardContent>
+          </Card>
 
-          {/* Account Sections Grid */}
-          <div className="grid gap-6">
-            {/* Managed Accounts */}
-            {accountsByType.managed.length > 0 ? (
-              <AccountSection
-                icon={<Shield className="w-6 h-6 text-primary" />}
-                title="Managed Accounts"
-                amount="$0.00"
-                initiallyOpen={true}
-              >
-                <div className="p-6 text-center">
-                  <p className="text-muted-foreground mb-4">Accounts managed by your advisor</p>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {/* Account cards would go here */}
-                    <div className="p-4 border rounded-lg bg-muted/50">
-                      <p className="text-sm text-muted-foreground">No managed accounts yet</p>
-                    </div>
-                  </div>
+          {/* 401K/457/403B Plans */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center justify-between">
+                <div className="flex items-center">
+                  <TrendingUp className="mr-2 h-5 w-5 text-primary" />
+                  401K/457/403B Plans
                 </div>
-              </AccountSection>
-            ) : (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <Shield className="mr-2 h-5 w-5 text-primary" />
-                    Managed Accounts
-                  </CardTitle>
-                  <CardDescription>Accounts managed by your advisor</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <EmptyAccountSection
-                    message="Talk to your advisor about adding managed accounts"
-                    buttonText="Complete Setup"
-                    onAddAccount={handleCompleteSetup}
-                  />
-                </CardContent>
-              </Card>
-            )}
+                <span className="text-lg font-medium">$0.00</span>
+              </CardTitle>
+              <CardDescription>No retirement plans linked.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button onClick={() => handleAddAccount('Retirement Plan')} variant="outline" className="w-full sm:w-auto">
+                <PlusCircle className="mr-2 h-4 w-4" />
+                Add Retirement Plan
+              </Button>
+            </CardContent>
+          </Card>
 
-            {/* Investment Accounts */}
-            {accountsByType.investments.length > 0 ? (
-              <AccountSection
-                icon={<TrendingUp className="w-6 h-6 text-primary" />}
-                title="Investment Accounts"
-                amount="$0.00"
-              >
-                <div className="p-6">
-                  <p className="text-muted-foreground">Your investment and brokerage accounts</p>
+          {/* External Investment */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center justify-between">
+                <div className="flex items-center">
+                  <TrendingUp className="mr-2 h-5 w-5 text-primary" />
+                  External Investment
                 </div>
-              </AccountSection>
-            ) : (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <TrendingUp className="mr-2 h-5 w-5 text-primary" />
-                    Investment Accounts
-                  </CardTitle>
-                  <CardDescription>Your investment and brokerage accounts</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <EmptyAccountSection
-                    message="To track your investments, add a new account by clicking the + button above"
-                    buttonText="Add Investment Account"
-                    onAddAccount={handleAddAccount}
-                  />
-                </CardContent>
-              </Card>
-            )}
+                <span className="text-lg font-medium">$0.00</span>
+              </CardTitle>
+              <CardDescription>No external investment accounts linked.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button onClick={() => handleAddAccount('Investment Account')} variant="outline" className="w-full sm:w-auto">
+                <PlusCircle className="mr-2 h-4 w-4" />
+                Add Investment Account
+              </Button>
+            </CardContent>
+          </Card>
 
-            {/* Manual Accounts */}
-            {accountsByType.manual.length > 0 ? (
-              <AccountSection
-                icon={<CreditCard className="w-6 h-6 text-primary" />}
-                title="Manually-Tracked Accounts"
-                amount="$0.00"
-              >
-                <div className="p-6">
-                  <p className="text-muted-foreground">Accounts you track manually</p>
+          {/* External Manually-Tracked */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center justify-between">
+                <div className="flex items-center">
+                  <CreditCard className="mr-2 h-5 w-5 text-primary" />
+                  External Manually-Tracked
                 </div>
-              </AccountSection>
-            ) : (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <CreditCard className="mr-2 h-5 w-5 text-primary" />
-                    Manually-Tracked Accounts
-                  </CardTitle>
-                  <CardDescription>Accounts you track manually</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <EmptyAccountSection
-                    message="Add a manually-tracked account to keep tabs on accounts that can't be linked automatically"
-                    buttonText="Add Manual Account"
-                    onAddAccount={handleAddAccount}
-                  />
-                </CardContent>
-              </Card>
-            )}
+                <span className="text-lg font-medium">$0.00</span>
+              </CardTitle>
+              <CardDescription>No manually tracked accounts added.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button onClick={() => handleAddAccount('Manual Account')} variant="outline" className="w-full sm:w-auto">
+                <PlusCircle className="mr-2 h-4 w-4" />
+                Add Manual Account
+              </Button>
+            </CardContent>
+          </Card>
 
-            {/* Loan Accounts */}
-            {accountsByType.loans.length > 0 ? (
-              <AccountSection
-                icon={<Building className="w-6 h-6 text-primary" />}
-                title="Loans"
-                amount="$0.00"
-              >
-                <div className="p-6">
-                  <p className="text-muted-foreground">Your loan and debt accounts</p>
+          {/* External Loans */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center justify-between">
+                <div className="flex items-center">
+                  <Building className="mr-2 h-5 w-5 text-primary" />
+                  External Loans
                 </div>
-              </AccountSection>
-            ) : (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <Building className="mr-2 h-5 w-5 text-primary" />
-                    Loans
-                  </CardTitle>
-                  <CardDescription>Your loan and debt accounts</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <EmptyAccountSection
-                    message="To track your loans, add a new account by clicking the + button above"
-                    buttonText="Add Loan Account"
-                    onAddAccount={handleAddAccount}
-                  />
-                </CardContent>
-              </Card>
-            )}
+                <span className="text-lg font-medium">$0.00</span>
+              </CardTitle>
+              <CardDescription>No loan accounts linked.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-2">Loan Type</label>
+                <Select defaultValue="mortgage">
+                  <SelectTrigger className="w-full sm:w-48">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="mortgage">Mortgage</SelectItem>
+                    <SelectItem value="personal">Personal Loan</SelectItem>
+                    <SelectItem value="auto">Auto Loan</SelectItem>
+                    <SelectItem value="student">Student Loan</SelectItem>
+                    <SelectItem value="business">Business Loan</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <Button onClick={() => handleAddAccount('Loan')} variant="outline" className="w-full sm:w-auto">
+                <PlusCircle className="mr-2 h-4 w-4" />
+                Add Loan
+              </Button>
+            </CardContent>
+          </Card>
 
-            {/* Banking Accounts */}
-            {accountsByType.banking.length > 0 ? (
-              <AccountSection
-                icon={<Banknote className="w-6 h-6 text-primary" />}
-                title="Banking Accounts"
-                amount="$0.00"
-              >
-                <div className="p-6">
-                  <p className="text-muted-foreground">Your checking, savings, and other banking accounts</p>
+          {/* External Banking */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center justify-between">
+                <div className="flex items-center">
+                  <Banknote className="mr-2 h-5 w-5 text-primary" />
+                  External Banking
                 </div>
-              </AccountSection>
-            ) : (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <Banknote className="mr-2 h-5 w-5 text-primary" />
-                    Banking Accounts
-                  </CardTitle>
-                  <CardDescription>Your checking, savings, and other banking accounts</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <EmptyAccountSection
-                    message="To track your banking accounts, add a new account by clicking the + button above"
-                    buttonText="Add Banking Account"
-                    onAddAccount={handleAddAccount}
-                  />
-                </CardContent>
-              </Card>
-            )}
-          </div>
+                <span className="text-lg font-medium">$0.00</span>
+              </CardTitle>
+              <CardDescription>No banking accounts linked.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button onClick={() => handleAddAccount('Bank Account')} variant="outline" className="w-full sm:w-auto">
+                <PlusCircle className="mr-2 h-4 w-4" />
+                Add Bank Account
+              </Button>
+            </CardContent>
+          </Card>
+
+          {/* External Credit Cards */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center justify-between">
+                <div className="flex items-center">
+                  <CreditCard className="mr-2 h-5 w-5 text-primary" />
+                  External Credit Cards
+                </div>
+                <span className="text-lg font-medium">$0.00</span>
+              </CardTitle>
+              <CardDescription>No credit card accounts linked.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button onClick={() => handleAddAccount('Credit Card')} variant="outline" className="w-full sm:w-auto">
+                <PlusCircle className="mr-2 h-4 w-4" />
+                Add Credit Card
+              </Button>
+            </CardContent>
+          </Card>
         </div>
-
-        {/* Dialogs */}
-        <AccountLinkTypeSelector
-          onSelectPlaid={handlePlaidSelected}
-          onSelectManual={handleManualSelected}
-          onBack={handleBackToAccounts}
-        />
-
-        <AddAccountDialog
-          isOpen={showAddAccountDialog}
-          onClose={() => setShowAddAccountDialog(false)}
-          onAddAccount={(accountData) => console.log('Account added:', accountData)}
-          accountType={selectedAccountType}
-          sectionType="manual"
-        />
-
-        <PlaidLinkDialog
-          isOpen={showPlaidDialog}
-          onClose={() => setShowPlaidDialog(false)}
-          onSuccess={handlePlaidSuccess}
-        />
-
-        <ManageFundingDialog
-          isOpen={showManageFundingDialog}
-          onClose={() => setShowManageFundingDialog(false)}
-          accounts={fundingAccounts}
-        />
       </div>
     </ThreeColumnLayout>
   );
