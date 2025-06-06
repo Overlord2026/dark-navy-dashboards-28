@@ -417,6 +417,9 @@ export default function ClientLegacyVault() {
                                     <div className="flex justify-between items-start mb-3">
                                       <div>
                                         <h4 className="font-medium">{physician.name}</h4>
+                                        {physician.specialty && (
+                                          <p className="text-sm text-muted-foreground">{physician.specialty}</p>
+                                        )}
                                         {physician.facility && (
                                           <p className="text-sm text-muted-foreground">{physician.facility}</p>
                                         )}

@@ -16,6 +16,7 @@ interface AddPhysicianDialogProps {
 
 interface PhysicianData {
   name: string;
+  specialty: string;
   facility: string;
   phone: string;
   email: string;
@@ -31,6 +32,7 @@ export const AddPhysicianDialog: React.FC<AddPhysicianDialogProps> = ({
 }) => {
   const [formData, setFormData] = useState<PhysicianData>({
     name: '',
+    specialty: '',
     facility: '',
     phone: '',
     email: '',
@@ -48,6 +50,7 @@ export const AddPhysicianDialog: React.FC<AddPhysicianDialogProps> = ({
   const resetForm = () => {
     setFormData({
       name: '',
+      specialty: '',
       facility: '',
       phone: '',
       email: '',
@@ -94,6 +97,16 @@ export const AddPhysicianDialog: React.FC<AddPhysicianDialogProps> = ({
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               placeholder="Enter physician's name"
+            />
+          </div>
+          
+          <div className="grid gap-2">
+            <Label htmlFor="specialty">Specialty</Label>
+            <Input
+              id="specialty"
+              value={formData.specialty}
+              onChange={(e) => setFormData({ ...formData, specialty: e.target.value })}
+              placeholder="Enter physician's specialty"
             />
           </div>
           
