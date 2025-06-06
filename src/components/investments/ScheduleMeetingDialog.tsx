@@ -1,8 +1,8 @@
 
-import React, { useState } from "react";
+import React from "react";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "lucide-react";
-import { useTaxPlanning } from "@/hooks/useTaxPlanning";
+import { toast } from "sonner";
 
 interface ScheduleMeetingDialogProps {
   assetName: string;
@@ -10,10 +10,14 @@ interface ScheduleMeetingDialogProps {
 }
 
 export function ScheduleMeetingDialog({ assetName, className = "" }: ScheduleMeetingDialogProps) {
-  const { scheduleMeeting } = useTaxPlanning();
-
   const handleScheduleMeeting = () => {
-    scheduleMeeting(assetName);
+    // Open Calendly with Tony Gomes's link
+    window.open("https://calendly.com/tonygomes/60min?month=2025-06", "_blank");
+    
+    toast.success("Opening scheduling page", {
+      description: `Schedule a meeting to discuss ${assetName} with your advisor.`,
+      duration: 3000,
+    });
   };
 
   return (

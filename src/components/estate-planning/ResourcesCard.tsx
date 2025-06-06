@@ -3,8 +3,19 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ExternalLink, FileText } from "lucide-react";
+import { toast } from "sonner";
 
 export const ResourcesCard: React.FC = () => {
+  const handleScheduleConsultation = () => {
+    // Open Calendly with Tony Gomes's link
+    window.open("https://calendly.com/tonygomes/60min?month=2025-06", "_blank");
+    
+    toast.success("Opening scheduling page", {
+      description: "Schedule your estate planning consultation with your advisor.",
+      duration: 3000,
+    });
+  };
+
   return (
     <Card className="w-full">
       <CardHeader className="pb-4">
@@ -50,7 +61,9 @@ export const ResourcesCard: React.FC = () => {
           <p className="text-sm text-muted-foreground mb-3 leading-relaxed">
             Need assistance with estate planning?
           </p>
-          <Button className="w-full text-sm h-auto py-2">Schedule a Consultation</Button>
+          <Button onClick={handleScheduleConsultation} className="w-full text-sm h-auto py-2">
+            Schedule a Consultation
+          </Button>
         </div>
       </CardContent>
     </Card>

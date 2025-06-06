@@ -2,7 +2,6 @@
 import React from "react";
 import { Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import { toast } from "sonner";
 
 interface ScheduleMeetingButtonProps {
@@ -12,7 +11,7 @@ interface ScheduleMeetingButtonProps {
 export const ScheduleMeetingButton: React.FC<ScheduleMeetingButtonProps> = ({ offeringName }) => {
   const handleScheduleMeeting = () => {
     // Open Calendly with Tony Gomes's link
-    window.open("https://calendly.com/tonygomes/60min", "_blank");
+    window.open("https://calendly.com/tonygomes/60min?month=2025-06", "_blank");
     
     toast.success("Opening scheduling page", {
       description: `Schedule a meeting to discuss ${offeringName} with your advisor.`,

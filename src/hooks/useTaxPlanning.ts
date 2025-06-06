@@ -1,10 +1,8 @@
 
 import { useInterestNotification } from '@/hooks/useInterestNotification';
-import { useLearnMoreNotification } from '@/hooks/useLearnMoreNotification';
 import { toast } from 'sonner';
 
 export const useTaxPlanning = () => {
-  const { sendLearnMoreEmail } = useLearnMoreNotification();
   const { sendInterestEmail } = useInterestNotification();
 
   const createConsultation = async (consultationData: {
@@ -12,25 +10,16 @@ export const useTaxPlanning = () => {
     notes: string;
   }) => {
     try {
-      const success = await sendLearnMoreEmail(
-        'Tax Strategy Consultation',
-        'Tax Consultation',
-        'Tax Planning',
-        'consultant_request'
-      );
-
-      if (success) {
-        toast.success('Tax strategy consultation request sent successfully!', {
-          description: 'Your advisor will contact you to schedule the consultation.',
-        });
-        return true;
-      } else {
-        toast.error('Failed to send consultation request. Please try again.');
-        return false;
-      }
+      // Open Calendly instead of sending email
+      window.open("https://calendly.com/tonygomes/60min?month=2025-06", "_blank");
+      
+      toast.success('Opening scheduling page', {
+        description: 'Schedule your tax strategy consultation with your advisor.',
+      });
+      return true;
     } catch (error) {
-      console.error('Error creating consultation:', error);
-      toast.error('Failed to send consultation request. Please try again.');
+      console.error('Error opening consultation scheduling:', error);
+      toast.error('Failed to open scheduling page. Please try again.');
       return false;
     }
   };
@@ -58,25 +47,16 @@ export const useTaxPlanning = () => {
 
   const scheduleMeeting = async (itemName: string) => {
     try {
-      const success = await sendLearnMoreEmail(
-        itemName,
-        'Tax Strategy',
-        'Tax Planning',
-        'consultant_request'
-      );
-
-      if (success) {
-        toast.success('Meeting request sent successfully!', {
-          description: 'Your advisor will contact you to schedule the meeting.',
-        });
-        return true;
-      } else {
-        toast.error('Failed to send meeting request. Please try again.');
-        return false;
-      }
+      // Open Calendly instead of sending email
+      window.open("https://calendly.com/tonygomes/60min?month=2025-06", "_blank");
+      
+      toast.success('Opening scheduling page', {
+        description: `Schedule a meeting to discuss ${itemName} with your advisor.`,
+      });
+      return true;
     } catch (error) {
-      console.error('Error scheduling meeting:', error);
-      toast.error('Failed to send meeting request. Please try again.');
+      console.error('Error opening meeting scheduling:', error);
+      toast.error('Failed to open scheduling page. Please try again.');
       return false;
     }
   };
