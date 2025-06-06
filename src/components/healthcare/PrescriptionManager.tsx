@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -39,7 +38,7 @@ export const PrescriptionManager: React.FC = () => {
   };
 
   const handleAddPrescription = async () => {
-    if (!formData.name || !formData.dosage || !formData.frequency || !formData.next_refill) {
+    if (!formData.name || !formData.dosage || !formData.frequency) {
       return;
     }
 
@@ -151,10 +150,12 @@ export const PrescriptionManager: React.FC = () => {
                         <span>{prescription.frequency}</span>
                       </div>
                       
-                      <div className="flex items-center gap-2">
-                        <Calendar className="h-4 w-4 text-muted-foreground" />
-                        <span>Refill by {format(new Date(prescription.next_refill), 'MMM d, yyyy')}</span>
-                      </div>
+                      {prescription.next_refill && (
+                        <div className="flex items-center gap-2">
+                          <Calendar className="h-4 w-4 text-muted-foreground" />
+                          <span>Refill by {format(new Date(prescription.next_refill), 'MMM d, yyyy')}</span>
+                        </div>
+                      )}
                       
                       {prescription.doctor && (
                         <div className="flex items-center gap-2">
@@ -214,12 +215,12 @@ export const PrescriptionManager: React.FC = () => {
           
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
-              <Label htmlFor="name">Medication Name *</Label>
+              <Label htmlFor="medication">Medication *</Label>
               <Input
-                id="name"
+                id="medication"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                placeholder="e.g., Lisinopril"
+                placeholder="Enter medication name"
               />
             </div>
             
@@ -229,7 +230,7 @@ export const PrescriptionManager: React.FC = () => {
                 id="dosage"
                 value={formData.dosage}
                 onChange={(e) => setFormData({ ...formData, dosage: e.target.value })}
-                placeholder="e.g., 10mg"
+                placeholder="e.g., 10mg, 1 tablet"
               />
             </div>
             
@@ -239,12 +240,12 @@ export const PrescriptionManager: React.FC = () => {
                 id="frequency"
                 value={formData.frequency}
                 onChange={(e) => setFormData({ ...formData, frequency: e.target.value })}
-                placeholder="e.g., Once daily"
+                placeholder="e.g., Once daily, Twice a day"
               />
             </div>
             
             <div className="grid gap-2">
-              <Label htmlFor="next_refill">Next Refill Date *</Label>
+              <Label htmlFor="next_refill">Next refill</Label>
               <Input
                 id="next_refill"
                 type="date"
@@ -254,12 +255,12 @@ export const PrescriptionManager: React.FC = () => {
             </div>
             
             <div className="grid gap-2">
-              <Label htmlFor="doctor">Doctor</Label>
+              <Label htmlFor="prescribed_by">Prescribed by</Label>
               <Input
-                id="doctor"
+                id="prescribed_by"
                 value={formData.doctor}
                 onChange={(e) => setFormData({ ...formData, doctor: e.target.value })}
-                placeholder="e.g., Smith"
+                placeholder="Doctor's name"
               />
             </div>
             
@@ -269,18 +270,7 @@ export const PrescriptionManager: React.FC = () => {
                 id="pharmacy"
                 value={formData.pharmacy}
                 onChange={(e) => setFormData({ ...formData, pharmacy: e.target.value })}
-                placeholder="e.g., CVS Pharmacy"
-              />
-            </div>
-            
-            <div className="grid gap-2">
-              <Label htmlFor="notes">Notes</Label>
-              <Textarea
-                id="notes"
-                value={formData.notes}
-                onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                placeholder="Any additional notes..."
-                rows={3}
+                placeholder="Pharmacy name"
               />
             </div>
           </div>
@@ -291,7 +281,7 @@ export const PrescriptionManager: React.FC = () => {
             </Button>
             <Button 
               onClick={handleAddPrescription}
-              disabled={!formData.name || !formData.dosage || !formData.frequency || !formData.next_refill}
+              disabled={!formData.name || !formData.dosage || !formData.frequency}
             >
               Add Prescription
             </Button>
@@ -311,12 +301,12 @@ export const PrescriptionManager: React.FC = () => {
           
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
-              <Label htmlFor="edit-name">Medication Name *</Label>
+              <Label htmlFor="edit-medication">Medication *</Label>
               <Input
-                id="edit-name"
+                id="edit-medication"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                placeholder="e.g., Lisinopril"
+                placeholder="Enter medication name"
               />
             </div>
             
@@ -326,7 +316,7 @@ export const PrescriptionManager: React.FC = () => {
                 id="edit-dosage"
                 value={formData.dosage}
                 onChange={(e) => setFormData({ ...formData, dosage: e.target.value })}
-                placeholder="e.g., 10mg"
+                placeholder="e.g., 10mg, 1 tablet"
               />
             </div>
             
@@ -336,12 +326,12 @@ export const PrescriptionManager: React.FC = () => {
                 id="edit-frequency"
                 value={formData.frequency}
                 onChange={(e) => setFormData({ ...formData, frequency: e.target.value })}
-                placeholder="e.g., Once daily"
+                placeholder="e.g., Once daily, Twice a day"
               />
             </div>
             
             <div className="grid gap-2">
-              <Label htmlFor="edit-next_refill">Next Refill Date *</Label>
+              <Label htmlFor="edit-next_refill">Next refill</Label>
               <Input
                 id="edit-next_refill"
                 type="date"
@@ -351,12 +341,12 @@ export const PrescriptionManager: React.FC = () => {
             </div>
             
             <div className="grid gap-2">
-              <Label htmlFor="edit-doctor">Doctor</Label>
+              <Label htmlFor="edit-prescribed_by">Prescribed by</Label>
               <Input
-                id="edit-doctor"
+                id="edit-prescribed_by"
                 value={formData.doctor}
                 onChange={(e) => setFormData({ ...formData, doctor: e.target.value })}
-                placeholder="e.g., Smith"
+                placeholder="Doctor's name"
               />
             </div>
             
@@ -366,18 +356,7 @@ export const PrescriptionManager: React.FC = () => {
                 id="edit-pharmacy"
                 value={formData.pharmacy}
                 onChange={(e) => setFormData({ ...formData, pharmacy: e.target.value })}
-                placeholder="e.g., CVS Pharmacy"
-              />
-            </div>
-            
-            <div className="grid gap-2">
-              <Label htmlFor="edit-notes">Notes</Label>
-              <Textarea
-                id="edit-notes"
-                value={formData.notes}
-                onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                placeholder="Any additional notes..."
-                rows={3}
+                placeholder="Pharmacy name"
               />
             </div>
           </div>
@@ -388,7 +367,7 @@ export const PrescriptionManager: React.FC = () => {
             </Button>
             <Button 
               onClick={handleEditPrescription}
-              disabled={!formData.name || !formData.dosage || !formData.frequency || !formData.next_refill}
+              disabled={!formData.name || !formData.dosage || !formData.frequency}
             >
               Update Prescription
             </Button>
