@@ -1,7 +1,8 @@
+
 import React, { useState, useEffect } from "react";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
-import { PlusIcon, ChevronUpIcon, ChevronDownIcon, Edit, Trash2 } from "lucide-react";
+import { PlusIcon, Edit, Trash2 } from "lucide-react";
 import { GoalDetailsSidePanel, GoalFormData } from "./GoalDetailsSidePanel";
 import { Card } from "@/components/ui/card";
 import { format } from "date-fns";
@@ -61,7 +62,6 @@ const generateUUID = (): string => {
 };
 
 export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps) {
-  const [expandedGoals, setExpandedGoals] = useState<string[]>([]);
   const [selectedGoal, setSelectedGoal] = useState<Goal | undefined>(undefined);
   const [isGoalDialogOpen, setIsGoalDialogOpen] = useState(false);
   const [detailsPanelTitle, setDetailsPanelTitle] = useState<string>("");
@@ -81,14 +81,6 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
   } = useFinancialPlans();
 
   // Function declarations - moved before early returns to fix scoping
-  const toggleGoalExpansion = (goalId: string) => {
-    setExpandedGoals(prev => 
-      prev.includes(goalId)
-        ? prev.filter(id => id !== goalId)
-        : [...prev, goalId]
-    );
-  };
-  
   const handleGoalClick = (goal: Goal) => {
     setSelectedGoal(goal);
     const goalTitle = goal.title || goal.name || "";
@@ -100,12 +92,6 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
     }
     
     setDetailsPanelTitle(panelTitle);
-    setIsGoalDialogOpen(true);
-  };
-
-  const handleRetirementAgeClick = (title: string) => {
-    setSelectedGoal(undefined);
-    setDetailsPanelTitle(title);
     setIsGoalDialogOpen(true);
   };
 
@@ -434,10 +420,10 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
         Add your goals including retirement age and big purchases like homes, education, and vacations.
       </p>
       
-      <div>
-        <h3 className="text-md font-medium mb-4">Target Retirement Age</h3>
-        {retirementGoals.length > 0 ? (
-          retirementGoals.map((goal, index) => (
+      {retirementGoals.length > 0 && (
+        <div>
+          <h3 className="text-md font-medium mb-4">Target Retirement Age</h3>
+          {retirementGoals.map((goal, index) => (
             <RetirementAgeCard 
               key={goal.id || `retirement-goal-${index}`}
               goal={goal}
@@ -446,57 +432,35 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
               onDelete={(e) => handleDeleteGoal(goal.id, e)}
               isNew={goal.id === newGoalId}
             />
-          ))
-        ) : (
-          <Card 
-            className="bg-[#0D1426] border border-blue-900 p-6 cursor-pointer hover:border-blue-600 transition-all mb-4"
-            onClick={() => handleRetirementAgeClick("Target Retirement Age")}
-          >
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="text-3xl font-bold">70</div>
-                <div className="text-sm text-gray-400">years old</div>
-              </div>
-              <div className="text-right">
-                <div className="text-sm text-gray-400">2033</div>
-              </div>
-            </div>
-            <div className="flex justify-between items-center mt-6">
-              <div className="text-sm font-medium">Antonio's Retirement Age</div>
-              <div className="text-sm text-gray-400">Antonio Gomez</div>
-            </div>
-          </Card>
-        )}
-      </div>
+          ))}
+        </div>
+      )}
       
-      <div>
-        <h3 className="text-md font-medium mb-4">Other Goals</h3>
-        {otherGoals.length > 0 ? (
-          <div className="space-y-4">
-            {otherGoals.map((goal, index) => (
-              <GoalCard 
-                key={goal.id || `other-goal-${index}`} 
-                goal={goal} 
-                isExpanded={expandedGoals.includes(goal.id || `other-goal-${index}`)} 
-                onToggle={() => toggleGoalExpansion(goal.id || `other-goal-${index}`)}
-                onClick={() => handleGoalClick(goal)}
-                onEdit={(e) => handleEditGoal(goal, e)}
-                onDelete={(e) => handleDeleteGoal(goal.id, e)}
-                isNew={goal.id === newGoalId}
-              />
-            ))}
-          </div>
-        ) : (
-          <Card 
-            className="bg-[#0D1426] border border-blue-900 p-6 text-center hover:border-blue-600 transition-all cursor-pointer"
-            onClick={handleAddGoalClick}
-          >
-            <p className="text-gray-400">
-              Add other goals for education, cars, vacations, homes, and more.
-            </p>
-          </Card>
-        )}
-      </div>
+      {otherGoals.length > 0 && (
+        <div className="space-y-4">
+          {otherGoals.map((goal, index) => (
+            <GoalCard 
+              key={goal.id || `other-goal-${index}`} 
+              goal={goal} 
+              onClick={() => handleGoalClick(goal)}
+              onEdit={(e) => handleEditGoal(goal, e)}
+              onDelete={(e) => handleDeleteGoal(goal.id, e)}
+              isNew={goal.id === newGoalId}
+            />
+          ))}
+        </div>
+      )}
+
+      {localGoals.length === 0 && (
+        <Card 
+          className="bg-[#0D1426] border border-blue-900 p-6 text-center hover:border-blue-600 transition-all cursor-pointer"
+          onClick={handleAddGoalClick}
+        >
+          <p className="text-gray-400">
+            Add goals for retirement, education, cars, vacations, homes, and more.
+          </p>
+        </Card>
+      )}
       
       {/* Single unified dialog for both adding and editing goals */}
       <Dialog open={isGoalDialogOpen} onOpenChange={setIsGoalDialogOpen}>
@@ -536,7 +500,7 @@ function RetirementAgeCard({ goal, onClick, onEdit, onDelete, isNew = false }: {
   
   return (
     <Card 
-      className={`bg-[#0D1426] border border-blue-900 p-6 cursor-pointer hover:border-blue-600 transition-all relative ${
+      className={`bg-[#0D1426] border border-blue-900 p-6 cursor-pointer hover:border-blue-600 transition-all relative mb-4 ${
         isNew ? 'animate-in slide-in-from-bottom-5 fade-in-100 duration-500' : 'animate-in fade-in-80 duration-200'
       }`}
       onClick={onClick}
@@ -574,14 +538,29 @@ function RetirementAgeCard({ goal, onClick, onEdit, onDelete, isNew = false }: {
         <div className="text-sm font-medium">{shortName}'s Retirement Age</div>
         <div className="text-sm text-gray-400">{owner}</div>
       </div>
+      
+      {/* Always show expanded details for retirement goals */}
+      <div className="mt-4 space-y-2 pt-2 border-t border-blue-900/50">
+        {goal.planningHorizonAge && (
+          <div className="flex justify-between text-sm">
+            <span className="text-gray-400">Planning Horizon:</span>
+            <span>{goal.planningHorizonAge} years</span>
+          </div>
+        )}
+        
+        {goal.description && (
+          <div className="flex flex-col text-sm mt-2">
+            <span className="text-gray-400 mb-1">Description:</span>
+            <p className="text-sm">{goal.description}</p>
+          </div>
+        )}
+      </div>
     </Card>
   );
 }
 
-function GoalCard({ goal, isExpanded, onToggle, onClick, onEdit, onDelete, isNew = false }: { 
+function GoalCard({ goal, onClick, onEdit, onDelete, isNew = false }: { 
   goal: Goal;
-  isExpanded: boolean;
-  onToggle: () => void;
   onClick: () => void;
   onEdit: (event: React.MouseEvent) => void;
   onDelete: (event: React.MouseEvent) => void;
@@ -598,7 +577,7 @@ function GoalCard({ goal, isExpanded, onToggle, onClick, onEdit, onDelete, isNew
       }`}
       onClick={onClick}
     >
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between mb-4">
         <div className="flex-1">
           <h4 className="font-medium">
             {goalTitle} {inflationText && <span className="text-xs text-gray-400 ml-1">{inflationText}</span>}
@@ -626,189 +605,177 @@ function GoalCard({ goal, isExpanded, onToggle, onClick, onEdit, onDelete, isNew
               <Trash2 className="h-4 w-4" />
             </Button>
           </div>
-          
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            onClick={(e) => {
-              e.stopPropagation();
-              onToggle();
-            }}
-          >
-            {isExpanded ? <ChevronUpIcon className="h-5 w-5" /> : <ChevronDownIcon className="h-5 w-5" />}
-          </Button>
         </div>
       </div>
       
-      {isExpanded && (
-        <div className="mt-4 space-y-2 pt-2 border-t border-blue-900/50">
-          {(goal.type === "Asset Purchase" || goal.type === "Home Purchase" || goal.type === "Vehicle") && (
-            <>
-              {goal.purchasePrice !== undefined && (
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-400">Purchase Price:</span>
-                  <span>
-                    {new Intl.NumberFormat('en-US', {
-                      style: 'currency',
-                      currency: 'USD',
-                    }).format(goal.purchasePrice)}
-                  </span>
-                </div>
-              )}
-              
-              {goal.financingMethod && (
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-400">Financing:</span>
-                  <span>{goal.financingMethod}</span>
-                </div>
-              )}
-              
-              {(goal.type === "Asset Purchase" || goal.type === "Home Purchase") && 
-                goal.annualAppreciation && goal.annualAppreciation !== "None" && (
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-400">Annual Appreciation:</span>
-                  <span>{goal.annualAppreciation}</span>
-                </div>
-              )}
-            </>
-          )}
-          
-          {goal.type === "Education" && (
-            <>
-              {goal.studentName && (
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-400">Student:</span>
-                  <span>{goal.studentName}</span>
-                </div>
-              )}
-              
-              {goal.tuitionEstimate !== undefined && (
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-400">Tuition Estimate:</span>
-                  <span>
-                    {new Intl.NumberFormat('en-US', {
-                      style: 'currency',
-                      currency: 'USD',
-                    }).format(goal.tuitionEstimate)}
-                  </span>
-                </div>
-              )}
-              
-              {goal.startYear && goal.endYear && (
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-400">Years:</span>
-                  <span>{goal.startYear} - {goal.endYear}</span>
-                </div>
-              )}
-            </>
-          )}
-          
-          {goal.type === "Vacation" && (
-            <>
-              {goal.destination && (
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-400">Destination:</span>
-                  <span>{goal.destination}</span>
-                </div>
-              )}
-              
-              {goal.estimatedCost !== undefined && (
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-400">Estimated Cost:</span>
-                  <span>
-                    {new Intl.NumberFormat('en-US', {
-                      style: 'currency',
-                      currency: 'USD',
-                    }).format(goal.estimatedCost)}
-                  </span>
-                </div>
-              )}
-            </>
-          )}
-          
-          {goal.type === "Cash Reserve" && (
-            <>
-              {goal.amountDesired !== undefined && (
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-400">Target Amount:</span>
-                  <span>
-                    {new Intl.NumberFormat('en-US', {
-                      style: 'currency',
-                      currency: 'USD',
-                    }).format(goal.amountDesired)}
-                  </span>
-                </div>
-              )}
-              
-              {goal.annualAppreciation && goal.annualAppreciation !== "None" && (
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-400">Annual Appreciation:</span>
-                  <span>{goal.annualAppreciation}</span>
-                </div>
-              )}
-              
-              {goal.repeats && goal.repeats !== "None" && (
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-400">Repeats:</span>
-                  <span>{goal.repeats}</span>
-                </div>
-              )}
-            </>
-          )}
-          
-          {goal.targetDate && !["Education"].includes(goal.type || "") && (
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-400">Target Date:</span>
-              <span>{format(goal.targetDate, 'MMM yyyy')}</span>
-            </div>
-          )}
-          
-          {goal.targetAmount !== undefined && 
-            !["Asset Purchase", "Home Purchase", "Vehicle", "Vacation", "Education", "Cash Reserve"].includes(goal.type || "") && (
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-400">Target Amount:</span>
-              <span>
-                {new Intl.NumberFormat('en-US', {
-                  style: 'currency',
-                  currency: 'USD',
-                }).format(goal.targetAmount)}
-              </span>
-            </div>
-          )}
-          
-          {goal.targetRetirementAge && (
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-400">Target Retirement Age:</span>
-              <span>{goal.targetRetirementAge}</span>
-            </div>
-          )}
-          
-          {goal.planningHorizonAge && (
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-400">Planning Horizon:</span>
-              <span>{goal.planningHorizonAge} years</span>
-            </div>
-          )}
-          
-          {goal.description && (
-            <div className="flex flex-col text-sm mt-2">
-              <span className="text-gray-400 mb-1">Description:</span>
-              <p className="text-sm">{goal.description}</p>
-            </div>
-          )}
-          
-          {goal.annualInflationType && goal.annualInflationType !== "None" && (
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-400">Annual Inflation:</span>
-              <span>
-                {goal.annualInflationType === "General" ? "2% (General)" : 
-                 goal.annualInflationType === "Custom" ? `${goal.annualInflationRate}% (Custom)` : 
-                 "0%"}
-              </span>
-            </div>
-          )}
-        </div>
-      )}
+      {/* Always show expanded details */}
+      <div className="space-y-2 pt-2 border-t border-blue-900/50">
+        {(goal.type === "Asset Purchase" || goal.type === "Home Purchase" || goal.type === "Vehicle") && (
+          <>
+            {goal.purchasePrice !== undefined && (
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-400">Purchase Price:</span>
+                <span>
+                  {new Intl.NumberFormat('en-US', {
+                    style: 'currency',
+                    currency: 'USD',
+                  }).format(goal.purchasePrice)}
+                </span>
+              </div>
+            )}
+            
+            {goal.financingMethod && (
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-400">Financing:</span>
+                <span>{goal.financingMethod}</span>
+              </div>
+            )}
+            
+            {(goal.type === "Asset Purchase" || goal.type === "Home Purchase") && 
+              goal.annualAppreciation && goal.annualAppreciation !== "None" && (
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-400">Annual Appreciation:</span>
+                <span>{goal.annualAppreciation}</span>
+              </div>
+            )}
+          </>
+        )}
+        
+        {goal.type === "Education" && (
+          <>
+            {goal.studentName && (
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-400">Student:</span>
+                <span>{goal.studentName}</span>
+              </div>
+            )}
+            
+            {goal.tuitionEstimate !== undefined && (
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-400">Tuition Estimate:</span>
+                <span>
+                  {new Intl.NumberFormat('en-US', {
+                    style: 'currency',
+                    currency: 'USD',
+                  }).format(goal.tuitionEstimate)}
+                </span>
+              </div>
+            )}
+            
+            {goal.startYear && goal.endYear && (
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-400">Years:</span>
+                <span>{goal.startYear} - {goal.endYear}</span>
+              </div>
+            )}
+          </>
+        )}
+        
+        {goal.type === "Vacation" && (
+          <>
+            {goal.destination && (
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-400">Destination:</span>
+                <span>{goal.destination}</span>
+              </div>
+            )}
+            
+            {goal.estimatedCost !== undefined && (
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-400">Estimated Cost:</span>
+                <span>
+                  {new Intl.NumberFormat('en-US', {
+                    style: 'currency',
+                    currency: 'USD',
+                  }).format(goal.estimatedCost)}
+                </span>
+              </div>
+            )}
+          </>
+        )}
+        
+        {goal.type === "Cash Reserve" && (
+          <>
+            {goal.amountDesired !== undefined && (
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-400">Target Amount:</span>
+                <span>
+                  {new Intl.NumberFormat('en-US', {
+                    style: 'currency',
+                    currency: 'USD',
+                  }).format(goal.amountDesired)}
+                </span>
+              </div>
+            )}
+            
+            {goal.annualAppreciation && goal.annualAppreciation !== "None" && (
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-400">Annual Appreciation:</span>
+                <span>{goal.annualAppreciation}</span>
+              </div>
+            )}
+            
+            {goal.repeats && goal.repeats !== "None" && (
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-400">Repeats:</span>
+                <span>{goal.repeats}</span>
+              </div>
+            )}
+          </>
+        )}
+        
+        {goal.targetDate && !["Education"].includes(goal.type || "") && (
+          <div className="flex justify-between text-sm">
+            <span className="text-gray-400">Target Date:</span>
+            <span>{format(goal.targetDate, 'MMM yyyy')}</span>
+          </div>
+        )}
+        
+        {goal.targetAmount !== undefined && 
+          !["Asset Purchase", "Home Purchase", "Vehicle", "Vacation", "Education", "Cash Reserve"].includes(goal.type || "") && (
+          <div className="flex justify-between text-sm">
+            <span className="text-gray-400">Target Amount:</span>
+            <span>
+              {new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+              }).format(goal.targetAmount)}
+            </span>
+          </div>
+        )}
+        
+        {goal.targetRetirementAge && (
+          <div className="flex justify-between text-sm">
+            <span className="text-gray-400">Target Retirement Age:</span>
+            <span>{goal.targetRetirementAge}</span>
+          </div>
+        )}
+        
+        {goal.planningHorizonAge && (
+          <div className="flex justify-between text-sm">
+            <span className="text-gray-400">Planning Horizon:</span>
+            <span>{goal.planningHorizonAge} years</span>
+          </div>
+        )}
+        
+        {goal.description && (
+          <div className="flex flex-col text-sm mt-2">
+            <span className="text-gray-400 mb-1">Description:</span>
+            <p className="text-sm">{goal.description}</p>
+          </div>
+        )}
+        
+        {goal.annualInflationType && goal.annualInflationType !== "None" && (
+          <div className="flex justify-between text-sm">
+            <span className="text-gray-400">Annual Inflation:</span>
+            <span>
+              {goal.annualInflationType === "General" ? "2% (General)" : 
+               goal.annualInflationType === "Custom" ? `${goal.annualInflationRate}% (Custom)` : 
+               "0%"}
+            </span>
+          </div>
+        )}
+      </div>
     </Card>
   );
 }
