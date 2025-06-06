@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { CategoryList } from "@/components/documents/CategoryList";
@@ -17,6 +16,7 @@ import { DocumentType, DocumentItem, DocumentCategory } from "@/types/document";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { FamilyLegacyBox } from "@/components/estate-planning/FamilyLegacyBox";
 import { HealthcareFolder } from "@/components/healthcare/HealthcareFolder";
+import { PrescriptionManager } from "@/components/healthcare/PrescriptionManager";
 import { ProfessionalsProvider } from "@/context/ProfessionalsContext";
 import { useSupabaseDocumentManagement } from "@/hooks/useSupabaseDocumentManagement";
 import { 
@@ -329,30 +329,7 @@ export default function ClientLegacyVault() {
                     
                     {/* Prescriptions Tab */}
                     <TabsContent value="prescriptions" className="space-y-6">
-                      <Card>
-                        <CardHeader>
-                          <CardTitle className="flex items-center gap-2">
-                            <Pill className="h-5 w-5" />
-                            Prescription Management
-                          </CardTitle>
-                          <CardDescription>
-                            Manage your prescriptions and medication schedules
-                          </CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                          <div className="text-center py-8">
-                            <Pill className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                            <h3 className="text-lg font-semibold mb-2">Prescription Management</h3>
-                            <p className="text-muted-foreground mb-4">
-                              Track your medications, dosages, and refill schedules
-                            </p>
-                            <Button>
-                              <Pill className="mr-2 h-4 w-4" />
-                              Add Prescription
-                            </Button>
-                          </div>
-                        </CardContent>
-                      </Card>
+                      <PrescriptionManager />
                     </TabsContent>
                   </Tabs>
                 </CardContent>
