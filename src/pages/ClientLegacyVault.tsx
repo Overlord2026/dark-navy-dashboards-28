@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { CategoryList } from "@/components/documents/CategoryList";
@@ -233,6 +232,51 @@ export default function ClientLegacyVault() {
       return { status: 'due-soon', label: 'Due Soon', variant: 'secondary' as const };
     } else {
       return { status: 'good', label: 'Good', variant: 'default' as const };
+    }
+  };
+
+  // New function to get category-specific content
+  const getCategoryContent = (categoryId: string | null) => {
+    if (!categoryId) {
+      return {
+        title: "Select a Category",
+        description: "Choose a healthcare category from the left to view and manage related documents"
+      };
+    }
+
+    const category = healthcareCategories.find(cat => cat.id === categoryId);
+    
+    switch (categoryId) {
+      case "healthcare":
+        return {
+          title: "Healthcare Documents",
+          description: "Store and manage your medical records, prescriptions, and healthcare documents"
+        };
+      case "insurance-coverage":
+        return {
+          title: "Insurance Coverage",
+          description: "Manage your health insurance policies, coverage details, and claims documentation"
+        };
+      case "prescriptions":
+        return {
+          title: "Prescriptions & Medications",
+          description: "Keep track of your current medications, prescriptions, and pharmacy information"
+        };
+      case "physicians":
+        return {
+          title: "Physicians & Providers",
+          description: "Maintain contact information and records for your healthcare providers and specialists"
+        };
+      case "medical-records":
+        return {
+          title: "Medical Records & Documents",
+          description: "Store important medical records, test results, and healthcare documentation"
+        };
+      default:
+        return {
+          title: category?.name || "Healthcare Documents",
+          description: "Store and manage documents related to this healthcare category"
+        };
     }
   };
 
@@ -578,11 +622,24 @@ export default function ClientLegacyVault() {
                           </div>
                           
                           <div className="md:col-span-4">
-                            <HealthcareFolder 
-                              documents={[]} 
-                              onAddDocument={handleAddDocument}
-                              onCreateFolder={handleCreateFolder}
-                            />
+                            <Card>
+                              <CardHeader>
+                                <CardTitle className="flex items-center gap-2">
+                                  <FileText className="h-5 w-5" />
+                                  {getCategoryContent(activeCategory).title}
+                                </CardTitle>
+                                <CardDescription>
+                                  {getCategoryContent(activeCategory).description}
+                                </CardDescription>
+                              </CardHeader>
+                              <CardContent>
+                                <HealthcareFolder 
+                                  documents={[]} 
+                                  onAddDocument={handleAddDocument}
+                                  onCreateFolder={handleCreateFolder}
+                                />
+                              </CardContent>
+                            </Card>
                           </div>
                         </div>
                       </div>
