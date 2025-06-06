@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -214,89 +215,91 @@ export const HealthcareDocumentsList: React.FC = () => {
                 )}
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                 {filteredDocuments.map((document) => (
-                  <div key={document.id} className="border rounded-lg p-4 hover:border-primary transition-colors">
-                    <div className="flex items-start justify-between mb-3">
-                      <div className="flex items-start space-x-3 flex-1">
-                        {document.is_folder ? (
-                          <Folder className="h-5 w-5 text-blue-500 mt-1" />
-                        ) : (
-                          <FileText className="h-5 w-5 text-primary mt-1" />
-                        )}
-                        <div className="flex-1 min-w-0">
-                          <h4 className="font-medium truncate">{document.name}</h4>
-                          {document.description && (
-                            <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
-                              {document.description}
-                            </p>
+                  <Card key={document.id} className="hover:shadow-md transition-shadow">
+                    <CardContent className="p-4">
+                      <div className="flex items-start justify-between mb-3">
+                        <div className="flex items-start space-x-3 flex-1 min-w-0">
+                          {document.is_folder ? (
+                            <Folder className="h-5 w-5 text-blue-500 mt-1 flex-shrink-0" />
+                          ) : (
+                            <FileText className="h-5 w-5 text-primary mt-1 flex-shrink-0" />
+                          )}
+                          <div className="flex-1 min-w-0">
+                            <h4 className="font-medium text-sm truncate">{document.name}</h4>
+                            {document.description && (
+                              <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
+                                {document.description}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                        <div className="flex flex-col gap-1 flex-shrink-0">
+                          {document.encrypted && (
+                            <Badge variant="secondary" className="text-xs">
+                              Encrypted
+                            </Badge>
+                          )}
+                          {document.shared && (
+                            <Badge variant="outline" className="text-xs">
+                              Shared
+                            </Badge>
                           )}
                         </div>
                       </div>
-                      <div className="flex flex-col gap-1">
-                        {document.encrypted && (
-                          <Badge variant="secondary" className="text-xs">
-                            Encrypted
-                          </Badge>
-                        )}
-                        {document.shared && (
-                          <Badge variant="outline" className="text-xs">
-                            Shared
-                          </Badge>
+
+                      <div className="flex items-center text-xs text-muted-foreground mb-3">
+                        <Calendar className="h-3 w-3 mr-1 flex-shrink-0" />
+                        <span className="truncate">
+                          {format(new Date(document.created_at), "MMM d, yyyy")}
+                        </span>
+                        {document.size && (
+                          <>
+                            <span className="mx-2">•</span>
+                            <span className="truncate">{(document.size / (1024 * 1024)).toFixed(1)} MB</span>
+                          </>
                         )}
                       </div>
-                    </div>
 
-                    <div className="flex items-center text-xs text-muted-foreground mb-3">
-                      <Calendar className="h-3 w-3 mr-1" />
-                      <span>
-                        {format(new Date(document.created_at), "MMM d, yyyy")}
-                      </span>
-                      {document.size && (
-                        <>
-                          <span className="mx-2">•</span>
-                          <span>{(document.size / (1024 * 1024)).toFixed(1)} MB</span>
-                        </>
+                      {document.tags && document.tags.length > 0 && (
+                        <div className="flex flex-wrap gap-1 mb-3">
+                          {document.tags.slice(0, 2).map((tag, index) => (
+                            <Badge key={index} variant="outline" className="text-xs">
+                              {tag}
+                            </Badge>
+                          ))}
+                          {document.tags.length > 2 && (
+                            <Badge variant="outline" className="text-xs">
+                              +{document.tags.length - 2}
+                            </Badge>
+                          )}
+                        </div>
                       )}
-                    </div>
 
-                    {document.tags && document.tags.length > 0 && (
-                      <div className="flex flex-wrap gap-1 mb-3">
-                        {document.tags.slice(0, 3).map((tag, index) => (
-                          <Badge key={index} variant="outline" className="text-xs">
-                            {tag}
-                          </Badge>
-                        ))}
-                        {document.tags.length > 3 && (
-                          <Badge variant="outline" className="text-xs">
-                            +{document.tags.length - 3} more
-                          </Badge>
+                      <div className="flex gap-2">
+                        {!document.is_folder && (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="flex-1 text-xs"
+                            onClick={() => handleDownloadDocument(document)}
+                          >
+                            <Download className="h-3 w-3 mr-1" />
+                            Download
+                          </Button>
                         )}
-                      </div>
-                    )}
-
-                    <div className="flex gap-2">
-                      {!document.is_folder && (
                         <Button
                           variant="outline"
                           size="sm"
-                          className="flex-1"
-                          onClick={() => handleDownloadDocument(document)}
+                          onClick={() => handleDeleteDocument(document.id)}
+                          className="text-destructive hover:text-destructive text-xs"
                         >
-                          <Download className="h-4 w-4 mr-1" />
-                          Download
+                          <Trash2 className="h-3 w-3" />
                         </Button>
-                      )}
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleDeleteDocument(document.id)}
-                        className="text-destructive hover:text-destructive"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
+                      </div>
+                    </CardContent>
+                  </Card>
                 ))}
               </div>
             )}
