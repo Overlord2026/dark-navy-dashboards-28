@@ -1,9 +1,11 @@
 
+import { useInterestNotification } from '@/hooks/useInterestNotification';
 import { useLearnMoreNotification } from '@/hooks/useLearnMoreNotification';
 import { toast } from 'sonner';
 
 export const useTaxPlanning = () => {
   const { sendLearnMoreEmail } = useLearnMoreNotification();
+  const { sendInterestEmail } = useInterestNotification();
 
   const createConsultation = async (consultationData: {
     consultation_type: string;
@@ -39,17 +41,13 @@ export const useTaxPlanning = () => {
     notes: string;
   }) => {
     try {
-      const success = await sendLearnMoreEmail(
+      const success = await sendInterestEmail(
         interestData.asset_name,
         'Tax Strategy',
-        'Tax Planning',
-        'learn_more'
+        'Tax Planning'
       );
 
       if (success) {
-        toast.success('Interest registered successfully!', {
-          description: 'Your advisor will contact you soon.',
-        });
         return true;
       } else {
         toast.error('Failed to register interest. Please try again.');
