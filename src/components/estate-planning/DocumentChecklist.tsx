@@ -1,6 +1,13 @@
+
 import React, { useState, useRef } from "react";
-import { CheckCircle, Upload, Info, FileText, Trash2, Download } from "lucide-react";
+import { CheckCircle, Upload, Info, FileText, Trash2, Download, MoreHorizontal, Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   Tooltip,
   TooltipContent,
@@ -24,6 +31,7 @@ interface DocumentChecklistProps {
   onDirectFileUpload: (file: File, documentType: string) => void;
   onDeleteDocument: (documentId: string) => void;
   onViewDocument: (documentId: string) => void;
+  onShareWithProfessional?: (documentId: string) => void;
   documents: DocumentItem[];
 }
 
@@ -31,6 +39,7 @@ export const DocumentChecklist: React.FC<DocumentChecklistProps> = ({
   onDirectFileUpload,
   onDeleteDocument,
   onViewDocument,
+  onShareWithProfessional,
   documents,
 }) => {
   const [expandedGroups, setExpandedGroups] = useState<string[]>([
@@ -93,6 +102,12 @@ export const DocumentChecklist: React.FC<DocumentChecklistProps> = ({
         link.click();
         URL.revokeObjectURL(url);
       }
+    }
+  };
+
+  const handleShareWithProfessional = (documentId: string) => {
+    if (onShareWithProfessional) {
+      onShareWithProfessional(documentId);
     }
   };
 
@@ -242,24 +257,30 @@ export const DocumentChecklist: React.FC<DocumentChecklistProps> = ({
                       </div>
                       <div className="flex items-center gap-2">
                         {status === "completed" ? (
-                          <>
-                            <Button 
-                              variant="outline" 
-                              size="sm" 
-                              onClick={() => handleDownloadDocument(item.id)}
-                            >
-                              <Download className="h-4 w-4 mr-1" />
-                              Download
-                            </Button>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => handleDeleteDocument(item.id)}
-                              className="text-destructive hover:text-destructive"
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="outline" size="sm">
+                                <MoreHorizontal className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="bg-background border border-border">
+                              <DropdownMenuItem onClick={() => handleDownloadDocument(item.id)}>
+                                <Download className="mr-2 h-4 w-4" />
+                                Download
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => handleShareWithProfessional(item.id)}>
+                                <Share2 className="mr-2 h-4 w-4" />
+                                Share with Professional
+                              </DropdownMenuItem>
+                              <DropdownMenuItem 
+                                onClick={() => handleDeleteDocument(item.id)}
+                                className="text-destructive focus:text-destructive"
+                              >
+                                <Trash2 className="mr-2 h-4 w-4" />
+                                Delete Document
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
                         ) : (
                           <>
                             <input

@@ -100,6 +100,33 @@ export const FamilyLegacyBox: React.FC = () => {
     setShareDialogOpen(true);
   };
 
+  const handleShareWithProfessional = (documentId: string) => {
+    // For now, we'll simulate sharing by adding a professional to the shared_with array
+    // In a real implementation, this would open a dialog to select professionals
+    const handleShare = async () => {
+      try {
+        const backendDoc = documents.find(doc => doc.document_type === documentId);
+        if (backendDoc) {
+          const currentShared = backendDoc.shared_with || [];
+          const newShared = [...currentShared, "Professional Team"];
+          
+          await updateDocument(backendDoc.id, {
+            shared_with: newShared,
+          });
+          
+          toast.success("Document shared with professional", {
+            description: "The document has been added to your shared documents."
+          });
+        }
+      } catch (error) {
+        console.error('Error sharing document:', error);
+        toast.error("Failed to share document");
+      }
+    };
+    
+    handleShare();
+  };
+
   const handleDocumentShare = async (documentId: string, sharedWith: string[]) => {
     try {
       const backendDoc = documents.find(doc => doc.document_type === documentId);
@@ -157,6 +184,7 @@ export const FamilyLegacyBox: React.FC = () => {
                   onDirectFileUpload={handleDirectFileUpload}
                   onDeleteDocument={handleDeleteDocument}
                   onViewDocument={handleViewDocument}
+                  onShareWithProfessional={handleShareWithProfessional}
                   documents={convertedDocuments}
                 />
               </TabsContent>
