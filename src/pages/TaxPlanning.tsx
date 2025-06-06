@@ -131,16 +131,6 @@ export default function TaxPlanning() {
                       pageContext="Tax Planning"
                     />
                     <ScheduleMeetingDialog assetName="Roth IRA Conversion" />
-                    <LearnMoreButton 
-                      assetName="Roth IRA Conversion" 
-                      itemType="Tax Strategy"
-                      pageContext="Tax Planning"
-                    />
-                    <RequestAssistanceButton 
-                      itemName="Roth IRA Conversion" 
-                      itemType="Tax Strategy"
-                      pageContext="Tax Planning"
-                    />
                   </div>
                 </div>
               </div>
