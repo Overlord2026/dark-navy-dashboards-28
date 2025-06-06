@@ -6,8 +6,8 @@ import { NoDocumentsState, NoCategorySelectedState } from "@/components/document
 import { UploadDocumentDialog } from "@/components/documents/UploadDocumentDialog";
 import { EditDocumentDialog } from "@/components/documents/EditDocumentDialog";
 import { ShareDocumentDialog } from "@/components/documents/ShareDocumentDialog";
-import { DeleteDocumentDialog } from "@/components/DeleteDocumentDialog";
-import { NewFolderDialog } from "@/components/NewFolderDialog";
+import { DeleteDocumentDialog } from "@/components/documents/DeleteDocumentDialog";
+import { NewFolderDialog } from "@/components/documents/NewFolderDialog";
 import { Button } from "@/components/ui/button";
 import { FolderPlus, Upload, ExternalLink, ArchiveIcon, HeartPulseIcon, Activity, FileText, Pill, Users, Edit, Trash2 } from "lucide-react";
 import { documentCategories, healthcareCategories } from "@/data/documentCategories";
