@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -14,31 +13,36 @@ const healthcareCategories = [
     id: 'healthcare',
     name: 'Healthcare',
     icon: HeartPulse,
-    description: 'General healthcare documents and records'
+    description: 'General healthcare documents and records',
+    iconColor: 'text-red-500'
   },
   {
     id: 'insurance-coverage',
     name: 'Insurance Coverage',
     icon: Shield,
-    description: 'Health insurance policies and coverage details'
+    description: 'Health insurance policies and coverage details',
+    iconColor: 'text-blue-500'
   },
   {
     id: 'prescriptions',
     name: 'Prescriptions & Medications',
     icon: Pill,
-    description: 'Prescription records and medication information'
+    description: 'Prescription records and medication information',
+    iconColor: 'text-green-500'
   },
   {
     id: 'physicians',
     name: 'Physicians & Providers',
     icon: Users,
-    description: 'Healthcare provider information and contacts'
+    description: 'Healthcare provider information and contacts',
+    iconColor: 'text-purple-500'
   },
   {
     id: 'medical-records',
     name: 'Medical Records & Documents',
     icon: Activity,
-    description: 'Medical records, test results, and reports'
+    description: 'Medical records, test results, and reports',
+    iconColor: 'text-orange-500'
   }
 ];
 
@@ -140,7 +144,7 @@ export const HealthcareDocumentsList: React.FC = () => {
                       : "hover:bg-muted text-muted-foreground hover:text-foreground"
                   )}
                 >
-                  <Icon className="h-4 w-4 flex-shrink-0" />
+                  <Icon className={cn("h-4 w-4 flex-shrink-0", category.iconColor)} />
                   <div className="flex-1 min-w-0">
                     <div className="font-medium text-sm truncate">{category.name}</div>
                     <div className="text-xs text-muted-foreground truncate">{category.description}</div>
@@ -201,7 +205,7 @@ export const HealthcareDocumentsList: React.FC = () => {
                   </>
                 ) : (
                   <>
-                    <activecat.icon className="mx-auto h-12 w-12 text-muted-foreground" />
+                    <activecat.icon className={cn("mx-auto h-12 w-12", activecat?.iconColor || "text-muted-foreground")} />
                     <h3 className="mt-4 text-lg font-medium">No {activecat?.name} Documents</h3>
                     <p className="mt-2 text-sm text-muted-foreground">
                       Upload your first document to the {activecat?.name} category to get started.
