@@ -63,8 +63,7 @@ const generateUUID = (): string => {
 export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps) {
   const [expandedGoals, setExpandedGoals] = useState<string[]>([]);
   const [selectedGoal, setSelectedGoal] = useState<Goal | undefined>(undefined);
-  const [isDetailsPanelOpen, setIsDetailsPanelOpen] = useState(false);
-  const [isAddGoalDialogOpen, setIsAddGoalDialogOpen] = useState(false);
+  const [isGoalDialogOpen, setIsGoalDialogOpen] = useState(false);
   const [detailsPanelTitle, setDetailsPanelTitle] = useState<string>("");
   const [localGoals, setLocalGoals] = useState<Goal[]>(goals);
   const [newGoalId, setNewGoalId] = useState<string | null>(null);
@@ -101,19 +100,19 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
     }
     
     setDetailsPanelTitle(panelTitle);
-    setIsDetailsPanelOpen(true);
+    setIsGoalDialogOpen(true);
   };
 
   const handleRetirementAgeClick = (title: string) => {
     setSelectedGoal(undefined);
     setDetailsPanelTitle(title);
-    setIsDetailsPanelOpen(true);
+    setIsGoalDialogOpen(true);
   };
 
   const handleAddGoalClick = () => {
     setSelectedGoal(undefined);
     setDetailsPanelTitle("Add New Goal");
-    setIsAddGoalDialogOpen(true);
+    setIsGoalDialogOpen(true);
   };
 
   const handleTitleUpdate = (name: string, owner: string) => {
@@ -273,8 +272,7 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
         }
       }
       
-      setIsDetailsPanelOpen(false);
-      setIsAddGoalDialogOpen(false);
+      setIsGoalDialogOpen(false);
     } catch (error) {
       console.error('Error saving goal:', error);
       toast.error("Failed to save goal. Please try again.");
@@ -286,8 +284,7 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
       setLocalGoals(prev => prev.filter(g => g.id !== selectedGoal.id));
     }
     
-    setIsDetailsPanelOpen(false);
-    setIsAddGoalDialogOpen(false);
+    setIsGoalDialogOpen(false);
   };
 
   const handleEditGoal = (goal: Goal, event: React.MouseEvent) => {
@@ -297,12 +294,12 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
     
     let panelTitle = goalTitle;
     if (goal.owner) {
-      const ownerPossessive = goal.owner.endsWith('s') ? `${goal.owner}'` : `${goal.owner}'s`;
+      const ownerPossessive = owner.endsWith('s') ? `${goal.owner}'` : `${goal.owner}'s`;
       panelTitle = `${ownerPossessive} ${goalTitle}`;
     }
     
     setDetailsPanelTitle(panelTitle);
-    setIsDetailsPanelOpen(true);
+    setIsGoalDialogOpen(true);
   };
 
   const handleDeleteGoal = async (goalId: string, event: React.MouseEvent) => {
@@ -501,17 +498,8 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
         )}
       </div>
       
-      <GoalDetailsSidePanel
-        isOpen={isDetailsPanelOpen}
-        onClose={() => setIsDetailsPanelOpen(false)}
-        onCancel={handleCancelGoal}
-        goal={selectedGoal}
-        onSave={handleSaveGoal}
-        title={detailsPanelTitle}
-        onTitleUpdate={handleTitleUpdate}
-      />
-
-      <Dialog open={isAddGoalDialogOpen} onOpenChange={setIsAddGoalDialogOpen}>
+      {/* Single unified dialog for both adding and editing goals */}
+      <Dialog open={isGoalDialogOpen} onOpenChange={setIsGoalDialogOpen}>
         <DialogContent className="max-w-4xl h-[90vh] p-0 overflow-hidden">
           <DialogHeader className="px-6 py-4 border-b">
             <DialogTitle>{detailsPanelTitle}</DialogTitle>
@@ -519,9 +507,9 @@ export function GoalsList({ goals, onGoalUpdate, onGoalDelete }: GoalsListProps)
           <div className="flex-1 overflow-y-auto px-6 py-4">
             <GoalDetailsSidePanel
               isOpen={true}
-              onClose={() => setIsAddGoalDialogOpen(false)}
+              onClose={() => setIsGoalDialogOpen(false)}
               onCancel={handleCancelGoal}
-              goal={undefined}
+              goal={selectedGoal}
               onSave={handleSaveGoal}
               title=""
               onTitleUpdate={handleTitleUpdate}
