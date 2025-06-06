@@ -12,7 +12,6 @@ import {
   Scale, 
   ExternalLink 
 } from "lucide-react";
-import { toast } from "sonner";
 
 // Define the AdvancedTaxStrategy type
 interface AdvancedTaxStrategy {
@@ -122,6 +121,10 @@ export const AdvancedTaxStrategies: React.FC = () => {
     }
   };
 
+  const handleRequestConsultation = (strategyTitle: string) => {
+    window.open('https://calendly.com/tonygomes/60min?month=2025-05', '_blank');
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -213,7 +216,7 @@ export const AdvancedTaxStrategies: React.FC = () => {
                       variant="outline" 
                       size="sm" 
                       className="text-xs px-4 py-2"
-                      onClick={() => toast.info(`Request sent for more information about ${strategy.title}`)}
+                      onClick={() => handleRequestConsultation(strategy.title)}
                     >
                       Request Consultation
                     </Button>
