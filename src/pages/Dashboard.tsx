@@ -2,13 +2,13 @@
 import React, { useState, useEffect } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { NetWorthSummary } from "@/components/dashboard/NetWorthSummary";
-import { useUser } from "@/context/UserContext";
+import { useAuth } from "@/context/AuthContext";
 import { useSubscription } from "@/context/SubscriptionContext";
 import { WelcomeTrialBanner } from "@/components/dashboard/WelcomeTrialBanner";
 import { usePagePerformance } from "@/hooks/usePagePerformance";
 
 export default function Dashboard() {
-  const { userProfile } = useUser();
+  const { userProfile } = useAuth();
   const { isInFreeTrial } = useSubscription();
   const [showWelcomeBanner, setShowWelcomeBanner] = useState(true);
   
