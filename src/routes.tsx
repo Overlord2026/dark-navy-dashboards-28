@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { createBrowserRouter } from "react-router-dom";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { ProfessionalsRouteWrapper } from "@/components/providers/ProfessionalsRouteWrapper";
 
@@ -110,146 +110,142 @@ import ErrorSimulation from "@/pages/ErrorSimulation";
 import AccessibilityAudit from "@/pages/AccessibilityAudit";
 import DeveloperAccessControl from "@/pages/DeveloperAccessControl";
 import IPProtection from "@/pages/IPProtection";
-import TabPages from "@/pages/TabPages";
 
-const AppRoutes = () => {
-  return (
-    <Router>
-      <Routes>
-        {/* Public Marketing Routes */}
-        <Route path="/home" element={<HomePage />} />
-        <Route path="/about" element={<AboutUsPage />} />
-        <Route path="/services" element={<ServicesPage />} />
-        <Route path="/team" element={<TeamPage />} />
-        <Route path="/careers" element={<CareersPage />} />
-        <Route path="/contact" element={<ContactPage />} />
-        <Route path="/privacy" element={<PrivacyPolicyPage />} />
-        <Route path="/terms" element={<TermsOfServicePage />} />
-        <Route path="/disclosures" element={<DisclosuresPage />} />
-        <Route path="/accessibility" element={<AccessibilityPage />} />
+const router = createBrowserRouter([
+  // Public Marketing Routes
+  { path: "/home", element: <HomePage /> },
+  { path: "/about", element: <AboutUsPage /> },
+  { path: "/services", element: <ServicesPage /> },
+  { path: "/team", element: <TeamPage /> },
+  { path: "/careers", element: <CareersPage /> },
+  { path: "/contact", element: <ContactPage /> },
+  { path: "/privacy", element: <PrivacyPolicyPage /> },
+  { path: "/terms", element: <TermsOfServicePage /> },
+  { path: "/disclosures", element: <DisclosuresPage /> },
+  { path: "/accessibility", element: <AccessibilityPage /> },
 
-        {/* Auth Routes */}
-        <Route path="/auth" element={<Auth />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/professional-signup" element={<ProfessionalSignup />} />
+  // Auth Routes
+  { path: "/auth", element: <Auth /> },
+  { path: "/login", element: <LoginPage /> },
+  { path: "/professional-signup", element: <ProfessionalSignup /> },
 
-        {/* Protected Routes */}
-        <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-        <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-        <Route path="/documents" element={<ProtectedRoute><Documents /></ProtectedRoute>} />
-        <Route path="/education" element={<ProtectedRoute><Education /></ProtectedRoute>} />
-        <Route path="/financial-plans" element={<ProtectedRoute><FinancialPlans /></ProtectedRoute>} />
-        <Route path="/investments" element={<ProtectedRoute><Investments /></ProtectedRoute>} />
-        <Route path="/tax-planning" element={<ProtectedRoute><TaxPlanning /></ProtectedRoute>} />
-        <Route path="/education/tax-planning" element={<ProtectedRoute><TaxPlanningEducation /></ProtectedRoute>} />
-        <Route path="/insurance" element={<ProtectedRoute><Insurance /></ProtectedRoute>} />
-        <Route path="/personal-insurance" element={<ProtectedRoute><PersonalInsurance /></ProtectedRoute>} />
-        <Route path="/client-lending" element={<ProtectedRoute><Lending /></ProtectedRoute>} />
-        <Route path="/lending" element={<ProtectedRoute><Lending /></ProtectedRoute>} />
-        <Route path="/estate-planning" element={<ProtectedRoute><EstatePlanning /></ProtectedRoute>} />
+  // Protected Routes
+  { path: "/", element: <ProtectedRoute><Dashboard /></ProtectedRoute> },
+  { path: "/dashboard", element: <ProtectedRoute><Dashboard /></ProtectedRoute> },
+  { path: "/documents", element: <ProtectedRoute><Documents /></ProtectedRoute> },
+  { path: "/education", element: <ProtectedRoute><Education /></ProtectedRoute> },
+  { path: "/financial-plans", element: <ProtectedRoute><FinancialPlans /></ProtectedRoute> },
+  { path: "/investments", element: <ProtectedRoute><Investments /></ProtectedRoute> },
+  { path: "/tax-planning", element: <ProtectedRoute><TaxPlanning /></ProtectedRoute> },
+  { path: "/education/tax-planning", element: <ProtectedRoute><TaxPlanningEducation /></ProtectedRoute> },
+  { path: "/insurance", element: <ProtectedRoute><Insurance /></ProtectedRoute> },
+  { path: "/personal-insurance", element: <ProtectedRoute><PersonalInsurance /></ProtectedRoute> },
+  { path: "/client-lending", element: <ProtectedRoute><Lending /></ProtectedRoute> },
+  { path: "/lending", element: <ProtectedRoute><Lending /></ProtectedRoute> },
+  { path: "/estate-planning", element: <ProtectedRoute><EstatePlanning /></ProtectedRoute> },
 
-        {/* Family Wealth Routes */}
-        <Route path="/accounts" element={<ProtectedRoute><Accounts /></ProtectedRoute>} />
-        <Route path="/client-accounts" element={<ProtectedRoute><Accounts /></ProtectedRoute>} />
-        <Route path="/all-assets" element={<ProtectedRoute><AllAssets /></ProtectedRoute>} />
-        <Route path="/client-all-assets" element={<ProtectedRoute><AllAssets /></ProtectedRoute>} />
-        <Route path="/properties" element={<ProtectedRoute><Properties /></ProtectedRoute>} />
-        <Route path="/client-properties" element={<ProtectedRoute><Properties /></ProtectedRoute>} />
-        <Route path="/cash-management" element={<ProtectedRoute><CashManagement /></ProtectedRoute>} />
-        <Route path="/client-cash-management" element={<ProtectedRoute><CashManagement /></ProtectedRoute>} />
-        <Route path="/tax-budgets" element={<ProtectedRoute><TaxBudgets /></ProtectedRoute>} />
-        <Route path="/client-tax-budgets" element={<ProtectedRoute><TaxBudgets /></ProtectedRoute>} />
-        <Route path="/transfers" element={<ProtectedRoute><Transfers /></ProtectedRoute>} />
-        <Route path="/client-transfers" element={<ProtectedRoute><Transfers /></ProtectedRoute>} />
-        <Route path="/legacy-vault" element={<ProtectedRoute><LegacyVault /></ProtectedRoute>} />
-        <Route path="/client-legacy-vault" element={<ProtectedRoute><ClientLegacyVault /></ProtectedRoute>} />
-        <Route path="/client-social-security" element={<ProtectedRoute><SocialSecurity /></ProtectedRoute>} />
-        <Route path="/social-security" element={<ProtectedRoute><SocialSecurity /></ProtectedRoute>} />
-        <Route path="/client-business-filings" element={<ProtectedRoute><BusinessFilings /></ProtectedRoute>} />
-        <Route path="/business-filings" element={<ProtectedRoute><BusinessFilings /></ProtectedRoute>} />
-        <Route path="/billpay" element={<ProtectedRoute><BillPay /></ProtectedRoute>} />
-        <Route path="/client-billpay" element={<ProtectedRoute><BillPay /></ProtectedRoute>} />
+  // Family Wealth Routes
+  { path: "/accounts", element: <ProtectedRoute><Accounts /></ProtectedRoute> },
+  { path: "/client-accounts", element: <ProtectedRoute><Accounts /></ProtectedRoute> },
+  { path: "/all-assets", element: <ProtectedRoute><AllAssets /></ProtectedRoute> },
+  { path: "/client-all-assets", element: <ProtectedRoute><AllAssets /></ProtectedRoute> },
+  { path: "/properties", element: <ProtectedRoute><Properties /></ProtectedRoute> },
+  { path: "/client-properties", element: <ProtectedRoute><Properties /></ProtectedRoute> },
+  { path: "/cash-management", element: <ProtectedRoute><CashManagement /></ProtectedRoute> },
+  { path: "/client-cash-management", element: <ProtectedRoute><CashManagement /></ProtectedRoute> },
+  { path: "/tax-budgets", element: <ProtectedRoute><TaxBudgets /></ProtectedRoute> },
+  { path: "/client-tax-budgets", element: <ProtectedRoute><TaxBudgets /></ProtectedRoute> },
+  { path: "/transfers", element: <ProtectedRoute><Transfers /></ProtectedRoute> },
+  { path: "/client-transfers", element: <ProtectedRoute><Transfers /></ProtectedRoute> },
+  { path: "/legacy-vault", element: <ProtectedRoute><LegacyVault /></ProtectedRoute> },
+  { path: "/client-legacy-vault", element: <ProtectedRoute><ClientLegacyVault /></ProtectedRoute> },
+  { path: "/client-social-security", element: <ProtectedRoute><SocialSecurity /></ProtectedRoute> },
+  { path: "/social-security", element: <ProtectedRoute><SocialSecurity /></ProtectedRoute> },
+  { path: "/client-business-filings", element: <ProtectedRoute><BusinessFilings /></ProtectedRoute> },
+  { path: "/business-filings", element: <ProtectedRoute><BusinessFilings /></ProtectedRoute> },
+  { path: "/billpay", element: <ProtectedRoute><BillPay /></ProtectedRoute> },
+  { path: "/client-billpay", element: <ProtectedRoute><BillPay /></ProtectedRoute> },
 
-        {/* Investment Routes */}
-        <Route path="/investments/all-alternatives" element={<ProtectedRoute><AllAlternativeInvestments /></ProtectedRoute>} />
-        <Route path="/investments/alternative/:category" element={<ProtectedRoute><AlternativeAssetCategory /></ProtectedRoute>} />
-        <Route path="/investments/all-model-portfolios" element={<ProtectedRoute><AllModelPortfolios /></ProtectedRoute>} />
-        <Route path="/investments/model-portfolio/:id" element={<ProtectedRoute><PortfolioModelDetail /></ProtectedRoute>} />
-        <Route path="/investments/view-all/:category" element={<ProtectedRoute><ViewAllOfferings /></ProtectedRoute>} />
-        <Route path="/investments/portfolio-builder" element={<ProtectedRoute><PortfolioBuilder /></ProtectedRoute>} />
-        <Route path="/investments/investment-builder" element={<ProtectedRoute><InvestmentBuilder /></ProtectedRoute>} />
-        <Route path="/investments/performance" element={<ProtectedRoute><InvestmentPerformance /></ProtectedRoute>} />
-        <Route path="/investments/risk" element={<ProtectedRoute><InvestmentRisk /></ProtectedRoute>} />
+  // Investment Routes
+  { path: "/investments/all-alternatives", element: <ProtectedRoute><AllAlternativeInvestments /></ProtectedRoute> },
+  { path: "/investments/alternative/:category", element: <ProtectedRoute><AlternativeAssetCategory /></ProtectedRoute> },
+  { path: "/investments/all-model-portfolios", element: <ProtectedRoute><AllModelPortfolios /></ProtectedRoute> },
+  { path: "/investments/model-portfolio/:id", element: <ProtectedRoute><PortfolioModelDetail /></ProtectedRoute> },
+  { path: "/investments/view-all/:category", element: <ProtectedRoute><ViewAllOfferings /></ProtectedRoute> },
+  { path: "/investments/portfolio-builder", element: <ProtectedRoute><PortfolioBuilder /></ProtectedRoute> },
+  { path: "/investments/investment-builder", element: <ProtectedRoute><InvestmentBuilder /></ProtectedRoute> },
+  { path: "/investments/performance", element: <ProtectedRoute><InvestmentPerformance /></ProtectedRoute> },
+  { path: "/investments/risk", element: <ProtectedRoute><InvestmentRisk /></ProtectedRoute> },
 
-        {/* Specific Investment Categories */}
-        <Route path="/investments/alternative/private-equity" element={<ProtectedRoute><PrivateEquity /></ProtectedRoute>} />
-        <Route path="/investments/alternative/private-debt" element={<ProtectedRoute><PrivateDebt /></ProtectedRoute>} />
-        <Route path="/investments/alternative/digital-assets" element={<ProtectedRoute><DigitalAssets /></ProtectedRoute>} />
-        <Route path="/investments/alternative/real-assets" element={<ProtectedRoute><RealAssets /></ProtectedRoute>} />
-        <Route path="/investments/alternative/hedge-funds" element={<ProtectedRoute><HedgeFunds /></ProtectedRoute>} />
-        <Route path="/investments/alternative/venture-capital" element={<ProtectedRoute><VentureCapital /></ProtectedRoute>} />
-        <Route path="/investments/alternative/structured-investments" element={<ProtectedRoute><StructuredInvestments /></ProtectedRoute>} />
-        <Route path="/investments/alternative/collectibles" element={<ProtectedRoute><Collectibles /></ProtectedRoute>} />
-        <Route path="/investments/model-portfolios" element={<ProtectedRoute><ModelPortfolios /></ProtectedRoute>} />
-        <Route path="/investments/stock-screener" element={<ProtectedRoute><StockScreener /></ProtectedRoute>} />
+  // Specific Investment Categories
+  { path: "/investments/alternative/private-equity", element: <ProtectedRoute><PrivateEquity /></ProtectedRoute> },
+  { path: "/investments/alternative/private-debt", element: <ProtectedRoute><PrivateDebt /></ProtectedRoute> },
+  { path: "/investments/alternative/digital-assets", element: <ProtectedRoute><DigitalAssets /></ProtectedRoute> },
+  { path: "/investments/alternative/real-assets", element: <ProtectedRoute><RealAssets /></ProtectedRoute> },
+  { path: "/investments/alternative/hedge-funds", element: <ProtectedRoute><HedgeFunds /></ProtectedRoute> },
+  { path: "/investments/alternative/venture-capital", element: <ProtectedRoute><VentureCapital /></ProtectedRoute> },
+  { path: "/investments/alternative/structured-investments", element: <ProtectedRoute><StructuredInvestments /></ProtectedRoute> },
+  { path: "/investments/alternative/collectibles", element: <ProtectedRoute><Collectibles /></ProtectedRoute> },
+  { path: "/investments/model-portfolios", element: <ProtectedRoute><ModelPortfolios /></ProtectedRoute> },
+  { path: "/investments/stock-screener", element: <ProtectedRoute><StockScreener /></ProtectedRoute> },
 
-        {/* Collaboration Routes */}
-        <Route path="/professionals" element={
-          <ProtectedRoute>
-            <ProfessionalsRouteWrapper>
-              <Professionals />
-            </ProfessionalsRouteWrapper>
-          </ProtectedRoute>
-        } />
-        <Route path="/sharing" element={<ProtectedRoute><ClientFamily /></ProtectedRoute>} />
+  // Collaboration Routes
+  { 
+    path: "/professionals", 
+    element: (
+      <ProtectedRoute>
+        <ProfessionalsRouteWrapper>
+          <Professionals />
+        </ProfessionalsRouteWrapper>
+      </ProtectedRoute>
+    )
+  },
+  { path: "/sharing", element: <ProtectedRoute><ClientFamily /></ProtectedRoute> },
 
-        {/* Other App Routes */}
-        <Route path="/help" element={<ProtectedRoute><Help /></ProtectedRoute>} />
-        <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
-        <Route path="/subscription" element={<ProtectedRoute><Subscription /></ProtectedRoute>} />
-        <Route path="/advisor-dashboard" element={<ProtectedRoute><AdvisorDashboard /></ProtectedRoute>} />
-        <Route path="/advisor-profile" element={<ProtectedRoute><AdvisorProfile /></ProtectedRoute>} />
-        <Route path="/advisor-onboarding" element={<ProtectedRoute><AdvisorOnboarding /></ProtectedRoute>} />
-        <Route path="/advisor-feedback" element={<ProtectedRoute><AdvisorFeedback /></ProtectedRoute>} />
-        <Route path="/advisor-modules" element={<ProtectedRoute><AdvisorModuleMarketplace /></ProtectedRoute>} />
-        <Route path="/customer-profile" element={<ProtectedRoute><CustomerProfile /></ProtectedRoute>} />
-        <Route path="/admin-subscription" element={<ProtectedRoute><AdminSubscription /></ProtectedRoute>} />
-        <Route path="/funding-accounts" element={<ProtectedRoute><FundingAccounts /></ProtectedRoute>} />
-        <Route path="/banking-transfers" element={<ProtectedRoute><BankingTransfers /></ProtectedRoute>} />
-        <Route path="/project-integration" element={<ProtectedRoute><ProjectIntegration /></ProtectedRoute>} />
+  // Other App Routes
+  { path: "/help", element: <ProtectedRoute><Help /></ProtectedRoute> },
+  { path: "/settings", element: <ProtectedRoute><Settings /></ProtectedRoute> },
+  { path: "/subscription", element: <ProtectedRoute><Subscription /></ProtectedRoute> },
+  { path: "/advisor-dashboard", element: <ProtectedRoute><AdvisorDashboard /></ProtectedRoute> },
+  { path: "/advisor-profile", element: <ProtectedRoute><AdvisorProfile /></ProtectedRoute> },
+  { path: "/advisor-onboarding", element: <ProtectedRoute><AdvisorOnboarding /></ProtectedRoute> },
+  { path: "/advisor-feedback", element: <ProtectedRoute><AdvisorFeedback /></ProtectedRoute> },
+  { path: "/advisor-modules", element: <ProtectedRoute><AdvisorModuleMarketplace /></ProtectedRoute> },
+  { path: "/customer-profile", element: <ProtectedRoute><CustomerProfile /></ProtectedRoute> },
+  { path: "/admin-subscription", element: <ProtectedRoute><AdminSubscription /></ProtectedRoute> },
+  { path: "/funding-accounts", element: <ProtectedRoute><FundingAccounts /></ProtectedRoute> },
+  { path: "/banking-transfers", element: <ProtectedRoute><BankingTransfers /></ProtectedRoute> },
+  { path: "/project-integration", element: <ProtectedRoute><ProjectIntegration /></ProtectedRoute> },
 
-        {/* Mobile Routes */}
-        <Route path="/mobile/home" element={<ProtectedRoute><MobileHome /></ProtectedRoute>} />
-        <Route path="/mobile/accounts" element={<ProtectedRoute><MobileAccounts /></ProtectedRoute>} />
-        <Route path="/mobile/documents" element={<ProtectedRoute><MobileDocuments /></ProtectedRoute>} />
-        <Route path="/mobile/education" element={<ProtectedRoute><MobileEducation /></ProtectedRoute>} />
-        <Route path="/mobile/tax-planning" element={<ProtectedRoute><MobileTaxPlanning /></ProtectedRoute>} />
-        <Route path="/mobile/transfers" element={<ProtectedRoute><MobileTransfers /></ProtectedRoute>} />
-        <Route path="/mobile/more" element={<ProtectedRoute><MobileMore /></ProtectedRoute>} />
+  // Mobile Routes
+  { path: "/mobile/home", element: <ProtectedRoute><MobileHome /></ProtectedRoute> },
+  { path: "/mobile/accounts", element: <ProtectedRoute><MobileAccounts /></ProtectedRoute> },
+  { path: "/mobile/documents", element: <ProtectedRoute><MobileDocuments /></ProtectedRoute> },
+  { path: "/mobile/education", element: <ProtectedRoute><MobileEducation /></ProtectedRoute> },
+  { path: "/mobile/tax-planning", element: <ProtectedRoute><MobileTaxPlanning /></ProtectedRoute> },
+  { path: "/mobile/transfers", element: <ProtectedRoute><MobileTransfers /></ProtectedRoute> },
+  { path: "/mobile/more", element: <ProtectedRoute><MobileMore /></ProtectedRoute> },
 
-        {/* Marketplace Routes */}
-        <Route path="/marketplace" element={<ProtectedRoute><Marketplace /></ProtectedRoute>} />
-        <Route path="/marketplace/rfp" element={<ProtectedRoute><MarketplaceRfp /></ProtectedRoute>} />
-        <Route path="/marketplace/rfp/:id" element={<ProtectedRoute><MarketplaceRfpDetail /></ProtectedRoute>} />
+  // Marketplace Routes
+  { path: "/marketplace", element: <ProtectedRoute><Marketplace /></ProtectedRoute> },
+  { path: "/marketplace/rfp", element: <ProtectedRoute><MarketplaceRfp /></ProtectedRoute> },
+  { path: "/marketplace/rfp/:id", element: <ProtectedRoute><MarketplaceRfpDetail /></ProtectedRoute> },
 
-        {/* Diagnostics Routes */}
-        <Route path="/system-diagnostics" element={<ProtectedRoute><SystemDiagnostics /></ProtectedRoute>} />
-        <Route path="/system-health" element={<ProtectedRoute><SystemHealthDashboard /></ProtectedRoute>} />
-        <Route path="/navigation-diagnostics" element={<ProtectedRoute><NavigationDiagnostics /></ProtectedRoute>} />
-        <Route path="/performance-diagnostics" element={<ProtectedRoute><PerformanceDiagnostics /></ProtectedRoute>} />
-        <Route path="/form-validation-tests" element={<ProtectedRoute><FormValidationTests /></ProtectedRoute>} />
-        <Route path="/visual-testing" element={<ProtectedRoute><VisualTesting /></ProtectedRoute>} />
-        <Route path="/error-simulation" element={<ProtectedRoute><ErrorSimulation /></ProtectedRoute>} />
-        <Route path="/accessibility-audit" element={<ProtectedRoute><AccessibilityAudit /></ProtectedRoute>} />
-        <Route path="/developer-access" element={<ProtectedRoute><DeveloperAccessControl /></ProtectedRoute>} />
-        <Route path="/ip-protection" element={<ProtectedRoute><IPProtection /></ProtectedRoute>} />
-        <Route path="/tab-pages" element={<ProtectedRoute><TabPages /></ProtectedRoute>} />
+  // Diagnostics Routes
+  { path: "/system-diagnostics", element: <ProtectedRoute><SystemDiagnostics /></ProtectedRoute> },
+  { path: "/system-health", element: <ProtectedRoute><SystemHealthDashboard /></ProtectedRoute> },
+  { path: "/navigation-diagnostics", element: <ProtectedRoute><NavigationDiagnostics /></ProtectedRoute> },
+  { path: "/performance-diagnostics", element: <ProtectedRoute><PerformanceDiagnostics /></ProtectedRoute> },
+  { path: "/form-validation-tests", element: <ProtectedRoute><FormValidationTests /></ProtectedRoute> },
+  { path: "/visual-testing", element: <ProtectedRoute><VisualTesting /></ProtectedRoute> },
+  { path: "/error-simulation", element: <ProtectedRoute><ErrorSimulation /></ProtectedRoute> },
+  { path: "/accessibility-audit", element: <ProtectedRoute><AccessibilityAudit /></ProtectedRoute> },
+  { path: "/developer-access", element: <ProtectedRoute><DeveloperAccessControl /></ProtectedRoute> },
+  { path: "/ip-protection", element: <ProtectedRoute><IPProtection /></ProtectedRoute> },
+  { path: "/tab-pages", element: <ProtectedRoute><TabPages /></ProtectedRoute> },
 
-        {/* Catch-all route */}
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </Router>
-  );
-};
+  // Catch-all route
+  { path: "*", element: <NotFound /> }
+]);
 
-export default AppRoutes;
+export default router;
