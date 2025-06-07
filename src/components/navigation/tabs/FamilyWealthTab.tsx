@@ -68,7 +68,14 @@ export const familyWealthNavItems: NavItem[] = [
   { 
     title: "Social Security", 
     href: "/social-security", 
-    icon: CircleDollarSignIcon 
+    icon: CircleDollarSignIcon,
+    submenu: [
+      {
+        title: "Business Filings",
+        href: "/client-business-filings",
+        icon: LineChartIcon
+      }
+    ]
   },
   { 
     title: "Bill Pay", 
@@ -100,6 +107,11 @@ const FamilyWealthTab = () => {
                 <Badge variant="secondary" className="ml-2 text-xs">
                   Coming Soon
                 </Badge>
+              )}
+              {item.submenu && (
+                <div className="mt-1 text-xs text-muted-foreground">
+                  Includes: {item.submenu.map(sub => sub.title).join(', ')}
+                </div>
               )}
             </div>
           </div>

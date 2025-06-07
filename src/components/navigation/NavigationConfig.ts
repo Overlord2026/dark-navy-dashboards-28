@@ -125,12 +125,14 @@ export const familyWealthNavItems: NavItem[] = [
   { 
     title: "Social Security", 
     href: "/client-social-security", 
-    icon: CircleDollarSignIcon
-  },
-  { 
-    title: "Business Filings", 
-    href: "/client-business-filings", 
-    icon: FileTextIcon
+    icon: CircleDollarSignIcon,
+    submenu: [
+      {
+        title: "Business Filings",
+        href: "/client-business-filings",
+        icon: FileTextIcon
+      }
+    ]
   },
   { 
     title: "Bill Pay", 
