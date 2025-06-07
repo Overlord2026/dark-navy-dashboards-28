@@ -25,41 +25,34 @@ export const familyWealthNavItems: NavItem[] = [
   },
   { 
     title: "Accounts Overview", 
-    href: "/client-accounts", 
+    href: "/accounts", 
     icon: WalletIcon 
   },
   { 
     title: "All Assets", 
-    href: "/client-all-assets", 
+    href: "/all-assets", 
     icon: Diamond 
   },
   { 
-    title: "Documents", 
-    href: "/client-documents", 
-    icon: BookIcon 
+    title: "Real Estate", 
+    href: "/properties", 
+    icon: BuildingIcon 
   },
   { 
     title: "Cash Management", 
-    href: "/client-cash-management", 
+    href: "/cash-management", 
     icon: BanknoteIcon,
     comingSoon: true
   },
   { 
-    title: "Transfers", 
-    href: "/client-transfers", 
-    icon: ArrowRightLeft,
-    comingSoon: true
-  },
-  { 
-    title: "Properties", 
-    href: "/client-properties", 
-    icon: BuildingIcon 
-  },
-  { 
     title: "Tax & Budgets", 
-    href: "/client-tax-budgets", 
-    icon: Calculator,
-    comingSoon: true
+    href: "/tax-budgets", 
+    icon: Calculator 
+  },
+  { 
+    title: "Transfers", 
+    href: "/transfers", 
+    icon: ArrowRightLeft 
   },
   { 
     title: "Secure Family Vault", 
@@ -68,7 +61,7 @@ export const familyWealthNavItems: NavItem[] = [
   },
   { 
     title: "Social Security", 
-    href: "/social-security", 
+    href: "/client-social-security", 
     icon: CircleDollarSignIcon,
     submenu: [
       {
@@ -80,9 +73,8 @@ export const familyWealthNavItems: NavItem[] = [
   },
   { 
     title: "Bill Pay", 
-    href: "/client-billpay", 
-    icon: Receipt,
-    comingSoon: true
+    href: "/billpay", 
+    icon: Receipt 
   }
 ];
 

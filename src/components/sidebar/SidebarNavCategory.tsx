@@ -35,6 +35,8 @@ const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
   expandedSubmenus,
   toggleSubmenu
 }) => {
+  console.log(`SidebarNavCategory ${id} - expandedSubmenus:`, expandedSubmenus);
+
   if (collapsed) {
     return (
       <div className="flex flex-col items-center space-y-1">
@@ -108,12 +110,17 @@ const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
           const submenuKey = `${id}-${item.title}`;
           const submenuExpanded = expandedSubmenus[submenuKey] || false;
 
+          console.log(`Item ${item.title} - hasSubmenu: ${hasSubmenu}, submenuKey: ${submenuKey}, submenuExpanded: ${submenuExpanded}`);
+
           if (hasSubmenu) {
             return (
               <div key={item.title} className="space-y-1">
                 <Collapsible
                   open={submenuExpanded}
-                  onOpenChange={() => toggleSubmenu(submenuKey)}
+                  onOpenChange={() => {
+                    console.log(`Toggling submenu for key: ${submenuKey}`);
+                    toggleSubmenu(submenuKey);
+                  }}
                 >
                   <CollapsibleTrigger asChild>
                     <div className={cn(
