@@ -11,7 +11,8 @@ import {
   Calculator,
   Diamond,
   BookIcon,
-  WalletIcon
+  WalletIcon,
+  FileTextIcon
 } from "lucide-react";
 import { NavItem } from "@/types/navigation";
 import { Badge } from "@/components/ui/badge";
@@ -73,7 +74,7 @@ export const familyWealthNavItems: NavItem[] = [
       {
         title: "Business Filings",
         href: "/client-business-filings",
-        icon: LineChartIcon
+        icon: FileTextIcon
       }
     ]
   },
