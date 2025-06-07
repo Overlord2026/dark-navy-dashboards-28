@@ -28,7 +28,11 @@ export const navigationCategories: NavCategory[] = [
     id: "family-wealth",
     title: "Family Wealth",
     label: "Family Wealth", 
-    items: familyWealthNavItems,
+    items: familyWealthNavItems.map(item => 
+      item.title === "Bill Pay" 
+        ? { ...item, comingSoon: true }
+        : item
+    ),
     defaultExpanded: true
   },
   {
