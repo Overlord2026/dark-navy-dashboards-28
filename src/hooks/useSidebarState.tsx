@@ -43,7 +43,6 @@ export const useSidebarState = (navigationCategories: NavCategory[]) => {
     // Expand relevant category based on current route
     const path = location.pathname;
     let shouldExpandCategory = '';
-    let shouldExpandSubmenu = '';
     
     console.log("Current path for category expansion:", path);
     
@@ -61,15 +60,17 @@ export const useSidebarState = (navigationCategories: NavCategory[]) => {
         console.log(`Found matching item: ${matchingItem.title} in category: ${category.id}`);
         
         // If the item has submenus, expand the relevant submenu too
-        if (matchingItem.submenu?.length) {
-          const matchingSubmenu = matchingItem.submenu.find(subItem => {
+        if (matchingItem.items?.length) {
+          const matchingSubmenu = matchingItem.items.find(subItem => {
             const subItemPath = normalizePath(subItem.href);
             return path === subItemPath || path.startsWith(`${subItemPath}/`);
           });
           
           if (matchingSubmenu) {
-            shouldExpandSubmenu = `${category.id}-${matchingItem.title}`;
-            console.log(`Found matching submenu: ${matchingSubmenu.title} in ${matchingItem.title}`);
+            setExpandedSubmenus(prev => ({
+              ...prev,
+              [matchingItem.title]: true
+            }));
           }
         }
       }
@@ -81,15 +82,6 @@ export const useSidebarState = (navigationCategories: NavCategory[]) => {
       setExpandedCategories(prev => ({
         ...prev,
         [shouldExpandCategory]: true
-      }));
-    }
-    
-    // Expand the relevant submenu if found
-    if (shouldExpandSubmenu) {
-      console.log(`Expanding submenu: ${shouldExpandSubmenu}`);
-      setExpandedSubmenus(prev => ({
-        ...prev,
-        [shouldExpandSubmenu]: true
       }));
     }
     
@@ -108,15 +100,14 @@ export const useSidebarState = (navigationCategories: NavCategory[]) => {
     }));
   };
 
-  const toggleSubmenu = (submenuKey: string, e?: React.MouseEvent) => {
+  const toggleSubmenu = (itemTitle: string, e?: React.MouseEvent) => {
     if (e) {
       e.preventDefault();
       e.stopPropagation();
     }
-    console.log(`Toggling submenu: ${submenuKey}`);
     setExpandedSubmenus(prev => ({
       ...prev,
-      [submenuKey]: !prev[submenuKey]
+      [itemTitle]: !prev[itemTitle]
     }));
   };
 

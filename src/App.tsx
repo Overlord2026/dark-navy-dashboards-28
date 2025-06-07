@@ -1,6 +1,6 @@
 
 import { RouterProvider } from "react-router-dom";
-import router from "./routes";
+import routes from "./routes";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { AuthProvider } from "@/context/AuthContext";
 import { NetWorthProvider } from "@/context/NetWorthContext";
@@ -31,7 +31,7 @@ function App() {
               <FinancialPlanProvider>
                 <DiagnosticsProvider>
                   <AdvisorProvider>
-                    <RouterProvider router={router} />
+                    <RouterProvider router={routes} />
                     <Toaster position="top-right" richColors closeButton />
                   </AdvisorProvider>
                 </DiagnosticsProvider>
