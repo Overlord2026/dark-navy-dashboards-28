@@ -105,14 +105,15 @@ const SidebarNavCategory: React.FC<SidebarNavCategoryProps> = ({
           const Icon = item.icon;
           const normalizedHref = item.href.startsWith("/") ? item.href : `/${item.href}`;
           const hasSubmenu = item.submenu && item.submenu.length > 0;
-          const submenuExpanded = expandedSubmenus[item.title] || false;
+          const submenuKey = `${id}-${item.title}`;
+          const submenuExpanded = expandedSubmenus[submenuKey] || false;
 
           if (hasSubmenu) {
             return (
               <div key={item.title} className="space-y-1">
                 <Collapsible
                   open={submenuExpanded}
-                  onOpenChange={() => toggleSubmenu(item.title)}
+                  onOpenChange={() => toggleSubmenu(submenuKey)}
                 >
                   <CollapsibleTrigger asChild>
                     <div className={cn(
