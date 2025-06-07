@@ -1,88 +1,92 @@
-
 import React from "react";
-import { 
-  LineChartIcon, 
-  BanknoteIcon, 
-  ArrowRightLeft, 
-  BuildingIcon, 
+import {
+  LineChartIcon,
+  BanknoteIcon,
+  ArrowRightLeft,
+  BuildingIcon,
   VaultIcon,
   CircleDollarSignIcon,
   Receipt,
   Calculator,
   Diamond,
   BookIcon,
-  WalletIcon
+  WalletIcon,
 } from "lucide-react";
 import { NavItem } from "@/types/navigation";
 import { Badge } from "@/components/ui/badge";
 
 export const familyWealthNavItems: NavItem[] = [
-  { 
-    title: "Financial Plans", 
-    href: "/financial-plans", 
-    icon: LineChartIcon 
+  {
+    title: "Financial Plans",
+    href: "/financial-plans",
+    icon: LineChartIcon,
   },
-  { 
-    title: "Accounts Overview", 
-    href: "/client-accounts", 
-    icon: WalletIcon 
+  {
+    title: "Accounts Overview",
+    href: "/client-accounts",
+    icon: WalletIcon,
   },
-  { 
-    title: "All Assets", 
-    href: "/client-all-assets", 
-    icon: Diamond 
+  {
+    title: "All Assets",
+    href: "/client-all-assets",
+    icon: Diamond,
   },
-  { 
-    title: "Documents", 
-    href: "/client-documents", 
-    icon: BookIcon 
+  {
+    title: "Documents",
+    href: "/client-documents",
+    icon: BookIcon,
   },
-  { 
-    title: "Cash Management", 
-    href: "/client-cash-management", 
+  {
+    title: "Cash Management",
+    href: "/client-cash-management",
     icon: BanknoteIcon,
-    comingSoon: true
+    comingSoon: true,
   },
-  { 
-    title: "Transfers", 
-    href: "/client-transfers", 
+  {
+    title: "Transfers",
+    href: "/client-transfers",
     icon: ArrowRightLeft,
-    comingSoon: true
+    comingSoon: true,
   },
-  { 
-    title: "Properties", 
-    href: "/client-properties", 
-    icon: BuildingIcon 
+  {
+    title: "Properties",
+    href: "/client-properties",
+    icon: BuildingIcon,
   },
-  { 
-    title: "Tax & Budgets", 
-    href: "/client-tax-budgets", 
+  {
+    title: "Tax & Budgets",
+    href: "/client-tax-budgets",
     icon: Calculator,
-    comingSoon: true
+    comingSoon: true,
   },
-  { 
-    title: "Secure Family Vault", 
-    href: "/legacy-vault", 
-    icon: VaultIcon 
+  {
+    title: "Secure Family Vault",
+    href: "/legacy-vault",
+    icon: VaultIcon,
   },
-  { 
-    title: "Social Security", 
-    href: "/social-security", 
+  {
+    title: "Social Security",
+    href: "/social-security",
     icon: CircleDollarSignIcon,
     submenu: [
       {
         title: "Business Filings",
         href: "/client-business-filings",
-        icon: LineChartIcon
-      }
-    ]
+        icon: LineChartIcon,
+      },
+    ],
   },
-  { 
-    title: "Bill Pay", 
-    href: "/client-billpay", 
+  {
+    title: "Business Filings",
+    href: "/client-business-filings",
+    icon: LineChartIcon,
+  },
+  {
+    title: "Bill Pay",
+    href: "/client-billpay",
     icon: Receipt,
-    comingSoon: true
-  }
+    comingSoon: true,
+  },
 ];
 
 const FamilyWealthTab = () => {
@@ -91,14 +95,18 @@ const FamilyWealthTab = () => {
       <h2 className="text-xl font-semibold mb-4">Family Wealth Management</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {familyWealthNavItems.map((item) => (
-          <div 
+          <div
             key={item.href}
             className={`p-4 border rounded-lg transition-colors flex items-center gap-3 ${
-              item.comingSoon 
-                ? 'cursor-not-allowed opacity-60 bg-muted/30' 
-                : 'hover:bg-muted/50 cursor-pointer'
+              item.comingSoon
+                ? "cursor-not-allowed opacity-60 bg-muted/30"
+                : "hover:bg-muted/50 cursor-pointer"
             }`}
-            onClick={item.comingSoon ? undefined : () => window.location.href = item.href}
+            onClick={
+              item.comingSoon
+                ? undefined
+                : () => (window.location.href = item.href)
+            }
           >
             {item.icon && <item.icon className="h-5 w-5 text-primary" />}
             <div className="flex-1">
@@ -110,7 +118,7 @@ const FamilyWealthTab = () => {
               )}
               {item.submenu && (
                 <div className="mt-1 text-xs text-muted-foreground">
-                  Includes: {item.submenu.map(sub => sub.title).join(', ')}
+                  Includes: {item.submenu.map((sub) => sub.title).join(", ")}
                 </div>
               )}
             </div>
