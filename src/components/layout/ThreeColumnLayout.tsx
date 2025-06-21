@@ -164,12 +164,16 @@ export function ThreeColumnLayout({
     )}>
       <div className="w-full flex justify-center items-center py-1 border-b border-border z-50 bg-background sticky top-0">
         {isMobile && (
-          <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
+          <div className="absolute left-2 top-1/2 transform -translate-y-1/2 z-50">
             <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-8 w-8">
-                  <Menu className="h-5 w-5" />
-                  <span className="sr-only">Toggle navigation</span>
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="h-10 w-10 p-0 hover:bg-accent focus:bg-accent active:bg-accent touch-manipulation"
+                  aria-label="Toggle navigation menu"
+                >
+                  <Menu className="h-6 w-6" />
                 </Button>
               </SheetTrigger>
               <SheetContent 
