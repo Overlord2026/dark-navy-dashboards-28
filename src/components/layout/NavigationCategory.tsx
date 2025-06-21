@@ -1,28 +1,17 @@
 
 import React from "react";
+import { Link } from "react-router-dom";
 import { ChevronDown, ChevronRight } from "lucide-react";
-import { NavigationItem } from "./NavigationItem";
+import { cn } from "@/lib/utils";
+import { NavCategory } from "@/types/navigation";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { NavItem, NavCategory } from "@/types/navigation";
-import { cn } from "@/lib/utils";
-
-interface MainMenuItem {
-  id: string;
-  label: string;
-  icon: React.ElementType | React.FC;
-  href: string;
-}
 
 interface NavigationCategoryProps {
-  category: NavCategory | {
-    id: string;
-    label: string;
-    items: MainMenuItem[] | NavItem[];
-  };
+  category: NavCategory;
   isExpanded: boolean;
   toggleCategory: (categoryId: string) => void;
   currentPath: string;
@@ -30,79 +19,124 @@ interface NavigationCategoryProps {
   isLightTheme: boolean;
 }
 
-export const NavigationCategory = ({
+export const NavigationCategory: React.FC<NavigationCategoryProps> = ({
   category,
   isExpanded,
   toggleCategory,
   currentPath,
   isCollapsed,
   isLightTheme
-}: NavigationCategoryProps) => {
-  // Helper function to check if a path is active
-  const isActivePath = (path: string): boolean => {
-    // Normalize both paths for comparison
-    const normalizedPath = path.startsWith("/") ? path : `/${path}`;
-    const normalizedCurrentPath = currentPath.startsWith("/") ? currentPath : `/${currentPath}`;
+}) => {
+  const isActive = (href: string) => {
+    const normalizedHref = href.startsWith("/") ? href : `/${href}`;
+    const normalizedPath = `/${currentPath}`;
     
-    return normalizedPath === normalizedCurrentPath;
+    return normalizedPath === normalizedHref || 
+           (normalizedHref !== "/" && normalizedPath.startsWith(normalizedHref));
   };
 
-  return (
-    <div key={category.id} className="mb-2">
-      {!isCollapsed && (
-        <Collapsible
-          open={isExpanded}
-          onOpenChange={() => toggleCategory(category.id)}
-        >
-          <CollapsibleTrigger asChild>
-            <div className={`flex items-center justify-between p-2 text-xs uppercase tracking-wider font-semibold ${isLightTheme ? 'text-[#222222]/70' : 'text-[#E2E2E2]/70'} cursor-pointer`}>
-              <span>{category.label}</span>
-              <div>
-                {isExpanded ? (
-                  <ChevronDown className="h-4 w-4" />
-                ) : (
-                  <ChevronRight className="h-4 w-4" />
+  if (isCollapsed) {
+    return (
+      <div className="flex flex-col items-center space-y-1">
+        {category.items.map((item) => {
+          const Icon = item.icon;
+          const normalizedHref = item.href.startsWith("/") ? item.href : `/${item.href}`;
+          
+          if (item.comingSoon) {
+            return (
+              <div
+                key={item.title}
+                className={cn(
+                  "group flex items-center justify-center w-8 h-8 p-2 rounded-md transition-colors opacity-50 cursor-not-allowed",
+                  isLightTheme ? "text-sidebar-foreground" : "text-sidebar-foreground"
                 )}
+                title={`${item.title} (Coming Soon)`}
+              >
+                {Icon && <Icon className="h-4 w-4" />}
+                <span className="sr-only">{item.title}</span>
               </div>
-            </div>
-          </CollapsibleTrigger>
-          <CollapsibleContent className="space-y-1.5">
-            {category.items.map((item: any) => (
-              <NavigationItem
-                key={item.id || item.href}
-                item={{
-                  id: item.id || item.href.replace('/', ''),
-                  label: item.label || item.title,
-                  icon: item.icon,
-                  href: item.href
-                }}
-                isActive={isActivePath(item.href)}
-                isCollapsed={false}
-                isLightTheme={isLightTheme}
-              />
-            ))}
-          </CollapsibleContent>
-        </Collapsible>
-      )}
-      
-      {isCollapsed && (
-        <div className="flex flex-col items-center space-y-1">
-          {category.items.map((item: any) => (
-            <NavigationItem
-              key={item.id || item.href}
-              item={{
-                id: item.id || item.href.replace('/', ''),
-                label: item.label || item.title,
-                icon: item.icon,
-                href: item.href
-              }}
-              isActive={isActivePath(item.href)}
-              isCollapsed={true}
-              isLightTheme={isLightTheme}
-            />
-          ))}
+            );
+          }
+
+          return (
+            <Link
+              key={item.title}
+              to={normalizedHref}
+              className={cn(
+                "group flex items-center justify-center w-8 h-8 p-2 rounded-md transition-colors border touch-manipulation",
+                isActive(normalizedHref)
+                  ? "bg-sidebar-accent text-sidebar-accent-foreground border-sidebar-accent"
+                  : "text-sidebar-foreground border-transparent hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+              )}
+              title={item.title}
+            >
+              {Icon && <Icon className="h-4 w-4" />}
+              <span className="sr-only">{item.title}</span>
+            </Link>
+          );
+        })}
+      </div>
+    );
+  }
+
+  return (
+    <Collapsible
+      open={isExpanded}
+      onOpenChange={() => toggleCategory(category.id)}
+    >
+      <CollapsibleTrigger asChild>
+        <div className={cn(
+          "flex items-center justify-between w-full p-3 text-xs uppercase tracking-wider font-semibold cursor-pointer transition-colors touch-manipulation rounded-md",
+          "hover:bg-sidebar-accent/50",
+          isLightTheme ? "text-sidebar-foreground/70 hover:text-sidebar-foreground" : "text-sidebar-foreground/70 hover:text-sidebar-foreground"
+        )}>
+          <span>{category.label}</span>
+          {isExpanded ? (
+            <ChevronDown className="h-4 w-4" />
+          ) : (
+            <ChevronRight className="h-4 w-4" />
+          )}
         </div>
-      )}
-    </div>
+      </CollapsibleTrigger>
+      <CollapsibleContent className="space-y-1 pb-2">
+        {category.items.map((item) => {
+          const Icon = item.icon;
+          const normalizedHref = item.href.startsWith("/") ? item.href : `/${item.href}`;
+
+          if (item.comingSoon) {
+            return (
+              <div
+                key={item.title}
+                className={cn(
+                  "group flex items-center py-3 px-3 rounded-md transition-colors opacity-50 cursor-not-allowed border",
+                  "text-sidebar-foreground/50 border-transparent"
+                )}
+                title={`${item.title} (Coming Soon)`}
+              >
+                {Icon && <Icon className="h-5 w-5 mr-3 flex-shrink-0" />}
+                <span className="flex-1 text-sm">{item.title}</span>
+                <span className="text-xs text-muted-foreground">(Coming Soon)</span>
+              </div>
+            );
+          }
+
+          return (
+            <Link
+              key={item.title}
+              to={normalizedHref}
+              className={cn(
+                "group flex items-center py-3 px-3 rounded-md transition-colors border touch-manipulation text-sm",
+                isActive(normalizedHref)
+                  ? "bg-sidebar-accent text-sidebar-accent-foreground border-sidebar-accent font-medium"
+                  : "text-sidebar-foreground border-transparent hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+              )}
+            >
+              {Icon && <Icon className="h-5 w-5 mr-3 flex-shrink-0" />}
+              <span>{item.title}</span>
+            </Link>
+          );
+        })}
+      </CollapsibleContent>
+    </Collapsible>
   );
 };

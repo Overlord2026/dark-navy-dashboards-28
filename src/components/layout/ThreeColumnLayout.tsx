@@ -1,4 +1,5 @@
-import { ReactNode, useState } from "react";
+
+import { ReactNode, useState, useEffect } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { UserProfileSection } from "@/components/sidebar/UserProfileSection";
@@ -10,6 +11,10 @@ import { NavigationCategory } from "./NavigationCategory";
 import { SecondaryNavigation } from "./SecondaryNavigation";
 import { navigationCategories } from "@/components/navigation/NavigationRegistry";
 import { getSecondaryMenuItems } from "./navigationData";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
+import { Menu } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface ThreeColumnLayoutProps {
   children: ReactNode;
@@ -30,12 +35,33 @@ export function ThreeColumnLayout({
 }: ThreeColumnLayoutProps) {
   const [mainSidebarCollapsed, setMainSidebarCollapsed] = useState(false);
   const [secondarySidebarCollapsed, setSecondarySidebarCollapsed] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>(
     navigationCategories.reduce((acc, category) => {
       acc[category.id] = category.defaultExpanded ?? true;
       return acc;
     }, {} as Record<string, boolean>)
   );
+
+  const isMobile = useIsMobile();
+
+  // Close mobile menu when route changes
+  const location = useLocation();
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [location.pathname]);
+
+  // Handle window resize
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 1024 && mobileMenuOpen) {
+        setMobileMenuOpen(false);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [mobileMenuOpen]);
 
   const handleBookSession = () => {
     console.log("Book session clicked");
@@ -49,7 +75,6 @@ export function ThreeColumnLayout({
   const { userProfile } = useAuth();
   
   const params = useParams();
-  const location = useLocation();
   
   const sectionId = params.sectionId || activeSecondaryItem;
   
@@ -99,54 +124,81 @@ export function ThreeColumnLayout({
     console.log(`Profile menu item clicked in layout: ${itemId}`);
   };
 
+  // Sidebar Content Component
+  const SidebarContent = () => (
+    <div className="flex flex-col h-full">
+      <div className="px-4 border-sidebar-border mt-2 mb-2">
+        <UserProfileSection onMenuItemClick={handleProfileMenuItemClick} showLogo={false} />
+      </div>
+      
+      <div className="overflow-y-auto mt-0 flex-1">
+        <nav className="px-2 space-y-1">
+          {navigationCategories.map((category) => (
+            <NavigationCategory
+              key={category.id}
+              category={category}
+              isExpanded={expandedCategories[category.id]}
+              toggleCategory={toggleCategory}
+              currentPath={currentPath}
+              isCollapsed={mainSidebarCollapsed && !isMobile}
+              isLightTheme={isLightTheme}
+            />
+          ))}
+        </nav>
+      </div>
+      
+      <div className="px-4 mt-auto mb-3 border-sidebar-border">
+        <AdvisorSection 
+          onViewProfile={handleViewProfile} 
+          onBookSession={handleBookSession} 
+          collapsed={mainSidebarCollapsed && !isMobile} 
+        />
+      </div>
+    </div>
+  );
+
   return (
     <div className={cn(
       "flex flex-col h-screen overflow-hidden",
       "bg-background text-foreground"
     )}>
       <div className="w-full flex justify-center items-center py-1 border-b border-border z-50 bg-background sticky top-0">
+        {isMobile && (
+          <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
+            <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon" className="h-8 w-8">
+                  <Menu className="h-5 w-5" />
+                  <span className="sr-only">Toggle navigation</span>
+                </Button>
+              </SheetTrigger>
+              <SheetContent 
+                side="left" 
+                className="w-[280px] p-0 bg-sidebar-background border-sidebar-border"
+              >
+                <SidebarContent />
+              </SheetContent>
+            </Sheet>
+          </div>
+        )}
         <Header />
       </div>
       
       <div className="flex flex-1 overflow-hidden">
-        <aside
-          className={cn(
-            "flex flex-col transition-all duration-300 ease-in-out z-30 bg-sidebar-background border-r border-sidebar-border",
-            mainSidebarCollapsed ? "w-[70px]" : "w-[280px]"
-          )}
-        >
-          <div className="flex flex-col h-full">
-            <div className="px-4 border-sidebar-border mt-2 mb-2">
-              <UserProfileSection onMenuItemClick={handleProfileMenuItemClick} showLogo={false} />
-            </div>
-            
-            <div className="overflow-y-auto mt-0 flex-1">
-              <nav className="px-2 space-y-1">
-                {navigationCategories.map((category) => (
-                  <NavigationCategory
-                    key={category.id}
-                    category={category}
-                    isExpanded={expandedCategories[category.id]}
-                    toggleCategory={toggleCategory}
-                    currentPath={currentPath}
-                    isCollapsed={mainSidebarCollapsed}
-                    isLightTheme={isLightTheme}
-                  />
-                ))}
-              </nav>
-            </div>
-            
-            <div className="px-4 mt-auto mb-3 border-sidebar-border">
-              <AdvisorSection 
-                onViewProfile={handleViewProfile} 
-                onBookSession={handleBookSession} 
-                collapsed={mainSidebarCollapsed} 
-              />
-            </div>
-          </div>
-        </aside>
+        {/* Desktop Sidebar */}
+        {!isMobile && (
+          <aside
+            className={cn(
+              "flex flex-col transition-all duration-300 ease-in-out z-30 bg-sidebar-background border-r border-sidebar-border",
+              mainSidebarCollapsed ? "w-[70px]" : "w-[280px]"
+            )}
+          >
+            <SidebarContent />
+          </aside>
+        )}
 
-        {hasSecondaryMenu && (
+        {/* Secondary Navigation for Desktop */}
+        {!isMobile && hasSecondaryMenu && (
           <SecondaryNavigation 
             hasSecondaryMenu={hasSecondaryMenu}
             secondarySidebarCollapsed={secondarySidebarCollapsed}
@@ -163,10 +215,16 @@ export function ThreeColumnLayout({
             </div>
           ) : null}
           
-          <main className="flex-1 overflow-y-auto p-3 font-sans w-full">
+          <main className={cn(
+            "flex-1 overflow-y-auto font-sans w-full",
+            isMobile ? "p-4" : "p-3"
+          )}>
             {!isDashboardPage && !isLegacyVaultPage && (
               <div className="flex justify-between items-center mb-4">
-                <h1 className="text-2xl font-bold text-foreground">{title}</h1>
+                <h1 className={cn(
+                  "font-bold text-foreground",
+                  isMobile ? "text-xl" : "text-2xl"
+                )}>{title}</h1>
               </div>
             )}
             {children}
