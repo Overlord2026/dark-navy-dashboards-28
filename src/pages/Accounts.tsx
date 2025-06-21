@@ -36,10 +36,6 @@ const Accounts = () => {
         )}>
           <div className="space-y-1">
             <div className="flex items-center gap-3">
-              <h1 className={cn(
-                "font-bold tracking-tight",
-                isMobile ? "text-2xl" : "text-3xl"
-              )}>Accounts</h1>
               <Badge variant="secondary" className={cn(
                 isMobile ? "text-xs px-2 py-1" : "text-xs"
               )}>Coming soon</Badge>
