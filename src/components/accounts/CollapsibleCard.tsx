@@ -1,60 +1,96 @@
 
-import React, { useState } from 'react';
+import React, { useState, ReactNode } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 
 interface CollapsibleCardProps {
-  icon: React.ReactNode;
+  icon: ReactNode;
   title: string;
   amount: string;
   description: string;
-  children: React.ReactNode;
-  defaultExpanded?: boolean;
+  children: ReactNode;
+  defaultOpen?: boolean;
 }
 
-export function CollapsibleCard({ 
+export const CollapsibleCard = ({ 
   icon, 
   title, 
   amount, 
   description, 
   children, 
-  defaultExpanded = false 
-}: CollapsibleCardProps) {
-  const [isExpanded, setIsExpanded] = useState(defaultExpanded);
+  defaultOpen = false 
+}: CollapsibleCardProps) => {
+  const [isOpen, setIsOpen] = useState(defaultOpen);
+  const isMobile = useIsMobile();
 
   return (
-    <Card>
+    <Card className="w-full">
       <CardHeader 
-        className="cursor-pointer" 
-        onClick={() => setIsExpanded(!isExpanded)}
-      >
-        <CardTitle className="flex items-center justify-between">
-          <div className="flex items-center">
-            {icon}
-            {title}
-          </div>
-          <div className="flex items-center gap-3">
-            <span className="text-lg font-medium">{amount}</span>
-            {isExpanded ? (
-              <ChevronUp className="h-5 w-5 text-muted-foreground" />
-            ) : (
-              <ChevronDown className="h-5 w-5 text-muted-foreground" />
-            )}
-          </div>
-        </CardTitle>
-        <CardDescription>{description}</CardDescription>
-      </CardHeader>
-      <div 
         className={cn(
-          "overflow-hidden transition-all duration-200",
-          isExpanded ? "max-h-none" : "max-h-0"
+          "cursor-pointer transition-colors hover:bg-muted/50",
+          isMobile ? "p-4" : "p-6"
         )}
+        onClick={() => setIsOpen(!isOpen)}
       >
-        <CardContent>
+        <div className={cn(
+          "flex items-center justify-between",
+          isMobile ? "gap-2" : "gap-4"
+        )}>
+          <div className="flex items-center gap-3 min-w-0 flex-1">
+            {icon}
+            <div className="min-w-0 flex-1">
+              <CardTitle className={cn(
+                "flex items-center gap-2",
+                isMobile ? "text-lg" : "text-xl"
+              )}>
+                <span className="truncate">{title}</span>
+              </CardTitle>
+              <CardDescription className={cn(
+                "mt-1",
+                isMobile ? "text-xs" : "text-sm"
+              )}>
+                {description}
+              </CardDescription>
+            </div>
+          </div>
+          <div className="flex items-center gap-3 flex-shrink-0">
+            <span className={cn(
+              "font-semibold",
+              isMobile ? "text-base" : "text-lg"
+            )}>{amount}</span>
+            <Button 
+              variant="ghost" 
+              size={isMobile ? "sm" : "default"}
+              className={cn(
+                "h-auto p-1",
+                isMobile ? "w-6 h-6" : "w-8 h-8"
+              )}
+            >
+              {isOpen ? (
+                <ChevronUp className={cn(
+                  isMobile ? "h-3 w-3" : "h-4 w-4"
+                )} />
+              ) : (
+                <ChevronDown className={cn(
+                  isMobile ? "h-3 w-3" : "h-4 w-4"
+                )} />
+              )}
+            </Button>
+          </div>
+        </div>
+      </CardHeader>
+      
+      {isOpen && (
+        <CardContent className={cn(
+          "border-t",
+          isMobile ? "p-4 pt-4" : "p-6 pt-4"
+        )}>
           {children}
         </CardContent>
-      </div>
+      )}
     </Card>
   );
-}
+};

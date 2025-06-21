@@ -1,3 +1,4 @@
+
 import React from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
@@ -8,9 +9,12 @@ import { RetirementAccountTracker } from "@/components/social-security/Retiremen
 import { FundingAccountsOverview } from "@/components/accounts/FundingAccountsOverview";
 import { CollapsibleCard } from "@/components/accounts/CollapsibleCard";
 import { useAccountManagement } from "@/hooks/useAccountManagement";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { cn } from "@/lib/utils";
 
 const Accounts = () => {
   const { fundingAccounts, handleManageFunding, handleCompleteSetup } = useAccountManagement();
+  const isMobile = useIsMobile();
 
   const handleAddAccount = (type: string) => {
     console.log(`Add ${type} clicked`);
@@ -21,23 +25,51 @@ const Accounts = () => {
       activeMainItem="accounts"
       title="Accounts"
     >
-      <div className="container mx-auto px-4 py-6 max-w-7xl space-y-6">
+      <div className={cn(
+        "container mx-auto max-w-7xl space-y-6",
+        isMobile ? "px-3 py-4" : "px-4 py-6"
+      )}>
         {/* Header Section */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 border-b border-border">
+        <div className={cn(
+          "flex gap-4 pb-6 border-b border-border",
+          isMobile ? "flex-col items-start" : "flex-col sm:flex-row sm:items-center sm:justify-between"
+        )}>
           <div className="space-y-1">
             <div className="flex items-center gap-3">
-              <h1 className="text-3xl font-bold tracking-tight">Accounts</h1>
-              <Badge variant="secondary" className="text-xs">Coming soon</Badge>
+              <h1 className={cn(
+                "font-bold tracking-tight",
+                isMobile ? "text-2xl" : "text-3xl"
+              )}>Accounts</h1>
+              <Badge variant="secondary" className={cn(
+                isMobile ? "text-xs px-2 py-1" : "text-xs"
+              )}>Coming soon</Badge>
             </div>
-            <p className="text-muted-foreground">Manage all your financial accounts in one place</p>
+            <p className={cn(
+              "text-muted-foreground",
+              isMobile ? "text-sm" : ""
+            )}>Manage all your financial accounts in one place</p>
           </div>
-          <div className="flex gap-3">
-            <Button onClick={handleManageFunding} variant="outline">
-              <Wallet className="mr-2 h-4 w-4" />
+          <div className={cn(
+            "flex gap-3",
+            isMobile ? "w-full flex-col" : "flex-row"
+          )}>
+            <Button 
+              onClick={handleManageFunding} 
+              variant="outline"
+              className={cn(
+                isMobile ? "w-full text-sm" : ""
+              )}
+            >
+              <Wallet className={cn("mr-2", isMobile ? "h-3 w-3" : "h-4 w-4")} />
               Manage Funding
             </Button>
-            <Button onClick={() => handleAddAccount('General')}>
-              <PlusCircle className="mr-2 h-4 w-4" />
+            <Button 
+              onClick={() => handleAddAccount('General')}
+              className={cn(
+                isMobile ? "w-full text-sm" : ""
+              )}
+            >
+              <PlusCircle className={cn("mr-2", isMobile ? "h-3 w-3" : "h-4 w-4")} />
               Add Account
             </Button>
           </div>
@@ -52,19 +84,24 @@ const Accounts = () => {
 
           {/* BFO Managed */}
           <CollapsibleCard
-            icon={<Shield className="mr-2 h-5 w-5 text-primary" />}
+            icon={<Shield className={cn("mr-2 h-5 w-5 text-primary", isMobile && "h-4 w-4")} />}
             title="BFO Managed"
             amount="$0.00"
             description="Complete your account setup to view managed accounts."
           >
-            <Button onClick={handleCompleteSetup} className="w-full sm:w-auto">
+            <Button 
+              onClick={handleCompleteSetup} 
+              className={cn(
+                isMobile ? "w-full text-sm" : "w-full sm:w-auto"
+              )}
+            >
               Complete Setup
             </Button>
           </CollapsibleCard>
 
           {/* 401K/457/403B Plans */}
           <CollapsibleCard
-            icon={<TrendingUp className="mr-2 h-5 w-5 text-primary" />}
+            icon={<TrendingUp className={cn("mr-2 h-5 w-5 text-primary", isMobile && "h-4 w-4")} />}
             title="401K/457/403B Plans"
             amount="$0.00"
             description="Track and manage your retirement accounts"
@@ -74,42 +111,59 @@ const Accounts = () => {
 
           {/* External Investment */}
           <CollapsibleCard
-            icon={<TrendingUp className="mr-2 h-5 w-5 text-primary" />}
+            icon={<TrendingUp className={cn("mr-2 h-5 w-5 text-primary", isMobile && "h-4 w-4")} />}
             title="External Investment"
             amount="$0.00"
             description="No external investment accounts linked."
           >
-            <Button onClick={() => handleAddAccount('Investment Account')} variant="outline" className="w-full sm:w-auto">
-              <PlusCircle className="mr-2 h-4 w-4" />
+            <Button 
+              onClick={() => handleAddAccount('Investment Account')} 
+              variant="outline" 
+              className={cn(
+                isMobile ? "w-full text-sm" : "w-full sm:w-auto"
+              )}
+            >
+              <PlusCircle className={cn("mr-2", isMobile ? "h-3 w-3" : "h-4 w-4")} />
               Add Investment Account
             </Button>
           </CollapsibleCard>
 
           {/* External Manually-Tracked */}
           <CollapsibleCard
-            icon={<CreditCard className="mr-2 h-5 w-5 text-primary" />}
+            icon={<CreditCard className={cn("mr-2 h-5 w-5 text-primary", isMobile && "h-4 w-4")} />}
             title="External Manually-Tracked"
             amount="$0.00"
             description="No manually tracked accounts added."
           >
-            <Button onClick={() => handleAddAccount('Manual Account')} variant="outline" className="w-full sm:w-auto">
-              <PlusCircle className="mr-2 h-4 w-4" />
+            <Button 
+              onClick={() => handleAddAccount('Manual Account')} 
+              variant="outline" 
+              className={cn(
+                isMobile ? "w-full text-sm" : "w-full sm:w-auto"
+              )}
+            >
+              <PlusCircle className={cn("mr-2", isMobile ? "h-3 w-3" : "h-4 w-4")} />
               Add Manual Account
             </Button>
           </CollapsibleCard>
 
           {/* External Loans */}
           <CollapsibleCard
-            icon={<Building className="mr-2 h-5 w-5 text-primary" />}
+            icon={<Building className={cn("mr-2 h-5 w-5 text-primary", isMobile && "h-4 w-4")} />}
             title="External Loans"
             amount="$0.00"
             description="No loan accounts linked."
           >
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium mb-2">Loan Type</label>
+                <label className={cn(
+                  "block font-medium mb-2",
+                  isMobile ? "text-sm" : "text-sm"
+                )}>Loan Type</label>
                 <Select defaultValue="mortgage">
-                  <SelectTrigger className="w-full sm:w-48">
+                  <SelectTrigger className={cn(
+                    isMobile ? "w-full text-sm" : "w-full sm:w-48"
+                  )}>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -121,8 +175,14 @@ const Accounts = () => {
                   </SelectContent>
                 </Select>
               </div>
-              <Button onClick={() => handleAddAccount('Loan')} variant="outline" className="w-full sm:w-auto">
-                <PlusCircle className="mr-2 h-4 w-4" />
+              <Button 
+                onClick={() => handleAddAccount('Loan')} 
+                variant="outline" 
+                className={cn(
+                  isMobile ? "w-full text-sm" : "w-full sm:w-auto"
+                )}
+              >
+                <PlusCircle className={cn("mr-2", isMobile ? "h-3 w-3" : "h-4 w-4")} />
                 Add Loan
               </Button>
             </div>
@@ -130,26 +190,38 @@ const Accounts = () => {
 
           {/* External Banking */}
           <CollapsibleCard
-            icon={<Banknote className="mr-2 h-5 w-5 text-primary" />}
+            icon={<Banknote className={cn("mr-2 h-5 w-5 text-primary", isMobile && "h-4 w-4")} />}
             title="External Banking"
             amount="$0.00"
             description="No banking accounts linked."
           >
-            <Button onClick={() => handleAddAccount('Bank Account')} variant="outline" className="w-full sm:w-auto">
-              <PlusCircle className="mr-2 h-4 w-4" />
+            <Button 
+              onClick={() => handleAddAccount('Bank Account')} 
+              variant="outline" 
+              className={cn(
+                isMobile ? "w-full text-sm" : "w-full sm:w-auto"
+              )}
+            >
+              <PlusCircle className={cn("mr-2", isMobile ? "h-3 w-3" : "h-4 w-4")} />
               Add Bank Account
             </Button>
           </CollapsibleCard>
 
           {/* External Credit Cards */}
           <CollapsibleCard
-            icon={<CreditCard className="mr-2 h-5 w-5 text-primary" />}
+            icon={<CreditCard className={cn("mr-2 h-5 w-5 text-primary", isMobile && "h-4 w-4")} />}
             title="External Credit Cards"
             amount="$0.00"
             description="No credit card accounts linked."
           >
-            <Button onClick={() => handleAddAccount('Credit Card')} variant="outline" className="w-full sm:w-auto">
-              <PlusCircle className="mr-2 h-4 w-4" />
+            <Button 
+              onClick={() => handleAddAccount('Credit Card')} 
+              variant="outline" 
+              className={cn(
+                isMobile ? "w-full text-sm" : "w-full sm:w-auto"
+              )}
+            >
+              <PlusCircle className={cn("mr-2", isMobile ? "h-3 w-3" : "h-4 w-4")} />
               Add Credit Card
             </Button>
           </CollapsibleCard>
