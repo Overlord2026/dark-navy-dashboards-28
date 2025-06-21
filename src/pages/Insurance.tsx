@@ -8,6 +8,7 @@ import { getInsuranceTitle } from "@/utils/insuranceUtils";
 import { useTheme } from "@/context/ThemeContext";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const Insurance = () => {
   const [selectedType, setSelectedType] = useState<InsuranceType | null>(null);
@@ -16,6 +17,7 @@ const Insurance = () => {
   const [totalPages, setTotalPages] = useState(1);
   const { theme } = useTheme();
   const isLightTheme = theme === "light";
+  const isMobile = useIsMobile();
 
   // Map insurance types to their available providers
   const insuranceTypeProviders: Record<InsuranceType, InsuranceTypeInfo> = {
@@ -93,7 +95,9 @@ const Insurance = () => {
         isLightTheme ? "bg-background" : "bg-background"
       )}>
         <ThreeColumnLayout activeMainItem="insurance" title="Insurance">
-          <InsuranceOverview onSelectType={handleSelectType} />
+          <div className={isMobile ? "px-2" : ""}>
+            <InsuranceOverview onSelectType={handleSelectType} />
+          </div>
         </ThreeColumnLayout>
       </div>
     );
@@ -106,18 +110,20 @@ const Insurance = () => {
       isLightTheme ? "bg-background" : "bg-background"
     )}>
       <ThreeColumnLayout activeMainItem="insurance" title={getInsuranceTitle(selectedType)}>
-        <InsuranceDetailView
-          selectedType={selectedType}
-          selectedProvider={selectedProvider}
-          currentPage={currentPage}
-          totalPages={totalPages}
-          insuranceTypeProviders={insuranceTypeProviders}
-          onBackToMain={handleBackToMain}
-          onNextProvider={handleNextProvider}
-          onPrevProvider={handlePrevProvider}
-          onSelectProvider={selectProvider}
-          onInterested={handleInterested}
-        />
+        <div className={isMobile ? "px-2" : ""}>
+          <InsuranceDetailView
+            selectedType={selectedType}
+            selectedProvider={selectedProvider}
+            currentPage={currentPage}
+            totalPages={totalPages}
+            insuranceTypeProviders={insuranceTypeProviders}
+            onBackToMain={handleBackToMain}
+            onNextProvider={handleNextProvider}
+            onPrevProvider={handlePrevProvider}
+            onSelectProvider={selectProvider}
+            onInterested={handleInterested}
+          />
+        </div>
       </ThreeColumnLayout>
     </div>
   );

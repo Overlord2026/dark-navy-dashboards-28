@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Plus, Upload, FileText, Shield, Heart, Home, Car, Umbrella } from "lucide-react";
 import { useInsuranceStore } from "@/hooks/useInsuranceStore";
 import { UploadDocumentDialog } from "@/components/documents/UploadDocumentDialog";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { cn } from "@/lib/utils";
 
 export const PersonalInsuranceDashboard = () => {
   const { 
@@ -15,6 +17,7 @@ export const PersonalInsuranceDashboard = () => {
   } = useInsuranceStore();
   const [isUploadDialogOpen, setIsUploadDialogOpen] = React.useState(false);
   const [activeCategory, setActiveCategory] = React.useState<string | null>(null);
+  const isMobile = useIsMobile();
 
   // Group policies by type for the summary
   const policyCountByType = policies.reduce((acc, policy) => {
@@ -24,62 +27,120 @@ export const PersonalInsuranceDashboard = () => {
 
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card className="p-4 flex flex-col items-center justify-center text-center">
-          <h3 className="text-lg font-medium mb-1">Total Policies</h3>
-          <p className="text-3xl font-bold">{policies.length}</p>
-          <p className="text-sm text-muted-foreground mt-2">Across {Object.keys(policyCountByType).length} categories</p>
+      <div className={cn(
+        "grid gap-4",
+        isMobile ? "grid-cols-1" : "grid-cols-1 md:grid-cols-3"
+      )}>
+        <Card className={cn(
+          "flex flex-col items-center justify-center text-center",
+          isMobile ? "p-3" : "p-4"
+        )}>
+          <h3 className={cn(
+            "font-medium mb-1",
+            isMobile ? "text-base" : "text-lg"
+          )}>Total Policies</h3>
+          <p className={cn(
+            "font-bold",
+            isMobile ? "text-2xl" : "text-3xl"
+          )}>{policies.length}</p>
+          <p className={cn(
+            "text-muted-foreground mt-2",
+            isMobile ? "text-xs" : "text-sm"
+          )}>Across {Object.keys(policyCountByType).length} categories</p>
         </Card>
         
-        <Card className="p-4 flex flex-col items-center justify-center text-center">
-          <h3 className="text-lg font-medium mb-1">Annual Premiums</h3>
-          <p className="text-3xl font-bold">${totalPremium.toLocaleString()}</p>
-          <p className="text-sm text-muted-foreground mt-2">Total yearly cost</p>
+        <Card className={cn(
+          "flex flex-col items-center justify-center text-center",
+          isMobile ? "p-3" : "p-4"
+        )}>
+          <h3 className={cn(
+            "font-medium mb-1",
+            isMobile ? "text-base" : "text-lg"
+          )}>Annual Premiums</h3>
+          <p className={cn(
+            "font-bold",
+            isMobile ? "text-2xl" : "text-3xl"
+          )}>${totalPremium.toLocaleString()}</p>
+          <p className={cn(
+            "text-muted-foreground mt-2",
+            isMobile ? "text-xs" : "text-sm"
+          )}>Total yearly cost</p>
         </Card>
         
-        <Card className="p-4 flex flex-col items-center justify-center text-center">
-          <h3 className="text-lg font-medium mb-1">Total Coverage</h3>
-          <p className="text-3xl font-bold">${totalCoverage.toLocaleString()}</p>
-          <p className="text-sm text-muted-foreground mt-2">Combined protection</p>
+        <Card className={cn(
+          "flex flex-col items-center justify-center text-center",
+          isMobile ? "p-3" : "p-4"
+        )}>
+          <h3 className={cn(
+            "font-medium mb-1",
+            isMobile ? "text-base" : "text-lg"
+          )}>Total Coverage</h3>
+          <p className={cn(
+            "font-bold",
+            isMobile ? "text-2xl" : "text-3xl"
+          )}>${totalCoverage.toLocaleString()}</p>
+          <p className={cn(
+            "text-muted-foreground mt-2",
+            isMobile ? "text-xs" : "text-sm"
+          )}>Combined protection</p>
         </Card>
       </div>
       
-      <h3 className="text-xl font-medium mb-3">Policy Types</h3>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <h3 className={cn(
+        "font-medium mb-3",
+        isMobile ? "text-lg" : "text-xl"
+      )}>Policy Types</h3>
+      <div className={cn(
+        "grid gap-4",
+        isMobile ? "grid-cols-1" : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+      )}>
         <PolicyTypeCard 
           title="Life Insurance" 
           count={policyCountByType['term-life'] || 0 + policyCountByType['permanent-life'] || 0} 
-          icon={<Heart className="h-8 w-8 text-red-500" />} 
+          icon={<Heart className={cn("text-red-500", isMobile ? "h-6 w-6" : "h-8 w-8")} />} 
           href="#life" 
         />
         <PolicyTypeCard 
           title="Annuities" 
           count={policyCountByType['annuity'] || 0} 
-          icon={<FileText className="h-8 w-8 text-blue-500" />} 
+          icon={<FileText className={cn("text-blue-500", isMobile ? "h-6 w-6" : "h-8 w-8")} />} 
           href="#annuities" 
         />
         <PolicyTypeCard 
           title="Health Insurance" 
           count={policyCountByType['health'] || 0 + policyCountByType['long-term-care'] || 0} 
-          icon={<Shield className="h-8 w-8 text-green-500" />} 
+          icon={<Shield className={cn("text-green-500", isMobile ? "h-6 w-6" : "h-8 w-8")} />} 
           href="#health" 
         />
         <PolicyTypeCard 
           title="Property Insurance" 
           count={policyCountByType['homeowners'] || 0 + policyCountByType['auto'] || 0} 
-          icon={<Home className="h-8 w-8 text-amber-500" />} 
+          icon={<Home className={cn("text-amber-500", isMobile ? "h-6 w-6" : "h-8 w-8")} />} 
           href="#property" 
         />
         <PolicyTypeCard 
           title="Umbrella Policies" 
           count={policyCountByType['umbrella'] || 0} 
-          icon={<Umbrella className="h-8 w-8 text-purple-500" />} 
+          icon={<Umbrella className={cn("text-purple-500", isMobile ? "h-6 w-6" : "h-8 w-8")} />} 
           href="#umbrella" 
         />
-        <Card className="p-4 flex items-center justify-center">
-          <Button variant="outline" className="w-full h-full flex flex-col py-8 gap-4" onClick={() => setIsUploadDialogOpen(true)}>
-            <Upload className="h-8 w-8 text-gray-500" />
-            <span>Upload Policy Documents</span>
+        <Card className={cn(
+          "flex items-center justify-center",
+          isMobile ? "p-3" : "p-4"
+        )}>
+          <Button 
+            variant="outline" 
+            className={cn(
+              "w-full h-full flex flex-col gap-4",
+              isMobile ? "py-6 gap-2" : "py-8 gap-4"
+            )}
+            onClick={() => setIsUploadDialogOpen(true)}
+          >
+            <Upload className={cn(
+              "text-gray-500",
+              isMobile ? "h-6 w-6" : "h-8 w-8"
+            )} />
+            <span className={isMobile ? "text-sm" : ""}>Upload Policy Documents</span>
           </Button>
         </Card>
       </div>
@@ -104,16 +165,30 @@ interface PolicyTypeCardProps {
 }
 
 const PolicyTypeCard = ({ title, count, icon, href }: PolicyTypeCardProps) => {
+  const isMobile = useIsMobile();
+  
   return (
     <Card className="overflow-hidden">
-      <a href={href} className="block p-4 h-full">
-        <div className="flex items-center gap-4">
-          <div className="bg-background rounded-full p-3">
+      <a href={href} className={cn("block h-full", isMobile ? "p-3" : "p-4")}>
+        <div className={cn(
+          "flex items-center gap-4",
+          isMobile ? "gap-3" : "gap-4"
+        )}>
+          <div className={cn(
+            "bg-background rounded-full",
+            isMobile ? "p-2" : "p-3"
+          )}>
             {icon}
           </div>
           <div>
-            <h4 className="font-medium">{title}</h4>
-            <p className="text-sm text-muted-foreground">
+            <h4 className={cn(
+              "font-medium",
+              isMobile ? "text-sm" : ""
+            )}>{title}</h4>
+            <p className={cn(
+              "text-muted-foreground",
+              isMobile ? "text-xs" : "text-sm"
+            )}>
               {count} {count === 1 ? 'policy' : 'policies'}
             </p>
           </div>

@@ -13,11 +13,13 @@ import { UmbrellaInsuranceTab } from "@/components/insurance/UmbrellaInsuranceTa
 import { useTheme } from "@/context/ThemeContext";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const PersonalInsurance = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
   const { theme } = useTheme();
   const isLightTheme = theme === "light";
+  const isMobile = useIsMobile();
   
   const handleExport = () => {
     toast.success("Exporting insurance summary...", {
@@ -31,39 +33,56 @@ const PersonalInsurance = () => {
       isLightTheme ? "bg-background" : "bg-background"
     )}>
       <ThreeColumnLayout activeMainItem="family-wealth" title="Insurance & Annuities">
-        <div className="mx-auto w-full max-w-6xl space-y-4 animate-fade-in p-3">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
-            <div>
+        <div className={cn(
+          "mx-auto w-full max-w-6xl space-y-4 animate-fade-in",
+          isMobile ? "p-2" : "p-3"
+        )}>
+          <div className={cn(
+            "flex items-center justify-between mb-4",
+            isMobile ? "flex-col gap-3" : "flex-row"
+          )}>
+            <div className={isMobile ? "text-center" : ""}>
               <h1 className={cn(
-                "text-[24px] font-semibold mb-1",
+                "font-semibold mb-1",
+                isMobile ? "text-xl" : "text-[24px]",
                 isLightTheme ? "text-foreground" : "text-foreground"
               )}>Insurance & Annuities</h1>
               <p className={cn(
-                "text-muted-foreground"
+                "text-muted-foreground",
+                isMobile ? "text-sm" : ""
               )}>
                 Track and manage your personal insurance policies and annuities
               </p>
             </div>
-            <div className="mt-3 md:mt-0 flex gap-2">
-              <Button variant="outline" onClick={handleExport}>
+            <div className={cn(
+              "flex gap-2",
+              isMobile ? "w-full" : "mt-0"
+            )}>
+              <Button 
+                variant="outline" 
+                onClick={handleExport}
+                className={isMobile ? "flex-1 text-sm" : ""}
+              >
                 Export Summary
               </Button>
             </div>
           </div>
           
           <Card className={cn(
-            "p-4",
+            isMobile ? "p-3" : "p-4",
             isLightTheme ? "bg-card border-border" : "bg-card border-border"
           )}>
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
               <TabsList className={cn(
-                "grid grid-cols-2 md:grid-cols-6 gap-2 mb-4",
+                "mb-4 w-full",
+                isMobile ? "grid grid-cols-2 gap-1 h-auto p-1" : "grid grid-cols-6 gap-2",
                 isLightTheme ? "bg-muted" : "bg-muted"
               )}>
                 <TabsTrigger 
                   value="dashboard"
                   className={cn(
-                    "data-[state=active]:bg-background data-[state=active]:text-foreground"
+                    "data-[state=active]:bg-background data-[state=active]:text-foreground",
+                    isMobile ? "text-sm py-2 px-2" : ""
                   )}
                 >
                   Dashboard
@@ -71,7 +90,8 @@ const PersonalInsurance = () => {
                 <TabsTrigger 
                   value="life"
                   className={cn(
-                    "data-[state=active]:bg-background data-[state=active]:text-foreground"
+                    "data-[state=active]:bg-background data-[state=active]:text-foreground",
+                    isMobile ? "text-sm py-2 px-2" : ""
                   )}
                 >
                   Life
@@ -79,7 +99,8 @@ const PersonalInsurance = () => {
                 <TabsTrigger 
                   value="annuities"
                   className={cn(
-                    "data-[state=active]:bg-background data-[state=active]:text-foreground"
+                    "data-[state=active]:bg-background data-[state=active]:text-foreground",
+                    isMobile ? "text-sm py-2 px-2" : ""
                   )}
                 >
                   Annuities
@@ -87,7 +108,8 @@ const PersonalInsurance = () => {
                 <TabsTrigger 
                   value="health"
                   className={cn(
-                    "data-[state=active]:bg-background data-[state=active]:text-foreground"
+                    "data-[state=active]:bg-background data-[state=active]:text-foreground",
+                    isMobile ? "text-sm py-2 px-2" : ""
                   )}
                 >
                   Health
@@ -95,7 +117,8 @@ const PersonalInsurance = () => {
                 <TabsTrigger 
                   value="property"
                   className={cn(
-                    "data-[state=active]:bg-background data-[state=active]:text-foreground"
+                    "data-[state=active]:bg-background data-[state=active]:text-foreground",
+                    isMobile ? "text-sm py-2 px-2" : ""
                   )}
                 >
                   Property
@@ -103,7 +126,8 @@ const PersonalInsurance = () => {
                 <TabsTrigger 
                   value="umbrella"
                   className={cn(
-                    "data-[state=active]:bg-background data-[state=active]:text-foreground"
+                    "data-[state=active]:bg-background data-[state=active]:text-foreground",
+                    isMobile ? "text-sm py-2 px-2" : ""
                   )}
                 >
                   Umbrella

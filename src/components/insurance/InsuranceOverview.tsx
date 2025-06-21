@@ -4,6 +4,7 @@ import { InsuranceTypeCard } from "./InsuranceTypeCard";
 import { InsuranceType } from "@/types/insuranceProvider";
 import { useTheme } from "@/context/ThemeContext";
 import { cn } from "@/lib/utils";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface InsuranceOverviewProps {
   onSelectType: (type: InsuranceType) => void;
@@ -12,6 +13,7 @@ interface InsuranceOverviewProps {
 export const InsuranceOverview = ({ onSelectType }: InsuranceOverviewProps) => {
   const { theme } = useTheme();
   const isLightTheme = theme === "light";
+  const isMobile = useIsMobile();
 
   const insuranceTypes = [
     {
@@ -63,10 +65,14 @@ export const InsuranceOverview = ({ onSelectType }: InsuranceOverviewProps) => {
 
   return (
     <div className={cn(
-      "animate-fade-in min-h-screen p-4",
+      "animate-fade-in min-h-screen",
+      isMobile ? "p-2" : "p-4",
       isLightTheme ? "bg-background text-foreground" : "bg-background text-foreground"
     )}>
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+      <div className={cn(
+        "grid gap-6",
+        isMobile ? "grid-cols-1" : "grid-cols-1 md:grid-cols-2 xl:grid-cols-3"
+      )}>
         {insuranceTypes.map((insurance) => (
           <InsuranceTypeCard
             key={insurance.type}
