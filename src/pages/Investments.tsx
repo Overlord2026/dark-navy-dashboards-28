@@ -13,6 +13,7 @@ import { PortfolioPickerDialog } from "@/components/investments/PortfolioPickerD
 import { BFOModelsTable } from "@/components/investments/BFOModelsTable";
 import { useBFOModels } from "@/hooks/useBFOModels";
 import { getAllInvestmentCategoryData } from "@/services/marketDataService";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface PortfolioModel {
   id: string;
@@ -38,6 +39,7 @@ interface ModelPortfolio {
 const Investments = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const isMobile = useIsMobile();
   const [selectedTab, setSelectedTab] = useState("intelligent-alloc");
   const [alternativeData, setAlternativeData] = useState<any>({});
   const [isLoading, setIsLoading] = useState(true);
@@ -278,17 +280,27 @@ const Investments = () => {
         </div>
 
         <Tabs value={selectedTab} className="w-full" onValueChange={handleTabChange}>
-          <TabsList className="w-full mb-6">
-            <TabsTrigger value="intelligent-alloc" className="flex-1">Intelligent Alloc.</TabsTrigger>
-            <TabsTrigger value="private-markets" className="flex-1">Private Markets</TabsTrigger>
+          <TabsList className={`w-full mb-6 ${isMobile ? 'flex-col h-auto p-1' : 'flex-row'}`}>
+            <TabsTrigger 
+              value="intelligent-alloc" 
+              className={`${isMobile ? 'w-full justify-center py-3 text-sm' : 'flex-1'}`}
+            >
+              {isMobile ? "Intelligent Allocation" : "Intelligent Alloc."}
+            </TabsTrigger>
+            <TabsTrigger 
+              value="private-markets" 
+              className={`${isMobile ? 'w-full justify-center py-3 text-sm' : 'flex-1'}`}
+            >
+              Private Markets
+            </TabsTrigger>
             <TabsTrigger 
               value="bfo-models" 
-              className="flex-1 relative cursor-not-allowed opacity-60" 
+              className={`${isMobile ? 'w-full justify-center py-3 text-sm relative cursor-not-allowed opacity-60' : 'flex-1 relative cursor-not-allowed opacity-60'}`}
               disabled
             >
-              <span className="flex items-center gap-2">
+              <span className={`flex items-center gap-2 ${isMobile ? 'flex-col' : ''}`}>
                 BFO Models
-                <Badge variant="secondary" className="text-xs px-2 py-0.5 bg-yellow-500/20 text-yellow-600 border-yellow-500/30">
+                <Badge variant="secondary" className={`text-xs px-2 py-0.5 bg-yellow-500/20 text-yellow-600 border-yellow-500/30 ${isMobile ? 'mt-1' : ''}`}>
                   Coming Soon
                 </Badge>
               </span>
@@ -309,7 +321,7 @@ const Investments = () => {
                 </p>
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className={`grid gap-6 ${isMobile ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'}`}>
                 {alternativeCategories.map((category) => (
                   <div 
                     key={category.id}
