@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { 
   Table, 
@@ -179,13 +178,9 @@ export const BusinessFilingsTracker = () => {
   return (
     <div className="space-y-6">
       <div className={cn(
-        "flex items-center justify-between",
-        isMobile && "flex-col gap-4 items-start"
+        "flex items-center justify-end",
+        isMobile && "justify-center"
       )}>
-        <h2 className={cn(
-          "font-semibold",
-          isMobile ? "text-lg" : "text-xl"
-        )}>Business Filings & Alerts</h2>
         <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
           <DialogTrigger asChild>
             <Button className={cn(isMobile && "w-full text-sm")}>
