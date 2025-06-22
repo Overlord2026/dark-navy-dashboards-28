@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
@@ -121,6 +122,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           console.log('User signed in or token refreshed');
         }
         
+        // Handle password recovery
+        if (event === 'PASSWORD_RECOVERY') {
+          console.log('Password recovery event detected');
+          // The user will be redirected to reset-password page automatically
+        }
+        
         setSession(session);
         setUser(session?.user ?? null);
         
@@ -240,11 +247,15 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const resetPassword = async (email: string): Promise<{ success: boolean; error?: string }> => {
     try {
+      const redirectUrl = `${window.location.origin}/reset-password`;
+      console.log('Sending password reset with redirect URL:', redirectUrl);
+      
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/reset-password`
+        redirectTo: redirectUrl
       });
       
       if (error) {
+        console.error('Reset password error:', error);
         return { success: false, error: error.message };
       }
       
