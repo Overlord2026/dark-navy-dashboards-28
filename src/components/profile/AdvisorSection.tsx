@@ -1,13 +1,11 @@
-
-import React, { useState } from "react";
+import React from "react";
+import { ChevronRight, UserRoundIcon, MailIcon, LinkedinIcon, Calendar, ExternalLinkIcon, MapPinIcon } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { CalendarDays, MessageSquare, Phone, Mail, Star, Award, TrendingUp } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { useTheme } from "@/context/ThemeContext";
+import { Link } from "react-router-dom";
+import { useAdvisor } from "@/context/AdvisorContext";
 
 interface AdvisorSectionProps {
   onViewProfile: (tabId: string) => void;
@@ -15,254 +13,82 @@ interface AdvisorSectionProps {
   collapsed?: boolean;
 }
 
-export const AdvisorSection: React.FC<AdvisorSectionProps> = ({
-  onViewProfile,
-  onBookSession,
-  collapsed = false
-}) => {
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-
-  const handleViewProfile = () => {
-    setIsDialogOpen(true);
-  };
-
+export const AdvisorSection = ({ onViewProfile, onBookSession, collapsed = false }: AdvisorSectionProps) => {
+  const { theme } = useTheme();
+  const { advisorInfo } = useAdvisor();
+  const isLightTheme = theme === "light";
+  
   const handleBookSession = () => {
-    onBookSession();
-    console.log("Book session clicked");
+    // Open Calendly directly like on the Client Advisor Profile page
+    window.open("https://calendly.com/tonygomes/60min", "_blank");
   };
-
-  const handleTabClick = (tabId: string) => {
-    onViewProfile(tabId);
-  };
-
+  
   return (
-    <>
-      <div className={cn(
-        "border-t border-sidebar-border pt-4",
-        collapsed ? "px-2" : "px-0"
-      )}>
-        <div className="space-y-3">
-          <div className="flex items-center space-x-3">
-            <Avatar className="h-10 w-10 border-2 border-primary/20">
-              <AvatarImage src="/lovable-uploads/cfb9898e-86f6-43a4-816d-9ecd35536845.png" alt="Sarah Johnson" />
-              <AvatarFallback className="bg-primary/10 text-primary font-semibold">SJ</AvatarFallback>
-            </Avatar>
+    <div className="px-2 py-2">
+      <Popover>
+        <PopoverTrigger asChild>
+          <div 
+            className={`flex items-center w-full py-4 px-4 rounded-lg transition-colors cursor-pointer min-h-[90px] ${isLightTheme ? 'bg-white text-[#222222] hover:bg-[#F5F5F5] border border-gray-200' : 'bg-[#2A2A40] text-white hover:bg-[#333350] border border-white/10'}`}
+          >
             {!collapsed && (
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-sidebar-foreground truncate">Sarah Johnson</p>
-                <p className="text-xs text-sidebar-foreground/70 truncate">Senior Financial Advisor</p>
+              <div className="flex flex-col overflow-hidden flex-1 space-y-1 min-w-0">
+                <span className={`text-[17px] ${isLightTheme ? 'text-[#222222]' : 'text-white'} whitespace-nowrap truncate font-semibold`}>{advisorInfo.name}</span>
+                <span className={`text-[12px] ${isLightTheme ? 'text-[#666666]' : 'text-gray-400'} font-medium whitespace-nowrap`}>Advisor/CFO</span>
               </div>
             )}
+            {!collapsed && (
+              <ChevronRight className={`h-4 w-4 ${isLightTheme ? 'text-gray-400' : 'text-gray-500'} flex-shrink-0 ml-2`} />
+            )}
           </div>
-          
-          {!collapsed && (
-            <div className="flex space-x-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleViewProfile}
-                className="flex-1 text-xs h-8 bg-sidebar-accent/50 hover:bg-sidebar-accent border-sidebar-border"
-              >
-                View Profile
-              </Button>
-              <Button
-                size="sm"
-                onClick={handleBookSession}
-                className="flex-1 text-xs h-8 bg-primary hover:bg-primary/90"
-              >
-                Book Session
-              </Button>
-            </div>
-          )}
-          
-          {collapsed && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleViewProfile}
-              className="w-full p-2 h-8"
-              title="View Advisor Profile"
-            >
-              <MessageSquare className="h-4 w-4" />
-            </Button>
-          )}
-        </div>
-      </div>
-
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto bg-background border-border z-50">
-          <DialogHeader>
-            <DialogTitle className="text-xl font-semibold">Your Financial Advisor</DialogTitle>
-            <DialogDescription>
-              Connect with your dedicated financial advisor for personalized guidance
-            </DialogDescription>
-          </DialogHeader>
-          
-          <Tabs defaultValue="profile" className="w-full">
-            <TabsList className="grid w-full grid-cols-3 mb-6">
-              <TabsTrigger 
-                value="profile" 
-                onClick={() => handleTabClick('profile')}
-                className="text-sm"
-              >
-                Profile
-              </TabsTrigger>
-              <TabsTrigger 
-                value="services" 
-                onClick={() => handleTabClick('services')}
-                className="text-sm"
-              >
-                Services
-              </TabsTrigger>
-              <TabsTrigger 
-                value="contact" 
-                onClick={() => handleTabClick('contact')}
-                className="text-sm"
-              >
-                Contact
-              </TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="profile" className="space-y-4">
-              <Card>
-                <CardHeader className="pb-4">
-                  <div className="flex items-center space-x-4">
-                    <Avatar className="h-16 w-16 border-2 border-primary/20">
-                      <AvatarImage src="/lovable-uploads/cfb9898e-86f6-43a4-816d-9ecd35536845.png" alt="Sarah Johnson" />
-                      <AvatarFallback className="bg-primary/10 text-primary font-semibold text-lg">SJ</AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1">
-                      <CardTitle className="text-lg">Sarah Johnson, CFP®</CardTitle>
-                      <p className="text-muted-foreground">Senior Financial Advisor</p>
-                      <div className="flex items-center mt-2 space-x-2">
-                        <div className="flex items-center">
-                          <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                          <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                          <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                          <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                          <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                        </div>
-                        <span className="text-sm text-muted-foreground">5.0 (127 reviews)</span>
-                      </div>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div>
-                    <h4 className="font-medium mb-2">About</h4>
-                    <p className="text-sm text-muted-foreground leading-relaxed">
-                      With over 12 years of experience in wealth management and financial planning, 
-                      Sarah specializes in helping high-net-worth individuals and families achieve 
-                      their long-term financial goals through comprehensive planning strategies.
-                    </p>
-                  </div>
-                  
-                  <div>
-                    <h4 className="font-medium mb-2">Credentials & Experience</h4>
-                    <div className="space-y-2">
-                      <div className="flex items-center space-x-2">
-                        <Award className="h-4 w-4 text-primary" />
-                        <span className="text-sm">Certified Financial Planner (CFP®)</span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <TrendingUp className="h-4 w-4 text-primary" />
-                        <span className="text-sm">12+ years in wealth management</span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <Badge variant="secondary" className="text-xs">Estate Planning</Badge>
-                        <Badge variant="secondary" className="text-xs">Tax Strategy</Badge>
-                        <Badge variant="secondary" className="text-xs">Investment Management</Badge>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-            
-            <TabsContent value="services" className="space-y-4">
-              <div className="grid gap-4">
-                <Card>
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-base">Comprehensive Financial Planning</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-muted-foreground mb-3">
-                      Holistic approach to your financial future including retirement planning, 
-                      investment strategy, and risk management.
-                    </p>
-                    <Badge variant="outline" className="text-xs">60-min consultation</Badge>
-                  </CardContent>
-                </Card>
-                
-                <Card>
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-base">Estate & Tax Planning</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-muted-foreground mb-3">
-                      Strategic planning to minimize tax burden and ensure smooth wealth transfer 
-                      to beneficiaries.
-                    </p>
-                    <Badge variant="outline" className="text-xs">90-min consultation</Badge>
-                  </CardContent>
-                </Card>
-                
-                <Card>
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-base">Investment Portfolio Review</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-muted-foreground mb-3">
-                      Regular portfolio analysis and rebalancing to align with your risk tolerance 
-                      and financial objectives.
-                    </p>
-                    <Badge variant="outline" className="text-xs">30-min consultation</Badge>
-                  </CardContent>
-                </Card>
+        </PopoverTrigger>
+        <PopoverContent 
+          align="start" 
+          side={collapsed ? "right" : "bottom"} 
+          className={`w-[380px] p-0 overflow-hidden ${isLightTheme ? 'bg-[#F9F7E8] border-[#DCD8C0] text-[#222222]' : 'bg-[#1E1E30] border-gray-700 text-white'} shadow-md shadow-black/20 border`}
+        >
+          <div className="bg-[#1B1B32] p-6 text-white">
+            <div className="flex items-start space-x-4 mb-4">
+              <Avatar className="h-[70px] w-[70px] border-2 border-gray-600">
+                <AvatarImage src="/lovable-uploads/dc1ba115-9699-414c-b9d0-7521bf7e7224.png" alt={advisorInfo.name} />
+                <AvatarFallback className="bg-[#9F9EA1] text-white text-[24px]">
+                  {advisorInfo.name.split(' ').map(name => name[0]).join('')}
+                </AvatarFallback>
+              </Avatar>
+              <div className="overflow-hidden">
+                <p className="font-semibold text-xl whitespace-nowrap text-ellipsis overflow-hidden mb-1">{advisorInfo.name}</p>
+                <div className="flex items-center text-sm text-gray-300 mb-2">
+                  <MapPinIcon className="h-4 w-4 mr-2 flex-shrink-0" />
+                  <span>{advisorInfo.location}</span>
+                </div>
+                <a href={`mailto:${advisorInfo.email}`} className="text-sm text-blue-400 hover:underline flex items-center">
+                  <MailIcon className="h-4 w-4 mr-2 flex-shrink-0" />
+                  <span className="truncate">{advisorInfo.email}</span>
+                </a>
               </div>
-            </TabsContent>
+            </div>
             
-            <TabsContent value="contact" className="space-y-4">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-base">Get in Touch</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="space-y-3">
-                    <div className="flex items-center space-x-3">
-                      <Phone className="h-4 w-4 text-muted-foreground" />
-                      <span className="text-sm">(555) 123-4567</span>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                      <Mail className="h-4 w-4 text-muted-foreground" />
-                      <span className="text-sm">sarah.johnson@bfo.com</span>
-                    </div>
-                  </div>
-                  
-                  <div className="pt-4 space-y-2">
-                    <Button 
-                      onClick={handleBookSession} 
-                      className="w-full"
-                      size="sm"
-                    >
-                      <CalendarDays className="h-4 w-4 mr-2" />
-                      Schedule Consultation
-                    </Button>
-                    <Button 
-                      variant="outline" 
-                      className="w-full"
-                      size="sm"
-                    >
-                      <MessageSquare className="h-4 w-4 mr-2" />
-                      Send Message
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-          </Tabs>
-        </DialogContent>
-      </Dialog>
-    </>
+            <div className="space-y-2 mt-4">
+              <Link 
+                to="/client-advisor-profile"
+                className="w-full flex items-center justify-center py-2.5 px-4 bg-transparent hover:bg-white/10 border border-white/20 rounded-md transition-colors"
+                onClick={() => onViewProfile("bio")}
+              >
+                <UserRoundIcon className="h-5 w-5 mr-2" />
+                <span className="font-medium">View profile</span>
+              </Link>
+              
+              <button 
+                onClick={handleBookSession}
+                className="w-full flex items-center justify-center py-2.5 px-4 bg-transparent hover:bg-white/10 border border-white/20 rounded-md transition-colors text-white"
+              >
+                <Calendar className="h-5 w-5 mr-2" />
+                <span className="font-medium">Book a session</span>
+                <ExternalLinkIcon className="h-4 w-4 ml-2" />
+              </button>
+            </div>
+          </div>
+        </PopoverContent>
+      </Popover>
+    </div>
   );
 };
