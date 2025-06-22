@@ -28,11 +28,13 @@ interface AuthContextType {
   userProfile: UserProfile | null;
   isAuthenticated: boolean;
   isLoading: boolean;
+  isEmailConfirmed: boolean;
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
   signup: (email: string, password: string, userData?: any) => Promise<{ success: boolean; error?: string }>;
   logout: () => Promise<void>;
   updateUserProfile: (profile: Partial<UserProfile>) => Promise<void>;
   refreshProfile: () => Promise<void>;
+  resendConfirmation: (email: string) => Promise<{ success: boolean; error?: string }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -113,6 +115,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         console.log('Auth state changed:', event, session?.user?.id);
+        
+        // Handle email confirmation
+        if (event === 'TOKEN_REFRESHED' || event === 'SIGNED_IN') {
+          console.log('User signed in or token refreshed');
+        }
+        
         setSession(session);
         setUser(session?.user ?? null);
         
@@ -183,6 +191,14 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         return { success: false, error: error.message };
       }
       
+      // Check if email confirmation is required
+      if (data.user && !data.session) {
+        return { 
+          success: true, 
+          error: 'Please check your email and click the confirmation link to complete your registration.' 
+        };
+      }
+      
       return { success: true };
     } catch (error) {
       console.error('Signup error:', error);
@@ -198,6 +214,27 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       setUserProfile(null);
     } catch (error) {
       console.error('Logout error:', error);
+    }
+  };
+
+  const resendConfirmation = async (email: string): Promise<{ success: boolean; error?: string }> => {
+    try {
+      const { error } = await supabase.auth.resend({
+        type: 'signup',
+        email: email,
+        options: {
+          emailRedirectTo: `${window.location.origin}/`
+        }
+      });
+      
+      if (error) {
+        return { success: false, error: error.message };
+      }
+      
+      return { success: true };
+    } catch (error) {
+      console.error('Resend confirmation error:', error);
+      return { success: false, error: 'An unexpected error occurred' };
     }
   };
 
@@ -241,6 +278,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   };
 
+  const isEmailConfirmed = user?.email_confirmed_at ? true : false;
+
   return (
     <AuthContext.Provider
       value={{
@@ -249,11 +288,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         userProfile,
         isAuthenticated: !!user,
         isLoading,
+        isEmailConfirmed,
         login,
         signup,
         logout,
         updateUserProfile,
-        refreshProfile
+        refreshProfile,
+        resendConfirmation
       }}
     >
       {children}
