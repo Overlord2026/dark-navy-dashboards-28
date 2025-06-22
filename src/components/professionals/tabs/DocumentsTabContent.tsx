@@ -79,13 +79,13 @@ export function DocumentsTabContent({ onUpload, onShare }: DocumentsTabContentPr
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
+      <div className="flex flex-col gap-4 justify-between items-start">
         <div>
           <h2 className="text-xl font-semibold">Document Management</h2>
           <p className="text-muted-foreground">Upload and share documents with your professional team</p>
         </div>
         
-        <div className="flex gap-2">
+        <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
           <Button onClick={onUpload} className="flex items-center gap-2">
             <Upload className="h-4 w-4" />
             Upload Document
@@ -97,11 +97,11 @@ export function DocumentsTabContent({ onUpload, onShare }: DocumentsTabContentPr
         </div>
       </div>
 
-      <div className="grid gap-6">
+      <div className="space-y-6">
         {/* Shared Documents Section */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 text-lg">
               <Share2 className="h-5 w-5" />
               Shared Documents
             </CardTitle>
@@ -130,27 +130,27 @@ export function DocumentsTabContent({ onUpload, onShare }: DocumentsTabContentPr
                     key={`${document.source}-${document.id}`}
                     className="border rounded-lg p-4 hover:border-primary transition-colors"
                   >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-start space-x-3 flex-1">
-                        <FileText className="h-5 w-5 text-primary mt-1" />
-                        <div className="flex-1">
-                          <h4 className="font-medium">{document.name}</h4>
-                          <div className="flex items-center text-xs text-muted-foreground mt-2 space-x-4">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                      <div className="flex items-start space-x-3 flex-1 min-w-0">
+                        <FileText className="h-5 w-5 text-primary mt-1 flex-shrink-0" />
+                        <div className="flex-1 min-w-0">
+                          <h4 className="font-medium truncate">{document.name}</h4>
+                          <div className="flex flex-col sm:flex-row sm:items-center text-xs text-muted-foreground mt-2 gap-2">
                             {document.sharedWith.length > 0 && (
                               <div className="flex items-center">
-                                <User className="h-3 w-3 mr-1" />
-                                <span>
+                                <User className="h-3 w-3 mr-1 flex-shrink-0" />
+                                <span className="truncate">
                                   Shared with {document.sharedWith.join(', ')}
                                 </span>
                               </div>
                             )}
                             <div className="flex items-center">
-                              <Calendar className="h-3 w-3 mr-1" />
+                              <Calendar className="h-3 w-3 mr-1 flex-shrink-0" />
                               <span>
                                 {format(document.date, "MMM d, yyyy")}
                               </span>
                             </div>
-                            <span className="text-xs px-2 py-1 rounded-full bg-green-100 text-green-800">
+                            <span className="text-xs px-2 py-1 rounded-full bg-green-100 text-green-800 w-fit">
                               {document.status === "active" ? "Active" : "Expired"}
                             </span>
                           </div>
@@ -159,7 +159,7 @@ export function DocumentsTabContent({ onUpload, onShare }: DocumentsTabContentPr
                       
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="sm">
+                          <Button variant="ghost" size="sm" className="flex-shrink-0">
                             <MoreHorizontal className="h-4 w-4" />
                           </Button>
                         </DropdownMenuTrigger>
@@ -191,7 +191,7 @@ export function DocumentsTabContent({ onUpload, onShare }: DocumentsTabContentPr
         {/* Professional Shared Documents (Original Component) */}
         <Card>
           <CardHeader>
-            <CardTitle>Professional Documents</CardTitle>
+            <CardTitle className="text-lg">Professional Documents</CardTitle>
             <p className="text-sm text-muted-foreground">
               Documents shared via professional relationships
             </p>
