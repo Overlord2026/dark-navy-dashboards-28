@@ -17,7 +17,6 @@ export default function ClientFamily() {
       <div className="space-y-6 animate-fade-in">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="space-y-2">
-            <h1 className="text-2xl font-bold">Family Members</h1>
             <p className="text-muted-foreground text-sm sm:text-base">
               Manage your family members and their access to your financial information
             </p>
