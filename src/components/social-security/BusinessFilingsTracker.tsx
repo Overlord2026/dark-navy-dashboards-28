@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { 
   Table, 
@@ -44,6 +45,8 @@ import * as z from "zod";
 import { format, addDays, isBefore, isAfter } from "date-fns";
 import { AlertTriangle, Calendar, CheckCircle, Clock, FileText, Plus, Trash2 } from "lucide-react";
 import { useBusinessFilings, BusinessFiling } from "@/hooks/useBusinessFilings";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { cn } from "@/lib/utils";
 
 // Define the form schema for business filing
 const businessFilingSchema = z.object({
@@ -85,6 +88,7 @@ export const BusinessFilingsTracker = () => {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [filterStatus, setFilterStatus] = useState<"all" | "upcoming" | "overdue" | "completed">("all");
   const { filings, isLoading, addFiling, deleteFiling, toggleComplete } = useBusinessFilings();
+  const isMobile = useIsMobile();
   
   const form = useForm<BusinessFilingForm>({
     resolver: zodResolver(businessFilingSchema),
@@ -174,18 +178,27 @@ export const BusinessFilingsTracker = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold">Business Filings & Alerts</h2>
+      <div className={cn(
+        "flex items-center justify-between",
+        isMobile && "flex-col gap-4 items-start"
+      )}>
+        <h2 className={cn(
+          "font-semibold",
+          isMobile ? "text-lg" : "text-xl"
+        )}>Business Filings & Alerts</h2>
         <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
           <DialogTrigger asChild>
-            <Button>
-              <Plus className="mr-2 h-4 w-4" /> Add New Filing
+            <Button className={cn(isMobile && "w-full text-sm")}>
+              <Plus className={cn("mr-2", isMobile ? "h-3 w-3" : "h-4 w-4")} /> Add New Filing
             </Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-[550px]">
+          <DialogContent className={cn(
+            "sm:max-w-[550px]",
+            isMobile && "mx-4 max-w-[calc(100vw-2rem)] max-h-[90vh] overflow-y-auto"
+          )}>
             <DialogHeader>
-              <DialogTitle>Add New Business Filing</DialogTitle>
-              <DialogDescription>
+              <DialogTitle className={cn(isMobile && "text-lg")}>Add New Business Filing</DialogTitle>
+              <DialogDescription className={cn(isMobile && "text-sm")}>
                 Add details about a business filing to track deadlines and receive reminders.
               </DialogDescription>
             </DialogHeader>
@@ -197,9 +210,13 @@ export const BusinessFilingsTracker = () => {
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Filing Name</FormLabel>
+                      <FormLabel className={cn(isMobile && "text-sm")}>Filing Name</FormLabel>
                       <FormControl>
-                        <Input placeholder="e.g. Annual Report" {...field} />
+                        <Input 
+                          placeholder="e.g. Annual Report" 
+                          {...field} 
+                          className={cn(isMobile && "text-sm")}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -211,9 +228,13 @@ export const BusinessFilingsTracker = () => {
                   name="description"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Description (Optional)</FormLabel>
+                      <FormLabel className={cn(isMobile && "text-sm")}>Description (Optional)</FormLabel>
                       <FormControl>
-                        <Input placeholder="Brief description" {...field} />
+                        <Input 
+                          placeholder="Brief description" 
+                          {...field} 
+                          className={cn(isMobile && "text-sm")}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -225,25 +246,35 @@ export const BusinessFilingsTracker = () => {
                   name="business_name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Business Name</FormLabel>
+                      <FormLabel className={cn(isMobile && "text-sm")}>Business Name</FormLabel>
                       <FormControl>
-                        <Input placeholder="Business name" {...field} />
+                        <Input 
+                          placeholder="Business name" 
+                          {...field} 
+                          className={cn(isMobile && "text-sm")}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
                 
-                <div className="grid grid-cols-2 gap-4">
+                <div className={cn(
+                  "grid gap-4",
+                  isMobile ? "grid-cols-1" : "grid-cols-2"
+                )}>
                   <FormField
                     control={form.control}
                     name="filing_type"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Filing Type</FormLabel>
+                        <FormLabel className={cn(isMobile && "text-sm")}>Filing Type</FormLabel>
                         <FormControl>
                           <select
-                            className="w-full flex h-10 rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                            className={cn(
+                              "w-full flex h-10 rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring",
+                              isMobile && "text-sm"
+                            )}
                             {...field}
                           >
                             <option value="">Select type...</option>
@@ -262,7 +293,7 @@ export const BusinessFilingsTracker = () => {
                     name="due_date"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Due Date</FormLabel>
+                        <FormLabel className={cn(isMobile && "text-sm")}>Due Date</FormLabel>
                         <FormControl>
                           <DatePicker 
                             date={field.value} 
@@ -280,7 +311,7 @@ export const BusinessFilingsTracker = () => {
                   name="reminder_days"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Reminder (Days Before)</FormLabel>
+                      <FormLabel className={cn(isMobile && "text-sm")}>Reminder (Days Before)</FormLabel>
                       <FormControl>
                         <Input 
                           type="number" 
@@ -288,9 +319,10 @@ export const BusinessFilingsTracker = () => {
                           max={90} 
                           {...field}
                           onChange={e => field.onChange(parseInt(e.target.value) || 0)}
+                          className={cn(isMobile && "text-sm")}
                         />
                       </FormControl>
-                      <FormDescription>
+                      <FormDescription className={cn(isMobile && "text-xs")}>
                         How many days before the due date to receive a reminder.
                       </FormDescription>
                       <FormMessage />
@@ -302,7 +334,10 @@ export const BusinessFilingsTracker = () => {
                   control={form.control}
                   name="recurring"
                   render={({ field }) => (
-                    <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                    <FormItem className={cn(
+                      "flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4",
+                      isMobile && "p-3"
+                    )}>
                       <FormControl>
                         <Checkbox
                           checked={field.value}
@@ -310,8 +345,8 @@ export const BusinessFilingsTracker = () => {
                         />
                       </FormControl>
                       <div className="space-y-1 leading-none">
-                        <FormLabel>Recurring Filing</FormLabel>
-                        <FormDescription>
+                        <FormLabel className={cn(isMobile && "text-sm")}>Recurring Filing</FormLabel>
+                        <FormDescription className={cn(isMobile && "text-xs")}>
                           Is this a recurring filing that happens on a regular schedule?
                         </FormDescription>
                       </div>
@@ -325,10 +360,13 @@ export const BusinessFilingsTracker = () => {
                     name="recurring_period"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Recurrence Period</FormLabel>
+                        <FormLabel className={cn(isMobile && "text-sm")}>Recurrence Period</FormLabel>
                         <FormControl>
                           <select
-                            className="w-full flex h-10 rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                            className={cn(
+                              "w-full flex h-10 rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring",
+                              isMobile && "text-sm"
+                            )}
                             {...field}
                           >
                             <option value="">Select period...</option>
@@ -343,8 +381,13 @@ export const BusinessFilingsTracker = () => {
                   />
                 )}
                 
-                <DialogFooter>
-                  <Button type="submit">Save Filing</Button>
+                <DialogFooter className={cn(isMobile && "flex-col space-y-2")}>
+                  <Button 
+                    type="submit" 
+                    className={cn(isMobile && "w-full text-sm")}
+                  >
+                    Save Filing
+                  </Button>
                 </DialogFooter>
               </form>
             </Form>
@@ -354,15 +397,19 @@ export const BusinessFilingsTracker = () => {
       
       <Card>
         <CardHeader>
-          <CardTitle>Your Business Filings</CardTitle>
-          <CardDescription>
+          <CardTitle className={cn(isMobile && "text-lg")}>Your Business Filings</CardTitle>
+          <CardDescription className={cn(isMobile && "text-sm")}>
             Track important business filings, deadlines, and compliance requirements.
           </CardDescription>
-          <div className="flex space-x-2 mt-2">
+          <div className={cn(
+            "flex space-x-2 mt-2",
+            isMobile && "flex-wrap gap-2"
+          )}>
             <Button 
               variant={filterStatus === "all" ? "default" : "outline"} 
               size="sm" 
               onClick={() => setFilterStatus("all")}
+              className={cn(isMobile && "text-xs px-2")}
             >
               All
             </Button>
@@ -370,6 +417,7 @@ export const BusinessFilingsTracker = () => {
               variant={filterStatus === "upcoming" ? "default" : "outline"} 
               size="sm" 
               onClick={() => setFilterStatus("upcoming")}
+              className={cn(isMobile && "text-xs px-2")}
             >
               Upcoming
             </Button>
@@ -377,7 +425,10 @@ export const BusinessFilingsTracker = () => {
               variant={filterStatus === "overdue" ? "default" : "outline"} 
               size="sm" 
               onClick={() => setFilterStatus("overdue")}
-              className={filterStatus === "overdue" ? "" : "border-red-600 text-red-600 hover:bg-red-600/10"}
+              className={cn(
+                filterStatus === "overdue" ? "" : "border-red-600 text-red-600 hover:bg-red-600/10",
+                isMobile && "text-xs px-2"
+              )}
             >
               Overdue
             </Button>
@@ -385,6 +436,7 @@ export const BusinessFilingsTracker = () => {
               variant={filterStatus === "completed" ? "default" : "outline"} 
               size="sm" 
               onClick={() => setFilterStatus("completed")}
+              className={cn(isMobile && "text-xs px-2")}
             >
               Completed
             </Button>
@@ -394,117 +446,216 @@ export const BusinessFilingsTracker = () => {
           {filteredFilings.length === 0 ? (
             <div className="text-center py-8">
               <FileText className="mx-auto h-12 w-12 text-muted-foreground opacity-30" />
-              <h3 className="mt-4 text-lg font-medium">No filings found</h3>
-              <p className="mt-2 text-sm text-muted-foreground">
+              <h3 className={cn(
+                "mt-4 font-medium",
+                isMobile ? "text-base" : "text-lg"
+              )}>No filings found</h3>
+              <p className={cn(
+                "mt-2 text-muted-foreground",
+                isMobile ? "text-sm" : ""
+              )}>
                 {filterStatus === "all" 
                   ? "You haven't added any business filings yet." 
                   : `No ${filterStatus} filings match your criteria.`}
               </p>
               <Button 
                 variant="outline" 
-                className="mt-4" 
+                className={cn(
+                  "mt-4",
+                  isMobile && "text-sm"
+                )}
                 onClick={() => setIsAddDialogOpen(true)}
               >
-                <Plus className="mr-2 h-4 w-4" /> Add Your First Filing
+                <Plus className={cn("mr-2", isMobile ? "h-3 w-3" : "h-4 w-4")} /> Add Your First Filing
               </Button>
             </div>
           ) : (
             <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="w-[250px]">Filing</TableHead>
-                    <TableHead>Business</TableHead>
-                    <TableHead>Type</TableHead>
-                    <TableHead>Due Date</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
+              {isMobile ? (
+                // Mobile card layout
+                <div className="space-y-4">
                   {filteredFilings.map((filing) => {
                     const status = getFilingStatus(filing);
                     return (
-                      <TableRow key={filing.id}>
-                        <TableCell className="font-medium">
-                          <div>
-                            {filing.name}
-                            {filing.recurring && (
-                              <Badge variant="outline" className="ml-2">
-                                {filing.recurring_period}
-                              </Badge>
-                            )}
-                          </div>
-                          {filing.description && (
-                            <div className="text-xs text-muted-foreground mt-1">
-                              {filing.description}
+                      <Card key={filing.id} className="p-4">
+                        <div className="flex flex-col space-y-3">
+                          <div className="flex items-start justify-between">
+                            <div className="flex-1 min-w-0">
+                              <div className="font-medium text-sm truncate">
+                                {filing.name}
+                                {filing.recurring && (
+                                  <Badge variant="outline" className="ml-2 text-xs">
+                                    {filing.recurring_period}
+                                  </Badge>
+                                )}
+                              </div>
+                              {filing.description && (
+                                <div className="text-xs text-muted-foreground mt-1">
+                                  {filing.description}
+                                </div>
+                              )}
+                              <div className="text-xs text-muted-foreground mt-1">
+                                {filing.business_name} • {filing.filing_type}
+                              </div>
                             </div>
-                          )}
-                        </TableCell>
-                        <TableCell>{filing.business_name}</TableCell>
-                        <TableCell>{filing.filing_type}</TableCell>
-                        <TableCell>
-                          <div className="flex items-center">
-                            <Calendar className="h-4 w-4 mr-2 text-muted-foreground" />
-                            {format(filing.due_date, "MMM d, yyyy")}
                           </div>
-                          <div className="text-xs text-muted-foreground mt-1">
-                            <Clock className="h-3 w-3 inline mr-1" />
-                            Reminder: {filing.reminder_days} days before
+                          
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center text-xs">
+                              <Calendar className="h-3 w-3 mr-1 text-muted-foreground" />
+                              {format(filing.due_date, "MMM d, yyyy")}
+                            </div>
+                            
+                            <div className="flex items-center space-x-2">
+                              {status === "completed" && (
+                                <Badge variant="outline" className="bg-green-500/10 text-green-500 border-green-500/20 text-xs">
+                                  <CheckCircle className="h-2 w-2 mr-1" /> Done
+                                </Badge>
+                              )}
+                              {status === "overdue" && (
+                                <Badge variant="outline" className="bg-red-500/10 text-red-500 border-red-500/20 text-xs">
+                                  <AlertTriangle className="h-2 w-2 mr-1" /> Overdue
+                                </Badge>
+                              )}
+                              {status === "upcoming" && (
+                                <Badge variant="outline" className="bg-amber-500/10 text-amber-500 border-amber-500/20 text-xs">
+                                  <Clock className="h-2 w-2 mr-1" /> Due Soon
+                                </Badge>
+                              )}
+                              {status === "scheduled" && (
+                                <Badge variant="outline" className="bg-blue-500/10 text-blue-500 border-blue-500/20 text-xs">
+                                  Scheduled
+                                </Badge>
+                              )}
+                            </div>
                           </div>
-                        </TableCell>
-                        <TableCell>
-                          {status === "completed" && (
-                            <Badge variant="outline" className="bg-green-500/10 text-green-500 border-green-500/20">
-                              <CheckCircle className="h-3 w-3 mr-1" /> Completed
-                            </Badge>
-                          )}
-                          {status === "overdue" && (
-                            <Badge variant="outline" className="bg-red-500/10 text-red-500 border-red-500/20">
-                              <AlertTriangle className="h-3 w-3 mr-1" /> Overdue
-                            </Badge>
-                          )}
-                          {status === "upcoming" && (
-                            <Badge variant="outline" className="bg-amber-500/10 text-amber-500 border-amber-500/20">
-                              <Clock className="h-3 w-3 mr-1" /> Due Soon
-                            </Badge>
-                          )}
-                          {status === "scheduled" && (
-                            <Badge variant="outline" className="bg-blue-500/10 text-blue-500 border-blue-500/20">
-                              Scheduled
-                            </Badge>
-                          )}
-                        </TableCell>
-                        <TableCell className="text-right">
+                          
                           <div className="flex justify-end space-x-2">
                             <Button
                               variant="ghost"
-                              size="icon"
+                              size="sm"
                               onClick={() => handleToggleComplete(filing.id!)}
                               title={filing.completed ? "Mark as incomplete" : "Mark as completed"}
+                              className="text-xs"
                             >
-                              <CheckCircle className={`h-4 w-4 ${filing.completed ? "text-green-500" : "text-muted-foreground"}`} />
+                              <CheckCircle className={`h-3 w-3 ${filing.completed ? "text-green-500" : "text-muted-foreground"}`} />
                             </Button>
                             <Button
                               variant="ghost"
-                              size="icon"
+                              size="sm"
                               onClick={() => handleDeleteFiling(filing.id!)}
                               title="Delete filing"
+                              className="text-xs"
                             >
-                              <Trash2 className="h-4 w-4 text-muted-foreground" />
+                              <Trash2 className="h-3 w-3 text-muted-foreground" />
                             </Button>
                           </div>
-                        </TableCell>
-                      </TableRow>
+                        </div>
+                      </Card>
                     );
                   })}
-                </TableBody>
-              </Table>
+                </div>
+              ) : (
+                // Desktop table layout
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="w-[250px]">Filing</TableHead>
+                      <TableHead>Business</TableHead>
+                      <TableHead>Type</TableHead>
+                      <TableHead>Due Date</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead className="text-right">Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredFilings.map((filing) => {
+                      const status = getFilingStatus(filing);
+                      return (
+                        <TableRow key={filing.id}>
+                          <TableCell className="font-medium">
+                            <div>
+                              {filing.name}
+                              {filing.recurring && (
+                                <Badge variant="outline" className="ml-2">
+                                  {filing.recurring_period}
+                                </Badge>
+                              )}
+                            </div>
+                            {filing.description && (
+                              <div className="text-xs text-muted-foreground mt-1">
+                                {filing.description}
+                              </div>
+                            )}
+                          </TableCell>
+                          <TableCell>{filing.business_name}</TableCell>
+                          <TableCell>{filing.filing_type}</TableCell>
+                          <TableCell>
+                            <div className="flex items-center">
+                              <Calendar className="h-4 w-4 mr-2 text-muted-foreground" />
+                              {format(filing.due_date, "MMM d, yyyy")}
+                            </div>
+                            <div className="text-xs text-muted-foreground mt-1">
+                              <Clock className="h-3 w-3 inline mr-1" />
+                              Reminder: {filing.reminder_days} days before
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            {status === "completed" && (
+                              <Badge variant="outline" className="bg-green-500/10 text-green-500 border-green-500/20">
+                                <CheckCircle className="h-3 w-3 mr-1" /> Completed
+                              </Badge>
+                            )}
+                            {status === "overdue" && (
+                              <Badge variant="outline" className="bg-red-500/10 text-red-500 border-red-500/20">
+                                <AlertTriangle className="h-3 w-3 mr-1" /> Overdue
+                              </Badge>
+                            )}
+                            {status === "upcoming" && (
+                              <Badge variant="outline" className="bg-amber-500/10 text-amber-500 border-amber-500/20">
+                                <Clock className="h-3 w-3 mr-1" /> Due Soon
+                              </Badge>
+                            )}
+                            {status === "scheduled" && (
+                              <Badge variant="outline" className="bg-blue-500/10 text-blue-500 border-blue-500/20">
+                                Scheduled
+                              </Badge>
+                            )}
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <div className="flex justify-end space-x-2">
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => handleToggleComplete(filing.id!)}
+                                title={filing.completed ? "Mark as incomplete" : "Mark as completed"}
+                              >
+                                <CheckCircle className={`h-4 w-4 ${filing.completed ? "text-green-500" : "text-muted-foreground"}`} />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => handleDeleteFiling(filing.id!)}
+                                title="Delete filing"
+                              >
+                                <Trash2 className="h-4 w-4 text-muted-foreground" />
+                              </Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  </TableBody>
+                </Table>
+              )}
             </div>
           )}
         </CardContent>
         <CardFooter className="flex justify-between">
-          <div className="text-sm text-muted-foreground">
+          <div className={cn(
+            "text-muted-foreground",
+            isMobile ? "text-xs" : "text-sm"
+          )}>
             Showing {filteredFilings.length} of {filings.length} filings
           </div>
         </CardFooter>
@@ -512,8 +663,8 @@ export const BusinessFilingsTracker = () => {
       
       <Card>
         <CardHeader>
-          <CardTitle>Filing Calendar</CardTitle>
-          <CardDescription>
+          <CardTitle className={cn(isMobile && "text-lg")}>Filing Calendar</CardTitle>
+          <CardDescription className={cn(isMobile && "text-sm")}>
             View your upcoming business filings on a timeline.
           </CardDescription>
         </CardHeader>
@@ -533,36 +684,49 @@ export const BusinessFilingsTracker = () => {
                 return (
                   <div 
                     key={filing.id} 
-                    className={`p-4 rounded-lg border flex items-center space-x-4 ${
+                    className={cn(
+                      "p-4 rounded-lg border flex items-center space-x-4",
                       isOverdue 
                         ? "bg-red-500/10 border-red-500/30" 
                         : isWithinReminder 
                           ? "bg-amber-500/10 border-amber-500/30"
-                          : "bg-blue-500/5 border-blue-500/20"
-                    }`}
+                          : "bg-blue-500/5 border-blue-500/20",
+                      isMobile && "flex-col space-x-0 space-y-3 items-start"
+                    )}
                   >
-                    <div className={`h-12 w-12 rounded-full flex items-center justify-center ${
+                    <div className={cn(
+                      "h-12 w-12 rounded-full flex items-center justify-center flex-shrink-0",
                       isOverdue 
                         ? "bg-red-500/20 text-red-500" 
                         : isWithinReminder 
                           ? "bg-amber-500/20 text-amber-500"
-                          : "bg-blue-500/20 text-blue-500"
-                    }`}>
+                          : "bg-blue-500/20 text-blue-500",
+                      isMobile && "h-10 w-10"
+                    )}>
                       {isOverdue 
-                        ? <AlertTriangle className="h-6 w-6" />
+                        ? <AlertTriangle className={cn(isMobile ? "h-5 w-5" : "h-6 w-6")} />
                         : isWithinReminder 
-                          ? <Clock className="h-6 w-6" />
-                          : <Calendar className="h-6 w-6" />
+                          ? <Clock className={cn(isMobile ? "h-5 w-5" : "h-6 w-6")} />
+                          : <Calendar className={cn(isMobile ? "h-5 w-5" : "h-6 w-6")} />
                       }
                     </div>
-                    <div className="flex-1">
-                      <h4 className="font-medium">
+                    <div className={cn("flex-1", isMobile && "w-full")}>
+                      <h4 className={cn(
+                        "font-medium",
+                        isMobile ? "text-sm" : ""
+                      )}>
                         {filing.name}
-                        <span className="text-sm font-normal ml-2 opacity-70">
+                        <span className={cn(
+                          "font-normal ml-2 opacity-70",
+                          isMobile ? "text-xs" : "text-sm"
+                        )}>
                           ({filing.business_name})
                         </span>
                       </h4>
-                      <div className="text-sm mt-1">
+                      <div className={cn(
+                        "mt-1",
+                        isMobile ? "text-xs" : "text-sm"
+                      )}>
                         {isOverdue 
                           ? `Overdue by ${Math.abs(daysUntilDue)} days` 
                           : `Due in ${daysUntilDue} days`
@@ -575,6 +739,7 @@ export const BusinessFilingsTracker = () => {
                       variant="outline" 
                       size="sm"
                       onClick={() => handleToggleComplete(filing.id!)}
+                      className={cn(isMobile && "w-full text-sm")}
                     >
                       Mark Complete
                     </Button>
@@ -585,8 +750,14 @@ export const BusinessFilingsTracker = () => {
             {filings.filter(filing => !filing.completed).length === 0 && (
               <div className="text-center py-6">
                 <CheckCircle className="mx-auto h-12 w-12 text-green-500 opacity-50" />
-                <h3 className="mt-4 text-lg font-medium">All caught up!</h3>
-                <p className="mt-2 text-sm text-muted-foreground">
+                <h3 className={cn(
+                  "mt-4 font-medium",
+                  isMobile ? "text-base" : "text-lg"
+                )}>All caught up!</h3>
+                <p className={cn(
+                  "mt-2 text-muted-foreground",
+                  isMobile ? "text-sm" : ""
+                )}>
                   You have no upcoming business filings due.
                 </p>
               </div>
