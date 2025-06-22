@@ -43,6 +43,7 @@ import TaxPlanningEducation from "@/pages/TaxPlanningEducation";
 import NavigationDiagnostics from "@/pages/NavigationDiagnostics";
 import { ProfessionalsRouteWrapper } from "@/components/providers/ProfessionalsRouteWrapper";
 import Auth from "@/pages/Auth";
+import ResetPassword from "@/pages/ResetPassword";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 
 const routes = createBrowserRouter([
@@ -53,6 +54,10 @@ const routes = createBrowserRouter([
   {
     path: "/auth",
     element: <Auth />
+  },
+  {
+    path: "/reset-password",
+    element: <ResetPassword />
   },
   {
     path: "/client-dashboard",
