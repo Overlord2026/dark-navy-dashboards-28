@@ -143,19 +143,28 @@ export const AdvisorProfileView = ({
       {/* Tabs Section with improved mobile responsiveness */}
       <div className="px-4 md:px-10 pb-6 md:pb-10">
         <Tabs value={activeTab} onValueChange={onTabChange} className="w-full">
-          <div className="overflow-x-auto scrollbar-hide mb-6 md:mb-8">
-            <TabsList className="bg-[#1c2e4a] w-full min-w-max flex justify-start md:justify-center mb-0">
-              <TabsTrigger value="bio" className="data-[state=active]:bg-white/10 px-3 md:px-6 py-2 md:py-3 text-sm whitespace-nowrap">
-                <UserIcon className="h-3 w-3 md:h-4 md:w-4 mr-1.5 md:mr-2" />
-                Bio
+          <div className="w-full mb-6 md:mb-8">
+            <TabsList className="bg-[#1c2e4a] w-full grid grid-cols-3 h-auto p-1 gap-1">
+              <TabsTrigger 
+                value="bio" 
+                className="data-[state=active]:bg-white/10 px-2 py-2.5 text-xs font-medium flex-1 min-w-0"
+              >
+                <UserIcon className="h-3 w-3 mr-1.5 flex-shrink-0" />
+                <span className="truncate">Bio</span>
               </TabsTrigger>
-              <TabsTrigger value="location" className="data-[state=active]:bg-white/10 px-3 md:px-6 py-2 md:py-3 text-sm whitespace-nowrap">
-                <MapPinIcon className="h-3 w-3 md:h-4 md:w-4 mr-1.5 md:mr-2" />
-                Location
+              <TabsTrigger 
+                value="location" 
+                className="data-[state=active]:bg-white/10 px-2 py-2.5 text-xs font-medium flex-1 min-w-0"
+              >
+                <MapPinIcon className="h-3 w-3 mr-1.5 flex-shrink-0" />
+                <span className="truncate">Location</span>
               </TabsTrigger>
-              <TabsTrigger value="education" className="data-[state=active]:bg-white/10 px-3 md:px-6 py-2 md:py-3 text-sm whitespace-nowrap">
-                <GraduationCapIcon className="h-3 w-3 md:h-4 md:w-4 mr-1.5 md:mr-2" />
-                Education
+              <TabsTrigger 
+                value="education" 
+                className="data-[state=active]:bg-white/10 px-2 py-2.5 text-xs font-medium flex-1 min-w-0"
+              >
+                <GraduationCapIcon className="h-3 w-3 mr-1.5 flex-shrink-0" />
+                <span className="truncate">Education</span>
               </TabsTrigger>
             </TabsList>
           </div>
