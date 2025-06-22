@@ -178,7 +178,7 @@ export default function Auth() {
         </Card>
       </div>
       
-      <footer className="py-6 px-4 bg-[#1B1B32] text-white text-center">
+      <footer className="py-3 px-4 bg-[#1B1B32] text-white text-center">
         <p>&copy; {new Date().getFullYear()} Boutique Family Office. All rights reserved.</p>
       </footer>
     </div>
