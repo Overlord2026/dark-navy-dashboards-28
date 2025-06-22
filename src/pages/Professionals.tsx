@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -28,22 +27,22 @@ export default function Professionals() {
           <ProfessionalsHeader onAddProfessional={() => setIsAddDialogOpen(true)} />
 
           <Tabs defaultValue="professionals" onValueChange={setActiveTab} className="w-full">
-            <TabsList className="mb-4">
-              <TabsTrigger value="professionals" className="flex gap-2 items-center">
+            <TabsList className="mb-4 w-full flex-col sm:flex-row h-auto p-1">
+              <TabsTrigger value="professionals" className="flex gap-2 items-center w-full sm:w-auto justify-center">
                 <Users2 size={16} />
-                <span>Professionals</span>
+                <span className="text-xs sm:text-sm">Professionals</span>
               </TabsTrigger>
-              <TabsTrigger value="documents" className="flex gap-2 items-center">
+              <TabsTrigger value="documents" className="flex gap-2 items-center w-full sm:w-auto justify-center">
                 <FileText size={16} />
-                <span>Shared Documents</span>
+                <span className="text-xs sm:text-sm">Shared Documents</span>
               </TabsTrigger>
               <TabsTrigger 
                 value="permissions" 
-                className="flex gap-2 items-center opacity-50 cursor-not-allowed relative"
+                className="flex gap-2 items-center opacity-50 cursor-not-allowed relative w-full sm:w-auto justify-center"
                 disabled
               >
                 <ShieldCheck size={16} />
-                <span>Permissions</span>
+                <span className="text-xs sm:text-sm">Permissions</span>
                 <Badge variant="warning" className="ml-2 text-xs px-2 py-0.5 bg-yellow-500 text-black">
                   Coming Soon
                 </Badge>
