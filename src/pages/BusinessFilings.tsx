@@ -17,7 +17,6 @@ const BusinessFilings = () => {
       <div className="w-full space-y-6 animate-fade-in">
         <div className="flex justify-between items-start">
           <div className="flex-1">
-            <h1 className="text-2xl font-bold">Business Filings & Alerts</h1>
             <p className="text-muted-foreground">
               Track important business filings, deadlines, and compliance
               requirements for your businesses.
