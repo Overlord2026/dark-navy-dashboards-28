@@ -24,9 +24,12 @@ import { LiabilitiesList } from "@/components/liabilities/LiabilitiesList";
 import { ComprehensiveAssetsSummary } from "@/components/assets/ComprehensiveAssetsSummary";
 import { NetWorthAnalysis } from "@/components/assets/NetWorthAnalysis";
 import { Card, CardContent } from "@/components/ui/card";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { cn } from "@/lib/utils";
 
 export default function AllAssets() {
   const { isAuthenticated } = useAuth();
+  const isMobile = useIsMobile();
   const [mainTab, setMainTab] = useState("summary");
   const [assetFilter, setAssetFilter] = useState("assets");
   const [isAddAssetDialogOpen, setIsAddAssetDialogOpen] = useState(false);
@@ -62,11 +65,23 @@ export default function AllAssets() {
   if (!isAuthenticated) {
     return (
       <ThreeColumnLayout title="All Assets">
-        <div className="container mx-auto p-4">
+        <div className={cn(
+          "container mx-auto",
+          isMobile ? "px-3 py-4" : "px-4 py-6"
+        )}>
           <Card>
-            <CardContent className="pt-6 text-center">
-              <h2 className="text-xl font-semibold mb-2">Authentication Required</h2>
-              <p className="text-muted-foreground">Please log in to view and manage your assets.</p>
+            <CardContent className={cn(
+              "text-center",
+              isMobile ? "pt-4" : "pt-6"
+            )}>
+              <h2 className={cn(
+                "font-semibold mb-2",
+                isMobile ? "text-lg" : "text-xl"
+              )}>Authentication Required</h2>
+              <p className={cn(
+                "text-muted-foreground",
+                isMobile ? "text-sm" : ""
+              )}>Please log in to view and manage your assets.</p>
             </CardContent>
           </Card>
         </div>
@@ -76,44 +91,93 @@ export default function AllAssets() {
   
   return (
     <ThreeColumnLayout title="All Assets">
-      <div className="container mx-auto p-4 mt-4">
+      <div className={cn(
+        "container mx-auto mt-4",
+        isMobile ? "px-3 py-4" : "px-4 py-6"
+      )}>
         <div className="mb-6">
-          <p className="text-muted-foreground mb-4">Comprehensive view of all your assets and liabilities</p>
-          <div className="flex justify-end">
-            <div className="flex gap-2">
-              <Button
-                onClick={() => setIsAddLiabilityDialogOpen(true)}
-                variant="outline"
-              >
-                <PlusCircle className="mr-2 h-4 w-4" />
-                Add Liability
-              </Button>
-              <Button
-                onClick={() => setIsAddAssetDialogOpen(true)}
-              >
-                <PlusCircle className="mr-2 h-4 w-4" />
-                Add Asset
-              </Button>
-            </div>
+          <p className={cn(
+            "text-muted-foreground mb-4",
+            isMobile ? "text-sm" : ""
+          )}>Comprehensive view of all your assets and liabilities</p>
+          <div className={cn(
+            "flex gap-2",
+            isMobile ? "flex-col" : "justify-end"
+          )}>
+            <Button
+              onClick={() => setIsAddLiabilityDialogOpen(true)}
+              variant="outline"
+              className={cn(
+                isMobile ? "w-full text-sm" : ""
+              )}
+            >
+              <PlusCircle className={cn("mr-2", isMobile ? "h-3 w-3" : "h-4 w-4")} />
+              Add Liability
+            </Button>
+            <Button
+              onClick={() => setIsAddAssetDialogOpen(true)}
+              className={cn(
+                isMobile ? "w-full text-sm" : ""
+              )}
+            >
+              <PlusCircle className={cn("mr-2", isMobile ? "h-3 w-3" : "h-4 w-4")} />
+              Add Asset
+            </Button>
           </div>
         </div>
         
         <Tabs value={mainTab} onValueChange={setMainTab} className="w-full">
-          <TabsList className="grid grid-cols-3 w-full mb-6">
-            <TabsTrigger value="summary">Asset Summary</TabsTrigger>
-            <TabsTrigger value="allocation">Asset Allocation</TabsTrigger>
-            <TabsTrigger value="networth">Net Worth</TabsTrigger>
+          <TabsList className={cn(
+            "w-full mb-6",
+            isMobile ? "h-auto flex-col p-1" : "grid grid-cols-3"
+          )}>
+            <TabsTrigger 
+              value="summary" 
+              className={cn(
+                isMobile ? "w-full justify-center text-sm py-2" : ""
+              )}
+            >
+              Asset Summary
+            </TabsTrigger>
+            <TabsTrigger 
+              value="allocation"
+              className={cn(
+                isMobile ? "w-full justify-center text-sm py-2" : ""
+              )}
+            >
+              Asset Allocation
+            </TabsTrigger>
+            <TabsTrigger 
+              value="networth"
+              className={cn(
+                isMobile ? "w-full justify-center text-sm py-2" : ""
+              )}
+            >
+              Net Worth
+            </TabsTrigger>
           </TabsList>
           
           <TabsContent value="summary" className="space-y-6">
             <SupabaseAssetsSummary />
             
-            <div className="flex justify-between items-center">
-              <h3 className="text-lg font-semibold">Asset Details</h3>
+            <div className={cn(
+              "flex items-center",
+              isMobile ? "flex-col gap-3 items-start" : "justify-between"
+            )}>
+              <h3 className={cn(
+                "font-semibold",
+                isMobile ? "text-base" : "text-lg"
+              )}>Asset Details</h3>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="outline" className="flex items-center gap-2">
-                    <Filter className="h-4 w-4" />
+                  <Button 
+                    variant="outline" 
+                    className={cn(
+                      "flex items-center gap-2",
+                      isMobile ? "w-full text-sm" : ""
+                    )}
+                  >
+                    <Filter className={cn(isMobile ? "h-3 w-3" : "h-4 w-4")} />
                     {getSelectedFilterLabel()}
                   </Button>
                 </DropdownMenuTrigger>
@@ -142,12 +206,18 @@ export default function AllAssets() {
           </TabsContent>
           
           <TabsContent value="allocation" className="space-y-6">
-            <h2 className="text-2xl font-semibold">Asset Allocation</h2>
+            <h2 className={cn(
+              "font-semibold",
+              isMobile ? "text-xl" : "text-2xl"
+            )}>Asset Allocation</h2>
             <ComprehensiveAssetsSummary showTabs={false} />
           </TabsContent>
           
           <TabsContent value="networth" className="space-y-6">
-            <h2 className="text-2xl font-semibold">Net Worth Analysis</h2>
+            <h2 className={cn(
+              "font-semibold",
+              isMobile ? "text-xl" : "text-2xl"
+            )}>Net Worth Analysis</h2>
             <NetWorthAnalysis />
           </TabsContent>
         </Tabs>
