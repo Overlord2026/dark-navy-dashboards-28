@@ -23,18 +23,18 @@ const BusinessFilings = () => {
             </p>
           </div>
           {isMobile ? (
-            <div className="flex gap-2">
+            <div className="flex flex-col gap-2">
               <RequestAssistanceButton
                 itemName="Business Filing Management"
                 itemType="Business Service"
                 pageContext="Business Filings"
-                className="flex-1"
+                className="w-full"
               />
               <ConsultantRequestButton
                 itemName="Business Compliance"
                 itemType="Business Service"
                 pageContext="Business Filings"
-                className="flex-1"
+                className="w-full"
               />
             </div>
           ) : (
