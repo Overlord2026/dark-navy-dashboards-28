@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -72,12 +71,12 @@ export default function Auth() {
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
-      <header className="w-full flex justify-center items-center py-4 border-b border-gray-200 bg-[#1B1B32] sticky top-0 z-50">
+      <header className="w-full flex justify-center items-center py-3 border-b border-gray-200 bg-[#1B1B32] sticky top-0 z-50">
         <div className="flex justify-center items-center">
           <img 
             src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" 
             alt="Boutique Family Office Logo" 
-            className="h-16 w-auto"
+            className="h-10 w-auto"
           />
         </div>
       </header>
