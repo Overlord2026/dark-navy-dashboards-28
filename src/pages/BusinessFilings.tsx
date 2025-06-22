@@ -15,31 +15,30 @@ const BusinessFilings = () => {
       title="Business Filings"
     >
       <div className="w-full space-y-6 animate-fade-in">
-        <div className="flex justify-between items-start">
-          <div className="flex-1">
+        <div className="space-y-4">
+          <div>
             <p className="text-muted-foreground">
               Track important business filings, deadlines, and compliance
               requirements for your businesses.
             </p>
-            {isMobile && (
-              <div className="flex gap-2 mt-4">
-                <RequestAssistanceButton
-                  itemName="Business Filing Management"
-                  itemType="Business Service"
-                  pageContext="Business Filings"
-                  className="flex-1"
-                />
-                <ConsultantRequestButton
-                  itemName="Business Compliance"
-                  itemType="Business Service"
-                  pageContext="Business Filings"
-                  className="flex-1"
-                />
-              </div>
-            )}
           </div>
-          {!isMobile && (
+          {isMobile ? (
             <div className="flex gap-2">
+              <RequestAssistanceButton
+                itemName="Business Filing Management"
+                itemType="Business Service"
+                pageContext="Business Filings"
+                className="flex-1"
+              />
+              <ConsultantRequestButton
+                itemName="Business Compliance"
+                itemType="Business Service"
+                pageContext="Business Filings"
+                className="flex-1"
+              />
+            </div>
+          ) : (
+            <div className="flex justify-end gap-2">
               <RequestAssistanceButton
                 itemName="Business Filing Management"
                 itemType="Business Service"
