@@ -1,12 +1,13 @@
-
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "sonner";
+import { Chrome } from "lucide-react";
 
 export default function Auth() {
   const [isSignUp, setIsSignUp] = useState(false);
@@ -16,11 +17,12 @@ export default function Auth() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
   const [awaitingConfirmation, setAwaitingConfirmation] = useState(false);
   const [passwordResetSent, setPasswordResetSent] = useState(false);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { isAuthenticated, login, signup, resendConfirmation, resetPassword } = useAuth();
+  const { isAuthenticated, login, signup, signInWithGoogle, resendConfirmation, resetPassword } = useAuth();
 
   useEffect(() => {
     // Check for email confirmation success
@@ -89,6 +91,24 @@ export default function Auth() {
       console.error('Auth error:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    setGoogleLoading(true);
+    try {
+      const result = await signInWithGoogle();
+      if (result.success) {
+        toast.success('Redirecting to Google sign-in...');
+        // The redirect will happen automatically
+      } else {
+        toast.error(result.error || 'Failed to sign in with Google');
+      }
+    } catch (error) {
+      toast.error('An unexpected error occurred with Google sign-in');
+      console.error('Google sign-in error:', error);
+    } finally {
+      setGoogleLoading(false);
     }
   };
 
@@ -264,86 +284,109 @@ export default function Auth() {
               </div>
             </form>
           ) : (
-            <form onSubmit={handleAuth} className="space-y-4">
-              {isSignUp && (
-                <>
-                  <div className="space-y-2">
-                    <Label htmlFor="firstName" className="text-white">First Name</Label>
-                    <Input 
-                      id="firstName" 
-                      type="text" 
-                      placeholder="Enter your first name"
-                      value={firstName}
-                      onChange={(e) => setFirstName(e.target.value)}
-                      className="bg-white border-gray-300 text-black placeholder:text-gray-500 focus:border-white focus:ring-white"
-                      required 
-                    />
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="lastName" className="text-white">Last Name</Label>
-                    <Input 
-                      id="lastName" 
-                      type="text" 
-                      placeholder="Enter your last name"
-                      value={lastName}
-                      onChange={(e) => setLastName(e.target.value)}
-                      className="bg-white border-gray-300 text-black placeholder:text-gray-500 focus:border-white focus:ring-white"
-                      required 
-                    />
-                  </div>
-                </>
-              )}
-              
-              <div className="space-y-2">
-                <Label htmlFor="email" className="text-white">Email</Label>
-                <Input 
-                  id="email" 
-                  type="email" 
-                  placeholder="you@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="bg-white border-gray-300 text-black placeholder:text-gray-500 focus:border-white focus:ring-white"
-                  autoComplete="email" 
-                  required 
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="password" className="text-white">Password</Label>
-                <Input 
-                  id="password" 
-                  type="password" 
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="bg-white border-gray-300 text-black placeholder:text-gray-500 focus:border-white focus:ring-white"
-                  autoComplete={isSignUp ? "new-password" : "current-password"}
-                  required 
-                />
-              </div>
-              
-              {!isSignUp && (
-                <div className="text-right">
-                  <button
-                    type="button"
-                    onClick={() => setIsForgotPassword(true)}
-                    className="text-white hover:underline text-sm"
-                    disabled={loading}
-                  >
-                    Forgot Password?
-                  </button>
-                </div>
-              )}
-              
+            <div className="space-y-4">
+              {/* Google Sign-In Button */}
               <Button 
-                type="submit" 
-                className="w-full bg-white text-[#1B1B32] hover:bg-gray-100 font-medium"
-                disabled={loading}
+                onClick={handleGoogleSignIn}
+                variant="outline"
+                className="w-full bg-white text-black hover:bg-gray-50 border border-gray-300 font-medium flex items-center justify-center gap-2"
+                disabled={googleLoading || loading}
               >
-                {loading ? "Loading..." : (isSignUp ? "Create Account" : "Sign In")}
+                <Chrome className="h-4 w-4" />
+                {googleLoading ? "Connecting..." : "Continue with Google"}
               </Button>
-            </form>
+              
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <Separator className="w-full border-gray-600" />
+                </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                  <span className="bg-[#1B1B32] px-2 text-gray-400">Or continue with email</span>
+                </div>
+              </div>
+
+              {/* Email/Password Form */}
+              <form onSubmit={handleAuth} className="space-y-4">
+                {isSignUp && (
+                  <>
+                    <div className="space-y-2">
+                      <Label htmlFor="firstName" className="text-white">First Name</Label>
+                      <Input 
+                        id="firstName" 
+                        type="text" 
+                        placeholder="Enter your first name"
+                        value={firstName}
+                        onChange={(e) => setFirstName(e.target.value)}
+                        className="bg-white border-gray-300 text-black placeholder:text-gray-500 focus:border-white focus:ring-white"
+                        required 
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="lastName" className="text-white">Last Name</Label>
+                      <Input 
+                        id="lastName" 
+                        type="text" 
+                        placeholder="Enter your last name"
+                        value={lastName}
+                        onChange={(e) => setLastName(e.target.value)}
+                        className="bg-white border-gray-300 text-black placeholder:text-gray-500 focus:border-white focus:ring-white"
+                        required 
+                      />
+                    </div>
+                  </>
+                )}
+                
+                <div className="space-y-2">
+                  <Label htmlFor="email" className="text-white">Email</Label>
+                  <Input 
+                    id="email" 
+                    type="email" 
+                    placeholder="you@example.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="bg-white border-gray-300 text-black placeholder:text-gray-500 focus:border-white focus:ring-white"
+                    autoComplete="email" 
+                    required 
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="password" className="text-white">Password</Label>
+                  <Input 
+                    id="password" 
+                    type="password" 
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="bg-white border-gray-300 text-black placeholder:text-gray-500 focus:border-white focus:ring-white"
+                    autoComplete={isSignUp ? "new-password" : "current-password"}
+                    required 
+                  />
+                </div>
+                
+                {!isSignUp && (
+                  <div className="text-right">
+                    <button
+                      type="button"
+                      onClick={() => setIsForgotPassword(true)}
+                      className="text-white hover:underline text-sm"
+                      disabled={loading}
+                    >
+                      Forgot Password?
+                    </button>
+                  </div>
+                )}
+                
+                <Button 
+                  type="submit" 
+                  className="w-full bg-white text-[#1B1B32] hover:bg-gray-100 font-medium"
+                  disabled={loading || googleLoading}
+                >
+                  {loading ? "Loading..." : (isSignUp ? "Create Account" : "Sign In")}
+                </Button>
+              </form>
+            </div>
           )}
           
           {!awaitingConfirmation && !passwordResetSent && !isForgotPassword && (
@@ -354,7 +397,7 @@ export default function Auth() {
                   type="button"
                   onClick={() => setIsSignUp(!isSignUp)}
                   className="text-white hover:underline font-medium"
-                  disabled={loading}
+                  disabled={loading || googleLoading}
                 >
                   {isSignUp ? "Sign in" : "Create account"}
                 </button>
