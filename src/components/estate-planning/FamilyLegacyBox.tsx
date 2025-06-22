@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -10,6 +9,8 @@ import { DocumentViewerDialog } from "./DocumentViewerDialog";
 import { AdvancedTaxStrategies } from "./AdvancedTaxStrategies";
 import { useEstatePlanning } from "@/hooks/useEstatePlanning";
 import { toast } from "sonner";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { cn } from "@/lib/utils";
 
 export const FamilyLegacyBox: React.FC = () => {
   const [activeTab, setActiveTab] = useState("overview");
@@ -17,6 +18,7 @@ export const FamilyLegacyBox: React.FC = () => {
   const [viewerDialogOpen, setViewerDialogOpen] = useState(false);
   const [selectedDocument, setSelectedDocument] = useState<string | null>(null);
   const [selectedDocumentDetails, setSelectedDocumentDetails] = useState<any | null>(null);
+  const isMobile = useIsMobile();
   
   const { 
     documents, 
@@ -171,13 +173,36 @@ export const FamilyLegacyBox: React.FC = () => {
       <div className="xl:col-span-3 space-y-6">
         <Card>
           <CardHeader className="pb-4">
-            <CardTitle className="text-xl font-semibold">Family Legacy Box</CardTitle>
+            <CardTitle className={cn(
+              "font-semibold",
+              isMobile ? "text-lg" : "text-xl"
+            )}>Family Legacy Box</CardTitle>
           </CardHeader>
-          <CardContent className="p-6 pt-0">
+          <CardContent className={cn(
+            "pt-0",
+            isMobile ? "p-4" : "p-6"
+          )}>
             <Tabs defaultValue="overview" value={activeTab} onValueChange={setActiveTab}>
-              <TabsList className="grid w-full grid-cols-2 mb-6">
-                <TabsTrigger value="overview" className="text-sm">Document Overview</TabsTrigger>
-                <TabsTrigger value="shared" className="text-sm">Shared Documents</TabsTrigger>
+              <TabsList className={cn(
+                "w-full mb-6",
+                isMobile ? "h-auto flex-col p-1" : "grid grid-cols-2"
+              )}>
+                <TabsTrigger 
+                  value="overview" 
+                  className={cn(
+                    isMobile ? "w-full justify-center text-sm py-2" : "text-sm"
+                  )}
+                >
+                  Document Overview
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="shared" 
+                  className={cn(
+                    isMobile ? "w-full justify-center text-sm py-2" : "text-sm"
+                  )}
+                >
+                  Shared Documents
+                </TabsTrigger>
               </TabsList>
               <TabsContent value="overview" className="mt-0">
                 <DocumentChecklist
