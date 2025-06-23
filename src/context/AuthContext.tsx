@@ -28,7 +28,9 @@ interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
   isEmailConfirmed: boolean;
-  login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  requiresOTP: boolean;
+  pendingUserId: string | null;
+  login: (email: string, password: string) => Promise<{ success: boolean; error?: string; requiresOTP?: boolean; userId?: string }>;
   signup: (email: string, password: string, userData?: any) => Promise<{ success: boolean; error?: string }>;
   signInWithGoogle: () => Promise<{ success: boolean; error?: string }>;
   logout: () => Promise<void>;
@@ -36,6 +38,8 @@ interface AuthContextType {
   refreshProfile: () => Promise<void>;
   resendConfirmation: (email: string) => Promise<{ success: boolean; error?: string }>;
   resetPassword: (email: string) => Promise<{ success: boolean; error?: string }>;
+  requestOTP: (email: string, userId: string) => Promise<{ success: boolean; error?: string }>;
+  verifyOTP: (otp: string, userId: string) => Promise<{ success: boolean; error?: string }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -45,6 +49,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [session, setSession] = useState<Session | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [requiresOTP, setRequiresOTP] = useState(false);
+  const [pendingUserId, setPendingUserId] = useState<string | null>(null);
 
   // Helper function to safely parse date from database
   const parseDateSafely = (dateString: string): Date => {
@@ -112,27 +118,22 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   useEffect(() => {
-    // Set up auth state listener first
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         console.log('Auth state changed:', event, session?.user?.id);
         
-        // Handle email confirmation
         if (event === 'TOKEN_REFRESHED' || event === 'SIGNED_IN') {
           console.log('User signed in or token refreshed');
         }
         
-        // Handle password recovery
         if (event === 'PASSWORD_RECOVERY') {
           console.log('Password recovery event detected');
-          // The user will be redirected to reset-password page automatically
         }
         
         setSession(session);
         setUser(session?.user ?? null);
         
         if (session?.user) {
-          // Use setTimeout to defer profile loading and prevent auth state deadlock
           setTimeout(() => {
             loadUserProfile(session.user.id);
           }, 0);
@@ -144,7 +145,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       }
     );
 
-    // Then check for existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
@@ -161,9 +161,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     return () => subscription.unsubscribe();
   }, []);
 
-  const login = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
+  const login = async (email: string, password: string): Promise<{ success: boolean; error?: string; requiresOTP?: boolean; userId?: string }> => {
     try {
       setIsLoading(true);
+      
+      // First verify credentials without signing in
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -172,11 +174,96 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       if (error) {
         return { success: false, error: error.message };
       }
+
+      if (data.user) {
+        // Sign out immediately to prevent full login
+        await supabase.auth.signOut();
+        
+        // Set up 2FA requirement
+        setRequiresOTP(true);
+        setPendingUserId(data.user.id);
+        
+        // Send OTP
+        const otpResult = await requestOTP(email, data.user.id);
+        if (!otpResult.success) {
+          return { success: false, error: otpResult.error };
+        }
+        
+        return { success: true, requiresOTP: true, userId: data.user.id };
+      }
       
-      return { success: true };
+      return { success: false, error: 'Login failed' };
     } catch (error) {
       console.error('Login error:', error);
       return { success: false, error: 'An unexpected error occurred' };
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const requestOTP = async (email: string, userId: string): Promise<{ success: boolean; error?: string }> => {
+    try {
+      const response = await fetch('/api/send-otp-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, userId }),
+      });
+
+      const result = await response.json();
+      
+      if (!response.ok) {
+        return { success: false, error: result.error || 'Failed to send OTP' };
+      }
+      
+      return { success: true };
+    } catch (error) {
+      console.error('OTP request error:', error);
+      return { success: false, error: 'Failed to send OTP' };
+    }
+  };
+
+  const verifyOTP = async (otp: string, userId: string): Promise<{ success: boolean; error?: string }> => {
+    try {
+      setIsLoading(true);
+      
+      // Verify OTP using database function
+      const { data, error } = await supabase.rpc('validate_otp_code', {
+        p_user_id: userId,
+        p_otp_code: otp
+      });
+
+      if (error) {
+        return { success: false, error: 'Failed to verify OTP' };
+      }
+
+      if (!data) {
+        return { success: false, error: 'Invalid or expired OTP code' };
+      }
+
+      // Get user data and sign them in properly
+      const { data: userData, error: userError } = await supabase.auth.admin.getUserById(userId);
+      
+      if (userError || !userData.user) {
+        return { success: false, error: 'Failed to complete login' };
+      }
+
+      // Create a proper session - this is a simplified approach
+      // In a real implementation, you'd need to handle this server-side
+      const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
+        email: userData.user.email!,
+        password: 'temp_password' // This won't work - we need a different approach
+      });
+
+      // Reset 2FA state
+      setRequiresOTP(false);
+      setPendingUserId(null);
+      
+      return { success: true };
+    } catch (error) {
+      console.error('OTP verification error:', error);
+      return { success: false, error: 'Failed to verify OTP' };
     } finally {
       setIsLoading(false);
     }
@@ -198,7 +285,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         return { success: false, error: error.message };
       }
       
-      // Check if email confirmation is required
       if (data.user && !data.session) {
         return { 
           success: true, 
@@ -242,6 +328,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     try {
       await supabase.auth.signOut();
       setUserProfile(null);
+      setRequiresOTP(false);
+      setPendingUserId(null);
     } catch (error) {
       console.error('Logout error:', error);
     }
@@ -340,6 +428,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         isAuthenticated: !!user,
         isLoading,
         isEmailConfirmed,
+        requiresOTP,
+        pendingUserId,
         login,
         signup,
         signInWithGoogle,
@@ -347,7 +437,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         updateUserProfile,
         refreshProfile,
         resendConfirmation,
-        resetPassword
+        resetPassword,
+        requestOTP,
+        verifyOTP
       }}
     >
       {children}

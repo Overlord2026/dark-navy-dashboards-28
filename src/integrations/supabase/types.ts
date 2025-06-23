@@ -1916,6 +1916,36 @@ export type Database = {
         }
         Relationships: []
       }
+      user_otp_codes: {
+        Row: {
+          attempts: number
+          created_at: string
+          expires_at: string
+          id: string
+          is_used: boolean
+          otp_code: string
+          user_id: string
+        }
+        Insert: {
+          attempts?: number
+          created_at?: string
+          expires_at: string
+          id?: string
+          is_used?: boolean
+          otp_code: string
+          user_id: string
+        }
+        Update: {
+          attempts?: number
+          created_at?: string
+          expires_at?: string
+          id?: string
+          is_used?: boolean
+          otp_code?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_portfolio_assignments: {
         Row: {
           assigned_accounts: number | null
@@ -2075,6 +2105,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      cleanup_expired_otp_codes: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
       upsert_daily_financial_snapshot: {
         Args: {
           p_user_id: string
@@ -2083,6 +2117,10 @@ export type Database = {
           p_net_worth: number
         }
         Returns: undefined
+      }
+      validate_otp_code: {
+        Args: { p_user_id: string; p_otp_code: string }
+        Returns: boolean
       }
     }
     Enums: {
