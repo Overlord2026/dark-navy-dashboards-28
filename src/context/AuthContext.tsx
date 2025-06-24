@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
-import { sendOTPEmail } from '@/services/otpEmailService';
 
 interface UserProfile {
   id: string;
@@ -29,10 +28,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
   isEmailConfirmed: boolean;
-  requiresOTP: boolean;
-  pendingUserId: string | null;
-  pendingEmail: string | null;
-  login: (email: string, password: string) => Promise<{ success: boolean; error?: string; requiresOTP?: boolean; userId?: string }>;
+  login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
   signup: (email: string, password: string, userData?: any) => Promise<{ success: boolean; error?: string }>;
   signInWithGoogle: () => Promise<{ success: boolean; error?: string }>;
   logout: () => Promise<void>;
@@ -40,8 +36,6 @@ interface AuthContextType {
   refreshProfile: () => Promise<void>;
   resendConfirmation: (email: string) => Promise<{ success: boolean; error?: string }>;
   resetPassword: (email: string) => Promise<{ success: boolean; error?: string }>;
-  requestOTP: (email: string, userId: string) => Promise<{ success: boolean; error?: string }>;
-  verifyOTP: (otp: string, userId: string) => Promise<{ success: boolean; error?: string }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -51,18 +45,18 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [session, setSession] = useState<Session | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [requiresOTP, setRequiresOTP] = useState(false);
-  const [pendingUserId, setPendingUserId] = useState<string | null>(null);
-  const [pendingEmail, setPendingEmail] = useState<string | null>(null);
 
+  // Helper function to safely parse date from database
   const parseDateSafely = (dateString: string): Date => {
     if (!dateString) return new Date();
     
+    // If it's a date-only string (YYYY-MM-DD), parse it in local timezone
     if (dateString.match(/^\d{4}-\d{2}-\d{2}$/)) {
       const [year, month, day] = dateString.split('-').map(Number);
       return new Date(year, month - 1, day);
     }
     
+    // For datetime strings, create date object
     const date = new Date(dateString);
     return isNaN(date.getTime()) ? new Date() : date;
   };
@@ -85,6 +79,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       if (profile) {
         console.log("Loaded profile from database:", profile);
         
+        // Handle date conversion properly
         let dateOfBirth: Date | undefined;
         if (profile.date_of_birth_date) {
           dateOfBirth = parseDateSafely(profile.date_of_birth_date);
@@ -117,14 +112,27 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   useEffect(() => {
+    // Set up auth state listener first
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         console.log('Auth state changed:', event, session?.user?.id);
+        
+        // Handle email confirmation
+        if (event === 'TOKEN_REFRESHED' || event === 'SIGNED_IN') {
+          console.log('User signed in or token refreshed');
+        }
+        
+        // Handle password recovery
+        if (event === 'PASSWORD_RECOVERY') {
+          console.log('Password recovery event detected');
+          // The user will be redirected to reset-password page automatically
+        }
         
         setSession(session);
         setUser(session?.user ?? null);
         
         if (session?.user) {
+          // Use setTimeout to defer profile loading and prevent auth state deadlock
           setTimeout(() => {
             loadUserProfile(session.user.id);
           }, 0);
@@ -136,6 +144,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       }
     );
 
+    // Then check for existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
@@ -152,65 +161,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     return () => subscription.unsubscribe();
   }, []);
 
-  const requestOTP = async (email: string, userId: string): Promise<{ success: boolean; error?: string }> => {
-    try {
-      // Generate 6-digit OTP
-      const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
-      
-      // Set expiration to 5 minutes from now
-      const expiresAt = new Date(Date.now() + 5 * 60 * 1000).toISOString();
-
-      // Check rate limiting - max 3 OTP requests per 10 minutes
-      const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000).toISOString();
-      const { data: recentCodes, error: countError } = await supabase
-        .from('user_otp_codes')
-        .select('id')
-        .eq('user_id', userId)
-        .gte('created_at', tenMinutesAgo);
-
-      if (countError) {
-        throw new Error('Failed to check rate limit');
-      }
-
-      if (recentCodes && recentCodes.length >= 3) {
-        return { success: false, error: 'Too many OTP requests. Please wait 10 minutes before requesting again.' };
-      }
-
-      // Store OTP in database
-      const { error: insertError } = await supabase
-        .from('user_otp_codes')
-        .insert({
-          user_id: userId,
-          otp_code: otpCode,
-          expires_at: expiresAt
-        });
-
-      if (insertError) {
-        throw new Error(`Failed to store OTP: ${insertError.message}`);
-      }
-
-      // Send email using the new OTP email service
-      const emailSuccess = await sendOTPEmail({
-        userEmail: email,
-        userName: 'User',
-        otpCode: otpCode
-      });
-
-      if (!emailSuccess) {
-        return { success: false, error: 'Failed to send OTP email' };
-      }
-      
-      return { success: true };
-    } catch (error) {
-      console.error('OTP request error:', error);
-      return { success: false, error: 'Failed to send OTP' };
-    }
-  };
-
-  const login = async (email: string, password: string): Promise<{ success: boolean; error?: string; requiresOTP?: boolean; userId?: string }> => {
+  const login = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
     try {
       setIsLoading(true);
-      
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -219,58 +172,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       if (error) {
         return { success: false, error: error.message };
       }
-
-      if (data.user) {
-        await supabase.auth.signOut();
-        
-        setRequiresOTP(true);
-        setPendingUserId(data.user.id);
-        setPendingEmail(email);
-        
-        const otpResult = await requestOTP(email, data.user.id);
-        if (!otpResult.success) {
-          return { success: false, error: otpResult.error };
-        }
-        
-        return { success: true, requiresOTP: true, userId: data.user.id };
-      }
-      
-      return { success: false, error: 'Login failed' };
-    } catch (error) {
-      console.error('Login error:', error);
-      return { success: false, error: 'An unexpected error occurred' };
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const verifyOTP = async (otp: string, userId: string): Promise<{ success: boolean; error?: string }> => {
-    try {
-      setIsLoading(true);
-      
-      const { data, error } = await supabase.rpc('validate_otp_code', {
-        p_user_id: userId,
-        p_otp_code: otp
-      });
-
-      if (error) {
-        return { success: false, error: 'Failed to verify OTP' };
-      }
-
-      if (!data) {
-        return { success: false, error: 'Invalid or expired OTP code' };
-      }
-
-      setRequiresOTP(false);
-      setPendingUserId(null);
-      setPendingEmail(null);
-      
-      window.location.href = '/client-dashboard';
       
       return { success: true };
     } catch (error) {
-      console.error('OTP verification error:', error);
-      return { success: false, error: 'Failed to verify OTP' };
+      console.error('Login error:', error);
+      return { success: false, error: 'An unexpected error occurred' };
     } finally {
       setIsLoading(false);
     }
@@ -292,6 +198,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         return { success: false, error: error.message };
       }
       
+      // Check if email confirmation is required
       if (data.user && !data.session) {
         return { 
           success: true, 
@@ -335,9 +242,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     try {
       await supabase.auth.signOut();
       setUserProfile(null);
-      setRequiresOTP(false);
-      setPendingUserId(null);
-      setPendingEmail(null);
     } catch (error) {
       console.error('Logout error:', error);
     }
@@ -436,9 +340,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         isAuthenticated: !!user,
         isLoading,
         isEmailConfirmed,
-        requiresOTP,
-        pendingUserId,
-        pendingEmail,
         login,
         signup,
         signInWithGoogle,
@@ -446,9 +347,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         updateUserProfile,
         refreshProfile,
         resendConfirmation,
-        resetPassword,
-        requestOTP,
-        verifyOTP
+        resetPassword
       }}
     >
       {children}

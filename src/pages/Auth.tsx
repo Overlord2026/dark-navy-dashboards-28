@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -7,7 +6,6 @@ import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { useAuth } from "@/context/AuthContext";
-import { OTPVerification } from "@/components/auth/OTPVerification";
 import { toast } from "sonner";
 import { Chrome } from "lucide-react";
 
@@ -24,18 +22,7 @@ export default function Auth() {
   const [passwordResetSent, setPasswordResetSent] = useState(false);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { 
-    isAuthenticated, 
-    login, 
-    signup, 
-    signInWithGoogle, 
-    resendConfirmation, 
-    resetPassword,
-    requiresOTP,
-    pendingUserId,
-    pendingEmail,
-    verifyOTP
-  } = useAuth();
+  const { isAuthenticated, login, signup, signInWithGoogle, resendConfirmation, resetPassword } = useAuth();
 
   useEffect(() => {
     // Check for email confirmation success
@@ -86,12 +73,8 @@ export default function Auth() {
         const result = await login(email, password);
 
         if (result.success) {
-          if (result.requiresOTP) {
-            toast.success('OTP code sent to your email. Please verify to continue.');
-          } else {
-            toast.success('Logged in successfully!');
-            navigate('/client-dashboard');
-          }
+          toast.success('Logged in successfully!');
+          navigate('/client-dashboard');
         } else {
           if (result.error?.includes('Invalid login credentials')) {
             toast.error('Invalid email or password. Please check your credentials.');
@@ -173,7 +156,7 @@ export default function Auth() {
     }
   };
 
-  const handleBackToLogin = () => {
+  const resetForm = () => {
     setIsSignUp(false);
     setIsForgotPassword(false);
     setAwaitingConfirmation(false);
@@ -183,39 +166,6 @@ export default function Auth() {
     setFirstName("");
     setLastName("");
   };
-
-  const resetForm = () => {
-    handleBackToLogin();
-  };
-
-  // Show OTP verification if required
-  if (requiresOTP && pendingUserId && pendingEmail) {
-    return (
-      <div className="min-h-screen bg-white flex flex-col">
-        <header className="w-full flex justify-center items-center py-2 border-b border-gray-200 bg-[#1B1B32] sticky top-0 z-50">
-          <div className="flex justify-center items-center">
-            <img 
-              src="/lovable-uploads/3346c76f-f91c-4791-b77d-adb2f34a06af.png" 
-              alt="Boutique Family Office Logo" 
-              className="h-8 w-auto"
-            />
-          </div>
-        </header>
-        
-        <div className="flex-1 flex justify-center items-center p-4 bg-white">
-          <OTPVerification
-            email={pendingEmail}
-            userId={pendingUserId}
-            onBack={handleBackToLogin}
-          />
-        </div>
-        
-        <footer className="py-2 px-4 bg-[#1B1B32] text-white text-center text-sm">
-          <p>&copy; {new Date().getFullYear()} Boutique Family Office. All rights reserved.</p>
-        </footer>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
