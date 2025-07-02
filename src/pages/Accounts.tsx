@@ -263,7 +263,7 @@ const Accounts = () => {
                 )}
               >
                 <PlusCircle className={cn("mr-2", isMobile ? "h-3 w-3" : "h-4 w-4")} />
-                Add Private Equity Account
+                Add Private Equity
               </Button>
             </div>
           </CollapsibleCard>
