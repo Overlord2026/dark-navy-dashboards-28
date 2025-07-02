@@ -46,7 +46,7 @@ const Accounts = () => {
   const [showAddLiabilityDialog, setShowAddLiabilityDialog] = React.useState(false);
 
   const handleAddAccountType = (type: string) => {
-    if (type === 'Liability') {
+    if (type === 'liability' || type === 'Liability') {
       setShowAddLiabilityDialog(true);
     } else {
       console.log(`Add ${type} clicked`);
