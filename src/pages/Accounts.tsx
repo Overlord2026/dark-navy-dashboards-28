@@ -1,3 +1,4 @@
+
 import React from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
@@ -28,17 +29,19 @@ const Accounts = () => {
         "container mx-auto max-w-7xl space-y-6",
         isMobile ? "px-3 py-4" : "px-4 py-6"
       )}>
-        {/* Header Section */}
+        {/* Header Section with description right below title */}
+        <div className="space-y-2 mb-6">
+          <p className={cn(
+            "text-muted-foreground",
+            isMobile ? "text-sm" : "text-base"
+          )}>Manage all your financial accounts in one place</p>
+        </div>
+        
+        {/* Action buttons */}
         <div className={cn(
           "flex gap-4 pb-6 border-b border-border",
-          isMobile ? "flex-col items-start" : "flex-col sm:flex-row sm:items-center sm:justify-between"
+          isMobile ? "flex-col items-start" : "flex-row items-center justify-end"
         )}>
-          <div className="space-y-2">
-            <p className={cn(
-              "text-muted-foreground",
-              isMobile ? "text-sm" : "text-base"
-            )}>Manage all your financial accounts in one place</p>
-          </div>
           <div className={cn(
             "flex gap-3",
             isMobile ? "w-full flex-col" : "flex-row"
