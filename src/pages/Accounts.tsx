@@ -1,3 +1,4 @@
+
 import React from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
@@ -7,6 +8,7 @@ import { PlusCircle, Shield, TrendingUp, CreditCard, Building, Banknote, Wallet 
 import { RetirementAccountTracker } from "@/components/social-security/RetirementAccountTracker";
 import { FundingAccountsOverview } from "@/components/accounts/FundingAccountsOverview";
 import { CollapsibleCard } from "@/components/accounts/CollapsibleCard";
+import { AccountLinkTypeSelector } from "@/components/accounts/AccountLinkTypeSelector";
 import { useAccountManagement } from "@/hooks/useAccountManagement";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
@@ -19,8 +21,13 @@ const Accounts = () => {
     handleCompleteSetup,
     handleAddAccount,
     handleAccountTypeSelected,
+    handlePlaidSelected,
+    handleManualSelected,
+    handleBackToAccounts,
     showAddAccountTypeDialog,
-    setShowAddAccountTypeDialog
+    showAccountTypeSelector,
+    setShowAddAccountTypeDialog,
+    setShowAccountTypeSelector
   } = useAccountManagement();
   const isMobile = useIsMobile();
 
@@ -81,7 +88,6 @@ const Accounts = () => {
             onManageFunding={handleManageFunding} 
           />
 
-          {/* BFO Managed */}
           <CollapsibleCard
             icon={<Shield className={cn("mr-2 h-5 w-5 text-primary", isMobile && "h-4 w-4")} />}
             title="BFO Managed"
@@ -98,7 +104,6 @@ const Accounts = () => {
             </Button>
           </CollapsibleCard>
 
-          {/* 401K/457/403B Plans */}
           <CollapsibleCard
             icon={<TrendingUp className={cn("mr-2 h-5 w-5 text-primary", isMobile && "h-4 w-4")} />}
             title="401K/457/403B Plans"
@@ -108,7 +113,6 @@ const Accounts = () => {
             <RetirementAccountTracker />
           </CollapsibleCard>
 
-          {/* Investment */}
           <CollapsibleCard
             icon={<TrendingUp className={cn("mr-2 h-5 w-5 text-primary", isMobile && "h-4 w-4")} />}
             title="Investment"
@@ -127,7 +131,6 @@ const Accounts = () => {
             </Button>
           </CollapsibleCard>
 
-          {/* Manually-Tracked */}
           <CollapsibleCard
             icon={<CreditCard className={cn("mr-2 h-5 w-5 text-primary", isMobile && "h-4 w-4")} />}
             title="Manually-Tracked"
@@ -146,7 +149,6 @@ const Accounts = () => {
             </Button>
           </CollapsibleCard>
 
-          {/* Loans */}
           <CollapsibleCard
             icon={<Building className={cn("mr-2 h-5 w-5 text-primary", isMobile && "h-4 w-4")} />}
             title="Loans"
@@ -187,7 +189,6 @@ const Accounts = () => {
             </div>
           </CollapsibleCard>
 
-          {/* Banking */}
           <CollapsibleCard
             icon={<Banknote className={cn("mr-2 h-5 w-5 text-primary", isMobile && "h-4 w-4")} />}
             title="Banking"
@@ -206,7 +207,6 @@ const Accounts = () => {
             </Button>
           </CollapsibleCard>
 
-          {/* Credit Cards */}
           <CollapsibleCard
             icon={<CreditCard className={cn("mr-2 h-5 w-5 text-primary", isMobile && "h-4 w-4")} />}
             title="Credit Cards"
@@ -233,6 +233,17 @@ const Accounts = () => {
         onOpenChange={setShowAddAccountTypeDialog}
         onAccountTypeSelect={handleAccountTypeSelected}
       />
+
+      {/* Account Link Type Selector - shown when Bank Account is selected */}
+      {showAccountTypeSelector && (
+        <div className="fixed inset-0 bg-background z-50 overflow-auto">
+          <AccountLinkTypeSelector
+            onSelectPlaid={handlePlaidSelected}
+            onSelectManual={handleManualSelected}
+            onBack={handleBackToAccounts}
+          />
+        </div>
+      )}
     </ThreeColumnLayout>
   );
 };
