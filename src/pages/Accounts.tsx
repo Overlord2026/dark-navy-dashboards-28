@@ -1,4 +1,3 @@
-
 import React from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
@@ -34,15 +33,10 @@ const Accounts = () => {
           "flex gap-4 pb-6 border-b border-border",
           isMobile ? "flex-col items-start" : "flex-col sm:flex-row sm:items-center sm:justify-between"
         )}>
-          <div className="space-y-1">
-            <div className="flex items-center gap-3">
-              <Badge variant="secondary" className={cn(
-                isMobile ? "text-xs px-2 py-1" : "text-xs"
-              )}>Coming soon</Badge>
-            </div>
+          <div className="space-y-2">
             <p className={cn(
               "text-muted-foreground",
-              isMobile ? "text-sm" : ""
+              isMobile ? "text-sm" : "text-base"
             )}>Manage all your financial accounts in one place</p>
           </div>
           <div className={cn(
