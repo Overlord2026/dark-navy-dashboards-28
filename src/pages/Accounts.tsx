@@ -47,9 +47,20 @@ const Accounts = () => {
 
   const handleAddAccountType = (type: string) => {
     if (type === 'liability' || type === 'Liability') {
+      setShowAddAccountTypeDialog(false); // Close the account type dialog first
       setShowAddLiabilityDialog(true);
     } else {
       console.log(`Add ${type} clicked`);
+    }
+  };
+
+  // Update the handleAccountTypeSelected to handle liability properly
+  const handleAccountTypeSelectedWithLiability = (type: string) => {
+    if (type === 'liability') {
+      setShowAddAccountTypeDialog(false);
+      setShowAddLiabilityDialog(true);
+    } else {
+      handleAccountTypeSelected(type);
     }
   };
 
@@ -268,7 +279,7 @@ const Accounts = () => {
       <AddAccountTypeDialog 
         open={showAddAccountTypeDialog}
         onOpenChange={setShowAddAccountTypeDialog}
-        onAccountTypeSelect={handleAccountTypeSelected}
+        onAccountTypeSelect={handleAccountTypeSelectedWithLiability}
       />
 
       {/* Account Link Type Selector Dialog */}
