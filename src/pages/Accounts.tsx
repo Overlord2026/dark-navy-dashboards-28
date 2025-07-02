@@ -3,13 +3,14 @@ import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { PlusCircle, Shield, TrendingUp, CreditCard, Building, Banknote, Wallet, Coins, AlertTriangle } from "lucide-react";
+import { PlusCircle, Shield, TrendingUp, CreditCard, Building, Banknote, Wallet, Coins, AlertTriangle, Package } from "lucide-react";
 import { RetirementAccountTracker } from "@/components/social-security/RetirementAccountTracker";
 import { FundingAccountsOverview } from "@/components/accounts/FundingAccountsOverview";
 import { CollapsibleCard } from "@/components/accounts/CollapsibleCard";
 import { useAccountManagement } from "@/hooks/useAccountManagement";
 import { useDigitalAssets } from "@/hooks/useDigitalAssets";
 import { useSupabaseLiabilities } from "@/hooks/useSupabaseLiabilities";
+import { useSupabaseAssets } from "@/hooks/useSupabaseAssets";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 import { AddAccountTypeDialog } from "@/components/accounts/AddAccountTypeDialog";
@@ -19,6 +20,7 @@ import { DigitalAssetsTable } from "@/components/accounts/DigitalAssetsTable";
 import { AddLiabilityDialog } from "@/components/liabilities/AddLiabilityDialog";
 import { LiabilitiesList } from "@/components/liabilities/LiabilitiesList";
 import { AddOtherAssetDialog } from "@/components/assets/AddOtherAssetDialog";
+import { OtherAssetsList } from "@/components/assets/OtherAssetsList";
 
 const Accounts = () => {
   const { 
@@ -42,6 +44,7 @@ const Accounts = () => {
   
   const { getFormattedTotalValue, loading: digitalAssetsLoading } = useDigitalAssets();
   const { getTotalLiabilities, refreshLiabilities } = useSupabaseLiabilities();
+  const { getFormattedTotalValue: getFormattedOtherAssetsValue, loading: otherAssetsLoading } = useSupabaseAssets();
   const isMobile = useIsMobile();
 
   // Add state for liability dialog
@@ -252,6 +255,28 @@ const Accounts = () => {
               >
                 <PlusCircle className={cn("mr-2", isMobile ? "h-3 w-3" : "h-4 w-4")} />
                 Add Digital Asset
+              </Button>
+            </div>
+          </CollapsibleCard>
+
+          {/* Other Assets */}
+          <CollapsibleCard
+            icon={<Package className={cn("mr-2 h-5 w-5 text-primary", isMobile && "h-4 w-4")} />}
+            title="Other Assets"
+            amount={otherAssetsLoading ? "Loading..." : getFormattedOtherAssetsValue()}
+            description="Track your other valuable assets like vehicles, collectibles, and more."
+          >
+            <div className="space-y-4">
+              <OtherAssetsList />
+              <Button 
+                onClick={() => handleAccountTypeSelected('other-assets')} 
+                variant="outline" 
+                className={cn(
+                  isMobile ? "w-full text-sm" : "w-full sm:w-auto"
+                )}
+              >
+                <PlusCircle className={cn("mr-2", isMobile ? "h-3 w-3" : "h-4 w-4")} />
+                Add Other Asset
               </Button>
             </div>
           </CollapsibleCard>
