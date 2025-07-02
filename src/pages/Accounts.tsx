@@ -15,6 +15,7 @@ import { cn } from "@/lib/utils";
 import { AddAccountTypeDialog } from "@/components/accounts/AddAccountTypeDialog";
 import { AccountLinkTypeSelector } from "@/components/accounts/AccountLinkTypeSelector";
 import { AddDigitalAssetDialog } from "@/components/accounts/AddDigitalAssetDialog";
+import { DigitalAssetsTable } from "@/components/accounts/DigitalAssetsTable";
 
 const Accounts = () => {
   const { 
@@ -245,16 +246,19 @@ const Accounts = () => {
             amount={digitalAssetsLoading ? "Loading..." : getFormattedTotalValue()}
             description="Track your cryptocurrency and digital asset holdings."
           >
-            <Button 
-              onClick={() => handleAccountTypeSelected('digital-assets')} 
-              variant="outline" 
-              className={cn(
-                isMobile ? "w-full text-sm" : "w-full sm:w-auto"
-              )}
-            >
-              <PlusCircle className={cn("mr-2", isMobile ? "h-3 w-3" : "h-4 w-4")} />
-              Add Digital Asset
-            </Button>
+            <div className="space-y-4">
+              <DigitalAssetsTable />
+              <Button 
+                onClick={() => handleAccountTypeSelected('digital-assets')} 
+                variant="outline" 
+                className={cn(
+                  isMobile ? "w-full text-sm" : "w-full sm:w-auto"
+                )}
+              >
+                <PlusCircle className={cn("mr-2", isMobile ? "h-3 w-3" : "h-4 w-4")} />
+                Add Digital Asset
+              </Button>
+            </div>
           </CollapsibleCard>
         </div>
       </div>
