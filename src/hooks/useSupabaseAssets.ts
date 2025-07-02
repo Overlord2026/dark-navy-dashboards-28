@@ -21,6 +21,9 @@ export interface OtherAssetData {
   value: number;
 }
 
+// Export alias for compatibility with existing components
+export type SupabaseAsset = OtherAsset;
+
 export const useSupabaseAssets = () => {
   const [assets, setAssets] = useState<OtherAsset[]>([]);
   const [loading, setLoading] = useState(true);
@@ -96,8 +99,38 @@ export const useSupabaseAssets = () => {
     }
   };
 
+  // Update an asset
+  const updateAsset = async (id: string, updates: Partial<OtherAssetData>): Promise<OtherAsset | null> => {
+    try {
+      setSaving(true);
+      
+      const { data, error } = await supabase
+        .from('other_assets')
+        .update(updates)
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Error updating asset:', error);
+        toast.error('Failed to update asset');
+        return null;
+      }
+
+      setAssets(prev => prev.map(asset => asset.id === id ? data : asset));
+      toast.success('Asset updated successfully');
+      return data;
+    } catch (error) {
+      console.error('Error:', error);
+      toast.error('An unexpected error occurred');
+      return null;
+    } finally {
+      setSaving(false);
+    }
+  };
+
   // Delete an asset
-  const deleteAsset = async (id: string): Promise<void> => {
+  const deleteAsset = async (id: string): Promise<boolean> => {
     try {
       setSaving(true);
       
@@ -109,14 +142,16 @@ export const useSupabaseAssets = () => {
       if (error) {
         console.error('Error deleting asset:', error);
         toast.error('Failed to delete asset');
-        return;
+        return false;
       }
 
       setAssets(prev => prev.filter(asset => asset.id !== id));
       toast.success('Asset deleted successfully');
+      return true;
     } catch (error) {
       console.error('Error:', error);
       toast.error('An unexpected error occurred');
+      return false;
     } finally {
       setSaving(false);
     }
@@ -138,6 +173,16 @@ export const useSupabaseAssets = () => {
     }).format(total);
   };
 
+  // Get assets by type
+  const getAssetsByType = (type: string) => {
+    return assets.filter(asset => asset.type === type);
+  };
+
+  // Get assets by category (alias for type for compatibility)
+  const getAssetsByCategory = (category: string) => {
+    return getAssetsByType(category);
+  };
+
   useEffect(() => {
     fetchAssets();
   }, []);
@@ -147,9 +192,12 @@ export const useSupabaseAssets = () => {
     loading,
     saving,
     addAsset,
+    updateAsset,
     deleteAsset,
     getTotalValue,
     getFormattedTotalValue,
+    getAssetsByType,
+    getAssetsByCategory,
     refreshAssets: fetchAssets,
   };
 };
