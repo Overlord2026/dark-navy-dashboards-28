@@ -160,47 +160,6 @@ const Accounts = () => {
             </Button>
           </CollapsibleCard>
 
-          {/* Loans */}
-          <CollapsibleCard
-            icon={<Building className={cn("mr-2 h-5 w-5 text-primary", isMobile && "h-4 w-4")} />}
-            title="Loans"
-            amount="$0.00"
-            description="No loan accounts linked."
-          >
-            <div className="space-y-4">
-              <div>
-                <label className={cn(
-                  "block font-medium mb-2",
-                  isMobile ? "text-sm" : "text-sm"
-                )}>Loan Type</label>
-                <Select defaultValue="mortgage">
-                  <SelectTrigger className={cn(
-                    isMobile ? "w-full text-sm" : "w-full sm:w-48"
-                  )}>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="mortgage">Mortgage</SelectItem>
-                    <SelectItem value="personal">Personal Loan</SelectItem>
-                    <SelectItem value="auto">Auto Loan</SelectItem>
-                    <SelectItem value="student">Student Loan</SelectItem>
-                    <SelectItem value="business">Business Loan</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <Button 
-                onClick={() => handleAddAccountType('Loan')} 
-                variant="outline" 
-                className={cn(
-                  isMobile ? "w-full text-sm" : "w-full sm:w-auto"
-                )}
-              >
-                <PlusCircle className={cn("mr-2", isMobile ? "h-3 w-3" : "h-4 w-4")} />
-                Add Loan
-              </Button>
-            </div>
-          </CollapsibleCard>
-
           {/* Banking */}
           <CollapsibleCard
             icon={<Banknote className={cn("mr-2 h-5 w-5 text-primary", isMobile && "h-4 w-4")} />}
