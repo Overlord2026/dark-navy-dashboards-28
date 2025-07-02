@@ -4,7 +4,7 @@ import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { PlusCircle, Shield, TrendingUp, CreditCard, Building, Banknote, Wallet, Coins } from "lucide-react";
+import { PlusCircle, Shield, TrendingUp, CreditCard, Building, Banknote, Wallet, Coins, AlertTriangle } from "lucide-react";
 import { RetirementAccountTracker } from "@/components/social-security/RetirementAccountTracker";
 import { FundingAccountsOverview } from "@/components/accounts/FundingAccountsOverview";
 import { CollapsibleCard } from "@/components/accounts/CollapsibleCard";
@@ -218,6 +218,25 @@ const Accounts = () => {
                 Add Digital Asset
               </Button>
             </div>
+          </CollapsibleCard>
+
+          {/* Liability */}
+          <CollapsibleCard
+            icon={<AlertTriangle className={cn("mr-2 h-5 w-5 text-primary", isMobile && "h-4 w-4")} />}
+            title="Liability"
+            amount="$0.00"
+            description="Track your debts and liabilities."
+          >
+            <Button 
+              onClick={() => handleAddAccountType('Liability')} 
+              variant="outline" 
+              className={cn(
+                isMobile ? "w-full text-sm" : "w-full sm:w-auto"
+              )}
+            >
+              <PlusCircle className={cn("mr-2", isMobile ? "h-3 w-3" : "h-4 w-4")} />
+              Add Liability
+            </Button>
           </CollapsibleCard>
         </div>
       </div>
