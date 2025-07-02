@@ -1,5 +1,4 @@
-
-import React from "react";
+import React, { useState } from "react";
 import { useDigitalAssets } from "@/hooks/useDigitalAssets";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -15,10 +14,26 @@ import {
 import { Trash2, Coins } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
+import { DeleteDigitalAssetDialog } from "./DeleteDigitalAssetDialog";
 
 export function DigitalAssetsTable() {
-  const { digitalAssets, loading } = useDigitalAssets();
+  const { digitalAssets, loading, deleteDigitalAsset } = useDigitalAssets();
   const isMobile = useIsMobile();
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [assetToDelete, setAssetToDelete] = useState(null);
+
+  const handleDeleteClick = (asset) => {
+    setAssetToDelete(asset);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (assetToDelete) {
+      await deleteDigitalAsset(assetToDelete.id);
+      setDeleteDialogOpen(false);
+      setAssetToDelete(null);
+    }
+  };
 
   if (loading) {
     return (
@@ -60,88 +75,116 @@ export function DigitalAssetsTable() {
 
   if (isMobile) {
     return (
-      <div className="space-y-4">
-        {digitalAssets.map((asset) => (
-          <Card key={asset.id} className="p-4">
-            <div className="flex justify-between items-start mb-3">
-              <div>
-                <h4 className="font-semibold text-lg">{getAssetDisplayName(asset)}</h4>
-                <Badge variant="outline" className="mt-1">
-                  {asset.asset_type === 'Other' ? 'Custom' : 'Crypto'}
-                </Badge>
+      <>
+        <div className="space-y-4">
+          {digitalAssets.map((asset) => (
+            <Card key={asset.id} className="p-4">
+              <div className="flex justify-between items-start mb-3">
+                <div>
+                  <h4 className="font-semibold text-lg">{getAssetDisplayName(asset)}</h4>
+                  <Badge variant="outline" className="mt-1">
+                    {asset.asset_type === 'Other' ? 'Custom' : 'Crypto'}
+                  </Badge>
+                </div>
+                <div className="text-right">
+                  <p className="font-bold text-lg text-green-600">
+                    {formatCurrency(asset.total_value)}
+                  </p>
+                </div>
               </div>
-              <div className="text-right">
-                <p className="font-bold text-lg text-green-600">
-                  {formatCurrency(asset.total_value)}
-                </p>
+              
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Quantity:</span>
+                  <span>{formatQuantity(asset.quantity)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Price per Unit:</span>
+                  <span>{formatCurrency(asset.price_per_unit)}</span>
+                </div>
               </div>
-            </div>
-            
-            <div className="space-y-2 text-sm">
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Quantity:</span>
-                <span>{formatQuantity(asset.quantity)}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Price per Unit:</span>
-                <span>{formatCurrency(asset.price_per_unit)}</span>
-              </div>
-            </div>
 
-            <div className="flex gap-2 mt-4">
-              <Button variant="outline" size="sm" className="flex-1 text-red-600 hover:text-red-700">
-                <Trash2 className="h-3 w-3 mr-1" />
-                Delete
-              </Button>
-            </div>
-          </Card>
-        ))}
-      </div>
+              <div className="flex gap-2 mt-4">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="flex-1 text-red-600 hover:text-red-700"
+                  onClick={() => handleDeleteClick(asset)}
+                >
+                  <Trash2 className="h-3 w-3 mr-1" />
+                  Delete
+                </Button>
+              </div>
+            </Card>
+          ))}
+        </div>
+        
+        <DeleteDigitalAssetDialog
+          open={deleteDialogOpen}
+          onOpenChange={setDeleteDialogOpen}
+          asset={assetToDelete}
+          onConfirm={handleDeleteConfirm}
+        />
+      </>
     );
   }
 
   return (
-    <div className="rounded-md border">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Asset</TableHead>
-            <TableHead>Type</TableHead>
-            <TableHead className="text-right">Quantity</TableHead>
-            <TableHead className="text-right">Price per Unit</TableHead>
-            <TableHead className="text-right">Total Value</TableHead>
-            <TableHead className="text-right">Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {digitalAssets.map((asset) => (
-            <TableRow key={asset.id}>
-              <TableCell className="font-medium">
-                {getAssetDisplayName(asset)}
-              </TableCell>
-              <TableCell>
-                <Badge variant="outline">
-                  {asset.asset_type === 'Other' ? 'Custom' : 'Crypto'}
-                </Badge>
-              </TableCell>
-              <TableCell className="text-right">
-                {formatQuantity(asset.quantity)}
-              </TableCell>
-              <TableCell className="text-right">
-                {formatCurrency(asset.price_per_unit)}
-              </TableCell>
-              <TableCell className="text-right font-semibold text-green-600">
-                {formatCurrency(asset.total_value)}
-              </TableCell>
-              <TableCell className="text-right">
-                <Button variant="ghost" size="sm" className="text-red-600 hover:text-red-700">
-                  <Trash2 className="h-4 w-4" />
-                </Button>
-              </TableCell>
+    <>
+      <div className="rounded-md border">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Asset</TableHead>
+              <TableHead>Type</TableHead>
+              <TableHead className="text-right">Quantity</TableHead>
+              <TableHead className="text-right">Price per Unit</TableHead>
+              <TableHead className="text-right">Total Value</TableHead>
+              <TableHead className="text-right">Actions</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </div>
+          </TableHeader>
+          <TableBody>
+            {digitalAssets.map((asset) => (
+              <TableRow key={asset.id}>
+                <TableCell className="font-medium">
+                  {getAssetDisplayName(asset)}
+                </TableCell>
+                <TableCell>
+                  <Badge variant="outline">
+                    {asset.asset_type === 'Other' ? 'Custom' : 'Crypto'}
+                  </Badge>
+                </TableCell>
+                <TableCell className="text-right">
+                  {formatQuantity(asset.quantity)}
+                </TableCell>
+                <TableCell className="text-right">
+                  {formatCurrency(asset.price_per_unit)}
+                </TableCell>
+                <TableCell className="text-right font-semibold text-green-600">
+                  {formatCurrency(asset.total_value)}
+                </TableCell>
+                <TableCell className="text-right">
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="text-red-600 hover:text-red-700"
+                    onClick={() => handleDeleteClick(asset)}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+      
+      <DeleteDigitalAssetDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        asset={assetToDelete}
+        onConfirm={handleDeleteConfirm}
+      />
+    </>
   );
 }

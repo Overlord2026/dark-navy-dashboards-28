@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useToast } from '@/hooks/use-toast';
@@ -103,6 +102,41 @@ export function useDigitalAssets() {
     }
   };
 
+  // Delete digital asset
+  const deleteDigitalAsset = async (id: string) => {
+    try {
+      const { error } = await supabase
+        .from('digital_assets')
+        .delete()
+        .eq('id', id);
+
+      if (error) {
+        console.error('Error deleting digital asset:', error);
+        toast({
+          title: "Error",
+          description: "Failed to delete digital asset",
+          variant: "destructive"
+        });
+        return false;
+      }
+
+      setDigitalAssets(prev => prev.filter(asset => asset.id !== id));
+      toast({
+        title: "Success",
+        description: "Digital asset deleted successfully"
+      });
+      return true;
+    } catch (error) {
+      console.error('Error deleting digital asset:', error);
+      toast({
+        title: "Error",
+        description: "Failed to delete digital asset",
+        variant: "destructive"
+      });
+      return false;
+    }
+  };
+
   // Calculate total value
   const getTotalValue = () => {
     return digitalAssets.reduce((total, asset) => total + asset.total_value, 0);
@@ -127,6 +161,7 @@ export function useDigitalAssets() {
     digitalAssets,
     loading,
     addDigitalAsset,
+    deleteDigitalAsset,
     getTotalValue,
     getFormattedTotalValue,
     refetch: fetchDigitalAssets
