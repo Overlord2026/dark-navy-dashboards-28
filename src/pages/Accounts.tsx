@@ -1,4 +1,3 @@
-
 import React from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
@@ -11,12 +10,21 @@ import { CollapsibleCard } from "@/components/accounts/CollapsibleCard";
 import { useAccountManagement } from "@/hooks/useAccountManagement";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
+import { AddAccountTypeDialog } from "@/components/accounts/AddAccountTypeDialog";
 
 const Accounts = () => {
-  const { fundingAccounts, handleManageFunding, handleCompleteSetup } = useAccountManagement();
+  const { 
+    fundingAccounts, 
+    handleManageFunding, 
+    handleCompleteSetup,
+    handleAddAccount,
+    handleAccountTypeSelected,
+    showAddAccountTypeDialog,
+    setShowAddAccountTypeDialog
+  } = useAccountManagement();
   const isMobile = useIsMobile();
 
-  const handleAddAccount = (type: string) => {
+  const handleAddAccountType = (type: string) => {
     console.log(`Add ${type} clicked`);
   };
 
@@ -55,7 +63,7 @@ const Accounts = () => {
               Manage Funding
             </Button>
             <Button 
-              onClick={() => handleAddAccount('General')}
+              onClick={handleAddAccount}
               className={cn(
                 isMobile ? "w-full text-sm" : ""
               )}
@@ -108,7 +116,7 @@ const Accounts = () => {
             description="No investment accounts linked."
           >
             <Button 
-              onClick={() => handleAddAccount('Investment Account')} 
+              onClick={() => handleAddAccountType('Investment Account')} 
               variant="outline" 
               className={cn(
                 isMobile ? "w-full text-sm" : "w-full sm:w-auto"
@@ -127,7 +135,7 @@ const Accounts = () => {
             description="No manually tracked accounts added."
           >
             <Button 
-              onClick={() => handleAddAccount('Manual Account')} 
+              onClick={() => handleAddAccountType('Manual Account')} 
               variant="outline" 
               className={cn(
                 isMobile ? "w-full text-sm" : "w-full sm:w-auto"
@@ -167,7 +175,7 @@ const Accounts = () => {
                 </Select>
               </div>
               <Button 
-                onClick={() => handleAddAccount('Loan')} 
+                onClick={() => handleAddAccountType('Loan')} 
                 variant="outline" 
                 className={cn(
                   isMobile ? "w-full text-sm" : "w-full sm:w-auto"
@@ -187,7 +195,7 @@ const Accounts = () => {
             description="No banking accounts linked."
           >
             <Button 
-              onClick={() => handleAddAccount('Bank Account')} 
+              onClick={() => handleAddAccountType('Bank Account')} 
               variant="outline" 
               className={cn(
                 isMobile ? "w-full text-sm" : "w-full sm:w-auto"
@@ -206,7 +214,7 @@ const Accounts = () => {
             description="No credit card accounts linked."
           >
             <Button 
-              onClick={() => handleAddAccount('Credit Card')} 
+              onClick={() => handleAddAccountType('Credit Card')} 
               variant="outline" 
               className={cn(
                 isMobile ? "w-full text-sm" : "w-full sm:w-auto"
@@ -218,6 +226,13 @@ const Accounts = () => {
           </CollapsibleCard>
         </div>
       </div>
+
+      {/* Add Account Type Dialog */}
+      <AddAccountTypeDialog 
+        open={showAddAccountTypeDialog}
+        onOpenChange={setShowAddAccountTypeDialog}
+        onAccountTypeSelect={handleAccountTypeSelected}
+      />
     </ThreeColumnLayout>
   );
 };

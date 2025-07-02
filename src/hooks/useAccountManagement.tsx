@@ -23,6 +23,7 @@ export function useAccountManagement() {
   const [selectedAccountType, setSelectedAccountType] = useState("");
   const [showAccountTypeSelector, setShowAccountTypeSelector] = useState(false);
   const [showAddAccountDialog, setShowAddAccountDialog] = useState(false);
+  const [showAddAccountTypeDialog, setShowAddAccountTypeDialog] = useState(false);
   const [showPlaidDialog, setShowPlaidDialog] = useState(false);
   const [showManageFundingDialog, setShowManageFundingDialog] = useState(false);
   
@@ -33,12 +34,17 @@ export function useAccountManagement() {
   ];
 
   const handleAddAccount = () => {
-    setShowAccountTypeSelector(true);
+    setShowAddAccountTypeDialog(true);
   };
 
   const handleAccountTypeSelected = (type: string) => {
     setSelectedAccountType(type);
-    setShowAddAccountDialog(true);
+    console.log(`Account type selected: ${type}`);
+    toast({
+      title: "Account Type Selected",
+      description: `You selected: ${type.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}`
+    });
+    // Here you could navigate to a specific form or open another dialog based on the type
   };
 
   const handlePlaidSelected = () => {
@@ -83,6 +89,7 @@ export function useAccountManagement() {
     selectedAccountType,
     showAccountTypeSelector,
     showAddAccountDialog,
+    showAddAccountTypeDialog,
     showPlaidDialog,
     showManageFundingDialog,
     fundingAccounts,
@@ -97,6 +104,7 @@ export function useAccountManagement() {
     handleManageFunding,
     handleCompleteSetup,
     setShowAddAccountDialog,
+    setShowAddAccountTypeDialog,
     setShowPlaidDialog,
     setShowManageFundingDialog
   };
