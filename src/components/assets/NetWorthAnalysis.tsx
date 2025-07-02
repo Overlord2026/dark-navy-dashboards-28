@@ -1,5 +1,4 @@
 
-
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { useSupabaseAssets } from "@/hooks/useSupabaseAssets";
@@ -115,13 +114,13 @@ export const NetWorthAnalysis: React.FC = () => {
               ) : (
                 <div className="space-y-4">
                   {liabilities.map((liability) => {
-                    const percentage = calculatePercentage(Number(liability.amount), totalLiabilities);
+                    const percentage = calculatePercentage(Number(liability.current_balance), totalLiabilities);
                     return (
                       <div key={liability.id} className="space-y-2">
                         <div className="flex justify-between items-center">
                           <span className="text-sm font-medium">{liability.name}</span>
                           <div className="text-right">
-                            <div className="text-sm font-bold">{formatCurrency(Number(liability.amount))}</div>
+                            <div className="text-sm font-bold">{formatCurrency(Number(liability.current_balance))}</div>
                             <div className="text-xs text-muted-foreground">{percentage}%</div>
                           </div>
                         </div>
@@ -157,4 +156,3 @@ export const NetWorthAnalysis: React.FC = () => {
     </div>
   );
 };
-
