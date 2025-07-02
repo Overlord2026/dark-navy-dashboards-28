@@ -1,3 +1,4 @@
+
 import React from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
@@ -99,12 +100,12 @@ const Accounts = () => {
             <RetirementAccountTracker />
           </CollapsibleCard>
 
-          {/* External Investment */}
+          {/* Investment */}
           <CollapsibleCard
             icon={<TrendingUp className={cn("mr-2 h-5 w-5 text-primary", isMobile && "h-4 w-4")} />}
-            title="External Investment"
+            title="Investment"
             amount="$0.00"
-            description="No external investment accounts linked."
+            description="No investment accounts linked."
           >
             <Button 
               onClick={() => handleAddAccount('Investment Account')} 
@@ -118,10 +119,10 @@ const Accounts = () => {
             </Button>
           </CollapsibleCard>
 
-          {/* External Manually-Tracked */}
+          {/* Manually-Tracked */}
           <CollapsibleCard
             icon={<CreditCard className={cn("mr-2 h-5 w-5 text-primary", isMobile && "h-4 w-4")} />}
-            title="External Manually-Tracked"
+            title="Manually-Tracked"
             amount="$0.00"
             description="No manually tracked accounts added."
           >
@@ -137,10 +138,10 @@ const Accounts = () => {
             </Button>
           </CollapsibleCard>
 
-          {/* External Loans */}
+          {/* Loans */}
           <CollapsibleCard
             icon={<Building className={cn("mr-2 h-5 w-5 text-primary", isMobile && "h-4 w-4")} />}
-            title="External Loans"
+            title="Loans"
             amount="$0.00"
             description="No loan accounts linked."
           >
@@ -178,10 +179,10 @@ const Accounts = () => {
             </div>
           </CollapsibleCard>
 
-          {/* External Banking */}
+          {/* Banking */}
           <CollapsibleCard
             icon={<Banknote className={cn("mr-2 h-5 w-5 text-primary", isMobile && "h-4 w-4")} />}
-            title="External Banking"
+            title="Banking"
             amount="$0.00"
             description="No banking accounts linked."
           >
@@ -197,10 +198,10 @@ const Accounts = () => {
             </Button>
           </CollapsibleCard>
 
-          {/* External Credit Cards */}
+          {/* Credit Cards */}
           <CollapsibleCard
             icon={<CreditCard className={cn("mr-2 h-5 w-5 text-primary", isMobile && "h-4 w-4")} />}
-            title="External Credit Cards"
+            title="Credit Cards"
             amount="$0.00"
             description="No credit card accounts linked."
           >
