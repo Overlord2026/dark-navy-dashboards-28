@@ -33,6 +33,7 @@ export const useSupabaseLiabilities = () => {
     }
 
     try {
+      console.log('Fetching liabilities for user:', user.id);
       const { data, error } = await supabase
         .from('user_liabilities')
         .select('*')
@@ -45,6 +46,7 @@ export const useSupabaseLiabilities = () => {
         return;
       }
 
+      console.log('Fetched liabilities:', data);
       setLiabilities(data || []);
     } catch (error) {
       console.error('Error:', error);

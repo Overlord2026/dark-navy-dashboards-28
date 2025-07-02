@@ -70,6 +70,17 @@ export const AddLiabilityDialog = ({ open, onOpenChange, onLiabilityAdded }: Add
     setIsSubmitting(true);
 
     try {
+      // First, let's check the table structure
+      console.log('Checking table structure...');
+      const { data: tableInfo, error: tableError } = await supabase
+        .from('user_liabilities')
+        .select('*')
+        .limit(0);
+      
+      if (tableError) {
+        console.error('Table structure check error:', tableError);
+      }
+
       const liabilityData: any = {
         user_id: user.id,
         name: name.trim(),
@@ -101,6 +112,8 @@ export const AddLiabilityDialog = ({ open, onOpenChange, onLiabilityAdded }: Add
           liabilityData.interest_rate = numericInterestRate;
         }
       }
+
+      console.log('Inserting liability data:', liabilityData);
 
       const { error } = await supabase
         .from('user_liabilities')
