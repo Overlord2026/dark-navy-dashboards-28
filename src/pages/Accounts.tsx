@@ -1,9 +1,10 @@
+
 import React from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { PlusCircle, Shield, TrendingUp, CreditCard, Building, Banknote, Wallet } from "lucide-react";
+import { PlusCircle, Shield, TrendingUp, CreditCard, Building, Banknote, Wallet, Coins } from "lucide-react";
 import { RetirementAccountTracker } from "@/components/social-security/RetirementAccountTracker";
 import { FundingAccountsOverview } from "@/components/accounts/FundingAccountsOverview";
 import { CollapsibleCard } from "@/components/accounts/CollapsibleCard";
@@ -231,6 +232,25 @@ const Accounts = () => {
             >
               <PlusCircle className={cn("mr-2", isMobile ? "h-3 w-3" : "h-4 w-4")} />
               Add Credit Card
+            </Button>
+          </CollapsibleCard>
+
+          {/* Digital Assets */}
+          <CollapsibleCard
+            icon={<Coins className={cn("mr-2 h-5 w-5 text-primary", isMobile && "h-4 w-4")} />}
+            title="Digital Assets"
+            amount="$0.00"
+            description="No digital assets added."
+          >
+            <Button 
+              onClick={() => handleAccountTypeSelected('digital-assets')} 
+              variant="outline" 
+              className={cn(
+                isMobile ? "w-full text-sm" : "w-full sm:w-auto"
+              )}
+            >
+              <PlusCircle className={cn("mr-2", isMobile ? "h-3 w-3" : "h-4 w-4")} />
+              Add Digital Asset
             </Button>
           </CollapsibleCard>
         </div>
