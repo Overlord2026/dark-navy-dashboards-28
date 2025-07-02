@@ -40,11 +40,19 @@ export function useAccountManagement() {
   const handleAccountTypeSelected = (type: string) => {
     setSelectedAccountType(type);
     console.log(`Account type selected: ${type}`);
-    toast({
-      title: "Account Type Selected",
-      description: `You selected: ${type.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}`
-    });
-    // Here you could navigate to a specific form or open another dialog based on the type
+    
+    if (type === 'bank') {
+      // Show the account link type selector for bank accounts
+      setShowAddAccountTypeDialog(false);
+      setShowAccountTypeSelector(true);
+    } else {
+      // For other account types, show toast for now
+      toast({
+        title: "Account Type Selected",
+        description: `You selected: ${type.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}`
+      });
+      setShowAddAccountTypeDialog(false);
+    }
   };
 
   const handlePlaidSelected = () => {
@@ -70,6 +78,11 @@ export function useAccountManagement() {
     setShowAccountTypeSelector(false);
     setShowAddAccountDialog(false);
     setShowPlaidDialog(false);
+  };
+
+  const handleBackToAccountTypes = () => {
+    setShowAccountTypeSelector(false);
+    setShowAddAccountTypeDialog(true);
   };
 
   const handleManageFunding = () => {
@@ -101,11 +114,13 @@ export function useAccountManagement() {
     handleManualSelected,
     handlePlaidSuccess,
     handleBackToAccounts,
+    handleBackToAccountTypes,
     handleManageFunding,
     handleCompleteSetup,
     setShowAddAccountDialog,
     setShowAddAccountTypeDialog,
     setShowPlaidDialog,
-    setShowManageFundingDialog
+    setShowManageFundingDialog,
+    setShowAccountTypeSelector
   };
 }

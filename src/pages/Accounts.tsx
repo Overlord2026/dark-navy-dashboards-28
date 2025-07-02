@@ -1,3 +1,4 @@
+
 import React from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
@@ -11,6 +12,7 @@ import { useAccountManagement } from "@/hooks/useAccountManagement";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 import { AddAccountTypeDialog } from "@/components/accounts/AddAccountTypeDialog";
+import { AccountLinkTypeSelector } from "@/components/accounts/AccountLinkTypeSelector";
 
 const Accounts = () => {
   const { 
@@ -19,8 +21,13 @@ const Accounts = () => {
     handleCompleteSetup,
     handleAddAccount,
     handleAccountTypeSelected,
+    handlePlaidSelected,
+    handleManualSelected,
+    handleBackToAccountTypes,
     showAddAccountTypeDialog,
-    setShowAddAccountTypeDialog
+    showAccountTypeSelector,
+    setShowAddAccountTypeDialog,
+    setShowAccountTypeSelector
   } = useAccountManagement();
   const isMobile = useIsMobile();
 
@@ -233,6 +240,19 @@ const Accounts = () => {
         onOpenChange={setShowAddAccountTypeDialog}
         onAccountTypeSelect={handleAccountTypeSelected}
       />
+
+      {/* Account Link Type Selector Dialog */}
+      {showAccountTypeSelector && (
+        <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4">
+          <div className="bg-background rounded-lg shadow-lg max-w-md w-full p-6">
+            <AccountLinkTypeSelector
+              onSelectPlaid={handlePlaidSelected}
+              onSelectManual={handleManualSelected}
+              onBack={handleBackToAccountTypes}
+            />
+          </div>
+        </div>
+      )}
     </ThreeColumnLayout>
   );
 };
