@@ -47,9 +47,6 @@ const Accounts = () => {
   // Add state for liability dialog
   const [showAddLiabilityDialog, setShowAddLiabilityDialog] = React.useState(false);
 
-  // Add state for other asset dialog
-  const [showAddOtherAssetDialog, setShowAddOtherAssetDialog] = React.useState(false);
-
   const handleAddAccountType = (type: string) => {
     if (type === 'liability' || type === 'Liability') {
       setShowAddAccountTypeDialog(false); // Close the account type dialog first
