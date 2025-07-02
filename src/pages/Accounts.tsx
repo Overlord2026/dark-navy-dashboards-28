@@ -1,4 +1,3 @@
-
 import React from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
@@ -19,6 +18,7 @@ import { AddDigitalAssetDialog } from "@/components/accounts/AddDigitalAssetDial
 import { DigitalAssetsTable } from "@/components/accounts/DigitalAssetsTable";
 import { AddLiabilityDialog } from "@/components/liabilities/AddLiabilityDialog";
 import { LiabilitiesList } from "@/components/liabilities/LiabilitiesList";
+import { AddOtherAssetDialog } from "@/components/assets/AddOtherAssetDialog";
 
 const Accounts = () => {
   const { 
@@ -35,7 +35,9 @@ const Accounts = () => {
     showAddDigitalAssetDialog,
     setShowAddAccountTypeDialog,
     setShowAccountTypeSelector,
-    setShowAddDigitalAssetDialog
+    setShowAddDigitalAssetDialog,
+    setShowAddOtherAssetDialog,
+    setShowAddOtherAssetDialog: setShowAddOtherAssetDialogProp
   } = useAccountManagement();
   
   const { getFormattedTotalValue, loading: digitalAssetsLoading } = useDigitalAssets();
@@ -44,6 +46,9 @@ const Accounts = () => {
 
   // Add state for liability dialog
   const [showAddLiabilityDialog, setShowAddLiabilityDialog] = React.useState(false);
+
+  // Add state for other asset dialog
+  const [showAddOtherAssetDialog, setShowAddOtherAssetDialog] = React.useState(false);
 
   const handleAddAccountType = (type: string) => {
     if (type === 'liability' || type === 'Liability') {
@@ -54,11 +59,14 @@ const Accounts = () => {
     }
   };
 
-  // Update the handleAccountTypeSelected to handle liability properly
+  // Update the handleAccountTypeSelected to handle liability and other assets properly
   const handleAccountTypeSelectedWithLiability = (type: string) => {
     if (type === 'liability') {
       setShowAddAccountTypeDialog(false);
       setShowAddLiabilityDialog(true);
+    } else if (type === 'other-assets') {
+      setShowAddAccountTypeDialog(false);
+      setShowAddOtherAssetDialog(true);
     } else {
       handleAccountTypeSelected(type);
     }
@@ -310,6 +318,12 @@ const Accounts = () => {
         open={showAddLiabilityDialog}
         onOpenChange={setShowAddLiabilityDialog}
         onLiabilityAdded={refreshLiabilities}
+      />
+
+      {/* Add Other Asset Dialog */}
+      <AddOtherAssetDialog
+        open={showAddOtherAssetDialog}
+        onOpenChange={setShowAddOtherAssetDialog}
       />
     </ThreeColumnLayout>
   );
