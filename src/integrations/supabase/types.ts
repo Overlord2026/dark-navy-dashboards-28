@@ -1115,6 +1115,39 @@ export type Database = {
         }
         Relationships: []
       }
+      private_equity_accounts: {
+        Row: {
+          created_at: string
+          entity_name: string
+          entity_type: string
+          id: string
+          ownership_percentage: number | null
+          updated_at: string
+          user_id: string
+          valuation: number
+        }
+        Insert: {
+          created_at?: string
+          entity_name: string
+          entity_type: string
+          id?: string
+          ownership_percentage?: number | null
+          updated_at?: string
+          user_id: string
+          valuation?: number
+        }
+        Update: {
+          created_at?: string
+          entity_name?: string
+          entity_type?: string
+          id?: string
+          ownership_percentage?: number | null
+          updated_at?: string
+          user_id?: string
+          valuation?: number
+        }
+        Relationships: []
+      }
       professionals: {
         Row: {
           address: string | null

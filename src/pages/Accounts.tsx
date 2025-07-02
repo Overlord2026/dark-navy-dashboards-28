@@ -1,4 +1,3 @@
-
 import React from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
@@ -23,6 +22,8 @@ import { LiabilitiesList } from "@/components/liabilities/LiabilitiesList";
 import { AddOtherAssetDialog } from "@/components/assets/AddOtherAssetDialog";
 import { OtherAssetsList } from "@/components/assets/OtherAssetsList";
 import { AddPrivateEquityDialog } from "@/components/accounts/AddPrivateEquityDialog";
+import { PrivateEquityAccountsList } from "@/components/accounts/PrivateEquityAccountsList";
+import { usePrivateEquityAccounts } from "@/hooks/usePrivateEquityAccounts";
 
 const Accounts = () => {
   const { 
@@ -49,6 +50,7 @@ const Accounts = () => {
   const { getFormattedTotalValue, loading: digitalAssetsLoading } = useDigitalAssets();
   const { getTotalLiabilities, refreshLiabilities } = useSupabaseLiabilities();
   const { getFormattedTotalValue: getFormattedOtherAssetsValue, loading: otherAssetsLoading } = useSupabaseAssets();
+  const { getFormattedTotalValuation, loading: privateEquityLoading } = usePrivateEquityAccounts();
   const isMobile = useIsMobile();
 
   // Add state for liability dialog
@@ -248,11 +250,11 @@ const Accounts = () => {
           <CollapsibleCard
             icon={<Briefcase className={cn("mr-2 h-5 w-5 text-primary", isMobile && "h-4 w-4")} />}
             title="Private Equity"
-            amount="$0.00"
+            amount={privateEquityLoading ? "Loading..." : getFormattedTotalValuation()}
             description="Track your private equity investments and holdings."
           >
             <div className="space-y-4">
-              <p className="text-sm text-muted-foreground">No private equity accounts added yet.</p>
+              <PrivateEquityAccountsList />
               <Button 
                 onClick={() => handleAccountTypeSelectedWithLiability('private-equity')} 
                 variant="outline" 

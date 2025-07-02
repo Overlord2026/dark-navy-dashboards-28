@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
+import { usePrivateEquityAccounts } from "@/hooks/usePrivateEquityAccounts";
 import { ArrowLeft } from "lucide-react";
 
 interface AddPrivateEquityDialogProps {
@@ -20,6 +21,7 @@ export function AddPrivateEquityDialog({
   onBack 
 }: AddPrivateEquityDialogProps) {
   const { toast } = useToast();
+  const { addAccount, saving } = usePrivateEquityAccounts();
   
   const [formData, setFormData] = useState({
     entityName: "",
@@ -45,12 +47,12 @@ export function AddPrivateEquityDialog({
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!formData.entityName.trim()) {
       toast({
-        title: "Error",
+        title: "Error", 
         description: "Entity name is required",
         variant: "destructive"
       });
@@ -87,8 +89,9 @@ export function AddPrivateEquityDialog({
     }
 
     // Validate ownership percentage if provided
+    let ownershipNum: number | undefined;
     if (formData.ownershipPercentage) {
-      const ownershipNum = parseFloat(formData.ownershipPercentage);
+      ownershipNum = parseFloat(formData.ownershipPercentage);
       if (isNaN(ownershipNum) || ownershipNum < 0 || ownershipNum > 100) {
         toast({
           title: "Error",
@@ -99,22 +102,24 @@ export function AddPrivateEquityDialog({
       }
     }
 
-    console.log("Private Equity Account Data:", formData);
-    
-    toast({
-      title: "Private Equity Account Added",
-      description: `${formData.entityName} has been added successfully`
+    const result = await addAccount({
+      entity_name: formData.entityName,
+      valuation: valuationNum,
+      ownership_percentage: ownershipNum,
+      entity_type: formData.entityType
     });
 
-    // Reset form
-    setFormData({
-      entityName: "",
-      valuation: "",
-      ownershipPercentage: "",
-      entityType: ""
-    });
-    
-    onOpenChange(false);
+    if (result) {
+      // Reset form
+      setFormData({
+        entityName: "",
+        valuation: "",
+        ownershipPercentage: "",
+        entityType: ""
+      });
+      
+      onOpenChange(false);
+    }
   };
 
   const handleBack = () => {
@@ -204,8 +209,8 @@ export function AddPrivateEquityDialog({
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               Cancel
             </Button>
-            <Button type="submit">
-              Add Private Equity Account
+            <Button type="submit" disabled={saving}>
+              {saving ? "Adding..." : "Add Private Equity Account"}
             </Button>
           </DialogFooter>
         </form>
