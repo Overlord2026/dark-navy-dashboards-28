@@ -9,7 +9,12 @@ export interface SupabaseLiability {
   user_id: string;
   name: string;
   type: string;
-  amount: number;
+  current_balance: number;
+  original_loan_amount?: number;
+  start_date?: string;
+  end_date?: string;
+  monthly_payment?: number;
+  interest_rate?: number;
   created_at: string;
   updated_at: string;
 }
@@ -51,7 +56,7 @@ export const useSupabaseLiabilities = () => {
 
   // Calculate total liabilities value
   const getTotalLiabilities = () => {
-    return liabilities.reduce((total, liability) => total + Number(liability.amount), 0);
+    return liabilities.reduce((total, liability) => total + Number(liability.current_balance), 0);
   };
 
   useEffect(() => {

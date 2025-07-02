@@ -10,12 +10,15 @@ import { FundingAccountsOverview } from "@/components/accounts/FundingAccountsOv
 import { CollapsibleCard } from "@/components/accounts/CollapsibleCard";
 import { useAccountManagement } from "@/hooks/useAccountManagement";
 import { useDigitalAssets } from "@/hooks/useDigitalAssets";
+import { useSupabaseLiabilities } from "@/hooks/useSupabaseLiabilities";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 import { AddAccountTypeDialog } from "@/components/accounts/AddAccountTypeDialog";
 import { AccountLinkTypeSelector } from "@/components/accounts/AccountLinkTypeSelector";
 import { AddDigitalAssetDialog } from "@/components/accounts/AddDigitalAssetDialog";
 import { DigitalAssetsTable } from "@/components/accounts/DigitalAssetsTable";
+import { AddLiabilityDialog } from "@/components/liabilities/AddLiabilityDialog";
+import { LiabilitiesList } from "@/components/liabilities/LiabilitiesList";
 
 const Accounts = () => {
   const { 
@@ -36,10 +39,27 @@ const Accounts = () => {
   } = useAccountManagement();
   
   const { getFormattedTotalValue, loading: digitalAssetsLoading } = useDigitalAssets();
+  const { getTotalLiabilities, refreshLiabilities } = useSupabaseLiabilities();
   const isMobile = useIsMobile();
 
+  // Add state for liability dialog
+  const [showAddLiabilityDialog, setShowAddLiabilityDialog] = React.useState(false);
+
   const handleAddAccountType = (type: string) => {
-    console.log(`Add ${type} clicked`);
+    if (type === 'Liability') {
+      setShowAddLiabilityDialog(true);
+    } else {
+      console.log(`Add ${type} clicked`);
+    }
+  };
+
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }).format(amount);
   };
 
   return (
@@ -224,19 +244,22 @@ const Accounts = () => {
           <CollapsibleCard
             icon={<AlertTriangle className={cn("mr-2 h-5 w-5 text-primary", isMobile && "h-4 w-4")} />}
             title="Liability"
-            amount="$0.00"
+            amount={formatCurrency(getTotalLiabilities())}
             description="Track your debts and liabilities."
           >
-            <Button 
-              onClick={() => handleAddAccountType('Liability')} 
-              variant="outline" 
-              className={cn(
-                isMobile ? "w-full text-sm" : "w-full sm:w-auto"
-              )}
-            >
-              <PlusCircle className={cn("mr-2", isMobile ? "h-3 w-3" : "h-4 w-4")} />
-              Add Liability
-            </Button>
+            <div className="space-y-4">
+              <LiabilitiesList />
+              <Button 
+                onClick={() => handleAddAccountType('Liability')} 
+                variant="outline" 
+                className={cn(
+                  isMobile ? "w-full text-sm" : "w-full sm:w-auto"
+                )}
+              >
+                <PlusCircle className={cn("mr-2", isMobile ? "h-3 w-3" : "h-4 w-4")} />
+                Add Liability
+              </Button>
+            </div>
           </CollapsibleCard>
         </div>
       </div>
@@ -269,6 +292,13 @@ const Accounts = () => {
         open={showAddDigitalAssetDialog}
         onOpenChange={setShowAddDigitalAssetDialog}
         onBack={handleBackToAccountTypes}
+      />
+
+      {/* Add Liability Dialog */}
+      <AddLiabilityDialog
+        open={showAddLiabilityDialog}
+        onOpenChange={setShowAddLiabilityDialog}
+        onLiabilityAdded={refreshLiabilities}
       />
     </ThreeColumnLayout>
   );
