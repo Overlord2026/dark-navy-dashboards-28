@@ -827,6 +827,39 @@ export type Database = {
         }
         Relationships: []
       }
+      other_assets: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          owner: string
+          type: string
+          updated_at: string
+          user_id: string
+          value: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          owner?: string
+          type: string
+          updated_at?: string
+          user_id: string
+          value?: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          owner?: string
+          type?: string
+          updated_at?: string
+          user_id?: string
+          value?: number
+        }
+        Relationships: []
+      }
       physicians: {
         Row: {
           created_at: string
