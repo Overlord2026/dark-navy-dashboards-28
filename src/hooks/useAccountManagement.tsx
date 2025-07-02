@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -27,6 +28,7 @@ export function useAccountManagement() {
   const [showManageFundingDialog, setShowManageFundingDialog] = useState(false);
   const [showAddDigitalAssetDialog, setShowAddDigitalAssetDialog] = useState(false);
   const [showAddOtherAssetDialog, setShowAddOtherAssetDialog] = useState(false);
+  const [showAddPrivateEquityDialog, setShowAddPrivateEquityDialog] = useState(false);
   
   // Sample linked funding accounts - in a real app, this would come from an API
   const fundingAccounts = [
@@ -54,6 +56,10 @@ export function useAccountManagement() {
       // Show the other assets form
       setShowAddAccountTypeDialog(false);
       setShowAddOtherAssetDialog(true);
+    } else if (type === 'private-equity') {
+      // Show the private equity form
+      setShowAddAccountTypeDialog(false);
+      setShowAddPrivateEquityDialog(true);
     } else {
       // For other account types, show toast for now
       toast({
@@ -94,6 +100,7 @@ export function useAccountManagement() {
     setShowAddAccountDialog(false);
     setShowAddDigitalAssetDialog(false);
     setShowAddOtherAssetDialog(false);
+    setShowAddPrivateEquityDialog(false);
     setShowAddAccountTypeDialog(true);
   };
 
@@ -119,6 +126,7 @@ export function useAccountManagement() {
     showManageFundingDialog,
     showAddDigitalAssetDialog,
     showAddOtherAssetDialog,
+    showAddPrivateEquityDialog,
     fundingAccounts,
     
     // Actions
@@ -137,6 +145,7 @@ export function useAccountManagement() {
     setShowManageFundingDialog,
     setShowAccountTypeSelector,
     setShowAddDigitalAssetDialog,
-    setShowAddOtherAssetDialog
+    setShowAddOtherAssetDialog,
+    setShowAddPrivateEquityDialog
   };
 }

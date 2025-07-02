@@ -21,6 +21,7 @@ import { AddLiabilityDialog } from "@/components/liabilities/AddLiabilityDialog"
 import { LiabilitiesList } from "@/components/liabilities/LiabilitiesList";
 import { AddOtherAssetDialog } from "@/components/assets/AddOtherAssetDialog";
 import { OtherAssetsList } from "@/components/assets/OtherAssetsList";
+import { AddPrivateEquityDialog } from "@/components/accounts/AddPrivateEquityDialog";
 
 const Accounts = () => {
   const { 
@@ -36,10 +37,12 @@ const Accounts = () => {
     showAccountTypeSelector,
     showAddDigitalAssetDialog,
     showAddOtherAssetDialog,
+    showAddPrivateEquityDialog,
     setShowAddAccountTypeDialog,
     setShowAccountTypeSelector,
     setShowAddDigitalAssetDialog,
-    setShowAddOtherAssetDialog
+    setShowAddOtherAssetDialog,
+    setShowAddPrivateEquityDialog
   } = useAccountManagement();
   
   const { getFormattedTotalValue, loading: digitalAssetsLoading } = useDigitalAssets();
@@ -67,6 +70,9 @@ const Accounts = () => {
     } else if (type === 'other-assets') {
       setShowAddAccountTypeDialog(false);
       setShowAddOtherAssetDialog(true);
+    } else if (type === 'private-equity') {
+      setShowAddAccountTypeDialog(false);
+      setShowAddPrivateEquityDialog(true);
     } else {
       handleAccountTypeSelected(type);
     }
@@ -346,6 +352,13 @@ const Accounts = () => {
       <AddOtherAssetDialog
         open={showAddOtherAssetDialog}
         onOpenChange={setShowAddOtherAssetDialog}
+      />
+
+      {/* Add Private Equity Dialog */}
+      <AddPrivateEquityDialog
+        open={showAddPrivateEquityDialog}
+        onOpenChange={setShowAddPrivateEquityDialog}
+        onBack={handleBackToAccountTypes}
       />
     </ThreeColumnLayout>
   );
