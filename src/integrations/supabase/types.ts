@@ -1924,28 +1924,43 @@ export type Database = {
       }
       user_liabilities: {
         Row: {
-          amount: number
           created_at: string
+          current_balance: number
+          end_date: string | null
           id: string
+          interest_rate: number | null
+          monthly_payment: number | null
           name: string
+          original_loan_amount: number | null
+          start_date: string | null
           type: string
           updated_at: string
           user_id: string
         }
         Insert: {
-          amount?: number
           created_at?: string
+          current_balance?: number
+          end_date?: string | null
           id?: string
+          interest_rate?: number | null
+          monthly_payment?: number | null
           name: string
+          original_loan_amount?: number | null
+          start_date?: string | null
           type: string
           updated_at?: string
           user_id: string
         }
         Update: {
-          amount?: number
           created_at?: string
+          current_balance?: number
+          end_date?: string | null
           id?: string
+          interest_rate?: number | null
+          monthly_payment?: number | null
           name?: string
+          original_loan_amount?: number | null
+          start_date?: string | null
           type?: string
           updated_at?: string
           user_id?: string

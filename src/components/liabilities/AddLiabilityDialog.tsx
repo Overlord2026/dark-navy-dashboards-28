@@ -70,54 +70,53 @@ export const AddLiabilityDialog = ({ open, onOpenChange, onLiabilityAdded }: Add
     setIsSubmitting(true);
 
     try {
-      // Build the liability data object step by step
-      const liabilityData: Record<string, any> = {};
-      
-      // Required fields
-      liabilityData.user_id = user.id;
-      liabilityData.name = name.trim();
-      liabilityData.type = type;
-      liabilityData.current_balance = numericCurrentBalance;
+      // Create the insert data object with only the required fields first
+      const insertData: any = {
+        user_id: user.id,
+        name: name.trim(),
+        type: type,
+        current_balance: numericCurrentBalance
+      };
 
-      // Optional fields - only add if they have values
+      // Add optional fields only if they have valid values
       if (originalLoanAmount && originalLoanAmount.trim()) {
         const numericOriginalAmount = parseFloat(originalLoanAmount);
         if (!isNaN(numericOriginalAmount) && numericOriginalAmount > 0) {
-          liabilityData.original_loan_amount = numericOriginalAmount;
+          insertData.original_loan_amount = numericOriginalAmount;
         }
       }
 
       if (startDate && startDate.trim()) {
-        liabilityData.start_date = startDate;
+        insertData.start_date = startDate;
       }
 
       if (endDate && endDate.trim()) {
-        liabilityData.end_date = endDate;
+        insertData.end_date = endDate;
       }
 
       if (monthlyPayment && monthlyPayment.trim()) {
         const numericMonthlyPayment = parseFloat(monthlyPayment);
         if (!isNaN(numericMonthlyPayment) && numericMonthlyPayment > 0) {
-          liabilityData.monthly_payment = numericMonthlyPayment;
+          insertData.monthly_payment = numericMonthlyPayment;
         }
       }
 
       if (interestRate && interestRate.trim()) {
         const numericInterestRate = parseFloat(interestRate);
         if (!isNaN(numericInterestRate) && numericInterestRate >= 0) {
-          liabilityData.interest_rate = numericInterestRate;
+          insertData.interest_rate = numericInterestRate;
         }
       }
 
-      console.log('Inserting liability data:', liabilityData);
+      console.log('Attempting to insert liability:', insertData);
 
       const { data, error } = await supabase
         .from('user_liabilities')
-        .insert([liabilityData])
+        .insert([insertData])
         .select();
 
       if (error) {
-        console.error('Error adding liability:', error);
+        console.error('Database error:', error);
         toast.error(`Failed to add liability: ${error.message}`);
         return;
       }
@@ -128,8 +127,8 @@ export const AddLiabilityDialog = ({ open, onOpenChange, onLiabilityAdded }: Add
       onLiabilityAdded();
       onOpenChange(false);
     } catch (error) {
-      console.error('Unexpected error:', error);
-      toast.error("An unexpected error occurred");
+      console.error('Unexpected error adding liability:', error);
+      toast.error("An unexpected error occurred while adding the liability");
     } finally {
       setIsSubmitting(false);
     }
