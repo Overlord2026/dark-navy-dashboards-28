@@ -244,7 +244,10 @@ const Accounts = () => {
       {/* Account Link Type Selector Dialog */}
       {showAccountTypeSelector && (
         <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4">
-          <div className="bg-background rounded-lg shadow-lg max-w-md w-full p-6">
+          <div className={cn(
+            "bg-background rounded-lg shadow-lg w-full p-6",
+            isMobile ? "max-w-sm mx-4" : "max-w-md"
+          )}>
             <AccountLinkTypeSelector
               onSelectPlaid={handlePlaidSelected}
               onSelectManual={handleManualSelected}
