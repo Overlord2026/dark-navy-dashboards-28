@@ -33,11 +33,11 @@ const Accounts = () => {
     showAddAccountTypeDialog,
     showAccountTypeSelector,
     showAddDigitalAssetDialog,
+    showAddOtherAssetDialog,
     setShowAddAccountTypeDialog,
     setShowAccountTypeSelector,
     setShowAddDigitalAssetDialog,
-    setShowAddOtherAssetDialog,
-    setShowAddOtherAssetDialog: setShowAddOtherAssetDialogProp
+    setShowAddOtherAssetDialog
   } = useAccountManagement();
   
   const { getFormattedTotalValue, loading: digitalAssetsLoading } = useDigitalAssets();
