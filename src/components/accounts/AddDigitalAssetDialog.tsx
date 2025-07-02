@@ -21,6 +21,7 @@ import { useTheme } from "@/context/ThemeContext";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
+import { useDigitalAssets } from "@/hooks/useDigitalAssets";
 
 interface AddDigitalAssetDialogProps {
   open: boolean;
@@ -44,6 +45,7 @@ export function AddDigitalAssetDialog({
   const { theme } = useTheme();
   const isMobile = useIsMobile();
   const { toast } = useToast();
+  const { addDigitalAsset } = useDigitalAssets();
   const isLightTheme = theme === "light";
 
   const [formData, setFormData] = useState({
@@ -54,6 +56,7 @@ export function AddDigitalAssetDialog({
   });
 
   const [calculatedValue, setCalculatedValue] = useState(0);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Auto-calculate value when quantity or price changes
   useEffect(() => {
@@ -69,7 +72,17 @@ export function AddDigitalAssetDialog({
     }));
   };
 
-  const handleSubmit = () => {
+  const resetForm = () => {
+    setFormData({
+      assetType: '',
+      customAssetType: '',
+      quantity: '',
+      pricePerUnit: '',
+    });
+    setCalculatedValue(0);
+  };
+
+  const handleSubmit = async () => {
     // Validation
     if (!formData.assetType) {
       toast({
@@ -107,22 +120,22 @@ export function AddDigitalAssetDialog({
       return;
     }
 
-    // Here you would typically save the digital asset
-    const assetName = formData.assetType === 'Other' ? formData.customAssetType : formData.assetType;
-    
-    toast({
-      title: "Digital Asset Added",
-      description: `${assetName} has been added to your portfolio with a value of $${calculatedValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+    setIsSubmitting(true);
+
+    const success = await addDigitalAsset({
+      asset_type: formData.assetType,
+      custom_asset_type: formData.assetType === 'Other' ? formData.customAssetType : null,
+      quantity: parseFloat(formData.quantity),
+      price_per_unit: parseFloat(formData.pricePerUnit),
+      total_value: calculatedValue
     });
 
-    // Reset form and close
-    setFormData({
-      assetType: '',
-      customAssetType: '',
-      quantity: '',
-      pricePerUnit: '',
-    });
-    onOpenChange(false);
+    if (success) {
+      resetForm();
+      onOpenChange(false);
+    }
+
+    setIsSubmitting(false);
   };
 
   return (
@@ -291,6 +304,7 @@ export function AddDigitalAssetDialog({
           <Button 
             variant="ghost" 
             onClick={onBack}
+            disabled={isSubmitting}
             className={cn(
               "group transition-all duration-200",
               isMobile ? "w-full text-sm" : "flex-1",
@@ -308,12 +322,13 @@ export function AddDigitalAssetDialog({
           
           <Button 
             onClick={handleSubmit}
+            disabled={isSubmitting}
             className={cn(
               isMobile ? "w-full text-sm" : "flex-1",
               "bg-primary hover:bg-primary/90"
             )}
           >
-            Add Digital Asset
+            {isSubmitting ? "Adding..." : "Add Digital Asset"}
           </Button>
         </div>
       </DialogContent>

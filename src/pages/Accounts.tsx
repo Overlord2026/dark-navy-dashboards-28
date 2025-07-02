@@ -9,6 +9,7 @@ import { RetirementAccountTracker } from "@/components/social-security/Retiremen
 import { FundingAccountsOverview } from "@/components/accounts/FundingAccountsOverview";
 import { CollapsibleCard } from "@/components/accounts/CollapsibleCard";
 import { useAccountManagement } from "@/hooks/useAccountManagement";
+import { useDigitalAssets } from "@/hooks/useDigitalAssets";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 import { AddAccountTypeDialog } from "@/components/accounts/AddAccountTypeDialog";
@@ -32,6 +33,8 @@ const Accounts = () => {
     setShowAccountTypeSelector,
     setShowAddDigitalAssetDialog
   } = useAccountManagement();
+  
+  const { getFormattedTotalValue, loading: digitalAssetsLoading } = useDigitalAssets();
   const isMobile = useIsMobile();
 
   const handleAddAccountType = (type: string) => {
@@ -239,8 +242,8 @@ const Accounts = () => {
           <CollapsibleCard
             icon={<Coins className={cn("mr-2 h-5 w-5 text-primary", isMobile && "h-4 w-4")} />}
             title="Digital Assets"
-            amount="$0.00"
-            description="No digital assets added."
+            amount={digitalAssetsLoading ? "Loading..." : getFormattedTotalValue()}
+            description="Track your cryptocurrency and digital asset holdings."
           >
             <Button 
               onClick={() => handleAccountTypeSelected('digital-assets')} 

@@ -84,6 +84,42 @@ export type Database = {
         }
         Relationships: []
       }
+      digital_assets: {
+        Row: {
+          asset_type: string
+          created_at: string
+          custom_asset_type: string | null
+          id: string
+          price_per_unit: number
+          quantity: number
+          total_value: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          asset_type: string
+          created_at?: string
+          custom_asset_type?: string | null
+          id?: string
+          price_per_unit: number
+          quantity: number
+          total_value: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          asset_type?: string
+          created_at?: string
+          custom_asset_type?: string | null
+          id?: string
+          price_per_unit?: number
+          quantity?: number
+          total_value?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       document_categories: {
         Row: {
           created_at: string | null
