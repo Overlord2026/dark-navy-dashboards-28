@@ -1,6 +1,5 @@
-
 import React, { useState } from "react";
-import { useSupabaseLiabilities } from "@/hooks/useSupabaseLiabilities";
+import { useSupabaseLiabilities, SupabaseLiability } from "@/hooks/useSupabaseLiabilities";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -17,19 +16,29 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
+import { DeleteLiabilityDialog } from "./DeleteLiabilityDialog";
 
 export function LiabilitiesList() {
   const { liabilities, loading, refreshLiabilities } = useSupabaseLiabilities();
   const isMobile = useIsMobile();
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [liabilityToDelete, setLiabilityToDelete] = useState<SupabaseLiability | null>(null);
 
-  const handleDelete = async (id: string) => {
-    setDeletingId(id);
+  const handleDeleteClick = (liability: SupabaseLiability) => {
+    setLiabilityToDelete(liability);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!liabilityToDelete) return;
+    
+    setDeletingId(liabilityToDelete.id);
     try {
       const { error } = await supabase
         .from('user_liabilities')
         .delete()
-        .eq('id', id);
+        .eq('id', liabilityToDelete.id);
 
       if (error) {
         console.error('Error deleting liability:', error);
@@ -44,6 +53,7 @@ export function LiabilitiesList() {
       toast.error('Failed to delete liability');
     } finally {
       setDeletingId(null);
+      setLiabilityToDelete(null);
     }
   };
 
@@ -87,122 +97,140 @@ export function LiabilitiesList() {
 
   if (isMobile) {
     return (
-      <div className="space-y-4">
-        {liabilities.map((liability) => (
-          <Card key={liability.id} className="p-4">
-            <div className="flex justify-between items-start mb-3">
-              <div>
-                <h4 className="font-semibold text-lg">{liability.name}</h4>
-                <Badge variant="outline" className="mt-1">
-                  {liability.type}
-                </Badge>
-              </div>
-              <div className="text-right">
-                <p className="font-bold text-lg text-red-600">
-                  {formatCurrency(liability.current_balance)}
-                </p>
-              </div>
-            </div>
-            
-            <div className="space-y-2 text-sm">
-              {liability.original_loan_amount && (
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Original Amount:</span>
-                  <span>{formatCurrency(liability.original_loan_amount)}</span>
+      <>
+        <div className="space-y-4">
+          {liabilities.map((liability) => (
+            <Card key={liability.id} className="p-4">
+              <div className="flex justify-between items-start mb-3">
+                <div>
+                  <h4 className="font-semibold text-lg">{liability.name}</h4>
+                  <Badge variant="outline" className="mt-1">
+                    {liability.type}
+                  </Badge>
                 </div>
-              )}
-              {liability.monthly_payment && (
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Monthly Payment:</span>
-                  <span>{formatCurrency(liability.monthly_payment)}</span>
+                <div className="text-right">
+                  <p className="font-bold text-lg text-red-600">
+                    {formatCurrency(liability.current_balance)}
+                  </p>
                 </div>
-              )}
-              {liability.interest_rate && (
+              </div>
+              
+              <div className="space-y-2 text-sm">
+                {liability.original_loan_amount && (
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Original Amount:</span>
+                    <span>{formatCurrency(liability.original_loan_amount)}</span>
+                  </div>
+                )}
+                {liability.monthly_payment && (
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Monthly Payment:</span>
+                    <span>{formatCurrency(liability.monthly_payment)}</span>
+                  </div>
+                )}
+                {liability.interest_rate && (
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Interest Rate:</span>
+                    <span>{formatPercentage(liability.interest_rate)}</span>
+                  </div>
+                )}
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Interest Rate:</span>
-                  <span>{formatPercentage(liability.interest_rate)}</span>
+                  <span className="text-muted-foreground">Start Date:</span>
+                  <span>{formatDate(liability.start_date)}</span>
                 </div>
-              )}
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Start Date:</span>
-                <span>{formatDate(liability.start_date)}</span>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">End Date:</span>
+                  <span>{formatDate(liability.end_date)}</span>
+                </div>
               </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">End Date:</span>
-                <span>{formatDate(liability.end_date)}</span>
-              </div>
-            </div>
 
-            <div className="flex gap-2 mt-4">
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className="flex-1 text-red-600 hover:text-red-700"
-                onClick={() => handleDelete(liability.id)}
-                disabled={deletingId === liability.id}
-              >
-                <Trash2 className="h-3 w-3 mr-1" />
-                {deletingId === liability.id ? "Deleting..." : "Delete"}
-              </Button>
-            </div>
-          </Card>
-        ))}
-      </div>
+              <div className="flex gap-2 mt-4">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="flex-1 text-red-600 hover:text-red-700"
+                  onClick={() => handleDeleteClick(liability)}
+                  disabled={deletingId === liability.id}
+                >
+                  <Trash2 className="h-3 w-3 mr-1" />
+                  {deletingId === liability.id ? "Deleting..." : "Delete"}
+                </Button>
+              </div>
+            </Card>
+          ))}
+        </div>
+
+        <DeleteLiabilityDialog
+          open={deleteDialogOpen}
+          onOpenChange={setDeleteDialogOpen}
+          liability={liabilityToDelete}
+          onConfirm={handleDeleteConfirm}
+        />
+      </>
     );
   }
 
   return (
-    <div className="rounded-md border">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Name</TableHead>
-            <TableHead>Type</TableHead>
-            <TableHead className="text-right">Current Balance</TableHead>
-            <TableHead className="text-right">Monthly Payment</TableHead>
-            <TableHead className="text-right">Interest Rate</TableHead>
-            <TableHead>End Date</TableHead>
-            <TableHead className="text-right">Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {liabilities.map((liability) => (
-            <TableRow key={liability.id}>
-              <TableCell className="font-medium">
-                {liability.name}
-              </TableCell>
-              <TableCell>
-                <Badge variant="outline">
-                  {liability.type}
-                </Badge>
-              </TableCell>
-              <TableCell className="text-right font-semibold text-red-600">
-                {formatCurrency(liability.current_balance)}
-              </TableCell>
-              <TableCell className="text-right">
-                {formatCurrency(liability.monthly_payment)}
-              </TableCell>
-              <TableCell className="text-right">
-                {formatPercentage(liability.interest_rate)}
-              </TableCell>
-              <TableCell>
-                {formatDate(liability.end_date)}
-              </TableCell>
-              <TableCell className="text-right">
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  className="text-red-600 hover:text-red-700"
-                  onClick={() => handleDelete(liability.id)}
-                  disabled={deletingId === liability.id}
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
-              </TableCell>
+    <>
+      <div className="rounded-md border">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Name</TableHead>
+              <TableHead>Type</TableHead>
+              <TableHead className="text-right">Current Balance</TableHead>
+              <TableHead className="text-right">Monthly Payment</TableHead>
+              <TableHead className="text-right">Interest Rate</TableHead>
+              <TableHead>End Date</TableHead>
+              <TableHead className="text-right">Actions</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </div>
+          </TableHeader>
+          <TableBody>
+            {liabilities.map((liability) => (
+              <TableRow key={liability.id}>
+                <TableCell className="font-medium">
+                  {liability.name}
+                </TableCell>
+                <TableCell>
+                  <Badge variant="outline">
+                    {liability.type}
+                  </Badge>
+                </TableCell>
+                <TableCell className="text-right font-semibold text-red-600">
+                  {formatCurrency(liability.current_balance)}
+                </TableCell>
+                <TableCell className="text-right">
+                  {formatCurrency(liability.monthly_payment)}
+                </TableCell>
+                <TableCell className="text-right">
+                  {formatPercentage(liability.interest_rate)}
+                </TableCell>
+                <TableCell>
+                  {formatDate(liability.end_date)}
+                </TableCell>
+                <TableCell className="text-right">
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="text-red-600 hover:text-red-700"
+                    onClick={() => handleDeleteClick(liability)}
+                    disabled={deletingId === liability.id}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+
+      <DeleteLiabilityDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        liability={liabilityToDelete}
+        onConfirm={handleDeleteConfirm}
+      />
+    </>
   );
 }
