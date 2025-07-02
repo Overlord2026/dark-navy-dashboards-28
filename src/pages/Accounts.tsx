@@ -23,7 +23,7 @@ const Accounts = () => {
   return (
     <ThreeColumnLayout
       activeMainItem="accounts"
-      title="Accounts"
+      title="Account Overview"
     >
       <div className={cn(
         "container mx-auto max-w-7xl space-y-6",
