@@ -70,68 +70,66 @@ export const AddLiabilityDialog = ({ open, onOpenChange, onLiabilityAdded }: Add
     setIsSubmitting(true);
 
     try {
-      // First, let's check the table structure
-      console.log('Checking table structure...');
-      const { data: tableInfo, error: tableError } = await supabase
-        .from('user_liabilities')
-        .select('*')
-        .limit(0);
+      // Build the liability data object step by step
+      const liabilityData: Record<string, any> = {};
       
-      if (tableError) {
-        console.error('Table structure check error:', tableError);
-      }
+      // Required fields
+      liabilityData.user_id = user.id;
+      liabilityData.name = name.trim();
+      liabilityData.type = type;
+      liabilityData.current_balance = numericCurrentBalance;
 
-      const liabilityData: any = {
-        user_id: user.id,
-        name: name.trim(),
-        type,
-        current_balance: numericCurrentBalance
-      };
-
-      // Add optional fields if they have values
-      if (originalLoanAmount) {
+      // Optional fields - only add if they have values
+      if (originalLoanAmount && originalLoanAmount.trim()) {
         const numericOriginalAmount = parseFloat(originalLoanAmount);
-        if (!isNaN(numericOriginalAmount)) {
+        if (!isNaN(numericOriginalAmount) && numericOriginalAmount > 0) {
           liabilityData.original_loan_amount = numericOriginalAmount;
         }
       }
 
-      if (startDate) liabilityData.start_date = startDate;
-      if (endDate) liabilityData.end_date = endDate;
+      if (startDate && startDate.trim()) {
+        liabilityData.start_date = startDate;
+      }
 
-      if (monthlyPayment) {
+      if (endDate && endDate.trim()) {
+        liabilityData.end_date = endDate;
+      }
+
+      if (monthlyPayment && monthlyPayment.trim()) {
         const numericMonthlyPayment = parseFloat(monthlyPayment);
-        if (!isNaN(numericMonthlyPayment)) {
+        if (!isNaN(numericMonthlyPayment) && numericMonthlyPayment > 0) {
           liabilityData.monthly_payment = numericMonthlyPayment;
         }
       }
 
-      if (interestRate) {
+      if (interestRate && interestRate.trim()) {
         const numericInterestRate = parseFloat(interestRate);
-        if (!isNaN(numericInterestRate)) {
+        if (!isNaN(numericInterestRate) && numericInterestRate >= 0) {
           liabilityData.interest_rate = numericInterestRate;
         }
       }
 
       console.log('Inserting liability data:', liabilityData);
 
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from('user_liabilities')
-        .insert(liabilityData);
+        .insert([liabilityData])
+        .select();
 
       if (error) {
         console.error('Error adding liability:', error);
-        toast.error("Failed to add liability");
+        toast.error(`Failed to add liability: ${error.message}`);
         return;
       }
 
+      console.log('Successfully added liability:', data);
       toast.success("Liability added successfully");
       resetForm();
       onLiabilityAdded();
       onOpenChange(false);
     } catch (error) {
-      console.error('Error:', error);
-      toast.error("Failed to add liability");
+      console.error('Unexpected error:', error);
+      toast.error("An unexpected error occurred");
     } finally {
       setIsSubmitting(false);
     }
