@@ -12,7 +12,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Edit, Trash2, Coins } from "lucide-react";
+import { Trash2, Coins } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 
@@ -86,17 +86,9 @@ export function DigitalAssetsTable() {
                 <span className="text-muted-foreground">Price per Unit:</span>
                 <span>{formatCurrency(asset.price_per_unit)}</span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Added:</span>
-                <span>{new Date(asset.created_at).toLocaleDateString()}</span>
-              </div>
             </div>
 
             <div className="flex gap-2 mt-4">
-              <Button variant="outline" size="sm" className="flex-1">
-                <Edit className="h-3 w-3 mr-1" />
-                Edit
-              </Button>
               <Button variant="outline" size="sm" className="flex-1 text-red-600 hover:text-red-700">
                 <Trash2 className="h-3 w-3 mr-1" />
                 Delete
@@ -118,7 +110,6 @@ export function DigitalAssetsTable() {
             <TableHead className="text-right">Quantity</TableHead>
             <TableHead className="text-right">Price per Unit</TableHead>
             <TableHead className="text-right">Total Value</TableHead>
-            <TableHead className="text-right">Date Added</TableHead>
             <TableHead className="text-right">Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -142,18 +133,10 @@ export function DigitalAssetsTable() {
               <TableCell className="text-right font-semibold text-green-600">
                 {formatCurrency(asset.total_value)}
               </TableCell>
-              <TableCell className="text-right text-sm text-muted-foreground">
-                {new Date(asset.created_at).toLocaleDateString()}
-              </TableCell>
               <TableCell className="text-right">
-                <div className="flex gap-2 justify-end">
-                  <Button variant="ghost" size="sm">
-                    <Edit className="h-4 w-4" />
-                  </Button>
-                  <Button variant="ghost" size="sm" className="text-red-600 hover:text-red-700">
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </div>
+                <Button variant="ghost" size="sm" className="text-red-600 hover:text-red-700">
+                  <Trash2 className="h-4 w-4" />
+                </Button>
               </TableCell>
             </TableRow>
           ))}
