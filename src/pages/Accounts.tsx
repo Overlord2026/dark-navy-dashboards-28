@@ -1,9 +1,10 @@
+
 import React from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { PlusCircle, Shield, TrendingUp, CreditCard, Building, Banknote, Wallet, Coins, AlertTriangle, Package } from "lucide-react";
+import { PlusCircle, Shield, TrendingUp, CreditCard, Building, Banknote, Wallet, Coins, AlertTriangle, Package, Briefcase } from "lucide-react";
 import { RetirementAccountTracker } from "@/components/social-security/RetirementAccountTracker";
 import { FundingAccountsOverview } from "@/components/accounts/FundingAccountsOverview";
 import { CollapsibleCard } from "@/components/accounts/CollapsibleCard";
@@ -241,6 +242,28 @@ const Accounts = () => {
               <PlusCircle className={cn("mr-2", isMobile ? "h-3 w-3" : "h-4 w-4")} />
               Add Credit Card
             </Button>
+          </CollapsibleCard>
+
+          {/* Private Equity */}
+          <CollapsibleCard
+            icon={<Briefcase className={cn("mr-2 h-5 w-5 text-primary", isMobile && "h-4 w-4")} />}
+            title="Private Equity"
+            amount="$0.00"
+            description="Track your private equity investments and holdings."
+          >
+            <div className="space-y-4">
+              <p className="text-sm text-muted-foreground">No private equity accounts added yet.</p>
+              <Button 
+                onClick={() => handleAccountTypeSelectedWithLiability('private-equity')} 
+                variant="outline" 
+                className={cn(
+                  isMobile ? "w-full text-sm" : "w-full sm:w-auto"
+                )}
+              >
+                <PlusCircle className={cn("mr-2", isMobile ? "h-3 w-3" : "h-4 w-4")} />
+                Add Private Equity Account
+              </Button>
+            </div>
           </CollapsibleCard>
 
           {/* Digital Assets */}
