@@ -1,4 +1,3 @@
-
 import React from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
@@ -13,6 +12,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 import { AddAccountTypeDialog } from "@/components/accounts/AddAccountTypeDialog";
 import { AccountLinkTypeSelector } from "@/components/accounts/AccountLinkTypeSelector";
+import { AddDigitalAssetDialog } from "@/components/accounts/AddDigitalAssetDialog";
 
 const Accounts = () => {
   const { 
@@ -26,8 +26,10 @@ const Accounts = () => {
     handleBackToAccountTypes,
     showAddAccountTypeDialog,
     showAccountTypeSelector,
+    showAddDigitalAssetDialog,
     setShowAddAccountTypeDialog,
-    setShowAccountTypeSelector
+    setShowAccountTypeSelector,
+    setShowAddDigitalAssetDialog
   } = useAccountManagement();
   const isMobile = useIsMobile();
 
@@ -256,6 +258,13 @@ const Accounts = () => {
           </div>
         </div>
       )}
+
+      {/* Add Digital Asset Dialog */}
+      <AddDigitalAssetDialog
+        open={showAddDigitalAssetDialog}
+        onOpenChange={setShowAddDigitalAssetDialog}
+        onBack={handleBackToAccountTypes}
+      />
     </ThreeColumnLayout>
   );
 };

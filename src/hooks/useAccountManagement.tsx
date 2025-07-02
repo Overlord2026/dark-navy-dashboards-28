@@ -26,6 +26,7 @@ export function useAccountManagement() {
   const [showAddAccountTypeDialog, setShowAddAccountTypeDialog] = useState(false);
   const [showPlaidDialog, setShowPlaidDialog] = useState(false);
   const [showManageFundingDialog, setShowManageFundingDialog] = useState(false);
+  const [showAddDigitalAssetDialog, setShowAddDigitalAssetDialog] = useState(false);
   
   // Sample linked funding accounts - in a real app, this would come from an API
   const fundingAccounts = [
@@ -45,6 +46,10 @@ export function useAccountManagement() {
       // Show the account link type selector for bank accounts
       setShowAddAccountTypeDialog(false);
       setShowAccountTypeSelector(true);
+    } else if (type === 'digital-assets') {
+      // Show the digital assets form
+      setShowAddAccountTypeDialog(false);
+      setShowAddDigitalAssetDialog(true);
     } else {
       // For other account types, show toast for now
       toast({
@@ -82,6 +87,8 @@ export function useAccountManagement() {
 
   const handleBackToAccountTypes = () => {
     setShowAccountTypeSelector(false);
+    setShowAddAccountDialog(false);
+    setShowAddDigitalAssetDialog(false);
     setShowAddAccountTypeDialog(true);
   };
 
@@ -105,6 +112,7 @@ export function useAccountManagement() {
     showAddAccountTypeDialog,
     showPlaidDialog,
     showManageFundingDialog,
+    showAddDigitalAssetDialog,
     fundingAccounts,
     
     // Actions
@@ -121,6 +129,7 @@ export function useAccountManagement() {
     setShowAddAccountTypeDialog,
     setShowPlaidDialog,
     setShowManageFundingDialog,
-    setShowAccountTypeSelector
+    setShowAccountTypeSelector,
+    setShowAddDigitalAssetDialog
   };
 }
