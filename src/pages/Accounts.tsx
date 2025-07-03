@@ -178,15 +178,6 @@ const Accounts = () => {
             </Button>
           </CollapsibleCard>
 
-          {/* 401K/457/403B Plans */}
-          <CollapsibleCard
-            icon={<TrendingUp className={cn("mr-2 h-5 w-5 text-primary", isMobile && "h-4 w-4")} />}
-            title="401K/457/403B Plans"
-            amount="$0.00"
-            description="Track and manage your retirement accounts"
-          >
-            <RetirementAccountTracker />
-          </CollapsibleCard>
 
           {/* Investment */}
           <CollapsibleCard
