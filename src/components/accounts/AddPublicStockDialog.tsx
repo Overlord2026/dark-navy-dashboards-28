@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
+import { usePublicStocks } from "@/hooks/usePublicStocks";
 import { ArrowLeft } from "lucide-react";
 
 interface AddPublicStockDialogProps {
@@ -18,6 +19,7 @@ export function AddPublicStockDialog({
   onBack 
 }: AddPublicStockDialogProps) {
   const { toast } = useToast();
+  const { addStock, saving } = usePublicStocks();
   
   const [formData, setFormData] = useState({
     companyName: "",
@@ -109,22 +111,24 @@ export function AddPublicStockDialog({
       return;
     }
 
-    const totalValue = calculateTotalValue();
-    
-    toast({
-      title: "Public Stock Added",
-      description: `${formData.companyName} (${formData.tickerSymbol.toUpperCase()}) - ${formatCurrency(totalValue)}`
+    const result = await addStock({
+      companyName: formData.companyName,
+      tickerSymbol: formData.tickerSymbol.toUpperCase(),
+      numberOfShares: shares,
+      pricePerShare: price
     });
 
-    // Reset form
-    setFormData({
-      companyName: "",
-      tickerSymbol: "",
-      numberOfShares: "",
-      pricePerShare: ""
-    });
-    
-    onOpenChange(false);
+    if (result) {
+      // Reset form
+      setFormData({
+        companyName: "",
+        tickerSymbol: "",
+        numberOfShares: "",
+        pricePerShare: ""
+      });
+      
+      onOpenChange(false);
+    }
   };
 
   const handleBack = () => {
@@ -216,8 +220,8 @@ export function AddPublicStockDialog({
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               Cancel
             </Button>
-            <Button type="submit">
-              Add Public Stock
+            <Button type="submit" disabled={saving}>
+              {saving ? "Adding..." : "Add Public Stock"}
             </Button>
           </DialogFooter>
         </form>

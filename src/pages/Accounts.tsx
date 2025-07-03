@@ -25,6 +25,8 @@ import { AddPrivateEquityDialog } from "@/components/accounts/AddPrivateEquityDi
 import { PrivateEquityAccountsList } from "@/components/accounts/PrivateEquityAccountsList";
 import { usePrivateEquityAccounts } from "@/hooks/usePrivateEquityAccounts";
 import { AddPublicStockDialog } from "@/components/accounts/AddPublicStockDialog";
+import { PublicStocksList } from "@/components/accounts/PublicStocksList";
+import { usePublicStocks } from "@/hooks/usePublicStocks";
 
 const Accounts = () => {
   const { 
@@ -54,6 +56,7 @@ const Accounts = () => {
   const { getTotalLiabilities, refreshLiabilities } = useSupabaseLiabilities();
   const { getFormattedTotalValue: getFormattedOtherAssetsValue, loading: otherAssetsLoading } = useSupabaseAssets();
   const { getFormattedTotalValuation, loading: privateEquityLoading } = usePrivateEquityAccounts();
+  const { getFormattedTotalValue: getFormattedPublicStockValue, loading: publicStockLoading } = usePublicStocks();
   const isMobile = useIsMobile();
 
   // Add state for liability dialog
@@ -267,6 +270,28 @@ const Accounts = () => {
               >
                 <PlusCircle className={cn("mr-2", isMobile ? "h-3 w-3" : "h-4 w-4")} />
                 Add Private Equity
+              </Button>
+            </div>
+          </CollapsibleCard>
+
+          {/* Public Stock */}
+          <CollapsibleCard
+            icon={<TrendingUp className={cn("mr-2 h-5 w-5 text-primary", isMobile && "h-4 w-4")} />}
+            title="Public Stock"
+            amount={publicStockLoading ? "Loading..." : getFormattedPublicStockValue()}
+            description="Track your individual stock holdings and equity investments."
+          >
+            <div className="space-y-4">
+              <PublicStocksList />
+              <Button 
+                onClick={() => handleAccountTypeSelected('public-stock')} 
+                variant="outline" 
+                className={cn(
+                  isMobile ? "w-full text-sm" : "w-full sm:w-auto"
+                )}
+              >
+                <PlusCircle className={cn("mr-2", isMobile ? "h-3 w-3" : "h-4 w-4")} />
+                Add Public Stock
               </Button>
             </div>
           </CollapsibleCard>
