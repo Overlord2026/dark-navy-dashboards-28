@@ -1471,6 +1471,42 @@ export type Database = {
           },
         ]
       }
+      public_stocks: {
+        Row: {
+          company_name: string
+          created_at: string
+          id: string
+          number_of_shares: number
+          price_per_share: number
+          ticker_symbol: string
+          total_value: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          company_name: string
+          created_at?: string
+          id?: string
+          number_of_shares?: number
+          price_per_share?: number
+          ticker_symbol: string
+          total_value?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          company_name?: string
+          created_at?: string
+          id?: string
+          number_of_shares?: number
+          price_per_share?: number
+          ticker_symbol?: string
+          total_value?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       shared_documents: {
         Row: {
           created_at: string

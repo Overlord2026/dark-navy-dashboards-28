@@ -1,21 +1,24 @@
 import { useState, useEffect } from 'react';
+import { supabase } from '@/lib/supabase';
 import { toast } from 'sonner';
 
 export interface PublicStock {
   id: string;
-  companyName: string;
-  tickerSymbol: string;
-  numberOfShares: number;
-  pricePerShare: number;
-  totalValue: number;
-  createdAt: string;
+  user_id: string;
+  company_name: string;
+  ticker_symbol: string;
+  number_of_shares: number;
+  price_per_share: number;
+  total_value: number;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface PublicStockData {
-  companyName: string;
-  tickerSymbol: string;
-  numberOfShares: number;
-  pricePerShare: number;
+  company_name: string;
+  ticker_symbol: string;
+  number_of_shares: number;
+  price_per_share: number;
 }
 
 export const usePublicStocks = () => {
@@ -23,21 +26,33 @@ export const usePublicStocks = () => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
-  // Simulate fetching stocks - in a real app, this would come from an API
+  // Fetch all public stocks for the current user
   const fetchStocks = async () => {
     try {
       setLoading(true);
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 500));
       
-      // Get from localStorage for demo purposes
-      const savedStocks = localStorage.getItem('publicStocks');
-      if (savedStocks) {
-        setStocks(JSON.parse(savedStocks));
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        console.log('No authenticated user found');
+        return;
       }
+
+      const { data, error } = await supabase
+        .from('public_stocks')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error('Error fetching public stocks:', error);
+        toast.error('Failed to fetch public stocks');
+        return;
+      }
+
+      setStocks(data || []);
     } catch (error) {
-      console.error('Error fetching public stocks:', error);
-      toast.error('Failed to fetch public stocks');
+      console.error('Error:', error);
+      toast.error('An unexpected error occurred');
     } finally {
       setLoading(false);
     }
@@ -48,26 +63,36 @@ export const usePublicStocks = () => {
     try {
       setSaving(true);
       
-      const totalValue = stockData.numberOfShares * stockData.pricePerShare;
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        toast.error('You must be logged in to add public stocks');
+        return null;
+      }
       
-      const newStock: PublicStock = {
-        id: `stock-${Date.now()}`,
-        ...stockData,
-        totalValue,
-        createdAt: new Date().toISOString()
-      };
+      const totalValue = stockData.number_of_shares * stockData.price_per_share;
 
-      const updatedStocks = [newStock, ...stocks];
-      setStocks(updatedStocks);
-      
-      // Save to localStorage for demo purposes
-      localStorage.setItem('publicStocks', JSON.stringify(updatedStocks));
-      
+      const { data, error } = await supabase
+        .from('public_stocks')
+        .insert({
+          ...stockData,
+          user_id: user.id,
+          total_value: totalValue,
+        })
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Error adding public stock:', error);
+        toast.error('Failed to add public stock');
+        return null;
+      }
+
+      setStocks(prev => [data, ...prev]);
       toast.success('Public stock added successfully');
-      return newStock;
+      return data;
     } catch (error) {
-      console.error('Error adding public stock:', error);
-      toast.error('Failed to add public stock');
+      console.error('Error:', error);
+      toast.error('An unexpected error occurred');
       return null;
     } finally {
       setSaving(false);
@@ -79,17 +104,23 @@ export const usePublicStocks = () => {
     try {
       setSaving(true);
       
-      const updatedStocks = stocks.filter(stock => stock.id !== id);
-      setStocks(updatedStocks);
-      
-      // Save to localStorage for demo purposes
-      localStorage.setItem('publicStocks', JSON.stringify(updatedStocks));
-      
+      const { error } = await supabase
+        .from('public_stocks')
+        .delete()
+        .eq('id', id);
+
+      if (error) {
+        console.error('Error deleting public stock:', error);
+        toast.error('Failed to delete public stock');
+        return false;
+      }
+
+      setStocks(prev => prev.filter(stock => stock.id !== id));
       toast.success('Public stock deleted successfully');
       return true;
     } catch (error) {
-      console.error('Error deleting public stock:', error);
-      toast.error('Failed to delete public stock');
+      console.error('Error:', error);
+      toast.error('An unexpected error occurred');
       return false;
     } finally {
       setSaving(false);
@@ -98,7 +129,7 @@ export const usePublicStocks = () => {
 
   // Get total value of all stocks
   const getTotalValue = () => {
-    return stocks.reduce((total, stock) => total + stock.totalValue, 0);
+    return stocks.reduce((total, stock) => total + stock.total_value, 0);
   };
 
   // Get formatted total value

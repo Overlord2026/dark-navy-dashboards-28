@@ -63,13 +63,13 @@ export const PublicStocksList = () => {
               "font-medium",
               isMobile ? "text-sm" : "text-base"
             )}>
-              {stock.companyName} ({stock.tickerSymbol})
+              {stock.company_name} ({stock.ticker_symbol})
             </div>
             <div className={cn(
               "text-muted-foreground",
               isMobile ? "text-xs" : "text-sm"
             )}>
-              {stock.numberOfShares} shares @ {formatCurrency(stock.pricePerShare)}
+              {stock.number_of_shares} shares @ {formatCurrency(stock.price_per_share)}
             </div>
           </div>
           
@@ -81,7 +81,7 @@ export const PublicStocksList = () => {
               "font-semibold",
               isMobile ? "text-sm" : "text-base"
             )}>
-              {formatCurrency(stock.totalValue)}
+              {formatCurrency(stock.total_value)}
             </span>
             
             <div className="flex gap-1">

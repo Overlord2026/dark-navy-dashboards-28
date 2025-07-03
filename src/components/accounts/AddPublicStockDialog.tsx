@@ -112,10 +112,10 @@ export function AddPublicStockDialog({
     }
 
     const result = await addStock({
-      companyName: formData.companyName,
-      tickerSymbol: formData.tickerSymbol.toUpperCase(),
-      numberOfShares: shares,
-      pricePerShare: price
+      company_name: formData.companyName,
+      ticker_symbol: formData.tickerSymbol.toUpperCase(),
+      number_of_shares: shares,
+      price_per_share: price
     });
 
     if (result) {
