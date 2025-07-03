@@ -30,6 +30,9 @@ import { usePublicStocks } from "@/hooks/usePublicStocks";
 import { AddRealEstateDialog } from "@/components/accounts/AddRealEstateDialog";
 import { RealEstateList } from "@/components/accounts/RealEstateList";
 import { useRealEstate } from "@/hooks/useRealEstate";
+import { useInvestmentAccounts } from "@/hooks/useInvestmentAccounts";
+import { InvestmentAccountsList } from "@/components/accounts/InvestmentAccountsList";
+import { AddInvestmentAccountDialog } from "@/components/accounts/AddInvestmentAccountDialog";
 
 const Accounts = () => {
   const { 
@@ -48,13 +51,15 @@ const Accounts = () => {
     showAddPrivateEquityDialog,
     showAddPublicStockDialog,
     showAddRealEstateDialog,
+    showAddInvestmentAccountDialog,
     setShowAddAccountTypeDialog,
     setShowAccountTypeSelector,
     setShowAddDigitalAssetDialog,
     setShowAddOtherAssetDialog,
     setShowAddPrivateEquityDialog,
     setShowAddPublicStockDialog,
-    setShowAddRealEstateDialog
+    setShowAddRealEstateDialog,
+    setShowAddInvestmentAccountDialog
   } = useAccountManagement();
   
   const { getFormattedTotalValue, loading: digitalAssetsLoading } = useDigitalAssets();
@@ -63,6 +68,7 @@ const Accounts = () => {
   const { getFormattedTotalValuation, loading: privateEquityLoading } = usePrivateEquityAccounts();
   const { getFormattedTotalValue: getFormattedPublicStockValue, loading: publicStockLoading } = usePublicStocks();
   const { getFormattedTotalValue: getFormattedRealEstateValue, loading: realEstateLoading } = useRealEstate();
+  const { getFormattedTotalBalance, loading: investmentAccountsLoading } = useInvestmentAccounts();
   const isMobile = useIsMobile();
 
   // Add state for liability dialog
@@ -186,19 +192,22 @@ const Accounts = () => {
           <CollapsibleCard
             icon={<TrendingUp className={cn("mr-2 h-5 w-5 text-primary", isMobile && "h-4 w-4")} />}
             title="Investment"
-            amount="$0.00"
-            description="No investment accounts linked."
+            amount={getFormattedTotalBalance()}
+            description="Track your investment accounts and balances."
           >
-            <Button 
-              onClick={() => handleAddAccountType('Investment Account')} 
-              variant="outline" 
-              className={cn(
-                isMobile ? "w-full text-sm" : "w-full sm:w-auto"
-              )}
-            >
-              <PlusCircle className={cn("mr-2", isMobile ? "h-3 w-3" : "h-4 w-4")} />
-              Add Investment Account
-            </Button>
+            <div className="space-y-4">
+              <InvestmentAccountsList />
+              <Button 
+                onClick={() => handleAccountTypeSelected('investment')} 
+                variant="outline" 
+                className={cn(
+                  isMobile ? "w-full text-sm" : "w-full sm:w-auto"
+                )}
+              >
+                <PlusCircle className={cn("mr-2", isMobile ? "h-3 w-3" : "h-4 w-4")} />
+                Add Investment Account
+              </Button>
+            </div>
           </CollapsibleCard>
 
           {/* Manually-Tracked */}
@@ -453,6 +462,13 @@ const Accounts = () => {
       <AddRealEstateDialog
         open={showAddRealEstateDialog}
         onOpenChange={setShowAddRealEstateDialog}
+        onBack={handleBackToAccountTypes}
+      />
+
+      {/* Add Investment Account Dialog */}
+      <AddInvestmentAccountDialog
+        open={showAddInvestmentAccountDialog}
+        onOpenChange={setShowAddInvestmentAccountDialog}
         onBack={handleBackToAccountTypes}
       />
     </ThreeColumnLayout>

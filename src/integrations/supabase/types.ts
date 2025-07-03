@@ -652,6 +652,36 @@ export type Database = {
           },
         ]
       }
+      investment_accounts: {
+        Row: {
+          account_type: string
+          balance: number
+          created_at: string
+          id: string
+          name: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          account_type: string
+          balance?: number
+          created_at?: string
+          id?: string
+          name: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          account_type?: string
+          balance?: number
+          created_at?: string
+          id?: string
+          name?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       investment_categories: {
         Row: {
           created_at: string | null
