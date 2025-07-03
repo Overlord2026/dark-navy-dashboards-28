@@ -30,6 +30,7 @@ export function useAccountManagement() {
   const [showAddOtherAssetDialog, setShowAddOtherAssetDialog] = useState(false);
   const [showAddPrivateEquityDialog, setShowAddPrivateEquityDialog] = useState(false);
   const [showAddPublicStockDialog, setShowAddPublicStockDialog] = useState(false);
+  const [showAddRealEstateDialog, setShowAddRealEstateDialog] = useState(false);
   
   // Sample linked funding accounts - in a real app, this would come from an API
   const fundingAccounts = [
@@ -64,6 +65,9 @@ export function useAccountManagement() {
     } else if (type === 'public-stock') {
       setShowAddAccountTypeDialog(false);
       setShowAddPublicStockDialog(true);
+    } else if (type === 'real-estate') {
+      setShowAddAccountTypeDialog(false);
+      setShowAddRealEstateDialog(true);
     } else {
       // For other account types, show toast for now
       toast({
@@ -106,6 +110,7 @@ export function useAccountManagement() {
     setShowAddOtherAssetDialog(false);
     setShowAddPrivateEquityDialog(false);
     setShowAddPublicStockDialog(false);
+    setShowAddRealEstateDialog(false);
     setShowAddAccountTypeDialog(true);
   };
 
@@ -133,6 +138,7 @@ export function useAccountManagement() {
     showAddOtherAssetDialog,
     showAddPrivateEquityDialog,
     showAddPublicStockDialog,
+    showAddRealEstateDialog,
     fundingAccounts,
     
     // Actions
@@ -153,6 +159,7 @@ export function useAccountManagement() {
     setShowAddDigitalAssetDialog,
     setShowAddOtherAssetDialog,
     setShowAddPrivateEquityDialog,
-    setShowAddPublicStockDialog
+    setShowAddPublicStockDialog,
+    setShowAddRealEstateDialog
   };
 }

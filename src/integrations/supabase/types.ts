@@ -1507,6 +1507,39 @@ export type Database = {
         }
         Relationships: []
       }
+      real_estate_properties: {
+        Row: {
+          address: string
+          created_at: string
+          current_market_value: number
+          id: string
+          name: string
+          property_type: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          address: string
+          created_at?: string
+          current_market_value?: number
+          id?: string
+          name: string
+          property_type: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          address?: string
+          created_at?: string
+          current_market_value?: number
+          id?: string
+          name?: string
+          property_type?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       shared_documents: {
         Row: {
           created_at: string

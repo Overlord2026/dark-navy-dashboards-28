@@ -3,7 +3,7 @@ import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { PlusCircle, Shield, TrendingUp, CreditCard, Building, Banknote, Wallet, Coins, AlertTriangle, Package, Briefcase } from "lucide-react";
+import { PlusCircle, Shield, TrendingUp, CreditCard, Building, Banknote, Wallet, Coins, AlertTriangle, Package, Briefcase, Home } from "lucide-react";
 import { RetirementAccountTracker } from "@/components/social-security/RetirementAccountTracker";
 import { FundingAccountsOverview } from "@/components/accounts/FundingAccountsOverview";
 import { CollapsibleCard } from "@/components/accounts/CollapsibleCard";
@@ -27,6 +27,9 @@ import { usePrivateEquityAccounts } from "@/hooks/usePrivateEquityAccounts";
 import { AddPublicStockDialog } from "@/components/accounts/AddPublicStockDialog";
 import { PublicStocksList } from "@/components/accounts/PublicStocksList";
 import { usePublicStocks } from "@/hooks/usePublicStocks";
+import { AddRealEstateDialog } from "@/components/accounts/AddRealEstateDialog";
+import { RealEstateList } from "@/components/accounts/RealEstateList";
+import { useRealEstate } from "@/hooks/useRealEstate";
 
 const Accounts = () => {
   const { 
@@ -44,12 +47,14 @@ const Accounts = () => {
     showAddOtherAssetDialog,
     showAddPrivateEquityDialog,
     showAddPublicStockDialog,
+    showAddRealEstateDialog,
     setShowAddAccountTypeDialog,
     setShowAccountTypeSelector,
     setShowAddDigitalAssetDialog,
     setShowAddOtherAssetDialog,
     setShowAddPrivateEquityDialog,
-    setShowAddPublicStockDialog
+    setShowAddPublicStockDialog,
+    setShowAddRealEstateDialog
   } = useAccountManagement();
   
   const { getFormattedTotalValue, loading: digitalAssetsLoading } = useDigitalAssets();
@@ -57,6 +62,7 @@ const Accounts = () => {
   const { getFormattedTotalValue: getFormattedOtherAssetsValue, loading: otherAssetsLoading } = useSupabaseAssets();
   const { getFormattedTotalValuation, loading: privateEquityLoading } = usePrivateEquityAccounts();
   const { getFormattedTotalValue: getFormattedPublicStockValue, loading: publicStockLoading } = usePublicStocks();
+  const { getFormattedTotalValue: getFormattedRealEstateValue, loading: realEstateLoading } = useRealEstate();
   const isMobile = useIsMobile();
 
   // Add state for liability dialog
@@ -318,6 +324,28 @@ const Accounts = () => {
             </div>
           </CollapsibleCard>
 
+          {/* Real Estate */}
+          <CollapsibleCard
+            icon={<Home className={cn("mr-2 h-5 w-5 text-primary", isMobile && "h-4 w-4")} />}
+            title="Real Estate"
+            amount={realEstateLoading ? "Loading..." : getFormattedRealEstateValue()}
+            description="Track your real estate properties and their market values."
+          >
+            <div className="space-y-4">
+              <RealEstateList />
+              <Button 
+                onClick={() => handleAccountTypeSelected('real-estate')} 
+                variant="outline" 
+                className={cn(
+                  isMobile ? "w-full text-sm" : "w-full sm:w-auto"
+                )}
+              >
+                <PlusCircle className={cn("mr-2", isMobile ? "h-3 w-3" : "h-4 w-4")} />
+                Add Real Estate
+              </Button>
+            </div>
+          </CollapsibleCard>
+
           {/* Other Assets */}
           <CollapsibleCard
             icon={<Package className={cn("mr-2 h-5 w-5 text-primary", isMobile && "h-4 w-4")} />}
@@ -418,6 +446,13 @@ const Accounts = () => {
       <AddPublicStockDialog
         open={showAddPublicStockDialog}
         onOpenChange={setShowAddPublicStockDialog}
+        onBack={handleBackToAccountTypes}
+      />
+
+      {/* Add Real Estate Dialog */}
+      <AddRealEstateDialog
+        open={showAddRealEstateDialog}
+        onOpenChange={setShowAddRealEstateDialog}
         onBack={handleBackToAccountTypes}
       />
     </ThreeColumnLayout>
