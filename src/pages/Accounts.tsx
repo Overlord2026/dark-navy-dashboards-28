@@ -262,7 +262,7 @@ const Accounts = () => {
           <CollapsibleCard
             icon={<Briefcase className={cn("mr-2 h-5 w-5 text-primary", isMobile && "h-4 w-4")} />}
             title="Private Equity"
-            amount={privateEquityLoading ? "Loading..." : getFormattedTotalValuation()}
+            amount={getFormattedTotalValuation()}
             description="Track your private equity investments and holdings."
           >
             <div className="space-y-4">
@@ -284,7 +284,7 @@ const Accounts = () => {
           <CollapsibleCard
             icon={<TrendingUp className={cn("mr-2 h-5 w-5 text-primary", isMobile && "h-4 w-4")} />}
             title="Public Stock"
-            amount={publicStockLoading ? "Loading..." : getFormattedPublicStockValue()}
+            amount={getFormattedPublicStockValue()}
             description="Track your individual stock holdings and equity investments."
           >
             <div className="space-y-4">
@@ -306,7 +306,7 @@ const Accounts = () => {
           <CollapsibleCard
             icon={<Coins className={cn("mr-2 h-5 w-5 text-primary", isMobile && "h-4 w-4")} />}
             title="Digital Assets"
-            amount={digitalAssetsLoading ? "Loading..." : getFormattedTotalValue()}
+            amount={getFormattedTotalValue()}
             description="Track your cryptocurrency and digital asset holdings."
           >
             <div className="space-y-4">
@@ -328,7 +328,7 @@ const Accounts = () => {
           <CollapsibleCard
             icon={<Home className={cn("mr-2 h-5 w-5 text-primary", isMobile && "h-4 w-4")} />}
             title="Real Estate"
-            amount={realEstateLoading ? "Loading..." : getFormattedRealEstateValue()}
+            amount={getFormattedRealEstateValue()}
             description="Track your real estate properties and their market values."
           >
             <div className="space-y-4">
@@ -350,7 +350,7 @@ const Accounts = () => {
           <CollapsibleCard
             icon={<Package className={cn("mr-2 h-5 w-5 text-primary", isMobile && "h-4 w-4")} />}
             title="Other Assets"
-            amount={otherAssetsLoading ? "Loading..." : getFormattedOtherAssetsValue()}
+            amount={getFormattedOtherAssetsValue()}
             description="Track your other valuable assets like vehicles, collectibles, and more."
           >
             <div className="space-y-4">

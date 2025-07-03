@@ -22,7 +22,7 @@ export interface RealEstatePropertyData {
 
 export const useRealEstate = () => {
   const [properties, setProperties] = useState<RealEstateProperty[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
 
   // Fetch all real estate properties for the current user
