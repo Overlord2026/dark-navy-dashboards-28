@@ -37,10 +37,10 @@ export function AddAccountTypeDialog({
       icon: <TrendingUp className="h-6 w-6" />
     },
     {
-      id: "credit-card",
-      name: "Credit Card",
-      description: "Credit cards and lines of credit",
-      icon: <CreditCard className="h-6 w-6" />
+      id: "public-stock",
+      name: "Public Stock",
+      description: "Individual stocks and equity investments",
+      icon: <TrendingUp className="h-6 w-6" />
     },
     {
       id: "private-equity",
