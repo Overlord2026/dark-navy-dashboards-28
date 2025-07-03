@@ -229,24 +229,6 @@ const Accounts = () => {
             </div>
           </CollapsibleCard>
 
-          {/* Manually-Tracked */}
-          <CollapsibleCard
-            icon={<CreditCard className={cn("mr-2 h-5 w-5 text-primary", isMobile && "h-4 w-4")} />}
-            title="Manually-Tracked"
-            amount="$0.00"
-            description="No manually tracked accounts added."
-          >
-            <Button 
-              onClick={() => handleAddAccountType('Manual Account')} 
-              variant="outline" 
-              className={cn(
-                isMobile ? "w-full text-sm" : "w-full sm:w-auto"
-              )}
-            >
-              <PlusCircle className={cn("mr-2", isMobile ? "h-3 w-3" : "h-4 w-4")} />
-              Add Manual Account
-            </Button>
-          </CollapsibleCard>
 
           {/* Banking */}
           <CollapsibleCard
@@ -267,24 +249,6 @@ const Accounts = () => {
             </Button>
           </CollapsibleCard>
 
-          {/* Credit Cards */}
-          <CollapsibleCard
-            icon={<CreditCard className={cn("mr-2 h-5 w-5 text-primary", isMobile && "h-4 w-4")} />}
-            title="Credit Cards"
-            amount="$0.00"
-            description="No credit card accounts linked."
-          >
-            <Button 
-              onClick={() => handleAddAccountType('Credit Card')} 
-              variant="outline" 
-              className={cn(
-                isMobile ? "w-full text-sm" : "w-full sm:w-auto"
-              )}
-            >
-              <PlusCircle className={cn("mr-2", isMobile ? "h-3 w-3" : "h-4 w-4")} />
-              Add Credit Card
-            </Button>
-          </CollapsibleCard>
 
           {/* Private Equity */}
           <CollapsibleCard
