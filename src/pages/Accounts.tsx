@@ -24,6 +24,7 @@ import { OtherAssetsList } from "@/components/assets/OtherAssetsList";
 import { AddPrivateEquityDialog } from "@/components/accounts/AddPrivateEquityDialog";
 import { PrivateEquityAccountsList } from "@/components/accounts/PrivateEquityAccountsList";
 import { usePrivateEquityAccounts } from "@/hooks/usePrivateEquityAccounts";
+import { AddPublicStockDialog } from "@/components/accounts/AddPublicStockDialog";
 
 const Accounts = () => {
   const { 
@@ -40,11 +41,13 @@ const Accounts = () => {
     showAddDigitalAssetDialog,
     showAddOtherAssetDialog,
     showAddPrivateEquityDialog,
+    showAddPublicStockDialog,
     setShowAddAccountTypeDialog,
     setShowAccountTypeSelector,
     setShowAddDigitalAssetDialog,
     setShowAddOtherAssetDialog,
-    setShowAddPrivateEquityDialog
+    setShowAddPrivateEquityDialog,
+    setShowAddPublicStockDialog
   } = useAccountManagement();
   
   const { getFormattedTotalValue, loading: digitalAssetsLoading } = useDigitalAssets();
@@ -383,6 +386,13 @@ const Accounts = () => {
       <AddPrivateEquityDialog
         open={showAddPrivateEquityDialog}
         onOpenChange={setShowAddPrivateEquityDialog}
+        onBack={handleBackToAccountTypes}
+      />
+
+      {/* Add Public Stock Dialog */}
+      <AddPublicStockDialog
+        open={showAddPublicStockDialog}
+        onOpenChange={setShowAddPublicStockDialog}
         onBack={handleBackToAccountTypes}
       />
     </ThreeColumnLayout>
