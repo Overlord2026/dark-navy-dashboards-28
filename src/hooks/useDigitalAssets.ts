@@ -16,7 +16,7 @@ export interface DigitalAsset {
 
 export function useDigitalAssets() {
   const [digitalAssets, setDigitalAssets] = useState<DigitalAsset[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
   // Fetch digital assets

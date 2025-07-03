@@ -23,7 +23,7 @@ export interface PublicStockData {
 
 export const usePublicStocks = () => {
   const [stocks, setStocks] = useState<PublicStock[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
   // Fetch all public stocks for the current user

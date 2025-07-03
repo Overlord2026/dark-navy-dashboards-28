@@ -23,7 +23,7 @@ export interface PrivateEquityAccountData {
 
 export const usePrivateEquityAccounts = () => {
   const [accounts, setAccounts] = useState<PrivateEquityAccount[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
   // Fetch all private equity accounts for the current user

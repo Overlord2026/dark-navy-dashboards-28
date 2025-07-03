@@ -26,7 +26,7 @@ export type SupabaseAsset = OtherAsset;
 
 export const useSupabaseAssets = () => {
   const [assets, setAssets] = useState<OtherAsset[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
   // Fetch all assets for the current user
