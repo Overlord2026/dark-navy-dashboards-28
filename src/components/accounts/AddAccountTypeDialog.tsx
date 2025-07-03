@@ -9,7 +9,8 @@ import {
   Coins, 
   AlertTriangle, 
   Package,
-  Briefcase
+  Briefcase,
+  PiggyBank
 } from "lucide-react";
 
 interface AddAccountTypeDialogProps {
@@ -29,6 +30,12 @@ export function AddAccountTypeDialog({
       name: "Bank Account",
       description: "Checking, savings, or other bank accounts",
       icon: <Banknote className="h-6 w-6" />
+    },
+    {
+      id: "retirement-plan",
+      name: "Retirement Plan",
+      description: "401K, 457, 403B, and other retirement plans",
+      icon: <PiggyBank className="h-6 w-6" />
     },
     {
       id: "investment",

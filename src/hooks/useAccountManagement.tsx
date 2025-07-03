@@ -72,6 +72,13 @@ export function useAccountManagement() {
     } else if (type === 'investment') {
       setShowAddAccountTypeDialog(false);
       setShowAddInvestmentAccountDialog(true);
+    } else if (type === 'retirement-plan') {
+      // For retirement plan, show a toast for now since functionality exists but was removed
+      toast({
+        title: "Retirement Plan",
+        description: "Retirement plan tracking functionality"
+      });
+      setShowAddAccountTypeDialog(false);
     } else {
       // For other account types, show toast for now
       toast({
