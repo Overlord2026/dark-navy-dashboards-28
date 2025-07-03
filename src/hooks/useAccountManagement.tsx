@@ -32,6 +32,7 @@ export function useAccountManagement() {
   const [showAddPublicStockDialog, setShowAddPublicStockDialog] = useState(false);
   const [showAddRealEstateDialog, setShowAddRealEstateDialog] = useState(false);
   const [showAddInvestmentAccountDialog, setShowAddInvestmentAccountDialog] = useState(false);
+  const [showAddRetirementPlanDialog, setShowAddRetirementPlanDialog] = useState(false);
   
   // Sample linked funding accounts - in a real app, this would come from an API
   const fundingAccounts = [
@@ -73,12 +74,8 @@ export function useAccountManagement() {
       setShowAddAccountTypeDialog(false);
       setShowAddInvestmentAccountDialog(true);
     } else if (type === 'retirement-plan') {
-      // For retirement plan, show a toast for now since functionality exists but was removed
-      toast({
-        title: "Retirement Plan",
-        description: "Retirement plan tracking functionality"
-      });
       setShowAddAccountTypeDialog(false);
+      setShowAddRetirementPlanDialog(true);
     } else {
       // For other account types, show toast for now
       toast({
@@ -123,6 +120,7 @@ export function useAccountManagement() {
     setShowAddPublicStockDialog(false);
     setShowAddRealEstateDialog(false);
     setShowAddInvestmentAccountDialog(false);
+    setShowAddRetirementPlanDialog(false);
     setShowAddAccountTypeDialog(true);
   };
 
@@ -152,6 +150,7 @@ export function useAccountManagement() {
     showAddPublicStockDialog,
     showAddRealEstateDialog,
     showAddInvestmentAccountDialog,
+    showAddRetirementPlanDialog,
     fundingAccounts,
     
     // Actions
@@ -174,6 +173,7 @@ export function useAccountManagement() {
     setShowAddPrivateEquityDialog,
     setShowAddPublicStockDialog,
     setShowAddRealEstateDialog,
-    setShowAddInvestmentAccountDialog
+    setShowAddInvestmentAccountDialog,
+    setShowAddRetirementPlanDialog
   };
 }

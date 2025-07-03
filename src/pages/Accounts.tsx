@@ -3,7 +3,7 @@ import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { PlusCircle, Shield, TrendingUp, CreditCard, Building, Banknote, Wallet, Coins, AlertTriangle, Package, Briefcase, Home } from "lucide-react";
+import { PlusCircle, Shield, TrendingUp, CreditCard, Building, Banknote, Wallet, Coins, AlertTriangle, Package, Briefcase, Home, PiggyBank } from "lucide-react";
 import { RetirementAccountTracker } from "@/components/social-security/RetirementAccountTracker";
 import { FundingAccountsOverview } from "@/components/accounts/FundingAccountsOverview";
 import { CollapsibleCard } from "@/components/accounts/CollapsibleCard";
@@ -33,6 +33,9 @@ import { useRealEstate } from "@/hooks/useRealEstate";
 import { useInvestmentAccounts } from "@/hooks/useInvestmentAccounts";
 import { InvestmentAccountsList } from "@/components/accounts/InvestmentAccountsList";
 import { AddInvestmentAccountDialog } from "@/components/accounts/AddInvestmentAccountDialog";
+import { useRetirementPlans } from "@/hooks/useRetirementPlans";
+import { RetirementPlansList } from "@/components/accounts/RetirementPlansList";
+import { AddRetirementPlanDialog } from "@/components/accounts/AddRetirementPlanDialog";
 
 const Accounts = () => {
   const { 
@@ -52,6 +55,7 @@ const Accounts = () => {
     showAddPublicStockDialog,
     showAddRealEstateDialog,
     showAddInvestmentAccountDialog,
+    showAddRetirementPlanDialog,
     setShowAddAccountTypeDialog,
     setShowAccountTypeSelector,
     setShowAddDigitalAssetDialog,
@@ -59,7 +63,8 @@ const Accounts = () => {
     setShowAddPrivateEquityDialog,
     setShowAddPublicStockDialog,
     setShowAddRealEstateDialog,
-    setShowAddInvestmentAccountDialog
+    setShowAddInvestmentAccountDialog,
+    setShowAddRetirementPlanDialog
   } = useAccountManagement();
   
   const { getFormattedTotalValue, loading: digitalAssetsLoading } = useDigitalAssets();
@@ -69,6 +74,7 @@ const Accounts = () => {
   const { getFormattedTotalValue: getFormattedPublicStockValue, loading: publicStockLoading } = usePublicStocks();
   const { getFormattedTotalValue: getFormattedRealEstateValue, loading: realEstateLoading } = useRealEstate();
   const { getFormattedTotalBalance, loading: investmentAccountsLoading } = useInvestmentAccounts();
+  const { getFormattedTotalBalance: getFormattedRetirementBalance, loading: retirementPlansLoading } = useRetirementPlans();
   const isMobile = useIsMobile();
 
   // Add state for liability dialog
@@ -176,6 +182,28 @@ const Accounts = () => {
             >
               Complete Setup
             </Button>
+          </CollapsibleCard>
+
+          {/* Retirement Plans */}
+          <CollapsibleCard
+            icon={<PiggyBank className={cn("mr-2 h-5 w-5 text-primary", isMobile && "h-4 w-4")} />}
+            title="Retirement Plans"
+            amount={getFormattedRetirementBalance()}
+            description="Track your 401(k), 403(b), and 457(b) retirement plans."
+          >
+            <div className="space-y-4">
+              <RetirementPlansList />
+              <Button 
+                onClick={() => handleAccountTypeSelected('retirement-plan')} 
+                variant="outline" 
+                className={cn(
+                  isMobile ? "w-full text-sm" : "w-full sm:w-auto"
+                )}
+              >
+                <PlusCircle className={cn("mr-2", isMobile ? "h-3 w-3" : "h-4 w-4")} />
+                Add Retirement Plan
+              </Button>
+            </div>
           </CollapsibleCard>
 
 
@@ -460,6 +488,13 @@ const Accounts = () => {
       <AddInvestmentAccountDialog
         open={showAddInvestmentAccountDialog}
         onOpenChange={setShowAddInvestmentAccountDialog}
+        onBack={handleBackToAccountTypes}
+      />
+
+      {/* Add Retirement Plan Dialog */}
+      <AddRetirementPlanDialog
+        open={showAddRetirementPlanDialog}
+        onOpenChange={setShowAddRetirementPlanDialog}
         onBack={handleBackToAccountTypes}
       />
     </ThreeColumnLayout>

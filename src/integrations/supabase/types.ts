@@ -1570,6 +1570,45 @@ export type Database = {
         }
         Relationships: []
       }
+      retirement_plans: {
+        Row: {
+          balance: number
+          contribution_amount: number | null
+          created_at: string
+          id: string
+          plan_type: string
+          provider: string
+          source: string
+          updated_at: string
+          user_id: string
+          vesting_schedule: string | null
+        }
+        Insert: {
+          balance?: number
+          contribution_amount?: number | null
+          created_at?: string
+          id?: string
+          plan_type: string
+          provider: string
+          source: string
+          updated_at?: string
+          user_id: string
+          vesting_schedule?: string | null
+        }
+        Update: {
+          balance?: number
+          contribution_amount?: number | null
+          created_at?: string
+          id?: string
+          plan_type?: string
+          provider?: string
+          source?: string
+          updated_at?: string
+          user_id?: string
+          vesting_schedule?: string | null
+        }
+        Relationships: []
+      }
       shared_documents: {
         Row: {
           created_at: string
