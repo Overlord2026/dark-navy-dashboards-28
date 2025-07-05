@@ -85,7 +85,7 @@ export function AddAccountTypeDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[675px] p-0 overflow-hidden bg-card border border-border/50 shadow-2xl">
+      <DialogContent className="sm:max-w-[750px] p-0 overflow-hidden bg-card border border-border/50 shadow-2xl">
         <div className="relative">
           {/* Header with gradient background */}
           <div className="relative px-8 py-6 bg-gradient-to-br from-primary/5 via-primary/3 to-transparent border-b border-border/30">
