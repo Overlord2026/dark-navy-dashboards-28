@@ -131,7 +131,7 @@ export const AddInvestmentAccountDialog = ({
             <Button 
               type="button" 
               variant="outline" 
-              onClick={handleBack}
+              onClick={() => onOpenChange(false)}
               className={cn(isMobile && "w-full")}
             >
               Cancel
