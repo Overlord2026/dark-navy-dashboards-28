@@ -167,22 +167,6 @@ const Accounts = () => {
             onManageFunding={handleManageFunding} 
           />
 
-          {/* BFO Managed */}
-          <CollapsibleCard
-            icon={<Shield className={cn("mr-2 h-5 w-5 text-primary", isMobile && "h-4 w-4")} />}
-            title="BFO Managed"
-            amount="$0.00"
-            description="Complete your account setup to view managed accounts."
-          >
-            <Button 
-              onClick={handleCompleteSetup} 
-              className={cn(
-                isMobile ? "w-full text-sm" : "w-full sm:w-auto"
-              )}
-            >
-              Complete Setup
-            </Button>
-          </CollapsibleCard>
 
           {/* Retirement Plans */}
           <CollapsibleCard
