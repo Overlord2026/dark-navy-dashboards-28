@@ -88,7 +88,7 @@ export function AddAccountTypeDialog({
       <DialogContent className="sm:max-w-[750px] p-0 overflow-hidden bg-card border border-border/50 shadow-2xl">
         <div className="relative">
           {/* Header with gradient background */}
-          <div className="relative px-8 py-6 bg-gradient-to-br from-primary/5 via-primary/3 to-transparent border-b border-border/30">
+          <div className="relative px-8 py-5 bg-gradient-to-br from-primary/5 via-primary/3 to-transparent border-b border-border/30">
             <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-accent/5 opacity-50" />
             <DialogHeader className="relative">
               <DialogTitle className="text-2xl font-semibold text-foreground tracking-tight">
@@ -101,7 +101,7 @@ export function AddAccountTypeDialog({
           </div>
           
           {/* Account types grid */}
-          <div className="p-8">
+          <div className="p-7">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {accountTypes.map((type, index) => (
                 <button
