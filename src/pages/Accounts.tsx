@@ -176,7 +176,7 @@ const Accounts = () => {
             description="No banking accounts linked."
           >
             <Button 
-              onClick={() => handleAddAccountType('Bank Account')} 
+              onClick={() => handleAccountTypeSelected('bank')} 
               variant="outline" 
               className={cn(
                 isMobile ? "w-full text-sm" : "w-full sm:w-auto"
