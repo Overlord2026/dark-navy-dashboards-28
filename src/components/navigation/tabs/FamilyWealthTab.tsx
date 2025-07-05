@@ -40,7 +40,6 @@ export const familyWealthNavItems: NavItem[] = [
     title: "Cash Management",
     href: "/client-cash-management",
     icon: BanknoteIcon,
-    comingSoon: true,
   },
   {
     title: "Transfers",
