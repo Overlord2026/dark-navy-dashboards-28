@@ -1,6 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Trash2, Home } from "lucide-react";
+import { 
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { useRealEstate } from "@/hooks/useRealEstate";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
@@ -8,10 +18,19 @@ import { cn } from "@/lib/utils";
 export const RealEstateList = () => {
   const { properties, loading, deleteProperty } = useRealEstate();
   const isMobile = useIsMobile();
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [propertyToDelete, setPropertyToDelete] = useState<{ id: string; name: string } | null>(null);
 
-  const handleDelete = async (id: string) => {
-    if (window.confirm('Are you sure you want to delete this property?')) {
-      await deleteProperty(id);
+  const handleDelete = (id: string, name: string) => {
+    setPropertyToDelete({ id, name });
+    setDeleteDialogOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (propertyToDelete) {
+      await deleteProperty(propertyToDelete.id);
+      setDeleteDialogOpen(false);
+      setPropertyToDelete(null);
     }
   };
 
@@ -119,7 +138,7 @@ export const RealEstateList = () => {
                 "p-2",
                 isMobile ? "h-8 w-8" : "h-9 w-9"
               )}
-              onClick={() => handleDelete(property.id)}
+              onClick={() => handleDelete(property.id, property.name)}
             >
               <Trash2 className={cn(
                 isMobile ? "h-3 w-3" : "h-4 w-4"
@@ -128,6 +147,23 @@ export const RealEstateList = () => {
           </div>
         </div>
       ))}
+      
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirm Deletion</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete "{propertyToDelete?.name}"? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              Delete Property
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
