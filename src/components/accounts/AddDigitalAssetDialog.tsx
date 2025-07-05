@@ -140,196 +140,164 @@ export function AddDigitalAssetDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className={cn(
-        "max-w-md max-h-[90vh] overflow-y-auto",
-        isMobile ? "mx-4 w-[calc(100vw-2rem)]" : "w-full"
-      )}>
-        <DialogHeader className="text-center mb-6">
-          <div className="flex items-center justify-center mb-3">
-            <div className={cn(
-              "rounded-full p-3",
-              isLightTheme 
-                ? "bg-yellow-50 text-yellow-600" 
-                : "bg-yellow-500/10 text-yellow-400"
-            )}>
-              <Coins className={cn(isMobile ? "h-5 w-5" : "h-6 w-6")} />
-            </div>
-          </div>
-          <DialogTitle className={cn(
-            "font-semibold",
-            isMobile ? "text-xl" : "text-2xl",
-            isLightTheme ? "text-[#222222]" : "text-white"
-          )}>
-            Add Digital Asset
-          </DialogTitle>
-          <p className={cn(
-            "mt-2",
-            isMobile ? "text-sm" : "text-base",
-            isLightTheme ? "text-[#666666]" : "text-gray-400"
-          )}>
-            Enter details for your digital asset holdings
-          </p>
-        </DialogHeader>
-        
-        <div className="space-y-6">
-          {/* Asset Type */}
-          <div className="space-y-2">
-            <Label className={cn(
-              "text-sm font-medium",
-              isLightTheme ? "text-[#222222]" : "text-white"
-            )}>
-              Asset Type
-            </Label>
-            <Select
-              value={formData.assetType}
-              onValueChange={(value) => handleInputChange('assetType', value)}
-            >
-              <SelectTrigger className={cn(
-                "w-full",
-                isLightTheme 
-                  ? "bg-[#F9F7E8] border-[#DCD8C0] text-[#222222]" 
-                  : "bg-[#1B1B32] border-[#2A2A40] text-white"
-              )}>
-                <SelectValue placeholder="Select asset type" />
-              </SelectTrigger>
-              <SelectContent>
-                {assetTypes.map((asset) => (
-                  <SelectItem key={asset.value} value={asset.value}>
-                    {asset.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          {/* Custom Asset Type (if Other is selected) */}
-          {formData.assetType === 'Other' && (
-            <div className="space-y-2">
-              <Label className={cn(
-                "text-sm font-medium",
-                isLightTheme ? "text-[#222222]" : "text-white"
-              )}>
-                Specify Asset Type
-              </Label>
-              <Input
-                type="text"
-                placeholder="e.g., DOGE, ADA, etc."
-                value={formData.customAssetType}
-                onChange={(e) => handleInputChange('customAssetType', e.target.value)}
-                className={cn(
-                  isLightTheme 
-                    ? "bg-[#F9F7E8] border-[#DCD8C0] text-[#222222]" 
-                    : "bg-[#1B1B32] border-[#2A2A40] text-white"
+      <DialogContent className={cn("sm:max-w-[550px] p-0 overflow-hidden bg-card border border-border/50 shadow-2xl", isMobile && "mx-4")}>
+        <div className="relative">
+          {/* Header with gradient background */}
+          <div className="relative px-8 py-5 bg-gradient-to-br from-primary/5 via-primary/3 to-transparent border-b border-border/30">
+            <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-accent/5 opacity-50" />
+            <DialogHeader className="relative">
+              <div className="flex items-center gap-4">
+                {onBack && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={onBack}
+                    className="p-2 rounded-full hover:bg-primary/10 transition-all duration-300"
+                  >
+                    <ArrowLeft className="h-4 w-4 text-foreground" />
+                  </Button>
                 )}
-              />
-            </div>
-          )}
+                <div className="flex items-center gap-3">
+                  <div className="p-3 rounded-lg bg-primary/10 text-primary">
+                    <Coins className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <DialogTitle className="text-2xl font-semibold text-foreground tracking-tight">
+                      Add Digital Asset
+                    </DialogTitle>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Enter details for your digital asset holdings
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </DialogHeader>
+          </div>
 
-          {/* Quantity */}
-          <div className="space-y-2">
-            <Label className={cn(
-              "text-sm font-medium",
-              isLightTheme ? "text-[#222222]" : "text-white"
-            )}>
-              Quantity
-            </Label>
-            <Input
-              type="number"
-              step="any"
-              placeholder="0.00"
-              value={formData.quantity}
-              onChange={(e) => handleInputChange('quantity', e.target.value)}
-              className={cn(
-                isLightTheme 
-                  ? "bg-[#F9F7E8] border-[#DCD8C0] text-[#222222]" 
-                  : "bg-[#1B1B32] border-[#2A2A40] text-white"
+          {/* Form content */}
+          <div className="p-7">
+            <div className="space-y-5">
+              {/* Asset Type */}
+              <div className="space-y-3">
+                <Label htmlFor="asset-type" className="text-base font-medium text-foreground">Asset Type</Label>
+                <Select
+                  value={formData.assetType}
+                  onValueChange={(value) => handleInputChange('assetType', value)}
+                >
+                  <SelectTrigger className="h-12 border-border/50 bg-background hover:border-primary/30 transition-colors duration-200">
+                    <SelectValue placeholder="Select asset type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {assetTypes.map((asset) => (
+                      <SelectItem key={asset.value} value={asset.value}>
+                        {asset.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Custom Asset Type (if Other is selected) */}
+              {formData.assetType === 'Other' && (
+                <div className="space-y-3">
+                  <Label htmlFor="custom-asset-type" className="text-base font-medium text-foreground">
+                    Specify Asset Type
+                  </Label>
+                  <Input
+                    id="custom-asset-type"
+                    type="text"
+                    placeholder="e.g., DOGE, ADA, etc."
+                    value={formData.customAssetType}
+                    onChange={(e) => handleInputChange('customAssetType', e.target.value)}
+                    className="h-12 border-border/50 bg-background hover:border-primary/30 focus:border-primary/50 transition-colors duration-200"
+                  />
+                </div>
               )}
-            />
-          </div>
 
-          {/* Price per Unit */}
-          <div className="space-y-2">
-            <Label className={cn(
-              "text-sm font-medium",
-              isLightTheme ? "text-[#222222]" : "text-white"
-            )}>
-              Price per Unit (USD)
-            </Label>
-            <Input
-              type="number"
-              step="any"
-              placeholder="0.00"
-              value={formData.pricePerUnit}
-              onChange={(e) => handleInputChange('pricePerUnit', e.target.value)}
-              className={cn(
-                isLightTheme 
-                  ? "bg-[#F9F7E8] border-[#DCD8C0] text-[#222222]" 
-                  : "bg-[#1B1B32] border-[#2A2A40] text-white"
-              )}
-            />
-          </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-3">
+                  <Label htmlFor="quantity" className="text-base font-medium text-foreground">Quantity</Label>
+                  <Input
+                    id="quantity"
+                    type="number"
+                    step="any"
+                    placeholder="0.00"
+                    value={formData.quantity}
+                    onChange={(e) => handleInputChange('quantity', e.target.value)}
+                    className="h-12 border-border/50 bg-background hover:border-primary/30 focus:border-primary/50 transition-colors duration-200"
+                  />
+                </div>
 
-          {/* Calculated Value */}
-          <div className={cn(
-            "rounded-lg p-4 border",
-            isLightTheme 
-              ? "bg-green-50 border-green-200" 
-              : "bg-green-500/10 border-green-500/20"
-          )}>
-            <div className="flex justify-between items-center">
-              <span className={cn(
-                "text-sm font-medium",
-                isLightTheme ? "text-green-800" : "text-green-400"
-              )}>
-                Total Value:
-              </span>
-              <span className={cn(
-                "text-lg font-bold",
-                isLightTheme ? "text-green-800" : "text-green-400"
-              )}>
-                ${calculatedValue.toLocaleString('en-US', { 
-                  minimumFractionDigits: 2, 
-                  maximumFractionDigits: 2 
-                })}
-              </span>
+                <div className="space-y-3">
+                  <Label htmlFor="price-per-unit" className="text-base font-medium text-foreground">Price per Unit (USD)</Label>
+                  <div className="relative">
+                    <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground">$</span>
+                    <Input
+                      id="price-per-unit"
+                      type="number"
+                      step="any"
+                      placeholder="0.00"
+                      value={formData.pricePerUnit}
+                      onChange={(e) => handleInputChange('pricePerUnit', e.target.value)}
+                      className="h-12 pl-8 border-border/50 bg-background hover:border-primary/30 focus:border-primary/50 transition-colors duration-200"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Calculated Value */}
+              <div className="rounded-lg p-4 border border-border/40 bg-primary/3">
+                <div className="flex justify-between items-center">
+                  <span className="text-base font-medium text-foreground">
+                    Total Value:
+                  </span>
+                  <span className="text-xl font-bold text-primary">
+                    ${calculatedValue.toLocaleString('en-US', { 
+                      minimumFractionDigits: 2, 
+                      maximumFractionDigits: 2 
+                    })}
+                  </span>
+                </div>
+              </div>
+
+              {/* Action buttons */}
+              <div className="pt-5 border-t border-border/30">
+                <div className={cn("flex gap-3", isMobile ? "flex-col" : "flex-row justify-end")}>
+                  <Button 
+                    variant="outline" 
+                    onClick={onBack}
+                    disabled={isSubmitting}
+                    className={cn(
+                      "h-12 px-6 border-border/50 hover:border-primary/30 hover:bg-primary/5 transition-all duration-200",
+                      isMobile && "w-full"
+                    )}
+                  >
+                    <ArrowLeft className="mr-2 h-4 w-4" />
+                    Back
+                  </Button>
+                  
+                  <Button 
+                    onClick={handleSubmit}
+                    disabled={isSubmitting}
+                    className={cn(
+                      "h-12 px-8 bg-primary hover:bg-primary/90 text-primary-foreground font-medium transition-all duration-200",
+                      "shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30",
+                      isMobile && "w-full"
+                    )}
+                  >
+                    {isSubmitting ? (
+                      <div className="flex items-center gap-2">
+                        <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
+                        Adding...
+                      </div>
+                    ) : (
+                      'Add Digital Asset'
+                    )}
+                  </Button>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-
-        {/* Actions */}
-        <div className={cn(
-          "flex gap-3 pt-6 border-t border-border",
-          isMobile ? "flex-col" : "flex-row justify-between"
-        )}>
-          <Button 
-            variant="ghost" 
-            onClick={onBack}
-            disabled={isSubmitting}
-            className={cn(
-              "group transition-all duration-200",
-              isMobile ? "w-full text-sm" : "flex-1",
-              isLightTheme 
-                ? "text-[#666666] hover:text-[#222222] hover:bg-[#F2F0E1]" 
-                : "text-gray-400 hover:text-white hover:bg-[#2A2A40]"
-            )}
-          >
-            <ArrowLeft className={cn(
-              "mr-2 transition-transform duration-200 group-hover:-translate-x-1",
-              isMobile ? "h-3 w-3" : "h-4 w-4"
-            )} />
-            Back
-          </Button>
-          
-          <Button 
-            onClick={handleSubmit}
-            disabled={isSubmitting}
-            className={cn(
-              isMobile ? "w-full text-sm" : "flex-1",
-              "bg-primary hover:bg-primary/90"
-            )}
-          >
-            {isSubmitting ? "Adding..." : "Add Digital Asset"}
-          </Button>
         </div>
       </DialogContent>
     </Dialog>
