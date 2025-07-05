@@ -76,75 +76,69 @@ export const RealEstateList = () => {
   }
 
   return (
-    <div className="space-y-3">
+    <div className={cn(
+      "grid gap-4",
+      isMobile ? "grid-cols-1" : "grid-cols-1 md:grid-cols-2 lg:grid-cols-1"
+    )}>
       {properties.map((property) => (
         <div
           key={property.id}
-          className={cn(
-            "flex items-center justify-between p-3 border rounded-lg",
-            isMobile ? "flex-col gap-2" : "flex-row"
-          )}
+          className="group relative overflow-hidden rounded-xl border border-border/50 bg-card hover:shadow-lg transition-all duration-300 hover:border-primary/20"
         >
-          <div className={cn(
-            "flex items-start gap-3 flex-1",
-            isMobile ? "w-full" : ""
-          )}>
-            <div className="mt-1">
-              <Home className={cn(
-                "text-primary",
-                isMobile ? "h-4 w-4" : "h-5 w-5"
-              )} />
+          {/* Property Header */}
+          <div className="relative p-5 pb-4 bg-gradient-to-br from-primary/5 via-primary/3 to-transparent">
+            <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-accent/5 opacity-50" />
+            <div className="relative flex items-start justify-between">
+              <div className="flex items-start gap-3">
+                <div className="p-2.5 rounded-lg bg-primary/10 text-primary group-hover:bg-primary/20 transition-colors duration-200">
+                  <Home className="h-5 w-5" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-lg font-semibold text-foreground mb-1 group-hover:text-primary transition-colors duration-200">
+                    {property.name}
+                  </h3>
+                  <div className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary border border-primary/20">
+                    {getPropertyTypeLabel(property.property_type)}
+                  </div>
+                </div>
+              </div>
+              
+              <Button
+                variant="ghost"
+                size="sm"
+                className="opacity-0 group-hover:opacity-100 p-2 rounded-full hover:bg-destructive/10 hover:text-destructive transition-all duration-200"
+                onClick={() => handleDelete(property.id, property.name)}
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
             </div>
-            <div className={cn(
-              "flex-1",
-              isMobile ? "text-center" : "text-left"
-            )}>
-              <div className={cn(
-                "font-medium",
-                isMobile ? "text-sm" : "text-base"
-              )}>
-                {property.name}
+          </div>
+
+          {/* Property Details */}
+          <div className="p-5 pt-4">
+            <div className="space-y-3">
+              {/* Address */}
+              <div className="flex items-start gap-2">
+                <div className="w-1.5 h-1.5 rounded-full bg-muted-foreground mt-2 flex-shrink-0" />
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  {property.address}
+                </p>
               </div>
-              <div className={cn(
-                "text-muted-foreground",
-                isMobile ? "text-xs" : "text-sm"
-              )}>
-                {property.address}
-              </div>
-              <div className={cn(
-                "text-muted-foreground",
-                isMobile ? "text-xs" : "text-sm"
-              )}>
-                Type: {getPropertyTypeLabel(property.property_type)}
+
+              {/* Market Value */}
+              <div className="flex items-center justify-between pt-2 border-t border-border/30">
+                <span className="text-sm font-medium text-muted-foreground">
+                  Market Value
+                </span>
+                <span className="text-xl font-bold text-foreground group-hover:text-primary transition-colors duration-200">
+                  {formatCurrency(property.current_market_value)}
+                </span>
               </div>
             </div>
           </div>
-          
-          <div className={cn(
-            "flex items-center gap-2",
-            isMobile ? "w-full justify-between" : "justify-end"
-          )}>
-            <span className={cn(
-              "font-semibold",
-              isMobile ? "text-sm" : "text-base"
-            )}>
-              {formatCurrency(property.current_market_value)}
-            </span>
-            
-            <Button
-              variant="ghost"
-              size={isMobile ? "sm" : "default"}
-              className={cn(
-                "p-2",
-                isMobile ? "h-8 w-8" : "h-9 w-9"
-              )}
-              onClick={() => handleDelete(property.id, property.name)}
-            >
-              <Trash2 className={cn(
-                isMobile ? "h-3 w-3" : "h-4 w-4"
-              )} />
-            </Button>
-          </div>
+
+          {/* Hover Effect Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
         </div>
       ))}
       
