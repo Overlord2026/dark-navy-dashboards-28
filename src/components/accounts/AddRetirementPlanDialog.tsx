@@ -80,10 +80,10 @@ export const AddRetirementPlanDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className={cn("sm:max-w-[500px] p-0 overflow-hidden bg-card border border-border/50 shadow-2xl", isMobile && "mx-4")}>
+      <DialogContent className={cn("sm:max-w-[550px] p-0 overflow-hidden bg-card border border-border/50 shadow-2xl", isMobile && "mx-4")}>
         <div className="relative">
           {/* Header with gradient background */}
-          <div className="relative px-8 py-6 bg-gradient-to-br from-primary/5 via-primary/3 to-transparent border-b border-border/30">
+          <div className="relative px-8 py-5 bg-gradient-to-br from-primary/5 via-primary/3 to-transparent border-b border-border/30">
             <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-accent/5 opacity-50" />
             <DialogHeader className="relative">
               <div className="flex items-center gap-4">
@@ -115,8 +115,8 @@ export const AddRetirementPlanDialog = ({
           </div>
 
           {/* Form content */}
-          <div className="p-8">
-            <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="p-7">
+            <form onSubmit={handleSubmit} className="space-y-5">
               <div className="space-y-3">
                 <Label htmlFor="plan_type" className="text-base font-medium text-foreground">Plan Type</Label>
                 <Select
@@ -222,7 +222,7 @@ export const AddRetirementPlanDialog = ({
               </div>
 
               {/* Action buttons */}
-              <div className="pt-6 border-t border-border/30">
+              <div className="pt-5 border-t border-border/30">
                 <div className={cn("flex gap-3", isMobile ? "flex-col" : "flex-row justify-end")}>
                   <Button 
                     type="button" 
