@@ -13,8 +13,7 @@ export const accountsNavItems: NavItem[] = [
   { 
     title: "Cash Management", 
     href: "/client-cash-management", 
-    icon: BanknoteIcon,
-    comingSoon: true
+    icon: BanknoteIcon 
   },
   { 
     title: "Transfers", 
