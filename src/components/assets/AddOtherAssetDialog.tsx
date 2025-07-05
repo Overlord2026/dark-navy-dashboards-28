@@ -7,6 +7,9 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useSupabaseAssets } from "@/hooks/useSupabaseAssets";
 import { toast } from "sonner";
+import { Package, ArrowLeft } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { cn } from "@/lib/utils";
 
 interface AddOtherAssetDialogProps {
   open: boolean;
@@ -23,6 +26,7 @@ const otherAssetTypes = [
 
 export const AddOtherAssetDialog = ({ open, onOpenChange }: AddOtherAssetDialogProps) => {
   const { addAsset } = useSupabaseAssets();
+  const isMobile = useIsMobile();
   const [name, setName] = useState("");
   const [type, setType] = useState("");
   const [value, setValue] = useState("");
@@ -73,67 +77,116 @@ export const AddOtherAssetDialog = ({ open, onOpenChange }: AddOtherAssetDialogP
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle>Add Other Asset</DialogTitle>
-        </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <Label htmlFor="name">Name *</Label>
-            <Input
-              id="name"
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="e.g., Life Insurance Policy, Vintage Car"
-              required
-            />
+      <DialogContent className={cn("sm:max-w-[550px] p-0 overflow-hidden bg-card border border-border/50 shadow-2xl", isMobile && "mx-4")}>
+        <div className="relative">
+          {/* Header with gradient background */}
+          <div className="relative px-8 py-5 bg-gradient-to-br from-primary/5 via-primary/3 to-transparent border-b border-border/30">
+            <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-accent/5 opacity-50" />
+            <DialogHeader className="relative">
+              <div className="flex items-center gap-3">
+                <div className="p-3 rounded-lg bg-primary/10 text-primary">
+                  <Package className="h-6 w-6" />
+                </div>
+                <div>
+                  <DialogTitle className="text-2xl font-semibold text-foreground tracking-tight">
+                    Add Other Asset
+                  </DialogTitle>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Add miscellaneous assets to your portfolio
+                  </p>
+                </div>
+              </div>
+            </DialogHeader>
           </div>
-          
-          <div>
-            <Label htmlFor="type">Type *</Label>
-            <Select value={type} onValueChange={setType} required>
-              <SelectTrigger>
-                <SelectValue placeholder="Select asset type" />
-              </SelectTrigger>
-              <SelectContent>
-                {otherAssetTypes.map((assetType) => (
-                  <SelectItem key={assetType.value} value={assetType.value}>
-                    {assetType.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+
+          {/* Form content */}
+          <div className="p-7">
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <div className="space-y-3">
+                <Label htmlFor="name" className="text-base font-medium text-foreground">Asset Name</Label>
+                <Input
+                  id="name"
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="e.g., Life Insurance Policy, Vintage Car"
+                  className="h-12 border-border/50 bg-background hover:border-primary/30 focus:border-primary/50 transition-colors duration-200"
+                  required
+                />
+              </div>
+              
+              <div className="space-y-3">
+                <Label htmlFor="type" className="text-base font-medium text-foreground">Asset Type</Label>
+                <Select value={type} onValueChange={setType} required>
+                  <SelectTrigger className="h-12 border-border/50 bg-background hover:border-primary/30 transition-colors duration-200">
+                    <SelectValue placeholder="Select asset type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {otherAssetTypes.map((assetType) => (
+                      <SelectItem key={assetType.value} value={assetType.value}>
+                        {assetType.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div className="space-y-3">
+                <Label htmlFor="value" className="text-base font-medium text-foreground">Asset Value</Label>
+                <div className="relative">
+                  <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground">$</span>
+                  <Input
+                    id="value"
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    value={value}
+                    onChange={(e) => setValue(e.target.value)}
+                    placeholder="0.00"
+                    className="h-12 pl-8 border-border/50 bg-background hover:border-primary/30 focus:border-primary/50 transition-colors duration-200"
+                    required
+                  />
+                </div>
+              </div>
+              
+              {/* Action buttons */}
+              <div className="pt-5 border-t border-border/30">
+                <div className={cn("flex gap-3", isMobile ? "flex-col" : "flex-row justify-end")}>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => onOpenChange(false)}
+                    disabled={isSubmitting}
+                    className={cn(
+                      "h-12 px-6 border-border/50 hover:border-primary/30 hover:bg-primary/5 transition-all duration-200",
+                      isMobile && "w-full"
+                    )}
+                  >
+                    Cancel
+                  </Button>
+                  <Button 
+                    type="submit" 
+                    disabled={isSubmitting}
+                    className={cn(
+                      "h-12 px-8 bg-primary hover:bg-primary/90 text-primary-foreground font-medium transition-all duration-200",
+                      "shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30",
+                      isMobile && "w-full"
+                    )}
+                  >
+                    {isSubmitting ? (
+                      <div className="flex items-center gap-2">
+                        <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
+                        Adding...
+                      </div>
+                    ) : (
+                      'Add Other Asset'
+                    )}
+                  </Button>
+                </div>
+              </div>
+            </form>
           </div>
-          
-          <div>
-            <Label htmlFor="value">Value ($) *</Label>
-            <Input
-              id="value"
-              type="number"
-              step="0.01"
-              min="0"
-              value={value}
-              onChange={(e) => setValue(e.target.value)}
-              placeholder="0.00"
-              required
-            />
-          </div>
-          
-          <div className="flex justify-end gap-2">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => onOpenChange(false)}
-              disabled={isSubmitting}
-            >
-              Cancel
-            </Button>
-            <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? "Adding..." : "Add Asset"}
-            </Button>
-          </div>
-        </form>
+        </div>
       </DialogContent>
     </Dialog>
   );
