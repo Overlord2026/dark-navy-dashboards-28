@@ -250,14 +250,17 @@
     }
   }
   
-  @keyframes slideOutRight {
-    from {
-      transform: translateX(0);
-      opacity: 1;
-    }
+  /* Account type dialog animations */
+  .animate-fade-in {
+    animation: fadeIn 0.4s ease-out forwards;
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  
+  @keyframes fadeIn {
     to {
-      transform: translateX(100%);
-      opacity: 0;
+      opacity: 1;
+      transform: translateY(0);
     }
   }
 }
