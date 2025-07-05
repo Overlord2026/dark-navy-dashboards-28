@@ -168,6 +168,25 @@ const Accounts = () => {
           />
 
 
+          {/* Banking */}
+          <CollapsibleCard
+            icon={<Banknote className={cn("mr-2 h-5 w-5 text-primary", isMobile && "h-4 w-4")} />}
+            title="Banking"
+            amount="$0.00"
+            description="No banking accounts linked."
+          >
+            <Button 
+              onClick={() => handleAddAccountType('Bank Account')} 
+              variant="outline" 
+              className={cn(
+                isMobile ? "w-full text-sm" : "w-full sm:w-auto"
+              )}
+            >
+              <PlusCircle className={cn("mr-2", isMobile ? "h-3 w-3" : "h-4 w-4")} />
+              Add Bank Account
+            </Button>
+          </CollapsibleCard>
+
           {/* Retirement Plans */}
           <CollapsibleCard
             icon={<PiggyBank className={cn("mr-2 h-5 w-5 text-primary", isMobile && "h-4 w-4")} />}
@@ -211,26 +230,6 @@ const Accounts = () => {
                 Add Investment Account
               </Button>
             </div>
-          </CollapsibleCard>
-
-
-          {/* Banking */}
-          <CollapsibleCard
-            icon={<Banknote className={cn("mr-2 h-5 w-5 text-primary", isMobile && "h-4 w-4")} />}
-            title="Banking"
-            amount="$0.00"
-            description="No banking accounts linked."
-          >
-            <Button 
-              onClick={() => handleAddAccountType('Bank Account')} 
-              variant="outline" 
-              className={cn(
-                isMobile ? "w-full text-sm" : "w-full sm:w-auto"
-              )}
-            >
-              <PlusCircle className={cn("mr-2", isMobile ? "h-3 w-3" : "h-4 w-4")} />
-              Add Bank Account
-            </Button>
           </CollapsibleCard>
 
 
