@@ -32,6 +32,41 @@ serve(async (req) => {
     plaidEnvironment
   });
 
+  // Early return if missing critical env vars
+  if (!supabaseUrl || !supabaseAnonKey) {
+    console.error('CRITICAL: Missing Supabase environment variables');
+    return new Response(
+      JSON.stringify({ 
+        error: 'Server configuration error - Missing Supabase credentials',
+        details: {
+          supabaseUrl: supabaseUrl ? 'SET' : 'MISSING',
+          supabaseAnonKey: supabaseAnonKey ? 'SET' : 'MISSING'
+        }
+      }),
+      { 
+        status: 500,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      }
+    )
+  }
+
+  if (!plaidClientId || !plaidSecretKey) {
+    console.error('CRITICAL: Missing Plaid environment variables');
+    return new Response(
+      JSON.stringify({ 
+        error: 'Server configuration error - Missing Plaid credentials',
+        details: {
+          plaidClientId: plaidClientId ? 'SET' : 'MISSING',
+          plaidSecretKey: plaidSecretKey ? 'SET' : 'MISSING'
+        }
+      }),
+      { 
+        status: 500,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      }
+    )
+  }
+
   try {
     // Initialize Supabase client
     const supabaseClient = createClient(
