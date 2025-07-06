@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import { useSupabaseAssets } from "@/hooks/useSupabaseAssets";
+import { useOtherAssets } from "@/hooks/useOtherAssets";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,7 +13,7 @@ interface AddAssetDialogProps {
 }
 
 export const AddAssetDialog: React.FC<AddAssetDialogProps> = ({ open, onOpenChange }) => {
-  const { addAsset } = useSupabaseAssets();
+  const { addAsset } = useOtherAssets();
   
   const [assetName, setAssetName] = useState("");
   const [assetType, setAssetType] = useState("");

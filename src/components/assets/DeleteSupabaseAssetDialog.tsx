@@ -1,6 +1,6 @@
 
 import React from "react";
-import { useSupabaseAssets, SupabaseAsset } from "@/hooks/useSupabaseAssets";
+import { useOtherAssets, OtherAsset } from "@/hooks/useOtherAssets";
 import { 
   Dialog, 
   DialogContent, 
@@ -15,7 +15,7 @@ import { formatCurrency } from "@/lib/formatters";
 interface DeleteSupabaseAssetDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  asset: SupabaseAsset | null;
+  asset: OtherAsset | null;
 }
 
 export const DeleteSupabaseAssetDialog: React.FC<DeleteSupabaseAssetDialogProps> = ({ 
@@ -23,7 +23,7 @@ export const DeleteSupabaseAssetDialog: React.FC<DeleteSupabaseAssetDialogProps>
   onOpenChange, 
   asset 
 }) => {
-  const { deleteAsset } = useSupabaseAssets();
+  const { deleteAsset } = useOtherAssets();
   
   const handleDelete = async () => {
     if (!asset) return;

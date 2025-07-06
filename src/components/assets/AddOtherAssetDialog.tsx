@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useSupabaseAssets } from "@/hooks/useSupabaseAssets";
+import { useOtherAssets } from "@/hooks/useOtherAssets";
 import { toast } from "sonner";
 import { Package, ArrowLeft } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -25,7 +25,7 @@ const otherAssetTypes = [
 ];
 
 export const AddOtherAssetDialog = ({ open, onOpenChange }: AddOtherAssetDialogProps) => {
-  const { addAsset } = useSupabaseAssets();
+  const { addAsset } = useOtherAssets();
   const isMobile = useIsMobile();
   const [name, setName] = useState("");
   const [type, setType] = useState("");

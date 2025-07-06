@@ -1,6 +1,6 @@
 
 import React from "react";
-import { useSupabaseAssets } from "@/hooks/useSupabaseAssets";
+import { useOtherAssets } from "@/hooks/useOtherAssets";
 import { useSupabaseLiabilities } from "@/hooks/useSupabaseLiabilities";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatCurrency } from "@/lib/formatters";
@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 
 export const SupabaseAssetsSummary: React.FC = () => {
-  const { assets, getTotalValue, getAssetsByType, loading: assetsLoading } = useSupabaseAssets();
+  const { assets, getTotalValue, getAssetsByType, loading: assetsLoading } = useOtherAssets();
   const { getTotalLiabilities, loading: liabilitiesLoading } = useSupabaseLiabilities();
 
   if (assetsLoading || liabilitiesLoading) {

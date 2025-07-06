@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import { useSupabaseAssets, SupabaseAsset } from "@/hooks/useSupabaseAssets";
+import { useOtherAssets, OtherAsset } from "@/hooks/useOtherAssets";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { 
@@ -28,8 +28,8 @@ interface SupabaseAssetListProps {
 }
 
 export const SupabaseAssetList: React.FC<SupabaseAssetListProps> = ({ filter }) => {
-  const { assets, getAssetsByCategory, loading } = useSupabaseAssets();
-  const [selectedAsset, setSelectedAsset] = useState<SupabaseAsset | null>(null);
+  const { assets, getAssetsByCategory, loading } = useOtherAssets();
+  const [selectedAsset, setSelectedAsset] = useState<OtherAsset | null>(null);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   

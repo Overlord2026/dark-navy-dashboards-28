@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from "react";
-import { useSupabaseAssets, SupabaseAsset } from "@/hooks/useSupabaseAssets";
+import { useOtherAssets, OtherAsset } from "@/hooks/useOtherAssets";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 interface EditSupabaseAssetDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  asset: SupabaseAsset | null;
+  asset: OtherAsset | null;
 }
 
 export const EditSupabaseAssetDialog: React.FC<EditSupabaseAssetDialogProps> = ({ 
@@ -17,7 +17,7 @@ export const EditSupabaseAssetDialog: React.FC<EditSupabaseAssetDialogProps> = (
   onOpenChange, 
   asset 
 }) => {
-  const { updateAsset } = useSupabaseAssets();
+  const { updateAsset } = useOtherAssets();
   const [assetName, setAssetName] = useState("");
   const [assetValue, setAssetValue] = useState("");
   const [assetOwner, setAssetOwner] = useState("");

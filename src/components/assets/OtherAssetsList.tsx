@@ -22,12 +22,12 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Trash2, Package } from "lucide-react";
-import { useSupabaseAssets, OtherAsset } from "@/hooks/useSupabaseAssets";
+import { useOtherAssets, OtherAsset } from "@/hooks/useOtherAssets";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 
 export const OtherAssetsList = () => {
-  const { assets, loading, deleteAsset } = useSupabaseAssets();
+  const { assets, loading, deleteAsset } = useOtherAssets();
   const isMobile = useIsMobile();
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [assetToDelete, setAssetToDelete] = useState<OtherAsset | null>(null);
