@@ -99,6 +99,8 @@ export function PlaidLinkDialog({ isOpen, onClose, onSuccess }: PlaidLinkDialogP
     console.log("PlaidLinkDialog: handleConnect called", { ready, linkToken });
     if (ready && linkToken) {
       console.log("PlaidLinkDialog: Opening Plaid Link");
+      // Close our dialog first to prevent interference
+      onClose();
       openPlaidLink();
     } else {
       console.log("PlaidLinkDialog: Not ready, showing loading state");
