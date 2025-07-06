@@ -1,10 +1,9 @@
-import React from "react";
-import { useForm } from "react-hook-form";
-import { ArrowLeft } from "lucide-react";
+import React, { useState } from "react";
+import { ArrowLeft, Banknote } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -13,7 +12,7 @@ import { cn } from "@/lib/utils";
 interface BankAccountFormData {
   name: string;
   type: string;
-  balance: string;
+  balance: number;
 }
 
 interface AddBankAccountDialogProps {
@@ -30,13 +29,13 @@ export function AddBankAccountDialog({
   const { toast } = useToast();
   const isMobile = useIsMobile();
   
-  const form = useForm<BankAccountFormData>({
-    defaultValues: {
-      name: "",
-      type: "",
-      balance: ""
-    }
+  const [formData, setFormData] = useState<BankAccountFormData>({
+    name: "",
+    type: "",
+    balance: 0
   });
+
+  const [saving, setSaving] = useState(false);
 
   const bankAccountTypes = [
     { value: "checking", label: "Checking" },
@@ -47,31 +46,36 @@ export function AddBankAccountDialog({
     { value: "other", label: "Other" }
   ];
 
-  const onSubmit = (data: BankAccountFormData) => {
-    const balance = parseFloat(data.balance);
-    if (isNaN(balance)) {
-      toast({
-        title: "Invalid Balance",
-        description: "Please enter a valid balance amount",
-        variant: "destructive"
-      });
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!formData.name.trim()) {
       return;
     }
 
+    setSaving(true);
+    
     // TODO: Here you would typically save to your backend/state management
-    console.log("Bank account data:", { ...data, balance });
+    console.log("Bank account data:", formData);
+    
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 1000));
     
     toast({
       title: "Bank Account Added",
-      description: `${data.name} has been added successfully`
+      description: `${formData.name} has been added successfully`
     });
     
-    form.reset();
+    setFormData({
+      name: "",
+      type: "",
+      balance: 0
+    });
+    setSaving(false);
     onOpenChange(false);
   };
 
   const handleBack = () => {
-    form.reset();
     if (onBack) {
       onBack();
     } else {
@@ -81,128 +85,139 @@ export function AddBankAccountDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className={cn(
-        "max-w-md mx-auto",
-        isMobile ? "w-[95vw] max-h-[90vh] overflow-y-auto" : "w-full"
-      )}>
-        <DialogHeader>
-          <DialogTitle className={cn(
-            "text-center",
-            isMobile ? "text-lg" : "text-xl"
-          )}>
-            Add Bank Account Manually
-          </DialogTitle>
-        </DialogHeader>
-
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            {/* Name Field */}
-            <FormField
-              control={form.control}
-              name="name"
-              rules={{ required: "Account name is required" }}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Account Name</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="e.g., Chase Checking Account"
-                      {...field}
-                      className={cn(isMobile ? "text-base" : "")}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Type Field */}
-            <FormField
-              control={form.control}
-              name="type"
-              rules={{ required: "Account type is required" }}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Account Type</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <FormControl>
-                      <SelectTrigger className={cn(isMobile ? "text-base" : "")}>
-                        <SelectValue placeholder="Select account type" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {bankAccountTypes.map((type) => (
-                        <SelectItem key={type.value} value={type.value}>
-                          {type.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Balance Field */}
-            <FormField
-              control={form.control}
-              name="balance"
-              rules={{ 
-                required: "Balance is required",
-                pattern: {
-                  value: /^\d+(\.\d{1,2})?$/,
-                  message: "Please enter a valid amount (e.g., 1000.00)"
-                }
-              }}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Current Balance</FormLabel>
-                  <FormControl>
-                    <div className="relative">
-                      <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground">
-                        $
-                      </span>
-                      <Input
-                        placeholder="0.00"
-                        {...field}
-                        className={cn(
-                          "pl-8",
-                          isMobile ? "text-base" : ""
-                        )}
-                      />
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Action Buttons */}
-            <div className={cn(
-              "flex gap-3 pt-4",
-              isMobile ? "flex-col" : "flex-row justify-end"
-            )}>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={handleBack}
-                className={cn(
-                  "flex items-center gap-2",
-                  isMobile ? "w-full" : ""
+      <DialogContent className={cn("sm:max-w-[550px] p-0 overflow-hidden bg-card border border-border/50 shadow-2xl", isMobile && "mx-4")}>
+        <div className="relative">
+          {/* Header with gradient background */}
+          <div className="relative px-8 py-5 bg-gradient-to-br from-primary/5 via-primary/3 to-transparent border-b border-border/30">
+            <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-accent/5 opacity-50" />
+            <DialogHeader className="relative">
+              <div className="flex items-center gap-4">
+                {onBack && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleBack}
+                    className="p-2 rounded-full hover:bg-primary/10 transition-all duration-300"
+                  >
+                    <ArrowLeft className="h-4 w-4 text-foreground" />
+                  </Button>
                 )}
-              >
-                <ArrowLeft className="h-4 w-4" />
-                Back
-              </Button>
-              <Button
-                type="submit"
-                className={cn(isMobile ? "w-full" : "")}
-              >
-                Add Account
-              </Button>
-            </div>
-          </form>
-        </Form>
+                <div className="flex items-center gap-3">
+                  <div className="p-3 rounded-lg bg-primary/10 text-primary">
+                    <Banknote className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <DialogTitle className="text-2xl font-semibold text-foreground tracking-tight">
+                      Add Bank Account
+                    </DialogTitle>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Manually add your checking, savings, or other bank accounts
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </DialogHeader>
+          </div>
+
+          {/* Form content */}
+          <div className="p-7">
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <div className="space-y-3">
+                <Label htmlFor="name" className="text-base font-medium text-foreground">Account Name</Label>
+                <Input
+                  id="name"
+                  placeholder="e.g., Chase Checking, Bank of America Savings"
+                  value={formData.name}
+                  onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                  className="h-12 border-border/50 bg-background hover:border-primary/30 focus:border-primary/50 transition-colors duration-200"
+                  required
+                />
+              </div>
+
+              <div className="space-y-3">
+                <Label htmlFor="account_type" className="text-base font-medium text-foreground">Account Type</Label>
+                <Select
+                  value={formData.type}
+                  onValueChange={(value: string) => setFormData(prev => ({ ...prev, type: value }))}
+                >
+                  <SelectTrigger className="h-12 border-border/50 bg-background hover:border-primary/30 transition-colors duration-200">
+                    <SelectValue placeholder="Select account type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {bankAccountTypes.map((option) => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-3">
+                <Label htmlFor="balance" className="text-base font-medium text-foreground">Current Balance</Label>
+                <div className="relative">
+                  <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground">$</span>
+                  <Input
+                    id="balance"
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    placeholder="0.00"
+                    value={formData.balance}
+                    onChange={(e) => setFormData(prev => ({ ...prev, balance: parseFloat(e.target.value) || 0 }))}
+                    className="h-12 pl-8 border-border/50 bg-background hover:border-primary/30 focus:border-primary/50 transition-colors duration-200"
+                  />
+                </div>
+              </div>
+
+              {formData.balance > 0 && (
+                <div className="rounded-lg p-4 border border-border/40 bg-primary/3">
+                  <div className="flex justify-between items-center">
+                    <span className="text-base font-medium text-foreground">Account Balance:</span>
+                    <span className="text-xl font-bold text-primary">
+                      ${formData.balance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              {/* Action buttons */}
+              <div className="pt-5 border-t border-border/30">
+                <div className={cn("flex gap-3", isMobile ? "flex-col" : "flex-row justify-end")}>
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    onClick={() => onOpenChange(false)}
+                    className={cn(
+                      "h-12 px-6 border-border/50 hover:border-primary/30 hover:bg-primary/5 transition-all duration-200",
+                      isMobile && "w-full"
+                    )}
+                  >
+                    Cancel
+                  </Button>
+                  <Button 
+                    type="submit" 
+                    disabled={saving || !formData.name.trim()}
+                    className={cn(
+                      "h-12 px-8 bg-primary hover:bg-primary/90 text-primary-foreground font-medium transition-all duration-200",
+                      "shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30",
+                      isMobile && "w-full"
+                    )}
+                  >
+                    {saving ? (
+                      <div className="flex items-center gap-2">
+                        <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
+                        Adding...
+                      </div>
+                    ) : (
+                      'Add Bank Account'
+                    )}
+                  </Button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
       </DialogContent>
     </Dialog>
   );
