@@ -13,6 +13,8 @@ import { DiagnosticsProvider } from "@/context/DiagnosticsContext";
 import { AdvisorProvider } from "@/context/AdvisorContext";
 import { BankAccountsProvider } from "@/context/BankAccountsContext";
 import { RetirementPlansProvider } from "@/context/RetirementPlansContext";
+import { InvestmentAccountsProvider } from "@/context/InvestmentAccountsContext";
+import { PrivateEquityAccountsProvider } from "@/context/PrivateEquityAccountsContext";
 
 // Create a Query Client
 const queryClient = new QueryClient({
@@ -35,12 +37,16 @@ function App() {
                 <FinancialPlanProvider>
                   <BankAccountsProvider>
                     <RetirementPlansProvider>
-                      <DiagnosticsProvider>
-                        <AdvisorProvider>
-                          <RouterProvider router={routes} />
-                          <Toaster position="top-right" richColors closeButton />
-                        </AdvisorProvider>
-                      </DiagnosticsProvider>
+                      <InvestmentAccountsProvider>
+                        <PrivateEquityAccountsProvider>
+                          <DiagnosticsProvider>
+                            <AdvisorProvider>
+                              <RouterProvider router={routes} />
+                              <Toaster position="top-right" richColors closeButton />
+                            </AdvisorProvider>
+                          </DiagnosticsProvider>
+                        </PrivateEquityAccountsProvider>
+                      </InvestmentAccountsProvider>
                     </RetirementPlansProvider>
                   </BankAccountsProvider>
                 </FinancialPlanProvider>
