@@ -176,12 +176,6 @@ export function PlaidLinkDialog({ isOpen, onClose, onSuccess }: PlaidLinkDialogP
           <div className="relative p-8">
             
             <div className="text-center space-y-6">
-              <img 
-                src="/lovable-uploads/7372735a-98e1-411a-85a3-f01eff66a6be.png" 
-                alt="Plaid connection illustration" 
-                className="w-32 h-auto mx-auto"
-              />
-              
               <div className="space-y-3">
                 <h2 className="text-xl font-semibold text-foreground">
                   <span className="font-bold">Advanced Wealth Management</span> uses <span className="font-bold">Plaid</span> to connect your account
