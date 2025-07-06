@@ -55,7 +55,7 @@ export function PlaidLinkDialog({ isOpen, onClose, onSuccess }: PlaidLinkDialogP
       console.error('Error fetching link token:', error);
       toast({
         title: "Error",
-        description: "Failed to initialize Plaid connection",
+        description: "Failed to initialize Plaid connection. Please check your internet connection and try again.",
         variant: "destructive"
       });
     }
