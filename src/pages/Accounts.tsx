@@ -5,7 +5,6 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { PlusCircle, Shield, TrendingUp, CreditCard, Building, Banknote, Wallet, Coins, AlertTriangle, Package, Briefcase, Home, PiggyBank } from "lucide-react";
 import { RetirementAccountTracker } from "@/components/social-security/RetirementAccountTracker";
-import { FundingAccountsOverview } from "@/components/accounts/FundingAccountsOverview";
 import { CollapsibleCard } from "@/components/accounts/CollapsibleCard";
 import { useAccountManagement } from "@/hooks/useAccountManagement";
 import { useDigitalAssets } from "@/hooks/useDigitalAssets";
@@ -43,7 +42,6 @@ import { useBankAccounts } from "@/context/BankAccountsContext";
 
 const Accounts = () => {
   const { 
-    fundingAccounts, 
     handleManageFunding, 
     handleCompleteSetup,
     handleAddAccount,
@@ -171,13 +169,6 @@ const Accounts = () => {
         </div>
         
         <div className="grid gap-6">
-          {/* Funding Accounts Section */}
-          <FundingAccountsOverview 
-            accounts={fundingAccounts} 
-            onManageFunding={handleManageFunding} 
-          />
-
-
           {/* Banking */}
           <CollapsibleCard
             icon={<Banknote className={cn("mr-2 h-5 w-5 text-primary", isMobile && "h-4 w-4")} />}
