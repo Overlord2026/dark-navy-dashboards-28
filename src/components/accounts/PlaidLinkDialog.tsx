@@ -130,9 +130,6 @@ export function PlaidLinkDialog({ isOpen, onClose, onSuccess }: PlaidLinkDialogP
       {step === "info" && (
         <DialogContent className="sm:max-w-[500px] bg-card text-foreground border-border p-0 overflow-hidden">
           <div className="relative p-8">
-            <DialogClose className="absolute right-6 top-6 rounded-full bg-muted p-2 text-muted-foreground opacity-70 ring-offset-background transition-all hover:opacity-100 hover:bg-muted/80">
-              <X className="h-4 w-4" />
-            </DialogClose>
             
             <div className="text-center space-y-6">
               <div className="mx-auto w-16 h-16 bg-gradient-to-br from-primary/20 to-accent/20 rounded-full flex items-center justify-center mb-6">
@@ -177,9 +174,6 @@ export function PlaidLinkDialog({ isOpen, onClose, onSuccess }: PlaidLinkDialogP
       {step === "plaid" && (
         <DialogContent className="sm:max-w-[500px] bg-card text-foreground border-border p-0 overflow-hidden">
           <div className="relative p-8">
-            <DialogClose className="absolute right-6 top-6 rounded-full bg-muted p-2 text-muted-foreground opacity-70 ring-offset-background transition-all hover:opacity-100 hover:bg-muted/80">
-              <X className="h-4 w-4" />
-            </DialogClose>
             
             <div className="text-center space-y-6">
               <img 
