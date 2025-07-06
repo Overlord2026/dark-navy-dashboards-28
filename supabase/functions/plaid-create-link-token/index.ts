@@ -12,66 +12,14 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
-  // Enhanced logging for debugging
-  console.log('=== Plaid Create Link Token Function Started ===');
-  console.log('Request method:', req.method);
-  console.log('Request headers:', Object.fromEntries(req.headers.entries()));
-  
-  // Check environment variables
-  const supabaseUrl = Deno.env.get('SUPABASE_URL');
-  const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY');
-  const plaidClientId = Deno.env.get('PLAID_CLIENT_ID');
-  const plaidSecretKey = Deno.env.get('PLAID_SECRET_KEY');
-  const plaidEnvironment = Deno.env.get('PLAID_ENVIRONMENT') || 'sandbox';
-  
-  console.log('Environment check:', {
-    supabaseUrl: supabaseUrl ? 'SET' : 'MISSING',
-    supabaseAnonKey: supabaseAnonKey ? 'SET' : 'MISSING',
-    plaidClientId: plaidClientId ? 'SET' : 'MISSING', 
-    plaidSecretKey: plaidSecretKey ? 'SET' : 'MISSING',
-    plaidEnvironment
-  });
-
-  // Early return if missing critical env vars
-  if (!supabaseUrl || !supabaseAnonKey) {
-    console.error('CRITICAL: Missing Supabase environment variables');
-    return new Response(
-      JSON.stringify({ 
-        error: 'Server configuration error - Missing Supabase credentials',
-        details: {
-          supabaseUrl: supabaseUrl ? 'SET' : 'MISSING',
-          supabaseAnonKey: supabaseAnonKey ? 'SET' : 'MISSING'
-        }
-      }),
-      { 
-        status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-      }
-    )
-  }
-
-  if (!plaidClientId || !plaidSecretKey) {
-    console.error('CRITICAL: Missing Plaid environment variables');
-    return new Response(
-      JSON.stringify({ 
-        error: 'Server configuration error - Missing Plaid credentials',
-        details: {
-          plaidClientId: plaidClientId ? 'SET' : 'MISSING',
-          plaidSecretKey: plaidSecretKey ? 'SET' : 'MISSING'
-        }
-      }),
-      { 
-        status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-      }
-    )
-  }
-
   try {
+    console.log('=== Plaid Create Link Token Function Started ===');
+    console.log('Request method:', req.method);
+
     // Initialize Supabase client
     const supabaseClient = createClient(
-      supabaseUrl ?? '',
-      supabaseAnonKey ?? '',
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
       {
         global: {
           headers: { Authorization: req.headers.get('Authorization')! },
@@ -80,21 +28,13 @@ serve(async (req) => {
     )
 
     // Get the user from the request
-    console.log('Getting user from Supabase auth...');
     const {
       data: { user },
-      error: authError
     } = await supabaseClient.auth.getUser()
 
-    console.log('Auth result:', { 
-      user: user ? { id: user.id, email: user.email } : null, 
-      error: authError 
-    });
-
     if (!user) {
-      console.error('No authenticated user found');
       return new Response(
-        JSON.stringify({ error: 'Unauthorized - No user found' }),
+        JSON.stringify({ error: 'Unauthorized' }),
         { 
           status: 401,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' }
@@ -103,15 +43,18 @@ serve(async (req) => {
     }
 
     // Get Plaid credentials from environment
-    const PLAID_CLIENT_ID = plaidClientId;
-    const PLAID_SECRET_KEY = plaidSecretKey;
-    const PLAID_ENVIRONMENT = plaidEnvironment;
+    const PLAID_CLIENT_ID = Deno.env.get('PLAID_CLIENT_ID')
+    const PLAID_SECRET_KEY = Deno.env.get('PLAID_SECRET_KEY')
+    const PLAID_ENVIRONMENT = Deno.env.get('PLAID_ENVIRONMENT') || 'sandbox'
+
+    console.log('Environment check:', {
+      plaidClientId: PLAID_CLIENT_ID ? 'SET' : 'MISSING',
+      plaidSecretKey: PLAID_SECRET_KEY ? 'SET' : 'MISSING',
+      plaidEnvironment: PLAID_ENVIRONMENT
+    });
 
     if (!PLAID_CLIENT_ID || !PLAID_SECRET_KEY) {
-      console.error('Missing Plaid credentials:', {
-        clientId: PLAID_CLIENT_ID ? 'SET' : 'MISSING',
-        secretKey: PLAID_SECRET_KEY ? 'SET' : 'MISSING'
-      });
+      console.error('Missing Plaid credentials')
       return new Response(
         JSON.stringify({ 
           error: 'Server configuration error - Missing Plaid credentials',
@@ -134,7 +77,7 @@ serve(async (req) => {
       ? 'https://development.plaid.com'
       : 'https://sandbox.plaid.com'
 
-    console.log(`Creating link token for user ${user.id} in ${PLAID_ENVIRONMENT} environment`)
+    console.log(`Creating link token for user ${user.id}`)
 
     // Create link token request
     const linkTokenRequest = {
@@ -146,18 +89,20 @@ serve(async (req) => {
       user: {
         client_user_id: user.id,
       },
-      products: ['auth', 'transactions']
+      products: ['auth', 'transactions'],
+      redirect_uri: null,
     }
 
-    // Call Plaid API to create link token
-    console.log('Making request to Plaid API:', {
-      url: `${plaidApiUrl}/link/token/create`,
-      requestBody: {
-        ...linkTokenRequest,
-        secret: '[REDACTED]' // Don't log the secret
-      }
+    console.log('Making link token request to Plaid API...');
+    console.log('Link token request details:', {
+      client_id: PLAID_CLIENT_ID,
+      secret: '[REDACTED]',
+      client_name: linkTokenRequest.client_name,
+      products: linkTokenRequest.products,
+      user_id: user.id,
+      url: `${plaidApiUrl}/link/token/create`
     });
-    
+
     const response = await fetch(`${plaidApiUrl}/link/token/create`, {
       method: 'POST',
       headers: {
@@ -166,19 +111,16 @@ serve(async (req) => {
       body: JSON.stringify(linkTokenRequest),
     })
 
-    console.log('Plaid API response status:', response.status);
-    console.log('Plaid API response headers:', Object.fromEntries(response.headers.entries()));
-    
-    const plaidResponse = await response.json()
-    console.log('Plaid API response body:', plaidResponse);
+    console.log('Link token response status:', response.status);
+    const data = await response.json()
+    console.log('Link token response data:', data);
 
     if (!response.ok) {
-      console.error('Plaid API error - Status:', response.status);
-      console.error('Plaid API error - Response:', plaidResponse);
+      console.error('Plaid link token creation error:', data)
       return new Response(
         JSON.stringify({ 
           error: 'Failed to create link token',
-          details: plaidResponse,
+          details: data,
           status: response.status
         }),
         { 
@@ -188,12 +130,13 @@ serve(async (req) => {
       )
     }
 
-    console.log('Link token created successfully')
+    console.log(`Successfully created link token for user ${user.id}`)
 
     return new Response(
       JSON.stringify({ 
-        link_token: plaidResponse.link_token,
-        expiration: plaidResponse.expiration 
+        link_token: data.link_token,
+        expiration: data.expiration,
+        request_id: data.request_id
       }),
       { 
         headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
@@ -208,9 +151,10 @@ serve(async (req) => {
     
     return new Response(
       JSON.stringify({ 
-        error: 'Internal server error',
+        error: 'Internal server error during link token creation',
         details: error.message,
-        type: error.constructor.name
+        type: error.constructor.name,
+        timestamp: new Date().toISOString()
       }),
       { 
         status: 500,
