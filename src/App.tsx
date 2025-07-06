@@ -11,6 +11,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { DiagnosticsProvider } from "@/context/DiagnosticsContext";
 import { AdvisorProvider } from "@/context/AdvisorContext";
+import { BankAccountsProvider } from "@/context/BankAccountsContext";
 
 // Create a Query Client
 const queryClient = new QueryClient({
@@ -31,12 +32,14 @@ function App() {
             <SubscriptionProvider>
               <NetWorthProvider>
                 <FinancialPlanProvider>
-                  <DiagnosticsProvider>
-                    <AdvisorProvider>
-                      <RouterProvider router={routes} />
-                      <Toaster position="top-right" richColors closeButton />
-                    </AdvisorProvider>
-                  </DiagnosticsProvider>
+                  <BankAccountsProvider>
+                    <DiagnosticsProvider>
+                      <AdvisorProvider>
+                        <RouterProvider router={routes} />
+                        <Toaster position="top-right" richColors closeButton />
+                      </AdvisorProvider>
+                    </DiagnosticsProvider>
+                  </BankAccountsProvider>
                 </FinancialPlanProvider>
               </NetWorthProvider>
             </SubscriptionProvider>
