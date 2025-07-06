@@ -1,4 +1,3 @@
-
 // Re-export the context hook for backward compatibility
 export { useLiabilities, type SupabaseLiability } from '@/context/LiabilitiesContext';
 

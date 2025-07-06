@@ -1,4 +1,3 @@
-
 // Re-export the context hook for backward compatibility
 export { useOtherAssets, type OtherAsset, type OtherAssetData, type SupabaseAsset } from '@/context/OtherAssetsContext';
 
