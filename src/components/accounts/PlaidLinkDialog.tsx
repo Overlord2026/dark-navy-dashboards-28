@@ -45,8 +45,8 @@ export function PlaidLinkDialog({ isOpen, onClose, onSuccess }: PlaidLinkDialogP
       if (error) {
         console.error('Error creating link token:', error);
         toast({
-          title: "Error",
-          description: "Failed to initialize Plaid connection",
+          title: "Plaid Connection Error",
+          description: error.message || "Failed to initialize Plaid connection. Please try again or contact support.",
           variant: "destructive"
         });
         return;
