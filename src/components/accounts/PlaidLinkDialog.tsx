@@ -128,33 +128,46 @@ export function PlaidLinkDialog({ isOpen, onClose, onSuccess }: PlaidLinkDialogP
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       {step === "info" && (
-        <DialogContent className="sm:max-w-[600px] bg-[#121a2c] text-white border-gray-800 p-0 overflow-hidden">
-          <div className="p-6">
-            <DialogClose className="absolute right-4 top-4 rounded-full bg-gray-800 p-1.5 text-gray-400 opacity-70 ring-offset-background transition-opacity hover:opacity-100">
+        <DialogContent className="sm:max-w-[500px] bg-card text-foreground border-border p-0 overflow-hidden">
+          <div className="relative p-8">
+            <DialogClose className="absolute right-6 top-6 rounded-full bg-muted p-2 text-muted-foreground opacity-70 ring-offset-background transition-all hover:opacity-100 hover:bg-muted/80">
               <X className="h-4 w-4" />
             </DialogClose>
             
-            <div className="text-center mb-8">
-              <h2 className="text-xl font-semibold mb-2">To link accounts, you'll be asked to select your institution using Plaid.</h2>
-              <p className="text-gray-400 text-sm">
-                * We use Plaid to authenticate your accounts. In the case your institution isn't supported by Plaid, contact us for further assistance.
-              </p>
+            <div className="text-center space-y-6">
+              <div className="mx-auto w-16 h-16 bg-gradient-to-br from-primary/20 to-accent/20 rounded-full flex items-center justify-center mb-6">
+                <Shield className="h-8 w-8 text-primary" />
+              </div>
+              
+              <div className="space-y-3">
+                <h2 className="text-2xl font-semibold text-foreground">Connect Your Accounts</h2>
+                <p className="text-muted-foreground leading-relaxed max-w-sm mx-auto">
+                  You'll be securely redirected to select your financial institution using Plaid's trusted platform.
+                </p>
+              </div>
+              
+              <div className="bg-muted/50 rounded-lg p-4 text-sm text-muted-foreground">
+                <p className="flex items-start gap-2">
+                  <span className="text-primary">ℹ</span>
+                  If your institution isn't supported by Plaid, please contact our support team for assistance.
+                </p>
+              </div>
             </div>
 
-            <div className="flex justify-between mt-8">
+            <div className="flex justify-between mt-8 gap-3">
               <Button 
                 variant="outline" 
                 onClick={onClose}
-                className="border-gray-700 text-white hover:bg-[#1c2e4a] gap-2"
+                className="flex-1 gap-2"
               >
                 <ArrowLeft className="h-4 w-4" />
-                Back
+                Cancel
               </Button>
               <Button 
                 onClick={handleContinue}
-                className="bg-white text-black hover:bg-gray-200"
+                className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90"
               >
-                Link Accounts
+                Continue
               </Button>
             </div>
           </div>
@@ -162,55 +175,65 @@ export function PlaidLinkDialog({ isOpen, onClose, onSuccess }: PlaidLinkDialogP
       )}
 
       {step === "plaid" && (
-        <DialogContent className="sm:max-w-[600px] bg-white text-black border-gray-200 p-0 overflow-hidden">
-          <DialogClose className="absolute right-4 top-4 rounded-full bg-gray-100 p-1 text-gray-600 opacity-70 ring-offset-background transition-opacity hover:opacity-100">
-            <X className="h-4 w-4" />
-          </DialogClose>
-          
-          <div className="p-8 flex flex-col items-center">
-            <img 
-              src="/lovable-uploads/7372735a-98e1-411a-85a3-f01eff66a6be.png" 
-              alt="Plaid connection illustration" 
-              className="w-40 h-auto mb-4"
-            />
+        <DialogContent className="sm:max-w-[500px] bg-card text-foreground border-border p-0 overflow-hidden">
+          <div className="relative p-8">
+            <DialogClose className="absolute right-6 top-6 rounded-full bg-muted p-2 text-muted-foreground opacity-70 ring-offset-background transition-all hover:opacity-100 hover:bg-muted/80">
+              <X className="h-4 w-4" />
+            </DialogClose>
             
-            <h2 className="text-xl font-semibold text-center mb-1">
-              <span className="font-bold">Advanced Wealth Management</span> uses <span className="font-bold">Plaid</span> to connect your account
-            </h2>
-            
-            <div className="my-8 w-full max-w-md space-y-6">
-              <div className="flex items-start gap-3">
-                <Zap className="h-5 w-5 text-gray-700 mt-0.5" />
-                <div>
-                  <h3 className="font-medium text-sm">Connect in seconds</h3>
-                  <p className="text-gray-600 text-sm">
-                    8000+ apps trust Plaid to quickly connect to financial institutions
-                  </p>
+            <div className="text-center space-y-6">
+              <img 
+                src="/lovable-uploads/7372735a-98e1-411a-85a3-f01eff66a6be.png" 
+                alt="Plaid connection illustration" 
+                className="w-32 h-auto mx-auto"
+              />
+              
+              <div className="space-y-3">
+                <h2 className="text-xl font-semibold text-foreground">
+                  <span className="font-bold">Advanced Wealth Management</span> uses <span className="font-bold">Plaid</span> to connect your account
+                </h2>
+              </div>
+              
+              <div className="space-y-4 max-w-md mx-auto">
+                <div className="flex items-start gap-3 text-left">
+                  <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center mt-0.5">
+                    <Zap className="h-4 w-4 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="font-medium text-sm text-foreground">Connect in seconds</h3>
+                    <p className="text-muted-foreground text-sm">
+                      8000+ apps trust Plaid to quickly connect to financial institutions
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start gap-3 text-left">
+                  <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center mt-0.5">
+                    <Shield className="h-4 w-4 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="font-medium text-sm text-foreground">Keep your data safe</h3>
+                    <p className="text-muted-foreground text-sm">
+                      Plaid uses best-in-class encryption to help protect your data
+                    </p>
+                  </div>
                 </div>
               </div>
               
-              <div className="flex items-start gap-3">
-                <Shield className="h-5 w-5 text-gray-700 mt-0.5" />
-                <div>
-                  <h3 className="font-medium text-sm">Keep your data safe</h3>
-                  <p className="text-gray-600 text-sm">
-                    Plaid uses best-in-class encryption to help protect your data
-                  </p>
-                </div>
+              <div className="text-xs text-muted-foreground text-center max-w-md mx-auto bg-muted/30 rounded-lg p-3">
+                By continuing, you agree to Plaid's <a href="#" className="underline text-primary hover:text-primary/80">Privacy Policy</a> and to receiving updates on plaid.com
               </div>
             </div>
             
-            <div className="text-xs text-gray-500 text-center mb-6 max-w-md">
-              By continuing, you agree to Plaid's <a href="#" className="underline">Privacy Policy</a> and to receiving updates on plaid.com
+            <div className="mt-8">
+              <Button 
+                onClick={handleConnect}
+                className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
+                disabled={isConnecting}
+              >
+                {isConnecting ? "Connecting..." : "Continue with Plaid"}
+              </Button>
             </div>
-            
-            <Button 
-              onClick={handleConnect}
-              className="w-full bg-black text-white hover:bg-gray-800"
-              disabled={isConnecting}
-            >
-              {isConnecting ? "Connecting..." : "Continue"}
-            </Button>
           </div>
         </DialogContent>
       )}
