@@ -146,7 +146,7 @@ serve(async (req) => {
       user: {
         client_user_id: user.id,
       },
-      products: ['transactions', 'accounts'],
+      products: ['transactions', 'auth'],
       account_filters: {
         depository: {
           account_subtypes: ['checking', 'savings', 'money_market', 'cd']
