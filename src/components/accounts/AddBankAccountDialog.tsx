@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useBankAccounts } from "@/hooks/useBankAccounts";
 import { cn } from "@/lib/utils";
 
 interface BankAccountFormData {
@@ -28,14 +29,13 @@ export function AddBankAccountDialog({
 }: AddBankAccountDialogProps) {
   const { toast } = useToast();
   const isMobile = useIsMobile();
+  const { addAccount, saving } = useBankAccounts();
   
   const [formData, setFormData] = useState<BankAccountFormData>({
     name: "",
     type: "",
     balance: 0
   });
-
-  const [saving, setSaving] = useState(false);
 
   const bankAccountTypes = [
     { value: "checking", label: "Checking" },
@@ -49,30 +49,29 @@ export function AddBankAccountDialog({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.name.trim()) {
+    if (!formData.name.trim() || !formData.type) {
+      toast({
+        title: "Validation Error",
+        description: "Please fill in all required fields",
+        variant: "destructive"
+      });
       return;
     }
 
-    setSaving(true);
-    
-    // TODO: Here you would typically save to your backend/state management
-    console.log("Bank account data:", formData);
-    
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    toast({
-      title: "Bank Account Added",
-      description: `${formData.name} has been added successfully`
+    const success = await addAccount({
+      name: formData.name,
+      account_type: formData.type,
+      balance: formData.balance
     });
     
-    setFormData({
-      name: "",
-      type: "",
-      balance: 0
-    });
-    setSaving(false);
-    onOpenChange(false);
+    if (success) {
+      setFormData({
+        name: "",
+        type: "",
+        balance: 0
+      });
+      onOpenChange(false);
+    }
   };
 
   const handleBack = () => {

@@ -37,6 +37,8 @@ import { useRetirementPlans } from "@/hooks/useRetirementPlans";
 import { RetirementPlansList } from "@/components/accounts/RetirementPlansList";
 import { AddRetirementPlanDialog } from "@/components/accounts/AddRetirementPlanDialog";
 import { AddBankAccountDialog } from "@/components/accounts/AddBankAccountDialog";
+import { BankAccountsList } from "@/components/accounts/BankAccountsList";
+import { useBankAccounts } from "@/hooks/useBankAccounts";
 
 const Accounts = () => {
   const { 
@@ -78,6 +80,7 @@ const Accounts = () => {
   const { getFormattedTotalValue: getFormattedRealEstateValue, loading: realEstateLoading } = useRealEstate();
   const { getFormattedTotalBalance, loading: investmentAccountsLoading } = useInvestmentAccounts();
   const { getFormattedTotalBalance: getFormattedRetirementBalance, loading: retirementPlansLoading } = useRetirementPlans();
+  const { getFormattedTotalBalance: getFormattedBankBalance, loading: bankAccountsLoading } = useBankAccounts();
   const isMobile = useIsMobile();
 
   // Add state for liability dialog
@@ -175,19 +178,22 @@ const Accounts = () => {
           <CollapsibleCard
             icon={<Banknote className={cn("mr-2 h-5 w-5 text-primary", isMobile && "h-4 w-4")} />}
             title="Banking"
-            amount="$0.00"
-            description="No banking accounts linked."
+            amount={getFormattedBankBalance()}
+            description="Manage your checking, savings, and other bank accounts."
           >
-            <Button 
-              onClick={() => handleAccountTypeSelected('bank')} 
-              variant="outline" 
-              className={cn(
-                isMobile ? "w-full text-sm" : "w-full sm:w-auto"
-              )}
-            >
-              <PlusCircle className={cn("mr-2", isMobile ? "h-3 w-3" : "h-4 w-4")} />
-              Add Bank Account
-            </Button>
+            <div className="space-y-4">
+              <BankAccountsList />
+              <Button 
+                onClick={() => handleAccountTypeSelected('bank')} 
+                variant="outline" 
+                className={cn(
+                  isMobile ? "w-full text-sm" : "w-full sm:w-auto"
+                )}
+              >
+                <PlusCircle className={cn("mr-2", isMobile ? "h-3 w-3" : "h-4 w-4")} />
+                Add Bank Account
+              </Button>
+            </div>
           </CollapsibleCard>
 
           {/* Retirement Plans */}
