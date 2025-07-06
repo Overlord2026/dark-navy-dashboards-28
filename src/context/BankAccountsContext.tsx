@@ -168,36 +168,65 @@ export function BankAccountsProvider({ children }: { children: React.ReactNode }
   const addPlaidAccounts = async (publicToken: string) => {
     try {
       setSaving(true);
+      console.log('BankAccountsContext: Starting addPlaidAccounts with publicToken:', publicToken?.substring(0, 20) + '...');
       
       const { data, error } = await supabase.functions.invoke('plaid-exchange-public-token', {
         body: { public_token: publicToken }
       });
 
+      console.log('BankAccountsContext: Exchange response:', { data, error });
+
       if (error) {
         console.error('Error exchanging Plaid token:', error);
+        const errorMessage = typeof error === 'string' 
+          ? error 
+          : error?.message || error?.details || "Unknown error occurred during account linking";
+        
+        toast({
+          title: "Account Linking Failed",
+          description: errorMessage,
+          variant: "destructive"
+        });
+        return false;
+      }
+
+      if (!data) {
+        console.error('No data received from plaid-exchange-public-token');
         toast({
           title: "Error",
-          description: "Failed to link accounts with Plaid",
+          description: "No response received from server during account linking",
           variant: "destructive"
         });
         return false;
       }
 
       // Add new accounts to state
-      if (data.accounts) {
+      if (data.accounts && Array.isArray(data.accounts) && data.accounts.length > 0) {
+        console.log(`BankAccountsContext: Adding ${data.accounts.length} accounts to state`);
         setAccounts(prev => [...data.accounts, ...prev]);
         toast({
-          title: "Success",
-          description: `Successfully linked ${data.accounts.length} accounts`
+          title: "Success!",
+          description: `Successfully linked ${data.accounts.length} account${data.accounts.length === 1 ? '' : 's'}`
         });
+        
+        // Refresh accounts from database to ensure consistency
+        await fetchAccounts();
+        return true;
+      } else {
+        console.warn('BankAccountsContext: No accounts returned from exchange:', data);
+        toast({
+          title: "Warning",
+          description: "Account linking completed but no accounts were found",
+          variant: "destructive"
+        });
+        return false;
       }
       
-      return true;
     } catch (error) {
       console.error('Error adding Plaid accounts:', error);
       toast({
-        title: "Error",
-        description: "Failed to link accounts with Plaid",
+        title: "Connection Error",
+        description: "Network error occurred during account linking. Please try again.",
         variant: "destructive"
       });
       return false;

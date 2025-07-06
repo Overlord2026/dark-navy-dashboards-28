@@ -16,7 +16,12 @@ serve(async (req) => {
     // Parse request body
     const { public_token } = await req.json()
 
+    console.log('=== Plaid Exchange Public Token Function Started ===');
+    console.log('Request method:', req.method);
+    console.log('Public token received:', public_token ? 'YES' : 'NO');
+
     if (!public_token) {
+      console.error('No public token provided');
       return new Response(
         JSON.stringify({ error: 'Public token is required' }),
         { 
@@ -57,10 +62,22 @@ serve(async (req) => {
     const PLAID_SECRET_KEY = Deno.env.get('PLAID_SECRET_KEY')
     const PLAID_ENVIRONMENT = Deno.env.get('PLAID_ENVIRONMENT') || 'sandbox'
 
+    console.log('Environment check:', {
+      plaidClientId: PLAID_CLIENT_ID ? 'SET' : 'MISSING',
+      plaidSecretKey: PLAID_SECRET_KEY ? 'SET' : 'MISSING',
+      plaidEnvironment: PLAID_ENVIRONMENT
+    });
+
     if (!PLAID_CLIENT_ID || !PLAID_SECRET_KEY) {
       console.error('Missing Plaid credentials')
       return new Response(
-        JSON.stringify({ error: 'Server configuration error' }),
+        JSON.stringify({ 
+          error: 'Server configuration error - Missing Plaid credentials',
+          details: {
+            clientId: PLAID_CLIENT_ID ? 'SET' : 'MISSING',
+            secretKey: PLAID_SECRET_KEY ? 'SET' : 'MISSING'
+          }
+        }),
         { 
           status: 500,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' }
@@ -84,6 +101,14 @@ serve(async (req) => {
       public_token: public_token,
     }
 
+    console.log('Making token exchange request to Plaid API...');
+    console.log('Exchange request details:', {
+      client_id: PLAID_CLIENT_ID,
+      secret: '[REDACTED]',
+      public_token: public_token.substring(0, 20) + '...',
+      url: `${plaidApiUrl}/link/token/exchange`
+    });
+
     const exchangeResponse = await fetch(`${plaidApiUrl}/link/token/exchange`, {
       method: 'POST',
       headers: {
@@ -92,14 +117,17 @@ serve(async (req) => {
       body: JSON.stringify(exchangeRequest),
     })
 
+    console.log('Exchange response status:', exchangeResponse.status);
     const exchangeData = await exchangeResponse.json()
+    console.log('Exchange response data:', exchangeData);
 
     if (!exchangeResponse.ok) {
       console.error('Plaid token exchange error:', exchangeData)
       return new Response(
         JSON.stringify({ 
           error: 'Failed to exchange public token',
-          details: exchangeData 
+          details: exchangeData,
+          status: exchangeResponse.status
         }),
         { 
           status: 500,
@@ -115,6 +143,7 @@ serve(async (req) => {
       access_token: exchangeData.access_token,
     }
 
+    console.log('Making accounts request to Plaid API...');
     const accountsResponse = await fetch(`${plaidApiUrl}/accounts/get`, {
       method: 'POST',
       headers: {
@@ -123,14 +152,26 @@ serve(async (req) => {
       body: JSON.stringify(accountsRequest),
     })
 
+    console.log('Accounts response status:', accountsResponse.status);
     const accountsData = await accountsResponse.json()
+    console.log('Accounts response data:', {
+      accounts_count: accountsData.accounts?.length || 0,
+      accounts: accountsData.accounts?.map((acc: any) => ({
+        id: acc.account_id,
+        name: acc.name,
+        type: acc.type,
+        subtype: acc.subtype,
+        balance: acc.balances?.current
+      })) || []
+    });
 
     if (!accountsResponse.ok) {
       console.error('Plaid accounts fetch error:', accountsData)
       return new Response(
         JSON.stringify({ 
           error: 'Failed to fetch accounts',
-          details: accountsData 
+          details: accountsData,
+          status: accountsResponse.status
         }),
         { 
           status: 500,
@@ -153,17 +194,38 @@ serve(async (req) => {
       last_plaid_sync: new Date().toISOString(),
     }))
 
+    console.log('Preparing to insert accounts:', {
+      user_id: user.id,
+      accounts_count: accountsToInsert.length,
+      accounts_summary: accountsToInsert.map(acc => ({
+        name: acc.name,
+        type: acc.account_type,
+        balance: acc.balance,
+        plaid_account_id: acc.plaid_account_id
+      }))
+    });
+
     const { data: insertedAccounts, error: insertError } = await supabaseClient
       .from('bank_accounts')
       .insert(accountsToInsert)
       .select()
 
+    console.log('Database insert result:', {
+      success: !insertError,
+      inserted_count: insertedAccounts?.length || 0,
+      error: insertError
+    });
+
     if (insertError) {
       console.error('Database insert error:', insertError)
       return new Response(
         JSON.stringify({ 
-          error: 'Failed to save accounts',
-          details: insertError 
+          error: 'Failed to save accounts to database',
+          details: insertError,
+          plaid_data: {
+            accounts_received: accountsData.accounts.length,
+            item_id: exchangeData.item_id
+          }
         }),
         { 
           status: 500,
@@ -177,7 +239,12 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({ 
         success: true,
-        accounts: insertedAccounts
+        accounts: insertedAccounts,
+        summary: {
+          total_accounts: insertedAccounts?.length || 0,
+          item_id: exchangeData.item_id,
+          timestamp: new Date().toISOString()
+        }
       }),
       { 
         headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
@@ -185,9 +252,18 @@ serve(async (req) => {
     )
 
   } catch (error) {
-    console.error('Error in plaid-exchange-public-token:', error)
+    console.error('=== Critical Error in plaid-exchange-public-token ===');
+    console.error('Error type:', error.constructor.name);
+    console.error('Error message:', error.message);
+    console.error('Error stack:', error.stack);
+    
     return new Response(
-      JSON.stringify({ error: 'Internal server error' }),
+      JSON.stringify({ 
+        error: 'Internal server error during account linking',
+        details: error.message,
+        type: error.constructor.name,
+        timestamp: new Date().toISOString()
+      }),
       { 
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
