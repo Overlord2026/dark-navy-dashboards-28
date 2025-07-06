@@ -19,6 +19,7 @@ import { PublicStocksProvider } from "@/context/PublicStocksContext";
 import { DigitalAssetsProvider } from "@/context/DigitalAssetsContext";
 import { RealEstateProvider } from "@/context/RealEstateContext";
 import { OtherAssetsProvider } from "@/context/OtherAssetsContext";
+import { LiabilitiesProvider } from "@/context/LiabilitiesContext";
 
 // Create a Query Client
 const queryClient = new QueryClient({
@@ -47,12 +48,14 @@ function App() {
                             <DigitalAssetsProvider>
                               <RealEstateProvider>
                                 <OtherAssetsProvider>
-                                  <DiagnosticsProvider>
-                                  <AdvisorProvider>
-                                    <RouterProvider router={routes} />
-                                    <Toaster position="top-right" richColors closeButton />
-                                  </AdvisorProvider>
-                                </DiagnosticsProvider>
+                                  <LiabilitiesProvider>
+                                    <DiagnosticsProvider>
+                                    <AdvisorProvider>
+                                      <RouterProvider router={routes} />
+                                      <Toaster position="top-right" richColors closeButton />
+                                    </AdvisorProvider>
+                                  </DiagnosticsProvider>
+                                  </LiabilitiesProvider>
                                 </OtherAssetsProvider>
                               </RealEstateProvider>
                             </DigitalAssetsProvider>
