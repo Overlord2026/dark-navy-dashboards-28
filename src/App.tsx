@@ -12,6 +12,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { DiagnosticsProvider } from "@/context/DiagnosticsContext";
 import { AdvisorProvider } from "@/context/AdvisorContext";
 import { BankAccountsProvider } from "@/context/BankAccountsContext";
+import { RetirementPlansProvider } from "@/context/RetirementPlansContext";
 
 // Create a Query Client
 const queryClient = new QueryClient({
@@ -33,12 +34,14 @@ function App() {
               <NetWorthProvider>
                 <FinancialPlanProvider>
                   <BankAccountsProvider>
-                    <DiagnosticsProvider>
-                      <AdvisorProvider>
-                        <RouterProvider router={routes} />
-                        <Toaster position="top-right" richColors closeButton />
-                      </AdvisorProvider>
-                    </DiagnosticsProvider>
+                    <RetirementPlansProvider>
+                      <DiagnosticsProvider>
+                        <AdvisorProvider>
+                          <RouterProvider router={routes} />
+                          <Toaster position="top-right" richColors closeButton />
+                        </AdvisorProvider>
+                      </DiagnosticsProvider>
+                    </RetirementPlansProvider>
                   </BankAccountsProvider>
                 </FinancialPlanProvider>
               </NetWorthProvider>
