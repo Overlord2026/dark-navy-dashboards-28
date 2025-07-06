@@ -33,6 +33,7 @@ export function useAccountManagement() {
   const [showAddRealEstateDialog, setShowAddRealEstateDialog] = useState(false);
   const [showAddInvestmentAccountDialog, setShowAddInvestmentAccountDialog] = useState(false);
   const [showAddRetirementPlanDialog, setShowAddRetirementPlanDialog] = useState(false);
+  const [showAddBankAccountDialog, setShowAddBankAccountDialog] = useState(false);
   
   // Sample linked funding accounts - in a real app, this would come from an API
   const fundingAccounts = [
@@ -93,7 +94,7 @@ export function useAccountManagement() {
 
   const handleManualSelected = () => {
     setShowAccountTypeSelector(false);
-    setShowAddAccountDialog(true);
+    setShowAddBankAccountDialog(true);
     setSelectedAccountType("manual");
   };
 
@@ -121,6 +122,7 @@ export function useAccountManagement() {
     setShowAddRealEstateDialog(false);
     setShowAddInvestmentAccountDialog(false);
     setShowAddRetirementPlanDialog(false);
+    setShowAddBankAccountDialog(false);
     setShowAddAccountTypeDialog(true);
   };
 
@@ -151,6 +153,7 @@ export function useAccountManagement() {
     showAddRealEstateDialog,
     showAddInvestmentAccountDialog,
     showAddRetirementPlanDialog,
+    showAddBankAccountDialog,
     fundingAccounts,
     
     // Actions
@@ -174,6 +177,7 @@ export function useAccountManagement() {
     setShowAddPublicStockDialog,
     setShowAddRealEstateDialog,
     setShowAddInvestmentAccountDialog,
-    setShowAddRetirementPlanDialog
+    setShowAddRetirementPlanDialog,
+    setShowAddBankAccountDialog
   };
 }
