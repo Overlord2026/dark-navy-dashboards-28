@@ -44,11 +44,18 @@ export function BankAccountsProvider({ children }: { children: React.ReactNode }
 
   const fetchAccounts = async () => {
     try {
+      console.log('BankAccountsContext: Starting fetchAccounts');
       setLoading(true);
+      
+      const { data: user } = await supabase.auth.getUser();
+      console.log('BankAccountsContext: Current user:', user?.user?.id);
+      
       const { data, error } = await supabase
         .from('bank_accounts')
         .select('*')
         .order('created_at', { ascending: false });
+
+      console.log('BankAccountsContext: Fetch result:', { data, error, count: data?.length });
 
       if (error) {
         console.error('Error fetching bank accounts:', error);
@@ -60,6 +67,7 @@ export function BankAccountsProvider({ children }: { children: React.ReactNode }
         return;
       }
 
+      console.log('BankAccountsContext: Setting accounts:', data?.length || 0);
       setAccounts(data || []);
     } catch (error) {
       console.error('Error fetching bank accounts:', error);
