@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
-import { Trash2, Edit, DollarSign } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { useBankAccounts } from '@/hooks/useBankAccounts';
-import { useIsMobile } from '@/hooks/use-mobile';
-import { cn } from '@/lib/utils';
-import {
+import { Card } from '@/components/ui/card';
+import { 
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import { 
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -16,21 +20,25 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { Trash2, Banknote } from 'lucide-react';
+import { useBankAccounts } from '@/hooks/useBankAccounts';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { cn } from '@/lib/utils';
 
-export function BankAccountsList() {
-  const { accounts, loading, deleteAccount } = useBankAccounts();
+export const BankAccountsList = () => {
+  const { accounts, deleteAccount, saving } = useBankAccounts();
   const isMobile = useIsMobile();
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [accountToDelete, setAccountToDelete] = useState<string | null>(null);
+  const [accountToDelete, setAccountToDelete] = useState<{ id: string; name: string } | null>(null);
 
-  const handleDeleteClick = (accountId: string) => {
-    setAccountToDelete(accountId);
+  const handleDeleteClick = (account: any) => {
+    setAccountToDelete({ id: account.id, name: `${getAccountTypeLabel(account.account_type)} - ${account.name}` });
     setDeleteDialogOpen(true);
   };
 
   const handleDeleteConfirm = async () => {
     if (accountToDelete) {
-      await deleteAccount(accountToDelete);
+      await deleteAccount(accountToDelete.id);
       setDeleteDialogOpen(false);
       setAccountToDelete(null);
     }
@@ -50,111 +58,133 @@ export function BankAccountsList() {
       'checking': 'Checking',
       'savings': 'Savings',
       'money-market': 'Money Market',
-      'cd': 'CD',
-      'hsa': 'HSA',
+      'cd': 'Certificate of Deposit',
+      'hsa': 'Health Savings Account',
       'other': 'Other'
     };
     return typeMap[type] || type;
   };
 
-  if (loading) {
+  if (accounts.length === 0) {
     return (
-      <div className="space-y-3">
-        {[1, 2].map((i) => (
-          <Card key={i} className="animate-pulse">
-            <CardContent className="p-4">
-              <div className="h-4 bg-muted rounded w-3/4 mb-2"></div>
-              <div className="h-3 bg-muted rounded w-1/2"></div>
-            </CardContent>
-          </Card>
-        ))}
+      <div className="text-center py-8">
+        <Banknote className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+        <p className="text-muted-foreground">No bank accounts added yet.</p>
+        <p className="text-sm text-muted-foreground">Add your first account to start tracking.</p>
       </div>
     );
   }
 
-  if (accounts.length === 0) {
+  if (isMobile) {
     return (
-      <div className={cn(
-        "text-center py-8 text-muted-foreground",
-        isMobile ? "py-6" : "py-8"
-      )}>
-        <DollarSign className={cn(
-          "mx-auto mb-3 text-muted-foreground/50",
-          isMobile ? "h-8 w-8" : "h-12 w-12"
-        )} />
-        <p className={cn(isMobile ? "text-sm" : "text-base")}>
-          No bank accounts added yet
-        </p>
-      </div>
+      <>
+        <div className="space-y-4">
+          {accounts.map((account) => (
+            <Card key={account.id} className="p-4">
+              <div className="flex justify-between items-start mb-3">
+                <div>
+                  <h4 className="font-semibold text-lg">{account.name}</h4>
+                  <div className="flex gap-2 mt-1">
+                    <Badge variant="outline">{getAccountTypeLabel(account.account_type)}</Badge>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <p className="font-bold text-lg text-green-600">
+                    {formatCurrency(account.balance)}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex gap-2 mt-4">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="flex-1 text-red-600 hover:text-red-700"
+                  onClick={() => handleDeleteClick(account)}
+                  disabled={saving}
+                >
+                  <Trash2 className="h-3 w-3 mr-1" />
+                  Delete
+                </Button>
+              </div>
+            </Card>
+          ))}
+        </div>
+        
+        <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Confirm Deletion</AlertDialogTitle>
+              <AlertDialogDescription>
+                Are you sure you want to delete "{accountToDelete?.name}"? This action cannot be undone.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={handleDeleteConfirm} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                Delete Account
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </>
     );
   }
 
   return (
     <>
-      <div className="space-y-3">
-        {accounts.map((account) => (
-          <Card key={account.id} className="hover:shadow-md transition-shadow duration-200">
-            <CardContent className={cn("p-4", isMobile && "p-3")}>
-              <div className={cn(
-                "flex justify-between items-start",
-                isMobile ? "flex-col gap-3" : "flex-row"
-              )}>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-2">
-                    <h4 className={cn(
-                      "font-semibold text-foreground truncate",
-                      isMobile ? "text-sm" : "text-base"
-                    )}>
-                      {account.name}
-                    </h4>
-                    <Badge variant="secondary" className={cn(
-                      isMobile ? "text-xs px-2 py-1" : "text-sm"
-                    )}>
-                      {getAccountTypeLabel(account.account_type)}
-                    </Badge>
-                  </div>
-                  <p className={cn(
-                    "text-xl font-bold text-primary",
-                    isMobile ? "text-lg" : "text-xl"
-                  )}>
-                    {formatCurrency(account.balance)}
-                  </p>
-                </div>
-                
-                <div className={cn(
-                  "flex gap-2",
-                  isMobile ? "w-full justify-end" : "flex-shrink-0"
-                )}>
-                  <Button
-                    variant="outline"
-                    size={isMobile ? "sm" : "sm"}
-                    onClick={() => handleDeleteClick(account.id)}
-                    className="text-destructive hover:text-destructive hover:bg-destructive/10"
+      <div className="rounded-md border">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Account Name</TableHead>
+              <TableHead>Account Type</TableHead>
+              <TableHead className="text-right">Balance</TableHead>
+              <TableHead className="text-right">Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {accounts.map((account) => (
+              <TableRow key={account.id}>
+                <TableCell className="font-medium">
+                  {account.name}
+                </TableCell>
+                <TableCell>
+                  <Badge variant="outline">
+                    {getAccountTypeLabel(account.account_type)}
+                  </Badge>
+                </TableCell>
+                <TableCell className="text-right font-semibold text-green-600">
+                  {formatCurrency(account.balance)}
+                </TableCell>
+                <TableCell className="text-right">
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="text-red-600 hover:text-red-700"
+                    onClick={() => handleDeleteClick(account)}
+                    disabled={saving}
                   >
-                    <Trash2 className={cn(isMobile ? "h-3 w-3" : "h-4 w-4")} />
-                    {!isMobile && <span className="ml-1">Delete</span>}
+                    <Trash2 className="h-4 w-4" />
                   </Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
       </div>
-
+      
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Confirm Deletion</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete this bank account? This action cannot be undone.
+              Are you sure you want to delete "{accountToDelete?.name}"? This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={handleDeleteConfirm}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-            >
+            <AlertDialogAction onClick={handleDeleteConfirm} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
               Delete Account
             </AlertDialogAction>
           </AlertDialogFooter>
@@ -162,4 +192,4 @@ export function BankAccountsList() {
       </AlertDialog>
     </>
   );
-}
+};
