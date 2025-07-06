@@ -38,22 +38,23 @@ export function PlaidLinkDialog({ isOpen, onClose, onSuccess }: PlaidLinkDialogP
     try {
       console.log("PlaidLinkDialog: Starting fetchLinkToken");
       setIsConnecting(true);
-      const { data, error } = await supabase.functions.invoke('plaid-create-link-token');
+      const response = await supabase.functions.invoke('plaid-create-link-token');
       
-      console.log("PlaidLinkDialog: Link token response", { data, error });
+      console.log("PlaidLinkDialog: Full response", response);
+      console.log("PlaidLinkDialog: Link token response", { data: response.data, error: response.error });
       
-      if (error) {
-        console.error('Error creating link token:', error);
+      if (response.error) {
+        console.error('Error creating link token:', response.error);
         toast({
           title: "Plaid Connection Error",
-          description: error.message || "Failed to initialize Plaid connection. Please try again or contact support.",
+          description: response.error.message || "Failed to initialize Plaid connection. Please try again or contact support.",
           variant: "destructive"
         });
         return;
       }
       
-      console.log("PlaidLinkDialog: Setting link token", data.link_token);
-      setLinkToken(data.link_token);
+      console.log("PlaidLinkDialog: Setting link token", response.data?.link_token);
+      setLinkToken(response.data?.link_token);
     } catch (error) {
       console.error('Error fetching link token:', error);
       toast({
