@@ -1,5 +1,6 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { usePlaidLink } from "react-plaid-link";
 import { 
   Dialog, 
   DialogContent,
@@ -7,38 +8,81 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/lib/supabase";
 import { ArrowLeft, ExternalLink, Shield, Zap, X } from "lucide-react";
 
 interface PlaidLinkDialogProps {
   isOpen: boolean;
   onClose: () => void;
-  onSuccess: (linkToken: string) => void;
+  onSuccess: (publicToken: string) => void;
 }
 
 export function PlaidLinkDialog({ isOpen, onClose, onSuccess }: PlaidLinkDialogProps) {
   const { toast } = useToast();
   const [isConnecting, setIsConnecting] = useState(false);
   const [step, setStep] = useState<"info" | "plaid">("info");
+  const [linkToken, setLinkToken] = useState<string | null>(null);
 
-  const handleConnect = () => {
-    setIsConnecting(true);
-    
-    // Simulate Plaid connection
-    setTimeout(() => {
+  // Fetch link token when dialog opens
+  useEffect(() => {
+    if (isOpen && step === "plaid" && !linkToken) {
+      fetchLinkToken();
+    }
+  }, [isOpen, step, linkToken]);
+
+  const fetchLinkToken = async () => {
+    try {
+      setIsConnecting(true);
+      const { data, error } = await supabase.functions.invoke('plaid-create-link-token');
+      
+      if (error) {
+        console.error('Error creating link token:', error);
+        toast({
+          title: "Error",
+          description: "Failed to initialize Plaid connection",
+          variant: "destructive"
+        });
+        return;
+      }
+      
+      setLinkToken(data.link_token);
+    } catch (error) {
+      console.error('Error fetching link token:', error);
+      toast({
+        title: "Error",
+        description: "Failed to initialize Plaid connection",
+        variant: "destructive"
+      });
+    } finally {
       setIsConnecting(false);
-      
-      // In a real implementation, this would be the response from the Plaid API
-      const mockLinkToken = "plaid-mock-link-token-" + Date.now();
-      
+    }
+  };
+
+  const { open: openPlaidLink, ready } = usePlaidLink({
+    token: linkToken,
+    onSuccess: (public_token: string, metadata: any) => {
+      console.log('Plaid Link success:', { public_token, metadata });
       toast({
         title: "Success",
         description: "Your accounts have been successfully linked"
       });
-      
-      onSuccess(mockLinkToken);
+      onSuccess(public_token);
       onClose();
-    }, 2000);
-  };
+    },
+    onExit: (err: any, metadata: any) => {
+      if (err != null) {
+        console.error('Plaid Link error:', err);
+        toast({
+          title: "Connection Error",
+          description: "Failed to link your accounts. Please try again.",
+          variant: "destructive"
+        });
+      }
+    },
+    onEvent: (eventName: string, metadata: any) => {
+      console.log('Plaid Link event:', eventName, metadata);
+    },
+  });
 
   const handleContinue = () => {
     setStep("plaid");
@@ -46,6 +90,15 @@ export function PlaidLinkDialog({ isOpen, onClose, onSuccess }: PlaidLinkDialogP
 
   const handleBack = () => {
     setStep("info");
+    setLinkToken(null);
+  };
+
+  const handleConnect = () => {
+    if (ready && linkToken) {
+      openPlaidLink();
+    } else {
+      fetchLinkToken();
+    }
   };
 
   return (

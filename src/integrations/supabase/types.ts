@@ -42,7 +42,13 @@ export type Database = {
           balance: number
           created_at: string
           id: string
+          institution_name: string | null
+          is_plaid_linked: boolean | null
+          last_plaid_sync: string | null
           name: string
+          plaid_account_id: string | null
+          plaid_institution_id: string | null
+          plaid_item_id: string | null
           updated_at: string
           user_id: string
         }
@@ -51,7 +57,13 @@ export type Database = {
           balance?: number
           created_at?: string
           id?: string
+          institution_name?: string | null
+          is_plaid_linked?: boolean | null
+          last_plaid_sync?: string | null
           name: string
+          plaid_account_id?: string | null
+          plaid_institution_id?: string | null
+          plaid_item_id?: string | null
           updated_at?: string
           user_id: string
         }
@@ -60,7 +72,13 @@ export type Database = {
           balance?: number
           created_at?: string
           id?: string
+          institution_name?: string | null
+          is_plaid_linked?: boolean | null
+          last_plaid_sync?: string | null
           name?: string
+          plaid_account_id?: string | null
+          plaid_institution_id?: string | null
+          plaid_item_id?: string | null
           updated_at?: string
           user_id?: string
         }

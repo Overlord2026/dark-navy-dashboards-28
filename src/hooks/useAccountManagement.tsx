@@ -1,6 +1,7 @@
 
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { useBankAccounts } from "@/context/BankAccountsContext";
 
 // Types
 export interface Account {
@@ -20,6 +21,7 @@ export interface FundingAccount {
 
 export function useAccountManagement() {
   const { toast } = useToast();
+  const { addPlaidAccounts } = useBankAccounts();
   const [selectedAccountType, setSelectedAccountType] = useState("");
   const [showAccountTypeSelector, setShowAccountTypeSelector] = useState(false);
   const [showAddAccountDialog, setShowAddAccountDialog] = useState(false);
@@ -98,12 +100,14 @@ export function useAccountManagement() {
     setSelectedAccountType("manual");
   };
 
-  const handlePlaidSuccess = (linkToken: string) => {
-    console.log("Plaid link successful with token:", linkToken);
-    toast({
-      title: "Account Linked",
-      description: "Your accounts have been successfully linked via Plaid"
-    });
+  const handlePlaidSuccess = async (publicToken: string) => {
+    console.log("Plaid link successful with public token:", publicToken);
+    const success = await addPlaidAccounts(publicToken);
+    if (success) {
+      // Reset dialog states
+      setShowPlaidDialog(false);
+      setShowAccountTypeSelector(false);
+    }
   };
 
   const handleBackToAccounts = () => {

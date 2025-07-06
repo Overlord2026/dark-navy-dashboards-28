@@ -10,6 +10,12 @@ export interface BankAccount {
   balance: number;
   created_at: string;
   updated_at: string;
+  plaid_account_id?: string;
+  plaid_item_id?: string;
+  plaid_institution_id?: string;
+  institution_name?: string;
+  is_plaid_linked?: boolean;
+  last_plaid_sync?: string;
 }
 
 interface BankAccountsContextType {
@@ -21,6 +27,8 @@ interface BankAccountsContextType {
     account_type: string;
     balance: number;
   }) => Promise<boolean>;
+  addPlaidAccounts: (publicToken: string) => Promise<boolean>;
+  syncPlaidAccount: (accountId: string) => Promise<boolean>;
   deleteAccount: (id: string) => Promise<boolean>;
   getFormattedTotalBalance: () => string;
   refreshAccounts: () => Promise<void>;
@@ -157,6 +165,86 @@ export function BankAccountsProvider({ children }: { children: React.ReactNode }
     }
   };
 
+  const addPlaidAccounts = async (publicToken: string) => {
+    try {
+      setSaving(true);
+      
+      const { data, error } = await supabase.functions.invoke('plaid-exchange-public-token', {
+        body: { public_token: publicToken }
+      });
+
+      if (error) {
+        console.error('Error exchanging Plaid token:', error);
+        toast({
+          title: "Error",
+          description: "Failed to link accounts with Plaid",
+          variant: "destructive"
+        });
+        return false;
+      }
+
+      // Add new accounts to state
+      if (data.accounts) {
+        setAccounts(prev => [...data.accounts, ...prev]);
+        toast({
+          title: "Success",
+          description: `Successfully linked ${data.accounts.length} accounts from ${data.institution?.name}`
+        });
+      }
+      
+      return true;
+    } catch (error) {
+      console.error('Error adding Plaid accounts:', error);
+      toast({
+        title: "Error",
+        description: "Failed to link accounts with Plaid",
+        variant: "destructive"
+      });
+      return false;
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const syncPlaidAccount = async (accountId: string) => {
+    try {
+      const { data, error } = await supabase.functions.invoke('plaid-sync-accounts', {
+        body: { account_id: accountId }
+      });
+
+      if (error) {
+        console.error('Error syncing Plaid account:', error);
+        toast({
+          title: "Error",
+          description: "Failed to sync account balance",
+          variant: "destructive"
+        });
+        return false;
+      }
+
+      // Update account in state
+      if (data.account) {
+        setAccounts(prev => prev.map(acc => 
+          acc.id === accountId ? data.account : acc
+        ));
+        toast({
+          title: "Success",
+          description: "Account balance synced successfully"
+        });
+      }
+      
+      return true;
+    } catch (error) {
+      console.error('Error syncing Plaid account:', error);
+      toast({
+        title: "Error",
+        description: "Failed to sync account balance",
+        variant: "destructive"
+      });
+      return false;
+    }
+  };
+
   const getFormattedTotalBalance = () => {
     const total = accounts.reduce((sum, account) => sum + account.balance, 0);
     return new Intl.NumberFormat('en-US', {
@@ -178,6 +266,8 @@ export function BankAccountsProvider({ children }: { children: React.ReactNode }
         loading,
         saving,
         addAccount,
+        addPlaidAccounts,
+        syncPlaidAccount,
         deleteAccount,
         getFormattedTotalBalance,
         refreshAccounts: fetchAccounts
