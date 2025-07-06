@@ -23,17 +23,24 @@ export function PlaidLinkDialog({ isOpen, onClose, onSuccess }: PlaidLinkDialogP
   const [step, setStep] = useState<"info" | "plaid">("info");
   const [linkToken, setLinkToken] = useState<string | null>(null);
 
+  console.log("PlaidLinkDialog: Rendering with state", { isOpen, step, linkToken, isConnecting });
+
   // Fetch link token when dialog opens
   useEffect(() => {
+    console.log("PlaidLinkDialog: useEffect triggered", { isOpen, step, linkToken });
     if (isOpen && step === "plaid" && !linkToken) {
+      console.log("PlaidLinkDialog: Calling fetchLinkToken");
       fetchLinkToken();
     }
   }, [isOpen, step, linkToken]);
 
   const fetchLinkToken = async () => {
     try {
+      console.log("PlaidLinkDialog: Starting fetchLinkToken");
       setIsConnecting(true);
       const { data, error } = await supabase.functions.invoke('plaid-create-link-token');
+      
+      console.log("PlaidLinkDialog: Link token response", { data, error });
       
       if (error) {
         console.error('Error creating link token:', error);
@@ -45,6 +52,7 @@ export function PlaidLinkDialog({ isOpen, onClose, onSuccess }: PlaidLinkDialogP
         return;
       }
       
+      console.log("PlaidLinkDialog: Setting link token", data.link_token);
       setLinkToken(data.link_token);
     } catch (error) {
       console.error('Error fetching link token:', error);
@@ -85,18 +93,23 @@ export function PlaidLinkDialog({ isOpen, onClose, onSuccess }: PlaidLinkDialogP
   });
 
   const handleContinue = () => {
+    console.log("PlaidLinkDialog: Moving to plaid step");
     setStep("plaid");
   };
 
   const handleBack = () => {
+    console.log("PlaidLinkDialog: Moving back to info step");
     setStep("info");
     setLinkToken(null);
   };
 
   const handleConnect = () => {
+    console.log("PlaidLinkDialog: handleConnect called", { ready, linkToken });
     if (ready && linkToken) {
+      console.log("PlaidLinkDialog: Opening Plaid Link");
       openPlaidLink();
     } else {
+      console.log("PlaidLinkDialog: Fetching link token");
       fetchLinkToken();
     }
   };
