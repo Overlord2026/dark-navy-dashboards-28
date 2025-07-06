@@ -36,7 +36,6 @@ import { AddInvestmentAccountDialog } from "@/components/accounts/AddInvestmentA
 import { useRetirementPlans } from "@/hooks/useRetirementPlans";
 import { RetirementPlansList } from "@/components/accounts/RetirementPlansList";
 import { AddRetirementPlanDialog } from "@/components/accounts/AddRetirementPlanDialog";
-import { AddBankAccountDialog } from "@/components/accounts/AddBankAccountDialog";
 
 const Accounts = () => {
   const { 
@@ -57,7 +56,6 @@ const Accounts = () => {
     showAddRealEstateDialog,
     showAddInvestmentAccountDialog,
     showAddRetirementPlanDialog,
-    showAddBankAccountDialog,
     setShowAddAccountTypeDialog,
     setShowAccountTypeSelector,
     setShowAddDigitalAssetDialog,
@@ -66,8 +64,7 @@ const Accounts = () => {
     setShowAddPublicStockDialog,
     setShowAddRealEstateDialog,
     setShowAddInvestmentAccountDialog,
-    setShowAddRetirementPlanDialog,
-    setShowAddBankAccountDialog
+    setShowAddRetirementPlanDialog
   } = useAccountManagement();
   
   const { getFormattedTotalValue, loading: digitalAssetsLoading } = useDigitalAssets();
@@ -445,13 +442,6 @@ const Accounts = () => {
       <AddRetirementPlanDialog
         open={showAddRetirementPlanDialog}
         onOpenChange={setShowAddRetirementPlanDialog}
-        onBack={handleBackToAccountTypes}
-      />
-
-      {/* Add Bank Account Dialog */}
-      <AddBankAccountDialog
-        open={showAddBankAccountDialog}
-        onOpenChange={setShowAddBankAccountDialog}
         onBack={handleBackToAccountTypes}
       />
     </ThreeColumnLayout>
