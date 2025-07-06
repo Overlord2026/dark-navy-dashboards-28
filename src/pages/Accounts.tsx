@@ -10,7 +10,7 @@ import { useAccountManagement } from "@/hooks/useAccountManagement";
 import { useDigitalAssets } from "@/hooks/useDigitalAssets";
 import { useLiabilities } from "@/context/LiabilitiesContext";
 import { useSupabaseAssets } from "@/hooks/useSupabaseAssets";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { useResponsive } from "@/hooks/use-responsive";
 import { cn } from "@/lib/utils";
 import { AddAccountTypeDialog } from "@/components/accounts/AddAccountTypeDialog";
 import { AccountLinkTypeSelector } from "@/components/accounts/AccountLinkTypeSelector";
@@ -83,7 +83,7 @@ const Accounts = () => {
   const { getFormattedTotalBalance, loading: investmentAccountsLoading } = useInvestmentAccounts();
   const { getFormattedTotalBalance: getFormattedRetirementBalance, loading: retirementPlansLoading } = useRetirementPlans();
   const { getFormattedTotalBalance: getFormattedBankBalance, loading: bankAccountsLoading } = useBankAccounts();
-  const isMobile = useIsMobile();
+  const { isMobile, isTablet, isSmallScreen, isLargeScreen } = useResponsive();
 
   // Add state for liability dialog
   const [showAddLiabilityDialog, setShowAddLiabilityDialog] = React.useState(false);
@@ -129,30 +129,41 @@ const Accounts = () => {
     >
       <div className={cn(
         "container mx-auto max-w-7xl space-y-6",
-        isMobile ? "px-3 py-4" : "px-4 py-6"
+        isSmallScreen ? "px-3 py-4" : isLargeScreen ? "px-6 py-8" : "px-4 py-6"
       )}>
         {/* Header Section */}
         <div className={cn(
           "flex gap-4 pb-6 border-b border-border",
-          isMobile ? "flex-col items-start" : "flex-col sm:flex-row sm:items-center sm:justify-between"
+          isMobile ? "flex-col items-start space-y-4" : 
+          isTablet ? "flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0" :
+          "flex-row items-center justify-between"
         )}>
           <div className="space-y-2">
             <p className={cn(
               "text-muted-foreground",
-              isMobile ? "text-sm" : "text-base"
+              isMobile ? "text-sm" : isTablet ? "text-sm sm:text-base" : "text-base"
             )}>Manage all your financial accounts in one place</p>
           </div>
           <div className={cn(
             "flex gap-3",
-            isMobile ? "w-full flex-col" : "flex-row"
+            isMobile ? "w-full flex-col" : 
+            isTablet ? "w-full sm:w-auto flex-col sm:flex-row" :
+            "flex-row"
           )}>
             <Button 
               onClick={handleAddAccount}
               className={cn(
-                isMobile ? "w-full text-sm" : ""
+                isMobile ? "w-full text-sm" : 
+                isTablet ? "w-full sm:w-auto text-sm" :
+                "text-base"
               )}
             >
-              <PlusCircle className={cn("mr-2", isMobile ? "h-3 w-3" : "h-4 w-4")} />
+              <PlusCircle className={cn(
+                "mr-2", 
+                isMobile ? "h-3 w-3" : 
+                isTablet ? "h-4 w-4" : 
+                "h-4 w-4"
+              )} />
               Add Account
             </Button>
           </div>
@@ -161,7 +172,7 @@ const Accounts = () => {
         <div className="grid gap-6">
           {/* Banking */}
           <CollapsibleCard
-            icon={<Banknote className={cn("mr-2 h-5 w-5 text-primary", isMobile && "h-4 w-4")} />}
+            icon={<Banknote className={cn("mr-2 h-5 w-5 text-primary", isSmallScreen && "h-4 w-4")} />}
             title="Banking"
             amount={getFormattedBankBalance()}
             description="Manage your checking, savings, and other bank accounts."
@@ -172,10 +183,15 @@ const Accounts = () => {
                 onClick={() => handleAccountTypeSelected('bank')} 
                 variant="outline" 
                 className={cn(
-                  isMobile ? "w-full text-sm" : "w-full sm:w-auto"
+                  isSmallScreen ? "w-full text-sm" : 
+                  isTablet ? "w-full md:w-auto" :
+                  "w-full sm:w-auto"
                 )}
               >
-                <PlusCircle className={cn("mr-2", isMobile ? "h-3 w-3" : "h-4 w-4")} />
+                <PlusCircle className={cn(
+                  "mr-2", 
+                  isSmallScreen ? "h-3 w-3" : "h-4 w-4"
+                )} />
                 Add Bank Account
               </Button>
             </div>
@@ -183,7 +199,7 @@ const Accounts = () => {
 
           {/* Retirement Plans */}
           <CollapsibleCard
-            icon={<PiggyBank className={cn("mr-2 h-5 w-5 text-primary", isMobile && "h-4 w-4")} />}
+            icon={<PiggyBank className={cn("mr-2 h-5 w-5 text-primary", isSmallScreen && "h-4 w-4")} />}
             title="Retirement Plans"
             amount={getFormattedRetirementBalance()}
             description="Track your 401(k), 403(b), and 457(b) retirement plans."
@@ -194,10 +210,15 @@ const Accounts = () => {
                 onClick={() => handleAccountTypeSelected('retirement-plan')} 
                 variant="outline" 
                 className={cn(
-                  isMobile ? "w-full text-sm" : "w-full sm:w-auto"
+                  isSmallScreen ? "w-full text-sm" : 
+                  isTablet ? "w-full md:w-auto" :
+                  "w-full sm:w-auto"
                 )}
               >
-                <PlusCircle className={cn("mr-2", isMobile ? "h-3 w-3" : "h-4 w-4")} />
+                <PlusCircle className={cn(
+                  "mr-2", 
+                  isSmallScreen ? "h-3 w-3" : "h-4 w-4"
+                )} />
                 Add Retirement Plan
               </Button>
             </div>
@@ -206,7 +227,7 @@ const Accounts = () => {
 
           {/* Investment */}
           <CollapsibleCard
-            icon={<TrendingUp className={cn("mr-2 h-5 w-5 text-primary", isMobile && "h-4 w-4")} />}
+            icon={<TrendingUp className={cn("mr-2 h-5 w-5 text-primary", isSmallScreen && "h-4 w-4")} />}
             title="Investment"
             amount={getFormattedTotalBalance()}
             description="Track your investment accounts and balances."
@@ -217,10 +238,15 @@ const Accounts = () => {
                 onClick={() => handleAccountTypeSelected('investment')} 
                 variant="outline" 
                 className={cn(
-                  isMobile ? "w-full text-sm" : "w-full sm:w-auto"
+                  isSmallScreen ? "w-full text-sm" : 
+                  isTablet ? "w-full md:w-auto" :
+                  "w-full sm:w-auto"
                 )}
               >
-                <PlusCircle className={cn("mr-2", isMobile ? "h-3 w-3" : "h-4 w-4")} />
+                <PlusCircle className={cn(
+                  "mr-2", 
+                  isSmallScreen ? "h-3 w-3" : "h-4 w-4"
+                )} />
                 Add Investment Account
               </Button>
             </div>
@@ -229,7 +255,7 @@ const Accounts = () => {
 
           {/* Private Equity */}
           <CollapsibleCard
-            icon={<Briefcase className={cn("mr-2 h-5 w-5 text-primary", isMobile && "h-4 w-4")} />}
+            icon={<Briefcase className={cn("mr-2 h-5 w-5 text-primary", isSmallScreen && "h-4 w-4")} />}
             title="Private Equity"
             amount={getFormattedTotalValuation()}
             description="Track your private equity investments and holdings."
@@ -240,10 +266,15 @@ const Accounts = () => {
                 onClick={() => handleAccountTypeSelectedWithLiability('private-equity')} 
                 variant="outline" 
                 className={cn(
-                  isMobile ? "w-full text-sm" : "w-full sm:w-auto"
+                  isSmallScreen ? "w-full text-sm" : 
+                  isTablet ? "w-full md:w-auto" :
+                  "w-full sm:w-auto"
                 )}
               >
-                <PlusCircle className={cn("mr-2", isMobile ? "h-3 w-3" : "h-4 w-4")} />
+                <PlusCircle className={cn(
+                  "mr-2", 
+                  isSmallScreen ? "h-3 w-3" : "h-4 w-4"
+                )} />
                 Add Private Equity
               </Button>
             </div>
@@ -251,7 +282,7 @@ const Accounts = () => {
 
           {/* Public Stock */}
           <CollapsibleCard
-            icon={<TrendingUp className={cn("mr-2 h-5 w-5 text-primary", isMobile && "h-4 w-4")} />}
+            icon={<TrendingUp className={cn("mr-2 h-5 w-5 text-primary", isSmallScreen && "h-4 w-4")} />}
             title="Public Stock"
             amount={getFormattedPublicStockValue()}
             description="Track your individual stock holdings and equity investments."
@@ -262,10 +293,15 @@ const Accounts = () => {
                 onClick={() => handleAccountTypeSelected('public-stock')} 
                 variant="outline" 
                 className={cn(
-                  isMobile ? "w-full text-sm" : "w-full sm:w-auto"
+                  isSmallScreen ? "w-full text-sm" : 
+                  isTablet ? "w-full md:w-auto" :
+                  "w-full sm:w-auto"
                 )}
               >
-                <PlusCircle className={cn("mr-2", isMobile ? "h-3 w-3" : "h-4 w-4")} />
+                <PlusCircle className={cn(
+                  "mr-2", 
+                  isSmallScreen ? "h-3 w-3" : "h-4 w-4"
+                )} />
                 Add Public Stock
               </Button>
             </div>
@@ -273,7 +309,7 @@ const Accounts = () => {
 
           {/* Digital Assets */}
           <CollapsibleCard
-            icon={<Coins className={cn("mr-2 h-5 w-5 text-primary", isMobile && "h-4 w-4")} />}
+            icon={<Coins className={cn("mr-2 h-5 w-5 text-primary", isSmallScreen && "h-4 w-4")} />}
             title="Digital Assets"
             amount={getFormattedTotalValue()}
             description="Track your cryptocurrency and digital asset holdings."
@@ -284,10 +320,15 @@ const Accounts = () => {
                 onClick={() => handleAccountTypeSelected('digital-assets')} 
                 variant="outline" 
                 className={cn(
-                  isMobile ? "w-full text-sm" : "w-full sm:w-auto"
+                  isSmallScreen ? "w-full text-sm" : 
+                  isTablet ? "w-full md:w-auto" :
+                  "w-full sm:w-auto"
                 )}
               >
-                <PlusCircle className={cn("mr-2", isMobile ? "h-3 w-3" : "h-4 w-4")} />
+                <PlusCircle className={cn(
+                  "mr-2", 
+                  isSmallScreen ? "h-3 w-3" : "h-4 w-4"
+                )} />
                 Add Digital Asset
               </Button>
             </div>
@@ -295,7 +336,7 @@ const Accounts = () => {
 
           {/* Real Estate */}
           <CollapsibleCard
-            icon={<Home className={cn("mr-2 h-5 w-5 text-primary", isMobile && "h-4 w-4")} />}
+            icon={<Home className={cn("mr-2 h-5 w-5 text-primary", isSmallScreen && "h-4 w-4")} />}
             title="Real Estate"
             amount={getFormattedRealEstateValue()}
             description="Track your real estate properties and their market values."
@@ -306,10 +347,15 @@ const Accounts = () => {
                 onClick={() => handleAccountTypeSelected('real-estate')} 
                 variant="outline" 
                 className={cn(
-                  isMobile ? "w-full text-sm" : "w-full sm:w-auto"
+                  isSmallScreen ? "w-full text-sm" : 
+                  isTablet ? "w-full md:w-auto" :
+                  "w-full sm:w-auto"
                 )}
               >
-                <PlusCircle className={cn("mr-2", isMobile ? "h-3 w-3" : "h-4 w-4")} />
+                <PlusCircle className={cn(
+                  "mr-2", 
+                  isSmallScreen ? "h-3 w-3" : "h-4 w-4"
+                )} />
                 Add Real Estate
               </Button>
             </div>
@@ -317,7 +363,7 @@ const Accounts = () => {
 
           {/* Other Assets */}
           <CollapsibleCard
-            icon={<Package className={cn("mr-2 h-5 w-5 text-primary", isMobile && "h-4 w-4")} />}
+            icon={<Package className={cn("mr-2 h-5 w-5 text-primary", isSmallScreen && "h-4 w-4")} />}
             title="Other Assets"
             amount={getFormattedOtherAssetsValue()}
             description="Track your other valuable assets like vehicles, collectibles, and more."
@@ -328,10 +374,15 @@ const Accounts = () => {
                 onClick={() => handleAccountTypeSelected('other-assets')} 
                 variant="outline" 
                 className={cn(
-                  isMobile ? "w-full text-sm" : "w-full sm:w-auto"
+                  isSmallScreen ? "w-full text-sm" : 
+                  isTablet ? "w-full md:w-auto" :
+                  "w-full sm:w-auto"
                 )}
               >
-                <PlusCircle className={cn("mr-2", isMobile ? "h-3 w-3" : "h-4 w-4")} />
+                <PlusCircle className={cn(
+                  "mr-2", 
+                  isSmallScreen ? "h-3 w-3" : "h-4 w-4"
+                )} />
                 Add Other Asset
               </Button>
             </div>
@@ -339,7 +390,7 @@ const Accounts = () => {
 
           {/* Liability */}
           <CollapsibleCard
-            icon={<AlertTriangle className={cn("mr-2 h-5 w-5 text-primary", isMobile && "h-4 w-4")} />}
+            icon={<AlertTriangle className={cn("mr-2 h-5 w-5 text-primary", isSmallScreen && "h-4 w-4")} />}
             title="Liability"
             amount={formatCurrency(getTotalLiabilities())}
             description="Track your debts and liabilities."
@@ -350,10 +401,15 @@ const Accounts = () => {
                 onClick={() => handleAddAccountType('Liability')} 
                 variant="outline" 
                 className={cn(
-                  isMobile ? "w-full text-sm" : "w-full sm:w-auto"
+                  isSmallScreen ? "w-full text-sm" : 
+                  isTablet ? "w-full md:w-auto" :
+                  "w-full sm:w-auto"
                 )}
               >
-                <PlusCircle className={cn("mr-2", isMobile ? "h-3 w-3" : "h-4 w-4")} />
+                <PlusCircle className={cn(
+                  "mr-2", 
+                  isSmallScreen ? "h-3 w-3" : "h-4 w-4"
+                )} />
                 Add Liability
               </Button>
             </div>
@@ -373,7 +429,9 @@ const Accounts = () => {
         <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4">
           <div className={cn(
             "bg-background rounded-lg shadow-lg w-full p-6",
-            isMobile ? "max-w-sm mx-4" : "max-w-md"
+            isSmallScreen ? "max-w-sm mx-4" : 
+            isTablet ? "max-w-md mx-4" :
+            "max-w-md"
           )}>
             <AccountLinkTypeSelector
               onSelectPlaid={handlePlaidSelected}
