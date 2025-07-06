@@ -38,6 +38,7 @@ import { RetirementPlansList } from "@/components/accounts/RetirementPlansList";
 import { AddRetirementPlanDialog } from "@/components/accounts/AddRetirementPlanDialog";
 import { AddBankAccountDialog } from "@/components/accounts/AddBankAccountDialog";
 import { BankAccountsList } from "@/components/accounts/BankAccountsList";
+import { PlaidLinkDialog } from "@/components/accounts/PlaidLinkDialog";
 import { useBankAccounts } from "@/context/BankAccountsContext";
 
 const Accounts = () => {
@@ -49,9 +50,11 @@ const Accounts = () => {
     handleAccountTypeSelected,
     handlePlaidSelected,
     handleManualSelected,
+    handlePlaidSuccess,
     handleBackToAccountTypes,
     showAddAccountTypeDialog,
     showAccountTypeSelector,
+    showPlaidDialog,
     showAddDigitalAssetDialog,
     showAddOtherAssetDialog,
     showAddPrivateEquityDialog,
@@ -62,6 +65,7 @@ const Accounts = () => {
     showAddBankAccountDialog,
     setShowAddAccountTypeDialog,
     setShowAccountTypeSelector,
+    setShowPlaidDialog,
     setShowAddDigitalAssetDialog,
     setShowAddOtherAssetDialog,
     setShowAddPrivateEquityDialog,
@@ -458,6 +462,13 @@ const Accounts = () => {
         open={showAddBankAccountDialog}
         onOpenChange={setShowAddBankAccountDialog}
         onBack={handleBackToAccountTypes}
+      />
+      
+      {/* Plaid Link Dialog */}
+      <PlaidLinkDialog
+        isOpen={showPlaidDialog}
+        onClose={() => setShowPlaidDialog(false)}
+        onSuccess={handlePlaidSuccess}
       />
     </ThreeColumnLayout>
   );
