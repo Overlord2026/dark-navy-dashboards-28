@@ -38,7 +38,7 @@ import { RetirementPlansList } from "@/components/accounts/RetirementPlansList";
 import { AddRetirementPlanDialog } from "@/components/accounts/AddRetirementPlanDialog";
 import { AddBankAccountDialog } from "@/components/accounts/AddBankAccountDialog";
 import { BankAccountsList } from "@/components/accounts/BankAccountsList";
-import { useBankAccounts } from "@/hooks/useBankAccounts";
+import { useBankAccounts } from "@/context/BankAccountsContext";
 
 const Accounts = () => {
   const { 

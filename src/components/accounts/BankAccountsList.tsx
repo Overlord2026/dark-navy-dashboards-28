@@ -21,7 +21,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Trash2, Banknote } from 'lucide-react';
-import { useBankAccounts } from '@/hooks/useBankAccounts';
+import { useBankAccounts } from '@/context/BankAccountsContext';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
 
