@@ -6,16 +6,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { CreditCard, ArrowLeft } from "lucide-react";
-import { supabase } from "@/lib/supabase";
-import { useAuth } from "@/context/AuthContext";
-import { toast } from "sonner";
+import { useLiabilities } from "@/context/LiabilitiesContext";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 
 interface AddLiabilityDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onLiabilityAdded: () => void;
 }
 
 const liabilityTypes = [
@@ -27,8 +24,9 @@ const liabilityTypes = [
   { value: "Other", label: "Other" },
 ];
 
-export const AddLiabilityDialog = ({ open, onOpenChange, onLiabilityAdded }: AddLiabilityDialogProps) => {
+export const AddLiabilityDialog = ({ open, onOpenChange }: AddLiabilityDialogProps) => {
   const isMobile = useIsMobile();
+  const { addLiability } = useLiabilities();
   const [name, setName] = useState("");
   const [type, setType] = useState("");
   const [currentBalance, setCurrentBalance] = useState("");
@@ -38,7 +36,6 @@ export const AddLiabilityDialog = ({ open, onOpenChange, onLiabilityAdded }: Add
   const [monthlyPayment, setMonthlyPayment] = useState("");
   const [interestRate, setInterestRate] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { user } = useAuth();
 
   const resetForm = () => {
     setName("");
@@ -54,87 +51,60 @@ export const AddLiabilityDialog = ({ open, onOpenChange, onLiabilityAdded }: Add
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!user) {
-      toast.error("Please log in to add liabilities");
-      return;
-    }
-
     if (!name.trim() || !type || !currentBalance) {
-      toast.error("Please fill in all required fields");
       return;
     }
 
     const numericCurrentBalance = parseFloat(currentBalance);
     if (isNaN(numericCurrentBalance) || numericCurrentBalance < 0) {
-      toast.error("Please enter a valid current balance");
       return;
     }
 
     setIsSubmitting(true);
 
-    try {
-      // Create the insert data object with only the required fields first
-      const insertData: any = {
-        user_id: user.id,
-        name: name.trim(),
-        type: type,
-        current_balance: numericCurrentBalance
-      };
+    const liabilityData: any = {
+      name: name.trim(),
+      type: type,
+      current_balance: numericCurrentBalance
+    };
 
-      // Add optional fields only if they have valid values
-      if (originalLoanAmount && originalLoanAmount.trim()) {
-        const numericOriginalAmount = parseFloat(originalLoanAmount);
-        if (!isNaN(numericOriginalAmount) && numericOriginalAmount > 0) {
-          insertData.original_loan_amount = numericOriginalAmount;
-        }
+    // Add optional fields if they have valid values
+    if (originalLoanAmount && originalLoanAmount.trim()) {
+      const numericOriginalAmount = parseFloat(originalLoanAmount);
+      if (!isNaN(numericOriginalAmount) && numericOriginalAmount > 0) {
+        liabilityData.original_loan_amount = numericOriginalAmount;
       }
-
-      if (startDate && startDate.trim()) {
-        insertData.start_date = startDate;
-      }
-
-      if (endDate && endDate.trim()) {
-        insertData.end_date = endDate;
-      }
-
-      if (monthlyPayment && monthlyPayment.trim()) {
-        const numericMonthlyPayment = parseFloat(monthlyPayment);
-        if (!isNaN(numericMonthlyPayment) && numericMonthlyPayment > 0) {
-          insertData.monthly_payment = numericMonthlyPayment;
-        }
-      }
-
-      if (interestRate && interestRate.trim()) {
-        const numericInterestRate = parseFloat(interestRate);
-        if (!isNaN(numericInterestRate) && numericInterestRate >= 0) {
-          insertData.interest_rate = numericInterestRate;
-        }
-      }
-
-      console.log('Attempting to insert liability:', insertData);
-
-      const { data, error } = await supabase
-        .from('user_liabilities')
-        .insert([insertData])
-        .select();
-
-      if (error) {
-        console.error('Database error:', error);
-        toast.error(`Failed to add liability: ${error.message}`);
-        return;
-      }
-
-      console.log('Successfully added liability:', data);
-      toast.success("Liability added successfully");
-      resetForm();
-      onLiabilityAdded();
-      onOpenChange(false);
-    } catch (error) {
-      console.error('Unexpected error adding liability:', error);
-      toast.error("An unexpected error occurred while adding the liability");
-    } finally {
-      setIsSubmitting(false);
     }
+
+    if (startDate && startDate.trim()) {
+      liabilityData.start_date = startDate;
+    }
+
+    if (endDate && endDate.trim()) {
+      liabilityData.end_date = endDate;
+    }
+
+    if (monthlyPayment && monthlyPayment.trim()) {
+      const numericMonthlyPayment = parseFloat(monthlyPayment);
+      if (!isNaN(numericMonthlyPayment) && numericMonthlyPayment > 0) {
+        liabilityData.monthly_payment = numericMonthlyPayment;
+      }
+    }
+
+    if (interestRate && interestRate.trim()) {
+      const numericInterestRate = parseFloat(interestRate);
+      if (!isNaN(numericInterestRate) && numericInterestRate >= 0) {
+        liabilityData.interest_rate = numericInterestRate;
+      }
+    }
+
+    const success = await addLiability(liabilityData);
+    if (success) {
+      resetForm();
+      onOpenChange(false);
+    }
+    
+    setIsSubmitting(false);
   };
 
   return (

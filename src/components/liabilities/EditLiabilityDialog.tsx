@@ -5,15 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { supabase } from "@/lib/supabase";
-import { toast } from "sonner";
-import { SupabaseLiability } from "@/hooks/useSupabaseLiabilities";
+import { useLiabilities, Liability } from "@/context/LiabilitiesContext";
 
 interface EditLiabilityDialogProps {
-  liability: SupabaseLiability | null;
+  liability: Liability | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onLiabilityUpdated: () => void;
 }
 
 const liabilityTypes = [
@@ -25,7 +22,8 @@ const liabilityTypes = [
   { value: "Other", label: "Other" },
 ];
 
-export const EditLiabilityDialog = ({ liability, open, onOpenChange, onLiabilityUpdated }: EditLiabilityDialogProps) => {
+export const EditLiabilityDialog = ({ liability, open, onOpenChange }: EditLiabilityDialogProps) => {
+  const { updateLiability } = useLiabilities();
   const [name, setName] = useState("");
   const [type, setType] = useState("");
   const [currentBalance, setCurrentBalance] = useState("");
@@ -55,70 +53,53 @@ export const EditLiabilityDialog = ({ liability, open, onOpenChange, onLiability
     if (!liability) return;
 
     if (!name.trim() || !type || !currentBalance) {
-      toast.error("Please fill in all required fields");
       return;
     }
 
     const numericCurrentBalance = parseFloat(currentBalance);
     if (isNaN(numericCurrentBalance) || numericCurrentBalance < 0) {
-      toast.error("Please enter a valid current balance");
       return;
     }
 
     setIsSubmitting(true);
 
-    try {
-      const liabilityData: any = {
-        name: name.trim(),
-        type,
-        current_balance: numericCurrentBalance
-      };
+    const updates: any = {
+      name: name.trim(),
+      type,
+      current_balance: numericCurrentBalance
+    };
 
-      // Add optional fields if they have values
-      if (originalLoanAmount) {
-        const numericOriginalAmount = parseFloat(originalLoanAmount);
-        if (!isNaN(numericOriginalAmount)) {
-          liabilityData.original_loan_amount = numericOriginalAmount;
-        }
+    // Add optional fields if they have values
+    if (originalLoanAmount) {
+      const numericOriginalAmount = parseFloat(originalLoanAmount);
+      if (!isNaN(numericOriginalAmount)) {
+        updates.original_loan_amount = numericOriginalAmount;
       }
-
-      if (startDate) liabilityData.start_date = startDate;
-      if (endDate) liabilityData.end_date = endDate;
-
-      if (monthlyPayment) {
-        const numericMonthlyPayment = parseFloat(monthlyPayment);
-        if (!isNaN(numericMonthlyPayment)) {
-          liabilityData.monthly_payment = numericMonthlyPayment;
-        }
-      }
-
-      if (interestRate) {
-        const numericInterestRate = parseFloat(interestRate);
-        if (!isNaN(numericInterestRate)) {
-          liabilityData.interest_rate = numericInterestRate;
-        }
-      }
-
-      const { error } = await supabase
-        .from('user_liabilities')
-        .update(liabilityData)
-        .eq('id', liability.id);
-
-      if (error) {
-        console.error('Error updating liability:', error);
-        toast.error("Failed to update liability");
-        return;
-      }
-
-      toast.success("Liability updated successfully");
-      onLiabilityUpdated();
-      onOpenChange(false);
-    } catch (error) {
-      console.error('Error:', error);
-      toast.error("Failed to update liability");
-    } finally {
-      setIsSubmitting(false);
     }
+
+    if (startDate) updates.start_date = startDate;
+    if (endDate) updates.end_date = endDate;
+
+    if (monthlyPayment) {
+      const numericMonthlyPayment = parseFloat(monthlyPayment);
+      if (!isNaN(numericMonthlyPayment)) {
+        updates.monthly_payment = numericMonthlyPayment;
+      }
+    }
+
+    if (interestRate) {
+      const numericInterestRate = parseFloat(interestRate);
+      if (!isNaN(numericInterestRate)) {
+        updates.interest_rate = numericInterestRate;
+      }
+    }
+
+    const success = await updateLiability(liability.id, updates);
+    if (success) {
+      onOpenChange(false);
+    }
+    
+    setIsSubmitting(false);
   };
 
   return (

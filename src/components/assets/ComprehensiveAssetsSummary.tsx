@@ -13,7 +13,7 @@ import {
   Legend
 } from "recharts";
 import { useSupabaseAssets } from "@/hooks/useSupabaseAssets";
-import { useSupabaseLiabilities } from "@/hooks/useSupabaseLiabilities";
+import { useLiabilities } from "@/context/LiabilitiesContext";
 
 interface ComprehensiveAssetsSummaryProps {
   showTabs?: boolean;
@@ -30,7 +30,7 @@ export const ComprehensiveAssetsSummary: React.FC<ComprehensiveAssetsSummaryProp
   } = useNetWorth();
   
   const { assets: supabaseAssets, loading: assetsLoading } = useSupabaseAssets();
-  const { getTotalLiabilities, loading: liabilitiesLoading } = useSupabaseLiabilities();
+  const { getTotalLiabilities, loading: liabilitiesLoading } = useLiabilities();
   
   const loading = contextLoading || assetsLoading || liabilitiesLoading;
   

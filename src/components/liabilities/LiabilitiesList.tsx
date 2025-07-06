@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useSupabaseLiabilities, SupabaseLiability } from "@/hooks/useSupabaseLiabilities";
+import { useLiabilities, Liability } from "@/context/LiabilitiesContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -14,18 +14,16 @@ import {
 import { Trash2, Edit, AlertTriangle } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
-import { supabase } from "@/lib/supabase";
-import { toast } from "sonner";
 import { DeleteLiabilityDialog } from "./DeleteLiabilityDialog";
 
 export function LiabilitiesList() {
-  const { liabilities, loading, refreshLiabilities } = useSupabaseLiabilities();
+  const { liabilities, loading, deleteLiability } = useLiabilities();
   const isMobile = useIsMobile();
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [liabilityToDelete, setLiabilityToDelete] = useState<SupabaseLiability | null>(null);
+  const [liabilityToDelete, setLiabilityToDelete] = useState<Liability | null>(null);
 
-  const handleDeleteClick = (liability: SupabaseLiability) => {
+  const handleDeleteClick = (liability: Liability) => {
     setLiabilityToDelete(liability);
     setDeleteDialogOpen(true);
   };
@@ -34,27 +32,12 @@ export function LiabilitiesList() {
     if (!liabilityToDelete) return;
     
     setDeletingId(liabilityToDelete.id);
-    try {
-      const { error } = await supabase
-        .from('user_liabilities')
-        .delete()
-        .eq('id', liabilityToDelete.id);
-
-      if (error) {
-        console.error('Error deleting liability:', error);
-        toast.error('Failed to delete liability');
-        return;
-      }
-
-      toast.success('Liability deleted successfully');
-      refreshLiabilities();
-    } catch (error) {
-      console.error('Error:', error);
-      toast.error('Failed to delete liability');
-    } finally {
-      setDeletingId(null);
-      setLiabilityToDelete(null);
+    const success = await deleteLiability(liabilityToDelete.id);
+    if (success) {
+      setDeleteDialogOpen(false);
     }
+    setDeletingId(null);
+    setLiabilityToDelete(null);
   };
 
   if (loading) {

@@ -2,14 +2,14 @@
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { useSupabaseAssets } from "@/hooks/useSupabaseAssets";
-import { useSupabaseLiabilities } from "@/hooks/useSupabaseLiabilities";
+import { useLiabilities } from "@/context/LiabilitiesContext";
 import { formatCurrency } from "@/lib/formatters";
 import { Progress } from "@/components/ui/progress";
 import { TrendingDown, PieChart } from "lucide-react";
 
 export const NetWorthAnalysis: React.FC = () => {
   const { assets, loading: assetsLoading, getTotalValue } = useSupabaseAssets();
-  const { liabilities, loading: liabilitiesLoading, getTotalLiabilities } = useSupabaseLiabilities();
+  const { liabilities, loading: liabilitiesLoading, getTotalLiabilities } = useLiabilities();
   
   const loading = assetsLoading || liabilitiesLoading;
   

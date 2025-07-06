@@ -1,7 +1,7 @@
 
 import React from "react";
 import { useOtherAssets } from "@/hooks/useOtherAssets";
-import { useSupabaseLiabilities } from "@/hooks/useSupabaseLiabilities";
+import { useLiabilities } from "@/context/LiabilitiesContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatCurrency } from "@/lib/formatters";
 import { 
@@ -11,7 +11,7 @@ import {
 
 export const SupabaseAssetsSummary: React.FC = () => {
   const { assets, getTotalValue, getAssetsByType, loading: assetsLoading } = useOtherAssets();
-  const { getTotalLiabilities, loading: liabilitiesLoading } = useSupabaseLiabilities();
+  const { getTotalLiabilities, loading: liabilitiesLoading } = useLiabilities();
 
   if (assetsLoading || liabilitiesLoading) {
     return (

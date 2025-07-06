@@ -9,7 +9,7 @@ import { FundingAccountsOverview } from "@/components/accounts/FundingAccountsOv
 import { CollapsibleCard } from "@/components/accounts/CollapsibleCard";
 import { useAccountManagement } from "@/hooks/useAccountManagement";
 import { useDigitalAssets } from "@/hooks/useDigitalAssets";
-import { useSupabaseLiabilities } from "@/hooks/useSupabaseLiabilities";
+import { useLiabilities } from "@/context/LiabilitiesContext";
 import { useSupabaseAssets } from "@/hooks/useSupabaseAssets";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
@@ -73,7 +73,7 @@ const Accounts = () => {
   } = useAccountManagement();
   
   const { getFormattedTotalValue, loading: digitalAssetsLoading } = useDigitalAssets();
-  const { getTotalLiabilities, refreshLiabilities } = useSupabaseLiabilities();
+  const { getTotalLiabilities } = useLiabilities();
   const { getFormattedTotalValue: getFormattedOtherAssetsValue, loading: otherAssetsLoading } = useSupabaseAssets();
   const { getFormattedTotalValuation, loading: privateEquityLoading } = usePrivateEquityAccounts();
   const { getFormattedTotalValue: getFormattedPublicStockValue, loading: publicStockLoading } = usePublicStocks();
@@ -410,7 +410,6 @@ const Accounts = () => {
       <AddLiabilityDialog
         open={showAddLiabilityDialog}
         onOpenChange={setShowAddLiabilityDialog}
-        onLiabilityAdded={refreshLiabilities}
       />
 
       {/* Add Other Asset Dialog */}

@@ -58,8 +58,7 @@ export default function AllAssets() {
   };
 
   const handleLiabilityAdded = () => {
-    // Trigger a refresh of the data by updating the refresh key
-    setRefreshKey(prev => prev + 1);
+    // No longer needed - context handles updates automatically
   };
 
   if (!isAuthenticated) {
@@ -231,7 +230,6 @@ export default function AllAssets() {
       <AddLiabilityDialog 
         open={isAddLiabilityDialogOpen} 
         onOpenChange={setIsAddLiabilityDialogOpen}
-        onLiabilityAdded={handleLiabilityAdded}
       />
     </ThreeColumnLayout>
   );

@@ -1,6 +1,6 @@
 
 import React from "react";
-import { SupabaseLiability } from "@/hooks/useSupabaseLiabilities";
+import { Liability } from "@/context/LiabilitiesContext";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -15,7 +15,7 @@ import {
 interface DeleteLiabilityDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  liability: SupabaseLiability | null;
+  liability: Liability | null;
   onConfirm: () => void;
 }
 
