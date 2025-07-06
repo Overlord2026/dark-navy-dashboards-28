@@ -23,28 +23,17 @@ export function PlaidLinkDialog({ isOpen, onClose, onSuccess }: PlaidLinkDialogP
 
   console.log("PlaidLinkDialog: Rendering with state", { isOpen, linkToken, isConnecting });
   
-  // Reset state when dialog opens
+  // Fetch link token when dialog opens (without showing loading initially)
   useEffect(() => {
-    if (isOpen) {
-      console.log("PlaidLinkDialog: Dialog opened, resetting state");
-      setLinkToken(null);
-      setIsConnecting(false);
-    }
-  }, [isOpen]);
-
-  // Fetch link token when dialog opens
-  useEffect(() => {
-    console.log("PlaidLinkDialog: useEffect triggered", { isOpen, linkToken });
     if (isOpen && !linkToken) {
-      console.log("PlaidLinkDialog: Calling fetchLinkToken");
+      console.log("PlaidLinkDialog: Dialog opened, fetching link token");
       fetchLinkToken();
     }
-  }, [isOpen, linkToken]);
+  }, [isOpen]);
 
   const fetchLinkToken = async () => {
     try {
       console.log("PlaidLinkDialog: Starting fetchLinkToken");
-      setIsConnecting(true);
       const response = await supabase.functions.invoke('plaid-create-link-token');
       
       console.log("PlaidLinkDialog: Full response", response);
@@ -69,8 +58,6 @@ export function PlaidLinkDialog({ isOpen, onClose, onSuccess }: PlaidLinkDialogP
         description: "Failed to initialize Plaid connection",
         variant: "destructive"
       });
-    } finally {
-      setIsConnecting(false);
     }
   };
 
@@ -100,14 +87,23 @@ export function PlaidLinkDialog({ isOpen, onClose, onSuccess }: PlaidLinkDialogP
     },
   });
 
+  // Clear loading state when Plaid is ready
+  useEffect(() => {
+    if (ready && linkToken && isConnecting) {
+      console.log("PlaidLinkDialog: Plaid is ready, clearing loading state");
+      setIsConnecting(false);
+    }
+  }, [ready, linkToken, isConnecting]);
+
   const handleConnect = () => {
     console.log("PlaidLinkDialog: handleConnect called", { ready, linkToken });
     if (ready && linkToken) {
       console.log("PlaidLinkDialog: Opening Plaid Link");
       openPlaidLink();
     } else {
-      console.log("PlaidLinkDialog: Fetching link token");
-      fetchLinkToken();
+      console.log("PlaidLinkDialog: Not ready, showing loading state");
+      setIsConnecting(true);
+      // The token fetch is already in progress, just wait for it
     }
   };
 
