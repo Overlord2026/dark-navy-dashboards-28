@@ -188,7 +188,7 @@ export function BankAccountsProvider({ children }: { children: React.ReactNode }
         setAccounts(prev => [...data.accounts, ...prev]);
         toast({
           title: "Success",
-          description: `Successfully linked ${data.accounts.length} accounts from ${data.institution?.name}`
+          description: `Successfully linked ${data.accounts.length} accounts`
         });
       }
       

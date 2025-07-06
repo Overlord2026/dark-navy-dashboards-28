@@ -142,13 +142,13 @@ serve(async (req) => {
     // Store accounts in database
     const accountsToInsert = accountsData.accounts.map((account: any) => ({
       user_id: user.id,
-      name: `${accountsData.institution.name} ${account.name}`,
+      name: account.name || account.official_name || 'Unknown Account',
       account_type: account.subtype || account.type,
       balance: account.balances.current || 0,
       plaid_account_id: account.account_id,
       plaid_item_id: exchangeData.item_id,
-      plaid_institution_id: accountsData.institution.institution_id,
-      institution_name: accountsData.institution.name,
+      plaid_institution_id: null, // Will be populated later if needed
+      institution_name: null, // Will be populated later if needed
       is_plaid_linked: true,
       last_plaid_sync: new Date().toISOString(),
     }))
@@ -177,8 +177,7 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({ 
         success: true,
-        accounts: insertedAccounts,
-        institution: accountsData.institution
+        accounts: insertedAccounts
       }),
       { 
         headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
