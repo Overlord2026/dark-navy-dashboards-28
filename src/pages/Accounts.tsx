@@ -147,16 +147,6 @@ const Accounts = () => {
             isMobile ? "w-full flex-col" : "flex-row"
           )}>
             <Button 
-              onClick={handleManageFunding} 
-              variant="outline"
-              className={cn(
-                isMobile ? "w-full text-sm" : ""
-              )}
-            >
-              <Wallet className={cn("mr-2", isMobile ? "h-3 w-3" : "h-4 w-4")} />
-              Manage Funding
-            </Button>
-            <Button 
               onClick={handleAddAccount}
               className={cn(
                 isMobile ? "w-full text-sm" : ""
