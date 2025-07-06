@@ -24,6 +24,16 @@ export function PlaidLinkDialog({ isOpen, onClose, onSuccess }: PlaidLinkDialogP
   const [linkToken, setLinkToken] = useState<string | null>(null);
 
   console.log("PlaidLinkDialog: Rendering with state", { isOpen, step, linkToken, isConnecting });
+  
+  // Reset state when dialog opens
+  useEffect(() => {
+    if (isOpen) {
+      console.log("PlaidLinkDialog: Dialog opened, resetting state");
+      setStep("info");
+      setLinkToken(null);
+      setIsConnecting(false);
+    }
+  }, [isOpen]);
 
   // Fetch link token when dialog opens
   useEffect(() => {
@@ -94,7 +104,7 @@ export function PlaidLinkDialog({ isOpen, onClose, onSuccess }: PlaidLinkDialogP
   });
 
   const handleContinue = () => {
-    console.log("PlaidLinkDialog: Moving to plaid step");
+    console.log("PlaidLinkDialog: handleContinue clicked - Moving to plaid step");
     setStep("plaid");
   };
 
