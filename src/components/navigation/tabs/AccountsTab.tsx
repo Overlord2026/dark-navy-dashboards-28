@@ -18,8 +18,7 @@ export const accountsNavItems: NavItem[] = [
   { 
     title: "Transfers", 
     href: "/client-transfers", 
-    icon: ArrowRightLeft,
-    comingSoon: true
+    icon: ArrowRightLeft
   },
   { 
     title: "Funding Accounts", 
