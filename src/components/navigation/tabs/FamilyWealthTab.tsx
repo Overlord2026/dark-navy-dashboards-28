@@ -45,7 +45,6 @@ export const familyWealthNavItems: NavItem[] = [
     title: "Transfers",
     href: "/client-transfers",
     icon: ArrowRightLeft,
-    comingSoon: true,
   },
   {
     title: "Properties",
