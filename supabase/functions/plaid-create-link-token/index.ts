@@ -15,6 +15,9 @@ serve(async (req) => {
   try {
     console.log('=== Plaid Create Link Token Function Started ===');
     console.log('Request method:', req.method);
+    console.log('Request headers:', Object.fromEntries(req.headers.entries()));
+    console.log('User-Agent:', req.headers.get('user-agent'));
+    console.log('Timestamp:', new Date().toISOString());
 
     // Initialize Supabase client
     const supabaseClient = createClient(

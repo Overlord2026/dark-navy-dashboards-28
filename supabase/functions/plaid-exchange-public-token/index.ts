@@ -19,6 +19,9 @@ serve(async (req) => {
     console.log('=== Plaid Exchange Public Token Function Started ===');
     console.log('Request method:', req.method);
     console.log('Public token received:', public_token ? 'YES' : 'NO');
+    console.log('Request headers:', Object.fromEntries(req.headers.entries()));
+    console.log('User-Agent:', req.headers.get('user-agent'));
+    console.log('Timestamp:', new Date().toISOString());
 
     if (!public_token) {
       console.error('No public token provided');

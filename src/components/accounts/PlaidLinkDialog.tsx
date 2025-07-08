@@ -23,7 +23,7 @@ export function PlaidLinkDialog({ isOpen, onClose, onSuccess }: PlaidLinkDialogP
   const [error, setError] = useState<string | null>(null);
   const [isRetrying, setIsRetrying] = useState(false);
 
-  console.log("PlaidLinkDialog: Rendering with state", { isOpen, linkToken, isConnecting });
+  console.log("PlaidLinkDialog: Rendering with state", { isOpen, linkToken, isConnecting, error });
   
   // Fetch link token when dialog opens
   useEffect(() => {
@@ -93,26 +93,32 @@ export function PlaidLinkDialog({ isOpen, onClose, onSuccess }: PlaidLinkDialogP
   const { open: openPlaidLink, ready } = usePlaidLink({
     token: linkToken,
     onSuccess: (public_token: string, metadata: any) => {
-      console.log('Plaid Link success:', { public_token, metadata });
-      toast({
-        title: "Success",
-        description: "Your accounts have been successfully linked"
-      });
-      onSuccess(public_token);
+      console.log('PlaidLinkDialog: Plaid Link success callback triggered');
+      console.log('PlaidLinkDialog: Public token received:', public_token?.substring(0, 20) + '...');
+      console.log('PlaidLinkDialog: Metadata:', metadata);
+      
+      // Close the dialog first
       onClose();
+      
+      // Call the success handler
+      onSuccess(public_token);
     },
     onExit: (err: any, metadata: any) => {
+      console.log('PlaidLinkDialog: Plaid Link exit callback triggered');
       if (err != null) {
-        console.error('Plaid Link error:', err);
+        console.error('PlaidLinkDialog: Plaid Link error:', err);
         toast({
           title: "Connection Error",
           description: "Failed to link your accounts. Please try again.",
           variant: "destructive"
         });
+      } else {
+        console.log('PlaidLinkDialog: User exited Plaid Link without error');
       }
+      console.log('PlaidLinkDialog: Exit metadata:', metadata);
     },
     onEvent: (eventName: string, metadata: any) => {
-      console.log('Plaid Link event:', eventName, metadata);
+      console.log('PlaidLinkDialog: Plaid Link event:', eventName, metadata);
     },
   });
 
@@ -128,8 +134,7 @@ export function PlaidLinkDialog({ isOpen, onClose, onSuccess }: PlaidLinkDialogP
     console.log("PlaidLinkDialog: handleConnect called", { ready, linkToken });
     if (ready && linkToken) {
       console.log("PlaidLinkDialog: Opening Plaid Link");
-      // Close our dialog first to prevent interference
-      onClose();
+      // Don't close our dialog immediately - let Plaid handle the flow
       openPlaidLink();
     } else {
       console.log("PlaidLinkDialog: Not ready, showing loading state");

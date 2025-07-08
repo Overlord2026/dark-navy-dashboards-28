@@ -90,6 +90,7 @@ export function useAccountManagement() {
   };
 
   const handlePlaidSelected = () => {
+    console.log("useAccountManagement: Plaid selected, opening Plaid dialog");
     setShowAccountTypeSelector(false);
     setShowPlaidDialog(true);
   };
@@ -101,12 +102,39 @@ export function useAccountManagement() {
   };
 
   const handlePlaidSuccess = async (publicToken: string) => {
-    console.log("Plaid link successful with public token:", publicToken);
-    const success = await addPlaidAccounts(publicToken);
-    if (success) {
-      // Reset dialog states
-      setShowPlaidDialog(false);
-      setShowAccountTypeSelector(false);
+    console.log("useAccountManagement: Plaid success callback triggered with token:", publicToken?.substring(0, 20) + '...');
+    console.log("useAccountManagement: Starting account exchange process...");
+    
+    try {
+      const success = await addPlaidAccounts(publicToken);
+      console.log("useAccountManagement: addPlaidAccounts result:", success);
+      
+      if (success) {
+        console.log("useAccountManagement: Successfully added Plaid accounts, closing dialogs");
+        // Reset dialog states
+        setShowPlaidDialog(false);
+        setShowAccountTypeSelector(false);
+        
+        // Show success message
+        toast({
+          title: "Success!",
+          description: "Your bank accounts have been successfully linked.",
+        });
+      } else {
+        console.error("useAccountManagement: Failed to add Plaid accounts");
+        toast({
+          title: "Connection Failed",
+          description: "Failed to link your accounts. Please try again.",
+          variant: "destructive"
+        });
+      }
+    } catch (error) {
+      console.error("useAccountManagement: Error in handlePlaidSuccess:", error);
+      toast({
+        title: "Connection Error",
+        description: "An error occurred while linking your accounts. Please try again.",
+        variant: "destructive"
+      });
     }
   };
 

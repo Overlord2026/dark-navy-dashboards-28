@@ -205,7 +205,11 @@ export function BankAccountsProvider({ children }: { children: React.ReactNode }
         body: { public_token: publicToken }
       });
 
-      console.log('BankAccountsContext: Exchange response:', { data, error });
+      console.log('BankAccountsContext: Exchange response:', { 
+        success: data?.success, 
+        accountsCount: data?.accounts?.length,
+        error: error ? (typeof error === 'string' ? error : JSON.stringify(error)) : null
+      });
 
       if (error) {
         console.error('Error exchanging Plaid token:', error);
@@ -241,10 +245,12 @@ export function BankAccountsProvider({ children }: { children: React.ReactNode }
         return false;
       }
 
-      // The real-time subscription will handle adding the accounts to state
-      // No need to manually update state here since real-time will pick it up
+      // Try to refresh accounts manually in case real-time doesn't work immediately
+      console.log('BankAccountsContext: Triggering manual account refresh...');
+      await fetchAccounts();
+      
       if (data.accounts && Array.isArray(data.accounts) && data.accounts.length > 0) {
-        console.log(`BankAccountsContext: Successfully linked ${data.accounts.length} accounts. Real-time will update the UI.`);
+        console.log(`BankAccountsContext: Successfully linked ${data.accounts.length} accounts`);
         toast({
           title: "Success!",
           description: `Successfully linked ${data.accounts.length} account${data.accounts.length === 1 ? '' : 's'}`
