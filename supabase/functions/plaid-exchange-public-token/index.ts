@@ -13,10 +13,17 @@ serve(async (req) => {
   }
 
   try {
+    console.log('=== Plaid Exchange Public Token Function Started ===');
+    console.log('Request method:', req.method);
+    console.log('Request headers:', Object.fromEntries(req.headers.entries()));
+    console.log('User-Agent:', req.headers.get('user-agent'));
+    console.log('Timestamp:', new Date().toISOString());
+
     // Parse request body safely
     let public_token;
     try {
       const body = await req.json();
+      console.log('Request body received:', { hasPublicToken: !!body.public_token });
       public_token = body.public_token;
     } catch (parseError) {
       console.error('Failed to parse request body:', parseError);
@@ -32,13 +39,6 @@ serve(async (req) => {
         }
       );
     }
-
-    console.log('=== Plaid Exchange Public Token Function Started ===');
-    console.log('Request method:', req.method);
-    console.log('Public token received:', public_token ? 'YES' : 'NO');
-    console.log('Request headers:', Object.fromEntries(req.headers.entries()));
-    console.log('User-Agent:', req.headers.get('user-agent'));
-    console.log('Timestamp:', new Date().toISOString());
 
     if (!public_token) {
       console.error('No public token provided');
@@ -137,6 +137,7 @@ serve(async (req) => {
       ? 'https://development.plaid.com'
       : 'https://sandbox.plaid.com'
 
+    console.log(`Using Plaid API URL: ${plaidApiUrl} for environment: ${PLAID_ENVIRONMENT}`);
     console.log(`Exchanging public token for user ${user.id}`)
 
     // Exchange public token for access token

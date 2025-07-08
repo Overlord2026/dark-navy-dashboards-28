@@ -101,6 +101,35 @@ export function PlaidDebugDialog({ isOpen, onClose }: PlaidDebugDialogProps) {
             
             <Button 
               onClick={async () => {
+                try {
+                  console.log("Testing plaid-exchange-public-token function directly...");
+                  const testResponse = await supabase.functions.invoke('plaid-exchange-public-token', {
+                    body: { 
+                      public_token: 'test-public-token-for-debugging' 
+                    }
+                  });
+                  console.log("Exchange function test response:", testResponse);
+                  
+                  toast({
+                    title: "Exchange Function Test",
+                    description: `Response: ${testResponse.error ? 'Error' : 'Success'} - Check console for details`
+                  });
+                } catch (error) {
+                  console.error("Exchange function test failed:", error);
+                  toast({
+                    title: "Exchange Function Test Failed",
+                    description: `Error: ${error}`,
+                    variant: "destructive"
+                  });
+                }
+              }}
+              variant="outline"
+            >
+              Test Exchange Function
+            </Button>
+            
+            <Button 
+              onClick={async () => {
                 console.log("=== FULL PLAID DEBUG INFO ===");
                 console.log("Current URL:", window.location.href);
                 console.log("User Agent:", navigator.userAgent);
