@@ -271,10 +271,37 @@ serve(async (req) => {
 
     if (insertError) {
       console.error('Database insert error:', insertError)
+      
+      // Handle specific database errors more gracefully
+      let errorMessage = 'Failed to save accounts to database';
+      if (insertError.message?.includes('duplicate key')) {
+        errorMessage = 'Some accounts are already linked. Please refresh the page.';
+        console.log('Duplicate account detected - this might be expected behavior');
+        
+        // Return success for existing accounts
+        console.log('Accounts already exist - returning success');
+        return new Response(
+          JSON.stringify({ 
+            success: true,
+            accounts: [],
+            message: 'Accounts already exist',
+            summary: {
+              total_accounts: 0,
+              item_id: exchangeData.item_id,
+              timestamp: new Date().toISOString()
+            }
+          }),
+          { 
+            status: 200,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          }
+        )
+      }
+      
       return new Response(
         JSON.stringify({ 
           success: false,
-          error: 'Failed to save accounts to database',
+          error: errorMessage,
           details: insertError,
           plaid_data: {
             accounts_received: accountsData.accounts.length,

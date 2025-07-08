@@ -100,20 +100,32 @@ export function PlaidDebugDialog({ isOpen, onClose }: PlaidDebugDialogProps) {
             </Button>
             
             <Button 
-              onClick={() => {
+              onClick={async () => {
                 console.log("=== FULL PLAID DEBUG INFO ===");
                 console.log("Current URL:", window.location.href);
                 console.log("User Agent:", navigator.userAgent);
                 console.log("Local Storage keys:", Object.keys(localStorage));
                 console.log("Session Storage keys:", Object.keys(sessionStorage));
+                
+                // Test edge function connectivity
+                try {
+                  console.log("Testing edge function connectivity...");
+                  const testResponse = await supabase.functions.invoke('plaid-exchange-public-token', {
+                    body: { test: true }
+                  });
+                  console.log("Edge function test response:", testResponse);
+                } catch (error) {
+                  console.error("Edge function test failed:", error);
+                }
+                
                 toast({
                   title: "Debug Info",
-                  description: "Check console for debug information"
+                  description: "Check console for detailed debug information"
                 });
               }}
               variant="outline"
             >
-              Log Debug Info
+              Log Debug Info & Test Functions
             </Button>
           </div>
         </div>

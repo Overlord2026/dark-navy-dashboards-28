@@ -237,12 +237,25 @@ export function BankAccountsProvider({ children }: { children: React.ReactNode }
 
       if (!data.success) {
         console.error('Plaid exchange reported failure:', data);
-        toast({
-          title: "Account Linking Failed",
-          description: data.error || "Failed to link accounts",
-          variant: "destructive"
-        });
-        return false;
+        const errorMessage = data.error || "Failed to link accounts";
+        
+        // Show more specific error messages for common issues
+        if (errorMessage.includes('already linked')) {
+          toast({
+            title: "Accounts Already Linked",
+            description: "These accounts are already connected. Refreshing your account list.",
+          });
+          // Still refresh accounts to show existing ones
+          await fetchAccounts();
+          return true;
+        } else {
+          toast({
+            title: "Account Linking Failed",
+            description: errorMessage,
+            variant: "destructive"
+          });
+          return false;
+        }
       }
 
       // Try to refresh accounts manually in case real-time doesn't work immediately

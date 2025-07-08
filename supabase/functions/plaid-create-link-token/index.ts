@@ -104,7 +104,7 @@ serve(async (req) => {
       user: {
         client_user_id: user.id,
       },
-      products: ['auth', 'transactions'],
+      products: ['transactions'],
       redirect_uri: null,
     }
 
