@@ -213,7 +213,13 @@ serve(async (req) => {
     console.log('Database insert result:', {
       success: !insertError,
       inserted_count: insertedAccounts?.length || 0,
-      error: insertError
+      error: insertError,
+      inserted_accounts: insertedAccounts?.map(acc => ({
+        id: acc.id,
+        name: acc.name,
+        balance: acc.balance,
+        user_id: acc.user_id
+      }))
     });
 
     if (insertError) {
@@ -225,6 +231,10 @@ serve(async (req) => {
           plaid_data: {
             accounts_received: accountsData.accounts.length,
             item_id: exchangeData.item_id
+          },
+          debug_info: {
+            user_id: user.id,
+            attempted_inserts: accountsToInsert.length
           }
         }),
         { 
@@ -233,6 +243,19 @@ serve(async (req) => {
         }
       )
     }
+
+    // Verify accounts were saved correctly
+    const { data: verificationAccounts, error: verificationError } = await supabaseClient
+      .from('bank_accounts')
+      .select('id, name, balance, user_id')
+      .eq('user_id', user.id)
+      .in('plaid_account_id', accountsToInsert.map(acc => acc.plaid_account_id))
+
+    console.log('Account verification result:', {
+      verification_success: !verificationError,
+      verified_count: verificationAccounts?.length || 0,
+      verification_error: verificationError
+    });
 
     console.log(`Successfully linked ${accountsData.accounts.length} accounts for user ${user.id}`)
 

@@ -31,7 +31,7 @@ interface BankAccountsContextType {
   syncPlaidAccount: (accountId: string) => Promise<boolean>;
   deleteAccount: (id: string) => Promise<boolean>;
   getFormattedTotalBalance: () => string;
-  refreshAccounts: () => Promise<void>;
+        refreshAccounts: () => Promise<void>;
 }
 
 const BankAccountsContext = createContext<BankAccountsContextType | undefined>(undefined);
@@ -47,33 +47,56 @@ export function BankAccountsProvider({ children }: { children: React.ReactNode }
       console.log('BankAccountsContext: Starting fetchAccounts');
       setLoading(true);
       
-      const { data: user } = await supabase.auth.getUser();
-      console.log('BankAccountsContext: Current user:', user?.user?.id);
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
       
-      const { data, error } = await supabase
-        .from('bank_accounts')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      console.log('BankAccountsContext: Fetch result:', { data, error, count: data?.length });
-
-      if (error) {
-        console.error('Error fetching bank accounts:', error);
+      if (userError) {
+        console.error('BankAccountsContext: Authentication error:', userError);
         toast({
-          title: "Error",
-          description: "Failed to load bank accounts",
+          title: "Authentication Error",
+          description: "Please log in to view your accounts",
           variant: "destructive"
         });
         return;
       }
 
-      console.log('BankAccountsContext: Setting accounts:', data?.length || 0);
+      if (!user) {
+        console.log('BankAccountsContext: No authenticated user found');
+        setAccounts([]);
+        return;
+      }
+
+      console.log('BankAccountsContext: Fetching accounts for user:', user.id);
+      
+      const { data, error } = await supabase
+        .from('bank_accounts')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false });
+
+      console.log('BankAccountsContext: Fetch result:', { 
+        userId: user.id,
+        data, 
+        error, 
+        count: data?.length 
+      });
+
+      if (error) {
+        console.error('Error fetching bank accounts:', error);
+        toast({
+          title: "Database Error",
+          description: `Failed to load bank accounts: ${error.message}`,
+          variant: "destructive"
+        });
+        return;
+      }
+
+      console.log('BankAccountsContext: Successfully loaded accounts:', data?.length || 0);
       setAccounts(data || []);
     } catch (error) {
-      console.error('Error fetching bank accounts:', error);
+      console.error('Unexpected error fetching bank accounts:', error);
       toast({
         title: "Error",
-        description: "Failed to load bank accounts",
+        description: "An unexpected error occurred while loading accounts",
         variant: "destructive"
       });
     } finally {
@@ -208,17 +231,24 @@ export function BankAccountsProvider({ children }: { children: React.ReactNode }
         return false;
       }
 
-      // Add new accounts to state
+      if (!data.success) {
+        console.error('Plaid exchange reported failure:', data);
+        toast({
+          title: "Account Linking Failed",
+          description: data.error || "Failed to link accounts",
+          variant: "destructive"
+        });
+        return false;
+      }
+
+      // The real-time subscription will handle adding the accounts to state
+      // No need to manually update state here since real-time will pick it up
       if (data.accounts && Array.isArray(data.accounts) && data.accounts.length > 0) {
-        console.log(`BankAccountsContext: Adding ${data.accounts.length} accounts to state`);
-        setAccounts(prev => [...data.accounts, ...prev]);
+        console.log(`BankAccountsContext: Successfully linked ${data.accounts.length} accounts. Real-time will update the UI.`);
         toast({
           title: "Success!",
           description: `Successfully linked ${data.accounts.length} account${data.accounts.length === 1 ? '' : 's'}`
         });
-        
-        // Refresh accounts from database to ensure consistency
-        await fetchAccounts();
         return true;
       } else {
         console.warn('BankAccountsContext: No accounts returned from exchange:', data);
@@ -294,6 +324,40 @@ export function BankAccountsProvider({ children }: { children: React.ReactNode }
 
   useEffect(() => {
     fetchAccounts();
+
+    // Set up real-time subscription for bank accounts
+    const channel = supabase
+      .channel('bank_accounts_changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'bank_accounts'
+        },
+        (payload) => {
+          console.log('BankAccountsContext: Real-time update received:', payload);
+          
+          if (payload.eventType === 'INSERT') {
+            console.log('BankAccountsContext: New account added via real-time');
+            setAccounts(prev => [payload.new as BankAccount, ...prev]);
+          } else if (payload.eventType === 'UPDATE') {
+            console.log('BankAccountsContext: Account updated via real-time');
+            setAccounts(prev => prev.map(acc => 
+              acc.id === payload.new.id ? payload.new as BankAccount : acc
+            ));
+          } else if (payload.eventType === 'DELETE') {
+            console.log('BankAccountsContext: Account deleted via real-time');
+            setAccounts(prev => prev.filter(acc => acc.id !== payload.old.id));
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      console.log('BankAccountsContext: Cleaning up real-time subscription');
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   return (
