@@ -21,7 +21,11 @@ serve(async (req) => {
     } catch (parseError) {
       console.error('Failed to parse request body:', parseError);
       return new Response(
-        JSON.stringify({ error: 'Invalid request body - must be valid JSON' }),
+        JSON.stringify({ 
+          success: false,
+          error: 'Invalid request body - must be valid JSON',
+          details: parseError.message 
+        }),
         { 
           status: 400,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' }
@@ -39,7 +43,10 @@ serve(async (req) => {
     if (!public_token) {
       console.error('No public token provided');
       return new Response(
-        JSON.stringify({ error: 'Public token is required' }),
+        JSON.stringify({ 
+          success: false,
+          error: 'Public token is required' 
+        }),
         { 
           status: 400,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' }
@@ -52,7 +59,10 @@ serve(async (req) => {
     if (!authHeader) {
       console.error('Missing Authorization header');
       return new Response(
-        JSON.stringify({ error: 'Missing Authorization header' }),
+        JSON.stringify({ 
+          success: false,
+          error: 'Missing Authorization header' 
+        }),
         { 
           status: 401,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' }
@@ -80,6 +90,7 @@ serve(async (req) => {
       console.error('Authentication error:', userError);
       return new Response(
         JSON.stringify({ 
+          success: false,
           error: 'Unauthorized', 
           details: userError?.message || 'No user found' 
         }),
@@ -105,6 +116,7 @@ serve(async (req) => {
       console.error('Missing Plaid credentials')
       return new Response(
         JSON.stringify({ 
+          success: false,
           error: 'Server configuration error - Missing Plaid credentials',
           details: {
             clientId: PLAID_CLIENT_ID ? 'SET' : 'MISSING',
@@ -158,6 +170,7 @@ serve(async (req) => {
       console.error('Plaid token exchange error:', exchangeData)
       return new Response(
         JSON.stringify({ 
+          success: false,
           error: 'Failed to exchange public token',
           details: exchangeData,
           status: exchangeResponse.status
@@ -202,6 +215,7 @@ serve(async (req) => {
       console.error('Plaid accounts fetch error:', accountsData)
       return new Response(
         JSON.stringify({ 
+          success: false,
           error: 'Failed to fetch accounts',
           details: accountsData,
           status: accountsResponse.status
@@ -259,6 +273,7 @@ serve(async (req) => {
       console.error('Database insert error:', insertError)
       return new Response(
         JSON.stringify({ 
+          success: false,
           error: 'Failed to save accounts to database',
           details: insertError,
           plaid_data: {
@@ -303,6 +318,7 @@ serve(async (req) => {
         }
       }),
       { 
+        status: 200,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
       }
     )
@@ -315,6 +331,7 @@ serve(async (req) => {
     
     return new Response(
       JSON.stringify({ 
+        success: false,
         error: 'Internal server error during account linking',
         details: error.message,
         type: error.constructor.name,

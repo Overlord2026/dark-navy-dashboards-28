@@ -115,21 +115,25 @@ export function useAccountManagement() {
         setShowPlaidDialog(false);
         setShowAccountTypeSelector(false);
         
-        // Show success message
+        // Show success message - this is already handled in the BankAccountsContext
+        // but we'll keep this as a fallback
         toast({
           title: "Success!",
           description: "Your bank accounts have been successfully linked.",
         });
       } else {
         console.error("useAccountManagement: Failed to add Plaid accounts");
-        toast({
-          title: "Connection Failed",
-          description: "Failed to link your accounts. Please try again.",
-          variant: "destructive"
-        });
+        // Error message is already shown in BankAccountsContext
+        // Close the dialog so user can retry
+        setShowPlaidDialog(false);
+        setShowAccountTypeSelector(false);
       }
     } catch (error) {
       console.error("useAccountManagement: Error in handlePlaidSuccess:", error);
+      // Close the dialog and let user retry
+      setShowPlaidDialog(false);
+      setShowAccountTypeSelector(false);
+      
       toast({
         title: "Connection Error",
         description: "An error occurred while linking your accounts. Please try again.",

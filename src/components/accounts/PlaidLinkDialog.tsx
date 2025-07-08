@@ -97,14 +97,15 @@ export function PlaidLinkDialog({ isOpen, onClose, onSuccess }: PlaidLinkDialogP
       console.log('PlaidLinkDialog: Public token received:', public_token?.substring(0, 20) + '...');
       console.log('PlaidLinkDialog: Metadata:', metadata);
       
-      // Close the dialog first
-      onClose();
+      setIsConnecting(true);
       
-      // Call the success handler
+      // Call the success handler and wait for result
       onSuccess(public_token);
     },
     onExit: (err: any, metadata: any) => {
       console.log('PlaidLinkDialog: Plaid Link exit callback triggered');
+      setIsConnecting(false);
+      
       if (err != null) {
         console.error('PlaidLinkDialog: Plaid Link error:', err);
         toast({
