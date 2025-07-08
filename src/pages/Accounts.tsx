@@ -39,6 +39,7 @@ import { AddBankAccountDialog } from "@/components/accounts/AddBankAccountDialog
 import { BankAccountsList } from "@/components/accounts/BankAccountsList";
 import { PlaidLinkDialog } from "@/components/accounts/PlaidLinkDialog";
 import { PlaidDebugDialog } from "@/components/accounts/PlaidDebugDialog";
+import { PlaidConnectionTest } from "@/components/accounts/PlaidConnectionTest";
 import { useBankAccounts } from "@/context/BankAccountsContext";
 
 const Accounts = () => {
@@ -193,21 +194,28 @@ const Accounts = () => {
           >
             <div className="space-y-4">
               <BankAccountsList />
-              <Button 
-                onClick={() => handleAccountTypeSelected('bank')} 
-                variant="outline" 
-                className={cn(
-                  isSmallScreen ? "w-full text-sm" : 
-                  isTablet ? "w-full md:w-auto" :
-                  "w-full sm:w-auto"
-                )}
-              >
-                <PlusCircle className={cn(
-                  "mr-2", 
-                  isSmallScreen ? "h-3 w-3" : "h-4 w-4"
-                )} />
-                Add Bank Account
-              </Button>
+              <div className="flex flex-wrap gap-3">
+                <Button 
+                  onClick={() => handleAccountTypeSelected('bank')} 
+                  variant="outline" 
+                  className={cn(
+                    isSmallScreen ? "w-full text-sm" : 
+                    isTablet ? "w-full md:w-auto" :
+                    "w-auto"
+                  )}
+                >
+                  <PlusCircle className={cn(
+                    "mr-2", 
+                    isSmallScreen ? "h-3 w-3" : "h-4 w-4"
+                  )} />
+                  Add Bank Account
+                </Button>
+                <div className={cn(
+                  isSmallScreen ? "w-full" : "w-auto"
+                )}>
+                  <PlaidConnectionTest />
+                </div>
+              </div>
             </div>
           </CollapsibleCard>
 
