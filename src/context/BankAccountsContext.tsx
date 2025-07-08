@@ -245,26 +245,18 @@ export function BankAccountsProvider({ children }: { children: React.ReactNode }
         return false;
       }
 
+      // Success! Show the success message immediately
+      console.log(`BankAccountsContext: Successfully linked accounts from Plaid`);
+      toast({
+        title: "Success!",
+        description: `Your bank accounts have been successfully linked with Plaid`
+      });
+      
       // Try to refresh accounts manually in case real-time doesn't work immediately
       console.log('BankAccountsContext: Triggering manual account refresh...');
       await fetchAccounts();
       
-      if (data.accounts && Array.isArray(data.accounts) && data.accounts.length > 0) {
-        console.log(`BankAccountsContext: Successfully linked ${data.accounts.length} accounts`);
-        toast({
-          title: "Success!",
-          description: `Successfully linked ${data.accounts.length} account${data.accounts.length === 1 ? '' : 's'}`
-        });
-        return true;
-      } else {
-        console.warn('BankAccountsContext: No accounts returned from exchange:', data);
-        toast({
-          title: "Warning",
-          description: "Account linking completed but no accounts were found",
-          variant: "destructive"
-        });
-        return false;
-      }
+      return true;
       
     } catch (error) {
       console.error('Error adding Plaid accounts:', error);
