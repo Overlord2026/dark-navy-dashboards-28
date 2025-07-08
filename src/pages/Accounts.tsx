@@ -37,6 +37,7 @@ import { RetirementPlansList } from "@/components/accounts/RetirementPlansList";
 import { AddRetirementPlanDialog } from "@/components/accounts/AddRetirementPlanDialog";
 import { AddBankAccountDialog } from "@/components/accounts/AddBankAccountDialog";
 import { BankAccountsList } from "@/components/accounts/BankAccountsList";
+import { EnhancedBankAccountsList } from "@/components/accounts/EnhancedBankAccountsList";
 import { PlaidLinkDialog } from "@/components/accounts/PlaidLinkDialog";
 
 
@@ -180,7 +181,7 @@ const Accounts = () => {
             description="Manage your checking, savings, and other bank accounts."
           >
             <div className="space-y-4">
-              <BankAccountsList />
+              <EnhancedBankAccountsList />
               <div className="flex flex-wrap gap-3">
                 <Button 
                   onClick={() => handleAccountTypeSelected('bank')} 
