@@ -7,9 +7,7 @@ const corsHeaders = {
 }
 
 serve(async (req) => {
-  console.log('=== EDGE FUNCTION ENTRY POINT REACHED ===');
-  console.log('Request method:', req.method);
-  console.log('Request URL:', req.url);
+  console.log('=== EDGE FUNCTION STARTED ===');
   
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
@@ -18,7 +16,7 @@ serve(async (req) => {
   }
 
   try {
-    console.log('=== Plaid Exchange Function Started ===');
+    console.log('=== Processing POST request ===');
     
     // Parse request body
     const body = await req.json();
@@ -27,6 +25,7 @@ serve(async (req) => {
     console.log('Public token received:', public_token ? 'YES' : 'NO');
 
     if (!public_token) {
+      console.log('=== NO PUBLIC TOKEN PROVIDED ===');
       return new Response(
         JSON.stringify({ 
           success: false,
@@ -42,6 +41,7 @@ serve(async (req) => {
     // Initialize Supabase client
     const authHeader = req.headers.get('Authorization');
     if (!authHeader) {
+      console.log('=== NO AUTH HEADER ===');
       return new Response(
         JSON.stringify({ 
           success: false,
@@ -54,6 +54,7 @@ serve(async (req) => {
       );
     }
 
+    console.log('=== CREATING SUPABASE CLIENT ===');
     const supabaseClient = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_ANON_KEY') ?? '',
@@ -65,6 +66,7 @@ serve(async (req) => {
     )
 
     // Get the user
+    console.log('=== GETTING USER ===');
     const { data: { user }, error: userError } = await supabaseClient.auth.getUser()
 
     if (userError || !user) {
@@ -84,6 +86,7 @@ serve(async (req) => {
     console.log('User authenticated:', user.id);
 
     // Get Plaid credentials
+    console.log('=== GETTING PLAID CREDENTIALS ===');
     const PLAID_CLIENT_ID = Deno.env.get('PLAID_CLIENT_ID')
     const PLAID_SECRET_KEY = Deno.env.get('PLAID_SECRET_KEY')
     const PLAID_ENVIRONMENT = Deno.env.get('PLAID_ENVIRONMENT') || 'sandbox'
@@ -95,6 +98,7 @@ serve(async (req) => {
     });
 
     if (!PLAID_CLIENT_ID || !PLAID_SECRET_KEY) {
+      console.log('=== MISSING PLAID CREDENTIALS ===');
       return new Response(
         JSON.stringify({ 
           success: false,
@@ -117,13 +121,13 @@ serve(async (req) => {
     console.log(`Using Plaid API: ${plaidApiUrl}`);
 
     // Exchange public token for access token
+    console.log('=== EXCHANGING TOKEN ===');
     const exchangeRequest = {
       client_id: PLAID_CLIENT_ID,
       secret: PLAID_SECRET_KEY,
       public_token: public_token,
     }
 
-    console.log('Calling Plaid token exchange...');
     const exchangeResponse = await fetch(`${plaidApiUrl}/link/token/exchange`, {
       method: 'POST',
       headers: {
@@ -150,16 +154,16 @@ serve(async (req) => {
       )
     }
 
-    console.log('Token exchange successful, access token received');
+    console.log('Token exchange successful');
 
     // Get accounts
+    console.log('=== GETTING ACCOUNTS ===');
     const accountsRequest = {
       client_id: PLAID_CLIENT_ID,
       secret: PLAID_SECRET_KEY,
       access_token: exchangeData.access_token,
     }
 
-    console.log('Fetching accounts from Plaid...');
     const accountsResponse = await fetch(`${plaidApiUrl}/accounts/get`, {
       method: 'POST',
       headers: {
@@ -188,6 +192,7 @@ serve(async (req) => {
     }
 
     if (!accountsData.accounts || accountsData.accounts.length === 0) {
+      console.log('=== NO ACCOUNTS FOUND ===');
       return new Response(
         JSON.stringify({ 
           success: false,
@@ -201,6 +206,7 @@ serve(async (req) => {
     }
 
     // Prepare accounts for database
+    console.log('=== PREPARING ACCOUNTS FOR DATABASE ===');
     const accountsToInsert = accountsData.accounts.map((account: any) => ({
       user_id: user.id,
       name: account.name || account.official_name || 'Unknown Account',
@@ -270,7 +276,7 @@ serve(async (req) => {
     )
 
   } catch (error) {
-    console.error('=== Critical Error ===');
+    console.error('=== CRITICAL ERROR ===');
     console.error('Error:', error.message);
     console.error('Stack:', error.stack);
     
