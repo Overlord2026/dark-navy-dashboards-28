@@ -438,12 +438,33 @@ serve(async (req) => {
     console.error('Error type:', error.constructor.name);
     console.error('Error message:', error.message);
     console.error('Error stack:', error.stack);
+    console.error('Error details:', error);
+    
+    // Try to identify the specific error type
+    let errorCategory = 'unknown';
+    let errorDetails = error.message;
+    
+    if (error.message?.includes('fetch')) {
+      errorCategory = 'network_error';
+      errorDetails = 'Failed to connect to Plaid API. Check network connectivity.';
+    } else if (error.message?.includes('auth')) {
+      errorCategory = 'auth_error';
+      errorDetails = 'Authentication failed. Check Supabase user session.';
+    } else if (error.message?.includes('database') || error.message?.includes('relation')) {
+      errorCategory = 'database_error';
+      errorDetails = 'Database error. Check table structure and permissions.';
+    } else if (error.message?.includes('JSON')) {
+      errorCategory = 'json_error';
+      errorDetails = 'JSON parsing error. Check API response format.';
+    }
     
     return new Response(
       JSON.stringify({ 
         success: false,
         error: 'Internal server error during account linking',
-        details: error.message,
+        category: errorCategory,
+        details: errorDetails,
+        message: error.message,
         type: error.constructor.name,
         timestamp: new Date().toISOString()
       }),
