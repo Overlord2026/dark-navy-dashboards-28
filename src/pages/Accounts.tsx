@@ -38,7 +38,7 @@ import { AddRetirementPlanDialog } from "@/components/accounts/AddRetirementPlan
 import { AddBankAccountDialog } from "@/components/accounts/AddBankAccountDialog";
 import { BankAccountsList } from "@/components/accounts/BankAccountsList";
 import { PlaidLinkDialog } from "@/components/accounts/PlaidLinkDialog";
-import { PlaidDebugDialog } from "@/components/accounts/PlaidDebugDialog";
+
 
 import { useBankAccounts } from "@/context/BankAccountsContext";
 
@@ -89,8 +89,6 @@ const Accounts = () => {
 
   // Add state for liability dialog
   const [showAddLiabilityDialog, setShowAddLiabilityDialog] = React.useState(false);
-  // Add state for debug dialog
-  const [showPlaidDebugDialog, setShowPlaidDebugDialog] = React.useState(false);
 
   const handleAddAccountType = (type: string) => {
     if (type === 'liability' || type === 'Liability') {
@@ -169,17 +167,6 @@ const Accounts = () => {
                 "h-4 w-4"
               )} />
               Add Account
-            </Button>
-            <Button 
-              onClick={() => setShowPlaidDebugDialog(true)}
-              variant="outline"
-              className={cn(
-                isMobile ? "w-full text-sm" : 
-                isTablet ? "w-full sm:w-auto text-sm" :
-                "text-base"
-              )}
-            >
-              Debug Plaid
             </Button>
           </div>
         </div>
@@ -527,11 +514,6 @@ const Accounts = () => {
         onSuccess={handlePlaidSuccess}
       />
       
-      {/* Plaid Debug Dialog */}
-      <PlaidDebugDialog
-        isOpen={showPlaidDebugDialog}
-        onClose={() => setShowPlaidDebugDialog(false)}
-      />
     </ThreeColumnLayout>
   );
 };
