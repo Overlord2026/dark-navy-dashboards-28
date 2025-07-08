@@ -227,19 +227,101 @@ serve(async (req) => {
       )
     }
 
+    // Validate that we have accounts
+    if (!accountsData.accounts || accountsData.accounts.length === 0) {
+      console.error('No accounts returned from Plaid API');
+      return new Response(
+        JSON.stringify({ 
+          success: false,
+          error: 'No accounts found',
+          details: 'Plaid returned no accounts. This may be due to insufficient product permissions.',
+          debug_info: {
+            item_id: exchangeData.item_id,
+            accounts_data: accountsData
+          }
+        }),
+        { 
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        }
+      )
+    }
+
+    // Get institution information
+    let institutionName = 'Unknown Bank';
+    try {
+      if (exchangeData.item_id) {
+        console.log('Fetching item details to get institution...');
+        const itemRequest = {
+          client_id: PLAID_CLIENT_ID,
+          secret: PLAID_SECRET_KEY,
+          access_token: exchangeData.access_token,
+        }
+        
+        const itemResponse = await fetch(`${plaidApiUrl}/item/get`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(itemRequest),
+        })
+        
+        if (itemResponse.ok) {
+          const itemData = await itemResponse.json()
+          const institutionId = itemData.item?.institution_id;
+          
+          if (institutionId) {
+            console.log('Fetching institution name for ID:', institutionId);
+            const institutionRequest = {
+              client_id: PLAID_CLIENT_ID,
+              secret: PLAID_SECRET_KEY,
+              institution_id: institutionId,
+              country_codes: ['US'],
+            }
+            
+            const institutionResponse = await fetch(`${plaidApiUrl}/institutions/get_by_id`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(institutionRequest),
+            })
+            
+            if (institutionResponse.ok) {
+              const institutionData = await institutionResponse.json()
+              institutionName = institutionData.institution?.name || institutionName;
+              console.log('Found institution name:', institutionName);
+            }
+          }
+        }
+      }
+    } catch (error) {
+      console.warn('Failed to fetch institution details:', error);
+      // Continue with unknown institution name
+    }
+
     // Store accounts in database
-    const accountsToInsert = accountsData.accounts.map((account: any) => ({
-      user_id: user.id,
-      name: account.name || account.official_name || 'Unknown Account',
-      account_type: account.subtype || account.type,
-      balance: account.balances.current || 0,
-      plaid_account_id: account.account_id,
-      plaid_item_id: exchangeData.item_id,
-      plaid_institution_id: null, // Will be populated later if needed
-      institution_name: null, // Will be populated later if needed
-      is_plaid_linked: true,
-      last_plaid_sync: new Date().toISOString(),
-    }))
+    const accountsToInsert = accountsData.accounts.map((account: any) => {
+      // Ensure we have a valid balance
+      const balance = account.balances?.current ?? account.balances?.available ?? 0;
+      
+      // Create a descriptive account name
+      const accountName = account.name || account.official_name || 
+        `${institutionName} ${account.subtype || account.type}`;
+      
+      return {
+        user_id: user.id,
+        name: accountName,
+        account_type: account.subtype || account.type || 'unknown',
+        balance: balance,
+        plaid_account_id: account.account_id,
+        plaid_item_id: exchangeData.item_id,
+        plaid_institution_id: account.institution_id || null,
+        institution_name: institutionName,
+        is_plaid_linked: true,
+        last_plaid_sync: new Date().toISOString(),
+      }
+    })
 
     console.log('Preparing to insert accounts:', {
       user_id: user.id,
