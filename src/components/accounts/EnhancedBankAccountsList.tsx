@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { DeleteBankAccountDialog } from './DeleteBankAccountDialog';
 import { useBankAccounts } from '@/context/BankAccountsContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -37,6 +38,10 @@ export function EnhancedBankAccountsList() {
   const { accounts, loading, saving, deleteAccount, syncPlaidAccount } = useBankAccounts();
   const isMobile = useIsMobile();
   const [hiddenBalances, setHiddenBalances] = useState<Set<string>>(new Set());
+  const [deleteDialog, setDeleteDialog] = useState<{
+    isOpen: boolean;
+    account: any | null;
+  }>({ isOpen: false, account: null });
 
   if (loading) {
     return (
@@ -107,6 +112,21 @@ export function EnhancedBankAccountsList() {
       newHidden.add(accountId);
     }
     setHiddenBalances(newHidden);
+  };
+
+  const handleDeleteClick = (account: any) => {
+    setDeleteDialog({ isOpen: true, account });
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (deleteDialog.account) {
+      await deleteAccount(deleteDialog.account.id);
+      setDeleteDialog({ isOpen: false, account: null });
+    }
+  };
+
+  const handleDeleteCancel = () => {
+    setDeleteDialog({ isOpen: false, account: null });
   };
 
   const totalBalance = accounts.reduce((sum, account) => sum + account.balance, 0);
@@ -184,7 +204,7 @@ export function EnhancedBankAccountsList() {
                         </DropdownMenuItem>
                       )}
                       <DropdownMenuItem 
-                        onClick={() => deleteAccount(account.id)}
+                        onClick={() => handleDeleteClick(account)}
                         disabled={saving}
                         className="text-destructive"
                       >
@@ -368,7 +388,7 @@ export function EnhancedBankAccountsList() {
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => deleteAccount(account.id)}
+                        onClick={() => handleDeleteClick(account)}
                         disabled={saving}
                         className="h-8 w-8 p-0 text-destructive hover:text-destructive"
                       >
@@ -382,6 +402,16 @@ export function EnhancedBankAccountsList() {
           </Table>
         </CardContent>
       </Card>
+
+      {/* Delete Confirmation Dialog */}
+      <DeleteBankAccountDialog
+        isOpen={deleteDialog.isOpen}
+        onClose={handleDeleteCancel}
+        onConfirm={handleDeleteConfirm}
+        accountName={deleteDialog.account?.name || ''}
+        accountType={deleteDialog.account?.account_type || ''}
+        isDeleting={saving}
+      />
     </div>
   );
 }
