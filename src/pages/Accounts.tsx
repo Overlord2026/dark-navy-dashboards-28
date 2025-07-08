@@ -39,7 +39,7 @@ import { AddBankAccountDialog } from "@/components/accounts/AddBankAccountDialog
 import { BankAccountsList } from "@/components/accounts/BankAccountsList";
 import { PlaidLinkDialog } from "@/components/accounts/PlaidLinkDialog";
 import { PlaidDebugDialog } from "@/components/accounts/PlaidDebugDialog";
-import { PlaidConnectionTest } from "@/components/accounts/PlaidConnectionTest";
+
 import { useBankAccounts } from "@/context/BankAccountsContext";
 
 const Accounts = () => {
@@ -210,11 +210,6 @@ const Accounts = () => {
                   )} />
                   Add Bank Account
                 </Button>
-                <div className={cn(
-                  isSmallScreen ? "w-full" : "w-auto"
-                )}>
-                  <PlaidConnectionTest />
-                </div>
               </div>
             </div>
           </CollapsibleCard>
