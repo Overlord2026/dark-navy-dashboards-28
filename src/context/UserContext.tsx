@@ -58,67 +58,19 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   useEffect(() => {
-    // Use the profile from AuthContext when available
+    // Simply use the profile from AuthContext - no duplicate loading
     if (authUserProfile) {
       setUserProfile(authUserProfile);
       setIsLoading(false);
     } else if (user && session) {
-      const loadUserProfile = async () => {
-        try {
-          console.log("Loading user profile for user:", user.id);
-          
-          const { data: profile, error } = await supabase
-            .from('profiles')
-            .select('*')
-            .eq('id', user.id)
-            .single();
-
-          if (error && error.code !== 'PGRST116') {
-            console.error('Error loading profile:', error);
-            setUserProfile(null);
-          } else if (profile) {
-            console.log("Loaded profile from database:", profile);
-            
-            // Handle date conversion properly
-            let dateOfBirth: Date | undefined;
-            if (profile.date_of_birth_date) {
-              dateOfBirth = parseDateSafely(profile.date_of_birth_date);
-            } else if (profile.date_of_birth) {
-              dateOfBirth = parseDateSafely(profile.date_of_birth);
-            }
-
-            setUserProfile({
-              id: profile.id,
-              name: profile.display_name || `${profile.first_name || ''} ${profile.last_name || ''}`.trim(),
-              displayName: profile.display_name,
-              email: profile.email || user.email,
-              firstName: profile.first_name,
-              lastName: profile.last_name,
-              middleName: profile.middle_name,
-              title: profile.title,
-              suffix: profile.suffix,
-              gender: profile.gender,
-              maritalStatus: profile.marital_status,
-              dateOfBirth: dateOfBirth,
-              phone: profile.phone,
-              investorType: profile.investor_type,
-              role: profile.role || 'client',
-              permissions: profile.permissions || []
-            });
-          }
-        } catch (error) {
-          console.error('Error in loadUserProfile:', error);
-          setUserProfile(null);
-        }
-        setIsLoading(false);
-      };
-
-      loadUserProfile();
+      // AuthContext is still loading the profile
+      setIsLoading(true);
     } else {
+      // Not authenticated
       setUserProfile(null);
       setIsLoading(false);
     }
-  }, [user, session, authUserProfile]);
+  }, [authUserProfile, user, session]);
 
   const login = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
     return await authLogin(email, password);
