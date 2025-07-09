@@ -95,8 +95,13 @@ export default function Auth() {
         const result = await login(email, password);
 
         if (result.success) {
-          toast.success('Logged in successfully!');
-          navigate('/client-dashboard');
+          if (result.requires2FA) {
+            toast.success('Please check your email for verification code');
+            navigate('/otp-verification');
+          } else {
+            toast.success('Logged in successfully!');
+            navigate('/client-dashboard');
+          }
         } else {
           if (result.error?.includes('Invalid login credentials')) {
             toast.error('Invalid email or password. Please check your credentials.');

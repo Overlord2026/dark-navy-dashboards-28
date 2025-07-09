@@ -44,6 +44,8 @@ import NavigationDiagnostics from "@/pages/NavigationDiagnostics";
 import { ProfessionalsRouteWrapper } from "@/components/providers/ProfessionalsRouteWrapper";
 import Auth from "@/pages/Auth";
 import ResetPassword from "@/pages/ResetPassword";
+import OTPVerification from "@/pages/OTPVerification";
+import Setup2FA from "@/pages/Setup2FA";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 
 const routes = createBrowserRouter([
@@ -58,6 +60,14 @@ const routes = createBrowserRouter([
   {
     path: "/reset-password",
     element: <ResetPassword />
+  },
+  {
+    path: "/otp-verification",
+    element: <OTPVerification />
+  },
+  {
+    path: "/setup-2fa",
+    element: <ProtectedRoute><Setup2FA /></ProtectedRoute>
   },
   {
     path: "/client-dashboard",

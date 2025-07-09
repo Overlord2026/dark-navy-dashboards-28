@@ -19,6 +19,7 @@ interface UserProfile {
   investorType?: string;
   role: 'client' | 'advisor' | 'admin' | 'system_administrator' | 'developer' | 'consultant' | 'accountant' | 'attorney';
   permissions?: string[];
+  twoFactorEnabled?: boolean;
 }
 
 interface AuthContextType {
@@ -28,7 +29,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
   isEmailConfirmed: boolean;
-  login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  login: (email: string, password: string) => Promise<{ success: boolean; error?: string; requires2FA?: boolean }>;
   signup: (email: string, password: string, userData?: any) => Promise<{ success: boolean; error?: string }>;
   signInWithGoogle: () => Promise<{ success: boolean; error?: string }>;
   logout: () => Promise<void>;
@@ -36,6 +37,8 @@ interface AuthContextType {
   refreshProfile: () => Promise<void>;
   resendConfirmation: (email: string) => Promise<{ success: boolean; error?: string }>;
   resetPassword: (email: string) => Promise<{ success: boolean; error?: string }>;
+  sendOTP: () => Promise<{ success: boolean; error?: string }>;
+  verifyOTP: (otpCode: string) => Promise<{ success: boolean; error?: string }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -103,7 +106,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           phone: profile.phone,
           investorType: profile.investor_type,
           role: profile.role || 'client',
-          permissions: profile.permissions || []
+          permissions: profile.permissions || [],
+          twoFactorEnabled: profile.two_factor_enabled || false
         });
       }
     } catch (error) {
@@ -161,7 +165,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     return () => subscription.unsubscribe();
   }, []);
 
-  const login = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
+  const login = async (email: string, password: string): Promise<{ success: boolean; error?: string; requires2FA?: boolean }> => {
     try {
       setIsLoading(true);
       const { data, error } = await supabase.auth.signInWithPassword({
@@ -171,6 +175,20 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       
       if (error) {
         return { success: false, error: error.message };
+      }
+
+      // Check if user has 2FA enabled
+      if (data.user) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('two_factor_enabled')
+          .eq('id', data.user.id)
+          .single();
+
+        if (profile?.two_factor_enabled) {
+          // Don't set the session state yet, require 2FA first
+          return { success: true, requires2FA: true };
+        }
       }
       
       return { success: true };
@@ -329,6 +347,54 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   };
 
+  const sendOTP = async (): Promise<{ success: boolean; error?: string }> => {
+    if (!session) {
+      return { success: false, error: 'Not authenticated' };
+    }
+
+    try {
+      const { data, error } = await supabase.functions.invoke('send-otp', {
+        body: { userEmail: user?.email },
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+        },
+      });
+
+      if (error) throw error;
+
+      return { success: true };
+    } catch (error: any) {
+      console.error('Send OTP error:', error);
+      return { success: false, error: error.message || 'Failed to send verification code' };
+    }
+  };
+
+  const verifyOTP = async (otpCode: string): Promise<{ success: boolean; error?: string }> => {
+    if (!session) {
+      return { success: false, error: 'Not authenticated' };
+    }
+
+    try {
+      const { data, error } = await supabase.functions.invoke('verify-otp', {
+        body: { otpCode },
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+        },
+      });
+
+      if (error) throw error;
+
+      if (data.valid) {
+        return { success: true };
+      } else {
+        return { success: false, error: 'Invalid or expired verification code' };
+      }
+    } catch (error: any) {
+      console.error('Verify OTP error:', error);
+      return { success: false, error: error.message || 'Failed to verify code' };
+    }
+  };
+
   const isEmailConfirmed = user?.email_confirmed_at ? true : false;
 
   return (
@@ -347,7 +413,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         updateUserProfile,
         refreshProfile,
         resendConfirmation,
-        resetPassword
+        resetPassword,
+        sendOTP,
+        verifyOTP
       }}
     >
       {children}
