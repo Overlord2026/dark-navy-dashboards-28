@@ -21,7 +21,7 @@ export const AccountSection = ({
   const [isOpen, setIsOpen] = useState(initiallyOpen);
 
   return (
-    <div className="rounded-lg border border-slate-800 bg-slate-900 overflow-hidden transition-all duration-200">
+    <div className="rounded-lg border bg-card overflow-hidden transition-all duration-200">
       <div 
         className="p-4 flex items-center justify-between cursor-pointer"
         onClick={() => setIsOpen(!isOpen)}
@@ -42,7 +42,7 @@ export const AccountSection = ({
           isOpen ? "max-h-96" : "max-h-0"
         )}
       >
-        <div className="border-t border-slate-800">
+        <div className="border-t border-border">
           {children}
         </div>
       </div>
