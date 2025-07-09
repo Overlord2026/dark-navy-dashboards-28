@@ -99,26 +99,28 @@ export function PlaidLinkDialog({ isOpen, onClose, onSuccess }: PlaidLinkDialogP
       console.log('PlaidLinkDialog: Public token received:', public_token?.substring(0, 20) + '...');
       console.log('PlaidLinkDialog: Metadata:', metadata);
       
-      setIsConnecting(true);
-      
-      // Call the success handler and wait for result
+      // Don't reopen our dialog on success - let the parent handle the success flow
       onSuccess(public_token);
     },
     onExit: (err: any, metadata: any) => {
       console.log('PlaidLinkDialog: Plaid Link exit callback triggered');
-      setIsConnecting(false);
       
       if (err != null) {
         console.error('PlaidLinkDialog: Plaid Link error:', err);
+        // Reopen our dialog to show the error and retry option
+        setError("Failed to link your accounts. Please try again.");
         toast({
           title: "Connection Error",
           description: "Failed to link your accounts. Please try again.",
           variant: "destructive"
         });
       } else {
-        console.log('PlaidLinkDialog: User exited Plaid Link without error');
+        console.log('PlaidLinkDialog: User exited Plaid Link without error - closing dialog');
+        // User cancelled, close our dialog too
+        onClose();
       }
       console.log('PlaidLinkDialog: Exit metadata:', metadata);
+      setIsConnecting(false);
     },
     onEvent: (eventName: string, metadata: any) => {
       console.log('PlaidLinkDialog: Plaid Link event:', eventName, metadata);
@@ -136,8 +138,9 @@ export function PlaidLinkDialog({ isOpen, onClose, onSuccess }: PlaidLinkDialogP
   const handleConnect = () => {
     console.log("PlaidLinkDialog: handleConnect called", { ready, linkToken });
     if (ready && linkToken) {
-      console.log("PlaidLinkDialog: Opening Plaid Link");
-      // Don't close our dialog immediately - let Plaid handle the flow
+      console.log("PlaidLinkDialog: Opening Plaid Link and closing our dialog");
+      // Close our dialog immediately when Plaid opens to prevent conflicts
+      onClose();
       openPlaidLink();
     } else {
       console.log("PlaidLinkDialog: Not ready, showing loading state");
