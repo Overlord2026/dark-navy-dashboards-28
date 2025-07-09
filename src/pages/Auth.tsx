@@ -401,7 +401,7 @@ export default function Auth() {
                 
                 <Button 
                   type="submit" 
-                  className="w-full bg-white text-[#1B1B32] hover:bg-gray-100 font-medium"
+                  className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-medium transition-colors"
                   disabled={loading || googleLoading}
                 >
                   {loading ? "Loading..." : (isSignUp ? "Create Account" : "Sign In")}
