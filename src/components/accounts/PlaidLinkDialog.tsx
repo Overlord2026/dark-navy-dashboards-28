@@ -146,9 +146,28 @@ export function PlaidLinkDialog({ isOpen, onClose, onSuccess }: PlaidLinkDialogP
     }
   };
 
+  const handleDialogClose = () => {
+    console.log("PlaidLinkDialog: Dialog close requested");
+    onClose();
+  };
+
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[500px] bg-card text-foreground border-border p-0 overflow-hidden" onPointerDownOutside={(e) => e.preventDefault()}>
+    <Dialog open={isOpen} onOpenChange={handleDialogClose}>
+      <DialogContent 
+        className="sm:max-w-[500px] bg-card text-foreground border-border p-0 overflow-hidden"
+        onInteractOutside={(e) => {
+          // Allow interaction outside when Plaid is not ready to prevent blocking
+          if (!ready || !linkToken) {
+            e.preventDefault();
+          }
+        }}
+        onEscapeKeyDown={(e) => {
+          // Allow escape when Plaid is not active
+          if (isConnecting) {
+            e.preventDefault();
+          }
+        }}
+      >
         <DialogTitle className="sr-only">Connect Bank Account with Plaid</DialogTitle>
         <DialogDescription className="sr-only">
           Connect your bank account securely using Plaid to automatically sync your financial data.
