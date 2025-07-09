@@ -118,7 +118,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   useEffect(() => {
     // Set up auth state listener first
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
+      (event, session) => {
         console.log('Auth state changed:', event, session?.user?.id);
         
         // Handle email confirmation
@@ -139,7 +139,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           // Use setTimeout to defer profile loading and prevent auth state deadlock
           setTimeout(() => {
             loadUserProfile(session.user.id);
-          }, 0);
+          }, 100);
         } else {
           setUserProfile(null);
         }
