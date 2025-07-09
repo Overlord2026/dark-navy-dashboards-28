@@ -151,36 +151,7 @@ export function InvestmentAccountsProvider({ children }: { children: React.React
   };
 
   useEffect(() => {
-    const checkAuthAndInit = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session?.user) {
-        console.log('InvestmentAccountsContext: User authenticated, fetching accounts...');
-        await fetchAccounts();
-      } else {
-        console.log('InvestmentAccountsContext: No authenticated user, skipping fetch');
-        setLoading(false);
-      }
-    };
-
-    checkAuthAndInit();
-
-    // Listen for auth state changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-      console.log('InvestmentAccountsContext: Auth state changed:', event, !!session?.user);
-      
-      if (event === 'SIGNED_IN' && session?.user) {
-        console.log('InvestmentAccountsContext: User signed in, fetching accounts...');
-        await fetchAccounts();
-      } else if (event === 'SIGNED_OUT') {
-        console.log('InvestmentAccountsContext: User signed out, clearing accounts');
-        setAccounts([]);
-        setLoading(false);
-      }
-    });
-
-    return () => {
-      subscription.unsubscribe();
-    };
+    fetchAccounts();
   }, []);
 
   return (

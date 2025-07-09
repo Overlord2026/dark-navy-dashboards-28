@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { ChevronDown, LogOut, UserIcon, PhoneIcon, FileTextIcon, UsersIcon, BuildingIcon, PaletteIcon, Shield } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { ChevronDown, LogOut, UserIcon, PhoneIcon, FileTextIcon, UsersIcon, BuildingIcon, PaletteIcon } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { useTheme } from "@/context/ThemeContext";
 import { Button } from "@/components/ui/button";
@@ -25,7 +24,6 @@ interface UserProfileSectionProps {
 export const UserProfileSection = ({ onMenuItemClick, showLogo = true }: UserProfileSectionProps) => {
   const { userProfile, logout } = useAuth();
   const { theme } = useTheme();
-  const navigate = useNavigate();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [activeForm, setActiveForm] = useState<string | null>(null);
@@ -57,11 +55,6 @@ export const UserProfileSection = ({ onMenuItemClick, showLogo = true }: UserPro
     
     if (itemId === "change-theme") {
       setIsThemeDialogOpen(true);
-      return;
-    }
-    
-    if (itemId === "2fa-settings") {
-      navigate("/setup-2fa");
       return;
     }
     
@@ -287,22 +280,6 @@ export const UserProfileSection = ({ onMenuItemClick, showLogo = true }: UserPro
                 "font-medium",
                 isLightTheme ? "text-foreground" : "text-white"
               )}>Change Theme</span>
-            </DropdownMenuItem>
-            
-            <DropdownMenuItem 
-              onClick={() => handleMenuItemClick('2fa-settings')}
-              className={cn(
-                "flex items-center px-3 py-3 rounded-md cursor-pointer transition-colors",
-                isLightTheme 
-                  ? "hover:bg-muted focus:bg-muted" 
-                  : "hover:bg-[#2A2A40] focus:bg-[#2A2A40]"
-              )}
-            >
-              <Shield className="h-4 w-4 mr-3 text-emerald-400" />
-              <span className={cn(
-                "font-medium",
-                isLightTheme ? "text-foreground" : "text-white"
-              )}>2Factor Authentication</span>
             </DropdownMenuItem>
             
             <DropdownMenuItem 

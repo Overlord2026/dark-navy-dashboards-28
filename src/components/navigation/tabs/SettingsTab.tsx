@@ -1,6 +1,6 @@
 
 import React from "react";
-import { UserIcon, HeartHandshakeIcon, Shield } from "lucide-react";
+import { UserIcon, HeartHandshakeIcon } from "lucide-react";
 import { NavItem } from "@/types/navigation";
 
 export const settingsNavItems: NavItem[] = [
@@ -12,11 +12,7 @@ export const settingsNavItems: NavItem[] = [
   { 
     title: "Settings", 
     href: "/settings", 
-    icon: UserIcon,
-    items: [
-      { title: "General", href: "/settings" },
-      { title: "Security", href: "/setup-2fa" },
-    ]
+    icon: UserIcon 
   }
 ];
 

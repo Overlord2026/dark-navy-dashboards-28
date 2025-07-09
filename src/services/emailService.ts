@@ -68,46 +68,6 @@ Please follow up with this client regarding their interest.`,
   }
 };
 
-export interface OTPEmailData {
-  userName: string;
-  userEmail: string;
-  otpCode: string;
-}
-
-export const sendOTPEmail = async (data: OTPEmailData): Promise<boolean> => {
-  try {
-    const templateParams = {
-      to_email: data.userEmail,
-      from_name: 'Family Office Platform',
-      from_email: 'namandevops44@gmail.com',
-      subject: 'Your Verification Code',
-      message: `Your verification code for Two-Factor Authentication is: ${data.otpCode}
-
-This code will expire in 5 minutes for security purposes.
-
-If you didn't request this code, please ignore this email.`,
-      user_name: data.userName,
-      user_email: data.userEmail,
-      otp_code: data.otpCode
-    };
-
-    console.log('Sending OTP email with params:', templateParams);
-
-    const result = await emailjs.send(
-      EMAILJS_SERVICE_ID,
-      EMAILJS_TEMPLATE_ID, // Using the existing template
-      templateParams,
-      EMAILJS_PUBLIC_KEY
-    );
-
-    console.log('OTP email sent successfully:', result);
-    return true;
-  } catch (error) {
-    console.error('Failed to send OTP email:', error);
-    return false;
-  }
-};
-
 export const sendLearnMoreNotification = async (data: LearnMoreEmailData): Promise<boolean> => {
   try {
     let subjectPrefix = 'Learn More Request';

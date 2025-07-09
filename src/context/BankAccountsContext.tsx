@@ -342,81 +342,40 @@ export function BankAccountsProvider({ children }: { children: React.ReactNode }
   };
 
   useEffect(() => {
-    let channel: any;
-    
-    const initializeData = async () => {
-      console.log('BankAccountsContext: Initializing data and subscriptions');
-      
-      // First fetch accounts
-      await fetchAccounts();
-      
-      // Then set up real-time subscription
-      channel = supabase
-        .channel('bank_accounts_changes')
-        .on(
-          'postgres_changes',
-          {
-            event: '*',
-            schema: 'public',
-            table: 'bank_accounts'
-          },
-          (payload) => {
-            console.log('BankAccountsContext: Real-time update received:', payload);
-            
-            if (payload.eventType === 'INSERT') {
-              console.log('BankAccountsContext: New account added via real-time');
-              setAccounts(prev => [payload.new as BankAccount, ...prev]);
-            } else if (payload.eventType === 'UPDATE') {
-              console.log('BankAccountsContext: Account updated via real-time');
-              setAccounts(prev => prev.map(acc => 
-                acc.id === payload.new.id ? payload.new as BankAccount : acc
-              ));
-            } else if (payload.eventType === 'DELETE') {
-              console.log('BankAccountsContext: Account deleted via real-time');
-              setAccounts(prev => prev.filter(acc => acc.id !== payload.old.id));
-            }
+    fetchAccounts();
+
+    // Set up real-time subscription for bank accounts
+    const channel = supabase
+      .channel('bank_accounts_changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'bank_accounts'
+        },
+        (payload) => {
+          console.log('BankAccountsContext: Real-time update received:', payload);
+          
+          if (payload.eventType === 'INSERT') {
+            console.log('BankAccountsContext: New account added via real-time');
+            setAccounts(prev => [payload.new as BankAccount, ...prev]);
+          } else if (payload.eventType === 'UPDATE') {
+            console.log('BankAccountsContext: Account updated via real-time');
+            setAccounts(prev => prev.map(acc => 
+              acc.id === payload.new.id ? payload.new as BankAccount : acc
+            ));
+          } else if (payload.eventType === 'DELETE') {
+            console.log('BankAccountsContext: Account deleted via real-time');
+            setAccounts(prev => prev.filter(acc => acc.id !== payload.old.id));
           }
-        )
-        .subscribe();
-    };
-
-    // Check auth state and initialize
-    const checkAuthAndInit = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session?.user) {
-        console.log('BankAccountsContext: User authenticated, initializing...');
-        await initializeData();
-      } else {
-        console.log('BankAccountsContext: No authenticated user, skipping initialization');
-        setLoading(false);
-      }
-    };
-
-    checkAuthAndInit();
-
-    // Listen for auth state changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-      console.log('BankAccountsContext: Auth state changed:', event, !!session?.user);
-      
-      if (event === 'SIGNED_IN' && session?.user) {
-        console.log('BankAccountsContext: User signed in, reinitializing...');
-        await initializeData();
-      } else if (event === 'SIGNED_OUT') {
-        console.log('BankAccountsContext: User signed out, clearing data');
-        setAccounts([]);
-        setLoading(false);
-        if (channel) {
-          supabase.removeChannel(channel);
         }
-      }
-    });
+      )
+      .subscribe();
 
     return () => {
-      console.log('BankAccountsContext: Cleaning up subscriptions');
-      subscription.unsubscribe();
-      if (channel) {
-        supabase.removeChannel(channel);
-      }
+      console.log('BankAccountsContext: Cleaning up real-time subscription');
+      supabase.removeChannel(channel);
     };
   }, []);
 

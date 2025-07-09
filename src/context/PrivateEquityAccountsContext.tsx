@@ -153,36 +153,7 @@ export function PrivateEquityAccountsProvider({ children }: { children: React.Re
   };
 
   useEffect(() => {
-    const checkAuthAndInit = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session?.user) {
-        console.log('PrivateEquityAccountsContext: User authenticated, fetching accounts...');
-        await fetchAccounts();
-      } else {
-        console.log('PrivateEquityAccountsContext: No authenticated user, skipping fetch');
-        setLoading(false);
-      }
-    };
-
-    checkAuthAndInit();
-
-    // Listen for auth state changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-      console.log('PrivateEquityAccountsContext: Auth state changed:', event, !!session?.user);
-      
-      if (event === 'SIGNED_IN' && session?.user) {
-        console.log('PrivateEquityAccountsContext: User signed in, fetching accounts...');
-        await fetchAccounts();
-      } else if (event === 'SIGNED_OUT') {
-        console.log('PrivateEquityAccountsContext: User signed out, clearing accounts');
-        setAccounts([]);
-        setLoading(false);
-      }
-    });
-
-    return () => {
-      subscription.unsubscribe();
-    };
+    fetchAccounts();
   }, []);
 
   return (

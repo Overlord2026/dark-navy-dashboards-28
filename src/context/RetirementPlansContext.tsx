@@ -157,36 +157,7 @@ export function RetirementPlansProvider({ children }: { children: React.ReactNod
   };
 
   useEffect(() => {
-    const checkAuthAndInit = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session?.user) {
-        console.log('RetirementPlansContext: User authenticated, fetching plans...');
-        await fetchPlans();
-      } else {
-        console.log('RetirementPlansContext: No authenticated user, skipping fetch');
-        setLoading(false);
-      }
-    };
-
-    checkAuthAndInit();
-
-    // Listen for auth state changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-      console.log('RetirementPlansContext: Auth state changed:', event, !!session?.user);
-      
-      if (event === 'SIGNED_IN' && session?.user) {
-        console.log('RetirementPlansContext: User signed in, fetching plans...');
-        await fetchPlans();
-      } else if (event === 'SIGNED_OUT') {
-        console.log('RetirementPlansContext: User signed out, clearing plans');
-        setPlans([]);
-        setLoading(false);
-      }
-    });
-
-    return () => {
-      subscription.unsubscribe();
-    };
+    fetchPlans();
   }, []);
 
   return (
