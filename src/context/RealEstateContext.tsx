@@ -153,7 +153,36 @@ export function RealEstateProvider({ children }: { children: React.ReactNode }) 
   };
 
   useEffect(() => {
-    fetchProperties();
+    const checkAuthAndInit = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        console.log('RealEstateContext: User authenticated, fetching properties...');
+        await fetchProperties();
+      } else {
+        console.log('RealEstateContext: No authenticated user, skipping fetch');
+        setLoading(false);
+      }
+    };
+
+    checkAuthAndInit();
+
+    // Listen for auth state changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      console.log('RealEstateContext: Auth state changed:', event, !!session?.user);
+      
+      if (event === 'SIGNED_IN' && session?.user) {
+        console.log('RealEstateContext: User signed in, fetching properties...');
+        await fetchProperties();
+      } else if (event === 'SIGNED_OUT') {
+        console.log('RealEstateContext: User signed out, clearing properties');
+        setProperties([]);
+        setLoading(false);
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
   return (

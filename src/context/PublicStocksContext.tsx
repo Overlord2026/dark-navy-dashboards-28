@@ -157,7 +157,36 @@ export function PublicStocksProvider({ children }: { children: React.ReactNode }
   };
 
   useEffect(() => {
-    fetchStocks();
+    const checkAuthAndInit = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        console.log('PublicStocksContext: User authenticated, fetching stocks...');
+        await fetchStocks();
+      } else {
+        console.log('PublicStocksContext: No authenticated user, skipping fetch');
+        setLoading(false);
+      }
+    };
+
+    checkAuthAndInit();
+
+    // Listen for auth state changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      console.log('PublicStocksContext: Auth state changed:', event, !!session?.user);
+      
+      if (event === 'SIGNED_IN' && session?.user) {
+        console.log('PublicStocksContext: User signed in, fetching stocks...');
+        await fetchStocks();
+      } else if (event === 'SIGNED_OUT') {
+        console.log('PublicStocksContext: User signed out, clearing stocks');
+        setStocks([]);
+        setLoading(false);
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
   return (

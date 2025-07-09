@@ -173,7 +173,36 @@ export function DigitalAssetsProvider({ children }: { children: React.ReactNode 
   };
 
   useEffect(() => {
-    fetchDigitalAssets();
+    const checkAuthAndInit = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        console.log('DigitalAssetsContext: User authenticated, fetching assets...');
+        await fetchDigitalAssets();
+      } else {
+        console.log('DigitalAssetsContext: No authenticated user, skipping fetch');
+        setLoading(false);
+      }
+    };
+
+    checkAuthAndInit();
+
+    // Listen for auth state changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      console.log('DigitalAssetsContext: Auth state changed:', event, !!session?.user);
+      
+      if (event === 'SIGNED_IN' && session?.user) {
+        console.log('DigitalAssetsContext: User signed in, fetching assets...');
+        await fetchDigitalAssets();
+      } else if (event === 'SIGNED_OUT') {
+        console.log('DigitalAssetsContext: User signed out, clearing assets');
+        setDigitalAssets([]);
+        setLoading(false);
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
   return (
