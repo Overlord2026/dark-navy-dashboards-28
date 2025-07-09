@@ -3,7 +3,9 @@ import { useState, useEffect } from "react";
 import { usePlaidLink } from "react-plaid-link";
 import { 
   Dialog, 
-  DialogContent
+  DialogContent,
+  DialogTitle,
+  DialogDescription
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
@@ -146,7 +148,11 @@ export function PlaidLinkDialog({ isOpen, onClose, onSuccess }: PlaidLinkDialogP
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[500px] bg-card text-foreground border-border p-0 overflow-hidden">
+      <DialogContent className="sm:max-w-[500px] bg-card text-foreground border-border p-0 overflow-hidden" onPointerDownOutside={(e) => e.preventDefault()}>
+        <DialogTitle className="sr-only">Connect Bank Account with Plaid</DialogTitle>
+        <DialogDescription className="sr-only">
+          Connect your bank account securely using Plaid to automatically sync your financial data.
+        </DialogDescription>
         <div className="relative p-8">
           
           <div className="text-center space-y-6">
