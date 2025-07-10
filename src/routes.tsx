@@ -13,6 +13,7 @@ import AllAssets from "@/pages/AllAssets";
 import CashManagement from "@/pages/CashManagement";
 import TaxBudgets from "@/pages/TaxBudgets";
 import Transfers from "@/pages/Transfers";
+import CreateTransfer from "@/pages/CreateTransfer";
 import ClientLegacyVault from "@/pages/ClientLegacyVault";
 import SocialSecurity from "@/pages/SocialSecurity";
 import BusinessFilings from "@/pages/BusinessFilings";
@@ -126,6 +127,10 @@ const routes = createBrowserRouter([
   {
     path: "/client-transfers",
     element: <ProtectedRoute><Transfers /></ProtectedRoute>
+  },
+  {
+    path: "/create-transfer",
+    element: <ProtectedRoute><CreateTransfer /></ProtectedRoute>
   },
   {
     path: "/client-legacy-vault",
