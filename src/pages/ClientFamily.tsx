@@ -8,7 +8,7 @@ export default function ClientFamily() {
   return (
     <ThreeColumnLayout activeMainItem="client-family" title="">
       <div className="space-y-6 animate-fade-in">
-        <div className="space-y-6">
+        <div className="space-y-6 mt-8">
           <FamilyMembersList />
         </div>
       </div>
