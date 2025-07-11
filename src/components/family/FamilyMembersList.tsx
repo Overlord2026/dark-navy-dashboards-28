@@ -26,9 +26,10 @@ import {
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { MoreHorizontal, Edit, Trash2, Mail } from 'lucide-react';
+import { MoreHorizontal, Edit, Trash2, Mail, UserPlus } from 'lucide-react';
 import { useFamilyMembers, FamilyMember } from '@/hooks/useFamilyMembers';
 import { EditFamilyMemberDialog } from './EditFamilyMemberDialog';
+import { AddFamilyMemberDialog } from './AddFamilyMemberDialog';
 
 const formatRelationship = (relationship: string) => {
   return relationship.charAt(0).toUpperCase() + relationship.slice(1);
@@ -66,11 +67,19 @@ export const FamilyMembersList: React.FC = () => {
   return (
     <>
       <Card>
-        <CardHeader>
-          <CardTitle>Family Members</CardTitle>
-          <CardDescription>
-            Manage family members and their access to your account
-          </CardDescription>
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+          <div>
+            <CardTitle>Family Members</CardTitle>
+            <CardDescription>
+              Manage family members and their access to your account
+            </CardDescription>
+          </div>
+          <AddFamilyMemberDialog>
+            <Button className="w-auto">
+              <UserPlus className="mr-2 h-4 w-4" />
+              Add Family Member
+            </Button>
+          </AddFamilyMemberDialog>
         </CardHeader>
         <CardContent>
           <Table>
