@@ -326,16 +326,6 @@ export default function ClientLegacyVault() {
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-2">
-              <Button
-                onClick={() => window.open('https://trustandwill.com', '_blank')}
-                className="flex items-center gap-2 bg-blue-600 text-white border-blue-600 hover:bg-blue-700 hover:border-blue-700 transition-colors shrink-0 font-medium shadow-lg"
-              >
-                <ExternalLink className="h-4 w-4" />
-                <span className="hidden sm:inline">DIY with Trust & Will</span>
-                <span className="sm:hidden">Trust & Will</span>
-              </Button>
-            </div>
           </div>
           
           {/* Tabs Section */}
