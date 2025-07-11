@@ -223,7 +223,7 @@ export function ThreeColumnLayout({
             "flex-1 overflow-y-auto font-sans w-full",
             isMobile ? "p-4" : "p-3"
           )}>
-            {!isDashboardPage && !isLegacyVaultPage && (
+            {!isDashboardPage && !isLegacyVaultPage && title && (
               <div className="flex justify-between items-center mb-4">
                 <h1 className={cn(
                   "font-bold text-foreground",
