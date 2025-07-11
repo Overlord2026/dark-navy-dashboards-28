@@ -33,7 +33,7 @@ import { useFamilyMembers, AddFamilyMemberData } from '@/hooks/useFamilyMembers'
 
 const formSchema = z.object({
   name: z.string().min(1, 'Name is required'),
-  relationship: z.enum(['spouse', 'parent', 'child', 'sibling', 'other']),
+  relationship: z.enum(['spouse', 'parent', 'child', 'sibling', 'aunt', 'brother', 'daughter', 'domestic-partner', 'father', 'father-in-law', 'grandfather', 'grandmother', 'granddaughter', 'grandson', 'mother', 'mother-in-law', 'nephew', 'niece', 'other-individual', 'other']),
   email: z.string().email('Invalid email').min(1, 'Email is required'),
   access_level: z.enum(['full', 'limited']),
 });
@@ -119,6 +119,21 @@ export const AddFamilyMemberDialog: React.FC<AddFamilyMemberDialogProps> = ({ ch
                       <SelectItem value="parent">Parent</SelectItem>
                       <SelectItem value="child">Child</SelectItem>
                       <SelectItem value="sibling">Sibling</SelectItem>
+                      <SelectItem value="aunt">Aunt</SelectItem>
+                      <SelectItem value="brother">Brother</SelectItem>
+                      <SelectItem value="daughter">Daughter</SelectItem>
+                      <SelectItem value="domestic-partner">Domestic Partner</SelectItem>
+                      <SelectItem value="father">Father</SelectItem>
+                      <SelectItem value="father-in-law">Father-in-law</SelectItem>
+                      <SelectItem value="grandfather">Grandfather</SelectItem>
+                      <SelectItem value="grandmother">Grandmother</SelectItem>
+                      <SelectItem value="granddaughter">Granddaughter</SelectItem>
+                      <SelectItem value="grandson">Grandson</SelectItem>
+                      <SelectItem value="mother">Mother</SelectItem>
+                      <SelectItem value="mother-in-law">Mother-in-law</SelectItem>
+                      <SelectItem value="nephew">Nephew</SelectItem>
+                      <SelectItem value="niece">Niece</SelectItem>
+                      <SelectItem value="other-individual">Other Individual</SelectItem>
                       <SelectItem value="other">Other</SelectItem>
                     </SelectContent>
                   </Select>

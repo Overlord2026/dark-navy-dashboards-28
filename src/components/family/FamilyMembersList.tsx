@@ -32,7 +32,10 @@ import { EditFamilyMemberDialog } from './EditFamilyMemberDialog';
 import { AddFamilyMemberDialog } from './AddFamilyMemberDialog';
 
 const formatRelationship = (relationship: string) => {
-  return relationship.charAt(0).toUpperCase() + relationship.slice(1);
+  return relationship
+    .split('-')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join('-');
 };
 
 export const FamilyMembersList: React.FC = () => {
