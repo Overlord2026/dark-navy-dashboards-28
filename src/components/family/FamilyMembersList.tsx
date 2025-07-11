@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import {
   Table,
@@ -64,19 +63,6 @@ export const FamilyMembersList: React.FC = () => {
     return <div>Loading family members...</div>;
   }
 
-  if (familyMembers.length === 0) {
-    return (
-      <Card>
-        <CardHeader>
-          <CardTitle>No Family Members Added</CardTitle>
-          <CardDescription>
-            Start by adding family members who should have access to your financial information.
-          </CardDescription>
-        </CardHeader>
-      </Card>
-    );
-  }
-
   return (
     <>
       <Card>
@@ -99,53 +85,61 @@ export const FamilyMembersList: React.FC = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {familyMembers.map((member) => (
-                <TableRow key={member.id}>
-                  <TableCell className="font-medium">{member.name}</TableCell>
-                  <TableCell>{formatRelationship(member.relationship)}</TableCell>
-                  <TableCell>
-                    {member.email ? (
-                      <div className="flex items-center gap-2">
-                        <Mail className="w-4 h-4" />
-                        {member.email}
-                      </div>
-                    ) : (
-                      <span className="text-muted-foreground">No email</span>
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    <Badge variant={member.access_level === 'full' ? 'default' : 'secondary'}>
-                      {member.access_level === 'full' ? 'Full Access' : 'Limited Access'}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    {new Date(member.created_at).toLocaleDateString()}
-                  </TableCell>
-                  <TableCell>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-8 w-8 p-0">
-                          <span className="sr-only">Open menu</span>
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => handleEditClick(member)}>
-                          <Edit className="mr-2 h-4 w-4" />
-                          Edit
-                        </DropdownMenuItem>
-                        <DropdownMenuItem 
-                          onClick={() => handleDeleteClick(member)}
-                          className="text-destructive"
-                        >
-                          <Trash2 className="mr-2 h-4 w-4" />
-                          Remove
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+              {familyMembers.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
+                    No family members found. Add family members who should have access to your financial information.
                   </TableCell>
                 </TableRow>
-              ))}
+              ) : (
+                familyMembers.map((member) => (
+                  <TableRow key={member.id}>
+                    <TableCell className="font-medium">{member.name}</TableCell>
+                    <TableCell>{formatRelationship(member.relationship)}</TableCell>
+                    <TableCell>
+                      {member.email ? (
+                        <div className="flex items-center gap-2">
+                          <Mail className="w-4 h-4" />
+                          {member.email}
+                        </div>
+                      ) : (
+                        <span className="text-muted-foreground">No email</span>
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant={member.access_level === 'full' ? 'default' : 'secondary'}>
+                        {member.access_level === 'full' ? 'Full Access' : 'Limited Access'}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      {new Date(member.created_at).toLocaleDateString()}
+                    </TableCell>
+                    <TableCell>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" className="h-8 w-8 p-0">
+                            <span className="sr-only">Open menu</span>
+                            <MoreHorizontal className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem onClick={() => handleEditClick(member)}>
+                            <Edit className="mr-2 h-4 w-4" />
+                            Edit
+                          </DropdownMenuItem>
+                          <DropdownMenuItem 
+                            onClick={() => handleDeleteClick(member)}
+                            className="text-destructive"
+                          >
+                            <Trash2 className="mr-2 h-4 w-4" />
+                            Remove
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
             </TableBody>
           </Table>
         </CardContent>
