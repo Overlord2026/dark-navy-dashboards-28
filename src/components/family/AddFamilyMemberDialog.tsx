@@ -35,6 +35,7 @@ const formSchema = z.object({
   name: z.string().min(1, 'Name is required'),
   relationship: z.enum(['spouse', 'parent', 'child', 'sibling', 'other']),
   email: z.string().email('Invalid email').min(1, 'Email is required'),
+  access_level: z.enum(['full', 'limited']),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -53,6 +54,7 @@ export const AddFamilyMemberDialog: React.FC<AddFamilyMemberDialogProps> = ({ ch
       name: '',
       relationship: 'spouse',
       email: '',
+      access_level: 'full',
     },
   });
 
@@ -62,7 +64,7 @@ export const AddFamilyMemberDialog: React.FC<AddFamilyMemberDialogProps> = ({ ch
       relationship: data.relationship,
       email: data.email,
       has_app_access: true,
-      access_level: 'full',
+      access_level: data.access_level,
     };
 
     const success = await addFamilyMember(memberData);
@@ -140,6 +142,31 @@ export const AddFamilyMemberDialog: React.FC<AddFamilyMemberDialogProps> = ({ ch
                   </FormControl>
                   <FormDescription>
                     Required for account setup and access
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="access_level"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Access Level *</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select access level" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="full">Full Access</SelectItem>
+                      <SelectItem value="limited">Limited Access</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormDescription>
+                    Full access allows viewing all financial information, limited access restricts sensitive data
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
