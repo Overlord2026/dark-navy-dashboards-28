@@ -25,6 +25,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { MoreHorizontal, Edit, Trash2, Mail } from 'lucide-react';
 import { useFamilyMembers, FamilyMember } from '@/hooks/useFamilyMembers';
@@ -84,6 +85,7 @@ export const FamilyMembersList: React.FC = () => {
                 <TableHead>Name</TableHead>
                 <TableHead>Relationship</TableHead>
                 <TableHead>Email</TableHead>
+                <TableHead>Access</TableHead>
                 <TableHead>Added</TableHead>
                 <TableHead className="w-[70px]"></TableHead>
               </TableRow>
@@ -102,6 +104,11 @@ export const FamilyMembersList: React.FC = () => {
                     ) : (
                       <span className="text-muted-foreground">No email</span>
                     )}
+                  </TableCell>
+                  <TableCell>
+                    <Badge variant={member.access_level === 'full' ? 'default' : 'secondary'}>
+                      {member.access_level === 'full' ? 'Full Access' : 'Limited Access'}
+                    </Badge>
                   </TableCell>
                   <TableCell>
                     {new Date(member.created_at).toLocaleDateString()}
