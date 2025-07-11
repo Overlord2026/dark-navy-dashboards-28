@@ -72,7 +72,7 @@ export const FamilyMembersList: React.FC = () => {
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
           <div>
-            <CardTitle>Family Members</CardTitle>
+            <CardTitle className="mb-2">Family Members</CardTitle>
             <CardDescription>
               Manage family members and their access to your account
             </CardDescription>
