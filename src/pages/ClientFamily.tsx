@@ -6,7 +6,7 @@ import { FamilyMembersList } from "@/components/family/FamilyMembersList";
 export default function ClientFamily() {
 
   return (
-    <ThreeColumnLayout activeMainItem="client-family" title="Family Members">
+    <ThreeColumnLayout activeMainItem="client-family">
       <div className="space-y-6 animate-fade-in">
         <div className="space-y-6">
           <FamilyMembersList />
