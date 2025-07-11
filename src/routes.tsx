@@ -20,7 +20,7 @@ import BusinessFilings from "@/pages/BusinessFilings";
 import Properties from "@/pages/Properties";
 import BillPay from "@/pages/BillPay";
 import Documents from "@/pages/Documents";
-import Professionals from "@/pages/Professionals";
+
 import ProfessionalSignup from "@/pages/ProfessionalSignup";
 import Help from "@/pages/Help";
 import Settings from "@/pages/Settings";
@@ -163,14 +163,6 @@ const routes = createBrowserRouter([
   {
     path: "/client-documents",
     element: <ProtectedRoute><ProfessionalsRouteWrapper><Documents /></ProfessionalsRouteWrapper></ProtectedRoute>
-  },
-  {
-    path: "/client-professionals",
-    element: <ProtectedRoute><ProfessionalsRouteWrapper><Professionals /></ProfessionalsRouteWrapper></ProtectedRoute>
-  },
-  {
-    path: "/professionals",
-    element: <Navigate to="/client-professionals" replace />
   },
   {
     path: "/client-family",
