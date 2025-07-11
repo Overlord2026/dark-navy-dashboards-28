@@ -13,11 +13,6 @@ import { toast } from "sonner";
 
 export const collaborationNavItems: NavItem[] = [
   { 
-    title: "Service Professionals", 
-    href: "/professionals", 
-    icon: Users2 
-  },
-  { 
     title: "Family Members", 
     href: "/client-family", 
     icon: UsersIcon 
