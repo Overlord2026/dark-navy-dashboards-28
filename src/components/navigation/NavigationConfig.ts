@@ -144,11 +144,6 @@ export const familyWealthNavItems: NavItem[] = [
 // COLLABORATION & SHARING category
 export const collaborationNavItems: NavItem[] = [
   { 
-    title: "Service Professionals", 
-    href: "/professionals", 
-    icon: Users2Icon 
-  },
-  { 
     title: "Family Members", 
     href: "/sharing", 
     icon: ShareIcon 
