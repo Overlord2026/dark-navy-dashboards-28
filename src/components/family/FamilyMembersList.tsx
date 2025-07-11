@@ -29,6 +29,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { MoreHorizontal, Edit, Trash2, Mail } from 'lucide-react';
 import { useFamilyMembers, FamilyMember } from '@/hooks/useFamilyMembers';
+import { EditFamilyMemberDialog } from './EditFamilyMemberDialog';
 
 const formatRelationship = (relationship: string) => {
   return relationship.charAt(0).toUpperCase() + relationship.slice(1);
@@ -38,6 +39,13 @@ export const FamilyMembersList: React.FC = () => {
   const { familyMembers, isLoading, deleteFamilyMember } = useFamilyMembers();
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [memberToDelete, setMemberToDelete] = useState<FamilyMember | null>(null);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [memberToEdit, setMemberToEdit] = useState<FamilyMember | null>(null);
+
+  const handleEditClick = (member: FamilyMember) => {
+    setMemberToEdit(member);
+    setEditDialogOpen(true);
+  };
 
   const handleDeleteClick = (member: FamilyMember) => {
     setMemberToDelete(member);
@@ -122,7 +130,7 @@ export const FamilyMembersList: React.FC = () => {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => console.log('Edit member:', member.id)}>
+                        <DropdownMenuItem onClick={() => handleEditClick(member)}>
                           <Edit className="mr-2 h-4 w-4" />
                           Edit
                         </DropdownMenuItem>
@@ -142,6 +150,12 @@ export const FamilyMembersList: React.FC = () => {
           </Table>
         </CardContent>
       </Card>
+
+      <EditFamilyMemberDialog
+        member={memberToEdit}
+        open={editDialogOpen}
+        onOpenChange={setEditDialogOpen}
+      />
 
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <AlertDialogContent>
