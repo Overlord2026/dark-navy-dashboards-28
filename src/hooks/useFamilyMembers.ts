@@ -8,7 +8,7 @@ export interface FamilyMember {
   id: string;
   user_id: string;
   name: string;
-  relationship: 'spouse' | 'parent' | 'child' | 'sibling' | 'aunt' | 'brother' | 'daughter' | 'domestic-partner' | 'father' | 'father-in-law' | 'grandfather' | 'grandmother' | 'granddaughter' | 'grandson' | 'mother' | 'mother-in-law' | 'nephew' | 'niece' | 'other-individual' | 'other';
+  relationship: 'aunt' | 'brother' | 'daughter' | 'domestic-partner' | 'father' | 'father-in-law' | 'grandfather' | 'grandmother' | 'granddaughter' | 'grandson' | 'mother' | 'mother-in-law' | 'nephew' | 'niece' | 'other-individual';
   email: string;
   has_app_access: boolean;
   access_level: 'full' | 'limited';
@@ -20,7 +20,7 @@ export interface FamilyMember {
 
 export interface AddFamilyMemberData {
   name: string;
-  relationship: 'spouse' | 'parent' | 'child' | 'sibling' | 'aunt' | 'brother' | 'daughter' | 'domestic-partner' | 'father' | 'father-in-law' | 'grandfather' | 'grandmother' | 'granddaughter' | 'grandson' | 'mother' | 'mother-in-law' | 'nephew' | 'niece' | 'other-individual' | 'other';
+  relationship: 'aunt' | 'brother' | 'daughter' | 'domestic-partner' | 'father' | 'father-in-law' | 'grandfather' | 'grandmother' | 'granddaughter' | 'grandson' | 'mother' | 'mother-in-law' | 'nephew' | 'niece' | 'other-individual';
   email: string;
   has_app_access: boolean;
   access_level: 'full' | 'limited';

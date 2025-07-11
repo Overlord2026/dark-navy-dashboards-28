@@ -33,7 +33,7 @@ import { useFamilyMembers, AddFamilyMemberData } from '@/hooks/useFamilyMembers'
 
 const formSchema = z.object({
   name: z.string().min(1, 'Name is required'),
-  relationship: z.enum(['spouse', 'parent', 'child', 'sibling', 'aunt', 'brother', 'daughter', 'domestic-partner', 'father', 'father-in-law', 'grandfather', 'grandmother', 'granddaughter', 'grandson', 'mother', 'mother-in-law', 'nephew', 'niece', 'other-individual', 'other']),
+  relationship: z.enum(['aunt', 'brother', 'daughter', 'domestic-partner', 'father', 'father-in-law', 'grandfather', 'grandmother', 'granddaughter', 'grandson', 'mother', 'mother-in-law', 'nephew', 'niece', 'other-individual']),
   email: z.string().email('Invalid email').min(1, 'Email is required'),
   access_level: z.enum(['full', 'limited']),
 });
@@ -52,7 +52,7 @@ export const AddFamilyMemberDialog: React.FC<AddFamilyMemberDialogProps> = ({ ch
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: '',
-      relationship: 'spouse',
+      relationship: 'aunt',
       email: '',
       access_level: 'full',
     },
@@ -115,10 +115,6 @@ export const AddFamilyMemberDialog: React.FC<AddFamilyMemberDialogProps> = ({ ch
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="spouse">Spouse</SelectItem>
-                      <SelectItem value="parent">Parent</SelectItem>
-                      <SelectItem value="child">Child</SelectItem>
-                      <SelectItem value="sibling">Sibling</SelectItem>
                       <SelectItem value="aunt">Aunt</SelectItem>
                       <SelectItem value="brother">Brother</SelectItem>
                       <SelectItem value="daughter">Daughter</SelectItem>
@@ -134,7 +130,6 @@ export const AddFamilyMemberDialog: React.FC<AddFamilyMemberDialogProps> = ({ ch
                       <SelectItem value="nephew">Nephew</SelectItem>
                       <SelectItem value="niece">Niece</SelectItem>
                       <SelectItem value="other-individual">Other Individual</SelectItem>
-                      <SelectItem value="other">Other</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
