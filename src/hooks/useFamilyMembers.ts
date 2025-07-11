@@ -32,8 +32,12 @@ export const useFamilyMembers = () => {
   const { userProfile } = useAuth();
 
   const fetchFamilyMembers = async () => {
-    if (!userProfile?.id) return;
+    if (!userProfile?.id) {
+      setIsLoading(false);
+      return;
+    }
 
+    setIsLoading(true);
     try {
       const { data, error } = await supabase
         .from('family_members')
