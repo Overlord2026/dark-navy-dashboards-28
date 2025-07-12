@@ -39,3 +39,12 @@ verify_jwt = true
 
 [functions.plaid-sync-accounts]
 verify_jwt = true
+
+[functions.process-transfer]
+verify_jwt = false
+
+[functions.stripe-ach-transfer]
+verify_jwt = false
+
+[functions.stripe-ach-webhook]
+verify_jwt = false

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { ArrowRight, Clock, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
+import { ArrowRight, Clock, CheckCircle, XCircle, AlertCircle, Banknote, CreditCard } from 'lucide-react';
 import { useTransfers } from '@/context/TransfersContext';
 import { useBankAccounts } from '@/hooks/useBankAccounts';
 import { formatDistanceToNow } from 'date-fns';
@@ -21,8 +21,12 @@ export function TransferHistory() {
         return <CheckCircle className="h-4 w-4 text-green-500" />;
       case 'pending':
       case 'processing':
+      case 'ach_debit_pending':
+      case 'funds_held':
+      case 'ach_credit_pending':
         return <Clock className="h-4 w-4 text-yellow-500" />;
       case 'failed':
+      case 'ach_credit_failed':
         return <XCircle className="h-4 w-4 text-red-500" />;
       case 'cancelled':
         return <AlertCircle className="h-4 w-4 text-gray-500" />;
@@ -37,13 +41,32 @@ export function TransferHistory() {
         return 'default';
       case 'pending':
       case 'processing':
+      case 'ach_debit_pending':
+      case 'funds_held':
+      case 'ach_credit_pending':
         return 'secondary';
       case 'failed':
+      case 'ach_credit_failed':
         return 'destructive';
       case 'cancelled':
         return 'outline';
       default:
         return 'outline';
+    }
+  };
+
+  const formatStatus = (status: string) => {
+    switch (status) {
+      case 'ach_debit_pending':
+        return 'ACH Debit Pending';
+      case 'funds_held':
+        return 'Funds Held';
+      case 'ach_credit_pending':
+        return 'ACH Credit Pending';
+      case 'ach_credit_failed':
+        return 'ACH Credit Failed';
+      default:
+        return status.charAt(0).toUpperCase() + status.slice(1);
     }
   };
 
@@ -115,6 +138,11 @@ export function TransferHistory() {
             >
               <div className="flex-1 space-y-1">
                 <div className="flex items-center gap-2">
+                  {transfer.transfer_type === 'ach' ? (
+                    <Banknote className="h-4 w-4 text-blue-600" />
+                  ) : (
+                    <CreditCard className="h-4 w-4 text-green-600" />
+                  )}
                   <span className="font-medium">
                     {getAccountName(transfer.from_account_id)}
                   </span>
@@ -122,6 +150,9 @@ export function TransferHistory() {
                   <span className="font-medium">
                     {getAccountName(transfer.to_account_id)}
                   </span>
+                  <Badge variant="outline" className="text-xs">
+                    {transfer.transfer_type === 'ach' ? 'ACH' : 'Internal'}
+                  </Badge>
                 </div>
                 
                 <div className="flex items-center gap-4 text-sm text-muted-foreground">
@@ -133,6 +164,18 @@ export function TransferHistory() {
                     <span className="italic">"{transfer.description}"</span>
                   )}
                 </div>
+                
+                {transfer.transfer_type === 'ach' && transfer.estimated_completion_date && (
+                  <div className="text-xs text-blue-600 dark:text-blue-400">
+                    Expected completion: {new Date(transfer.estimated_completion_date).toLocaleDateString()}
+                  </div>
+                )}
+                
+                {transfer.failure_reason && (
+                  <div className="text-xs text-red-600 dark:text-red-400">
+                    {transfer.failure_reason}
+                  </div>
+                )}
               </div>
               
               <div className="flex items-center gap-3">
@@ -149,7 +192,7 @@ export function TransferHistory() {
                 
                 <Badge variant={getStatusVariant(transfer.status)} className="flex items-center gap-1">
                   {getStatusIcon(transfer.status)}
-                  {transfer.status.charAt(0).toUpperCase() + transfer.status.slice(1)}
+                  {formatStatus(transfer.status)}
                 </Badge>
               </div>
             </div>

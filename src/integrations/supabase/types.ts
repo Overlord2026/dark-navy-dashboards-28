@@ -14,6 +14,44 @@ export type Database = {
   }
   public: {
     Tables: {
+      ach_events: {
+        Row: {
+          created_at: string | null
+          event_data: Json | null
+          event_type: string
+          id: string
+          processed_at: string | null
+          stripe_event_id: string | null
+          transfer_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          event_data?: Json | null
+          event_type: string
+          id?: string
+          processed_at?: string | null
+          stripe_event_id?: string | null
+          transfer_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          event_data?: Json | null
+          event_type?: string
+          id?: string
+          processed_at?: string | null
+          stripe_event_id?: string | null
+          transfer_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ach_events_transfer_id_fkey"
+            columns: ["transfer_id"]
+            isOneToOne: false
+            referencedRelation: "transfers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       audit_logs: {
         Row: {
           created_at: string | null
@@ -43,7 +81,9 @@ export type Database = {
       }
       bank_accounts: {
         Row: {
+          account_number_last4: string | null
           account_type: string
+          ach_enabled: boolean | null
           balance: number
           created_at: string
           id: string
@@ -54,11 +94,15 @@ export type Database = {
           plaid_account_id: string | null
           plaid_institution_id: string | null
           plaid_item_id: string | null
+          routing_number: string | null
+          stripe_account_id: string | null
           updated_at: string
           user_id: string
         }
         Insert: {
+          account_number_last4?: string | null
           account_type: string
+          ach_enabled?: boolean | null
           balance?: number
           created_at?: string
           id?: string
@@ -69,11 +113,15 @@ export type Database = {
           plaid_account_id?: string | null
           plaid_institution_id?: string | null
           plaid_item_id?: string | null
+          routing_number?: string | null
+          stripe_account_id?: string | null
           updated_at?: string
           user_id: string
         }
         Update: {
+          account_number_last4?: string | null
           account_type?: string
+          ach_enabled?: boolean | null
           balance?: number
           created_at?: string
           id?: string
@@ -84,6 +132,8 @@ export type Database = {
           plaid_account_id?: string | null
           plaid_institution_id?: string | null
           plaid_item_id?: string | null
+          routing_number?: string | null
+          stripe_account_id?: string | null
           updated_at?: string
           user_id?: string
         }
@@ -1900,44 +1950,71 @@ export type Database = {
       }
       transfers: {
         Row: {
+          ach_credit_status: string | null
+          ach_debit_status: string | null
+          ach_return_code: string | null
           amount: number
           created_at: string
           description: string | null
+          estimated_completion_date: string | null
+          failure_reason: string | null
           from_account_id: string
+          funds_held_at: string | null
           id: string
           processed_at: string | null
           reference_number: string
           status: string
+          stripe_credit_payment_intent_id: string | null
+          stripe_debit_payment_intent_id: string | null
           to_account_id: string
           transfer_fee: number
+          transfer_type: string | null
           updated_at: string
           user_id: string
         }
         Insert: {
+          ach_credit_status?: string | null
+          ach_debit_status?: string | null
+          ach_return_code?: string | null
           amount: number
           created_at?: string
           description?: string | null
+          estimated_completion_date?: string | null
+          failure_reason?: string | null
           from_account_id: string
+          funds_held_at?: string | null
           id?: string
           processed_at?: string | null
           reference_number?: string
           status?: string
+          stripe_credit_payment_intent_id?: string | null
+          stripe_debit_payment_intent_id?: string | null
           to_account_id: string
           transfer_fee?: number
+          transfer_type?: string | null
           updated_at?: string
           user_id: string
         }
         Update: {
+          ach_credit_status?: string | null
+          ach_debit_status?: string | null
+          ach_return_code?: string | null
           amount?: number
           created_at?: string
           description?: string | null
+          estimated_completion_date?: string | null
+          failure_reason?: string | null
           from_account_id?: string
+          funds_held_at?: string | null
           id?: string
           processed_at?: string | null
           reference_number?: string
           status?: string
+          stripe_credit_payment_intent_id?: string | null
+          stripe_debit_payment_intent_id?: string | null
           to_account_id?: string
           transfer_fee?: number
+          transfer_type?: string | null
           updated_at?: string
           user_id?: string
         }

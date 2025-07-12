@@ -8,6 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { ArrowRight, AlertCircle } from 'lucide-react';
 import { useBankAccounts } from '@/hooks/useBankAccounts';
 import { useTransfers } from '@/context/TransfersContext';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 interface TransferFormProps {
   onSuccess?: () => void;
@@ -15,13 +16,14 @@ interface TransferFormProps {
 
 export function TransferForm({ onSuccess }: TransferFormProps) {
   const { accounts } = useBankAccounts();
-  const { createTransfer, processing } = useTransfers();
+  const { createTransfer, createACHTransfer, processing } = useTransfers();
   
   const [fromAccount, setFromAccount] = useState('');
   const [toAccount, setToAccount] = useState('');
   const [amount, setAmount] = useState('');
   const [description, setDescription] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [transferType, setTransferType] = useState<'internal' | 'ach'>('internal');
 
   // Filter accounts for selection
   const availableFromAccounts = accounts.filter(acc => acc.id !== toAccount);
@@ -45,6 +47,10 @@ export function TransferForm({ onSuccess }: TransferFormProps) {
       newErrors.amount = 'Please enter a valid amount greater than 0';
     }
 
+    if (transferType === 'ach' && parseFloat(amount) < 0.50) {
+      newErrors.amount = 'Minimum amount for ACH transfers is $0.50';
+    }
+
     if (selectedFromAccount && parseFloat(amount) > selectedFromAccount.balance) {
       newErrors.amount = `Insufficient funds. Available: $${selectedFromAccount.balance.toFixed(2)}`;
     }
@@ -60,12 +66,16 @@ export function TransferForm({ onSuccess }: TransferFormProps) {
       return;
     }
 
-    const success = await createTransfer({
+    const transferData = {
       from_account_id: fromAccount,
       to_account_id: toAccount,
       amount: parseFloat(amount),
       description: description || undefined
-    });
+    };
+
+    const success = transferType === 'ach' 
+      ? await createACHTransfer(transferData)
+      : await createTransfer(transferData);
 
     if (success) {
       // Reset form
@@ -108,6 +118,28 @@ export function TransferForm({ onSuccess }: TransferFormProps) {
         </CardDescription>
       </CardHeader>
       <CardContent>
+        <Tabs value={transferType} onValueChange={(value) => setTransferType(value as 'internal' | 'ach')} className="mb-6">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="internal">Internal Transfer</TabsTrigger>
+            <TabsTrigger value="ach">ACH Transfer</TabsTrigger>
+          </TabsList>
+          <TabsContent value="internal" className="mt-4">
+            <div className="p-4 bg-blue-50 dark:bg-blue-950/20 rounded-lg">
+              <h4 className="font-medium text-blue-900 dark:text-blue-100 mb-2">Internal Transfer</h4>
+              <p className="text-sm text-blue-700 dark:text-blue-300">
+                Instant transfers between your accounts within the platform. No fees applied.
+              </p>
+            </div>
+          </TabsContent>
+          <TabsContent value="ach" className="mt-4">
+            <div className="p-4 bg-green-50 dark:bg-green-950/20 rounded-lg">
+              <h4 className="font-medium text-green-900 dark:text-green-100 mb-2">ACH Bank Transfer</h4>
+              <p className="text-sm text-green-700 dark:text-green-300">
+                Real bank-to-bank transfers using ACH. Takes 1-3 business days. Minimum $0.50.
+              </p>
+            </div>
+          </TabsContent>
+        </Tabs>
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* From Account */}
           <div className="space-y-2">
@@ -225,10 +257,14 @@ export function TransferForm({ onSuccess }: TransferFormProps) {
                   <span>To:</span>
                   <span>{selectedToAccount?.name}</span>
                 </div>
-                <div className="flex justify-between font-medium">
-                  <span>Amount:</span>
-                  <span>{formatCurrency(parseFloat(amount))}</span>
-                </div>
+                 <div className="flex justify-between font-medium">
+                   <span>Amount:</span>
+                   <span>{formatCurrency(parseFloat(amount))}</span>
+                 </div>
+                 <div className="flex justify-between">
+                   <span>Type:</span>
+                   <span>{transferType === 'ach' ? 'ACH Transfer (1-3 days)' : 'Internal (Instant)'}</span>
+                 </div>
               </div>
             </div>
           )}
@@ -239,7 +275,10 @@ export function TransferForm({ onSuccess }: TransferFormProps) {
             className="w-full" 
             disabled={processing || !fromAccount || !toAccount || !amount}
           >
-            {processing ? 'Processing Transfer...' : 'Transfer Funds'}
+            {processing 
+              ? (transferType === 'ach' ? 'Initiating ACH Transfer...' : 'Processing Transfer...') 
+              : (transferType === 'ach' ? 'Start ACH Transfer' : 'Transfer Funds')
+            }
           </Button>
         </form>
       </CardContent>

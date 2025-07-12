@@ -9,12 +9,21 @@ export interface Transfer {
   to_account_id: string;
   amount: number;
   transfer_fee: number;
-  status: 'pending' | 'processing' | 'completed' | 'failed' | 'cancelled';
+  status: 'pending' | 'processing' | 'completed' | 'failed' | 'cancelled' | 'ach_debit_pending' | 'funds_held' | 'ach_credit_pending' | 'ach_credit_failed';
   description: string | null;
   reference_number: string;
   processed_at: string | null;
   created_at: string;
   updated_at: string;
+  transfer_type?: string;
+  stripe_debit_payment_intent_id?: string;
+  stripe_credit_payment_intent_id?: string;
+  ach_debit_status?: string;
+  ach_credit_status?: string;
+  funds_held_at?: string;
+  estimated_completion_date?: string;
+  ach_return_code?: string;
+  failure_reason?: string;
 }
 
 interface TransfersContextType {
@@ -22,6 +31,12 @@ interface TransfersContextType {
   loading: boolean;
   processing: boolean;
   createTransfer: (transferData: {
+    from_account_id: string;
+    to_account_id: string;
+    amount: number;
+    description?: string;
+  }) => Promise<boolean>;
+  createACHTransfer: (transferData: {
     from_account_id: string;
     to_account_id: string;
     amount: number;
@@ -173,6 +188,83 @@ export function TransfersProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const createACHTransfer = async (transferData: {
+    from_account_id: string;
+    to_account_id: string;
+    amount: number;
+    description?: string;
+  }) => {
+    try {
+      setProcessing(true);
+      console.log('TransfersContext: Creating ACH transfer:', transferData);
+      
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        toast({
+          title: "Error",
+          description: "You must be logged in to create an ACH transfer",
+          variant: "destructive"
+        });
+        return false;
+      }
+
+      // Call the edge function to process the ACH transfer
+      const { data, error } = await supabase.functions.invoke('stripe-ach-transfer', {
+        body: transferData
+      });
+
+      console.log('TransfersContext: ACH Transfer response:', { data, error });
+
+      if (error) {
+        console.error('Error creating ACH transfer:', error);
+        const errorMessage = typeof error === 'string' 
+          ? error 
+          : error?.message || "Failed to process ACH transfer";
+        
+        toast({
+          title: "ACH Transfer Failed",
+          description: errorMessage,
+          variant: "destructive"
+        });
+        return false;
+      }
+
+      if (!data?.success) {
+        console.error('ACH Transfer failed:', data);
+        toast({
+          title: "ACH Transfer Failed",
+          description: data?.error || "ACH transfer could not be completed",
+          variant: "destructive"
+        });
+        return false;
+      }
+
+      // Add the new transfer to our state
+      if (data.transfer) {
+        setTransfers(prev => [data.transfer, ...prev]);
+      }
+
+      toast({
+        title: "ACH Transfer Initiated",
+        description: data.message || `ACH transfer of $${transferData.amount.toFixed(2)} initiated successfully`,
+      });
+
+      // Refresh transfers to get the latest state
+      await fetchTransfers();
+      return true;
+    } catch (error) {
+      console.error('Error creating ACH transfer:', error);
+      toast({
+        title: "ACH Transfer Error",
+        description: "An unexpected error occurred during ACH transfer",
+        variant: "destructive"
+      });
+      return false;
+    } finally {
+      setProcessing(false);
+    }
+  };
+
   const getTransferHistory = (limit = 10) => {
     return transfers.slice(0, limit);
   };
@@ -219,6 +311,7 @@ export function TransfersProvider({ children }: { children: React.ReactNode }) {
         loading,
         processing,
         createTransfer,
+        createACHTransfer,
         refreshTransfers: fetchTransfers,
         getTransferHistory
       }}
