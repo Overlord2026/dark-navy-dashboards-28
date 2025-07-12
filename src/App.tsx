@@ -20,6 +20,7 @@ import { DigitalAssetsProvider } from "@/context/DigitalAssetsContext";
 import { RealEstateProvider } from "@/context/RealEstateContext";
 import { OtherAssetsProvider } from "@/context/OtherAssetsContext";
 import { LiabilitiesProvider } from "@/context/LiabilitiesContext";
+import { TransfersProvider } from "@/context/TransfersContext";
 
 // Create a Query Client
 const queryClient = new QueryClient({
@@ -41,7 +42,8 @@ function App() {
               <NetWorthProvider>
                 <FinancialPlanProvider>
                   <BankAccountsProvider>
-                    <RetirementPlansProvider>
+                    <TransfersProvider>
+                      <RetirementPlansProvider>
                       <InvestmentAccountsProvider>
                         <PrivateEquityAccountsProvider>
                           <PublicStocksProvider>
@@ -62,8 +64,9 @@ function App() {
                           </PublicStocksProvider>
                         </PrivateEquityAccountsProvider>
                       </InvestmentAccountsProvider>
-                    </RetirementPlansProvider>
-                  </BankAccountsProvider>
+                                      </RetirementPlansProvider>
+                                    </TransfersProvider>
+                                  </BankAccountsProvider>
                 </FinancialPlanProvider>
               </NetWorthProvider>
             </SubscriptionProvider>

@@ -1898,6 +1898,66 @@ export type Database = {
         }
         Relationships: []
       }
+      transfers: {
+        Row: {
+          amount: number
+          created_at: string
+          description: string | null
+          from_account_id: string
+          id: string
+          processed_at: string | null
+          reference_number: string
+          status: string
+          to_account_id: string
+          transfer_fee: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          description?: string | null
+          from_account_id: string
+          id?: string
+          processed_at?: string | null
+          reference_number?: string
+          status?: string
+          to_account_id: string
+          transfer_fee?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          description?: string | null
+          from_account_id?: string
+          id?: string
+          processed_at?: string | null
+          reference_number?: string
+          status?: string
+          to_account_id?: string
+          transfer_fee?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_transfers_from_account"
+            columns: ["from_account_id"]
+            isOneToOne: false
+            referencedRelation: "bank_accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_transfers_to_account"
+            columns: ["to_account_id"]
+            isOneToOne: false
+            referencedRelation: "bank_accounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_additional_info: {
         Row: {
           citizenship_status: string | null
